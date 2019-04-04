@@ -2,122 +2,89 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDD6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4975C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A942147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F0620882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WJGzChcY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mbr+oia3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WQbCkCPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfDDKRz (ORCPT
+        id S1729274AbfDDKSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:17:55 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:52463 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728663AbfDDKRz (ORCPT
+        Thu, 4 Apr 2019 06:18:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40578 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:17:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1554373074; x=1585909074;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version;
-  bh=5DxTW9PtZZ3mSeHNjENoa9rON7DMLH0EzOwcicSWPsU=;
-  b=WJGzChcYqUK/PcrSetPNOracMf1OLHFQH3+f1F9MuCcWZA/4eq9hbvDN
-   mRY3B7hkJD0cFy4aZUsq9wE6P7nSy5xD4ZbSL9yvtAKxj1bzZvzN8aGGn
-   arbBOfzw1y7D4mafKTeWxPWbNmBLybrZx7bSuQdht/YJqKhVqk0t0KBUw
-   8=;
-X-IronPort-AV: E=Sophos;i="5.60,308,1549929600"; 
-   d="scan'208";a="797408673"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Apr 2019 10:17:24 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x34AHICx010298
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 4 Apr 2019 10:17:21 GMT
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 4 Apr 2019 10:17:20 +0000
-Received: from udc4a3e82dbc15a031435.hfa14.amazon.com (10.43.160.69) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 4 Apr 2019 10:17:14 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <talel@amazon.com>, <robh@kernel.org>, <edubezval@gmail.com>,
-        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <rui.zhang@intel.com>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <hanochu@amazon.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: thermal: al-thermal: Add binding documentation
-Date:   Thu, 4 Apr 2019 13:16:55 +0300
-Message-ID: <1554373016-1442-2-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554373016-1442-1-git-send-email-talel@amazon.com>
-References: <1554373016-1442-1-git-send-email-talel@amazon.com>
+        Thu, 4 Apr 2019 06:18:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D9FE361CA3; Thu,  4 Apr 2019 10:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554373100;
+        bh=FrnjyGh0J8CJkHp0LnC/Ogic1+pfatKhKBZinj70YXg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=mbr+oia3LHFeCRRU/qx0QkRgerJGoSq7nHDc0WLESpIkx40UGxD+qSR565B7awKWn
+         UGH3GhKqnieCwpPx4FgjiUvGB8qgb826XnLolAfD4znpyTmbC6tG8ayGpli1tsd+ZC
+         Mvwxh1eFHiqVaJ3bFiU7Kx3C4bz5AT4NN4DUwm2I=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3FBEB61891;
+        Thu,  4 Apr 2019 10:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554373098;
+        bh=FrnjyGh0J8CJkHp0LnC/Ogic1+pfatKhKBZinj70YXg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=WQbCkCPvcfV0oL0bpd1T677vyoml7ZliY/E4OBo/oHRy4mXxlGkrayJ/mGYXQqKIH
+         lzpxwU9i3mcvtR6RskVc+P0q4aBbRn0y6U8Qwo5ckM6iwrdYASTB8oE8tjECR4/LFt
+         11cmZoKDJRBUhD9ppTsmY2Z9m6XeynMsKIEEx/tI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3FBEB61891
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.69]
-X-ClientProxiedBy: EX13D25UWC003.ant.amazon.com (10.43.162.129) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] net: mwifiex: fix a NULL pointer dereference
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190312053107.5790-1-kjlu@umn.edu>
+References: <20190312053107.5790-1-kjlu@umn.edu>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     kjlu@umn.edu, pakki001@umn.edu,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190404101820.D9FE361CA3@smtp.codeaurora.org>
+Date:   Thu,  4 Apr 2019 10:18:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add thermal binding documentation for Amazon's Annapurna Labs Thermal
-Sensor.
+Kangjie Lu <kjlu@umn.edu> wrote:
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
----
- .../bindings/thermal/amazon,al-thermal.txt         | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+> In case dev_alloc_skb fails, the fix returns -ENOMEM to avoid
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-diff --git a/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-new file mode 100644
-index 0000000..af8cf18
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-@@ -0,0 +1,33 @@
-+Amazon's Annapurna Labs Thermal Sensor
-+
-+Simple thermal device that allows temperature reading by a single MMIO
-+transaction.
-+
-+Required properties:
-+- compatible: "amazon,al-thermal".
-+- reg: The physical base address and length of the sensor's registers.
-+- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a description.
-+
-+Example:
-+	thermal: thermal {
-+		compatible = "amazon,al-thermal";
-+		reg = <0x0 0x05002860 0x0 0x1>;
-+		#thermal-sensor-cells = <0x1>;
-+	};
-+
-+	thermal-zones {
-+		thermal_z0 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal 0>;
-+			trips {
-+				thermalz0_crit {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+		};
-+	};
-+
+Patch applied to wireless-drivers-next.git, thanks.
+
+e5b9b206f3f6 net: mwifiex: fix a NULL pointer dereference
+
 -- 
-2.7.4
+https://patchwork.kernel.org/patch/10848599/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
