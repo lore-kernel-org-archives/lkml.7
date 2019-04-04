@@ -2,202 +2,230 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F26C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5596C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655ED20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sg9krI2C"
+	by mail.kernel.org (Postfix) with ESMTP id 6869B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfDDKIg (ORCPT
+        id S1729080AbfDDKIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:08:36 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:26413 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfDDKIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:08:36 -0400
-X-IronPort-AV: E=Sophos;i="5.60,308,1549954800"; 
-   d="scan'208";a="26742747"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Apr 2019 03:08:35 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Thu, 4 Apr 2019 03:08:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XnP+OqlrDBkUjTnDbremAKJRdZ2QhOQyQZmW9ja2DQU=;
- b=sg9krI2CiH+9eEw56heMQc+Eu6Pq6gjClqGT4vHLK5mPT9n5FVtbSMeUCbA9NXwGOKJEl5AVaukjMlN6xt2PHuTe3LfqhTSHTyYevoxU6M1+TtzsF48zjyp5A6d1+ed0in+4rY9LDPk9LTBZmTQ+twpdVi0htOGYikJf0hf7j2M=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1661.namprd11.prod.outlook.com (10.172.55.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Thu, 4 Apr 2019 10:08:24 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::65cd:b698:41:54d6]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::65cd:b698:41:54d6%2]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
- 10:08:24 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
-CC:     <gregory.clement@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: sama5d{2,4}: use SPDX-License-Identifier
-Thread-Topic: [PATCH v2 1/4] ARM: dts: sama5d{2,4}: use
- SPDX-License-Identifier
-Thread-Index: AQHU6s5WjznPokvnPUa2lz3A45bIPg==
-Date:   Thu, 4 Apr 2019 10:08:24 +0000
-Message-ID: <6e680e5d-6549-a0b0-22d9-cf83e424fc9a@microchip.com>
-References: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
-In-Reply-To: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0179.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::23) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicolas.Ferre@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.6.168.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3cdf64ea-8469-4e07-f02f-08d6b8e57936
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1661;
-x-ms-traffictypediagnostic: MWHPR11MB1661:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MWHPR11MB16611A90E958199FDC2D435EE0500@MWHPR11MB1661.namprd11.prod.outlook.com>
-x-forefront-prvs: 0997523C40
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(199004)(189003)(31686004)(6116002)(76176011)(26005)(316002)(6486002)(6506007)(8936002)(446003)(386003)(36756003)(6436002)(106356001)(11346002)(71190400001)(3846002)(478600001)(99286004)(71200400001)(476003)(53936002)(2616005)(486006)(105586002)(72206003)(86362001)(25786009)(52116002)(6246003)(6306002)(6512007)(186003)(54906003)(53546011)(2906002)(66066001)(6636002)(7736002)(102836004)(14444005)(97736004)(966005)(5660300002)(68736007)(110136005)(305945005)(8676002)(81166006)(81156014)(229853002)(14454004)(256004)(4326008)(31696002)(32563001)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1661;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: P6WvqJ7CREy4siJEPgOq+fKKKoashaMgSviV8M6Lax7uWQLfeitgnAxJmFonffWcGO+vgzmH2K21SD1lOXqsumWGEozwTQ93a8VgYzJDSkcWEsR2Vi8n/hHcIUcOO3n0zVvhWZ/wX9ikvprcGfd7m1/NcASB8eU0El92wtAupjNcSCoTuvFImWIz9435caZw/huU8ZtqBLm9/0muLDBDQ2lY/0ph9hSogiBSSYtLPCWrnJXFQW4RXtA5HpjQnYH9NZFEUdShI7kABM/nqt0TuKjbnKRfbIitR8bbMq3gg02T6hae+XelCBexM7vItKGfug1tyGoDvu6Xb8wiH+WPdTjnjfT1QLE7HoTcvQrlzCriEKkKxuL0wGpYdrLWumCdwhO+e9IiZOHg9V6V30fql0ePpMmaIgaVnMJ7deyLhHY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F22C170EF773EF4BB07DA330E03FD675@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 4 Apr 2019 06:08:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39776 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728728AbfDDKIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:08:45 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8D3C730B4AC7;
+        Thu,  4 Apr 2019 10:08:44 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77BA3983B;
+        Thu,  4 Apr 2019 10:08:44 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 430A51819AFA;
+        Thu,  4 Apr 2019 10:08:44 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 06:08:44 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        jasowang@redhat.com, Dave Chinner <david@fromorbit.com>,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        riel@surriel.com, stefanha@redhat.com,
+        dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        imammedo@redhat.com
+Message-ID: <527416483.17415178.1554372524196.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190404094029.GD16131@quack2.suse.cz>
+References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-6-pagupta@redhat.com> <20190403220912.GB26298@dastard> <20190403223921.GM5147@magnolia> <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com> <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com> <20190404094029.GD16131@quack2.suse.cz>
+Subject: Re: [Qemu-devel] [PATCH v4 5/5] xfs: disable map_sync for async
+ flush
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cdf64ea-8469-4e07-f02f-08d6b8e57936
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 10:08:24.4022
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1661
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.146, 10.4.195.18]
+Thread-Topic: disable map_sync for async flush
+Thread-Index: vR1AEl9E2RamNqVZ7jOkEfJYDPUHJg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 04 Apr 2019 10:08:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDMvMDQvMjAxOSBhdCAyMjo1MiwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IEV4dGVy
-bmFsIEUtTWFpbA0KPiANCj4gDQo+IFRoZSBYMTEgbGljZW5zZSB0ZXh0IFsxXSBpcyBleHBsaWNp
-dGx5IGZvciB0aGUgWCBDb25zb3J0aXVtIGFuZCBoYXMgYQ0KPiBjb3VwbGUgb2YgZXh0cmEgY2xh
-dXNlcy4gVGhlIE1JVCBsaWNlbnNlIHRleHQgWzJdIGlzIGFjdHVhbGx5IHdoYXQgdGhlDQo+IGN1
-cnJlbnQgRFQgZmlsZXMgY2xhaW0uDQo+IA0KPiBbMV0gaHR0cHM6Ly9zcGR4Lm9yZy9saWNlbnNl
-cy9YMTEuaHRtbA0KPiBbMl0gaHR0cHM6Ly9zcGR4Lm9yZy9saWNlbnNlcy9NSVQuaHRtbA0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJv
-b3RsaW4uY29tPg0KDQp3aG9sZSBzZXJpZXM6DQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmlj
-b2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0KDQo+IC0tLQ0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRz
-L3NhbWE1ZDIuZHRzaSB8IDM5ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
-ICBhcmNoL2FybS9ib290L2R0cy9zYW1hNWQ0LmR0c2kgfCAzOSArLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDc2
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1
-ZDIuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0KPiBpbmRleCBkMTU5ZWU0
-MmVmMjkuLjI2YWU2YjM0ZTMyOSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2Ft
-YTVkMi5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0KPiBAQCAt
-MSw0NiArMSw5IEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjArIE9S
-IE1JVCkNCj4gICAvKg0KPiAgICAqIHNhbWE1ZDIuZHRzaSAtIERldmljZSBUcmVlIEluY2x1ZGUg
-ZmlsZSBmb3IgU0FNQTVEMiBmYW1pbHkgU29DDQo+ICAgICoNCj4gICAgKiAgQ29weXJpZ2h0IChD
-KSAyMDE1IEF0bWVsLA0KPiAgICAqICAgICAgICAgICAgICAgIDIwMTUgTHVkb3ZpYyBEZXNyb2No
-ZXMgPGx1ZG92aWMuZGVzcm9jaGVzQGF0bWVsLmNvbT4NCj4gLSAqDQo+IC0gKiBUaGlzIGZpbGUg
-aXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcw0K
-PiAtICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3Rl
-IHRoYXQgdGhpcyBkdWFsDQo+IC0gKiBsaWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmls
-ZSwgYW5kIG5vdCB0aGlzIHByb2plY3QgYXMgYQ0KPiAtICogd2hvbGUuDQo+IC0gKg0KPiAtICog
-IGEpIFRoaXMgZmlsZSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
-bmQvb3INCj4gLSAqICAgICBtb2RpZnkgaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2Vu
-ZXJhbCBQdWJsaWMgTGljZW5zZSBhcw0KPiAtICogICAgIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBT
-b2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZQ0KPiAtICogICAgIExp
-Y2Vuc2UsIG9yIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uDQo+IC0gKg0KPiAt
-ICogICAgIFRoaXMgZmlsZSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwg
-YmUgdXNlZnVsLA0KPiAtICogICAgIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBl
-dmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+IC0gKiAgICAgTUVSQ0hBTlRBQklMSVRZIG9y
-IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiAtICogICAgIEdO
-VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+IC0gKg0KPiAtICog
-T3IsIGFsdGVybmF0aXZlbHksDQo+IC0gKg0KPiAtICogIGIpIFBlcm1pc3Npb24gaXMgaGVyZWJ5
-IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uDQo+IC0gKiAgICAgb2J0YWlu
-aW5nIGEgY29weSBvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24N
-Cj4gLSAqICAgICBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2Fy
-ZSB3aXRob3V0DQo+IC0gKiAgICAgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxpbWl0
-YXRpb24gdGhlIHJpZ2h0cyB0byB1c2UsDQo+IC0gKiAgICAgY29weSwgbW9kaWZ5LCBtZXJnZSwg
-cHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yDQo+IC0gKiAgICAgc2VsbCBj
-b3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUN
-Cj4gLSAqICAgICBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhl
-IGZvbGxvd2luZw0KPiAtICogICAgIGNvbmRpdGlvbnM6DQo+IC0gKg0KPiAtICogICAgIFRoZSBh
-Ym92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJl
-DQo+IC0gKiAgICAgaW5jbHVkZWQgaW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9u
-cyBvZiB0aGUgU29mdHdhcmUuDQo+IC0gKg0KPiAtICogICAgIFRIRSBTT0ZUV0FSRSBJUyBQUk9W
-SURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFOWSBLSU5ELA0KPiAtICogICAgIEVY
-UFJFU1MgT1IgSU1QTElFRCwgSU5DTFVESU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFO
-VElFUw0KPiAtICogICAgIE9GIE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNV
-TEFSIFBVUlBPU0UgQU5EDQo+IC0gKiAgICAgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBT
-SEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQNCj4gLSAqICAgICBIT0xERVJTIEJFIExJQUJM
-RSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VTIE9SIE9USEVSIExJQUJJTElUWSwNCj4gLSAqICAgICBX
-SEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJ
-TkcNCj4gLSAqICAgICBGUk9NLCBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZU
-V0FSRSBPUiBUSEUgVVNFIE9SDQo+IC0gKiAgICAgT1RIRVIgREVBTElOR1MgSU4gVEhFIFNPRlRX
-QVJFLg0KPiAgICAqLw0KPiAgIA0KPiAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9kbWEvYXQ5MS5o
-Pg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+IGluZGV4IDZjMWU0MWY5NDU0OS4uNmFiMjdhN2Iz
-ODhkIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zYW1hNWQ0LmR0c2kNCj4gKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+IEBAIC0xLDQ2ICsxLDkgQEANCj4g
-Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCsgT1IgTUlUKQ0KPiAgIC8qDQo+
-ICAgICogc2FtYTVkNC5kdHNpIC0gRGV2aWNlIFRyZWUgSW5jbHVkZSBmaWxlIGZvciBTQU1BNUQ0
-IGZhbWlseSBTb0MNCj4gICAgKg0KPiAgICAqICBDb3B5cmlnaHQgKEMpIDIwMTQgQXRtZWwsDQo+
-ICAgICogICAgICAgICAgICAgICAgMjAxNCBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQGF0
-bWVsLmNvbT4NCj4gLSAqDQo+IC0gKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNh
-biB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcw0KPiAtICogb2YgdGhlIEdQTCBvciB0aGUg
-WDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsDQo+IC0gKiBs
-aWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0aGlzIHByb2plY3Qg
-YXMgYQ0KPiAtICogd2hvbGUuDQo+IC0gKg0KPiAtICogIGEpIFRoaXMgZmlsZSBpcyBmcmVlIHNv
-ZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4gLSAqICAgICBtb2RpZnkg
-aXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcw0K
-PiAtICogICAgIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRo
-ZXIgdmVyc2lvbiAyIG9mIHRoZQ0KPiAtICogICAgIExpY2Vuc2UsIG9yIChhdCB5b3VyIG9wdGlv
-bikgYW55IGxhdGVyIHZlcnNpb24uDQo+IC0gKg0KPiAtICogICAgIFRoaXMgZmlsZSBpcyBkaXN0
-cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPiAtICogICAgIGJ1
-dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5
-IG9mDQo+IC0gKiAgICAgTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxB
-UiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiAtICogICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
-IGZvciBtb3JlIGRldGFpbHMuDQo+IC0gKg0KPiAtICogT3IsIGFsdGVybmF0aXZlbHksDQo+IC0g
-Kg0KPiAtICogIGIpIFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdl
-LCB0byBhbnkgcGVyc29uDQo+IC0gKiAgICAgb2J0YWluaW5nIGEgY29weSBvZiB0aGlzIHNvZnR3
-YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24NCj4gLSAqICAgICBmaWxlcyAodGhlICJT
-b2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0DQo+IC0gKiAgICAgcmVz
-dHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0cyB0byB1c2Us
-DQo+IC0gKiAgICAgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3Vi
-bGljZW5zZSwgYW5kL29yDQo+IC0gKiAgICAgc2VsbCBjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBh
-bmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUNCj4gLSAqICAgICBTb2Z0d2FyZSBpcyBm
-dXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhlIGZvbGxvd2luZw0KPiAtICogICAgIGNv
-bmRpdGlvbnM6DQo+IC0gKg0KPiAtICogICAgIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFu
-ZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJlDQo+IC0gKiAgICAgaW5jbHVkZWQgaW4g
-YWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUuDQo+IC0g
-Kg0KPiAtICogICAgIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdB
-UlJBTlRZIE9GIEFOWSBLSU5ELA0KPiAtICogICAgIEVYUFJFU1MgT1IgSU1QTElFRCwgSU5DTFVE
-SU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFOVElFUw0KPiAtICogICAgIE9GIE1FUkNI
-QU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5EDQo+IC0gKiAg
-ICAgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZ
-UklHSFQNCj4gLSAqICAgICBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VT
-IE9SIE9USEVSIExJQUJJTElUWSwNCj4gLSAqICAgICBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBD
-T05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcNCj4gLSAqICAgICBGUk9NLCBPVVQg
-T0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SDQo+IC0g
-KiAgICAgT1RIRVIgREVBTElOR1MgSU4gVEhFIFNPRlRXQVJFLg0KPiAgICAqLw0KPiAgIA0KPiAg
-ICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9hdDkxLmg+DQo+IA0KDQoNCi0tIA0KTmljb2xh
-cyBGZXJyZQ0K
+
+> On Thu 04-04-19 05:09:10, Pankaj Gupta wrote:
+> > 
+> > > > On Thu, Apr 04, 2019 at 09:09:12AM +1100, Dave Chinner wrote:
+> > > > > On Wed, Apr 03, 2019 at 04:10:18PM +0530, Pankaj Gupta wrote:
+> > > > > > Virtio pmem provides asynchronous host page cache flush
+> > > > > > mechanism. we don't support 'MAP_SYNC' with virtio pmem
+> > > > > > and xfs.
+> > > > > > 
+> > > > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > > > > ---
+> > > > > >  fs/xfs/xfs_file.c | 8 ++++++++
+> > > > > >  1 file changed, 8 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > > > > > index 1f2e2845eb76..dced2eb8c91a 100644
+> > > > > > --- a/fs/xfs/xfs_file.c
+> > > > > > +++ b/fs/xfs/xfs_file.c
+> > > > > > @@ -1203,6 +1203,14 @@ xfs_file_mmap(
+> > > > > >  	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+> > > > > >  		return -EOPNOTSUPP;
+> > > > > >  
+> > > > > > +	/* We don't support synchronous mappings with DAX files if
+> > > > > > +	 * dax_device is not synchronous.
+> > > > > > +	 */
+> > > > > > +	if (IS_DAX(file_inode(filp)) && !dax_synchronous(
+> > > > > > +		xfs_find_daxdev_for_inode(file_inode(filp))) &&
+> > > > > > +					(vma->vm_flags & VM_SYNC))
+> > > > > > +		return -EOPNOTSUPP;
+> > > > > > +
+> > > > > >  	file_accessed(filp);
+> > > > > >  	vma->vm_ops = &xfs_file_vm_ops;
+> > > > > >  	if (IS_DAX(file_inode(filp)))
+> > > > > 
+> > > > > All this ad hoc IS_DAX conditional logic is getting pretty nasty.
+> > > > > 
+> > > > > xfs_file_mmap(
+> > > > > ....
+> > > > > {
+> > > > > 	struct inode	*inode = file_inode(filp);
+> > > > > 
+> > > > > 	if (vma->vm_flags & VM_SYNC) {
+> > > > > 		if (!IS_DAX(inode))
+> > > > > 			return -EOPNOTSUPP;
+> > > > > 		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
+> > > > > 			return -EOPNOTSUPP;
+> > > > > 	}
+> > > > > 
+> > > > > 	file_accessed(filp);
+> > > > > 	vma->vm_ops = &xfs_file_vm_ops;
+> > > > > 	if (IS_DAX(inode))
+> > > > > 		vma->vm_flags |= VM_HUGEPAGE;
+> > > > > 	return 0;
+> > > > > }
+> > > > > 
+> > > > > 
+> > > > > Even better, factor out all the "MAP_SYNC supported" checks into a
+> > > > > helper so that the filesystem code just doesn't have to care about
+> > > > > the details of checking for DAX+MAP_SYNC support....
+> > > > 
+> > > > Seconded, since ext4 has nearly the same flag validation logic.
+> > > 
+> > 
+> > Only issue with this I see is we need the helper function only for
+> > supported
+> > filesystems ext4 & xfs (right now). If I create the function in "fs.h" it
+> > will be compiled for every filesystem, even for those don't need it.
+> > 
+> > Sample patch below, does below patch is near to what you have in mind?
+> 
+> So I would put the helper in include/linux/dax.h and have it like:
+> 
+> bool daxdev_mapping_supported(struct vm_area_struct *vma,
+> 			      struct dax_device *dax_dev)
+> {
+> 	if (!(vma->vm_flags & VM_SYNC))
+> 		return true;
+> 	if (!IS_DAX(file_inode(vma->vm_file)))
+> 		return false;
+> 	return dax_synchronous(dax_dev);
+> }
+
+Sure. This is much better. I was also not sure what to name the helper function.
+I will go ahead with this unless 'Dave' & 'Darrick' have anything to add.
+
+Thank you very much.
+
+Best regards,
+Pankaj 
+
+> 
+> 								Honza
+> > 
+> > =================
+> > 
+> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > index 1f2e2845eb76..614995170cac 100644
+> > --- a/fs/xfs/xfs_file.c
+> > +++ b/fs/xfs/xfs_file.c
+> > @@ -1196,12 +1196,17 @@ xfs_file_mmap(
+> >         struct file     *filp,
+> >         struct vm_area_struct *vma)
+> >  {
+> > +       struct dax_device *dax_dev =
+> > xfs_find_daxdev_for_inode(file_inode(filp));
+> > +
+> >         /*
+> > -        * We don't support synchronous mappings for non-DAX files. At
+> > least
+> > -        * until someone comes with a sensible use case.
+> > +        * We don't support synchronous mappings for non-DAX files and
+> > +        * for DAX files if underneath dax_device is not synchronous.
+> >          */
+> > -       if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+> > -               return -EOPNOTSUPP;
+> > +       if (vma->vm_flags & VM_SYNC) {
+> > +               int err = is_synchronous(filp, dax_dev);
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> >  
+> >         file_accessed(filp);
+> >         vma->vm_ops = &xfs_file_vm_ops;
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 8b42df09b04c..add017de3dd7 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -2162,6 +2162,20 @@ static inline void file_accessed(struct file *file)
+> >                 touch_atime(&file->f_path);
+> >  }
+> >  
+> > +struct dax_device;
+> > +extern bool dax_synchronous(struct dax_device *dax_dev);
+> > +static inline int is_synchronous(struct file *filp, struct dax_device
+> > *dax_dev)
+> > +{
+> > +       struct inode *inode = file_inode(filp);
+> > +
+> > +       if (!IS_DAX(inode))
+> > +               return -EOPNOTSUPP;
+> > +       if (!dax_synchronous(dax_dev))
+> > +               return -EOPNOTSUPP;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  int sync_inode(struct inode *inode, struct writeback_control *wbc);
+> >  int sync_inode_metadata(struct inode *inode, int wait);
+> >  
+> > ---------
+> > 
+> > Thanks,
+> > Pankaj
+> > 
+> > 
+> > 
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+> 
+> 
