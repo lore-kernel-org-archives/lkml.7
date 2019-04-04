@@ -2,105 +2,67 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0E9C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C490F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370671;
-	bh=LKNrg6J55Gu+5893+dJvkQyWzV1nv4kYhrpZsDCEhJg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfjBmWpbQc5wqYDpSdblS9MV830GUlYhTTPMbyQROTRrPlrU6dmAamhTHlwwOLjKH
-	 /kK1oxa3fZMARc1Iuf9JEjEZ5UCQRoLTzc3Pnx8CIvR7XIpJMo0RdGtspDoLZxulKE
-	 cqvSsryXH93tnJ6M7O3o/LgYVTxdv+SbDMDJb8/o=
+	by mail.kernel.org (Postfix) with ESMTP id 26233205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QRoB0vcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfDDJEi (ORCPT
+        id S1732458AbfDDJh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731990AbfDDJEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D34302190C;
-        Thu,  4 Apr 2019 09:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368675;
-        bh=LKNrg6J55Gu+5893+dJvkQyWzV1nv4kYhrpZsDCEhJg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zeUF/kLhcBtPePkEObkN1DZx0c501yuXShmkNDGrzu7XBosGK4Z3Xf3sgk7WJ28Ze
-         uSpInqIFl+6mbIOT4OdOkfyeNZg/eJE87eiveIpJRFui5ME/41uyajvP1qMhJGHLks
-         qrjKRmWutwqLgCl+nRLX6QBfSz6S+EAp9km9CCFw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/187] bcache: fix input overflow to sequential_cutoff
-Date:   Thu,  4 Apr 2019 10:47:29 +0200
-Message-Id: <20190404084608.549662173@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 4 Apr 2019 05:37:56 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:58190 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730726AbfDDJhy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:37:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554370670; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=F5VToilLnMBME9L+TXy2uaYnd9STb1aEJYklDsxqWuQ=;
+        b=QRoB0vcM9gcLxl3Uf7c5RHDTeJTflknGkL7a27BdL6DxyUKMmsxbUiREfovQ0IkMfYIkEx
+        QBXDb9EhacgyA0xz2tislqRLgK632OO/+24rhnmHDoiYKgAfd6QZTvkFMwLO4LKKu06JWe
+        LlxEVLSuspXuHt3iWm1vIqwHIV2PFFM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Bin Liu <b-liu@ti.com>
+Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] usb: musb: Disable pullup in gadget setup
+Date:   Thu,  4 Apr 2019 11:37:43 +0200
+Message-Id: <20190404093743.6470-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+The pullup may be already enabled before the driver is initialized.
+It has to be disabled at init time, as we cannot guarantee that a gadget
+driver will be bound to the UDC.
 
-------------------
-
-[ Upstream commit 8c27a3953e92eb0b22dbb03d599f543a05f9574e ]
-
-People may set sequential_cutoff of a cached device via sysfs file,
-but current code does not check input value overflow. E.g. if value
-4294967295 (UINT_MAX) is written to file sequential_cutoff, its value
-is 4GB, but if 4294967296 (UINT_MAX + 1) is written into, its value
-will be 0. This is an unexpected behavior.
-
-This patch replaces d_strtoi_h() by sysfs_strtoul_clamp() to convert
-input string to unsigned integer value, and limit its range in
-[0, UINT_MAX]. Then the input overflow can be fixed.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/musb/musb_gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 59bf13faf752..01c7c4452a26 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -295,7 +295,9 @@ STORE(__cached_dev)
- 		dc->io_disable = v ? 1 : 0;
- 	}
+diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
+index ffe462a657b1..094dc59c834c 100644
+--- a/drivers/usb/musb/musb_gadget.c
++++ b/drivers/usb/musb/musb_gadget.c
+@@ -1794,6 +1794,7 @@ int musb_gadget_setup(struct musb *musb)
  
--	d_strtoi_h(sequential_cutoff);
-+	sysfs_strtoul_clamp(sequential_cutoff,
-+			    dc->sequential_cutoff,
-+			    0, UINT_MAX);
- 	d_strtoi_h(readahead);
+ 	musb->is_active = 0;
+ 	musb_platform_try_idle(musb, 0);
++	musb_pullup(musb, 0);
  
- 	if (attr == &sysfs_clear_stats)
+ 	status = usb_add_gadget_udc(musb->controller, &musb->g);
+ 	if (status)
 -- 
-2.19.1
-
-
+2.11.0
 
