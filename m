@@ -2,58 +2,54 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A934C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76337C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF96A217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6ED217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368065;
-	bh=kYEHdgS3K/aNuHyd2QCWEUXWu3UQ1rki5YXWOhUh6tM=;
+	s=default; t=1554368068;
+	bh=rXAEZhGpPgUmAe4M5DIC/K77xdBzBaKh/TpzBeWZz1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFgEeSQMk/JnKsRtyi/kfCm7qr12r+7StxgcUXwoPNspQR8Ay7O6FgvEgvQF9XM2q
-	 /IZ1jNPlebP0hjQUlioLxvL85bGm9B4tXUKoESTCmisv6UXw9on1Z8Xcl0kSYsR1ia
-	 LUeZM86NSMx4dABNrY36B2Mw12A0IG7pqDVcc5F0=
+	b=Z+Seqwn+HUiqSeo2zau1XNAuRF43YOiLB/Nh5FLlciIsvx/9aFpW77E7pruhoGyK4
+	 M2bx8vwsIiY3vqEaJWjFeYNaN9eKEj2Y3AlJjQsJTjuW13riateTqgp5XCB0Dstbl9
+	 kEPzwJfCwqcFLtjArYO/PqtLNvVR980qkY7BhLEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfDDIyX (ORCPT
+        id S1730045AbfDDIy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbfDDIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:21 -0400
+        id S1729097AbfDDIyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E640C217D4;
-        Thu,  4 Apr 2019 08:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 969ED21852;
+        Thu,  4 Apr 2019 08:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368060;
-        bh=kYEHdgS3K/aNuHyd2QCWEUXWu3UQ1rki5YXWOhUh6tM=;
+        s=default; t=1554368063;
+        bh=rXAEZhGpPgUmAe4M5DIC/K77xdBzBaKh/TpzBeWZz1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XCiJyjWLod4JXD4QbG/1+30I8IHXq3cj8XdH7WkhBe/nBa7Yq7g4+Eqw3RJCPkk7D
-         ksYOwDVkQ/GvaOB/aV344HFTEMSTBXDydhW24xnXvCTZGiohJHwocoauaiZi5aJohD
-         TZRdlb82kk+z0lcbp63JAu7D6OQNnrw4WpjgPl9s=
+        b=TNqtWyr90dL+738rOZug49j50oZw5a9eXf1BLqotJZTo7QYIS99ZfNHg+KJcvzPRs
+         usuTWSMYP69vzTrpggbl7kTfKrXp/b3wCX3aBqVSPdpAA2dSfTVftsiLP8dtt+ru4h
+         XlnKeWJFPF3SPUtMdDeyUDYi2tT8daJL/mGxAeWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Cyril Hrubis <chrubis@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 006/121] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified
-Date:   Thu,  4 Apr 2019 10:46:34 +0200
-Message-Id: <20190404084545.604076895@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        NeilBrown <neil@brown.name>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 007/121] CIFS: fix POSIX lock leak and invalid ptr deref
+Date:   Thu,  4 Apr 2019 10:46:35 +0200
+Message-Id: <20190404084545.667763459@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -72,142 +68,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+[ Upstream commit bc31d0cdcfbadb6258b45db97e93b1c83822ba33 ]
 
-commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 upstream.
+We have a customer reporting crashes in lock_get_status() with many
+"Leaked POSIX lock" messages preceeding the crash.
 
-When MPOL_MF_STRICT was specified and an existing page was already on a
-node that does not follow the policy, mbind() should return -EIO.  But
-commit 6f4576e3687b ("mempolicy: apply page table walker on
-queue_pages_range()") broke the rule.
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ POSIX: fl_owner=ffff8900e7b79380 fl_flags=0x1 fl_type=0x1 fl_pid=20709
+ Leaked POSIX lock on dev=0x0:0x4b ino...
+ Leaked locks on dev=0x0:0x4b ino=0xf911400000029:
+ POSIX: fl_owner=ffff89f41c870e00 fl_flags=0x1 fl_type=0x1 fl_pid=19592
+ stack segment: 0000 [#1] SMP
+ Modules linked in: binfmt_misc msr tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag rpcsec_gss_krb5 arc4 ecb auth_rpcgss nfsv4 md4 nfs nls_utf8 lockd grace cifs sunrpc ccm dns_resolver fscache af_packet iscsi_ibft iscsi_boot_sysfs vmw_vsock_vmci_transport vsock xfs libcrc32c sb_edac edac_core crct10dif_pclmul crc32_pclmul ghash_clmulni_intel drbg ansi_cprng vmw_balloon aesni_intel aes_x86_64 lrw gf128mul glue_helper ablk_helper cryptd joydev pcspkr vmxnet3 i2c_piix4 vmw_vmci shpchp fjes processor button ac btrfs xor raid6_pq sr_mod cdrom ata_generic sd_mod ata_piix vmwgfx crc32c_intel drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm serio_raw ahci libahci drm libata vmw_pvscsi sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
 
-And commit c8633798497c ("mm: mempolicy: mbind and migrate_pages support
-thp migration") didn't return the correct value for THP mbind() too.
+ Supported: Yes
+ CPU: 6 PID: 28250 Comm: lsof Not tainted 4.4.156-94.64-default #1
+ Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/05/2016
+ task: ffff88a345f28740 ti: ffff88c74005c000 task.ti: ffff88c74005c000
+ RIP: 0010:[<ffffffff8125dcab>]  [<ffffffff8125dcab>] lock_get_status+0x9b/0x3b0
+ RSP: 0018:ffff88c74005fd90  EFLAGS: 00010202
+ RAX: ffff89bde83e20ae RBX: ffff89e870003d18 RCX: 0000000049534f50
+ RDX: ffffffff81a3541f RSI: ffffffff81a3544e RDI: ffff89bde83e20ae
+ RBP: 0026252423222120 R08: 0000000020584953 R09: 000000000000ffff
+ R10: 0000000000000000 R11: ffff88c74005fc70 R12: ffff89e5ca7b1340
+ R13: 00000000000050e5 R14: ffff89e870003d30 R15: ffff89e5ca7b1340
+ FS:  00007fafd64be800(0000) GS:ffff89f41fd00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000001c80018 CR3: 000000a522048000 CR4: 0000000000360670
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Stack:
+  0000000000000208 ffffffff81a3d6b6 ffff89e870003d30 ffff89e870003d18
+  ffff89e5ca7b1340 ffff89f41738d7c0 ffff89e870003d30 ffff89e5ca7b1340
+  ffffffff8125e08f 0000000000000000 ffff89bc22b67d00 ffff88c74005ff28
+ Call Trace:
+  [<ffffffff8125e08f>] locks_show+0x2f/0x70
+  [<ffffffff81230ad1>] seq_read+0x251/0x3a0
+  [<ffffffff81275bbc>] proc_reg_read+0x3c/0x70
+  [<ffffffff8120e456>] __vfs_read+0x26/0x140
+  [<ffffffff8120e9da>] vfs_read+0x7a/0x120
+  [<ffffffff8120faf2>] SyS_read+0x42/0xa0
+  [<ffffffff8161cbc3>] entry_SYSCALL_64_fastpath+0x1e/0xb7
 
-If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it
-reaches queue_pages_to_pte_range() or queue_pages_pmd() to check if an
-existing page was already on a node that does not follow the policy.
-And, non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
-MPOL_MF_MOVE_ALL was specified.
+When Linux closes a FD (close(), close-on-exec, dup2(), ...) it calls
+filp_close() which also removes all posix locks.
 
-Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
+The lock struct is initialized like so in filp_close() and passed
+down to cifs
 
-[akpm@linux-foundation.org: tweak code comment]
-Link: http://lkml.kernel.org/r/1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reported-by: Cyril Hrubis <chrubis@suse.cz>
-Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: David Rientjes <rientjes@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	...
+        lock.fl_type = F_UNLCK;
+        lock.fl_flags = FL_POSIX | FL_CLOSE;
+        lock.fl_start = 0;
+        lock.fl_end = OFFSET_MAX;
+	...
 
+Note the FL_CLOSE flag, which hints the VFS code that this unlocking
+is done for closing the fd.
 
+filp_close()
+  locks_remove_posix(filp, id);
+    vfs_lock_file(filp, F_SETLK, &lock, NULL);
+      return filp->f_op->lock(filp, cmd, fl) => cifs_lock()
+        rc = cifs_setlk(file, flock, type, wait_flag, posix_lck, lock, unlock, xid);
+          rc = server->ops->mand_unlock_range(cfile, flock, xid);
+          if (flock->fl_flags & FL_POSIX && !rc)
+                  rc = locks_lock_file_wait(file, flock)
+
+Notice how we don't call locks_lock_file_wait() which does the
+generic VFS lock/unlock/wait work on the inode if rc != 0.
+
+If we are closing the handle, the SMB server is supposed to remove any
+locks associated with it. Similarly, cifs.ko frees and wakes up any
+lock and lock waiter when closing the file:
+
+cifs_close()
+  cifsFileInfo_put(file->private_data)
+	/*
+	 * Delete any outstanding lock records. We'll lose them when the file
+	 * is closed anyway.
+	 */
+	down_write(&cifsi->lock_sem);
+	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
+		list_del(&li->llist);
+		cifs_del_lock_waiters(li);
+		kfree(li);
+	}
+	list_del(&cifs_file->llist->llist);
+	kfree(cifs_file->llist);
+	up_write(&cifsi->lock_sem);
+
+So we can safely ignore unlocking failures in cifs_lock() if they
+happen with the FL_CLOSE flag hint set as both the server and the
+client take care of it during the actual closing.
+
+This is not a proper fix for the unlocking failure but it's safe and
+it seems to prevent the lock leakages and crashes the customer
+experiences.
+
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c |   40 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+ fs/cifs/file.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -427,6 +427,13 @@ static inline bool queue_pages_required(
- 	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
- }
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 72d6f4db9bdc..cd69c1e9750f 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1631,8 +1631,20 @@ cifs_setlk(struct file *file, struct file_lock *flock, __u32 type,
+ 		rc = server->ops->mand_unlock_range(cfile, flock, xid);
  
-+/*
-+ * queue_pages_pmd() has three possible return values:
-+ * 1 - pages are placed on the right node or queued successfully.
-+ * 0 - THP was split.
-+ * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
-+ *        page was already on a node that does not follow the policy.
-+ */
- static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
- {
-@@ -436,7 +443,7 @@ static int queue_pages_pmd(pmd_t *pmd, s
- 	unsigned long flags;
- 
- 	if (unlikely(is_pmd_migration_entry(*pmd))) {
--		ret = 1;
-+		ret = -EIO;
- 		goto unlock;
- 	}
- 	page = pmd_page(*pmd);
-@@ -462,8 +469,15 @@ static int queue_pages_pmd(pmd_t *pmd, s
- 	ret = 1;
- 	flags = qp->flags;
- 	/* go to thp migration */
--	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-+	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-+		if (!vma_migratable(walk->vma)) {
-+			ret = -EIO;
-+			goto unlock;
-+		}
-+
- 		migrate_page_add(page, qp->pagelist, flags);
-+	} else
-+		ret = -EIO;
- unlock:
- 	spin_unlock(ptl);
  out:
-@@ -488,8 +502,10 @@ static int queue_pages_pte_range(pmd_t *
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
- 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
--		if (ret)
-+		if (ret > 0)
- 			return 0;
-+		else if (ret < 0)
-+			return ret;
- 	}
- 
- 	if (pmd_trans_unstable(pmd))
-@@ -526,11 +542,16 @@ retry:
- 			goto retry;
- 		}
- 
--		migrate_page_add(page, qp->pagelist, flags);
-+		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-+			if (!vma_migratable(vma))
-+				break;
-+			migrate_page_add(page, qp->pagelist, flags);
-+		} else
-+			break;
- 	}
- 	pte_unmap_unlock(pte - 1, ptl);
- 	cond_resched();
--	return 0;
-+	return addr != end ? -EIO : 0;
+-	if (flock->fl_flags & FL_POSIX && !rc)
++	if (flock->fl_flags & FL_POSIX) {
++		/*
++		 * If this is a request to remove all locks because we
++		 * are closing the file, it doesn't matter if the
++		 * unlocking failed as both cifs.ko and the SMB server
++		 * remove the lock on file close
++		 */
++		if (rc) {
++			cifs_dbg(VFS, "%s failed rc=%d\n", __func__, rc);
++			if (!(flock->fl_flags & FL_CLOSE))
++				return rc;
++		}
+ 		rc = locks_lock_file_wait(file, flock);
++	}
+ 	return rc;
  }
  
- static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
-@@ -600,7 +621,12 @@ static int queue_pages_test_walk(unsigne
- 	unsigned long endvma = vma->vm_end;
- 	unsigned long flags = qp->flags;
- 
--	if (!vma_migratable(vma))
-+	/*
-+	 * Need check MPOL_MF_STRICT to return -EIO if possible
-+	 * regardless of vma_migratable
-+	 */
-+	if (!vma_migratable(vma) &&
-+	    !(flags & MPOL_MF_STRICT))
- 		return 1;
- 
- 	if (endvma > end)
-@@ -627,7 +653,7 @@ static int queue_pages_test_walk(unsigne
- 	}
- 
- 	/* queue pages from current vma */
--	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-+	if (flags & MPOL_MF_VALID)
- 		return 0;
- 	return 1;
- }
+-- 
+2.19.1
+
 
 
