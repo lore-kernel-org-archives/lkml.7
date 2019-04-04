@@ -2,103 +2,118 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8566EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D9EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D137206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7517E20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="Q8TEcZp2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvFX4Kgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbfDDSrX (ORCPT
+        id S1730016AbfDDSso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:47:23 -0400
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:16048 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729456AbfDDSrS (ORCPT
+        Thu, 4 Apr 2019 14:48:44 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46994 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDSso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:47:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
-  t=1554403635; x=1585939635;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=blPiuQw5mEA1nphC4CI7CGPcz/CtVQvVInVQvGTr75M=;
-  b=Q8TEcZp2hUHRbQClnJBFM6nG+TQeuKdWkiHXjhdsxmM2X5YbZ+v+RAxl
-   Va+f/U9yUxB91fqJDOf+rd/l38gf3GUZ+fsk+KduuuXGs9QL9mEDTUvIZ
-   sqcyEA+tTPoGkXBS68vZfbIyaBgoZkPNFJiWx3ayC+6bZ/Yhvc1NjsQOS
-   I=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EABQAuTqZchyWd50NlHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBZQKBKYJRJ4wsXaUNgXoOAQGEbAKFTiI8AgwBAQMBAQkBAwIBAQIQAQE?=
- =?us-ascii?q?BFQkIKS+COikBgmgCAQMSFVIQUVcZIoMAgXaiEz0Cb4EBiQcBAQGBazOKL4E?=
- =?us-ascii?q?wAQGGaYRIgVc/hGGEDYEEhRQDkl2TDQcCgk8EkScCGIF1klqfPwIEAgQFAhW?=
- =?us-ascii?q?BfQmBWHCDPIIkjkYhATKOG4JNAQE?=
-X-IPAS-Result: =?us-ascii?q?A2EABQAuTqZchyWd50NlHAEBAQQBAQcEAQGBZQKBKYJRJ?=
- =?us-ascii?q?4wsXaUNgXoOAQGEbAKFTiI8AgwBAQMBAQkBAwIBAQIQAQEBFQkIKS+COikBg?=
- =?us-ascii?q?mgCAQMSFVIQUVcZIoMAgXaiEz0Cb4EBiQcBAQGBazOKL4EwAQGGaYRIgVc/h?=
- =?us-ascii?q?GGEDYEEhRQDkl2TDQcCgk8EkScCGIF1klqfPwIEAgQFAhWBfQmBWHCDPIIkj?=
- =?us-ascii?q?kYhATKOG4JNAQE?=
-Received: from mx0b-00154901.pphosted.com ([67.231.157.37])
-  by esa7.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Apr 2019 13:47:14 -0500
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34ISMQ6043163;
-        Thu, 4 Apr 2019 14:47:16 -0400
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0b-00154901.pphosted.com with ESMTP id 2rnn028y88-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 14:47:15 -0400
-X-LoopCount0: from 10.173.37.27
-X-IronPort-AV: E=Sophos;i="5.60,309,1549951200"; 
-   d="scan'208";a="337561725"
-From:   Mario Limonciello <mario.limonciello@dell.com>
-To:     linux-usb@vger.kernel.org
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hayeswang@realtek.com,
-        sjg@google.com, campello@google.com,
-        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v2 1/2] r8152: remove extra action copying ethernet address
-Date:   Thu,  4 Apr 2019 13:46:52 -0500
-Message-Id: <1554403613-5970-2-git-send-email-mario.limonciello@dell.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554403613-5970-1-git-send-email-mario.limonciello@dell.com>
-References: <1554403613-5970-1-git-send-email-mario.limonciello@dell.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=750 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040116
+        Thu, 4 Apr 2019 14:48:44 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r25so2526712lfn.13;
+        Thu, 04 Apr 2019 11:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CbQ1/qZ4MVf6FqHTg8C0Lq5KKGzXWo9GvZYsM+qwvNE=;
+        b=KvFX4KghzayWZJ80TDY84sZNp9DtdXo33KAPQgENuvfwx+vRDZx91Z5IS3UrkBi5Lr
+         nPJCDndUuqPDGNjQfQ/HHJ3Wk4HRxzvzs2X2RzfW3uyGkTDw7lL0bd2OIr2DyP7uZKOt
+         jQL1natlMcdmccABNj6mJ3HqU+64KFy39f3ph33kyhwNSveoYkc77wbsw1vFcTQcnweO
+         S87IHfgTdpaU72GsD1v/NfPrOznjthpBbsuDh1JsDwnPv5Y4HEZ6b/JcFW5SYeR98y4M
+         HRaCj0VYR8EH2BvgqzMXHB7/0JvKO9f1bs5KzVVFa40efw+Gu1OErCSSBhFqHVz1CXW4
+         k24Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CbQ1/qZ4MVf6FqHTg8C0Lq5KKGzXWo9GvZYsM+qwvNE=;
+        b=YFOVti9msjpCvz0Gm3TEkH4eIeI1M58YVhRvekP7GwkI8ahk0O69EVoEiGKddYDXXo
+         viJNpTkl7wwnF/T1vODM42Y8ZJD4ShrxwNTeVR8XNohJjkQGxcv6tXo7uiUt13qa91SS
+         nGv3CCf1d7lPlHerCsRcon0aIX56OkFVOSkZ0zPc4IMlB0B/6AWor2Qhmv8Di8purpow
+         U7QLC/0YU4xH8rC/zwwRRpGKof55cYkf1PVlUqWgBtV5MJrXrihKRTCizeFwrzySJGbP
+         4xq653jF6I55d+1uWLmvTwydjkOlciu6OqgdK8BLkn4GGoWWII6goVmiTSEwsfqPLybf
+         3UjA==
+X-Gm-Message-State: APjAAAWuq5gacPIAq+31WneoLRHGykRoOu0yNpnglzDvU75gRc9lYMdi
+        tzwsWVFu7wSds5hKBsfhg4+X1cMR
+X-Google-Smtp-Source: APXvYqwEfTlrdJxtSDZYdf6Tc02WeA8Eamd0tW3lLjoFicL+olb4TS15VwotcdyEIxzYfdwkiQ6l/Q==
+X-Received: by 2002:ac2:5325:: with SMTP id f5mr4406521lfh.77.1554403721863;
+        Thu, 04 Apr 2019 11:48:41 -0700 (PDT)
+Received: from [192.168.1.19] (dkj99.neoplus.adsl.tpnet.pl. [83.24.13.99])
+        by smtp.gmail.com with ESMTPSA id z83sm4179863ljb.48.2019.04.04.11.48.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 11:48:40 -0700 (PDT)
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+To:     Tony Lindgren <tony@atomide.com>, Dan Murphy <dmurphy@ti.com>
+Cc:     robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com> <20190404000909.GY49658@atomide.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
+Date:   Thu, 4 Apr 2019 20:48:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190404000909.GY49658@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This already happens later on in `rtl8152_set_mac_address`
+Hi Tony,
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/net/usb/r8152.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks for the feedback.
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 86c8c64..dc1bfff 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -1212,7 +1212,6 @@ static int vendor_mac_passthru_addr_read(struct r8152 *tp, struct sockaddr *sa)
- 		goto amacout;
- 	}
- 	memcpy(sa->sa_data, buf, 6);
--	ether_addr_copy(tp->netdev->dev_addr, sa->sa_data);
- 	netif_info(tp, probe, tp->netdev,
- 		   "Using pass-thru MAC addr %pM\n", sa->sa_data);
- 
+On 4/4/19 2:09 AM, Tony Lindgren wrote:
+> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
+>> Introduce the Texas Instruments LM3532 White LED driver.
+>> The driver supports ALS configurability or manual brightness
+>> control.
+>>
+>> The driver also supports associating LED strings with specific
+>> control banks in a group or as individually controlled strings.
+> 
+> I'm seeing slightly different naming under /sys/class/leds:
+> 
+> lm3532:backlight
+> lm3532:platform::kbd_backlight
+
+The problem is in the "platform:" being a part of DT
+label property. It should not be included there if devicename
+section is added in the driver.
+
+> 
+> Not sure if this is correct with the the "platform" and
+> "::" there for the kbd_backlight?
+> 
+> With the dts change I posted, I've tested this with
+> linux-next and Sebastian's DSI command mode patches
+> "[PATCHv6 0/4] omapdrm: DSI command mode panel support".
+> 
+> So feel free to add:
+> 
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> 
+
 -- 
-2.7.4
-
+Best regards,
+Jacek Anaszewski
