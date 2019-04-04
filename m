@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA112C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C90FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787B12075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7EA2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370176;
-	bh=xEFKpPn8bHMEXj7bVbtkrCgxQJM6q8M+7oxgv+7zqas=;
+	s=default; t=1554370183;
+	bh=fk/ewNo0bcmDcA/TR1FEC+GO/PeKstfoouvQKMN6Uhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ts+fq6lF5Bz6uNqup9k/9Yswn2xL65DHDO4diGkI7BhRh9HHJg6Y6Fg+Uw/KeymLf
-	 IkTbRlj+kuumcq2zj3NUHzWbsn7EkB9e+2Wa8w9RrH9fFG7a/hioSROS2kx9Ql4KXe
-	 djHgg2iYJXAB38pDOT+lmuMIeNMKcK2dTp3kZVJ0=
+	b=Ly7pDMiXHQc8UeRrJC1bZqLNcqy5MFUbU3VyTcPFek7qManQdqYnDMxC42iWt0/dS
+	 t9rFeE4EJRlsEjH2RHlGfsHGeEtY7/zo/Oe06meN2tve9eaiZNML1t6NaINhZjFKl1
+	 iMw+S68tXDSOXkgYSKNDzIxvi3UV+stW20MlvrOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733266AbfDDJ3f (ORCPT
+        id S1733229AbfDDJ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733064AbfDDJKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:48 -0400
+        id S1732814AbfDDJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1802C20693;
-        Thu,  4 Apr 2019 09:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A730F20693;
+        Thu,  4 Apr 2019 09:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369047;
-        bh=xEFKpPn8bHMEXj7bVbtkrCgxQJM6q8M+7oxgv+7zqas=;
+        s=default; t=1554369042;
+        bh=fk/ewNo0bcmDcA/TR1FEC+GO/PeKstfoouvQKMN6Uhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxEAjx1e4XkO6TNsc1TqDrSWtfwiyCSWvzqYIPdCUElDTGukpGiZMa412nMmUkpSK
-         wex+8A7J3Kz31klq+4hTCQJ/iRVJVIw4kDsgVwpRk/EHqUV6ouZBtWE+PsS5PuK6t6
-         MO43BnPFNegsepoS2ebLHmmNOm7dkglszNnK3ubM=
+        b=HY8q7xU2+oSAovUmEhJdLDA/UvGsDhtsBuMFFfaL1bvntlkDGdiXBHoP7nUVJpg1V
+         09M7qr2wLe9O0AkBv/GI0eYYQUvsyrwdYp471DePb9sxA7tribDbZju07Z0r/Jv6ZL
+         fPqwGLBNwbN9EFR2n2PvrFc2Fm1A3ERfmL1dYjE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 078/246] ARM: 8845/1: use unified assembler in c files
-Date:   Thu,  4 Apr 2019 10:46:18 +0200
-Message-Id: <20190404084621.866345019@linuxfoundation.org>
+Subject: [PATCH 5.0 076/246] serial: 8250_pxa: honor the port number from devicetree
+Date:   Thu,  4 Apr 2019 10:46:16 +0200
+Message-Id: <20190404084621.795624667@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,97 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b7e8c9397cd4efe6567d2728f091f1b728025533 ]
+[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
 
-Use unified assembler syntax (UAL) in inline assembler. Divided
-syntax is considered deprecated. This will also allow to build
-the kernel using LLVM's integrated assembler.
+Like the other OF-enabled drivers, use the port number from the firmware if
+the devicetree specifies an alias:
 
-When compiling non-Thumb2 GCC always emits a ".syntax divided"
-at the beginning of the inline assembly which makes the
-assembler fail. Since GCC 5 there is the -masm-syntax-unified
-GCC option which make GCC assume unified syntax asm and hence
-emits ".syntax unified" even in ARM mode. However, the option
-is broken since GCC version 6 (see GCC PR88648 [1]). Work
-around by adding ".syntax unified" as part of the inline
-assembly.
+  aliases {
+      ...
+      serial2 = &uart2; /* Should be ttyS2 */
+  }
 
-[0] https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html#index-masm-syntax-unified
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88648
+This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
+messes up the numbering.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/copypage-v4mc.c | 3 ++-
- arch/arm/mm/copypage-v4wb.c | 3 ++-
- arch/arm/mm/copypage-v4wt.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_pxa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/mm/copypage-v4mc.c b/arch/arm/mm/copypage-v4mc.c
-index b03202cddddb..f74cdce6d4da 100644
---- a/arch/arm/mm/copypage-v4mc.c
-+++ b/arch/arm/mm/copypage-v4mc.c
-@@ -45,6 +45,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	int tmp;
+diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
+index b9bcbe20a2be..c47188860e32 100644
+--- a/drivers/tty/serial/8250/8250_pxa.c
++++ b/drivers/tty/serial/8250/8250_pxa.c
+@@ -113,6 +113,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
- 1:	mcr	p15, 0, %1, c7, c6, 1		@ 1   invalidate D line\n\
- 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
-@@ -56,7 +57,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
--	ldmneia	%0!, {r2, r3, ip, lr}		@ 4\n\
-+	ldmiane	%0!, {r2, r3, ip, lr}		@ 4\n\
- 	bne	1b				@ "
- 	: "+&r" (from), "+&r" (to), "=&r" (tmp)
- 	: "2" (PAGE_SIZE / 64)
-diff --git a/arch/arm/mm/copypage-v4wb.c b/arch/arm/mm/copypage-v4wb.c
-index cd3e165afeed..6d336740aae4 100644
---- a/arch/arm/mm/copypage-v4wb.c
-+++ b/arch/arm/mm/copypage-v4wb.c
-@@ -27,6 +27,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
- 	int tmp;
- 
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 1:	mcr	p15, 0, %0, c7, c6, 1		@ 1   invalidate D line\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
-@@ -38,7 +39,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
--	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
-+	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	bne	1b				@ 1\n\
- 	mcr	p15, 0, %1, c7, c10, 4		@ 1   drain WB"
- 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
-diff --git a/arch/arm/mm/copypage-v4wt.c b/arch/arm/mm/copypage-v4wt.c
-index 8614572e1296..3851bb396442 100644
---- a/arch/arm/mm/copypage-v4wt.c
-+++ b/arch/arm/mm/copypage-v4wt.c
-@@ -25,6 +25,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
- 	int tmp;
- 
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 1:	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4+1\n\
-@@ -34,7 +35,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
--	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
-+	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	bne	1b				@ 1\n\
- 	mcr	p15, 0, %2, c7, c7, 0		@ flush ID cache"
- 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
++	ret = of_alias_get_id(pdev->dev.of_node, "serial");
++	if (ret >= 0)
++		uart.port.line = ret;
++
+ 	uart.port.type = PORT_XSCALE;
+ 	uart.port.iotype = UPIO_MEM32;
+ 	uart.port.mapbase = mmres->start;
 -- 
 2.19.1
 
