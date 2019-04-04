@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AE3C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF38C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7C92075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0953D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370776;
-	bh=IdPP1kgzsjD8Wb3v67ymoOb7gX7zlYTjymgD1SDsHo4=;
+	s=default; t=1554370791;
+	bh=2snY4cQy5W7AF5jpYt/98j6lNleW//3elI+uvbEQ5M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0YbM1K9JgaPWge1ERHdu06Amuhvd18ilEoCjISJQVAQcXq9EJ8RkFqO6/YVI0ZkLk
-	 cWLd0+lHoNJaWk54zAnxsgZzNSGQO5SftLCfkrMulgyHifylOkoLCFhhn3tEulGjBD
-	 AyoSuSrTVBZa2mKeU9biBQnuNw5dfeLgIiNETn3g=
+	b=X1q0j3LJ5KVlCiHCd5aBpbsTxqj+ZYg7TiWjBHB7S+8xNw6Cy2z1r0ExG5hDS8uyi
+	 tjhZv4jpV025FrmkDpI8CQUDWfqFkwZC1UWjmmuiNeB0W6gA6tYMM7bH5fLxYkVL8I
+	 z5egM8cCHG5YXl2dxb6GbeaSL40KcCPEMQVDOMfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfDDJD2 (ORCPT
+        id S1731985AbfDDJjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731321AbfDDJD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:26 -0400
+        id S1731552AbfDDJDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D41782147C;
-        Thu,  4 Apr 2019 09:03:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B91621741;
+        Thu,  4 Apr 2019 09:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368606;
-        bh=IdPP1kgzsjD8Wb3v67ymoOb7gX7zlYTjymgD1SDsHo4=;
+        s=default; t=1554368600;
+        bh=2snY4cQy5W7AF5jpYt/98j6lNleW//3elI+uvbEQ5M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqPGNSFIGIsVjah3Y/8JvpPQKmq57azujtG34gmssKzEtA7+UP8mkFKA2rgiXuUmi
-         UR6Sxwi1Pu/LPpZC+1eUZ1/hj2q3P0Qa2acrw5ZC+bW5iDUaa07/ZWfSef50hFwSQm
-         o1lNKRcXIHvBxOF78IB6EH6hKdzJZrDIFaBBqFaE=
+        b=LsZIoq7GXAklIYnUUO4h5vXvg71stVcswnZ3Hq67++bVlmzXJMqoktUb7eWmDOERz
+         OC025JB7zv+JamTWcFdKWTDtR09lO1retzL5o5QRbyVLu3J7zqMiTWc0Hex8bKwLUT
+         OnRSMNVnwRGVAxNKACjBATWQDZ//P26ZnC+1PzF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/187] selftests: skip seccomp get_metadata test if not real root
-Date:   Thu,  4 Apr 2019 10:47:18 +0200
-Message-Id: <20190404084607.952046935@linuxfoundation.org>
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 099/187] iwlwifi: pcie: fix emergency path
+Date:   Thu,  4 Apr 2019 10:47:16 +0200
+Message-Id: <20190404084607.844819877@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,43 +67,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 3aa415dd2128e478ea3225b59308766de0e94d6b ]
+[ Upstream commit c6ac9f9fb98851f47b978a9476594fc3c477a34d ]
 
-The get_metadata() test requires real root, so let's skip it if we're not
-real root.
+Allocator swaps the pending requests with 0 when it starts
+working. This means that relying on it n RX path to decide if
+to move to emergency is not always a good idea, since it may
+be zero, but there are still a lot of unallocated RBs in the
+system. Change allocator to decrement the pending requests on
+real time. It is more expensive since it accesses the atomic
+variable more times, but it gives the RX path a better idea
+of the system's status.
 
-Note that I used XFAIL here because that's what the test does later if
-CONFIG_CHEKCKPOINT_RESTORE happens to not be enabled. After looking at the
-code, there doesn't seem to be a nice way to skip tests defined as TEST(),
-since there's no return code (I tried exit(KSFT_SKIP), but that didn't work
-either...). So let's do it this way to be consistent, and easier to fix
-when someone comes along and fixes it.
-
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Reported-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 868a1e863f95 ("iwlwifi: pcie: avoid empty free RB queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 83057fa9d391..14cad657bc6a 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -2920,6 +2920,12 @@ TEST(get_metadata)
- 	struct seccomp_metadata md;
- 	long ret;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index d4a31e014c82..b2905f01b7df 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -502,7 +502,7 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_rb_allocator *rba = &trans_pcie->rba;
+ 	struct list_head local_empty;
+-	int pending = atomic_xchg(&rba->req_pending, 0);
++	int pending = atomic_read(&rba->req_pending);
  
-+	/* Only real root can get metadata. */
-+	if (geteuid()) {
-+		XFAIL(return, "get_metadata requires real root");
-+		return;
-+	}
+ 	IWL_DEBUG_RX(trans, "Pending allocation requests = %d\n", pending);
+ 
+@@ -557,11 +557,13 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 			i++;
+ 		}
+ 
++		atomic_dec(&rba->req_pending);
+ 		pending--;
 +
- 	ASSERT_EQ(0, pipe(pipefd));
+ 		if (!pending) {
+-			pending = atomic_xchg(&rba->req_pending, 0);
++			pending = atomic_read(&rba->req_pending);
+ 			IWL_DEBUG_RX(trans,
+-				     "Pending allocation requests = %d\n",
++				     "Got more pending allocation requests = %d\n",
+ 				     pending);
+ 		}
  
- 	pid = fork();
+@@ -573,12 +575,15 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 		spin_unlock(&rba->lock);
+ 
+ 		atomic_inc(&rba->req_ready);
++
+ 	}
+ 
+ 	spin_lock(&rba->lock);
+ 	/* return unused rbds to the allocator empty list */
+ 	list_splice_tail(&local_empty, &rba->rbd_empty);
+ 	spin_unlock(&rba->lock);
++
++	IWL_DEBUG_RX(trans, "%s, exit.\n", __func__);
+ }
+ 
+ /*
 -- 
 2.19.1
 
