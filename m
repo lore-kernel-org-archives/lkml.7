@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC01C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87755C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF11F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC91205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370709;
-	bh=CEjMWr6Q8Cdtn5OH+1kS76ZifgJR0JatV5uLD6HRk1c=;
+	s=default; t=1554370713;
+	bh=d0l9pjau2bgQ4b11jOXXfLeBvYCetLuAOUSam/BmH4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fFenLWuZglIV9C13b9zSIJjhW2h75/CuuxVRavKiJWYTR1ZbsHvFRjieOsVaX8q6H
-	 rFS73q4I0sg1hfKXlmvlq/pyvf7vXkygFEbYLb8NVDlatkbNsU4lGOGyJA1bsrXOic
-	 F6vL0A39T/YRLVTAjJ/9xz1VGySIOXrd/nyJ0cZE=
+	b=PxtbtHqb96wfoI6Dn4FL6XhyQmkC+TW6+fELCwR4iHSrJrdXCmp2LhRkF9JVWLThu
+	 C13x1WrBWhvrXNI6zuxQCpVQL1tQfTc1w89NZQaZyjhUX3nHOguV4IThHeUwdHb0z9
+	 uUkE82yUbCTPu3qAw23tfwxu9tXLLym3xEYsuBlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbfDDJES (ORCPT
+        id S1731424AbfDDJEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730646AbfDDJEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:15 -0400
+        id S1731901AbfDDJEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DE82147C;
-        Thu,  4 Apr 2019 09:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384352147C;
+        Thu,  4 Apr 2019 09:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368654;
-        bh=CEjMWr6Q8Cdtn5OH+1kS76ZifgJR0JatV5uLD6HRk1c=;
+        s=default; t=1554368650;
+        bh=d0l9pjau2bgQ4b11jOXXfLeBvYCetLuAOUSam/BmH4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HbBE8YcINrjlcwTFvZUW4ofGbysJUye3XfQtcQRjYf6eMaNNCmZJTfv0pjTuau31
-         OzSgApnyfCmSvreirj4N74qPzW+MPyrz2TtM4skkSM56R7NIAzZ/GobL+r//r1D7TR
-         p4n92m/3HI+c9CflFdqrn90iX9XEGmnJAfyuyZD4=
+        b=MFwpExGr9vumNkCE3lusY6zQ8Xo7/gwOjnnTyxKGro8X818Wy+P6zEYKrHDaVl2/X
+         AtR+FrFuUbcI3RGr3QeefFMl5m2FCVio2zIXirZ2FhJ1a5ua66DeyG2GoJ5NJEwEr3
+         OquwGHIzLBqz22TZLM4Kw6Johp9+suUWfZFiOPDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 119/187] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Thu,  4 Apr 2019 10:47:36 +0200
-Message-Id: <20190404084608.854117571@linuxfoundation.org>
+Subject: [PATCH 4.19 118/187] net: phy: consider latched link-down status in polling mode
+Date:   Thu,  4 Apr 2019 10:47:35 +0200
+Message-Id: <20190404084608.813854619@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -69,50 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit 93c0970493c71f264e6c3c7caf1ff24a9e1de786 ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+The link status value latches link-down events. To get the current
+status we read the register twice in genphy_update_link(). There's
+a potential risk that we miss a link-down event in polling mode.
+This may cause issues if the user e.g. connects his machine to a
+different network.
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+On the other hand reading the latched value may cause issues in
+interrupt mode. Following scenario:
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+- After boot link goes up
+- phy_start() is called triggering an aneg restart, hence link goes
+  down and link-down info is latched.
+- After aneg has finished link goes up and triggers an interrupt.
+  Interrupt handler reads link status, means it reads the latched
+  "link is down" info. But there won't be another interrupt as long
+  as link stays up, therefore phylib will never recognize that link
+  is up.
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Deal with both scenarios by reading the register twice in interrupt
+mode only.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/phy/phy-c45.c    | 10 ++++++++--
+ drivers/net/phy/phy_device.c | 13 +++++++++----
+ 2 files changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 77cee99fc36c..c48f083d522a 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -427,6 +427,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index e1225545362d..0ba3607585bd 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -147,9 +147,15 @@ int genphy_c45_read_link(struct phy_device *phydev, u32 mmd_mask)
+ 		mmd_mask &= ~BIT(devad);
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
+ 		/* The link state is latched low so that momentary link
+-		 * drops can be detected.  Do not double-read the status
+-		 * register if the link is down.
++		 * drops can be detected. Do not double-read the status
++		 * in polling mode to detect such short link drops.
+ 		 */
++		if (!phy_polling_mode(phydev)) {
++			val = phy_read_mmd(phydev, devad, MDIO_STAT1);
++			if (val < 0)
++				return val;
++		}
 +
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
+ 		val = phy_read_mmd(phydev, devad, MDIO_STAT1);
+ 		if (val < 0)
+ 			return val;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 2c32c795f5dd..8a96d985a52f 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1503,10 +1503,15 @@ int genphy_update_link(struct phy_device *phydev)
+ {
+ 	int status;
+ 
+-	/* Do a fake read */
+-	status = phy_read(phydev, MII_BMSR);
+-	if (status < 0)
+-		return status;
++	/* The link state is latched low so that momentary link
++	 * drops can be detected. Do not double-read the status
++	 * in polling mode to detect such short link drops.
++	 */
++	if (!phy_polling_mode(phydev)) {
++		status = phy_read(phydev, MII_BMSR);
++		if (status < 0)
++			return status;
++	}
+ 
+ 	/* Read link and autonegotiation status */
+ 	status = phy_read(phydev, MII_BMSR);
 -- 
 2.19.1
 
