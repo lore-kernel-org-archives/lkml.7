@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A80AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01021C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07D821850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ED62186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367968;
-	bh=spGOOxlpPuQd6ElQ6tqT2QrUNGZ0KTXgEvmTlRoVSY8=;
+	s=default; t=1554367969;
+	bh=aHx3hjDYKQkjyGsE2ZRx93zXo6zlWegeaqlcEdZLIUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ns3tRHOuJ4f4+xOXez5nRnezjMpMF2xqZfG/2AlTzMqD2Pu450GMtSw+mTafgL4dJ
-	 x3awDVX+ivd5vpd7u8XT1EqOkC0zDQadru7EXYQNPNFAAdXDmwlvdv6QPPezAqHJ9R
-	 jEOgEUlMnW+Adn2AXTVdjwQLw6tk3Fj31TLAYeQE=
+	b=BF8fcdf9pzoHjnBrXGEV2tfovRpTgeOjNYll0ur2uEt5MCf/pk1uxrMvGVeTpHGpa
+	 0r0b3OCfC4iOQqv5vu1hb8tXUr0N6wgeMziuUTa0eB3Pvb8/7iPdJEbfiLnqg8C1FB
+	 f+9lPJRK+Nqj/901HZY8UWvNPiyaZcyTiUVms2m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfDDIwq (ORCPT
+        id S1729209AbfDDIws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54860 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbfDDIwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:42 -0400
+        id S1729212AbfDDIwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F28B217D9;
-        Thu,  4 Apr 2019 08:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45D321850;
+        Thu,  4 Apr 2019 08:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367961;
-        bh=spGOOxlpPuQd6ElQ6tqT2QrUNGZ0KTXgEvmTlRoVSY8=;
+        s=default; t=1554367964;
+        bh=aHx3hjDYKQkjyGsE2ZRx93zXo6zlWegeaqlcEdZLIUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9RTJzaIMkhi8DkKJlG03GPPNfBpO0cqRzAlvCWVDOpJj72l9LntO2SnZAkim7oLG
-         aasRtbwzTtz8iOW3sEb4+mkfQgHrVzyHVL1Yg5DNQ69I1fgag9jklFX/Q9Jmqyg0t6
-         LbyCFjJbOWfqhsE8pkutNDuYbt4uPOnbB/0f+xYE=
+        b=e/9+9NapkGd/iA9b/OggGx7VSBo9Y58JbmPMtS//YZd5wTngXPATGBNgePFAMatYX
+         5YB4o0DyxT0HBrO3p4h4uDl3DwhdKJloe0VuaOcRNjynXuy3BcBWjMewayfVvMxM11
+         AQdsbcJfaipAVO9dO3kJCss3sARc0UYJAqoT/1i8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Song Hongyan <hongyan.song@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 77/91] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
-Date:   Thu,  4 Apr 2019 10:48:01 +0200
-Message-Id: <20190404084539.911248795@linuxfoundation.org>
+        stable@vger.kernel.org, Buland Singh <bsingh@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 78/91] hpet: Fix missing = character in the __setup() code of hpet_mmap_enable
+Date:   Thu,  4 Apr 2019 10:48:02 +0200
+Message-Id: <20190404084539.963963008@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,61 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
+[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
 
-Host driver should handle interrupt mask register earlier than wake up ish FW
-else there will be conditions when FW interrupt comes, host PIMR register still
-not set ready, so move the interrupt mask setting before ish_wakeup.
+Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
+user processes")' introduced a new kernel command line parameter hpet_mmap,
+that is required to expose the memory map of the HPET registers to
+user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
+broken and never takes effect due to missing '=' character in the __setup()
+code of hpet_mmap_enable.
 
-Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
-conditions host driver received a busy_clear interrupt (before the busy_clear
-mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
-the interrupt will never be cleared, causing the DEVICE not sending following
-IRQ.
+Before this patch:
 
-Since PISR clear should not be called for the CHV device we do this change.
-After the change, both ISH2HOST interrupt and busy_clear interrupt will be
-considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
-from IPC_IS_BUSY check.
+dmesg output with the kernel command line parameter hpet_mmap=1
 
-Signed-off-by: Song Hongyan <hongyan.song@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+[    0.204152] HPET mmap disabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204192] HPET mmap disabled
+
+After this patch:
+
+dmesg output with the kernel command line parameter hpet_mmap=1
+
+[    0.203945] HPET mmap enabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204652] HPET mmap disabled
+
+Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
+Signed-off-by: Buland Singh <bsingh@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
-index 0c9ac4d5d850..41d44536aa15 100644
---- a/drivers/hid/intel-ish-hid/ipc/ipc.c
-+++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
-@@ -92,7 +92,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
- 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
- 	} else {
- 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
--		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
-+		interrupt_generated = !!pisr_val;
-+		/* only busy-clear bit is RW, others are RO */
-+		if (pisr_val)
-+			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
- 	}
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 50272fe81f26..818a8d40e5c9 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -376,7 +376,7 @@ static __init int hpet_mmap_enable(char *str)
+ 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
+ 	return 1;
+ }
+-__setup("hpet_mmap", hpet_mmap_enable);
++__setup("hpet_mmap=", hpet_mmap_enable);
  
- 	return interrupt_generated;
-@@ -795,11 +798,11 @@ int ish_hw_start(struct ishtp_device *dev)
+ static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
  {
- 	ish_set_host_rdy(dev);
- 
-+	set_host_ready(dev);
-+
- 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
- 	ish_wakeup(dev);
- 
--	set_host_ready(dev);
--
- 	/* wait for FW-initiated reset flow */
- 	if (!dev->recvd_hw_ready)
- 		wait_event_interruptible_timeout(dev->wait_hw_ready,
 -- 
 2.19.1
 
