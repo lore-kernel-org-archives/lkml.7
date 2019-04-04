@@ -2,67 +2,67 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998EFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D3DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B10E2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C51E2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKmCBzs5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+4n3Auv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfDDDgG (ORCPT
+        id S1727152AbfDDDgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:36:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43870 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfDDDgF (ORCPT
+        Wed, 3 Apr 2019 23:36:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40441 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfDDDgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:36:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c8so612709pfd.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:04 -0700 (PDT)
+        Wed, 3 Apr 2019 23:36:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u9so498247pgo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ATVaL0BIcRrddkftI6sh9Xp4gw4NfYBuCJEK93HbLeU=;
-        b=rKmCBzs52IVhUtfKRiHeIOvrwSN/b443hb4GxVRQmBQdIEDSczP2Q8i/Z9UqKG63eq
-         f+AkUX1JO8wwwWmjefJYVhXCBvxle2SUKDNug3pAFoidc0zqfArwoVjeoWo1uYvxAvxK
-         s0zLSmMsqbWESGD0qMDHAk3DcIU1epl4Ba+XlTdpTptsCjHKmZ5vpoioQfRkZDjKPG7S
-         RqyRrExG2rD1XB4ysQj495mB9zV2EuopEO0SAEKw2W8CWDu6nuK3HTGZuiqksGR2phNg
-         QbwwJ5lFEZshA2G/fpvnIxrsScEjvxhUkMnnqoZkMngkCsPvcYS6U8eO5b4g2Vrn9cMW
-         nTNw==
+        bh=4hFRGGNdcU8vlM88cfy2RLP9AZ/aEQhsa4FL81XyY5I=;
+        b=l+4n3AuvD3Zu0v6dF/2m4N149idN+ctNj72fR2SVD7pNTleaAJaUaygiNJaovpDO56
+         gbmCxBWUIv/f1fdbX9kQWtLRrY8oACjxEE3QQXjNl4t2OXQFQTdk/wjvwInK2u3FOGE7
+         +Rtc5GmC3vrPKZjXudAyzM3TkIF/ACHkEgioIsTt1di/rqKtZt10l+Y0Rs+94LEaigcC
+         xr4zUMBb6XemdhJN6WcRoX4foZEXOt3trTPxSw0MvBK1QLMLKf4pd7oSwg73nO8o454I
+         8zLe2fkj/9zOcykPMXa8nUmk15u3nyML4Y2plosYmRsYG/xcYoHZiNKXx3/s1aQGK1o8
+         FSRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ATVaL0BIcRrddkftI6sh9Xp4gw4NfYBuCJEK93HbLeU=;
-        b=ugs5CL6c5asUkjgB1LnQe+rCqZYS+U+d1kYUXRMUtSMns2qm5dEvnREg0vyhDaSngo
-         7L7R4uBJh4/wn7DKL2cgCg+XMLfvMOp591NMwmGRXrKTnzY4lb/woYeS+rdAtIOai0XA
-         ed+9MWg0883GnIcd1E9Nq9kcg/KGcXgQoP3Exhe7/BLocXpla69T37MnQEPK6l3midGi
-         ei/g+xL9UqlEyQEwHcS2DRWOw6c+klV5r4b6o46kpLcM6BrOVB/GPPZ70Vak2Ut9Pi2j
-         gsNodj52ix96SB8MUJbL7inJ/740uJyen8TVV6/bzZGTTPGdzJUFm4E4EYKHQg22u7RY
-         JDqQ==
-X-Gm-Message-State: APjAAAUnAUWWpLV1P0ySqARQ8IP+enY6uKLbkSWuAlfmdal9pq0S2GkA
-        jIY+Tii2QyeZdS1jICAxLQpHyGHdBp4=
-X-Google-Smtp-Source: APXvYqzN68UBaaXaeIDhdKpX8QN0NoYx34/CT1JjgNLimmnfq7ag2NudengqscJS7/SVhAEwmwrtfQ==
-X-Received: by 2002:a62:ab14:: with SMTP id p20mr3334379pff.23.1554348964007;
-        Wed, 03 Apr 2019 20:36:04 -0700 (PDT)
+        bh=4hFRGGNdcU8vlM88cfy2RLP9AZ/aEQhsa4FL81XyY5I=;
+        b=IK8pPWRlkya+LBWmYGwhnFvrMcq3qTjvhQFz0ViXb2A0RanqiZQD/eapsKNMZ9tucM
+         Ci6XSYOo52jJRQ8gcTu1paU1kp/mtaC9gGiWAyLUYXHd/uhIqAE/Y4aZ3NzOehL9B2Dm
+         QrmOSrr97cNFlHtF6t9Duc1WU5lAsCxuRbPoziX39g1dlvWMz8FuvTzMSjeR3kOqImf+
+         qwhSiTYkpbvhmPFJOPGTLntr/2ejSYFYcq9rArbge8OXrJPVI9cbzxycwO3hiTOFpMh/
+         SSGYTVQKlqK6CEuePZxrVdygbEsXTB6PiYtd45CPfJB0roL55Ts1i4cZ+uVOVx1IPx8C
+         cLiw==
+X-Gm-Message-State: APjAAAWMf3XHcujaOEgdFUF3eX4e0221Uoq1+MXnBXouhFAeaqpd2bou
+        hIVMIbXTxZzqQ3KEjaTpMbfoUA==
+X-Google-Smtp-Source: APXvYqzdQY3/Duw2Bm4S0BKyQUO6JCiHbsm7nMfwqYmrE7+hMLM5kOEB7LYrrbkTg8WRJv4OzAe8gg==
+X-Received: by 2002:a62:1215:: with SMTP id a21mr3348668pfj.126.1554348967345;
+        Wed, 03 Apr 2019 20:36:07 -0700 (PDT)
 Received: from xps15.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.00
+        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:36:03 -0700 (PDT)
+        Wed, 03 Apr 2019 20:36:06 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
         suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@linaro.org,
         coresight@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/20] coresight: etm4x: Configure tracers to emit timestamps
-Date:   Wed,  3 Apr 2019 21:35:25 -0600
-Message-Id: <20190404033541.14072-5-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 05/20] coresight: Adding return code to sink::disable() operation
+Date:   Wed,  3 Apr 2019 21:35:26 -0600
+Message-Id: <20190404033541.14072-6-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404033541.14072-1-mathieu.poirier@linaro.org>
 References: <20190404033541.14072-1-mathieu.poirier@linaro.org>
@@ -71,135 +71,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configure timestamps to be emitted at regular intervals in the trace
-stream to temporally correlate instructions executed on different CPUs.
+In preparation to handle device reference counting inside of the sink
+drivers, add a return code to the sink::disable() operation so that
+proper action can be taken if a sink has not been disabled.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 101 +++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-etb10.c   | 3 ++-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 5 +++--
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ drivers/hwtracing/coresight/coresight-tpiu.c    | 3 ++-
+ drivers/hwtracing/coresight/coresight.c         | 6 +++++-
+ include/linux/coresight.h                       | 2 +-
+ 6 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index d64192c29860..46d337fd8442 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -204,6 +204,90 @@ static void etm4_enable_hw_smp_call(void *info)
- 	arg->rc = etm4_enable_hw(arg->drvdata);
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index 105782ea64c7..71c2a3cdb866 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -325,7 +325,7 @@ static void etb_disable_hw(struct etb_drvdata *drvdata)
+ 	coresight_disclaim_device(drvdata->base);
  }
  
-+/*
-+ * The goal of function etm4_config_timestamp_event() is to configure a
-+ * counter that will tell the tracer to emit a timestamp packet when it
-+ * reaches zero.  This is done in order to get a more fine grained idea
-+ * of when instructions are executed so that they can be correlated
-+ * with execution on other CPUs.
-+ *
-+ * To do this the counter itself is configured to self reload and
-+ * TRCRSCTLR1 (always true) used to get the counter to decrement.  From
-+ * there a resource selector is configured with the counter and the
-+ * timestamp control register to use the resource selector to trigger the
-+ * event that will insert a timestamp packet in the stream.
-+ */
-+static int etm4_config_timestamp_event(struct etmv4_drvdata *drvdata)
-+{
-+	int ctridx, ret = -EINVAL;
-+	int counter, rselector;
-+	u32 val = 0;
-+	struct etmv4_config *config = &drvdata->config;
-+
-+	/* No point in trying if we don't have at least one counter */
-+	if (!drvdata->nr_cntr)
-+		goto out;
-+
-+	/* Find a counter that hasn't been initialised */
-+	for (ctridx = 0; ctridx < drvdata->nr_cntr; ctridx++)
-+		if (config->cntr_val[ctridx] == 0)
-+			break;
-+
-+	/* All the counters have been configured already, bail out */
-+	if (ctridx == drvdata->nr_cntr) {
-+		pr_debug("%s: no available counter found\n", __func__);
-+		ret = -ENOSPC;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Searching for an available resource selector to use, starting at
-+	 * '2' since every implementation has at least 2 resource selector.
-+	 * ETMIDR4 gives the number of resource selector _pairs_,
-+	 * hence multiply by 2.
-+	 */
-+	for (rselector = 2; rselector < drvdata->nr_resource * 2; rselector++)
-+		if (!config->res_ctrl[rselector])
-+			break;
-+
-+	if (rselector == drvdata->nr_resource * 2) {
-+		pr_debug("%s: no available resource selector found\n", __func__);
-+		ret = -ENOSPC;
-+		goto out;
-+	}
-+
-+	/* Remember what counter we used */
-+	counter = 1 << ctridx;
-+
-+	/*
-+	 * Initialise original and reload counter value to the smallest
-+	 * possible value in order to get as much precision as we can.
-+	 */
-+	config->cntr_val[ctridx] = 1;
-+	config->cntrldvr[ctridx] = 1;
-+
-+	/* Set the trace counter control register */
-+	val =  0x1 << 16	|  /* Bit 16, reload counter automatically */
-+	       0x0 << 7		|  /* Select single resource selector */
-+	       0x1;		   /* Resource selector 1, i.e always true */
-+
-+	config->cntr_ctrl[ctridx] = val;
-+
-+	val = 0x2 << 16		| /* Group 0b0010 - Counter and sequencers */
-+	      counter << 0;	  /* Counter to use */
-+
-+	config->res_ctrl[rselector] = val;
-+
-+	val = 0x0 << 7		| /* Select single resource selector */
-+	      rselector;	  /* Resource selector */
-+
-+	config->ts_ctrl = val;
-+
-+	ret = 0;
-+out:
-+	return ret;
-+}
-+
- static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
- 				   struct perf_event *event)
+-static void etb_disable(struct coresight_device *csdev)
++static int etb_disable(struct coresight_device *csdev)
  {
-@@ -239,9 +323,24 @@ static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
- 		/* TRM: Must program this for cycacc to work */
- 		config->ccctlr = ETM_CYC_THRESHOLD_DEFAULT;
- 	}
--	if (attr->config & BIT(ETM_OPT_TS))
-+	if (attr->config & BIT(ETM_OPT_TS)) {
-+		/*
-+		 * Configure timestamps to be emitted at regular intervals in
-+		 * order to correlate instructions executed on different CPUs
-+		 * (CPU-wide trace scenarios).
-+		 */
-+		ret = etm4_config_timestamp_event(drvdata);
-+
-+		/*
-+		 * No need to go further if timestamp intervals can't
-+		 * be configured.
-+		 */
-+		if (ret)
-+			goto out;
-+
- 		/* bit[11], Global timestamp tracing bit */
- 		config->cfg |= BIT(11);
-+	}
+ 	struct etb_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	unsigned long flags;
+@@ -340,6 +340,7 @@ static void etb_disable(struct coresight_device *csdev)
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
  
- 	if (attr->config & BIT(ETM_OPT_CTXTID))
- 		/* bit[6], Context ID tracing bit */
+ 	dev_dbg(drvdata->dev, "ETB disabled\n");
++	return 0;
+ }
+ 
+ static void *etb_alloc_buffer(struct coresight_device *csdev, int cpu,
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index a5f053f2db2c..d4213e7c2c45 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -273,7 +273,7 @@ static int tmc_enable_etf_sink(struct coresight_device *csdev,
+ 	return 0;
+ }
+ 
+-static void tmc_disable_etf_sink(struct coresight_device *csdev)
++static int tmc_disable_etf_sink(struct coresight_device *csdev)
+ {
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+@@ -281,7 +281,7 @@ static void tmc_disable_etf_sink(struct coresight_device *csdev)
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+ 	if (drvdata->reading) {
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return;
++		return -EBUSY;
+ 	}
+ 
+ 	/* Disable the TMC only if it needs to */
+@@ -293,6 +293,7 @@ static void tmc_disable_etf_sink(struct coresight_device *csdev)
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	dev_dbg(drvdata->dev, "TMC-ETB/ETF disabled\n");
++	return 0;
+ }
+ 
+ static int tmc_enable_etf_link(struct coresight_device *csdev,
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index f684283890d3..33501777038a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1392,7 +1392,7 @@ static int tmc_enable_etr_sink(struct coresight_device *csdev,
+ 	return -EINVAL;
+ }
+ 
+-static void tmc_disable_etr_sink(struct coresight_device *csdev)
++static int tmc_disable_etr_sink(struct coresight_device *csdev)
+ {
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+@@ -1400,7 +1400,7 @@ static void tmc_disable_etr_sink(struct coresight_device *csdev)
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+ 	if (drvdata->reading) {
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return;
++		return -EBUSY;
+ 	}
+ 
+ 	/* Disable the TMC only if it needs to */
+@@ -1412,6 +1412,7 @@ static void tmc_disable_etr_sink(struct coresight_device *csdev)
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	dev_dbg(drvdata->dev, "TMC-ETR disabled\n");
++	return 0;
+ }
+ 
+ static const struct coresight_ops_sink tmc_etr_sink_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index b2f72a1fa402..0d13da1b9df1 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -94,13 +94,14 @@ static void tpiu_disable_hw(struct tpiu_drvdata *drvdata)
+ 	CS_LOCK(drvdata->base);
+ }
+ 
+-static void tpiu_disable(struct coresight_device *csdev)
++static int tpiu_disable(struct coresight_device *csdev)
+ {
+ 	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+ 	tpiu_disable_hw(drvdata);
+ 
+ 	dev_dbg(drvdata->dev, "TPIU disabled\n");
++	return 0;
+ }
+ 
+ static const struct coresight_ops_sink tpiu_sink_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 29cef898afba..13eda4693f81 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -239,9 +239,13 @@ static int coresight_enable_sink(struct coresight_device *csdev,
+ 
+ static void coresight_disable_sink(struct coresight_device *csdev)
+ {
++	int ret;
++
+ 	if (atomic_dec_return(csdev->refcnt) == 0) {
+ 		if (sink_ops(csdev)->disable) {
+-			sink_ops(csdev)->disable(csdev);
++			ret = sink_ops(csdev)->disable(csdev);
++			if (ret)
++				return;
+ 			csdev->enable = false;
+ 		}
+ 	}
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 7b87965f7a65..189cc6ddc92b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -192,7 +192,7 @@ struct coresight_device {
+  */
+ struct coresight_ops_sink {
+ 	int (*enable)(struct coresight_device *csdev, u32 mode, void *data);
+-	void (*disable)(struct coresight_device *csdev);
++	int (*disable)(struct coresight_device *csdev);
+ 	void *(*alloc_buffer)(struct coresight_device *csdev, int cpu,
+ 			      void **pages, int nr_pages, bool overwrite);
+ 	void (*free_buffer)(void *config);
 -- 
 2.17.1
 
