@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEF9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC15C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C942171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED8D2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367839;
-	bh=091zDTOViqJ10FX10fzbKlQDrXiwwima9ZT097FjJB4=;
+	s=default; t=1554367841;
+	bh=Q3lwg5t1gAe/6IqqeCfhGJ+xnUB4cK7kETgH9OOo0VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orw0vLzVBsp03PdJJZ92YHhXaMoSiPkzfqxMWy/aPAHH9bEnN1RWVQfsotEr69uqw
-	 qktSbNcKJ3NYNsscKsbi/OHCRt5nVMsfs6cSPvmYtq25bAgxc8UDNZ/tfpcz0q30Gb
-	 kLQ2o3yCGeRvqrmCuzzKJwhtWLZ88HyWc/YWPaLA=
+	b=oau3J/UuI8Ml/f9eLWeQdYv3hwmK8nOdNfjJhu9LtRB3BT+hUUvGIZmugMV3Rudh/
+	 DVqbH5KR6eMak+yYVWel42lAL9Ua4KgK39UPDEteaXOwVuUPcLOA95nOq2gl7QhOpv
+	 Q96RfEisZ7zM0yCB082BtD/LPTmivDo7GMS0TIlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfDDIui (ORCPT
+        id S1729164AbfDDIuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729104AbfDDIuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:50:35 -0400
+        id S1729145AbfDDIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F3820882;
-        Thu,  4 Apr 2019 08:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C52B2147C;
+        Thu,  4 Apr 2019 08:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367835;
-        bh=091zDTOViqJ10FX10fzbKlQDrXiwwima9ZT097FjJB4=;
+        s=default; t=1554367837;
+        bh=Q3lwg5t1gAe/6IqqeCfhGJ+xnUB4cK7kETgH9OOo0VM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEqhAfTdWDqCIQurzXxUCqmg5GPjjEvedM7SKchGOAgeazuy4JeB95I1VSrV9ZRmy
-         PhHIJATug1tQrDtrl7K7geifIhgPFfRTfwmElzUk0SPotJFKkAuAXcJzYZsnOnU1Pl
-         qmJ6nOPddvw8OtWSkEzBij2ZNyhykM0bBh67JtNY=
+        b=y+Ha831NsOOiI96Jb3232OHB+BfZSpmZTtPTJVIXSdvb1vOzsiwdLe+HFangbTGsm
+         iBHJEr7XUs0HPzams373IpHRR17uxXLh0fe+1aArYlyVIXR8X5NaL8wn1NwJjz+GJj
+         Yx4rf/n0RxkH9GPqJh17YRqXmhDA2kqGEH/TUBf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Sartain <mikesart@fastmail.com>,
-        Mathias Krause <minipli@googlemail.com>,
-        Tony Jones <tonyj@suse.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 30/91] tools lib traceevent: Fix buffer overflow in arg_eval
-Date:   Thu,  4 Apr 2019 10:47:14 +0200
-Message-Id: <20190404084537.205989697@linuxfoundation.org>
+Subject: [PATCH 4.9 15/91] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
+Date:   Thu,  4 Apr 2019 10:46:59 +0200
+Message-Id: <20190404084536.309654654@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -70,45 +67,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
+[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
 
-Fix buffer overflow observed when running perf test.
+The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
+dynamically allocate a struct member, but this is normally intended for
+local variables.
 
-The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
-resulting in -9223372036854775808 which overflows the 20 character
-buffer.
+Building with clang, I get a warning for a few locations that check the
+address of the cpumask_var_t:
 
-If is possible this bug has been reported before but I still don't see
-any fix checked in:
+drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
 
-See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+As far as I can tell, the code is still correct, as the truth value of
+the pointer is what we need in this configuration. To get rid of
+the warning, use cpumask_available() instead of checking the
+pointer directly.
 
-Reported-by: Michael Sartain <mikesart@fastmail.com>
-Reported-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 669475300ba8..700c74b0aed0 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2428,7 +2428,7 @@ static int arg_num_eval(struct print_arg *arg, long long *val)
- static char *arg_eval (struct print_arg *arg)
- {
- 	long long val;
--	static char buf[20];
-+	static char buf[24];
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index 89acf7bc4cf9..b73d9ba9496c 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -120,7 +120,7 @@ static void enic_init_affinity_hint(struct enic *enic)
  
- 	switch (arg->type) {
- 	case PRINT_ATOM:
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
+-		    (enic->msix[i].affinity_mask &&
++		    (cpumask_available(enic->msix[i].affinity_mask) &&
+ 		     !cpumask_empty(enic->msix[i].affinity_mask)))
+ 			continue;
+ 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
+@@ -149,7 +149,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i)		||
+ 		    enic_is_notify_intr(enic, i)	||
+-		    !enic->msix[i].affinity_mask	||
++		    !cpumask_available(enic->msix[i].affinity_mask) ||
+ 		    cpumask_empty(enic->msix[i].affinity_mask))
+ 			continue;
+ 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
+@@ -162,7 +162,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->wq_count; i++) {
+ 		int wq_intr = enic_msix_wq_intr(enic, i);
+ 
+-		if (enic->msix[wq_intr].affinity_mask &&
++		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
+ 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
+ 			netif_set_xps_queue(enic->netdev,
+ 					    enic->msix[wq_intr].affinity_mask,
 -- 
 2.19.1
 
