@@ -2,167 +2,316 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1296C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68346C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FBE2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8D42082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nuOK4QIf";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mf5Suj5v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2UDuM+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbfDDP6m (ORCPT
+        id S1729025AbfDDP6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:58:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54414 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfDDP6l (ORCPT
+        Thu, 4 Apr 2019 11:58:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44610 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbfDDP6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:58:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6EF0B609F3; Thu,  4 Apr 2019 15:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554393520;
-        bh=SjYD7LkpZFeudCLIro3RsY4IGzIcPmQiimxjetnOsF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nuOK4QIf1mhFNs6x6avUyh92sUY62yrOMFt+oaO935Y3uExR6tIbWieuhDNJcIMyA
-         nlGhmW40li3EdU776BfkKFyc2zb/0Iw2xfRPuVNTf/tTCOEnHOb4Qc9c2cI7TW+zc8
-         v4q8ixkhwtlvsCTuyFz3SZsUOn+QzpsziiyKaKCU=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 353116074F;
-        Thu,  4 Apr 2019 15:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554393519;
-        bh=SjYD7LkpZFeudCLIro3RsY4IGzIcPmQiimxjetnOsF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mf5Suj5vkeIvwNLe81OpMFCfo2l8AwlLe2adU3y66igDGAJxnOIYdAXwMrI66v1CQ
-         kyG4lxvqd1gN8LUrEs+g6UgrhZOlBTjhnpyylU9+XrTuS28FSv8WIyrDF7EI467Xnk
-         Vgvll5vCMbfv53S7yMAOZqtTV975H1HvwXDfaqLI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 353116074F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 4 Apr 2019 09:58:38 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup
- interrupt parent
-Message-ID: <20190404155838.GD10883@codeaurora.org>
-References: <20190313211844.29416-1-ilina@codeaurora.org>
- <20190313211844.29416-4-ilina@codeaurora.org>
- <20190318174236.072f0a95@why.wild-wind.fr.eu.org>
+        Thu, 4 Apr 2019 11:58:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y13so1569636pfm.11;
+        Thu, 04 Apr 2019 08:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SbY8zIV+54PZBDtDpClm+8eIxboSLAobmWa605Pctxc=;
+        b=E2UDuM+Pb2LpZINKDm/goziCi6N4hyvf8SvaGaMRW8AFpX8okG+vS8mYGEbyzg7aQ0
+         aJiXwU28E0JNDnD2zcgVs3KBTeuXLEFowb+S3ZySaCHfIzlMCsmoXfJ7Bgks6UjIyN9R
+         q9IJVh+HFz2PehINblm6MWsrWA0OI7eZBgidA01tobukQfhr0AKevYuzTuy7o7zWeHln
+         ymQLXb5tsWkmtrm9ZOZUD8psAQ1ftodat2tFcrckY27e7CWf/r25LTS0zme66gDg6hW5
+         q7DHSEL8k6SICgYWkn8YsA5gkZzeA5PYo+AYUUZIb08KjPZgaE0E78ENgpN7TIE1QP/h
+         eq3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SbY8zIV+54PZBDtDpClm+8eIxboSLAobmWa605Pctxc=;
+        b=EfJnciThcJR1HTjgOJlFek/e6GJ3txUBZ64RL3vlVSgiq7eECo6UFd9XMt6bX0kE5p
+         cPalXE6ed8nAaFxYfEyF54RANqgY6D55DTBGRrmxLWTQjUqToijgKK+7NtRj8hR+GP0o
+         uGSkibI9sk7rPA+tK0P9+Ep7v3BkeM362fU9ji05Re+3e2VHeb18z1KEcqALUQMsP32N
+         2Lmfio5CpN73lnrK5Vhb3HI4c+p5wCCesZ6vnuJaNl0W5A777WgxYpes0HlYzCAsgxDX
+         wwbPe+Y6R7PIoKowlLF2XyYJEBZ0tllvH4c402lLPQrTono9czXHwZtxQUzVIKUGS0rP
+         ykCg==
+X-Gm-Message-State: APjAAAWIjrl4mMJmpRoijSKgHhwEJlI9FOUu9/bcPlunv7ud0hJyW8zQ
+        RHIzWAej4uxrhUYBfTWW63U=
+X-Google-Smtp-Source: APXvYqwexDMEnVXQe/f9tekRQ6Vrb6nFyyfg9chATDSy6Tq501P4cc0FTEiOFtCjbILOTrQufKmbXQ==
+X-Received: by 2002:a65:410a:: with SMTP id w10mr6698163pgp.206.1554393523671;
+        Thu, 04 Apr 2019 08:58:43 -0700 (PDT)
+Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id u17sm27197073pfn.19.2019.04.04.08.58.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 08:58:43 -0700 (PDT)
+Subject: Re: [PATCH tip/core/rcu 04/21] docs/memory-barriers.txt: Rewrite
+ "KERNEL I/O BARRIER EFFECTS" section
+To:     Will Deacon <will.deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, stern@rowland.harvard.edu,
+        andrea.parri@amarulasolutions.com, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Mikulas Patocka <mpatocka@redhat.com>
+References: <20190326234114.GA23843@linux.ibm.com>
+ <20190326234133.24962-4-paulmck@linux.ibm.com>
+ <20190402130346.GA14559@fuggles.cambridge.arm.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
+Date:   Fri, 5 Apr 2019 00:58:36 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190318174236.072f0a95@why.wild-wind.fr.eu.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190402130346.GA14559@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18 2019 at 11:54 -0600, Marc Zyngier wrote:
->On Wed, 13 Mar 2019 15:18:37 -0600
->Lina Iyer <ilina@codeaurora.org> wrote:
->
->Please do Cc Rob when posting DT related patches.
->
->> Some interrupt controllers in a SoC, are always powered on and have a
->> select interrupts routed to them, so that they can wakeup the SoC from
->> suspend. Add wakeup-parent DT property to refer to these interrupt
->> controllers.
+Hi Will,
+
+On Tue, 2 Apr 2019 14:03:46 +0100, Will Deacon wrote:
+> On Tue, Mar 26, 2019 at 04:41:16PM -0700, Paul E. McKenney wrote:
+>> From: Will Deacon <will.deacon@arm.com>
 >>
->> If the interrupts routed to the wakeup parent are not sequential, than a
->> map needs to exist to associate the same interrupt line on multiple
->> interrupt controllers. Providing this map in every driver is cumbersome.
->> Let's add this in the device tree and document the properties to map the
->> interrupt specifiers
+>> The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
+>> x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
+>> This is largely because I/O ordering is a horrible can of worms, but also
+>> because the document has stagnated as our understanding has evolved.
 >>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> Attempt to address some of that, by rewriting the section based on
+>> recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
+>> find a way to formalise this stuff, but for now let's at least try to
+>> make the English easier to understand.
+>>
+>> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+>> Cc: Palmer Dabbelt <palmer@sifive.com>
+>> Cc: Daniel Lustig <dlustig@nvidia.com>
+>> Cc: David Howells <dhowells@redhat.com>
+>> Cc: Alan Stern <stern@rowland.harvard.edu>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
+>> Cc: Mikulas Patocka <mpatocka@redhat.com>
+>> Signed-off-by: Will Deacon <will.deacon@arm.com>
+>> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 >> ---
->> Changes in v4:
->> 	- Added this documentation
->> ---
->>  .../interrupt-controller/interrupts.txt       | 39 +++++++++++++++++++
->>  1 file changed, 39 insertions(+)
+>>  Documentation/memory-barriers.txt | 115 ++++++++++++++++++------------
+>>  1 file changed, 70 insertions(+), 45 deletions(-)
+> 
+> If somebody could provide an Ack on this patch, I'd really appreciate it,
+> please. Whilst the portable ordering guarantees that I've documented are
+> fairly conservative, I do think that this change is a big improvement and
+> gives you what you need if you're writing a portable device driver for a new
+> piece of hardware. I'm tackling the removal of MMIOWB as a separate series.
+> 
+> I think Paul now requires an Ack before he'll send a patch to mainline,
+> hence the grovelling.
+
+I'm afraid I'm not that qualified to provide an Ack to this patch,
+but please find a nit fix below.
+
+> 
+> Cheers,
+> 
+> Will
+> 
+>> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+>> index 1c22b21ae922..158947ae78c2 100644
+>> --- a/Documentation/memory-barriers.txt
+>> +++ b/Documentation/memory-barriers.txt
+>> @@ -2599,72 +2599,97 @@ likely, then interrupt-disabling locks should be used to guarantee ordering.
+>>  KERNEL I/O BARRIER EFFECTS
+>>  ==========================
+>>  
+>> -When accessing I/O memory, drivers should use the appropriate accessor
+>> -functions:
+>> +Interfacing with peripherals via I/O accesses is deeply architecture and device
+>> +specific. Therefore, drivers which are inherently non-portable may rely on
+>> +specific behaviours of their target systems in order to achieve synchronization
+>> +in the most lightweight manner possible. For drivers intending to be portable
+>> +between multiple architectures and bus implementations, the kernel offers a
+>> +series of accessor functions that provide various degrees of ordering
+>> +guarantees:
+>>  
+>> - (*) inX(), outX():
+>> + (*) readX(), writeX():
+>>  
+>> -     These are intended to talk to I/O space rather than memory space, but
+>> -     that's primarily a CPU-specific concept.  The i386 and x86_64 processors
+>> -     do indeed have special I/O space access cycles and instructions, but many
+>> -     CPUs don't have such a concept.
+>> +     The readX() and writeX() MMIO accessors take a pointer to the peripheral
+>> +     being accessed as an __iomem * parameter. For pointers mapped with the
+>> +     default I/O attributes (e.g. those returned by ioremap()), then the
+>> +     ordering guarantees are as follows:
+>>  
+>> -     The PCI bus, amongst others, defines an I/O space concept which - on such
+>> -     CPUs as i386 and x86_64 - readily maps to the CPU's concept of I/O
+>> -     space.  However, it may also be mapped as a virtual I/O space in the CPU's
+>> -     memory map, particularly on those CPUs that don't support alternate I/O
+>> -     spaces.
+>> +     1. All readX() and writeX() accesses to the same peripheral are ordered
+>> +        with respect to each other. For example, this ensures that MMIO register
+>> +	writes by the CPU to a particular device will arrive in program order.
+>>  
+>> -     Accesses to this space may be fully synchronous (as on i386), but
+>> -     intermediary bridges (such as the PCI host bridge) may not fully honour
+>> -     that.
+>> +     2. A writeX() by the CPU to the peripheral will first wait for the
+>> +        completion of all prior CPU writes to memory. For example, this ensures
+>> +        that writes by the CPU to an outbound DMA buffer allocated by
+>> +        dma_alloc_coherent() will be visible to a DMA engine when the CPU writes
+>> +        to its MMIO control register to trigger the transfer.
+>>  
+>> -     They are guaranteed to be fully ordered with respect to each other.
+>> +     3. A readX() by the CPU from the peripheral will complete before any
+>> +	subsequent CPU reads from memory can begin. For example, this ensures
+>> +	that reads by the CPU from an incoming DMA buffer allocated by
+>> +	dma_alloc_coherent() will not see stale data after reading from the DMA
+>> +	engine's MMIO status register to establish that the DMA transfer has
+>> +	completed.
+>>  
+>> -     They are not guaranteed to be fully ordered with respect to other types of
+>> -     memory and I/O operation.
+>> +     4. A readX() by the CPU from the peripheral will complete before any
+>> +	subsequent delay() loop can begin execution. For example, this ensures
+>> +	that two MMIO register writes by the CPU to a peripheral will arrive at
+>> +	least 1us apart if the first write is immediately read back with readX()
+>> +	and udelay(1) is called prior to the second writeX().
+>>  
+>> - (*) readX(), writeX():
+>> +     __iomem pointers obtained with non-default attributes (e.g. those returned
+>> +     by ioremap_wc()) are unlikely to provide many of these guarantees.
+>>  
+>> -     Whether these are guaranteed to be fully ordered and uncombined with
+>> -     respect to each other on the issuing CPU depends on the characteristics
+>> -     defined for the memory window through which they're accessing.  On later
+>> -     i386 architecture machines, for example, this is controlled by way of the
+>> -     MTRR registers.
+>> + (*) readX_relaxed(), writeX_relaxed():
+>>  
+>> -     Ordinarily, these will be guaranteed to be fully ordered and uncombined,
+>> -     provided they're not accessing a prefetchable device.
+>> +     These are similar to readX() and writeX(), but provide weaker memory
+>> +     ordering guarantees. Specifically, they do not guarantee ordering with
+>> +     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
+>> +     but they are still guaranteed to be ordered with respect to other accesses
+>> +     to the same peripheral when operating on __iomem pointers mapped with the
+>> +     default I/O attributes.
+>>  
+>> -     However, intermediary hardware (such as a PCI bridge) may indulge in
+>> -     deferral if it so wishes; to flush a store, a load from the same location
+>> -     is preferred[*], but a load from the same device or from configuration
+>> -     space should suffice for PCI.
+>> + (*) readsX(), writesX():
+>>  
+>> -     [*] NOTE! attempting to load from the same location as was written to may
+>> -	 cause a malfunction - consider the 16550 Rx/Tx serial registers for
+>> -	 example.
+>> +     The readsX() and writesX() MMIO accessors are designed for accessing
+>> +     register-based, memory-mapped FIFOs residing on peripherals that are not
+>> +     capable of performing DMA. Consequently, they provide only the ordering
+>> +     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
+>>  
+>> -     Used with prefetchable I/O memory, an mmiowb() barrier may be required to
+>> -     force stores to be ordered.
+>> + (*) inX(), outX():
+>>  
+>> -     Please refer to the PCI specification for more information on interactions
+>> -     between PCI transactions.
+>> +     The inX() and outX() accessors are intended to access legacy port-mapped
+>> +     I/O peripherals, which may require special instructions on some
+>> +     architectures (notably x86). The port number of the peripheral being
+>> +     accessed is passed as an argument.
+>>  
+>> - (*) readX_relaxed(), writeX_relaxed()
+>> +     Since many CPU architectures ultimately access these peripherals via an
+>> +     internal virtual memory mapping, the portable ordering guarantees provided
+>> +     by inX() and outX() are the same as those provided by readX() and writeX()
+>> +     respectively when accessing a mapping with the default I/O attributes.
+>>  
+>> -     These are similar to readX() and writeX(), but provide weaker memory
+>> -     ordering guarantees.  Specifically, they do not guarantee ordering with
+>> -     respect to normal memory accesses (e.g. DMA buffers) nor do they guarantee
+>> -     ordering with respect to LOCK or UNLOCK operations.  If the latter is
+>> -     required, an mmiowb() barrier can be used.  Note that relaxed accesses to
+>> -     the same peripheral are guaranteed to be ordered with respect to each
+>> -     other.
+>> +     Device drivers may expect outX() to emit a non-posted write transaction
+>> +     that waits for a completion response from the I/O peripheral before
+>> +     returning. This is not guaranteed by all architectures and is therefore
+>> +     not part of the portable ordering semantics.
+>> +
+>> + (*) insX(), outsX():
+>> +
+>> +     As above, the insX() and outX() accessors provide the same ordering
+                                  outsX()
+
+>> +     guarantees as readsX() and writesX() respectively when accessing a mapping
+>> +     with the default I/O attributes.
+>>  
+>>   (*) ioreadX(), iowriteX()
+>>  
+>>       These will perform appropriately for the type of access they're actually
+>>       doing, be it inX()/outX() or readX()/writeX().
+>>  
+>> +All of these accessors assume that the underlying peripheral is little-endian,
+>> +and will therefore perform byte-swapping operations on big-endian architectures.
+>> +
+>> +Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
+>> +operations is a dangerous sport which may require the use of mmiowb(). See the
+>> +subsection "Acquires vs I/O accesses" for more information.
+>>  
+>>  ========================================
+>>  ASSUMED MINIMUM EXECUTION ORDERING MODEL
+>> -- 
+>> 2.17.1
 >>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> index 8a3c40829899..917b598317f5 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> @@ -108,3 +108,42 @@ commonly used:
->>  			sensitivity = <7>;
->>  		};
->>  	};
->> +
->> +3) Interrupt wakeup parent
->> +--------------------------
->> +
->> +Some interrupt controllers in a SoC, are always powered on and have a select
->> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
->> +interrupt controllers do not fall into the category of a parent interrupt
->> +controller and can be specified by the "wakeup-parent" property and contain a
->> +single phandle referring to the wakeup capable interrupt controller.
->> +
->> +   Example:
->> +	wakeup-parent = <&pdc_intc>;
->> +
->> +
->> +4) Interrupt mapping
->> +--------------------
->> +
->> +Sometimes interrupts may be detected by more than one interrupt controller
->> +(depending on which controller is active). The interrupt controllers may not
->> +be in hierarchy and therefore the interrupt controller driver is required to
->> +establish the relationship between the same interrupt at different interrupt
->> +controllers. If these interrupts are not sequential then a map needs to be
->> +specified to help identify these interrupts.
->> +
->> +Mapping the interrupt specifiers in the device tree can be done using the
->> +"irqdomain-map" property. The property contains interrupt specifier at the
->> +current interrupt controller followed by the interrupt specifier at the mapped
->> +interrupt controller.
->> +
->> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
->> +
->> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
->> +be provided to help interpret the valid bits of the incoming and mapped
->> +interrupt specifiers respectively.
->> +
->> +   Example:
->> +	irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
->> +	irqdomain-map-mask = <0xff 0>;
->> +	irqdomain-map-pass-thru = <0 0xff>;
->
->
->This doesn't quite explain how the mask and pass-thru properties are
->used. I guess that the mask is used to define the 'useful bits' on the
->incoming side, but pass-thru puzzles me. In your example, does it mean
->that incoming lines map to outgoing interrupt <0 0>?
->
-Sorry about the late reply.
 
-How about this to go with the rest of the documentation -
+JFYI, there is another document Documentation/driver-api/device-io.rst,
+which is somewhat related to this update. It looks like this one also needs
+some update, as Jon commented in transforming to .rst format in commit
+8a8a602fdb83 ("docs: Convert the deviceio template to RST"):
+<quote>
+    Like the rest of our documentation, this one could use some work.  There's
+    no mention of ioremap() and friends, no mention of io_read*() and friends.
+    But we have nice documentation for all those folks writing new drivers that
+    do port I/O :).
+</quote>
 
-In the above example, the input interrupt specifier map-mask <0xff 0> applied
-on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
-input interrupt 22, 24 etc. The second argument being irq type is immaterial
-from the map and is used from the incoming request instead. The pass-thru
-specifier parses the output interrupt specifier from the rest of the unparsed
-argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
-interrupt 36, 37 etc.
+This commit was merged in v4.11 cycle. And there has been no update whatsoever
+since. mmiowb() is lightly mentioned therein. IMHO, just updating
+memory-barriers.txt would widen the gap of information.
 
+Thoughts?
 
---Lina
-
+        Thanks, Akira
