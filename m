@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EA1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E87C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445E82177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86C7217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369415;
-	bh=XBlXoNZUBBoSgafKCat+RYWkre2LTP5IEDRR9MUG+e0=;
+	s=default; t=1554369417;
+	bh=r5DgWeTdEcF1hOAtTU54is8LPwLqAafydhWJ7i6ef5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nYFlWftngXg4O02zTp1d+vG0b3rX0hq1nbz2AVH4h00xdE0aDu8B0qQ9FsqF/tNAH
-	 qz6qnFJ+EEkHVbHaPscG+Hczu3aaG1OliWJXFrLzbLKNt7bc0zU6MX9W94xBKJ8VNY
-	 VnZLstWzappkY/E+denhn8gVLEW8caJhram3WhMQ=
+	b=P/V5Gr/nea8Tq7IcoI+PzNgvlXqWIq4fdf0KHtoRwUact1RnFEvLByVDgIVbOE3ge
+	 QdMryH3zaeTTTWyLHGhovNYRv0vXDmz7PozgWBwusW8VkMIMqtHL0RzFbut1ubjuc8
+	 +FUqPMLLJmWeorNQYLoOY60eNXKKRPBHW6GBrzUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbfDDJQx (ORCPT
+        id S2388133AbfDDJQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387703AbfDDJQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:51 -0400
+        id S2388121AbfDDJQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81482054F;
-        Thu,  4 Apr 2019 09:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3834120693;
+        Thu,  4 Apr 2019 09:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369410;
-        bh=XBlXoNZUBBoSgafKCat+RYWkre2LTP5IEDRR9MUG+e0=;
+        s=default; t=1554369412;
+        bh=r5DgWeTdEcF1hOAtTU54is8LPwLqAafydhWJ7i6ef5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6pxEMhxXY0/KXny0N3rSy5/+ytbOPVSYg7yoxExLJriYu80q003VlY5Z/VWt6bZg
-         hUV/VwfIAap1wPNzIgK+d98Rv2/VCKKRSpOkAg1Y0RbTIiRGoUxGYuVtKLtse8FjC0
-         1v+xc/nVDVtuYBNWiuXbBTm9lxz/kdn2homPDiFc=
+        b=mtimH7z+hZOBMB80/eWkKcFp6JAtmXeRKsOKDuobmkctv/Ycjr8OpidI7E6+EUbc+
+         SyO97vFF3NebuJTczQk/IG1HniBDK4PTbhhM6wBKkRv/gcSVbZAWbBnCHTuNc6KuEw
+         dv8UjvkvDXuWl3/xo3BhgK+8MtXz77sKCMNaIKkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 213/246] pinctrl: sh-pfc: r8a77995: Fix MOD_SEL bit numbering
-Date:   Thu,  4 Apr 2019 10:48:33 +0200
-Message-Id: <20190404084626.649913177@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, cai@gmx.us,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        linux-arm-kernel@lists.infradead.org, longman@redhat.com,
+        marc.zyngier@arm.com, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 214/246] cpu/hotplug: Mute hotplug lockdep during init
+Date:   Thu,  4 Apr 2019 10:48:34 +0200
+Message-Id: <20190404084626.685559617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,77 +74,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5219aa33caec2f7b68eda2b7e4ab8e276f323254 ]
+[ Upstream commit ce48c457b95316b9a01b5aa9d4456ce820df94b4 ]
 
-MOD_SEL register bit numbering was different from R-Car D3 SoC and
-R-Car H3/M3-[WN] SoCs.
+Since we've had:
 
-MOD_SEL 1-bit      H3/M3-[WN]  D3
-===============    ==========  =====
-Set Value = H'0    b'0         b'0
-Set Value = H'1    b'1         b'1
+  commit cb538267ea1e ("jump_label/lockdep: Assert we hold the hotplug lock for _cpuslocked() operations")
 
-MOD_SEL 2-bits     H3/M3-[WN]  D3
-===============    ==========  =====
-Set Value = H'0    b'00        b'00
-Set Value = H'1    b'01        b'10
-Set Value = H'2    b'10        b'01
-Set Value = H'3    b'11        b'11
+we've been getting some lockdep warnings during init, such as on HiKey960:
 
-MOD_SEL 3-bits     H3/M3-[WN]  D3
-===============    ==========  =====
-Set Value = H'0    b'000       b'000
-Set Value = H'1    b'001       b'100
-Set Value = H'2    b'010       b'010
-Set Value = H'3    b'011       b'110
-Set Value = H'4    b'100       b'001
-Set Value = H'5    b'101       b'101
-Set Value = H'6    b'110       b'011
-Set Value = H'7    b'111       b'111
+[    0.820495] WARNING: CPU: 4 PID: 0 at kernel/cpu.c:316 lockdep_assert_cpus_held+0x3c/0x48
+[    0.820498] Modules linked in:
+[    0.820509] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G S                4.20.0-rc5-00051-g4cae42a #34
+[    0.820511] Hardware name: HiKey960 (DT)
+[    0.820516] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
+[    0.820520] pc : lockdep_assert_cpus_held+0x3c/0x48
+[    0.820523] lr : lockdep_assert_cpus_held+0x38/0x48
+[    0.820526] sp : ffff00000a9cbe50
+[    0.820528] x29: ffff00000a9cbe50 x28: 0000000000000000
+[    0.820533] x27: 00008000b69e5000 x26: ffff8000bff4cfe0
+[    0.820537] x25: ffff000008ba69e0 x24: 0000000000000001
+[    0.820541] x23: ffff000008fce000 x22: ffff000008ba70c8
+[    0.820545] x21: 0000000000000001 x20: 0000000000000003
+[    0.820548] x19: ffff00000a35d628 x18: ffffffffffffffff
+[    0.820552] x17: 0000000000000000 x16: 0000000000000000
+[    0.820556] x15: ffff00000958f848 x14: 455f3052464d4d34
+[    0.820559] x13: 00000000769dde98 x12: ffff8000bf3f65a8
+[    0.820564] x11: 0000000000000000 x10: ffff00000958f848
+[    0.820567] x9 : ffff000009592000 x8 : ffff00000958f848
+[    0.820571] x7 : ffff00000818ffa0 x6 : 0000000000000000
+[    0.820574] x5 : 0000000000000000 x4 : 0000000000000001
+[    0.820578] x3 : 0000000000000000 x2 : 0000000000000001
+[    0.820582] x1 : 00000000ffffffff x0 : 0000000000000000
+[    0.820587] Call trace:
+[    0.820591]  lockdep_assert_cpus_held+0x3c/0x48
+[    0.820598]  static_key_enable_cpuslocked+0x28/0xd0
+[    0.820606]  arch_timer_check_ool_workaround+0xe8/0x228
+[    0.820610]  arch_timer_starting_cpu+0xe4/0x2d8
+[    0.820615]  cpuhp_invoke_callback+0xe8/0xd08
+[    0.820619]  notify_cpu_starting+0x80/0xb8
+[    0.820625]  secondary_start_kernel+0x118/0x1d0
 
-This patch replaces the #define name and value of MOD_SEL.
+We've also had a similar warning in sched_init_smp() for every
+asymmetric system that would enable the sched_asym_cpucapacity static
+key, although that was singled out in:
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Fixes: 794a67117646 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
-[shimoda: split a patch per SoC and revise the commit log]
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[geert: Use a macro to do the actual reordering]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+  commit 40fa3780bac2 ("sched/core: Take the hotplug lock in sched_init_smp()")
+
+Those warnings are actually harmless, since we cannot have hotplug
+operations at the time they appear. Instead of starting to sprinkle
+useless hotplug lock operations in the init codepaths, mute the
+warnings until they start warning about real problems.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: cai@gmx.us
+Cc: daniel.lezcano@linaro.org
+Cc: dietmar.eggemann@arm.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: longman@redhat.com
+Cc: marc.zyngier@arm.com
+Cc: mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/1545243796-23224-2-git-send-email-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/cpu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-index 84d78db381e3..9e377e3b9cb3 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-@@ -381,6 +381,9 @@ FM(IP12_23_20)	IP12_23_20 \
- FM(IP12_27_24)	IP12_27_24 \
- FM(IP12_31_28)	IP12_31_28 \
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 47f695d80dd1..6754f3ecfd94 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -313,6 +313,15 @@ void cpus_write_unlock(void)
  
-+/* The bit numbering in MOD_SEL fields is reversed */
-+#define REV4(f0, f1, f2, f3)			f0 f2 f1 f3
+ void lockdep_assert_cpus_held(void)
+ {
++	/*
++	 * We can't have hotplug operations before userspace starts running,
++	 * and some init codepaths will knowingly not take the hotplug lock.
++	 * This is all valid, so mute lockdep until it makes sense to report
++	 * unheld locks.
++	 */
++	if (system_state < SYSTEM_RUNNING)
++		return;
 +
- /* MOD_SEL0 */			/* 0 */			/* 1 */			/* 2 */			/* 3 */
- #define MOD_SEL0_30		FM(SEL_MSIOF2_0)	FM(SEL_MSIOF2_1)
- #define MOD_SEL0_29		FM(SEL_I2C3_0)		FM(SEL_I2C3_1)
-@@ -388,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
- #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
- #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
- #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
--#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
--#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
--#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
--#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
-+#define MOD_SEL0_24_23	   REV4(FM(SEL_PWM0_0),		FM(SEL_PWM0_1),		FM(SEL_PWM0_2),		F_(0, 0))
-+#define MOD_SEL0_22_21	   REV4(FM(SEL_PWM1_0),		FM(SEL_PWM1_1),		FM(SEL_PWM1_2),		F_(0, 0))
-+#define MOD_SEL0_20_19	   REV4(FM(SEL_PWM2_0),		FM(SEL_PWM2_1),		FM(SEL_PWM2_2),		F_(0, 0))
-+#define MOD_SEL0_18_17	   REV4(FM(SEL_PWM3_0),		FM(SEL_PWM3_1),		FM(SEL_PWM3_2),		F_(0, 0))
- #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
- #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
- #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
+ 	percpu_rwsem_assert_held(&cpu_hotplug_lock);
+ }
+ 
 -- 
 2.19.1
 
