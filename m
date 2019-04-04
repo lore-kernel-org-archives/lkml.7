@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F2CC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E06521872
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B222183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368538;
-	bh=5sSIGHvHQgz+OipSgiacZ8OZWKXKEBa2ePdYsumJwfA=;
+	s=default; t=1554368544;
+	bh=MyPKGGsJf3xC4h1Tsf5ti2Tc2odgU0FuZsYygMpeOpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhwmox9P9RyMxl/hbRziJKIgw5Bkn0kwgwmiN599SnJRXnTkwmZZYtuKoFcAX6XQg
-	 M30nVHxh1wI9Jkj8WEd7B8roafeIZ+9/UhMPU5gq3FD7xO7QcvCXl6l+ZMXhBps4Wy
-	 fC90VUPTMhWVyeTRnrtpqORj0/tNY0vAm2T/GTSs=
+	b=efNuiRoLsoFvMYd8DJHm3bq9/+MFL9Pg2MaUXX0y/8gF4vACunLjKtnlxTbYUgTeE
+	 +PVMDVwqV+WTwGvcdb2kBacbfM5fSchBI7qQAyD/X0vVrDUw3bBQwCuFy3SINJYkCF
+	 4UGHtm3XhycKL5euuB+n/DdTITGFNNQ0RHaMO6gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731588AbfDDJCQ (ORCPT
+        id S1731610AbfDDJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731577AbfDDJCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:13 -0400
+        id S1731596AbfDDJCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 394DC21741;
-        Thu,  4 Apr 2019 09:02:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A79221741;
+        Thu,  4 Apr 2019 09:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368532;
-        bh=5sSIGHvHQgz+OipSgiacZ8OZWKXKEBa2ePdYsumJwfA=;
+        s=default; t=1554368538;
+        bh=MyPKGGsJf3xC4h1Tsf5ti2Tc2odgU0FuZsYygMpeOpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKXe4WYOBHqql7//UVVCDm7eF5zqIRNIZ7DjwPmYOPp0EJdIvEjNXXnYaTKjKMT9H
-         sh87gAIdaO9UyvaVMUYslT+s2sQ9p3ZZAohjR8YkrON60e0rjJ8HoiMm5RkfVvMKra
-         sbDiEeM9Okeq5NZo9s+fpcsHDKlyhVHk4KjTuvSw=
+        b=bEDTXhDjMVjKfvvLctX05NxgWD93KLkJ50Ae+GU/JfVZGKOS3NdY78OUIVuAPNvxs
+         rYMn5LvgyMb/a7GnsdfwyjuHTR64vtypsE3/jyEICcx/O1yhHk6Ue+4t1ebjJQkc9s
+         PZ9l2CWDE/LUR2QKypjycu8CQEeYmlNT0W69hkfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/187] serial: 8250_pxa: honor the port number from devicetree
-Date:   Thu,  4 Apr 2019 10:46:35 +0200
-Message-Id: <20190404084605.815075523@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 060/187] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
+Date:   Thu,  4 Apr 2019 10:46:37 +0200
+Message-Id: <20190404084605.907377087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -65,41 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
+[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
 
-Like the other OF-enabled drivers, use the port number from the firmware if
-the devicetree specifies an alias:
+L1 tables are allocated with __get_dma_pages, and therefore already
+ignored by kmemleak.
 
-  aliases {
-      ...
-      serial2 = &uart2; /* Should be ttyS2 */
-  }
+Without this, the kernel would print this error message on boot,
+when the first L1 table is allocated:
 
-This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
-messes up the numbering.
+[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
+[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
+[    2.831227] Workqueue: events deferred_probe_work_func
+[    2.836353] Call trace:
+...
+[    2.852532]  paint_ptr+0xa0/0xa8
+[    2.855750]  kmemleak_ignore+0x38/0x6c
+[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
+[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
+[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
+...
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_pxa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
-index b9bcbe20a2be..c47188860e32 100644
---- a/drivers/tty/serial/8250/8250_pxa.c
-+++ b/drivers/tty/serial/8250/8250_pxa.c
-@@ -113,6 +113,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index fde728ea2900..48d4709a8e93 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -228,7 +228,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
+ 		if (dma != phys)
+ 			goto out_unmap;
+ 	}
+-	kmemleak_ignore(table);
++	if (lvl == 2)
++		kmemleak_ignore(table);
+ 	return table;
  
-+	ret = of_alias_get_id(pdev->dev.of_node, "serial");
-+	if (ret >= 0)
-+		uart.port.line = ret;
-+
- 	uart.port.type = PORT_XSCALE;
- 	uart.port.iotype = UPIO_MEM32;
- 	uart.port.mapbase = mmres->start;
+ out_unmap:
 -- 
 2.19.1
 
