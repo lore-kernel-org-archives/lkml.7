@@ -2,180 +2,135 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE28C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB425C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBDB21852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B/kuhY9D"
+	by mail.kernel.org (Postfix) with ESMTP id BB65420855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfDDDIg (ORCPT
+        id S1726561AbfDDDKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:08:36 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40179 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfDDDIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:08:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so401531plr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5leik6S6No5EZTddJwuepRt2JsDU9cFHxAqjqn0iBr4=;
-        b=B/kuhY9Db92e15oXiPQqPJNUrMQBT6XQd3rmBP8FdrBm5vuX5Hs8mFycf57JrWjS/d
-         XJxTWczXqG9+J6BvsRS3bJlO8GkmGcyy0o57f59LHI+rV3rvm9Fj+eLBGVPkUs+YufnO
-         2jFUxLHUZ58k4hVg9Bu1I5Ali14m0E3S5aPOW+m53PS9jp4lJZKcgFI8dLYzZgYmIIZ7
-         xeQCKIgskDPxKG4gTWz2xcvebqIVA7c8o/Vx/TMQ5ewL/IISeMBHfkV6S0dQAVsjHjQ/
-         JUUgiEJLp/VVua98m9X2h79Z7Y4n0IZBKeXyFc/nAl59d0LCpC8uzD+9MVRpcLJIJo7N
-         0/wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5leik6S6No5EZTddJwuepRt2JsDU9cFHxAqjqn0iBr4=;
-        b=ujxTDrTJt3LfWFQTTZdZeLYwK8vPwdNEjPgfeKDjsmkKinsnAF+SKUJuEB8NEMc2iR
-         q5VsomSGx5FG/9OeQYaeAXqD/DE5hqfNk7vMD3ARQxs+Mq9CKqjsZOGEyQMF/RWst96B
-         C7Y7XAUL/VXGykvcOy5G+mGVMEmTMcoCFMzXvrdZzXCxQ89/3mnS3xiSVGw5Ot1jaT0l
-         VMbwhtAjekIvq+N971dTFk23Y6d0F+HKhvQ7CnpxnaM4oIWcfW8o6aiD8KXVvP5/tIx6
-         nv6PxpBBakdpuAvKQ6Xt3RbhASVdoJ+Y9+I1Kpm1fe3uJ55/vyBeiVGKNXcV4X+4RiHN
-         JOHg==
-X-Gm-Message-State: APjAAAWLg2rF1ADf5k1t2eVJrNMGWg12F6+XUKyAypHJy7tp5BFJjQy3
-        XTkIHfzZm7OxraSZA228iDU4bA==
-X-Google-Smtp-Source: APXvYqxRhwhThDGvy0C+R7z4t13xKgTiHwM/lCYBxrTlssKyJFOLEcVanQqoy2LQfB5/FdybivWX/w==
-X-Received: by 2002:a17:902:d705:: with SMTP id w5mr3812082ply.200.1554347315009;
-        Wed, 03 Apr 2019 20:08:35 -0700 (PDT)
-Received: from [10.71.14.66] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id 8sm35173747pfs.50.2019.04.03.20.08.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:08:33 -0700 (PDT)
-Subject: Re: [PATCH v1 3/3] thermal: rockchip: Support the PX30 SoC in thermal
- driver
-To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
-Cc:     rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
-References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
- <1554100985-11385-4-git-send-email-zhangqing@rock-chips.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <b00bffe4-8aad-ad86-bac8-d196b22b304d@linaro.org>
-Date:   Thu, 4 Apr 2019 05:08:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 23:10:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60982 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfDDDKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 23:10:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D3AC68763B;
+        Thu,  4 Apr 2019 03:10:36 +0000 (UTC)
+Received: from localhost (ovpn-12-46.pek2.redhat.com [10.72.12.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C31584BD1;
+        Thu,  4 Apr 2019 03:10:33 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 11:10:30 +0800
+From:   "bhe@redhat.com" <bhe@redhat.com>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190404031030.GU7627@MiWiFi-R3L-srv>
+References: <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
+ <20190403082305.GG1555@localhost.localdomain>
+ <20190403090210.GH1555@localhost.localdomain>
+ <c8613886-7014-cbd2-788f-a4f29bb5b4a5@ce.jp.nec.com>
+ <20190404025234.GA12658@dhcp-128-65.nay.redhat.com>
+ <20190404030037.GT7627@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <1554100985-11385-4-git-send-email-zhangqing@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404030037.GT7627@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 04 Apr 2019 03:10:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/04/2019 08:43, Elaine Zhang wrote:
-> PX30 SOC has two Temperature Sensors for CPU and GPU.
+On 04/04/19 at 11:00am, Baoquan He wrote:
+> On 04/04/19 at 10:52am, Dave Young wrote:
+> > On 04/04/19 at 01:23am, Junichi Nomura wrote:
+> > > Hi Dave and Chao,
+> > > 
+> > > On 4/3/19 6:02 PM, Chao Fan wrote:
+> > > > On Wed, Apr 03, 2019 at 04:23:06PM +0800, Chao Fan wrote:
+> > > >> On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+> > > >>> Fix 3.  need more debugging, have you or Junichi run tests on more real
+> > > >>> hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+> > > >>> help to try test patch or provide any help. 
+> > > >>
+> > > >> I am still testing in real hardware.
+> > > > 
+> > > > Hi Dave,
+> > > > 
+> > > > I find a Fujitsu Desktop PC to test it.
+> > > > Without this PATCH, it failed to kexec and kdump.
+> > > > With this PATCH, it succeed to kexec.
+> > > > But failed to kdump. From the log, I think it didn't jump to the second
+> > > > kernel, just reboot after panic. I have not figured out what's the
+> > > > problem, but it seems not caused by this PATCH.
+> > > > So I still think this PATCH works for the Fujitsu Desktop PC.
+> > > > 
+> > > > As for your issue, I think there may be some problems related to specified
+> > > > hardware. Are you using a Lenovo laptop?
+> > > > 
+> > > > And I am not sure how Nomura tested it.
+> > > 
+> > > I've tested 3 different models of EFI-booted baremetal servers with both
+> > > normal kexec and panic kexec.  So far as I've tried Linus's v5.1-rc3,
+> > > the problem always reproduced without the patch and disappears with the patch.
+> > 
+> > Hmm, both of my two laptops (Thinkpad T480s and T420) failed to boot with kexec.
+> > 
+> > I will see if I can find something, but it may need more time because
+> > early console does not work especially after kexec.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->  drivers/thermal/rockchip_thermal.c | 39 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+> Dave, can you try below patch to print debugging message and hang kernel
+> to check the outputting? The hang is necessary, otherwise later printk
+> printking will overwrite it.
 > 
-> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-> index faa6c7792155..d5c161e63361 100644
-> --- a/drivers/thermal/rockchip_thermal.c
-> +++ b/drivers/thermal/rockchip_thermal.c
-> @@ -225,11 +225,15 @@ struct rockchip_thermal_data {
->  #define GRF_TSADC_TESTBIT_L			0x0e648
->  #define GRF_TSADC_TESTBIT_H			0x0e64c
+> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> index c0d6c560df69..68119547c4aa 100644
+> --- a/arch/x86/boot/compressed/misc.c
+> +++ b/arch/x86/boot/compressed/misc.c
+> @@ -351,9 +351,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+>  	/* Clear flags intended for solely in-kernel use. */
+>  	boot_params->hdr.loadflags &= ~KASLR_FLAG;
 >  
-> +#define PX30_GRF_SOC_CON2			0x0408
-> +
->  #define GRF_SARADC_TESTBIT_ON			(0x10001 << 2)
->  #define GRF_TSADC_TESTBIT_H_ON			(0x10001 << 2)
->  #define GRF_TSADC_VCM_EN_L			(0x10001 << 7)
->  #define GRF_TSADC_VCM_EN_H			(0x10001 << 7)
+> -	/* Save RSDP address for later use. */
+> -	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+> -
+>  	sanitize_boot_params(boot_params);
 >  
-> +#define GRF_CON_TSADC_CH_INV			(0x10001 << 1)
-> +
->  /**
->   * struct tsadc_table - code to temperature conversion table
->   * @code: the value of adc channel
-> @@ -692,6 +696,14 @@ static void rk_tsadcv3_initialize(struct regmap *grf, void __iomem *regs,
->  			       regs + TSADCV2_AUTO_CON);
->  }
+>  	if (boot_params->screen_info.orig_video_mode == 7) {
+> @@ -370,6 +367,10 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+>  	console_init();
+>  	debug_putstr("early console in extract_kernel\n");
 >  
-> +static void rk_tsadcv4_initialize(struct regmap *grf, void __iomem *regs,
-> +				  enum tshut_polarity tshut_polarity)
-> +{
-> +	rk_tsadcv2_initialize(grf, regs, tshut_polarity);
-> +	if (!IS_ERR(grf))
+ +	/* Save RSDP address for later use. */
+ +	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+ +
+ +	error("Hang kernel for kexec debugging");
 
-Why this test ? grf is not modified by the 'rk_tsadcv2_initialize' function.
+Sorry, here I means calling error() to hang kernel after calling
+get_rsdp_addr().
 
-> +		regmap_write(grf, PX30_GRF_SOC_CON2, GRF_CON_TSADC_CH_INV);
-> +}
-> +
->  static void rk_tsadcv2_irq_ack(void __iomem *regs)
->  {
->  	u32 val;
-> @@ -821,6 +833,30 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
->  	writel_relaxed(val, regs + TSADCV2_INT_EN);
->  }
+
+>  	free_mem_ptr     = heap;	/* Heap */
+>  	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
 >  
-> +static const struct rockchip_tsadc_chip px30_tsadc_data = {
-> +	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
-> +	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
-> +	.chn_num = 2, /* 2 channels for tsadc */
-> +
-> +	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
-> +	.tshut_temp = 95000,
-> +
-> +	.initialize = rk_tsadcv4_initialize,
-> +	.irq_ack = rk_tsadcv3_irq_ack,
-> +	.control = rk_tsadcv3_control,
-> +	.get_temp = rk_tsadcv2_get_temp,
-> +	.set_alarm_temp = rk_tsadcv2_alarm_temp,
-> +	.set_tshut_temp = rk_tsadcv2_tshut_temp,
-> +	.set_tshut_mode = rk_tsadcv2_tshut_mode,
-> +
-> +	.table = {
-> +		.id = rk3328_code_table,
-> +		.length = ARRAY_SIZE(rk3328_code_table),
-> +		.data_mask = TSADCV2_DATA_MASK,
-> +		.mode = ADC_INCREMENT,
-> +	},
-> +};
-> +
->  static const struct rockchip_tsadc_chip rv1108_tsadc_data = {
->  	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
->  	.chn_num = 1, /* one channel for tsadc */
-> @@ -993,6 +1029,9 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
->  };
->  
->  static const struct of_device_id of_rockchip_thermal_match[] = {
-> +	{	.compatible = "rockchip,px30-tsadc",
-> +		.data = (void *)&px30_tsadc_data,
-> +	},
->  	{
->  		.compatible = "rockchip,rv1108-tsadc",
->  		.data = (void *)&rv1108_tsadc_data,
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
