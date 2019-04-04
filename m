@@ -7,101 +7,109 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EA0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC37C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B60620820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CEF20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A2EFYZwE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IRAlL/xF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfDDAfK (ORCPT
+        id S1728734AbfDDAfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 20:35:10 -0400
-Received: from mail-ot1-f73.google.com ([209.85.210.73]:42765 "EHLO
-        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfDDAdS (ORCPT
+        Wed, 3 Apr 2019 20:35:17 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:51567 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfDDAdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 20:33:18 -0400
-Received: by mail-ot1-f73.google.com with SMTP id j17so298836otp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:33:18 -0700 (PDT)
+        Wed, 3 Apr 2019 20:33:13 -0400
+Received: by mail-vk1-f202.google.com with SMTP id r14so423203vkd.18
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=UWUYbOZniscPzPib57I8cPwH1j1zNPSziYufzU02lOY=;
-        b=A2EFYZwEC5y58dctC8LWHsqA6qoE5h0LFuFYwP6Uwqnal/NFUhQVsKZ/0Ysr8bH//x
-         FT17CqgqigWaJaw5c+416HEm1SOJ5orG1jO9WJ4kVGBoTxfe2sFF3NgIGiHr1ETJUCoC
-         AGe5N/8cJDz2uObdp0e8WjGFpC8mGvo4d5ebbKSY9TuIQ8SyXWnil8fW2KzUZCt/aofk
-         8biDkpWIJeJyZnldpFA5lFAbH8dXFWs7Ho0n0l1twAexbAB/330nKb/6uAkKYGyTrW0N
-         OJepi47SLo9FwbAlZUvw24949yhqGJ+zGZV7oTsTvqOH+6+6k01sIrImWHkw9JwsgDIu
-         28oA==
+        bh=iaaF5/aYD/K1PTKwNLEWQdX8WLqLGYfc09hndKsTKvo=;
+        b=IRAlL/xFWhgbbpXtzjS8gWTXeZcNeEhAKd8NbdYGUmAEC44bgqLt8+paigb80y/Q0j
+         EhV7F6H8vUaAzgky2cnEOMhIdDbk1k6Fv6F3Q+LIf2cT/CCUnf4GmpjSJPMvtiH2tkYG
+         DcvYmZAKAj6LnpeL7LtQoyvQ58e3LcxfNJMrANWVlrJGynzrJEELOa5/D8v4unQ04F0D
+         cWPZYcEadltcA9SHWmsAWpxyXliB1Rlsqv+3CXICyR9weXkQOfvfgDs2Jchw2Pd86cwk
+         o2v5txavD8MqgJlM6iqRLbj4+x1qUHY1kEoEM3vxd8y+jE4rxGz4Mlc1IRFvNTCy9Ro5
+         60Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=UWUYbOZniscPzPib57I8cPwH1j1zNPSziYufzU02lOY=;
-        b=YN19RBL+egzT7/4Ugb3aO6chLBjrlEmqw6rbG+qTDxVwZLWyaHLOd0mrZom+L7QG5O
-         kwbfF2FEdcSnnxDwnDuFCn4by4dLZlPf65ccV3lF2oDdoOkXasUCLzXLMxC8xICi+/sO
-         6ymrHOOt9ZiYHUxyYe3T304EGZnNmNYM9duo9BegUE3jgl81XEsYQ7YKFl7BadJCLQNg
-         XTWtF7mfdkNP6arQVgmHBTwsFba7fZMeB5GCmi2HQUk+/iWgl9lWFnVerShXdg1djWm8
-         OlNv/TLt6+qHBnaiM2423oOxhiKjLWHwmcOhsyxgwxtJpWVYY/cGKkAeJDcW/CY9/xUM
-         KhQA==
-X-Gm-Message-State: APjAAAWrrwADNnpXesYcZlQM8xdUFzuBBT7vH8YjFlb/SbjIytaoet+z
-        PxMZaUKEMaQksLeuMvBB21WUa6Y+08BBoXVjGBd7mg==
-X-Google-Smtp-Source: APXvYqzL3jPDtiMeU77dXPt0+VSnZ8pBp/Uh79/K3V3E8HHlCSQfc9Fzun4Dp6GY5hR8FwEKn511hYcZ8i+fnLxtrC+4KQ==
-X-Received: by 2002:a9d:6343:: with SMTP id y3mr301853otk.38.1554337997827;
- Wed, 03 Apr 2019 17:33:17 -0700 (PDT)
-Date:   Wed,  3 Apr 2019 17:32:31 -0700
+        bh=iaaF5/aYD/K1PTKwNLEWQdX8WLqLGYfc09hndKsTKvo=;
+        b=htIQ2MPmaw3qEk3naj+i05dVtcr9BNNNyCQ7T5+SdhuSZ67NsxpLIwowptLQmW4TEX
+         5RfQ5Qu+2Pr49dW80rDWoxDTY5zWqxdVu9SZY1mp68mseKtWeY97ZjekU8qDsEXebNLi
+         xMDJfUSKhwryL+6G1+NIvPLEyVqyuii5Lo3hOXdTGwvF3Y1Usykd2831JVxhhe7S0llq
+         LRB4D3Xo/3PhPfLzmYDkGkcxosOwCxIfKTEF6qYUayZ6hnS+6rGCok1E7cqdKroa0g0X
+         a0e8hfKpGJ+Hpr79gMugid6w7Ae8cwPK2Qe9fO9EK4Qe2XCxDxYprKwPO52HbjtdprhK
+         W1cQ==
+X-Gm-Message-State: APjAAAU+0NX4XGa0WqQyfIoyLrB2kaH0/TPvtoZIYrhK/uZ0uVoRvPp0
+        qPJU6or3bz6u1cYjYVxOK4D30zrXhxyKQoIXN3TYvQ==
+X-Google-Smtp-Source: APXvYqw9Lw50mP2E9RFKzr2uBzyKV4bQkDkKFIehcmqEqfdPpSpIAo1DzC+63SbTNAY3OaDhNoijQBd0lYyFH/X0Ouz5nw==
+X-Received: by 2002:a1f:1b82:: with SMTP id b124mr367884vkb.11.1554337992127;
+ Wed, 03 Apr 2019 17:33:12 -0700 (PDT)
+Date:   Wed,  3 Apr 2019 17:32:29 -0700
 In-Reply-To: <20190404003249.14356-1-matthewgarrett@google.com>
-Message-Id: <20190404003249.14356-10-matthewgarrett@google.com>
+Message-Id: <20190404003249.14356-8-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190404003249.14356-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH V32 09/27] uswsusp: Disable when the kernel is locked down
+Subject: [PATCH V32 07/27] kexec_file: Restrict at runtime if the kernel is
+ locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, dhowells@redhat.com,
         linux-api@vger.kernel.org, luto@kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Matthew Garrett <mjg59@google.com>, linux-pm@vger.kernel.org,
-        pavel@ucw.cz, rjw@rjwysocki.net
+        Jiri Bohac <jbohac@suse.cz>,
+        Matthew Garrett <mjg59@google.com>, kexec@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: Jiri Bohac <jbohac@suse.cz>
 
-uswsusp allows a user process to dump and then restore kernel state, which
-makes it possible to modify the running kernel.  Disable this if the kernel
-is locked down.
+When KEXEC_SIG is not enabled, kernel should not load images through
+kexec_file systemcall if the kernel is locked down.
 
+[Modified by David Howells to fit with modifications to the previous patch
+ and to return -EPERM if the kernel is locked down for consistency with
+ other lockdowns. Modified by Matthew Garrett to remove the IMA
+ integration, which will be replaced by integrating with the IMA
+ architecture policy patches.]
+
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-cc: linux-pm@vger.kernel.org
-Cc: pavel@ucw.cz
-Cc: rjw@rjwysocki.net
+Reviewed-by: Jiri Bohac <jbohac@suse.cz>
+cc: kexec@lists.infradead.org
 ---
- kernel/power/user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/kexec_file.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 2d8b60a3c86b..99e13fd13237 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -52,6 +52,9 @@ static int snapshot_open(struct inode *inode, struct file *filp)
- 	if (!hibernation_available())
- 		return -EPERM;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 67f3a866eabe..a1cc37c8b43b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -239,6 +239,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		}
  
-+	if (kernel_is_locked_down("/dev/snapshot", LOCKDOWN_INTEGRITY))
-+		return -EPERM;
+ 		ret = 0;
 +
- 	lock_system_sleep();
++		if (kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)) {
++			ret = -EPERM;
++			goto out;
++		}
++
+ 		break;
  
- 	if (!atomic_add_unless(&snapshot_device_available, -1, 0)) {
+ 		/* All other errors are fatal, including nomem, unparseable
 -- 
 2.21.0.392.gf8f6787159e-goog
 
