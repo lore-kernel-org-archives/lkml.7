@@ -3,51 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABE0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBDAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01BD20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BCB21738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368096;
-	bh=iKMo+iOBfav9RRbyCC2cd+mI9je5qbicUsZUzXdY5hI=;
+	s=default; t=1554368100;
+	bh=bOGXalrGpVzBDTFUagsUQn8llHDsdizbe929Uw/2rms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=msT2aH6Mblkm+gTU1j4AYznploBuhQQLmfmCbfEMxGsKMkcnJSvVfuJ8kLQ/MUeCt
-	 wYV76SjOyAk6Jl7wAJZXYxXZUMUo+iy/G7NGJygRxLe6lBZY1an0WQbkfj065zUZrY
-	 goJA9wlFelU3QqJBVxnVntl0s5WCSCTkMd7IY5kc=
+	b=QWBL/T7oG77xL/Jw2rsbEX42N0B2RXWTyC4NroawUf8VOoIIBnlJc/Se/BNOgxNIl
+	 zW4/UW6KbTIwn1BsNn9q2myz+7puVnp5slBQPwgv/PWh55UJ1cW6MVWRKqVJHAMFh9
+	 1N4zLIWIVSxPTX2h4Qhu9MKpRnMlSq6yezf7QOK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbfDDIyx (ORCPT
+        id S1730178AbfDDIy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfDDIyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:51 -0400
+        id S1730155AbfDDIyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDE620652;
-        Thu,  4 Apr 2019 08:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4D9C20652;
+        Thu,  4 Apr 2019 08:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368090;
-        bh=iKMo+iOBfav9RRbyCC2cd+mI9je5qbicUsZUzXdY5hI=;
+        s=default; t=1554368093;
+        bh=bOGXalrGpVzBDTFUagsUQn8llHDsdizbe929Uw/2rms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2k1OchntFPxKiZkJx9L8UW+Gm9NMQvcn4I45riR5CDRs2R14tP6QzzIk3NZf7QoT
-         TyrkogN12s8q3xdurHfsm9lgIjYFipQsdRVp0lG6HHolfus+SAoiAp/9ti+xE1F+89
-         /mQjL7JZ7jnyIdbiLaMMOlCq4IHeb3fHJxwIOKr4=
+        b=Cn6KWy6DQsnG8mozeZM4stnpsgHTVIhkiek4icIAJ1NCOEqR126Dv0RzJpko+kmv1
+         sjI7YCA6Ap6cLi+R3Ii1gH3Rt2Z4jGEWIJBRAE+SD4rNcGXEkqGfM6vX1oMx6gFA1P
+         ejfG4mZblVBRFzrCKFtZAdHEMJLwFfYKZRipxg8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 034/121] fs: fix guard_bio_eod to check for real EOD errors
-Date:   Thu,  4 Apr 2019 10:47:02 +0200
-Message-Id: <20190404084547.182738584@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Sartain <mikesart@fastmail.com>,
+        Mathias Krause <minipli@googlemail.com>,
+        Tony Jones <tonyj@suse.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 035/121] tools lib traceevent: Fix buffer overflow in arg_eval
+Date:   Thu,  4 Apr 2019 10:47:03 +0200
+Message-Id: <20190404084547.228365869@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,77 +70,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
+[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
 
-guard_bio_eod() can truncate a segment in bio to allow it to do IO on
-odd last sectors of a device.
+Fix buffer overflow observed when running perf test.
 
-It already checks if the IO starts past EOD, but it does not consider
-the possibility of an IO request starting within device boundaries can
-contain more than one segment past EOD.
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
-underflow bvec->bv_len.
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
 
-Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
 
-This situation has been found on filesystems such as isofs and vfat,
-which doesn't check the device size before mount, if the device is
-smaller than the filesystem itself, a readahead on such filesystem,
-which spans EOD, can trigger this situation, leading a call to
-zero_user() with a wrong size possibly corrupting memory.
-
-I didn't see any crash, or didn't let the system run long enough to
-check if memory corruption will be hit somewhere, but adding
-instrumentation to guard_bio_end() to check truncated_bytes size, was
-enough to see the error.
-
-The following script can trigger the error.
-
-MNT=/mnt
-IMG=./DISK.img
-DEV=/dev/loop0
-
-mkfs.vfat $IMG
-mount $IMG $MNT
-cp -R /etc $MNT &> /dev/null
-umount $MNT
-
-losetup -D
-
-losetup --find --show --sizelimit 16247280 $IMG
-mount $DEV $MNT
-
-find $MNT -type f -exec cat {} + >/dev/null
-
-Kudos to Eric Sandeen for coming up with the reproducer above
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 8086cc8ff0bc..bdca7b10e239 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3084,6 +3084,13 @@ void guard_bio_eod(int op, struct bio *bio)
- 	/* Uhhuh. We've got a bio that straddles the device size! */
- 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 9a17bc27296e..3955ba9e6fcb 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2430,7 +2430,7 @@ static int arg_num_eval(struct print_arg *arg, long long *val)
+ static char *arg_eval (struct print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
-+	/*
-+	 * The bio contains more than one segment which spans EOD, just return
-+	 * and let IO layer turn it into an EIO
-+	 */
-+	if (truncated_bytes > bvec->bv_len)
-+		return;
-+
- 	/* Truncate the bio.. */
- 	bio->bi_iter.bi_size -= truncated_bytes;
- 	bvec->bv_len -= truncated_bytes;
+ 	switch (arg->type) {
+ 	case PRINT_ATOM:
 -- 
 2.19.1
 
