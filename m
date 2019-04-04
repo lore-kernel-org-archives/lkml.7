@@ -2,119 +2,174 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892D8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E505C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AD220855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAAF20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="VJLrsHwl";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="G/urXn2R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="azs8j6C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfDDNCn (ORCPT
+        id S1729764AbfDDNDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:02:43 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:6729 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfDDNCn (ORCPT
+        Thu, 4 Apr 2019 09:03:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfDDNDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:02:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1554382963; x=1585918963;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=2LxRBG+bjKdJmTDYJdHMfLyq/vf8R6fXEs1CWCQ+c6s=;
-  b=VJLrsHwlQlyooicmiIQeSbg+uyrpBjLBwvxuOsQPYK/k9Sobke6iMsYr
-   vANpknsSrgEFup6EnRahddGoiy7lGB0lVqYwwExN2vdBo55MywUh+RBZe
-   RRactr5F3nENEyCu5Rsf0bYU798dVmtiRAGYd3S4B3yoaElJipXpfc2ey
-   vQ1UPktlYQRUrlUa9EU8xadTh3jf71twBRkIAvkl0R+4BAKxY/4KpsuoC
-   YK0R+YLVP/0Et1Pd1tDsHiwc+UIlbm+eVWHAlp1O7jkOX99KNu08QI9oH
-   ZhWvIxIdsPFjcbVM5mVacDTyia1J/WrJd/xh53KdgbdB53VOKNaYAxGsX
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,308,1549900800"; 
-   d="scan'208";a="106351444"
-Received: from mail-by2nam01lp2059.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.59])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Apr 2019 21:02:37 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2LxRBG+bjKdJmTDYJdHMfLyq/vf8R6fXEs1CWCQ+c6s=;
- b=G/urXn2RmcDo/KBvwVGfV5o3sXaFfDI9HBOLtKCxxT+N5I2Xni9ONpjp4oaEil1GZQJAUm7SSQjVlkOpBQubEVn+T/kliXHp/qOYk2027RPnLCYkQsDyFl8HBIT2TDjW5P35FUMOwOnnpVJLOSFDzXe/+88O1t1YBhEsmpR5uYc=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB5277.namprd04.prod.outlook.com (20.177.253.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Thu, 4 Apr 2019 13:02:34 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::41d5:ff9d:9889:6d66]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::41d5:ff9d:9889:6d66%2]) with mapi id 15.20.1771.014; Thu, 4 Apr 2019
- 13:02:34 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Douglas Gilbert <dgilbert@interlog.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: correcting incorrect peripheral device type 0x0
-Thread-Topic: correcting incorrect peripheral device type 0x0
-Thread-Index: AQHU6pdDxWIvHAc/ikWG8Iy8lFyBPaYr5z2AgAAOKOA=
-Date:   Thu, 4 Apr 2019 13:02:34 +0000
-Message-ID: <SN6PR04MB4925C4CBA85C47CF865C3732FC500@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <ab8d589f-db76-9a95-1b55-3e906ad89487@free.fr>
- <yq1zhp6satq.fsf@oracle.com> <69474538-b097-f672-a263-aefd5958dc90@free.fr>
-In-Reply-To: <69474538-b097-f672-a263-aefd5958dc90@free.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c2703a0-9a4d-4925-ead4-08d6b8fdce43
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR04MB5277;
-x-ms-traffictypediagnostic: SN6PR04MB5277:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB52770E8761B896079CFD759DFC500@SN6PR04MB5277.namprd04.prod.outlook.com>
-x-forefront-prvs: 0997523C40
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(136003)(366004)(396003)(346002)(199004)(189003)(74316002)(9686003)(229853002)(71200400001)(476003)(486006)(105586002)(106356001)(68736007)(53936002)(11346002)(446003)(76176011)(81166006)(81156014)(33656002)(52536014)(3846002)(7696005)(4326008)(6116002)(6506007)(8676002)(305945005)(14444005)(14454004)(54906003)(72206003)(25786009)(4744005)(26005)(97736004)(256004)(86362001)(99286004)(102836004)(6246003)(66066001)(316002)(2906002)(110136005)(6436002)(55016002)(8936002)(478600001)(186003)(71190400001)(5660300002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5277;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2kAAeVVXfcyzPQevPHKxXvBqX57YLISsWemwRUkuPiiDrmX5DVDYiunEgmWNsFVxhbV1t/0to8x8BGPIc3Il5YEQhWVIAPYs0fXFv8hZPt9CNaaHmJHN5qzpf5UvLWyYpy1nXj74Rlu4N4o+ia5d6RO4yFCy+iqEwgL0Z1rc8RlN9/23TDQAnViuLPEigwGtflISd/zt83BgBBx7vQQMurrApCn4U2oJXd6dDqvTHufyO8t7i1S86rVpdraXSFoImqWPX54GHCfQ2c/oWM84MpVl+cs5qVy7sYDvZjDORfNxft4h8ZeaekY1oOYMA2k5AtS9RtgNEwzisv833MJJqEc+gvuQuWPBF0Zx0BlDXrg/5AQwRaNuTM5cKcfvLslyjUTjZ/lvyR4ogrmEUsNgp9t9HNmnQgftuEUM+VTiScY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 4 Apr 2019 09:03:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2eORCRvSDvO6jizBu164MngG79aEY2YEpD4oMitGjlI=; b=azs8j6C0cGYyjAZ975gn6LX+a
+        8eVfDHTXDF+/HtaOgITge8VApY0S+ZtIpxnHuUmR6NkCqDVSLA+Emu3TM+a6CQaCCbJmcbu4kd6mp
+        tIhlXLtiETs+Hq7Ci4RVME6Rqd0zGJHYwZmHBb0+kfWmQC5QzE7Ykl5XQYMtzIR9Sb1WXvuKvjUTl
+        C3VrNktyyLvMdxbxl3NMBNUqf/gKq+AoLiydnDtLnbDxAib+BlUfaMCBhkgJpgwiclZ3ZGkk02Q3Y
+        slSO9snK+MWgmfjNI7wcd7pj/cW/FqaJI3cdXAlRShfIlZAONCHWIoQ+8yGRoyQALr9AK2yEW3+b3
+        1NApQd36w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hC21H-00055Y-As; Thu, 04 Apr 2019 13:03:03 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 928CD2038C24B; Thu,  4 Apr 2019 15:03:00 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 15:03:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Message-ID: <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c2703a0-9a4d-4925-ead4-08d6b8fdce43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 13:02:34.4877
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5277
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiA+IE1hcmMgd3JvdGU6DQo+ID4NCj4gPj4gc2NzaSAwOjA6MDo0OTQ4ODogc2NzaV9h
-ZGRfbHVuOiBjb3JyZWN0aW5nIGluY29ycmVjdCBwZXJpcGhlcmFsIGRldmljZSB0eXBlDQo+IDB4
-MCBmb3IgVy1MVU4gMHggICAgICAgICAgICBjMTUwaE4NCj4gPg0KPiA+ICAgICAgICAgICAgIF5e
-Xl5eIFdoZXJlIGRvIHRoZXNlIGNyYXp5IExVTiBudW1iZXJzIGNvbWUgZnJvbT8gVGhhdA0KPiA+
-ICAgICAgICAgICAgIGxvb2tzIGxpa2Ugc29tZXRoaW5nIHdoaWNoIG5lZWRzIGZpeGluZy4uLg0K
-PiANCj4gCXNkZXZfcHJpbnRrKEtFUk5fV0FSTklORywgc2RldiwgIiVzOiBjb3JyZWN0aW5nIGlu
-Y29ycmVjdA0KPiBwZXJpcGhlcmFsIGRldmljZSB0eXBlIDB4JXggZm9yIFctTFVOIDB4JTE2eGhO
-XG4iLA0KPiAJCQlfX2Z1bmNfXywgc2Rldi0+dHlwZSwgKHVuc2lnbmVkIGludClzZGV2LT5sdW4p
-Ow0KPiANCj4gV2hhdCBkb2VzIHRoZSAiaE4iIHN1ZmZpeCBzdGFuZCBmb3I/IEl0IHNlZW1zIHJl
-ZHVuZGFudCB3aXRoIHRoZSAiMHgiDQo+IHByZWZpeC4uLg0KPiAoTG9va3MgbGlrZSBoTiBtaWdo
-dCBiZSAiaGV4YWRlY2ltYWwgTnVtYmVyIikNCj4gDQo+IA0KPiBzY3NpIDA6MDowOjQ5NDg4IC0+
-IDB4YzE1MA0KPiBzY3NpIDA6MDowOjQ5NDc2IC0+IDB4YzE0NA0KPiBzY3NpIDA6MDowOjQ5NDU2
-IC0+IDB4YzEzMA0KVGhvc2UgYXJlIGNvbWluZyBmcm9tIHVmc2hjZF9zY3NpX2FkZF93bHVzKCks
-IA0KSW4gd2hpY2ggd2UgY2FsbCBfX3Njc2lfYWRkX2RldmljZSgpICBmb3IgZWFjaCBvbmUgb2Yg
-dGhlIDMgdy1sdW5zOg0KVUZTIERldmljZSAtIDB4NTAsIEJvb3QgLSAweDMwLCBSUE1CIC0gMHg0
-NC4NCkV2ZXJ5dGhpbmcgc2VlbXMgaW4gb3JkZXIuDQoNClRoYW5rcywNCkF2cmkNCg==
+On Thu, Apr 04, 2019 at 01:09:09PM +0200, Peter Zijlstra wrote:
+
+> That is not entirely the scenario I talked about, but *groan*.
+> 
+> So what I meant was:
+> 
+> 	CPU-0							CPU-n
+> 
+> 	__schedule()
+> 	  local_irq_disable()
+> 
+> 	  ...
+> 	    deactivate_task(prev);
+> 
+> 								try_to_wake_up(@p)
+> 								  ...
+> 								  smp_cond_load_acquire(&p->on_cpu, !VAL);
+> 
+> 	  <PMI>
+> 	    ..
+> 	    perf_event_disable_inatomic()
+> 	      event->pending_disable = 1;
+> 	      irq_work_queue() /* self-IPI */
+> 	  </PMI>
+> 
+> 	  context_switch()
+> 	    prepare_task_switch()
+> 	      perf_event_task_sched_out()
+> 	        // the above chain that clears pending_disable
+> 
+> 	    finish_task_switch()
+> 	      finish_task()
+> 	        smp_store_release(prev->on_cpu, 0);
+> 								  /* finally.... */
+> 								// take woken
+> 								// context_switch to @p
+> 	      finish_lock_switch()
+> 	        raw_spin_unlock_irq()
+> 		/* w00t, IRQs enabled, self-IPI time */
+> 	        <self-IPI>
+> 		  perf_pending_event()
+> 		    // event->pending_disable == 0
+> 		</self-IPI>
+> 
+> 
+> What you're suggesting, is that the time between:
+> 
+>   smp_store_release(prev->on_cpu, 0);
+> 
+> and
+> 
+>   <self-IPI>
+> 
+> on CPU-0 is sufficient for CPU-n to context switch to the task, enable
+> the event there, trigger a PMI that calls perf_event_disable_inatomic()
+> _again_ (this would mean irq_work_queue() failing, which we don't check)
+> (and schedule out again, although that's not required).
+> 
+> This being virt that might actually be possible if (v)CPU-0 takes a nap
+> I suppose.
+> 
+> Let me think about this a little more...
+
+Does the below cure things? It's not exactly pretty, but it could just
+do the trick.
+
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dfc4bab0b02b..d496e6911442 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2009,8 +2009,8 @@ event_sched_out(struct perf_event *event,
+ 	event->pmu->del(event, 0);
+ 	event->oncpu = -1;
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
++	if (event->pending_disable == smp_processor_id()) {
++		event->pending_disable = -1;
+ 		state = PERF_EVENT_STATE_OFF;
+ 	}
+ 	perf_event_set_state(event, state);
+@@ -2198,7 +2198,7 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ 
+ void perf_event_disable_inatomic(struct perf_event *event)
+ {
+-	event->pending_disable = 1;
++	event->pending_disable = smp_processor_id();
+ 	irq_work_queue(&event->pending);
+ }
+ 
+@@ -5822,8 +5822,8 @@ static void perf_pending_event(struct irq_work *entry)
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
++	if (event->pending_disable == smp_processor_id()) {
++		event->pending_disable = -1;
+ 		perf_event_disable_local(event);
+ 	}
+ 
+@@ -10236,6 +10236,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 
+ 	init_waitqueue_head(&event->waitq);
++	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
+ 
+ 	mutex_init(&event->mmap_mutex);
