@@ -4,54 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A172CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4465EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD2220693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BB720693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368992;
-	bh=4IL2HCaPmyapqk+1indfqhywJwA9ug07I37kg2icq78=;
+	s=default; t=1554368996;
+	bh=/nIV/fGH+CgcQy8+EIi55FqpZEINdruxAOGABvN50jE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k/1gYPTd0+t1azbVbqiko4qBpbszYiX93Mrb6l0hr86sTKs2S6IL6/sE9h3l3FBA2
-	 xtdwXH9wSJ8IXKsYCey19SisySGExB5+II2FsBLYNJWnu1MriBlFzneEmVC1/JVnd0
-	 8+P8MhNl8RQ7hFgGEmSSaE9JcK/u+M5RZmuMQxWU=
+	b=VMex+KrWEIauhB6e9CNjZQ4XbG6mCz3Wnlw0JtLDnQ87kIej/0LNc0a7al9GKXnrL
+	 kNsYe9jtqCxzm5bwLfu13Vf1djPJdt3sTl0/Xlm9I1X9xOw+z1mjxpdpI30ZPUrHpH
+	 TqfQbUe+M2HMHLGEK/J8ut+8iqBc105HcQHc54iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbfDDJJu (ORCPT
+        id S1732910AbfDDJJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732892AbfDDJJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:48 -0400
+        id S1732678AbfDDJJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C44572054F;
-        Thu,  4 Apr 2019 09:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40D4A20652;
+        Thu,  4 Apr 2019 09:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368988;
-        bh=4IL2HCaPmyapqk+1indfqhywJwA9ug07I37kg2icq78=;
+        s=default; t=1554368990;
+        bh=/nIV/fGH+CgcQy8+EIi55FqpZEINdruxAOGABvN50jE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KpKyxVCRzi9J70xI2KulJGFUZjmHM5fG3KF0BQ8B05qLlT648XJfOsspMoVgpr82w
-         UiqCbyCOUrytqZkFY3AVTUCvB9uAXl883xSbzKCrrw4tvWWjUbKvN51oGQ81oo2kgl
-         KbtOc8p0VToopmH8a1cxgrgXKUek3x9Tuvb66N48=
+        b=IEBVyolg8sZ/+bImPxBfu7KDDMvjcI5GaYWCb6QDVZtkTwHb9ugBhv1JVvR5JVtnA
+         Tb5a1d16b/JPeiSIHX0RhU8F3SWLmCGxbV95Jk0H2DI0OMp+hQEL3O4is6EgI96y98
+         IN3XE2H7h/dUDhe7ioh7+gEzDCKU/TsYnzWcqmVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Sartain <mikesart@fastmail.com>,
-        Mathias Krause <minipli@googlemail.com>,
-        Tony Jones <tonyj@suse.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 056/246] tools lib traceevent: Fix buffer overflow in arg_eval
-Date:   Thu,  4 Apr 2019 10:45:56 +0200
-Message-Id: <20190404084620.985241647@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org, Huang Ying <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, Keith Busch <keith.busch@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 057/246] mm/resource: Return real error codes from walk failures
+Date:   Thu,  4 Apr 2019 10:45:57 +0200
+Message-Id: <20190404084621.174666333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -70,45 +83,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
+[ Upstream commit 5cd401ace914dc68556c6d2fcae0c349444d5f86 ]
 
-Fix buffer overflow observed when running perf test.
+walk_system_ram_range() can return an error code either becuase
+*it* failed, or because the 'func' that it calls returned an
+error.  The memory hotplug does the following:
 
-The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
-resulting in -9223372036854775808 which overflows the 20 character
-buffer.
+	ret = walk_system_ram_range(..., func);
+        if (ret)
+		return ret;
 
-If is possible this bug has been reported before but I still don't see
-any fix checked in:
+and 'ret' makes it out to userspace, eventually.  The problem
+s, walk_system_ram_range() failues that result from *it* failing
+(as opposed to 'func') return -1.  That leads to a very odd
+-EPERM (-1) return code out to userspace.
 
-See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+Make walk_system_ram_range() return -EINVAL for internal
+failures to keep userspace less confused.
 
-Reported-by: Michael Sartain <mikesart@fastmail.com>
-Reported-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This return code is compatible with all the callers that I
+audited.
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ross Zwisler <zwisler@kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: linux-nvdimm@lists.01.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Jerome Glisse <jglisse@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/resource.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index abd4fa5d3088..87494c7c619d 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2457,7 +2457,7 @@ static int arg_num_eval(struct tep_print_arg *arg, long long *val)
- static char *arg_eval (struct tep_print_arg *arg)
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 915c02e8e5dd..ca7ed5158cff 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -382,7 +382,7 @@ static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
+ 				 int (*func)(struct resource *, void *))
  {
- 	long long val;
--	static char buf[20];
-+	static char buf[24];
+ 	struct resource res;
+-	int ret = -1;
++	int ret = -EINVAL;
  
- 	switch (arg->type) {
- 	case TEP_PRINT_ATOM:
+ 	while (start < end &&
+ 	       !find_next_iomem_res(start, end, flags, desc, first_lvl, &res)) {
+@@ -462,7 +462,7 @@ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+ 	unsigned long flags;
+ 	struct resource res;
+ 	unsigned long pfn, end_pfn;
+-	int ret = -1;
++	int ret = -EINVAL;
+ 
+ 	start = (u64) start_pfn << PAGE_SHIFT;
+ 	end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
 -- 
 2.19.1
 
