@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D28C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D837C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77F42075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A6A206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371387;
-	bh=vVwPuTDAvMSOha1T0pRQQg6hi7UY/1tQ6mxeu0vVoNo=;
+	s=default; t=1554371399;
+	bh=7udGr7CkuOqZ/ZkMTAMyEcn+KtSzPuocwrswRQADpss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kkRI8e2nARqp5sbQ3HV4Yu3hbhEnLs2IcUrMoTtATPwZD9+gzA6X9BXv94QJAyr2K
-	 W0ZpIom3JxwmeUDHG3Tg9LO1QN+Ih4hblaqwrKIU0okZnglXhUAcyBJDiaj1TECWPc
-	 e4DUmdzWcTv9Gi7X8HfKWvFDyMNnkhKCTCC9FSiQ=
+	b=N8L6ZeOXyNbxeIuyEIAiV2n1xQDwrGExQ1Kh8eqCkY8tI7BiRYiOSr9om0bGFs51O
+	 QDYGo5kQyXRxi2zrGIzwGGuPUa3U4aweGQyAOZ+c64PUk+xJAZKpEuhYH31bzKf9ML
+	 VfHA1MExmSPozK0/Srd17h8Pa61ogbKyEjEpZwBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbfDDJtq (ORCPT
+        id S1730686AbfDDJt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbfDDI4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:14 -0400
+        id S1729969AbfDDI4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B417520652;
-        Thu,  4 Apr 2019 08:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBCA20652;
+        Thu,  4 Apr 2019 08:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368174;
-        bh=vVwPuTDAvMSOha1T0pRQQg6hi7UY/1tQ6mxeu0vVoNo=;
+        s=default; t=1554368163;
+        bh=7udGr7CkuOqZ/ZkMTAMyEcn+KtSzPuocwrswRQADpss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ssqr3OWp5blv4Gx3msHl3IUNurxkxAh6GGlbZuvUefQOtZyo83edre7QxUKDpVyYr
-         dzoMG0x4DUjEVkciwSmt8J4+Owhgt3ozrFSN313dyiwfhu92xeOPXovGV/0hl7jpQo
-         6Lcj+7Gx/PqbLpH9KsYF7m5CJEoTA0HJD3Xocgq4=
+        b=aX+EOH1zvnKkEzOaoONfL1SAwEdtf7fBQMd9EnttYp/ldHcLR4uH1oH1gd9yvhHrY
+         4ZcGPPijAVBC0nNAWgPQ2oqiABES5czEx1V8qWouchFHKUYMt/i2ETUaQK+xUEWrCF
+         Dc9e1nQbF6TG91gazxWqoa4eZNp4+qAJpfnDkNoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/121] mmc: omap: fix the maximum timeout setting
-Date:   Thu,  4 Apr 2019 10:47:16 +0200
-Message-Id: <20190404084547.866319556@linuxfoundation.org>
+Subject: [PATCH 4.14 044/121] serial: 8250_pxa: honor the port number from devicetree
+Date:   Thu,  4 Apr 2019 10:47:12 +0200
+Message-Id: <20190404084547.659936574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,49 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
+[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
 
-When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
+Like the other OF-enabled drivers, use the port number from the firmware if
+the devicetree specifies an alias:
 
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	[ad inf.]
+  aliases {
+      ...
+      serial2 = &uart2; /* Should be ttyS2 */
+  }
 
-Emulator warnings appear to be valid. The TI document SPRU680 [1]
-("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
-(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
-cycles and "0xff and 0xfe cannot be used".
+This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
+messes up the numbering.
 
-Fix by using 0xfd as the maximum timeout.
-
-Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
-real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
-(OMAP2420) that MMC works as before.
-
-[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
-
-Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_pxa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-index c28c51ad650f..f11245a0521c 100644
---- a/drivers/mmc/host/omap.c
-+++ b/drivers/mmc/host/omap.c
-@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
- 	reg &= ~(1 << 5);
- 	OMAP_MMC_WRITE(host, SDIO, reg);
- 	/* Set maximum timeout */
--	OMAP_MMC_WRITE(host, CTO, 0xff);
-+	OMAP_MMC_WRITE(host, CTO, 0xfd);
- }
+diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
+index 4d68731af534..de1372ba24b1 100644
+--- a/drivers/tty/serial/8250/8250_pxa.c
++++ b/drivers/tty/serial/8250/8250_pxa.c
+@@ -118,6 +118,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
++	ret = of_alias_get_id(pdev->dev.of_node, "serial");
++	if (ret >= 0)
++		uart.port.line = ret;
++
+ 	uart.port.type = PORT_XSCALE;
+ 	uart.port.iotype = UPIO_MEM32;
+ 	uart.port.mapbase = mmres->start;
 -- 
 2.19.1
 
