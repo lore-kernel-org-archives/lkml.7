@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A4CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D61C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E5F2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CB22171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTWy3uKH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p5ap4iba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfDDDgx (ORCPT
+        id S1728743AbfDDDg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:36:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40741 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728671AbfDDDgw (ORCPT
+        Wed, 3 Apr 2019 23:36:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33881 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728671AbfDDDg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:36:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c207so619257pfc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:51 -0700 (PDT)
+        Wed, 3 Apr 2019 23:36:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so636348pfd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kFYUPXqDT+4NKa1uTQaXULpv7Y+YefzCDvbN138zMnI=;
-        b=LTWy3uKHie6dKXq48SuUSLDOFWqCbGplQB45KxnD/vCJcF5L/sa/6SJCsJfosIpCPl
-         vKFmCf6HgO8KQKoD1jtzcVSjz7N+SN/Vumg/EhLmnN98dw6WYr3+RXOJrXl5KlF3LOO/
-         ggUt2/E4oD0dsHEWIQ8WZTik71totE9jL6xSGHHwC+3bR7dOnPQTVaHHz7PcMHHdAzp8
-         iHehk1++FQ943S5EtIOSoTJKk6P+ZEKkjpaSMak+FOY7m8refm9ZzDNl+7bnuAwwmmK1
-         YBNM9mtRz+VTcMmRuCg7nFKbz6ofMXDes8uQJykGMOlO1RKxwfW1K62fR75y1GMZEIrv
-         Oo2Q==
+        bh=LudRC9TQK4HNLvQvknqLAVG3xxx86t5omiW1jcpQn7M=;
+        b=p5ap4ibaWa2YMJgeLjUNn2YMG/1OP1OdJICTAiBIXN8oy4cPKJ51Jd9kOgaA4wY3/x
+         pp3Du9fIrKogx0dYSHz5wkHkBeWvIOYrNJ54wwWHiCwo2AnCRQjvV5L/oKWlTrL6M06e
+         sxquML1M0yOl5NfRz5fQN0Vn6538pwN+786rBqo2JJfOmVE5vnbYdWrvPE7CEvmdFtQE
+         Y3iyYDLa+rQV5dsqGUtO+VzodR7R6CZVjq+sIlhfMLNwv1HzYaFmkH5KS4WvPROLmDGV
+         IowW/KPSopknMq0CmQGY1mEsq5R+0/V2HD/eFxOSPS/dJWA6bWk/d94S+RwISxwbZp+E
+         yJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=kFYUPXqDT+4NKa1uTQaXULpv7Y+YefzCDvbN138zMnI=;
-        b=bBSbF7giFF8ZKMQHcoPiJcYXVPz24Oa9+AEIwfZ/1Yu7fYuIO95k53k0j+gdnAVtHR
-         YpFvm/GAY0qmmnlOqQo2SJOGoVjmoRb8yWv5TCcsVUf/xSJscsb6oD6Gt5P8RKbx4hsi
-         nqP5msSMMuwSoHobJRoFS4r8ahpcCrNIo6MjubwqSvoIRIjcNYNoglzRAT6wnFdeU0EY
-         y8teCwRxZaNuexWqLEjxG3HkNNSqenzGiVaUhZRsOll17PpyBSoWW9PizmTIfEGikm3X
-         7pmKJUnQd0/6/b3C1gdYVn7q00lrJCkpNLm5wEbrrRparEdv9D+1e++V4DlbwfBeCba3
-         6nNw==
-X-Gm-Message-State: APjAAAWanZwQ9lb/WLlmHdevsST8Xhi2dMF0yk+Izpao2f4bNKJ4tpT4
-        NuncdTWROPnknL8IFZQgJ6W3bA==
-X-Google-Smtp-Source: APXvYqxx/cle2EssAtFjyb90I0PMaH5UqnhmroQOmHt53z8YZ32ZmNf5mj3nCTrCe2iY/q7XgHIcjg==
-X-Received: by 2002:a63:4e57:: with SMTP id o23mr3467140pgl.368.1554349011296;
-        Wed, 03 Apr 2019 20:36:51 -0700 (PDT)
+        bh=LudRC9TQK4HNLvQvknqLAVG3xxx86t5omiW1jcpQn7M=;
+        b=cOhPwQFtd3KUtiplxqXjV20z0zKCWVxkiGHLQWtVz20V4m2vlWQuKFfjazdOYR1wM2
+         sjl6QBF0E4gSbsOONMY8nXK3O6TZpfkYpTNQnK2/r2lg7qxyqCt1oYJQUS6FzYc7Lp0R
+         JOOyfyDjqJb/jsAWrkeWK9w6LWli1ML+2Pf94J7x3CUrzQkqLcOitcWVF31LxPeOim2S
+         kwTPmlyRHIrCov0HKf7/fTDtfmzv2UgWDHvteOq0B8Qnwb1tqKzrcDhZmEQKIXleoGDx
+         S1cYPBUJgUXVZxGc2/iA4QaMTG5WZGTsm/thCV7y5Heck3zOw4vfxtphWJI9D0TEl+nI
+         veNQ==
+X-Gm-Message-State: APjAAAWZQNOiPFMfMjst6nVyWi7XFaDSIN0c8yX8EgxZbWkJChMH6bt7
+        aWjApW9ge74VZN/hNx7pZUsEAQ==
+X-Google-Smtp-Source: APXvYqyWtaDRUkI7E51SZkIw6nNMwUGRIn9GPjmjSfHKhkdgoSLfqdmkYEa/D81ozG+zhNjzgSH0qA==
+X-Received: by 2002:a65:47c6:: with SMTP id f6mr3400010pgs.173.1554349014940;
+        Wed, 03 Apr 2019 20:36:54 -0700 (PDT)
 Received: from xps15.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.47
+        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:36:50 -0700 (PDT)
+        Wed, 03 Apr 2019 20:36:54 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
         suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@linaro.org,
         coresight@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 17/20] coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide scenarios
-Date:   Wed,  3 Apr 2019 21:35:38 -0600
-Message-Id: <20190404033541.14072-18-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 18/20] coresight: tmc-etr: Add support for CPU-wide trace scenarios
+Date:   Wed,  3 Apr 2019 21:35:39 -0600
+Message-Id: <20190404033541.14072-19-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404033541.14072-1-mathieu.poirier@linaro.org>
 References: <20190404033541.14072-1-mathieu.poirier@linaro.org>
@@ -71,177 +71,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses the PID of the process being traced to allocate and free
-ETR memory buffers for CPU-wide scenarios.  The implementation is tailored
-to handle both N:1 and 1:1 source/sink HW topologies.
+This patch adds support for CPU-wide trace scenarios by making sure that
+only the sources monitoring the same process have access to a common sink.
+Because the sink is shared between sources, the first source to use the
+sink switches it on while the last one does the cleanup.  Any attempt to
+modify the HW is overlooked for as long as more than one source is using
+a sink.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- .../hwtracing/coresight/coresight-tmc-etr.c   | 107 +++++++++++++++++-
- 1 file changed, 104 insertions(+), 3 deletions(-)
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 38 ++++++++++++++++---
+ drivers/hwtracing/coresight/coresight-tmc.c   |  2 +
+ drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
+ 3 files changed, 38 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 1346474ac019..61110ef41d00 100644
+index 61110ef41d00..a91c1bc17e2d 100644
 --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
 +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -8,6 +8,8 @@
- #include <linux/coresight.h>
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
-+#include <linux/idr.h>
-+#include <linux/mutex.h>
- #include <linux/refcount.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -26,6 +28,7 @@ struct etr_flat_buf {
+@@ -1473,6 +1473,13 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	struct etr_buf *etr_buf = etr_perf->etr_buf;
  
- /*
-  * etr_perf_buffer - Perf buffer used for ETR
-+ * @drvdata		- The ETR drvdaga this buffer has been allocated for.
-  * @etr_buf		- Actual buffer used by the ETR
-  * @pid			- The PID this etr_perf_buffer belongs to.
-  * @snaphost		- Perf session mode
-@@ -34,6 +37,7 @@ struct etr_flat_buf {
-  * @pages		- Array of Pages in the ring buffer.
-  */
- struct etr_perf_buffer {
-+	struct tmc_drvdata	*drvdata;
- 	struct etr_buf		*etr_buf;
- 	pid_t			pid;
- 	bool			snapshot;
-@@ -1210,6 +1214,72 @@ alloc_etr_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
- 	return etr_buf;
- }
- 
-+static struct etr_buf *
-+get_perf_etr_buf_cpu_wide(struct tmc_drvdata *drvdata,
-+			  struct perf_event *event, int nr_pages,
-+			  void **pages, bool snapshot)
-+{
-+	int ret;
-+	pid_t pid = task_pid_nr(event->owner);
-+	struct etr_buf *etr_buf;
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
 +
-+retry:
-+	/*
-+	 * An etr_perf_buffer is associated with an event and holds a reference
-+	 * to the AUX ring buffer that was created for that event.  In CPU-wide
-+	 * N:1 mode multiple events (one per CPU), each with its own AUX ring
-+	 * buffer, share a sink.  As such an etr_perf_buffer is created for each
-+	 * event but a single etr_buf associated with the ETR is shared between
-+	 * them.  The last event in a trace session will copy the content of the
-+	 * etr_buf to its AUX ring buffer.  Ring buffer associated to other
-+	 * events are simply not used an freed as events are destoyed.  We still
-+	 * need to allocate a ring buffer for each event since we don't know
-+	 * which event will be last.
-+	 */
-+
-+	/*
-+	 * The first thing to do here is check if an etr_buf has already been
-+	 * allocated for this session.  If so it is shared with this event,
-+	 * otherwise it is created.
-+	 */
-+	mutex_lock(&drvdata->idr_mutex);
-+	etr_buf = idr_find(&drvdata->idr, pid);
-+	if (etr_buf) {
-+		refcount_inc(&etr_buf->refcount);
-+		mutex_unlock(&drvdata->idr_mutex);
-+		return etr_buf;
++	/* Don't do anything if another tracer is using this sink */
++	if (atomic_read(csdev->refcnt) != 1) {
++		spin_unlock_irqrestore(&drvdata->spinlock, flags);
++		goto out;
 +	}
 +
-+	/* If we made it here no buffer has been allocated, do so now. */
-+	mutex_unlock(&drvdata->idr_mutex);
-+
-+	etr_buf = alloc_etr_buf(drvdata, event, nr_pages, pages, snapshot);
-+	if (IS_ERR(etr_buf))
-+		return etr_buf;
-+
-+	refcount_set(&etr_buf->refcount, 1);
-+
-+	/* Now that we have a buffer, add it to the IDR. */
-+	mutex_lock(&drvdata->idr_mutex);
-+	ret = idr_alloc(&drvdata->idr, etr_buf, pid, pid + 1, GFP_KERNEL);
-+	mutex_unlock(&drvdata->idr_mutex);
-+
-+	/* Another event with this session ID has allocated this buffer. */
-+	if (ret == -ENOSPC) {
-+		tmc_free_etr_buf(etr_buf);
-+		goto retry;
-+	}
-+
-+	/* The IDR can't allocate room for a new session, abandon ship. */
-+	if (ret == -ENOMEM) {
-+		tmc_free_etr_buf(etr_buf);
-+		return ERR_PTR(ret);
-+	}
-+
-+
-+	return etr_buf;
-+}
-+
- static struct etr_buf *
- get_perf_etr_buf_per_thread(struct tmc_drvdata *drvdata,
- 			    struct perf_event *event, int nr_pages,
-@@ -1238,7 +1308,8 @@ get_perf_etr_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
- 		return get_perf_etr_buf_per_thread(drvdata, event, nr_pages,
- 						   pages, snapshot);
- 
--	return ERR_PTR(-ENOENT);
-+	return get_perf_etr_buf_cpu_wide(drvdata, event, nr_pages,
-+					 pages, snapshot);
- }
- 
- static struct etr_perf_buffer *
-@@ -1265,7 +1336,13 @@ tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
- 	return ERR_PTR(-ENOMEM);
- 
- done:
-+	/*
-+	 * Keep a reference to the ETR this buffer has been allocated for
-+	 * in order to have access to the IDR in tmc_free_etr_buffer().
-+	 */
-+	etr_perf->drvdata = drvdata;
- 	etr_perf->etr_buf = etr_buf;
-+
- 	return etr_perf;
- }
- 
-@@ -1295,9 +1372,33 @@ static void *tmc_alloc_etr_buffer(struct coresight_device *csdev,
- static void tmc_free_etr_buffer(void *config)
+ 	if (WARN_ON(drvdata->perf_data != etr_perf)) {
+ 		lost = true;
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+@@ -1512,17 +1519,15 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
  {
- 	struct etr_perf_buffer *etr_perf = config;
-+	struct tmc_drvdata *drvdata = etr_perf->drvdata;
-+	struct etr_buf *buf, *etr_buf = etr_perf->etr_buf;
+ 	int rc = 0;
++	pid_t pid;
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	struct perf_output_handle *handle = data;
+ 	struct etr_perf_buffer *etr_perf = etm_perf_sink_config(handle);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+-	/*
+-	 * There can be only one writer per sink in perf mode. If the sink
+-	 * is already open in SYSFS mode, we can't use it.
+-	 */
+-	if (drvdata->mode != CS_MODE_DISABLED || WARN_ON(drvdata->perf_data)) {
++	 /* Don't use this sink if it is already claimed by sysFS */
++	if (drvdata->mode == CS_MODE_SYSFS) {
+ 		rc = -EBUSY;
+ 		goto unlock_out;
+ 	}
+@@ -1532,10 +1537,31 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 		goto unlock_out;
+ 	}
+ 
++	/* Get a handle on the pid of the process to monitor */
++	pid = etr_perf->pid;
 +
-+	if (!etr_buf)
-+		goto free_etr_perf_buffer;
-+
-+	mutex_lock(&drvdata->idr_mutex);
-+	/* If we are not the last one to use the buffer, don't touch it. */
-+	if (!refcount_dec_and_test(&etr_buf->refcount)) {
-+		mutex_unlock(&drvdata->idr_mutex);
-+		goto free_etr_perf_buffer;
++	/* Do not proceed if this device is associated with another session */
++	if (drvdata->pid != -1 && drvdata->pid != pid) {
++		rc = -EBUSY;
++		goto unlock_out;
 +	}
 +
-+	/* We are the last one, remove from the IDR and free the buffer. */
-+	buf = idr_remove(&drvdata->idr, etr_perf->pid);
-+	mutex_unlock(&drvdata->idr_mutex);
+ 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
+ 	drvdata->perf_data = etr_perf;
 +
 +	/*
-+	 * Something went very wrong if the buffer associated with this ID
-+	 * is not the same in the IDR.  Leak to avoid use after free.
++	 * No HW configuration is needed if the sink is already in
++	 * use for this session.
 +	 */
-+	if (buf && WARN_ON(buf != etr_buf))
-+		goto free_etr_perf_buffer;
++	if (drvdata->pid == pid) {
++		atomic_inc(csdev->refcnt);
++		goto unlock_out;
++	}
 +
-+	tmc_free_etr_buf(etr_perf->etr_buf);
+ 	rc = tmc_etr_enable_hw(drvdata, etr_perf->etr_buf);
+ 	if (!rc) {
++		/* Associate with monitored process. */
++		drvdata->pid = pid;
+ 		drvdata->mode = CS_MODE_PERF;
+ 		atomic_inc(csdev->refcnt);
+ 	}
+@@ -1579,6 +1605,8 @@ static int tmc_disable_etr_sink(struct coresight_device *csdev)
+ 	/* Complain if we (somehow) got out of sync */
+ 	WARN_ON_ONCE(drvdata->mode == CS_MODE_DISABLED);
+ 	tmc_etr_disable_hw(drvdata);
++	/* Dissociate from monitored process. */
++	drvdata->pid = -1;
+ 	drvdata->mode = CS_MODE_DISABLED;
  
--	if (etr_perf->etr_buf)
--		tmc_free_etr_buf(etr_perf->etr_buf);
-+free_etr_perf_buffer:
- 	kfree(etr_perf);
- }
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index 71c86cffc021..fd8267fd8e6b 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -417,6 +417,8 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 	devid = readl_relaxed(drvdata->base + CORESIGHT_DEVID);
+ 	drvdata->config_type = BMVAL(devid, 6, 7);
+ 	drvdata->memwidth = tmc_get_memwidth(devid);
++	/* This device is not associated with a session */
++	drvdata->pid = -1;
  
+ 	if (drvdata->config_type == TMC_CONFIG_TYPE_ETR) {
+ 		if (np)
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index c1b1700b2df7..503f1b3a3741 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -165,6 +165,8 @@ struct etr_buf {
+  * @csdev:	component vitals needed by the framework.
+  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
+  * @spinlock:	only one at a time pls.
++ * @pid:	Process ID of the process being monitored by the session
++ *		that is using this component.
+  * @buf:	Snapshot of the trace data for ETF/ETB.
+  * @etr_buf:	details of buffer used in TMC-ETR
+  * @len:	size of the available trace for ETF/ETB.
+@@ -186,6 +188,7 @@ struct tmc_drvdata {
+ 	struct coresight_device	*csdev;
+ 	struct miscdevice	miscdev;
+ 	spinlock_t		spinlock;
++	pid_t			pid;
+ 	bool			reading;
+ 	union {
+ 		char		*buf;		/* TMC ETB */
 -- 
 2.17.1
 
