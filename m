@@ -2,52 +2,57 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924FAC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F008FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5999D2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70392183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368365;
-	bh=0OxmJPZnkVCDwtKNj9a///FyKDal9zhRT2X9d+2AIGw=;
+	s=default; t=1554368368;
+	bh=S0PI6G2OXK7kYB9p2bV8NWZ5GF39qE2vPS7OTU2bhZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhcdfnPEXfEq/CmAyoi6iTH6LB7Ka6vq4X9HKrMfyxHkIinyR1+HSRyNRn1NmhiTI
-	 icDF/ArOwesmx3/q2SY4X7NL00wgYhdmKaywyjXWxm87xLse8PCCzm9xpP0WpG+M4y
-	 5A0c5t0vMbBu/sPR7nkrPjRNX2yJWBpZepiothcQ=
+	b=WhN5XB9nc/pk8wS9YnVZwXcYnmsuQJow9AU8NMKoVEAJCHpEaKT+Nr8rx8ji00Exc
+	 XMBrc9PwjtrArmkW7O4C32ymKqPCQdVSHCue0W5kN/CmnPX67AXXlBj/9vmynNnWUF
+	 xi2t2t9jo8LWh+gHDetzqx8TfCHs29BJcHE2liv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfDDI7W (ORCPT
+        id S1731087AbfDDI71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730084AbfDDI7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:18 -0400
+        id S1730084AbfDDI7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62D1C2177E;
-        Thu,  4 Apr 2019 08:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB81217D9;
+        Thu,  4 Apr 2019 08:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368357;
-        bh=0OxmJPZnkVCDwtKNj9a///FyKDal9zhRT2X9d+2AIGw=;
+        s=default; t=1554368363;
+        bh=S0PI6G2OXK7kYB9p2bV8NWZ5GF39qE2vPS7OTU2bhZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bViPVbAjYbqchf6l7qyQa6Dcr/HRYvaXxMS5Iv8+1OiD9+ei2ulrUKOSG3V0Yi3K/
-         kA/tA4MW3p4wXxp/cF2eigC/32dZxi6XKK99L95IqEec/mw499/BNCh2X6XyXlo3bd
-         BwpXt+ejpHvE3j66kIMrF48eqwAdCd1rmpy2UMt0=
+        b=m3sx1+4xw0NRtpNNq9PsNrh/6+3YdH2/gxlYlj7vEs0+N4vN0tCYjUTP1Njc0DZE9
+         kGJfFR/8yjCKiLHYrvG+nFvB07zzgUAUTvhgurPht/o7wg7+/uikmrBbnElQ9z14Ii
+         ytBE8Zku2IH/tromyoqdo9EgHg3hXr+45uD+NHYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 4.19 002/187] ext4: cleanup bh release code in ext4_ind_remove_space()
-Date:   Thu,  4 Apr 2019 10:45:39 +0200
-Message-Id: <20190404084603.221472937@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 012/187] gpio: gpio-omap: fix level interrupt idling
+Date:   Thu,  4 Apr 2019 10:45:49 +0200
+Message-Id: <20190404084603.677724843@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,163 +71,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-Currently, we are releasing the indirect buffer where we are done with
-it in ext4_ind_remove_space(), so we can see the brelse() and
-BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
-may probably forget to release the buffer some day.  This patch cleans
-up the code by putting of the code which releases the buffers to the
-end of the function.
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Jari Ruusu <jari.ruusu@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
+
+However, this does not appear to be a practical problem.
+
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
+
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
+
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
+
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1219,6 +1219,7 @@ int ext4_ind_remove_space(handle_t *hand
- 	ext4_lblk_t offsets[4], offsets2[4];
- 	Indirect chain[4], chain2[4];
- 	Indirect *partial, *partial2;
-+	Indirect *p = NULL, *p2 = NULL;
- 	ext4_lblk_t max_block;
- 	__le32 nr = 0, nr2 = 0;
- 	int n = 0, n2 = 0;
-@@ -1260,7 +1261,7 @@ int ext4_ind_remove_space(handle_t *hand
- 		}
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index e81008678a38..6c1acf642c8e 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -888,14 +888,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
  
- 
--		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
-+		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
- 		if (nr) {
- 			if (partial == chain) {
- 				/* Shared branch grows from the inode */
-@@ -1285,13 +1286,11 @@ int ext4_ind_remove_space(handle_t *hand
- 				partial->p + 1,
- 				(__le32 *)partial->bh->b_data+addr_per_block,
- 				(chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 
- end_range:
--		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 		if (nr2) {
- 			if (partial2 == chain2) {
- 				/*
-@@ -1321,16 +1320,14 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 		goto do_indirects;
- 	}
- 
- 	/* Punch happened within the same level (n == n2) */
--	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
--	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
-+	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 
- 	/* Free top, but only if partial2 isn't its subtree. */
- 	if (nr) {
-@@ -1387,15 +1384,7 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			while (partial > chain) {
--				BUFFER_TRACE(partial->bh, "call brelse");
--				brelse(partial->bh);
--			}
--			while (partial2 > chain2) {
--				BUFFER_TRACE(partial2->bh, "call brelse");
--				brelse(partial2->bh);
--			}
--			return 0;
-+			goto cleanup;
- 		}
- 
- 		/*
-@@ -1410,8 +1399,6 @@ end_range:
- 					   partial->p + 1,
- 					   (__le32 *)partial->bh->b_data+addr_per_block,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 		if (partial2 > chain2 && depth2 <= depth) {
-@@ -1419,11 +1406,21 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 	}
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
 +
-+cleanup:
-+	while (p && p > chain) {
-+		BUFFER_TRACE(p->bh, "call brelse");
-+		brelse(p->bh);
-+		p--;
-+	}
-+	while (p2 && p2 > chain2) {
-+		BUFFER_TRACE(p2->bh, "call brelse");
-+		brelse(p2->bh);
-+		p2--;
-+	}
- 	return 0;
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
  
- do_indirects:
-@@ -1431,7 +1428,7 @@ do_indirects:
- 	switch (offsets[0]) {
- 	default:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_IND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
-@@ -1439,7 +1436,7 @@ do_indirects:
- 		}
- 	case EXT4_IND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_DIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
-@@ -1447,7 +1444,7 @@ do_indirects:
- 		}
- 	case EXT4_DIND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_TIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
-@@ -1456,5 +1453,5 @@ do_indirects:
- 	case EXT4_TIND_BLOCK:
- 		;
- 	}
--	return 0;
-+	goto cleanup;
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
  }
+ 
+-- 
+2.19.1
+
 
 
