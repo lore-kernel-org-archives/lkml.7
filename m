@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0851CC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00082C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7A421738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C138821850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368049;
-	bh=05SdunXKnUk6b8Z8vQdioJhQ9NZt3LOfslNNBY2dBPg=;
+	s=default; t=1554368054;
+	bh=F29Ru+7cAjmaT8wxaf1HD/czDaWJDN3BHy8O9MUp7p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m13O/p7foLgKYhBYVNbd9y3yzlWy4wFuFuAcxzg76rWO76aM/1yHzfdABlF7m7qm0
-	 FEpX1QEtS+irFBuVGDaUJ1kZtY4051oLODlUGu3Eu3W/1pnsgWLDPXbI4wz5lTWedp
-	 UucyAXzfW8RuO+3YfV1k/aaqTg8jNF9gQ4DtRrsc=
+	b=jtA/dpx+YDaAsXzI/PqHWVePetbtMBllxl9jgRDOLBEkZwxt5r4puwMwj8udV+uwq
+	 ao0kkRzzLiTxbRWmXk7HH/8ShLUiU5w7e9KzPr47dOnHztRQMXVG7p7/ezM8nYB84O
+	 Cq2FsMz8EXLmCTFfWbwXOXC5KtWSuzaTMNM+00Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbfDDIyI (ORCPT
+        id S1729993AbfDDIyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfDDIyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:03 -0400
+        id S1729959AbfDDIyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E3020652;
-        Thu,  4 Apr 2019 08:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E680E20652;
+        Thu,  4 Apr 2019 08:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368042;
-        bh=05SdunXKnUk6b8Z8vQdioJhQ9NZt3LOfslNNBY2dBPg=;
+        s=default; t=1554368047;
+        bh=F29Ru+7cAjmaT8wxaf1HD/czDaWJDN3BHy8O9MUp7p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GNst1Xtrbul+sngdeZ4xn5vxYe2MPv8MXxi2As37Nk+xGH7jLOKZjvolxxbK5G/Tb
-         5Dxy41agpdHCtSTBqachTy3dzQoLswmctGqJr46Hk65pQlrWM+DZ4+YlmCDfM0ItWy
-         KjNOA8kcF4neEzD1jmnEFD2mU2x4O0fp21sjw5hw=
+        b=K3K3JCI1MfbA+/1nhdUNz0VSIP6df2xUdK6NchDlpaqkOCzQqzeySVNrdscITJzzM
+         rc9B8+ZOLkunVYrGpJf/mztHhNvzpgGSfjSwrM8mj0h2XNEJhseWxKC1gwECGKFTKV
+         rxZns9fiw0qSjoLwULHfoc19F2BOYJxHCvgbFufA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 016/121] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
-Date:   Thu,  4 Apr 2019 10:46:44 +0200
-Message-Id: <20190404084546.246591774@linuxfoundation.org>
+Subject: [PATCH 4.14 018/121] iio: adc: fix warning in Qualcomm PM8xxx HK/XOADC driver
+Date:   Thu,  4 Apr 2019 10:46:46 +0200
+Message-Id: <20190404084546.352608931@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,62 +72,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
+[ Upstream commit e0f0ae838a25464179d37f355d763f9ec139fc15 ]
 
-The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
-dynamically allocate a struct member, but this is normally intended for
-local variables.
+The pm8xxx_get_channel() implementation is unclear, and causes gcc to
+suddenly generate odd warnings.  The trigger for the warning (at least
+for me) was the entirely unrelated commit 79a4e91d1bb2 ("device.h: Add
+__cold to dev_<level> logging functions"), which apparently changes gcc
+code generation in the caller function enough to cause this:
 
-Building with clang, I get a warning for a few locations that check the
-address of the cpumask_var_t:
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c: In function ‘pm8xxx_xoadc_probe’:
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:633:8: warning: ‘ch’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    ret = pm8xxx_read_channel_rsv(adc, ch, AMUX_RSV4,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             &read_nomux_rsv4, true);
+             ~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:426:27: note: ‘ch’ was declared here
+    struct pm8xxx_chan_info *ch;
+                             ^~
 
-drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+because gcc for some reason then isn't able to see that the termination
+condition for the "for( )" loop in that function is also the condition
+for returning NULL.
 
-As far as I can tell, the code is still correct, as the truth value of
-the pointer is what we need in this configuration. To get rid of
-the warning, use cpumask_available() instead of checking the
-pointer directly.
+So it's not _actually_ uninitialized, but the function is admittedly
+just unnecessarily oddly written.
 
-Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Simplify and clarify the function, making gcc also see that it always
+returns a valid initialized value.
+
+Cc: Joe Perches <joe@perches.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/qcom-pm8xxx-xoadc.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index ced348e15a63..19f374b180fc 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+diff --git a/drivers/iio/adc/qcom-pm8xxx-xoadc.c b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+index cea8f1fb444a..7e8da418a7b7 100644
+--- a/drivers/iio/adc/qcom-pm8xxx-xoadc.c
++++ b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+@@ -423,18 +423,14 @@ static irqreturn_t pm8xxx_eoc_irq(int irq, void *d)
+ static struct pm8xxx_chan_info *
+ pm8xxx_get_channel(struct pm8xxx_xoadc *adc, u8 chan)
+ {
+-	struct pm8xxx_chan_info *ch;
+ 	int i;
  
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
--		    (enic->msix[i].affinity_mask &&
-+		    (cpumask_available(enic->msix[i].affinity_mask) &&
- 		     !cpumask_empty(enic->msix[i].affinity_mask)))
- 			continue;
- 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
-@@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i)		||
- 		    enic_is_notify_intr(enic, i)	||
--		    !enic->msix[i].affinity_mask	||
-+		    !cpumask_available(enic->msix[i].affinity_mask) ||
- 		    cpumask_empty(enic->msix[i].affinity_mask))
- 			continue;
- 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
-@@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->wq_count; i++) {
- 		int wq_intr = enic_msix_wq_intr(enic, i);
+ 	for (i = 0; i < adc->nchans; i++) {
+-		ch = &adc->chans[i];
++		struct pm8xxx_chan_info *ch = &adc->chans[i];
+ 		if (ch->hwchan->amux_channel == chan)
+-			break;
++			return ch;
+ 	}
+-	if (i == adc->nchans)
+-		return NULL;
+-
+-	return ch;
++	return NULL;
+ }
  
--		if (enic->msix[wq_intr].affinity_mask &&
-+		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
- 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
- 			netif_set_xps_queue(enic->netdev,
- 					    enic->msix[wq_intr].affinity_mask,
+ static int pm8xxx_read_channel_rsv(struct pm8xxx_xoadc *adc,
 -- 
 2.19.1
 
