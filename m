@@ -2,95 +2,153 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D06C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FC920700
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F69A2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VbefsEsp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sd+S/WBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDDDeZ (ORCPT
+        id S1726761AbfDDDft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:34:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39748 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDDDeY (ORCPT
+        Wed, 3 Apr 2019 23:35:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40425 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDDDft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:34:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343Xkwx051251;
-        Thu, 4 Apr 2019 03:34:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=07oT3sqTD/ewTKWuDekpbwpkvCvkisgub3c0s8nNcag=;
- b=VbefsEsp0pzOToP4wxz13C1OTd0YCB70T+I0rF7r1yClb0HDouD3gk8E5POU/6ynuV5y
- j4xF2nyV/VZpf9l1iiCpQixcGoJ3O9EKyUcz33M0f9NIEfopCHUtY8iPa9edem9X6MJ2
- 5iSucFK8lzhiXhYi3TryoU+o8AHbAy5LndxAjQEpnUt89SIGD3GWHoCqfLR9SHNUL3Mc
- bJPefr7g3SvAMj+oCo4RvHRd+ojqoqMUZMPXIxOnuLTVzGQYS83eNgeEtnx4aVU34Muw
- QdZNqk8C7ka79+KaG8Ww7Ox1p0zaPxnH9prsi+UOx42W77mdswJoCY+oNDh6vdIqzTwH xA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2rj13qcfmb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:34:14 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343XWdr117236;
-        Thu, 4 Apr 2019 03:34:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2rm8f5pk69-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:34:13 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x343YCYc017949;
-        Thu, 4 Apr 2019 03:34:12 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 20:34:11 -0700
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Martin Petersen <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: correcting incorrect peripheral device type 0x0
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <ab8d589f-db76-9a95-1b55-3e906ad89487@free.fr>
-Date:   Wed, 03 Apr 2019 23:34:09 -0400
-In-Reply-To: <ab8d589f-db76-9a95-1b55-3e906ad89487@free.fr> (Marc Gonzalez's
-        message of "Tue, 2 Apr 2019 17:05:05 +0200")
-Message-ID: <yq1zhp6satq.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=647
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040023
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=706 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040023
+        Wed, 3 Apr 2019 23:35:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u9so497914pgo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=SzMmPvMQAmPO6BOEfaZSK+hLAqRvRp/TykXUpsX/htk=;
+        b=Sd+S/WBjBW0/zkvWyEjUQr1HXyWBW2CBK3x4N8FkSYQ/cJIBSvklAI7NQvLim3QY9R
+         dVzaw6G7nALCDc3k6zFCn7+I5FbEQl1FZz6y6OxcmcKogIEf89nxZf/AHlBc/3cfhsTu
+         g1MydHc9mfIu+oa6Tb2C4dbKEbNNtSGauZJQ+iKp0yQPuggV/xm/jvJKBIEIX2WMd7AB
+         cttd8FyykfSxLp1UIg6wc2UARRcsYv7vumYeoVwbAMhKQwyji2SGz5+b2eE1Jn6xsMGP
+         vxn+lLztzA5YLLXI4QmzERgfHlQJrisE6SvHkAPQYpVuUnnRw1kPTZIt0Y4G5YdTvLbm
+         GYPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SzMmPvMQAmPO6BOEfaZSK+hLAqRvRp/TykXUpsX/htk=;
+        b=Bcgd1G582vZjr4GAEQrlDPBgXSKfAtjAETQuIKzVHx5PfNZASVNHGqQjphvSIJTLGq
+         qf9ZqdMUlJQ64yrbadq22dgUEHwH64/2AcMC81syY9uUjPVYqaCBdqkHUyZCNYaJvNbB
+         UJvD5ueMJJ6KgXN79bsco8S8AQfD5DTj0OG4wViTC5lEuA9atPv9XruCeNXoCalAQvMh
+         wGejEXFgrQ+wZ/bqh3R+6GX0c9d1+y2jGDh6r7DIbD3+TR8bRooG+o0zfdfuziH/EafG
+         UnEyRWV0xQ1MEVgWnexZfSfe4xDP1Qujm6G+ycipMpiKuMommd+YukQbEmkeXqxnUVzZ
+         aUOA==
+X-Gm-Message-State: APjAAAVLTu7up0eJZdef6cokaPw94YGubu3wP8wSw+vslxZRaA+x2q+t
+        t7a6RQGY2H6EQkiK6OEE+Ewgfw==
+X-Google-Smtp-Source: APXvYqzkYAvDWxUQc601PlsEgyTKMKWB74DkuSdVcjL3JTE6FDkbsjGXXuCYU2y+2Qw8vT8yuOWJdA==
+X-Received: by 2002:a62:4d43:: with SMTP id a64mr3341616pfb.157.1554348948423;
+        Wed, 03 Apr 2019 20:35:48 -0700 (PDT)
+Received: from xps15.imgcgcw.net ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.35.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 20:35:47 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@linaro.org,
+        coresight@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/20] coresight: Add support for CPU-wide trace scenarios 
+Date:   Wed,  3 Apr 2019 21:35:21 -0600
+Message-Id: <20190404033541.14072-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the third revision of a patchset that adds support for CPU-wide
+trace scenarios and as such, it is now possible to issue the following
+commands:
 
-Marc,
+        # perf record -e cs_etm/@20070000.etr/ -C 2,3 $COMMAND
+        # perf record -e cs_etm/@20070000.etr/ -a $COMMAND
 
-> scsi 0:0:0:49488: scsi_add_lun: correcting incorrect peripheral device type 0x0 for W-LUN 0x            c150hN
+The solution is designed to work for both 1:1 and N:1 source/sink
+topologies, though the former hasn't been tested for lack of access to HW.
 
-             ^^^^^ Where do these crazy LUN numbers come from? That
-             looks like something which needs fixing...
+Most of the changes revolve around allowing more than one event to use
+a sink when operated from perf.  More specifically the first event to
+use a sink switches it on while the last one is tasked to aggregate traces
+and switching off the device.
+
+This is the kernel part of the solution, with the user space portion to be
+released in a later set.  All patches (user and kernel) have been rebased
+on v5.1-rc3 and are hosted here[1].  Everything has been tested on Juno, the
+410c dragonboard, and hikey620 platforms.
+
+Regards,
+Mathieu
+
+[1]. https://git.linaro.org/people/mathieu.poirier/coresight.git (5.1-rc3-cpu-wide-v3) 
+
+== Changes for v3 ==
+* Added review-by tags (some were dropped due to patch refactoring).
+* Split IDR and reference counting patches.
+* Moved IDR to struct tmc_drvdata to support 1:1 source/sink topologies.
+* Enhanced code comments related to design choices.
+* Renamed ETR buffer allocation functions to have a stronger perf semantic.
+* Rebased to v5.1-rc3.
+
+== Changes for V2 ==
+* Using define ETM4_CFG_BIT_CTXTID rather than hard coded value (Suzuki).
+* Moved pid out of struct etr_buf and into struct etr_perf_buffer (Suzuki).
+* Removed code related to forcing double buffering (Suzuki).
+* Fixed function reallocarray() for older distributions (Mike).
+* Fixed counter configuration when dealing with errors(Leo).
+* Automatically selecting PID_IN_CONTEXTIDR with ETMv4 driver.
+* Rebased to v5.1-rc2.
+
+Mathieu Poirier (20):
+  coresight: pmu: Adding ITRACE property to cs_etm PMU
+  coresight: etm4x: Add kernel configuration for CONTEXTID
+  coresight: etm4x: Skip selector pair 0
+  coresight: etm4x: Configure tracers to emit timestamps
+  coresight: Adding return code to sink::disable() operation
+  coresight: Move reference counting inside sink drivers
+  coresight: Properly address errors in sink::disable() functions
+  coresight: Properly address concurrency in sink::update() functions
+  coresight: perf: Clean up function etm_setup_aux()
+  coresight: perf: Refactor function free_event_data()
+  coresight: Communicate perf event to sink buffer allocation functions
+  coresight: tmc-etr: Refactor function tmc_etr_setup_perf_buf()
+  coresight: tmc-etr: Create per-thread buffer allocation function
+  coresight: tmc-etr: Introduce the notion of process ID to ETR devices
+  coresight: tmc-etr: Introduce the notion of reference counting to ETR
+    devices
+  coresight: tmc-etr: Introduce the notion of IDR to ETR devices
+  coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide
+    scenarios
+  coresight: tmc-etr: Add support for CPU-wide trace scenarios
+  coresight: tmc-etf: Add support for CPU-wide trace scenarios
+  coresight: etb10: Add support for CPU-wide trace scenarios
+
+ drivers/hwtracing/coresight/Kconfig           |   1 +
+ drivers/hwtracing/coresight/coresight-etb10.c |  83 ++++--
+ .../hwtracing/coresight/coresight-etm-perf.c  |  37 ++-
+ drivers/hwtracing/coresight/coresight-etm4x.c | 113 +++++++-
+ .../hwtracing/coresight/coresight-tmc-etf.c   |  82 ++++--
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 261 ++++++++++++++++--
+ drivers/hwtracing/coresight/coresight-tmc.c   |   6 +
+ drivers/hwtracing/coresight/coresight-tmc.h   |  12 +
+ drivers/hwtracing/coresight/coresight-tpiu.c  |   9 +-
+ drivers/hwtracing/coresight/coresight.c       |  28 +-
+ include/linux/coresight-pmu.h                 |   2 +
+ include/linux/coresight.h                     |   7 +-
+ tools/include/linux/coresight-pmu.h           |   2 +
+ 13 files changed, 546 insertions(+), 97 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
