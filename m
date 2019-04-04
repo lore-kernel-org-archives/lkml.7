@@ -2,122 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C70CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21923C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FBD20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370009;
-	bh=a0ja9YY5t9YqDggapWousEbNkIe4r3ZnGqyZriMCSQw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLY+9U5eUTZPV3OkyNpmpPoJhXBJUZ2/put9GmOQ+8jO87GbRG106kVgznUmo22FD
-	 y3AMfBmmODsMgs6O0kUR3xGW69ydtp5Aux3DX5k8/yy1BReLv5scAI6777BXr5dp5y
-	 5zRCspPr7GgehS76c6A2aDtV2NzkMQd5XC8PnFWk=
+	by mail.kernel.org (Postfix) with ESMTP id E4C1C20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BziY5QH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbfDDJ0r (ORCPT
+        id S2387483AbfDDJM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387487AbfDDJM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E48D20820;
-        Thu,  4 Apr 2019 09:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369179;
-        bh=a0ja9YY5t9YqDggapWousEbNkIe4r3ZnGqyZriMCSQw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGC6Uc3JWEEV0TWwed4gZ7FqRWuWoZGE1SD1v1jMw8zE6k9KHF04pcu8f8Do4GWnR
-         EmAdypEHHj3OgI0+iizQKd63UKZ4oHxIzUm0Yml1Bntn5rt5RonKEwyq4JaRV3q+Zr
-         UA7tvleHtr/zbtfKdvyusga3uI+QlqvPFskD+Q2Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 113/246] media: sh_veu: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:46:53 +0200
-Message-Id: <20190404084623.107805629@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 05:12:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43830 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387472AbfDDJMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3498dKp106900;
+        Thu, 4 Apr 2019 09:12:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=ooRjGljdHviFfmGky4Dy3X8VE6QgnWWfyaBMio4KVV8=;
+ b=BziY5QH8JiAXF13/CpjnOyerM6gCJ126g7KctQbGh2NWmRDsFyjqUtz1OtfmY9+11VN4
+ GeNaoH7+ednm9KfyM/i/TsgNVjKbhpge1YMDAFuQfa76+fChpp5gYXJ0a1Lc23aoUD20
+ L4D0N7d78XOLvi9MoghyQ5xWuQF82AthBwH+7/D2uCrVcNIK5QUT3MlawWwPO25UhaXP
+ GIBh13fn/h9reInfxWEiWHG8dsjjvvc1SfkYBVOIXkTR2hJVcqbGOjdHuueTLF7vVvp8
+ H1/TRHcWxNNKpQxsxtbU2mgAsSPKX/5m3dfVt712/0DydqISIVAqCzleXFoxeF841WRv lA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2rhyvtdwuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:12:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349CLdw156462;
+        Thu, 4 Apr 2019 09:12:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2rm8f5j05n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:12:22 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x349CHNF017487;
+        Thu, 4 Apr 2019 09:12:17 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 02:12:16 -0700
+Date:   Thu, 4 Apr 2019 12:12:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lucas Oshiro <lucasseikioshiro@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH] staging: iio: cdc: ad7746: Replace bitshift by BIT
+Message-ID: <20190404091206.GI32590@kadam>
+References: <20190403204502.28917-1-lucasseikioshiro@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403204502.28917-1-lucasseikioshiro@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=871
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040065
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Wed, Apr 03, 2019 at 05:45:02PM -0300, Lucas Oshiro wrote:
+>  #define AD7746_VTSETUP_VTMD_INT_TEMP	(0 << 5)
+> -#define AD7746_VTSETUP_VTMD_EXT_TEMP	(1 << 5)
+> +#define AD7746_VTSETUP_VTMD_EXT_TEMP	BIT(5)
 
-------------------
+No, the original is more readable.  Otherwise you can't see that it's
+part of a set.
 
-[ Upstream commit 43c145195c7fc3025ee7ecfc67112ac1c82af7c2 ]
+Just ignore checkpatch when it gives nonsense advice.
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
-
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
-
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
-
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/sh_veu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/platform/sh_veu.c b/drivers/media/platform/sh_veu.c
-index 09ae64a0004c..d277cc674349 100644
---- a/drivers/media/platform/sh_veu.c
-+++ b/drivers/media/platform/sh_veu.c
-@@ -273,13 +273,13 @@ static void sh_veu_process(struct sh_veu_dev *veu,
- static void sh_veu_device_run(void *priv)
- {
- 	struct sh_veu_dev *veu = priv;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 
- 	src_buf = v4l2_m2m_next_src_buf(veu->m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(veu->m2m_ctx);
- 
- 	if (src_buf && dst_buf)
--		sh_veu_process(veu, src_buf, dst_buf);
-+		sh_veu_process(veu, &src_buf->vb2_buf, &dst_buf->vb2_buf);
- }
- 
- 		/* ========== video ioctls ========== */
--- 
-2.19.1
-
-
+regards,
+dan carpenter
 
