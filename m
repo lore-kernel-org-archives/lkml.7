@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A572BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57333C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756212147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2606B2183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368393;
-	bh=SporxTRfM0/QzoeB5LOfPjJwX+8pCsCf9fI5003B0N8=;
+	s=default; t=1554368398;
+	bh=cOGDFI3eduanPU7WQB4Sc5tRC6VBg7S9g2FDSprIGZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZEleXlwg1zKRSgxrQzfOuXnp8bLVamYkIv7h2t6hE+FbUZOfnZRE6Qk7GRHtJQaO
-	 WwNVQ+C7ZoiQ+vi+CjRbYkPlVmoruyDUYapQHCXPZE65ci9C6ao22NONFpF38BmXcw
-	 ZB5dnf2RG4p7wq77jTXCqG1JXVfPC5b+RXEK7UIQ=
+	b=iDZBuEgaO8HBQ0QnoaoTsXi9Pb+BPOX5ln9rKb196ABnI6h/D6B45VMjG1O+9U5N1
+	 s1JAVY1jv65VyjHfgyq5ZiBthwtHmEPRW2sllO0FVwmqFUqG34G1myS6vmsyHt7Xzp
+	 Tu4DfI0Z2gLUzznB1cA/FuHRWmYJ99uSYKEOb4bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfDDI7w (ORCPT
+        id S1731160AbfDDI74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36270 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731131AbfDDI7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:48 -0400
+        id S1729877AbfDDI7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4092147C;
-        Thu,  4 Apr 2019 08:59:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BB12147C;
+        Thu,  4 Apr 2019 08:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368387;
-        bh=SporxTRfM0/QzoeB5LOfPjJwX+8pCsCf9fI5003B0N8=;
+        s=default; t=1554368390;
+        bh=cOGDFI3eduanPU7WQB4Sc5tRC6VBg7S9g2FDSprIGZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHwXNmnl3fbn8plTGyL7mDwNr5y4zqnFy0WepNH+K48wSnwITqqumQCH9/3ntRLDb
-         3xSjxYUdHSYGwdR/iecBCGvAW4wDq49BsCUIbiuGcy2q1k8QZJsirRXGw2xz822dYT
-         wCNVi6V/MJktWkSve1Nelq2oHH/JIydmoIKYkgOQ=
+        b=fMtJioHf70mjx0GoBf/+WLd08blR1XJbsLj45EMwTFnpZOCNix0p7mN1+B+qd9NZV
+         vKA20wDUiccSLB1jH7kxydPe1CG1Iil8ImCDLVIzNYxUvXskpMh8RX5VPHNfc3uLDD
+         FPSxsngZmpaowXIsi6/UgK/9pOfUp+eu+WXTloYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/187] h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
-Date:   Thu,  4 Apr 2019 10:45:43 +0200
-Message-Id: <20190404084603.392944979@linuxfoundation.org>
+Subject: [PATCH 4.19 007/187] f2fs: fix to adapt small inline xattr space in __find_inline_xattr()
+Date:   Thu,  4 Apr 2019 10:45:44 +0200
+Message-Id: <20190404084603.436273149@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,59 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fc2b47b55f17fd996f7a01975ce1c33c2f2513f6 ]
+[ Upstream commit 2c28aba8b2e2a51749fa66e01b68e1cd5b53e022 ]
 
-It believe it is a bad idea to hardcode a specific compiler prefix
-that may or may not be installed on a user's system. It is annoying
-when testing features that should not require compilers at all.
+With below testcase, we will fail to find existed xattr entry:
 
-For example, mrproper, headers_install, etc. should work without
-any compiler.
+1. mkfs.f2fs -O extra_attr -O flexible_inline_xattr /dev/zram0
+2. mount -t f2fs -o inline_xattr_size=1 /dev/zram0 /mnt/f2fs/
+3. touch /mnt/f2fs/file
+4. setfattr -n "user.name" -v 0 /mnt/f2fs/file
+5. getfattr -n "user.name" /mnt/f2fs/file
 
-They look like follows on my machine.
+/mnt/f2fs/file: user.name: No such attribute
 
-$ make ARCH=h8300 mrproper
-./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
-./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
-make: h8300-unknown-linux-gcc: Command not found
-make: h8300-unknown-linux-gcc: Command not found
-  [ a bunch of the same error messages continue ]
+The reason is for inode which has very small inline xattr size,
+__find_inline_xattr() will fail to traverse any entry due to first
+entry may not be loaded from xattr node yet, later, we may skip to
+check entire xattr datas in __find_xattr(), result in such wrong
+condition.
 
-$ make ARCH=h8300 headers_install
-./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
-./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
-make: h8300-unknown-linux-gcc: Command not found
-  HOSTCC  scripts/basic/fixdep
-make: h8300-unknown-linux-gcc: Command not found
-  WRAP    arch/h8300/include/generated/uapi/asm/kvm_para.h
-  [ snip ]
+This patch adds condition to check such case to avoid this issue.
 
-The solution is to delete this line, or to use cc-cross-prefix like
-some architectures do. I chose the latter as a moderate fixup.
-
-I added an alternative 'h8300-linux-' because it is available at:
-
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/h8300/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/xattr.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/h8300/Makefile b/arch/h8300/Makefile
-index 58634e6bae92..55f251810129 100644
---- a/arch/h8300/Makefile
-+++ b/arch/h8300/Makefile
-@@ -27,7 +27,7 @@ KBUILD_LDFLAGS += $(ldflags-y)
- CHECKFLAGS += -msize-long
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index 087e53a2d96c..409a637f7a92 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -227,11 +227,11 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
+ {
+ 	struct f2fs_xattr_entry *entry;
+ 	unsigned int inline_size = inline_xattr_size(inode);
++	void *max_addr = base_addr + inline_size;
  
- ifeq ($(CROSS_COMPILE),)
--CROSS_COMPILE := h8300-unknown-linux-
-+CROSS_COMPILE := $(call cc-cross-prefix, h8300-unknown-linux- h8300-linux-)
- endif
+ 	list_for_each_xattr(entry, base_addr) {
+-		if ((void *)entry + sizeof(__u32) > base_addr + inline_size ||
+-			(void *)XATTR_NEXT_ENTRY(entry) + sizeof(__u32) >
+-			base_addr + inline_size) {
++		if ((void *)entry + sizeof(__u32) > max_addr ||
++			(void *)XATTR_NEXT_ENTRY(entry) > max_addr) {
+ 			*last_addr = entry;
+ 			return NULL;
+ 		}
+@@ -242,6 +242,13 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
+ 		if (!memcmp(entry->e_name, name, len))
+ 			break;
+ 	}
++
++	/* inline xattr header or entry across max inline xattr size */
++	if (IS_XATTR_LAST_ENTRY(entry) &&
++		(void *)entry + sizeof(__u32) > max_addr) {
++		*last_addr = entry;
++		return NULL;
++	}
+ 	return entry;
+ }
  
- core-y	+= arch/$(ARCH)/kernel/ arch/$(ARCH)/mm/
 -- 
 2.19.1
 
