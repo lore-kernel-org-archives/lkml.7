@@ -2,106 +2,127 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ADFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E294C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED0C206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E086B206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554371178;
+	bh=nMADdsGGqy93p6BnP93FT6TGT9ky/0AEr9SEYJhB98U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wGVMxjCp++Swsy32+Z2VAwwym2iaAGbTGKEJeBEUqHFRNlOotOJf9pNG9U1U+FIfb
+	 iAC7/1Ro6FkwYi55nCXVm+pqjO4wI/5ZCdV7ayjRUQxMxvijykCIKBu6wNOdzpW6IL
+	 IDYPOOnFq0XrENlcObQSpTPYJ/dbmBQAVlnHGHTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbfDDJpv (ORCPT
+        id S1730911AbfDDJqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:45:51 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:46720 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbfDDJpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:45:44 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E53883C013A;
-        Thu,  4 Apr 2019 11:45:41 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id UD3h-i35fCq1; Thu,  4 Apr 2019 11:45:35 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Thu, 4 Apr 2019 05:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729868AbfDDI6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 499F13C00C3;
-        Thu,  4 Apr 2019 11:45:35 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Apr 2019
- 11:45:34 +0200
-Date:   Thu, 4 Apr 2019 11:45:31 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Simon Herkenhoff <sherkenhoff@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH] serial: sh-sci: Fix HSCIF RX sampling point calculation
-Message-ID: <20190404094531.GA31244@vmlxhi-102.adit-jv.com>
-References: <20190401112510.23145-1-geert+renesas@glider.be>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3182A2184E;
+        Thu,  4 Apr 2019 08:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368319;
+        bh=nMADdsGGqy93p6BnP93FT6TGT9ky/0AEr9SEYJhB98U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aslmg9Ey/MHGNaEVhBjbySlJ6ZziaHfMN6saAat9o9tc5J2hoSTamEn16Tow4NZqK
+         a1gNAOlwWacLy/YJDdGxo47ly1LzoK0raxkMNwUkg8Nc1Yimwup9TEZwBJ1VgVES+X
+         QwvbpF3ya81oZ6kSJvG1Y/F2K0sWRKaV3bLjN31Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Song Hongyan <hongyan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 103/121] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
+Date:   Thu,  4 Apr 2019 10:48:11 +0200
+Message-Id: <20190404084550.872809250@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
+References: <20190404084545.245659903@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190401112510.23145-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-On Mon, Apr 01, 2019 at 01:25:10PM +0200, Geert Uytterhoeven wrote:
-> There are several issues with the formula used for calculating the
-> deviation from the intended rate:
->   1. While min_err and last_stop are signed, srr and baud are unsigned.
->      Hence the signed values are promoted to unsigned, which will lead
->      to a bogus value of deviation if min_err is negative,
->   2. Srr is the register field value, which is one less than the actual
->      sampling rate factor,
->   3. The divisions do not use rounding.
-> 
-> Fix this by casting unsigned variables to int, adding one to srr, and
-> using a single DIV_ROUND_CLOSEST().
-> 
-> Fixes: 63ba1e00f178a448 ("serial: sh-sci: Support for HSCIF RX sampling point adjustment")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Anyone with a good test setup for verifying this feature actually works
-> as advertised?
-> ---
->  drivers/tty/serial/sh-sci.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index 2bdaeba5d527a6ce..8dea59edde34c224 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2522,7 +2522,9 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
->  			 * center of the last stop bit in sampling clocks.
->  			 */
->  			int last_stop = bits * 2 - 1;
-> -			int deviation = min_err * srr * last_stop / 2 / baud;
-> +			int deviation = DIV_ROUND_CLOSEST(min_err * last_stop *
-> +							  (int)(srr + 1),
-> +							  2 * (int)baud);
->  
->  			if (abs(deviation) >= 2) {
->  				/* At least two sampling clocks off at the
+------------------
 
-Just wanted to say thank you for your tremendous commitment and
-continuity in supporting the R-Car platform (and beyond that), which
-allowed us to gracefully overcome the problems encountered in the
-project in the best possible time, specifically thanks to this patch.
+[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
 
-Best regards,
-Eugeniu.
+Host driver should handle interrupt mask register earlier than wake up ish FW
+else there will be conditions when FW interrupt comes, host PIMR register still
+not set ready, so move the interrupt mask setting before ish_wakeup.
+
+Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
+conditions host driver received a busy_clear interrupt (before the busy_clear
+mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
+the interrupt will never be cleared, causing the DEVICE not sending following
+IRQ.
+
+Since PISR clear should not be called for the CHV device we do this change.
+After the change, both ISH2HOST interrupt and busy_clear interrupt will be
+considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
+from IPC_IS_BUSY check.
+
+Signed-off-by: Song Hongyan <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
+index 9a60ec13cb10..a3106fcc2253 100644
+--- a/drivers/hid/intel-ish-hid/ipc/ipc.c
++++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
+@@ -91,7 +91,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
+ 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
+ 	} else {
+ 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
+-		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
++		interrupt_generated = !!pisr_val;
++		/* only busy-clear bit is RW, others are RO */
++		if (pisr_val)
++			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
+ 	}
+ 
+ 	return interrupt_generated;
+@@ -843,11 +846,11 @@ int ish_hw_start(struct ishtp_device *dev)
+ {
+ 	ish_set_host_rdy(dev);
+ 
++	set_host_ready(dev);
++
+ 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
+ 	ish_wakeup(dev);
+ 
+-	set_host_ready(dev);
+-
+ 	/* wait for FW-initiated reset flow */
+ 	if (!dev->recvd_hw_ready)
+ 		wait_event_interruptible_timeout(dev->wait_hw_ready,
+-- 
+2.19.1
+
+
+
