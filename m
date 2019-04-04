@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA388C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FFEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B304921734
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C8320652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369471;
-	bh=/W/BJ1FRw1RBiBKdLMEJ+AWZtR455YD30xWV+T+3sHI=;
+	s=default; t=1554369474;
+	bh=kvnlPMiVNhVn9LycacgLUjcdAKTGvR+IF+BURDI4/sM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VsZbCiJuz/sfM9sEAVp+RM0xfhfPHG25lSVIyBjPvTrsIxRsMmH8l1OzeYvHP+hkD
-	 YvdnhpCTXJgMw31l0b1bktBNO8rSY64Nn42s+VOVaJyoB2vl1FQiTmNOMWG3r6dZdk
-	 cAgIj/87cIZ3iXqm/bE8KEnv9B5MPjvHr08Fwsh0=
+	b=Etipg/da10h5sglJbJd5BKHs2d3tvXeuuB/pQp2p0ljxYvzRWotFoKbSb5o4KQWLB
+	 yfmfDYLyARf4gpueAQyOjBlRI7r45Bbl0ZiRMEkHs8q0SAvxV8Ow7gu7YUVOHQIufv
+	 WNPjl3QmAMdEFMY/sEgQcWTKgeQWHv1Tg69rLMuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388299AbfDDJRu (ORCPT
+        id S2388309AbfDDJRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387460AbfDDJRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:45 -0400
+        id S2388283AbfDDJRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B1421734;
-        Thu,  4 Apr 2019 09:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3462075E;
+        Thu,  4 Apr 2019 09:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369464;
-        bh=/W/BJ1FRw1RBiBKdLMEJ+AWZtR455YD30xWV+T+3sHI=;
+        s=default; t=1554369467;
+        bh=kvnlPMiVNhVn9LycacgLUjcdAKTGvR+IF+BURDI4/sM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEG2kE2mWzuN4zrUen4kONCKeqbnvt2IXtPDe9z5NUhWigh9n3IArzmwdzQ70WgDL
-         7TlzL0y1Ika/PlgN366d29ec8Wvpliug5DfRSZfCYoHtY675VSXTAjYoNFanprjLq8
-         vROUBfTRpzys7aJqidgBqogxHOBEePqMond4X4ac=
+        b=fuSALumnTs1dkt9jjNV/Rg/8Z1QRN5yxpVl1P9LxWy5wh5Hd3A/ZVQ0TqROijNBGW
+         5NOWChlSgKycAZ4gCXfdq1qPERSPrfiTQShOp4zzUyXeoxKReJsThS5EudJrMOzD5D
+         hYWeWH6nu9xSnrWhGFKeRz64dWb1SbQXjfRJgSPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Nguyen Viet Dung <dung.nguyen.aj@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 234/246] ARM: shmobile: Fix R-Car Gen2 regulator quirk
-Date:   Thu,  4 Apr 2019 10:48:54 +0200
-Message-Id: <20190404084627.476051398@linuxfoundation.org>
+Subject: [PATCH 5.0 235/246] clk: rockchip: fix frac settings of GPLL clock for rk3328
+Date:   Thu,  4 Apr 2019 10:48:55 +0200
+Message-Id: <20190404084627.513774759@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,57 +67,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5347a0203709d5039a74d7c94e23519eee478094 ]
+[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
 
-The quirk code currently detects all compatible I2C chips with a shared
-IRQ line on all I2C busses, adds them into a list, and registers a bus
-notifier. For every chip for which the bus notifier triggers, the quirk
-code performs I2C transfer on that I2C bus for all addresses in the list.
-The problem is that this may generate transfers to non-existing chips on
-systems with multiple I2C busses.
+This patch fixes settings of GPLL frequency in fractional mode for
+rk3328. In this mode, FOUTVCO is calcurated by following formula:
+  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
 
-This patch adds a check to verify that the I2C bus to which the chip with
-shared IRQ is attached to matches the I2C bus of the chip which triggered
-the bus notifier and only starts the I2C transfer if they match.
+The problem is in FREF * FRAC >> 24 term. This result always lacks
+one from target value is specified by rate member. For example first
+itme of rk3328_pll_frac_rate originally has
+  - rate  : 1016064000
+  - refdiv: 3
+  - fbdiv : 127
+  - frac  : 134217
+  - FREF * FBDIV / REFDIV        = 1016000000
+  - (FREF * FRAC / REFDIV) >> 24 = 63999
+Thus calculated rate is 1016063999. It seems wrong.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Tested-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+If frac has 134218 (it is increased 1 from original value), second
+term is 64000. All other items have same situation. So this patch
+adds 1 to frac member in all items of rk3328_pll_frac_rate.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-index 8e50daa99151..dc526ef2e9b3 100644
---- a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-@@ -40,6 +40,7 @@
- struct regulator_quirk {
- 	struct list_head		list;
- 	const struct of_device_id	*id;
-+	struct device_node		*np;
- 	struct of_phandle_args		irq_args;
- 	struct i2c_msg			i2c_msg;
- 	bool				shared;	/* IRQ line is shared */
-@@ -101,6 +102,9 @@ static int regulator_quirk_notify(struct notifier_block *nb,
- 		if (!pos->shared)
- 			continue;
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index faa94adb2a37..65ab5c2f48b0 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
  
-+		if (pos->np->parent != client->dev.parent->of_node)
-+			continue;
-+
- 		dev_info(&client->dev, "clearing %s@0x%02x interrupts\n",
- 			 pos->id->compatible, pos->i2c_msg.addr);
- 
-@@ -165,6 +169,7 @@ static int __init rcar_gen2_regulator_quirk(void)
- 		memcpy(&quirk->i2c_msg, id->data, sizeof(quirk->i2c_msg));
- 
- 		quirk->id = id;
-+		quirk->np = np;
- 		quirk->i2c_msg.addr = addr;
- 
- 		ret = of_irq_parse_one(np, 0, argsa);
+ static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
+ 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
+-	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
++	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
+ 	/* vco = 1016064000 */
+-	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
++	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
++	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
++	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
+ 	/* vco = 860156000 */
+-	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
++	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
+ 	/* vco = 903168000 */
+-	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
++	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
+ 	/* vco = 819200000 */
+ 	{ /* sentinel */ },
+ };
 -- 
 2.19.1
 
