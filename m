@@ -2,173 +2,114 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF0DC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4797EC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94A620882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EC021852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554414828;
+	bh=xZLj/dM4yvsxxAOduPfGFuMxFMUwm2DjGIt71EuyvGI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KKwrCgxq1L+cErc+P9SYeKmG+JkFJzhQI4vbsoUPOfUggqeDN1J2zPJ8stgR2RsPE
+	 U/8lRNrBJxtzeq6r4hcKGMtfeZD16wL9OAat4KxwNLxs/loF5UFVFUCdgzAodOQd7G
+	 pT/Rke6ISm6GpfgoSLreE5oRaArf2f5pYrk4283U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfDDVw0 (ORCPT
+        id S1730371AbfDDVxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 17:52:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39376 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729714AbfDDVw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 17:52:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2CF03AEE6;
-        Thu,  4 Apr 2019 21:52:23 +0000 (UTC)
-Subject: Re: [RFC 0/2] add static key for slub_debug
-To:     Christopher Lameter <cl@linux.com>
-Cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org
-References: <20190404091531.9815-1-vbabka@suse.cz>
- <01000169e911ae41-0abde43e-18e8-442b-b289-e796c461f0b1-000000@email.amazonses.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <74806ef2-2ffa-c229-09e5-29aa9e852ca1@suse.cz>
-Date:   Thu, 4 Apr 2019 23:52:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 4 Apr 2019 17:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729714AbfDDVxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 17:53:46 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C4820882;
+        Thu,  4 Apr 2019 21:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554414825;
+        bh=xZLj/dM4yvsxxAOduPfGFuMxFMUwm2DjGIt71EuyvGI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q0MoGxANnXlWbJ6m1CiOKEXsTDi6hTNn8PFvBgmnY2hCQ5WFAOh53FQCyu8s+2MHu
+         DCpD6UqdC7k8bYbBKYqTIopI3LXM9efYLXRQDdyVcyGdX3QB9GMkA2xvlBO+miDBgr
+         Kloe7yBEXhmFU01WETw7NrHWyhWbtgxNgoO6Fkgc=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v3 0/7] Rewrite clk parent handling
+Date:   Thu,  4 Apr 2019 14:53:37 -0700
+Message-Id: <20190404215344.6330-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-In-Reply-To: <01000169e911ae41-0abde43e-18e8-442b-b289-e796c461f0b1-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 5:57 PM, Christopher Lameter wrote:
-> On Thu, 4 Apr 2019, Vlastimil Babka wrote:
-> 
->> I looked a bit at SLUB debugging capabilities and first thing I noticed is
->> there's no static key guarding the runtime enablement as is common for similar
->> debugging functionalities, so here's a RFC to add it. Can be further improved
->> if there's interest.
-> 
-> Well the runtime enablement is per slab cache and static keys are global.
+There are a couple warts with clk parent handling in the common clk
+framework. This patch series addresses one of those warts, parent-child
+linkages. We use strings for all parent-child linkages, and this leads
+to poorly written code that extracts clk names from struct clk pointers
+and makes clk provider drivers use clk consumer APIs. I've converted the
+fixed factor clk and I'm looking at converting users of other "basic"
+clk types in follow-up patches so we can start moving drivers away from
+string matching in the clk namespace.
 
-Sure, but the most common scenario worth optimizing for is that no slab
-cache has debugging enabled, and thus the global static key is disabled.
+Changes from v2:
+ * Dropped patches that got merged into v5.1-rc1
+ * Introduced a new function of_clk_hw_register()
+ * Introduced 'index' into clk_parent_data structure 
+ * Converted fixed-factor basic type to new design
+ * Fixed some bugs in a recent patch to clkdev, leading to
+   an essential API for clkdev based lookups working
 
-Once it becomes enabled, the flags are checked for each cache, no change
-there.
+Changes from v1:
+ * Dropped new get_parent_hw, we'll pick it up in a later series
+ * Rebased to v5.0-rc6 to avoid conflicts with clk-fixes
+ * Renamed 'fallback' to 'name' and 'name' to 'fw_name' in parent map
+ * Made sure that clk_hw_get_parent_by_index() never sees an error pointer
+   so that we don't mistakenly try to defer an error pointer
+ * Fixed index passing mistake on of_clk_get_hw_from_clkspec()
+ * Copy over all the data from parent maps and free it correctly too
 
-> Adding static key adds code to the critical paths.
+Stephen Boyd (7):
+  clkdev: Hold clocks_mutex while iterating clocks list
+  clk: Prepare for clk registration API that uses DT nodes
+  clk: Add of_clk_hw_register() API for early clk drivers
+  clk: Allow parents to be specified without string names
+  clk: Look for parents with clkdev based clk_lookups
+  clk: Allow parents to be specified via clkspec index
+  clk: fixed-factor: Let clk framework find parent
 
-It's effectively a NOP as long as it's disabled. When enabled, the NOP
-is livepatched into a jump (unconditional!) to the flags check.
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-> Since the flags for a
-> kmem_cache have to be inspected anyways there may not be that much of a
-> benefit.
+ drivers/clk/clk-fixed-factor.c |  53 ++++--
+ drivers/clk/clk.c              | 326 +++++++++++++++++++++++++--------
+ drivers/clk/clk.h              |   2 +
+ drivers/clk/clkdev.c           |  38 ++--
+ include/linux/clk-provider.h   |  22 +++
+ 5 files changed, 334 insertions(+), 107 deletions(-)
 
-The point is that as long as it's disabled (the common case), no flag
-check (most likely involving a conditional jump) is being executed at
-all (unlike now). NOP is obviously cheaper than a flag check. For the
-(uncommon) case with debugging enabled, it adds unconditional jump which
-is also rather cheap. So the tradeoff looks good.
 
->> It's true that in the alloc fast path the debugging check overhead is AFAICS
->> amortized by the per-cpu cache, i.e. when the allocation is from there, no
->> debugging functionality is performed. IMHO that's kinda a weakness, especially
->> for SLAB_STORE_USER, so I might also look at doing something about it, and then
->> the static key might be more critical for overhead reduction.
-> 
-> Moving debugging out of the per cpu fastpath allows that fastpath to be
-> much simpler and faster.
-> 
-> SLAB_STORE_USER is mostly used only for debugging in which case we are
-> less concerned with performance.
-
-Agreed, so it would be nice if we could do e.g. SLAB_STORE_USER for all
-allocations in such case.
-
-> If you want to use SLAB_STORE_USER in the fastpath then we have to do some
-> major redesign there.
-
-Sure. Just saying that benefit of static key in alloc path is currently
-limited as the debugging itself is limited due to alloc fast path being
-effective. But there's still immediate benefit in free path.
-
->> In the freeing fast path I quickly checked the stats and it seems that in
->> do_slab_free(), the "if (likely(page == c->page))" is not as likely as it
->> declares, as in the majority of cases, freeing doesn't happen on the object
->> that belongs to the page currently cached. So the advantage of a static key in
->> slow path __slab_free() should be more useful immediately.
-> 
-> Right. The freeing logic is actuall a weakness in terms of performance for
-> SLUB due to the need to operate on a per page queue immediately.
-> 
+base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
+-- 
+Sent by a computer through tubes
 
