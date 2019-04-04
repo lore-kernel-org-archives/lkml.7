@@ -2,52 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905CCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FEEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B2E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768942075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370941;
-	bh=2AUYNOR6M6y5fgXj7UzFkNiN/LlzH9BWPxMNBOWiswU=;
+	s=default; t=1554370945;
+	bh=uRQM1qfRhkfP2ZO8dRRQBkHRrlYp2Dj7fn3vU/E2ITM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kfLIkl8lPOJ06k/H5coTwVgiNKVYsFBDIWeVcelip3MmQP7MwAuW+LthGCS0J/yBg
-	 vBYF96p1LdI/xMBPaYUUvTIQbWAuhlQTYDpqmXJ6XyPo/VKy05mkQC/l+oukwUxdr1
-	 skq0NAKcYd/tdVxoSkuMV/VCwvcv0JoSez5McY38=
+	b=n/JQP2yBGW93Zlfp0KFsdgA+UZW+blKPDGGXzbGKWkI9L3NGe8lunx6KzBJ683icu
+	 Wayqhjon94fsO3F0LRyAndV8SxQo+tratFBnrRAdiSEbD7QttOBhAn06LJxO9S8a/m
+	 psQ4ZeLDnDcIA1KJ939AxSvfXXL2AEs3D9GpsiTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfDDJBi (ORCPT
+        id S1731435AbfDDJBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38726 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbfDDJBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:34 -0400
+        id S1731424AbfDDJB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E2392147C;
-        Thu,  4 Apr 2019 09:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8CA21741;
+        Thu,  4 Apr 2019 09:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368493;
-        bh=2AUYNOR6M6y5fgXj7UzFkNiN/LlzH9BWPxMNBOWiswU=;
+        s=default; t=1554368485;
+        bh=uRQM1qfRhkfP2ZO8dRRQBkHRrlYp2Dj7fn3vU/E2ITM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+zBJpzpqhivjuThlH0ToiMQcqOQrEeZ+xFTTbPgLHjE3MH38D7qI/r4SmMen2yIy
-         QSaC7yBskjVwS6iLdnMRZq4QvdnTCm/AGVNhqc3JAKupdYgRaub7YaAGiM2mZ9CqoV
-         ALJPoD28S8eyWFZjRiG0bUs1P6+3spxFJDr2NwBw=
+        b=DslScXed+xQukV9rQVEexBIGc6WcZoEMDMJNs6GZjbbRHh+JrKMogyar7PA5U8Pn+
+         KVgVeHGcGRGqEfXhqXF8Rz3yNDlWq7+vfWzt20cvrFHSVGnnHX+/J7kjCeUI4b8T+u
+         FaGFBuSOxFihNJh+3l7Uw/jZvNwwGoD7faPH+SJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, luojiajun <luojiajun3@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Slavomir Kaslev <kaslevs@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/187] jbd2: fix invalid descriptor block checksum
-Date:   Thu,  4 Apr 2019 10:46:21 +0200
-Message-Id: <20190404084605.156532712@linuxfoundation.org>
+Subject: [PATCH 4.19 041/187] fs: Make splice() and tee() take into account O_NONBLOCK flag on pipes
+Date:   Thu,  4 Apr 2019 10:46:18 +0200
+Message-Id: <20190404084605.015765515@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,50 +67,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
+[ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
 
-In jbd2_journal_commit_transaction(), if we are in abort mode,
-we may flush the buffer without setting descriptor block checksum
-by goto start_journal_io. Then fs is mounted,
-jbd2_descriptor_block_csum_verify() failed.
+The current implementation of splice() and tee() ignores O_NONBLOCK set
+on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag for
+blocking on pipe arguments.  This is inconsistent since splice()-ing
+from/to non-pipe file descriptors does take O_NONBLOCK into
+consideration.
 
-[  271.379811] EXT4-fs (vdd): shut down requested (2)
-[  271.381827] Aborting journal on device vdd-8.
-[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
-[  271.598023] JBD2: recovery failed
-[  271.598484] EXT4-fs (vdd): error loading journal
+Fix this by promoting O_NONBLOCK, when set on a pipe, to
+SPLICE_F_NONBLOCK.
 
-Fix this problem by keep setting descriptor block checksum if the
-descriptor buffer is not NULL.
+Some context for how the current implementation of splice() leads to
+inconsistent behavior.  In the ongoing work[1] to add VM tracing
+capability to trace-cmd we stream tracing data over named FIFOs or
+vsockets from guests back to the host.
 
-This checksum problem can be reproduced by xfstests generic/388.
+When we receive SIGINT from user to stop tracing, we set O_NONBLOCK on
+the input file descriptor and set SPLICE_F_NONBLOCK for the next call to
+splice().  If splice() was blocked waiting on data from the input FIFO,
+after SIGINT splice() restarts with the same arguments (no
+SPLICE_F_NONBLOCK) and blocks again instead of returning -EAGAIN when no
+data is available.
 
-Signed-off-by: luojiajun <luojiajun3@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+This differs from the splice() behavior when reading from a vsocket or
+when we're doing a traditional read()/write() loop (trace-cmd's
+--nosplice argument).
+
+With this patch applied we get the same behavior in all situations after
+setting O_NONBLOCK which also matches the behavior of doing a
+read()/write() loop instead of splice().
+
+This change does have potential of breaking users who don't expect
+EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH programs
+that set O_NONBLOCK and don't anticipate EAGAIN are arguably buggy[2].
+
+ [1] https://github.com/skaslev/trace-cmd/tree/vsock
+ [2] https://github.com/torvalds/linux/blob/d47e3da1759230e394096fd742aad423c291ba48/fs/read_write.c#L1425
+
+Signed-off-by: Slavomir Kaslev <kaslevs@vmware.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/splice.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 150cc030b4d7..65ea0355a4f6 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -691,9 +691,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
-                            the last tag we set up. */
+diff --git a/fs/splice.c b/fs/splice.c
+index 29e92b506394..7769181aa1a6 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1119,6 +1119,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (ipipe == opipe)
+ 			return -EINVAL;
  
- 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
--
--			jbd2_descriptor_block_csum_set(journal, descriptor);
- start_journal_io:
-+			if (descriptor)
-+				jbd2_descriptor_block_csum_set(journal,
-+							descriptor);
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
 +
- 			for (i = 0; i < bufs; i++) {
- 				struct buffer_head *bh = wbuf[i];
- 				/*
+ 		return splice_pipe_to_pipe(ipipe, opipe, len, flags);
+ 	}
+ 
+@@ -1144,6 +1147,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (unlikely(ret < 0))
+ 			return ret;
+ 
++		if (in->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		file_start_write(out);
+ 		ret = do_splice_from(ipipe, out, &offset, len, flags);
+ 		file_end_write(out);
+@@ -1168,6 +1174,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 			offset = in->f_pos;
+ 		}
+ 
++		if (out->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		pipe_lock(opipe);
+ 		ret = wait_for_space(opipe, flags);
+ 		if (!ret)
+@@ -1717,6 +1726,9 @@ static long do_tee(struct file *in, struct file *out, size_t len,
+ 	 * copying the data.
+ 	 */
+ 	if (ipipe && opipe && ipipe != opipe) {
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		/*
+ 		 * Keep going, unless we encounter an error. The ipipe/opipe
+ 		 * ordering doesn't really matter.
 -- 
 2.19.1
 
