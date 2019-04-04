@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C94C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5A621872
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BF921872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDDBhy (ORCPT
+        id S1726670AbfDDBhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 21:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 21:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfDDBhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 21:37:47 -0400
+        id S1726388AbfDDBhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 21:37:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E7D21850;
-        Thu,  4 Apr 2019 01:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72C9217D4;
+        Thu,  4 Apr 2019 01:37:44 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hBrK6-00055C-6Q; Wed, 03 Apr 2019 21:37:46 -0400
-Message-Id: <20190404013746.085272166@goodmis.org>
+        id 1hBrK3-0004yL-PC; Wed, 03 Apr 2019 21:37:43 -0400
+Message-Id: <20190404013743.674315225@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Apr 2019 21:37:39 -0400
+Date:   Wed, 03 Apr 2019 21:37:25 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [for-next][PATCH 18/19] sched/fair: do not expose some tracepoints to user if
- CONFIG_SCHEDSTATS is not set
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: [for-next][PATCH 04/19] tracing: Save the last hist commands associated event name
 References: <20190404013721.023858792@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -46,94 +46,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
-be not exposed to user if CONFIG_SCHEDSTATS is not set.
+In preparation for making use of the new trace error log, save the
+subsystem and event name associated with the last hist command - it
+will be passed as the location param in the event_log_err() calls.
 
-Link: http://lkml.kernel.org/r/1553602391-11926-3-git-send-email-laoar.shao@gmail.com
+Link: http://lkml.kernel.org/r/eb0fd1362be8f39facb86c83eecf441b7a5876f8.1554072478.git.tom.zanussi@linux.intel.com
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/trace/events/sched.h | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ kernel/trace/trace_events_hist.c | 33 ++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 9a4bdfadab07..c8c7c7efb487 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -241,7 +241,6 @@ DECLARE_EVENT_CLASS(sched_process_template,
- DEFINE_EVENT(sched_process_template, sched_process_free,
- 	     TP_PROTO(struct task_struct *p),
- 	     TP_ARGS(p));
--	     
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 795aa2038377..0de702bf148f 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -535,15 +535,34 @@ static struct track_data *track_data_alloc(unsigned int key_len,
+ 	return data;
+ }
  
- /*
-  * Tracepoint for a task exiting:
-@@ -336,11 +335,20 @@ TRACE_EVENT(sched_process_exec,
- 		  __entry->pid, __entry->old_pid)
- );
- 
+-static char last_hist_cmd[MAX_FILTER_STR_VAL];
++static char last_cmd[MAX_FILTER_STR_VAL];
++static char last_cmd_loc[MAX_FILTER_STR_VAL];
 +
-+#ifdef CONFIG_SCHEDSTATS
-+#define DEFINE_EVENT_SCHEDSTAT DEFINE_EVENT
-+#define DECLARE_EVENT_CLASS_SCHEDSTAT DECLARE_EVENT_CLASS
-+#else
-+#define DEFINE_EVENT_SCHEDSTAT DEFINE_EVENT_NOP
-+#define DECLARE_EVENT_CLASS_SCHEDSTAT DECLARE_EVENT_CLASS_NOP
-+#endif
+ static char hist_err_str[MAX_FILTER_STR_VAL];
+ 
+-static void last_cmd_set(char *str)
++static void last_cmd_set(struct trace_event_file *file, char *str)
+ {
++	const char *system = NULL, *name = NULL;
++	struct trace_event_call *call;
 +
- /*
-  * XXX the below sched_stat tracepoints only apply to SCHED_OTHER/BATCH/IDLE
-  *     adding sched_stat support to SCHED_FIFO/RR would be welcome.
-  */
--DECLARE_EVENT_CLASS(sched_stat_template,
-+DECLARE_EVENT_CLASS_SCHEDSTAT(sched_stat_template,
+ 	if (!str)
+ 		return;
  
- 	TP_PROTO(struct task_struct *tsk, u64 delay),
+-	strncpy(last_hist_cmd, str, MAX_FILTER_STR_VAL - 1);
++	strncpy(last_cmd, str, MAX_FILTER_STR_VAL - 1);
++
++	if (file) {
++		call = file->event_call;
++
++		system = call->class->system;
++		if (system) {
++			name = trace_event_name(call);
++			if (!name)
++				system = NULL;
++		}
++	}
++
++	if (system)
++		snprintf(last_cmd_loc, MAX_FILTER_STR_VAL, "hist:%s:%s", system, name);
+ }
  
-@@ -363,12 +371,11 @@ DECLARE_EVENT_CLASS(sched_stat_template,
- 			(unsigned long long)__entry->delay)
- );
+ static void hist_err(char *str, char *var)
+@@ -583,6 +602,8 @@ static void hist_err_event(char *str, char *system, char *event, char *var)
+ static void hist_err_clear(void)
+ {
+ 	hist_err_str[0] = '\0';
++	last_cmd[0] = '\0';
++	last_cmd_loc[0] = '\0';
+ }
  
--
- /*
-  * Tracepoint for accounting wait time (time the task is runnable
-  * but not actually running due to scheduler contention).
-  */
--DEFINE_EVENT(sched_stat_template, sched_stat_wait,
-+DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_wait,
- 	     TP_PROTO(struct task_struct *tsk, u64 delay),
- 	     TP_ARGS(tsk, delay));
+ static bool have_hist_err(void)
+@@ -5438,8 +5459,8 @@ static int hist_show(struct seq_file *m, void *v)
+ 	}
  
-@@ -376,7 +383,7 @@ DEFINE_EVENT(sched_stat_template, sched_stat_wait,
-  * Tracepoint for accounting sleep time (time the task is not runnable,
-  * including iowait, see below).
-  */
--DEFINE_EVENT(sched_stat_template, sched_stat_sleep,
-+DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_sleep,
- 	     TP_PROTO(struct task_struct *tsk, u64 delay),
- 	     TP_ARGS(tsk, delay));
+ 	if (have_hist_err()) {
+-		seq_printf(m, "\nERROR: %s\n", hist_err_str);
+-		seq_printf(m, "  Last command: %s\n", last_hist_cmd);
++		seq_printf(m, "\n%s: error: \n", hist_err_str);
++		seq_printf(m, "  Last command: %s\n", last_cmd);
+ 	}
  
-@@ -384,14 +391,14 @@ DEFINE_EVENT(sched_stat_template, sched_stat_sleep,
-  * Tracepoint for accounting iowait time (time the task is not runnable
-  * due to waiting on IO to complete).
-  */
--DEFINE_EVENT(sched_stat_template, sched_stat_iowait,
-+DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_iowait,
- 	     TP_PROTO(struct task_struct *tsk, u64 delay),
- 	     TP_ARGS(tsk, delay));
+  out_unlock:
+@@ -6043,8 +6064,8 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 	lockdep_assert_held(&event_mutex);
  
- /*
-  * Tracepoint for accounting blocked time (time the task is in uninterruptible).
-  */
--DEFINE_EVENT(sched_stat_template, sched_stat_blocked,
-+DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_blocked,
- 	     TP_PROTO(struct task_struct *tsk, u64 delay),
- 	     TP_ARGS(tsk, delay));
+ 	if (glob && strlen(glob)) {
+-		last_cmd_set(param);
+ 		hist_err_clear();
++		last_cmd_set(file, param);
+ 	}
  
+ 	if (!param)
 -- 
 2.20.1
 
