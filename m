@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC892C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67080C10F0D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9A021904
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3828121901
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368900;
-	bh=jcmColJ1GOErNW/EjMc0LrtisJNHSYInyhOr9ptxecA=;
+	s=default; t=1554368903;
+	bh=chVVm/2/4OKB5cIRpVAtGVf8rX01/FTP83VSQQiQMuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECMF02FfysMOB5l2GbwOyAhCfYn+Rq9Y6/Q+tsYBxSADsZ/fsqXRquGZzYJG5ppcc
-	 grWYbZ07wBf1jZQmso0bgU9dyaCF3isjEDZIT6PmPGwXiVXoaMtUF+rEloEvTGHeQo
-	 YWDzJ4wwi7TbrCCoMblysgYfXJIglgrUUzx90ur0=
+	b=Qsrndl1x8hGwSJ8lHQNVlilGfglec79EihKIp7MSXyY35DhhIqz6ae8JoeZUrQszi
+	 RQcivNBnEmHye25n7o5NfjUv9HzF75CUS2ZqNXUvtJFSSagdwhWsrO1DB2WH0eSu/Z
+	 tX7fqOUlUwXYY0alAnYs2zYtQ19DouSxWqLANVMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732431AbfDDJIS (ORCPT
+        id S1732639AbfDDJIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:08:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732615AbfDDJIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:08:13 -0400
+        id S1732189AbfDDJIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:08:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74174218C3;
-        Thu,  4 Apr 2019 09:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5821218FF;
+        Thu,  4 Apr 2019 09:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368891;
-        bh=jcmColJ1GOErNW/EjMc0LrtisJNHSYInyhOr9ptxecA=;
+        s=default; t=1554368898;
+        bh=chVVm/2/4OKB5cIRpVAtGVf8rX01/FTP83VSQQiQMuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNxBHAV7Vr7wipLUSDZTtuXctC7vN2Gr4bA+EjNtWTG+3dDB+U/mNU4axRrekbrnp
-         rw5otI1U2XWR59uCWZ2tw30K45kCjqewKmCvXwKDy0j5wlBtXyp4M4oKBXEsxD9pBp
-         Wc4O/gOwLb2FL7KurqPDGo8rlRsyo6XsMHrsCvY0=
+        b=aA9q99WK5rnIx7mery1T7dFmQOXb2xduhqG1i8ISqBhcPg/4Y+Qq2DP5PVzPRoyvr
+         vgztnP6hA83bVA4hAd4pIwK3rUn0pCd0tBRGLFpY1F9oAbaaS8h7P7rNisGOn7VGZY
+         Le9R5vWKcpzazSfqKjZYZx/Ba4q9l5mxKr8x8VkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 020/246] libbpf: force fixdep compilation at the start of the build
-Date:   Thu,  4 Apr 2019 10:45:20 +0200
-Message-Id: <20190404084619.860513419@linuxfoundation.org>
+Subject: [PATCH 5.0 022/246] scsi: hisi_sas: Fix a timeout race of driver internal and SMP IO
+Date:   Thu,  4 Apr 2019 10:45:22 +0200
+Message-Id: <20190404084619.916001143@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,117 +67,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8e2688876c7f7073d925e1f150e86b8ed3338f52 ]
+[ Upstream commit 4790595723d4b833b18c994973d39f9efb842887 ]
 
-libbpf targets don't explicitly depend on fixdep target, so when
-we do 'make -j$(nproc)', there is a high probability, that some
-objects will be built before fixdep binary is available.
+For internal IO and SMP IO, there is a time-out timer for them. In the
+timer handler, it checks whether IO is done according to the flag
+task->task_state_lock.
 
-Fix this by running sub-make; this makes sure that fixdep dependency
-is properly accounted for.
+There is an issue which may cause system suspended: internal IO or SMP IO
+is sent, but at that time because of hardware exception (such as inject
+2Bit ECC error), so IO is not completed and also not timeout. But, at that
+time, the SAS controller reset occurs to recover system. It will release
+the resource and set the status of IO to be SAS_TASK_STATE_DONE, so when IO
+timeout, it will never complete the completion of IO and wait for ever.
 
-For the same issue in perf, see commit abb26210a395 ("perf tools: Force
-fixdep compilation at the start of the build").
+[  729.123632] Call trace:
+[  729.126791] [<ffff00000808655c>] __switch_to+0x94/0xa8
+[  729.133106] [<ffff000008d96e98>] __schedule+0x1e8/0x7fc
+[  729.138975] [<ffff000008d974e0>] schedule+0x34/0x8c
+[  729.144401] [<ffff000008d9b000>] schedule_timeout+0x1d8/0x3cc
+[  729.150690] [<ffff000008d98218>] wait_for_common+0xdc/0x1a0
+[  729.157101] [<ffff000008d98304>] wait_for_completion+0x28/0x34
+[  729.165973] [<ffff000000dcefb4>] hisi_sas_internal_task_abort+0x2a0/0x424 [hisi_sas_test_main]
+[  729.176447] [<ffff000000dd18f4>] hisi_sas_abort_task+0x244/0x2d8 [hisi_sas_test_main]
+[  729.185258] [<ffff000008971714>] sas_eh_handle_sas_errors+0x1c8/0x7b8
+[  729.192391] [<ffff000008972774>] sas_scsi_recover_host+0x130/0x398
+[  729.199237] [<ffff00000894d8a8>] scsi_error_handler+0x148/0x5c0
+[  729.206009] [<ffff0000080f4118>] kthread+0x10c/0x138
+[  729.211563] [<ffff0000080855dc>] ret_from_fork+0x10/0x18
 
-Before:
+To solve the issue, callback function task_done of those IOs need to be
+called when on SAS controller reset.
 
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
-
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
- # cannot find fixdep (/usr/local/google/home/sdf/src/linux/xxx//fixdep)
- # using basic dep data
-
-/tmp/bld/libbpf.o: libbpf.c /usr/include/stdc-predef.h \
- /usr/include/stdlib.h /usr/include/features.h \
- /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
-
-After:
-
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
-
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
-cmd_/tmp/bld/libbpf.o := gcc -Wp,-MD,/tmp/bld/.libbpf.o.d -Wp,-MT,/tmp/bld/libbpf.o -g -Wall -DHAVE_LIBELF_MMAP_SUPPORT -DCOMPAT_NEED_REALLOCARRAY -Wbad-function-cast -Wdeclaration-after-statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat -Wstrict-aliasing=3 -Werror -Wall -fPIC -I. -I/usr/local/google/home/sdf/src/linux/tools/include -I/usr/local/google/home/sdf/src/linux/tools/arch/x86/include/uapi -I/usr/local/google/home/sdf/src/linux/tools/include/uapi -fvisibility=hidden -D"BUILD_STR(s)=$(pound)s" -c -o /tmp/bld/libbpf.o libbpf.c
-
-source_/tmp/bld/libbpf.o := libbpf.c
-
-deps_/tmp/bld/libbpf.o := \
-  /usr/include/stdc-predef.h \
-  /usr/include/stdlib.h \
-  /usr/include/features.h \
-  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
-  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-
-Fixes: 7c422f557266 ("tools build: Build fixdep helper from perf and basic libs")
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/Makefile | 3 ++-
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 34d9c3619c96..78fd86b85087 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -162,7 +162,8 @@ endif
- 
- TARGETS = $(CMD_TARGETS)
- 
--all: fixdep all_cmd
-+all: fixdep
-+	$(Q)$(MAKE) all_cmd
- 
- all_cmd: $(CMD_TARGETS) check
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 88ae415e907a..62d158574281 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -873,7 +873,8 @@ static void hisi_sas_do_release_task(struct hisi_hba *hisi_hba, struct sas_task
+ 		spin_lock_irqsave(&task->task_state_lock, flags);
+ 		task->task_state_flags &=
+ 			~(SAS_TASK_STATE_PENDING | SAS_TASK_AT_INITIATOR);
+-		task->task_state_flags |= SAS_TASK_STATE_DONE;
++		if (!slot->is_internal && task->task_proto != SAS_PROTOCOL_SMP)
++			task->task_state_flags |= SAS_TASK_STATE_DONE;
+ 		spin_unlock_irqrestore(&task->task_state_lock, flags);
+ 	}
  
 -- 
 2.19.1
