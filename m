@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4485EC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2FEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141D4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A05205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370285;
-	bh=94YzjAsryu9wbksOXASL8G0K5780+9jBPgrlsyeAldw=;
+	s=default; t=1554370299;
+	bh=uv/GzhpeaQPcLViHxdb3r2a6jYVwRLQapmmZu4wQFvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZ1KkdM420QkUNROFgk5wIEQR3Re+sFMdp6w/oChgFcwSG/2p9IYYRQGAEoYQoRRG
-	 8WJD2V37JXu8i1BSDetDood9+88tHyrSWOLhZ/lxhmGmdbh3L9tcadg2BGgty4I5OX
-	 0a3QC2Exfs5PLLsT9ss4vdEK1WqlrXil+ePqAVyM=
+	b=hDWIeEQCwM+UATu6moLSvCFRNezPkenOIuF22eKuHl/8OdQ1E4IdSiI5vxhEnEpLD
+	 GB1Z+DpM4zUnd9r6e9Ix/ZbJnJPuXVwFPR8wpzNbmczFV0j+gOVXjCrJuINRnW0VvU
+	 f+S6zyB1ub0r8U2xHvVQwpFZjUJnyA3wC3X1MGuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbfDDJbY (ORCPT
+        id S1733082AbfDDJbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732611AbfDDJJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:26 -0400
+        id S1732792AbfDDJJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8677320693;
-        Thu,  4 Apr 2019 09:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C68520693;
+        Thu,  4 Apr 2019 09:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368965;
-        bh=94YzjAsryu9wbksOXASL8G0K5780+9jBPgrlsyeAldw=;
+        s=default; t=1554368957;
+        bh=uv/GzhpeaQPcLViHxdb3r2a6jYVwRLQapmmZu4wQFvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/CxZYqTDJi0K9lbaYnzSDqqp4TfJewR2FBzd38jVfsBfBjjZBvwjW4Hh+OiHj/Oc
-         qqph3HkazQdTAlqbT8/MTIpCj2nDBClZDohgfzOtbxsAmdBnCuxDYyYdr6A4RmtLxI
-         g6v+PBmqvndy9iBXOFQQx7fYbRkiG+zUXqbZ5Gfw=
+        b=qnAEO3kP873AqcrnSv161/5AT9xSbRO9hvHFH+o4pemOX40bY6QaU78sUxu+tSJb8
+         w//GGQYtKyQUVHqhLP37Zm83LIG0aoTcIOzlBslHsi8LiWZMjgmSpxAltBlvjlS02Y
+         ZUIz5g+joEkRLbRK81rDrHhnV+XNY8eqVFBKXio0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Yisheng Xie <xieyisheng1@huawei.com>,
-        zhong jiang <zhongjiang@huawei.com>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 033/246] mm, mempolicy: fix uninit memory access
-Date:   Thu,  4 Apr 2019 10:45:33 +0200
-Message-Id: <20190404084620.232932913@linuxfoundation.org>
+Subject: [PATCH 5.0 030/246] docs/core-api/mm: fix user memory accessors formatting
+Date:   Thu,  4 Apr 2019 10:45:30 +0200
+Message-Id: <20190404084620.148221936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -76,93 +68,176 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2e25644e8da4ed3a27e7b8315aaae74660be72dc ]
+[ Upstream commit bc8ff3ca6589d63c6d10f5ee8bed38f74851b469 ]
 
-Syzbot with KMSAN reports (excerpt):
+The descriptions of userspace memory access functions had minor issues
+with formatting that made kernel-doc unable to properly detect the
+function/macro names and the return value sections:
 
-==================================================================
-BUG: KMSAN: uninit-value in mpol_rebind_policy mm/mempolicy.c:353 [inline]
-BUG: KMSAN: uninit-value in mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-CPU: 1 PID: 17420 Comm: syz-executor4 Not tainted 4.20.0-rc7+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
-  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:295
-  mpol_rebind_policy mm/mempolicy.c:353 [inline]
-  mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-  update_tasks_nodemask+0x608/0xca0 kernel/cgroup/cpuset.c:1120
-  update_nodemasks_hier kernel/cgroup/cpuset.c:1185 [inline]
-  update_nodemask kernel/cgroup/cpuset.c:1253 [inline]
-  cpuset_write_resmask+0x2a98/0x34b0 kernel/cgroup/cpuset.c:1728
+./arch/x86/include/asm/uaccess.h:80: info: Scanning doc for
+./arch/x86/include/asm/uaccess.h:139: info: Scanning doc for
+./arch/x86/include/asm/uaccess.h:231: info: Scanning doc for
+./arch/x86/include/asm/uaccess.h:505: info: Scanning doc for
+./arch/x86/include/asm/uaccess.h:530: info: Scanning doc for
+./arch/x86/lib/usercopy_32.c:58: info: Scanning doc for
+./arch/x86/lib/usercopy_32.c:69: warning: No description found for return
+value of 'clear_user'
+./arch/x86/lib/usercopy_32.c:78: info: Scanning doc for
+./arch/x86/lib/usercopy_32.c:90: warning: No description found for return
+value of '__clear_user'
 
-...
+Fix the formatting.
 
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
-  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
-  kmem_cache_alloc+0x572/0xb90 mm/slub.c:2777
-  mpol_new mm/mempolicy.c:276 [inline]
-  do_mbind mm/mempolicy.c:1180 [inline]
-  kernel_mbind+0x8a7/0x31a0 mm/mempolicy.c:1347
-  __do_sys_mbind mm/mempolicy.c:1354 [inline]
-
-As it's difficult to report where exactly the uninit value resides in
-the mempolicy object, we have to guess a bit.  mm/mempolicy.c:353
-contains this part of mpol_rebind_policy():
-
-        if (!mpol_store_user_nodemask(pol) &&
-            nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
-
-"mpol_store_user_nodemask(pol)" is testing pol->flags, which I couldn't
-ever see being uninitialized after leaving mpol_new().  So I'll guess
-it's actually about accessing pol->w.cpuset_mems_allowed on line 354,
-but still part of statement starting on line 353.
-
-For w.cpuset_mems_allowed to be not initialized, and the nodes_equal()
-reachable for a mempolicy where mpol_set_nodemask() is called in
-do_mbind(), it seems the only possibility is a MPOL_PREFERRED policy
-with empty set of nodes, i.e.  MPOL_LOCAL equivalent, with MPOL_F_LOCAL
-flag.  Let's exclude such policies from the nodes_equal() check.  Note
-the uninit access should be benign anyway, as rebinding this kind of
-policy is always a no-op.  Therefore no actual need for stable
-inclusion.
-
-Link: http://lkml.kernel.org/r/a71997c3-e8ae-a787-d5ce-3db05768b27c@suse.cz
-Link: http://lkml.kernel.org/r/73da3e9c-cc84-509e-17d9-0c434bb9967d@suse.cz
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Yisheng Xie <xieyisheng1@huawei.com>
-Cc: zhong jiang <zhongjiang@huawei.com>
+Link: http://lkml.kernel.org/r/1549549644-4903-3-git-send-email-rppt@linux.ibm.com
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/uaccess.h | 24 ++++++++++++------------
+ arch/x86/lib/usercopy_32.c     |  8 ++++----
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 6bc9786aad6e..c2275c1e6d2a 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -350,7 +350,7 @@ static void mpol_rebind_policy(struct mempolicy *pol, const nodemask_t *newmask)
- {
- 	if (!pol)
- 		return;
--	if (!mpol_store_user_nodemask(pol) &&
-+	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
- 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
- 		return;
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index c1334aaaa78d..f3aed639dccd 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -76,7 +76,7 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
+ #endif
  
+ /**
+- * access_ok: - Checks if a user space pointer is valid
++ * access_ok - Checks if a user space pointer is valid
+  * @addr: User space pointer to start of block to check
+  * @size: Size of block to check
+  *
+@@ -85,12 +85,12 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
+  *
+  * Checks if a pointer to a block of memory in user space is valid.
+  *
+- * Returns true (nonzero) if the memory block may be valid, false (zero)
+- * if it is definitely invalid.
+- *
+  * Note that, depending on architecture, this function probably just
+  * checks that the pointer is in the user space range - after calling
+  * this function, memory access functions may still return -EFAULT.
++ *
++ * Return: true (nonzero) if the memory block may be valid, false (zero)
++ * if it is definitely invalid.
+  */
+ #define access_ok(addr, size)					\
+ ({									\
+@@ -135,7 +135,7 @@ extern int __get_user_bad(void);
+ __typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
+ 
+ /**
+- * get_user: - Get a simple variable from user space.
++ * get_user - Get a simple variable from user space.
+  * @x:   Variable to store result.
+  * @ptr: Source address, in user space.
+  *
+@@ -149,7 +149,7 @@ __typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
+  * @ptr must have pointer-to-simple-variable type, and the result of
+  * dereferencing @ptr must be assignable to @x without a cast.
+  *
+- * Returns zero on success, or -EFAULT on error.
++ * Return: zero on success, or -EFAULT on error.
+  * On error, the variable @x is set to zero.
+  */
+ /*
+@@ -227,7 +227,7 @@ extern void __put_user_4(void);
+ extern void __put_user_8(void);
+ 
+ /**
+- * put_user: - Write a simple value into user space.
++ * put_user - Write a simple value into user space.
+  * @x:   Value to copy to user space.
+  * @ptr: Destination address, in user space.
+  *
+@@ -241,7 +241,7 @@ extern void __put_user_8(void);
+  * @ptr must have pointer-to-simple-variable type, and @x must be assignable
+  * to the result of dereferencing @ptr.
+  *
+- * Returns zero on success, or -EFAULT on error.
++ * Return: zero on success, or -EFAULT on error.
+  */
+ #define put_user(x, ptr)					\
+ ({								\
+@@ -503,7 +503,7 @@ struct __large_struct { unsigned long buf[100]; };
+ } while (0)
+ 
+ /**
+- * __get_user: - Get a simple variable from user space, with less checking.
++ * __get_user - Get a simple variable from user space, with less checking.
+  * @x:   Variable to store result.
+  * @ptr: Source address, in user space.
+  *
+@@ -520,7 +520,7 @@ struct __large_struct { unsigned long buf[100]; };
+  * Caller must check the pointer with access_ok() before calling this
+  * function.
+  *
+- * Returns zero on success, or -EFAULT on error.
++ * Return: zero on success, or -EFAULT on error.
+  * On error, the variable @x is set to zero.
+  */
+ 
+@@ -528,7 +528,7 @@ struct __large_struct { unsigned long buf[100]; };
+ 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)))
+ 
+ /**
+- * __put_user: - Write a simple value into user space, with less checking.
++ * __put_user - Write a simple value into user space, with less checking.
+  * @x:   Value to copy to user space.
+  * @ptr: Destination address, in user space.
+  *
+@@ -545,7 +545,7 @@ struct __large_struct { unsigned long buf[100]; };
+  * Caller must check the pointer with access_ok() before calling this
+  * function.
+  *
+- * Returns zero on success, or -EFAULT on error.
++ * Return: zero on success, or -EFAULT on error.
+  */
+ 
+ #define __put_user(x, ptr)						\
+diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
+index bfd94e7812fc..7d290777246d 100644
+--- a/arch/x86/lib/usercopy_32.c
++++ b/arch/x86/lib/usercopy_32.c
+@@ -54,13 +54,13 @@ do {									\
+ } while (0)
+ 
+ /**
+- * clear_user: - Zero a block of memory in user space.
++ * clear_user - Zero a block of memory in user space.
+  * @to:   Destination address, in user space.
+  * @n:    Number of bytes to zero.
+  *
+  * Zero a block of memory in user space.
+  *
+- * Returns number of bytes that could not be cleared.
++ * Return: number of bytes that could not be cleared.
+  * On success, this will be zero.
+  */
+ unsigned long
+@@ -74,14 +74,14 @@ clear_user(void __user *to, unsigned long n)
+ EXPORT_SYMBOL(clear_user);
+ 
+ /**
+- * __clear_user: - Zero a block of memory in user space, with less checking.
++ * __clear_user - Zero a block of memory in user space, with less checking.
+  * @to:   Destination address, in user space.
+  * @n:    Number of bytes to zero.
+  *
+  * Zero a block of memory in user space.  Caller must check
+  * the specified block with access_ok() before calling this function.
+  *
+- * Returns number of bytes that could not be cleared.
++ * Return: number of bytes that could not be cleared.
+  * On success, this will be zero.
+  */
+ unsigned long
 -- 
 2.19.1
 
