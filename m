@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA40C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DADC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE98D206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFDB20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfDDDzy (ORCPT
+        id S1728985AbfDDD4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:55:54 -0400
-Received: from regular1.263xmail.com ([211.150.70.205]:43892 "EHLO
+        Wed, 3 Apr 2019 23:56:37 -0400
+Received: from regular1.263xmail.com ([211.150.70.197]:57814 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfDDDzy (ORCPT
+        with ESMTP id S1728933AbfDDD4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:55:54 -0400
-Received: from sugar.zhang?rock-chips.com (unknown [192.168.167.158])
-        by regular1.263xmail.com (Postfix) with ESMTP id 012BF49C;
-        Thu,  4 Apr 2019 11:55:51 +0800 (CST)
+        Wed, 3 Apr 2019 23:56:37 -0400
+Received: from sugar.zhang?rock-chips.com (unknown [192.168.167.192])
+        by regular1.263xmail.com (Postfix) with ESMTP id 44C9368A;
+        Thu,  4 Apr 2019 11:56:35 +0800 (CST)
 X-263anti-spam: KSV:0;BIG:0;
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
@@ -32,10 +32,10 @@ X-ABS-CHECKED: 1
 X-SKE-CHECKED: 1
 X-ANTISPAM-LEVEL: 2
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P11171T140309601748736S1554350148756742_;
-        Thu, 04 Apr 2019 11:55:50 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P27186T140355238283008S1554350192612308_;
+        Thu, 04 Apr 2019 11:56:34 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4a751afae11919253e86403bd88738ef>
+X-UNIQUE-TAG: <42b942c1645e5b1a64fa1c8b90af1a18>
 X-RL-SENDER: sugar.zhang@rock-chips.com
 X-SENDER: zxg@rock-chips.com
 X-LOGIN-NAME: sugar.zhang@rock-chips.com
@@ -50,11 +50,10 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
         Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v1 09/12] dt-bindings: sound: add compatible for rk1808
-Date:   Thu,  4 Apr 2019 11:55:45 +0800
-Message-Id: <1554350145-24198-1-git-send-email-sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 10/12] ASoC: rockchip: pdm: adjust waterlevel in frame unit
+Date:   Thu,  4 Apr 2019 11:56:29 +0800
+Message-Id: <1554350189-24318-1-git-send-email-sugar.zhang@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554298856-59028-1-git-send-email-sugar.zhang@rock-chips.com>
 References: <1554298856-59028-1-git-send-email-sugar.zhang@rock-chips.com>
@@ -63,26 +62,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds bindings for rk1808 soc.
+This patch make the waterlevel more reasonable, because the pdm
+controller share the single FIFO(128 entries) with each channel.
+adjust waterlevel in frame to meet the vad or dma frames request.
 
 Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 ---
 
- Documentation/devicetree/bindings/sound/rockchip,pdm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/rockchip/rockchip_pdm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
-index 3e0eb73..98572a2 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
-@@ -4,6 +4,7 @@ Required properties:
+diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+index 3e1c5fd..955cdc2 100644
+--- a/sound/soc/rockchip/rockchip_pdm.c
++++ b/sound/soc/rockchip/rockchip_pdm.c
+@@ -255,8 +255,9 @@ static int rockchip_pdm_hw_params(struct snd_pcm_substream *substream,
+ 	regmap_update_bits(pdm->regmap, PDM_CTRL0,
+ 			   PDM_PATH_MSK | PDM_VDW_MSK,
+ 			   val);
++	/* all channels share the single FIFO */
+ 	regmap_update_bits(pdm->regmap, PDM_DMA_CTRL, PDM_DMA_RDL_MSK,
+-			   PDM_DMA_RDL(16));
++			   PDM_DMA_RDL(8 * params_channels(params)));
  
- - compatible: "rockchip,pdm"
-   - "rockchip,px30-pdm"
-+  - "rockchip,rk1808-pdm"
-   - "rockchip,rk3308-pdm"
- - reg: physical base address of the controller and length of memory mapped
-   region.
+ 	return 0;
+ }
 -- 
 2.7.4
 
