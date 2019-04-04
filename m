@@ -2,61 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD84C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F840C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E248E20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F099620652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368373;
-	bh=Z/t/rhvzHX5TMF7k7ezoCSU2TWPHwFy3tqTuGlAWYeE=;
+	s=default; t=1554368378;
+	bh=7tCIUaCOVMNKGmg5rZqYdWrKf769vBqfoAsF8w53tO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vio809HKazqFZGzcXZzWWAZft6NZDDrLzsHwXXFkJiQa0K+84oJCvjVP1oATTjplU
-	 LbLvrZDfvT/znhsWzhpnUs1do9SwZ6MIIjDkFkXtMFlF9gSraXOk630nf8z8igBF+O
-	 aS26mBX5DXizqjzV/ycc55AmgxTtdZb3VCCqXKGo=
+	b=0zTT9ydRJfZaQcqcCAGHfkzVI6eConm/EMzAM7/sNL8ydGB/ovN4HUvWbsohDCp5Y
+	 Bx4zKce8TA4XygiDQcfsbLnKEGjgjFV2Q2LQRODbCSONcogyBOnZm0bZd20ZNxvxM5
+	 OYjyYI6EKrU/MW5QoyK29P2T4aY8bvMSpx5/6kXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfDDI7b (ORCPT
+        id S1731105AbfDDI7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35794 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731088AbfDDI73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:29 -0400
+        id S1731092AbfDDI7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A401D2177E;
-        Thu,  4 Apr 2019 08:59:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46B832183E;
+        Thu,  4 Apr 2019 08:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368368;
-        bh=Z/t/rhvzHX5TMF7k7ezoCSU2TWPHwFy3tqTuGlAWYeE=;
+        s=default; t=1554368370;
+        bh=7tCIUaCOVMNKGmg5rZqYdWrKf769vBqfoAsF8w53tO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=so89tzcpNnOPDISlALEkaaJpWTnGtan8dd2sEGgx+9/mNhWrYdeXv4fHMuMb39NAc
-         N3sTKz40C+jf/u7eSGv7zW3McQbgvZNp3nsH6d++Jlep+mmDmPNCgk9o0pMsWomABi
-         P2Y8dhI2mCPDT5eM4iwaPmBKoU8XxRmCjhzpBDHg=
+        b=j/hvnhm3O4yEVCdlgHGzpgGH5G6wrn/Tu5uZ1foEmPME/0QzWMueP1IyvTJyWzVnS
+         X/yPB6GV/zK59cvZlSre9fqpfX0tHazPJm+tgkGfAn0M7iRS35hrEnRAhBYjRixyIv
+         zDdzEi/ljxUKsstId2rhIGz7uZKLIcrfW2nDbpJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/187] sysctl: handle overflow for file-max
-Date:   Thu,  4 Apr 2019 10:45:51 +0200
-Message-Id: <20190404084603.765313114@linuxfoundation.org>
+Subject: [PATCH 4.19 015/187] net: stmmac: Avoid sometimes uninitialized Clang warnings
+Date:   Thu,  4 Apr 2019 10:45:52 +0200
+Message-Id: <20190404084603.808468469@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -75,68 +67,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
+[ Upstream commit df103170854e87124ee7bdd2bca64b178e653f97 ]
 
-Currently, when writing
+When building with -Wsometimes-uninitialized, Clang warns:
 
-  echo 18446744073709551616 > /proc/sys/fs/file-max
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
 
-/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
-crashes the system.
+Clang is concerned with the use of stmmac_do_void_callback (which
+stmmac_get_timestamp and stmmac_config_sub_second_increment wrap),
+as it may fail to initialize these values if the if condition was ever
+false (meaning the callbacks don't exist). It's not wrong because the
+callbacks (get_timestamp and config_sub_second_increment respectively)
+are the ones that initialize the variables. While it's unlikely that the
+callbacks are ever going to disappear and make that condition false, we
+can easily avoid this warning by zero initialize the variables.
 
-This commit sets the max and min value for file-max.  The max value is
-set to long int.  Any higher value cannot currently be used as the
-percpu counters are long ints and not unsigned integers.
-
-Note that the file-max value is ultimately parsed via
-__do_proc_doulongvec_minmax().  This function does not report error when
-min or max are exceeded.  Which means if a value largen that long int is
-written userspace will not receive an error instead the old value will be
-kept.  There is an argument to be made that this should be changed and
-__do_proc_doulongvec_minmax() should return an error when a dedicated min
-or max value are exceeded.  However this has the potential to break
-userspace so let's defer this to an RFC patch.
-
-Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-[christian@brauner.io: v4]
-  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/384
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 3b86acd5de4e..9e22660153ff 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -126,6 +126,7 @@ static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
- static unsigned long one_ul = 1;
-+static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
- static int one_thousand = 1000;
- #ifdef CONFIG_PRINTK
-@@ -1695,6 +1696,8 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &long_max,
- 	},
- 	{
- 		.procname	= "nr_open",
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 43ab9e905bed..886176be818e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -474,7 +474,7 @@ static void stmmac_get_tx_hwtstamp(struct stmmac_priv *priv,
+ 				   struct dma_desc *p, struct sk_buff *skb)
+ {
+ 	struct skb_shared_hwtstamps shhwtstamp;
+-	u64 ns;
++	u64 ns = 0;
+ 
+ 	if (!priv->hwts_tx_en)
+ 		return;
+@@ -513,7 +513,7 @@ static void stmmac_get_rx_hwtstamp(struct stmmac_priv *priv, struct dma_desc *p,
+ {
+ 	struct skb_shared_hwtstamps *shhwtstamp = NULL;
+ 	struct dma_desc *desc = p;
+-	u64 ns;
++	u64 ns = 0;
+ 
+ 	if (!priv->hwts_rx_en)
+ 		return;
+@@ -558,8 +558,8 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 	u32 snap_type_sel = 0;
+ 	u32 ts_master_en = 0;
+ 	u32 ts_event_en = 0;
++	u32 sec_inc = 0;
+ 	u32 value = 0;
+-	u32 sec_inc;
+ 	bool xmac;
+ 
+ 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
 -- 
 2.19.1
 
