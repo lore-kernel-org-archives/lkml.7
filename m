@@ -2,975 +2,207 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8169CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ACEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB20206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AF0206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="hZrxwDex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfDDMYj (ORCPT
+        id S1729756AbfDDMYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:24:39 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:58965 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfDDMY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:24:26 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id D46F4100027;
-        Thu,  4 Apr 2019 12:24:18 +0000 (UTC)
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     hans.verkuil@cisco.com, acourbot@chromium.org,
-        sakari.ailus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     tfiga@chromium.org, posciak@chromium.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
-        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
-        linux-sunxi@googlegroups.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v6 2/2] media: cedrus: Add H264 decoding support
-Date:   Thu,  4 Apr 2019 14:23:59 +0200
-Message-Id: <24501af4fe83dbdadfd4daaa37260bbb85f53a63.1554380592.git-series.maxime.ripard@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.bfe197a82766125bea21dd26fd3de85893a921ac.1554380592.git-series.maxime.ripard@bootlin.com>
-References: <cover.bfe197a82766125bea21dd26fd3de85893a921ac.1554380592.git-series.maxime.ripard@bootlin.com>
+        Thu, 4 Apr 2019 08:24:22 -0400
+Received: from mail-eopbgr10099.outbound.protection.outlook.com ([40.107.1.99]:12548
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727039AbfDDMYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 08:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector2-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7gEDc/K4SAQCkputn6kB9zgjzTcxXVZDloIEf1lmnbk=;
+ b=hZrxwDex9EhKJ3rU4t4LXOPDXW1oa7RhpY/33u52P7E9+jS99BcSWXA0/Q+0lnY+0THDO5wtaGpngxlI643fQ7oDZrrPtbfoore7uo/0i/ZmepWxm/+SC6P41LR/P1CCl8d9tkETfJlCRgWr0kzq4+pe/rRhT9Dppn9j8OB8+Aw=
+Received: from AM6PR07MB4821.eurprd07.prod.outlook.com (20.177.190.218) by
+ AM6PR07MB4965.eurprd07.prod.outlook.com (20.177.197.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.11; Thu, 4 Apr 2019 12:24:02 +0000
+Received: from AM6PR07MB4821.eurprd07.prod.outlook.com
+ ([fe80::4849:4337:439d:6825]) by AM6PR07MB4821.eurprd07.prod.outlook.com
+ ([fe80::4849:4337:439d:6825%4]) with mapi id 15.20.1771.011; Thu, 4 Apr 2019
+ 12:24:02 +0000
+From:   "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+CC:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>,
+        "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Florian Westphal <fw@strlen.de>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Shewmaker <agshew@gmail.com>,
+        Glenn Judd <glenn.judd@morganstanley.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
+Thread-Topic: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
+Thread-Index: AQHU6uFJ5qKL9TJ2LUy0DTa6bmxATw==
+Date:   Thu, 4 Apr 2019 12:24:02 +0000
+Message-ID: <20190404121731.13917-1-olivier.tilmans@nokia-bell-labs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MRXP264CA0038.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:14::26) To AM6PR07MB4821.eurprd07.prod.outlook.com
+ (2603:10a6:20b:3c::26)
+x-mailer: git-send-email 2.21.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=olivier.tilmans@nokia-bell-labs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [135.245.212.87]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9ef55d4f-43e5-44bd-15ff-08d6b8f86be3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR07MB4965;
+x-ms-traffictypediagnostic: AM6PR07MB4965:
+x-microsoft-antispam-prvs: <AM6PR07MB4965CB53D23C582C548C9CB5E0500@AM6PR07MB4965.eurprd07.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(39860400002)(396003)(366004)(199004)(189003)(2906002)(26005)(59246006)(81156014)(81166006)(4326008)(6512007)(71200400001)(71190400001)(6436002)(1671002)(53936002)(109986005)(186003)(54906003)(7736002)(8936002)(7416002)(386003)(6506007)(2616005)(305945005)(8676002)(66066001)(476003)(14454004)(25786009)(105586002)(86362001)(68736007)(486006)(5660300002)(106356001)(52116002)(50226002)(6486002)(6116002)(3846002)(1076003)(478600001)(36756003)(102836004)(316002)(99286004)(14444005)(256004)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR07MB4965;H:AM6PR07MB4821.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: nokia-bell-labs.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z9hgYMjpHlTW2bWllrtGvJMF4ujS5NAFexEIqJH61uSPUFAeglHV/1IDUPyI3Gnb1m6Sj95tnRmeIQbcvBVUPnu/HRbLfXZJkWGNFqL+3MSQPFQUBYspXhfMMda7mnJPZCb0XXRyBMgdm/LC+u+ZZpPmG7zDLhAHpizOtZbbkDm/vpYUz+GHk5rfDO15Qe4GJYOIev68nSM864uYeQkYwJfbsQksceQaKI+cbRDtj0UxJ8OIlp0nSnwUfb7+AcOMrA0teyR6AfsjMYWlYHHQjNxH87VdEGXjc/uFoSNqp4HVW8zZKVbhNA+hjkHpMaXMznkchHw04QYpC0o9Rv0QTfcEPgWA5GI0ymImrHQHs26WERfI7gjRTWMIoT2lqFEM/CzhSFTHf35DLl254FfbzsqoSADCnWfNHEbg1V0r6Ok=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <52F3F0EF9A40A940BD88E91F5AB851E8@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nokia-bell-labs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ef55d4f-43e5-44bd-15ff-08d6b8f86be3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 12:24:02.5421
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR07MB4965
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce some basic H264 decoding support in cedrus. So far, only the
-baseline profile videos have been tested, and some more advanced features
-used in higher profiles are not even implemented.
-
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/staging/media/sunxi/cedrus/Makefile       |   3 +-
- drivers/staging/media/sunxi/cedrus/cedrus.c       |  31 +-
- drivers/staging/media/sunxi/cedrus/cedrus.h       |  38 +-
- drivers/staging/media/sunxi/cedrus/cedrus_dec.c   |  13 +-
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 574 +++++++++++++++-
- drivers/staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +-
- drivers/staging/media/sunxi/cedrus/cedrus_regs.h  |  91 ++-
- drivers/staging/media/sunxi/cedrus/cedrus_video.c |   9 +-
- 8 files changed, 761 insertions(+), 2 deletions(-)
- create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-
-diff --git a/drivers/staging/media/sunxi/cedrus/Makefile b/drivers/staging/media/sunxi/cedrus/Makefile
-index 808842f0119e..c85ac6db0302 100644
---- a/drivers/staging/media/sunxi/cedrus/Makefile
-+++ b/drivers/staging/media/sunxi/cedrus/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_VIDEO_SUNXI_CEDRUS) += sunxi-cedrus.o
- 
--sunxi-cedrus-y = cedrus.o cedrus_video.o cedrus_hw.o cedrus_dec.o cedrus_mpeg2.o
-+sunxi-cedrus-y = cedrus.o cedrus_video.o cedrus_hw.o cedrus_dec.o \
-+		 cedrus_mpeg2.o cedrus_h264.o
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index b98add3cdedd..e365f8abb5e3 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -40,6 +40,36 @@ static const struct cedrus_control cedrus_controls[] = {
- 		.codec		= CEDRUS_CODEC_MPEG2,
- 		.required	= false,
- 	},
-+	{
-+		.id		= V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
-+		.elem_size	= sizeof(struct v4l2_ctrl_h264_decode_param),
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= true,
-+	},
-+	{
-+		.id		= V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
-+		.elem_size	= sizeof(struct v4l2_ctrl_h264_slice_param),
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= true,
-+	},
-+	{
-+		.id		= V4L2_CID_MPEG_VIDEO_H264_SPS,
-+		.elem_size	= sizeof(struct v4l2_ctrl_h264_sps),
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= true,
-+	},
-+	{
-+		.id		= V4L2_CID_MPEG_VIDEO_H264_PPS,
-+		.elem_size	= sizeof(struct v4l2_ctrl_h264_pps),
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= true,
-+	},
-+	{
-+		.id		= V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
-+		.elem_size	= sizeof(struct v4l2_ctrl_h264_scaling_matrix),
-+		.codec		= CEDRUS_CODEC_H264,
-+		.required	= true,
-+	},
- };
- 
- #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
-@@ -278,6 +308,7 @@ static int cedrus_probe(struct platform_device *pdev)
- 	}
- 
- 	dev->dec_ops[CEDRUS_CODEC_MPEG2] = &cedrus_dec_ops_mpeg2;
-+	dev->dec_ops[CEDRUS_CODEC_H264] = &cedrus_dec_ops_h264;
- 
- 	mutex_init(&dev->dev_mutex);
- 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-index c57c04b41d2e..e2cf1384b75f 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -32,7 +32,7 @@
- 
- enum cedrus_codec {
- 	CEDRUS_CODEC_MPEG2,
--
-+	CEDRUS_CODEC_H264,
- 	CEDRUS_CODEC_LAST,
- };
- 
-@@ -42,6 +42,12 @@ enum cedrus_irq_status {
- 	CEDRUS_IRQ_OK,
- };
- 
-+enum cedrus_h264_pic_type {
-+	CEDRUS_H264_PIC_TYPE_FRAME	= 0,
-+	CEDRUS_H264_PIC_TYPE_FIELD,
-+	CEDRUS_H264_PIC_TYPE_MBAFF,
-+};
-+
- struct cedrus_control {
- 	u32			id;
- 	u32			elem_size;
-@@ -49,6 +55,14 @@ struct cedrus_control {
- 	unsigned char		required:1;
- };
- 
-+struct cedrus_h264_run {
-+	const struct v4l2_ctrl_h264_decode_param	*decode_param;
-+	const struct v4l2_ctrl_h264_pps			*pps;
-+	const struct v4l2_ctrl_h264_scaling_matrix	*scaling_matrix;
-+	const struct v4l2_ctrl_h264_slice_param		*slice_param;
-+	const struct v4l2_ctrl_h264_sps			*sps;
-+};
-+
- struct cedrus_mpeg2_run {
- 	const struct v4l2_ctrl_mpeg2_slice_params	*slice_params;
- 	const struct v4l2_ctrl_mpeg2_quantization	*quantization;
-@@ -59,12 +73,20 @@ struct cedrus_run {
- 	struct vb2_v4l2_buffer	*dst;
- 
- 	union {
-+		struct cedrus_h264_run	h264;
- 		struct cedrus_mpeg2_run	mpeg2;
- 	};
- };
- 
- struct cedrus_buffer {
- 	struct v4l2_m2m_buffer          m2m_buf;
-+
-+	union {
-+		struct {
-+			unsigned int			position;
-+			enum cedrus_h264_pic_type	pic_type;
-+		} h264;
-+	} codec;
- };
- 
- struct cedrus_ctx {
-@@ -79,6 +101,19 @@ struct cedrus_ctx {
- 	struct v4l2_ctrl		**ctrls;
- 
- 	struct vb2_buffer		*dst_bufs[VIDEO_MAX_FRAME];
-+
-+	union {
-+		struct {
-+			void		*mv_col_buf;
-+			dma_addr_t	mv_col_buf_dma;
-+			ssize_t		mv_col_buf_field_size;
-+			ssize_t		mv_col_buf_size;
-+			void		*pic_info_buf;
-+			dma_addr_t	pic_info_buf_dma;
-+			void		*neighbor_info_buf;
-+			dma_addr_t	neighbor_info_buf_dma;
-+		} h264;
-+	} codec;
- };
- 
- struct cedrus_dec_ops {
-@@ -121,6 +156,7 @@ struct cedrus_dev {
- };
- 
- extern struct cedrus_dec_ops cedrus_dec_ops_mpeg2;
-+extern struct cedrus_dec_ops cedrus_dec_ops_h264;
- 
- static inline void cedrus_write(struct cedrus_dev *dev, u32 reg, u32 val)
- {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-index 4d6d602cdde6..93285c6d9184 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-@@ -46,6 +46,19 @@ void cedrus_device_run(void *priv)
- 			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
- 		break;
- 
-+	case V4L2_PIX_FMT_H264_SLICE_RAW:
-+		run.h264.decode_param = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS);
-+		run.h264.pps = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_PPS);
-+		run.h264.scaling_matrix = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX);
-+		run.h264.slice_param = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
-+		run.h264.sps = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_SPS);
-+		break;
-+
- 	default:
- 		break;
- 	}
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-new file mode 100644
-index 000000000000..4e91195c9a13
---- /dev/null
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -0,0 +1,574 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Cedrus VPU driver
-+ *
-+ * Copyright (c) 2013 Jens Kuske <jenskuske@gmail.com>
-+ * Copyright (c) 2018 Bootlin
-+ */
-+
-+#include <linux/types.h>
-+
-+#include <media/videobuf2-dma-contig.h>
-+
-+#include "cedrus.h"
-+#include "cedrus_hw.h"
-+#include "cedrus_regs.h"
-+
-+enum cedrus_h264_sram_off {
-+	CEDRUS_SRAM_H264_PRED_WEIGHT_TABLE	= 0x000,
-+	CEDRUS_SRAM_H264_FRAMEBUFFER_LIST	= 0x100,
-+	CEDRUS_SRAM_H264_REF_LIST_0		= 0x190,
-+	CEDRUS_SRAM_H264_REF_LIST_1		= 0x199,
-+	CEDRUS_SRAM_H264_SCALING_LIST_8x8_0	= 0x200,
-+	CEDRUS_SRAM_H264_SCALING_LIST_8x8_1	= 0x210,
-+	CEDRUS_SRAM_H264_SCALING_LIST_4x4	= 0x220,
-+};
-+
-+struct cedrus_h264_sram_ref_pic {
-+	__le32	top_field_order_cnt;
-+	__le32	bottom_field_order_cnt;
-+	__le32	frame_info;
-+	__le32	luma_ptr;
-+	__le32	chroma_ptr;
-+	__le32	mv_col_top_ptr;
-+	__le32	mv_col_bot_ptr;
-+	__le32	reserved;
-+} __packed;
-+
-+#define CEDRUS_H264_FRAME_NUM		18
-+
-+#define CEDRUS_NEIGHBOR_INFO_BUF_SIZE	(16 * SZ_1K)
-+#define CEDRUS_PIC_INFO_BUF_SIZE	(128 * SZ_1K)
-+
-+static void cedrus_h264_write_sram(struct cedrus_dev *dev,
-+				   enum cedrus_h264_sram_off off,
-+				   const void *data, size_t len)
-+{
-+	const u32 *buffer = data;
-+	size_t count = DIV_ROUND_UP(len, 4);
-+
-+	cedrus_write(dev, VE_AVC_SRAM_PORT_OFFSET, off << 2);
-+
-+	while (count--)
-+		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
-+}
-+
-+static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_ctx *ctx,
-+					      unsigned int position,
-+					      unsigned int field)
-+{
-+	dma_addr_t addr = ctx->codec.h264.mv_col_buf_dma;
-+
-+	/* Adjust for the position */
-+	addr += position * ctx->codec.h264.mv_col_buf_field_size * 2;
-+
-+	/* Adjust for the field */
-+	addr += field * ctx->codec.h264.mv_col_buf_field_size;
-+
-+	return addr;
-+}
-+
-+static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
-+				struct cedrus_buffer *buf,
-+				unsigned int top_field_order_cnt,
-+				unsigned int bottom_field_order_cnt,
-+				struct cedrus_h264_sram_ref_pic *pic)
-+{
-+	struct vb2_buffer *vbuf = &buf->m2m_buf.vb.vb2_buf;
-+	unsigned int position = buf->codec.h264.position;
-+
-+	pic->top_field_order_cnt = top_field_order_cnt;
-+	pic->bottom_field_order_cnt = bottom_field_order_cnt;
-+	pic->frame_info = buf->codec.h264.pic_type << 8;
-+
-+	pic->luma_ptr = cedrus_buf_addr(vbuf, &ctx->dst_fmt, 0);
-+	pic->chroma_ptr = cedrus_buf_addr(vbuf, &ctx->dst_fmt, 1);
-+	pic->mv_col_top_ptr = cedrus_h264_mv_col_buf_addr(ctx, position, 0);
-+	pic->mv_col_bot_ptr = cedrus_h264_mv_col_buf_addr(ctx, position, 1);
-+}
-+
-+static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
-+				    struct cedrus_run *run)
-+{
-+	struct cedrus_h264_sram_ref_pic pic_list[CEDRUS_H264_FRAME_NUM];
-+	const struct v4l2_ctrl_h264_decode_param *dec_param = run->h264.decode_param;
-+	const struct v4l2_ctrl_h264_slice_param *slice = run->h264.slice_param;
-+	const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
-+	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
-+	struct cedrus_buffer *output_buf;
-+	struct cedrus_dev *dev = ctx->dev;
-+	unsigned long used_dpbs = 0;
-+	unsigned int position;
-+	unsigned int output = 0;
-+	unsigned int i;
-+
-+	memset(pic_list, 0, sizeof(pic_list));
-+
-+	for (i = 0; i < ARRAY_SIZE(dec_param->dpb); i++) {
-+		const struct v4l2_h264_dpb_entry *dpb = &dec_param->dpb[i];
-+		struct cedrus_buffer *cedrus_buf;
-+		int buf_idx;
-+
-+		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_VALID))
-+			continue;
-+
-+		buf_idx = vb2_find_timestamp(cap_q, dpb->reference_ts, 0);
-+		if (buf_idx < 0)
-+			continue;
-+
-+		cedrus_buf = vb2_to_cedrus_buffer(ctx->dst_bufs[buf_idx]);
-+		position = cedrus_buf->codec.h264.position;
-+		used_dpbs |= BIT(position);
-+
-+		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-+			continue;
-+
-+		cedrus_fill_ref_pic(ctx, cedrus_buf,
-+				    dpb->top_field_order_cnt,
-+				    dpb->bottom_field_order_cnt,
-+				    &pic_list[position]);
-+
-+		output = max(position, output);
-+	}
-+
-+	position = find_next_zero_bit(&used_dpbs, CEDRUS_H264_FRAME_NUM,
-+				      output);
-+	if (position >= CEDRUS_H264_FRAME_NUM)
-+		position = find_first_zero_bit(&used_dpbs, CEDRUS_H264_FRAME_NUM);
-+
-+	output_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
-+	output_buf->codec.h264.position = position;
-+
-+	if (slice->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
-+		output_buf->codec.h264.pic_type = CEDRUS_H264_PIC_TYPE_FIELD;
-+	else if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
-+		output_buf->codec.h264.pic_type = CEDRUS_H264_PIC_TYPE_MBAFF;
-+	else
-+		output_buf->codec.h264.pic_type = CEDRUS_H264_PIC_TYPE_FRAME;
-+
-+	cedrus_fill_ref_pic(ctx, output_buf,
-+			    dec_param->top_field_order_cnt,
-+			    dec_param->bottom_field_order_cnt,
-+			    &pic_list[position]);
-+
-+	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_FRAMEBUFFER_LIST,
-+			       pic_list, sizeof(pic_list));
-+
-+	cedrus_write(dev, VE_H264_OUTPUT_FRAME_IDX, position);
-+}
-+
-+#define CEDRUS_MAX_REF_IDX	32
-+
-+static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
-+				   struct cedrus_run *run,
-+				   const u8 *ref_list, u8 num_ref,
-+				   enum cedrus_h264_sram_off sram)
-+{
-+	const struct v4l2_ctrl_h264_decode_param *decode = run->h264.decode_param;
-+	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
-+	struct cedrus_dev *dev = ctx->dev;
-+	u8 sram_array[CEDRUS_MAX_REF_IDX];
-+	unsigned int i;
-+	size_t size;
-+
-+	memset(sram_array, 0, sizeof(sram_array));
-+
-+	for (i = 0; i < num_ref; i++) {
-+		const struct v4l2_h264_dpb_entry *dpb;
-+		const struct cedrus_buffer *cedrus_buf;
-+		const struct vb2_v4l2_buffer *ref_buf;
-+		unsigned int position;
-+		int buf_idx;
-+		u8 dpb_idx;
-+
-+		dpb_idx = ref_list[i];
-+		dpb = &decode->dpb[dpb_idx];
-+
-+		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-+			continue;
-+
-+		buf_idx = vb2_find_timestamp(cap_q, dpb->reference_ts, 0);
-+		if (buf_idx < 0)
-+			continue;
-+
-+		ref_buf = to_vb2_v4l2_buffer(ctx->dst_bufs[buf_idx]);
-+		cedrus_buf = vb2_v4l2_to_cedrus_buffer(ref_buf);
-+		position = cedrus_buf->codec.h264.position;
-+
-+		sram_array[i] |= position << 1;
-+		if (ref_buf->field == V4L2_FIELD_BOTTOM)
-+			sram_array[i] |= BIT(0);
-+	}
-+
-+	size = min_t(size_t, ALIGN(num_ref, 4), sizeof(sram_array));
-+	cedrus_h264_write_sram(dev, sram, &sram_array, size);
-+}
-+
-+static void cedrus_write_ref_list0(struct cedrus_ctx *ctx,
-+				   struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_h264_slice_param *slice = run->h264.slice_param;
-+
-+	_cedrus_write_ref_list(ctx, run,
-+			       slice->ref_pic_list0,
-+			       slice->num_ref_idx_l0_active_minus1 + 1,
-+			       CEDRUS_SRAM_H264_REF_LIST_0);
-+}
-+
-+static void cedrus_write_ref_list1(struct cedrus_ctx *ctx,
-+				   struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_h264_slice_param *slice = run->h264.slice_param;
-+
-+	_cedrus_write_ref_list(ctx, run,
-+			       slice->ref_pic_list1,
-+			       slice->num_ref_idx_l1_active_minus1 + 1,
-+			       CEDRUS_SRAM_H264_REF_LIST_1);
-+}
-+
-+static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
-+				       struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_h264_scaling_matrix *scaling =
-+		run->h264.scaling_matrix;
-+	struct cedrus_dev *dev = ctx->dev;
-+
-+	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_0,
-+			       scaling->scaling_list_8x8[0],
-+			       sizeof(scaling->scaling_list_8x8[0]));
-+
-+	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_1,
-+			       scaling->scaling_list_8x8[3],
-+			       sizeof(scaling->scaling_list_8x8[3]));
-+
-+	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_4x4,
-+			       scaling->scaling_list_4x4,
-+			       sizeof(scaling->scaling_list_4x4));
-+}
-+
-+static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
-+					   struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_h264_slice_param *slice =
-+		run->h264.slice_param;
-+	const struct v4l2_h264_pred_weight_table *pred_weight =
-+		&slice->pred_weight_table;
-+	struct cedrus_dev *dev = ctx->dev;
-+	int i, j, k;
-+
-+	cedrus_write(dev, VE_H264_SHS_WP,
-+		     ((pred_weight->chroma_log2_weight_denom & 0x7) << 4) |
-+		     ((pred_weight->luma_log2_weight_denom & 0x7) << 0));
-+
-+	cedrus_write(dev, VE_AVC_SRAM_PORT_OFFSET,
-+		     CEDRUS_SRAM_H264_PRED_WEIGHT_TABLE << 2);
-+
-+	for (i = 0; i < ARRAY_SIZE(pred_weight->weight_factors); i++) {
-+		const struct v4l2_h264_weight_factors *factors =
-+			&pred_weight->weight_factors[i];
-+
-+		for (j = 0; j < ARRAY_SIZE(factors->luma_weight); j++) {
-+			u32 val;
-+
-+			val = (((u32)factors->luma_offset[j] & 0x1ff) << 16) |
-+				(factors->luma_weight[j] & 0x1ff);
-+			cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, val);
-+		}
-+
-+		for (j = 0; j < ARRAY_SIZE(factors->chroma_weight); j++) {
-+			for (k = 0; k < ARRAY_SIZE(factors->chroma_weight[0]); k++) {
-+				u32 val;
-+
-+				val = (((u32)factors->chroma_offset[j][k] & 0x1ff) << 16) |
-+					(factors->chroma_weight[j][k] & 0x1ff);
-+				cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, val);
-+			}
-+		}
-+	}
-+}
-+
-+static void cedrus_set_params(struct cedrus_ctx *ctx,
-+			      struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_h264_decode_param *decode = run->h264.decode_param;
-+	const struct v4l2_ctrl_h264_slice_param *slice = run->h264.slice_param;
-+	const struct v4l2_ctrl_h264_pps *pps = run->h264.pps;
-+	const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
-+	struct vb2_buffer *src_buf = &run->src->vb2_buf;
-+	struct cedrus_dev *dev = ctx->dev;
-+	dma_addr_t src_buf_addr;
-+	u32 offset = slice->header_bit_size;
-+	u32 len = (slice->size * 8) - offset;
-+	u32 reg;
-+
-+	cedrus_write(dev, VE_H264_VLD_LEN, len);
-+	cedrus_write(dev, VE_H264_VLD_OFFSET, offset);
-+
-+	src_buf_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
-+	cedrus_write(dev, VE_H264_VLD_END,
-+		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
-+	cedrus_write(dev, VE_H264_VLD_ADDR,
-+		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
-+		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
-+		     VE_H264_VLD_ADDR_LAST);
-+
-+	/*
-+	 * FIXME: Since the bitstream parsing is done in software, and
-+	 * in userspace, this shouldn't be needed anymore. But it
-+	 * turns out that removing it breaks the decoding process,
-+	 * without any clear indication why.
-+	 */
-+	cedrus_write(dev, VE_H264_TRIGGER_TYPE,
-+		     VE_H264_TRIGGER_TYPE_INIT_SWDEC);
-+
-+	if (((pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) &&
-+	     (slice->slice_type == V4L2_H264_SLICE_TYPE_P ||
-+	      slice->slice_type == V4L2_H264_SLICE_TYPE_SP)) ||
-+	    (pps->weighted_bipred_idc == 1 &&
-+	     slice->slice_type == V4L2_H264_SLICE_TYPE_B))
-+		cedrus_write_pred_weight_table(ctx, run);
-+
-+	if ((slice->slice_type == V4L2_H264_SLICE_TYPE_P) ||
-+	    (slice->slice_type == V4L2_H264_SLICE_TYPE_SP) ||
-+	    (slice->slice_type == V4L2_H264_SLICE_TYPE_B))
-+		cedrus_write_ref_list0(ctx, run);
-+
-+	if (slice->slice_type == V4L2_H264_SLICE_TYPE_B)
-+		cedrus_write_ref_list1(ctx, run);
-+
-+	// picture parameters
-+	reg = 0;
-+	/*
-+	 * FIXME: the kernel headers are allowing the default value to
-+	 * be passed, but the libva doesn't give us that.
-+	 */
-+	reg |= (slice->num_ref_idx_l0_active_minus1 & 0x1f) << 10;
-+	reg |= (slice->num_ref_idx_l1_active_minus1 & 0x1f) << 5;
-+	reg |= (pps->weighted_bipred_idc & 0x3) << 2;
-+	if (pps->flags & V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE)
-+		reg |= VE_H264_PPS_ENTROPY_CODING_MODE;
-+	if (pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED)
-+		reg |= VE_H264_PPS_WEIGHTED_PRED;
-+	if (pps->flags & V4L2_H264_PPS_FLAG_CONSTRAINED_INTRA_PRED)
-+		reg |= VE_H264_PPS_CONSTRAINED_INTRA_PRED;
-+	if (pps->flags & V4L2_H264_PPS_FLAG_TRANSFORM_8X8_MODE)
-+		reg |= VE_H264_PPS_TRANSFORM_8X8_MODE;
-+	cedrus_write(dev, VE_H264_PPS, reg);
-+
-+	// sequence parameters
-+	reg = 0;
-+	reg |= (sps->chroma_format_idc & 0x7) << 19;
-+	reg |= (sps->pic_width_in_mbs_minus1 & 0xff) << 8;
-+	reg |= sps->pic_height_in_map_units_minus1 & 0xff;
-+	if (sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY)
-+		reg |= VE_H264_SPS_MBS_ONLY;
-+	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
-+		reg |= VE_H264_SPS_MB_ADAPTIVE_FRAME_FIELD;
-+	if (sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE)
-+		reg |= VE_H264_SPS_DIRECT_8X8_INFERENCE;
-+	cedrus_write(dev, VE_H264_SPS, reg);
-+
-+	// slice parameters
-+	reg = 0;
-+	reg |= decode->nal_ref_idc ? BIT(12) : 0;
-+	reg |= (slice->slice_type & 0xf) << 8;
-+	reg |= slice->cabac_init_idc & 0x3;
-+	reg |= VE_H264_SHS_FIRST_SLICE_IN_PIC;
-+	if (slice->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
-+		reg |= VE_H264_SHS_FIELD_PIC;
-+	if (slice->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
-+		reg |= VE_H264_SHS_BOTTOM_FIELD;
-+	if (slice->flags & V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED)
-+		reg |= VE_H264_SHS_DIRECT_SPATIAL_MV_PRED;
-+	cedrus_write(dev, VE_H264_SHS, reg);
-+
-+	reg = 0;
-+	reg |= VE_H264_SHS2_NUM_REF_IDX_ACTIVE_OVRD;
-+	reg |= (slice->num_ref_idx_l0_active_minus1 & 0x1f) << 24;
-+	reg |= (slice->num_ref_idx_l1_active_minus1 & 0x1f) << 16;
-+	reg |= (slice->disable_deblocking_filter_idc & 0x3) << 8;
-+	reg |= (slice->slice_alpha_c0_offset_div2 & 0xf) << 4;
-+	reg |= slice->slice_beta_offset_div2 & 0xf;
-+	cedrus_write(dev, VE_H264_SHS2, reg);
-+
-+	reg = 0;
-+	reg |= (pps->second_chroma_qp_index_offset & 0x3f) << 16;
-+	reg |= (pps->chroma_qp_index_offset & 0x3f) << 8;
-+	reg |= (pps->pic_init_qp_minus26 + 26 + slice->slice_qp_delta) & 0x3f;
-+	cedrus_write(dev, VE_H264_SHS_QP, reg);
-+
-+	// clear status flags
-+	cedrus_write(dev, VE_H264_STATUS, cedrus_read(dev, VE_H264_STATUS));
-+
-+	// enable int
-+	cedrus_write(dev, VE_H264_CTRL,
-+		     VE_H264_CTRL_SLICE_DECODE_INT |
-+		     VE_H264_CTRL_DECODE_ERR_INT |
-+		     VE_H264_CTRL_VLD_DATA_REQ_INT);
-+}
-+
-+static enum cedrus_irq_status
-+cedrus_h264_irq_status(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+	u32 reg = cedrus_read(dev, VE_H264_STATUS);
-+
-+	if (reg & (VE_H264_STATUS_DECODE_ERR_INT |
-+		   VE_H264_STATUS_VLD_DATA_REQ_INT))
-+		return CEDRUS_IRQ_ERROR;
-+
-+	if (reg & VE_H264_CTRL_SLICE_DECODE_INT)
-+		return CEDRUS_IRQ_OK;
-+
-+	return CEDRUS_IRQ_NONE;
-+}
-+
-+static void cedrus_h264_irq_clear(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+
-+	cedrus_write(dev, VE_H264_STATUS,
-+		     VE_H264_STATUS_INT_MASK);
-+}
-+
-+static void cedrus_h264_irq_disable(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+	u32 reg = cedrus_read(dev, VE_H264_CTRL);
-+
-+	cedrus_write(dev, VE_H264_CTRL,
-+		     reg & ~VE_H264_CTRL_INT_MASK);
-+}
-+
-+static void cedrus_h264_setup(struct cedrus_ctx *ctx,
-+			      struct cedrus_run *run)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+
-+	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
-+
-+	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
-+	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
-+		     ctx->codec.h264.pic_info_buf_dma);
-+	cedrus_write(dev, VE_H264_EXTRA_BUFFER2,
-+		     ctx->codec.h264.neighbor_info_buf_dma);
-+
-+	cedrus_write_scaling_lists(ctx, run);
-+	cedrus_write_frame_list(ctx, run);
-+
-+	cedrus_set_params(ctx, run);
-+}
-+
-+static int cedrus_h264_start(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+	unsigned int field_size;
-+	unsigned int mv_col_size;
-+	int ret;
-+
-+	/*
-+	 * FIXME: It seems that the H6 cedarX code is using a formula
-+	 * here based on the size of the frame, while all the older
-+	 * code is using a fixed size, so that might need to be
-+	 * changed at some point.
-+	 */
-+	ctx->codec.h264.pic_info_buf =
-+		dma_alloc_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+				   &ctx->codec.h264.pic_info_buf_dma,
-+				   GFP_KERNEL);
-+	if (!ctx->codec.h264.pic_info_buf)
-+		return -ENOMEM;
-+
-+	/*
-+	 * That buffer is supposed to be 16kiB in size, and be aligned
-+	 * on 16kiB as well. However, dma_alloc_coherent provides the
-+	 * guarantee that we'll have a CPU and DMA address aligned on
-+	 * the smallest page order that is greater to the requested
-+	 * size, so we don't have to overallocate.
-+	 */
-+	ctx->codec.h264.neighbor_info_buf =
-+		dma_alloc_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
-+				   &ctx->codec.h264.neighbor_info_buf_dma,
-+				   GFP_KERNEL);
-+	if (!ctx->codec.h264.neighbor_info_buf) {
-+		ret = -ENOMEM;
-+		goto err_pic_buf;
-+	}
-+
-+	field_size = DIV_ROUND_UP(ctx->src_fmt.width, 16) *
-+		DIV_ROUND_UP(ctx->src_fmt.height, 16) * 16;
-+
-+	/*
-+	 * FIXME: This is actually conditional to
-+	 * V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE not being set, we
-+	 * might have to rework this if memory efficiency ever is
-+	 * something we need to work on.
-+	 */
-+	field_size = field_size * 2;
-+
-+	/*
-+	 * FIXME: This is actually conditional to
-+	 * V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY not being set, we might
-+	 * have to rework this if memory efficiency ever is something
-+	 * we need to work on.
-+	 */
-+	field_size = field_size * 2;
-+	ctx->codec.h264.mv_col_buf_field_size = field_size;
-+
-+	mv_col_size = field_size * 2 * CEDRUS_H264_FRAME_NUM;
-+	ctx->codec.h264.mv_col_buf_size = mv_col_size;
-+	ctx->codec.h264.mv_col_buf = dma_alloc_coherent(dev->dev,
-+							ctx->codec.h264.mv_col_buf_size,
-+							&ctx->codec.h264.mv_col_buf_dma,
-+							GFP_KERNEL);
-+	if (!ctx->codec.h264.mv_col_buf) {
-+		ret = -ENOMEM;
-+		goto err_neighbor_buf;
-+	}
-+
-+	return 0;
-+
-+err_neighbor_buf:
-+	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
-+			  ctx->codec.h264.neighbor_info_buf,
-+			  ctx->codec.h264.neighbor_info_buf_dma);
-+
-+err_pic_buf:
-+	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+			  ctx->codec.h264.pic_info_buf,
-+			  ctx->codec.h264.pic_info_buf_dma);
-+	return ret;
-+}
-+
-+static void cedrus_h264_stop(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+
-+	dma_free_coherent(dev->dev, ctx->codec.h264.mv_col_buf_size,
-+			  ctx->codec.h264.mv_col_buf,
-+			  ctx->codec.h264.mv_col_buf_dma);
-+	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
-+			  ctx->codec.h264.neighbor_info_buf,
-+			  ctx->codec.h264.neighbor_info_buf_dma);
-+	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+			  ctx->codec.h264.pic_info_buf,
-+			  ctx->codec.h264.pic_info_buf_dma);
-+}
-+
-+static void cedrus_h264_trigger(struct cedrus_ctx *ctx)
-+{
-+	struct cedrus_dev *dev = ctx->dev;
-+
-+	cedrus_write(dev, VE_H264_TRIGGER_TYPE,
-+		     VE_H264_TRIGGER_TYPE_AVC_SLICE_DECODE);
-+}
-+
-+struct cedrus_dec_ops cedrus_dec_ops_h264 = {
-+	.irq_clear	= cedrus_h264_irq_clear,
-+	.irq_disable	= cedrus_h264_irq_disable,
-+	.irq_status	= cedrus_h264_irq_status,
-+	.setup		= cedrus_h264_setup,
-+	.start		= cedrus_h264_start,
-+	.stop		= cedrus_h264_stop,
-+	.trigger	= cedrus_h264_trigger,
-+};
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-index fbfff7c1c771..748f7f673547 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-@@ -46,6 +46,10 @@ int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec)
- 		reg |= VE_MODE_DEC_MPEG;
- 		break;
- 
-+	case CEDRUS_CODEC_H264:
-+		reg |= VE_MODE_DEC_H264;
-+		break;
-+
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-index de2d6b6f64bf..3e9931416e45 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-@@ -232,4 +232,95 @@
- #define VE_DEC_MPEG_ROT_LUMA			(VE_ENGINE_DEC_MPEG + 0xcc)
- #define VE_DEC_MPEG_ROT_CHROMA			(VE_ENGINE_DEC_MPEG + 0xd0)
- 
-+#define VE_H264_SPS			0x200
-+#define VE_H264_SPS_MBS_ONLY			BIT(18)
-+#define VE_H264_SPS_MB_ADAPTIVE_FRAME_FIELD	BIT(17)
-+#define VE_H264_SPS_DIRECT_8X8_INFERENCE	BIT(16)
-+
-+#define VE_H264_PPS			0x204
-+#define VE_H264_PPS_ENTROPY_CODING_MODE		BIT(15)
-+#define VE_H264_PPS_WEIGHTED_PRED		BIT(4)
-+#define VE_H264_PPS_CONSTRAINED_INTRA_PRED	BIT(1)
-+#define VE_H264_PPS_TRANSFORM_8X8_MODE		BIT(0)
-+
-+#define VE_H264_SHS			0x208
-+#define VE_H264_SHS_FIRST_SLICE_IN_PIC		BIT(5)
-+#define VE_H264_SHS_FIELD_PIC			BIT(4)
-+#define VE_H264_SHS_BOTTOM_FIELD		BIT(3)
-+#define VE_H264_SHS_DIRECT_SPATIAL_MV_PRED	BIT(2)
-+
-+#define VE_H264_SHS2			0x20c
-+#define VE_H264_SHS2_NUM_REF_IDX_ACTIVE_OVRD	BIT(12)
-+
-+#define VE_H264_SHS_WP			0x210
-+
-+#define VE_H264_SHS_QP			0x21c
-+#define VE_H264_SHS_QP_SCALING_MATRIX_DEFAULT	BIT(24)
-+
-+#define VE_H264_CTRL			0x220
-+#define VE_H264_CTRL_VLD_DATA_REQ_INT		BIT(2)
-+#define VE_H264_CTRL_DECODE_ERR_INT		BIT(1)
-+#define VE_H264_CTRL_SLICE_DECODE_INT		BIT(0)
-+
-+#define VE_H264_CTRL_INT_MASK		(VE_H264_CTRL_VLD_DATA_REQ_INT | \
-+					 VE_H264_CTRL_DECODE_ERR_INT | \
-+					 VE_H264_CTRL_SLICE_DECODE_INT)
-+
-+#define VE_H264_TRIGGER_TYPE		0x224
-+#define VE_H264_TRIGGER_TYPE_AVC_SLICE_DECODE	(8 << 0)
-+#define VE_H264_TRIGGER_TYPE_INIT_SWDEC		(7 << 0)
-+
-+#define VE_H264_STATUS			0x228
-+#define VE_H264_STATUS_VLD_DATA_REQ_INT		VE_H264_CTRL_VLD_DATA_REQ_INT
-+#define VE_H264_STATUS_DECODE_ERR_INT		VE_H264_CTRL_DECODE_ERR_INT
-+#define VE_H264_STATUS_SLICE_DECODE_INT		VE_H264_CTRL_SLICE_DECODE_INT
-+
-+#define VE_H264_STATUS_INT_MASK			VE_H264_CTRL_INT_MASK
-+
-+#define VE_H264_CUR_MB_NUM		0x22c
-+
-+#define VE_H264_VLD_ADDR		0x230
-+#define VE_H264_VLD_ADDR_FIRST			BIT(30)
-+#define VE_H264_VLD_ADDR_LAST			BIT(29)
-+#define VE_H264_VLD_ADDR_VALID			BIT(28)
-+#define VE_H264_VLD_ADDR_VAL(x)			(((x) & 0x0ffffff0) | ((x) >> 28))
-+
-+#define VE_H264_VLD_OFFSET		0x234
-+#define VE_H264_VLD_LEN			0x238
-+#define VE_H264_VLD_END			0x23c
-+#define VE_H264_SDROT_CTRL		0x240
-+#define VE_H264_OUTPUT_FRAME_IDX	0x24c
-+#define VE_H264_EXTRA_BUFFER1		0x250
-+#define VE_H264_EXTRA_BUFFER2		0x254
-+#define VE_H264_BASIC_BITS		0x2dc
-+#define VE_AVC_SRAM_PORT_OFFSET		0x2e0
-+#define VE_AVC_SRAM_PORT_DATA		0x2e4
-+
-+#define VE_ISP_INPUT_SIZE		0xa00
-+#define VE_ISP_INPUT_STRIDE		0xa04
-+#define VE_ISP_CTRL			0xa08
-+#define VE_ISP_INPUT_LUMA		0xa78
-+#define VE_ISP_INPUT_CHROMA		0xa7c
-+
-+#define VE_AVC_PARAM			0xb04
-+#define VE_AVC_QP			0xb08
-+#define VE_AVC_MOTION_EST		0xb10
-+#define VE_AVC_CTRL			0xb14
-+#define VE_AVC_TRIGGER			0xb18
-+#define VE_AVC_STATUS			0xb1c
-+#define VE_AVC_BASIC_BITS		0xb20
-+#define VE_AVC_UNK_BUF			0xb60
-+#define VE_AVC_VLE_ADDR			0xb80
-+#define VE_AVC_VLE_END			0xb84
-+#define VE_AVC_VLE_OFFSET		0xb88
-+#define VE_AVC_VLE_MAX			0xb8c
-+#define VE_AVC_VLE_LENGTH		0xb90
-+#define VE_AVC_REF_LUMA			0xba0
-+#define VE_AVC_REF_CHROMA		0xba4
-+#define VE_AVC_REC_LUMA			0xbb0
-+#define VE_AVC_REC_CHROMA		0xbb4
-+#define VE_AVC_REF_SLUMA		0xbb8
-+#define VE_AVC_REC_SLUMA		0xbbc
-+#define VE_AVC_MB_INFO			0xbc0
-+
- #endif
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-index 9673874ece10..e2b530b1a956 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -38,6 +38,10 @@ static struct cedrus_format cedrus_formats[] = {
- 		.directions	= CEDRUS_DECODE_SRC,
- 	},
- 	{
-+		.pixelformat	= V4L2_PIX_FMT_H264_SLICE_RAW,
-+		.directions	= CEDRUS_DECODE_SRC,
-+	},
-+	{
- 		.pixelformat	= V4L2_PIX_FMT_SUNXI_TILED_NV12,
- 		.directions	= CEDRUS_DECODE_DST,
- 	},
-@@ -100,6 +104,7 @@ static void cedrus_prepare_format(struct v4l2_pix_format *pix_fmt)
- 
- 	switch (pix_fmt->pixelformat) {
- 	case V4L2_PIX_FMT_MPEG2_SLICE:
-+	case V4L2_PIX_FMT_H264_SLICE_RAW:
- 		/* Zero bytes per line for encoded source. */
- 		bytesperline = 0;
- 
-@@ -464,6 +469,10 @@ static int cedrus_start_streaming(struct vb2_queue *vq, unsigned int count)
- 		ctx->current_codec = CEDRUS_CODEC_MPEG2;
- 		break;
- 
-+	case V4L2_PIX_FMT_H264_SLICE_RAW:
-+		ctx->current_codec = CEDRUS_CODEC_H264;
-+		break;
-+
- 	default:
- 		return -EINVAL;
- 	}
--- 
-git-series 0.9.1
+RnJvbTogS29lbiBEZSBTY2hlcHBlciA8a29lbi5kZV9zY2hlcHBlckBub2tpYS1iZWxsLWxhYnMu
+Y29tPg0KDQpSRkM4MjU3IMKnMy41IGV4cGxpY2l0bHkgc3RhdGVzIHRoYXQgIkEgRENUQ1Agc2Vu
+ZGVyIE1VU1QgcmVhY3QgdG8NCmxvc3MgZXBpc29kZXMgaW4gdGhlIHNhbWUgd2F5IGFzIGNvbnZl
+bnRpb25hbCBUQ1AiLg0KDQpDdXJyZW50bHksIExpbnV4IERDVENQIHBlcmZvcm1zIG5vIGN3bmQg
+cmVkdWN0aW9uIHdoZW4gbG9zc2VzDQphcmUgZW5jb3VudGVyZWQuIE9wdGlvbmFsbHksIHRoZSBk
+Y3RjcF9jbGFtcF9hbHBoYV9vbl9sb3NzIHJlc2V0cw0KYWxwaGEgdG8gaXRzIG1heGltYWwgdmFs
+dWUgaWYgYSBSVE8gaGFwcGVucy4gVGhpcyBiZWhhdmlvcg0KaXMgc3ViLW9wdGltYWwgZm9yIGF0
+IGxlYXN0IHR3byByZWFzb25zOiBpKSBpdCBpZ25vcmVzIGxvc3Nlcw0KdHJpZ2dlcmluZyBmYXN0
+IHJldHJhbnNtaXNzaW9uczsgYW5kIGlpKSBpdCBjYXVzZXMgdW5uZWNlc3NhcnkgbGFyZ2UNCmN3
+bmQgcmVkdWN0aW9uIGluIHRoZSBmdXR1cmUgaWYgdGhlIGxvc3Mgd2FzIGlzb2xhdGVkIGFzIGl0
+IHJlc2V0cw0KdGhlIGhpc3RvcmljYWwgdGVybSBvZiBEQ1RDUCdzIGFscGhhIEVXTUEgdG8gaXRz
+IG1heGltYWwgdmFsdWUgKGkuZS4sDQpkZW5vdGluZyBhIHRvdGFsIGNvbmdlc3Rpb24pLiBUaGUg
+c2Vjb25kIHJlYXNvbiBoYXMgYW4gZXNwZWNpYWxseQ0Kbm90aWNlYWJsZSBlZmZlY3Qgd2hlbiB1
+c2luZyBEQ1RDUCBpbiBoaWdoIEJEUCBlbnZpcm9ubWVudHMsIHdoZXJlDQphbHBoYSBub3JtYWxs
+eSBzdGF5cyBhdCBsb3cgdmFsdWVzLg0KDQpUaGlzIHBhdGNoIHJlcGxhY2UgdGhlIGNsYW1waW5n
+IG9mIGFscGhhIGJ5IHNldHRpbmcgc3N0aHJlc2ggdG8NCmhhbGYgb2YgY3duZCBmb3IgYm90aCBm
+YXN0IHJldHJhbnNtaXNzaW9ucyBhbmQgUlRPcywgYXQgbW9zdCBvbmNlDQpwZXIgUlRULiBDb25z
+ZXF1ZW50bHksIHRoZSBkY3RjcF9jbGFtcF9hbHBoYV9vbl9sb3NzIG1vZHVsZSBwYXJhbWV0ZXIN
+CmhhcyBiZWVuIHJlbW92ZWQuDQoNClRoZSB0YWJsZSBiZWxvdyBzaG93cyBleHBlcmltZW50YWwg
+cmVzdWx0cyB3aGVyZSB3ZSBtZWFzdXJlZCB0aGUNCmRyb3AgcHJvYmFiaWxpdHkgb2YgYSBQSUUg
+QVFNIChub3QgYXBwbHlpbmcgRUNOIG1hcmtzKSBhdCBhDQpib3R0bGVuZWNrIGluIHRoZSBwcmVz
+ZW5jZSBvZiBhIHNpbmdsZSBUQ1AgZmxvdyB3aXRoIGVpdGhlciB0aGUNCmFscGhhLWNsYW1waW5n
+IG9wdGlvbiBlbmFibGVkIG9yIHRoZSBjd25kIGhhbHZpbmcgcHJvcG9zZWQgYnkgdGhpcw0KcGF0
+Y2guIFJlc3VsdHMgdXNpbmcgcmVubyBvciBjdWJpYyBhcmUgZ2l2ZW4gZm9yIGNvbXBhcmlzb24u
+DQoNCiAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgTGluayAgIHwgICBSVFQgICAgfCAgICBE
+cm9wDQogICAgICAgICAgICAgICAgIFRDUCBDQyAgIHwgIHNwZWVkICB8IGJhc2UrQVFNIHwgcHJv
+YmFiaWxpdHkNCiAgICAgICAgPT09PT09PT09PT09PT09PT09fD09PT09PT09PXw9PT09PT09PT09
+fD09PT09PT09PT09PQ0KICAgICAgICAgICAgICAgICAgICBDVUJJQyB8ICA0ME1icHMgfCAgNysy
+MG1zICB8ICAgIDAuMjElDQogICAgICAgICAgICAgICAgICAgICBSRU5PIHwgICAgICAgICB8ICAg
+ICAgICAgIHwgICAgMC4xOSUNCiAgICAgICAgRENUQ1AtQ0xBTVAtQUxQSEEgfCAgICAgICAgIHwg
+ICAgICAgICAgfCAgIDI1LjgwJQ0KICAgICAgICAgRENUQ1AtSEFMVkUtQ1dORCB8ICAgICAgICAg
+fCAgICAgICAgICB8ICAgIDAuMjIlDQogICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0t
+LS18LS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0NCiAgICAgICAgICAgICAgICAgICAgQ1VCSUMgfCAx
+MDBNYnBzIHwgIDcrMjBtcyAgfCAgICAwLjAzJQ0KICAgICAgICAgICAgICAgICAgICAgUkVOTyB8
+ICAgICAgICAgfCAgICAgICAgICB8ICAgIDAuMDIlDQogICAgICAgIERDVENQLUNMQU1QLUFMUEhB
+IHwgICAgICAgICB8ICAgICAgICAgIHwgICAyMy4zMCUNCiAgICAgICAgIERDVENQLUhBTFZFLUNX
+TkQgfCAgICAgICAgIHwgICAgICAgICAgfCAgICAwLjA0JQ0KICAgICAgICAtLS0tLS0tLS0tLS0t
+LS0tLS18LS0tLS0tLS0tfC0tLS0tLS0tLS18LS0tLS0tLS0tLS0tDQogICAgICAgICAgICAgICAg
+ICAgIENVQklDIHwgODAwTWJwcyB8ICAgMSsxbXMgIHwgICAgMC4wNCUNCiAgICAgICAgICAgICAg
+ICAgICAgIFJFTk8gfCAgICAgICAgIHwgICAgICAgICAgfCAgICAwLjA1JQ0KICAgICAgICBEQ1RD
+UC1DTEFNUC1BTFBIQSB8ICAgICAgICAgfCAgICAgICAgICB8ICAgMTguNzAlDQogICAgICAgICBE
+Q1RDUC1IQUxWRS1DV05EIHwgICAgICAgICB8ICAgICAgICAgIHwgICAgMC4wNiUNCg0KV2Ugc2Vl
+IHRoYXQsIHdpdGhvdXQgaGFsdmluZyBpdHMgY3duZCBmb3IgYWxsIHNvdXJjZSBvZiBsb3NzZXMs
+DQpEQ1RDUCBkcml2ZXMgdGhlIEFRTSB0byBsYXJnZSBkcm9wIHByb2JhYmlsaXRpZXMgaW4gb3Jk
+ZXIgdG8ga2VlcA0KdGhlIHF1ZXVlIGxlbmd0aCB1bmRlciBjb250cm9sIChpLmUuLCBpdCByZXBl
+YXRlZGx5IGZhY2VzIFJUT3MpLg0KSW5zdGVhZCwgaWYgRENUQ1AgcmVhY3RzIHRvIGFsbCBzb3Vy
+Y2Ugb2YgbG9zc2VzLCBpdCBjYW4gdGhlbiBiZQ0KY29udHJvbGxlZCBieSB0aGUgQVFNIHVzaW5n
+IHNpbWlsYXIgZHJvcCBsZXZlbHMgdGhhbiBjdWJpYyBvciByZW5vLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBLb2VuIERlIFNjaGVwcGVyIDxrb2VuLmRlX3NjaGVwcGVyQG5va2lhLWJlbGwtbGFicy5jb20+
+DQpTaWduZWQtb2ZmLWJ5OiBPbGl2aWVyIFRpbG1hbnMgPG9saXZpZXIudGlsbWFuc0Bub2tpYS1i
+ZWxsLWxhYnMuY29tPg0KQ2M6IEJvYiBCcmlzY29lIDxyZXNlYXJjaEBib2JicmlzY29lLm5ldD4N
+CkNjOiBMYXdyZW5jZSBCcmFrbW8gPGJyYWttb0BmYi5jb20+DQpDYzogRmxvcmlhbiBXZXN0cGhh
+bCA8ZndAc3RybGVuLmRlPg0KQ2M6IERhbmllbCBCb3JrbWFubiA8Ym9ya21hbm5AaW9nZWFyYm94
+Lm5ldD4NCkNjOiBZdWNodW5nIENoZW5nIDx5Y2hlbmdAZ29vZ2xlLmNvbT4NCkNjOiBOZWFsIENh
+cmR3ZWxsIDxuY2FyZHdlbGxAZ29vZ2xlLmNvbT4NCkNjOiBFcmljIER1bWF6ZXQgPGVkdW1hemV0
+QGdvb2dsZS5jb20+DQpDYzogQW5kcmV3IFNoZXdtYWtlciA8YWdzaGV3QGdtYWlsLmNvbT4NCkNj
+OiBHbGVubiBKdWRkIDxnbGVubi5qdWRkQG1vcmdhbnN0YW5sZXkuY29tPg0KDQotLS0NCnYxIC0+
+IHYyOg0KICAgIC0gUmVtb3ZlIHRoZSBtb2R1bGUgcGFyYW1ldGVyIHRoYXQgd2FzIG1ha2luZyB0
+aGUgcmVhY3Rpb24gdG8gbG9zc2VzDQogICAgICBvcHRpb25hbCBhcyBSRkM4MjU3IHNwZWNpZmll
+cyB0aGUgYmVoYXZpb3IgYXMgYSBNVVNULg0KLS0tDQogbmV0L2lwdjQvdGNwX2RjdGNwLmMgfCAz
+NiArKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwg
+MTggaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9uZXQvaXB2
+NC90Y3BfZGN0Y3AuYyBiL25ldC9pcHY0L3RjcF9kY3RjcC5jDQppbmRleCBjZDQ4MTRmN2U5NjIu
+LjM1OWRhNjhkN2MwNiAxMDA2NDQNCi0tLSBhL25ldC9pcHY0L3RjcF9kY3RjcC5jDQorKysgYi9u
+ZXQvaXB2NC90Y3BfZGN0Y3AuYw0KQEAgLTY3LDExICs2Nyw2IEBAIHN0YXRpYyB1bnNpZ25lZCBp
+bnQgZGN0Y3BfYWxwaGFfb25faW5pdCBfX3JlYWRfbW9zdGx5ID0gRENUQ1BfTUFYX0FMUEhBOw0K
+IG1vZHVsZV9wYXJhbShkY3RjcF9hbHBoYV9vbl9pbml0LCB1aW50LCAwNjQ0KTsNCiBNT0RVTEVf
+UEFSTV9ERVNDKGRjdGNwX2FscGhhX29uX2luaXQsICJwYXJhbWV0ZXIgZm9yIGluaXRpYWwgYWxw
+aGEgdmFsdWUiKTsNCiANCi1zdGF0aWMgdW5zaWduZWQgaW50IGRjdGNwX2NsYW1wX2FscGhhX29u
+X2xvc3MgX19yZWFkX21vc3RseTsNCi1tb2R1bGVfcGFyYW0oZGN0Y3BfY2xhbXBfYWxwaGFfb25f
+bG9zcywgdWludCwgMDY0NCk7DQotTU9EVUxFX1BBUk1fREVTQyhkY3RjcF9jbGFtcF9hbHBoYV9v
+bl9sb3NzLA0KLQkJICJwYXJhbWV0ZXIgZm9yIGNsYW1waW5nIGFscGhhIG9uIGxvc3MiKTsNCi0N
+CiBzdGF0aWMgc3RydWN0IHRjcF9jb25nZXN0aW9uX29wcyBkY3RjcF9yZW5vOw0KIA0KIHN0YXRp
+YyB2b2lkIGRjdGNwX3Jlc2V0KGNvbnN0IHN0cnVjdCB0Y3Bfc29jayAqdHAsIHN0cnVjdCBkY3Rj
+cCAqY2EpDQpAQCAtMTY0LDIxICsxNTksMjMgQEAgc3RhdGljIHZvaWQgZGN0Y3BfdXBkYXRlX2Fs
+cGhhKHN0cnVjdCBzb2NrICpzaywgdTMyIGZsYWdzKQ0KIAl9DQogfQ0KIA0KLXN0YXRpYyB2b2lk
+IGRjdGNwX3N0YXRlKHN0cnVjdCBzb2NrICpzaywgdTggbmV3X3N0YXRlKQ0KK3N0YXRpYyB2b2lk
+IGRjdGNwX3JlYWN0X3RvX2xvc3Moc3RydWN0IHNvY2sgKnNrKQ0KIHsNCi0JaWYgKGRjdGNwX2Ns
+YW1wX2FscGhhX29uX2xvc3MgJiYgbmV3X3N0YXRlID09IFRDUF9DQV9Mb3NzKSB7DQotCQlzdHJ1
+Y3QgZGN0Y3AgKmNhID0gaW5ldF9jc2tfY2Eoc2spOw0KKwlzdHJ1Y3QgZGN0Y3AgKmNhID0gaW5l
+dF9jc2tfY2Eoc2spOw0KKwlzdHJ1Y3QgdGNwX3NvY2sgKnRwID0gdGNwX3NrKHNrKTsNCiANCi0J
+CS8qIElmIHRoaXMgZXh0ZW5zaW9uIGlzIGVuYWJsZWQsIHdlIGNsYW1wIGRjdGNwX2FscGhhIHRv
+DQotCQkgKiBtYXggb24gcGFja2V0IGxvc3M7IHRoZSBtb3RpdmF0aW9uIGlzIHRoYXQgZGN0Y3Bf
+YWxwaGENCi0JCSAqIGlzIGFuIGluZGljYXRvciB0byB0aGUgZXh0ZW5kIG9mIGNvbmdlc3Rpb24g
+YW5kIHBhY2tldA0KLQkJICogbG9zcyBpcyBhbiBpbmRpY2F0b3Igb2YgZXh0cmVtZSBjb25nZXN0
+aW9uOyBzZXR0aW5nDQotCQkgKiB0aGlzIGluIHByYWN0aWNlIHR1cm5lZCBvdXQgdG8gYmUgYmVu
+ZWZpY2lhbCwgYW5kDQotCQkgKiBlZmZlY3RpdmVseSBhc3N1bWVzIHRvdGFsIGNvbmdlc3Rpb24g
+d2hpY2ggcmVkdWNlcyB0aGUNCi0JCSAqIHdpbmRvdyBieSBoYWxmLg0KLQkJICovDQotCQljYS0+
+ZGN0Y3BfYWxwaGEgPSBEQ1RDUF9NQVhfQUxQSEE7DQotCX0NCisJY2EtPmxvc3NfY3duZCA9IHRw
+LT5zbmRfY3duZDsNCisJdHAtPnNuZF9zc3RocmVzaCA9IG1heCh0cC0+c25kX2N3bmQgPj4gMVUs
+IDJVKTsNCit9DQorDQorc3RhdGljIHZvaWQgZGN0Y3Bfc3RhdGUoc3RydWN0IHNvY2sgKnNrLCB1
+OCBuZXdfc3RhdGUpDQorew0KKwlpZiAobmV3X3N0YXRlID09IFRDUF9DQV9SZWNvdmVyeSAmJg0K
+KwkgICAgbmV3X3N0YXRlICE9IGluZXRfY3NrKHNrKS0+aWNza19jYV9zdGF0ZSkNCisJCWRjdGNw
+X3JlYWN0X3RvX2xvc3Moc2spOw0KKwkvKiBXZSBoYW5kbGUgUlRPIGluIGRjdGNwX2N3bmRfZXZl
+bnQgdG8gZW5zdXJlIHRoYXQgd2UgcGVyZm9ybSBvbmx5DQorCSAqIG9uZSBsb3NzLWFkanVzdG1l
+bnQgcGVyIFJUVC4NCisJICovDQogfQ0KIA0KIHN0YXRpYyB2b2lkIGRjdGNwX2N3bmRfZXZlbnQo
+c3RydWN0IHNvY2sgKnNrLCBlbnVtIHRjcF9jYV9ldmVudCBldikNCkBAIC0xOTAsNiArMTg3LDkg
+QEAgc3RhdGljIHZvaWQgZGN0Y3BfY3duZF9ldmVudChzdHJ1Y3Qgc29jayAqc2ssIGVudW0gdGNw
+X2NhX2V2ZW50IGV2KQ0KIAljYXNlIENBX0VWRU5UX0VDTl9OT19DRToNCiAJCWRjdGNwX2VjZV9h
+Y2tfdXBkYXRlKHNrLCBldiwgJmNhLT5wcmlvcl9yY3Zfbnh0LCAmY2EtPmNlX3N0YXRlKTsNCiAJ
+CWJyZWFrOw0KKwljYXNlIENBX0VWRU5UX0xPU1M6DQorCQlkY3RjcF9yZWFjdF90b19sb3NzKHNr
+KTsNCisJCWJyZWFrOw0KIAlkZWZhdWx0Og0KIAkJLyogRG9uJ3QgY2FyZSBmb3IgdGhlIHJlc3Qu
+ICovDQogCQlicmVhazsNCi0tIA0KMi4yMS4wDQoNCg==
