@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E87BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A25C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE542177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F11217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367998;
-	bh=5amhRwohAgBT4y4TYwrDDa1+8IsVSdfshaUbzKjMmdw=;
+	s=default; t=1554368002;
+	bh=I2d/+N2OQJ7GhbQVYRjcYWGgA+6YKFO/RULsNnkARos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwiIENhe6Pde15LAu6sISb5e2fVI9se5BeYSALJ+3RHBeHgcY9nGImVgPURYd82QD
-	 JdjZQuqbqw1XNWnm4PQvkr6jCfofIgar+n2MXiGjemX3wKTB32MvQ4M/JgNNpQpPjr
-	 A8jwsoni9/+aEPZVZ5yhau4UF42a+oMGPQlSRVok=
+	b=ttww0r4Mt6O8qZG22d6yompV8aL0do9TyI46VWakNaNpJErgWqJA0I4dnH1GP5HJR
+	 /c9yhR2qXAoYe+9+n+f+N2pZW7VJL65VjA98uj/FY2DckUqK8E1rSlOwWWURkEXSi6
+	 +4M3UBnn3Ad8rxZeCRcNPVnReSHYaim0g1iQZ1ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbfDDIxQ (ORCPT
+        id S1729786AbfDDIxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbfDDIxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:13 -0400
+        id S1729036AbfDDIxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D9E2147C;
-        Thu,  4 Apr 2019 08:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217B0217D4;
+        Thu,  4 Apr 2019 08:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367993;
-        bh=5amhRwohAgBT4y4TYwrDDa1+8IsVSdfshaUbzKjMmdw=;
+        s=default; t=1554367995;
+        bh=I2d/+N2OQJ7GhbQVYRjcYWGgA+6YKFO/RULsNnkARos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1sQ8ohXrPuE5PBzAU5bf9o9nvnhydKU5ssPRx8dmQ4KKZWIsodWs8ZxZy7PZWaix9
-         ikxXHR2l7xtx3XoAS0Rji/609W0fxXsqco7n1IVVxJC15tvqY2dHXU87PHfrx4hBgb
-         6c8gDoYZDslj9cFPX5IPTm0e2uuvtFe/5S9Je4lo=
+        b=bY9f/n/qDr2clMn59C676x7g+wj/nWOFrr8fzTq2RogVc7yQ6pEcAIWCx/xkRVxuA
+         PeGiPdqrTIWeWmmL79354elCyOt0BGcw4j+GhitX0euZ362IzJBFryNmo/CtmUUPAu
+         AGvglg8GZ4KweNSoWl0ClIK7hh4nv6Ob33drbLbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 74/91] media: mt9m111: set initial frame size other than 0x0
-Date:   Thu,  4 Apr 2019 10:47:58 +0200
-Message-Id: <20190404084539.735838753@linuxfoundation.org>
+Subject: [PATCH 4.9 75/91] hwrng: virtio - Avoid repeated init of completion
+Date:   Thu,  4 Apr 2019 10:47:59 +0200
+Message-Id: <20190404084539.794071936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -71,37 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 29856308137de1c21eda89411695f4fc6e9780ff ]
+[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
 
-This driver sets initial frame width and height to 0x0, which is invalid.
-So set it to selection rectangle bounds instead.
+The virtio-rng driver uses a completion called have_data to wait for a
+virtio read to be fulfilled by the hypervisor. The completion is reset
+before placing a buffer on the virtio queue and completed by the virtio
+callback once data has been written into the buffer.
 
-This is detected by v4l2-compliance detected.
+Prior to this commit, the driver called init_completion on this
+completion both during probe as well as when registering virtio buffers
+as part of a hwrng read operation. The second of these init_completion
+calls should instead be reinit_completion because the have_data
+completion has already been inited by probe. As described in
+Documentation/scheduler/completion.txt, "Calling init_completion() twice
+on the same completion object is most likely a bug".
 
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This bug was present in the initial implementation of virtio-rng in
+f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
+then the have_data completion was a single static completion rather than
+a member of one of potentially multiple virtrng_info structs as
+implemented later by 08e53fbdb85c ("virtio-rng: support multiple
+virtio-rng devices"). The original driver incorrectly used
+init_completion rather than INIT_COMPLETION to reset have_data during
+read.
+
+Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
+Chrome OS virtual machine monitor, and confirming that the virtio-rng
+driver successfully produces random bytes from the host.
+
+Signed-off-by: David Tolnay <dtolnay@gmail.com>
+Tested-by: David Tolnay <dtolnay@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/char/hw_random/virtio-rng.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index 72e71b762827..a6145877bd00 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -974,6 +974,8 @@ static int mt9m111_probe(struct i2c_client *client,
- 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
- 	mt9m111->rect.width	= MT9M111_MAX_WIDTH;
- 	mt9m111->rect.height	= MT9M111_MAX_HEIGHT;
-+	mt9m111->width		= mt9m111->rect.width;
-+	mt9m111->height		= mt9m111->rect.height;
- 	mt9m111->fmt		= &mt9m111_colour_fmts[0];
- 	mt9m111->lastpage	= -1;
- 	mutex_init(&mt9m111->power_lock);
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index 3fa2f8a009b3..1c5c4314c6b5 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+ 
+ 	if (!vi->busy) {
+ 		vi->busy = true;
+-		init_completion(&vi->have_data);
++		reinit_completion(&vi->have_data);
+ 		register_buffer(vi, buf, size);
+ 	}
+ 
 -- 
 2.19.1
 
