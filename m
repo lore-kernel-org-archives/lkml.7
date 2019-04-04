@@ -2,170 +2,134 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E184C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 04:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CABC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 04:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED2F2133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 04:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="LilBzVZs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B7wwLCg6"
+	by mail.kernel.org (Postfix) with ESMTP id C95052064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 04:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfDDEk3 (ORCPT
+        id S1726790AbfDDEmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 00:40:29 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:50411 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725903AbfDDEk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 00:40:29 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3945E22001;
-        Thu,  4 Apr 2019 00:40:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 04 Apr 2019 00:40:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=bUj9cbWyiESD0Bndu7rVRnpZO5R
-        GiJ6UN/btqvOMQzs=; b=LilBzVZsyjXpmUeuJmZQ7Y+uZrJnTTp3BYXzPrZZ5lY
-        T2M9C00bxrnlWdXN8RULcQnLug7v/Z8WgHE5T3e9+tsTA8s2nL/vKgfD1//NwQ6N
-        fRoBpYpfJg0V37fdH72ptQh8/gXbXeryPKCleEKF2G7Ab7s1g3ZvpxXGxld+g4Gk
-        4x4WPrnIILYaiyZAzuHrB09pi+8ommonzl1QtPztwVkTvRVaZWj6Qz9a93EWk1zd
-        UK9cUAke4Urf02P4AoIMD+M1sFABWGyJqPRSUe/RfHgVuTOsVLfZ8Pt/N/cddG64
-        AmwZVL+UH7tzZNfmTEXfFa9RGuX9KfMB5o4Nq+Fom3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bUj9cb
-        WyiESD0Bndu7rVRnpZO5RGiJ6UN/btqvOMQzs=; b=B7wwLCg61dSqSMNqMB2jX/
-        NZgBgRnxkTKygwqNS2Ty+qvnu7AKFu1l4GyCzY0jj5qdVeYMFIWyWET17/SEbrzj
-        IU7vv/sJM+f9CWnzGn3+vOVkOV9uv8Q4g6jojiAUgcsyLMRRjcJDr+iiz7EXUBZO
-        7LktPymVBPnmlVUEZUxlyMnqmyRvhxCXOssUd2f8E8G+hcU87x4gezRGWOIQV0A9
-        wTTair7UEojVB76FWDf/6KxeG2lSKCiKqBvgyrpE4Uen7rBj66Dnk1uJA4xcTpAW
-        m2xPcj39R8sulCRcgmdPCh4HYeHAr74OkMFMzBA7/iV+9TRzG5vm6u58g8fwxVoA
-        ==
-X-ME-Sender: <xms:u4qlXGTFrTZb_DWvALZx7_euM30AD_HrwUXvuhhgj9t3dicy95FhhQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdekfeculddtuddrgedutddrtddtmd
-    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
-    ejmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredtofervdenucfhrhhomhep
-    fdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtohgsihhnrdgttgeqnecuff
-    homhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvgedrudegledruddugedrkeei
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsth
-    gvrhfuihiivgeptd
-X-ME-Proxy: <xmx:u4qlXGfYZuxFbCPsWQQx6bcZBokcUeyGR3CXXH9woUnpfo_PzTgsTQ>
-    <xmx:u4qlXH0w9YC9VYnG42RROq5pmJfxKbHD8VSQvoneEOcn_k9v0Ra7pg>
-    <xmx:u4qlXCs_zoe62dctCp6DDOWxL3ja28G5IKYzpncaFfa-gsk8kXxbpg>
-    <xmx:vIqlXPca26sTVtn2yzYtYifaq6OtxueTr3W6epUZNMna33Cfk0tgnA>
-Received: from localhost (124-149-114-86.dyn.iinet.net.au [124.149.114.86])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DD01510310;
-        Thu,  4 Apr 2019 00:40:26 -0400 (EDT)
-Date:   Thu, 4 Apr 2019 15:39:56 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     kernel test robot <lkp@intel.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>, LKP <lkp@01.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: 15c8410c67 ("mm/slob.c: respect list_head abstraction layer"):
- WARNING: CPU: 0 PID: 1 at lib/list_debug.c:28 __list_add_valid
-Message-ID: <20190404043956.GA19471@eros.localdomain>
-References: <5ca413c6.9TM84kwWw8lLhnmK%lkp@intel.com>
- <20190403045417.GA19313@eros.localdomain>
+        Thu, 4 Apr 2019 00:42:23 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51456 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbfDDEmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 00:42:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24EFCA78;
+        Wed,  3 Apr 2019 21:42:20 -0700 (PDT)
+Received: from [10.162.40.100] (p8cg001049571a15.blr.arm.com [10.162.40.100])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 525703F557;
+        Wed,  3 Apr 2019 21:42:14 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64/mm: Enable ZONE_DEVICE
+To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        logang@deltatee.com, david@redhat.com, cai@lca.pw,
+        jglisse@redhat.com
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-7-git-send-email-anshuman.khandual@arm.com>
+ <ea5567c7-caad-8a4e-7c6f-cec4b772a526@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <0d72db39-e20d-1cbd-368e-74dda9b6c936@arm.com>
+Date:   Thu, 4 Apr 2019 10:12:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403045417.GA19313@eros.localdomain>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <ea5567c7-caad-8a4e-7c6f-cec4b772a526@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 03:54:17PM +1100, Tobin C. Harding wrote:
-> On Wed, Apr 03, 2019 at 10:00:38AM +0800, kernel test robot wrote:
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> > 
-> > commit 15c8410c67adefd26ea0df1f1b86e1836051784b
-> > Author:     Tobin C. Harding <tobin@kernel.org>
-> > AuthorDate: Fri Mar 29 10:01:23 2019 +1100
-> > Commit:     Stephen Rothwell <sfr@canb.auug.org.au>
-> > CommitDate: Sat Mar 30 16:09:41 2019 +1100
-> > 
-> >     mm/slob.c: respect list_head abstraction layer
-> >     
-> >     Currently we reach inside the list_head.  This is a violation of the layer
-> >     of abstraction provided by the list_head.  It makes the code fragile.
-> >     More importantly it makes the code wicked hard to understand.
-> >     
-> >     The code logic is based on the page in which an allocation was made, we
-> >     want to modify the slob_list we are working on to have this page at the
-> >     front.  We already have a function to check if an entry is at the front of
-> >     the list.  Recently a function was added to list.h to do the list
-> >     rotation.  We can use these two functions to reduce line count, reduce
-> >     code fragility, and reduce cognitive load required to read the code.
-> >     
-> >     Use list_head functions to interact with lists thereby maintaining the
-> >     abstraction provided by the list_head structure.
-> >     
-> >     Link: http://lkml.kernel.org/r/20190318000234.22049-3-tobin@kernel.org
-> >     Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> >     Cc: Christoph Lameter <cl@linux.com>
-> >     Cc: David Rientjes <rientjes@google.com>
-> >     Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >     Cc: Pekka Enberg <penberg@kernel.org>
-> >     Cc: Roman Gushchin <guro@fb.com>
-> >     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > 
-> > 2e1f88301e  include/linux/list.h: add list_rotate_to_front()
-> > 15c8410c67  mm/slob.c: respect list_head abstraction layer
-> > 05d08e2995  Add linux-next specific files for 20190402
-> > +-------------------------------------------------------+------------+------------+---------------+
-> > |                                                       | 2e1f88301e | 15c8410c67 | next-20190402 |
-> > +-------------------------------------------------------+------------+------------+---------------+
-> > | boot_successes                                        | 1009       | 198        | 299           |
-> > | boot_failures                                         | 0          | 2          | 44            |
-> > | WARNING:at_lib/list_debug.c:#__list_add_valid         | 0          | 2          | 44            |
-> > | RIP:__list_add_valid                                  | 0          | 2          | 44            |
-> > | WARNING:at_lib/list_debug.c:#__list_del_entry_valid   | 0          | 2          | 25            |
-> > | RIP:__list_del_entry_valid                            | 0          | 2          | 25            |
-> > | WARNING:possible_circular_locking_dependency_detected | 0          | 2          | 44            |
-> > | RIP:_raw_spin_unlock_irqrestore                       | 0          | 2          | 2             |
-> > | BUG:kernel_hang_in_test_stage                         | 0          | 0          | 6             |
-> > | BUG:unable_to_handle_kernel                           | 0          | 0          | 1             |
-> > | Oops:#[##]                                            | 0          | 0          | 1             |
-> > | RIP:slob_page_alloc                                   | 0          | 0          | 1             |
-> > | Kernel_panic-not_syncing:Fatal_exception              | 0          | 0          | 1             |
-> > | RIP:delay_tsc                                         | 0          | 0          | 2             |
-> > +-------------------------------------------------------+------------+------------+---------------+
-> > 
-> > [    2.618737] db_root: cannot open: /etc/target
-> > [    2.620114] mtdoops: mtd device (mtddev=name/number) must be supplied
-> > [    2.620967] slram: not enough parameters.
-> > [    2.621614] ------------[ cut here ]------------
-> > [    2.622254] list_add corruption. prev->next should be next (ffffffffaeeb71b0), but was ffffcee1406d3f70. (prev=ffffcee140422508).
+
+
+On 04/03/2019 07:28 PM, Robin Murphy wrote:
+> [ +Dan, Jerome ]
 > 
-> Is this perhaps a false positive because we hackishly move the list_head
-> 'head' and insert it back into the list.  Perhaps this is confusing the
-> validation functions?
+> On 03/04/2019 05:30, Anshuman Khandual wrote:
+>> Arch implementation for functions which create or destroy vmemmap mapping
+>> (vmemmap_populate, vmemmap_free) can comprehend and allocate from inside
+>> device memory range through driver provided vmem_altmap structure which
+>> fulfils all requirements to enable ZONE_DEVICE on the platform. Hence just
+> 
+> ZONE_DEVICE is about more than just altmap support, no?
 
-This has got me stumped.  I cannot create a test case where manipulating
-a list with list_rotate_to_front() causes the list validation functions
-to emit an error.  Also I cannot come up with a way on paper that it can
-happen either.
+Hot plugging the memory into a dev->numa_node's ZONE_DEVICE and initializing the
+struct pages for it has stand alone and self contained use case. The driver could
+just want to manage the memory itself but with struct pages either in the RAM or
+in the device memory range through struct vmem_altmap. The driver may not choose
+to opt for HMM, FS DAX, P2PDMA (use cases of ZONE_DEVICE) where it may have to
+map these pages into any user pagetable which would necessitate support for
+pte|pmd|pud_devmap.
 
-I don't really know how to go forwards from here.  I'll sleep on it and
-see if something comes to me, any ideas to look into please?
+Though I am still working towards getting HMM, FS DAX, P2PDMA enabled on arm64,
+IMHO ZONE_DEVICE is self contained and can be evaluated in itself.
 
-thanks,
-Tobin.
+> 
+>> enable ZONE_DEVICE by subscribing to ARCH_HAS_ZONE_DEVICE. But this is only
+>> applicable for ARM64_4K_PAGES (ARM64_SWAPPER_USES_SECTION_MAPS) only which
+>> creates vmemmap section mappings and utilize vmem_altmap structure.
+> 
+> What prevents it from working with other page sizes? One of the foremost use-cases for our 52-bit VA/PA support is to enable mapping large quantities of persistent memory, so we really do need this for 64K pages too. FWIW, it appears not to be an issue for PowerPC.
+
+
+On !AR64_4K_PAGES vmemmap_populate() calls vmemmap_populate_basepages() which
+does not support struct vmem_altmap right now. Originally was planning to send
+the vmemmap_populate_basepages() enablement patches separately but will post it
+here for review.
+
+> 
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   arch/arm64/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index db3e625..b5d8cf5 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -31,6 +31,7 @@ config ARM64
+>>       select ARCH_HAS_SYSCALL_WRAPPER
+>>       select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+>>       select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>> +    select ARCH_HAS_ZONE_DEVICE if ARM64_4K_PAGES
+> 
+> IIRC certain configurations (HMM?) don't even build if you just turn this on alone (although of course things may have changed elsewhere in the meantime) - crucially, though, from previous discussions[1] it seems fundamentally unsafe, since I don't think we can guarantee that nobody will touch the corners of ZONE_DEVICE that also require pte_devmap in order not to go subtly wrong. I did get as far as cooking up some patches to sort that out [2][3] which I never got round to posting for their own sake, so please consider picking those up as part of this series.
+
+In the previous discussion mentioned here [1] it sort of indicates that we
+cannot have a viable (ARCH_HAS_ZONE_DEVICE=y but !__HAVE_ARCH_PTE_DEVMAP). I
+dont understand why ! The driver can just hotplug the range into ZONE_DEVICE,
+manage the memory itself without mapping them to user page table ever. IIUC
+ZONE_DEVICE must not need user mapped device PFN support. All the corner case
+problems discussed previously come in once these new 'device PFN' memory which
+is now in ZONE_DEVICE get mapped into user page table.
+
+> 
+> Robin.
+> 
+>>       select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>>       select ARCH_INLINE_READ_LOCK if !PREEMPT
+>>       select ARCH_INLINE_READ_LOCK_BH if !PREEMPT
+>>
+> 
+> 
+> [1] https://lore.kernel.org/linux-mm/CAA9_cmfA9GS+1M1aSyv1ty5jKY3iho3CERhnRAruWJW3PfmpgA@mail.gmail.com/#t
+> [2] http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=61816b833afdb56b49c2e58f5289ae18809e5d67
+> [3] http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a5a16560eb1becf9a1d4cc0d03d6b5e76da4f4e1
+> (apologies to anyone if the linux-arm.org server is being flaky as usual and requires a few tries to respond properly)
+
+I have not evaluated pte_devmap(). Will consider [3] when enabling it. But
+I still dont understand why ZONE_DEVICE can not be enabled and used from a
+driver which never requires user mapping or pte|pmd|pud_devmap() support.
