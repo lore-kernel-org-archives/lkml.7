@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4710C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BBEC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E53205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB734205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370368;
-	bh=4S+k0aX22ojcl54tAH6LapJtuvJOQgv9FRcxey5LG+Y=;
+	s=default; t=1554370373;
+	bh=XuH24fgkmdKrRZPKt4UsQEktP1TM2UB2K/YUBBsYHDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pLZtLVbgGJaSWluizj7CAv+Rh4SaUglXLP8DzXr+33y2cn/QOGkVSt6Z3+UHmqf4T
-	 dXcq4ph1eYDYxwebD1kt7PE/jcvsDShxXO7E0WvoO5IDJBCpW4pZgaJ3WFoRyrgYG4
-	 cGfuk5ZeyAE1SJSeOzBuIejX70dWp0eAaMU2nE+g=
+	b=0d5wtF4qWBiF1+UeNYLrtjCLTljH2YtagsTsd0FnvL13RgD60INz8bLzbEoNcvI9L
+	 mSZAju0qdVEyBwmAS+7m+GE90zNh4jz5rHgftVnUe/Rs5uUWuCE+n6ERnp1EKOmLYZ
+	 evWrEogF4ZXx4WzOIhW7Gy6Nj4nZf18GPajPISu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732860AbfDDJcr (ORCPT
+        id S1732691AbfDDJIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732692AbfDDJIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:08:43 -0400
+        id S1732048AbfDDJIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:08:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB43C214AF;
-        Thu,  4 Apr 2019 09:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E2B21741;
+        Thu,  4 Apr 2019 09:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368922;
-        bh=4S+k0aX22ojcl54tAH6LapJtuvJOQgv9FRcxey5LG+Y=;
+        s=default; t=1554368919;
+        bh=XuH24fgkmdKrRZPKt4UsQEktP1TM2UB2K/YUBBsYHDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/Fx+dqL5h1WjUhMCFO3NKEihZJmFm1BxZ2Eg6DMLe1+1OCKZGL9pozSbVXNiuGkM
-         +gIJwczmcffcHGRi+jYQ12NAsH+CDNk/641a6TPo0P0iAkQOvcfzj2TsceHU+blUKd
-         41/fvvY9Y5cuq34sHOsIJ0oeImTqVFJdh2NJrkHs=
+        b=wcO80lFSWidegeebwqURKgdHJ4eouRKbN3Ofmz8i/vGZoX+En57odqTtCGEiV4pSp
+         ixgb+pHrpAaJXN/BQu0SNOUXBDCi1euIi6qxULcj+l5asT4C1qRbnujIKIMQw2AiyF
+         Sad0JQ1AfuyNJiLFyGzeAAol8V83c4cEtQGI5bI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
         Tony Lindgren <tony@atomide.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 015/246] gpio: gpio-omap: fix level interrupt idling
-Date:   Thu,  4 Apr 2019 10:45:15 +0200
-Message-Id: <20190404084619.718177210@linuxfoundation.org>
+Subject: [PATCH 5.0 014/246] clk: ti: clkctrl: Fix clkdm_name regression for TI_CLK_CLKCTRL_COMPAT
+Date:   Thu,  4 Apr 2019 10:45:14 +0200
+Message-Id: <20190404084619.690847928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -71,85 +67,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
+[ Upstream commit d17a718db40df2548e99a62dc3d7e5e2b38143cc ]
 
-Tony notes that the GPIO module does not idle when level interrupts are
-in use, as the wakeup appears to get stuck.
+Commit a72d785021cb ("clk: ti: Prepare for remove of OF node name")
+changed the code to use kasprintf() for provider->clkdm_name but also
+changed the offset used later on by three. We don't need to change the
+offset as we already have the extra three characters in the format for
+kasprintf with "%pOFnxxx".
 
-After extensive investigation, it appears that the wakeup will only be
-cleared if the interrupt status register is cleared while the interrupt
-is enabled. However, we are currently clearing it with the interrupt
-disabled for level-based interrupts.
+This caused the clocks with TI_CLK_CLKCTRL_COMPAT to have NULL
+clk->clkdm_name for omap4 and 5. And null clkdm_name can cause module
+reset, enable, and idle to fail.
 
-It is acknowledged that this observed behaviour conflicts with a
-statement in the TRM:
+The issue can also be seen also when enabling DEBUG for clkctrl.c
+and then we start seeing "clock: could not associate" messages for
+omap4 and 5 as the generated name is something like "l4_wkclkdm" instead
+of "l4_wkup_clkdm" that's needed.
 
-CAUTION
-  After servicing the interrupt, the status bit in the interrupt status
-  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
-  reset and the interrupt line released (by setting the corresponding
-  bit of the interrupt status register to 1) before enabling an
-  interrupt for the GPIO channel in the interrupt-enable register
-  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
-  the occurrence of unexpected interrupts when enabling an interrupt
-  for the GPIO channel.
+Let's fix the issue with a partial revert of commit a72d785021cb ("clk:
+ti: Prepare for remove of OF node name").
 
-However, this does not appear to be a practical problem.
+ALso note that in general code should not depend on the dts node names.
+And the node names should be generic types like clock-domain in this case.
+This could be fixed later by using separate compatible properties for the
+clockdomains, or by adding soc_device_match() table with reg offsets
+to the driver. But let's fix the regression first.
 
-Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
-the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
-Fix the sequence to clear the IRQ status" saying:
-
- if the status is cleared after disabling the IRQ then sWAKEUP will not
- be cleared and gates the module transition
-
-When we unmask the level interrupt after the interrupt has been handled,
-enable the interrupt and only then clear the interrupt. If the interrupt
-is still pending, the hardware will re-assert the interrupt status.
-
-Should the caution note in the TRM prove to be a problem, we could
-use a clear-enable-clear sequence instead.
-
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-[tony@atomide.com: updated comments based on an earlier TI patch]
+Fixes: a72d785021cb ("clk: ti: Prepare for remove of OF node name")
+Cc: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/clk/ti/clkctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index f4e9921fa966..7f33024b6d83 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -883,14 +883,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	if (trigger)
- 		omap_set_gpio_triggering(bank, offset, trigger);
- 
--	/* For level-triggered GPIOs, the clearing must be done after
--	 * the HW source is cleared, thus after the handler has run */
--	if (bank->level_mask & BIT(offset)) {
--		omap_set_gpio_irqenable(bank, offset, 0);
-+	omap_set_gpio_irqenable(bank, offset, 1);
-+
-+	/*
-+	 * For level-triggered GPIOs, clearing must be done after the source
-+	 * is cleared, thus after the handler has run. OMAP4 needs this done
-+	 * after enabing the interrupt to clear the wakeup status.
-+	 */
-+	if (bank->level_mask & BIT(offset))
- 		omap_clear_gpio_irqstatus(bank, offset);
--	}
- 
--	omap_set_gpio_irqenable(bank, offset, 1);
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
- }
- 
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 40630eb950fc..85d7f301149b 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -530,7 +530,7 @@ static void __init _ti_omap4_clkctrl_setup(struct device_node *node)
+ 		 * Create default clkdm name, replace _cm from end of parent
+ 		 * node name with _clkdm
+ 		 */
+-		provider->clkdm_name[strlen(provider->clkdm_name) - 5] = 0;
++		provider->clkdm_name[strlen(provider->clkdm_name) - 2] = 0;
+ 	} else {
+ 		provider->clkdm_name = kasprintf(GFP_KERNEL, "%pOFn", node);
+ 		if (!provider->clkdm_name) {
 -- 
 2.19.1
 
