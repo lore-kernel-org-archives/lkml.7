@@ -2,102 +2,145 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D49BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0293DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB0F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57542133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J3SpXvam"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eD0tjBoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfDDDYi (ORCPT
+        id S1726607AbfDDD24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:24:38 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:45352 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDDDYi (ORCPT
+        Wed, 3 Apr 2019 23:28:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43384 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDDD24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:24:38 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343ONv3039740;
-        Thu, 4 Apr 2019 03:24:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=eEf8G6QPqXwHU+Qn2u00XPjfTemL1SALrL30eyZgD90=;
- b=J3SpXvamhV2UPPhoDeZPA03cLRMEJ8UzPK5f7W2/Xs6Nw8GsDruzbBgOpM3ktHXBCGtK
- K06QLsH+tal/cZYQkbsKLGmeVkDGNa+1aePkZqjRxeRVV9zcJ0m2XU3vQ9QPSuG2ACZQ
- wLq42bA6L/Cl6o/HF6LooGzrLiA71+3RwotO9cK1dacBYO3iqOrXqwXXeeWfACqs50Jd
- 9b/0lt9v9TgrDkTFw2zv9cE0KljSx4XDKwnrrhGeBDZ0/myNE4kEzwBSItmTqUtsPLg3
- sXa6qG22bFmUW9qgVnNngSDJPXwa3u9PzV/xY5L3GIdp+bxwdY7Q1UZP9jp9eXnRPwo7 6A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2rhwydcpsp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:24:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343NJcr101516;
-        Thu, 4 Apr 2019 03:24:23 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2rm8f5pgwk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:24:23 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x343OLxN012090;
-        Thu, 4 Apr 2019 03:24:21 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 20:24:20 -0700
-To:     Jan Kotas <jank@cadence.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] scsi: ufs-cdns: Add support for UFSHCI with M31 PHY
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190327144405.5716-1-jank@cadence.com>
-        <20190327144405.5716-3-jank@cadence.com>
-Date:   Wed, 03 Apr 2019 23:24:17 -0400
-In-Reply-To: <20190327144405.5716-3-jank@cadence.com> (Jan Kotas's message of
-        "Wed, 27 Mar 2019 14:44:05 +0000")
-Message-ID: <yq1mul6tpum.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 3 Apr 2019 23:28:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c8so604156pfd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VFJ2wER6EQKUZL0dXpjVrQRv+8SzbIa0hZCCKCls6uc=;
+        b=eD0tjBoW6hsIYZKLAivX5T3fC3B0NgKd2iL88VLK8cCKdamgx22yzfhnqcEuHjNLTJ
+         9f993jHHYeDbEDptrVdHO/08yJQOXyrNzSIsFJ+N74XTsmToXEx2CMpaFcQuFyseFVLY
+         nl7JJLPqV4Gs62oqOyK9A53iropLTc54pkrb3LhCIWK7Aq0hmVe4Xx2KcyhF84i2wqu0
+         cVZSLRgVzmab13ZchZvYWRIDhVrej4yL+ur1mNSIREA2ItLO2FepbeHNXHDIeV013yh0
+         jvXuibSNSPQqQGv+VyOYY66DjGhGIoNs2zYVPyRFfjcSgDX+z/MNh7X8jJM1p9yAZ+8m
+         j9Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VFJ2wER6EQKUZL0dXpjVrQRv+8SzbIa0hZCCKCls6uc=;
+        b=GvQmvEjiKABPUIBne4PTu8Ee3OWpRqMhIn35UqWsZoSLlmVNP2Axs+Ux4Eaz3NaJwQ
+         xh06+d5spnLy5lbkF3aOuiRKzdWeMhr8FnAYSR+ojCCZrp4yIpzlkvF6iXx9gpIe0mzi
+         XhRUx0B3UMb0vUEx9Io/K8y5o7kMEoxdKwmfuaOY4X8Y1rNVkdj3Xo6088jg0/3CeR6l
+         xm0h+FbblrKLy1jAmM6iiZuX4eW5+4NYIp02Fx/foxQim1dZaOkLlsiidHtd1A77ORWo
+         W4e2NPn50BUleGDGDGvKG5KtjmJLy3Dk2eXUHMdO8wldPQ+yus+/14mqVkshSuMQ8/YQ
+         3ajQ==
+X-Gm-Message-State: APjAAAV5AclZPF6lDHM3svmfTKMq5Bq+GNNpUSeZtXP0cRCFcVkPKQ3Y
+        IusfHEXkLZc31HR0JAd0GmfJcyq3lj5xQQ==
+X-Google-Smtp-Source: APXvYqw50DXFCo1nIyIMANDfA4+Fr5ECKHZkbhypwyZ50F37Ko62glZybeveqUZBCDOc/zwmmaXgHQ==
+X-Received: by 2002:a63:e20b:: with SMTP id q11mr3441149pgh.263.1554348535036;
+        Wed, 03 Apr 2019 20:28:55 -0700 (PDT)
+Received: from [10.71.14.66] ([147.50.13.10])
+        by smtp.googlemail.com with ESMTPSA id r87sm18201915pfa.71.2019.04.03.20.28.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 20:28:54 -0700 (PDT)
+Subject: Re: [PATCH v3 04/13] thermal: qoriq: Add local struct qoriq_sensor
+ pointer
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
+ <20190401041418.5999-5-andrew.smirnov@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <02822a7c-ae86-8c00-093e-665b603b1430@linaro.org>
+Date:   Thu, 4 Apr 2019 05:28:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=748
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040022
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=796 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040022
+In-Reply-To: <20190401041418.5999-5-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 01/04/2019 06:14, Andrey Smirnov wrote:
+> Add local struct qoriq_sensor pointer in qoriq_tmu_register_tmu_zone()
+> for brevity.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> Cc: linux-imx@nxp.com
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/thermal/qoriq_thermal.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> index 6d40b9788266..e281bdcfa11f 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -114,18 +114,18 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
+>  
+>  	for (id = 0; id < SITES_MAX; id++) {
+>  		struct thermal_zone_device *tzd;
+> +		struct qoriq_sensor *s;
+>  
+> -		qdata->sensor[id] = devm_kzalloc(&pdev->dev,
+> +		s = qdata->sensor[id] = devm_kzalloc(&pdev->dev,
+>  				sizeof(struct qoriq_sensor), GFP_KERNEL);
 
-Jan,
+I would not recommend this, especially if you use a variable helper for
+clarity. Keep using the 's' variable and then assign qdata->sensor[id] =
+s at the end when everything is ok. May be rename it 'sensor'?
 
-> +	if (hba->vops && hba->vops->phy_initialization) {
-> +		status = hba->vops->phy_initialization(hba);
-> +		if (status)
-> +			return status;
-> +	}
-> +
-> +	return status;
+>  		if (!qdata->sensor[id])
+>  			return -ENOMEM;
+>  
+> -		qdata->sensor[id]->id = id;
+> -		qdata->sensor[id]->qdata = qdata;
+> +		s->id = id;
+> +		s->qdata = qdata;
+>  
+>  		tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, id,
+> -							   qdata->sensor[id],
+> -							   &tmu_tz_ops);
+> +							   s, &tmu_tz_ops);
+>  		if (IS_ERR(tzd)) {
+>  			if (PTR_ERR(tzd) == -ENODEV)
+>  				continue;
+> 
 
-I zapped the superfluous return conditional. Applied patches 1 and 2 to
-5.2/scsi-queue.
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
