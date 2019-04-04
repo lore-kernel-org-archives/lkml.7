@@ -2,42 +2,44 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BCCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B1AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9C5206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="Wq9XMcQe"
+	by mail.kernel.org (Postfix) with ESMTP id 6BEBD206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfDDLpU (ORCPT
+        id S1729520AbfDDLph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:45:20 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:55220 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDDLpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:45:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org; s=ds201810;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=m5hGgWKj5guZbjtv86sKgv6BKMcG4UtlinPlkaJBtQM=;
-        b=Wq9XMcQe2kWzm1GjS3jYf9rkDAiFae3tQR0Syb6kSMPUnpTBKlphogbwdwr8aQg0W2qBfWjbaB2HBM/spQ6tMLE43Zj6pOj2BmiOkFiENyM6Rw0L8oynFbd8vGwX9w0tO75NEKcqAJ3N13Ohlxf4RcMh2Zo+4elDYSC18+LF96eD7yU40GTPoXwkgRPmnL0fygZr3u6NDx0dsQ4lQNW1eXyrwHm3z86L7GiauG6CaKH4H44kiP/k9hNXa0nSrH2SljMDq6mtzkaArlb616xixvlU91KWguIxWfgoZeePegvkXbyry8g+UcYgpLDLydM+ciHFLz4+lLI0ZD8zqN38tQ==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:62338 helo=[192.168.10.179])
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <noralf@tronnes.org>)
-        id 1hC0o1-0004RS-SU; Thu, 04 Apr 2019 13:45:17 +0200
-Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        David Airlie <airlied@redhat.com>,
+        Thu, 4 Apr 2019 07:45:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59728 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfDDLpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 07:45:36 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 645E281E19;
+        Thu,  4 Apr 2019 11:45:36 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 25808983B;
+        Thu,  4 Apr 2019 11:45:36 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 3A4A416E30; Thu,  4 Apr 2019 13:45:35 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 13:45:35 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc:     David Airlie <airlied@linux.ie>,
         open list <linux-kernel@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>
+        <virtualization@lists.linux-foundation.org>,
+        David Airlie <airlied@redhat.com>
+Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
+Message-ID: <20190404114535.i5wh2rqtno3n54fh@sirius.home.kraxel.org>
 References: <20190403072318.31507-1-kraxel@redhat.com>
  <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
  <20190404055056.ddc2bdgjbgjj7tby@sirius.home.kraxel.org>
@@ -46,51 +48,27 @@ References: <20190403072318.31507-1-kraxel@redhat.com>
  <CAKMK7uHiWu-kOa6SP0ZRstnrwdYR0MHgtHdHZPLWLXxWaQVPrQ@mail.gmail.com>
  <2866e37e-8563-1f1e-8f16-1119f70d52e1@tronnes.org>
  <20190404102722.w6c7aoxzcrhn5xhi@sirius.home.kraxel.org>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <5ad479ea-a95f-b66b-20b6-5da41e2cee9a@tronnes.org>
-Date:   Thu, 4 Apr 2019 13:45:15 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20190404102722.w6c7aoxzcrhn5xhi@sirius.home.kraxel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 04 Apr 2019 11:45:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  Hi,
 
-
-Den 04.04.2019 12.27, skrev Gerd Hoffmann:
->   Hi,
-> 
->>> tinydrm_xrgb8888_to_*
->>>
->>> imo these could be put into some drm_format_helpers.c to be shared.
->>
->> I agree, my long term goal is to get rid of tinydrm.ko. Just haven't got
->> there yet.
->>
->> Gerd, if you end up using some of those functions, feel free to move
->> just those you need and I can do the rest later. But if you have time to
->> spare I wouldn't mind getting all of them moved ;-)
-> 
-> For now I just promoted cirrus to be a tinydrm driver ;)
-> 
-> Noticed that those helpers (including tinydrm_memcpy for the
-> non-converting case) apply clipping on the source but not on
-> the destination.  So, for fullscreen updates that works ok,
-> but for updating sub-rectangles it doesn't ...
-
-Ah yes, these MIPI type controllers support setting the destination
-window in controller RAM for the incoming buffer so there has been no
-need for clipping on the destination buffer.
-
-> 
 > So I guess I have to add a dest_clip bool parameter when moving them.
 > /me looks for a good place.  drm_fb_helpers.c I think.
-> 
-> cheers,
->   Gerd
-> 
+
+https://git.kraxel.org/cgit/linux/log/?h=drm-rewrite-cirrus updated.
+
+v2 series will follow later today or tomorrow.
+
+cheers,
+  Gerd
+
