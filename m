@@ -3,94 +3,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD885C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB37C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927762082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD122082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfDDOAC (ORCPT
+        id S1729030AbfDDOAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:00:02 -0400
-Received: from www62.your-server.de ([213.133.104.62]:58588 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfDDOAC (ORCPT
+        Thu, 4 Apr 2019 10:00:41 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20337 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727441AbfDDOAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:00:02 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hC2ti-0006Pc-VJ; Thu, 04 Apr 2019 15:59:19 +0200
-Received: from [2a02:120b:c3fc:feb0:dda7:bd28:a848:50e2] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hC2ti-000VT2-KB; Thu, 04 Apr 2019 15:59:18 +0200
-Subject: Re: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
-To:     Neal Cardwell <ncardwell@google.com>,
-        "Tilmans, Olivier (Nokia - BE/Antwerp)" 
-        <olivier.tilmans@nokia-bell-labs.com>
-Cc:     "De Schepper, Koen (Nokia - BE/Antwerp)" 
-        <koen.de_schepper@nokia-bell-labs.com>,
-        Bob Briscoe <research@bobbriscoe.net>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Florian Westphal <fw@strlen.de>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Andrew Shewmaker <agshew@gmail.com>,
-        Glenn Judd <glenn.judd@morganstanley.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Thu, 4 Apr 2019 10:00:40 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-113-8eB9-lQSN_KfDzsHNHWmvw-1; Thu, 04 Apr 2019 15:00:36 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 4 Apr 2019 15:01:43 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 4 Apr 2019 15:01:43 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sebastian Andrzej Siewior' <bigeasy@linutronix.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190404121731.13917-1-olivier.tilmans@nokia-bell-labs.com>
- <CADVnQy=hsPrDwXoym18j7YzCc36669NJ1kVBR76y+FgK6Meytw@mail.gmail.com>
- <CADVnQyks1T8KZibJF+UWR0zWGvqs+fUBkCYPJFxATx5PU-csSQ@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a5e4be03-24bd-8aec-529f-dda47c992f36@iogearbox.net>
-Date:   Thu, 4 Apr 2019 15:59:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <CADVnQyks1T8KZibJF+UWR0zWGvqs+fUBkCYPJFxATx5PU-csSQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: RE: [PATCH v9 00/27] x86: load FPU registers on return to userland
+Thread-Topic: [PATCH v9 00/27] x86: load FPU registers on return to userland
+Thread-Index: AQHU6jzQfWf8irPe1UiHuip9snecjKYsB0gw
+Date:   Thu, 4 Apr 2019 14:01:43 +0000
+Message-ID: <c4af28470a4347f5aa222a99471c939a@AcuMS.aculab.com>
+References: <20190403164156.19645-1-bigeasy@linutronix.de>
+In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25409/Thu Apr  4 09:53:59 2019)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: 8eB9-lQSN_KfDzsHNHWmvw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/04/2019 03:55 PM, Neal Cardwell wrote:
-> On Thu, Apr 4, 2019 at 9:48 AM Neal Cardwell <ncardwell@google.com> wrote:
->> On Thu, Apr 4, 2019 at 8:24 AM Tilmans, Olivier (Nokia - BE/Antwerp)
->> <olivier.tilmans@nokia-bell-labs.com> wrote:
->>>
->>> From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
->>>
->>> RFC8257 §3.5 explicitly states that "A DCTCP sender MUST react to
->>> loss episodes in the same way as conventional TCP".
->> ...
->>> This patch replace the clamping of alpha by setting ssthresh to
->>> half of cwnd for both fast retransmissions and RTOs, at most once
->>> per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
->>> has been removed.
->>
->> Acked-by: Neal Cardwell <ncardwell@google.com>
->>
->> Thanks!
-> 
-> FWIW, my vote is that this is an important bug fix that is appropriate
-> for the net branch and -stable releases, rather than net-next.
+RnJvbTogU2ViYXN0aWFuIEFuZHJ6ZWogU2lld2lvcg0KPiBTZW50OiAwMyBBcHJpbCAyMDE5IDE3
+OjQxDQouLi4NCj4gVG8gYWNjZXNzIHRoZSBGUFUgcmVnaXN0ZXJzIGluIGtlcm5lbCB3ZSBuZWVk
+Og0KPiAtIGRpc2FibGUgcHJlZW1wdGlvbiB0byBhdm9pZCB0aGF0IHRoZSBzY2hlZHVsZXIgc3dp
+dGNoZXMgdGFza3MuIEJ5DQo+ICAgZG9pbmcgc28gaXQgd291bGQgc2V0IFRJRl9ORUVEX0ZQVV9M
+T0FEIGFuZCB0aGUgRlBVIHJlZ2lzdGVycyB3b3VsZCBiZQ0KPiAgIG5vdCB2YWxpZC4NCj4gLSBk
+aXNhYmxlIEJIIGJlY2F1c2UgdGhlIHNvZnRpcnEgbWlnaHQgdXNlIGtlcm5lbF9mcHVfYmVnaW4o
+KSBhbmQgdGhlbg0KPiAgIHNldCBUSUZfTkVFRF9GUFVfTE9BRCBpbnN0ZWFkIGxvYWRpbmcgdGhl
+IEZQVSByZWdpc3RlcnMgb24gY29tcGxldGlvbi4NCg0KSXMgdGhlcmUgYSBwb3NzaWJsZSBvcHRp
+bWlzYXRpb24gaGVyZSBmb3Iga2VybmVsIHRocmVhZHM/DQpTaW5jZSB0aGVyZSBpcyBubyAndXNl
+ciBGUCBzdGF0ZScgdGhlICdrZXJuZWwgRlAgc3RhdGUnIGNhbg0KYmUgc2F2ZWQgYnkgYSB0YXNr
+IHN3aXRjaCBvciBzb2Z0aXJxLg0KDQpZb3UnZCBzdGlsbCB3YW50IHRoZSBrZXJuZWwgdGhyZWFk
+IHRvIGJyYWNrZXQgZnB1IHVzYWdlIChvciBhdCBsZWFzdCBzYXkNCnRoYXQgaXQgaXMgYSBrZXJu
+ZWwgdGhyZWFkIHRoYXQgYWx3YXlzIG5lZWRzIHRoZSBmcHUpIHRvIGF2b2lkIGhhdmluZw0KdG8g
+c2F2ZSBhbmQgcmVzdG9yZSB0aGUgZnB1IHJlZ2lzdGVycyBvbiBldmVyeSBjb250ZXh0IHN3aXRj
+aCB0by9mcm9tDQphIGtlcm5lbCB0aHJlYWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
+ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
+TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Agree, my preference would be for -net tree as well. Thanks for the fix!
-
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
