@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DE5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C674C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5AD20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB62F21902
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368310;
-	bh=BVEBRSmgLEm+B3AM9z4jRGl4xYERTtHA+TLDO2w3PF0=;
+	s=default; t=1554368313;
+	bh=ClPTYFRBv2OADWWbnGucJIAT01UIgzxh2URh5Wcoyus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugad229uGFb/HdpdRv93+dMVHEyHqpIB8rRgE1PH9diUBnNjD+IfVaJC9Kne8pvIy
-	 S1wHhFkheND8Mdd9dcV+lAyMB4N84/IcPYU41P1dca73bu7Tivrk79JfUVd27iIOOI
-	 rKLkilhWFfboNrpoHAcASoVwL6JM+MW84BAe3udE=
+	b=0QB0oGgn9rZP5MMRNQ+DPQzDR0o6pkkdauBDCaJodycKMdi9go3miPgmEz1W8yux4
+	 14ECrfA+VRbEwOb9VfjyYYWgdSCOySGtvZVWhCXhBDd/cvnUYyfHOqeYZBfwIlmL5L
+	 vztXHkU9lXjm7z5gJnVmiZcj0+xo+OCSp0x0gQs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfDDI62 (ORCPT
+        id S1730866AbfDDI6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730228AbfDDI60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:58:26 -0400
+        id S1730271AbfDDI62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD39320652;
-        Thu,  4 Apr 2019 08:58:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55B402075E;
+        Thu,  4 Apr 2019 08:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368305;
-        bh=BVEBRSmgLEm+B3AM9z4jRGl4xYERTtHA+TLDO2w3PF0=;
+        s=default; t=1554368307;
+        bh=ClPTYFRBv2OADWWbnGucJIAT01UIgzxh2URh5Wcoyus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=coc+FoyLFXJqTfBizoC8VAAo17QqXXGMtFTfHs3kAJgITb69Mp0H3AxEh8DmbRlCo
-         nb7HbXWTm9KQJh6yapRJGu2wzLZF7NvRpH5upLgXwQcCNNEQk53jqsX9PdoKeIvDfF
-         ahg692tXcoADUdHzEpDsakzK3Vos9Q8ZzM14Q6vI=
+        b=mtMf7TkXTDDkDJkf2oZkgWAw5sltxiBFngz9k+iiUwe6UeNhpeU+HEB/Xx0RnEDJS
+         xz5bpTsvhxaGw7G9jJ/O947mt9tAaZ/BlApT+sNJuUbB/TIKE4Lp+XQVjEEVME1Lix
+         sjUb7n9JPOSkJ6J605PBSze34UqOBlbnbB5B5tH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        "Michael W. Bringmann" <mwb@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/121] powerpc/pseries: Perform full re-add of CPU for topology update post-migration
-Date:   Thu,  4 Apr 2019 10:48:06 +0200
-Message-Id: <20190404084550.621212012@linuxfoundation.org>
+Subject: [PATCH 4.14 099/121] usb: dwc3: gadget: Fix OTG events when gadget driver isnt loaded
+Date:   Thu,  4 Apr 2019 10:48:07 +0200
+Message-Id: <20190404084550.667071262@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,107 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 81b61324922c67f73813d8a9c175f3c153f6a1c6 ]
+[ Upstream commit 169e3b68cadb5775daca009ced4faf01ffd97dcf ]
 
-On pseries systems, performing a partition migration can result in
-altering the nodes a CPU is assigned to on the destination system. For
-exampl, pre-migration on the source system CPUs are in node 1 and 3,
-post-migration on the destination system CPUs are in nodes 2 and 3.
+On v3.10a in dual-role mode, if port is in device mode
+and gadget driver isn't loaded, the OTG event interrupts don't
+come through.
 
-Handling the node change for a CPU can cause corruption in the slab
-cache if we hit a timing where a CPUs node is changed while cache_reap()
-is invoked. The corruption occurs because the slab cache code appears
-to rely on the CPU and slab cache pages being on the same node.
+It seems that if the core is configured to be OTG2.0 only,
+then we can't leave the DCFG.DEVSPD at Super-speed (default)
+if we expect OTG to work properly. It must be set to High-speed.
 
-The current dynamic updating of a CPUs node done in arch/powerpc/mm/numa.c
-does not prevent us from hitting this scenario.
+Fix this issue by configuring DCFG.DEVSPD to the supported
+maximum speed at gadget init. Device tree still needs to provide
+correct supported maximum speed for this to work.
 
-Changing the device tree property update notification handler that
-recognizes an affinity change for a CPU to do a full DLPAR remove and
-add of the CPU instead of dynamically changing its node resolves this
-issue.
+This issue wasn't present on v2.40a but is seen on v3.10a.
+It doesn't cause any side effects on v2.40a.
 
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Signed-off-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
-Tested-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/topology.h          |  2 ++
- arch/powerpc/mm/numa.c                       |  9 +--------
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 19 +++++++++++++++++++
- 3 files changed, 22 insertions(+), 8 deletions(-)
+ drivers/usb/dwc3/gadget.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index 66c72b356ac0..e6b185b4b3b1 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -117,6 +117,8 @@ static inline int prrn_is_enabled(void)
- #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
- #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
- #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
-+
-+int dlpar_cpu_readd(int cpu);
- #endif
- #endif
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 32dd0d3462da..1b99d44e52b9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3286,6 +3286,8 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 		goto err4;
+ 	}
  
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 40fb9a8835fe..0a02c73a27b3 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1527,13 +1527,6 @@ static void reset_topology_timer(void)
++	dwc3_gadget_set_speed(&dwc->gadget, dwc->maximum_speed);
++
+ 	return 0;
  
- #ifdef CONFIG_SMP
- 
--static void stage_topology_update(int core_id)
--{
--	cpumask_or(&cpu_associativity_changes_mask,
--		&cpu_associativity_changes_mask, cpu_sibling_mask(core_id));
--	reset_topology_timer();
--}
--
- static int dt_update_callback(struct notifier_block *nb,
- 				unsigned long action, void *data)
- {
-@@ -1546,7 +1539,7 @@ static int dt_update_callback(struct notifier_block *nb,
- 		    !of_prop_cmp(update->prop->name, "ibm,associativity")) {
- 			u32 core_id;
- 			of_property_read_u32(update->dn, "reg", &core_id);
--			stage_topology_update(core_id);
-+			rc = dlpar_cpu_readd(core_id);
- 			rc = NOTIFY_OK;
- 		}
- 		break;
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index b1ac8ac38434..0baaaa6b0929 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -799,6 +799,25 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
- 	return rc;
- }
- 
-+int dlpar_cpu_readd(int cpu)
-+{
-+	struct device_node *dn;
-+	struct device *dev;
-+	u32 drc_index;
-+	int rc;
-+
-+	dev = get_cpu_device(cpu);
-+	dn = dev->of_node;
-+
-+	rc = of_property_read_u32(dn, "ibm,my-drc-index", &drc_index);
-+
-+	rc = dlpar_cpu_remove_by_index(drc_index);
-+	if (!rc)
-+		rc = dlpar_cpu_add(drc_index);
-+
-+	return rc;
-+}
-+
- int dlpar_cpu(struct pseries_hp_errorlog *hp_elog)
- {
- 	u32 count, drc_index;
+ err4:
 -- 
 2.19.1
 
