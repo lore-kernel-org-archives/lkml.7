@@ -2,230 +2,104 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D952C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EDDC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6D6205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370905;
-	bh=L+tRldB3lmIYLkH38jqNgO2w1JmEbUdnJokizaUDYxo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bghIO6YBSSVzkyi2Vy5FmDoUn1D4h2eh3TuJFPazkeyh6wwx424Ek39YpVhuCUEfb
-	 DWa2mQZbuflwHyXKXfx/NyAan33GrcJIRNkb3+GRXjxIrUiKJWI5oYKCkqyaCvDsRM
-	 6FrzJxMOeKRZYMCrRwYlM6jV7KvhMXW2VxjjKyRY=
+	by mail.kernel.org (Postfix) with ESMTP id B629B20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZtlcWM9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbfDDJB7 (ORCPT
+        id S1731088AbfDDJmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731269AbfDDJB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B6562184B;
-        Thu,  4 Apr 2019 09:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368515;
-        bh=L+tRldB3lmIYLkH38jqNgO2w1JmEbUdnJokizaUDYxo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYkHvLrxYCCWzcuBNLzo2TmEXSfQjYJVi+q2qmPQEZ0oBJfpcJjBhoqqDviHmC9g/
-         MoJ1g2cBSuc5aCF4Sbr9tNNN4wVyOJJ3QMdEmRdq0X4xMexKHgj08KnFMS5KWMFY03
-         qkfQWT+cpxsX0DNzxxwUa7C+NtHrLxeGvd5T88aE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+        Thu, 4 Apr 2019 05:42:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43848 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbfDDJmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:42:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349coBt132101;
+        Thu, 4 Apr 2019 09:41:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=uaFbvxjxOQMcxI7Ji/KZlWXetyEb/afRw5K3+JGnp6o=;
+ b=ZtlcWM9obCZzpbdNCbFLEmkaMxjmh8BAySvSUv32KlEst3hCWWNpJ8dqLdVu/ayGCnHf
+ TCbwtuHtoFPwcSVbnX9E+f+C3MJ18cEplpWhX0B939kOkd4ajz0C0khxZ7m65VGyRxYG
+ x+xFpd32/97ZfFSLSfSiaXDY0E4ayHsysBkU1CYJJcFF/5sfU73RiqA67ppamHVOmiWx
+ dUw/USYl9HRXqgcEfQkiDr1lilfBjY4s3xBtHkJIUk7U1YTCZ9M/YPhh2AWys6F9DOzh
+ GHHcn4PXGKOI3JgcDCSWipBPa+l8Y173oS+IGcMXI2Aro/tuos1tkRXjRPqeemFpijMY FQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rhyvte288-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:41:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349fNcm066207;
+        Thu, 4 Apr 2019 09:41:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2rm9mjgw72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:41:52 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x349fpuh025596;
+        Thu, 4 Apr 2019 09:41:51 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 02:41:51 -0700
+Date:   Thu, 4 Apr 2019 12:41:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/187] platform/mellanox: mlxreg-hotplug: Fix KASAN warning
-Date:   Thu,  4 Apr 2019 10:46:45 +0200
-Message-Id: <20190404084606.250582647@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8192u: remove redundant null check on array
+ 'data'
+Message-ID: <20190404094141.GJ32590@kadam>
+References: <20190404093257.18757-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404093257.18757-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040067
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Apr 04, 2019 at 10:32:57AM +0100, Colin King wrote:
+> diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> index 944c8894f9ff..c4a4f118f547 100644
+> --- a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> +++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> @@ -2659,8 +2659,7 @@ static int ieee80211_wpa_set_wpa_ie(struct ieee80211_device *ieee,
+>  {
+>  	u8 *buf;
+>  
+> -	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN ||
+> -	    (param->u.wpa_ie.len && param->u.wpa_ie.data == NULL))
+> +	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN || param->u.wpa_ie.len)
+>  		return -EINVAL;
 
-------------------
+Nope...  :P  Don't do that...
 
-[ Upstream commit e4c275f77624961b56cce397814d9d770a45ac59 ]
-
-Fix the following KASAN warning produced when booting a 64-bit kernel:
-[   13.334750] BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
-[   13.342166] Read of size 8 at addr ffff880235067178 by task kworker/2:1/42
-[   13.342176] CPU: 2 PID: 42 Comm: kworker/2:1 Not tainted 4.20.0-rc1+ #106
-[   13.342179] Hardware name: Mellanox Technologies Ltd. MSN2740/Mellanox x86 SFF board, BIOS 5.6.5 06/07/2016
-[   13.342190] Workqueue: events deferred_probe_work_func
-[   13.342194] Call Trace:
-[   13.342206]  dump_stack+0xc7/0x15b
-[   13.342214]  ? show_regs_print_info+0x5/0x5
-[   13.342220]  ? kmsg_dump_rewind_nolock+0x59/0x59
-[   13.342234]  ? _raw_write_lock_irqsave+0x100/0x100
-[   13.351593]  print_address_description+0x73/0x260
-[   13.351603]  kasan_report+0x260/0x380
-[   13.351611]  ? find_first_bit+0x19/0x70
-[   13.351619]  find_first_bit+0x19/0x70
-[   13.351630]  mlxreg_hotplug_work_handler+0x73c/0x920 [mlxreg_hotplug]
-[   13.351639]  ? __lock_text_start+0x8/0x8
-[   13.351646]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351656]  ? mlxreg_hotplug_remove+0x1e0/0x1e0 [mlxreg_hotplug]
-[   13.351663]  ? regmap_volatile+0x40/0xb0
-[   13.351668]  ? regcache_write+0x4c/0x90
-[   13.351676]  ? mlxplat_mlxcpld_reg_write+0x24/0x30 [mlx_platform]
-[   13.351681]  ? _regmap_write+0xea/0x220
-[   13.351688]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351696]  ? devm_add_action+0x70/0x70
-[   13.351701]  ? mutex_unlock+0x1d/0x40
-[   13.351710]  mlxreg_hotplug_probe+0x82e/0x989 [mlxreg_hotplug]
-[   13.351723]  ? mlxreg_hotplug_work_handler+0x920/0x920 [mlxreg_hotplug]
-[   13.351731]  ? sysfs_do_create_link_sd.isra.2+0xf4/0x190
-[   13.351737]  ? sysfs_rename_link_ns+0xf0/0xf0
-[   13.351743]  ? devres_close_group+0x2b0/0x2b0
-[   13.351749]  ? pinctrl_put+0x20/0x20
-[   13.351755]  ? acpi_dev_pm_attach+0x2c/0xd0
-[   13.351763]  platform_drv_probe+0x70/0xd0
-[   13.351771]  really_probe+0x480/0x6e0
-[   13.351778]  ? device_attach+0x10/0x10
-[   13.351784]  ? __lock_text_start+0x8/0x8
-[   13.351790]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351797]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351806]  ? __driver_attach+0x190/0x190
-[   13.351812]  driver_probe_device+0x17d/0x1a0
-[   13.351819]  ? __driver_attach+0x190/0x190
-[   13.351825]  bus_for_each_drv+0xd6/0x130
-[   13.351831]  ? bus_rescan_devices+0x20/0x20
-[   13.351837]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351845]  __device_attach+0x18c/0x230
-[   13.351852]  ? device_bind_driver+0x70/0x70
-[   13.351859]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351866]  bus_probe_device+0xea/0x110
-[   13.351874]  deferred_probe_work_func+0x1c9/0x290
-[   13.351882]  ? driver_deferred_probe_add+0x1d0/0x1d0
-[   13.351889]  ? preempt_notifier_dec+0x20/0x20
-[   13.351897]  ? read_word_at_a_time+0xe/0x20
-[   13.351904]  ? strscpy+0x151/0x290
-[   13.351912]  ? set_work_pool_and_clear_pending+0x9c/0xf0
-[   13.351918]  ? __switch_to_asm+0x34/0x70
-[   13.351924]  ? __switch_to_asm+0x40/0x70
-[   13.351929]  ? __switch_to_asm+0x34/0x70
-[   13.351935]  ? __switch_to_asm+0x40/0x70
-[   13.351942]  process_one_work+0x5cc/0xa00
-[   13.351952]  ? pwq_dec_nr_in_flight+0x1e0/0x1e0
-[   13.351960]  ? pci_mmcfg_check_reserved+0x80/0xb8
-[   13.351967]  ? run_rebalance_domains+0x250/0x250
-[   13.351980]  ? stack_access_ok+0x35/0x80
-[   13.351986]  ? deref_stack_reg+0xa1/0xe0
-[   13.351994]  ? schedule+0xcd/0x250
-[   13.352000]  ? worker_enter_idle+0x2d6/0x330
-[   13.352006]  ? __schedule+0xeb0/0xeb0
-[   13.352014]  ? fork_usermode_blob+0x130/0x130
-[   13.352019]  ? mutex_lock+0xa7/0x100
-[   13.352026]  ? _raw_spin_lock_irq+0x98/0xf0
-[   13.352032]  ? _raw_read_unlock_irqrestore+0x30/0x30
-[   13.352037] i2c i2c-2: Added multiplexed i2c bus 11
-[   13.352043]  worker_thread+0x181/0xa80
-[   13.352052]  ? __switch_to_asm+0x34/0x70
-[   13.352058]  ? __switch_to_asm+0x40/0x70
-[   13.352064]  ? process_one_work+0xa00/0xa00
-[   13.352070]  ? __switch_to_asm+0x34/0x70
-[   13.352076]  ? __switch_to_asm+0x40/0x70
-[   13.352081]  ? __switch_to_asm+0x34/0x70
-[   13.352086]  ? __switch_to_asm+0x40/0x70
-[   13.352092]  ? __switch_to_asm+0x34/0x70
-[   13.352097]  ? __switch_to_asm+0x40/0x70
-[   13.352105]  ? __schedule+0x3d6/0xeb0
-[   13.352112]  ? migrate_swap_stop+0x470/0x470
-[   13.352119]  ? save_stack+0x89/0xb0
-[   13.352127]  ? kmem_cache_alloc_trace+0xe5/0x570
-[   13.352132]  ? kthread+0x59/0x1d0
-[   13.352138]  ? ret_from_fork+0x35/0x40
-[   13.352154]  ? __schedule+0xeb0/0xeb0
-[   13.352161]  ? remove_wait_queue+0x150/0x150
-[   13.352169]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.352175]  ? __lock_text_start+0x8/0x8
-[   13.352183]  ? process_one_work+0xa00/0xa00
-[   13.352188]  kthread+0x1a4/0x1d0
-[   13.352195]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[   13.352202]  ret_from_fork+0x35/0x40
-
-[   13.353879] The buggy address belongs to the page:
-[   13.353885] page:ffffea0008d419c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-[   13.353890] flags: 0x2ffff8000000000()
-[   13.353897] raw: 02ffff8000000000 ffffea0008d419c8 ffffea0008d419c8 0000000000000000
-[   13.353903] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-[   13.353905] page dumped because: kasan: bad access detected
-
-[   13.353908] Memory state around the buggy address:
-[   13.353912]  ffff880235067000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353917]  ffff880235067080: 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04
-[   13.353921] >ffff880235067100: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 f2 f2 f2 f2 04
-[   13.353923]                                                                 ^
-[   13.353927]  ffff880235067180: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 00 00 00 00 00
-[   13.353931]  ffff880235067200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353933] ==================================================================
-
-The warning is caused by the below loop:
-	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-while "asserted" is declared as 'unsigned'.
-
-The casting of 32-bit unsigned integer pointer to a 64-bit unsigned long
-pointer. There are two problems here.
-It causes the access of four extra byte, which can corrupt memory
-The 32-bit pointer address may not be 64-bit aligned.
-
-The fix changes variable "asserted" to "unsigned long".
-
-Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index b6d44550d98c..eca16d00e310 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -248,7 +248,8 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 			   struct mlxreg_core_item *item)
- {
- 	struct mlxreg_core_data *data;
--	u32 asserted, regval, bit;
-+	unsigned long asserted;
-+	u32 regval, bit;
- 	int ret;
- 
- 	/*
-@@ -281,7 +282,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 	asserted = item->cache ^ regval;
- 	item->cache = regval;
- 
--	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-+	for_each_set_bit(bit, &asserted, 8) {
- 		data = item->data + bit;
- 		if (regval & BIT(bit)) {
- 			if (item->inversed)
--- 
-2.19.1
-
-
+regards,
+dan carpenter
 
