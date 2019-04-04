@@ -2,78 +2,67 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD20C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5195FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE54206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2440120882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554394795;
+	bh=G78JqYgq7n3sCHNgjQhR8RqmephFQJg6/G2R/ZkCSjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LtmD0nBHDqRHM5IuJ2t793pgYKSEDQAmriUvG3E/PI8ntjXwnVCskgXB9CTfAHrYF
+	 aNk4yp8DXtP20Bv8/eWvJF6VmyANGE0VHeViQ9Np9R3irG7jtuSkuA1zXhcM1wtV2C
+	 nkbu6MhPi5JkyHr8UJjY6PGyvNGcy9eQoD+L1qOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfDDQTs (ORCPT
+        id S1728934AbfDDQTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:19:48 -0400
-Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:40570 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727191AbfDDQTr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:19:47 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 099BB180A8CC0;
-        Thu,  4 Apr 2019 16:19:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: spoon96_71e4cc086ad4f
-X-Filterd-Recvd-Size: 2018
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Apr 2019 16:19:42 +0000 (UTC)
-Message-ID: <8aa47dba7114d940d054140aa49eded1e479e3ef.camel@perches.com>
-Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
- newlines to logging
-From:   Joe Perches <joe@perches.com>
-To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Date:   Thu, 04 Apr 2019 09:19:39 -0700
-In-Reply-To: <20190404154850.GA19334@bogon.m.sigxcpu.org>
-References: <cover.1554114302.git.agx@sigxcpu.org>
-         <20190403161735.GN5238@ulmo>
-         <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
-         <20190404105359.GA8255@bogon.m.sigxcpu.org>
-         <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
-         <20190404154850.GA19334@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 4 Apr 2019 12:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727191AbfDDQTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:19:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B5D5206DD;
+        Thu,  4 Apr 2019 16:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554394792;
+        bh=G78JqYgq7n3sCHNgjQhR8RqmephFQJg6/G2R/ZkCSjU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gfyXZ/XmNiy/nizy/vkPJ/XW9NqvKQjlMQNShPP7dYCCeM0cOYbZK6HQ9edn0b1BN
+         XG/cjVkyL073x2qsETHzjYIoCapj5DwZOWeailb5mn+3hTw9Mm8W2m52A7IpgihQVx
+         N2oM5usf0yeYmxJJSercNVohO1zhh+cw/gd5blOE=
+Date:   Thu, 4 Apr 2019 18:19:49 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nilesh Hase <nilhase25@gmail.com>
+Cc:     matthias.bgg@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        sankalpnegi2310@gmail.com, neil@brown.name, sr@denx.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] MT7621-SPI: spi-mt7621: Fix alignment and style problems
+ Fixed Coding function and style issues
+Message-ID: <20190404161948.GA9440@kroah.com>
+References: <20190403193107.23873-1-nilhase25@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403193107.23873-1-nilhase25@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-04 at 17:48 +0200, Guido Günther wrote:
-> Hi Joe,
-[]
-> P.S.: The cc: list is huge, is there a reason for going way past what
-> get_maintainers puts out for this patch?
+On Thu, Apr 04, 2019 at 01:01:07AM +0530, Nilesh Hase wrote:
+> Signed-off-by: Nilesh Hase <nilhase25@gmail.com>
+> ---
+>  drivers/staging/mt7621-spi/spi-mt7621.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-No idea, I just used reply-all to your patch.
-
-
+I can't take patches without any changelog content, sorry.
