@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98147C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88561C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A9C206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DB72147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PG0J+FYJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UMbV94QY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbfDDJru (ORCPT
+        id S1731210AbfDDJrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:47:50 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38502 "EHLO
+        Thu, 4 Apr 2019 05:47:52 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38534 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730481AbfDDJrr (ORCPT
+        with ESMTP id S1731037AbfDDJru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:47:47 -0400
+        Thu, 4 Apr 2019 05:47:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1554371265; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1554371267; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=pC7IhBU1DSC3dGwjIZTkxjmjv2SxALVB8x57y+wbglU=;
-        b=PG0J+FYJ6gyXUbUJuQ8IPYFXUSQDC/mXCB6ZVmucUAayf22IFCvub/9l5IkcfPttxKnqF4
-        Oq+2kZUD9hiqy1vZ2T3cH2d4FdsBJchU++0ZqF2hrzw1bFtr0pqHNm8dx0xJ3SouaxkXEo
-        bg5o1Gx9B5oQoBJ/7FV9y4OH+YWr2Mo=
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=c5gIV1WBt4NfCQy/Dtw/ozvFkXgXPwJC2jGPWx6xhkQ=;
+        b=UMbV94QYqXtWVZ0DWSXLgNyN8EuShmTCzF99N9GFku8a5dKofDc4ti/vSQ2kIHDzd6pp9N
+        eOgQbgIaPETPZAhmZQd36eaNSESpkuNVVAjrdGCTW/jtbJJCJlFLSQrb/swRvfp5fwp1mc
+        n/HEg48dBJgl6ok8Q3PpiIsCcv6hiqg=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>
 Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 1/3] dt-bindings: usb: Add usb-phy property to the jz4740-musb node
-Date:   Thu,  4 Apr 2019 11:47:37 +0200
-Message-Id: <20190404094739.23503-1-paul@crapouillou.net>
+Subject: [PATCH v2 3/3] usb: musb: jz4740: obtain USB PHY from devicetree
+Date:   Thu,  4 Apr 2019 11:47:39 +0200
+Message-Id: <20190404094739.23503-3-paul@crapouillou.net>
+In-Reply-To: <20190404094739.23503-1-paul@crapouillou.net>
+References: <20190404094739.23503-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
-from devicetree.
+Fall back to devm_usb_get_phy() if devicetree is not available.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
@@ -52,36 +53,52 @@ Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Notes:
     v2: Change "usb-phy" DT property to "phys"
 
- Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/usb/musb/jz4740.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-index 620355cee63f..16808721f3ff 100644
---- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-@@ -8,9 +8,15 @@ Required properties:
- - interrupt-names: must be "mc"
- - clocks: phandle to the "udc" clock
- - clock-names: must be "udc"
-+- phys: phandle to the USB PHY
+diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
+index ad35e09f90bd..5261f8dfedec 100644
+--- a/drivers/usb/musb/jz4740.c
++++ b/drivers/usb/musb/jz4740.c
+@@ -74,9 +74,14 @@ static struct musb_hdrc_platform_data jz4740_musb_platform_data = {
  
- Example:
- 
-+usb_phy: usb-phy@0 {
-+	compatible = "usb-nop-xceiv";
-+	#phy-cells = <0>;
-+};
+ static int jz4740_musb_init(struct musb *musb)
+ {
+-	musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
++	struct device *dev = musb->controller->parent;
 +
- udc: usb@13040000 {
- 	compatible = "ingenic,jz4740-musb";
- 	reg = <0x13040000 0x10000>;
-@@ -21,4 +27,6 @@ udc: usb@13040000 {
++	if (dev->of_node)
++		musb->xceiv = devm_usb_get_phy_by_phandle(dev, "phys", 0);
++	else
++		musb->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+ 	if (IS_ERR(musb->xceiv)) {
+-		pr_err("HS UDC: no transceiver configured\n");
++		dev_err(dev, "No transceiver configured\n");
+ 		return PTR_ERR(musb->xceiv);
+ 	}
  
- 	clocks = <&cgu JZ4740_CLK_UDC>;
- 	clock-names = "udc";
-+
-+	phys = <&usb_phy>;
+@@ -90,13 +95,6 @@ static int jz4740_musb_init(struct musb *musb)
+ 	return 0;
+ }
+ 
+-static int jz4740_musb_exit(struct musb *musb)
+-{
+-	usb_put_phy(musb->xceiv);
+-
+-	return 0;
+-}
+-
+ /*
+  * DMA has not been confirmed to work with CONFIG_USB_INVENTRA_DMA,
+  * so let's not set up the dma function pointers yet.
+@@ -105,7 +103,6 @@ static const struct musb_platform_ops jz4740_musb_ops = {
+ 	.quirks		= MUSB_DMA_INVENTRA | MUSB_INDEXED_EP,
+ 	.fifo_mode	= 2,
+ 	.init		= jz4740_musb_init,
+-	.exit		= jz4740_musb_exit,
  };
+ 
+ static int jz4740_probe(struct platform_device *pdev)
 -- 
 2.11.0
 
