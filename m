@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2B0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0A5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAD820882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF7F217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554414836;
-	bh=HcIechYl/c6FVy1DBpjkLY6E2a4oNKzK9h0x6CXvb6U=;
+	s=default; t=1554414845;
+	bh=TU3kq3JEWEz++kRBNGTe+axsRuD/dRWgXb2HL8JqLuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CpOVEaMzcS1fkdJcR4aWRRc9WLNsOK1gJ3MWlIEyO0vkzcR+9sc49IjLVA1Yst7P0
-	 iCdf53XTsVcJPPQs6fh2i5U63zrhQbYVbYCzfDhXO280rJnG5zeeT7sTeJlWnSnP6G
-	 a37P6lAGl56xizyxYi6YTulTMObwQhnwGjwlMuvo=
+	b=KpD8Cu4ar49fHWFDDMeB+nFBZmbhi2wNC72qJmZEeHdK0jjMY/BZUQImHKoclZb1k
+	 uSsE4YxPIAU/TS1d4KaLqWY5OZ1//UbxRPlIYtBXZTbvoSCDmVYANUsq6WLgwbSdJQ
+	 gOVlBX1B+14Abc9SSnBg4gQCch9y6HCPxyj5i034=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbfDDVxz (ORCPT
+        id S1730532AbfDDVxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 17:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 17:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbfDDVxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 17:53:50 -0400
+        id S1729714AbfDDVxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 17:53:48 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 726DD218D4;
-        Thu,  4 Apr 2019 21:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A12BF2184B;
+        Thu,  4 Apr 2019 21:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554414828;
-        bh=HcIechYl/c6FVy1DBpjkLY6E2a4oNKzK9h0x6CXvb6U=;
+        s=default; t=1554414826;
+        bh=TU3kq3JEWEz++kRBNGTe+axsRuD/dRWgXb2HL8JqLuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+9pGerV8mWImVdbfzlsIQKH/GqWKhWJ2n25BAcoc5RefD+5ZMs1VX3a1BCXxYTDT
-         YOXqBD43wGKBqhRd78jtzJUOPt1o5xQzdPddeLLEpsBSnj52ZI7PBqx4kS+12vQ9Fn
-         KIMVkKO0wjjBfWa0h25XS3eBaDJGFqZzDWLEs6Fc=
+        b=my+dS+DF65zix17tNefCfo7aPo6wBifAqRk6x1PZ0KXhXBV45pCR9LQlndYxrFl0s
+         CSoAZMrmf38yHjxwBSvfUyfD8YAgMDuema7B02qNgwISV4W3+///OpVs0pU+dPEowb
+         rUVaKu4Kdeko5RqytS1MSUYivxUetlle38a3iuG8=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
@@ -47,10 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         Jerome Brunet <jbrunet@baylibre.com>,
         Russell King <linux@armlinux.org.uk>,
         Jeffrey Hugo <jhugo@codeaurora.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 7/7] clk: fixed-factor: Let clk framework find parent
-Date:   Thu,  4 Apr 2019 14:53:44 -0700
-Message-Id: <20190404215344.6330-8-sboyd@kernel.org>
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 3/7] clk: Add of_clk_hw_register() API for early clk drivers
+Date:   Thu,  4 Apr 2019 14:53:40 -0700
+Message-Id: <20190404215344.6330-4-sboyd@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190404215344.6330-1-sboyd@kernel.org>
 References: <20190404215344.6330-1-sboyd@kernel.org>
@@ -61,10 +61,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert this driver to a more modern way of specifying parents now that
-we have a way to specify clk parents by DT index. This lets us nicely
-avoid a problem where a parent clk name isn't know because the parent
-clk hasn't been registered yet.
+In some circumstances drivers register clks early and don't have access
+to a struct device because the device model isn't initialized yet. Add
+an API to let drivers register clks associated with a struct device_node
+so that these drivers can participate in getting parent clks through DT.
 
 Cc: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
@@ -72,141 +72,93 @@ Cc: Russell King <linux@armlinux.org.uk>
 Cc: Michael Turquette <mturquette@baylibre.com>
 Cc: Jeffrey Hugo <jhugo@codeaurora.org>
 Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk-fixed-factor.c | 53 +++++++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ drivers/clk/clk.c            | 26 +++++++++++++++++++++++---
+ include/linux/clk-provider.h |  1 +
+ 2 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 241b3f8c61a9..67cc7e515e42 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -64,12 +64,14 @@ const struct clk_ops clk_fixed_factor_ops = {
- };
- EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
- 
--struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
--		const char *name, const char *parent_name, unsigned long flags,
--		unsigned int mult, unsigned int div)
-+static struct clk_hw *
-+__clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
-+		const char *name, const char *parent_name, int index,
-+		unsigned long flags, unsigned int mult, unsigned int div)
- {
- 	struct clk_fixed_factor *fix;
- 	struct clk_init_data init;
-+	struct clk_parent_data pdata = { .index = index };
- 	struct clk_hw *hw;
- 	int ret;
- 
-@@ -85,11 +87,17 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 	init.name = name;
- 	init.ops = &clk_fixed_factor_ops;
- 	init.flags = flags | CLK_IS_BASIC;
--	init.parent_names = &parent_name;
-+	if (parent_name)
-+		init.parent_names = &parent_name;
-+	else
-+		init.parent_data = &pdata;
- 	init.num_parents = 1;
- 
- 	hw = &fix->hw;
--	ret = clk_hw_register(dev, hw);
-+	if (dev)
-+		ret = clk_hw_register(dev, hw);
-+	else
-+		ret = of_clk_hw_register(np, hw);
- 	if (ret) {
- 		kfree(fix);
- 		hw = ERR_PTR(ret);
-@@ -97,6 +105,14 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 
- 	return hw;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index d27775a73e67..4971e9651ca5 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -45,6 +45,7 @@ struct clk_core {
+ 	struct clk_hw		*hw;
+ 	struct module		*owner;
+ 	struct device		*dev;
++	struct device_node	*of_node;
+ 	struct clk_core		*parent;
+ 	const char		**parent_names;
+ 	struct clk_core		**parents;
+@@ -3313,7 +3314,8 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+ 	return clk;
  }
-+
-+struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-+		const char *name, const char *parent_name, unsigned long flags,
-+		unsigned int mult, unsigned int div)
+ 
+-static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
++static struct clk *
++__clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+ {
+ 	int i, ret;
+ 	struct clk_core *core;
+@@ -3339,6 +3341,7 @@ static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
+ 	if (dev && pm_runtime_enabled(dev))
+ 		core->rpm_enabled = true;
+ 	core->dev = dev;
++	core->of_node = np;
+ 	if (dev && dev->driver)
+ 		core->owner = dev->driver->owner;
+ 	core->hw = hw;
+@@ -3429,7 +3432,7 @@ static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
+  */
+ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return __clk_register(dev, hw);
++	return __clk_register(dev, dev->of_node, hw);
+ }
+ EXPORT_SYMBOL_GPL(clk_register);
+ 
+@@ -3445,10 +3448,27 @@ EXPORT_SYMBOL_GPL(clk_register);
+  */
+ int clk_hw_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return PTR_ERR_OR_ZERO(__clk_register(dev, hw));
++	return PTR_ERR_OR_ZERO(__clk_register(dev, dev->of_node, hw));
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register);
+ 
++/*
++ * of_clk_hw_register - register a clk_hw and return an error code
++ * @node: device_node of device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * of_clk_hw_register() is the primary interface for populating the clock tree
++ * with new clock nodes when a struct device is not available, but a struct
++ * device_node is. It returns an integer equal to zero indicating success or
++ * less than zero indicating failure. Drivers must test for an error code after
++ * calling of_clk_hw_register().
++ */
++int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
 +{
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, -1, flags,
-+					      mult, div);
++	return PTR_ERR_OR_ZERO(__clk_register(NULL, node, hw));
 +}
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
- 
- struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
-@@ -143,11 +159,10 @@ static const struct of_device_id set_rate_parent_matches[] = {
- 	{ /* Sentinel */ },
- };
- 
--static struct clk *_of_fixed_factor_clk_setup(struct device_node *node)
-+static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
++EXPORT_SYMBOL_GPL(of_clk_hw_register);
++
+ /* Free memory allocated for a clock. */
+ static void __clk_release(struct kref *ref)
  {
--	struct clk *clk;
-+	struct clk_hw *hw;
- 	const char *clk_name = node->name;
--	const char *parent_name;
- 	unsigned long flags = 0;
- 	u32 div, mult;
- 	int ret;
-@@ -165,30 +180,28 @@ static struct clk *_of_fixed_factor_clk_setup(struct device_node *node)
- 	}
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index b7cf80a71293..7d2d97e15b76 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -773,6 +773,7 @@ struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
  
- 	of_property_read_string(node, "clock-output-names", &clk_name);
--	parent_name = of_clk_get_parent_name(node, 0);
+ int __must_check clk_hw_register(struct device *dev, struct clk_hw *hw);
+ int __must_check devm_clk_hw_register(struct device *dev, struct clk_hw *hw);
++int __must_check of_clk_hw_register(struct device_node *node, struct clk_hw *hw);
  
- 	if (of_match_node(set_rate_parent_matches, node))
- 		flags |= CLK_SET_RATE_PARENT;
- 
--	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
--					mult, div);
--	if (IS_ERR(clk)) {
-+	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, 0,
-+					    flags, mult, div);
-+	if (IS_ERR(hw)) {
- 		/*
--		 * If parent clock is not registered, registration would fail.
- 		 * Clear OF_POPULATED flag so that clock registration can be
- 		 * attempted again from probe function.
- 		 */
- 		of_node_clear_flag(node, OF_POPULATED);
--		return clk;
-+		return ERR_CAST(hw);
- 	}
- 
--	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
- 	if (ret) {
--		clk_unregister(clk);
-+		clk_hw_unregister_fixed_factor(hw);
- 		return ERR_PTR(ret);
- 	}
- 
--	return clk;
-+	return hw;
- }
- 
- /**
-@@ -203,17 +216,17 @@ CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clock",
- 
- static int of_fixed_factor_clk_remove(struct platform_device *pdev)
- {
--	struct clk *clk = platform_get_drvdata(pdev);
-+	struct clk_hw *clk = platform_get_drvdata(pdev);
- 
- 	of_clk_del_provider(pdev->dev.of_node);
--	clk_unregister_fixed_factor(clk);
-+	clk_hw_unregister_fixed_factor(clk);
- 
- 	return 0;
- }
- 
- static int of_fixed_factor_clk_probe(struct platform_device *pdev)
- {
--	struct clk *clk;
-+	struct clk_hw *clk;
- 
- 	/*
- 	 * This function is not executed when of_fixed_factor_clk_setup
+ void clk_unregister(struct clk *clk);
+ void devm_clk_unregister(struct device *dev, struct clk *clk);
 -- 
 Sent by a computer through tubes
 
