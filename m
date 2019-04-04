@@ -2,160 +2,187 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281D7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146DEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC502147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="YXIMb923"
+	by mail.kernel.org (Postfix) with ESMTP id E116C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfDDKIJ (ORCPT
+        id S1728992AbfDDKIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:08:09 -0400
-Received: from mail-eopbgr130087.outbound.protection.outlook.com ([40.107.13.87]:34571
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Thu, 4 Apr 2019 06:08:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36688 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727053AbfDDKII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wUPvzulVhCdlCdmvWuxofD/x4xXNPy318UhPbEunRgY=;
- b=YXIMb923SPpf2p+FtQcvjZMuX29lJF9VgTu+sIL6hhNFLWcWudjEABoIs1RIDDahzuMsPBHt6Y2A/D1iyKi5i7zJ/EIYNnH+8FjlvVvJPYS1RaTXOMQSHp2OpSVdDOiPZsaOnp3L+r4mOvrVSGEfSSyVlRM0pWBhrDMbDuB7zFs=
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
- DB7PR08MB3450.eurprd08.prod.outlook.com (20.176.238.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Thu, 4 Apr 2019 10:08:04 +0000
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::899e:4160:166b:923a]) by DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::899e:4160:166b:923a%3]) with mapi id 15.20.1771.011; Thu, 4 Apr 2019
- 10:08:04 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [RFC PATCH v2] drm/komeda: fixing of DMA mapping sg segment warning
-Thread-Topic: [RFC PATCH v2] drm/komeda: fixing of DMA mapping sg segment
- warning
-Thread-Index: AQHU6s5KQMOVm+DvoUynXnNB4vwxrA==
-Date:   Thu, 4 Apr 2019 10:08:04 +0000
-Message-ID: <1554372474-3594-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR0401CA0010.apcprd04.prod.outlook.com
- (2603:1096:202:2::20) To DB7PR08MB3530.eurprd08.prod.outlook.com
- (2603:10a6:10:49::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01d32956-b61f-4bfc-de1e-08d6b8e56d19
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR08MB3450;
-x-ms-traffictypediagnostic: DB7PR08MB3450:
-x-ms-exchange-purlcount: 4
-nodisclaimer: True
-x-microsoft-antispam-prvs: <DB7PR08MB345095E7B8C7B8E6DD16F14B9F500@DB7PR08MB3450.eurprd08.prod.outlook.com>
-x-forefront-prvs: 0997523C40
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(39860400002)(396003)(376002)(189003)(199004)(4326008)(7736002)(71200400001)(66066001)(97736004)(53936002)(72206003)(25786009)(478600001)(5660300002)(966005)(68736007)(3846002)(6512007)(6506007)(105586002)(110136005)(6116002)(106356001)(26005)(316002)(8676002)(36756003)(50226002)(81156014)(186003)(14454004)(256004)(14444005)(2501003)(486006)(54906003)(2906002)(2201001)(6486002)(2616005)(52116002)(386003)(6436002)(476003)(6306002)(102836004)(8936002)(6636002)(55236004)(71190400001)(305945005)(99286004)(81166006)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3450;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h1VJVuuthXOeXNF+wZ9XtNDhy+fcoV2j+sRnM0VlnuPJQFn3vFvf95grWmwBe5TZcloCwUgxzJkyZlNO776vAJ5gN16bbV7iHNz5ASQrQRCyogIF4opmsBPBKJ0KZj63eVbyLO6tVPkJaN+6aRhyVo4RVavfipYTx4O4g7qu42X4OISi1wfb8lqHy8CM/XpyH+ZAHO895i6NWsdxf/Cv5AfMrfXu1B8adEreH5KUDby7W8R0xJXn8kx5ngnPrx01mnO0PZuKUVUJk+Nan78cTQXm6RLBbtvTVW00Ix/Y1dKcWoR6QKT1PNyt6MdLLxxOlSQDJt9G8LSjsN5TafgVeOVlG4GaKwGwjhfcCRQNtfuN5xC69ppPfhhr8XECn9yMFSvJXT9NWZbg/E1eQKbP4aV902zbsM3kStCX75j2AgQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1727053AbfDDKIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:08:11 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 735E07C0B5798CEDC192;
+        Thu,  4 Apr 2019 18:08:08 +0800 (CST)
+Received: from [127.0.0.1] (10.67.78.74) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
+ 18:08:00 +0800
+Subject: Re: [RFC] Question about enable doorbell irq and halt_poll process
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <guoheyi@huawei.com>, <kvm@vger.kernel.org>,
+        <xuwei5@huawei.com>
+References: <0fb3c9ba-8428-ea6c-2973-952624f601cc@huawei.com>
+ <20190320170219.510f2e1e@why.wild-wind.fr.eu.org>
+ <5df934fd-06d5-55f2-68a5-6f4985e4ac1b@huawei.com>
+ <86zhpc66jl.wl-marc.zyngier@arm.com>
+From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+Message-ID: <e32d81ed-d1f5-ce0b-7845-d4b680d556df@huawei.com>
+Date:   Thu, 4 Apr 2019 18:07:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01d32956-b61f-4bfc-de1e-08d6b8e56d19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 10:08:04.1520
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3450
+In-Reply-To: <86zhpc66jl.wl-marc.zyngier@arm.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.78.74]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing the DMA mapping sg segment warning, which shows "DMA-API: mapping
-sg segment longer than device claims to support [len=3D921600] [max=3D65536=
-]".
-Fixed by setting the max segment size at Komeda driver.
 
-This patch depends on:
-- https://patchwork.freedesktop.org/series/54448/
-- https://patchwork.freedesktop.org/series/54449/
-- https://patchwork.freedesktop.org/series/54450/
-- https://patchwork.freedesktop.org/series/58976/
 
-Changes since v1:
-- Adds member description
-- Adds patch denpendency in the comment
+On 2019/3/30 17:43, Marc Zyngier wrote:
 
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
----
- drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 4 ++++
- drivers/gpu/drm/arm/display/komeda/komeda_dev.h | 2 ++
- 2 files changed, 6 insertions(+)
+Hi, Marc
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.c
-index 7f25e6a..b4902ae 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-@@ -8,6 +8,7 @@
- #include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
-+#include <linux/dma-iommu.h>
- #ifdef CONFIG_DEBUG_FS
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-@@ -245,6 +246,9 @@ struct komeda_dev *komeda_dev_create(struct device *dev=
-)
- 		goto err_cleanup;
- 	}
-=20
-+	dev->dma_parms =3D &mdev->dma_parms;
-+	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+> On Sat, 30 Mar 2019 08:42:58 +0000,
+> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+>>
+>> Hi, Marc
+>>
+>> On 2019/3/21 1:02, Marc Zyngier Wrote:
+>>> On Tue, 19 Mar 2019 21:25:47 +0800
+>>> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+>>>
+>>>> Hi, all
+>>>>
+>>>> Using gicv4, when guest is waiting for irq, it sends wfi and traps to kvm.
+>>>> When vlpi is forwarded to PE after its_vpe_deschedule, before halt_poll in
+>>>> kvm_vcpu_block, halt_poll may increase latency for this vlpi getting to guest.
+>>>> In halt_poll process, it checks if there's pending irq for vcpu using pending_last.
+>>>> However, doorbell is not enable at this moment and vlpi or doorbell can not set
+>>>> pending_last true, to stop halt_poll. It will run until halt_poll time ends, if
+>>>> there's no other physical irq coming in the meantime. And then vcpu is scheduled out.
+>>>> This pending vlpi has to wait for vcpu getting schedule in next time.
+>>>>
+>>>> Should we enable doorbell before halt_poll process ?
+>>>
+>>> Enabling doorbells can be quite expensive. Depending on the HW, this is
+>>> either:
+>>>
+>>> - a write to memory (+DSB, potential cache maintenance), a write to the
+>>>   INVLPI register, and a poll of the SYNC register
+>>> - a write to memory (+DSB, potential cache maintenance), potentially
+>>>   a string of DISCARD+SYNC+MAPI+SYNC commands, and an INV+SYNC command
+>>>
+>> I have tested average cost of kvm_vgic_v4_enable_doorbell in our machine.
+>> When gic_rdists->has_direct_lpi is 1, it costs 0.35 us.
+>> When gic_rdists->has_direct_lpi is 0, it costs 1.4 us.
+> 
+> This looks pretty low. Which HW is that on? How about on something
+> like D05?
+
+I tested it on D06.
+D05 doesn't not support gicv4 and I haven't tested on D05.
+
+> 
+>> Compared to default halt_poll_ns, 500000ns, enabling doorbells is not
+>> large at all.
+> 
+> Sure. But I'm not sure this is a universal figure.
+> 
+>>
+>>> Frankly, you want to be careful with that. I'd rather enable them late
+>>> and have a chance of not blocking because of another (virtual)
+>>> interrupt, which saves us the doorbell business.
+>>>
+>>> I wonder if you wouldn't be in a better position by drastically
+>>> reducing halt_poll_ns for vcpu that can have directly injected
+>>> interrupts.
+>>>
+>>
+>> If we set halt_poll_ns to a small value, the chance of
+>> not blocking and vcpu scheduled out becomes larger. The cost
+>> of vcpu scheduled out is quite expensive.
+>> In many cases, one pcpu is assigned to only
+>> one vcpu, and halt_poll_ns is set quite large, to increase
+>> chance of halt_poll process got terminated. This is the
+>> reason we want to set halt_poll_ns large. And We hope vlpi
+>> stop halt_poll process in time.
+> 
+> Fair enough. It is certainly realistic to strictly partition the
+> system when GICv4 is in use, so I can see some potential benefit.
+> 
+>> Though it will check whether vcpu is runnable again by
+>> kvm_vcpu_check_block. Vlpi can prevent scheduling vcpu out.
+>> However it's somewhat later if halt_poll_ns is larger.
+>>
+>>> In any case, this is something that we should measure, not guess.
+> 
+> Please post results of realistic benchmarks that we can reproduce,
+> with and without this change. I'm willing to entertain the idea, but I
+> need more than just a vague number.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+
+I tested it with and without change (patch attached in the last).
+halt_poll_ns is keep default, 500000ns.
+I have merged the patch "arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled"
+to my test kernel, to make sure ICH_HCR_EL2.EN=1 in guest.
+
+netperf result:
+D06 as server, intel 8180 server as client
+with change:
+package 512 bytes - 5400 Mbits/s
+package 64 bytes - 740 Mbits/s
+without change:
+package 512 bytes - 5000 Mbits/s
+package 64 bytes - 710 Mbits/s
+
+Also I have tested D06 as client, intel machine as server,
+with the change, the result remains the same.
+
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 55fe8e2..0f56904 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2256,6 +2256,16 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 	if (vcpu->halt_poll_ns) {
+ 		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
+
++#ifdef CONFIG_ARM64
++		/*
++		 * When using gicv4, enable doorbell before halt pool wait
++		 * so that direct vlpi can stop halt poll.
++		 */
++		if (vcpu->arch.vgic_cpu.vgic_v3.its_vpe.its_vm) {
++			kvm_vgic_v4_enable_doorbell(vcpu);
++		}
++#endif
 +
- 	err =3D sysfs_create_group(&dev->kobj, &komeda_sysfs_attr_group);
- 	if (err) {
- 		DRM_ERROR("create sysfs group failed.\n");
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.h
-index 29e03c4..83ace71 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-@@ -149,6 +149,8 @@ struct komeda_dev {
- 	struct device *dev;
- 	/** @reg_base: the base address of komeda io space */
- 	u32 __iomem   *reg_base;
-+	/** @dma_parms: the dma parameters of komeda */
-+	struct device_dma_parameters dma_parms;
-=20
- 	/** @chip: the basic chip information */
- 	struct komeda_chip_info chip;
---=20
-1.9.1
+ 		++vcpu->stat.halt_attempted_poll;
+ 		do {
+ 			/*
+
+
+Thanks,
+Nianyao Tang		
+
+
+
 
