@@ -2,97 +2,142 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79900C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EF1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CB32075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E852075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:09:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z6AUyGdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfDDTJH (ORCPT
+        id S1730126AbfDDTJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:09:07 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:37960 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729848AbfDDTJG (ORCPT
+        Thu, 4 Apr 2019 15:09:26 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35483 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729848AbfDDTJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:09:06 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 5BB1D20025;
-        Thu,  4 Apr 2019 21:09:00 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 21:08:58 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
- newlines to logging
-Message-ID: <20190404190858.GA8008@ravnborg.org>
-References: <cover.1554114302.git.agx@sigxcpu.org>
- <20190403161735.GN5238@ulmo>
- <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
- <20190404105359.GA8255@bogon.m.sigxcpu.org>
- <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
- <20190404170040.GA23897@ravnborg.org>
- <ab5f36952d2125f5ed9706aa58b64ab10fecf531.camel@perches.com>
+        Thu, 4 Apr 2019 15:09:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u21so2636223lfu.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OcQ6KsvNejmpUh/2q7SELuFlGd/570l7ZBSItTRB/3Y=;
+        b=Z6AUyGdvfu7xNM7xzyFHJtaJ2pVTZybbrZLZywFlbYuKrnqTfWQ0TQeJQ2bpekCBsE
+         GkF2RO+O2qwsUUIhToW7lNhi2bxjXjKyAmtBLQhi6bsZDhZ4C/ubq5XPp69mPalvK9Bi
+         s+0TYyx/0WldH9UQVTWlRwjMel5AHF5SlvFOA8BqpHw8NhMrIB6Gjb2K9NyUcydb96xp
+         tYVN1J9f/NgR9GhQRH+QfoE0SUdrbPgD4+yMNkANOG5OOIftS0vZVCQWH6QXbwBLKB1d
+         qN+6uNNAHY+iKtJ2mrzqhhNNOC71TXA49UM916JGsco1TD4w7Vt2Ih9HcFov2cbpOy6t
+         aFiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OcQ6KsvNejmpUh/2q7SELuFlGd/570l7ZBSItTRB/3Y=;
+        b=Xz8vdt3yy8Af8+aQ5pfknKfol32pRFGJ5hjUEbKhbh0cuqs9i3J8Z8lZm1hm5Ak80r
+         STmiF6EyBKUZJca8JEj2LSKDRwfSEsxXXa5k843f3+ZGSy5fQHnPVkSP7ZMzzwXqhL17
+         cjbg3Xupcd22KlAaEWpd4YZWMqNTTDqyFQ2K/QS5TrzrNAbvgcH3wicQF338q403tmwO
+         mFTCy/zUWUre5vyZc05CR1aKgPdxcXRc9UIoTsDJM831cLg62WxdKNz4osHtQp0rbu0f
+         IKCAO4ns4S8G8JjW/Dv2GW9+aR5vExHL1zXwvQB+w5uEtrD6v6263+EjPHifU6gs4PXs
+         IFXA==
+X-Gm-Message-State: APjAAAVnnXJP5oCRpJig4MQCCM2OAAI+Aay1F0Rlb1C6GQq8am/OQzR2
+        RoLh+Fz3gKe5hybV1IQyis6l5HpOuJLSfzTzKRJhCQ==
+X-Google-Smtp-Source: APXvYqwnMfYIidHUiV+LBj009VRyderD2ldSsEqJdJ6s2BuKWwTAxMRQ2HqO2hBCgIcf2Yauw3FwyMDQPN8gZ+6e8DE=
+X-Received: by 2002:ac2:5108:: with SMTP id q8mr3819296lfb.99.1554404963915;
+ Thu, 04 Apr 2019 12:09:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab5f36952d2125f5ed9706aa58b64ab10fecf531.camel@perches.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=Wvc7zV2IR4HhXB_Na8QA:9 a=CjuIK1q_8ugA:10
+References: <20190308203801.57920-1-ncrews@chromium.org> <20190308210843.GA16125@amd>
+ <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com>
+ <20190404112415.GB18653@amd> <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
+ <20190404190326.GC27340@amd>
+In-Reply-To: <20190404190326.GC27340@amd>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Thu, 4 Apr 2019 12:09:12 -0700
+Message-ID: <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Erat <derat@google.com>,
+        Guenter Roeck <groeck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe.
+On Thu, Apr 4, 2019 at 12:03 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Thu 2019-04-04 09:13:27, Dmitry Torokhov wrote:
+> > On Thu, Apr 4, 2019 at 4:24 AM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > On Mon 2019-03-11 09:29:06, Nick Crews wrote:
+> > > > Thanks for looking this over. I will fix most of your concerns, but
+> > > > have one question.
+> > > >
+> > > > On Fri, Mar 8, 2019 at 2:08 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > > > >
+> > > > > On Fri 2019-03-08 13:38:02, Nick Crews wrote:
+> > > > > > This patch is meant to be applied on top of the for-next
+> > > > > > branch of the platform/chrome repository, as it uses some of
+> > > > > > the code staged there.
+> > > > > >
+> > > > > > The EC is in charge of controlling the keyboard backlight on
+> > > > > > the Wilco platform. We expose a standard LED class device at
+> > > > > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
+> > > > > > after the standard Chrome OS keyboard backlight driver at
+> > > > > > drivers/platform/chrome/cros_kbd_led_backlight.c
+> > > > >
+> > > > > Can you make it "platform::kbd_backlight"? We want some consistency
+> > > > > there.
+> > > >
+> > > > The analogous name in the standard driver
+> > > > drivers/platform/chrome/cros_kbd_led_backlight.c is
+> > > > "chromeos::kbd_backlight", and I thought "wilco" was a better
+> > > > substitute for "chromeos" than "platform" would be. What other thing
+> > > > are you saying "platform" would be consistent with?
+> > >
+> > > Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: in
+> > > the first place. But it happened. We want all backlights for the
+> > > system keyboard to use common name, and "chromeos" is not really
+> > > suitable for that. "platform" is.
+> >
+> > Pavel, who exactly wants this and why? Looking at today's -next I see:
+> >
+> > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+> > "::kbd_backlight" | wc -l
+> > 18
+> > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+> > "platform::kbd_backlight" | wc -l
+> > 0
+> >
+> > so there isn't a single instance of "platform::kbd_backlight" and we
+> > definitely not changing existing names.
+>
+> Yeah, we made mistakes in the past. We _don't_ want userspace to have
+> ever growing list of names for userspace to follow.
+>
+> Backlight of internal keyboard is pretty common concept and there
+> should be one name for it.
 
-> > >  
-> > >  	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-> > >  	if (ret < 0) {
-> > > -		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
-> > > +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
-> > 
-> > I was under the impression that newlines was optional these days.
-> > Should we always use them with logging?
-> 
-> Yes.
-> 
-> The general problem is KERN_CONT/pr_cont uses where interleaving
-> is still possible from multiple threads.
-> 
-> > I did not find any obvious clues in linux/printk.h
-> 
-> I'll see about adding something one day to the Documentation.
-> Likely in coding-style.rst.
+It is the *function* that is interesting to userspace, not full name,
+and we have proper standardization there.
 
-Thanks for the clarification.
-A seperate doc on logging would be awesome.
+I think before you demand changes in the drivers you need to get you
+naming scheme get accepted into mainline
+(Documentation/leds/leds-class.txt).
 
-	Sam
+Thanks.
+
+-- 
+Dmitry
