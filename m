@@ -3,110 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF89C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E34C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017CF20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C3B20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDDFvA (ORCPT
+        id S1726850AbfDDFvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:51:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58062 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfDDFvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:51:00 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A9D833078AAE;
-        Thu,  4 Apr 2019 05:50:59 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-22.ams2.redhat.com [10.36.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE72D5FCC4;
-        Thu,  4 Apr 2019 05:50:56 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 1AE8116E2D; Thu,  4 Apr 2019 07:50:56 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 07:50:56 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Airlie <airlied@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
-Message-ID: <20190404055056.ddc2bdgjbgjj7tby@sirius.home.kraxel.org>
-References: <20190403072318.31507-1-kraxel@redhat.com>
- <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
+        Thu, 4 Apr 2019 01:51:38 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47671 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfDDFvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 01:51:37 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D845CFF808;
+        Thu,  4 Apr 2019 05:51:29 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v2 0/5] Provide generic top-down mmap layout functions 
+Date:   Thu,  4 Apr 2019 01:51:23 -0400
+Message-Id: <20190404055128.24330-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 04 Apr 2019 05:51:00 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:58:09PM +1000, David Airlie wrote:
-> On Wed, Apr 3, 2019 at 5:23 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> > Time to kill some bad sample code people are copying from ;)
-> >
-> > This is a complete rewrite of the cirrus driver.  The cirrus_mode_set()
-> > function is pretty much the only function which is carried over largely
-> > unmodified.  Everything else is upside down.
-> >
-> > It is a single monster patch.  But given that it does some pretty
-> > fundamental changes to the drivers workflow and also reduces the code
-> > size by roughly 70% I think it'll still be alot easier to review than a
-> > longish baby-step patch series.
-> >
-> > Changes summary:
-> >  - Given the small amout of video memory (4 MB) the cirrus device has
-> >    the rewritten driver doesn't try to manage buffers there.  Instead
-> >    it will blit (memcpy) the active framebuffer to video memory.
-> 
-> Does it get any slower, with TTM I just wrote it to migrate just the
-> frontbuffer in/out of VRAM on modeset, won't we end up with more
-> copies now?
+This series introduces generic functions to make top-down mmap layout
+easily accessible to architectures, in particular riscv which was
+the initial goal of this series.
+The generic implementation was taken from arm64 and used successively
+by arm, mips and finally riscv.
 
-I didn't benchmark it, but if you care about performance you should not
-be using cirrus anyway ...
+Note that in addition the series fixes 2 issues:
+- stack randomization was taken into account even if not necessary.
+- [1] fixed an issue with mmap base which did not take into account
+  randomization but did not report it to arm and mips, so by moving
+  arm64 into a generic library, this problem is now fixed for both
+  architectures.
 
-For fbcon it probably doesn't make much of a difference, fbcon used a
-shadow framebuffer before (for fbdev mmap and dirty tracking).
+This work is an effort to factorize architecture functions to avoid
+code duplication and oversights as in [1].
 
-xorg probably ends up with more copying.
+[1]: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
 
-Anything doing display updates with page flips (i.e wayland) should end
-up with less copying, because you have one copy (blit) instead of two
-copies (migrate old frontbuffer out of vram, migrate new frontbuffer
-into vram) on pageflip.
+Changes in v2 as suggested by Christoph Hellwig:
+  - Preparatory patch that moves randomize_stack_top
+  - Fix duplicate config in riscv
+  - Align #if defined on next line => this gives rise to a checkpatch
+    warning. I found this pattern all around the tree, in the same proportion
+    as the previous pattern which was less pretty:
+    git grep -C 1 -n -P "^#if defined.+\|\|.*\\\\$" 
 
-Speaking of wayland:  Seems at least gnome-shell insists on using XR24.
+Alexandre Ghiti (5):
+  mm, fs: Move randomize_stack_top from fs to mm
+  arm64, mm: Move generic mmap layout functions to mm
+  arm: Use generic mmap top-down layout
+  mips: Use generic mmap top-down layout
+  riscv: Make mmap allocation top-down by default
 
-> >  - Only DRM_FORMAT_RGB565 (depth 16) is supported.  The old driver does
-> >    that too by default.  There was a module parameter which enables 24/32
-> >    bpp support and disables higher resolutions (due to cirrus hardware
-> >    constrains).  That parameter wasn't reimplemented.
+ arch/Kconfig                       |  8 +++
+ arch/arm/Kconfig                   |  1 +
+ arch/arm/include/asm/processor.h   |  2 -
+ arch/arm/mm/mmap.c                 | 52 ----------------
+ arch/arm64/Kconfig                 |  1 +
+ arch/arm64/include/asm/processor.h |  2 -
+ arch/arm64/mm/mmap.c               | 72 ----------------------
+ arch/mips/Kconfig                  |  1 +
+ arch/mips/include/asm/processor.h  |  5 --
+ arch/mips/mm/mmap.c                | 57 -----------------
+ arch/riscv/Kconfig                 | 11 ++++
+ fs/binfmt_elf.c                    | 20 ------
+ include/linux/mm.h                 |  2 +
+ kernel/sysctl.c                    |  6 +-
+ mm/util.c                          | 99 +++++++++++++++++++++++++++++-
+ 15 files changed, 126 insertions(+), 213 deletions(-)
 
-> This might be the big sticking point, this is a userspace regression
-> for a feature that was explicitly added a few years ago, can we really
-> get away without it?
-
-Well, I can reintroduce the module option.  I don't see any other
-reasonable way to support 32bpp.  If the driver reports XR24 as
-supported and also adds the higher resolutions (which work with RG16
-only) to the mode list userspace will of course try the higher
-resolutions with XR24 and struggle ...
-
-cheers,
-  Gerd
+-- 
+2.20.1
 
