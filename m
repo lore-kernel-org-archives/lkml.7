@@ -4,64 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AE1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16020C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DBE21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BA221850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368004;
-	bh=9KyJfwxBReI9kvGppxzxbD7dfxmHyjeyC63BNJJpqGI=;
+	s=default; t=1554368007;
+	bh=FlFBmuAMY+DY/P172A7FJW7Jgybyhq9UzpMNTwKhVLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7SyKw/UA+XUR5iRzUcO5JSMPXb6fj3mQMmweIK80nIkgWE3x15rwpkXw4ErPns/a
-	 LBQOe8oTBf5XMDwNrnVGrKispR2ouM64BYO2p0eINnKLTpWa7mzaqKMubrRL7sdoj6
-	 RIf+FTusipqEBDWNAxhoyOH8e38A6BeHZC/eI9gU=
+	b=eIKEIedDl2A4Af0hvJZ75D+4w2o9MdidbHN5He81OCL5AkNfDindFH8Mgkrh1Cw2R
+	 qa8f0bB0hotjoGGarqyq3g1WsLXybUWJ2JcFVUYH/2PvPJqRgECLyVJT0CYZ/g9ZXk
+	 +kxQJpkwPigsh9yejpHaMvEqNE6kyHFHoBKorfAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfDDIxX (ORCPT
+        id S1729810AbfDDIx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729785AbfDDIxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:22 -0400
+        id S1729076AbfDDIxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E8E2171F;
-        Thu,  4 Apr 2019 08:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A10C2184B;
+        Thu,  4 Apr 2019 08:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368000;
-        bh=9KyJfwxBReI9kvGppxzxbD7dfxmHyjeyC63BNJJpqGI=;
+        s=default; t=1554368003;
+        bh=FlFBmuAMY+DY/P172A7FJW7Jgybyhq9UzpMNTwKhVLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4gSnnynmeyX4fA1vA16TjSseD76eZEY/VmUGjM9OjLqZ1CWRkflXPnRtNaS0UpBF
-         iRamwJQBDZVdd98z2GrqYv6i0tBe2I/ZPfZOxjSLlKd1LkyuP8ELazOlSxp+oKG18a
-         vATcy73BLtR6RTRC7EgTfeEAzMmupkkShho2FkGw=
+        b=AMqzp/pnRFk4epmB7+FWwepluyeIq62Q7+bL2O7QxLNxLl2AvuVCinypvmbkONHYx
+         7fj7pfHq+XhXAeB10kd/hh7GhT/tkl7A5NgmjwSfN46zCpR3cXHpBQqF3N5m6ru05i
+         KTzEQMV7vuX5eUJgwOG65AHlWbkDtFmbPBw4HqzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        George Rimar <grimar@accesssoftek.com>,
+        Tri Vo <trong@android.com>, Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Michael Matz <matz@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>, morbo@google.com,
+        ruiu@google.com, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 67/91] efi/memattr: Dont bail on zero VA if it equals the regions PA
-Date:   Thu,  4 Apr 2019 10:47:51 +0200
-Message-Id: <20190404084539.330838278@linuxfoundation.org>
+Subject: [PATCH 4.9 85/91] x86/build: Specify elf_i386 linker emulation explicitly for i386 objects
+Date:   Thu,  4 Apr 2019 10:48:09 +0200
+Message-Id: <20190404084540.398204743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -80,66 +72,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5de0fef0230f3c8d75cff450a71740a7bf2db866 ]
+[ Upstream commit 927185c124d62a9a4d35878d7f6d432a166b74e3 ]
 
-The EFI memory attributes code cross-references the EFI memory map with
-the more granular EFI memory attributes table to ensure that they are in
-sync before applying the strict permissions to the regions it describes.
+The kernel uses the OUTPUT_FORMAT linker script command in it's linker
+scripts. Most of the time, the -m option is passed to the linker with
+correct architecture, but sometimes (at least for x86_64) the -m option
+contradicts the OUTPUT_FORMAT directive.
 
-Since we always install virtual mappings for the EFI runtime regions to
-which these strict permissions apply, we currently perform a sanity check
-on the EFI memory descriptor, and ensure that the EFI_MEMORY_RUNTIME bit
-is set, and that the virtual address has been assigned.
+Specifically, arch/x86/boot and arch/x86/realmode/rm produce i386 object
+files, but are linked with the -m elf_x86_64 linker flag when building
+for x86_64.
 
-However, in cases where a runtime region exists at physical address 0x0,
-and the virtual mapping equals the physical mapping, e.g., when running
-in mixed mode on x86, we encounter a memory descriptor with the runtime
-attribute and virtual address 0x0, and incorrectly draw the conclusion
-that a runtime region exists for which no virtual mapping was installed,
-and give up altogether. The consequence of this is that firmware mappings
-retain their read-write-execute permissions, making the system more
-vulnerable to attacks.
+The GNU linker manpage doesn't explicitly state any tie-breakers between
+-m and OUTPUT_FORMAT. But with BFD and Gold linkers, OUTPUT_FORMAT
+overrides the emulation value specified with the -m option.
 
-So let's only bail if the virtual address of 0x0 has been assigned to a
-physical region that does not reside at address 0x0.
+LLVM lld has a different behavior, however. When supplied with
+contradicting -m and OUTPUT_FORMAT values it fails with the following
+error message:
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+  ld.lld: error: arch/x86/realmode/rm/header.o is incompatible with elf_x86_64
+
+Therefore, just add the correct -m after the incorrect one (it overrides
+it), so the linker invocation looks like this:
+
+  ld -m elf_x86_64 -z max-page-size=0x200000 -m elf_i386 --emit-relocs -T \
+    realmode.lds header.o trampoline_64.o stack.o reboot.o -o realmode.elf
+
+This is not a functional change for GNU ld, because (although not
+explicitly documented) OUTPUT_FORMAT overrides -m EMULATION.
+
+Tested by building x86_64 kernel with GNU gcc/ld toolchain and booting
+it in QEMU.
+
+ [ bp: massage and clarify text. ]
+
+Suggested-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: George Rimar <grimar@accesssoftek.com>
+Signed-off-by: Tri Vo <trong@android.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tri Vo <trong@android.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Michael Matz <matz@suse.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 10f0d2f577053 ("efi: Implement generic support for the Memory ...")
-Link: http://lkml.kernel.org/r/20190202094119.13230-4-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: morbo@google.com
+Cc: ndesaulniers@google.com
+Cc: ruiu@google.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190111201012.71210-1-trong@android.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/Makefile        | 2 +-
+ arch/x86/realmode/rm/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index 236004b9a50d..9faa09e7c31f 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -93,7 +93,7 @@ static bool entry_is_valid(const efi_memory_desc_t *in, efi_memory_desc_t *out)
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 3b7156f46bc1..3b16935b22bc 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -100,7 +100,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
+ AFLAGS_header.o += -I$(objtree)/$(obj)
+ $(obj)/header.o: $(obj)/zoffset.h
  
- 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
- 			continue;
--		if (md->virt_addr == 0) {
-+		if (md->virt_addr == 0 && md->phys_addr != 0) {
- 			/* no virtual mapping has been installed by the stub */
- 			break;
- 		}
+-LDFLAGS_setup.elf	:= -T
++LDFLAGS_setup.elf	:= -m elf_i386 -T
+ $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
+ 	$(call if_changed,ld)
+ 
+diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
+index 25012abc3409..ce5f431e6823 100644
+--- a/arch/x86/realmode/rm/Makefile
++++ b/arch/x86/realmode/rm/Makefile
+@@ -47,7 +47,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+ targets += realmode.lds
+ $(obj)/realmode.lds: $(obj)/pasyms.h
+ 
+-LDFLAGS_realmode.elf := --emit-relocs -T
++LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
+ CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
+ 
+ targets += realmode.elf
 -- 
 2.19.1
 
