@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1947FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C462186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB322186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368858;
-	bh=SzXhmpQOktA0XK80I1zBgGCtw3HvpI1Jmek0Q6Qb0+0=;
+	s=default; t=1554368860;
+	bh=NFdyG0c28uum+R0yFwpuAZGgwWWE8lGHF5IbpBx6O9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WROFgKXoREy8LlJJ8c313GOkKi/278Dd31HggosgZX86JnLnFCV5lWdWx3LVY0Ymo
-	 E2257/YWaglZvKYvlrsTs2svvC5t63S0jI3gUchgXdh+TQDS2DqvvIlZjOa0Pltqyj
-	 9a73jduDHZ8ac3G2zCU1s6DEP5k2mVvSmcIHXUjk=
+	b=crZ1lFBtZP4ZOQkOs8NyTxQXEM7UMLc/KhI+qEAWrXB4csTOQnCqPryKktKn/7eTF
+	 ayZgfzZ/illALS99rTMwQeEIgquu228O5aTCGskFzVy7EkTrxiZWelpvVSp9TYmXjQ
+	 2PfoNUcf1uaj191rMmCfdx6U5UgL6+3bXxtMtj34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbfDDJHg (ORCPT
+        id S1732295AbfDDJHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732485AbfDDJHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:07:34 -0400
+        id S1731858AbfDDJHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C8F5218D4;
-        Thu,  4 Apr 2019 09:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A8D214AF;
+        Thu,  4 Apr 2019 09:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368853;
-        bh=SzXhmpQOktA0XK80I1zBgGCtw3HvpI1Jmek0Q6Qb0+0=;
+        s=default; t=1554368856;
+        bh=NFdyG0c28uum+R0yFwpuAZGgwWWE8lGHF5IbpBx6O9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmKEArm8jDhXi3NJIntbjKXu+G5tNZSqA8zlsW8pi0rk4nVRUc2A7nogr2tqTSYZw
-         UR4YmZuok4yVQhd4CHKtez8icZfU1CAS3EEPo2Np2tn/AhUCH33WPCBOoI31DkByWz
-         WgfmSJeG1WnFkJrGDhniWxOG9P/4GjfoPipIgrQQ=
+        b=XZoHGif7nyR78HfJpxiwHMFZVIl+sRH7t8Hy4soPz1QRhMLe6Sw9HlPZYEqP9+V8p
+         t/Wd3UznZ2TzEANveTxi3Y+mvm1dVWyUm2MKFV88jgPl8VwZ3mJiF1g8IcF28v5Nu/
+         eJxqvH0kgHixm1xMXoqQ7kQOO9M/Oq5ttzzblOB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/187] bcache: fix potential div-zero error of writeback_rate_p_term_inverse
-Date:   Thu,  4 Apr 2019 10:48:43 +0200
-Message-Id: <20190404084611.875407024@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 187/187] kprobes/x86: Blacklist non-attachable interrupt functions
+Date:   Thu,  4 Apr 2019 10:48:44 +0200
+Message-Id: <20190404084611.921138608@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -65,46 +75,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5b5fd3c94eef69dcfaa8648198e54c92e5687d6d ]
+[ Upstream commit a50480cb6d61d5c5fc13308479407b628b6bc1c5 ]
 
-Current code already uses d_strtoul_nonzero() to convert input string
-to an unsigned integer, to make sure writeback_rate_p_term_inverse
-won't be zero value. But overflow may happen when converting input
-string to an unsigned integer value by d_strtoul_nonzero(), then
-dc->writeback_rate_p_term_inverse can still be set to 0 even if the
-sysfs file input value is not zero, e.g. 4294967296 (a.k.a UINT_MAX+1).
+These interrupt functions are already non-attachable by kprobes.
+Blacklist them explicitly so that they can show up in
+/sys/kernel/debug/kprobes/blacklist and tools like BCC can use this
+additional information.
 
-If dc->writeback_rate_p_term_inverse is set to 0, it might cause a
-dev-zero error in following code from __update_writeback_rate(),
-	int64_t proportional_scaled =
-		div_s64(error, dc->writeback_rate_p_term_inverse);
-
-This patch replaces d_strtoul_nonzero() by sysfs_strtoul_clamp() and
-limit the value range in [1, UINT_MAX]. Then the unsigned integer
-overflow and dev-zero error can be avoided.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lkml.kernel.org/r/20181206095648.GA8249@Dell
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/entry/entry_64.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 503ad954ccc0..d9481640b3e1 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -286,7 +286,9 @@ STORE(__cached_dev)
- 	sysfs_strtoul_clamp(writeback_rate_i_term_inverse,
- 			    dc->writeback_rate_i_term_inverse,
- 			    1, UINT_MAX);
--	d_strtoul_nonzero(writeback_rate_p_term_inverse);
-+	sysfs_strtoul_clamp(writeback_rate_p_term_inverse,
-+			    dc->writeback_rate_p_term_inverse,
-+			    1, UINT_MAX);
- 	d_strtoul_nonzero(writeback_rate_minimum);
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index f95dcb209fdf..617df50a11d9 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -627,6 +627,7 @@ ENTRY(interrupt_entry)
  
- 	sysfs_strtoul_clamp(io_error_limit, dc->error_limit, 0, INT_MAX);
+ 	ret
+ END(interrupt_entry)
++_ASM_NOKPROBE(interrupt_entry)
+ 
+ 
+ /* Interrupt entry/exit. */
+@@ -826,6 +827,7 @@ native_irq_return_ldt:
+ 	jmp	native_irq_return_iret
+ #endif
+ END(common_interrupt)
++_ASM_NOKPROBE(common_interrupt)
+ 
+ /*
+  * APIC interrupts.
+@@ -840,6 +842,7 @@ ENTRY(\sym)
+ 	call	\do_sym	/* rdi points to pt_regs */
+ 	jmp	ret_from_intr
+ END(\sym)
++_ASM_NOKPROBE(\sym)
+ .endm
+ 
+ /* Make sure APIC interrupt handlers end up in the irqentry section: */
+@@ -984,6 +987,7 @@ ENTRY(\sym)
+ 
+ 	jmp	error_exit
+ 	.endif
++_ASM_NOKPROBE(\sym)
+ END(\sym)
+ .endm
+ 
 -- 
 2.19.1
 
