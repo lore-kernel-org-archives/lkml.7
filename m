@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6F0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EA1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B987A20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445E82177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369412;
-	bh=BvjuZ0m2CIC2YgjOvgOIcFzprWbKCHyP1cezF2QDwpM=;
+	s=default; t=1554369415;
+	bh=XBlXoNZUBBoSgafKCat+RYWkre2LTP5IEDRR9MUG+e0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1nNxm67Vm7/06cHXeNhyACsUPDky2qFuXsXcbtfgsn8IXxoI2BHlSOynE9w4ayUO0
-	 RCeHVIAvf5k2z62NVMNop39VjPo2ZCFtS3bJ/l2lEdw7yhg+uo4fitSwrK9rSbueHB
-	 7ho/0OMk8IF2Hv6E1hh/82B8/3KufaO9f9nXEKdQ=
+	b=nYFlWftngXg4O02zTp1d+vG0b3rX0hq1nbz2AVH4h00xdE0aDu8B0qQ9FsqF/tNAH
+	 qz6qnFJ+EEkHVbHaPscG+Hczu3aaG1OliWJXFrLzbLKNt7bc0zU6MX9W94xBKJ8VNY
+	 VnZLstWzappkY/E+denhn8gVLEW8caJhram3WhMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388115AbfDDJQv (ORCPT
+        id S2387506AbfDDJQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387691AbfDDJQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:46 -0400
+        id S2387703AbfDDJQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72072054F;
-        Thu,  4 Apr 2019 09:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81482054F;
+        Thu,  4 Apr 2019 09:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369405;
-        bh=BvjuZ0m2CIC2YgjOvgOIcFzprWbKCHyP1cezF2QDwpM=;
+        s=default; t=1554369410;
+        bh=XBlXoNZUBBoSgafKCat+RYWkre2LTP5IEDRR9MUG+e0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0s3H9YXAti1pV1MQRLia9gsXjXl4RJwjvnaX25Okg/QkwgNSzdEg6Uk04NXZVKHOJ
-         2eq0lLpvCWz5GfV/agpPZ6E7SqlzCi+ZJkPvc5qb+ljQAe8H6kx5tZ1RAu4lqGtlht
-         WifC0Cc7YcvXVnaBaTmRi49oqFWZs6UGdSmkhWKE=
+        b=n6pxEMhxXY0/KXny0N3rSy5/+ytbOPVSYg7yoxExLJriYu80q003VlY5Z/VWt6bZg
+         hUV/VwfIAap1wPNzIgK+d98Rv2/VCKKRSpOkAg1Y0RbTIiRGoUxGYuVtKLtse8FjC0
+         1v+xc/nVDVtuYBNWiuXbBTm9lxz/kdn2homPDiFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 211/246] pinctrl: meson: fix G12A ao pull registers base address
-Date:   Thu,  4 Apr 2019 10:48:31 +0200
-Message-Id: <20190404084626.579585540@linuxfoundation.org>
+Subject: [PATCH 5.0 213/246] pinctrl: sh-pfc: r8a77995: Fix MOD_SEL bit numbering
+Date:   Thu,  4 Apr 2019 10:48:33 +0200
+Message-Id: <20190404084626.649913177@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,87 +69,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e66dd48e8b0dee104d16417d30361074b08baca8 ]
+[ Upstream commit 5219aa33caec2f7b68eda2b7e4ab8e276f323254 ]
 
-Since Meson G12A SoC, Introduce new ao registers AO_RTI_PULL_UP_EN_REG
-and AO_GPIO_O.
+MOD_SEL register bit numbering was different from R-Car D3 SoC and
+R-Car H3/M3-[WN] SoCs.
 
-These bits of controlling output level are remapped to the new register
-AO_GPIO_O, and the AO_GPIO_O_EN_N support only controlling output enable.
+MOD_SEL 1-bit      H3/M3-[WN]  D3
+===============    ==========  =====
+Set Value = H'0    b'0         b'0
+Set Value = H'1    b'1         b'1
 
-These bits of controlling pull enable are remapped to the new register
-AO_RTI_PULL_UP_EN_REG, and the AO_RTI_PULL_UP_REG support only controlling
-pull type(up/down).
+MOD_SEL 2-bits     H3/M3-[WN]  D3
+===============    ==========  =====
+Set Value = H'0    b'00        b'00
+Set Value = H'1    b'01        b'10
+Set Value = H'2    b'10        b'01
+Set Value = H'3    b'11        b'11
 
-The new layout of ao gpio/pull registers is as follows:
-- AO_GPIO_O_EN_N        [offset: 0x9 << 2]
-- AO_GPIO_I             [offset: 0xa << 2]
-- AO_RTI_PULL_UP_REG    [offset: 0xb << 2]
-- AO_RTI_PULL_UP_EN_REG [offset: 0xc << 2]
-- AO_GPIO_O             [offset: 0xd << 2]
+MOD_SEL 3-bits     H3/M3-[WN]  D3
+===============    ==========  =====
+Set Value = H'0    b'000       b'000
+Set Value = H'1    b'001       b'100
+Set Value = H'2    b'010       b'010
+Set Value = H'3    b'011       b'110
+Set Value = H'4    b'100       b'001
+Set Value = H'5    b'101       b'101
+Set Value = H'6    b'110       b'011
+Set Value = H'7    b'111       b'111
 
->From above, we can see ao GPIO registers region has been separated by the
-ao pull registers. In order to ensure the continuity of the region on
-software, the ao GPIO and ao pull registers use the same base address, but
-can be identified by the offset.
+This patch replaces the #define name and value of MOD_SEL.
 
-Fixes: 29ae0952e85f ("pinctrl: meson-g12a: add pinctrl driver support")
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Fixes: 794a67117646 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
+[shimoda: split a patch per SoC and revise the commit log]
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[geert: Use a macro to do the actual reordering]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index ea87d739f534..a4ae1ac5369e 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -31,6 +31,9 @@
-  * In some cases the register ranges for pull enable and pull
-  * direction are the same and thus there are only 3 register ranges.
-  *
-+ * Since Meson G12A SoC, the ao register ranges for gpio, pull enable
-+ * and pull direction are the same, so there are only 2 register ranges.
-+ *
-  * For the pull and GPIO configuration every bank uses a contiguous
-  * set of bits in the register sets described above; the same register
-  * can be shared by more banks with different offsets.
-@@ -488,23 +491,22 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 		return PTR_ERR(pc->reg_mux);
- 	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+index 84d78db381e3..9e377e3b9cb3 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+@@ -381,6 +381,9 @@ FM(IP12_23_20)	IP12_23_20 \
+ FM(IP12_27_24)	IP12_27_24 \
+ FM(IP12_31_28)	IP12_31_28 \
  
--	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
--	if (IS_ERR(pc->reg_pull)) {
--		dev_err(pc->dev, "pull registers not found\n");
--		return PTR_ERR(pc->reg_pull);
-+	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
-+	if (IS_ERR(pc->reg_gpio)) {
-+		dev_err(pc->dev, "gpio registers not found\n");
-+		return PTR_ERR(pc->reg_gpio);
- 	}
- 
-+	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
-+	/* Use gpio region if pull one is not present */
-+	if (IS_ERR(pc->reg_pull))
-+		pc->reg_pull = pc->reg_gpio;
++/* The bit numbering in MOD_SEL fields is reversed */
++#define REV4(f0, f1, f2, f3)			f0 f2 f1 f3
 +
- 	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
- 	/* Use pull region if pull-enable one is not present */
- 	if (IS_ERR(pc->reg_pullen))
- 		pc->reg_pullen = pc->reg_pull;
- 
--	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
--	if (IS_ERR(pc->reg_gpio)) {
--		dev_err(pc->dev, "gpio registers not found\n");
--		return PTR_ERR(pc->reg_gpio);
--	}
--
- 	return 0;
- }
- 
+ /* MOD_SEL0 */			/* 0 */			/* 1 */			/* 2 */			/* 3 */
+ #define MOD_SEL0_30		FM(SEL_MSIOF2_0)	FM(SEL_MSIOF2_1)
+ #define MOD_SEL0_29		FM(SEL_I2C3_0)		FM(SEL_I2C3_1)
+@@ -388,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
+ #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
+ #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
+ #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
+-#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
+-#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
+-#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
+-#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
++#define MOD_SEL0_24_23	   REV4(FM(SEL_PWM0_0),		FM(SEL_PWM0_1),		FM(SEL_PWM0_2),		F_(0, 0))
++#define MOD_SEL0_22_21	   REV4(FM(SEL_PWM1_0),		FM(SEL_PWM1_1),		FM(SEL_PWM1_2),		F_(0, 0))
++#define MOD_SEL0_20_19	   REV4(FM(SEL_PWM2_0),		FM(SEL_PWM2_1),		FM(SEL_PWM2_2),		F_(0, 0))
++#define MOD_SEL0_18_17	   REV4(FM(SEL_PWM3_0),		FM(SEL_PWM3_1),		FM(SEL_PWM3_2),		F_(0, 0))
+ #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
+ #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
+ #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
 -- 
 2.19.1
 
