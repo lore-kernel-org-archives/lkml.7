@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B79DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CD9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2F3205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9FA20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370239;
-	bh=0/RRNqm7tPFECMaigc6o6BjWHq9V9ZjdVP0WmyENq4Q=;
+	s=default; t=1554370243;
+	bh=j65ElPe+zvTe6jSkkS2AusDdEE38oNaEqDboUzxhIyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUa0SKndu+sZjrHv6cYyW2+TlcfkAguYb13mViiNaLjLnAkzGZ2ctIr67IWjEyHlj
-	 PmAixRjnIDaEbD21cyYCqi1RHGtg9zGGXWuAaWQZ8XPRGjVy39dnamesqw/UF555f0
-	 0rhL8EW81RLhuuVBmKZPXiKpzkqZ6x22dv9vyHhQ=
+	b=CWyaZLwkx7f8L0a+p/UwVld7E/BQ8CdSgVmM3FLcPymGNkfBgVNrGporU9dpCTBTu
+	 RKWxzx4sNTvYW/X5rJABgq631mu1DasRzpGpueLzSABt2OIn75gJ3C6OwbgrDs9Hq0
+	 CyZcQO4xwxA9awTobpjQAl7N77gxccgQ4t/yVFAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732905AbfDDJah (ORCPT
+        id S1732915AbfDDJJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732260AbfDDJKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:03 -0400
+        id S1731164AbfDDJJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871DA2075E;
-        Thu,  4 Apr 2019 09:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C3D20855;
+        Thu,  4 Apr 2019 09:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369002;
-        bh=0/RRNqm7tPFECMaigc6o6BjWHq9V9ZjdVP0WmyENq4Q=;
+        s=default; t=1554368994;
+        bh=j65ElPe+zvTe6jSkkS2AusDdEE38oNaEqDboUzxhIyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GCBEhdIzyTvEiD6xWHXaS0EuX7tkKzf6rtWmP8hFW4tPwXMrbXR8v5UYkMCVpIeXL
-         urde07QWHIVrFzkZvldBJWI0QJ7dfInrIPg4YeJajtgho7+Pl6wY/6xSUgO3Gu+CJH
-         fLMxtVid3MSpsOUSFyPm94qU1axw1Wx4e6Rbu4dY=
+        b=bMfh8PWBlQnH8F4sGhOYVuRZ3TtoiXw8B1RIVtusVAn56YnUMIEK57BdVYdrbEsEb
+         HVJELJtJV2BueW3LcxdGVuPhcOyzkMwjUVNg23ufWNz15QNri3BPFwYkGQ64GQuKwr
+         VnozfvdicvdJA0M1LASAG/QaADjGL4volPmJt6io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Dongdong Liu <liudongdong3@huawei.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 061/246] ath10k: Fix the wrong updation of BW in tx_stats debugfs entry
-Date:   Thu,  4 Apr 2019 10:46:01 +0200
-Message-Id: <20190404084621.305852815@linuxfoundation.org>
+Subject: [PATCH 5.0 058/246] PCI/PME: Fix hotplug/sysfs remove deadlock in pcie_pme_remove()
+Date:   Thu,  4 Apr 2019 10:45:58 +0200
+Message-Id: <20190404084621.214843313@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,61 +67,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ef9051c72ab7bc664e8047c55ac74bdb1c7fa3ee ]
+[ Upstream commit 95c80bc6952b6a5badc7b702d23e5bf14d251e7c ]
 
-Currently, the bandwidth is updated wrongly in BW table in tx_stats
-debugfs per sta as there is difference in number of bandwidth type
-in mac80211 and driver stats table. This leads to bandwidth getting
-updated at wrong index in bandwidth table in tx_stats.
+Dongdong reported a deadlock triggered by a hotplug event during a sysfs
+"remove" operation:
 
-Fix this index mismatch between mac80211 and driver stats table (BW table)
-by making the number of bandwidth type in driver compatible with mac80211.
+  pciehp 0000:00:0c.0:pcie004: Slot(0-1): Link Up
+  # echo 1 > 0000:00:0c.0/remove
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+  PME and hotplug share an MSI/MSI-X vector.  The sysfs "remove" side is:
 
-Fixes: a904417fc876 ("ath10k: add extended per sta tx statistics support")
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+    remove_store
+       pci_stop_and_remove_bus_device_locked
+	 pci_lock_rescan_remove
+	 pci_stop_and_remove_bus_device
+	   ...
+	   pcie_pme_remove
+	     pcie_pme_suspend
+	       synchronize_irq        # wait for hotplug IRQ handler
+	 pci_unlock_rescan_remove
+
+  The hotplug side is:
+
+    pciehp_ist
+       pciehp_handle_presence_or_link_change
+	 pciehp_configure_device
+	   pci_lock_rescan_remove     # wait for pci_unlock_rescan_remove()
+
+  INFO: task bash:10913 blocked for more than 120 seconds.
+
+  # ps -ax |grep D
+   PID TTY      STAT   TIME COMMAND
+  10913 ttyAMA0  Ds+    0:00 -bash
+  14022 ?        D      0:00 [irq/745-pciehp]
+
+  # cat /proc/14022/stack
+  __switch_to+0x94/0xd8
+  pci_lock_rescan_remove+0x20/0x28
+  pciehp_configure_device+0x30/0x140
+  pciehp_handle_presence_or_link_change+0x324/0x458
+  pciehp_ist+0x1dc/0x1e0
+
+  # cat /proc/10913/stack
+  __switch_to+0x94/0xd8
+  synchronize_irq+0x8c/0xc0
+  pcie_pme_suspend+0xa4/0x118
+  pcie_pme_remove+0x20/0x40
+  pcie_port_remove_service+0x3c/0x58
+  ...
+  pcie_port_device_remove+0x2c/0x48
+  pcie_portdrv_remove+0x68/0x78
+  pci_device_remove+0x48/0x120
+  ...
+  pci_stop_bus_device+0x84/0xc0
+  pci_stop_and_remove_bus_device_locked+0x24/0x40
+  remove_store+0xa4/0xb8
+  dev_attr_store+0x44/0x60
+  sysfs_kf_write+0x58/0x80
+
+It is incorrect to call pcie_pme_suspend() from pcie_pme_remove() for two
+reasons.
+
+First, pcie_pme_suspend() calls synchronize_irq(), which will wait for the
+native hotplug interrupt handler as well as for the PME one, because they
+share one IRQ (as per the spec).  That may deadlock if hotplug is signaled
+while pcie_pme_remove() is running and the latter calls
+pci_lock_rescan_remove() before the former.
+
+Second, if pcie_pme_suspend() figures out that wakeup needs to be enabled
+for the port, it will return without disabling the interrupt as expected by
+pcie_pme_remove() which was overlooked by commit c7b5a4e6e8fb ("PCI / PM:
+Fix native PME handling during system suspend/resume").
+
+To fix that, rework pcie_pme_remove() to disable the PME interrupt, clear
+its status and prevent the PME worker function from re-enabling it before
+calling free_irq() on it, which should be sufficient.
+
+Fixes: c7b5a4e6e8fb ("PCI / PM: Fix native PME handling during system suspend/resume")
+Link: https://lore.kernel.org/linux-pci/c7697e7c-e1af-13e4-8491-0a3996e6ab5d@huawei.com
+Reported-by: Dongdong Liu <liudongdong3@huawei.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[bhelgaas: add URL and deadlock details from Dongdong]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/debugfs_sta.c | 7 ++++---
- drivers/net/wireless/ath/ath10k/wmi.h         | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/pme.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/debugfs_sta.c b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
-index 4778a455d81a..068f1a7e07d3 100644
---- a/drivers/net/wireless/ath/ath10k/debugfs_sta.c
-+++ b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
-@@ -696,11 +696,12 @@ static ssize_t ath10k_dbg_sta_dump_tx_stats(struct file *file,
- 						 "  %llu ", stats->ht[j][i]);
- 			len += scnprintf(buf + len, size - len, "\n");
- 			len += scnprintf(buf + len, size - len,
--					" BW %s (20,40,80,160 MHz)\n", str[j]);
-+					" BW %s (20,5,10,40,80,160 MHz)\n", str[j]);
- 			len += scnprintf(buf + len, size - len,
--					 "  %llu %llu %llu %llu\n",
-+					 "  %llu %llu %llu %llu %llu %llu\n",
- 					 stats->bw[j][0], stats->bw[j][1],
--					 stats->bw[j][2], stats->bw[j][3]);
-+					 stats->bw[j][2], stats->bw[j][3],
-+					 stats->bw[j][4], stats->bw[j][5]);
- 			len += scnprintf(buf + len, size - len,
- 					 " NSS %s (1x1,2x2,3x3,4x4)\n", str[j]);
- 			len += scnprintf(buf + len, size - len,
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index 2034ccc7cc72..1d5d0209ebeb 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -5003,7 +5003,7 @@ enum wmi_rate_preamble {
- #define ATH10K_FW_SKIPPED_RATE_CTRL(flags)	(((flags) >> 6) & 0x1)
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index 1a8b85051b1b..efa5b552914b 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -363,6 +363,16 @@ static bool pcie_pme_check_wakeup(struct pci_bus *bus)
+ 	return false;
+ }
  
- #define ATH10K_VHT_MCS_NUM	10
--#define ATH10K_BW_NUM		4
-+#define ATH10K_BW_NUM		6
- #define ATH10K_NSS_NUM		4
- #define ATH10K_LEGACY_NUM	12
- #define ATH10K_GI_NUM		2
++static void pcie_pme_disable_interrupt(struct pci_dev *port,
++				       struct pcie_pme_service_data *data)
++{
++	spin_lock_irq(&data->lock);
++	pcie_pme_interrupt_enable(port, false);
++	pcie_clear_root_pme_status(port);
++	data->noirq = true;
++	spin_unlock_irq(&data->lock);
++}
++
+ /**
+  * pcie_pme_suspend - Suspend PCIe PME service device.
+  * @srv: PCIe service device to suspend.
+@@ -387,11 +397,7 @@ static int pcie_pme_suspend(struct pcie_device *srv)
+ 			return 0;
+ 	}
+ 
+-	spin_lock_irq(&data->lock);
+-	pcie_pme_interrupt_enable(port, false);
+-	pcie_clear_root_pme_status(port);
+-	data->noirq = true;
+-	spin_unlock_irq(&data->lock);
++	pcie_pme_disable_interrupt(port, data);
+ 
+ 	synchronize_irq(srv->irq);
+ 
+@@ -427,9 +433,11 @@ static int pcie_pme_resume(struct pcie_device *srv)
+  */
+ static void pcie_pme_remove(struct pcie_device *srv)
+ {
+-	pcie_pme_suspend(srv);
++	struct pcie_pme_service_data *data = get_service_data(srv);
++
++	pcie_pme_disable_interrupt(srv->port, data);
+ 	free_irq(srv->irq, srv);
+-	kfree(get_service_data(srv));
++	kfree(data);
+ }
+ 
+ static struct pcie_port_service_driver pcie_pme_driver = {
 -- 
 2.19.1
 
