@@ -2,95 +2,88 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C369FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C474C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9182221734
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF650206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwJ0FvOa"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NoHbjUCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfDDMY1 (ORCPT
+        id S1729847AbfDDMYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:24:27 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42233 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfDDMYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:24:25 -0400
-Received: by mail-yb1-f193.google.com with SMTP id x84so903937ybg.9;
-        Thu, 04 Apr 2019 05:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=s3qpVVmxyOtu+1LyTKJENQDRUtah03qnRLReICoWpfQ=;
-        b=iwJ0FvOau3sebooPyMR1N0zFk8DyjSwl07Pmxc7tFDOK55SV6DHo0rVvw9oyGU9tvn
-         UldxEh3pekjqPCn9VK+2pZ5RaS+4uaDwzFDge9JQjC6E/D/wsZVt04mvcGYy3tX6x601
-         LDfKzMqL8WRl/1sZVRZIbaAFsTstfxTsm6au3x+0NV5gAJN16V5hzNtrzfDtGiGiwrpY
-         qSAmho7NXbqi8f6VBjgImWlILbAeAsHitmAVdFqUvgInnLyLxaN+z7aCZlc2QE/t14ZK
-         4dMQmPzsEg8DvcHJRaJZlf3TVavi9qf6peVHo5TWdQmK9lDH81cFs2/3qZiTwK5F1vhf
-         6DAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=s3qpVVmxyOtu+1LyTKJENQDRUtah03qnRLReICoWpfQ=;
-        b=jRGsIIcAH4jdFVNEwL7mUGLULMrHPpaZ4IjuBvpnocNFY3zNn4XghhtqIL/btfQdSQ
-         YM6IRnfYhdzhjTUCnCmY5Y9/6AJXDSHtxe75ttzBGnQ46akk7NLZicbVzK5KsAYk753t
-         DnwtR1O6dA/KZbcaUma/ucSlfrQFZG8AHLF96jOugDDuPCMVNSwpDpQn5ECpd3fjwghR
-         Cngx7YbspgUnYc2NrQf5oQIvB8ROmOm8O8n+x1xlPEdTcxbSjqeT7LtAFOSeoPO1byFz
-         NNo8wcAFGG1toFGI0j8Q9aNl7xbZf3JKKVkiHnO5EM7gfiqmsr0Iij8p1TE7e8L0FHin
-         4AbA==
-X-Gm-Message-State: APjAAAVWe2SKK1LSHQsa02iL3ig8DY17daxKRY7Yb+AJG2hIVxKbHtKG
-        rkvb4CfJm8lw/Jzv75PYdG/rm7uWlh+yc749t/E=
-X-Google-Smtp-Source: APXvYqwVPLJw8skjFVbPuYbFHg9pjK+SqOtxY0F7i8WzFyFtEKZWKj4ESFWV4/IfwlTN1+UZLSG8ZAYZ9qlIIHHEWys=
-X-Received: by 2002:a25:7492:: with SMTP id p140mr5159188ybc.394.1554380663980;
- Thu, 04 Apr 2019 05:24:23 -0700 (PDT)
+        Thu, 4 Apr 2019 08:24:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38804 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727562AbfDDMY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 08:24:28 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1F72F1EC064E;
+        Thu,  4 Apr 2019 14:24:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554380667;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uZTXvTLGkLDqy3CIH4NGp3FIe5g/vVod/lzgCt4u3cU=;
+        b=NoHbjUCQbyNtqSuNHrljUOdUzT68sCf6L7MJQS5vd1Wv1KBzSY8FR0Q1Ws3v2jFskbzDdi
+        7G849nGI0/pNc2Mh6ijhDP2AGisy1gLgsRcRp1F+CtvCNCzDr8cIMZm0yCCSPUOXUsEqtX
+        OHLsGgwFNXWo4eOZ26cPzhxXaWAIIB4=
+Date:   Thu, 4 Apr 2019 14:24:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190404122425.GC22539@zn.tnic>
+References: <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
+ <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20190404081620.zx5rt2j2rjvdcglt@yubo-2> <af74fc26-2790-d83b-5320-bd4581e00585@gmail.com>
-In-Reply-To: <af74fc26-2790-d83b-5320-bd4581e00585@gmail.com>
-From:   Bo YU <tsu.yubo@gmail.com>
-Date:   Thu, 4 Apr 2019 20:24:13 +0800
-Message-ID: <CAKq8=3LNN1-KQ_33tRa8niQWT8YjD_0F_1qgzwPi35asaTQbBg@mail.gmail.com>
-Subject: Re: [PATCH] bpf:sample: fix field 'lock' has incomplete type in hbm.h
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, songliubraving@fb.com,
-        Netdev <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        open list <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 4:30 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 04/04/2019 01:16 AM, Bo YU wrote:
-> > When compiling sample/bpf:
-> >
-> > samples/bpf/hbm.h:12:23: error: field =E2=80=98lock=E2=80=99 has incomp=
-lete type
-> >  struct bpf_spin_lock lock;
-> >
-> > Fixes: 187d0738ff35(bpf: Sample HBM BPF program to limit egress bw)
-> > Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-> > ---
->
-> This patch makes absolutely no sense.
->
-> Please carefully read samples/bpf/README.rst
-Ok, got it.
-Thanks,
->
->
+On Thu, Apr 04, 2019 at 03:32:33PM +0800, Dave Young wrote:
+> BTW, it would be good to start a new thread when you send V4 :)
+
+Yes please.
+
+> > +	/* Get systab from boot params. */
+> > +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+> > +	if (!systab)
+> > +		error("EFI system table not found in kexec boot_params.");
+> 
+> Instead of hang the system, return 0 should be better
+
+Can the kexec kernel even function if we fail here?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
