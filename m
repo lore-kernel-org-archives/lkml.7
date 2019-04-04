@@ -4,62 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D864C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40514C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACE02147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1196C2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369165;
-	bh=4yhN77EOLYFcGkjfV+IALldrkCmuquQJZIuLaHIOxiI=;
+	s=default; t=1554369170;
+	bh=jzwxOIilBKvMgAjiB1It+h+Ly36AJM6c80AUIaHtotQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Br29jJ9/+I0JpztcvGolauvm5BdBpwMkydtS8PabWELe1Pq0/hFJbWiFTb/jciQq7
-	 /JOt243lTawfVI8jDWAA9LFvXmcCYG1TiDSq+h9Et25LLm270byB122Qrfk71QXJzb
-	 /tmaWK9zsQW7dAIEtok1jrz7j+rY3XvlnhpkU17U=
+	b=mjXJWU2Lp1JgrHy7eIJr6oG4sVHHgaXboCgoNNssQaFg2Znshpm879/4AwdxelHZO
+	 b9R7YndcBj9fKir6Wxp6po83G40uibOAvDbI+nyvnVhB17iwuPYHkuNhi6kMc9NyqX
+	 1KFZMA7CQEoy5MAd1/kMa5Ue7eFQw6q/y3F6uf0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732958AbfDDJMo (ORCPT
+        id S1732978AbfDDJMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52762 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387429AbfDDJMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:40 -0400
+        id S1733062AbfDDJMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 403912054F;
-        Thu,  4 Apr 2019 09:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573182075E;
+        Thu,  4 Apr 2019 09:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369159;
-        bh=4yhN77EOLYFcGkjfV+IALldrkCmuquQJZIuLaHIOxiI=;
+        s=default; t=1554369164;
+        bh=jzwxOIilBKvMgAjiB1It+h+Ly36AJM6c80AUIaHtotQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUnJdeeP2auqKa5lhLSdjDp+9Kgztt8RZpQYA3WTCEGewtJ8M3WMtAyjeQlczoHCU
-         IZD5FJY4VbKrO9xrfppZblrKoGHAKZGPT+aygTu2nHIj+w4VV6dpXslrheRVjir0n8
-         mA+lmJWgbFCS4iKTYuzl1yOzS5xyH0EQQkKTfLpM=
+        b=k42QrAstdU5jWbrie2eXuzd0hC3S5O9bJ08hDSpXRmef+LaIWHNF+o8rRL3xaNT5Z
+         13qCX92wyGDc+oCS5uG8F9OdFf7h0XuU6b8U2lMORoa/1uR9aiRtGOJds1wozFSeGo
+         +WokRPPr1sRFtwRkkEn/Zzb5R5XuHIESWeIUIy8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jan Kotas <jank@cadence.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 111/246] SoC: imx-sgtl5000: add missing put_device()
-Date:   Thu,  4 Apr 2019 10:46:51 +0200
-Message-Id: <20190404084623.036295138@linuxfoundation.org>
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 121/246] gpio: of: Apply regulator-gpio quirk only to enable-gpios
+Date:   Thu,  4 Apr 2019 10:47:01 +0200
+Message-Id: <20190404084623.392174120@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -78,54 +71,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit 0e7d6f94016407fd7e1ae472e254d64d4454e9c8 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+Since commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
+the GPIO regulator had inverted the polarity of the control GPIO. This
+problem manifested itself on systems with DT containing the following
+description (snippet from salvator-common.dtsi):
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+	gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+	gpios-states = <1>;
+	states = <3300000 1
+		  1800000 0>;
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
+Prior to the aforementioned commit, the gpio-regulator code used
+gpio_request_array() to claim the GPIO(s) specified in the "gpios"
+DT node, while the commit changed that to devm_gpiod_get_index().
+
+The legacy gpio_request_array() calls gpio_request_one() and then
+gpiod_request(), which parses the DT flags of the "gpios" node and
+populates the GPIO descriptor flags field accordingly.
+
+The new devm_gpiod_get_index() calls gpiod_get_index(), then
+of_find_gpio(), of_get_named_gpiod_flags() with flags != NULL,
+and then of_gpio_flags_quirks(). Since commit a603a2b8d86e
+("gpio: of: Add special quirk to parse regulator flags"),
+of_gpio_flags_quirks() contains a quirk for regulator-gpio
+which was never triggered by the legacy gpio_request_array()
+code path, but is triggered by devm_gpiod_get_index() code
+path.
+
+This quirk checks whether a GPIO is associated with a fixed
+or gpio-regulator and if so, checks two additional conditions.
+First, whether such GPIO is active-low, and if so, ignores the
+active-low flag. Second, whether the regulator DT node does
+have an "enable-active-high" property and if the property is
+NOT present, sets the GPIO flags as active-low.
+
+The second check triggers a problem, since it is applied to all
+GPIOs associated with a gpio-regulator, rather than only on the
+"enable" GPIOs, as the old code did. This changes the way the
+gpio-regulator interprets the DT description of the control
+GPIOs.
+
+The old code using gpio_request_array() explicitly parsed the
+"enable-active-high" DT property and only applied it to the
+GPIOs described in the "enable-gpios" DT node, and only if
+those were present.
+
+This patch fixes the quirk code by only applying the quirk
+to "enable-gpios", thus restoring the old behavior.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Jan Kotas <jank@cadence.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
+ drivers/gpio/gpiolib-of.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index c29200cf755a..9b9a7ec52905 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -108,6 +108,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
- 	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index a6e1891217e2..30542a10014f 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -84,6 +84,7 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 	 * Note that active low is the default.
+ 	 */
+ 	if (IS_ENABLED(CONFIG_REGULATOR) &&
++	    !strcmp(propname, "enable-gpio") &&
+ 	    (of_device_is_compatible(np, "regulator-fixed") ||
+ 	     of_device_is_compatible(np, "reg-fixed-voltage") ||
+ 	     of_device_is_compatible(np, "regulator-gpio"))) {
 -- 
 2.19.1
 
