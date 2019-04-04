@@ -2,64 +2,65 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CC6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1116C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55E82082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8E1206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s9iIeE7V"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DCNujwYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfDDMHn (ORCPT
+        id S1728827AbfDDMJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:07:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33750 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfDDMHn (ORCPT
+        Thu, 4 Apr 2019 08:09:23 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51256 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfDDMJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:07:43 -0400
+        Thu, 4 Apr 2019 08:09:23 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34C7bYG085753;
-        Thu, 4 Apr 2019 07:07:37 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34C9Ijp060066;
+        Thu, 4 Apr 2019 07:09:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554379657;
-        bh=dB9FxF1Fr0tWpbEoSN87mfEh6nE2fOb+DiJX9WarJKg=;
+        s=ti-com-17Q1; t=1554379758;
+        bh=h9bM5mvozZ7xNX26D9bVmXYOr/QnmV9xbxgNfAhDx5A=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s9iIeE7VacLT8N2YtQE9aekmhGdDdqDHCWhzyVeFVuPUYAMCNJH6raX3jz2vMyxkm
-         Q8mfWFv1cxmWV5NHGb57y1EMMDEAnlLT6UaqaZK4LsC1ncfIghU62tr4PbtZ3u1vGX
-         Xaf67zzwa2al2fS63UVdnGxvwqJjY5SkUqv5AjrI=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34C7beb010772
+        b=DCNujwYLcPbj2Fom2LZg+IJ+8DH14L9buVptayxxdsAMAUi4bnO66tzL/UCujZrD9
+         OFCKWjh6wW3s7LXAo5nDdFqJkOoQj4vQQmLKNMz8EngMeaPqZrOEu4XGOPy3aL5dNI
+         Qkab3TdWXjMYssbq+sRaiPW2dl64e2x/L3Vtdk8U=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34C9IZK013563
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Apr 2019 07:07:37 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 4 Apr 2019 07:09:18 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
- 2019 07:07:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:09:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 4 Apr 2019 07:07:37 -0500
+ Frontend Transport; Thu, 4 Apr 2019 07:09:17 -0500
 Received: from [172.22.74.48] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34C7amt066219;
-        Thu, 4 Apr 2019 07:07:36 -0500
-Subject: Re: [PATCH 1/5] dt-bindings: mfd: Update the ramp up/down property
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34C9HpW069163;
+        Thu, 4 Apr 2019 07:09:17 -0500
+Subject: Re: [PATCH 4/5] mfd: ti-lmu: Remove support for LM3697
 To:     Lee Jones <lee.jones@linaro.org>
 CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
 References: <20190325142403.30447-1-dmurphy@ti.com>
- <20190325142403.30447-2-dmurphy@ti.com> <20190404081907.GO6830@dell>
+ <20190325142403.30447-5-dmurphy@ti.com> <20190404081736.GM6830@dell>
 From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d25c9893-c90c-7020-91c9-f1b1372afe21@ti.com>
-Date:   Thu, 4 Apr 2019 07:07:34 -0500
+Message-ID: <6ebe491c-f124-2849-2e3a-0209dd5a2620@ti.com>
+Date:   Thu, 4 Apr 2019 07:09:15 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190404081907.GO6830@dell>
+In-Reply-To: <20190404081736.GM6830@dell>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,19 +74,37 @@ Lee
 
 Thanks for the review
 
-On 4/4/19 3:19 AM, Lee Jones wrote:
+On 4/4/19 3:17 AM, Lee Jones wrote:
 > On Mon, 25 Mar 2019, Dan Murphy wrote:
 > 
->> Modify the ramp-up/down property and add the property description
->> to the binding.
+>> Remove support for the LM3697 from the ti-lmu
 > 
-> This is the 'what', but where is the 'why'?
+> Bit of an odd place to insert a line feed.
 > 
 
-I will add the why in v2.
+I will fix in v2.
+
+>> driver in favor of a dedicated LED driver.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>  drivers/leds/Kconfig                |  2 +-
+>>  drivers/mfd/Kconfig                 |  2 +-
+>>  drivers/mfd/ti-lmu.c                | 17 -----------
+>>  include/linux/mfd/ti-lmu-register.h | 44 -----------------------------
+>>  include/linux/mfd/ti-lmu.h          |  1 -
+>>  5 files changed, 2 insertions(+), 64 deletions(-)
+> 
+> I'm fine with the patch.
+> 
+> Can you edit drivers/leds/Kconfig as part of a separate patch please?
+> Keeping this in sync with this change is not critical and would add a
+> whole bunch of process which we can really do without.
+> 
+
+Ack.  I will add this when I add the LM3697 config in the Kconfig
 
 Dan
-<snip>
 
 -- 
 ------------------
