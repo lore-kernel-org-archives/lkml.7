@@ -2,93 +2,93 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9388CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB802133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6166620855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GG8gDsRd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBwGgNMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfDDDl4 (ORCPT
+        id S1727082AbfDDDmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:41:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45244 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDDDl4 (ORCPT
+        Wed, 3 Apr 2019 23:42:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40443 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDDDmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:41:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343eI3k044012;
-        Thu, 4 Apr 2019 03:41:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=mmYojRU0lMBF+LAPxrni+tg/zLQL1UFVNNa5v2nBnQo=;
- b=GG8gDsRdyMhwXqYsnWPf4eRk/Wn6K1gGoaBDNE7vJ+49g9ljSboAplqD0VYCK1Xk23Hd
- 5KuBu06EY7PsYHw2xpxoQJj69g/PQx3mXhsdev+zkFzBUg7A5yt/DuE/dIXc0gzw0UtE
- IVtFCPZ6BiJtOdsusdMBYQrHnie2Chm5a0/Gp83uYrRgxwojKoH+tvgvsn/3dqGa4XWX
- NpLNqOiDFYe9Ml4dKGF12H9A5BrLqwtzSz5YfrSh9aZ2UJbp0ErujeG4AiQlPtB28CFC
- ttg4i98xK2owI0A0OYA+NqVX+CTzwJ8GdTrudNeajSHhsQHiWbF0w2DL7f88ovSdZjSo jQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2rhyvtckdd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:41:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343eE5D115582;
-        Thu, 4 Apr 2019 03:41:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2rm8f5emt0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:41:45 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x343fi02020054;
-        Thu, 4 Apr 2019 03:41:44 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 20:41:44 -0700
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     <qla2xxx-upstream@qlogic.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: qla2xxx: Remove useless set memory to zero use memset()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190323132753.22508-1-yuehaibing@huawei.com>
-Date:   Wed, 03 Apr 2019 23:41:41 -0400
-In-Reply-To: <20190323132753.22508-1-yuehaibing@huawei.com> (Yue Haibing's
-        message of "Sat, 23 Mar 2019 21:27:53 +0800")
-Message-ID: <yq1r2aisah6.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 3 Apr 2019 23:42:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q66so736616ljq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=29X/AC/PrHlHS0OMXZfselge/eOaCEenzhRC+wnkd8o=;
+        b=aBwGgNMMbdYvO1VZSa7VNW2WMYZ2q9ZgnPP6BH+SBoSLH3Wae0qqRxXpHvKHKUw/+y
+         GCCBp6QpqX2s7b23Y/Ixr4Ich3cE+Y12kxZf8/QsU6Mvz7h8AU1O+TpCTXAKZP7B1X5l
+         pYmFTRwFlMjswkBWX+jC9vR1d+Z2GvXU5lYK/phCDbqQyeKx2eqSO8FeMSPc2E+zgxwB
+         Pfe3a5ehl+668ClY9GmEuk7+S0sdPwgAKfjBq0IgyVx9ojRsqi8AvDk/xcrtfjsPkE5t
+         MQlRxuyTLvnNBm1EPl2a37XYrxv0g5rdxbfsfNQ821R7qaBTd5tumFrjFjLuIgjOydkU
+         hHNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=29X/AC/PrHlHS0OMXZfselge/eOaCEenzhRC+wnkd8o=;
+        b=jkkT2vlITsWhKU9F/wpUY78/suibEX8TIlr6PjilBJrTPTjnJMmOFSP6SH0GI3f0ED
+         acsKac7wd7tSWVHgXnMqfV4IhdgSzB1DsGxdpKow08DXaLDDhv1zEGSy6neXHMSzpVN1
+         iMJpfegHTbAGGwHoyhK7UmIue3X5fqWex1vNpF+2gl4vYDJ3H1vp9V2V12H7DwLkD0Lk
+         skGmBwE/kfMKsOy8SZI60qTpkxCunPYkOBo7e7HLJkd9TD6o9q2jke7QBFA91CE6CaNl
+         oX0K9ofl12US/gDfuG1Aa7b51CJGr+sjhFLjr5SLzeOxbRTkzb1RwhuFJQYtYAm3QNwl
+         DPgg==
+X-Gm-Message-State: APjAAAU5XwPhjmc0f9qjHO+gjT1rkqNao5JIaECCnf2NWzpxq4d8PJ8a
+        LM9q8o8OgH0K0E2MeyeGTunyK0Zvo2Cc6RcFhYPxHj7x
+X-Google-Smtp-Source: APXvYqw4e+JidrHrHBXzWRWVeG/v6WdG5mRe2YaSaMe+B1YnJVi9rHe+KmuK4u+5iR2Qx3Wd4MV1Fl7Kq8Ic6KVi0P4=
+X-Received: by 2002:a2e:5d94:: with SMTP id v20mr1823342lje.138.1554349335486;
+ Wed, 03 Apr 2019 20:42:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=666
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040024
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=725 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040024
+References: <20190314163725.7918-1-jbrunet@baylibre.com> <20190314163725.7918-2-jbrunet@baylibre.com>
+ <20190330212830.GA28281@bogus> <722ef39685fb3b519d09c00a3444708abd685f9d.camel@baylibre.com>
+In-Reply-To: <722ef39685fb3b519d09c00a3444708abd685f9d.camel@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Apr 2019 10:42:03 +0700
+Message-ID: <CACRpkdahO0rQ+qLuWOqeMTECsH6JwRL7Eh+hb2iNH4JwgzJkOQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength property
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 31, 2019 at 2:04 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> On Sun, 2019-03-31 at 01:40 -0500, Rob Herring wrote:
+> > On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
+> > > From: Guillaume La Roque <glaroque@baylibre.com>
 
-Yue,
+> > > +Optional properties :
+> > > + - drive-strength: Drive strength for the specified pins in uA.
+> >
+> > The standard definition says this is in mA.
+>
+> Yes, the problem we have and the solutions we are thinking about are explained
+> in detail in the cover letter of this patchset. Could you share your opinion
+> on it ?
 
-> The memory return by kzalloc() has already be set to zero, so remove
-> useless memset(0).
+I like your idea with drive-strength-uA but I need the second opinion from the
+device tree people.
 
-Applied to 5.2/scsi-queue, thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Yours,
+Linus Walleij
