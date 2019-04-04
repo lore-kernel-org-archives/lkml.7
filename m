@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A19C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88198C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813B32177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513AA2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368401;
-	bh=U89L+oxuOD+Wy969u+/bnkAN6Sgm+gIzWEvraNfsuqY=;
+	s=default; t=1554368403;
+	bh=noFfUhlMIdtVeBNa5bp6KMBaIRSZes/Er45bjVXRVwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2ut22pY1k+iUmXpwV/zt6xzVh43Jc42Ol+uaZcN/bxHJfAW1/6O3r9dFQpsYOMpo
-	 nT26FhvUGxFNby73n/h+HZiDzmPY4Z/6fwI0VYFm8Tzmvf3z9nsgC9vAEidi801N0O
-	 5wmF8vptC3bCbJ7CJbqEEz/snR92Q1o9CoQMX7lc=
+	b=blnbCozbrkMBxqtHraXbR5YEY0mItyoLx+gRPCQYab0yJO084r97LBPIf+PhENrnd
+	 2x2vaOtFSEnn3muzaLDAkeFm9WF1F/p1qwtgy8GkbDcNhLkInMziU8dgZ1L1Qo4spe
+	 INnomPP3BexYMdOcoaAzOMZZsx1F2fnRoSRc4Tqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfDDI77 (ORCPT
+        id S1731181AbfDDJAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36360 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbfDDI7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:54 -0400
+        id S1731167AbfDDI77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863002183E;
-        Thu,  4 Apr 2019 08:59:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0285A2147C;
+        Thu,  4 Apr 2019 08:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368393;
-        bh=U89L+oxuOD+Wy969u+/bnkAN6Sgm+gIzWEvraNfsuqY=;
+        s=default; t=1554368398;
+        bh=noFfUhlMIdtVeBNa5bp6KMBaIRSZes/Er45bjVXRVwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqxWrR4LmTJJJY2c9/7Rx93CrMKJ+EvTSu4g3I/Eh3NkKqKIs38hpIEIp/jbg8t2j
-         AyJR9ofCZK7WNvbjhdajNhT5AIP1MYhkZHcvWtJBo7tVa3L+6GJD98/2U+y0NeA7/v
-         r4Tbymh1RKUCXisrI8zTv9XcO/KkV859oNVEWeFs=
+        b=m4fmZc1H0qbF+7l/qfzSpLAJBdG0YJj364eajGZfYZBlDPHPPsxYv4qSO7StO0nHC
+         8DXhPBU+1JwthXVW4YU8Xl5YH20KMNhxL/T5wdCk/LwwNbviLCanRo4I0OSAm9iwKr
+         vmJ64p3+v31C4pO2n3J0NggcryhciWEylA+b8GjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiqun Li <jiqun.li@unisoc.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/187] f2fs: fix to avoid deadlock in f2fs_read_inline_dir()
-Date:   Thu,  4 Apr 2019 10:45:45 +0200
-Message-Id: <20190404084603.476664278@linuxfoundation.org>
+Subject: [PATCH 4.19 010/187] net/mlx5: Avoid panic when setting vport rate
+Date:   Thu,  4 Apr 2019 10:45:47 +0200
+Message-Id: <20190404084603.599651593@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,118 +68,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aadcef64b22f668c1a107b86d3521d9cac915c24 ]
+[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
 
-As Jiqun Li reported in bugzilla:
+If we try to set VFs rate on a VF (not PF) net device, the kernel
+will be crash. The commands are show as below:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=202883
+$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
+$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
 
-sometimes, dead lock when make system call SYS_getdents64 with fsync() is
-called by another process.
+If not applied the first patch ("net/mlx5: Avoid panic when setting
+vport mac, getting vport config"), the command:
 
-monkey running on android9.0
+$ ip link set $MLX_VF0 vf 0 rate 100
 
-1.  task 9785 held sbi->cp_rwsem and waiting lock_page()
-2.  task 10349 held mm_sem and waiting sbi->cp_rwsem
-3. task 9709 held lock_page() and waiting mm_sem
+can also crash the kernel.
 
-so this is a dead lock scenario.
+[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
+[ 1650.007092]  do_setlink+0x982/0xd20
+[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
+[ 1650.007374]  rtnl_newlink+0x43/0x60
+[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
+[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
+[ 1650.007519]  netlink_unicast+0x17f/0x230
+[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
+[ 1650.007592]  sock_sendmsg+0x36/0x50
+[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
+[ 1650.007963]  __sys_sendmsg+0x58/0xa0
+[ 1650.007998]  do_syscall_64+0x5b/0x180
+[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-task stack is show by crash tools as following
-
-crash_arm64> bt ffffffc03c354080
-PID: 9785   TASK: ffffffc03c354080  CPU: 1   COMMAND: "RxIoScheduler-3"
->> #7 [ffffffc01b50fac0] __lock_page at ffffff80081b11e8
-
-crash-arm64> bt 10349
-PID: 10349  TASK: ffffffc018b83080  CPU: 1   COMMAND: "BUGLY_ASYNC_UPL"
->> #3 [ffffffc01f8cfa40] rwsem_down_read_failed at ffffff8008a93afc
-     PC: 00000033  LR: 00000000  SP: 00000000  PSTATE: ffffffffffffffff
-
-crash-arm64> bt 9709
-PID: 9709   TASK: ffffffc03e7f3080  CPU: 1   COMMAND: "IntentService[A"
->> #3 [ffffffc001e67850] rwsem_down_read_failed at ffffff8008a93afc
->> #8 [ffffffc001e67b80] el1_ia at ffffff8008084fc4
-     PC: ffffff8008274114  [compat_filldir64+120]
-     LR: ffffff80083584d4  [f2fs_fill_dentries+448]
-     SP: ffffffc001e67b80  PSTATE: 80400145
-    X29: ffffffc001e67b80  X28: 0000000000000000  X27: 000000000000001a
-    X26: 00000000000093d7  X25: ffffffc070d52480  X24: 0000000000000008
-    X23: 0000000000000028  X22: 00000000d43dfd60  X21: ffffffc001e67e90
-    X20: 0000000000000011  X19: ffffff80093a4000  X18: 0000000000000000
-    X17: 0000000000000000  X16: 0000000000000000  X15: 0000000000000000
-    X14: ffffffffffffffff  X13: 0000000000000008  X12: 0101010101010101
-    X11: 7f7f7f7f7f7f7f7f  X10: 6a6a6a6a6a6a6a6a   X9: 7f7f7f7f7f7f7f7f
-     X8: 0000000080808000   X7: ffffff800827409c   X6: 0000000080808000
-     X5: 0000000000000008   X4: 00000000000093d7   X3: 000000000000001a
-     X2: 0000000000000011   X1: ffffffc070d52480   X0: 0000000000800238
->> #9 [ffffffc001e67be0] f2fs_fill_dentries at ffffff80083584d0
-     PC: 0000003c  LR: 00000000  SP: 00000000  PSTATE: 000000d9
-    X12: f48a02ff X11: d4678960 X10: d43dfc00  X9: d4678ae4
-     X8: 00000058  X7: d4678994  X6: d43de800  X5: 000000d9
-     X4: d43dfc0c  X3: d43dfc10  X2: d46799c8  X1: 00000000
-     X0: 00001068
-
-Below potential deadlock will happen between three threads:
-Thread A		Thread B		Thread C
-- f2fs_do_sync_file
- - f2fs_write_checkpoint
-  - down_write(&sbi->node_change) -- 1)
-			- do_page_fault
-			 - down_write(&mm->mmap_sem) -- 2)
-			  - do_wp_page
-			   - f2fs_vm_page_mkwrite
-						- getdents64
-						 - f2fs_read_inline_dir
-						  - lock_page -- 3)
-  - f2fs_sync_node_pages
-   - lock_page -- 3)
-			    - __do_map_lock
-			     - down_read(&sbi->node_change) -- 1)
-						  - f2fs_fill_dentries
-						   - dir_emit
-						    - compat_filldir64
-						     - do_page_fault
-						      - down_read(&mm->mmap_sem) -- 2)
-
-Since f2fs_readdir is protected by inode.i_rwsem, there should not be
-any updates in inode page, we're safe to lookup dents in inode page
-without its lock held, so taking off the lock to improve concurrency
-of readdir and avoid potential deadlock.
-
-Reported-by: Jiqun Li <jiqun.li@unisoc.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
+Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
+Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inline.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 115dc219344b..92703efde36e 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -661,6 +661,12 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
- 	if (IS_ERR(ipage))
- 		return PTR_ERR(ipage);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index d6706475a3ba..886a4a77c47f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2044,19 +2044,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
+ int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
+ 				u32 max_rate, u32 min_rate)
+ {
+-	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
+-	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
+-					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
+-	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
+ 	struct mlx5_vport *evport;
++	u32 fw_max_bw_share;
+ 	u32 previous_min_rate;
+ 	u32 divider;
++	bool min_rate_supported;
++	bool max_rate_supported;
+ 	int err = 0;
  
-+	/*
-+	 * f2fs_readdir was protected by inode.i_rwsem, it is safe to access
-+	 * ipage without page's lock held.
-+	 */
-+	unlock_page(ipage);
+ 	if (!ESW_ALLOWED(esw))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport))
+ 		return -EINVAL;
 +
- 	inline_dentry = inline_data_addr(inode, ipage);
- 
- 	make_dentry_ptr_inline(inode, &d, inline_dentry);
-@@ -669,7 +675,7 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
- 	if (!err)
- 		ctx->pos = d.max;
- 
--	f2fs_put_page(ipage, 1);
-+	f2fs_put_page(ipage, 0);
- 	return err < 0 ? err : 0;
- }
++	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
++	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
++				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
++	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
++
+ 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
+ 		return -EOPNOTSUPP;
  
 -- 
 2.19.1
