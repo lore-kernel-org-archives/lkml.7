@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D04C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5EEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C3720693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A947B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369008;
-	bh=7HhHeJ0/gGt+iD5i54Rqd8/+NPOjcJWaq2fpC9oCORE=;
+	s=default; t=1554369011;
+	bh=X5yHFReVVEVAxsIVEKQQFvfYUj7lZKJDiobGfo2Orv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S7TUolHOuzCPodxLVWqzIO1rqJ8rLjiTZQvvFJ7wOsxsB5GfjaAfWUnE2907wZ+uo
-	 CepXSOOuhc/Ju5tqW2KIDGHELeCLznbvG9U2scRhTgXBzPf/zLSLhAyTXb1BmIJztl
-	 3qZi7BH3mNzQxAqgBFkNK8cpYd5Ka6ZW7iPkU2B0=
+	b=oFOzYIw7JdOJDjXzKu1aheSC2EKnqVFnVt5t+ElCO8EqXqEc/78BpFwyvMfUy8/BE
+	 yQ+OVolgu2FQtntr7qkx9cukDjN9+5bD9V5xHc/tsOnGeA9HTzwXjJqB00FPHt9maG
+	 iMx1Hq4QIq6JjFru/4JXsbd530wJ0VKCySKD55c4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbfDDJKH (ORCPT
+        id S1732963AbfDDJKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732097AbfDDJKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:05 -0400
+        id S1732097AbfDDJKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 064992054F;
-        Thu,  4 Apr 2019 09:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9793C2075E;
+        Thu,  4 Apr 2019 09:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369004;
-        bh=7HhHeJ0/gGt+iD5i54Rqd8/+NPOjcJWaq2fpC9oCORE=;
+        s=default; t=1554369007;
+        bh=X5yHFReVVEVAxsIVEKQQFvfYUj7lZKJDiobGfo2Orv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z65CypQGvXuCMqwSvDSwIkynLGe66EPA/meJY5PJRiycAiz5HeiAaz2pdbo9jqVQv
-         DLMIarDMn9EVvFByFBHAqho/R6c8g7mUDloiUtJtvzczIAvgKlSLu4sYpWndyHAjys
-         CnFkNWu+X4OBQOMgfqM+swSpuCAd3mXKg46c6TOQ=
+        b=vvAn3unyvHczfgRt2j0Eyv7NI7z5A94Yj74qHsj/x0Nqr2+5Dm+ioWvQ8JPqLnWZt
+         rTZ2gebPtqVr/T5OKMI9xLcSJEYj7tssg00OLjktns2L0QnYswjs80os4z95dr7nx+
+         UGXBX1Gp6ppNtnHBHlBth7Edt4lGPYuTwmXlAY9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will.deacon@arm.com>, johannes.berg@intel.com,
-        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 062/246] lockdep/lib/tests: Fix run_tests.sh
-Date:   Thu,  4 Apr 2019 10:46:02 +0200
-Message-Id: <20190404084621.336239355@linuxfoundation.org>
+Subject: [PATCH 5.0 046/246] cifs: Fix NULL pointer dereference of devname
+Date:   Thu,  4 Apr 2019 10:45:46 +0200
+Message-Id: <20190404084620.638199939@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -74,63 +66,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba ]
+[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
 
-Apparently the execute bits were set for the tests/*.sh scripts on my
-test setup but these are not set in the kernel tree. Fix this by adding
-the interpreter path in front of the script paths.
+There is a NULL pointer dereference of devname in strspn()
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: johannes.berg@intel.com
-Cc: tj@kernel.org
-Fixes: 5ecb8e94b494 ("tools/lib/lockdep/tests: Improve testing accuracy") # v5.0-rc1
-Link: https://lkml.kernel.org/r/20190214230058.196511-23-bvanassche@acm.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The oops looks something like:
+
+  CIFS: Attempting to mount (null)
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:strspn+0x0/0x50
+  ...
+  Call Trace:
+   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
+   ? cifs_get_volume_info+0x2f/0x80 [cifs]
+   cifs_setup_volume_info+0x20/0x190 [cifs]
+   cifs_get_volume_info+0x50/0x80 [cifs]
+   cifs_smb3_do_mount+0x59/0x630 [cifs]
+   ? ida_alloc_range+0x34b/0x3d0
+   cifs_do_mount+0x11/0x20 [cifs]
+   mount_fs+0x52/0x170
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix this by adding a NULL check on devname in cifs_parse_devname()
+
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/lockdep/run_tests.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/cifs/connect.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/lib/lockdep/run_tests.sh b/tools/lib/lockdep/run_tests.sh
-index c8fbd0306960..11f425662b43 100755
---- a/tools/lib/lockdep/run_tests.sh
-+++ b/tools/lib/lockdep/run_tests.sh
-@@ -11,7 +11,7 @@ find tests -name '*.c' | sort | while read -r i; do
- 	testname=$(basename "$i" .c)
- 	echo -ne "$testname... "
- 	if gcc -o "tests/$testname" -pthread "$i" liblockdep.a -Iinclude -D__USE_LIBLOCKDEP &&
--		timeout 1 "tests/$testname" 2>&1 | "tests/${testname}.sh"; then
-+		timeout 1 "tests/$testname" 2>&1 | /bin/bash "tests/${testname}.sh"; then
- 		echo "PASSED!"
- 	else
- 		echo "FAILED!"
-@@ -24,7 +24,7 @@ find tests -name '*.c' | sort | while read -r i; do
- 	echo -ne "(PRELOAD) $testname... "
- 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
- 		timeout 1 ./lockdep "tests/$testname" 2>&1 |
--		"tests/${testname}.sh"; then
-+		/bin/bash "tests/${testname}.sh"; then
- 		echo "PASSED!"
- 	else
- 		echo "FAILED!"
-@@ -37,7 +37,7 @@ find tests -name '*.c' | sort | while read -r i; do
- 	echo -ne "(PRELOAD + Valgrind) $testname... "
- 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
- 		{ timeout 10 valgrind --read-var-info=yes ./lockdep "./tests/$testname" >& "tests/${testname}.vg.out"; true; } &&
--		"tests/${testname}.sh" < "tests/${testname}.vg.out" &&
-+		/bin/bash "tests/${testname}.sh" < "tests/${testname}.vg.out" &&
- 		! grep -Eq '(^==[0-9]*== (Invalid |Uninitialised ))|Mismatched free|Source and destination overlap| UME ' "tests/${testname}.vg.out"; then
- 		echo "PASSED!"
- 	else
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index e61cd2938c9e..9d4e60123db4 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1487,6 +1487,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
+ 	const char *delims = "/\\";
+ 	size_t len;
+ 
++	if (unlikely(!devname || !*devname)) {
++		cifs_dbg(VFS, "Device name not specified.\n");
++		return -EINVAL;
++	}
++
+ 	/* make sure we have a valid UNC double delimiter prefix */
+ 	len = strspn(devname, delims);
+ 	if (len != 2)
 -- 
 2.19.1
 
