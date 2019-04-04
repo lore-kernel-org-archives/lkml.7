@@ -2,150 +2,78 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E779C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228EFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A079217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:42:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XHbNTv+W"
+	by mail.kernel.org (Postfix) with ESMTP id ECF6C217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfDDWm3 (ORCPT
+        id S1730499AbfDDWu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 18:42:29 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40094 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730291AbfDDWm2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 18:42:28 -0400
-Received: by mail-yw1-f67.google.com with SMTP id p64so1617160ywg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 15:42:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=61QcS1XaF8rISpIrfzv8F98PUZe7iaNJHTu+xZl/mz8=;
-        b=XHbNTv+WHgdO6QncIaQtXkLWCN/ThEmFWDRuL+cPsIxaAh38/zokY9qbE636Twt083
-         BqiilbDUVskuuOmVhhcVr0NnPH5uUZWypYPAQHhqa1FTR8HVq0hDbt44jNQeGtLq1rn3
-         EMH/MaBTX+KDpC3EVSZV6q0LTgZGhZbQuO5ktd7+MFtydWW1uM1VR4JWUKuTRpNxRYnf
-         ftuZM4wc3lC2P0TRoGDcMslwmo+k3GyTAAr2NcXzTUFxCC964s6OkPgIYZpWn2LNkfN3
-         zT80khl98ZCRWrRC8A9II7ouUuSdVoq+3szA+l79oWEZlNclk+9PnYIWlOdl3K+YIXde
-         eYLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=61QcS1XaF8rISpIrfzv8F98PUZe7iaNJHTu+xZl/mz8=;
-        b=JSpyg3qygO5K8GhGqKFlG/L1vKni1syyQUdJ7tqhdaA6rXsKxJ4JZOyEcZzIFkb0NJ
-         7Gbl65Ps2Y1BmeMNSheYLAM/V9fquJNl1ss9K2HM4MMzXaGtJaKCebBIEjzLi5ASFDSs
-         3fSOHi4j48MJPzWg9GafhQ4vcR6zlxvOGdwX/deS5FM28rKJPnJD4RhWvhiCmi8ouqLD
-         +ZjlEMNBj3A55uq+4NoVZURhH2aXd5jLWtPp5MNnEI0KQ8aXZsjd8G7jlDbHltnLlq/l
-         jspGXXvHqOP969uduuwDPpIpycfyn/lAlIvCeOjyuWn4uLBEhycwDo8md9fGVqjbRd7i
-         X89A==
-X-Gm-Message-State: APjAAAV9ZZSZ9+LScu+iz0HkvPAlLcRLzu9n3LDnEB/gg/z7ktw3GUuq
-        WSQATBkIMYlaKApi1Ct5nBTI4ZyJbjMmiabFSQ7vdw==
-X-Google-Smtp-Source: APXvYqyPwee/SWTgDW8QirABp7eIipjaRV83Hudbgo/Ih9kf25YRqGxgVnL6O0cPimcuqQCE35RRPLifdQ6YAdsmC5A=
-X-Received: by 2002:a81:3c14:: with SMTP id j20mr7228426ywa.367.1554417747586;
- Thu, 04 Apr 2019 15:42:27 -0700 (PDT)
+        Thu, 4 Apr 2019 18:50:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730454AbfDDWu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 18:50:28 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A0280F74B7;
+        Thu,  4 Apr 2019 22:50:28 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4DFDA7EFB1;
+        Thu,  4 Apr 2019 22:50:20 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 06:50:15 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        fin4478 fin4478 <fin4478@hotmail.com>,
+        "keith.busch@intel.com" <keith.busch@intel.com>,
+        "axboe@fb.com" <axboe@fb.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: A kernel warning when entering suspend
+Message-ID: <20190404225014.GB31281@ming.t460p>
+References: <AM6PR06MB50637026B0E7D87341BF47A3A1500@AM6PR06MB5063.eurprd06.prod.outlook.com>
+ <20190404085524.GA24927@ming.t460p>
+ <dbc75de4-aefc-b7da-e86a-91da37f463cf@oracle.com>
+ <alpine.DEB.2.21.1904041812350.1802@nanos.tec.linutronix.de>
+ <20190404221948.GB30656@ming.t460p>
+ <20190404222955.GA25081@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190404185919.GB27340@amd> <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
- <20190404191931.GA29984@amd> <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
- <20190404200658.GD29984@amd> <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
- <20190404202042.GF29984@amd> <CAE_wzQ-8XwzptH7EqNrELxjBzY2+0oHJGB3Va=vZwwK3csu_aA@mail.gmail.com>
- <20190404204207.GH29984@amd> <CAE_wzQ8xe=x0uYcZkDRVKpUAQ_1vVdEPHU3XnEV1=_WN1-AMfw@mail.gmail.com>
- <20190404220509.GA14690@amd>
-In-Reply-To: <20190404220509.GA14690@amd>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 4 Apr 2019 15:42:15 -0700
-Message-ID: <CABXOdTeQgjd2-T+eZCMdTDWBGLHEk6kvnYR0DjJYR7zuvVTMsQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Dmitry Torokhov <dtor@google.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404222955.GA25081@localhost.localdomain>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 04 Apr 2019 22:50:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 3:05 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Thu 2019-04-04 14:48:35, Dmitry Torokhov wrote:
-> > On Thu, Apr 4, 2019 at 1:42 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > >
-> > > Hi!
-> > >
-> > > > > > And what to do if internal keyboard is not platform but USB? Like
-> > > > > > Google "Whiskers"? (I am not sure why you decided to drop my mention
-> > > > > > of internal USB keyboards completely off your reply).
-> > > > >
-> > > > > I don't have answers for everything. Even if you have USB keyboard, you'll
-> > > > > likely still have backlight connected to embedded controller. If not,
-> > > > > then maybe you have exception userland needs to know about.
-> > > > >
-> > > > > Still better than making everything an exception.
-> > > >
-> > > > You do not need to make everything exception. You just need to look
-> > > > beyond the name, and see how the device is connected. And then apply
-> > > > your exceptions for "weird" devices.
-> > >
-> > > "Where it is connected" is not interesting to the userland. "Is it
-> > > backlight for internal keyboard" is the right question. It may be
-> > > connected to embedded controller or some kind of controller over
-> > > i2c... my shell scripts should not need to know about architecture of
-> > > every notebook out there.
-> >
-> > Then your scripts will be failing for some setups.
->
-> Well, yes. Do you want to guess what "lp5523:kb3" is?
->
+On Thu, Apr 04, 2019 at 04:29:56PM -0600, Keith Busch wrote:
+> On Fri, Apr 05, 2019 at 06:19:50AM +0800, Ming Lei wrote:
+> > Also in current blk-mq implementation, one irq may become shutdown
+> > because of CPU hotplug even though when there is in-flight request
+> > on the queue served by the irq. Then we depend on timeout handler to
+> > cover this case, and this irq may be enabled in the timeout handler too,
+> > please see nvme_poll_irqdisable().
+> 
+> Right, but when the last CPU mapped to an hctx is taken offline, we really
+> ought to have blk-mq wait for that hctx to reap all outstanding requests
+> before letting the notifier continue with offlining that CPU. We just
+> don't have the infrastructure to freeze an individual hctx yet.
 
-Oh, please. The discussion is about the driver name part, which you
-want to overload with some string to mean "internal", which in turn
-is, if anything, part of the functionality.
+Looks this issue isn't unique for storage device, anyone knows how other
+device drivers deal with this situation? For example, one network packet is
+submitted to NIC controller and not got completed, then the interrupt
+may become down because of CPU hotplug.
 
-With "platform", you'll at some point have two
-"platform::kbd_backlight" entries. Remind me to send you a "told you
-so" when that happens.
-
-Guenter
-
-> > > But I don't see why I should do additional work when its trivial for
-> > > kernel to just name the LED in an useful way.
-> > >
-> > > "platform::kbd_backlight" has no disadvantages compared to
-> > > "wilco::kbd_backlight" ... so lets just use it.
-> >
-> > It has disadvantages because it promises more than it can deliver IMO.
-> > If device name != "platform::kbd_backlight" it does not mean that it
-> > is not internal keyboard.
->
-> My promise is if "platform::kbd_backlight" exists, it is backlight for
-> internal keyboard. (And second half is "if it is easy for kernel, we
-> name backlight for internal keyboard platform::kbd_backlight").
->
-> > And you still have not resolved how you will
-> > handle cases when there is more than one deice that can be considered
-> > internal and may have a backlight.
->
-> Is that realistic? How would that device look like?
->
->                                                                         Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Thanks,
+Ming
