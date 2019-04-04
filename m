@@ -2,101 +2,85 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578EAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99050C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B58F2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A50B20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554374481;
+	bh=UD3xgcf74DYSS+bdTgxJwl6LTh89wbG7DlaqaG4+Dkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hyCzXgmNCzwb4TQW0W5F+fYq1oEZOHwu89aXHRvJPEmJGhPHUatkPk1oM3zHy+Fv9
+	 gDqZlFAax8H9+bjh9R+NA1K8LvxnYWROWndtTgxEjpTQirp+XKWW8k9h+CfhwKV3gQ
+	 nNTQBCOHimSZfQPRRnzz+essFBPxV9OB2UAqJQwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbfDDKka (ORCPT
+        id S1729376AbfDDKlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:40:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:15960 "EHLO mga02.intel.com"
+        Thu, 4 Apr 2019 06:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDDKka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:40:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 03:40:29 -0700
-X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
-   d="scan'208";a="313079954"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Apr 2019 03:40:27 -0700
-Message-ID: <c1a857b241020a44c070cfc6b57adb6e6aba00be.camel@linux.intel.com>
-Subject: Re: [Intel-gfx] [PATCH] drm/i915: Fix context IDs not released on
- driver hot unbind
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Date:   Thu, 04 Apr 2019 12:40:24 +0200
-In-Reply-To: <155437373474.7532.10868620123516507965@skylake-alporthouse-com>
-References: <20190404102445.12303-1-janusz.krzysztofik@linux.intel.com>
-         <155437373474.7532.10868620123516507965@skylake-alporthouse-com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
- 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1726269AbfDDKlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:41:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4BE20820;
+        Thu,  4 Apr 2019 10:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554374479;
+        bh=UD3xgcf74DYSS+bdTgxJwl6LTh89wbG7DlaqaG4+Dkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V5rmFiH0BgcWTynuZKWn4iDv07QUv0s3+XMk1uaqfJ2NvdIHlCGfsrg0FmSvVwTLK
+         VG3O2uHWEFrPgdIkTYVMmVCtM8xnKahquRQnWqJTHfYsDQwZu4sOv/jDDW+3EUrBIk
+         dbWOzFAj3p4KdcttTXtB3BIsOeKBljeEDaD01Khs=
+Date:   Thu, 4 Apr 2019 12:41:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.0 070/246] kbuild: make -r/-R effective in top Makefile
+ for old Make versions
+Message-ID: <20190404104111.GA17018@kroah.com>
+References: <20190404084619.236418459@linuxfoundation.org>
+ <20190404084621.593150895@linuxfoundation.org>
+ <CAK7LNAS5qfvnZEGKVQpqdQz3EOj88bd4qLc4bqcUDMhSVpJQmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAS5qfvnZEGKVQpqdQz3EOj88bd4qLc4bqcUDMhSVpJQmw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-04 at 11:28 +0100, Chris Wilson wrote:
-> Quoting Janusz Krzysztofik (2019-04-04 11:24:45)
-> > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > 
-> > In case the driver gets unbound while a device is open, kernel
-> > panic
-> > may be forced if a list of allocated context IDs is not empty.
-> > 
-> > When a device is open, the list may happen to be not empty because
-> > a
-> > context ID, once allocated by a context ID allocator to a context
-> > assosiated with that open file descriptor, is released as late as
-> > on device close.
-> > 
-> > On the other hand, there is a need to release all allocated context
-> > IDs
-> > and destroy the context ID allocator on driver unbind, even if a
-> > device
-> > is open, in order to free memory resources consumed and prevent
-> > from
-> > memory leaks.  The purpose of the forced kernel panic was to
-> > protect
-> > the context ID allocator from being silently destroyed if not all
-> > allocated IDs had been released.
+On Thu, Apr 04, 2019 at 06:16:37PM +0900, Masahiro Yamada wrote:
+> Hi.
 > 
-> Those open fd are still pointing into kernel memory where the driver
-> used to be. The panic is entirely correct, we should not be unloading
-> the module before those dangling pointers have been made safe.
 > 
-> This is papering over the symptom. How is the module being unloaded
-> with
-> open fd? 
+> On Thu, Apr 4, 2019 at 6:11 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > 5.0-stable review patch.  If anyone has any objections, please let me know.
+> >
+> > ------------------
+> >
+> > [ Upstream commit 3812b8c5c5d527239ac015f1f2c7654da7fcfbba ]
+> 
+> 
+> Some people complaint about this commit.
+> 
+> If you backport this,
+> could you please backport the following two as well?
+> 
+> 2b50f7ab63685cd247e32ad321f7338ed130d3d5
+> 688931a5ad4e55ba0c215248ba510cd67bc3afb4
 
-A user can play with the driver unbind or device remove sysfs
-interface.
+Now queued up, thanks!
 
-Thanks,
-Janusz
-
-> If all the fd have been closed, how have we failed to flush and
-> retire all requests (thereby unpinning the contexts and all other
-> pointers).
-> -Chris
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+greg k-h
