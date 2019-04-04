@@ -2,132 +2,144 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554F2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F74C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298BF21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DFB2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDDANR (ORCPT
+        id S1726676AbfDDAOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 20:13:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56616 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726528AbfDDANP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 20:13:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 77F9DAD3E;
-        Thu,  4 Apr 2019 00:13:12 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Date:   Thu, 04 Apr 2019 11:13:04 +1100
-Cc:     "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash bucket.
-In-Reply-To: <039555b9db9a410c88c7389708d157f1@AcuMS.aculab.com>
-References: <155416000985.9540.14182958463813560577.stgit@noble.brown> <155416006521.9540.5662092375167065834.stgit@noble.brown> <87470518ac3f4ab28918917401b9313b@AcuMS.aculab.com> <87o95o15br.fsf@notabene.neil.brown.name> <039555b9db9a410c88c7389708d157f1@AcuMS.aculab.com>
-Message-ID: <87v9zuzkz3.fsf@notabene.neil.brown.name>
+        Wed, 3 Apr 2019 20:14:08 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38971 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDDAOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 20:14:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m13so413077lfb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:14:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jsAdlS1nyk/IS3iZ4UY8wJIltrKe6lJEVq6hJlFMKY8=;
+        b=HtPrKJhSmsE1V9G42Lr9YWZiRm1dnYKS8hh+qhN077L6JVTtrx/KqkJvHgJiZ0kf+g
+         7Qv6uTV+tMv9YGsgfnY3ARfUdOIwN/LtQYuZHy+FFAVzDG6wL91Y3wxBE/gov3L3Hi+R
+         bv3RgEY30pHkA9OMtJY4nO82micjGxhczvgFaSl4U7ZvLTdj/w0g48qzIMxPmftelWBZ
+         Dn5aztvM/2y8OrCwxJ37XZSxVuXfMM8CMFR0ZWg6u+g6+mV29J2ozjEpoDJcRMfKwwNX
+         JCOPV0BEjIr3BF0L/0bf0Eya+M0OW8qmTXwXBUz150Z8nSpT6DL5bPkI14rdsNjwikwU
+         PJOw==
+X-Gm-Message-State: APjAAAUQKcEpPVEW0mNm3Cxd6bMqWYOCR6087nqWFXDsUDN95Eh6pDpr
+        X0hngaJE+fNU7mnhrGI0JuWj0E3I8LAAgSU6UJWMdQ==
+X-Google-Smtp-Source: APXvYqzci+3Q7xZuTbozP8hwW8C0qkpCGnkrSL5oDiV2btPU393JwPGyD5eThIaEX3cOQriRNgwR3jGFVcSYyGeN3TU=
+X-Received: by 2002:ac2:4551:: with SMTP id j17mr1309759lfm.141.1554336845554;
+ Wed, 03 Apr 2019 17:14:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20190328130306.25384-1-mcroce@redhat.com> <CAGXu5jLnu3-Gxb-4Gv8vtA9B3o582tX0GiOfug_wRZ78RDaW=g@mail.gmail.com>
+In-Reply-To: <CAGXu5jLnu3-Gxb-4Gv8vtA9B3o582tX0GiOfug_wRZ78RDaW=g@mail.gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 4 Apr 2019 02:13:29 +0200
+Message-ID: <CAGnkfhxJncMO6QwQjQeD_3SzYFr-Gw4q1u=Pkbnz17-e0UWpTw@mail.gmail.com>
+Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 03 2019, David Laight wrote:
-
-> From: NeilBrown
->> Sent: 02 April 2019 22:11
->>=20
->> On Tue, Apr 02 2019, David Laight wrote:
->>=20
->> > From: NeilBrown
->> >> Sent: 02 April 2019 00:08
->> >>
->> >> This patch changes rhashtables to use a bit_spin_lock on BIT(1) of the
->> >> bucket pointer to lock the hash chain for that bucket.
->> > ...
->> >> To enhance type checking, a new struct is introduced to represent the
->> >>   pointer plus lock-bit
->> >> that is stored in the bucket-table.  This is "struct rhash_lock_head"
->> >> and is empty.  A pointer to this needs to be cast to either an
->> >> unsigned lock, or a "struct rhash_head *" to be useful.
->> >> Variables of this type are most often called "bkt".
->> >
->> > Did you try using a union of the pointer and an 'unsigned long' ?
->> > Should remove a lot of the casts.
->>=20
->> It might, but I'm not sure it is what we want.
->> The value is not an unsigned long OR a pointer, it is both blended
->> together.  So it really isn't a union.
->> We *want* it to require casts to access, so that it is clear that
->> something unusual is happening, and care is needed.
+On Wed, Apr 3, 2019 at 7:41 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Right, but you also want to make it hard to forget to do it properly.
-> Using a union to access the memory as either a pointer or a long
-> is perfectly valid (and is valid with 'strict aliasing' enabled).
-> (Rather than the other use of a union to just save space.)
-
-Agreed.... I personally think that a union make it easy to forget.
-
+> On Thu, Mar 28, 2019 at 6:03 AM Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > fs.file-max sysctl uses proc_doulongvec_minmax() as proc handler, which
+> > accesses *extra1 and *extra2 as unsigned long, but commit 32a5ad9c2285
+> > ("sysctl: handle overflow for file-max") assigns &zero, which is an int,
+> > to extra1, generating the following KASAN report.
+> > Fix this by changing 'zero' to long, which does not need to be duplicated
+> > like 'one' and 'one_ul' for two data types.
+> >
+> > ==================================================================
+> > BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x2f9/0x600
+> > Read of size 8 at addr ffffffff8233dc20 by task systemd/1
+> >
+> > CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc2-kvm+ #22
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+> > Call Trace:
+> >  print_address_description+0x67/0x23d
+> >  kasan_report.cold.3+0x1c/0x36
+> >  __do_proc_doulongvec_minmax+0x2f9/0x600
+> >  proc_doulongvec_minmax+0x3a/0x50
+> >  proc_sys_call_handler+0x11d/0x170
+> >  vfs_write+0xd7/0x200
+> >  ksys_write+0x93/0x110
+> >  do_syscall_64+0x57/0x140
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x7f67d33e8804
+> > Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 48 8d 05 f9 5e 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89 f5 53
+> > RSP: 002b:00007fffd9992ed8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f67d33e8804
+> > RDX: 0000000000000015 RSI: 00005586ce2607b0 RDI: 0000000000000004
+> > RBP: 00007fffd9992f30 R08: 000000000000c0c0 R09: ffffffffffff0000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+> > R13: 0000000000000015 R14: 00005586ce2607c4 R15: 00007fffd9992f70
+> >
+> > The buggy address belongs to the variable:
+> >  0xffffffff8233dc20
+> >
+> > Memory state around the buggy address:
+> >  ffffffff8233db00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
+> >  ffffffff8233db80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
+> > >ffffffff8233dc00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
+> >                                ^
+> >  ffffffff8233dc80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+> >  ffffffff8233dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > ==================================================================
+> >
+> > Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >  kernel/sysctl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > index e5da394d1ca3..3e959d67d619 100644
+> > --- a/kernel/sysctl.c
+> > +++ b/kernel/sysctl.c
+> > @@ -124,7 +124,7 @@ static int sixty = 60;
+> >
+> >  static int __maybe_unused neg_one = -1;
+> >
+> > -static int zero;
+> > +static long zero;
+> >  static int __maybe_unused one = 1;
+> >  static int __maybe_unused two = 2;
+> >  static int __maybe_unused four = 4;
 >
-> An interesting thought....
-> Are the only valid actions 'lock and read, and 'unlock with optional upda=
-te' ?
-
-No, there is also "read without locking" - use for lookups with RCU
-protection.  But yes: the set of valid actions is quite limited.
-
-> If so there are only 2 bits of code that need to understand the encoding.
-> If you make the bit number(s) and polarity properties of the architecture
-> you should be able to make the stored value an invalid pointer (locked
-> and unlocked) on at least some architectures.
-
-I'd rather avoid writing arch-specific code if I can avoid it.  It isn't
-clear that the value of your proposal justifies the cost.
-Over-loading the low-order bits of a pointer is (I think) a well
-understood pattern.  I'd rather stick with such patterns.
-
-Thanks,
-NeilBrown
-
-
+> This seems okay to me; thanks for the fix! (I think it's fine to keep
+> this merged instead of a distinct long_zero, as long as we're not
+> seeing type warnings during the build.)
 >
-> 	David
+> Acked-by: Kees Cook <keescook@chromium.org>
 >
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+> -Kees
+>
+> --
+> Kees Cook
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+No warnings with gcc version 8.3.1 20190223
 
------BEGIN PGP SIGNATURE-----
+  CC      kernel/sysctl.o
+  AR      kernel/built-in.a
+...
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlylTBAACgkQOeye3VZi
-gbnGcQ//VYzBnKwzUtMiOQHuHiWA6Jp7nHk8JQqdx8uEmxwy7QnhGYySX9SJPSys
-cahPhxKzC+ZgsiSOYQNCdb8UguxNIgNu/TImfQg4i+toC7kbRtTfkJOEY02rtdf3
-H6VI6R6MF4CqmNlcXbGpSN+PYfKS17GCIyopGB41Q0D1TqChuIzmivNJPtWtRkQ1
-tj1lK6xFsNNSKdOhGL+Q2q+klymfFDtJ91U7atWZ5dty45Jg+I+rRgWIyp9VGwRc
-0zx7oLJZlJ2xEJ34eGccPe5KT4Ir+vo7E9ebJshPNRk8PY7efPSSBUyMoc+WahRs
-Ouv0GIrmufTcT1Tp53EblDY6s4kPbt0oCZGfDE6hqPNBHcJaDwMv61CTjy/eVr+i
-YjvPolJNd/fzFwfb5rbfiZaZMfTzmq/cWVI0m3lyBGh1TNhSQh5XMBNdEnhtlK2v
-mivxEhFV5fDFr/UjMbCpTMagWd1x7SlnPh6uQxhzXyP7Llw8CmPpXf7TUKvxXTMf
-NBBDxbVrL2P2PQgSewm1QFq1/Hagg5jeCcfgbV0xsBZ8TJafzyKo9aqeJwTl95ez
-Fli4rEwLX0ga6RE5ZtYifWh/0KsfV3X0O8HcE9lqm9JPHo8SFv2krHnmEQzrfZ6G
-ee0A3Ke2A6fg0F4+P5nsMEh0WIhqiIKvLucz7ijwAuYgmfzC3mQ=
-=7USo
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Matteo Croce
+per aspera ad upstream
