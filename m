@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF1EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390F0205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E65221850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370858;
-	bh=FRUkwshiMCUG19k+zRit9g5iQKYiRiWVSggY4gD9Nck=;
+	s=default; t=1554370862;
+	bh=sixjuAPjlD/HNLkAeOgGks0RcyOOisUcgd8getufvlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5Yvy4I4S67d+t0t8T9cwCP1+lEiDkaMgHWnqAMpGti9BmWRySGHaJWjg6zJx8HUI
-	 5LFQa+Lpf7ET7eSmKoQ/acuQYmLbHe4PnWKVKknNBebMwv+CoYPnSQ3fsO2jJQSJZr
-	 UICQzoTALekPCFwOV4zdd8tsC3SuwNeWok0FtqF0=
+	b=yqu1RPLkaFK0w2s7GoH8F9fLL8Ys6pmyxx5XHpzEQ7HUzl3uJ+aK8O198bOKHxluo
+	 nH6yCKao1BvY1A5e4kyvwxVYOBboIr0mkvS+QJavx9C1MB+W+8z8S0wFKbaQ9HLENx
+	 y4vFcRbMVRrtm437XML0nyZQg4IasjF0ThqwldeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbfDDJCi (ORCPT
+        id S1731648AbfDDJCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39750 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731600AbfDDJCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:24 -0400
+        id S1731620AbfDDJC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C976421741;
-        Thu,  4 Apr 2019 09:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E8C21741;
+        Thu,  4 Apr 2019 09:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368543;
-        bh=FRUkwshiMCUG19k+zRit9g5iQKYiRiWVSggY4gD9Nck=;
+        s=default; t=1554368548;
+        bh=sixjuAPjlD/HNLkAeOgGks0RcyOOisUcgd8getufvlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UTiSmKSxuLNRL69S7pDFbIq5zS18cMMUvMvn04Bhgkv3SAcMe8DCfGW5tr2OaMP99
-         M/3wm8sTYXPqy/48VGC92XhAXHnDpDGRye41ZpvHhvqReGSGTeAMe8urhsY6RxTVY6
-         UG0Li+yMuEoCcePZ+3VsTvZV6Zk/l+QM0wkQXZ6w=
+        b=CYf+uuZlmIc38XQkWxl8kZuPBM/MzcglI2/m0eK3GAAmPjcVM5EUIbex6dyqwDoQk
+         MuZBiagijqYaBcnaUMd3I/wz3W3CDhc83Nz08TTBnW/D0fuCnQ02+lgPrZg5V23xR2
+         EctatriFkfU8w6Mg6/+N+ELkAr1qGQHjVuCHjn2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/187] btrfs: qgroup: Make qgroup async transaction commit more aggressive
-Date:   Thu,  4 Apr 2019 10:46:39 +0200
-Message-Id: <20190404084605.994708096@linuxfoundation.org>
+Subject: [PATCH 4.19 072/187] perf annotate: Fix getting source line failure
+Date:   Thu,  4 Apr 2019 10:46:49 +0200
+Message-Id: <20190404084606.441151771@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,115 +71,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f5fef4593653dfa2a865c485bb81415de51d5c99 ]
+[ Upstream commit 11db1ad4513d6205d2519e1a30ff4cef746e3243 ]
 
-[BUG]
-Btrfs qgroup will still hit EDQUOT under the following case:
+The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
+("perf annotate: No need to calculate notes->start twice") removed notes->start
+assignment in symbol__calc_lines(). It will get failed in
+find_address_in_section() from symbol__tty_annotate() subroutine as the
+a2l->addr is wrong. So the annotate summary doesn't report the line number of
+source code correctly.
 
-  $ dev=/dev/test/test
-  $ mnt=/mnt/btrfs
-  $ umount $mnt &> /dev/null
-  $ umount $dev &> /dev/null
+Before fix:
 
-  $ mkfs.btrfs -f $dev
-  $ mount $dev $mnt -o nospace_cache
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
+  void hotspot_1(void)
+  {
+	volatile int i;
 
-  $ btrfs subv create $mnt/subv
-  $ btrfs quota enable $mnt
-  $ btrfs quota rescan -w $mnt
-  $ btrfs qgroup limit -e 1G $mnt/subv
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
+  }
 
-  $ fallocate -l 900M $mnt/subv/padding
-  $ sync
+  int main(void)
+  {
+	hotspot_1();
 
-  $ rm $mnt/subv/padding
+	return 0;
+  }
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
 
-  # Hit EDQUOT
-  $ xfs_io -f -c "pwrite 0 512M" $mnt/subv/real_file
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
 
-[CAUSE]
-Since commit a514d63882c3 ("btrfs: qgroup: Commit transaction in advance
-to reduce early EDQUOT"), btrfs is not forced to commit transaction to
-reclaim more quota space.
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
 
-Instead, we just check pertrans metadata reservation against some
-threshold and try to do asynchronously transaction commit.
+   19.30 common_while_1[32]
+   19.03 common_while_1[4e]
+   19.01 common_while_1[16]
+    5.04 common_while_1[13]
+    4.99 common_while_1[4b]
+    4.78 common_while_1[2c]
+    4.77 common_while_1[10]
+    4.66 common_while_1[2f]
+    4.59 common_while_1[51]
+    4.59 common_while_1[35]
+    4.52 common_while_1[19]
+    4.20 common_while_1[56]
+    0.51 common_while_1[48]
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
+   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
+      0.00 :   618:   jle    607 <hotspot_1+0xd>
+           :                 for (i = 0; i < 0x10000000; i++);
+  ...
 
-However in above case, the pertrans metadata reservation is pretty small
-thus it will never trigger asynchronous transaction commit.
+After fix:
 
-[FIX]
-Instead of only accounting pertrans metadata reservation, we calculate
-how much free space we have, and if there isn't much free space left,
-commit transaction asynchronously to try to free some space.
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
 
-This may slow down the fs when we have less than 32M free qgroup space,
-but should reduce a lot of false EDQUOT, so the cost should be
-acceptable.
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+   33.34 common_while_1.c:5
+   33.34 common_while_1.c:6
+   33.32 common_while_1.c:7
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
+    4.89 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
+    0.00 :   618:   jle    607 <hotspot_1+0xd>
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
+    0.00 :   621:   jmp    62c <hotspot_1+0x32>
+    0.00 :   623:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
+    4.73 :   629:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
+  ...
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
+Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ tools/perf/util/annotate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index e1fcb28ad4cc..e46e83e87600 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2427,16 +2427,15 @@ out:
- /*
-  * Two limits to commit transaction in advance.
-  *
-- * For RATIO, it will be 1/RATIO of the remaining limit
-- * (excluding data and prealloc meta) as threshold.
-+ * For RATIO, it will be 1/RATIO of the remaining limit as threshold.
-  * For SIZE, it will be in byte unit as threshold.
-  */
--#define QGROUP_PERTRANS_RATIO		32
--#define QGROUP_PERTRANS_SIZE		SZ_32M
-+#define QGROUP_FREE_RATIO		32
-+#define QGROUP_FREE_SIZE		SZ_32M
- static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 				const struct btrfs_qgroup *qg, u64 num_bytes)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 28cd6a17491b..dfee110b3a58 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1862,6 +1862,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 		     struct annotation_options *options,
+ 		     struct arch **parch)
  {
--	u64 limit;
-+	u64 free;
- 	u64 threshold;
++	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+ 		.privsize	= privsize,
+ 		.evsel		= evsel,
+@@ -1892,6 +1893,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
  
- 	if ((qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_RFER) &&
-@@ -2455,20 +2454,21 @@ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 	 */
- 	if ((qg->lim_flags & (BTRFS_QGROUP_LIMIT_MAX_RFER |
- 			      BTRFS_QGROUP_LIMIT_MAX_EXCL))) {
--		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL)
--			limit = qg->max_excl;
--		else
--			limit = qg->max_rfer;
--		threshold = (limit - qg->rsv.values[BTRFS_QGROUP_RSV_DATA] -
--			    qg->rsv.values[BTRFS_QGROUP_RSV_META_PREALLOC]) /
--			    QGROUP_PERTRANS_RATIO;
--		threshold = min_t(u64, threshold, QGROUP_PERTRANS_SIZE);
-+		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL) {
-+			free = qg->max_excl - qgroup_rsv_total(qg) - qg->excl;
-+			threshold = min_t(u64, qg->max_excl / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		} else {
-+			free = qg->max_rfer - qgroup_rsv_total(qg) - qg->rfer;
-+			threshold = min_t(u64, qg->max_rfer / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		}
+ 	args.ms.map = map;
+ 	args.ms.sym = sym;
++	notes->start = map__rip_2objdump(map, sym->start);
  
- 		/*
- 		 * Use transaction_kthread to commit transaction, so we no
- 		 * longer need to bother nested transaction nor lock context.
- 		 */
--		if (qg->rsv.values[BTRFS_QGROUP_RSV_META_PERTRANS] > threshold)
-+		if (free < threshold)
- 			btrfs_commit_transaction_locksafe(fs_info);
- 	}
+ 	return symbol__disassemble(sym, &args);
+ }
+@@ -2746,8 +2748,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
  
+ 	symbol__calc_percent(sym, evsel);
+ 
+-	notes->start = map__rip_2objdump(map, sym->start);
+-
+ 	annotation__set_offsets(notes, size);
+ 	annotation__mark_jump_targets(notes, sym);
+ 	annotation__compute_ipc(notes, size);
 -- 
 2.19.1
 
