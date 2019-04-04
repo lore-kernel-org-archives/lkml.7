@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B658C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E90CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CAB2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC39E2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371637;
-	bh=EekUVwjSsK9PzSI90GZ8qZGvSCRavBt6X5AyfJO5qBo=;
+	s=default; t=1554371648;
+	bh=DnpcXmv49/G9xVOgXkpSdA6U+sR3kKnKFwCgyMyDDdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUW723YF6BL//r2SVQvfM6KDlMIbkG+0cyE8hKeauVHxj9yp7aZuK3rZy9oLv4IXP
-	 ubCx9by85y/QA8QiGE+QZ8MW8Fka4KJFszSl6APw/k4IrDi3Jw/UvrTX3/M8jvsFlG
-	 LmuhaISLqyijUCYqstWlaIcwo+dgIE4O4LUgoAp8=
+	b=qUHTf68TdAK8UX+oMdnzsxtqdLVH4aYjLP8dDRMuKkecUcO7G8Dv9804UkmnPi0bv
+	 y6L4rTJaDpbUaRRLEiTdwtBxHJsO1ExuXuCDldmKZchNBPuvMLaYku9Dhz4b5rl9VR
+	 hwjJ2nnQiDQ3Z7xvG0CyYrAK3YXw69GdHWm5n9QI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfDDJx4 (ORCPT
+        id S1729441AbfDDJyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbfDDIw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:58 -0400
+        id S1729212AbfDDIwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02A4C20882;
-        Thu,  4 Apr 2019 08:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 113F72147C;
+        Thu,  4 Apr 2019 08:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367977;
-        bh=EekUVwjSsK9PzSI90GZ8qZGvSCRavBt6X5AyfJO5qBo=;
+        s=default; t=1554367969;
+        bh=DnpcXmv49/G9xVOgXkpSdA6U+sR3kKnKFwCgyMyDDdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xH/7RHKmBqBZ7/SOMw9cEtbjaHZZlzeVgtb1H1jOGq/tgvI7CODPtI7LA7z5lhoNo
-         TmbyGMOjrDWESGBKKZLG2MVh/p8BSGBJJ2GSn88Zg0iSbeQCnABljYIqh/h8SdEGVg
-         RzDowZFfwjI6WmFv3CA3F/JjLLO4qQdokt5xp/KY=
+        b=1ExeKqP/4fHImZTnZ/aULF5yLhbNaLC/evqe2fuRlVaqylSNbrp5mZbjylxwXcRBa
+         HHbY7bqR8+kprfN28aBfmrDhH9brrUVA3sQn5w0MPZN0Xp5gOLm9Xen9lkAle+bLgc
+         IZLJ6qMco727vz3c1dR6GTMfxLuU2EAFNwvZOVEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 83/91] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
-Date:   Thu,  4 Apr 2019 10:48:07 +0200
-Message-Id: <20190404084540.250598625@linuxfoundation.org>
+        stable@vger.kernel.org, Joey Zheng <yu.zheng@hxt-semitech.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Shunyong Yang <shunyong.yang@hxt-semitech.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 80/91] dmaengine: qcom_hidma: assign channel cookie correctly
+Date:   Thu,  4 Apr 2019 10:48:04 +0200
+Message-Id: <20190404084540.077201673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,53 +67,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
+[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
 
-The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
+When dma_cookie_complete() is called in hidma_process_completed(),
+dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
+hidma_txn_is_success() will be called to use channel cookie
+mchan->last_success to do additional DMA status check. Current code
+assigns mchan->last_success after dma_cookie_complete(). This causes
+a race condition of dma_cookie_status() returns DMA_COMPLETE before
+mchan->last_success is assigned correctly. The race will cause
+hidma_tx_status() return DMA_ERROR but the transaction is actually a
+success. Moreover, in async_tx case, it will cause a timeout panic
+in async_tx_quiesce().
 
-The problems in below entry:
-  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
+ Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
+ transaction
+ ...
+ Call trace:
+ [<ffff000008089994>] dump_backtrace+0x0/0x1f4
+ [<ffff000008089bac>] show_stack+0x24/0x2c
+ [<ffff00000891e198>] dump_stack+0x84/0xa8
+ [<ffff0000080da544>] panic+0x12c/0x29c
+ [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
+ [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
+ [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
+ [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
+ [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
+ [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
+ [<ffff000008736538>] md_thread+0x108/0x168
+ [<ffff0000080fb1cc>] kthread+0x10c/0x138
+ [<ffff000008084d34>] ret_from_fork+0x10/0x18
 
-1. The off-by-one min_sel causes wrong volatage calculation.
-   The min_sel should be 192.
-2. According to the datasheet[1] Table 7. (on page 43):
-   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
-
-Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
-
-[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
-
-Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/act8865-regulator.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/dma/qcom/hidma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 7652477e6a9d..39e8d60df060 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -131,7 +131,7 @@
-  * ACT8865 voltage number
-  */
- #define	ACT8865_VOLTAGE_NUM	64
--#define ACT8600_SUDCDC_VOLTAGE_NUM	255
-+#define ACT8600_SUDCDC_VOLTAGE_NUM	256
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index e244e10a94b5..5444f39bf939 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -131,24 +131,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
+ 		desc = &mdesc->desc;
+ 		last_cookie = desc->cookie;
  
- struct act8865 {
- 	struct regmap *regmap;
-@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
- 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
- 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
--	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
-+	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
-+	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
- };
++		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
++
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
++		if (llstat == DMA_COMPLETE) {
++			mchan->last_success = last_cookie;
++			result.result = DMA_TRANS_NOERROR;
++		} else {
++			result.result = DMA_TRANS_ABORTED;
++		}
++
+ 		dma_cookie_complete(desc);
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
  
- static struct regulator_ops act8865_ops = {
+-		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
+ 		dmaengine_desc_get_callback(desc, &cb);
+ 
+ 		dma_run_dependencies(desc);
+ 
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
+ 		list_move(&mdesc->node, &mchan->free);
+-
+-		if (llstat == DMA_COMPLETE) {
+-			mchan->last_success = last_cookie;
+-			result.result = DMA_TRANS_NOERROR;
+-		} else
+-			result.result = DMA_TRANS_ABORTED;
+-
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+ 		dmaengine_desc_callback_invoke(&cb, &result);
 -- 
 2.19.1
 
