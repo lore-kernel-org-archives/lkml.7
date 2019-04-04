@@ -2,296 +2,79 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0CDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEFE206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94CD214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfDDHco (ORCPT
+        id S1727229AbfDDHct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:32:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45544 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbfDDHco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:32:44 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6509B44FA1;
-        Thu,  4 Apr 2019 07:32:43 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-97.pek2.redhat.com [10.72.12.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97C8F62669;
-        Thu,  4 Apr 2019 07:32:38 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 15:32:33 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
-References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
- <20190325123229.GL12016@zn.tnic>
- <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
- <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
- <20190328064343.GA1877@MiWiFi-R3L-srv>
- <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
- <20190328155256.GP22720@zn.tnic>
- <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
+        Thu, 4 Apr 2019 03:32:49 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49299 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfDDHcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 03:32:48 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 4AB3D1C000F;
+        Thu,  4 Apr 2019 07:32:46 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 09:32:45 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] clk: sunxi-ng: H6 related clock fixes
+Message-ID: <20190404073245.ql7qnind4oxmp6t3@flea>
+References: <20190403151404.26542-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qot2ytx7br4g6d22"
 Content-Disposition: inline
-In-Reply-To: <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 04 Apr 2019 07:32:43 +0000 (UTC)
+In-Reply-To: <20190403151404.26542-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Junichi,
 
-While we are still debuggin the bug I reproduced, but for this patch
-I have still some comments inline.
+--qot2ytx7br4g6d22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BTW, it would be good to start a new thread when you send V4 :)
+On Wed, Apr 03, 2019 at 05:14:02PM +0200, Jernej Skrabec wrote:
+> During linux-next testing on Allwinner H6, I found several issues with
+> clock driver. This patch series fixes them.
+>
+> Patch 1 allows video and vpu related clocks to set parent rate.
+> Patch 2 adds a comment with short explanation why zero width check is
+> needed.
 
-On 04/02/19 at 10:25am, Junichi Nomura wrote:
-> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> in the early parsing code tries to search RSDP from EFI table but
-> that will crash because the table address is virtual when the kernel
-> was booted by kexec.
-> 
-> In the case of kexec, physical address of EFI tables is provided
-> via efi_setup_data in boot_params, which is set up by kexec(1).
-> 
-> Factor out the table parsing code and use different pointers depending
-> on whether the kernel is booted by kexec or not.
-> 
-> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Tested-by: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Dave Young <dyoung@redhat.com>
-> 
-> --
-> v2: Added comments above __efi_get_rsdp_addr() and kexec_get_rsdp_addr() 
-> 
-> v3: Properly ifdef out 64bit-only kexec code to avoid 32bit build warnings
-> 
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index 0ef4ad5..d9f9abd 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -44,17 +44,114 @@ static acpi_physical_address get_acpi_rsdp(void)
->  	return addr;
->  }
->  
-> -/* Search EFI system tables for RSDP. */
-> -static acpi_physical_address efi_get_rsdp_addr(void)
-> +#if defined(CONFIG_EFI) && defined(CONFIG_X86_64)
-> +static unsigned long efi_get_kexec_setup_data_addr(void)
-> +{
-> +	struct setup_data *data;
-> +	u64 pa_data;
-> +
-> +	pa_data = boot_params->hdr.setup_data;
-> +	while (pa_data) {
-> +		data = (struct setup_data *) pa_data;
-> +		if (data->type == SETUP_EFI)
-> +			return pa_data + sizeof(struct setup_data);
-> +		pa_data = data->next;
-> +	}
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_EFI
-> +/*
-> + * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
-> + * ACPI_TABLE_GUID are found, take the former, which has more features.
-> + */
-> +static acpi_physical_address
-> +__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
-> +		    bool efi_64)
->  {
->  	acpi_physical_address rsdp_addr = 0;
-> +	int i;
->  
-> +	/* Get EFI tables from systab. */
-> +	for (i = 0; i < nr_tables; i++) {
-> +		acpi_physical_address table;
-> +		efi_guid_t guid;
-> +
-> +		if (efi_64) {
-> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
-> +
-> +			guid  = tbl->guid;
-> +			table = tbl->table;
-> +
-> +			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
-> +				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
-> +				return 0;
-> +			}
-> +		} else {
-> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
-> +
-> +			guid  = tbl->guid;
-> +			table = tbl->table;
-> +		}
-> +
-> +		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
-> +			rsdp_addr = table;
-> +		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
-> +			return table;
-> +	}
-> +
-> +	return rsdp_addr;
-> +}
-> +#endif
-> +
-> +/*
-> + * EFI/kexec support is only added for 64bit. So we don't have to
-> + * care 32bit case.
-> + */
-> +static acpi_physical_address kexec_get_rsdp_addr(void)
-> +{
-> +#if defined(CONFIG_EFI) && defined(CONFIG_X86_64)
-> +	efi_system_table_64_t *systab;
-> +	struct efi_setup_data *esd;
-> +	struct efi_info *ei;
-> +	char *sig;
-> +
-> +	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
-> +	if (!esd)
-> +		return 0;
-> +
-> +	if (!esd->tables) {
-> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
-> +		return 0;
-> +	}
-> +
-> +	ei = &boot_params->efi_info;
-> +	sig = (char *)&ei->efi_loader_signature;
-> +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
-> +		debug_putstr("Wrong kexec EFI loader signature.\n");
-> +		return 0;
-> +	}
-> +
-> +	/* Get systab from boot params. */
-> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
-> +	if (!systab)
-> +		error("EFI system table not found in kexec boot_params.");
+Applied both, thanks!
+Maxime
 
-Instead of hang the system, return 0 should be better
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> +
-> +	return __efi_get_rsdp_addr((unsigned long) esd->tables,
-> +				   systab->nr_tables, true);
-> +#else
-> +	return 0;
-> +#endif
-> +}
-> +
-> +static acpi_physical_address efi_get_rsdp_addr(void)
-> +{
->  #ifdef CONFIG_EFI
-> -	unsigned long systab, systab_tables, config_tables;
-> +	unsigned long systab, config_tables;
->  	unsigned int nr_tables;
->  	struct efi_info *ei;
->  	bool efi_64;
-> -	int size, i;
->  	char *sig;
->  
->  	ei = &boot_params->efi_info;
-> @@ -88,49 +185,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
->  
->  		config_tables	= stbl->tables;
->  		nr_tables	= stbl->nr_tables;
-> -		size		= sizeof(efi_config_table_64_t);
->  	} else {
->  		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
->  
->  		config_tables	= stbl->tables;
->  		nr_tables	= stbl->nr_tables;
-> -		size		= sizeof(efi_config_table_32_t);
->  	}
->  
->  	if (!config_tables)
->  		error("EFI config tables not found.");
->  
-> -	/* Get EFI tables from systab. */
-> -	for (i = 0; i < nr_tables; i++) {
-> -		acpi_physical_address table;
-> -		efi_guid_t guid;
-> -
-> -		config_tables += size;
-> -
-> -		if (efi_64) {
-> -			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
-> -
-> -			guid  = tbl->guid;
-> -			table = tbl->table;
-> -
-> -			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
-> -				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
-> -				return 0;
-> -			}
-> -		} else {
-> -			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
-> -
-> -			guid  = tbl->guid;
-> -			table = tbl->table;
-> -		}
-> -
-> -		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
-> -			rsdp_addr = table;
-> -		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
-> -			return table;
-> -	}
-> +	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
-> +#else
-> +	return 0;
->  #endif
-> -	return rsdp_addr;
->  }
->  
->  static u8 compute_checksum(u8 *buffer, u32 length)
-> @@ -221,6 +289,9 @@ acpi_physical_address get_rsdp_addr(void)
->  		pa = boot_params->acpi_rsdp_addr;
->  
->  	if (!pa)
-> +		pa = kexec_get_rsdp_addr();
-> +
-> +	if (!pa)
->  		pa = efi_get_rsdp_addr();
+--qot2ytx7br4g6d22
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In case kexec_get_rsdp_addr failed, above code will try efi_get.. again,
-but that will also fail for same issue this patch is fixing.  In case
-kexec we should avoid the efi_get_rsdp_addr.
+-----BEGIN PGP SIGNATURE-----
 
->  
->  	if (!pa)
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKWzHQAKCRDj7w1vZxhR
+xSHhAQCwC5Cv8J55Jo4wFRF8Dw5qW46cNd89HthqB7KqgAadAwD8C7YeoAXhzkls
+1kpw8ccV1gD2k/TaWWh2Nm//UrhSQQ0=
+=Je6v
+-----END PGP SIGNATURE-----
 
-Thanks
-Dave
+--qot2ytx7br4g6d22--
