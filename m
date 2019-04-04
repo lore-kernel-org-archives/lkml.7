@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF00C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0865FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB402147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0F3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369450;
-	bh=4omXWfQ1rd1mCMKq4OiNDS4pWxZgcVtXixeY9c6UIQU=;
+	s=default; t=1554369452;
+	bh=7clfelsx/a9DPBTTdJnqiZL6xa5GWYfRDrKvGLTp6Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsW1tGJTJHGqI+MlSq7AyV3GXZdPPz8D7xaTLGWpZfnBj3jlD4xbgO+DYn7gkOltN
-	 CD2Z/YJP4ab8zoypEB+32RuRzNT3E2ozoRUCDZk6U7O3AWpKaG0+/tu5M1jwhmN6Ts
-	 ZEVDyFYqK25hMATHqVwn0wXaM07EJcsfP374g3Yk=
+	b=VzpZLnmPn1osM2wK8mA12kgJCM7Xdk36vRTjNbPEXTM/IOdE+7UtjNBr4c+E4qRH0
+	 j/3QNY4AxfcniaSUSxQiyRqLP8cT9sohydkCdsJWQtGhi0x8LF+lhw9pl2ntML8TKV
+	 duuxYpDir8efp+0cBGPbrWdG2Ovfhb8kdglHY4Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388213AbfDDJR2 (ORCPT
+        id S2388223AbfDDJRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388199AbfDDJRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:24 -0400
+        id S2388199AbfDDJRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 955AF214AF;
-        Thu,  4 Apr 2019 09:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1522075E;
+        Thu,  4 Apr 2019 09:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369444;
-        bh=4omXWfQ1rd1mCMKq4OiNDS4pWxZgcVtXixeY9c6UIQU=;
+        s=default; t=1554369449;
+        bh=7clfelsx/a9DPBTTdJnqiZL6xa5GWYfRDrKvGLTp6Xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bDpERT1Lwff70PGFamgtAOyoqM07fl0psVgXzddAmtGgQ1Nls/zYjzJ4QFUCP0+Fb
-         Q9bNpEoBwLTML/DyF59tKFVhA9u59qNEtZio25X1Ss+1xjNhcMS7GYZ0gEn5wYJiJq
-         SwHoYeGrsKJ5R7aAimwV9V3xy/7W6q78o4gYLpps=
+        b=UnXoH2L//FMESVAPkaEg80YxqPV0h6u5AfIqhfL92XlfW5jNrI/ABCtY/uNlAH4WI
+         R0pCLY1gsQEXtGK7E9H7KYuZXLbqb+NDu0hvjubIh9gt1keT40DobfD1rohXD4gBM1
+         dLdLyXBfPX5hbm2Lg6iqcCl2h+IcAD5VSKw9Ptdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Buland Singh <bsingh@redhat.com>,
+        stable@vger.kernel.org,
+        Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 210/246] hpet: Fix missing = character in the __setup() code of hpet_mmap_enable
-Date:   Thu,  4 Apr 2019 10:48:30 +0200
-Message-Id: <20190404084626.544419845@linuxfoundation.org>
+Subject: [PATCH 5.0 220/246] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Thu,  4 Apr 2019 10:48:40 +0200
+Message-Id: <20190404084626.903565438@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,56 +68,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-Before this patch:
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+Tested on s5pv210-galaxys (Samsung i9000 phone).
 
-[    0.204152] HPET mmap disabled
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
 
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204192] HPET mmap disabled
-
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 4a22b4b41aef..9bffcd37cc7b 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char *str)
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 4b47d9f42117..370942b67d86 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1293,13 +1293,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
  }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
  
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
  {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1326,11 +1329,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1339,11 +1342,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
