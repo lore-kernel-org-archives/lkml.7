@@ -2,321 +2,295 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E811C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2363EC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B727A20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E828D2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfDDKSp (ORCPT
+        id S1729397AbfDDKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:18:45 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:46971 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDDKSp (ORCPT
+        Thu, 4 Apr 2019 06:18:50 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35582 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbfDDKSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:18:45 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id AD48A3C013F;
-        Thu,  4 Apr 2019 12:18:41 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3StZ6-NXbAFl; Thu,  4 Apr 2019 12:18:34 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 1FAEE3C00C3;
-        Thu,  4 Apr 2019 12:18:34 +0200 (CEST)
-Received: from [10.72.93.172] (10.72.93.172) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Apr 2019
- 12:18:33 +0200
-Subject: Re: [PATCH 09/10] ALSA: pcm: Add snd_pcm_ops for snd_pcm_link()
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     <broonie@kernel.org>, <perex@perex.cz>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
- <1553586574-18608-1-git-send-email-twischer@de.adit-jv.com>
- <1553586574-18608-5-git-send-email-twischer@de.adit-jv.com>
- <s5ho95ym3s7.wl-tiwai@suse.de>
- <3ad5c313-ba2c-b541-8930-3f2515dfca72@de.adit-jv.com>
- <s5hr2at67ew.wl-tiwai@suse.de>
- <68cfbf7a-5f1e-50d2-2b97-4d3c5d360b36@de.adit-jv.com>
- <s5ha7hh62yg.wl-tiwai@suse.de>
- <c99f074c-99e2-7213-6738-67d08d44d030@de.adit-jv.com>
- <s5hef6slm00.wl-tiwai@suse.de>
- <00f4c8db-44cf-b555-f3ca-42916b1e7ceb@de.adit-jv.com>
- <s5h7ecklkr2.wl-tiwai@suse.de>
-From:   Timo Wischer <twischer@de.adit-jv.com>
-Message-ID: <00d97a34-c055-c7ef-dbfd-e17c0f6cfff3@de.adit-jv.com>
-Date:   Thu, 4 Apr 2019 12:18:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 06:18:46 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t4so1595867ljc.2;
+        Thu, 04 Apr 2019 03:18:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eukAPmIp/DTYZKjL3NSWt8arxBeiDuXIgJ87ukC54tk=;
+        b=XyvPFK1bR4bXfudtQOnx5aa8YmjBcasKaoqNsZCHML1OSW2yRt6nO72WK5u0iDZCwU
+         cgFtmFL9z3MWrLezSeJKoDiXQNJfvVeyEEOI/WWo0gFCdmEB/ooCUGxRetZ4GDrL3odl
+         GT6mgA5FHGeDUS8xCehcATKunTcwG+4owrEpv/CXW8C2p8fwT8wm10FqjiN0K8IelD80
+         7Ljfaw0peES9tXqPJJxgr/ywYFHL1sqvxvq+e4w4WQzoy/H0pZgHoXJx9jHwN8dMC1lN
+         OjgmInEhi/wDtObKlIotTZViTM0jNLW8y1sp+d6l9H/QfANsGk23ArAI+8SFxZUFiEmR
+         UYgA==
+X-Gm-Message-State: APjAAAVAianR30tqcjy1DRd3sNgvUacmiDVOIqiVZSWYp2u2bujbntnM
+        DXkbDxJUOT+62P3CYBBNajk=
+X-Google-Smtp-Source: APXvYqxuTWKQm9F/+XJMtd8KQFbvUl2ZKY5t0sz4YVD0sC/hgqWz1KWboszZTDpViFjB3NVfAx+Hqg==
+X-Received: by 2002:a2e:380c:: with SMTP id f12mr3100860lja.116.1554373122854;
+        Thu, 04 Apr 2019 03:18:42 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id i190sm3509725lfi.43.2019.04.04.03.18.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 03:18:42 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 13:18:29 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com,
+        bogdan-petru.chircu-mare@nxp.com
+Subject: [PATCH v13 0/8] support ROHM BD70528 PMIC
+Message-ID: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <s5h7ecklkr2.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.72.93.172]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/19 10:38, Takashi Iwai wrote:
-> On Wed, 27 Mar 2019 10:26:56 +0100,
-> Timo Wischer wrote:
->> On 3/27/19 10:11, Takashi Iwai wrote:
->>> On Wed, 27 Mar 2019 09:34:40 +0100,
->>> Timo Wischer wrote:
->>>> On 3/26/19 17:00, Takashi Iwai wrote:
->>>>> On Tue, 26 Mar 2019 16:16:54 +0100,
->>>>> Timo Wischer wrote:
->>>>>> On 3/26/19 15:23, Takashi Iwai wrote:
->>>>>>> On Tue, 26 Mar 2019 12:25:37 +0100,
->>>>>>> Timo Wischer wrote:
->>>>>>>> On 3/26/19 09:35, Takashi Iwai wrote:
->>>>>>>>
->>>>>>>>         On Tue, 26 Mar 2019 08:49:33 +0100,
->>>>>>>>         <twischer@de.adit-jv.com> wrote:
->>>>>>>>                  From: Timo Wischer <twischer@de.adit-jv.com>
->>>>>>>>                      snd_pcm_link() can be called by the user as long
->>>>>>>> as the device is not
->>>>>>>>             yet started. Therefore currently a driver which wants to iterate over
->>>>>>>>             the linked substreams has to do this at the start trigger. But the start
->>>>>>>>             trigger should not block for a long time. Therefore there is no callback
->>>>>>>>             which can be used to iterate over the linked substreams without delaying
->>>>>>>>             the start trigger.
->>>>>>>>             This patch introduces a new callback function which will be called after
->>>>>>>>             the linked substream list was updated by snd_pcm_link(). This callback
->>>>>>>>             function is allowed to block for a longer time without interfering the
->>>>>>>>             synchronized start up of linked substreams.
->>>>>>>>                      Signed-off-by: Timo Wischer
->>>>>>>> <twischer@de.adit-jv.com>
->>>>>>>>                  Well, the idea appears interesting, but I'm afraid
->>>>>>>> that the
->>>>>>>>         implementation is still racy.  The place you're calling the new
->>>>>>>>         callback isn't protected, hence the stream can be triggered while
->>>>>>>>         calling it.  That is, even during operating your loopback link_changed
->>>>>>>>         callback, another thread is able to start the stream.
->>>>>>>>         Hi Takashi,
->>>>>>>>
->>>>>>>> As far as I got you mean the following scenario:
->>>>>>>>
->>>>>>>>       * snd_pcm_link() is called for a HW sound card
->>>>>>>>           + loopback_snd_timer_link_changed()
->>>>>>> The start may happen at this point.
->>>>>> In this case the last link status will be used and aloop will print a
->>>>>> warning "Another sound timer was requested but at least one device is
->>>>>> already running...".
->>>>>>
->>>>>> Without this patch set a similar issue already exists. When calling
->>>>>> snd_pcm_start() before snd_pcm_link() was done the additional device
->>>>>> linked by the snd_pcm_link() will not be started.
->>>>>> Therefore the application has already to take care about the order of
->>>>>> the calls.
->>>>> Yes, but it doesn't matter for now, just because other drivers do care
->>>>> the PCM links only for trigger callback.  Now you're trying to add
->>>>> something new but in an incomplete manner.
->>>>>
->>>>>>>>           + loopback_snd_timer_open()
->>>>>>>>           + spin_lock_irqsave(&dpcm->cable->lock, flags);
->>>>>>>>       * snd_pcm_start() called for aloop sound card
->>>>>>>>           + loopback_trigger()
->>>>>>>>           + spin_lock(&cable->lock) -> has to wait till loopback_snd_timer_open()
->>>>>>>>             calls spin_unlock_irqrestore()
->>>>>>>>
->>>>>>>> So far snd_pcm_start() has to wait for loopback_snd_timer_open().
->>>>>>>>
->>>>>>>>       * loopback_snd_timer_open() will continue with
->>>>>>>>           + dpcm->cable->snd_timer.instance = NULL;
->>>>>>>>           + spin_unlock_irqrestore()
->>>>>>>>       * loopback_trigger() can enter the lock
->>>>>>>>           + loopback_snd_timer_start() will fail with -EINVAL due to
->>>>>>>>             (loopback_trigger == NULL)
->>>>>>>>
->>>>>>>> At least this will not result into memory corruption due to race or any other
->>>>>>>> wired behavior.
->>>>>>> I don't expect the memory corruption, but my point is that dealing
->>>>>>> with linked streams is still tricky.  It was considered for the
->>>>>>> lightweight coupled start/stop operation, and something intensively
->>>>>>> depending on the linked status was out of the original design...
->>>>>>>
->>>>>>>> But my expectation is that snd_pcm_link(hw, aloop) or snd_pcm_link(aloop, hw)
->>>>>>>> is only called by the application calling snd_pcm_start(aloop)
->>>>>>>> because the same aloop device cannot be opened by multiple applications at the
->>>>>>>> same time.
->>>>>>>>
->>>>>>>> Do you see an use case where one application would call snd_pcm_start() in
->>>>>>>> parallel with snd_pcm_link() (somehow configuring the device)?
->>>>>>> It's not about the actual application usages but rather against the
->>>>>>> malicious attacks.  Especially aloop is a virtual device that is
->>>>>>> available allover the places, it may be deployed / attacked easily.
->>>>>> The attack we are identifying here can only be done by the application
->>>>>> opening the aloop device.
->>>>>> An application allowed to open the aloop device is anyway able to
->>>>>> manipulate the audio streaming.
->>>>> Right, and if it such a racy access may lead to a driver misbehavior,
->>>>> it's a big concern.  The proposed callback usage is racy, so some
->>>>> other implementation might be broken easily in future.
->>>>>
->>>>>> Or do you see an attack which would influence any other device/stream
->>>>>> not opened by this application?
->>>>>>
->>>>>>>> May be we should add an additional synchronization mechanism in pcm_native.c
->>>>>>>> to avoid call of snd_pcm_link() in parallel with snd_pcm_start().
->>>>>>> If it really matters...  Honestly speaking, I'm not fully convinced
->>>>>>> whether we want to deal with this using the PCM link mechanism.
->>>>>>>
->>>>>>> What's the motivation for using the linked streams at the first place?
->>>>>>> That's one of the biggest missing piece in the whole picture.
->>>>>> In general when the user uses snd_pcm_link() it expects that the
->>>>>> linked devices are somehow synchronized.
->>>>>> Any applications already using snd_pcm_link() do not need to be
->>>>>> adapted to use the new feature of aloop (for example JACK or ALSA
->>>>>> multi plugin)
->>>>>>
->>>>>> But when linking a HW sound card and aloop without this patch set,
->>>>>> both devices will be started in sync but
->>>>>> the snd_pcm_period_eleapsed() calls of the different devices will
->>>>>> drift. To avoid this the aloop plugin can automatically use the right
->>>>>> timer.
->>>>>> If this feature is not implemented the user has to use snd_pcm_link()
->>>>>> to trigger snd_pcm_start() in sync but also has to configure the aloop
->>>>>> plugin to use the right sound timer.
->>>>>> May be the linked cards can change during runtime of the
->>>>>> system. Without this feature the aloop kernel driver has to be loaded
->>>>>> with different kernel parameters
->>>>>> to select the right timer.
->>>>>>
->>>>>> ALSA controls cannot be used easily. Selecting the sound timer by the
->>>>>> card number could be error prone because the card ID could change
->>>>>> between system starts.
->>>>>> Therefore an ALSA control supporting the card name should be
->>>>>> used. This could be for example done via an ALSA enum control. But in
->>>>>> this case the names of all sound cards of the system has to be
->>>>>> available
->>>>>> on aloop probe() call. But at this point in time the sound cards
->>>>>> probed after aloop are not available. Therefore only the sound timers
->>>>>> of the sound cards probed before aloop are selectable.
->>>>> Hm.  For me this patch series looks very hackish.  As mentioned, the
->>>>> PCM link usage is rather just a synchronous trigger start/stop for
->>>>> multiple streams belonging to the same hardware; in that sense, it'd
->>>>> be possible to adapt some mechanism for aloop, but at most it should
->>>>> be much less intrusive change, e.g. just doing the multiple
->>>>> loopback_timer_start() in a single loop.
->>>> What do you mean by "just doing the multiple loopback_timer_start() in
->>>> a single loop."?
->>>>
->>>> The snd_pcm_link() call information are mainly used to select the
->>>> right sound timer. Starting the timer in sync is a nice add-on.
->>>> Therefore by simple starting all timers in a for loop I would not
->>>> select the right sound timer.
->>>> (May be I misunderstood your example)
->>> My example is only about the system timer.
->>>
->>>> I could call the link_changed() callback inside
->>>> snd_pcm_stream_lock_irq() same lock also hold by snd_pcm_start().
->>>> But an application could still call snd_pcm_link() and snd_pcm_start()
->>>> in parallel e.g.:
->>>>
->>>> snd_pcm_common_ioctl(IOCTL_LINK)
->>>>> task switch
->>>> snd_pcm_common_ioctl(IOCTL_START)
->>>> snd_pcm_start()
->>>> done
->>>>> continue previous task
->>>> The same could for example happen with snd_pcm_start() and snd_hw_free():
->>>>
->>>> snd_pcm_common_ioctl(IOCTL_START)
->>>>> task switch
->>>> snd_pcm_common_ioctl(IOCTL_HW_FREE)
->>>> snd_hw_free()
->>>> Done
->>>>> continue previous task
->>>> snd_pcm_start() will fail with an error code
->>>>
->>>> Therefore I do not think we have to synchronize the IOCTL calls (this
->>>> can only be done in the user application or ALSAlib). We only have to
->>>> return an proper error code in case of misusage.
->>>>
->>>> As far as I understand ALSA was not designed for multithread usage. So
->>>> the user (or ALSAlib) has to be aware of calling the functions in the
->>>> right order.
->>>> Otherwise the user could expect returned error codes.
->>> Well, your assumption is plain wrong.  ALSA is designed for
->>> multithread usage.  And the kernel works for multithread.
->>>
->>> It's not about the right usage.  It's about the robustness, about
->>> whether any malicious code may lead to a serious defunct.  The opened
->>> race in calls may easily introduce such a failure.
->>>
->>>> In case of my patch set snd_pcm_start() will always fail with a proper
->>>> error code as long as no sound timer is running. This could be the
->>>> case if snd_pcm_start() is called before the first snd_pcm_link()
->>>> call.
->>>> This is also the case if snd_pcm_start() is called when the
->>>> snd_pcm_link() call has closed the old timer but not yet opened the
->>>> new one.
->>>> In case of snd_pcm_link() is called after snd_pcm_start() aloop will
->>>> write a proper warning (that the snd_pcm_link() call will have no
->>>> effect because the stream is already running).
->>>> All member variables used in loopback_snd_timer_open(),
->>>> loopback_snd_timer_source_update() and loopback_snd_timer_start() are
->>>> always protected by cable->lock. Therefore no one can read an invalid
->>>> state of these variables and the misusage can always be detected.
->>>>
->>>> Therefore I am not sure what I should change. May be you could
->>>> reference to a source code line which looks hackish for you?
->>> In principle, the PCM ops is supposed to be safe for operating a
->>> certain stuff.  If a state change may happen during the operation,
->>> this should be called inside PCM stream lock.  So the design of the
->>> new callback itself is fragile.
->>>
->>> then, it comes to a point to re-setup the timer at the link change.
->>> The idea is interesting, but it's a wrong usage of PCM link feature,
->>> to be honest.
->>>
->>> That said, I find the changes up to patch 8 are acceptable (with some
->>> fixes expected), but the link feature isn't.
+Patch series introducing support for ROHM BD70528 PMIC
 
-Hi Takashi,
+ROHM BD70528 is a programmable Power Management IC for battery
+powered 'ultra low power' systems like the pre-announced NXP
+i.MX7 ULP. This patch series introduces support for the PMIC. Please
+note that this driver only supports HW setup where PMIC is connected
+to I2C on A7 core. The other scenario is to use M4 as a power manager
+and connect pmic to M4. On such setups the A7 can only access pmic
+via M4 core using RPMSG virtio. Such setup depends on RPMSG
+implementation on M4 core and is currently not supported by this
+patch series.
 
-could you provide your feedback to the other patches?
+RTC block of the bd70528 can support 'wake' irq which wakes PMIC
+from standby state. Wake irq's can be armed to wake up system up
+to 24 hours from arming. bd70528 can also generate alarm interrupts
+which can be armed to occur years after triggering. The RTC driver
+does always arm both the waker and alarm irqs and does not utilize
+longer period of alarm interrupts. All the RTC timers are limited
+to occur within the next 24 hours. Any suggestions on more elegant
+timer support are welcome =)
 
-I would like to apply these 8 patches first and then I would provide an 
-addition patch to get an ALSA control to select the sound timer.
-I fear this would be the best idea (replacing the snd_pcm_link() 
-feature) because the ALSA control is accessible by any audio user and
-we could use ALSA hooks to select the right sound timer when opening an 
-ALSA device.
+GPIO portion of bd70528 driver adds I/O support for driving GPIO
+pins or reading the state. The interrupt functionality is provided
+by regmap-irq. Current GPIO driver is not aware of whether the pin(s)
+are used for I/O or interrupts and it is up-to driver user to
+ensure there is no misconfiguration or "double use".
 
->> Thanks for clarification. Do you think there is a chance to get an
->> acceptable snd_pcm_link() feature when using PCM stream lock for
->> snd_pcm_link()?
->> In this case I think snd_timer_open() has to be adapted to use
->> non-blocking calls only (do not use mutexs).
-> This needs a good amount of consideration: currently the PCM link
-> feature is designed for the synchronous start/stop, especially for the
-> streams *on the same hardware*.  The link between different devices is
-> merely a best-effort.  This is the current design.
->
-> Your target is obviously above that level.  So we have to consider
-> either extending the usage and the implementation, or introducing
-> another API.  Both are things we'd like to avoid as much as possible
-> from the maintainability POV.
->
->> Or do I have to use another API to configure the sound timer at
->> runtime (e.g. ALSA controls or RW kernel module parameters)?
-> The kernel parameter would be handy.  An alternative would be a
-> configuration via proc or sysfs file.  Even configfs or debugfs is
-> another possibility, but the proc file would be easiest, I suppose.
->
-> Of course, the disadvantage of these is that it's usually writable
-> only by root.
->
->
-> Takashi
+The power-supply patch included in series is only poorly tested as I
+lack of hardware with real battery connected. Reset and ADC are not
+supported by this series.
+
+Changelog v13:
+- Moved WDT enable/disable code from MFD to WDT
+- Added WDT enable/disable stubs for cases where WDT is omitted from
+  Kconfig
+
+Changelog v12:
+- No functional changes
+- Fixed styling issues pointed by Lee Jones
+- Fixed styling issues pointed by Alexandre Belloni
+- Fixed various styling issues
+
+Changelog v11:
+- No functional changes
+- Rebased on linux 5.1-rc2
+- Dropped patch 9 which was already applied by Mark
+- renamed dt-bindings patch as suggested by Rob
+  
+Changelog v10:
+- Exported locking functions for RTC lock and as a result dropped hid
+  the struct bd70528 from sub-devices who no longer needed it.
+- removed linux/gpio.h header from GPIO driver.
+
+Changelog v9: Changes suggested by Lee Jones
+- MFD, DT-binding, RTC and WDT changed
+- DT-bindings: Spelling fixes
+- RTC and WDT: Use exported function instead of function pointer for WDT
+  arming/disarming
+- MFD: Export WDT arming/disarming function instead of providing a
+  pointer to it.
+- Various styling fixes.
+
+Changelog v8:
+- regulators(*), wdt, gpio, rtc, mfd(*) and dt-bindings unchanged.
+  (*)Patches 1-3 squashed to not break bisecting.
+
+- removed unnecessary newline from clk
+- fixed possible use of uninitialized 'reg' from power-supply.
+  Found by 0-day tests and reported by Dan Carpenter.
+
+Changelog v7:
+Only patch 2 changed.
+- Avoid out-of-array-bounds access at regulator probe if unsupported
+  chip type is passed to bd718x7 regulator driver.
+
+Changelog v6:
+Only patch 10 changed.
+- styling fixes pointed by Gunter Roeck
+- dropped RFC tag
+
+Changelog v5 (RFC):
+Only patch 7 changed.
+- Explained why lock is not needed at GPIO value getting
+- removed ampersands from function pointer assignments.
+
+Changelog v4 (RFC):
+patches 1,2,3,4,5,10 are unchanged from v3
+DT-binding fixes suggested by Rob Herring:
+- drop interrupt-parent
+- drop clock-frequency
+- change pmic node name to a generic one
+RTC:
+- enable RTC block's irqs before registering rtc
+GPIO fixes after initial testing:
+- fix getting GPIO value when direction is output
+POWER:
+- Add ASCII art intended to clarify the charger HW state machine
+
+Changelog v3 (RFC):
+patches 1,2,3,4,5,6,7,8 and 10 are unchanged from v2
+RTC fixups suggested by Guenter Roeck:
+- create bd70528_set_time_locked function in order to simplify
+  error handling and to make mutex lock/unlock path more obvious
+- don't ignore errors on bd70528_set_time_locked
+- simplify bd70528_read_alarm enabled condition setting
+- add __packed to structs where members are mapped to HW registers
+- remove unnecessary brackets from enable condition in set_wake
+RTC: fixups suggested by Alessandro Belloni
+- don't use deprecated devm_rtc_device_register
+- add alarm_irq_enable callback
+- add range_min and range_max
+WDT:
+- add regmap and mutex pointers to WDT data so that they can be accessed
+  without dereferencing the parent data
+- remove parent data pointer from WDT data
+- embed struct watchdog_device into WDT data in order to avoid double
+  allocation.
+GPIO:
+- remove unused header as pointed by Linus Walleij
+POWER:
+- do not copy the whole MFD data (especially the mutex to avoid
+  all possibilities of accidentally using the copy of a mutex)
+
+Changelog v2 (RFC): Mainly feedback from Guenter Roeck:
+- patches 1, 2, 3, 4, 5, 9 are unchanged.
+- mfd: own mutex for each bd70528 instance - embed in struct bd70528
+- watchdog: do not copy parent device data
+- watchdog: fix deadlock caused by double locked mutex
+- watchdog: set initial timeouts and WDT parent information
+- watchdog: remove unnecessary ping function from ops
+- watchdog: and the comment regarding it
+- watchdog: allocate watchdog struct in order to allow multiple WDG
+  instances
+- rtc: bd70528 fix the order of mutex unlock and re-enabling RTC based
+  timers
+- rtc: fix the irq mask register address
+- power: fix the irq mask register address
+- regulator/regmap-irq: Drop the patches 1, 8 and 9 from original series
+  as those were already applied by Mark 
+
+Patch 1:
+	split the bd718x7.h to generic and chip specific portions.
+	(breaks compilation without patch 2 and 3)
+	- adapt bd718x7.h changes to bd718x7 regulator driver
+	- adapt bd718x7.h changes to bd718x7 clk driver
+Patch 2:
+	add MFD core support for bd70528
+Patch 3:
+	support bd70528 clk using bd718x7 clk driver
+Patch 4:
+	document DT bindings for BD70528
+Patch 5:
+	support BD70528 GPIO block
+Patch 6:
+	support BD70528 RTC
+Patch 7:
+	support BD70528 battery charger
+Patch 8:
+	support BD70528 watchdog
+
+This patch series is based on Linus' v5.1-rc2 tag.
+
+---
+
+Matti Vaittinen (8):
+  mfd: regulator: clk: split rohm-bd718x7.h
+  mfd: bd70528: Support ROHM bd70528 PMIC - core
+  clk: bd718x7: Support ROHM BD70528 clk block
+  dt-bindings: mfd: Document first ROHM BD70528 bindings
+  gpio: Initial support for ROHM bd70528 GPIO block
+  rtc: bd70528: Initial support for ROHM bd70528 RTC
+  power: supply: Initial support for ROHM BD70528 PMIC charger block
+  watchdog: bd70528: Initial support for ROHM BD70528 watchdog block
+
+ .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 +++
+ drivers/clk/Kconfig                           |   6 +-
+ drivers/clk/clk-bd718x7.c                     |  24 +-
+ drivers/gpio/Kconfig                          |  11 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-bd70528.c                   | 232 ++++++
+ drivers/mfd/Kconfig                           |  17 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rohm-bd70528.c                    | 316 ++++++++
+ drivers/mfd/rohm-bd718x7.c                    |  23 +-
+ drivers/power/supply/Kconfig                  |   9 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/bd70528-charger.c        | 742 ++++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c         |  25 +-
+ drivers/rtc/Kconfig                           |   8 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-bd70528.c                     | 500 ++++++++++++
+ drivers/watchdog/Kconfig                      |  12 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/bd70528_wdt.c                | 290 +++++++
+ include/linux/mfd/rohm-bd70528.h              | 408 ++++++++++
+ include/linux/mfd/rohm-bd718x7.h              |  22 +-
+ include/linux/mfd/rohm-generic.h              |  20 +
+ 23 files changed, 2726 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 drivers/watchdog/bd70528_wdt.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+-- 
+2.17.2
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
