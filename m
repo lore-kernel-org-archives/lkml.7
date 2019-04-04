@@ -2,102 +2,163 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9E3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6188C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF59206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829C8206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554371439;
+	bh=yHXEMEU+1ED6KQglNKd6brh+cIawGWd4/TFUQpf7IXk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m/OKM7pNOpqD948WpvG0hkvahf18pndqdZLhiyotCZ0sfPqcqs41R3RmLmakFiM5U
+	 UmVo540rmM5Vs1R2FXYKIbkp1dEE6kTadlILYcTAp6bDSsFQSvuxJ9ytGRzU5/SR8G
+	 d677Twjc4fr5hh4nQwi5u9/Lnz/xNAmRGqRvcBCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbfDDJud (ORCPT
+        id S1730321AbfDDIzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:50:33 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:20685 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730361AbfDDJub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:50:31 -0400
-X-IronPort-AV: E=Sophos;i="5.60,308,1549954800"; 
-   d="scan'208";a="26741851"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Apr 2019 02:50:30 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch03.mchp-main.com
- (10.10.76.49) with Microsoft SMTP Server id 14.3.352.0; Thu, 4 Apr 2019
- 02:50:29 -0700
-Date:   Thu, 4 Apr 2019 11:49:48 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Peng Hao <peng.hao2@zte.com.cn>
-CC:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <mojha@codeaurora.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4] arm/mach-at91/pm : fix possible object reference leak
-Message-ID: <20190404094948.fumw3w53ogtd4bud@M43218.corp.atmel.com>
-Mail-Followup-To: Peng Hao <peng.hao2@zte.com.cn>,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        mojha@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1554214358-113444-1-git-send-email-peng.hao2@zte.com.cn>
+        Thu, 4 Apr 2019 04:55:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730298AbfDDIzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E9520652;
+        Thu,  4 Apr 2019 08:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368130;
+        bh=yHXEMEU+1ED6KQglNKd6brh+cIawGWd4/TFUQpf7IXk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FTeIsQAeRT2vI8tFSOLppUI68r7c9vsSNRg0wk+d+Wja9txue4NHQ1ECCxC6C+bwR
+         xt2xBL09qm88B78QtUUtPmMc8zwPCRBqJrhfEJQMbV3C5+WE5bJ6VOG1MWruEwKv0W
+         6Un3KcVBcWZbSP0ah/nnItNvIi2bDk+WiRTkKATI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Slavomir Kaslev <kaslevs@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 032/121] fs: Make splice() and tee() take into account O_NONBLOCK flag on pipes
+Date:   Thu,  4 Apr 2019 10:47:00 +0200
+Message-Id: <20190404084547.084612403@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
+References: <20190404084545.245659903@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1554214358-113444-1-git-send-email-peng.hao2@zte.com.cn>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 10:12:38PM +0800, Peng Hao wrote:
-> 
-> of_find_device_by_node() takes a reference to the struct device
-> when it finds a match via get_device. When returning error we should
-> call put_device.
-> 
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Thanks applied to at91-fixes with:
+------------------
 
-Fixes: 24a0f5c539f9 ("ARM: at91: pm: Add sama5d2 backup mode")
-Cc: <stable@vger.kernel.org> # v4.14+
+[ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
 
-> ---
->  arch/arm/mach-at91/pm.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-> index 51e808a..38511a5 100644
-> --- a/arch/arm/mach-at91/pm.c
-> +++ b/arch/arm/mach-at91/pm.c
-> @@ -591,13 +591,13 @@ static int __init at91_pm_backup_init(void)
->  
->  	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-securam");
->  	if (!np)
-> -		goto securam_fail;
-> +		goto securam_fail_no_ref_dev;
->  
->  	pdev = of_find_device_by_node(np);
->  	of_node_put(np);
->  	if (!pdev) {
->  		pr_warn("%s: failed to find securam device!\n", __func__);
-> -		goto securam_fail;
-> +		goto securam_fail_no_ref_dev;
->  	}
->  
->  	sram_pool = gen_pool_get(&pdev->dev, NULL);
-> @@ -620,6 +620,8 @@ static int __init at91_pm_backup_init(void)
->  	return 0;
->  
->  securam_fail:
-> +	put_device(&pdev->dev);
-> +securam_fail_no_ref_dev:
->  	iounmap(pm_data.sfrbu);
->  	pm_data.sfrbu = NULL;
->  	return ret;
-> -- 
-> 1.8.3.1
-> 
-> 
+The current implementation of splice() and tee() ignores O_NONBLOCK set
+on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag for
+blocking on pipe arguments.  This is inconsistent since splice()-ing
+from/to non-pipe file descriptors does take O_NONBLOCK into
+consideration.
+
+Fix this by promoting O_NONBLOCK, when set on a pipe, to
+SPLICE_F_NONBLOCK.
+
+Some context for how the current implementation of splice() leads to
+inconsistent behavior.  In the ongoing work[1] to add VM tracing
+capability to trace-cmd we stream tracing data over named FIFOs or
+vsockets from guests back to the host.
+
+When we receive SIGINT from user to stop tracing, we set O_NONBLOCK on
+the input file descriptor and set SPLICE_F_NONBLOCK for the next call to
+splice().  If splice() was blocked waiting on data from the input FIFO,
+after SIGINT splice() restarts with the same arguments (no
+SPLICE_F_NONBLOCK) and blocks again instead of returning -EAGAIN when no
+data is available.
+
+This differs from the splice() behavior when reading from a vsocket or
+when we're doing a traditional read()/write() loop (trace-cmd's
+--nosplice argument).
+
+With this patch applied we get the same behavior in all situations after
+setting O_NONBLOCK which also matches the behavior of doing a
+read()/write() loop instead of splice().
+
+This change does have potential of breaking users who don't expect
+EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH programs
+that set O_NONBLOCK and don't anticipate EAGAIN are arguably buggy[2].
+
+ [1] https://github.com/skaslev/trace-cmd/tree/vsock
+ [2] https://github.com/torvalds/linux/blob/d47e3da1759230e394096fd742aad423c291ba48/fs/read_write.c#L1425
+
+Signed-off-by: Slavomir Kaslev <kaslevs@vmware.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/splice.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/fs/splice.c b/fs/splice.c
+index 00d2f142dcf9..3ff3e7fb3b5a 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1118,6 +1118,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (ipipe == opipe)
+ 			return -EINVAL;
+ 
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		return splice_pipe_to_pipe(ipipe, opipe, len, flags);
+ 	}
+ 
+@@ -1143,6 +1146,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (unlikely(ret < 0))
+ 			return ret;
+ 
++		if (in->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		file_start_write(out);
+ 		ret = do_splice_from(ipipe, out, &offset, len, flags);
+ 		file_end_write(out);
+@@ -1167,6 +1173,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 			offset = in->f_pos;
+ 		}
+ 
++		if (out->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		pipe_lock(opipe);
+ 		ret = wait_for_space(opipe, flags);
+ 		if (!ret)
+@@ -1704,6 +1713,9 @@ static long do_tee(struct file *in, struct file *out, size_t len,
+ 	 * copying the data.
+ 	 */
+ 	if (ipipe && opipe && ipipe != opipe) {
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		/*
+ 		 * Keep going, unless we encounter an error. The ipipe/opipe
+ 		 * ordering doesn't really matter.
+-- 
+2.19.1
+
+
+
