@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889FDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62D42075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A47B20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369109;
-	bh=bd8uKPHdqgqUbzuemPw5ZvsQVDhpftHuHdL7BklAn7I=;
+	s=default; t=1554369113;
+	bh=8yWRIlVtQ8vdjfvBFhjCFtMLTdNl/bLAurYctvRklfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0IPRSWsvFDZQiUw4gCzodWJPSFPUX/zsdcuf9H6JenA3tWOCL0wEJoIiDQHb6CZ5
-	 Pr35wCiOjaaoMhHH4S5zqlycletGz9WfxIDDpuvoc13MEIyRLrMBxTc+Q9SCIScJuP
-	 JxjMZqionJVkre6PALVD8s/dMYURezTnII7xEHJ4=
+	b=qDQ5iiu4S/R3NBAgfw+LWiQAC5XixEqwUv3fy7jzDTgrJCMAZnBqgCA7xD0siWcSz
+	 czH116F1M0JjqU25+iaqhZ5PpoXVuoydf2Bni0mfxuaUiZC7NqLxoSq3keBmGcnEuu
+	 g7KOhs3BoTjXsyAwdqjHClNlNQO71YDQRU5zYB/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733216AbfDDJLs (ORCPT
+        id S1733226AbfDDJLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733194AbfDDJLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:41 -0400
+        id S1733194AbfDDJLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93AFE2054F;
-        Thu,  4 Apr 2019 09:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87F2320652;
+        Thu,  4 Apr 2019 09:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369100;
-        bh=bd8uKPHdqgqUbzuemPw5ZvsQVDhpftHuHdL7BklAn7I=;
+        s=default; t=1554369108;
+        bh=8yWRIlVtQ8vdjfvBFhjCFtMLTdNl/bLAurYctvRklfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWuKjwkQEst17Gh97SLnYduVEviAXXmuUh8sKKBe4U+01VKA9tIoXoLgXDZcbuRUF
-         tVbAwAmbGXNURLgkS5U/1T4C0YocSSWRe14Ps7a5GkuU2162K77QuOhCmXy6FrL9X0
-         sRABxmBpWhP/Uci18aWj/7AuYlDA1VGItutcAxJY=
+        b=ns2A8rXDHrysDg1A0HWbB0c8Lj4kwYe5m4XXsph07tBN0+1SG2lW9y3stClei1rZg
+         9K4XFNkHyGD1fo0jto7j0uLKf3T9X4ijJYnP4IEiHutJeaWTiplDoxtGsQRy1XxaYj
+         Un6nsUOZCkq3ltdhj2SI3TVC5RORHw/umjwQgyPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 084/246] btrfs: qgroup: Make qgroup async transaction commit more aggressive
-Date:   Thu,  4 Apr 2019 10:46:24 +0200
-Message-Id: <20190404084622.082725562@linuxfoundation.org>
+Subject: [PATCH 5.0 087/246] net: dsa: mv88e6xxx: Add lockdep classes to fix false positive splat
+Date:   Thu,  4 Apr 2019 10:46:27 +0200
+Message-Id: <20190404084622.188073082@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,115 +67,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f5fef4593653dfa2a865c485bb81415de51d5c99 ]
+[ Upstream commit f6d9758b12660484b6639364cc406da92a918c96 ]
 
-[BUG]
-Btrfs qgroup will still hit EDQUOT under the following case:
+The following false positive lockdep splat has been observed.
 
-  $ dev=/dev/test/test
-  $ mnt=/mnt/btrfs
-  $ umount $mnt &> /dev/null
-  $ umount $dev &> /dev/null
+======================================================
+WARNING: possible circular locking dependency detected
+4.20.0+ #302 Not tainted
+------------------------------------------------------
+systemd-udevd/160 is trying to acquire lock:
+edea6080 (&chip->reg_lock){+.+.}, at: __setup_irq+0x640/0x704
 
-  $ mkfs.btrfs -f $dev
-  $ mount $dev $mnt -o nospace_cache
+but task is already holding lock:
+edff0340 (&desc->request_mutex){+.+.}, at: __setup_irq+0xa0/0x704
 
-  $ btrfs subv create $mnt/subv
-  $ btrfs quota enable $mnt
-  $ btrfs quota rescan -w $mnt
-  $ btrfs qgroup limit -e 1G $mnt/subv
+which lock already depends on the new lock.
 
-  $ fallocate -l 900M $mnt/subv/padding
-  $ sync
+the existing dependency chain (in reverse order) is:
 
-  $ rm $mnt/subv/padding
+-> #1 (&desc->request_mutex){+.+.}:
+       mutex_lock_nested+0x1c/0x24
+       __setup_irq+0xa0/0x704
+       request_threaded_irq+0xd0/0x150
+       mv88e6xxx_probe+0x41c/0x694 [mv88e6xxx]
+       mdio_probe+0x2c/0x54
+       really_probe+0x200/0x2c4
+       driver_probe_device+0x5c/0x174
+       __driver_attach+0xd8/0xdc
+       bus_for_each_dev+0x58/0x7c
+       bus_add_driver+0xe4/0x1f0
+       driver_register+0x7c/0x110
+       mdio_driver_register+0x24/0x58
+       do_one_initcall+0x74/0x2e8
+       do_init_module+0x60/0x1d0
+       load_module+0x1968/0x1ff4
+       sys_finit_module+0x8c/0x98
+       ret_fast_syscall+0x0/0x28
+       0xbedf2ae8
 
-  # Hit EDQUOT
-  $ xfs_io -f -c "pwrite 0 512M" $mnt/subv/real_file
+-> #0 (&chip->reg_lock){+.+.}:
+       __mutex_lock+0x50/0x8b8
+       mutex_lock_nested+0x1c/0x24
+       __setup_irq+0x640/0x704
+       request_threaded_irq+0xd0/0x150
+       mv88e6xxx_g2_irq_setup+0xcc/0x1b4 [mv88e6xxx]
+       mv88e6xxx_probe+0x44c/0x694 [mv88e6xxx]
+       mdio_probe+0x2c/0x54
+       really_probe+0x200/0x2c4
+       driver_probe_device+0x5c/0x174
+       __driver_attach+0xd8/0xdc
+       bus_for_each_dev+0x58/0x7c
+       bus_add_driver+0xe4/0x1f0
+       driver_register+0x7c/0x110
+       mdio_driver_register+0x24/0x58
+       do_one_initcall+0x74/0x2e8
+       do_init_module+0x60/0x1d0
+       load_module+0x1968/0x1ff4
+       sys_finit_module+0x8c/0x98
+       ret_fast_syscall+0x0/0x28
+       0xbedf2ae8
 
-[CAUSE]
-Since commit a514d63882c3 ("btrfs: qgroup: Commit transaction in advance
-to reduce early EDQUOT"), btrfs is not forced to commit transaction to
-reclaim more quota space.
+other info that might help us debug this:
 
-Instead, we just check pertrans metadata reservation against some
-threshold and try to do asynchronously transaction commit.
+ Possible unsafe locking scenario:
 
-However in above case, the pertrans metadata reservation is pretty small
-thus it will never trigger asynchronous transaction commit.
+       CPU0                    CPU1
+       ----                    ----
+  lock(&desc->request_mutex);
+                               lock(&chip->reg_lock);
+                               lock(&desc->request_mutex);
+  lock(&chip->reg_lock);
 
-[FIX]
-Instead of only accounting pertrans metadata reservation, we calculate
-how much free space we have, and if there isn't much free space left,
-commit transaction asynchronously to try to free some space.
+&desc->request_mutex refer to two different mutex. #1 is the GPIO for
+the chip interrupt. #2 is the chained interrupt between global 1 and
+global 2.
 
-This may slow down the fs when we have less than 32M free qgroup space,
-but should reduce a lot of false EDQUOT, so the cost should be
-acceptable.
+Add lockdep classes to the GPIO interrupt to avoid this.
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 543dd5e66f31..e28fb43e943b 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2842,16 +2842,15 @@ out:
- /*
-  * Two limits to commit transaction in advance.
-  *
-- * For RATIO, it will be 1/RATIO of the remaining limit
-- * (excluding data and prealloc meta) as threshold.
-+ * For RATIO, it will be 1/RATIO of the remaining limit as threshold.
-  * For SIZE, it will be in byte unit as threshold.
-  */
--#define QGROUP_PERTRANS_RATIO		32
--#define QGROUP_PERTRANS_SIZE		SZ_32M
-+#define QGROUP_FREE_RATIO		32
-+#define QGROUP_FREE_SIZE		SZ_32M
- static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 				const struct btrfs_qgroup *qg, u64 num_bytes)
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 4a0ec8e87c7a..6cba05a80892 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -442,12 +442,20 @@ out_mapping:
+ 
+ static int mv88e6xxx_g1_irq_setup(struct mv88e6xxx_chip *chip)
  {
--	u64 limit;
-+	u64 free;
- 	u64 threshold;
++	static struct lock_class_key lock_key;
++	static struct lock_class_key request_key;
+ 	int err;
  
- 	if ((qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_RFER) &&
-@@ -2870,20 +2869,21 @@ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 	 */
- 	if ((qg->lim_flags & (BTRFS_QGROUP_LIMIT_MAX_RFER |
- 			      BTRFS_QGROUP_LIMIT_MAX_EXCL))) {
--		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL)
--			limit = qg->max_excl;
--		else
--			limit = qg->max_rfer;
--		threshold = (limit - qg->rsv.values[BTRFS_QGROUP_RSV_DATA] -
--			    qg->rsv.values[BTRFS_QGROUP_RSV_META_PREALLOC]) /
--			    QGROUP_PERTRANS_RATIO;
--		threshold = min_t(u64, threshold, QGROUP_PERTRANS_SIZE);
-+		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL) {
-+			free = qg->max_excl - qgroup_rsv_total(qg) - qg->excl;
-+			threshold = min_t(u64, qg->max_excl / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		} else {
-+			free = qg->max_rfer - qgroup_rsv_total(qg) - qg->rfer;
-+			threshold = min_t(u64, qg->max_rfer / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		}
+ 	err = mv88e6xxx_g1_irq_setup_common(chip);
+ 	if (err)
+ 		return err;
  
- 		/*
- 		 * Use transaction_kthread to commit transaction, so we no
- 		 * longer need to bother nested transaction nor lock context.
- 		 */
--		if (qg->rsv.values[BTRFS_QGROUP_RSV_META_PERTRANS] > threshold)
-+		if (free < threshold)
- 			btrfs_commit_transaction_locksafe(fs_info);
- 	}
- 
++	/* These lock classes tells lockdep that global 1 irqs are in
++	 * a different category than their parent GPIO, so it won't
++	 * report false recursion.
++	 */
++	irq_set_lockdep_class(chip->irq, &lock_key, &request_key);
++
+ 	err = request_threaded_irq(chip->irq, NULL,
+ 				   mv88e6xxx_g1_irq_thread_fn,
+ 				   IRQF_ONESHOT | IRQF_SHARED,
 -- 
 2.19.1
 
