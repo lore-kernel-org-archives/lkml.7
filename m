@@ -2,119 +2,184 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05425C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12C1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3542082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A14A2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dDghTr1K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmAEAI/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfDDCdj (ORCPT
+        id S1726574AbfDDCfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:33:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:53605 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbfDDCdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 22:33:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44ZRp66N9Rz9sSW;
-        Thu,  4 Apr 2019 13:33:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554345216;
-        bh=gBGpPY53adum+ySqcQg91tpyKBMB7s+oko9+jpuDpzo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dDghTr1KnzQFDbQmWN3QEuT9HjkHtU0uVNEwsvqzE9JKEzLHf5SawfES2ZcbDxM1Z
-         hG4IidYni+wywB7o4uQ+oCy7kpL71W6n8jLvXPe2eZxCbQgpclxDGylh3V36OgDxBz
-         jQ+x2U0+IsHZNFT43gzccN0TJMvRGmugqwyzYa7iL9GefjyPbTIhddoixluTDrXRNm
-         aFKMOV7grdSqU/7U4gssGKjz9FVUdtjsDWd6fW65sSWJFCwat8J5etnOsgqUlXofl8
-         OImkbIRuNYv9QSJy834B2swTRMBh6hp8R7XsdEyF7sGzGzUXD5jxtMGj9NkjFx+C7r
-         eBCT9QHo9BowA==
-Date:   Thu, 4 Apr 2019 13:33:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Stefan Roese <sr@denx.de>
-Subject: linux-next: manual merge of the staging tree with the spi tree
-Message-ID: <20190404133317.56500903@canb.auug.org.au>
+        Wed, 3 Apr 2019 22:35:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38617 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfDDCfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 22:35:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g37so372686plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 19:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cpNPhnHlvkFGKfi0ejvd3Y/CasYlaZaOuSTN3WofdKg=;
+        b=TmAEAI/T+eTuvNcldHaVpc+b/cE6vIuCCXrUeZtBaVlkR9xPLT+0/KQKrLlOV/1MDM
+         FafHFR0G/rmLYC1icljCAcFTmLkXrBS5wK10vkcF/Cafk1pew43XI1/+9D7i2zKfcjgk
+         Qs/rYwQH+Fn/6fzQkjXj1KeOvwiRI/1OGkMNx8ty3HYs0NJ72amaX52H5VwRP4jFq2Vx
+         ovRJd9G1ZIo0gQsumJgNoJ7/igBfispNETVyoErzNfmGbSTllCs/5OejP5HUopM2rEm4
+         jT9FrhrEQE8/0SNZetVdrbjttPVlOZ9OKLxarcuH+Ps+0PFulsNvQAAXACnOTZM4RsUm
+         59mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cpNPhnHlvkFGKfi0ejvd3Y/CasYlaZaOuSTN3WofdKg=;
+        b=fGJgWwxoNokwICmaCZRoT5sx0drPXIct5J8VUw/hzJi/arcaGY714ckAxK8eBnFboe
+         ZE7mcidCVYCrWXYXcyKxNxnpvNbRu0VQyAfjW7bsAlPnXSYBxy6nNvfvMxeHsd4yEtsJ
+         hrABYEOUs3KNXpM7lVZ9kKkBAx2IEFq+Sd+HGg3nR6eSx7b5Q6TKXVwMVBgj/ZjwoH42
+         P7+Om0EO+BGNHzUWzQnZdb34DYkbYWVqg77Enxofi9eTzI18CfmfvOJO35NqM0wiTByi
+         60sre+pqhp3iOSBS4eA98GB5hI4mr/PuwDBL3WISjzrOrbwVVvY4kNamlKfrNYJakg9x
+         xRVQ==
+X-Gm-Message-State: APjAAAXYO1QNgMeMR+giY1BsxOSBICNHVpf2ZODd1ONlnzTPhWgcWUd1
+        74YRbEEhs5MBjLWP96vfB3W/og==
+X-Google-Smtp-Source: APXvYqyJuDVfgeN9a2z/dG5Duu/R2TMvZ13v/DNNllDOnoBZXcl7VSW34o9tFWYDNrT9o+FV1gRRUA==
+X-Received: by 2002:a17:902:8ecc:: with SMTP id x12mr3686623plo.0.1554345307521;
+        Wed, 03 Apr 2019 19:35:07 -0700 (PDT)
+Received: from [10.71.14.66] ([147.50.13.10])
+        by smtp.googlemail.com with ESMTPSA id i15sm21581314pfd.162.2019.04.03.19.35.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 19:35:06 -0700 (PDT)
+Subject: Re: [PATCH v4] arm64: dts: ls1088a: add one more thermal zone node
+To:     Yuantian Tang <andy.tang@nxp.com>, shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        rui.zhang@intel.com, edubezval@gmail.com
+References: <20190401032905.32711-1-andy.tang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <273bb946-8659-8e50-6598-3cffa6dff9f5@linaro.org>
+Date:   Thu, 4 Apr 2019 04:35:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/AqdhqQ7YcD9z6.=F1JwP81R"; protocol="application/pgp-signature"
+In-Reply-To: <20190401032905.32711-1-andy.tang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AqdhqQ7YcD9z6.=F1JwP81R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 01/04/2019 05:29, Yuantian Tang wrote:
+> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
+> sensor is used to monitor the temperature of core and SoC platform is for
+> platform. The current dts only support the first sensor.
+> This patch adds the second sensor node to dts to enable it.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
+> v4:
+> 	- use hyphen instead of underscore in node name
+> v3:
+> 	- use more descriptive name for each zone
+> v2:
+> 	- Add more information about sensors to description
+> PS: In order to keep consistency to the first thermal-zone node, there will
+> be "WARNING: line over 80 characters" warnings.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
+>  1 files changed, 39 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 661137f..d6d4ff2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -129,19 +129,19 @@
+>  	};
+>  
+>  	thermal-zones {
+> -		cpu_thermal: cpu-thermal {
+> +		core-cluster-thermal {
+>  			polling-delay-passive = <1000>;
+>  			polling-delay = <5000>;
+>  			thermal-sensors = <&tmu 0>;
+>  
+>  			trips {
+> -				cpu_alert: cpu-alert {
+> +				core_cluster_alert: core-cluster-alert {
+>  					temperature = <85000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu_crit: cpu-crit {
+> +				core_cluster_crit: core-cluster-crit {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "critical";
+> @@ -150,7 +150,42 @@
+>  
+>  			cooling-maps {
+>  				map0 {
+> -					trip = <&cpu_alert>;
+> +					trip = <&core_cluster_alert>;
+> +					cooling-device =
+> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
 
-Hi all,
+Does it make sense to assign the same cooling devices to two different
+thermal zones running different instances of governor ?
 
-Today's linux-next merge of the staging tree got a conflict in:
+> +			};
+> +		};
+> +
+> +		platform-thermal {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&tmu 1>;
+> +
+> +			trips {
+> +				platform_alert: platform-alert {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				platform_crit: platform-crit {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&platform_alert>;
+>  					cooling-device =
+>  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> 
 
-  drivers/spi/spi-mt7621.c
 
-between commit:
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-  cbd66c626e16 ("spi: mt7621: Move SPI driver out of staging")
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-from the spi tree and commit:
-
-  18f0e249da67 ("staging: mt7621-spi: Remove parentheses")
-
-from the staging tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/spi/spi-mt7621.c
-index ae836114ee3d,0e0e67280b00..000000000000
---- a/drivers/spi/spi-mt7621.c
-+++ b/drivers/spi/spi-mt7621.c
-@@@ -305,8 -301,8 +303,8 @@@ static int mt7621_spi_setup(struct spi_
-  	struct mt7621_spi *rs =3D spidev_to_mt7621_spi(spi);
- =20
-  	if ((spi->max_speed_hz =3D=3D 0) ||
- -		(spi->max_speed_hz > (rs->sys_freq / 2)))
- +	    (spi->max_speed_hz > (rs->sys_freq / 2)))
-- 		spi->max_speed_hz =3D (rs->sys_freq / 2);
-+ 		spi->max_speed_hz =3D rs->sys_freq / 2;
- =20
-  	if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
-  		dev_err(&spi->dev, "setup: requested speed is too low %d Hz\n",
-
---Sig_/AqdhqQ7YcD9z6.=F1JwP81R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlylbO0ACgkQAVBC80lX
-0Gx6Igf+K2YKTdU37c54sj8H7yIHR+NLJGaQWmWw0Nh4eEYs8dhI4RlT3znViScu
-V3GEOo1xJXOtTuN61IlPwFMnIHiUdpCFqid9bjf3IC6b9eM33JhCNf7oVSZSCW/P
-Sbky67qdms3cNPyLogcTuDpy+0L1ZO5X5zRNRXB7fxEQ+MUZqzNoZ6bfCsiVC8KL
-5DnmC+lKsxS0aVKNZWgi3xnRDCoZKwlT1Oxw4Wxp8XQCQ5Y5Y5GLTwYh1l++7m3i
-kNJnDBfa8IuPAic5rtO5b4Zv/BVmE9IkNN6KgOQkl5lhD7Mdwz0Mo6f1xpAqqJ1y
-b3CpMnwsJn5IjpvlaqlZrnPP4FKm/Q==
-=mtkn
------END PGP SIGNATURE-----
-
---Sig_/AqdhqQ7YcD9z6.=F1JwP81R--
