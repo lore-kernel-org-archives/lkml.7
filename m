@@ -2,224 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ED9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C9AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C822082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCD020855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfDDOtM (ORCPT
+        id S1729107AbfDDOtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:49:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:33506 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbfDDOtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:49:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D675169E;
-        Thu,  4 Apr 2019 07:49:11 -0700 (PDT)
-Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A4593F59C;
-        Thu,  4 Apr 2019 07:49:08 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 15:49:03 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc:     robin.murphy@arm.com, andrew.murray@arm.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        mark.rutland@arm.com, guohanjun@huawei.com, john.garry@huawei.com,
-        pabba@codeaurora.org, vkilari@codeaurora.org,
-        rruigrok@codeaurora.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxarm@huawei.com, neil.m.leeder@gmail.com
-Subject: Re: [PATCH v7 4/4] perf/smmuv3: Enable HiSilicon Erratum 162001800
- quirk
-Message-ID: <20190404144903.GA15903@red-moon>
-References: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
- <20190326151753.19384-5-shameerali.kolothum.thodi@huawei.com>
+        Thu, 4 Apr 2019 10:49:40 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41113 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbfDDOtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:49:39 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k8so2337676lja.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:49:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=juueRY59R/m88qkqw19CEd+EkOE6j2K2smQOXFVEsWg=;
+        b=id2//iQ4Fb/2L6ll7MXd0pRRwplwmRykBCk2Xx/6uGdiEdJ6pWxajpfNKKdr7HYMBI
+         uw/Y92nxUFOMnlprnuIqmlAg4wnirLqtsBPNJ2F3Ee4alQD1eC0ELtaSdiqxD0NrnH0L
+         GIJRTTSz+/v62/byEwADAhjukv6FgSfzeveLrVJvdtUW/5uLo6RREUSUyNzeFzmvsJQV
+         uY5oKIPEYD9COSJtzsVmB6uYLwwzNP6m71qScNWQbkhzgaSztgNRZHMAaJ18wsu3fK1U
+         2p47m25RQU2qLZDpY12AqE5/hPe3HHJtzYb1qNSXB/Ol5he7gS4hQQJkWYJr8V/lKSVl
+         IMUA==
+X-Gm-Message-State: APjAAAVSYTo1m5t/TbsAWjyV58vQpUWLDH8999FQqwaaRtl6q3HeSwYQ
+        b+btb7RQVn++XFXNiD5uf0rLXm0Q+opBunwCNkeIIoLHkMs=
+X-Google-Smtp-Source: APXvYqzXX6e2ZpolAsb00jCtcOm2ytmAxZbWErKg/30rpK5kUu6Zikwsm/NCvc8YXxJzqMcBJ5rQO6Ef4q7Q0jNFidc=
+X-Received: by 2002:a2e:1245:: with SMTP id t66mr3798426lje.18.1554389377982;
+ Thu, 04 Apr 2019 07:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326151753.19384-5-shameerali.kolothum.thodi@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190328130306.25384-1-mcroce@redhat.com> <20190403140203.qq37rgcikvoawb5f@brauner.io>
+ <CAGnkfhx+igF579dez6qwAxrtT-JrGSSEn-QmK+92447qBqXPpg@mail.gmail.com>
+ <20190403155108.GI22763@bombadil.infradead.org> <CAGnkfhxBafq4KeR8Jp5XBd7yWrMiofmEwqsCpb_7eL+ddgWagw@mail.gmail.com>
+ <CAGnkfhyY7QmrGEk-YF9w-X78dHSDOPQMYtxBkVnpb0MS8DkVhQ@mail.gmail.com> <20190404140931.zpmcbfgdnlq6jkqn@brauner.io>
+In-Reply-To: <20190404140931.zpmcbfgdnlq6jkqn@brauner.io>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 4 Apr 2019 16:49:02 +0200
+Message-ID: <CAGnkfhzse+vu0VK1zaOig=o-ayPUTZGjjVYdReJcnZ+JyfOmxg@mail.gmail.com>
+Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Zev Weiss <zev@bewilderbeest.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 03:17:53PM +0000, Shameer Kolothum wrote:
-> HiSilicon erratum 162001800 describes the limitation of
-> SMMUv3 PMCG implementation on HiSilicon Hip08 platforms.
-> 
-> On these platforms, the PMCG event counter registers
-> (SMMU_PMCG_EVCNTRn) are read only and as a result it
-> is not possible to set the initial counter period value
-> on event monitor start.
-> 
-> To work around this, the current value of the counter
-> is read and used for delta calculations. OEM information
-> from ACPI header is used to identify the affected hardware
-> platforms.
-> 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> Reviewed-by: Hanjun Guo <hanjun.guo@linaro.org>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->  drivers/acpi/arm64/iort.c     | 16 ++++++++++++++-
->  drivers/perf/arm_smmuv3_pmu.c | 48 ++++++++++++++++++++++++++++++++++++-------
->  include/linux/acpi_iort.h     |  1 +
->  3 files changed, 57 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index e2c9b26..4dc68de 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1366,9 +1366,23 @@ static void __init arm_smmu_v3_pmcg_init_resources(struct resource *res,
->  				       ACPI_EDGE_SENSITIVE, &res[2]);
->  }
->  
-> +static struct acpi_platform_list pmcg_plat_info[] __initdata = {
-> +	/* HiSilicon Hip08 Platform */
-> +	{"HISI  ", "HIP08   ", 0, ACPI_SIG_IORT, greater_than_or_equal, 0,
-> +	 IORT_SMMU_V3_PMCG_HISI_HIP08},
-> +	{ }
-> +};
+On Thu, Apr 4, 2019 at 4:09 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Wed, Apr 03, 2019 at 07:08:47PM +0200, Matteo Croce wrote:
+> > On Wed, Apr 3, 2019 at 6:40 PM Matteo Croce <mcroce@redhat.com> wrote:
+> > >
+> > > On Wed, Apr 3, 2019 at 5:51 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Wed, Apr 03, 2019 at 05:24:26PM +0200, Matteo Croce wrote:
+> > > > > On Wed, Apr 3, 2019 at 4:02 PM Christian Brauner <christian@brauner.io> wrote:
+> > > > > > Yeah, maybe but it still feels cleaner and more obvious to just add:
+> > > > > >
+> > > > > > static long long_zero;
+> > > > > >
+> > > > > > given that most callers actually seem to want an (unsigned) int.
+> > > > > >
+> > > > > > I don't have a strong opinion though so if others feel that it's just a
+> > > > > > waste of space consider it acked.
+> > > > > >
+> > > > >
+> > > > > Well, given that the value is zero, in this expectional case we could
+> > > > > avoid duplicating the symbol and save 4 bytes.
+> > > > > What the maintainers think?
+> > > >
+> > > > If we care about saving four bytes, we could just pass the address of
+> > > > ZERO_PAGE(0).
+> > >
+> > > That would work, work too, maybe it's a bit overkill.
+> > > int zero is always there and it's static, so enlarging it to long
+> > > should be a straightforward fix.
+> > > Obviously we can't do it for other numbers, but we can alias it just
+> > > for the zero case..
+> > >
+> > > Regards,
+> > >
+> > > --
+> > > Matteo Croce
+> > > per aspera ad upstream
+> >
+> > Anyway, I'm fine with both solutions, as I have other patches in the
+>
+> I think Matthew's idea gets us best of both worlds so I'd suggest to use
+> it and resend the patch. You likely want to Cc stable@vger.kernel.org
+> since the original patch this fixes got backported by Greg quite a bit
+> since this was a rather long-standing issue. Please also Cc Andrew this
+> time since he's likely going to pick it up.
+>
+> Thanks for the patch!
+> Christian
 
-Hopefully we won't have plaforms with *some* counters that eg are
-read-only and others that are read-write, or any other quirks
-combination that this hack can't solve, otherwise we are back to square
-one, namely, to the specifications (IORT or PMCG, or both).
+So you mean using page_address(ZERO_PAGE(0)) ?
+The idea is nice, but since struct ctl_table kern_table is declared as
+global variable, how can I assign it to the structure?
+GCC complains about 'initializer element is not constant', and
+ZERO_PAGE(0)->virtual only works if WANT_PAGE_VIRTUAL.
 
-As it stands it is OK since we can revisit it later so:
+Anyway, I'm preparing a treewide patch to move all "zero", "one" and
+"int_max" to three single, const variables in fs/proc/proc_sysctl.c
+as there are 200+ occourrences of them, so I'd rather keep this simple
+to have it easily backported to stable.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-
->  static int __init arm_smmu_v3_pmcg_add_platdata(struct platform_device *pdev)
->  {
-> -	u32 model = IORT_SMMU_V3_PMCG_GENERIC;
-> +	u32 model;
-> +	int idx;
-> +
-> +	idx = acpi_match_platform_list(pmcg_plat_info);
-> +	if (idx >= 0)
-> +		model = pmcg_plat_info[idx].data;
-> +	else
-> +		model = IORT_SMMU_V3_PMCG_GENERIC;
->  
->  	return platform_device_add_data(pdev, &model, sizeof(model));
->  }
-> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-> index 7803e9e..6b3c0ed 100644
-> --- a/drivers/perf/arm_smmuv3_pmu.c
-> +++ b/drivers/perf/arm_smmuv3_pmu.c
-> @@ -35,6 +35,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/acpi_iort.h>
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/cpuhotplug.h>
-> @@ -93,6 +94,8 @@
->  
->  #define SMMU_PMCG_PA_SHIFT              12
->  
-> +#define SMMU_PMCG_EVCNTR_RDONLY         BIT(0)
-> +
->  static int cpuhp_state_num;
->  
->  struct smmu_pmu {
-> @@ -108,6 +111,7 @@ struct smmu_pmu {
->  	void __iomem *reg_base;
->  	void __iomem *reloc_base;
->  	u64 counter_mask;
-> +	u32 options;
->  	bool global_filter;
->  	u32 global_filter_span;
->  	u32 global_filter_sid;
-> @@ -222,15 +226,27 @@ static void smmu_pmu_set_period(struct smmu_pmu *smmu_pmu,
->  	u32 idx = hwc->idx;
->  	u64 new;
->  
-> -	/*
-> -	 * We limit the max period to half the max counter value of the counter
-> -	 * size, so that even in the case of extreme interrupt latency the
-> -	 * counter will (hopefully) not wrap past its initial value.
-> -	 */
-> -	new = smmu_pmu->counter_mask >> 1;
-> +	if (smmu_pmu->options & SMMU_PMCG_EVCNTR_RDONLY) {
-> +		/*
-> +		 * On platforms that require this quirk, if the counter starts
-> +		 * at < half_counter value and wraps, the current logic of
-> +		 * handling the overflow may not work. It is expected that,
-> +		 * those platforms will have full 64 counter bits implemented
-> +		 * so that such a possibility is remote(eg: HiSilicon HIP08).
-> +		 */
-> +		new = smmu_pmu_counter_get_value(smmu_pmu, idx);
-> +	} else {
-> +		/*
-> +		 * We limit the max period to half the max counter value
-> +		 * of the counter size, so that even in the case of extreme
-> +		 * interrupt latency the counter will (hopefully) not wrap
-> +		 * past its initial value.
-> +		 */
-> +		new = smmu_pmu->counter_mask >> 1;
-> +		smmu_pmu_counter_set_value(smmu_pmu, idx, new);
-> +	}
->  
->  	local64_set(&hwc->prev_count, new);
-> -	smmu_pmu_counter_set_value(smmu_pmu, idx, new);
->  }
->  
->  static void smmu_pmu_set_event_filter(struct perf_event *event,
-> @@ -669,6 +685,22 @@ static void smmu_pmu_reset(struct smmu_pmu *smmu_pmu)
->  		       smmu_pmu->reloc_base + SMMU_PMCG_OVSCLR0);
->  }
->  
-> +static void smmu_pmu_get_acpi_options(struct smmu_pmu *smmu_pmu)
-> +{
-> +	u32 model;
-> +
-> +	model = *(u32 *)dev_get_platdata(smmu_pmu->dev);
-> +
-> +	switch (model) {
-> +	case IORT_SMMU_V3_PMCG_HISI_HIP08:
-> +		/* HiSilicon Erratum 162001800 */
-> +		smmu_pmu->options |= SMMU_PMCG_EVCNTR_RDONLY;
-> +		break;
-> +	}
-> +
-> +	dev_notice(smmu_pmu->dev, "option mask 0x%x\n", smmu_pmu->options);
-> +}
-> +
->  static int smmu_pmu_probe(struct platform_device *pdev)
->  {
->  	struct smmu_pmu *smmu_pmu;
-> @@ -748,6 +780,8 @@ static int smmu_pmu_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	smmu_pmu_get_acpi_options(smmu_pmu);
-> +
->  	/* Pick one CPU to be the preferred one to use */
->  	smmu_pmu->on_cpu = raw_smp_processor_id();
->  	WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(smmu_pmu->on_cpu)));
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 052ef7b..723e4df 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -32,6 +32,7 @@
->   * do with hardware or with IORT specification.
->   */
->  #define IORT_SMMU_V3_PMCG_GENERIC        0x00000000 /* Generic SMMUv3 PMCG */
-> +#define IORT_SMMU_V3_PMCG_HISI_HIP08     0x00000001 /* HiSilicon HIP08 PMCG */
->  
->  int iort_register_domain_token(int trans_id, phys_addr_t base,
->  			       struct fwnode_handle *fw_node);
-> -- 
-> 2.7.4
-> 
-> 
+-- 
+Matteo Croce
+per aspera ad upstream
