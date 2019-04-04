@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0865FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03022C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0F3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92F32075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369452;
-	bh=7clfelsx/a9DPBTTdJnqiZL6xa5GWYfRDrKvGLTp6Xk=;
+	s=default; t=1554369453;
+	bh=mL3P1WKEHm37xYIlUU1J1wFg2S4HHG5Zad6V7tcQZ1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzpZLnmPn1osM2wK8mA12kgJCM7Xdk36vRTjNbPEXTM/IOdE+7UtjNBr4c+E4qRH0
-	 j/3QNY4AxfcniaSUSxQiyRqLP8cT9sohydkCdsJWQtGhi0x8LF+lhw9pl2ntML8TKV
-	 duuxYpDir8efp+0cBGPbrWdG2Ovfhb8kdglHY4Gc=
+	b=fQ+kN9jsoVbbNz6+rv+SAqmQT5Fm92nAmvD7aGlvBRH3DS28JOgf7EMDhKgl4d3Wq
+	 UOJrniAWMh821OK+YucuIg//AHdH9XfsHAKuXeLKDMx1KsEaier7ECJpZbMpIVfdtV
+	 ke/wmAzkR5h/JdJL/YafEAG8ejE+SOssvFJrTl7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbfDDJRb (ORCPT
+        id S2388235AbfDDJRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388199AbfDDJRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:30 -0400
+        id S2387796AbfDDJR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1522075E;
-        Thu,  4 Apr 2019 09:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354D02075E;
+        Thu,  4 Apr 2019 09:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369449;
-        bh=7clfelsx/a9DPBTTdJnqiZL6xa5GWYfRDrKvGLTp6Xk=;
+        s=default; t=1554369446;
+        bh=mL3P1WKEHm37xYIlUU1J1wFg2S4HHG5Zad6V7tcQZ1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UnXoH2L//FMESVAPkaEg80YxqPV0h6u5AfIqhfL92XlfW5jNrI/ABCtY/uNlAH4WI
-         R0pCLY1gsQEXtGK7E9H7KYuZXLbqb+NDu0hvjubIh9gt1keT40DobfD1rohXD4gBM1
-         dLdLyXBfPX5hbm2Lg6iqcCl2h+IcAD5VSKw9Ptdc=
+        b=K1hLkuwaeO9/beBmBC55NegI96qPn7nogIXfZMOPgwW1pomIhW7iCUfKrs/ZCacvX
+         v+o7m6EI1UtxxwmuKjfEvABkTQZ4IB8HH60PG/z420HhwUO4dsGQub8M5R34Ez5iTC
+         Xz8VIvTsEAbnhl9cpFjOkSI8hnbrNywt3BCJuoTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 220/246] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
-Date:   Thu,  4 Apr 2019 10:48:40 +0200
-Message-Id: <20190404084626.903565438@linuxfoundation.org>
+Subject: [PATCH 5.0 201/246] perf script python: Use PyBytes for attr in trace-event-python
+Date:   Thu,  4 Apr 2019 10:48:21 +0200
+Message-Id: <20190404084626.225923086@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,84 +71,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
+[ Upstream commit 72e0b15cb24a497d7d0d4707cf51ff40c185ae8c ]
 
-Previously when doing format enumeration, it was returning all
- formats supported by driver, even if they're not supported by hw.
-Add missing check for fmt_ver_flag, so it'll be fixed and only those
- supported by hw will be returned. Similar thing is already done
- in s5p_jpeg_find_format.
+With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
+return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
 
-It was found by using v4l2-compliance tool and checking result
- of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
-and using v4l2-ctl to get list of all supported formats.
+Below is the observed behavior without the fix.  Note it is first necessary
+to apply the prior fix (Add trace_context extension module to sys,modules):
 
-Tested on s5pv210-galaxys (Samsung i9000 phone).
+  # ldd /usr/bin/perf | grep -i python
+          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
 
-Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
+  # perf record -e raw_syscalls:sys_enter /bin/false
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
 
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  # perf script -g python | cat
+  generated Python script: perf-script.py
+
+  # perf script -s ./perf-script.py
+  in trace_begin
+  Segmentation fault (core dumped)
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jaroslav Škarvada <jskarvad@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
+Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 4b47d9f42117..370942b67d86 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -1293,13 +1293,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
- 	return 0;
- }
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 87ef16a1b17e..2fe3cc43526f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 		Py_FatalError("couldn't create Python dictionary");
  
--static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
-+static int enum_fmt(struct s5p_jpeg_ctx *ctx,
-+		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
- 		    struct v4l2_fmtdesc *f, u32 type)
- {
- 	int i, num = 0;
-+	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
+-	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
+-			(const char *)&evsel->attr, sizeof(evsel->attr)));
++	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
  
- 	for (i = 0; i < n; ++i) {
--		if (sjpeg_formats[i].flags & type) {
-+		if (sjpeg_formats[i].flags & type &&
-+		    sjpeg_formats[i].flags & fmt_ver_flag) {
- 			/* index-th format of type type found ? */
- 			if (num == f->index)
- 				break;
-@@ -1326,11 +1329,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_CAPTURE);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_CAPTURE);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_CAPTURE);
- }
- 
- static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
-@@ -1339,11 +1342,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_OUTPUT);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_OUTPUT);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_OUTPUT);
- }
- 
- static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
+ 	pydict_set_item_string_decref(dict_sample, "pid",
+ 			_PyLong_FromLong(sample->pid));
 -- 
 2.19.1
 
