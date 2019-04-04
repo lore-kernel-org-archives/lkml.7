@@ -2,125 +2,505 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D192C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A140FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99173206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OTRZOngC"
+	by mail.kernel.org (Postfix) with ESMTP id 65DCD206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfDDQNl (ORCPT
+        id S1728699AbfDDQPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:13:41 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45369 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbfDDQNl (ORCPT
+        Thu, 4 Apr 2019 12:15:12 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56320 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727152AbfDDQPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:13:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 5so2189095lft.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w7cqMoh/o/5tquQe82yVz0UF1UW9cmylA3d/Z3b+co8=;
-        b=OTRZOngCg0aOonpHNoOqaoSbmnkYrjCvrhoB+grs4kKkC83w0G+OGlXSaMZf3VJi0f
-         fTBZmLlNrRkAX0XtFEFsx+CNQrUL7LXop2xTbAvI3K0Po+ukkfqCbxqNF/l3BuKbVPCZ
-         PGoAX/KHxSJEiIoX7UpD3HA1Nm1WGoik0EBEY6dYlahio0Vqnk0XVJhwXOX677pWOE2G
-         pen+lZ7WY/qPyMao/o/BKa5zXn7CO01Xp7gOXNj3UEEiMfqQ7onhFK8xJjG7sEzxBpD1
-         /ESQ36hS/Lh+9iACGiDJww9SnmAyQGVSlwUT/on6bgdUXOj9X7IM5A0ZEZdVXHzrV/M3
-         Pw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w7cqMoh/o/5tquQe82yVz0UF1UW9cmylA3d/Z3b+co8=;
-        b=ucYcMsMBSpaAURHi0DEZlX0VFUuLMs2T2huqPN9joP/hvReaJDV8eMQg+Hg3cEF1rz
-         P3baIw6RCizmwzJmrWHcC8j+jnwx609Wfn3DOyHcnJfE4Ovhyu9yO3/PJc1hkTn4ZUMN
-         vLoeVd6bA01YzuWIPRa3BBra5kTh8e6vlY3B9S5TsiWZ3UYVv4ZQCrw6zjJJgUwoCEa8
-         brZIvG/0y8Hlh2In9WLYqOJ8T39kRaC0V+QdAw/9czJ9uW0p0RSFjRgEeWpGQk9cj5+L
-         11Lxh/yJ7Acff+yEO9hQX+Q6BaPGexpM9VUYA2N8M0/9DaWCkYxHsK/Mlqf2CqnRumyD
-         nW6A==
-X-Gm-Message-State: APjAAAViHn7BxEtAFjq+0R36H8j2KAB7GZA9j4xGEW5pezNQqzhnTxnv
-        1YYDjPHfLgKIpoRhAEC7zjbFPbmbVCQgKncLtMDAYQ==
-X-Google-Smtp-Source: APXvYqzNx1n/oaadf0cP1rmbjjaMBtlRxxJa7fuaXngE8m5VuYNunaWVG5GB6pP8glSR7qJXBkyPKl9c1pRJ02axOKw=
-X-Received: by 2002:a19:ae0a:: with SMTP id f10mr3488781lfc.118.1554394418516;
- Thu, 04 Apr 2019 09:13:38 -0700 (PDT)
+        Thu, 4 Apr 2019 12:15:11 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34G6wDt008294;
+        Thu, 4 Apr 2019 18:14:54 +0200
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rmh5ykqw1-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 04 Apr 2019 18:14:54 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 77F4C31;
+        Thu,  4 Apr 2019 16:14:51 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 49F932D0B;
+        Thu,  4 Apr 2019 16:14:51 +0000 (GMT)
+Received: from [10.48.0.131] (10.75.127.46) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 4 Apr
+ 2019 18:14:50 +0200
+Subject: Re: [PATCH 2/2] tty: add rpmsg driver
+To:     xiang xiao <xiaoxiang781216@gmail.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com>
+ <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
+ <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8mOik8I/F6EW8XyQAA2P
+Message-ID: <4857555a-812d-0b96-9a70-2984ffb50ca9@st.com>
+Date:   Thu, 4 Apr 2019 18:14:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190308203801.57920-1-ncrews@chromium.org> <20190308210843.GA16125@amd>
- <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com> <20190404112415.GB18653@amd>
-In-Reply-To: <20190404112415.GB18653@amd>
-From:   Dmitry Torokhov <dtor@google.com>
-Date:   Thu, 4 Apr 2019 09:13:27 -0700
-Message-ID: <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 4:24 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Mon 2019-03-11 09:29:06, Nick Crews wrote:
-> > Thanks for looking this over. I will fix most of your concerns, but
-> > have one question.
-> >
-> > On Fri, Mar 8, 2019 at 2:08 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > >
-> > > On Fri 2019-03-08 13:38:02, Nick Crews wrote:
-> > > > This patch is meant to be applied on top of the for-next
-> > > > branch of the platform/chrome repository, as it uses some of
-> > > > the code staged there.
-> > > >
-> > > > The EC is in charge of controlling the keyboard backlight on
-> > > > the Wilco platform. We expose a standard LED class device at
-> > > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
-> > > > after the standard Chrome OS keyboard backlight driver at
-> > > > drivers/platform/chrome/cros_kbd_led_backlight.c
-> > >
-> > > Can you make it "platform::kbd_backlight"? We want some consistency
-> > > there.
-> >
-> > The analogous name in the standard driver
-> > drivers/platform/chrome/cros_kbd_led_backlight.c is
-> > "chromeos::kbd_backlight", and I thought "wilco" was a better
-> > substitute for "chromeos" than "platform" would be. What other thing
-> > are you saying "platform" would be consistent with?
->
-> Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: in
-> the first place. But it happened. We want all backlights for the
-> system keyboard to use common name, and "chromeos" is not really
-> suitable for that. "platform" is.
+Hello Xiang,
 
-Pavel, who exactly wants this and why? Looking at today's -next I see:
 
-dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-"::kbd_backlight" | wc -l
-18
-dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-"platform::kbd_backlight" | wc -l
-0
+On 4/3/19 2:47 PM, xiang xiao wrote:
+> On Thu, Mar 21, 2019 at 11:48 PM Fabien Dessenne <fabien.dessenne@st.com> wrote:
+>>
+>> This driver exposes a standard tty interface on top of the rpmsg
+>> framework through the "rpmsg-tty-channel" rpmsg service.
+>>
+>> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
+>> per rpmsg endpoint.
+>>
+> 
+> How to support multi-instances from the same remoteproc instance? I
+> saw that the channel name is fixed to "rpmsg-tty-channel" which mean
+> only one channel can be created for each remote side.
+The driver is multi-instance based on muti-endpoints on top of the
+"rpmsg-tty-channel" service.
+On remote side you just have to call rpmsg_create_ept with destination
+address set to ANY. The result is a NS service announcement that trigs a
+ probe with a new endpoint.
+You can find code example for the remote side here:
+https://github.com/STMicroelectronics/STM32CubeMP1/blob/master/Projects/STM32MP157C-DK2/Applications/OpenAMP/OpenAMP_TTY_echo/Src/main.c
+using some wrapper functions available here:
+https://github.com/STMicroelectronics/STM32CubeMP1/tree/master/Middlewares/Third_Party/OpenAMP
 
-so there isn't a single instance of "platform::kbd_backlight" and we
-definitely not changing existing names.
 
-Thanks.
+Best Regards
+Arnaud
 
--- 
-Dmitry
+> 
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+>> ---
+>>  drivers/tty/Kconfig     |   9 ++
+>>  drivers/tty/Makefile    |   1 +
+>>  drivers/tty/rpmsg_tty.c | 309 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 319 insertions(+)
+>>  create mode 100644 drivers/tty/rpmsg_tty.c
+>>
+>> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+>> index 0840d27..42696e6 100644
+>> --- a/drivers/tty/Kconfig
+>> +++ b/drivers/tty/Kconfig
+>> @@ -441,4 +441,13 @@ config VCC
+>>         depends on SUN_LDOMS
+>>         help
+>>           Support for Sun logical domain consoles.
+>> +
+>> +config RPMSG_TTY
+>> +       tristate "RPMSG tty driver"
+>> +       depends on RPMSG
+>> +       help
+>> +         Say y here to export rpmsg endpoints as tty devices, usually found
+>> +         in /dev/ttyRPMSGx.
+>> +         This makes it possible for user-space programs to send and receive
+>> +         rpmsg messages as a standard tty protocol.
+>>  endif # TTY
+>> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+>> index c72cafd..90a98a2 100644
+>> --- a/drivers/tty/Makefile
+>> +++ b/drivers/tty/Makefile
+>> @@ -33,5 +33,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
+>>  obj-$(CONFIG_GOLDFISH_TTY)     += goldfish.o
+>>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+>>  obj-$(CONFIG_VCC)              += vcc.o
+>> +obj-$(CONFIG_RPMSG_TTY)                += rpmsg_tty.o
+>>
+>>  obj-y += ipwireless/
+>> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
+>> new file mode 100644
+>> index 0000000..9c2a629
+>> --- /dev/null
+>> +++ b/drivers/tty/rpmsg_tty.c
+>> @@ -0,0 +1,309 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
+>> + * Authors: Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
+>> + *          Fabien Dessenne <fabien.dessenne@st.com> for STMicroelectronics.
+>> + * Derived from the imx-rpmsg and omap-rpmsg implementations.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/rpmsg.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/tty.h>
+>> +#include <linux/tty_flip.h>
+>> +
+>> +#define MAX_TTY_RPMSG          32
+>> +
+>> +static DEFINE_IDR(tty_idr);            /* tty instance id */
+>> +static DEFINE_MUTEX(idr_lock);         /* protects tty_idr */
+>> +
+>> +static struct tty_driver *rpmsg_tty_driver;
+>> +
+>> +struct rpmsg_tty_port {
+>> +       struct tty_port         port;   /* TTY port data */
+>> +       unsigned int            id;     /* TTY rpmsg index */
+>> +       spinlock_t              rx_lock; /* message reception lock */
+>> +       struct rpmsg_device     *rpdev; /* rpmsg device */
+>> +};
+>> +
+>> +static int rpmsg_tty_cb(struct rpmsg_device *rpdev, void *data, int len,
+>> +                       void *priv, u32 src)
+>> +{
+>> +       int space;
+>> +       unsigned char *cbuf;
+>> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
+>> +
+>> +       dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
+>> +
+>> +       print_hex_dump_debug(__func__, DUMP_PREFIX_NONE, 16, 1, data, len,
+>> +                            true);
+>> +
+>> +       /* Flush the recv-ed none-zero data to tty node */
+>> +       if (!len)
+>> +               return -EINVAL;
+>> +
+>> +       spin_lock(&cport->rx_lock);
+>> +       space = tty_prepare_flip_string(&cport->port, &cbuf, len);
+>> +       if (space <= 0) {
+>> +               dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
+>> +               spin_unlock(&cport->rx_lock);
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       if (space != len)
+>> +               dev_warn(&rpdev->dev, "Trunc buffer from %d to %d\n",
+>> +                        len, space);
+>> +
+>> +       memcpy(cbuf, data, space);
+>> +       tty_flip_buffer_push(&cport->port);
+>> +       spin_unlock(&cport->rx_lock);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int rpmsg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
+>> +{
+>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+>> +
+>> +       if (!cport) {
+>> +               dev_err(tty->dev, "cannot get cport\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       return tty_port_install(&cport->port, driver, tty);
+>> +}
+>> +
+>> +static int rpmsg_tty_open(struct tty_struct *tty, struct file *filp)
+>> +{
+>> +       return tty_port_open(tty->port, tty, filp);
+>> +}
+>> +
+>> +static void rpmsg_tty_close(struct tty_struct *tty, struct file *filp)
+>> +{
+>> +       return tty_port_close(tty->port, tty, filp);
+>> +}
+>> +
+>> +static int rpmsg_tty_write(struct tty_struct *tty, const unsigned char *buf,
+>> +                          int total)
+>> +{
+>> +       int count, ret = 0;
+>> +       const unsigned char *tbuf;
+>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+>> +       struct rpmsg_device *rpdev;
+>> +       int msg_size;
+>> +
+>> +       if (!cport) {
+>> +               dev_err(tty->dev, "cannot get cport\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       rpdev = cport->rpdev;
+>> +
+>> +       dev_dbg(&rpdev->dev, "%s: send message from tty->index = %d\n",
+>> +               __func__, tty->index);
+>> +
+>> +       if (!buf) {
+>> +               dev_err(&rpdev->dev, "buf shouldn't be null.\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       msg_size = rpmsg_get_buf_payload_size(rpdev->ept);
+>> +       if (msg_size < 0)
+>> +               return msg_size;
+>> +
+>> +       count = total;
+>> +       tbuf = buf;
+>> +       do {
+>> +               /* send a message to our remote processor */
+>> +               ret = rpmsg_send(rpdev->ept, (void *)tbuf,
+>> +                                min(count, msg_size));
+>> +               if (ret) {
+>> +                       dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
+>> +                       return ret;
+>> +               }
+>> +
+>> +               if (count > msg_size) {
+>> +                       count -= msg_size;
+>> +                       tbuf += msg_size;
+>> +               } else {
+>> +                       count = 0;
+>> +               }
+>> +       } while (count > 0);
+>> +
+> 
+> We need the flow control(or handshake) here, otherwise it's very easy
+> to lose the data if kernel keep send the data as fast as possible.
+> 
+>> +       return total;
+>> +}
+>> +
+>> +static int rpmsg_tty_write_room(struct tty_struct *tty)
+>> +{
+>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+>> +
+>> +       if (!cport) {
+>> +               dev_err(tty->dev, "cannot get cport\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       /* report the space in the rpmsg buffer */
+>> +       return rpmsg_get_buf_payload_size(cport->rpdev->ept);
+>> +}
+>> +
+>> +static const struct tty_operations rpmsg_tty_ops = {
+>> +       .install        = rpmsg_tty_install,
+>> +       .open           = rpmsg_tty_open,
+>> +       .close          = rpmsg_tty_close,
+>> +       .write          = rpmsg_tty_write,
+>> +       .write_room     = rpmsg_tty_write_room,
+>> +};
+>> +
+>> +struct rpmsg_tty_port *rpmsg_tty_alloc_cport(void)
+>> +{
+>> +       struct rpmsg_tty_port *cport;
+>> +
+>> +       cport = kzalloc(sizeof(*cport), GFP_KERNEL);
+>> +       if (!cport)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       mutex_lock(&idr_lock);
+>> +       cport->id = idr_alloc(&tty_idr, cport, 0, MAX_TTY_RPMSG, GFP_KERNEL);
+>> +       mutex_unlock(&idr_lock);
+>> +
+>> +       if (cport->id < 0) {
+>> +               kfree(cport);
+>> +               return ERR_PTR(-ENOSPC);
+>> +       }
+>> +
+>> +       return cport;
+>> +}
+>> +
+>> +static void rpmsg_tty_release_cport(struct rpmsg_tty_port *cport)
+>> +{
+>> +       mutex_lock(&idr_lock);
+>> +       idr_remove(&tty_idr, cport->id);
+>> +       mutex_unlock(&idr_lock);
+>> +
+>> +       kfree(cport);
+>> +}
+>> +
+>> +static int rpmsg_tty_probe(struct rpmsg_device *rpdev)
+>> +{
+>> +       struct rpmsg_tty_port *cport;
+>> +       struct device *tty_dev;
+>> +       int ret;
+>> +
+>> +       cport = rpmsg_tty_alloc_cport();
+>> +       if (IS_ERR(cport)) {
+>> +               dev_err(&rpdev->dev, "failed to alloc tty port\n");
+>> +               return PTR_ERR(cport);
+>> +       }
+>> +
+>> +       tty_port_init(&cport->port);
+>> +       cport->port.low_latency = cport->port.flags | ASYNC_LOW_LATENCY;
+>> +
+>> +       tty_dev = tty_port_register_device(&cport->port, rpmsg_tty_driver,
+>> +                                          cport->id, &rpdev->dev);
+>> +       if (IS_ERR(tty_dev)) {
+>> +               dev_err(&rpdev->dev, "failed to register tty port\n");
+>> +               ret = PTR_ERR(tty_dev);
+>> +               goto err_destroy;
+>> +       }
+>> +
+>> +       spin_lock_init(&cport->rx_lock);
+>> +       cport->rpdev = rpdev;
+>> +
+>> +       dev_set_drvdata(&rpdev->dev, cport);
+>> +
+>> +       dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x : ttyRPMSG%d\n",
+>> +                rpdev->src, rpdev->dst, cport->id);
+>> +
+>> +       return 0;
+>> +
+>> +err_destroy:
+>> +       tty_port_destroy(&cport->port);
+>> +       rpmsg_tty_release_cport(cport);
+>> +       return ret;
+>> +}
+>> +
+>> +static void rpmsg_tty_remove(struct rpmsg_device *rpdev)
+>> +{
+>> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
+>> +
+>> +       dev_info(&rpdev->dev, "removing rpmsg tty device %d\n", cport->id);
+>> +
+>> +       /* User hang up to release the tty */
+>> +       if (tty_port_initialized(&cport->port))
+>> +               tty_port_tty_hangup(&cport->port, false);
+>> +
+>> +       tty_unregister_device(rpmsg_tty_driver, cport->id);
+>> +       tty_port_destroy(&cport->port);
+>> +
+>> +       rpmsg_tty_release_cport(cport);
+>> +}
+>> +
+>> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
+>> +       { .name = "rpmsg-tty-channel" },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_driver_tty_id_table);
+>> +
+>> +static struct rpmsg_driver rpmsg_tty_rpmsg_drv = {
+>> +       .drv.name       = KBUILD_MODNAME,
+>> +       .id_table       = rpmsg_driver_tty_id_table,
+>> +       .probe          = rpmsg_tty_probe,
+>> +       .callback       = rpmsg_tty_cb,
+>> +       .remove         = rpmsg_tty_remove,
+>> +};
+>> +
+>> +static int __init rpmsg_tty_init(void)
+>> +{
+>> +       int err;
+>> +
+>> +       rpmsg_tty_driver = tty_alloc_driver(MAX_TTY_RPMSG, TTY_DRIVER_REAL_RAW |
+>> +                                           TTY_DRIVER_DYNAMIC_DEV);
+>> +       if (IS_ERR(rpmsg_tty_driver))
+>> +               return PTR_ERR(rpmsg_tty_driver);
+>> +
+>> +       rpmsg_tty_driver->driver_name = "rpmsg_tty";
+>> +       rpmsg_tty_driver->name = "ttyRPMSG";
+>> +       rpmsg_tty_driver->major = 0;
+>> +       rpmsg_tty_driver->type = TTY_DRIVER_TYPE_CONSOLE;
+>> +       rpmsg_tty_driver->init_termios = tty_std_termios;
+>> +
+>> +       tty_set_operations(rpmsg_tty_driver, &rpmsg_tty_ops);
+>> +
+>> +       err = tty_register_driver(rpmsg_tty_driver);
+>> +       if (err < 0) {
+>> +               pr_err("Couldn't install rpmsg tty driver: err %d\n", err);
+>> +               goto error_put;
+>> +       }
+>> +
+>> +       err = register_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
+>> +       if (err < 0) {
+>> +               pr_err("Couldn't register rpmsg tty driver: err %d\n", err);
+>> +               goto error_unregister;
+>> +       }
+>> +
+>> +       return 0;
+>> +
+>> +error_unregister:
+>> +       tty_unregister_driver(rpmsg_tty_driver);
+>> +
+>> +error_put:
+>> +       put_tty_driver(rpmsg_tty_driver);
+>> +
+>> +       return err;
+>> +}
+>> +
+>> +static void __exit rpmsg_tty_exit(void)
+>> +{
+>> +       unregister_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
+>> +       tty_unregister_driver(rpmsg_tty_driver);
+>> +       put_tty_driver(rpmsg_tty_driver);
+>> +       idr_destroy(&tty_idr);
+>> +}
+>> +
+>> +module_init(rpmsg_tty_init);
+>> +module_exit(rpmsg_tty_exit);
+>> +
+>> +MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
+>> +MODULE_AUTHOR("Fabien Dessenne <fabien.dessenne@st.com>");
+>> +MODULE_DESCRIPTION("virtio remote processor messaging tty driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.7.4
+>>
