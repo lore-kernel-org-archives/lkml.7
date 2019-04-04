@@ -2,88 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE22C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC16AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA09D206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7F9206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmoOKUi0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E6TEYvZR";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ORa7mpWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDDFRY (ORCPT
+        id S1726664AbfDDFUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:17:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39614 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfDDFRY (ORCPT
+        Thu, 4 Apr 2019 01:20:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43932 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfDDFUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:17:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m13so775508lfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 22:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZVp13yc6q87s+OR/Or4+n6UHxk+xyuZGfgJ+9ddS0ag=;
-        b=FmoOKUi0seCeye3MfcUL/av1v8PHsGVpMCFmhyKh6cC2aWB+BeQmNKvlKqIDjTAUMY
-         nGAJabZavlC3r9IBWFWakNdNk2ZjAbz7R4G7n1F+s8QCGEm0mCGTKKhR9zRkOAJz448p
-         Pgs3jzGvwN5rNWSRylnQ54BdLj59ujGxh/DFx6pKA0kGWOyg7AAeQQMWEVLsrBMDvCFR
-         NVrhTNIVc78qpNGBW0o9rhEe94YveTQISdnAufBXEkc47zlCELK6M90eXyiAsBzx+hcJ
-         Pbzi7izizs687j7Z+i5OgfEQ0CejhS3hbZhEjAts8Ox39jyM1avxxOGFi5r/byppJnuP
-         G/YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZVp13yc6q87s+OR/Or4+n6UHxk+xyuZGfgJ+9ddS0ag=;
-        b=klW031BdrclGgQQyjDWavCXIjqoNEOIu7LhrzjYM9G9t4wfgQGdZJ1rEHRXhEO5MVy
-         3cPUHfK30b1eBEVaQ53xP88fyA8lirSy8Wr4apXVTs+WqutyZB6X9vs5cWIIHPqDNjCr
-         An1onJSOhyOUNg++fo05TN6sSxJ6QL2NtIMsZwY//VSqkto2VY1eEtWF7gqNcQkB94Gv
-         WYo5F1YUotcGOesG12LEuDDk/xhWR0ZTgIBBCs3zfs5rEY+6wrPVlRtMH7Zgfo7mYLLT
-         3ySVhCk0JD4Nh87CcBnF4xQdsf7IpGC7ebBCOBjRQCdCXsm+YUV6K0fOdZYina9AHKE3
-         KsqQ==
-X-Gm-Message-State: APjAAAUoZFCYuwECNRFwV2BnAQ4CVgM79DVaojDnMLKLu7pfQziC1A5/
-        mI5JWjLMkM3zvEWGpBUb4/fQ1RwZh2ts+/YfC5LznA==
-X-Google-Smtp-Source: APXvYqwAI/6Fn/mul2qD5ucj15urIhgHJ8VhEXp9x1hACi0nE/g8/s4xiq1LRwFjmRW7wIPgJqwLsXApCmVv6ptQVHo=
-X-Received: by 2002:ac2:5479:: with SMTP id e25mr1952075lfn.121.1554355041901;
- Wed, 03 Apr 2019 22:17:21 -0700 (PDT)
+        Thu, 4 Apr 2019 01:20:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0136B606CF; Thu,  4 Apr 2019 05:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554355221;
+        bh=jA/wST5N6jQsW6sxwXK4yuBY7gOPQOoY0kG5nkjUjLM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=E6TEYvZRlKEakTWf9hVxSoKK6yWvoWtcsYGNU0I0KVPKKYWU0WVAvGMjT7KF08O2G
+         Jcc/KVRq5IjErwQDzTkNXlckGD+BM/+OgwtgAfx0SByEuNV5yjQ/OoKJjAz17BUDOj
+         7McFEl3AH1G8HoYOa2EjCqutokBY1QBIZ9YWTcjM=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 423F7606CF;
+        Thu,  4 Apr 2019 05:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554355220;
+        bh=jA/wST5N6jQsW6sxwXK4yuBY7gOPQOoY0kG5nkjUjLM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ORa7mpWtwvY9Qg8sfvBpDp8mAJTBIohFtEjo9fCRpoOTuSQ7LSws/95LFNP2JsvcF
+         8YD5HF0G/uCEETLXtfS8BTFa+736rK8bmSZ4niBx3JsTUjydUq6AteFeX4I8qgqXRA
+         DRyFgyEFYTuXJkh2KZ9KLWtCEOhZP2EWkT8iz8xE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 423F7606CF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linux-rockchip@lists.infradead.org, briannorris@chromium.org,
+        mka@chromium.org, ryandcase@chromium.org, heiko@sntech.de,
+        "David S. Miller" <davem@davemloft.net>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev@vger.kernel.org, Xinming Hu <huxinming820@gmail.com>
+Subject: Re: [PATCH] mwifiex: Make resume actually do something useful again on SDIO cards
+References: <20190404040106.40519-1-dianders@chromium.org>
+Date:   Thu, 04 Apr 2019 08:20:08 +0300
+In-Reply-To: <20190404040106.40519-1-dianders@chromium.org> (Douglas
+        Anderson's message of "Wed, 3 Apr 2019 21:01:06 -0700")
+Message-ID: <874l7egxdj.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20190320141425.20920-1-yuehaibing@huawei.com>
-In-Reply-To: <20190320141425.20920-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Apr 2019 12:17:10 +0700
-Message-ID: <CACRpkdZfAbAv6f3B77HfEjssfqSx0tKAbA_bTb-YWKvutRx3Qw@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: fsl: Make pinctrl_ipc_handle static
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 9:15 PM Yue Haibing <yuehaibing@huawei.com> wrote:
+Douglas Anderson <dianders@chromium.org> writes:
 
-> From: YueHaibing <yuehaibing@huawei.com>
+> The commit fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent
+> adapter status variables") had a fairly straightforward bug in it.  It
+> contained this bit of diff:
 >
-> Fix sparse warning:
+>  - if (!adapter->is_suspended) {
+>  + if (test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
 >
-> drivers/pinctrl/freescale/pinctrl-scu.c:38:19: warning:
->  symbol 'pinctrl_ipc_handle' was not declared. Should it be static?
+> As you can see the patch missed the "!" when converting to the atomic
+> bitops.  This meant that the resume hasn't done anything at all since
+> that commit landed and suspend/resume for mwifiex SDIO cards has been
+> totally broken.
 >
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> After fixing this mwifiex suspend/resume appears to work again, at
+> least with the simple testing I've done.
+>
+> Fixes: fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent adapter status variables")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Patch applied.
+I'm planning to queue this for 5.1.
 
-Yours,
-Linus Walleij
+-- 
+Kalle Valo
