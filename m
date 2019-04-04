@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E4AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391BFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2767621850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A38A21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367895;
-	bh=kWdYROo6GTUSEnc8p8usAVuYfJoqD4I+pTp55goTjOU=;
+	s=default; t=1554367898;
+	bh=p6k9VFlAaal5ILkdZAHr1L1xO48dMYftomQ5TnTVFUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IMfrPvgOTgN++vr6FhGF6U5pQpZQgzFEPmOwclm4iQMWjCPSQKUu9XsF0Tdjv7Wa
-	 qr5JI2YoIFEehFoBG2a6Ll9r3hOga2RfZxyT+M2MjSfEA1bqkhL6S2tibRzdk+KFxN
-	 iGdqSYIJPTrYsQci0efECz0jsz74MnFTMEEtCjm4=
+	b=x1Tt7yi70ZW7iMeOsEbyNQzRBgp/k2T74SQ+2oJjWRla++e208KFb93IlRs/PJAnW
+	 0foh4SKUTvSLZFv+oYbKNNjuFPXkWTRFJJwhse/wlCRKD1B+Jk5Qi/SSMpUUZtHxHT
+	 5dIG9bUVVU2SsGxSCiWkrOOdr+CZRU9S/6+znrWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfDDIvd (ORCPT
+        id S1729416AbfDDIvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbfDDIvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:31 -0400
+        id S1728921AbfDDIvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6806B217D7;
-        Thu,  4 Apr 2019 08:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1995F2184B;
+        Thu,  4 Apr 2019 08:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367889;
-        bh=kWdYROo6GTUSEnc8p8usAVuYfJoqD4I+pTp55goTjOU=;
+        s=default; t=1554367892;
+        bh=p6k9VFlAaal5ILkdZAHr1L1xO48dMYftomQ5TnTVFUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MoU90/cljLlWM8xT+TzLyJaVM4r9ODub8Mg33C35X5TCPDpAk6Fxam1j0BVBWT86d
-         NvStToWDrfzFw3mx0al3xuSEsQIZe0JSgWhnsoDsL4jM04kcl+tri35juRAZYmVoxn
-         ekc0YQHRG/sjJkmxpMgQ4/5wv/H/BGYwEpFDq+JU=
+        b=Wcg/9KHSIKKnfzSYsfb8EtcWFQQm2UdLhkT0+CdUB2pQclY5ag1YSj6Wbpjw+1iVE
+         weinvJYtmDBnegq4yu1R3tnRji514EjKsbcZ3mdPmgL9euxpXPKZmf08iDKDKdgF3k
+         By867cE71yE89E+0wfLGv1fALWdzefHEmaRL1iMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/91] coresight: etm4x: Add support to enable ETMv4.2
-Date:   Thu,  4 Apr 2019 10:47:19 +0200
-Message-Id: <20190404084537.495353967@linuxfoundation.org>
+Subject: [PATCH 4.9 36/91] ARM: 8840/1: use a raw_spinlock_t in unwind
+Date:   Thu,  4 Apr 2019 10:47:20 +0200
+Message-Id: <20190404084537.547404901@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -68,62 +67,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
+[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
 
-SDM845 has ETMv4.2 and can use the existing etm4x driver.
-But the current etm driver checks only for ETMv4.0 and
-errors out for other etm4x versions. This patch adds this
-missing support to enable SoC's with ETMv4x to use same
-driver by checking only the ETM architecture major version
-number.
+Mostly unwind is done with irqs enabled however SLUB may call it with
+irqs disabled while creating a new SLUB cache.
 
-Without this change, we get below error during etm probe:
+I had system freeze while loading a module which called
+kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
+interrupts and then
 
-/ # dmesg | grep etm
-[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+->new_slab_objects()
+ ->new_slab()
+  ->setup_object()
+   ->setup_object_debug()
+    ->init_tracking()
+     ->set_track()
+      ->save_stack_trace()
+       ->save_stack_trace_tsk()
+        ->walk_stackframe()
+         ->unwind_frame()
+          ->unwind_find_idx()
+           =>spin_lock_irqsave(&unwind_lock);
 
-With this change, etm probe is successful:
-
-/ # dmesg | grep etm
-[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
-
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/kernel/unwind.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 4db8d6a4d0cb..da27f8edba50 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -61,7 +61,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 0bee233fef9a..314cfb232a63 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
+ static const struct unwind_idx *__origin_unwind_idx;
+ extern const struct unwind_idx __stop_unwind_idx[];
  
- static bool etm4_arch_supported(u8 arch)
- {
--	switch (arch) {
-+	/* Mask out the minor version number */
-+	switch (arch & 0xf0) {
- 	case ETM_ARCH_V4:
- 		break;
- 	default:
+-static DEFINE_SPINLOCK(unwind_lock);
++static DEFINE_RAW_SPINLOCK(unwind_lock);
+ static LIST_HEAD(unwind_tables);
+ 
+ /* Convert a prel31 symbol to an absolute address */
+@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 		/* module unwind tables */
+ 		struct unwind_table *table;
+ 
+-		spin_lock_irqsave(&unwind_lock, flags);
++		raw_spin_lock_irqsave(&unwind_lock, flags);
+ 		list_for_each_entry(table, &unwind_tables, list) {
+ 			if (addr >= table->begin_addr &&
+ 			    addr < table->end_addr) {
+@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 				break;
+ 			}
+ 		}
+-		spin_unlock_irqrestore(&unwind_lock, flags);
++		raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 	}
+ 
+ 	pr_debug("%s: idx = %p\n", __func__, idx);
+@@ -529,9 +529,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
+ 	tab->begin_addr = text_addr;
+ 	tab->end_addr = text_addr + text_size;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_add_tail(&tab->list, &unwind_tables);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	return tab;
+ }
+@@ -543,9 +543,9 @@ void unwind_table_del(struct unwind_table *tab)
+ 	if (!tab)
+ 		return;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_del(&tab->list);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	kfree(tab);
+ }
 -- 
 2.19.1
 
