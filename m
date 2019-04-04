@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3229C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FCCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B962075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2326A20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370956;
-	bh=XcFrHLG3c2mR/DNZwpCrOvZNlQ5NA+MgCR6kU81BqPE=;
+	s=default; t=1554370962;
+	bh=mprgzQnvcTtOPyzj4++wiiltcdSvblcNX1KhfiPOhyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCqeLOpvTYPQ3mnMBis4Vyq/PLQCErjWDvP5KH72YLTWjnD3Jpgnrvwoz/2qBDji5
-	 PEu+m9XEN359UWSRKoxckrHUDQkGavMmsoY7nMsuXFp2Y64Ywf9T2Bpo/f5IzJQJ1a
-	 1V4L2n9LLnyV9lwVINAF/wpHkcZW4+Ay0vBNWRUQ=
+	b=2VvWY+AWnQA4GXS4X2C/4lAtB2UeFAQEzdchQm8P2WCwDnQL3C0kjTb747GFwQtIh
+	 oj1md1+9FHtDn/2Vkb9lSOuncNHi8PC/9kPbCkfDue3TSmDFk/dtpYk5Hp1gf+c+oH
+	 wQHbpSQ3XFcoxwonfs7E1XhDW8hiuRTfq778r+oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbfDDJmf (ORCPT
+        id S1731400AbfDDJBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730482AbfDDJBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:20 -0400
+        id S1730855AbfDDJBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB81721741;
-        Thu,  4 Apr 2019 09:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73B82183E;
+        Thu,  4 Apr 2019 09:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368480;
-        bh=XcFrHLG3c2mR/DNZwpCrOvZNlQ5NA+MgCR6kU81BqPE=;
+        s=default; t=1554368472;
+        bh=mprgzQnvcTtOPyzj4++wiiltcdSvblcNX1KhfiPOhyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UUiE4CaCv3HgJtpH+QKVIlbWxmo1sVmhUl2t2VhjHNflfv9v0uuk7CY27EvBCJ/Gk
-         YgPPVFxoER3yTl47zOe8katsi1rBaa+Mc++sfmyhgAe6n2f2InMgN5hiZD11PRUOv9
-         djLDQnU7EMn3b+C1+iCaUOKok0LGaPXYtleG48sA=
+        b=gDmgzV5WpfwrQ/MhIqx8392v8rCSsNZ3DYYeJ2Y4lo7knTP1bHiQAghhmNkFoBWh7
+         ZiT+ILXrl/WP7JLVPQEklTuI5Emn2XOU9QgA/w1nGtGOEn7kvskYEyvwqdFh9Lc+hj
+         Y7R7lqXB8+UsneH0vK9JhacNFQXGikCHMr75hKXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namjae Jeon <linkinjeon@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 039/187] cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED
-Date:   Thu,  4 Apr 2019 10:46:16 +0200
-Message-Id: <20190404084604.918847946@linuxfoundation.org>
+Subject: [PATCH 4.19 052/187] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Thu,  4 Apr 2019 10:46:29 +0200
+Message-Id: <20190404084605.542013759@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,52 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 969ae8e8d4ee54c99134d3895f2adf96047f5bee ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-Old windows version or Netapp SMB server will return
-NT_STATUS_NOT_SUPPORTED since they do not allow or implement
-FSCTL_VALIDATE_NEGOTIATE_INFO. The client should accept the response
-provided it's properly signed.
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
-See
-https://blogs.msdn.microsoft.com/openspecification/2012/06/28/smb3-secure-dialect-negotiation/
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-and
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
 
-MS-SMB2 validate negotiate response processing:
-https://msdn.microsoft.com/en-us/library/hh880630.aspx
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
 
-Samba client had already handled it.
-https://bugzilla.samba.org/attachment.cgi?id=13285&action=edit
-
-Signed-off-by: Namjae Jeon <linkinjeon@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 3d0db37d64ad..71f32d983384 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -881,8 +881,14 @@ int smb3_validate_negotiate(const unsigned int xid, struct cifs_tcon *tcon)
- 	rc = SMB2_ioctl(xid, tcon, NO_FILE_ID, NO_FILE_ID,
- 		FSCTL_VALIDATE_NEGOTIATE_INFO, true /* is_fsctl */,
- 		(char *)pneg_inbuf, inbuflen, (char **)&pneg_rsp, &rsplen);
--
--	if (rc != 0) {
-+	if (rc == -EOPNOTSUPP) {
-+		/*
-+		 * Old Windows versions or Netapp SMB server can return
-+		 * not supported error. Client should accept it.
-+		 */
-+		cifs_dbg(VFS, "Server does not support validate negotiate\n");
-+		return 0;
-+	} else if (rc != 0) {
- 		cifs_dbg(VFS, "validate protocol negotiate failed: %d\n", rc);
- 		rc = -EIO;
- 		goto out_free_inbuf;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 85fc6db48e44..159b897c5e80 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -935,8 +935,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
++
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
+ 
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
