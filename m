@@ -2,91 +2,143 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705D5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC7AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3312075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="XRsYxes9"
+	by mail.kernel.org (Postfix) with ESMTP id AC8232075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfDDKGQ (ORCPT
+        id S1728932AbfDDKGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:06:16 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:48639 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfDDKGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:06:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org; s=ds201810;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=oMxen7sXc1WBJneb2cacQ9YGw31pOzasd22fxQJIahU=;
-        b=XRsYxes9lzGFsGSr+l9u3eiNy6QYuKDHDMwQw/XUX4kzx+B/aUZF9RcQwuFjqo87DfOoYD99YUNTtazTI1ZfvZyFFVSRorNseeNzV072D+JuD0el/s/s2CQrwDlITJay7fH1dVJqGgRGZw3UyUyuHLrf49eCGemjZj2zBZgXkYFW8xpEJP4LC8rScDBBs4t/GrwD6ZHa2ctbADfFw3ioQjixBGCSJKVM+MCs6X/wKIwtqKf5ohCXGgZQWEwJX0vFkDGu9RNY4Zr9QEx3/knKo2GsCtQBNlDbQm//Gq8r1urgdUkebeMrBgA5h+9I3JPjxqeUtOzYaHJIz4J7Hw8mmA==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:61712 helo=[192.168.10.179])
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <noralf@tronnes.org>)
-        id 1hBzG8-0007Vh-V9; Thu, 04 Apr 2019 12:06:12 +0200
-Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
-To:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>
-Cc:     David Airlie <airlied@linux.ie>, David Airlie <airlied@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>
-References: <20190403072318.31507-1-kraxel@redhat.com>
- <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
- <20190404055056.ddc2bdgjbgjj7tby@sirius.home.kraxel.org>
- <CAKMK7uFbLcziLXrwds9QZBBPFiBDC_O+X9fiuutNjsutaPW+sQ@mail.gmail.com>
- <20190404083034.f7vrvukzqx5v7qju@sirius.home.kraxel.org>
- <CAKMK7uHiWu-kOa6SP0ZRstnrwdYR0MHgtHdHZPLWLXxWaQVPrQ@mail.gmail.com>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <2866e37e-8563-1f1e-8f16-1119f70d52e1@tronnes.org>
-Date:   Thu, 4 Apr 2019 12:06:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 06:06:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40472 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbfDDKGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:06:25 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 672D33082B71;
+        Thu,  4 Apr 2019 10:06:24 +0000 (UTC)
+Received: from [10.36.117.116] (ovpn-117-116.ams2.redhat.com [10.36.117.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A33D14149;
+        Thu,  4 Apr 2019 10:06:22 +0000 (UTC)
+Subject: Re: [PATCH 2/4] mm, memory_hotplug: provide a more generic
+ restrictions for memory hotplug
+To:     Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190328134320.13232-1-osalvador@suse.de>
+ <20190328134320.13232-3-osalvador@suse.de>
+ <20190403084603.GE15605@dhcp22.suse.cz>
+ <20190404100403.6lci2e55egrjfwig@d104.suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <9cc998c7-4e01-20b2-8765-77bfccfaebbc@redhat.com>
+Date:   Thu, 4 Apr 2019 12:06:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uHiWu-kOa6SP0ZRstnrwdYR0MHgtHdHZPLWLXxWaQVPrQ@mail.gmail.com>
+In-Reply-To: <20190404100403.6lci2e55egrjfwig@d104.suse.de>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 04 Apr 2019 10:06:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Den 04.04.2019 10.52, skrev Daniel Vetter:
-> On Thu, Apr 4, 2019 at 10:30 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->>
->>   Hi,
->>
->>>> Speaking of wayland:  Seems at least gnome-shell insists on using XR24.
+On 04.04.19 12:04, Oscar Salvador wrote:
+> On Wed, Apr 03, 2019 at 10:46:03AM +0200, Michal Hocko wrote:
+>> On Thu 28-03-19 14:43:18, Oscar Salvador wrote:
+>>> From: Michal Hocko <mhocko@suse.com>
 >>>
->>> Yeah XR24 is pretty much mandatory. Noralf added a few helpers to
->>> convert XR24 to other formats, for display not supporting anything
->>> else. Because userspace.
+>>> arch_add_memory, __add_pages take a want_memblock which controls whether
+>>> the newly added memory should get the sysfs memblock user API (e.g.
+>>> ZONE_DEVICE users do not want/need this interface). Some callers even
+>>> want to control where do we allocate the memmap from by configuring
+>>> altmap.
+>>>
+>>> Add a more generic hotplug context for arch_add_memory and __add_pages.
+>>> struct mhp_restrictions contains flags which contains additional
+>>> features to be enabled by the memory hotplug (MHP_MEMBLOCK_API
+>>> currently) and altmap for alternative memmap allocator.
+>>>
+>>> Please note that the complete altmap propagation down to vmemmap code
+>>> is still not done in this patch. It will be done in the follow up to
+>>> reduce the churn here.
+>>>
+>>> This patch shouldn't introduce any functional change.
 >>
->> Have a pointer to these helpers?  grepping around in drm didn't turn up
->> anything so far ...
+>> Is there an agreement on the interface here? Or do we want to hide almap
+>> behind some more general looking interface? If the former is true, can
+>> we merge it as it touches a code that might cause merge conflicts later on
+>> as multiple people are working on this area.
 > 
-> tinydrm_xrgb8888_to_*
-> 
-> imo these could be put into some drm_format_helpers.c to be shared.
+> Uhm, I think that the interface is fine for now.
+> I thought about providing some callbacks to build the altmap layout, but I
+> realized that it was overcomplicated and I would rather start easy.
+> Maybe the naming could be changed to what David suggested, something like
+> "mhp_options", which actually looks more generic and allows us to stuff more
+> things into it should the need arise in the future.
+> But that is something that can come afterwards I guess.
 
-I agree, my long term goal is to get rid of tinydrm.ko. Just haven't got
-there yet.
+I'd vote to rename it right away, but feel free to continue how you prefer.
 
-Gerd, if you end up using some of those functions, feel free to move
-just those you need and I can do the rest later. But if you have time to
-spare I wouldn't mind getting all of them moved ;-)
+-- 
 
-Noralf.
+Thanks,
 
-> From a quick look the xrgb8888_to_rgb888 is missing, but for a quick
-> hack you can just use rgb565 to get going.
-> -Daniel
-> 
+David / dhildenb
