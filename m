@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11402C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E325C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF252075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2494A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369251;
-	bh=/Teq4lSYkIO9wmtcU2gAh9YeGGOTXE8bHmHHf8yvxqk=;
+	s=default; t=1554369258;
+	bh=sCdBIDPLjfUPbueQfIA8SuTwhY+cxNRlI+FSZdODYV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M4TmnvsWPw0npzwuojk1Y8U24LlfIAirAykLKzzP8WvalqE0viDLssdoN3NnIKt9W
-	 2vpP6DXudkGsRV7z06TBheMkguKIwSBdhT2FWjTHNtmT2sOPDSE6S7wBndUwEP0+rY
-	 D0hPvfDCgDorp4HdZ5WcxZNMerPnCqLr4P2jPGag=
+	b=Z+ZWSjusM78bBpZ5RAIle6PdSLIB1Tux9CGApGbKpzp/xXY3iNKBOlx7f4ARp/oMQ
+	 rOiy33kyfI7ZOrMnY6gMXdabJ7ag0Beq3jouiPpWgdkOwfLihz8+jhhCN7ox4qkZL5
+	 A5kQKMg3C4vnND2GLes6MgyC4p7bqphVP9nMmVco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfDDJOL (ORCPT
+        id S1729694AbfDDJOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387446AbfDDJOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:08 -0400
+        id S2387681AbfDDJOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A363820643;
-        Thu,  4 Apr 2019 09:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01EA20643;
+        Thu,  4 Apr 2019 09:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369248;
-        bh=/Teq4lSYkIO9wmtcU2gAh9YeGGOTXE8bHmHHf8yvxqk=;
+        s=default; t=1554369253;
+        bh=sCdBIDPLjfUPbueQfIA8SuTwhY+cxNRlI+FSZdODYV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMMTL5kH/kSZNFC/lgm6uA3lR0RbC5ZxBOD/fExMrOLhvv7OHNo+CVx7+bFpkb+SK
-         lewj5eowPaE1K2SMWKbSWQYM5X2rx9mS3S1SuC6iQ2YQ2TUZsJYXuWvHhRVGnqAfal
-         wxqixAi1wWBMcxRsT2Tf8W1SmSy7NZeb/n8g1e9A=
+        b=zN3gkCrpj8ON6E9qL2F4OPlxELQtqjqTHUJrf+Va8Kxv37N4EerIRukZPIsL4dMIE
+         ljgamYL3IiQLky7yBUJIhHDobzMkOKZkJeE6TttvHad6YAu3cSP2y4VRvpmIs5/TYk
+         AXhB0+m+/OpxPSdvFjP+zgsk2JGRHSAyXVIwTf1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 152/246] bcache: fix potential div-zero error of writeback_rate_i_term_inverse
-Date:   Thu,  4 Apr 2019 10:47:32 +0200
-Message-Id: <20190404084624.492055626@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 154/246] genirq: Avoid summation loops for /proc/stat
+Date:   Thu,  4 Apr 2019 10:47:34 +0200
+Message-Id: <20190404084624.562266548@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,48 +77,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c3b75a2199cdbfc1c335155fe143d842604b1baa ]
+[ Upstream commit 1136b0728969901a091f0471968b2b76ed14d9ad ]
 
-dc->writeback_rate_i_term_inverse can be set via sysfs interface. It is
-in type unsigned int, and convert from input string by d_strtoul(). The
-problem is d_strtoul() does not check valid range of the input, if
-4294967296 is written into sysfs file writeback_rate_i_term_inverse,
-an overflow of unsigned integer will happen and value 0 is set to
-dc->writeback_rate_i_term_inverse.
+Waiman reported that on large systems with a large amount of interrupts the
+readout of /proc/stat takes a long time to sum up the interrupt
+statistics. In principle this is not a problem. but for unknown reasons
+some enterprise quality software reads /proc/stat with a high frequency.
 
-In writeback.c:__update_writeback_rate(), there are following lines of
-code,
-      integral_scaled = div_s64(dc->writeback_rate_integral,
-                      dc->writeback_rate_i_term_inverse);
-If dc->writeback_rate_i_term_inverse is set to 0 via sysfs interface,
-a div-zero error might be triggered in the above code.
+The reason for this is that interrupt statistics are accounted per cpu. So
+the /proc/stat logic has to sum up the interrupt stats for each interrupt.
 
-Therefore we need to add a range limitation in the sysfs interface,
-this is what this patch does, use sysfs_stroul_clamp() to replace
-d_strtoul() and restrict the input range in [1, UINT_MAX].
+This can be largely avoided for interrupts which are not marked as
+'PER_CPU' interrupts by simply adding a per interrupt summation counter
+which is incremented along with the per interrupt per cpu counter.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The PER_CPU interrupts need to avoid that and use only per cpu accounting
+because they share the interrupt number and the interrupt descriptor and
+concurrent updates would conflict or require unwanted synchronization.
+
+Reported-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Waiman Long <longman@redhat.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lkml.kernel.org/r/20190208135020.925487496@linutronix.de
+
+8<-------------
+
+v2: Undo the unintentional layout change of struct irq_desc.
+
+ include/linux/irqdesc.h |    1 +
+ kernel/irq/chip.c       |   12 ++++++++++--
+ kernel/irq/internals.h  |    8 +++++++-
+ kernel/irq/irqdesc.c    |    7 ++++++-
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/irqdesc.h |  1 +
+ kernel/irq/chip.c       | 12 ++++++++++--
+ kernel/irq/internals.h  |  8 +++++++-
+ kernel/irq/irqdesc.c    |  7 ++++++-
+ 4 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index f98cda32065d..28e0d5a5e25b 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -287,7 +287,9 @@ STORE(__cached_dev)
- 	sysfs_strtoul_clamp(writeback_rate_update_seconds,
- 			    dc->writeback_rate_update_seconds,
- 			    1, WRITEBACK_RATE_UPDATE_SECS_MAX);
--	d_strtoul(writeback_rate_i_term_inverse);
-+	sysfs_strtoul_clamp(writeback_rate_i_term_inverse,
-+			    dc->writeback_rate_i_term_inverse,
-+			    1, UINT_MAX);
- 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
- 	d_strtoul_nonzero(writeback_rate_minimum);
+diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
+index dd1e40ddac7d..875c41b23f20 100644
+--- a/include/linux/irqdesc.h
++++ b/include/linux/irqdesc.h
+@@ -65,6 +65,7 @@ struct irq_desc {
+ 	unsigned int		core_internal_state__do_not_mess_with_it;
+ 	unsigned int		depth;		/* nested irq disables */
+ 	unsigned int		wake_depth;	/* nested wake enables */
++	unsigned int		tot_count;
+ 	unsigned int		irq_count;	/* For detecting broken IRQs */
+ 	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
+ 	unsigned int		irqs_unhandled;
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 34e969069488..e960c4f46ee0 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -855,7 +855,11 @@ void handle_percpu_irq(struct irq_desc *desc)
+ {
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
  
+-	kstat_incr_irqs_this_cpu(desc);
++	/*
++	 * PER CPU interrupts are not serialized. Do not touch
++	 * desc->tot_count.
++	 */
++	__kstat_incr_irqs_this_cpu(desc);
+ 
+ 	if (chip->irq_ack)
+ 		chip->irq_ack(&desc->irq_data);
+@@ -884,7 +888,11 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+ 	unsigned int irq = irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+ 
+-	kstat_incr_irqs_this_cpu(desc);
++	/*
++	 * PER CPU interrupts are not serialized. Do not touch
++	 * desc->tot_count.
++	 */
++	__kstat_incr_irqs_this_cpu(desc);
+ 
+ 	if (chip->irq_ack)
+ 		chip->irq_ack(&desc->irq_data);
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index ca6afa267070..e74e7eea76cf 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -242,12 +242,18 @@ static inline void irq_state_set_masked(struct irq_desc *desc)
+ 
+ #undef __irqd_to_state
+ 
+-static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
++static inline void __kstat_incr_irqs_this_cpu(struct irq_desc *desc)
+ {
+ 	__this_cpu_inc(*desc->kstat_irqs);
+ 	__this_cpu_inc(kstat.irqs_sum);
+ }
+ 
++static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
++{
++	__kstat_incr_irqs_this_cpu(desc);
++	desc->tot_count++;
++}
++
+ static inline int irq_desc_get_node(struct irq_desc *desc)
+ {
+ 	return irq_common_data_get_node(&desc->irq_common_data);
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index ef8ad36cadcf..84fa255d0329 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -119,6 +119,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
+ 	desc->depth = 1;
+ 	desc->irq_count = 0;
+ 	desc->irqs_unhandled = 0;
++	desc->tot_count = 0;
+ 	desc->name = NULL;
+ 	desc->owner = owner;
+ 	for_each_possible_cpu(cpu)
+@@ -919,11 +920,15 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
+ unsigned int kstat_irqs(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+-	int cpu;
+ 	unsigned int sum = 0;
++	int cpu;
+ 
+ 	if (!desc || !desc->kstat_irqs)
+ 		return 0;
++	if (!irq_settings_is_per_cpu_devid(desc) &&
++	    !irq_settings_is_per_cpu(desc))
++	    return desc->tot_count;
++
+ 	for_each_possible_cpu(cpu)
+ 		sum += *per_cpu_ptr(desc->kstat_irqs, cpu);
+ 	return sum;
 -- 
 2.19.1
 
