@@ -4,54 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F43C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4982C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E672075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692172075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369795;
-	bh=CcZjScWXPLh7pz8wYtuTcSpmmo+TuxX8oB5fP9kbW2g=;
+	s=default; t=1554369800;
+	bh=2aJV4E/mwfB/WxWgT613H63US+yEHb/NzqxFjYb3HIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRCx59VOsJ11newbIUobVuA7/eUvDwkNJPn2K5FZxw0BqvpJk5vQXxxDiSVcg9rc9
-	 nOBHpSoCdmsFNo1BXPFXMCcFTzQ3Mpm0rTZt+X02NN5bhb1GVZ2rwtyDje6q3lEMuR
-	 1rg4sLefE476Qp2Wc+dZD5FX1du7R3BsY7ie1oLY=
+	b=Gk10/6O7sshUxhf0NV+JrB1wS04LwD8HRXzW2QY6vraEP74AGnBGLZfilsCmomafI
+	 ycdJ8Ky7p96pvrrr7s7gkXrDl+0mab3ilhVf1WwxkfgteQAxSI3hiEM3KnEz5ep1mV
+	 vYfSlgcB9kIgX9DiMwjbTyBEdGbJirhZl7jeLcrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387906AbfDDJPe (ORCPT
+        id S1733178AbfDDJP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56484 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387897AbfDDJPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:30 -0400
+        id S2387875AbfDDJPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B23932054F;
-        Thu,  4 Apr 2019 09:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 780BD214AF;
+        Thu,  4 Apr 2019 09:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369329;
-        bh=CcZjScWXPLh7pz8wYtuTcSpmmo+TuxX8oB5fP9kbW2g=;
+        s=default; t=1554369323;
+        bh=2aJV4E/mwfB/WxWgT613H63US+yEHb/NzqxFjYb3HIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpwuK518PHy55vwoNJMe6gPuzHCksNfgKkSjiPRakPE1GLx0O1blNvxnsqVd+SN97
-         p52LhfXXxlAN98HL96Y+FI3I7RqFQDlO8yGzmtJtZR5zfRJUGYuO7pnH1a7Hw2wqEO
-         aEi7+zuZb5kmeOGzOd8fwr3vzykFO/vOom5gxz68=
+        b=feIBQeZw0U9kRzHmpn1qMrQD36uuJwT/3jBb+xp+kCWQeqc9S6wfoTmLpmGjOf8vo
+         LLocCT4XVYdTlsiwzzyFW4IsHLxXGe3yr/Esb37oZ2qZ1RMp3JJLnh/k6xI/fSgOd2
+         VtisTOTmCKFDCvHJaSau527ordieFA8rjcPjJilY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jayant Shekhar <jshekhar@codeaurora.org>,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Alexander Graf <agraf@suse.de>, Borislav Petkov <bp@alien8.de>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 182/246] drm/msm/dpu: Convert to a chained irq chip
-Date:   Thu,  4 Apr 2019 10:48:02 +0200
-Message-Id: <20190404084625.554215418@linuxfoundation.org>
+Subject: [PATCH 5.0 180/246] efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
+Date:   Thu,  4 Apr 2019 10:48:00 +0200
+Message-Id: <20190404084625.482886012@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -70,200 +79,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 070e64dc1bbc879b7e0e9fffccd9dd139baf89f0 ]
+[ Upstream commit 4e46c2a956215482418d7b315749fb1b6c6bc224 ]
 
-Devices that make up DPU, i.e. graphics card, request their interrupts
-from this "virtual" interrupt chip. The interrupt chip builds upon a GIC
-SPI interrupt that raises high when any of the interrupts in the DPU's
-irq status register are triggered. From the kernel's perspective this is
-a chained irq chip, so requesting a flow handler for the GIC SPI and
-then calling generic IRQ handling code from that irq handler is not
-completely proper. It's better to convert this to a chained irq so that
-the GIC SPI irq doesn't appear in /proc/interrupts, can't have CPU
-affinity changed, and won't be accounted for with irq stats. Doing this
-also silences a recursive lockdep warning because we can specify a
-different lock class for the chained interrupts, silencing a warning
-that is easy to see with 'threadirqs' on the kernel commandline.
+The UEFI spec revision 2.7 errata A section 8.4 has the following to
+say about the virtual memory runtime services:
 
- WARNING: inconsistent lock state
- 4.19.10 #76 Tainted: G        W
- --------------------------------
- inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
- irq/40-dpu_mdss/203 [HC0[0]:SC0[2]:HE1:SE0] takes:
- 0000000053ea9021 (&irq_desc_lock_class){?.-.}, at: handle_level_irq+0x34/0x26c
- {IN-HARDIRQ-W} state was registered at:
-   lock_acquire+0x244/0x360
-   _raw_spin_lock+0x64/0xa0
-   handle_fasteoi_irq+0x54/0x2ec
-   generic_handle_irq+0x44/0x5c
-   __handle_domain_irq+0x9c/0x11c
-   gic_handle_irq+0x208/0x260
-   el1_irq+0xb4/0x130
-   arch_cpu_idle+0x178/0x3cc
-   default_idle_call+0x3c/0x54
-   do_idle+0x1a8/0x3dc
-   cpu_startup_entry+0x24/0x28
-   rest_init+0x240/0x270
-   start_kernel+0x5a8/0x6bc
- irq event stamp: 18
- hardirqs last  enabled at (17): [<ffffff9042385e80>] _raw_spin_unlock_irq+0x40/0xc0
- hardirqs last disabled at (16): [<ffffff904237a1f4>] __schedule+0x20c/0x1bbc
- softirqs last  enabled at (0): [<ffffff9040f318d0>] copy_process+0xb50/0x3964
- softirqs last disabled at (18): [<ffffff9041036364>] local_bh_disable+0x8/0x20
+  "This section contains function definitions for the virtual memory
+  support that may be optionally used by an operating system at runtime.
+  If an operating system chooses to make EFI runtime service calls in a
+  virtual addressing mode instead of the flat physical mode, then the
+  operating system must use the services in this section to switch the
+  EFI runtime services from flat physical addressing to virtual
+  addressing."
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+So it is pretty clear that calling SetVirtualAddressMap() is entirely
+optional, and so there is no point in doing so unless it achieves
+anything useful for us.
 
-        CPU0
-        ----
-   lock(&irq_desc_lock_class);
-   <Interrupt>
-     lock(&irq_desc_lock_class);
+This is not the case for 64-bit ARM. The identity mapping used by the
+firmware is arbitrarily converted into another permutation of userland
+addresses (i.e., bits [63:48] cleared), and the runtime code could easily
+deal with the original layout in exactly the same way as it deals with
+the converted layout. However, due to constraints related to page size
+differences if the OS is not running with 4k pages, and related to
+systems that may expose the individual sections of PE/COFF runtime
+modules as different memory regions, creating the virtual layout is a
+bit fiddly, and requires us to sort the memory map and reason about
+adjacent regions with identical memory types etc etc.
 
-  *** DEADLOCK ***
+So the obvious fix is to stop calling SetVirtualAddressMap() altogether
+on arm64 systems. However, to avoid surprises, which are notoriously
+hard to diagnose when it comes to OS<->firmware interactions, let's
+start by making it an opt-out feature, and implement support for the
+'efi=novamap' kernel command line parameter on ARM and arm64 systems.
 
- no locks held by irq/40-dpu_mdss/203.
+( Note that 32-bit ARM generally does require SetVirtualAddressMap() to be
+  used, given that the physical memory map and the kernel virtual address
+  map are not guaranteed to be non-overlapping like on arm64. However,
+  having support for efi=novamap,noruntime on 32-bit ARM, combined with
+  the recently proposed support for earlycon=efifb, is likely to be useful
+  to diagnose boot issues on such systems if they have no accessible serial
+  port. )
 
- stack backtrace:
- CPU: 0 PID: 203 Comm: irq/40-dpu_mdss Tainted: G        W         4.19.10 #76
- Call trace:
-  dump_backtrace+0x0/0x2f8
-  show_stack+0x20/0x2c
-  __dump_stack+0x20/0x28
-  dump_stack+0xcc/0x10c
-  mark_lock+0xbe0/0xe24
-  __lock_acquire+0x4cc/0x2708
-  lock_acquire+0x244/0x360
-  _raw_spin_lock+0x64/0xa0
-  handle_level_irq+0x34/0x26c
-  generic_handle_irq+0x44/0x5c
-  dpu_mdss_irq+0x64/0xec
-  irq_forced_thread_fn+0x58/0x9c
-  irq_thread+0x120/0x1dc
-  kthread+0x248/0x260
-  ret_from_fork+0x10/0x18
- ------------[ cut here ]------------
- irq 169 handler irq_default_primary_handler+0x0/0x18 enabled interrupts
-
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Jayant Shekhar <jshekhar@codeaurora.org>
-Cc: Rajesh Yadav <ryadav@codeaurora.org>
-Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190202094119.13230-8-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 36 ++++++++++++++----------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/firmware/efi/libstub/arm-stub.c        |  5 +++++
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 10 ++++++++++
+ drivers/firmware/efi/libstub/efistub.h         |  1 +
+ drivers/firmware/efi/libstub/fdt.c             |  3 +++
+ 4 files changed, 19 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-index cb307a2abf06..7316b4ab1b85 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-@@ -23,11 +23,14 @@ struct dpu_mdss {
- 	struct dpu_irq_controller irq_controller;
- };
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+index c037c6c5d0b7..04e6ecd72cd9 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/arm-stub.c
+@@ -367,6 +367,11 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
+ 		paddr = in->phys_addr;
+ 		size = in->num_pages * EFI_PAGE_SIZE;
  
--static irqreturn_t dpu_mdss_irq(int irq, void *arg)
-+static void dpu_mdss_irq(struct irq_desc *desc)
- {
--	struct dpu_mdss *dpu_mdss = arg;
-+	struct dpu_mdss *dpu_mdss = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	u32 interrupts;
- 
-+	chained_irq_enter(chip, desc);
++		if (novamap()) {
++			in->virt_addr = in->phys_addr;
++			continue;
++		}
 +
- 	interrupts = readl_relaxed(dpu_mdss->mmio + HW_INTR_STATUS);
+ 		/*
+ 		 * Make the mapping compatible with 64k pages: this allows
+ 		 * a 4k page size kernel to kexec a 64k page size kernel and
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index e94975f4655b..442f51c2a53d 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -34,6 +34,7 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
  
- 	while (interrupts) {
-@@ -39,20 +42,20 @@ static irqreturn_t dpu_mdss_irq(int irq, void *arg)
- 					   hwirq);
- 		if (mapping == 0) {
- 			DRM_ERROR("couldn't find irq mapping for %lu\n", hwirq);
--			return IRQ_NONE;
-+			break;
+ static int __section(.data) __nokaslr;
+ static int __section(.data) __quiet;
++static int __section(.data) __novamap;
+ 
+ int __pure nokaslr(void)
+ {
+@@ -43,6 +44,10 @@ int __pure is_quiet(void)
+ {
+ 	return __quiet;
+ }
++int __pure novamap(void)
++{
++	return __novamap;
++}
+ 
+ #define EFI_MMAP_NR_SLACK_SLOTS	8
+ 
+@@ -482,6 +487,11 @@ efi_status_t efi_parse_options(char const *cmdline)
+ 			__chunk_size = -1UL;
  		}
  
- 		rc = generic_handle_irq(mapping);
- 		if (rc < 0) {
- 			DRM_ERROR("handle irq fail: irq=%lu mapping=%u rc=%d\n",
- 				  hwirq, mapping, rc);
--			return IRQ_NONE;
-+			break;
- 		}
- 
- 		interrupts &= ~(1 << hwirq);
- 	}
- 
--	return IRQ_HANDLED;
-+	chained_irq_exit(chip, desc);
- }
- 
- static void dpu_mdss_irq_mask(struct irq_data *irqd)
-@@ -83,16 +86,16 @@ static struct irq_chip dpu_mdss_irq_chip = {
- 	.irq_unmask = dpu_mdss_irq_unmask,
- };
- 
-+static struct lock_class_key dpu_mdss_lock_key, dpu_mdss_request_key;
++		if (!strncmp(str, "novamap", 7)) {
++			str += strlen("novamap");
++			__novamap = 1;
++		}
 +
- static int dpu_mdss_irqdomain_map(struct irq_domain *domain,
- 		unsigned int irq, irq_hw_number_t hwirq)
- {
- 	struct dpu_mdss *dpu_mdss = domain->host_data;
--	int ret;
+ 		/* Group words together, delimited by "," */
+ 		while (*str && *str != ' ' && *str != ',')
+ 			str++;
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 32799cf039ef..337b52c4702c 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -27,6 +27,7 @@
  
-+	irq_set_lockdep_class(irq, &dpu_mdss_lock_key, &dpu_mdss_request_key);
- 	irq_set_chip_and_handler(irq, &dpu_mdss_irq_chip, handle_level_irq);
--	ret = irq_set_chip_data(irq, dpu_mdss);
--
--	return ret;
-+	return irq_set_chip_data(irq, dpu_mdss);
- }
+ extern int __pure nokaslr(void);
+ extern int __pure is_quiet(void);
++extern int __pure novamap(void);
  
- static const struct irq_domain_ops dpu_mdss_irqdomain_ops = {
-@@ -159,11 +162,13 @@ static void dpu_mdss_destroy(struct drm_device *dev)
- 	struct msm_drm_private *priv = dev->dev_private;
- 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
- 	struct dss_module_power *mp = &dpu_mdss->mp;
-+	int irq;
+ #define pr_efi(sys_table, msg)		do {				\
+ 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index 0dc7b4987cc2..f8f89f995e9d 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -327,6 +327,9 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
+ 	if (status == EFI_SUCCESS) {
+ 		efi_set_virtual_address_map_t *svam;
  
- 	pm_runtime_suspend(dev->dev);
- 	pm_runtime_disable(dev->dev);
- 	_dpu_mdss_irq_domain_fini(dpu_mdss);
--	free_irq(platform_get_irq(pdev, 0), dpu_mdss);
-+	irq = platform_get_irq(pdev, 0);
-+	irq_set_chained_handler_and_data(irq, NULL, NULL);
- 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
- 	devm_kfree(&pdev->dev, mp->clk_config);
- 
-@@ -187,6 +192,7 @@ int dpu_mdss_init(struct drm_device *dev)
- 	struct dpu_mdss *dpu_mdss;
- 	struct dss_module_power *mp;
- 	int ret = 0;
-+	int irq;
- 
- 	dpu_mdss = devm_kzalloc(dev->dev, sizeof(*dpu_mdss), GFP_KERNEL);
- 	if (!dpu_mdss)
-@@ -219,12 +225,12 @@ int dpu_mdss_init(struct drm_device *dev)
- 	if (ret)
- 		goto irq_domain_error;
- 
--	ret = request_irq(platform_get_irq(pdev, 0),
--			dpu_mdss_irq, 0, "dpu_mdss_isr", dpu_mdss);
--	if (ret) {
--		DPU_ERROR("failed to init irq: %d\n", ret);
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
- 		goto irq_error;
--	}
++		if (novamap())
++			return EFI_SUCCESS;
 +
-+	irq_set_chained_handler_and_data(irq, dpu_mdss_irq,
-+					 dpu_mdss);
- 
- 	pm_runtime_enable(dev->dev);
- 
+ 		/* Install the new virtual address map */
+ 		svam = sys_table->runtime->set_virtual_address_map;
+ 		status = svam(runtime_entry_count * desc_size, desc_size,
 -- 
 2.19.1
 
