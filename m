@@ -2,119 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53076C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EEBC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246892075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D134C20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uUjYa2MP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfDDHlK (ORCPT
+        id S1727253AbfDDHni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:41:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55124 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbfDDHlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:41:09 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 899F030832E9;
-        Thu,  4 Apr 2019 07:41:09 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-97.pek2.redhat.com [10.72.12.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A6A862669;
-        Thu,  4 Apr 2019 07:41:05 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 15:41:02 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc:     "bhe@redhat.com" <bhe@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190404074102.GA5970@dhcp-128-65.nay.redhat.com>
-References: <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
- <20190403082305.GG1555@localhost.localdomain>
- <20190403090210.GH1555@localhost.localdomain>
- <c8613886-7014-cbd2-788f-a4f29bb5b4a5@ce.jp.nec.com>
- <20190404025234.GA12658@dhcp-128-65.nay.redhat.com>
- <20190404030037.GT7627@MiWiFi-R3L-srv>
- <20190404031030.GU7627@MiWiFi-R3L-srv>
- <20190404032238.GA16267@dhcp-128-65.nay.redhat.com>
- <20190404064130.GA5530@dhcp-128-65.nay.redhat.com>
- <20190404072007.GL1555@localhost.localdomain>
+        Thu, 4 Apr 2019 03:43:38 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46724 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbfDDHni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 03:43:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x347hTGA064131;
+        Thu, 4 Apr 2019 02:43:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554363809;
+        bh=j1tJfLJ9K3b+a/cwVN/Xnyt70KNgMDwu+dzIRENh08w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uUjYa2MPeVCkCRBNp1O27ggyqpInZg3T3NbKO9+UCG0hArheaKYxnCOm57joKdtlV
+         o6pQjKu7wSihZo/5m5YxhnIPFFpifyYwsnqUOkbQP4T7+q7vWFHmgiVV0gPD4snO+c
+         El8e0H40SCITMARyxG8BbhZspXtRV7bVrjXSi6jQ=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x347hTWg010231
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 02:43:29 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
+ 2019 02:43:29 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Apr 2019 02:43:28 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x347hOQ5113095;
+        Thu, 4 Apr 2019 02:43:26 -0500
+Subject: Re: [PATCH v5 8/8] PCI: dwc: Do not write to MSI control registers if
+ the platform doesn't use it
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190321095927.7058-1-kishon@ti.com>
+ <20190321095927.7058-9-kishon@ti.com> <20190403171902.GB3783@red-moon>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <7fb6436b-133b-0345-c8de-02fa77ebcf4d@ti.com>
+Date:   Thu, 4 Apr 2019 13:12:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404072007.GL1555@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 04 Apr 2019 07:41:09 +0000 (UTC)
+In-Reply-To: <20190403171902.GB3783@red-moon>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
-On 04/04/19 at 03:20pm, Chao Fan wrote:
-> On Thu, Apr 04, 2019 at 02:41:30PM +0800, Dave Young wrote:
-> >On 04/04/19 at 11:22am, Dave Young wrote:
-> >> On 04/04/19 at 11:10am, Baoquan He wrote:
-> >> > On 04/04/19 at 11:00am, Baoquan He wrote:
-> >> > > On 04/04/19 at 10:52am, Dave Young wrote:
-> >> > > > On 04/04/19 at 01:23am, Junichi Nomura wrote:
-> >> >  +	/* Save RSDP address for later use. */
-> >> >  +	boot_params->acpi_rsdp_addr = get_rsdp_addr();
-> >> >  +
-> >> >  +	error("Hang kernel for kexec debugging");
-> >> > 
-> >> > Sorry, here I means calling error() to hang kernel after calling
-> >> > get_rsdp_addr().
-> >> 
-> >> Thanks, it did not hang, it always reset to firmware/grub boot menu.
-> >> I'm pretty sure now the bug exists in get_rsdp_addr().
-> >
-> >static acpi_physical_address kexec_get_rsdp_addr(void)
-> >{
-> >...
-> >        /* Get systab from boot params. */
-> >        systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
-> >        if (!systab)
-> >              error("EFI system table not found in kexec boot_params.");
-> > 
-> >...
-> >  -> add error("hang me") here will have a hang
-> >...
-> >        return __efi_get_rsdp_addr((unsigned long)esd->tables,
-> >                                   systab->nr_tables, true);
-> > 
-> 
-> I have an idea, but not sure whether is a problem.
-> In code of Nomura:
-> 
-> #if defined(CONFIG_EFI) && defined(CONFIG_X86_64)
-> [...]
->         if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
->                 debug_putstr("Wrong kexec EFI loader signature.\n");
->                 return 0;
->         }
-> 
->         /* Get systab from boot params. */
->         systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
-> [...]
-> #endif
-> 
-> After review agian, I wonder what will happen if 32bit-efi boot 64bit
-> OS.
+Hi Lorenzo,
 
-It is hard to find 32bit efi hardware, I can confirm all the laptop I
-have are 64bit efi.
+On 03/04/19 10:49 PM, Lorenzo Pieralisi wrote:
+> On Thu, Mar 21, 2019 at 03:29:27PM +0530, Kishon Vijay Abraham I wrote:
+>> Platforms which populate msi_host_init, has it's own MSI controller
+>> logic. Writing to MSI control registers on platforms which doesn't use
+>> Designware's MSI controller logic might have side effects. To
+>> be safe, do not write to MSI control registers if the platform uses
+>> it's own MSI controller logic instead of Designware's MSI controller
+>> logic.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../pci/controller/dwc/pcie-designware-host.c | 24 ++++++++++---------
+>>  1 file changed, 13 insertions(+), 11 deletions(-)
+> 
+> This patch is needed regardless of the rest of the series, correct ?
+> A.k.a. it is fixing an issue already in the mainline.
 
-In case 32bit efi EFI64_LOADER_SIGNATURE checking will be false.
+That's correct.
+
+Thanks
+Kishon
