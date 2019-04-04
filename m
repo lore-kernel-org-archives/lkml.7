@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF328C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A1421741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF999217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368347;
-	bh=UepO2QG41JDKi4+vqqeiJ9xdbbGIf7Cb2y0WZ17ulA4=;
+	s=default; t=1554368353;
+	bh=epHAlcIy1UWvxk0yQNj0vovJdQx4RpnPFxbyGf6ydiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cgLsYn2uSLc1JGw1m8CdxLzt5sx3Q9yUpHa/hK4m65HIv+cT6BzgdsFZFIXaSq5+x
-	 zH2B/arY7IqQkw6vVgC/jVF2mSNnWTKMw0aNTln6qzD1Y8ZMnFzKS0JIvBcPJEGsx3
-	 NWFXqiUQw1jfNtoD+Y4rHfvXJg4PgS3J7kyZp6Gk=
+	b=gdMLlSCzhIU4nAOl0+ZJlfgHtM0DDu2JK0XEqLotggIg5T5ovtN+nWYVUYR3vovii
+	 Tu3Eldi6mlh+ACGQPhK3RzDq0vMArW+bkc3tq55Euty+srKnxn9ljNbdxJeLAw81Ko
+	 2/NdrkixpV1uXCmvEQdca67qXDcWBJFh76RI6o18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbfDDI7G (ORCPT
+        id S1731052AbfDDI7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfDDI7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:01 -0400
+        id S1731025AbfDDI7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4077721741;
-        Thu,  4 Apr 2019 08:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8C421741;
+        Thu,  4 Apr 2019 08:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368340;
-        bh=UepO2QG41JDKi4+vqqeiJ9xdbbGIf7Cb2y0WZ17ulA4=;
+        s=default; t=1554368348;
+        bh=epHAlcIy1UWvxk0yQNj0vovJdQx4RpnPFxbyGf6ydiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLPxVFMGMIrlT5okC9lkhkgVM2GaNcq7+A/oiolhyJ/FZ3/NT7Idv9IlFDOYhi8iH
-         W6waSsIAA+plQkeUtOkmFXYHCDEarLpOlAvENh2jLhjrCiIJKhL/GImPABuL6UDDcG
-         gQHsGOBgoItvZbqRL1ZB3cQokZlyQxo6wW5H3mdY=
+        b=jw0cSj8dwsGhxeu0eOwKIMJK8JMQASaUXBAevB8GAwNefbRcOEKeD5FGO55RX6fJh
+         ARgn7sfwJxmOMlX9dfDcV+bLjEJPpc5DGHWSe8BGWMflo0FtcP8Sb2YtiN8CJrkesH
+         m/Kv9Dp8PkyrJhToy9HYzbnpKeFxl+SExOeZ6meU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/121] clk: rockchip: fix frac settings of GPLL clock for rk3328
-Date:   Thu,  4 Apr 2019 10:48:26 +0200
-Message-Id: <20190404084551.624973613@linuxfoundation.org>
+Subject: [PATCH 4.14 121/121] ACPI / video: Extend chassis-type detection with a "Lunch Box" check
+Date:   Thu,  4 Apr 2019 10:48:29 +0200
+Message-Id: <20190404084551.763013963@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,63 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
+[ Upstream commit d693c008e3ca04db5916ff72e68ce661888a913b ]
 
-This patch fixes settings of GPLL frequency in fractional mode for
-rk3328. In this mode, FOUTVCO is calcurated by following formula:
-  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
+Commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") introduced chassis type detection, limiting the
+lcd_only check for the backlight to devices where the chassis-type
+indicates their is no builtin LCD panel.
 
-The problem is in FREF * FRAC >> 24 term. This result always lacks
-one from target value is specified by rate member. For example first
-itme of rk3328_pll_frac_rate originally has
-  - rate  : 1016064000
-  - refdiv: 3
-  - fbdiv : 127
-  - frac  : 134217
-  - FREF * FBDIV / REFDIV        = 1016000000
-  - (FREF * FRAC / REFDIV) >> 24 = 63999
-Thus calculated rate is 1016063999. It seems wrong.
+The purpose of the lcd_only check is to avoid advertising a backlight
+interface on desktops, since skylake and newer machines seem to always
+have a backlight interface even if there is no LCD panel. The limiting
+of this check to desktops only was done to avoid breaking backlight
+support on some laptops which do not have the lcd flag set.
 
-If frac has 134218 (it is increased 1 from original value), second
-term is 64000. All other items have same situation. So this patch
-adds 1 to frac member in all items of rk3328_pll_frac_rate.
+The Fujitsu ESPRIMO Q910 which is a compact (NUC like) desktop machine
+has a chassis type of 0x10 aka "Lunch Box". Without the lcd_only check
+we end up falsely advertising backlight/brightness control on this
+device. This commit extend the dmi_is_desktop check to return true
+for type 0x10 to fix this.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/acpi/acpi_video.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index b04f29774ee7..559abf76891e 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
- 
- static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
- 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
--	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
-+	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
- 	/* vco = 1016064000 */
--	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
-+	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
-+	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
-+	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
- 	/* vco = 860156000 */
--	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
-+	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
- 	/* vco = 903168000 */
--	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
-+	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
- 	/* vco = 819200000 */
- 	{ /* sentinel */ },
- };
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 9f56c066227c..e39a1489cc72 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2142,6 +2142,7 @@ static bool dmi_is_desktop(void)
+ 	case 0x05: /* Pizza Box */
+ 	case 0x06: /* Mini Tower */
+ 	case 0x07: /* Tower */
++	case 0x10: /* Lunch Box */
+ 	case 0x11: /* Main Server Chassis */
+ 		return true;
+ 	}
 -- 
 2.19.1
 
