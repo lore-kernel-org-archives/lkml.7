@@ -2,103 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1673C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7026C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A63206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1gMACFGV"
+	by mail.kernel.org (Postfix) with ESMTP id 7E55D206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfDDTOo (ORCPT
+        id S1730224AbfDDTOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:14:44 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39108 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729287AbfDDTOo (ORCPT
+        Thu, 4 Apr 2019 15:14:49 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:41584 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730153AbfDDTOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:14:44 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34J90HL054777;
-        Thu, 4 Apr 2019 19:14:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=rsh4sNTtTPpzLzpoZK7QqGEVJD5blCoPJ8Gkq1Y+dic=;
- b=1gMACFGVbeBJQyYrjHvixqGeb4dQiBFDup8yJc5R2ViP335Ala9ZOe+Y/3Dds8NWFDlO
- yjmP2Uqc6c4CJxqW75AT4cY3pZl4uHKMa2RD4XW7iBFCkTowaoKANVvmHiBA2LONNr5a
- y0vJ3AJVl82pvDAxR+zN/PURrlOz+TUBhmHTCGnJHJdnfFtGcVv88aJpwd/RdABhL6pl
- tas6cCL7W7NPvInfRsBimZVAFw0K7pPhy+0AqYcKyqJt8vP39jrMFVCeR+OVXHEo9Kq0
- i12mhEpm70q5PAS39R4BQ7TPLoKMmU936ErgVLIGt8xMuLm+icoPFK/Jna5H2m9VEG6+ EA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2rhwydh9w4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 19:14:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34JDLDv176677;
-        Thu, 4 Apr 2019 19:14:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2rm8f63xdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 19:14:35 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34JETsH002127;
-        Thu, 4 Apr 2019 19:14:30 GMT
-Received: from kadam (/41.202.241.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 12:14:29 -0700
-Date:   Thu, 4 Apr 2019 22:14:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Timur Tabi <timur@freescale.com>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH 1/2] fsl_hypervisor: dereferencing error pointers in ioctl
-Message-ID: <20190404191420.GQ32613@kadam>
-References: <20181218082003.GD32567@kadam>
- <20190404121044.a38ba5895a485abcdc57f297@linux-foundation.org>
+        Thu, 4 Apr 2019 15:14:48 -0400
+Received: (qmail 27389 invoked by uid 2102); 4 Apr 2019 15:14:47 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 Apr 2019 15:14:47 -0400
+Date:   Thu, 4 Apr 2019 15:14:47 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jesse Hathaway <jesse@mbuki-mvuki.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+In-Reply-To: <CANSNSoWL-2hP6j+nQwjr26vUmvyJ_Y1c9CrJ4bHnuqYCXhecdg@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904041509280.1288-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404121044.a38ba5895a485abcdc57f297@linux-foundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040120
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040120
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:10:44PM -0700, Andrew Morton wrote:
-> On Tue, 18 Dec 2018 11:20:03 +0300 Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> 
-> > The strndup_user() function returns error pointers on error, and then
-> > in the error handling we pass the error pointers to kfree().  It will
-> > cause an Oops.
-> > 
-> 
-> Looks good to me.
-> 
-> I guess we should fix this too?
-> 
+On Thu, 4 Apr 2019, Jesse Hathaway wrote:
 
-I didn't notice that.  Thanks!
+> On Thu, Apr 4, 2019 at 12:16 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > I added debug statements to quirk_usb_early_handoff, quirk_usb_disable_ehci &
+> > > ehci_bios_handoff. The box hangs right before calling:
+> > >
+> > > pci_write_config_byte(pdev, offset + 3, 1);
+> >
+> > Right _before_ that line?  Not _after_ it?
+> 
+> Sorry I should have been more precise, it hangs executing the above
+> pci_write_config_function. I get the debug printk immediately preceding
+> that line.
+> 
+> > That's surprising because the two preceding lines of code are the
+> > condition of an "if" statement and a dev_dbg() call.  I don't see how
+> > either of them could cause a hang.
+> >
+> > Maybe the hang is a delayed reaction to something happening somewhere
+> > else.  But on the assumption that it isn't, you could try commenting
+> > out various parts of ehci_bios_handoff to see which ones make a
+> > difference.
+> 
+> will do
+> 
+> > > which is in ehci_bios_handoff:
+> > >
+> > > [   10.698240] DEBUG: Passed quirk_usb_early_handoff 1300
+> > > [   10.704271] DEBUG: Passed quirk_usb_early_handoff 1308
+> > > [   10.710206] DEBUG: Passed quirk_usb_disable_ehci 939
+> > > [   10.715949] DEBUG: Passed quirk_usb_disable_ehci 945
+> > > [   10.721685] DEBUG: Passed quirk_usb_disable_ehci 950
+> > > [   10.727423] DEBUG: Passed quirk_usb_disable_ehci 958
+> > > [   10.733160] DEBUG: Passed quirk_usb_disable_ehci 964
+> > > [   10.738897] DEBUG: Passed quirk_usb_disable_ehci 968
+> > > [   10.744633] DEBUG: Passed ehci_bios_handoff 849
+> > > [   10.749884] DEBUG: Passed ehci_bios_handoff 884
+> > >
+> > > I have attached the debug output, and my modified pci-quirks.c file
+> > > to the bug report, let me know what else I can do to help.
+> 
+> sorry I attached them to the bug report, but I have attached them to this
+> email as well.
 
-regards,
-dan carpenter
+Okay.  You could try skipping that pci_write_config_byte() call.  The 
+following loop would probably time out, and you might find that the 
+code crashes later on.
+
+You could also try setting try_handoff to 0 near the start of the
+routine.  Your system plus the Comtrol PCI card could have the same
+sort of bug as reported in Bugzilla #77021.
+
+Alan Stern
 
