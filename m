@@ -2,115 +2,120 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5D4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E757CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C1A20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB6D20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbfDDN0v (ORCPT
+        id S1729199AbfDDN2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:26:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5667 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726269AbfDDN0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:26:51 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE104A8740BD1D5C9D77;
-        Thu,  4 Apr 2019 21:26:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
- 21:26:45 +0800
-Subject: Re: [PATCH] extcon: axp288: Fix build err without CONFIG_ACPI
-To:     Hans de Goede <hdegoede@redhat.com>, <myungjoo.ham@samsung.com>,
-        <cw00.choi@samsung.com>, <wens@csie.org>
-References: <20190404104222.23900-1-yuehaibing@huawei.com>
- <bc169cce-5503-f1ec-777f-3b92f3371daf@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <71adb924-a258-1cee-a463-50040d6226e0@huawei.com>
-Date:   Thu, 4 Apr 2019 21:26:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 4 Apr 2019 09:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfDDN2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 09:28:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD7A0206B7;
+        Thu,  4 Apr 2019 13:28:04 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 09:28:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Roland McGrath <roland@hack.frob.com>,
+        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 0/6 v3] sycalls: Remove args i and n from
+ syscall_get_arguments()
+Message-ID: <20190404092803.1bffd135@gandalf.local.home>
+In-Reply-To: <20190401134104.676620247@goodmis.org>
+References: <20190401134104.676620247@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <bc169cce-5503-f1ec-777f-3b92f3371daf@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/4 20:02, Hans de Goede wrote:
-> Hi,
-> 
-> On 04-04-19 12:42, Yue Haibing wrote:
->> From: YueHaibing <yuehaibing@huawei.com>
->>
->> When building CONFIG_ACPI is not set
->> gcc warn this:
->>
->> drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
->> drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
->>      put_device(&adev->dev);
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> Using this driver without ACPI makes little sense, IMHO it would be better to add
-> a depends on ACPI to the Kconfig entry, rather then adding #ifdef-s to the driver.
+On Mon, 01 Apr 2019 09:41:04 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-OK, thank for your commnet, I will send v2 as this.
+> [ Looking for acks ]
+> 
 
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
->> ---
->>   drivers/extcon/extcon-axp288.c | 8 +++++---
->>   1 file changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
->> index 50f9402..ed8ac3f 100644
->> --- a/drivers/extcon/extcon-axp288.c
->> +++ b/drivers/extcon/extcon-axp288.c
->> @@ -333,7 +333,6 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->>       struct axp288_extcon_info *info;
->>       struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
->>       struct device *dev = &pdev->dev;
->> -    struct acpi_device *adev;
->>       int ret, i, pirq;
->>         info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->> @@ -357,6 +356,8 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->>           if (ret)
->>               return ret;
->>   +#ifdef CONFIG_ACPI
->> +        struct acpi_device *adev;
->>           adev = acpi_dev_get_first_match_dev("INT3496", NULL, -1);
->>           if (adev) {
->>               info->id_extcon = extcon_get_extcon_dev(acpi_dev_name(adev));
->> @@ -365,9 +366,10 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->>                   return -EPROBE_DEFER;
->>                 dev_info(dev, "controlling USB role\n");
->> -        } else {
->> -            dev_info(dev, "controlling USB role based on Vbus presence\n");
->>           }
->> +#else
->> +        dev_info(dev, "controlling USB role based on Vbus presence\n");
->> +#endif
->>       }
->>         info->vbus_attach = axp288_get_vbus_attach(info);
->>
-> 
-> .
-> 
+I got a couple.
+
+> Two and a half years ago I sent out 3 patches and a title letter that
+> had this[1]:
+
+Linus,
+
+Is this something that can go into this -rc release or would you want
+me to wait till the next merge window?
+
+The reason I ask, is that there's two arch patches in this series that
+have stable tags attached to them. But I moved things around such that
+they are applied before the global arch patches are and can be applied
+independently.
+
+Should I move those two patches up front and just add those to this
+release cycle, or would you like the entire series now?
+
+-- Steve
+
+
+> ----
+>  arch/arc/include/asm/syscall.h        |   7 +-
+>  arch/arm/include/asm/syscall.h        |  47 ++---------
+>  arch/arm64/include/asm/syscall.h      |  46 ++---------
+>  arch/c6x/include/asm/syscall.h        |  79 ++++---------------
+>  arch/csky/include/asm/syscall.h       |  26 ++-----
+>  arch/h8300/include/asm/syscall.h      |  34 ++------
+>  arch/hexagon/include/asm/syscall.h    |   4 +-
+>  arch/ia64/include/asm/syscall.h       |  13 +---
+>  arch/ia64/kernel/ptrace.c             |   7 +-
+>  arch/microblaze/include/asm/syscall.h |   8 +-
+>  arch/mips/include/asm/syscall.h       |   3 +-
+>  arch/mips/kernel/ptrace.c             |   2 +-
+>  arch/nds32/include/asm/syscall.h      |  62 +++------------
+>  arch/nios2/include/asm/syscall.h      |  84 ++++----------------
+>  arch/openrisc/include/asm/syscall.h   |  12 +--
+>  arch/parisc/include/asm/syscall.h     |  30 ++-----
+>  arch/powerpc/include/asm/syscall.h    |  15 ++--
+>  arch/riscv/include/asm/syscall.h      |  24 ++----
+>  arch/s390/include/asm/syscall.h       |  28 +++----
+>  arch/sh/include/asm/syscall_32.h      |  47 +++--------
+>  arch/sh/include/asm/syscall_64.h      |   8 +-
+>  arch/sparc/include/asm/syscall.h      |  11 ++-
+>  arch/um/include/asm/syscall-generic.h |  78 +++----------------
+>  arch/x86/include/asm/syscall.h        | 142 ++++++++--------------------------
+>  arch/xtensa/include/asm/syscall.h     |  33 ++------
+>  fs/proc/base.c                        |  17 ++--
+>  include/asm-generic/syscall.h         |  21 ++---
+>  include/linux/ptrace.h                |  11 ++-
+>  include/trace/events/syscalls.h       |   2 +-
+>  kernel/seccomp.c                      |   2 +-
+>  kernel/trace/trace_syscalls.c         |   9 ++-
+>  lib/syscall.c                         |  57 ++++++--------
+>  32 files changed, 247 insertions(+), 722 deletions(-)
 
