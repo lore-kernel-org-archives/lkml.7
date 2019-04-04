@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02317C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8F9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC458206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7D520855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sx41NnS9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljhSWBNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfDDQdH (ORCPT
+        id S1729431AbfDDQdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:33:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41389 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfDDQdH (ORCPT
+        Thu, 4 Apr 2019 12:33:22 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:32979 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfDDQdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:33:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d1so1429070plj.8;
-        Thu, 04 Apr 2019 09:33:06 -0700 (PDT)
+        Thu, 4 Apr 2019 12:33:21 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t16so1443758plo.0;
+        Thu, 04 Apr 2019 09:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nsY1Ds/vbGDS3oKVepfAP75rPvPrGqrJ2/0cXCbMjPk=;
-        b=Sx41NnS9tuoZ/4sd6EPjEJZo+mgZ5HFgl/VyMtfaq50fzQHmWTV8l6STRdokB+/UV2
-         +2P8iCXZlc/5+2q1N8napbZKZ+zAnWYgEiJCWkGsJsyG6bxhRum2gPrECCa1tgs8l8vG
-         peqpYslbNR7wJ8CB3ofqwl7sxDTmq2RXNsLQwxpu5sa4N6KL/+7h6AtMAv9s1r/SdZ/R
-         tM6mZoOMn1MbeP7cpYLqButhAyQhY7lr0y+UkPrxEIosdgjw6mMwUheAQakbDq0ho4Ja
-         MHjFISBlAUQN4MkVXLBB3UTnoSf/7vo2uqLD0AMkda0mu1zazUuWWHBQSpCI8p/h/lao
-         ut3Q==
+        bh=cRjyoJkeRUVPcQd2uvXdVSjWMHsJtzTqQ/MpLmQjECk=;
+        b=ljhSWBNB1a+die3X04mzP9/KBRsCrsmYTAktXrKgIPEkRFkOUPdXRrwxAPKUDzvJ20
+         c49VPJGQoApXZUI34viiJBNic279rQgL1co/s+1KkzPhxWB1cfT52RMHAdaIqRDnP0Bg
+         YgC8V0SOpH0SGrpoRDKQA0ZahKu87pyImDojn/4ej5dXaMe+3tTXz/mQwD2dP3J4+dc8
+         3TVnwtRmap2/1mX18tqBIRT1JlgD/jMuppU9zbK5G/dDJtcS+nGpyqzRAbh2NkNi5jWl
+         Ht2kgAmzwY86ca+N3IP0sxCW8I1sO2MLEu47twZ6x9jCJ9HaCitziDTCxh5napkTfj4D
+         MjuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nsY1Ds/vbGDS3oKVepfAP75rPvPrGqrJ2/0cXCbMjPk=;
-        b=bAN32GbH5bLG9WJ9s9luFvrdzR4DeGDOAaIn7jCEsCgqnX44uNaezY19aqef56Py08
-         Sle+yRN8f9EYrtkXNa0/IFvscl7t1h+zjoI8dB5RZf/mq4ZGpgasbXf1uZMZ04vblNDE
-         hSXklXsUyTXQHSg2VTiGZ7JK9HXRx0yYQWksc0JFTLdaqQhn1xkAyVQPRHMs/hD9L3jB
-         IYikcArnsGof1F3K2Ia1NbOQNXsgx6R2mQaL2yCZidmfy4wjPlX3M/nnii2PGrGlJxjB
-         jcp9rd6pWDJvVGrZ1tIpV4ctWs2fx9a0MYmUOjH/6d/e3oxxo1m+JBPIA29CEfDXbUpY
-         r5gA==
-X-Gm-Message-State: APjAAAUZWShCilqNihBWggSkHW/ZBL+JtxpUG5RzAQDeoNwB/a2h5if2
-        koktfayER/KeKpB5bnuKdIELuLvy
-X-Google-Smtp-Source: APXvYqyhNjO6FPJ0nQAf+uZrh8xuu6SStSExu93KLz61h0/9wv6/t/tOnbodrkC9MejGBOqUaU+HZw==
-X-Received: by 2002:a17:902:a7:: with SMTP id a36mr7518866pla.267.1554395585602;
-        Thu, 04 Apr 2019 09:33:05 -0700 (PDT)
+        bh=cRjyoJkeRUVPcQd2uvXdVSjWMHsJtzTqQ/MpLmQjECk=;
+        b=t+myciYV4uXZvmbHENIjZKTeLvFVI+tXR6S+B4gf4qDjNmmOmXMl9zO+O6j3wAGdhK
+         6sk0rPSH0FHPn/vbOzI4XX094UykCVImWyGF6gJ8ePcbxxyMz+2yc9VwPCUK5Sold9+u
+         AgFzJZePLbm3pllSaPrNPsgOpOMklJXvIb/y1l8cVC3+AMRXbe89fYNcQzY9XeA275mh
+         oNREZskxfY5pWSW3lAQFycTTledQrbAqGv6HRR9lmNRj/jQpEXP+bMTnZB/SXLKjyGAh
+         +oAM/xsupuLXagnyPTA5PkXFPoirI1PJg257Sogdivb7j9yPp4xY2wFqU9IaSMgQyF/H
+         htlw==
+X-Gm-Message-State: APjAAAWV1lnb0KIuzKlT1C2h6Iysi+03/kvGVDnqQQAUI2xRhkjG77V4
+        soukI936StjwKgrhzeP2mdwW3cWs
+X-Google-Smtp-Source: APXvYqyFjSLifYAp8r5ogK+D2qJ8ovvv/LztXVHmZyF+VdNNpRlPv2fotxWuJ90cCugAnLYHcRpPog==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr7483975plq.91.1554395600264;
+        Thu, 04 Apr 2019 09:33:20 -0700 (PDT)
 Received: from [10.67.49.72] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id p189sm8620942pfg.184.2019.04.04.09.33.04
+        by smtp.googlemail.com with ESMTPSA id d68sm10702679pfg.16.2019.04.04.09.33.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 09:33:04 -0700 (PDT)
-Subject: Re: [PATCH net-next v3 3/4] net: phy: meson-gxl: add g12a support
+        Thu, 04 Apr 2019 09:33:19 -0700 (PDT)
+Subject: Re: [PATCH net-next v3 4/4] net: phy: meson-gxl: clean-up gxl variant
+ driver
 To:     Jerome Brunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -66,7 +67,7 @@ To:     Jerome Brunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>,
 Cc:     netdev@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20190404131147.31156-1-jbrunet@baylibre.com>
- <20190404131147.31156-4-jbrunet@baylibre.com>
+ <20190404131147.31156-5-jbrunet@baylibre.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -123,12 +124,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <f49292d8-5c57-32ef-5db4-ced0ba0d91e1@gmail.com>
-Date:   Thu, 4 Apr 2019 09:33:03 -0700
+Message-ID: <e043e430-362e-1d5e-af43-a95ec2bd27d2@gmail.com>
+Date:   Thu, 4 Apr 2019 09:33:17 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190404131147.31156-4-jbrunet@baylibre.com>
+In-Reply-To: <20190404131147.31156-5-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,9 +139,14 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 4/4/19 6:11 AM, Jerome Brunet wrote:
-> The g12a SoC family uses the type of internal PHY that was used on the
-> gxl family. The quirks of gxl family, like the LPA register corruption,
-> appear to have been resolved on this new SoC generation.
+> The purpose of this change is to align the gxl and g12a driver
+> declaration.
+> 
+> Like on the g12a variant, remove genphy_aneg_done() from the driver
+> declaration as the net phy framework will default to it anyway.
+> 
+> Also, the gxl phy id should be an exact match as well, so let's change
+> this and use the macro provided.
 > 
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
