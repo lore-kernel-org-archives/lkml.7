@@ -2,218 +2,112 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4052C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60983C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF2A20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=demfloro.ru header.i=@demfloro.ru header.b="VyYTT/VV"
+	by mail.kernel.org (Postfix) with ESMTP id 270E42075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfDDTXF (ORCPT
+        id S1730351AbfDDTXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:23:05 -0400
-Received: from mx.demfloro.ru ([185.52.0.75]:52842 "EHLO mx.demfloro.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfDDTXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:23:05 -0400
-Received: from fire.localdomain (unknown [IPv6:2001:470:28:88::100])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: demfloro)
-        by mx.demfloro.ru (Postfix) with ESMTPSA id 44ZtBt1TlvzB57c;
-        Thu,  4 Apr 2019 19:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=demfloro.ru; s=032019;
-        t=1554405782; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=63g/cWAoNflwlZQm2tGWAfkT/DR+u+GHtae92sla5g4=;
-        b=VyYTT/VV88usSWiDDtDFyzv75g/AFYiqJWdVQLXhFVEA19NDOYdLdX5Aqc7f2cqqWLeWeM
-        7CGciGzgyk4Oa/epEz48zR8t/zbF840LR9QjRS8fqmTvT3DGP9kSQN+SRKb8VIahdlk6iY
-        W5ZhDhZ9ZKk80yn2kmB1bXREwa5kUVjoSZAcpHf6xPKuyYGNH8a+C88BMaYLZz9toddU1F
-        QvXRuT/PRWipOK1/H1N6omTv7Cw2QFBLzaxWw2ldLzpHbi873HJ7b1hBFCzRzgb3EowHjp
-        CuoQi6EstDYYswYvmAaaP2r/hTPF9z3CXf5INcSnKXZk8MTwEVGhymCXQRG0Wg==
-Date:   Thu, 4 Apr 2019 22:22:57 +0300
-From:   Dmitrii Tcvetkov <demfloro@demfloro.ru>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Bisected GFP in bfq_bfqq_expire on v5.1-rc1
-Message-ID: <20190404222257.0cfb1130@fire.localdomain>
-In-Reply-To: <EBC090F1-72C0-4794-91CC-37F9A2A1DEFB@linaro.org>
-References: <20190329160227.7d55c8dd@fire.localdomain>
-        <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
-        <626EAE58-63C1-4ABA-9040-9D9A61F74A0D@linaro.org>
-        <20190401115509.76310e03@fire.localdomain>
-        <84B0CA50-0ED8-4171-8007-19EA43951735@linaro.org>
-        <20190401122233.3e861312@fire.localdomain>
-        <EBC090F1-72C0-4794-91CC-37F9A2A1DEFB@linaro.org>
+        Thu, 4 Apr 2019 15:23:31 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60580 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730275AbfDDTXb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:23:31 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 06C8D802CA; Thu,  4 Apr 2019 21:23:20 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 21:23:31 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dmitry Torokhov <dtor@google.com>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Erat <derat@google.com>,
+        Guenter Roeck <groeck@google.com>
+Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
+ support
+Message-ID: <20190404192331.GB29984@amd>
+References: <20190308203801.57920-1-ncrews@chromium.org>
+ <20190308210843.GA16125@amd>
+ <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com>
+ <20190404112415.GB18653@amd>
+ <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
+ <20190404190326.GC27340@amd>
+ <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/IJ.6CVMsu2MF7LCxrnNrmoU"
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=demfloro.ru;
-        s=arc032019; t=1554405782;
-        h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=63g/cWAoNflwlZQm2tGWAfkT/DR+u+GHtae92sla5g4=;
-        b=WQWph2OhK9Hxh1EXVBvmrTLevQWbTBMoXzt/5P42up1gurx8EJGAAD7p1jYaGwUzP+lRGQ
-        iDkXAedxW0/p8cQ1AHD3rB7DPnTlmiffOQNPtd1tu9UhAfqtUDhMf1/K/SfcGcKe0/cM/C
-        tnEKf7OqekE9ZnuWgq4WiJ56V2EqC0clUJ0l9mmNQuKq3GKYVTzhs4JspHOvUJVYmTNT6E
-        VezvK5IurW6EKBMeD+oLCGD3wSnRzAOSe7GYURTmEKqkbqIPXkx/4vwznA5er+W1kf+hC7
-        r/ysvsU8kKIp77HKXMJMdhQowQHHhIMequ+4whN7MVGo5WdKvLknku70fW5iKA==
-ARC-Seal: i=1; s=arc032019; d=demfloro.ru; t=1554405782; a=rsa-sha256;
-        cv=none;
-        b=tqWtjR1uBfdBhYCB/emqDMK2o61mL/kbfioLlMZMWHmJ1VAb+Yq5zWio7WGI8R+ydZREe1
-        Q7TTJDkX72jf0zQ+hovycALoffXoGRGLUbBCu1qZNkPVdJyo9P+G8yJ1YINNOwXBK5xe2V
-        7YS+ZuSeGhuF5L/XXZ1ZNCqeDnk/xSkByWJ8vDzdrmF7hnBxL7tQ3xvkL9oSyogiwxp85L
-        7PfeHBGqDsF5IFnz6zbuXXvq363bul0FXqwSRbsoGQcFaE6x8Kxwj1CpJbYDTD3kvH5rs/
-        u2VKu0ZnkFKT7Kib34XekbZVCyLU0QqF/Cr5abGCJ1zPR+R9unrApzVuEv0qLw==
-ARC-Authentication-Results: i=1;
-        mx.demfloro.ru;
-        auth=pass smtp.auth=demfloro smtp.mailfrom=demfloro@demfloro.ru
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
+Content-Disposition: inline
+In-Reply-To: <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---MP_/IJ.6CVMsu2MF7LCxrnNrmoU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+
+--H1spWtNR+x+ondvy
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 1 Apr 2019 12:35:11 +0200
-Paolo Valente <paolo.valente@linaro.org> wrote:
+Hi!
 
-> 
-> 
-> > Il giorno 1 apr 2019, alle ore 11:22, Dmitrii Tcvetkov
-> > <demfloro@demfloro.ru> ha scritto:
-> > 
-> > On Mon, 1 Apr 2019 11:01:27 +0200
-> > Paolo Valente <paolo.valente@linaro.org> wrote:
-> >> Ok, thank you. Could you please do a
-> >> 
-> >> list *(bfq_bfqq_expire+0x1f3)
-> >> 
-> >> for me?
-> >> 
-> >> Thanks,
-> >> Paolo
-> >> 
-> >>> 
-> >>> <gpf.txt><gpf-w-bfq-group-iosched.txt><config.txt>
-> > 
-> > Reading symbols from vmlinux...done.
-> > (gdb) list *(bfq_bfqq_expire+0x1f3)
-> > 0xffffffff813d02c3 is in bfq_bfqq_expire (block/bfq-iosched.c:3390).
-> > 3385             * even in case bfqq and thus parent entities go on
-> > receiving 3386             * service with the same budget.
-> > 3387             */
-> > 3388            entity = entity->parent;
-> > 3389            for_each_entity(entity)
-> > 3390                    entity->service = 0;
-> > 3391    }
-> > 3392
-> > 3393    /*
-> > 3394     * Budget timeout is not implemented through a dedicated
-> > timer, but
-> 
-> Thank you very much.  Unfortunately this doesn't ring any bell.  I'm
-> trying to reproduce the failure.  It will probably take a little
-> time.  If I don't make it, I'll ask you to kindly retry after applying
-> some instrumentation patch.
-> 
+> > > > Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: =
+in
+> > > > the first place. But it happened. We want all backlights for the
+> > > > system keyboard to use common name, and "chromeos" is not really
+> > > > suitable for that. "platform" is.
+> > >
+> > > Pavel, who exactly wants this and why? Looking at today's -next I see:
+> > >
+> > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+> > > "::kbd_backlight" | wc -l
+> > > 18
+> > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+> > > "platform::kbd_backlight" | wc -l
+> > > 0
+> > >
+> > > so there isn't a single instance of "platform::kbd_backlight" and we
+> > > definitely not changing existing names.
+> >
+> > Yeah, we made mistakes in the past. We _don't_ want userspace to have
+> > ever growing list of names for userspace to follow.
+> >
+> > Backlight of internal keyboard is pretty common concept and there
+> > should be one name for it.
+>=20
+> It is the *function* that is interesting to userspace, not full name,
+> and we have proper standardization there.
 
-I looked at what git is doing just before panic and it's doing a lot of
-lstat() syscalls on working tree.
+Well, if full name is not interesting, as you argue, why do we have
+this discussion?
+									Pavel
 
-I've attached a python script which reproduces the crash in about
-10 seconds after it prepares testdir, git checkout origin/linux-5.0.y
-reproduces it in about 2 seconds. I have to use multiprocessing Pool as
-I couldn't reproduce the crash using ThreadPool, probably due to Python
-GIL.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--H1spWtNR+x+ondvy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---MP_/IJ.6CVMsu2MF7LCxrnNrmoU
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename=crash.py
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-#!/usr/bin/env python3
+iEYEARECAAYFAlymWbMACgkQMOfwapXb+vIRUgCgho7OJjwsAgoIWqnCfbMgmfEf
+CUkAnA+NfFWvB1SSaxxOG9QtPTkwaFkC
+=9MDq
+-----END PGP SIGNATURE-----
 
-from glob import glob
-from os import lstat,mkdir
-from random import randint
-from os.path import isdir,exists
-from pathlib import Path
-from time import sleep
-from subprocess import run
-from multiprocessing import Pool
-
-def drop_caches():
-    with open('/proc/sys/vm/drop_caches','w') as f:
-        f.write('3')
-
-def enable_bfq():
-    with open('/sys/block/sda/queue/scheduler','w') as f:
-        f.write('bfq')
-
-def sync():
-    run(('sync'))
-
-def prepare_tree(name):
-    def populate(dir, depth=6):
-        if not depth:
-            return
-        for fname in range(1,20):
-            if randint(0,100) > 80:
-                dirname = "{}{}/".format(dir,fname)
-                mkdir(dirname)
-                populate(dirname, depth - 1)
-                continue
-            fname = "{}{}".format(dir, fname)
-            Path(fname).touch(exist_ok=True)
-            
-    if not isdir(name):
-        mkdir(name)
-    if not name.endswith('/'):
-        name = '{}/'.format(name)
-    populate(name)
-    
-        
-
-def traverse(dir):
-    drop_caches()
-    for inode in glob("{}/*".format(dir)):
-        if isdir(inode):
-            traverse(inode)
-        else:
-            lstat(inode)
-            if randint(0,10) > 6:
-                sleep(0)
-
-def main():
-    nproc = 16
-    dirname = 'testdir'
-    if not exists(dirname):
-        prepare_tree(dirname)
-    sync()
-    drop_caches()
-    enable_bfq()
-    drop_caches()
-
-    with Pool(nproc) as pool:
-        dirs = (dirname,) * nproc
-        pool.map(traverse,dirs)
-            
-main()
-
---MP_/IJ.6CVMsu2MF7LCxrnNrmoU--
+--H1spWtNR+x+ondvy--
