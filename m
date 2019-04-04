@@ -2,351 +2,381 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F36C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BFCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA585206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F650206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WIK4AJ3R";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="huJe6imf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfDDQwz (ORCPT
+        id S1729275AbfDDQx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:52:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727108AbfDDQwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:52:55 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2259BAFA273A0D07A216;
-        Fri,  5 Apr 2019 00:52:52 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 00:52:43 +0800
-Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-To:     Guenter Roeck <linux@roeck-us.net>
-References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
- <1554393602-152448-4-git-send-email-john.garry@huawei.com>
- <20190404164130.GA12203@roeck-us.net>
-CC:     <bhelgaas@google.com>, <rafael@kernel.org>, <arnd@arndb.de>,
-        <lorenzo.pieralisi@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <bp@suse.de>,
-        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
-        <andy.shevchenko@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <24cc8006-0f0d-6b20-a466-e4a32a0bb656@huawei.com>
-Date:   Thu, 4 Apr 2019 17:52:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 4 Apr 2019 12:53:56 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:39890 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726418AbfDDQxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:53:55 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34GnlZx027649;
+        Thu, 4 Apr 2019 09:52:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=S63qVG4Ums0IRdEubLKn7lMmhUCcy/JMfjD3BkPbknI=;
+ b=WIK4AJ3RgfW4GW4fLqhaC63uxFncQnNyZwOtssDGpvVznG4fqhVxD1DXKiKw9qZxfSUI
+ eaCxWl+F3QM/wD88/+hGWVMDUHXiMMRE8kVR/vhOuuQi/uTltR8FwJ1Hp5GBR2BiuvHx
+ tgrm+ZZGUdEI92WtQyD7xcKUAhfaus1WAVc= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rngp5s7td-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 04 Apr 2019 09:52:49 -0700
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 4 Apr 2019 09:52:48 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 4 Apr 2019 09:52:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S63qVG4Ums0IRdEubLKn7lMmhUCcy/JMfjD3BkPbknI=;
+ b=huJe6imf7meVpS9GL7wv9EoABgEB/SX9hkb6P6twsZ4oxr8RiN6K73HcPDsFzk9tY2gVZCBCxUU4YeMad7m0nuRVJBddChi+82hu87CQmX7l07IAQY4jKLsrIohQoJVqMADZXH1khCf0H/17nx5nuJeJCR698crf2JkpztOzLoU=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2646.namprd15.prod.outlook.com (20.179.156.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Thu, 4 Apr 2019 16:52:46 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded%3]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
+ 16:52:46 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Uladzislau Rezki <urezki@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [RESEND PATCH 1/3] mm/vmap: keep track of free blocks for vmap
+ allocation
+Thread-Topic: [RESEND PATCH 1/3] mm/vmap: keep track of free blocks for vmap
+ allocation
+Thread-Index: AQHU6XC/t3CdtEyCo0+G5po95xTuJ6Yqeg4AgAGtUgCAABNhAA==
+Date:   Thu, 4 Apr 2019 16:52:45 +0000
+Message-ID: <20190404165240.GA9713@tower.DHCP.thefacebook.com>
+References: <20190402162531.10888-1-urezki@gmail.com>
+ <20190402162531.10888-2-urezki@gmail.com>
+ <20190403210644.GH6778@tower.DHCP.thefacebook.com>
+ <20190404154320.pf3lkwm5zcblvsfv@pc636>
+In-Reply-To: <20190404154320.pf3lkwm5zcblvsfv@pc636>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0061.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::38) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::cc5e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41255fba-84ba-4a69-5992-08d6b91df630
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB2646;
+x-ms-traffictypediagnostic: BYAPR15MB2646:
+x-microsoft-antispam-prvs: <BYAPR15MB26464D5F7A7409FA31E5B95FBE500@BYAPR15MB2646.namprd15.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39860400002)(376002)(366004)(136003)(199004)(54094003)(189003)(6512007)(99286004)(5024004)(33656002)(6486002)(478600001)(1411001)(316002)(46003)(6246003)(14454004)(446003)(6116002)(86362001)(7736002)(8676002)(5660300002)(105586002)(106356001)(81166006)(8936002)(256004)(6916009)(4326008)(53936002)(81156014)(9686003)(11346002)(6436002)(476003)(52116002)(76176011)(102836004)(68736007)(97736004)(6506007)(2906002)(25786009)(186003)(14444005)(486006)(54906003)(7416002)(386003)(71200400001)(1076003)(93886005)(305945005)(71190400001)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2646;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: j8P50ziYRGSyTjyrHthchymK1Z5p1NfaA2JW6hCjhWJxXDl7jWht1/ln8UKDaLTyw8TOz2joA6X+lfNVnrwkYCNo6zCjmcmgzz4u8EOu8LI/wXWJPfESp0FDUi5EMeDP9t3Mi4sqYU0sCCjvvr9biARMFZwqJFND/HgL0JC9oKNr30JGm9f/oRNrBkoa3A/bDzkaq+yLkWhmE/2kNeFiGUrXfhtnIrwHYNKfq7yL0CmSLxYow0wdzoaN2TME6/Krf4mTcCDzmpLugS6d6Smf0jZoC0o64WiBvHvCFm6MCmfNNdJDUBdBuDDT1KLKAg54kt0tUkmi09NNLeWFK0Ky8K8Kt4dpOvrpBYbiabooe+Yvj5k0v6bqsazW2UCr3Iz3uDb+8OvC++mmy9eEkghgLmhYWjYaRDTkmkJbH5zP5p4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <509A0A9AE64BB144BE3DCA20C4D57063@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190404164130.GA12203@roeck-us.net>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41255fba-84ba-4a69-5992-08d6b91df630
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 16:52:45.9390
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2646
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/04/2019 17:41, Guenter Roeck wrote:
-> On Fri, Apr 05, 2019 at 12:00:01AM +0800, John Garry wrote:
->> Currently when accessing logical indirect PIO addresses in
->> logic_{in, out}{,s}, we first ensure that the region is registered.
->>
->> However, no such check exists for CPU MMIO regions. The CPU MMIO regions
->> would be registered by the PCI host - when PCI_IOBASE is defined - in
->> pci_register_io_range().
->>
->> We have seen scenarios when systems which don't have a PCI host or, they
->> do, and the PCI host probe fails, that certain devices attempts to still
->> attempt to access PCI IO ports; examples are in [1] and [2].
->>
->> And even though we should protect against this by ensuring the driver
->> calls request_{muxed_}region(), some don't do this:
->>
->> root@(none)$ insmod hwmon/f71805f.ko
->>  Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->>  Mem abort info:
->>    ESR = 0x96000046
->>    Exception class = DABT (current EL), IL = 32 bits
->>    SET = 0, FnV = 0
->>    EA = 0, S1PTW = 0
->>  Data abort info:
->>    ISV = 0, ISS = 0x00000046
->>    CM = 0, WnR = 1
->>  swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->>  [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
->>  Internal error: Oops: 96000046 [#1] PREEMPT SMP
->>  Modules linked in: f71805f(+)
->>  CPU: 20 PID: 2736 Comm: insmod Not tainted 5.1.0-rc1-00003-g6f1bfec2a620-dirty #99
->>  Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->>  pstate: 80000005 (Nzcv daif -PAN -UAO)
->>  pc : logic_outb+0x54/0xb8
->>  lr : f71805f_find+0x2c/0x1b8 [f71805f]
->>  sp : ffff000025fbba90
->>  x29: ffff000025fbba90 x28: ffff000008b944d0
->>  x27: ffff000025fbbdf0 x26: 0000000000000100
->>  x25: ffff801f8c270580 x24: ffff000011420000
->>  x23: ffff000025fbbb3e x22: ffff000025fbbb40
->>  x21: ffff000008b991b8 x20: 0000000000000087
->>  x19: 000000000000002e x18: ffffffffffffffff
->>  x17: 0000000000000000 x16: 0000000000000000
->>  x15: ffff00001127d6c8 x14: 0000000000000000
->>  x13: 0000000000000000 x12: 0000000000000000
->>  x11: 0000000000010820 x10: 0000841fdac40000
->>  x9 : 0000000000000001 x8 : 0000000040000000
->>  x7 : 0000000000210d00 x6 : 0000000000000000
->>  x5 : ffff801fb6a46040 x4 : ffff841febeaeda0
->>  x3 : 0000000000ffbffe x2 : ffff000025fbbb40
->>  x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->>  Process insmod (pid: 2736, stack limit = 0x(____ptrval____))
->>  Call trace:
->>   logic_outb+0x54/0xb8
->>   f71805f_find+0x2c/0x1b8 [f71805f]
->>   f71805f_init+0x38/0xe48 [f71805f]
->>   do_one_initcall+0x5c/0x198
->>   do_init_module+0x54/0x1b0
->>   load_module+0x1dc4/0x2158
->>   __se_sys_init_module+0x14c/0x1e8
->>   __arm64_sys_init_module+0x18/0x20
->>   el0_svc_common+0x5c/0x100
->>   el0_svc_handler+0x2c/0x80
->>   el0_svc+0x8/0xc
->>  Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->>  ---[ end trace 10ea80bde051bbfc ]---
->> root@(none)$
->>
->> Note that the f71805f driver does not call request_{muxed_}region(), as it
->> should.
->>
+On Thu, Apr 04, 2019 at 05:43:20PM +0200, Uladzislau Rezki wrote:
+> Hello, Roman!
+>=20
+> >=20
+> > The patch looks really good to me! I've tried hard, but didn't find
+> > any serious issues/bugs. Some small nits below.
+> >=20
+> > Thank you for working on it!
+> >=20
+> I try my best, thank you for your review!
+>=20
+> > BTW, when sending a new iteration, please use "[PATCH vX]" subject pref=
+ix,
+> > e.g. [PATCH v3 1/3] mm/vmap: keep track of free blocks for vmap allocat=
+ion".
+> > RESEND usually means that you're sending the same version, e.g. when
+> > you need cc more people.
+> >=20
+> Thank you for the clarification. I will fix that next time.
+>=20
+> >=20
+> > On Tue, Apr 02, 2019 at 06:25:29PM +0200, Uladzislau Rezki (Sony) wrote=
+:
+> > > Currently an allocation of the new vmap area is done over busy
+> > > list iteration(complexity O(n)) until a suitable hole is found
+> > > between two busy areas. Therefore each new allocation causes
+> > > the list being grown. Due to over fragmented list and different
+> > > permissive parameters an allocation can take a long time. For
+> > > example on embedded devices it is milliseconds.
+> > >=20
+> > > This patch organizes the KVA memory layout into free areas of the
+> > > 1-ULONG_MAX range. It uses an augment red-black tree that keeps
+> > > blocks sorted by their offsets in pair with linked list keeping
+> > > the free space in order of increasing addresses.
+> > >=20
+> > > Each vmap_area object contains the "subtree_max_size" that reflects
+> > > a maximum available free block in its left or right sub-tree. Thus,
+> > > that allows to take a decision and traversal toward the block that
+> > > will fit and will have the lowest start address, i.e. sequential
+> > > allocation.
+> >=20
+> > I'd add here that an augmented red-black tree is used, and nodes
+> > are augmented with the size of the maximum available free block.
+> >=20
+> Will add.
+>=20
+> > >=20
+> > > Allocation: to allocate a new block a search is done over the
+> > > tree until a suitable lowest(left most) block is large enough
+> > > to encompass: the requested size, alignment and vstart point.
+> > > If the block is bigger than requested size - it is split.
+> > >=20
+> > > De-allocation: when a busy vmap area is freed it can either be
+> > > merged or inserted to the tree. Red-black tree allows efficiently
+> > > find a spot whereas a linked list provides a constant-time access
+> > > to previous and next blocks to check if merging can be done. In case
+> > > of merging of de-allocated memory chunk a large coalesced area is
+> > > created.
+> > >=20
+> > > Complexity: ~O(log(N))
+> > >=20
+> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > ---
+> > >  include/linux/vmalloc.h |    6 +-
+> > >  mm/vmalloc.c            | 1004 +++++++++++++++++++++++++++++++++++--=
+----------
+> > >  2 files changed, 762 insertions(+), 248 deletions(-)
+> > >=20
+> > > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> > > index 398e9c95cd61..ad483378fdd1 100644
+> > > --- a/include/linux/vmalloc.h
+> > > +++ b/include/linux/vmalloc.h
+> > > @@ -45,12 +45,16 @@ struct vm_struct {
+> > >  struct vmap_area {
+> > >  	unsigned long va_start;
+> > >  	unsigned long va_end;
+> > > +
+> > > +	/*
+> > > +	 * Largest available free size in subtree.
+> > > +	 */
+> > > +	unsigned long subtree_max_size;
+> > >  	unsigned long flags;
+> > >  	struct rb_node rb_node;         /* address sorted rbtree */
+> > >  	struct list_head list;          /* address sorted list */
+> > >  	struct llist_node purge_list;    /* "lazy purge" list */
+> > >  	struct vm_struct *vm;
+> > > -	struct rcu_head rcu_head;
+> > >  };
+> > > =20
+> > >  /*
+> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > index 755b02983d8d..3adbad3fb6c1 100644
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -31,6 +31,7 @@
+> > >  #include <linux/compiler.h>
+> > >  #include <linux/llist.h>
+> > >  #include <linux/bitops.h>
+> > > +#include <linux/rbtree_augmented.h>
+> > > =20
+> > >  #include <linux/uaccess.h>
+> > >  #include <asm/tlbflush.h>
+> > > @@ -320,9 +321,7 @@ unsigned long vmalloc_to_pfn(const void *vmalloc_=
+addr)
+> > >  }
+> > >  EXPORT_SYMBOL(vmalloc_to_pfn);
+> > > =20
+> > > -
+> > >  /*** Global kva allocator ***/
+> > > -
+> >=20
+> > Do we need this change?
+> >
+> This patch does not tend to refactor the code. I have removed extra empty
+> lines because i touched the code around. I can either keep that change or
+> remove it. What is your opinion?
 
-Hi Guenter,
+Usually it's better to separate cosmetic changes from functional, if you're
+not touching directly these lines. Not a big deal, of course.
 
-> ... which is the real problem, one that is not solved by this patch. This may
-> result in parallel and descructive accesses if there is another device on the
-> LPC bus, and another driver accessing that device. Personally I'd rather have
-> request_muxed_region() added to the f71805f driver.
+>=20
+> > >  #define VM_LAZY_FREE	0x02
+> > >  #define VM_VM_AREA	0x04
+> > > =20
+> > > @@ -331,14 +330,76 @@ static DEFINE_SPINLOCK(vmap_area_lock);
+> > >  LIST_HEAD(vmap_area_list);
+> > >  static LLIST_HEAD(vmap_purge_list);
+> > >  static struct rb_root vmap_area_root =3D RB_ROOT;
+> > > +static bool vmap_initialized __read_mostly;
+> > > +
+> > > +/*
+> > > + * This kmem_cache is used for vmap_area objects. Instead of
+> > > + * allocating from slab we reuse an object from this cache to
+> > > + * make things faster. Especially in "no edge" splitting of
+> > > + * free block.
+> > > + */
+> > > +static struct kmem_cache *vmap_area_cachep;
+> > > +
+> > > +/*
+> > > + * This linked list is used in pair with free_vmap_area_root.
+> > > + * It gives O(1) access to prev/next to perform fast coalescing.
+> > > + */
+> > > +static LIST_HEAD(free_vmap_area_list);
+> > > +
+> > > +/*
+> > > + * This augment red-black tree represents the free vmap space.
+> > > + * All vmap_area objects in this tree are sorted by va->va_start
+> > > + * address. It is used for allocation and merging when a vmap
+> > > + * object is released.
+> > > + *
+> > > + * Each vmap_area node contains a maximum available free block
+> > > + * of its sub-tree, right or left. Therefore it is possible to
+> > > + * find a lowest match of free area.
+> > > + */
+> > > +static struct rb_root free_vmap_area_root =3D RB_ROOT;
+> > > =20
+> > > -/* The vmap cache globals are protected by vmap_area_lock */
+> > > -static struct rb_node *free_vmap_cache;
+> > > -static unsigned long cached_hole_size;
+> > > -static unsigned long cached_vstart;
+> > > -static unsigned long cached_align;
+> > > +static __always_inline unsigned long
+> > > +__va_size(struct vmap_area *va)
+> > > +{
+> > > +	return (va->va_end - va->va_start);
+> > > +}
+> > > +
+> > > +static __always_inline unsigned long
+> > > +get_subtree_max_size(struct rb_node *node)
+> > > +{
+> > > +	struct vmap_area *va;
+> > > =20
+> > > -static unsigned long vmap_area_pcpu_hole;
+> > > +	va =3D rb_entry_safe(node, struct vmap_area, rb_node);
+> > > +	return va ? va->subtree_max_size : 0;
+> > > +}
+> > > +
+> > > +/*
+> > > + * Gets called when remove the node and rotate.
+> > > + */
+> > > +static __always_inline unsigned long
+> > > +compute_subtree_max_size(struct vmap_area *va)
+> > > +{
+> > > +	unsigned long max_size =3D __va_size(va);
+> > > +	unsigned long child_max_size;
+> > > +
+> > > +	child_max_size =3D get_subtree_max_size(va->rb_node.rb_right);
+> > > +	if (child_max_size > max_size)
+> > > +		max_size =3D child_max_size;
+> > > +
+> > > +	child_max_size =3D get_subtree_max_size(va->rb_node.rb_left);
+> > > +	if (child_max_size > max_size)
+> > > +		max_size =3D child_max_size;
+> > > +
+> > > +	return max_size;
+> >=20
+> > Nit: you can use max3 instead, e.g. :
+> >=20
+> > return max3(__va_size(va),
+> > 	    get_subtree_max_size(va->rb_node.rb_left),
+> > 	    get_subtree_max_size(va->rb_node.rb_right));
+> >=20
+> Good point. Will replace it!
+>=20
+> > > +}
+> > > +
+> > > +RB_DECLARE_CALLBACKS(static, free_vmap_area_rb_augment_cb,
+> > > +	struct vmap_area, rb_node, unsigned long, subtree_max_size,
+> > > +	compute_subtree_max_size)
+> > > +
+> > > +static void purge_vmap_area_lazy(void);
+> > > +static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
+> > > +static unsigned long lazy_max_pages(void);
+> > > =20
+> > >  static struct vmap_area *__find_vmap_area(unsigned long addr)
+> > >  {
+> > > @@ -359,41 +420,520 @@ static struct vmap_area *__find_vmap_area(unsi=
+gned long addr)
+> > >  	return NULL;
+> > >  }
+> > > =20
+> > > -static void __insert_vmap_area(struct vmap_area *va)
+> > > -{
+> > > -	struct rb_node **p =3D &vmap_area_root.rb_node;
+> > > -	struct rb_node *parent =3D NULL;
+> > > -	struct rb_node *tmp;
+> > > +/*
+> > > + * This function returns back addresses of parent node
+> > > + * and its left or right link for further processing.
+> > > + */
+> > > +static __always_inline struct rb_node **
+> > > +__find_va_links(struct vmap_area *va,
+> > > +	struct rb_root *root, struct rb_node *from,
+> > > +	struct rb_node **parent)
+> >=20
+> > The function looks much cleaner now, thank you!
+> >=20
+> > But if I understand it correctly, it returns a node (via parent)
+> > and a pointer to one of two links, so that the returned value
+> > is always =3D=3D parent + some constant offset.
+> > If so, I wonder if it's cleaner to return a parent node
+> > (as rb_node*) and a bool value which will indicate if the left
+> > or the right link should be used.
+> >=20
+> > Not a strong opinion, just an idea.
+> >=20
+> I see your point. Yes, that is possible to return "bool" value that
+> indicates left or right path. After that we can detect the direction.
+>=20
+> From the other hand, we end up and access the correct link anyway during
+> the traversal the tree. In case of "bool" way, we will need to add on top
+> some extra logic that checks where to attach to.
 
-Right, we should and will still fix f71805f. If you recall, I did have 
-the f71805f fix in the v1 series, but you committed that it was 
-orthogonal, so I decided to take it out of this work for now.
+Sure, makes sense. I'd add some comments here then.
 
-And even if we fix up f71805f and other known drivers which don't call 
-request_muxed_region(), we still need to police against these rogue 
-accesses, which is what this patch attempts to do.
-
-Thanks,
-John
-
->
-> Guenter
->
->> This patch adds a check to ensure that the CPU MMIO region is registered
->> prior to accessing the PCI IO ports.
->>
->> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->> [2] https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
->>
->> This patch includes some other tidy-up.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>  lib/logic_pio.c | 103 +++++++++++++++++++++++++++++++++++-------------
->>  1 file changed, 75 insertions(+), 28 deletions(-)
->>
->> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
->> index 431cd8d99236..3d8d986e9dcb 100644
->> --- a/lib/logic_pio.c
->> +++ b/lib/logic_pio.c
->> @@ -193,95 +193,135 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
->>
->>  #if defined(PCI_IOBASE)
->>  #if defined(CONFIG_INDIRECT_PIO)
->> +#define INVALID_RANGE(range)						\
->> +	(!(range) || ((range)->flags == LOGIC_PIO_INDIRECT && !(range)->ops))
->> +
->>  #define BUILD_LOGIC_IO(bw, type)					\
->>  type logic_in##bw(unsigned long addr)					\
->>  {									\
->>  	type ret = (type)~0;						\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return ret;						\
->> +	}								\
->>  									\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->>  		ret = read##bw(PCI_IOBASE + addr);			\
->>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
->> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->>  		size_t sz = sizeof(type);				\
->> +		void *hostdata = range->hostdata;			\
->>  									\
->> -		if (entry && entry->ops)				\
->> -			ret = entry->ops->in(entry->hostdata, addr, sz);\
->> -		else							\
->> -			WARN_ON_ONCE(1);				\
->> +		if (range->ops->in)					\
->> +			ret = range->ops->in(hostdata, addr, sz);	\
->>  	}								\
->>  	return ret;							\
->>  }									\
->>  									\
->> -void logic_out##bw(type value, unsigned long addr)			\
->> +void logic_out##bw(type val, unsigned long addr)			\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->> -		write##bw(value, PCI_IOBASE + addr);			\
->> +		write##bw(val, PCI_IOBASE + addr);			\
->>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
->> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->>  		size_t sz = sizeof(type);				\
->> +		void *hostdata = range->hostdata;			\
->>  									\
->> -		if (entry && entry->ops)				\
->> -			entry->ops->out(entry->hostdata,		\
->> -					addr, value, sz);		\
->> -		else							\
->> -			WARN_ON_ONCE(1);				\
->> +		if (range->ops->out)					\
->> +			range->ops->out(hostdata, addr, val, sz);	\
->>  	}								\
->>  }									\
->>  									\
->>  void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->>  		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
->>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
->> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->>  		size_t sz = sizeof(type);				\
->> +		void *hostdata = range->hostdata;			\
->>  									\
->> -		if (entry && entry->ops)				\
->> -			entry->ops->ins(entry->hostdata,		\
->> -				addr, buf, sz, cnt);			\
->> -		else							\
->> -			WARN_ON_ONCE(1);				\
->> +		if (range->ops->ins)					\
->> +			range->ops->ins(hostdata, addr, buf, sz, cnt);	\
->>  	}								\
->> -									\
->>  }									\
->>  									\
->>  void logic_outs##bw(unsigned long addr, const void *buf,		\
->>  		    unsigned int cnt)					\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->>  		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
->>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
->> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->>  		size_t sz = sizeof(type);				\
->> +		void *hostdata = range->hostdata;			\
->>  									\
->> -		if (entry && entry->ops)				\
->> -			entry->ops->outs(entry->hostdata,		\
->> -				addr, buf, sz, cnt);			\
->> -		else							\
->> -			WARN_ON_ONCE(1);				\
->> +		if (range->ops->outs)					\
->> +			range->ops->outs(hostdata, addr, buf, sz, cnt);	\
->>  	}								\
->>  }
->>
->>  #else /* CONFIG_INDIRECT_PIO */
->>
->> +#define INVALID_RANGE(range) (!(range))
->> +
->>  #define BUILD_LOGIC_IO(bw, type)					\
->>  type logic_in##bw(unsigned long addr)					\
->>  {									\
->>  	type ret = (type)~0;						\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return ret;						\
->> +	}								\
->>  									\
->>  	if (addr < MMIO_UPPER_LIMIT)					\
->>  		ret = read##bw(PCI_IOBASE + addr);			\
->>  	return ret;							\
->>  }									\
->>  									\
->> -void logic_out##bw(type value, unsigned long addr)			\
->> +void logic_out##bw(type val, unsigned long addr)			\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT)					\
->> -		write##bw(value, PCI_IOBASE + addr);			\
->> +		write##bw(val, PCI_IOBASE + addr);			\
->>  }									\
->>  									\
->>  void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT)					\
->>  		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
->>  }									\
->> @@ -289,6 +329,13 @@ void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->>  void logic_outs##bw(unsigned long addr, const void *buf,		\
->>  		    unsigned int cnt)					\
->>  {									\
->> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
->> +									\
->> +	if (INVALID_RANGE(range)) {					\
->> +		WARN_ON_ONCE(1);					\
->> +		return;							\
->> +	}								\
->> +									\
->>  	if (addr < MMIO_UPPER_LIMIT)					\
->>  		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
->>  }
->> --
->> 2.17.1
->>
->
-> .
->
-
-
+Thanks!
