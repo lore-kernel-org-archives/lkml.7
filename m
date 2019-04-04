@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B93EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41712C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B20C21872
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111FC2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554365818;
-	bh=hE8gLv/nVMRsSoiQrMEs7sNNnq6JbwRQzI23o9k+ZBc=;
+	s=default; t=1554365823;
+	bh=DxmDFyvsJMaZBt2kImIPHGHtFjBKZ2lR1EORtriPXEQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=tHf9+K+uOKlGtU3HEw654Qjguli/VAY9o+OV9TaKS7jfPrKlr/vw0vY3NraFzkOPI
-	 FqtyvrmaIUfdITrYOGarKpHjjM58CI2Br/fO2C4Na4JRq12+fBxNVElIsCbh6C7brj
-	 CtkqfG6prtxWS+budX7+tt3mNLna7U6FKKwRomG8=
+	b=HVm+cChOr/RQ4c/qvQMRWRQ6hopzd4O3SLFx4UItMQ+VfXErBW8kQQReY5ehW81rT
+	 KEFF+V3zkY7CKcNbn6Lf0/DComDvA1651sfksMEu3fmm+DPGcfBZlDQZPdM0AkIRYn
+	 H2whKLU+OoU6ApBlardzgbKX4GTM5praGKcZx5h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfDDIQ4 (ORCPT
+        id S1728721AbfDDIRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:16:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50638 "EHLO
+        Thu, 4 Apr 2019 04:17:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50748 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbfDDIQz (ORCPT
+        with ESMTP id S1726269AbfDDIQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:16:55 -0400
+        Thu, 4 Apr 2019 04:16:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=mLKwJqcitI1+Bw2m8VEZVon+yftBzc7r6BAV80yQCwc=; b=eqnUq0ccdmhL
-        Wh/zEpKY4/zWAGV9q5tHJqiiREJ52g7YjEksODtkXjWDfXYrk3N07a7dohXWx0InMOFflplGirx9j
-        lf0tUDkbw5SLQbK06PUjt1pDfuS8viEMQna1AkV76AvKFxaTQPnene1jdknoO8+G09HQkB8epyNYy
-        +MSCs=;
+        List-Archive; bh=ZSt2x4mIRF61VBd74288zKTDRhmLXsqhfoQCOXwJsFs=; b=ZjLnh9Yp1WjX
+        n1xknBgd8G3zRGQNiHS6ftP7u1hxrl6qageUZOsm9RqdAMdYa33M2pJCbZSjPo9eycDMAG+7cXV4L
+        Oj72ZDjyHO1XG/bslabYSdC+j1UAnjHArP8CdWEbEmEtvmvzkncIM/KFerEBVPBKeGSDMnSquhzS6
+        DPddg=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBxYB-00051k-RB; Thu, 04 Apr 2019 08:16:44 +0000
+        id 1hBxYD-00051W-J3; Thu, 04 Apr 2019 08:16:46 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D7D3E441D3C; Thu,  4 Apr 2019 15:16:40 +0700 (+07)
+        id 77C79441D3D; Thu,  4 Apr 2019 15:16:37 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sugar Zhang <sugar.zhang@rock-chips.com>
 Cc:     Mark Brown <broonie@kernel.org>, heiko@sntech.de,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: rockchip: pdm: add compatible for rk1808" to the asoc tree
-In-Reply-To:  <1554350070-24078-1-git-send-email-sugar.zhang@rock-chips.com>
+Subject: Applied "dt-bindings: sound: add compatible for rk1808" to the asoc tree
+In-Reply-To:  <1554350145-24198-1-git-send-email-sugar.zhang@rock-chips.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190404081640.D7D3E441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  4 Apr 2019 15:16:40 +0700 (+07)
+Message-Id: <20190404081637.77C79441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu,  4 Apr 2019 15:16:37 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: pdm: add compatible for rk1808
+   dt-bindings: sound: add compatible for rk1808
 
 has been applied to the asoc tree at
 
@@ -90,33 +91,31 @@ to this mail.
 Thanks,
 Mark
 
-From 717d97879b346d56fc47a6e3fe0ad44fea9949b2 Mon Sep 17 00:00:00 2001
+From 2a050b7a746e2c59a733a3641eb1c01cf2e573b4 Mon Sep 17 00:00:00 2001
 From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Date: Thu, 4 Apr 2019 11:54:30 +0800
-Subject: [PATCH] ASoC: rockchip: pdm: add compatible for rk1808
+Date: Thu, 4 Apr 2019 11:55:45 +0800
+Subject: [PATCH] dt-bindings: sound: add compatible for rk1808
 
-This patch adds support for rk1808, the pdm controller
-is the same as rk3308.
+This patch adds bindings for rk1808 soc.
 
 Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/rockchip_pdm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/sound/rockchip,pdm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 4f93a7454e85..3e1c5fd5b32b 100644
---- a/sound/soc/rockchip/rockchip_pdm.c
-+++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -457,6 +457,8 @@ static const struct of_device_id rockchip_pdm_match[] = {
- 	{ .compatible = "rockchip,pdm", },
- 	{ .compatible = "rockchip,px30-pdm",
- 	  .data = (void *)RK_PDM_RK3308 },
-+	{ .compatible = "rockchip,rk1808-pdm",
-+	  .data = (void *)RK_PDM_RK3308 },
- 	{ .compatible = "rockchip,rk3308-pdm",
- 	  .data = (void *)RK_PDM_RK3308 },
- 	{},
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
+index 3e0eb7354ba6..98572a25122f 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
+@@ -4,6 +4,7 @@ Required properties:
+ 
+ - compatible: "rockchip,pdm"
+   - "rockchip,px30-pdm"
++  - "rockchip,rk1808-pdm"
+   - "rockchip,rk3308-pdm"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
 -- 
 2.20.1
 
