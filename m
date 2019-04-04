@@ -2,96 +2,90 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20521C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B535C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE89205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A7920882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f0NajSm7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Jq+fGbZa"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HBZ1rZ/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfDDKNl (ORCPT
+        id S1729120AbfDDKOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:13:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37944 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfDDKNl (ORCPT
+        Thu, 4 Apr 2019 06:14:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37346 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:13:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 09A9461836; Thu,  4 Apr 2019 10:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554372820;
-        bh=J+Ymf1zOe05e/G0Pq7gWzdmC0ObjXqE6ys1W0FRBdx0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=f0NajSm77o0m89Ns8gVAVgCDDDHxbh17fLVjzmR2XylNEH5923FihbC/tGweHBQ23
-         AdqfhFwGiCrTtCwaDRsTYdrbW57tT5J/tkPJ7/OzgCW4S3wkH7ymLKIEMnt8/yyynq
-         PFu5XqdwMlwr0uR9uO9wYSsqrUi/eziN9uu2j4Ew=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C01161A41;
-        Thu,  4 Apr 2019 10:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554372817;
-        bh=J+Ymf1zOe05e/G0Pq7gWzdmC0ObjXqE6ys1W0FRBdx0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=Jq+fGbZa5xx806/nzl6cC/IZWT7ZzfCo9M3iuOVfMWID8Qvke3455JBGklWMuo0oQ
-         s2gw7/4cnKAvw3FhtDoYbfjd80dBDW7pQtTcLrnR9Ay31tSZIxBkJ0BQTVJEU4EMz+
-         M+AbUlHpuPDoZ5S72WNNl2onYev0vbuptAGyv/L0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C01161A41
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 4 Apr 2019 06:14:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34AEFHh172140;
+        Thu, 4 Apr 2019 10:14:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=hd2+/lKA9BOh2Qt67zskSgieqYosQLw2g/kZ5JHJz5o=;
+ b=HBZ1rZ/1PK984GiXHh6C9uIFMEu8ntbYzY0+DoQLT0hxxDJk5najrz9n0J8eU4FbRAwb
+ vQ2JEPNnKJRwsKdsyolxa0pNFQj8OqwzUMuQeFDaY9efyD8ZbPUVaubqFq2C7PttTEiB
+ nf/KrAUV84VLfC2pEwXA3pFtvOFQlDgD39rjT7hOQsUk8XEL/Fb3u39llDlB46I6NDPL
+ /9i9LIM70hfL9fGkYJws1xC07brxacHlJ5Kjxbvoui3lEdXL1eO+BKBy2UAyzfapi1zP
+ pUW+jOCnJpOYYWv/HO+Tqz9P9NaI4FYXoNkfUevqbozbTcTbJW7WgrzB6hgLobKqzNIz /w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2rj13qe3fn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 10:14:15 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34AEFik102604;
+        Thu, 4 Apr 2019 10:14:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2rm8f5jth3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 10:14:15 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34AE92C008823;
+        Thu, 4 Apr 2019 10:14:09 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 03:14:00 -0700
+Date:   Thu, 4 Apr 2019 13:13:46 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Timur Tabi <timur@freescale.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Mihai Caraman <mihai.caraman@freescale.com>,
+        Kumar Gala <galak@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] fsl_hypervisor: dereferencing error pointers in ioctl
+Message-ID: <20190404101346.GO32613@kadam>
+References: <20181218082003.GD32567@kadam>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3] brcmfmac: fix missing checks for kmemdup
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190315170433.3845-1-kjlu@umn.edu>
-References: <20190315170433.3845-1-kjlu@umn.edu>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     kjlu@umn.edu, pakki001@umn.edu,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190404101340.09A9461836@smtp.codeaurora.org>
-Date:   Thu,  4 Apr 2019 10:13:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181218082003.GD32567@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=762
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040072
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kangjie Lu <kjlu@umn.edu> wrote:
+I sent this patch series right before Christmas so everyone was on
+holiday.  It still applies fine.  Could you take a look at it?
 
-> In case kmemdup fails, the fix sets conn_info->req_ie_len and
-> conn_info->resp_ie_len to zero to avoid buffer overflows.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-46953f97224d brcmfmac: fix missing checks for kmemdup
-
--- 
-https://patchwork.kernel.org/patch/10855341/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+regards,
+dan carpenter
 
