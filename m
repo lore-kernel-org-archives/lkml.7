@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B656DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A9820882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DF02171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367972;
-	bh=PhC6DtTCkc9GAEmR6XXZPlXvDjeO3BVB2sY58ydJfVw=;
+	s=default; t=1554367977;
+	bh=9i9p2RE9ocVNq5TbDAKWZrZ5Xp963ZjToOiscC8M+QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7Ao3QgVln+U6dQ6n2vCapNwUTiYAp+sv3KMU5JEA/+0amT60rrVNzpCo7wYO+YqQ
-	 QnyQlwad7gqgM9yYqREMRP8ita7NhcmlA3UZ2xukd2gJj/x6T6I67TmiJzMlktQkCL
-	 UsLCyYEZ+qswLZQD9t154xwpZnkU6mK6z782FKvI=
+	b=LLIyunuyiuzQ/vhl9mCIsU7VMjcPPtJ3UCh/4mjj0a9vZGUlMzCA0tbWmeQRhi05O
+	 9kJHnMSTiRb9kWTpgq9bTZe735+OGNNHyt1dJhiyYrb1BegRKcWfHtfB/bPeqYgqub
+	 qMwLGNbCQV32DFitOwh0paxfi/cFN8aa0D7sR9tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbfDDIwv (ORCPT
+        id S1729711AbfDDIw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbfDDIwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:47 -0400
+        id S1729680AbfDDIwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69E002184B;
-        Thu,  4 Apr 2019 08:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A403221850;
+        Thu,  4 Apr 2019 08:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367966;
-        bh=PhC6DtTCkc9GAEmR6XXZPlXvDjeO3BVB2sY58ydJfVw=;
+        s=default; t=1554367972;
+        bh=9i9p2RE9ocVNq5TbDAKWZrZ5Xp963ZjToOiscC8M+QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cw01RXn89UcmybYnEEE/2L8FcMEMgACTxVlbhloSHdwEOyj2wmr8wfCJFWuTllzze
-         YKalVrHiROmKp8Zc0tN65eLDMhI3rjioIUcX+zskNu0yNhuPfbSm3LZRHLDt4A5NaE
-         0sW7Ic7dWms0Ob3VO/H/OZThw5YA4QExFQh190FQ=
+        b=CYmbLWzjFE9dyLSPuJMGrGrI0z26wwEjuWnMwX8QlRpMo6M/+JBtM/KiB+6foCnvV
+         gdmp3siegqKo4/yO1jJkoUBsZGtmr0bVLlSioqrixjh9euX3rhbLYDQ7/sHVnrJOYN
+         Ia2mzd2+EpknbOw4PtKA/wrlzJkKzeflOKf/bARw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 79/91] dmaengine: imx-dma: fix warning comparison of distinct pointer types
-Date:   Thu,  4 Apr 2019 10:48:03 +0200
-Message-Id: <20190404084540.018522148@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 81/91] netfilter: physdev: relax br_netfilter dependency
+Date:   Thu,  4 Apr 2019 10:48:05 +0200
+Message-Id: <20190404084540.132141892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,54 +66,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9227ab5643cb8350449502dd9e3168a873ab0e3b ]
+[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
 
-The warning got introduced by commit 930507c18304 ("arm64: add basic
-Kconfig symbols for i.MX8"). Since it got enabled for arm64. The warning
-haven't been seen before since size_t was 'unsigned int' when built on
-arm32.
+Following command:
+  iptables -D FORWARD -m physdev ...
+causes connectivity loss in some setups.
 
-../drivers/dma/imx-dma.c: In function ‘imxdma_sg_next’:
-../include/linux/kernel.h:846:29: warning: comparison of distinct pointer types lacks a cast
-   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-                             ^~
-../include/linux/kernel.h:860:4: note: in expansion of macro ‘__typecheck’
-   (__typecheck(x, y) && __no_side_effects(x, y))
-    ^~~~~~~~~~~
-../include/linux/kernel.h:870:24: note: in expansion of macro ‘__safe_cmp’
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-../include/linux/kernel.h:879:19: note: in expansion of macro ‘__careful_cmp’
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-../drivers/dma/imx-dma.c:288:8: note: in expansion of macro ‘min’
-  now = min(d->len, sg_dma_len(sg));
-        ^~~
+Reason is that iptables userspace will probe kernel for the module revision
+of the physdev patch, and physdev has an artificial dependency on
+br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
+is loaded).
 
-Rework so that we use min_t and pass in the size_t that returns the
-minimum of two values, using the specified type.
+This causes the "phydev" module to be loaded, which in turn enables the
+"call-iptables" infrastructure.
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Acked-by: Olof Johansson <olof@lixom.net>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+bridged packets might then get dropped by the iptables ruleset.
+
+The better fix would be to change the "call-iptables" defaults to 0 and
+enforce explicit setting to 1, but that breaks backwards compatibility.
+
+This does the next best thing: add a request_module call to checkentry.
+This was a stray '-D ... -m physdev' won't activate br_netfilter
+anymore.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/netfilter/br_netfilter.h | 1 -
+ net/bridge/br_netfilter_hooks.c      | 5 -----
+ net/netfilter/xt_physdev.c           | 9 +++++++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
-index 1cfa1d9bc971..f8786f60cdc1 100644
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -290,7 +290,7 @@ static inline int imxdma_sg_next(struct imxdma_desc *d)
- 	struct scatterlist *sg = d->sg;
- 	unsigned long now;
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index 0b0c35c37125..238d1b83a45a 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -48,7 +48,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
+ }
  
--	now = min(d->len, sg_dma_len(sg));
-+	now = min_t(size_t, d->len, sg_dma_len(sg));
- 	if (d->len != IMX_DMA_LENGTH_LOOP)
- 		d->len -= now;
+ struct net_device *setup_pre_routing(struct sk_buff *skb);
+-void br_netfilter_enable(void);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 7e42c0d1f55b..38865deab3ac 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -878,11 +878,6 @@ static const struct nf_br_ops br_ops = {
+ 	.br_dev_xmit_hook =	br_nf_dev_xmit,
+ };
+ 
+-void br_netfilter_enable(void)
+-{
+-}
+-EXPORT_SYMBOL_GPL(br_netfilter_enable);
+-
+ /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
+  * br_dev_queue_push_xmit is called afterwards */
+ static struct nf_hook_ops br_nf_ops[] __read_mostly = {
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index bb33598e4530..ec247d8370e8 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -96,8 +96,7 @@ match_outdev:
+ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ {
+ 	const struct xt_physdev_info *info = par->matchinfo;
+-
+-	br_netfilter_enable();
++	static bool brnf_probed __read_mostly;
+ 
+ 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
+ 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
+@@ -113,6 +112,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+ 			return -EINVAL;
+ 	}
++
++	if (!brnf_probed) {
++		brnf_probed = true;
++		request_module("br_netfilter");
++	}
++
+ 	return 0;
+ }
  
 -- 
 2.19.1
