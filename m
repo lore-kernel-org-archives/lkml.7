@@ -2,159 +2,195 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C76C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35BBC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAB220693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368955;
-	bh=Y6q5uWmJqjzqEdywjipgNwO0vbLAPX/JdRS21f+zOYA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yk2VFumHUrt1dihmLRYejFC6rvHRzKmHjVVitoATFpvvs2KxR52+UWm9SvOgQWmQ5
-	 yOVrSzXkpojyrA9Ld7HnGrbbKBd/Qzs3YlnD9fHmXkUm6kE2pL0f8ebCPIteDmPjWQ
-	 h8Q+UylhyvM0cHeesoSmjB0nM++ftshCMwfR1iyw=
+	by mail.kernel.org (Postfix) with ESMTP id 76D2F20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfDDJJO (ORCPT
+        id S1732593AbfDDJJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:09:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59218 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfDDJJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732776AbfDDJJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:12 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B802054F;
-        Thu,  4 Apr 2019 09:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368946;
-        bh=Y6q5uWmJqjzqEdywjipgNwO0vbLAPX/JdRS21f+zOYA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3luxSkK3uE8MXEQ/rjHM+js8NX+67XKsQSBZcdzUZWxSDkRMILeCLgjFC7KIyN1t
-         3dpUMtJfwEhrrkWgMjGoDezyc5HOMi4L9vd2Xf2Uv/RTHcf9eQp6XBVtbooDw4LdoB
-         2PUp71Madr1MTGn9O3+OXIxF0f20LaSyMi0thJPs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 040/246] page_poison: play nicely with KASAN
-Date:   Thu,  4 Apr 2019 10:45:40 +0200
-Message-Id: <20190404084620.443265908@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        by mx1.redhat.com (Postfix) with ESMTPS id 65D43C057E09;
+        Thu,  4 Apr 2019 09:09:11 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D1065DD97;
+        Thu,  4 Apr 2019 09:09:11 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8748941F3C;
+        Thu,  4 Apr 2019 09:09:10 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 05:09:10 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        cohuck@redhat.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>
+Message-ID: <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com>
+References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-6-pagupta@redhat.com> <20190403220912.GB26298@dastard> <20190403223921.GM5147@magnolia> <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com>
+Subject: Re: [PATCH v4 5/5] xfs: disable map_sync for async flush
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.161.59, 10.4.195.10]
+Thread-Topic: disable map_sync for async flush
+Thread-Index: 3lcRs/qAvRTCJfnvvKOwPX3OPYStPt5rTV2c
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 04 Apr 2019 09:09:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+> > On Thu, Apr 04, 2019 at 09:09:12AM +1100, Dave Chinner wrote:
+> > > On Wed, Apr 03, 2019 at 04:10:18PM +0530, Pankaj Gupta wrote:
+> > > > Virtio pmem provides asynchronous host page cache flush
+> > > > mechanism. we don't support 'MAP_SYNC' with virtio pmem
+> > > > and xfs.
+> > > > 
+> > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > > ---
+> > > >  fs/xfs/xfs_file.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > > > index 1f2e2845eb76..dced2eb8c91a 100644
+> > > > --- a/fs/xfs/xfs_file.c
+> > > > +++ b/fs/xfs/xfs_file.c
+> > > > @@ -1203,6 +1203,14 @@ xfs_file_mmap(
+> > > >  	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+> > > >  		return -EOPNOTSUPP;
+> > > >  
+> > > > +	/* We don't support synchronous mappings with DAX files if
+> > > > +	 * dax_device is not synchronous.
+> > > > +	 */
+> > > > +	if (IS_DAX(file_inode(filp)) && !dax_synchronous(
+> > > > +		xfs_find_daxdev_for_inode(file_inode(filp))) &&
+> > > > +					(vma->vm_flags & VM_SYNC))
+> > > > +		return -EOPNOTSUPP;
+> > > > +
+> > > >  	file_accessed(filp);
+> > > >  	vma->vm_ops = &xfs_file_vm_ops;
+> > > >  	if (IS_DAX(file_inode(filp)))
+> > > 
+> > > All this ad hoc IS_DAX conditional logic is getting pretty nasty.
+> > > 
+> > > xfs_file_mmap(
+> > > ....
+> > > {
+> > > 	struct inode	*inode = file_inode(filp);
+> > > 
+> > > 	if (vma->vm_flags & VM_SYNC) {
+> > > 		if (!IS_DAX(inode))
+> > > 			return -EOPNOTSUPP;
+> > > 		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
+> > > 			return -EOPNOTSUPP;
+> > > 	}
+> > > 
+> > > 	file_accessed(filp);
+> > > 	vma->vm_ops = &xfs_file_vm_ops;
+> > > 	if (IS_DAX(inode))
+> > > 		vma->vm_flags |= VM_HUGEPAGE;
+> > > 	return 0;
+> > > }
+> > > 
+> > > 
+> > > Even better, factor out all the "MAP_SYNC supported" checks into a
+> > > helper so that the filesystem code just doesn't have to care about
+> > > the details of checking for DAX+MAP_SYNC support....
+> > 
+> > Seconded, since ext4 has nearly the same flag validation logic.
+> 
 
-[ Upstream commit 4117992df66a26fa33908b4969e04801534baab1 ]
+Only issue with this I see is we need the helper function only for supported
+filesystems ext4 & xfs (right now). If I create the function in "fs.h" it 
+will be compiled for every filesystem, even for those don't need it.  
 
-KASAN does not play well with the page poisoning (CONFIG_PAGE_POISONING).
-It triggers false positives in the allocation path:
+Sample patch below, does below patch is near to what you have in mind?
 
-  BUG: KASAN: use-after-free in memchr_inv+0x2ea/0x330
-  Read of size 8 at addr ffff88881f800000 by task swapper/0
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc1+ #54
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   __asan_report_load8_noabort+0x19/0x20
-   memchr_inv+0x2ea/0x330
-   kernel_poison_pages+0x103/0x3d5
-   get_page_from_freelist+0x15e7/0x4d90
+=================
 
-because KASAN has not yet unpoisoned the shadow page for allocation
-before it checks memchr_inv() but only found a stale poison pattern.
-
-Also, false positives in free path,
-
-  BUG: KASAN: slab-out-of-bounds in kernel_poison_pages+0x29e/0x3d5
-  Write of size 4096 at addr ffff8888112cc000 by task swapper/0/1
-  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc1+ #55
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   check_memory_region+0x22d/0x250
-   memset+0x28/0x40
-   kernel_poison_pages+0x29e/0x3d5
-   __free_pages_ok+0x75f/0x13e0
-
-due to KASAN adds poisoned redzones around slab objects, but the page
-poisoning needs to poison the whole page.
-
-Link: http://lkml.kernel.org/r/20190114233405.67843-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/page_alloc.c  | 2 +-
- mm/page_poison.c | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 11dc3c0e8728..20dd3283bb1b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1945,8 +1945,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 
- 	arch_alloc_page(page, order);
- 	kernel_map_pages(page, 1 << order, 1);
--	kernel_poison_pages(page, 1 << order, 1);
- 	kasan_alloc_pages(page, order);
-+	kernel_poison_pages(page, 1 << order, 1);
- 	set_page_owner(page, order, gfp_flags);
- }
- 
-diff --git a/mm/page_poison.c b/mm/page_poison.c
-index f0c15e9017c0..21d4f97cb49b 100644
---- a/mm/page_poison.c
-+++ b/mm/page_poison.c
-@@ -6,6 +6,7 @@
- #include <linux/page_ext.h>
- #include <linux/poison.h>
- #include <linux/ratelimit.h>
-+#include <linux/kasan.h>
- 
- static bool want_page_poisoning __read_mostly;
- 
-@@ -40,7 +41,10 @@ static void poison_page(struct page *page)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 1f2e2845eb76..614995170cac 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1196,12 +1196,17 @@ xfs_file_mmap(
+        struct file     *filp,
+        struct vm_area_struct *vma)
  {
- 	void *addr = kmap_atomic(page);
++       struct dax_device *dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
++
+        /*
+-        * We don't support synchronous mappings for non-DAX files. At least
+-        * until someone comes with a sensible use case.
++        * We don't support synchronous mappings for non-DAX files and
++        * for DAX files if underneath dax_device is not synchronous.
+         */
+-       if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+-               return -EOPNOTSUPP;
++       if (vma->vm_flags & VM_SYNC) {
++               int err = is_synchronous(filp, dax_dev);
++               if (err)
++                       return err;
++       }
  
-+	/* KASAN still think the page is in-use, so skip it. */
-+	kasan_disable_current();
- 	memset(addr, PAGE_POISON, PAGE_SIZE);
-+	kasan_enable_current();
- 	kunmap_atomic(addr);
+        file_accessed(filp);
+        vma->vm_ops = &xfs_file_vm_ops;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8b42df09b04c..add017de3dd7 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2162,6 +2162,20 @@ static inline void file_accessed(struct file *file)
+                touch_atime(&file->f_path);
  }
  
--- 
-2.19.1
++struct dax_device;
++extern bool dax_synchronous(struct dax_device *dax_dev);
++static inline int is_synchronous(struct file *filp, struct dax_device *dax_dev)
++{
++       struct inode *inode = file_inode(filp);
++
++       if (!IS_DAX(inode))
++               return -EOPNOTSUPP;
++       if (!dax_synchronous(dax_dev))
++               return -EOPNOTSUPP;
++
++       return 0;
++}
++
+ int sync_inode(struct inode *inode, struct writeback_control *wbc);
+ int sync_inode_metadata(struct inode *inode, int wait);
+ 
+---------
+
+Thanks,
+Pankaj
 
 
 
