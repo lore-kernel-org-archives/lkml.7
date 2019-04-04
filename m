@@ -2,62 +2,58 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D62C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A934C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BB121850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF96A217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368062;
-	bh=IX47ADkcpfhfTHaJqDC3UFtaf+WRE2ZbBzkRGDL5ptM=;
+	s=default; t=1554368065;
+	bh=kYEHdgS3K/aNuHyd2QCWEUXWu3UQ1rki5YXWOhUh6tM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxXROl158cn/ZFAdMy3fRBnojq6t2XsPiaojuNRxUjjJBxg2CCqovAkRLu3wsLIHE
-	 3wKA/sfQWO+aLl6qWDA50vcf60QSGYpxKE2uCj2+4FxrBQ+p1Z1yutOS1gREPx/IOa
-	 vWXnlVUM8EREEgJbjqCJtx2x2g/bU3Cl+8QA/HY0=
+	b=kFgEeSQMk/JnKsRtyi/kfCm7qr12r+7StxgcUXwoPNspQR8Ay7O6FgvEgvQF9XM2q
+	 /IZ1jNPlebP0hjQUlioLxvL85bGm9B4tXUKoESTCmisv6UXw9on1Z8Xcl0kSYsR1ia
+	 LUeZM86NSMx4dABNrY36B2Mw12A0IG7pqDVcc5F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfDDIyV (ORCPT
+        id S1729582AbfDDIyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfDDIyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:19 -0400
+        id S1730006AbfDDIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BFBC2171F;
-        Thu,  4 Apr 2019 08:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E640C217D4;
+        Thu,  4 Apr 2019 08:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368057;
-        bh=IX47ADkcpfhfTHaJqDC3UFtaf+WRE2ZbBzkRGDL5ptM=;
+        s=default; t=1554368060;
+        bh=kYEHdgS3K/aNuHyd2QCWEUXWu3UQ1rki5YXWOhUh6tM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFGT1IaFSlU91PidzCI92k/sy2L5fTXyvIWZLpHi1fKjciJBLDOttranCVPa9Mhpm
-         pgewxuO3HjJeU0tFpVKiyO1tRw9iQHiDkuwSMKttRjS6m3/HMEb8tumEXbdf2LzuNl
-         OZFDtOstrV+ydRtNGlU751XF/9meE3je4duE7NkY=
+        b=XCiJyjWLod4JXD4QbG/1+30I8IHXq3cj8XdH7WkhBe/nBa7Yq7g4+Eqw3RJCPkk7D
+         ksYOwDVkQ/GvaOB/aV344HFTEMSTBXDydhW24xnXvCTZGiohJHwocoauaiZi5aJohD
+         TZRdlb82kk+z0lcbp63JAu7D6OQNnrw4WpjgPl9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Cyril Hrubis <chrubis@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rafael Aquini <aquini@redhat.com>,
         David Rientjes <rientjes@google.com>,
-        Yisheng Xie <xieyisheng1@huawei.com>,
-        zhong jiang <zhongjiang@huawei.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/121] mm, mempolicy: fix uninit memory access
-Date:   Thu,  4 Apr 2019 10:46:50 +0200
-Message-Id: <20190404084546.571630366@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 006/121] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified
+Date:   Thu,  4 Apr 2019 10:46:34 +0200
+Message-Id: <20190404084545.604076895@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -76,95 +72,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2e25644e8da4ed3a27e7b8315aaae74660be72dc ]
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-Syzbot with KMSAN reports (excerpt):
+commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 upstream.
 
-==================================================================
-BUG: KMSAN: uninit-value in mpol_rebind_policy mm/mempolicy.c:353 [inline]
-BUG: KMSAN: uninit-value in mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-CPU: 1 PID: 17420 Comm: syz-executor4 Not tainted 4.20.0-rc7+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
-  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:295
-  mpol_rebind_policy mm/mempolicy.c:353 [inline]
-  mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-  update_tasks_nodemask+0x608/0xca0 kernel/cgroup/cpuset.c:1120
-  update_nodemasks_hier kernel/cgroup/cpuset.c:1185 [inline]
-  update_nodemask kernel/cgroup/cpuset.c:1253 [inline]
-  cpuset_write_resmask+0x2a98/0x34b0 kernel/cgroup/cpuset.c:1728
+When MPOL_MF_STRICT was specified and an existing page was already on a
+node that does not follow the policy, mbind() should return -EIO.  But
+commit 6f4576e3687b ("mempolicy: apply page table walker on
+queue_pages_range()") broke the rule.
 
-...
+And commit c8633798497c ("mm: mempolicy: mbind and migrate_pages support
+thp migration") didn't return the correct value for THP mbind() too.
 
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
-  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
-  kmem_cache_alloc+0x572/0xb90 mm/slub.c:2777
-  mpol_new mm/mempolicy.c:276 [inline]
-  do_mbind mm/mempolicy.c:1180 [inline]
-  kernel_mbind+0x8a7/0x31a0 mm/mempolicy.c:1347
-  __do_sys_mbind mm/mempolicy.c:1354 [inline]
+If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it
+reaches queue_pages_to_pte_range() or queue_pages_pmd() to check if an
+existing page was already on a node that does not follow the policy.
+And, non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
+MPOL_MF_MOVE_ALL was specified.
 
-As it's difficult to report where exactly the uninit value resides in
-the mempolicy object, we have to guess a bit.  mm/mempolicy.c:353
-contains this part of mpol_rebind_policy():
+Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
 
-        if (!mpol_store_user_nodemask(pol) &&
-            nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
-
-"mpol_store_user_nodemask(pol)" is testing pol->flags, which I couldn't
-ever see being uninitialized after leaving mpol_new().  So I'll guess
-it's actually about accessing pol->w.cpuset_mems_allowed on line 354,
-but still part of statement starting on line 353.
-
-For w.cpuset_mems_allowed to be not initialized, and the nodes_equal()
-reachable for a mempolicy where mpol_set_nodemask() is called in
-do_mbind(), it seems the only possibility is a MPOL_PREFERRED policy
-with empty set of nodes, i.e.  MPOL_LOCAL equivalent, with MPOL_F_LOCAL
-flag.  Let's exclude such policies from the nodes_equal() check.  Note
-the uninit access should be benign anyway, as rebinding this kind of
-policy is always a no-op.  Therefore no actual need for stable
-inclusion.
-
-Link: http://lkml.kernel.org/r/a71997c3-e8ae-a787-d5ce-3db05768b27c@suse.cz
-Link: http://lkml.kernel.org/r/73da3e9c-cc84-509e-17d9-0c434bb9967d@suse.cz
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Yisheng Xie <xieyisheng1@huawei.com>
-Cc: zhong jiang <zhongjiang@huawei.com>
+[akpm@linux-foundation.org: tweak code comment]
+Link: http://lkml.kernel.org/r/1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reported-by: Cyril Hrubis <chrubis@suse.cz>
+Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/mempolicy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 1528c0b8d9bd..6ca0225335eb 100644
+
+---
+ mm/mempolicy.c |   40 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
+
 --- a/mm/mempolicy.c
 +++ b/mm/mempolicy.c
-@@ -349,7 +349,7 @@ static void mpol_rebind_policy(struct mempolicy *pol, const nodemask_t *newmask)
- {
- 	if (!pol)
- 		return;
--	if (!mpol_store_user_nodemask(pol) &&
-+	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
- 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
- 		return;
+@@ -427,6 +427,13 @@ static inline bool queue_pages_required(
+ 	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
+ }
  
--- 
-2.19.1
-
++/*
++ * queue_pages_pmd() has three possible return values:
++ * 1 - pages are placed on the right node or queued successfully.
++ * 0 - THP was split.
++ * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
++ *        page was already on a node that does not follow the policy.
++ */
+ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+ 				unsigned long end, struct mm_walk *walk)
+ {
+@@ -436,7 +443,7 @@ static int queue_pages_pmd(pmd_t *pmd, s
+ 	unsigned long flags;
+ 
+ 	if (unlikely(is_pmd_migration_entry(*pmd))) {
+-		ret = 1;
++		ret = -EIO;
+ 		goto unlock;
+ 	}
+ 	page = pmd_page(*pmd);
+@@ -462,8 +469,15 @@ static int queue_pages_pmd(pmd_t *pmd, s
+ 	ret = 1;
+ 	flags = qp->flags;
+ 	/* go to thp migration */
+-	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
++	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
++		if (!vma_migratable(walk->vma)) {
++			ret = -EIO;
++			goto unlock;
++		}
++
+ 		migrate_page_add(page, qp->pagelist, flags);
++	} else
++		ret = -EIO;
+ unlock:
+ 	spin_unlock(ptl);
+ out:
+@@ -488,8 +502,10 @@ static int queue_pages_pte_range(pmd_t *
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+ 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+-		if (ret)
++		if (ret > 0)
+ 			return 0;
++		else if (ret < 0)
++			return ret;
+ 	}
+ 
+ 	if (pmd_trans_unstable(pmd))
+@@ -526,11 +542,16 @@ retry:
+ 			goto retry;
+ 		}
+ 
+-		migrate_page_add(page, qp->pagelist, flags);
++		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
++			if (!vma_migratable(vma))
++				break;
++			migrate_page_add(page, qp->pagelist, flags);
++		} else
++			break;
+ 	}
+ 	pte_unmap_unlock(pte - 1, ptl);
+ 	cond_resched();
+-	return 0;
++	return addr != end ? -EIO : 0;
+ }
+ 
+ static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
+@@ -600,7 +621,12 @@ static int queue_pages_test_walk(unsigne
+ 	unsigned long endvma = vma->vm_end;
+ 	unsigned long flags = qp->flags;
+ 
+-	if (!vma_migratable(vma))
++	/*
++	 * Need check MPOL_MF_STRICT to return -EIO if possible
++	 * regardless of vma_migratable
++	 */
++	if (!vma_migratable(vma) &&
++	    !(flags & MPOL_MF_STRICT))
+ 		return 1;
+ 
+ 	if (endvma > end)
+@@ -627,7 +653,7 @@ static int queue_pages_test_walk(unsigne
+ 	}
+ 
+ 	/* queue pages from current vma */
+-	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
++	if (flags & MPOL_MF_VALID)
+ 		return 0;
+ 	return 1;
+ }
 
 
