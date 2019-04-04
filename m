@@ -2,409 +2,162 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84520C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB302204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AF7204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLQGdWF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbfDDKwi (ORCPT
+        id S1729669AbfDDKxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:52:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58014 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfDDKwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:52:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D597C169E;
-        Thu,  4 Apr 2019 03:52:37 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A96C3F557;
-        Thu,  4 Apr 2019 03:52:36 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 11:52:33 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-Message-ID: <20190404105233.GD3567@e103592.cambridge.arm.com>
-References: <20190208165513.8435-1-julien.grall@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190208165513.8435-1-julien.grall@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 4 Apr 2019 06:53:04 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43723 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729607AbfDDKxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:53:03 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k17so3138438wrx.10;
+        Thu, 04 Apr 2019 03:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pxvL35aH/7RCJzE3gEleqG2No3mstCVxiwL9/BTlxAc=;
+        b=HLQGdWF0YJME6Od1MQuO0vqx36A1rl8EcMhGek3Sm0QAC6nl0/8Y3r8W0xzio9LQ4z
+         /uI8SryNeBxJxdmDoXr+ZGKGpsh1Uo4H3fNH+ah7crSpkus6DplLa3hi57PPH4uP6/K1
+         74I+QuIt9HmZKUkh53rbzd3ji9hbcAO0LcpEURBpb6YYW7xuJNsM82BuK3vOBgtEajMZ
+         8yam7rsz/qIpMv++9yom3OY6M/XzWMUqzcs3tr8HdQAp1bG/ew388JHUqEfM9sVllNgY
+         I4cmSA2G/yzhseoI0m4nLVS4Hfbu70/8UTm/v7ngeGAG8NH7o8KQqM1IMutwiq2SWNoX
+         uZlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pxvL35aH/7RCJzE3gEleqG2No3mstCVxiwL9/BTlxAc=;
+        b=InjbYcM4XoOdyYljXI3fAkdhCtLXPwAxMh52x2jB4v6H8I3IqMdnWzRlc/JUEH2eNZ
+         cUvQewKQoJNAht7/dAJ+8QeXToPXeup6xXP3ugBoQegtmd4pv9AKZjcLyLSvkRYZYphu
+         PloS6O5pUwEEHKdA8vfKKIPzsq98aY1QH6/Mh/K9BILyoJXGSBx0QTJV5+4D9Q0VkoNl
+         Wn488aZ88lZpFs+Rs69ZFM6u/27aq6k5Pch6n6F26ZtIvzZxsLkGN3q7tIlTJ3LKJ3at
+         Sq2nFZYMhezKW+TI0Ecl+Dxy5iie4NuTCNglTIGqMANGCk2tz9lBUgWyKncvhTN1r+gk
+         JkGg==
+X-Gm-Message-State: APjAAAXLYkWsTCO4Wt4dG7wgd8GA/atkW5NCRN0D7VskiurWfSwvj4n4
+        msFor4E5M/G6SH2or59QGchp3lmcwCo=
+X-Google-Smtp-Source: APXvYqwbgeYeXk0wnbPxVpUTN6Jnm/LpFlH/JLVXcA62UOaTyMD14k6QlxTyhXWsZixx0HiWzeXP/Q==
+X-Received: by 2002:adf:f050:: with SMTP id t16mr157708wro.198.1554375181628;
+        Thu, 04 Apr 2019 03:53:01 -0700 (PDT)
+Received: from amir-VirtualBox.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
+        by smtp.gmail.com with ESMTPSA id x205sm17115285wmg.9.2019.04.04.03.53.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 03:53:00 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: [PATCH v2] acct: fix possible deadlock in acct_pin_kill
+Date:   Thu,  4 Apr 2019 13:52:55 +0300
+Message-Id: <20190404105255.12189-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 04:55:13PM +0000, Julien Grall wrote:
-> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
-> the kernel may be able to use FPSIMD/SVE. This is for instance the case
-> for crypto code.
-> 
-> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
-> function kernel_neon_{begin, end}. Furthermore, this can only be used
-> when may_use_simd() returns true.
-> 
-> The current implementation of may_use_simd() allows softirq to use
-> FPSIMD/SVE unless it is currently in used (i.e kernel_neon_busy is true).
-> When in used, softirqs usually fallback to a software method.
-> 
-> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
-> when touching the FPSIMD/SVE context. This has the drawback to disable
-> all softirqs even if they are not using FPSIMD/SVE.
-> 
-> As a softirq should not rely on been able to use simd at a given time,
-> there are limited reason to keep softirq disabled when touching the
-> FPSIMD/SVE context. Instead, we can only disable preemption and tell
-> the NEON unit is currently in use.
-> 
-> This patch introduces two new helpers kernel_neon_{disable, enable} to
-> mark the area using FPSIMD/SVE context and use them in replacement of
-> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
-> also re-implemented to use the new helpers.
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> ---
-> 
-> I have been exploring this solution as an alternative approach to the RT
-> patch "arm64: fpsimd: use preemp_disable in addition to local_bh_disable()".
-> 
-> So far, the patch has only been lightly tested.
-> 
-> For RT-linux, it might be possible to use migrate_{enable, disable}. I
-> am quite new with RT and have some trouble to understand the semantics
-> of migrate_{enable, disable}. So far, I am still unsure if it is possible
-> to run another userspace task on the same CPU while getting preempted
-> when the migration is disabled.
+This looks like an old bug, pre-dating the "Fixes" commit, but the
+"Fixes" commit did not handle it properly.
 
-(Leaving aside the RT aspects for now, but if migrate_{enable,disable}
-is costly it might not be the best thing to use deep in context switch
-paths, even if is technically correct...)
+The bug recently surfaced as a lockdep possible deadlock warning
+with commit d1d04ef8572b ("ovl: stack file ops").
 
-> ---
->  arch/arm64/include/asm/simd.h |  4 +--
->  arch/arm64/kernel/fpsimd.c    | 76 +++++++++++++++++++++++++------------------
->  2 files changed, 46 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/simd.h b/arch/arm64/include/asm/simd.h
-> index 6495cc51246f..94c0dac508aa 100644
-> --- a/arch/arm64/include/asm/simd.h
-> +++ b/arch/arm64/include/asm/simd.h
-> @@ -15,10 +15,10 @@
->  #include <linux/preempt.h>
->  #include <linux/types.h>
->  
-> -#ifdef CONFIG_KERNEL_MODE_NEON
-> -
->  DECLARE_PER_CPU(bool, kernel_neon_busy);
+When acct_on() replaces one acct file with another, it takes sb_writers
+lock on new file sb and calls acct_pin_kill(old) before releasing the
+sb_writers lock.
 
-Why make this unconditional?  This declaration is only here for
-may_use_simd() to use.  The stub version of may_use_simd() for the
-!CONFIG_KERNEL_MODE_NEON case doesn't touch it.
+If new file is on the same fs as old file, acct_pin_kill(old) fail to
+file_start_write_trylock() and skip writing the old file, because
+sb_writers (of new) is already taken by acct_on().
 
->  
-> +#ifdef CONFIG_KERNEL_MODE_NEON
-> +
->  /*
->   * may_use_simd - whether it is allowable at this time to issue SIMD
->   *                instructions or access the SIMD register file
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index 5ebe73b69961..b7e5dac26190 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -90,7 +90,8 @@
->   * To prevent this from racing with the manipulation of the task's FPSIMD state
->   * from task context and thereby corrupting the state, it is necessary to
->   * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
-> - * flag with local_bh_disable() unless softirqs are already masked.
-> + * flag with kernel_neon_{disable, enable}. This will still allow softirqs to
-> + * run but prevent them to use FPSIMD.
->   *
->   * For a certain task, the sequence may look something like this:
->   * - the task gets scheduled in; if both the task's fpsimd_cpu field
-> @@ -142,6 +143,9 @@ extern void __percpu *efi_sve_state;
->  
->  #endif /* ! CONFIG_ARM64_SVE */
->  
-> +static void kernel_neon_disable(void);
-> +static void kernel_neon_enable(void);
+If new file is not on same fs as old file, this ordering violation
+creates an unneeded dependency between new sb_writers and old sb_writers,
+which may later be reported as possible deadlock.
 
-I find these names a bit confusing: _disable() actualy enables FPSIMD/SVE
-context access for the current context (i.e., makes it safe).
+This could result in an actual deadlock if acct file is replaced from
+an old file in overlayfs over "real fs" to a new file in "real fs".
+acct_on() takes freeze protection on "real fs" and tries to write to
+overlayfs file. overlayfs is not freeze protected so do_acct_process()
+can carry on with __kernel_write() to overlayfs file, which would
+try to take freeze protection on "real fs" and deadlock.
 
-Since these also disable/enable preemption, perhaps we can align them
-with the existing get_cpu()/put_cpu(), something like:
+Reproducer of lockdep possible deadlock warning:
 
-void get_cpu_fpsimd_context();
-vold put_cpu_fpsimd_context();
+  mkdir -p mnt upper lower work
+  touch upper/x upper/y
+  mount -t overlay none mnt -olowerdir=lower,upperdir=upper,workdir=work
+  accton mnt/x
+  accton upper/y
 
-If you consider it's worth adding the checking helper I alluded to
-above, it could then be called something like:
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 4.19.0-rc1-xfstests #3424 Not tainted
+ ------------------------------------------------------
+ accton/1390 is trying to acquire lock:
+ 00000000e0585aa5 (&acct->lock#2){+.+.}, at: acct_pin_kill+0x1b/0x76
 
-bool have_cpu_fpsimd_context();
+ but task is already holding lock:
+ 000000003692505a (sb_writers#6){.+.+}, at: mnt_want_write+0x1d/0x42
 
-> +
->  /*
->   * Call __sve_free() directly only if you know task can't be scheduled
->   * or preempted.
-> @@ -213,11 +217,11 @@ static void sve_free(struct task_struct *task)
->   * thread_struct is known to be up to date, when preparing to enter
->   * userspace.
->   *
-> - * Softirqs (and preemption) must be disabled.
-> + * Preemption must be disabled.
+Reported-and-tested-by: syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com
+Fixes: 59eda0e07f43 ("new fs_pin killing logics")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
 
-[*] That's not enough: we need to be in kernel_neon_disable()...
-_enable() (i.e., kernel_neon_busy needs to be true to prevent softirqs
-messing with the FPSIMD state).
+Hi Al,
 
->   */
->  static void task_fpsimd_load(void)
->  {
-> -	WARN_ON(!in_softirq() && !irqs_disabled());
-> +	WARN_ON(!preempt_count() && !irqs_disabled());
+I've pinged you several times about this patch.
+Not sure if you had missed it or haven't had the time to look at
+it yet. syzbot has been complaining about the bug for a while now.
 
-Hmmm, looks like we can rewrite this is preemptible().  See
-include/linux/preempt.h.
+Fixes label claims to fix your commit, but I believe the bug was
+already there before your commit.
 
-Since we are checking that nothing can mess with the FPSIMD regs and
-associated task metadata, we should also be checking kernel_neon_busy
-here.
+As you can see, I have a reproducer to demonstrate the manifestation of
+the bug in the case of switching acct file from overlayfs to real fs.
+This started to manifest with overlayfs stacked f_op.
 
-For readability, we could wrap all that up in a single helper.
+I have made another claim about correctness of acct_on() when switching
+files on the same fs which seems obvious from the code, but did not
+bother to try to reproducer, because I doubt if anyone cares.
 
->  	if (system_supports_sve() && test_thread_flag(TIF_SVE))
->  		sve_load_state(sve_pffr(&current->thread),
-> @@ -238,7 +242,7 @@ void fpsimd_save(void)
->  	struct user_fpsimd_state *st = __this_cpu_read(fpsimd_last_state.st);
->  	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
->  
-> -	WARN_ON(!in_softirq() && !irqs_disabled());
-> +	WARN_ON(!preempt_count() && !irqs_disabled());
->  
->  	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
->  		if (system_supports_sve() && test_thread_flag(TIF_SVE)) {
-> @@ -360,7 +364,7 @@ static int __init sve_sysctl_init(void) { return 0; }
->   * task->thread.sve_state.
->   *
->   * Task can be a non-runnable task, or current.  In the latter case,
-> - * softirqs (and preemption) must be disabled.
-> + * preemption must be disabled.
+Thanks,
+Amir.
 
-See [*].
+Changes from v1:
+- Add Reported-and-tested-by syzbot
 
->   * task->thread.sve_state must point to at least sve_state_size(task)
->   * bytes of allocated kernel memory.
->   * task->thread.uw.fpsimd_state must be up to date before calling this
-> @@ -387,7 +391,7 @@ static void fpsimd_to_sve(struct task_struct *task)
->   * task->thread.uw.fpsimd_state.
->   *
->   * Task can be a non-runnable task, or current.  In the latter case,
-> - * softirqs (and preemption) must be disabled.
-> + * preemption must be disabled.
+ kernel/acct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-See [*].
+diff --git a/kernel/acct.c b/kernel/acct.c
+index addf7732fb56..c09355a7ae46 100644
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -251,8 +251,8 @@ static int acct_on(struct filename *pathname)
+ 	rcu_read_lock();
+ 	old = xchg(&ns->bacct, &acct->pin);
+ 	mutex_unlock(&acct->lock);
+-	pin_kill(old);
+ 	mnt_drop_write(mnt);
++	pin_kill(old);
+ 	mntput(mnt);
+ 	return 0;
+ }
+-- 
+2.17.1
 
->   * task->thread.sve_state must point to at least sve_state_size(task)
->   * bytes of allocated kernel memory.
->   * task->thread.sve_state must be up to date before calling this function.
-> @@ -547,7 +551,7 @@ int sve_set_vector_length(struct task_struct *task,
->  	 * non-SVE thread.
->  	 */
->  	if (task == current) {
-> -		local_bh_disable();
-> +		kernel_neon_disable();
->  
->  		fpsimd_save();
->  		set_thread_flag(TIF_FOREIGN_FPSTATE);
-> @@ -558,7 +562,7 @@ int sve_set_vector_length(struct task_struct *task,
->  		sve_to_fpsimd(task);
->  
->  	if (task == current)
-> -		local_bh_enable();
-> +		kernel_neon_enable();
->  
->  	/*
->  	 * Force reallocation of task SVE state to the correct size
-> @@ -813,7 +817,7 @@ asmlinkage void do_sve_acc(unsigned int esr, struct pt_regs *regs)
->  
->  	sve_alloc(current);
->  
-> -	local_bh_disable();
-> +	kernel_neon_disable();
->  
->  	fpsimd_save();
->  	fpsimd_to_sve(current);
-> @@ -825,7 +829,7 @@ asmlinkage void do_sve_acc(unsigned int esr, struct pt_regs *regs)
->  	if (test_and_set_thread_flag(TIF_SVE))
->  		WARN_ON(1); /* SVE access shouldn't have trapped */
->  
-> -	local_bh_enable();
-> +	kernel_neon_enable();
->  }
->  
->  /*
-> @@ -892,7 +896,7 @@ void fpsimd_flush_thread(void)
->  	if (!system_supports_fpsimd())
->  		return;
->  
-> -	local_bh_disable();
-> +	kernel_neon_disable();
->  
->  	memset(&current->thread.uw.fpsimd_state, 0,
->  	       sizeof(current->thread.uw.fpsimd_state));
-> @@ -935,7 +939,7 @@ void fpsimd_flush_thread(void)
->  
->  	set_thread_flag(TIF_FOREIGN_FPSTATE);
->  
-> -	local_bh_enable();
-> +	kernel_neon_enable();
->  }
->  
->  /*
-> @@ -947,9 +951,9 @@ void fpsimd_preserve_current_state(void)
->  	if (!system_supports_fpsimd())
->  		return;
->  
-> -	local_bh_disable();
-> +	kernel_neon_disable();
->  	fpsimd_save();
-> -	local_bh_enable();
-> +	kernel_neon_enable();
->  }
->  
->  /*
-> @@ -1007,14 +1011,14 @@ void fpsimd_restore_current_state(void)
->  	if (!system_supports_fpsimd())
->  		return;
->  
-> -	local_bh_disable();
-> +	kernel_neon_disable();
->  
->  	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
->  		task_fpsimd_load();
->  		fpsimd_bind_task_to_cpu();
->  	}
->  
-> -	local_bh_enable();
-> +	kernel_neon_enable();
->  }
->  
->  /*
-> @@ -1027,7 +1031,7 @@ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
->  	if (!system_supports_fpsimd())
->  		return;
->  
-> -	local_bh_disable();
-> +	kernel_neon_disable();
->  
->  	current->thread.uw.fpsimd_state = *state;
->  	if (system_supports_sve() && test_thread_flag(TIF_SVE))
-> @@ -1038,7 +1042,7 @@ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
->  
->  	clear_thread_flag(TIF_FOREIGN_FPSTATE);
->  
-> -	local_bh_enable();
-> +	kernel_neon_enable();
->  }
->  
->  /*
-> @@ -1055,11 +1059,28 @@ void fpsimd_flush_cpu_state(void)
->  	set_thread_flag(TIF_FOREIGN_FPSTATE);
->  }
->  
-> -#ifdef CONFIG_KERNEL_MODE_NEON
-> -
->  DEFINE_PER_CPU(bool, kernel_neon_busy);
->  EXPORT_PER_CPU_SYMBOL(kernel_neon_busy);
->  
-> +static void kernel_neon_disable(void)
-> +{
-> +	preempt_disable();
-> +	WARN_ON(__this_cpu_read(kernel_neon_busy));
-> +	__this_cpu_write(kernel_neon_busy, true);
-
-Can we do this with one __this_cpu_xchg()?
-
-> +}
-> +
-> +static void kernel_neon_enable(void)
-> +{
-> +	bool busy;
-> +
-> +	busy = __this_cpu_xchg(kernel_neon_busy, false);
-> +	WARN_ON(!busy); /* No matching kernel_neon_disable()? */
-> +
-> +	preempt_enable();
-> +}
-> +
-> +#ifdef CONFIG_KERNEL_MODE_NEON
-> +
->  /*
->   * Kernel-side NEON support functions
->   */
-> @@ -1084,9 +1105,7 @@ void kernel_neon_begin(void)
->  
->  	BUG_ON(!may_use_simd());
->  
-> -	local_bh_disable();
-> -
-> -	__this_cpu_write(kernel_neon_busy, true);
-> +	kernel_neon_disable();
->  
->  	/* Save unsaved fpsimd state, if any: */
->  	fpsimd_save();
-> @@ -1094,9 +1113,7 @@ void kernel_neon_begin(void)
->  	/* Invalidate any task state remaining in the fpsimd regs: */
->  	fpsimd_flush_cpu_state();
->  
-> -	preempt_disable();
-> -
-> -	local_bh_enable();
-> +	kernel_neon_enable();
-
-As you commented in your reply elsewhere, we don't want to call
-kernel_neon_enable() here.  We need to keep exclusive ownership of the
-CPU regs to continue until kernel_neon_end() is called.
-
-Otherwise, this looks reasonable overall.
-
-One nice feature of this is that is makes it clearer that the code is
-grabbing exclusive access to a particular thing (the FPSIMD regs and
-context metadata), which is not very obvious from the bare
-local_bh_{disable,enable} that was there previously.
-
-When reposting, you should probably rebase on kvmarm/next [1], since
-there is a minor conflict from the SVE KVM series.  It looks
-straightforward to fix up though.
-
-[...]
-
-For testing, can we have a test irritator module that does something
-like hooking the timer softirq with a kprobe and trashing the regs
-inside kernel_neon_begin()/_end()?
-
-It would be nice to have such a thing upstream, but it's OK to test
-with local hacks for now.
-
-
-I'm not sure how this patch will affect context switch overhead, so it
-would be good to see hackbench numbers (or similar).
-
-Cheers
----Dave
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git
-next
