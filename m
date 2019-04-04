@@ -2,103 +2,111 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890B2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F356BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F49B20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554399125;
-	bh=CmKh2tR/pTIuWm8wOShEfPZThUFcRz7Ow+2kNUxjfW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kun4mRDcfY5/xb3Q9GWoLg+vGcLjIZW5XVc781XmWd0866K42neDyTTCFfpnW+Nzm
-	 x/1jCkKTVf1Nok8ufHu03nc85JpsSe1D/i6XE41ngHDadsMQV+BSIQuFRn6uOCJKwV
-	 Ecx+43Vhczd9SBMT7U9W5p+5MxuW12gJ04Uqh5Cs=
+	by mail.kernel.org (Postfix) with ESMTP id CE26B20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfDDRcE (ORCPT
+        id S1729456AbfDDRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfDDRcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:32:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DCF02075E;
-        Thu,  4 Apr 2019 17:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554399122;
-        bh=CmKh2tR/pTIuWm8wOShEfPZThUFcRz7Ow+2kNUxjfW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zm5w50AWXSBAW3GwsOw+zXcaZ0B0DoPHEpntVb8HrN08SzxwGERIF+O5/lZ6OuaEW
-         P/5sJUpyzADJHwEEYGxLeHrs2NGBF77mfVbJsFUWkOevhanRdDqIP0s/N0TumimC11
-         vXRFMkveTB2bF4LzZajd7jFY+Q+gPotpdzRXamKY=
-Date:   Thu, 4 Apr 2019 19:32:00 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Slavomir Kaslev <kaslevs@vmware.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>
-Subject: Re: [PATCH 5.0 047/246] fs: Make splice() and tee() take into
- account O_NONBLOCK flag on pipes
-Message-ID: <20190404173200.GB29613@kroah.com>
-References: <20190404084619.236418459@linuxfoundation.org>
- <20190404084620.671108728@linuxfoundation.org>
- <3fa8b886ccb1ea2229344091be9ac769021f69a4.camel@vmware.com>
+        Thu, 4 Apr 2019 13:32:17 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:46114 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbfDDRcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 13:32:17 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hC6DY-00074s-FU; Thu, 04 Apr 2019 19:32:00 +0200
+Date:   Thu, 4 Apr 2019 19:31:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v6 10/20] x86/split_lock: Handle #AC exception for split
+ lock
+In-Reply-To: <1554326526-172295-11-git-send-email-fenghua.yu@intel.com>
+Message-ID: <alpine.DEB.2.21.1904041921460.1802@nanos.tec.linutronix.de>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com> <1554326526-172295-11-git-send-email-fenghua.yu@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fa8b886ccb1ea2229344091be9ac769021f69a4.camel@vmware.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 04:16:57PM +0000, Slavomir Kaslev wrote:
-> On Thu, 2019-04-04 at 10:45 +0200, Greg Kroah-Hartman wrote:
-> > 5.0-stable review patch.  If anyone has any objections, please let me
-> > know.
-> > 
-> > ------------------
-> > 
-> > [ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
-> > 
-> > The current implementation of splice() and tee() ignores O_NONBLOCK
-> > set
-> > on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag
-> > for
-> > blocking on pipe arguments.  This is inconsistent since splice()-ing
-> > from/to non-pipe file descriptors does take O_NONBLOCK into
-> > consideration.
-> > 
-> > Fix this by promoting O_NONBLOCK, when set on a pipe, to
-> > SPLICE_F_NONBLOCK.
-> 
-> [...]
-> 
-> > This change does have potential of breaking users who don't expect
-> > EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH
-> > programs
-> > that set O_NONBLOCK and don't anticipate EAGAIN are arguably
-> > buggy[2].
-> 
-> Hi Greg,
-> 
-> Can you drop this one from the stable queues? We discussed it with
-> Sasha[1] already in the autosel patches thread.
-> 
-> [1] https://lkml.org/lkml/2019/4/3/811
+On Wed, 3 Apr 2019, Fenghua Yu wrote:
+> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+> +{
+> +	unsigned int trapnr = X86_TRAP_AC;
+> +	char str[] = "alignment check";
+> +	int signr = SIGBUS;
+> +
+> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> +
+> +	/*
+> +	 * WARN*()s end up here; fix them up before we call the
+> +	 * notifier chain.
+> +	 */
 
-Dropped from everywhere now.
+How exactly is WARN*() ending up here?
 
-Sasha, how did this still get in?
+> +	if (!user_mode(regs) && fixup_bug(regs, trapnr))
 
-greg k-h
+And that fixup_bug() check does what?
+
+int fixup_bug(struct pt_regs *regs, int trapnr)
+{
+ 	if (trapnr != X86_TRAP_UD)
+                return 0;
+
+Copy and paste from do_error_trap() ....
+
+> +		return;
+> +
+> +	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) ==
+> +		       NOTIFY_STOP)
+> +		return;
+> +
+> +	cond_local_irq_enable(regs);
+> +	if (!user_mode(regs) &&
+> +	    static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT)) {
+> +		/*
+> +		 * Only split lock can generate #AC from kernel at this point.
+> +		 * Warn and disable split lock detection on this CPU. The
+> +		 * faulting instruction will be executed without generating
+> +		 * another #AC fault. User needs to check the warning and
+> +		 * fix the split lock issue in the faulting instruction.
+
+  "User needs to check the warning and fix the issue ..."
+
+I'm looking forward to all the fixes from Joe Users.
+
+Please remove that sentence. It's useless. Users report warnings if at all
+and the kernel developers who actually look at them surely don't need an
+advice like that.
+
+Thanks,
+
+	tglx
