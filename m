@@ -2,102 +2,104 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A14C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10478C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C0721741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36892082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QNvrF6HQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfDDOnl convert rfc822-to-8bit (ORCPT
+        id S1729253AbfDDOns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:43:41 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32763 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729095AbfDDOnk (ORCPT
+        Thu, 4 Apr 2019 10:43:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53083 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbfDDOnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:43:40 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-45-Ax38F7LhM8a1MVH26902Kg-1; Thu, 04 Apr 2019 15:43:37 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 4 Apr 2019 15:44:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 4 Apr 2019 15:44:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Fenghua Yu' <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH v6 04/20] x86/split_lock: Align x86_capability to unsigned
- long to avoid split locked access
-Thread-Topic: [PATCH v6 04/20] x86/split_lock: Align x86_capability to
- unsigned long to avoid split locked access
-Thread-Index: AQHU6mTrt6127B4KeUCFmArv0ksdfKYsEdZA
-Date:   Thu, 4 Apr 2019 14:44:44 +0000
-Message-ID: <73ecc9de54c3424da3cddd1a34cb8701@AcuMS.aculab.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
- <1554326526-172295-5-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1554326526-172295-5-git-send-email-fenghua.yu@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 4 Apr 2019 10:43:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a184so3368479wma.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+5EPK1jLpp1DksFX6bDHdB7cQlJWLKrS9nTZJnBqEYc=;
+        b=QNvrF6HQaCAuJc0hO6t/mmraaYs2X3kCub+Sy87sKJCIWIgsJZxOdejgqtEAMmGAfq
+         9BBjUQbsnuvfPMiBrqZiRlSEexTz5bpxz9jhv1FwqNAFuRceZee6a4+GofKw3gh8pHzG
+         jRajnK/Si04AuLxvJGjtizm/oLL/VHqQPmMY7iZ0Ua7jio4NhstOH5GAuUaPpNRgJ8Tz
+         frX9Z64X8aZZ9bONK/oS0lJXXLF4qWBmRUECfvIjrZAz9VeQo15q7a53kS0cWiv9IJbW
+         lRHL5l7NOhNXx1zMbZVifFHruSTKIJfCMy7maLUyIy+rMVUjiF4op2pP/TiSVF7w02/r
+         aVpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+5EPK1jLpp1DksFX6bDHdB7cQlJWLKrS9nTZJnBqEYc=;
+        b=sB9FCHKKf69VNIuWv2RQLfiD2zmYAMlaxhmKLS35Mr40gPDYqZar6lRzvACEJryBTY
+         iPlh3GBbYKekOvxUI5xXHLnQo23Wk0w0PRMSVDYo+hhQk4E55EghdEJDtGIHi3SIckQz
+         II8eD+NFN9nnFIm1jeA+S+Jb4qx6vzE9eFLoA1oAcsA/XGSRFijO1axAzu/anEKHpdVj
+         uGmmLb3CIYmsO0s94gBh1FJAgK56fIxKyHdvVHRGdCvPY09RB+FiEEtsBBFnXTWxTFqq
+         M5oG+FdQoc7TA+qU5DVnQvRULAd5vYEP5H3A9tn+wWzt0DkaMs6HsLcXzfleuB1Nm770
+         RHDA==
+X-Gm-Message-State: APjAAAXAgzdIv7zl0XKt5cxnODRkzzF2e1J91OqD0zOxGtU2XLgecw1v
+        Y+ftnjPo+MIoFS93Zrga+otCbA==
+X-Google-Smtp-Source: APXvYqw0RJ8pMlQrVgU8wXu8DYAVveOzRKB24ciGiiHemHod/LoGVdeX5yWbja/mtWVROS4xOeWn4A==
+X-Received: by 2002:a1c:9d8f:: with SMTP id g137mr4631387wme.26.1554389025446;
+        Thu, 04 Apr 2019 07:43:45 -0700 (PDT)
+Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id g12sm17848575wrw.40.2019.04.04.07.43.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Apr 2019 07:43:44 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     sean@poorly.run, dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, maxime.ripard@bootlin.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "Documentation/gpu/meson: Remove link to meson_canvas.c"
+Date:   Thu,  4 Apr 2019 16:43:42 +0200
+Message-Id: <20190404144342.15238-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MC-Unique: Ax38F7LhM8a1MVH26902Kg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu
-> Sent: 03 April 2019 22:22
-> set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
-> operate on bitmap defined in x86_capability.
-> 
-> Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
-> the location is at:
-> base address of x86_capability + (bit offset in x86_capability / 64) * 8
-> 
-> Since base address of x86_capability may not be aligned to unsigned long,
-> the single unsigned long location may cross two cache lines and
-> accessing the location by locked BTS/BTR introductions will trigger #AC.
+This reverts commit a3f98bb22cbfaaf67717e156f79e2bfeb42d4cac.
 
-That is not true.
-The BTS/BTR instructions access the memory word that contains the
-expected bit.
-The 'operand size' only affects the size of the register use for the
-bit offset.
-If the 'operand size' is 16 bits wide (+/- 32k bit offset) the cpu might
-do an aligned 16bit memory access, otherwise (32 or 64bit bit offset) it
-might do an aligned 32 bit access.
-It should never do an 64bit access and never a misaligned one (even if
-the base address is misaligned).
+Patch "Documentation/gpu/meson: Remove link to meson_canvas.c" was
+incorrectly applied on the wrong branch not containing the fixed
+commit 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
 
-	David
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/gpu/meson.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
+index b9e2f9aa3bd8..479f6f51a13b 100644
+--- a/Documentation/gpu/meson.rst
++++ b/Documentation/gpu/meson.rst
+@@ -42,6 +42,12 @@ Video Encoder
+ .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
+    :doc: Video Encoder
+ 
++Video Canvas Management
++=======================
++
++.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
++   :doc: Canvas
++
+ Video Clocks
+ ============
+ 
+-- 
+2.21.0
 
