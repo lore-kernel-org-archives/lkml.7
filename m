@@ -2,84 +2,86 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B42420820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:27:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AP1WqQOi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d/mjabtF"
+	by mail.kernel.org (Postfix) with ESMTP id A04F72147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfDDK1X (ORCPT
+        id S1729507AbfDDK11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 4 Apr 2019 06:27:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50150 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727310AbfDDK1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 06:27:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46338 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbfDDK1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:27:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B54ED61A6F; Thu,  4 Apr 2019 10:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554373642;
-        bh=cCmCw1ZaNS7ozBQmO7btLUerNKuxH8JK8jaDdDqvr/Y=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=AP1WqQOi4bK9BBmiSwj05qqzjYNiCqCuBvUFN19xQAqhhtZHsTTudhwZSMlFvA2M6
-         bFbPv4H+ybXvzCHhcr8468UcGhc6Deatko5WLg93orYuQSPxvsb38svS3zVSNHdDGM
-         pn7tdUZfqxZLnjncl+lyj0B9sRRQZC+4WSSsIZME=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24AA0611C5;
-        Thu,  4 Apr 2019 10:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554373640;
-        bh=cCmCw1ZaNS7ozBQmO7btLUerNKuxH8JK8jaDdDqvr/Y=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=d/mjabtFBjfBQoMm9E1qYfBflJpReFKLfRea9I53+jS6Xbol2rMRzgWy2hLHu6Xvd
-         0UsVwZf1yyCsQIch+1J3BNdbtSTroklOmCOpL3vvUhz+mu3TgZSy2k1pRZYEzeh8dZ
-         8/3jRu/Q8PvYYyRfWM5VweWRc8FSQUE1fKI7CYII=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 24AA0611C5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 7945B20264;
+        Thu,  4 Apr 2019 10:27:23 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F19B62669;
+        Thu,  4 Apr 2019 10:27:23 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 4EA2B16E31; Thu,  4 Apr 2019 12:27:22 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 12:27:22 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        David Airlie <airlied@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
+Message-ID: <20190404102722.w6c7aoxzcrhn5xhi@sirius.home.kraxel.org>
+References: <20190403072318.31507-1-kraxel@redhat.com>
+ <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
+ <20190404055056.ddc2bdgjbgjj7tby@sirius.home.kraxel.org>
+ <CAKMK7uFbLcziLXrwds9QZBBPFiBDC_O+X9fiuutNjsutaPW+sQ@mail.gmail.com>
+ <20190404083034.f7vrvukzqx5v7qju@sirius.home.kraxel.org>
+ <CAKMK7uHiWu-kOa6SP0ZRstnrwdYR0MHgtHdHZPLWLXxWaQVPrQ@mail.gmail.com>
+ <2866e37e-8563-1f1e-8f16-1119f70d52e1@tronnes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: move spin_lock_bh to spin_lock in tasklet
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1553005870-28018-1-git-send-email-chongguiguzi@gmail.com>
-References: <1553005870-28018-1-git-send-email-chongguiguzi@gmail.com>
-To:     Jeff Xie <chongguiguzi@gmail.com>
-Cc:     pkshih@realtek.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chongguiguzi@gmail.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190404102721.B54ED61A6F@smtp.codeaurora.org>
-Date:   Thu,  4 Apr 2019 10:27:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2866e37e-8563-1f1e-8f16-1119f70d52e1@tronnes.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 04 Apr 2019 10:27:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff Xie <chongguiguzi@gmail.com> wrote:
+  Hi,
 
-> It is unnecessary to call spin_lock_bh in a tasklet.
+> > tinydrm_xrgb8888_to_*
+> > 
+> > imo these could be put into some drm_format_helpers.c to be shared.
 > 
-> Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+> I agree, my long term goal is to get rid of tinydrm.ko. Just haven't got
+> there yet.
+> 
+> Gerd, if you end up using some of those functions, feel free to move
+> just those you need and I can do the rest later. But if you have time to
+> spare I wouldn't mind getting all of them moved ;-)
 
-Patch applied to wireless-drivers-next.git, thanks.
+For now I just promoted cirrus to be a tinydrm driver ;)
 
-38bb0baea310 rtlwifi: move spin_lock_bh to spin_lock in tasklet
+Noticed that those helpers (including tinydrm_memcpy for the
+non-converting case) apply clipping on the source but not on
+the destination.  So, for fullscreen updates that works ok,
+but for updating sub-rectangles it doesn't ...
 
--- 
-https://patchwork.kernel.org/patch/10859681/
+So I guess I have to add a dest_clip bool parameter when moving them.
+/me looks for a good place.  drm_fb_helpers.c I think.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+cheers,
+  Gerd
 
