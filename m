@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195C2C10F0D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B443C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7F820693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CC820449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369899;
-	bh=3Zy4JZ+m6UCsvdfDWQlfGRFAMYKgGJRjhIADQIBPDFE=;
+	s=default; t=1554369907;
+	bh=09Tfn5zKTSm9kUB/SogIIFf4R5VZD7Y1Q8tCkYUybdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IjOLCmvBq3jcCwNMmXPzJS4bk1+EmD+nJ4ZAGPKuVpeEU6nc4xt53YN5Iuh044H7Y
-	 SDMFkrF5eNQ+4GjElCVBz9KRjoKnzxGjjKrU24TnuCeoa2XPtlislc93Qn+7MBEdnN
-	 hmejLZNAAmJyEUTqvNeYlOTDJ27vW5gT+7FcXX8E=
+	b=r40+k8h24K1qIjPixe/0TIT8oJr6VzurlV+mWpcrv6hGJOH0Jrhj7Vza36mi3IAVK
+	 Pe481LhjPSPHxPn9y/0qpjA3nA7l611NTn/IcTAIbEYk1L8Bjz/Y+ovuEAtzZGecOq
+	 3y/wu99mimYfr6Cm7OrgFxafRc7h+D4cOrf2N1pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387686AbfDDJOO (ORCPT
+        id S1732767AbfDDJOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387674AbfDDJOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:11 -0400
+        id S2387452AbfDDJOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A4D620643;
-        Thu,  4 Apr 2019 09:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81AEE20643;
+        Thu,  4 Apr 2019 09:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369250;
-        bh=3Zy4JZ+m6UCsvdfDWQlfGRFAMYKgGJRjhIADQIBPDFE=;
+        s=default; t=1554369243;
+        bh=09Tfn5zKTSm9kUB/SogIIFf4R5VZD7Y1Q8tCkYUybdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BKxZGWFkPFYiKY/QRSCKaCiSVfBioiLH6Uab4pmd/V2DihL45bTyAVtDF/JQs7SSP
-         3oi/VdA/4VsLP7brBuW2NEfZhg13bF1qGoKiyuDBta7K1q6IPUk4ADOsmpjDB8NS4X
-         tCb9FPCU9t8LdxRmFT2cxwi7eYNbIq4XLt8hp6QM=
+        b=ezWuuOgPMQo+7GeNeozUtSh7+sQ9C0ITwiZReUgRLmMYd4h3py6LBDJpJC6HhdkOY
+         DdIvp5iL834OTIjTvF0KgzSDCAAaC6uW76GbCg0Y4dEee8DEprjnSxzDcREgizmWcY
+         EYKRoceoIj5TJaLbNCJ86sfO+Zxo2FCBJigpRUIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Coly Li <colyli@suse.de>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 153/246] bcache: improve sysfs_strtoul_clamp()
-Date:   Thu,  4 Apr 2019 10:47:33 +0200
-Message-Id: <20190404084624.527172555@linuxfoundation.org>
+Subject: [PATCH 5.0 150/246] bcache: fix input overflow to cache set sysfs file io_error_halflife
+Date:   Thu,  4 Apr 2019 10:47:30 +0200
+Message-Id: <20190404084624.421956560@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,62 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
+[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
 
-Currently sysfs_strtoul_clamp() is defined as,
- 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
- 83 do {                                                               \
- 84         if (attr == &sysfs_ ## file)                               \
- 85                 return strtoul_safe_clamp(buf, var, min, max)      \
- 86                         ?: (ssize_t) size;                         \
- 87 } while (0)
+Cache set sysfs entry io_error_halflife is used to set c->error_decay.
+c->error_decay is in type unsigned int, and it is converted by
+strtoul_or_return(), therefore overflow to c->error_decay is possible
+for a large input value.
 
-The problem is, if bit width of var is less then unsigned long, min and
-max may not protect var from integer overflow, because overflow happens
-in strtoul_safe_clamp() before checking min and max.
-
-To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
-effect, this patch adds an unsigned long variable, and uses it to macro
-strtoul_safe_clamp() to convert an unsigned long value in range defined
-by [min, max]. Then assign this value to var. By this method, if bit
-width of var is less than unsigned long, integer overflow won't happen
-before min and max are checking.
-
-Now sysfs_strtoul_clamp() can properly handle smaller data type like
-unsigned int, of cause min and max should be defined in range of
-unsigned int too.
+This patch fixes the overflow by using strtoul_safe_clamp() to convert
+input string to an unsigned long value in range [0, UINT_MAX], then
+divides by 88 and set it to c->error_decay.
 
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.h | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/md/bcache/sysfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
-index 3fe82425859c..0ad2715a884e 100644
---- a/drivers/md/bcache/sysfs.h
-+++ b/drivers/md/bcache/sysfs.h
-@@ -81,9 +81,16 @@ do {									\
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 557a8a3270a1..3b287f974fd9 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -778,8 +778,17 @@ STORE(__bch_cache_set)
+ 		c->error_limit = strtoul_or_return(buf);
  
- #define sysfs_strtoul_clamp(file, var, min, max)			\
- do {									\
--	if (attr == &sysfs_ ## file)					\
--		return strtoul_safe_clamp(buf, var, min, max)		\
--			?: (ssize_t) size;				\
-+	if (attr == &sysfs_ ## file) {					\
-+		unsigned long v = 0;					\
-+		ssize_t ret;						\
-+		ret = strtoul_safe_clamp(buf, v, min, max);		\
-+		if (!ret) {						\
-+			var = v;					\
-+			return size;					\
-+		}							\
-+		return ret;						\
-+	}								\
- } while (0)
+ 	/* See count_io_errors() for why 88 */
+-	if (attr == &sysfs_io_error_halflife)
+-		c->error_decay = strtoul_or_return(buf) / 88;
++	if (attr == &sysfs_io_error_halflife) {
++		unsigned long v = 0;
++		ssize_t ret;
++
++		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
++		if (!ret) {
++			c->error_decay = v / 88;
++			return size;
++		}
++		return ret;
++	}
  
- #define strtoul_or_return(cp)						\
+ 	if (attr == &sysfs_io_disable) {
+ 		v = strtoul_or_return(buf);
 -- 
 2.19.1
 
