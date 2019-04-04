@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B162C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39A4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49352218D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CC62147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368484;
-	bh=L4m+bvz06mBIlOXEZGS5rutM5Ii89qDIDhLZqA5Ydwg=;
+	s=default; t=1554368487;
+	bh=XrQnYt81Zq2ahedLObMLXsySvOVaacpfBebvvfUS6OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zbqh4rA9aWSoHrcx44jwObUekjeKqotueCcygSGmU2ncOncbPZ3k7RpOld//78A3w
-	 oyPxXlsD4vT/gIsQfLYF2jSTdl3VhUQ3/KLzvPY5VahnaQ9B76vtfd9BHNrf61MkT3
-	 DiVjC/Iqfepp0Ae7nQ0Bo1+E0m6thZVqeU88NMx4=
+	b=hg2+0yBVt/z8cU1hWrQ99SRzJU7c3xhnY3hRi1oKbwE9VXEGCoALeVwyqDNyj6vhF
+	 iNmCpWB6Qetcgi4ErdfZ2BhK06Z49OfT2du9NlIrXHK278UwTVfXr4IadhHDN9DN9m
+	 T5JLxSvOf5zxLZIstqNDdKPt4m9CYmmeAvV3JZvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731174AbfDDJBX (ORCPT
+        id S1731427AbfDDJB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfDDJBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:19 -0400
+        id S1731418AbfDDJBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC52218D4;
-        Thu,  4 Apr 2019 09:01:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC042147C;
+        Thu,  4 Apr 2019 09:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368477;
-        bh=L4m+bvz06mBIlOXEZGS5rutM5Ii89qDIDhLZqA5Ydwg=;
+        s=default; t=1554368483;
+        bh=XrQnYt81Zq2ahedLObMLXsySvOVaacpfBebvvfUS6OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hb6BPTTNg677cbq31UOE/ckQuKTKp3a4yp494963nCMVfGrsm6g8+TZe7xGe/h/TT
-         tRn9XPsjB7A7Mb9KFu+O99IeN4R+uCvTUzPmN8n9b5WN8Aanpnpul0SXL8xFsgq61N
-         gfOkvo1jIriGviW/rgSWX2RwTYzv/LosdTzadYWM=
+        b=wL6XcU6a1KA0OZUTaa6fHg3A5nJshnktGiL/Y2YHrWvv0jL86PrgkdmIyZf4aJqTN
+         cYyiAYSZaxEA4XskL9pYkrpRKMnVHotd/rB4Gs9jZr5uJ7fdv6yF1s9Wp+TemqahNR
+         reeR+P46D150honIZnFjX4vlcEN6BcHXgNN/SHgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/187] f2fs: fix to check inline_xattr_size boundary correctly
-Date:   Thu,  4 Apr 2019 10:46:15 +0200
-Message-Id: <20190404084604.872129191@linuxfoundation.org>
+Subject: [PATCH 4.19 040/187] cifs: Fix NULL pointer dereference of devname
+Date:   Thu,  4 Apr 2019 10:46:17 +0200
+Message-Id: <20190404084604.963447087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,109 +66,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 500e0b28ecd3c5aade98f3c3a339d18dcb166bb6 ]
+[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
 
-We use below condition to check inline_xattr_size boundary:
+There is a NULL pointer dereference of devname in strspn()
 
-	if (!F2FS_OPTION(sbi).inline_xattr_size ||
-		F2FS_OPTION(sbi).inline_xattr_size >=
-				DEF_ADDRS_PER_INODE -
-				F2FS_TOTAL_EXTRA_ATTR_SIZE -
-				DEF_INLINE_RESERVED_SIZE -
-				DEF_MIN_INLINE_SIZE)
+The oops looks something like:
 
-There is there problems in that check:
-- we should allow inline_xattr_size equaling to min size of inline
-{data,dentry} area.
-- F2FS_TOTAL_EXTRA_ATTR_SIZE and inline_xattr_size are based on
-different size unit, previous one is 4 bytes, latter one is 1 bytes.
-- DEF_MIN_INLINE_SIZE only indicate min size of inline data area,
-however, we need to consider min size of inline dentry area as well,
-minimal inline dentry should at least contain two entries: '.' and
-'..', so that min inline_dentry size is 40 bytes.
+  CIFS: Attempting to mount (null)
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:strspn+0x0/0x50
+  ...
+  Call Trace:
+   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
+   ? cifs_get_volume_info+0x2f/0x80 [cifs]
+   cifs_setup_volume_info+0x20/0x190 [cifs]
+   cifs_get_volume_info+0x50/0x80 [cifs]
+   cifs_smb3_do_mount+0x59/0x630 [cifs]
+   ? ida_alloc_range+0x34b/0x3d0
+   cifs_do_mount+0x11/0x20 [cifs]
+   mount_fs+0x52/0x170
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-.bitmap		1 * 1 = 1
-.reserved	1 * 1 = 1
-.dentry		11 * 2 = 22
-.filename	8 * 2 = 16
-total		40
+Fix this by adding a NULL check on devname in cifs_parse_devname()
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h          |  1 -
- fs/f2fs/super.c         | 13 +++++++------
- include/linux/f2fs_fs.h | 13 +++++++------
- 3 files changed, 14 insertions(+), 13 deletions(-)
+ fs/cifs/connect.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 42aef5c94927..a3ba20e5946f 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -450,7 +450,6 @@ struct f2fs_flush_device {
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a5ea742654aa..f31339db45fd 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1347,6 +1347,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
+ 	const char *delims = "/\\";
+ 	size_t len;
  
- /* for inline stuff */
- #define DEF_INLINE_RESERVED_SIZE	1
--#define DEF_MIN_INLINE_SIZE		1
- static inline int get_extra_isize(struct inode *inode);
- static inline int get_inline_xattr_addrs(struct inode *inode);
- #define MAX_INLINE_DATA(inode)	(sizeof(__le32) *			\
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index c9639ef0e8d5..79370b7fa9d2 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -822,12 +822,13 @@ static int parse_options(struct super_block *sb, char *options)
- 					"set with inline_xattr option");
- 			return -EINVAL;
- 		}
--		if (!F2FS_OPTION(sbi).inline_xattr_size ||
--			F2FS_OPTION(sbi).inline_xattr_size >=
--					DEF_ADDRS_PER_INODE -
--					F2FS_TOTAL_EXTRA_ATTR_SIZE -
--					DEF_INLINE_RESERVED_SIZE -
--					DEF_MIN_INLINE_SIZE) {
-+		if (F2FS_OPTION(sbi).inline_xattr_size <
-+			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
-+			F2FS_OPTION(sbi).inline_xattr_size >
-+			DEF_ADDRS_PER_INODE -
-+			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
-+			DEF_INLINE_RESERVED_SIZE -
-+			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
- 			f2fs_msg(sb, KERN_ERR,
- 					"inline xattr size is out of range");
- 			return -EINVAL;
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index f70f8ac9c4f4..40fec5f94949 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -489,12 +489,12 @@ typedef __le32	f2fs_hash_t;
- 
- /*
-  * space utilization of regular dentry and inline dentry (w/o extra reservation)
-- *		regular dentry			inline dentry
-- * bitmap	1 * 27 = 27			1 * 23 = 23
-- * reserved	1 * 3 = 3			1 * 7 = 7
-- * dentry	11 * 214 = 2354			11 * 182 = 2002
-- * filename	8 * 214 = 1712			8 * 182 = 1456
-- * total	4096				3488
-+ *		regular dentry		inline dentry (def)	inline dentry (min)
-+ * bitmap	1 * 27 = 27		1 * 23 = 23		1 * 1 = 1
-+ * reserved	1 * 3 = 3		1 * 7 = 7		1 * 1 = 1
-+ * dentry	11 * 214 = 2354		11 * 182 = 2002		11 * 2 = 22
-+ * filename	8 * 214 = 1712		8 * 182 = 1456		8 * 2 = 16
-+ * total	4096			3488			40
-  *
-  * Note: there are more reserved space in inline dentry than in regular
-  * dentry, when converting inline dentry we should handle this carefully.
-@@ -506,6 +506,7 @@ typedef __le32	f2fs_hash_t;
- #define SIZE_OF_RESERVED	(PAGE_SIZE - ((SIZE_OF_DIR_ENTRY + \
- 				F2FS_SLOT_LEN) * \
- 				NR_DENTRY_IN_BLOCK + SIZE_OF_DENTRY_BITMAP))
-+#define MIN_INLINE_DENTRY_SIZE		40	/* just include '.' and '..' entries */
- 
- /* One directory entry slot representing F2FS_SLOT_LEN-sized file name */
- struct f2fs_dir_entry {
++	if (unlikely(!devname || !*devname)) {
++		cifs_dbg(VFS, "Device name not specified.\n");
++		return -EINVAL;
++	}
++
+ 	/* make sure we have a valid UNC double delimiter prefix */
+ 	len = strspn(devname, delims);
+ 	if (len != 2)
 -- 
 2.19.1
 
