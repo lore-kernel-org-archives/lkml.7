@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3515CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB8DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EE3217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA0A217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368112;
-	bh=sz7D2RuVjYEuADJKuWRC4j3xdxLaF99Ao7zLCMFUzTs=;
+	s=default; t=1554368116;
+	bh=/Yo1mGTtFv67WJrWjV208qxiKij7FZQemelRpoEFmgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NztxOhxyo2IdXxkxMJic+OdJPTOVRFavypsW3rPHpdXx3/04qwEbYG7ENJ1AVcmBY
-	 gwJ/3mcpE2TPf3vN7MzBRFA3GDet37hrIuJn3pQiLwtbm6+4rbaZ97T7eTrzht/tkY
-	 S0DC5L87dEFfs/PYrJ7Pf1eMFb6YDwK/OBzW2K8M=
+	b=zKkMRXsPpetTCBivbPxwmhiWjKukoIxvUQjTpHsLgsHK/AmnhV5OCG3mjdUXtznJ3
+	 +gHtOA/xBHFlf1fxN+Th5+fwSJ1VqA8LYiaECCXjTMFTPbZ+QUHTq+KEKlR2SLtEaH
+	 baOD1qpHE73InhUsiDwFCsd3siRaAjoXcW4dKoBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfDDIzK (ORCPT
+        id S1730251AbfDDIzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbfDDIzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:05 -0400
+        id S1729275AbfDDIzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9FC2171F;
-        Thu,  4 Apr 2019 08:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CB47217D4;
+        Thu,  4 Apr 2019 08:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368105;
-        bh=sz7D2RuVjYEuADJKuWRC4j3xdxLaF99Ao7zLCMFUzTs=;
+        s=default; t=1554368108;
+        bh=/Yo1mGTtFv67WJrWjV208qxiKij7FZQemelRpoEFmgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zAB155EPuKrPvoihTxScJTc5/bazpbWP/yYZDXaRydZJOALRouiiiSdksJ6P8AjZa
-         eVeirEKoscwNnY3cHEBU6QezhbViTjeNYtBezjzlKbIulMF5hKiYkaLM0G9ifYWlxu
-         jr+mi5D5HWs5pYkLg8HrJoPEpDx/sbQwvewTTS5s=
+        b=mAjgurd9B4cMFOrkpc73N+2gPept021agn4W5+cG1Dsp+eW2Rm0KSMezeNFDSgLhh
+         r71UH8gSqtzXX4PhxsTjNJ9VIoZcE+mK4MAUGH4SAZUTCWwtY4atZoeyFGf/IzI4of
+         CkOPcwhEh+PrQB4Tn8atu9qAG2fUyc3RC6RWGMXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Jan Glauber <jglauber@cavium.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/121] crypto: cavium/zip - fix collision with generic cra_driver_name
-Date:   Thu,  4 Apr 2019 10:47:07 +0200
-Message-Id: <20190404084547.426357179@linuxfoundation.org>
+Subject: [PATCH 4.14 040/121] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Thu,  4 Apr 2019 10:47:08 +0200
+Message-Id: <20190404084547.470168311@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -69,66 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 41798036430015ad45137db2d4c213cd77fd0251 ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-The cavium/zip implementation of the deflate compression algorithm is
-incorrectly being registered under the generic driver name, which
-prevents the generic implementation from being registered with the
-crypto API when CONFIG_CRYPTO_DEV_CAVIUM_ZIP=y.  Similarly the lzs
-algorithm (which does not currently have a generic implementation...)
-is incorrectly being registered as lzs-generic.
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
-Fix the naming collision by adding a suffix "-cavium" to the
-cra_driver_name of the cavium/zip algorithms.
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-Fixes: 640035a2dc55 ("crypto: zip - Add ThunderX ZIP driver core")
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Jan Glauber <jglauber@cavium.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
+
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/cavium/zip/zip_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/cavium/zip/zip_main.c b/drivers/crypto/cavium/zip/zip_main.c
-index 1cd8aa488185..a6425a7afa7b 100644
---- a/drivers/crypto/cavium/zip/zip_main.c
-+++ b/drivers/crypto/cavium/zip/zip_main.c
-@@ -351,6 +351,7 @@ static struct pci_driver zip_driver = {
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 43ea5fb87b9a..70306ae039c0 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -938,8 +938,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
++
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
  
- static struct crypto_alg zip_comp_deflate = {
- 	.cra_name		= "deflate",
-+	.cra_driver_name	= "deflate-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -365,6 +366,7 @@ static struct crypto_alg zip_comp_deflate = {
- 
- static struct crypto_alg zip_comp_lzs = {
- 	.cra_name		= "lzs",
-+	.cra_driver_name	= "lzs-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -384,7 +386,7 @@ static struct scomp_alg zip_scomp_deflate = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "deflate",
--		.cra_driver_name	= "deflate-scomp",
-+		.cra_driver_name	= "deflate-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
-@@ -397,7 +399,7 @@ static struct scomp_alg zip_scomp_lzs = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "lzs",
--		.cra_driver_name	= "lzs-scomp",
-+		.cra_driver_name	= "lzs-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
