@@ -2,114 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CC5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420EC20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0594020855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZfKtX4l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gjaRVFNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfDDIHO (ORCPT
+        id S1727258AbfDDII2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:07:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35048 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbfDDIHO (ORCPT
+        Thu, 4 Apr 2019 04:08:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37352 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDDII2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:07:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so777884plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:07:13 -0700 (PDT)
+        Thu, 4 Apr 2019 04:08:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e6so840333pgc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ibM3lHeqJzWAyx2I7VLyFgmTRoqBMjsuQ/db2mydldI=;
-        b=eZfKtX4lsRpGT7pRHg5sNpC8SAp2bYdtvTa3cbXRkSl5Fc9RMIM/A2yon7YwcG9TuP
-         TACqLqVii5l0KjdP0oTi9X/vm33eeKy805mOsXn9Rzmtd+RXB0zJNzOmIhAc0073F3CO
-         ApknFQQbhyORoABtRDBZB1I/gG7j1DizZvuGHkxv9wZchNWH7C7GGlbYi+2ru0z97lb3
-         loINPYJ6ZGH5dD5XM0XvifMF4Werfk2UBAYjnT1mAxsofW8gBM3rYzeiS6BKBHoUnSnU
-         KEYEja3yVzWB0uRjcO4C3Q7OkvkIPn7Fa8lqYA2zeVDqD34jq8b1kyDS9gmFEEal9jXI
-         H6TA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Mp1oHWeHTUtm10kXUx613RnhgAkqJiWHeDd7CtnjsS4=;
+        b=gjaRVFNjeavT8zGQy2ubWKkzBJVxaBC3O8Yg8x+XGHBdO8nD/z5qGq7v3OXE99sjq3
+         t44VKo2u/dfWipZIRWyHvPOUHCQpjpXe5d1sKlsjPanEu7EHmUXbj+zoy6RxhgGm7dZc
+         WA7CFwzeyc+qhNLJixiu6FGPjWYxVEvL/ddoCstp4rX9BbKiqSzlA81fHxTSggw4GUDc
+         LT+Y0o0tP4FJTz2Jwn8P73GctrZ02kAYG2I6VZtvdcgJLdU+jZPK3W2yKorvC39QKU/v
+         xVFjSgBFiBjg4NVyyDZAHwuweWoIdC3bJ3whlo+Cnk/LWPs9ex1W1NCtSwZxDi1V76Ll
+         /xsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ibM3lHeqJzWAyx2I7VLyFgmTRoqBMjsuQ/db2mydldI=;
-        b=bYEFmgiADx3JSRzFn8ycswI3fQnldLE0oPd+Hs/bZJQRXSq3GEVeF1Hnva9fB2bH/s
-         52MS0JUdTxNecKi/rcDXhZUoDXSqB9edTl6mbGM3b0xyntSxtUYui+RbYpRJY/ugurSK
-         zNz9UJvTly5kkFOpJITrY/lvkxYno4RR3y4teK4mIbOUD5js1QfFN2vnayrxVq54vtan
-         OZSqteD566Yc4e7v8n6XZUsFQTuSVDozEpxrPJ6drEQ2pgupB2JYnQhBuTAmLknBcP3g
-         L/rBNln2du2fEMAdmGJK0SRYloKfBSHwSfhIMpsSyWjNluA00QsLKofmtt7tnczRuLZ1
-         kGhA==
-X-Gm-Message-State: APjAAAW6Sl43YSe/nPs4qEtWCqvgvX36jniWwyy2A58HLjCHyjtpmJbe
-        IDbwTa1MCh20UzTx6Lm/u34dEA==
-X-Google-Smtp-Source: APXvYqyYFGqcw6rM8ckAtlp1uymKMPH2ic4KPwQ06ehaJuSoIm7zPzWo3JxMz6kFS/AY073MxEvrRQ==
-X-Received: by 2002:a17:902:7885:: with SMTP id q5mr5043893pll.12.1554365233446;
-        Thu, 04 Apr 2019 01:07:13 -0700 (PDT)
-Received: from mai.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id x9sm32380940pfn.60.2019.04.04.01.07.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 01:07:12 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     andrew.smirnov@gmail.com
-Cc:     linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH RFC 2/2] thermal/drivers/qoriq: Use the get_temp_id()
-Date:   Thu,  4 Apr 2019 10:06:47 +0200
-Message-Id: <20190404080647.8173-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190404080647.8173-1-daniel.lezcano@linaro.org>
-References: <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
- <20190404080647.8173-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Mp1oHWeHTUtm10kXUx613RnhgAkqJiWHeDd7CtnjsS4=;
+        b=eO5dKhkY9Iyi0cqK2KvwAfk/5MlfmBElCP1frZ81ZfTd0BS5lafDmXF8URYInG/Tyv
+         EdWURSsBbpMrqaxClTgCO2y6WRjy+Gzgy5sC1GjPyxjQ0bc9sqk8/DDZhkjq79uuTg0u
+         2k/Wc8NyPRb8YnMuOdrRymxYfpHTeLae8urcEFEzMuSc5HEzLY/cCiX60d/y0qFA9FCb
+         +b8TjAhe1m6/a5r5MDkkaWF1dh6H2YT6yhwNvyZGQwn7WG+/8ZewsLvrUPWX22vjMcyF
+         EAUtLZHPtB8OI7lY4PfLwn+PGud0dnZgZ/XbzEYb9IrOeSzu6nSH1U/06Un6kl13VFUQ
+         LEPA==
+X-Gm-Message-State: APjAAAWYsEJjloRvws0uB4es2lyOBuXALaXWrXo/n8sWj5UxVnFd9TWU
+        MCYTx+MIltlHJ7Z36GQ5thEPDf9iH65lEQ==
+X-Google-Smtp-Source: APXvYqwloU2gBVe+wUHpJAa+srUOWmEodXMbbwTChUuYt0JeZVM77sBDLatz+4M2olopxmKZOfxcOA==
+X-Received: by 2002:a63:7885:: with SMTP id t127mr4329645pgc.338.1554365307272;
+        Thu, 04 Apr 2019 01:08:27 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id j28sm39730016pgb.46.2019.04.04.01.08.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 01:08:26 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 09:08:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mfd: cs47l90: Make DAC_AEC_CONTROL_2 readable
+Message-ID: <20190404080822.GK6830@dell>
+References: <20190403095917.6351-1-ckeepax@opensource.cirrus.com>
+ <20190403095917.6351-2-ckeepax@opensource.cirrus.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190403095917.6351-2-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the code is adding extra back pointer to find out the general
-structure for the driver from the sensor data.
+On Wed, 03 Apr 2019, Charles Keepax wrote:
 
-Use the get_temp_id() which pass the sensor id when registering the callback.
+> From: Ajit Pandey <ajit.pandey@cirrus.com>
+> 
+> There is a second AEC loopback on cs47l90 so the registers for it should
+> be readable.
+> 
+> Signed-off-by: Ajit Pandey <ajit.pandey@cirrus.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/cs47l90-tables.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/qoriq_thermal.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Applied, thanks.
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 3b5f5b3fb1bc..405d1fbdd0cb 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -92,20 +92,20 @@ static u32 tmu_read(struct qoriq_tmu_data *p, void __iomem *addr)
- 		return ioread32be(addr);
- }
- 
--static int tmu_get_temp(void *p, int *temp)
-+static int tmu_get_temp(int id, void *p, int *temp)
- {
- 	struct qoriq_sensor *qsensor = p;
- 	struct qoriq_tmu_data *qdata = qsensor->qdata;
- 	u32 val;
- 
--	val = tmu_read(qdata, &qdata->regs->site[qsensor->id].tritsr);
-+	val = tmu_read(qdata, &qdata->regs->site[id].tritsr);
- 	*temp = (val & 0xff) * 1000;
- 
- 	return 0;
- }
- 
- static const struct thermal_zone_of_device_ops tmu_tz_ops = {
--	.get_temp = tmu_get_temp,
-+	.get_temp_id = tmu_get_temp,
- };
- 
- static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
