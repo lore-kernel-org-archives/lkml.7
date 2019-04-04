@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C90FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A507DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7EA2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AC0205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370183;
-	bh=fk/ewNo0bcmDcA/TR1FEC+GO/PeKstfoouvQKMN6Uhg=;
+	s=default; t=1554370194;
+	bh=YZLmMM1vsCYCByao2kmZm7n2bZsIjGobZyFMdl/NU9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ly7pDMiXHQc8UeRrJC1bZqLNcqy5MFUbU3VyTcPFek7qManQdqYnDMxC42iWt0/dS
-	 t9rFeE4EJRlsEjH2RHlGfsHGeEtY7/zo/Oe06meN2tve9eaiZNML1t6NaINhZjFKl1
-	 iMw+S68tXDSOXkgYSKNDzIxvi3UV+stW20MlvrOM=
+	b=AaNqbHxEqY4IxLHraPpkUAijtZ0Uk1FsjnjNYCf52e1Fx1sxzBXvOTNjZ5piAbU6V
+	 /mVhBknclfwkW1HiluBvifNTXt37ejdSGnLhcgDIMuNZY1NxO7cv70wEu2+sMARCGc
+	 aWPiFJJyT/Zf2Ukc/jnMhEBVKLWt0otzeD83yfFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733229AbfDDJ3m (ORCPT
+        id S2387450AbfDDJ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50466 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732814AbfDDJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:42 -0400
+        id S1732126AbfDDJKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A730F20693;
-        Thu,  4 Apr 2019 09:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79D52054F;
+        Thu,  4 Apr 2019 09:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369042;
-        bh=fk/ewNo0bcmDcA/TR1FEC+GO/PeKstfoouvQKMN6Uhg=;
+        s=default; t=1554369034;
+        bh=YZLmMM1vsCYCByao2kmZm7n2bZsIjGobZyFMdl/NU9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HY8q7xU2+oSAovUmEhJdLDA/UvGsDhtsBuMFFfaL1bvntlkDGdiXBHoP7nUVJpg1V
-         09M7qr2wLe9O0AkBv/GI0eYYQUvsyrwdYp471DePb9sxA7tribDbZju07Z0r/Jv6ZL
-         fPqwGLBNwbN9EFR2n2PvrFc2Fm1A3ERfmL1dYjE4=
+        b=kuiHAIkWKoigB3hYNn2mJe1gVLyBy/KM/VDbxWfkexFMWzXwk1w6Nxftzy0TTLz1V
+         nvo4nNxqqxj2XPb/RtF+PCOWD9qxTEK8buHaMfETEy5kFeKfBSVyG6qFt+ATzXe5z1
+         EhpK5+2c4+azIcMacQ8mxmh6Z/Po7NY7KwqLG8y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        stable@vger.kernel.org, Alagu Sankar <alagusankar@silex-india.com>,
+        Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 076/246] serial: 8250_pxa: honor the port number from devicetree
-Date:   Thu,  4 Apr 2019 10:46:16 +0200
-Message-Id: <20190404084621.795624667@linuxfoundation.org>
+Subject: [PATCH 5.0 073/246] ath10k: dont report unset rssi values to mac80211
+Date:   Thu,  4 Apr 2019 10:46:13 +0200
+Message-Id: <20190404084621.694111562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,41 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
+[ Upstream commit 7d444522303177f3a3c09b9abb104ddeea470a70 ]
 
-Like the other OF-enabled drivers, use the port number from the firmware if
-the devicetree specifies an alias:
+The SDIO firmware does not provide RSSI value to the host, it's only set to
+zero. In that case don't report the value to mac80211. One risk here is that
+value zero might be a valid value with other firmware, currently there's no way
+to detect that.
 
-  aliases {
-      ...
-      serial2 = &uart2; /* Should be ttyS2 */
-  }
+Without the fix, the rssi value indicated by iw changes between the actual
+value and -95.
 
-This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
-messes up the numbering.
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00005-QCARMSWP-1.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Co-developed-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Alagu Sankar <alagusankar@silex-india.com>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_pxa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
-index b9bcbe20a2be..c47188860e32 100644
---- a/drivers/tty/serial/8250/8250_pxa.c
-+++ b/drivers/tty/serial/8250/8250_pxa.c
-@@ -113,6 +113,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index f42bac204ef8..ecf34ce7acf0 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -2130,9 +2130,15 @@ static bool ath10k_htt_rx_proc_rx_ind_hl(struct ath10k_htt *htt,
+ 	hdr = (struct ieee80211_hdr *)skb->data;
+ 	rx_status = IEEE80211_SKB_RXCB(skb);
+ 	rx_status->chains |= BIT(0);
+-	rx_status->signal = ATH10K_DEFAULT_NOISE_FLOOR +
+-			    rx->ppdu.combined_rssi;
+-	rx_status->flag &= ~RX_FLAG_NO_SIGNAL_VAL;
++	if (rx->ppdu.combined_rssi == 0) {
++		/* SDIO firmware does not provide signal */
++		rx_status->signal = 0;
++		rx_status->flag |= RX_FLAG_NO_SIGNAL_VAL;
++	} else {
++		rx_status->signal = ATH10K_DEFAULT_NOISE_FLOOR +
++			rx->ppdu.combined_rssi;
++		rx_status->flag &= ~RX_FLAG_NO_SIGNAL_VAL;
++	}
  
-+	ret = of_alias_get_id(pdev->dev.of_node, "serial");
-+	if (ret >= 0)
-+		uart.port.line = ret;
-+
- 	uart.port.type = PORT_XSCALE;
- 	uart.port.iotype = UPIO_MEM32;
- 	uart.port.mapbase = mmres->start;
+ 	spin_lock_bh(&ar->data_lock);
+ 	ch = ar->scan_channel;
 -- 
 2.19.1
 
