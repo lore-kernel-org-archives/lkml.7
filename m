@@ -2,172 +2,109 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BD0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354B1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4251C20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0601A20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Xzib2lEN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oKVHexL8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pMpHnOn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfDDKQI (ORCPT
+        id S1729237AbfDDKQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:16:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49194 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfDDKQI (ORCPT
+        Thu, 4 Apr 2019 06:16:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39738 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:16:08 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8043154B;
-        Thu,  4 Apr 2019 12:16:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1554372965;
-        bh=8W9GHmw9bPbZKSj5S9vdb+51GOROgSHOwAKvRKFHkn8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xzib2lENtHiD9BBXdTc+129XeW11Vn5ehUWUbzQNzmKDBevNjsl0L5xIh/3jzJ99m
-         jn3Bw4jhKsRwRTmMo55XOb5I6pAfhXr+ByG+MyxHROhWyywkU3id8WHMxy2WcJ3n/f
-         qlAiDUw4A57/lqyyMrKnOADzQKGXrDc67Bto/vak=
-Date:   Thu, 4 Apr 2019 13:15:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Harsha M M <harsha.manjulamallikarjun@in.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 3/8] drm: rcar-du: Give a name to clu table samples
-Message-ID: <20190404101554.GF5800@pendragon.ideasonboard.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <1554297284-14009-4-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+        Thu, 4 Apr 2019 06:16:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3635E61B5D; Thu,  4 Apr 2019 10:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554372981;
+        bh=RFTudF1rRaNt3OPm2mm6NoDnBvgqm0+bKsN0rR8r01o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oKVHexL8quzjjaPFs7tpyGgBXtcFCxQ6cayijiJhEy+dxLzcTdDByuQ3gRviSaosg
+         tqe8g5M/R7+1K7UHhHnhpV74hrAnWS6Kc81PPJKXaRpp4cGRBFODHvng9AYyOHX4kS
+         dsQGoyz0wDr0Rj2kld9FKbyF0AVmETzPoT9Stt30=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7AC461C97;
+        Thu,  4 Apr 2019 10:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554372979;
+        bh=RFTudF1rRaNt3OPm2mm6NoDnBvgqm0+bKsN0rR8r01o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pMpHnOn6KXYkmKjSPmlNGpySR2wGvtZBtq8agWKyc5rWlDRtnidfg2124dEKRxf/8
+         jz1QdgLVKo7kEmTfnzKti7/BaEbsUNBZUiTBEz2WAz8s4AAc0uWcIUacwIxMY4zBCr
+         8JhpPerEz53YWWKLzh1U61cXrUfE4mR0bFLZiIU4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7AC461C97
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] staging: rtl8192u: remove redundant null check on array
+ 'data'
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190404093257.18757-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <ced06fcb-153b-1e3c-4d6b-718dd3a91db7@codeaurora.org>
+Date:   Thu, 4 Apr 2019 15:46:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1554297284-14009-4-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190404093257.18757-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kalakodima,
 
-Thank you for the patch.
+On 4/4/2019 3:02 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The NULL check on ram->u.wpa_ie.data is redudant as data is
+s/redudant/redundant
+> zero-length array and is not a pointer, so it can't be null.
+> Remove the check.
+>
+> Addresses-Coverity: ("Array compared against 0")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-PAtches 3/8, 4/8 and 5/8 modify the new
-drivers/gpu/drm/rcar-du/rcar_du_cmm.c a file that was introduced in 1/8.
-Please squash them all together, there's no point in adding a driver
-with known to be incorrect code to then fix it in other patches.
+fix the commit text minor err
 
-On Wed, Apr 03, 2019 at 06:44:39PM +0530, VenkataRajesh.Kalakodima@in.bosch.com wrote:
-> From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
-> 
-> Replace the hardcoded value of clu table sample count with a
-> meaningful name.
-> 
-> Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
-> 
-> This is the out-of-tree patch for DU CMM driver support from
->     Yocto release v3.6.0. The part of this patch adding CMM support to
->     the new Rcar E3 (R8A77990) SoC was filtered out due to lack of
->     Yocto v3.6.0 (i.e. rcar-3.6.2) kernel updates on staging-414.
-> 
->     Link: https://github.com/renesas-rcar/du_cmm/commit/53973b806881ed8f54500b0d42bdc40aaca60476.patch
-> 
->     Following is from the patch description:
-> 
->     Subject: [PATCH] du_cmm: Release for Yocto v3.6.0
-> 
->     This patch made the following correspondence.
-> 
->       - R-Car E3(R8A77990) device support.
->       - Fix rewritting of parameter procedure in rcar_du_cmm_postclose
-> 
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> 
->       - Resolved checkpatch errors
->       - Resolved merge conflicts according to latest version
-> 
-> Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+
 > ---
->  drivers/gpu/drm/rcar-du/rcar_du_cmm.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> index ac613a6e..d380dd9 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> @@ -75,9 +75,9 @@
->  #include <linux/clk.h>
->  
->  /* #define DEBUG_PROCE_TIME 1 */
-> -
-> +#define CMM_CLU_SAMPLES 17
->  #define CMM_LUT_NUM 256
-> -#define CMM_CLU_NUM (17 * 17 * 17)
-> +#define CMM_CLU_NUM (CMM_CLU_SAMPLES * CMM_CLU_SAMPLES * CMM_CLU_SAMPLES)
->  #define CMM_HGO_NUM 64
->  /* rcar_du_drm.h Include */
->  #define LUT_DOUBLE_BUFFER_AUTO		0
-> @@ -211,11 +211,11 @@ static inline u32 index_to_clu_data(int index)
->  {
->  	int r, g, b;
->  
-> -	r = index % 17;
-> -	index /= 17;
-> -	g = index % 17;
-> -	index /= 17;
-> -	b = index % 17;
-> +	r = index % CMM_CLU_SAMPLES;
-> +	index /= CMM_CLU_SAMPLES;
-> +	g = index % CMM_CLU_SAMPLES;
-> +	index /= CMM_CLU_SAMPLES;
-> +	b = index % CMM_CLU_SAMPLES;
->  
->  	r = (r << 20);
->  	if (r > (255 << 16))
-> @@ -630,9 +630,9 @@ static int clu_table_copy(struct rcar_du_cmm *du_cmm)
->  	}
->  
->  	rcar_du_cmm_write(du_cmm, dst_addr, 0);
-> -	for (i = 0; i < 17; i++) {
-> -		for (j = 0; j < 17; j++) {
-> -			for (k = 0; k < 17; k++) {
-> +	for (i = 0; i < CMM_CLU_SAMPLES; i++) {
-> +		for (j = 0; j < CMM_CLU_SAMPLES; j++) {
-> +			for (k = 0; k < CMM_CLU_SAMPLES; k++) {
->  				rcar_du_cmm_write(du_cmm, src_addr,
->  						  (k << 16) | (j << 8) |
->  						  (i << 0));
-> @@ -912,9 +912,9 @@ int rcar_du_cmm_pm_suspend(struct rcar_du_crtc *rcrtc)
->  	}
->  
->  	index = 0;
-> -	for (i = 0; i < 17; i++) {
-> -		for (j = 0; j < 17; j++) {
-> -			for (k = 0; k < 17; k++) {
-> +	for (i = 0; i < CMM_CLU_SAMPLES; i++) {
-> +		for (j = 0; j < CMM_CLU_SAMPLES; j++) {
-> +			for (k = 0; k < CMM_CLU_SAMPLES; k++) {
->  				rcar_du_cmm_write(du_cmm, CMM_CLU_ADDR,
->  						  (k << 16) | (j << 8) |
->  						  (i << 0));
-> @@ -1014,6 +1014,8 @@ void rcar_du_cmm_postclose(struct drm_device *dev, struct drm_file *file_priv)
->  	for (crtcs_cnt = 0; crtcs_cnt < rcdu->num_crtcs; crtcs_cnt++) {
->  		rcrtc = &rcdu->crtcs[crtcs_cnt];
->  		du_cmm = rcrtc->cmm_handle;
-> +		if (!du_cmm)
-> +			continue;
->  		if (du_cmm->authority && du_cmm->pid == task_pid_nr(current)) {
->  			du_cmm->authority = false;
->  			du_cmm->pid = 0;
-
--- 
-Regards,
-
-Laurent Pinchart
+>   drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> index 944c8894f9ff..c4a4f118f547 100644
+> --- a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> +++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
+> @@ -2659,8 +2659,7 @@ static int ieee80211_wpa_set_wpa_ie(struct ieee80211_device *ieee,
+>   {
+>   	u8 *buf;
+>   
+> -	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN ||
+> -	    (param->u.wpa_ie.len && param->u.wpa_ie.data == NULL))
+> +	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN || param->u.wpa_ie.len)
+>   		return -EINVAL;
+>   
+>   	if (param->u.wpa_ie.len) {
