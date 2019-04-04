@@ -2,88 +2,103 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF99C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D4EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4507C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250D32075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554366382;
+	bh=E0tZjvkI7J53dhAqhJll0NZeehgs2C9JqsaiWYJO7uM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sHAi40dxyx920sd0l5c4bX96iV8njB9m9f9M/CaQvo0BcNsMhgfCvnntuMKInd0RW
+	 I+t0Cra4pW2xnfReBOhKJ6a3Aj8mSbrekUkj6xT2rH8+U1f8AuEQ3ncujN/ghsOJqZ
+	 bsvtLfctPDBfmTsLF5n9o/Gp9DPXrRKZ/MGQnpbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfDDIZy (ORCPT
+        id S1727773AbfDDI0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:25:54 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:42880 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfDDIZy (ORCPT
+        Thu, 4 Apr 2019 04:26:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41935 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfDDI0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:25:54 -0400
-X-IronPort-AV: E=Sophos;i="5.60,306,1549954800"; 
-   d="scan'208";a="27638899"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 04 Apr 2019 01:25:54 -0700
-Received: from soft-dev3.microsemi.net (10.10.76.4) by
- CHN-SV-EXCH01.mchp-main.com (10.10.76.37) with Microsoft SMTP Server id
- 14.3.352.0; Thu, 4 Apr 2019 01:25:53 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <ralf@linux-mips.org>, <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH v2] MIPS: generic: Add switchdev, pinctrl and fit to ocelot_defconfig
-Date:   Thu, 4 Apr 2019 10:25:28 +0200
-Message-ID: <1554366328-16459-1-git-send-email-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 4 Apr 2019 04:26:20 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v7so1176176oie.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:26:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sm+ubi2aoz5iNjZnLSFliywOspeWlby/mafXZrAF1rE=;
+        b=oDFwjp2RTZudC/wAUc8u8cexUllxG49zkTpHx3QEfxg+kAqh3NJdVaLYczbkbq0i3h
+         ntdqh119pVuIx0HqzY7EGBwn+aAO+oul/XwRaWltQoL8Dycf8xZVORbnXLQEf54Vlm76
+         Ps5FRee9T6aEA0wB63RfKqiEMLVYyuS0ENtYsNdfZy6VqKtcergsM5ve6aGgF+zPNa/5
+         rG3xFUtyic4SBT92Lc5OJrgFtFdzkMs/Jvpm/1tR1D4IINe+Wknvh1eUMt/yJ5eMghcL
+         Ag+gajYTPkh82pEC+XA4mx2CcaRv2lJ2N/JOpMYuKMzj8IVtvb1Jcl9yUkYLuJk7YiO9
+         ubeA==
+X-Gm-Message-State: APjAAAUsYsaSsJ4vroggLgkRHtSzBOgy+1IE729FAPSlegNuCynnAKdJ
+        Ai60Wvn/JSdpBNs1aWHq2x/zXxH0Ec18G0vlhm0=
+X-Google-Smtp-Source: APXvYqyxOEv+Azbk6YisuI4IH+ikvziLRujR9m7xEcevpyyQMb1Qga3jBIYUUX404sOHkZow4o/YXlFVTQpWbtzGWgQ=
+X-Received: by 2002:aca:5c55:: with SMTP id q82mr2524874oib.95.1554366379490;
+ Thu, 04 Apr 2019 01:26:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190404081158.16133-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190404081158.16133-1-andriy.shevchenko@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 4 Apr 2019 10:26:08 +0200
+Message-ID: <CAJZ5v0jTBZbge7AMLwXNU5vAB31SFVe5pM-z6OHFDS2yhnuhfA@mail.gmail.com>
+Subject: Re: [PATCH v2] driver core: platform: Propagate error from insert_resource()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the configuration were not selected by default anymore, therefore
-enable them again. Also remove some configs which are used for MSCC Ocelot.
+On Thu, Apr 4, 2019 at 10:12 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Since insert_resource() might return an error we don't need
+> to shadow its error code and would safely propagate to the user.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- arch/mips/configs/generic/board-ocelot.config | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/arch/mips/configs/generic/board-ocelot.config b/arch/mips/configs/generic/board-ocelot.config
-index f607888..184eb65 100644
---- a/arch/mips/configs/generic/board-ocelot.config
-+++ b/arch/mips/configs/generic/board-ocelot.config
-@@ -1,6 +1,10 @@
- # require CONFIG_CPU_MIPS32_R2=y
- 
- CONFIG_LEGACY_BOARD_OCELOT=y
-+CONFIG_FIT_IMAGE_FDT_OCELOT=y
-+
-+CONFIG_BRIDGE=y
-+CONFIG_GENERIC_PHY=y
- 
- CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
-@@ -19,6 +23,8 @@ CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- 
- CONFIG_NETDEVICES=y
-+CONFIG_NET_SWITCHDEV=y
-+CONFIG_NET_DSA=y
- CONFIG_MSCC_OCELOT_SWITCH=y
- CONFIG_MSCC_OCELOT_SWITCH_OCELOT=y
- CONFIG_MDIO_MSCC_MIIM=y
-@@ -35,6 +41,8 @@ CONFIG_SPI_DESIGNWARE=y
- CONFIG_SPI_DW_MMIO=y
- CONFIG_SPI_SPIDEV=y
- 
-+CONFIG_PINCTRL_OCELOT=y
-+
- CONFIG_GPIO_SYSFS=y
- 
- CONFIG_POWER_RESET=y
--- 
-2.7.4
-
+> ---
+> - move an assignment to the separate line inside first branch (Rafael)
+>
+>  drivers/base/platform.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index dab0a5abc391..9cf9e2af9efd 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -438,10 +438,12 @@ int platform_device_add(struct platform_device *pdev)
+>                                 p = &ioport_resource;
+>                 }
+>
+> -               if (p && insert_resource(p, r)) {
+> -                       dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
+> -                       ret = -EBUSY;
+> -                       goto failed;
+> +               if (p) {
+> +                       ret = insert_resource(p, r);
+> +                       if (ret) {
+> +                               dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
+> +                               goto failed;
+> +                       }
+>                 }
+>         }
+>
+> --
+> 2.20.1
+>
