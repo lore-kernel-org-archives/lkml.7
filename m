@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C9AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2525E20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA34420652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369551;
-	bh=Box3/IRsUHV72fPY2zmCKTfvBMJqADvIbrwnOvbOLG0=;
+	s=default; t=1554369561;
+	bh=haRWVPJ/F9ttQsT1aoCjAQ44M8y7quAe12v/u/sni+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEUVX/gMyhah7B9VO2NHEUvijprRZOPwxDtj83efJyFPVt6iqF2qUq76O7DRwgqz1
-	 iboC0BY8Cp/ej5J0SSJO44mHsQ3cFPqF6RlTzcFYIFxGv996ZyLBsJpt6t3Bufasvb
-	 vJ5810lIl8QX41yX6P395MeOnT2RPeFWLkPLT3gw=
+	b=Gb2f4CblHeNJ3O9iIttfPyHS49M5KW8VndxOgQ4vCXsyLzDWJeTDDA7yg1n0BCBR5
+	 PFUGazPStpfx8ygq6jsKXcmW1cc05rpEnudYNQiXDHT8sKa92oK4kQbr3S0JKqMCK9
+	 KZI8oL3I1SfWd71a6cflaMPygKOsuA1dfKkHxSmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfDDJSV (ORCPT
+        id S2388055AbfDDJTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388341AbfDDJSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:18:16 -0400
+        id S2387495AbfDDJSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:18:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4AD42147C;
-        Thu,  4 Apr 2019 09:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D590E20652;
+        Thu,  4 Apr 2019 09:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369496;
-        bh=Box3/IRsUHV72fPY2zmCKTfvBMJqADvIbrwnOvbOLG0=;
+        s=default; t=1554369488;
+        bh=haRWVPJ/F9ttQsT1aoCjAQ44M8y7quAe12v/u/sni+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQs3JQAleEM/csXntDoJLif6K11ITGgSfSPt5d/wQ3ljPTgmIL2++CxtCeNNkQYzL
-         W6EfTs55M3JR2DjyK5UujctunbERTCh9Iqj0DlKmg+DGNkha4wtfS07jvzil0cW6kR
-         +H1kzgp0ABHuSe7KPJgoqhbGVDYdj08FZMEj11PM=
+        b=Ab4WS9P5WjLkHKNKgN3XEkQGQGtSTSgylWEs8LBhQ+BQJ2sWIQhtKbJo4OqnCdJcS
+         Gbb8/hadHkRx+XvtIoXPRQz+PlWrr6Zduju+nXxbrAXP7TthkcZkWbk34B/qvpRM7S
+         rIfxd6h/dJb/g+0igoGZXGTnVvfnuxoWjGMcXq3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        George Rimar <grimar@accesssoftek.com>,
+        Tri Vo <trong@android.com>, Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Michael Matz <matz@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>, morbo@google.com,
+        ruiu@google.com, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 238/246] Input: soc_button_array - fix mapping of the 5th GPIO in a PNP0C40 device
-Date:   Thu,  4 Apr 2019 10:48:58 +0200
-Message-Id: <20190404084627.626147874@linuxfoundation.org>
+Subject: [PATCH 5.0 227/246] x86/build: Specify elf_i386 linker emulation explicitly for i386 objects
+Date:   Thu,  4 Apr 2019 10:48:47 +0200
+Message-Id: <20190404084627.183125437@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,52 +72,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e9eb788f9442d1b5d93efdb30c3be071ce8a22b1 ]
+[ Upstream commit 927185c124d62a9a4d35878d7f6d432a166b74e3 ]
 
-The Microsoft documenation for the PNP0C40 device aka the
-"Windows-compatible button array" describes the 5th GpioInt listed in
-the resources as: '5. Interrupt corresponding to the "Rotation Lock"
-button, if supported'.
+The kernel uses the OUTPUT_FORMAT linker script command in it's linker
+scripts. Most of the time, the -m option is passed to the linker with
+correct architecture, but sometimes (at least for x86_64) the -m option
+contradicts the OUTPUT_FORMAT directive.
 
-Notice this describes the 5th entry as a button while we sofar have been
-mapping it to EV_SW, SW_ROTATE_LOCK. On my Point of View TAB P1006W-232
-which actually comes with a rotation-lock button, the button indeed is a
-button and not a slider/switch. An image search for other Windows tablets
-has found 2 more models with a rotation-lock button and on both of those
-it too is a push-button and not a slider/switch.
+Specifically, arch/x86/boot and arch/x86/realmode/rm produce i386 object
+files, but are linked with the -m elf_x86_64 linker flag when building
+for x86_64.
 
-Further evidence can be found in the HUT extension HUTRR52 from Microsoft
-which adds rotation lock support to the HUT, which describes 2 different
-usages: "0xC9 System Display Rotation Lock Button" and
-"0xCA System Display Rotation Lock Slider Switch" note that switch is seen
-as a separate thing here and the non switch wording is an exact match for
-the "Windows-compatible button array" spec wording.
+The GNU linker manpage doesn't explicitly state any tie-breakers between
+-m and OUTPUT_FORMAT. But with BFD and Gold linkers, OUTPUT_FORMAT
+overrides the emulation value specified with the -m option.
 
-TL;DR: our current mapping of the 5th GPIO to SW_ROTATE_LOCK is wrong
-because the 5th GPIO is for a push-button not a switch.
+LLVM lld has a different behavior, however. When supplied with
+contradicting -m and OUTPUT_FORMAT values it fails with the following
+error message:
 
-This commit fixes this by maping the 5th GPIO to KEY_ROTATE_LOCK_TOGGLE.
+  ld.lld: error: arch/x86/realmode/rm/header.o is incompatible with elf_x86_64
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Therefore, just add the correct -m after the incorrect one (it overrides
+it), so the linker invocation looks like this:
+
+  ld -m elf_x86_64 -z max-page-size=0x200000 -m elf_i386 --emit-relocs -T \
+    realmode.lds header.o trampoline_64.o stack.o reboot.o -o realmode.elf
+
+This is not a functional change for GNU ld, because (although not
+explicitly documented) OUTPUT_FORMAT overrides -m EMULATION.
+
+Tested by building x86_64 kernel with GNU gcc/ld toolchain and booting
+it in QEMU.
+
+ [ bp: massage and clarify text. ]
+
+Suggested-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: George Rimar <grimar@accesssoftek.com>
+Signed-off-by: Tri Vo <trong@android.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tri Vo <trong@android.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Michael Matz <matz@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: morbo@google.com
+Cc: ndesaulniers@google.com
+Cc: ruiu@google.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190111201012.71210-1-trong@android.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/soc_button_array.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/Makefile        | 2 +-
+ arch/x86/realmode/rm/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-index 23520df7650f..55cd6e0b409c 100644
---- a/drivers/input/misc/soc_button_array.c
-+++ b/drivers/input/misc/soc_button_array.c
-@@ -373,7 +373,7 @@ static struct soc_button_info soc_button_PNP0C40[] = {
- 	{ "home", 1, EV_KEY, KEY_LEFTMETA, false, true },
- 	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
- 	{ "volume_down", 3, EV_KEY, KEY_VOLUMEDOWN, true, false },
--	{ "rotation_lock", 4, EV_SW, SW_ROTATE_LOCK, false, false },
-+	{ "rotation_lock", 4, EV_KEY, KEY_ROTATE_LOCK_TOGGLE, false, false },
- 	{ }
- };
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 9b5adae9cc40..e2839b5c246c 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -100,7 +100,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
+ AFLAGS_header.o += -I$(objtree)/$(obj)
+ $(obj)/header.o: $(obj)/zoffset.h
  
+-LDFLAGS_setup.elf	:= -T
++LDFLAGS_setup.elf	:= -m elf_i386 -T
+ $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
+ 	$(call if_changed,ld)
+ 
+diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
+index 4463fa72db94..96cb20de08af 100644
+--- a/arch/x86/realmode/rm/Makefile
++++ b/arch/x86/realmode/rm/Makefile
+@@ -47,7 +47,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+ targets += realmode.lds
+ $(obj)/realmode.lds: $(obj)/pasyms.h
+ 
+-LDFLAGS_realmode.elf := --emit-relocs -T
++LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
+ CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
+ 
+ targets += realmode.elf
 -- 
 2.19.1
 
