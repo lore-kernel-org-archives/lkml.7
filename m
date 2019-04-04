@@ -2,211 +2,274 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4824EC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D12C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EAD20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27CC206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfDDSSy (ORCPT
+        id S1729679AbfDDSTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:18:54 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:54046 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfDDSSx (ORCPT
+        Thu, 4 Apr 2019 14:19:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52170 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727310AbfDDSTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:18:53 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id DB43B72CC8C;
-        Thu,  4 Apr 2019 21:18:49 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id C30037CCE4F; Thu,  4 Apr 2019 21:18:49 +0300 (MSK)
-Date:   Thu, 4 Apr 2019 21:18:49 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
+        Thu, 4 Apr 2019 14:19:55 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34IGdJB007070
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 14:19:54 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rnncx4tuv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 14:19:53 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 4 Apr 2019 19:19:50 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Apr 2019 19:19:46 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34IJjTU20775084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Apr 2019 18:19:45 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBFCEB206A;
+        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE162B205F;
+        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7DDEC16C1D70; Thu,  4 Apr 2019 11:19:46 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 11:19:46 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
         Kees Cook <keescook@chromium.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Dave Martin <dave.martin@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org
-Subject: Re: [PATCH 6/6 v3] syscalls: Remove start and number from
- syscall_set_arguments() args
-Message-ID: <20190404181849.GA8711@altlinux.org>
-References: <20190401134104.676620247@goodmis.org>
- <20190401134421.442323029@goodmis.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH] Convert struct pid count to refcount_t
+Reply-To: paulmck@linux.ibm.com
+References: <20190404152314.GG14111@linux.ibm.com>
+ <Pine.LNX.4.44L0.1904041138070.1288-100000@iolanthe.rowland.org>
+ <20190404180842.GB183378@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190401134421.442323029@goodmis.org>
+In-Reply-To: <20190404180842.GB183378@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040418-2213-0000-0000-0000037178EA
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184313; UDB=6.00620099; IPR=6.00965066;
+ MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 18:19:49
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040418-2214-0000-0000-00005DE76509
+Message-Id: <20190404181946.GJ14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 04, 2019 at 02:08:42PM -0400, Joel Fernandes wrote:
+> Thanks a lot Paul and Allen, I replied below.
+> 
+> On Thu, Apr 04, 2019 at 12:01:32PM -0400, Alan Stern wrote:
+> > On Thu, 4 Apr 2019, Paul E. McKenney wrote:
+> > 
+> > > On Mon, Apr 01, 2019 at 05:11:39PM -0400, Joel Fernandes wrote:
+> > 
+> > > > > > So I would have expected the following litmus to result in Never, but it
+> > > > > > doesn't with Alan's patch:
+> > > > > > 
+> > > > > > P0(int *x, int *y)
+> > > > > > {
+> > > > > > 	*x = 1;
+> > > > > > 	smp_mb();
+> > > > > > 	*y = 1;
+> > > > > > }
+> > > > > > 
+> > > > > > P1(int *x, int *y)
+> > > > > > {
+> > > > > > 	int r1;
+> > > > > > 
+> > > > > > 	r1 = READ_ONCE(*y);
+> > > > > > 	if (r1)
+> > > > > > 		WRITE_ONCE(*x, 2);
+> > > > > > }
+> > > > > > 
+> > > > > > exists (1:r1=1 /\ ~x=2)
+> > > > > 
+> > > > > The problem is that the compiler can turn both of P0()'s writes into reads:
+> > > > > 
+> > > > > P0(int *x, int *y)
+> > > > > {
+> > > > > 	if (*x != 1)
+> > > > > 		*x = 1;
+> > > > > 	smp_mb();
+> > > > > 	if (*y != 1)
+> > > > > 		*y = 1;
+> > > > > }
+> > > > > 
+> > > > > These reads will not be ordered by smp_wmb(), so you have to do WRITE_ONCE()
+> > > > > to get an iron-clad ordering guarantee.
+> > > > 
+> > > > But the snippet above has smp_mb() which does order writes, even for the
+> > > > plain accesses.
+> > > 
+> > > True, but that code has a data race, namely P0()'s plain write to y
+> > > races with P1()'s READ_ONCE().  Data races give the compiler absolutely
+> > > astonishing levels of freedom to rearrange your code.  So, if you
+> > > as a developer or maintainer choose to have data races, it is your
+> > > responsibility to ensure that the compiler cannot mess you up.  So what
+> > > you should do in that case is to list the transformed code the compiler's
+> > > optimizations can produce and feed the corresponding litmus tests to LKMM,
+> > > using READ_ONCE() and WRITE_ONCE() for the post-optimization accesses.
+> > 
+> > In this case, I strongly suspect the compiler would not mess up the
+> > code badly enough to allow the unwanted end result.  But the LKMM tries
+> > to avoid making strong assumptions about what compilers will or will
+> > not do.
+> 
+> Here I was just trying to understand better how any kind of code
+> transformation can cause an issue. Certainly I can see an issue if the
+> compiler uses the memory location as a temporary variable as Paul pointed, to
+> which I agree that a WRITE_ONCE is better. I am in favor of being careful,
+> but here I was just trying to understand this better.
+> 
+> > > > I understand. Are we talking about load/store tearing being the issue here?
+> > > > Even under load/store tearing, I feel the program will produce correct
+> > > > results because r1 is either 0 or 1 (a single bit cannot be torn).
+> > > 
+> > > The compiler can (at least in theory) also transform *y = 1 as follows:
+> > > 
+> > > 	*y = r1; /* Use *y as temporary storage. */
+> > > 	do_something();
+> > > 	r1 = *y;
+> > > 	*y = 1;
+> > > 
+> > > Here r1 is some register and do_something() is an inline function visible
+> > > to the compiler (hence not implying barrier() upon call and return).
+> > > 
+> > > I don't know of any compilers that actually do this, but for me use
+> > > of WRITE_ONCE() is a small price to pay to prevent all past, present,
+> > > and future compiler from ever destroying^W optimizing my code in this way.
+> > > 
+> > > In your own code, if you dislike WRITE_ONCE() so much that you are willing
+> > > to commit to (now and forever!!!) checking all applicable versions of
+> > > compilers to make sure that they don't do this, well and good, knock
+> > > yourself out.  But it is your responsibility to do that checking, and you
+> > > can attest to LKMM that you have done so by giving LKMM litmus tests that
+> > > substitute WRITE_ONCE() for that plain C-language assignment statement.
+> > 
+> > Remember that the LKMM does not produce strict bounds.  That is, the
+> > LKMM will say that some outcomes are allowed even though no existing
+> > compiler/CPU combination would ever actually produce them.  This litmus
+> > test is an example.
+> 
+> Ok.
+> 
+> > > > Further, from the herd simulator output (below), according to the "States",
+> > > > r1==1 means P1() AFAICS would have already finished the the read and set the
+> > > > r1 register to 1.  Then I am wondering why it couldn't take the branch to set
+> > > > *x to 2.  According to herd, r1 == 1 AND x == 1 is a perfectly valid state
+> > > > for the below program. I still couldn't see in my mind how for the below
+> > > > program, this is possible - in terms of compiler optimizations or other kinds
+> > > > of ordering. Because there is a smp_mb() between the 2 plain writes in P0()
+> > > > and P1() did establish that r1 is 1 in the positive case. :-/.  I am surely
+> > > > missing something :-)
+> > > > 
+> > > > ---8<-----------------------
+> > > > C Joel-put_pid
+> > > > 
+> > > > {}
+> > > > 
+> > > > P0(int *x, int *y)
+> > > > {
+> > > > 	*x = 1;
+> > > > 	smp_mb();
+> > > > 	*y = 1;
+> > > > }
+> > > > 
+> > > > P1(int *x, int *y)
+> > > > {
+> > > > 	int r1;
+> > > > 
+> > > > 	r1 = READ_ONCE(*y);
+> > > > 	if (r1)
+> > > > 		WRITE_ONCE(*x, 2);
+> > > > }
+> > > > 
+> > > > exists (1:r1=1 /\ ~x=2)
+> > > > 
+> > > > ---8<-----------------------
+> > > > Output:
+> > > > 
+> > > > Test Joel-put_pid Allowed
+> > > > States 3
+> > > > 1:r1=0; x=1;
+> > > > 1:r1=1; x=1;	<-- Can't figure out why r1=1 and x != 2 here.
+> > > 
+> > > I must defer to Alan on this, but my guess is that this is due to
+> > > the fact that there is a data race.
+> > 
+> > Yes, and because the plain-access/data-race patch for the LKMM was
+> > intended only to detect data races, not to be aware of all the kinds of
+> > ordering that plain accesses can induce.  I said as much at the start
+> > of the patch's cover letter and it bears repeating.
+> > 
+> > In this case it is certainly true that the "*x = 1" write must be
+> > complete before the value of *y is changed from 0.  Hence P1's
+> > WRITE_ONCE will certainly overwrite the 1 with 2, and the final value
+> > of *x will be 2 if r1=1.
+> > 
+> > But the notion of "visibility" of a write that I put into the LKMM
+> > patch only allows for chains of marked accesses.  Since "*y = 1" is a
+> > plain access, the model does not recognize that it can enforce the
+> > ordering between the two writes to *x.
+> > 
+> > Also, you must remember, the LKMM's prediction about whether an outcome
+> > will or will not occur are meaningless if a data race is present.  
+> > Therefore the most fundamental the answer to why the "1:r1=1; x=1;"  
+> > line is there is basically what Paul said: It's there because the
+> > herd model gets completely messed up by data races.
+> 
+> Makes sense to me. Thanks for the good work on this.
+> 
+> FWIW, thought to mention (feel free ignore the suggestion if its
+> meaningless): If there is any chance that the outcome can be better
+> outputted, like r1=X; x=1; Where X stands for the result of a data race, that
+> would be lovely.  I don't know much about herd internals (yet) to say if the
+> suggestion makes sense but as a user, it would certainly help reduce
+> confusion.
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The "Flag data-race" that appeared in the herd output is your friend in
+this case.  If you see that in the output, that means that herd detected
+a data race, and the states output might or might not be reliable.
 
-On Mon, Apr 01, 2019 at 09:41:10AM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
->=20
-> After removing the start and count arguments of syscall_get_arguments() it
-> seems reasonable to remove them from syscall_set_arguments(). Note, as of
-> today, there are no users of syscall_set_arguments(). But we are told that
-> there will be soon. But for now, at least make it consistent with
-> syscall_get_arguments().
->=20
-> Link: http://lkml.kernel.org/r/20190327222014.GA32540@altlinux.org
+							Thanx, Paul
 
-FWIW, you can add
-Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
-=20
-There are two places listed below where I'd prefer to see more readable
-equivalents, but feel free to leave it to respective arch maintainers.
-
-> diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/sy=
-scall.h
-> index 89a6ec8731d8..671ebd357496 100644
-> --- a/arch/nds32/include/asm/syscall.h
-> +++ b/arch/nds32/include/asm/syscall.h
-> @@ -129,39 +129,20 @@ void syscall_get_arguments(struct task_struct *task=
-, struct pt_regs *regs,
->   * syscall_set_arguments - change system call parameter value
->   * @task:	task of interest, must be in system call entry tracing
->   * @regs:	task_pt_regs() of @task
-> - * @i:		argument index [0,5]
-> - * @n:		number of arguments; n+i must be [1,6].
->   * @args:	array of argument values to store
->   *
-> - * Changes @n arguments to the system call starting with the @i'th argum=
-ent.
-> - * Argument @i gets value @args[0], and so on.
-> - * An arch inline version is probably optimal when @i and @n are constan=
-ts.
-> + * Changes 6 arguments to the system call. The first argument gets value
-> + * @args[0], and so on.
->   *
->   * It's only valid to call this when @task is stopped for tracing on
->   * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUD=
-IT.
-> - * It's invalid to call this with @i + @n > 6; we only support system ca=
-lls
-> - * taking up to 6 arguments.
->   */
->  void syscall_set_arguments(struct task_struct *task, struct pt_regs *reg=
-s,
-> -			   unsigned int i, unsigned int n,
->  			   const unsigned long *args)
->  {
-> -	if (n =3D=3D 0)
-> -		return;
-> -
-> -	if (i + n > SYSCALL_MAX_ARGS) {
-> -		pr_warn("%s called with max args %d, handling only %d\n",
-> -			__func__, i + n, SYSCALL_MAX_ARGS);
-> -		n =3D SYSCALL_MAX_ARGS - i;
-> -	}
-> -
-> -	if (i =3D=3D 0) {
-> -		regs->orig_r0 =3D args[0];
-> -		args++;
-> -		i++;
-> -		n--;
-> -	}
-> +	regs->orig_r0 =3D args[0];
-> +	args++;
-> =20
-> -	memcpy(&regs->uregs[0] + i, args, n * sizeof(args[0]));
-> +	memcpy(&regs->uregs[0] + 1, args, 5 * sizeof(args[0]));
->  }
-
-A shorter and slightly more readable equivalent of the last memcpy is
-
-	memcpy(&regs->uregs[1], args, 5 * sizeof(args[0]));
-
-> diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/sysc=
-all.h
-> index ee0b1f6aa36d..59c3e91f2cdb 100644
-> --- a/arch/s390/include/asm/syscall.h
-> +++ b/arch/s390/include/asm/syscall.h
-> @@ -74,15 +74,14 @@ static inline void syscall_get_arguments(struct task_=
-struct *task,
-> =20
->  static inline void syscall_set_arguments(struct task_struct *task,
->  					 struct pt_regs *regs,
-> -					 unsigned int i, unsigned int n,
->  					 const unsigned long *args)
->  {
-> -	BUG_ON(i + n > 6);
-> +	unsigned int n =3D 6;
-> +
->  	while (n-- > 0)
-> -		if (i + n > 0)
-> -			regs->gprs[2 + i + n] =3D args[n];
-> -	if (i =3D=3D 0)
-> -		regs->orig_gpr2 =3D args[0];
-> +		if (n > 0)
-> +			regs->gprs[2 + n] =3D args[n];
-> +	regs->orig_gpr2 =3D args[0];
->  }
-
-A shorter and slightly more readable equivalent of the loop is
-
-	while (--n > 0)
-		regs->gprs[2 + n] =3D args[n];
-
-
---=20
-ldv
-
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcpkqJAAoJEAVFT+BVnCUIkZ4QAOj5yCToMhv0yo7mY8ZiYOeM
-4W75B2oenIbr0XPjODdE7bJ8Zz2aWXIy8ivTN5TkHPrhXeqD/+TrvHc8SIlGGZaQ
-RCkrjp8yN0vTWNQQyZ0QrAu27Z0bLMcM2RMTHYFHIKtIN9y/6FqOy+KFHBX+XTHs
-wRtrmxXaOg6tFsrw5ljEZJEPn4hiTStgTUNuUWfFHJ45xkLm/Xl1xy5I+q0vSTRe
-2TVfqiAgRND0rwyLCQnc6Q9A+eG/tojEI/yBeaePhNVc2aT8kjbopkH9ppxMf83s
-FR+Hy0IcJpSUEmNDPzFJ5dR4oTXVXSgxsVacQLbI1cYXZmFbe4kbmCArmS40Z1ID
-ETWm8m9repzEYVjVCGXNcPeZHwY6qm5V8TNSJYkuNdYLO/G5ViBSjNe/4EPp7Jsy
-U63M5VuKOWMfEW5JL3KV17+xKjQ8ehpeBWo9+CYRQlbjlmDfjL9CPqC+W0qWUcQn
-ID3Ifll16M/ERzBRky4+XTlNHBRIUnKsolQY+b8V9WL7F7FZAbi0EGOSBAiLIcYd
-f2JeixCHd3ax9okr0/3F3O0TWxRMfaId+9yxz8dUJUcDZ/QuMMzymnKYrmXN0Sug
-TwaWCVXiIhl3jYCF+AbJNA0dz72Jj4rz4PzQChRwagZEa5bGCRuzgU931k7xnobH
-JOoCPu0p7CEMVSeyAENw
-=xrhw
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
