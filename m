@@ -2,151 +2,111 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD0AC10F17
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 04:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1927DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 04:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B14A21850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 04:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Tx+GE/ky"
+	by mail.kernel.org (Postfix) with ESMTP id E331B2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 04:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfDEEOP (ORCPT
+        id S1726435AbfDEEUc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 00:14:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38845 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfDEEOP (ORCPT
+        Fri, 5 Apr 2019 00:20:32 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:55201 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEEUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 00:14:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w15so5636558wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 21:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mBHVrWRKGZevbfTKeXKRxI9gf6sJ5d1z7tzrVixC8Jk=;
-        b=Tx+GE/kyMVuyulYFD856bWPolojQWzZWKuGBYAyKjK0wSk4YRKTXZo6o4ZTOpJgsos
-         XQLvCcklGLmb66PPfiTWzUIWKIvNAVr6bC4EK1694Bit61uQlb1nNs67L+xwuxdl+PdX
-         h4ivnwEstWB2XAVo/kCN4+ygPl9oCOa/pI2nucctjYQjixoE9p2B2NieLcCvq/smEOzv
-         TWdJ2OrpLVzl1UGmcl93EOStMTOnOap/+WLoODhnByD6uG4l10NgxaH2EN6fKYZwp6i0
-         DCLg5XXKc7J3QjtjAUdqw6/870X0w+b8BWvDHsIQYMwDs6d1as/suV81ZZ8FMq7MVqoA
-         PVvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mBHVrWRKGZevbfTKeXKRxI9gf6sJ5d1z7tzrVixC8Jk=;
-        b=GFSeHd8pO9rTHLjfK9YSQlhxgaYSaBr1cl/f38Z5yWKZ17djqR+dD36735kwyJagLj
-         5dOk4y/ny7EraZJ8zsHEXLBiZAauzi8yyh1p7NqAm84FsBsgaDqhl+Zt4W0ypdqZ9ui4
-         xpm+4GrL9HliSbpZOPUpQoSuveiQV70BznkqTYLqqnHYP3/mE5vmI+R6wDXs78iA9nhL
-         de4aOzoqQXLzVaXXdlrsRB2+C9lQNvOZupY/w7yUzDBMInXcPxOhNhvGdZSQhkW7MsoX
-         XGEkE4EvgNB3yEm9tW2TaoVGOMXH6SuhK/YLx5VjsHTcKOdpO4eNMGDxsCTiRWGFT5MQ
-         UEKg==
-X-Gm-Message-State: APjAAAVLYf2M5yLbIyRBC4roRDhFHJT54WXRrbJlr9jqFxQoN7upEjwR
-        XPYDAARMCBNmZ3EflUy37wYf5q6uRQQfvgKpZ9Z/Pw==
-X-Google-Smtp-Source: APXvYqwPwBhxwnnbbp3Ou8kLLLXWzsVJNsanwq1En96de4XmSJmraw5HwQdVPcemwbBdE1cB9aXLGHM13X9Zf6iRDW8=
-X-Received: by 2002:a1c:1f08:: with SMTP id f8mr5700645wmf.97.1554437653482;
- Thu, 04 Apr 2019 21:14:13 -0700 (PDT)
+        Fri, 5 Apr 2019 00:20:32 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x354K9gA029556
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 13:20:09 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x354K8nt004149;
+        Fri, 5 Apr 2019 13:20:09 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x354JrIL002608;
+        Fri, 5 Apr 2019 13:20:08 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.138] [10.38.151.138]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-4012596; Fri, 5 Apr 2019 13:19:52 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC10GP.gisp.nec.co.jp ([10.38.151.138]) with mapi id 14.03.0319.002; Fri, 5
+ Apr 2019 13:19:51 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Dave Young <dyoung@redhat.com>
+CC:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU6riZJD2HLBcqv0GoZn6cDbIQhqYsYU0A
+Date:   Fri, 5 Apr 2019 04:19:50 +0000
+Message-ID: <ddddba22-db88-0d1b-63e2-c70dc1346d0b@ce.jp.nec.com>
+References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
+ <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <054A1887037BE0429EE23D2F37416DC1@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190403141627.11664-1-steven.price@arm.com> <20190403141627.11664-7-steven.price@arm.com>
-In-Reply-To: <20190403141627.11664-7-steven.price@arm.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 5 Apr 2019 09:44:02 +0530
-Message-ID: <CAAhSdy0Hz25LYwA6U0byRfbbmgorjiTUhyHs8sQ81=qvhPANrw@mail.gmail.com>
-Subject: Re: [PATCH v8 06/20] riscv: mm: Add p?d_large() definitions
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 7:47 PM Steven Price <steven.price@arm.com> wrote:
->
-> walk_page_range() is going to be allowed to walk page tables other than
-> those of user space. For this it needs to know when it has reached a
-> 'leaf' entry in the page tables. This information is provided by the
-> p?d_large() functions/macros.
->
-> For riscv a page is large when it has a read, write or execute bit
-> set on it.
->
-> CC: Palmer Dabbelt <palmer@sifive.com>
-> CC: Albert Ou <aou@eecs.berkeley.edu>
-> CC: linux-riscv@lists.infradead.org
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/riscv/include/asm/pgtable-64.h | 7 +++++++
->  arch/riscv/include/asm/pgtable.h    | 7 +++++++
->  2 files changed, 14 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-> index 7aa0ea9bd8bb..73747d9d7c66 100644
-> --- a/arch/riscv/include/asm/pgtable-64.h
-> +++ b/arch/riscv/include/asm/pgtable-64.h
-> @@ -51,6 +51,13 @@ static inline int pud_bad(pud_t pud)
->         return !pud_present(pud);
->  }
->
-> +#define pud_large      pud_large
-> +static inline int pud_large(pud_t pud)
-> +{
-> +       return pud_present(pud)
-> +               && (pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-> +}
-> +
->  static inline void set_pud(pud_t *pudp, pud_t pud)
->  {
->         *pudp = pud;
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 1141364d990e..9570883c79e7 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -111,6 +111,13 @@ static inline int pmd_bad(pmd_t pmd)
->         return !pmd_present(pmd);
->  }
->
-> +#define pmd_large      pmd_large
-> +static inline int pmd_large(pmd_t pmd)
-> +{
-> +       return pmd_present(pmd)
-> +               && (pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-> +}
-> +
->  static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->  {
->         *pmdp = pmd;
-> --
-> 2.20.1
->
+On 4/4/19 4:32 PM, Dave Young wrote:
+> While we are still debuggin the bug I reproduced, but for this patch
+> I have still some comments inline.
+> 
+> BTW, it would be good to start a new thread when you send V4 :)
 
-Looks good to me.
+Sure.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+>> +	/* Get systab from boot params. */
+>> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+>> +	if (!systab)
+>> +		error("EFI system table not found in kexec boot_params.");
+> 
+> Instead of hang the system, return 0 should be better
 
-Regards,
-Anup
+OK. I'll make it something like:
+	if (!systab) {
+		debug_putstr(...);
+		return 0;
+	}
+
+>>  	if (!pa)
+>> +		pa = kexec_get_rsdp_addr();
+>> +
+>> +	if (!pa)
+>>  		pa = efi_get_rsdp_addr();
+> 
+> In case kexec_get_rsdp_addr failed, above code will try efi_get.. again,
+> but that will also fail for same issue this patch is fixing.  In case
+> kexec we should avoid the efi_get_rsdp_addr.
+
+Yeah, I'll set efi_kexec_booted to true in kexec_get_rsdp_addr() if it's
+kexec booted so that efi_get_rsdp_addr() can exit early in such a case.
+
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
