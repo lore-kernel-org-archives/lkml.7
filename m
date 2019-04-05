@@ -2,125 +2,122 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624E1C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153D0C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B3721738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D840321738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEKEA6Ah"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fW+DzFqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbfDESiO (ORCPT
+        id S1731733AbfDESjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:38:14 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44323 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731087AbfDESiO (ORCPT
+        Fri, 5 Apr 2019 14:39:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51164 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731654AbfDESjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:38:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id u12so5802312iop.11;
-        Fri, 05 Apr 2019 11:38:13 -0700 (PDT)
+        Fri, 5 Apr 2019 14:39:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z11so7787358wmi.0;
+        Fri, 05 Apr 2019 11:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sS1MDVcP9r8rd8f/Exb154TT9Pe2vw4MwASpFoeBNoE=;
-        b=OEKEA6AhIGiHUXjs6I7gxdrB+jYBDwbuCuSyfNVLfU4hksvGGpA32eKnlzBNd9fpO0
-         vbhqYnmEZhy2ixp9GeK+ssXiKDBgLpuIKENghfC+N3WSDFw5uSz0XvLUy0bMR3rckAsW
-         CFYvoM9TbEIOIROpsBi5rcDWJI9bwwa3KmrULyAODt6nl8nktSYfOoAK6yKMzPH1Uc5f
-         NQaCm1+3A/Zn41WhspyJ2D2ALL6dvk0ZEvWdh6HeiQfErIkQIYZLTWOF3CnrIJj74zqj
-         5JCh1JH+zUoyMalK4pMhP57ijCmvMr/cNVf1I07JOXUcAm9fTZuIJ4uIEDQi82+phMwi
-         jMCQ==
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=mnvm+9lesrHyZqhSf2DoFjOXCqh3DHNocnRafDoBvnU=;
+        b=fW+DzFqFbD0upjz5OkgEDADjshaXIn/BqDQfjGmGCp0SyMyNq+tUgh1wDQOQQJOCAv
+         ux5g8dkXO1zIXUoYYPvYXWM4PcldnpGN4qZnGDK1fimCYWf4O0QWDPNa+l43Sg3SeFRp
+         vSSxUk49v7w6uFirCi69WEk9bkSUiqHH2nSAqcI2VAznXYI3fsrnv6Cw2QZT2cpHonxf
+         ocCqGdPdmGzAS/9cLCyfXo3bO2U6zilGt6h01b0CWidL+mShhd53LNE45cEokGdfutlW
+         iH6wDl5q8kYPoUL8ITA5Aa+Yv8nWJePWTwduUQsnnH8EVDyZhvwg9jU2JU+9cfgTloxd
+         9CaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sS1MDVcP9r8rd8f/Exb154TT9Pe2vw4MwASpFoeBNoE=;
-        b=YQa3c9uHoDW2gWXqCOLCtZjJMWrVKkRDq1tHtz4ltDl8wKakpC4LRwal3hb8c/fKkj
-         ZyPBYcChT0aFo+cPRQqTbouFbil5CsbL7+2ewY7BlMoaT6yHRxQedtXrkyhlIMrOiZBo
-         HuyOejAYcTlh4m+hcCjsO686Wsmo9FDMSvKHWtx545FmzRaE9j9trDhEhJ8zGRdIj5b8
-         q/FKrGr9KdWpHG2cEP33H0/sMAwric+gOlmstirBGFB0m8i9N5uTqzIFhNVYYsGkoMvr
-         ACvBvGrUarw3fhTxaEdVQN08gDZtO+M2bwCoP3AYIp2fXqRwC4UVTLlP0Mp1CM8XdZy/
-         hrrw==
-X-Gm-Message-State: APjAAAXAvW8LMiCYzVPh4+02FxYKC6hAQ91yeYCLWIzG6MBDB3M+Qb8H
-        GAjbCZiVH0ZOwLgLumIRBG6se8VUfsoli7KwCYr/lA==
-X-Google-Smtp-Source: APXvYqyG4F6Lt0S/J6prNWk5ZrnsCexXsN05mCC3c0beC1gZM21C9BbV+FPlU1z50dSBj2sxY+LYzTWaMw2JPAq4Bvo=
-X-Received: by 2002:a6b:c981:: with SMTP id z123mr8934997iof.123.1554489493162;
- Fri, 05 Apr 2019 11:38:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=mnvm+9lesrHyZqhSf2DoFjOXCqh3DHNocnRafDoBvnU=;
+        b=iVnI2Eq5BspUtHNv3cWAgmggRAg9pGeJxwRJQsVp2ZRzmoOUJK+1zyU5Y44Yf3ieBz
+         hSyQTmcUj5OPtvCjxEHAacdHg7bmsvhzsxucRzgvI+6Vm6tW3qdqhQ9bF3gX3NgiGnAl
+         D23uxyd/qlU8h31Ls9JTfBU9xoo5esKMGaMJshMyWkBfnITQ6c2BUVaBeQMPabRrh69G
+         HxwU7yYhKM4f3V6JD4IsVhvvHNXShNMmTObGI44ZwQoz+H6b1A4p7qCfUh8wi4bLIbBk
+         PzRvnuSU1+ShpkjxunFFEeveP4ATBL3/ldJi2lrfHug+3sVodBW0Buf05gfuCdKk8Rta
+         fQtg==
+X-Gm-Message-State: APjAAAXfUz9ltdOdGk/1gxJ7j6sBU82Pu8KWZrVAlRAScVwqpDlfu3au
+        GTRPtNxXUNi+s/KR0ZEoZaU=
+X-Google-Smtp-Source: APXvYqzd32h1p6+liIpTJLGKdw02MqhYo0FSBEMYzOa7UyDUwduaaOWFBxvy9zOJLHzHpX2uhTHdRA==
+X-Received: by 2002:a1c:9cd1:: with SMTP id f200mr9086912wme.91.1554489542281;
+        Fri, 05 Apr 2019 11:39:02 -0700 (PDT)
+Received: from X555LD ([2a02:85f:510:b900:9cd8:5174:23da:3e1d])
+        by smtp.gmail.com with ESMTPSA id z13sm30968302wrw.36.2019.04.05.11.38.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Apr 2019 11:39:01 -0700 (PDT)
+Date:   Fri, 05 Apr 2019 21:38:57 +0300
+From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: Re: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
+ offload for rockchip devices
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jose Abreu <jose.abreu@synopsys.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>,
+        Christoph =?iso-8859-1?q?M=FCllner?= 
+        <christoph.muellner@theobroma-systems.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>
+Message-Id: <1554489537.1199.0@gmail.com>
+In-Reply-To: <85c1d945-d49b-3350-6ff4-a058c5a8c1d7@arm.com>
+References: <20190401181840.31255-1-papadakospan@gmail.com>
+        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
+        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
+        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
+        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
+        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
+        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
+        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
+        <1554305721.1328.0@gmail.com> <1554306954.1328.1@gmail.com>
+        <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
+        <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
+        <1554488052.1193.1@gmail.com> <85c1d945-d49b-3350-6ff4-a058c5a8c1d7@arm.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-14-andrew.smirnov@gmail.com> <4c6ef4cb-8214-cda6-bfa9-8f0887fc2170@linaro.org>
-In-Reply-To: <4c6ef4cb-8214-cda6-bfa9-8f0887fc2170@linaro.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 5 Apr 2019 11:38:00 -0700
-Message-ID: <CAHQ1cqGfRCCD0vL+6xUWnHyL2FPQhMB=2f6nkdQ0wTWXZR0NCA@mail.gmail.com>
-Subject: Re: [PATCH v3 13/13] thermal: qoriq: Add hwmon support
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 2:12 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 01/04/2019 06:14, Andrey Smirnov wrote:
-> > Expose thermal readings as a HWMON device, so that it could be
-> > accessed using lm-sensors.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/thermal/qoriq_thermal.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> > index 9d227654f879..7fb9321a0d8c 100644
-> > --- a/drivers/thermal/qoriq_thermal.c
-> > +++ b/drivers/thermal/qoriq_thermal.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/thermal.h>
-> >
-> >  #include "thermal_core.h"
-> > +#include "thermal_hwmon.h"
-> >
-> >  #define SITES_MAX    16
-> >
-> > @@ -103,7 +104,10 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
-> >               case -ENODEV:
-> >                       continue;
-> >               case 0:
-> > -                     break;
-> > +                     ret = devm_thermal_add_hwmon_sysfs(tzd);
-> > +                     if (!ret)
-> > +                             break;
-> > +                     /* fallthrough */
->
-> Do we really want to disable the thermal zone if the hwmon fails to
-> register ?
 
-Original code already disables all thermal zones if any single one
-fails to register, so I though we may as well be as strict for hwmon
-registration as well. Doesn't have to be though. Will change in v4.
+> What's your overall setup? So far with my RK3328 box I've found that 
+> with an IPv4 link and an MTU of 2000 I have to dial PBL right down to 
+> 1 or 2 (with no-pbl-x8 as well) to prevent Tx stalling, and with the 
+> MTU bumped up to 3000 it just won't play at any PBL setting...
+> 
+> Robin.
 
-Thanks,
-Andrey Smirnov
+I'm using a Libre Computer Renegade with RK3328 SoC(maybe it's a board 
+specific thing?)
+I'm using txpbl as from what I can gather, the rx has no issues, no 
+need to change it.
+
+When it comes to rx,
+running the server (iperf3 -s) on the Renegade and iperf3 -c 
+<renegade_ip> on my laptop,
+I get about 940 Mbps. It's always been like that, satisfactory.
+
+When it comes to tx (the one all the fuss is about)
+I eventually find that just with snps,txpbl = <0x21>, and no other pbl 
+thing set I get about 905 Mbps on average sent to my laptop, now 
+running the iperf3 server.
+
+I must say I haven't touched the MTUs but I never needed to as the 
+issue presented itself in normal usage. Simple iperf tests will fail 
+after same kilobytes if no tweaks are applied.
+
+
