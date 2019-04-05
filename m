@@ -2,145 +2,155 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7822C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A73C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A097621726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C7C21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLsK7EXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfDEUzu (ORCPT
+        id S1726623AbfDEUz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 16:55:50 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54006 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbfDEUzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 16:55:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 13:55:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,313,1549958400"; 
-   d="scan'208";a="313516093"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga005.jf.intel.com with ESMTP; 05 Apr 2019 13:55:49 -0700
-Date:   Fri, 5 Apr 2019 13:55:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [patch V2 19/29] x86/exceptions: Split debug IST stack
-Message-ID: <20190405205549.GE15808@linux.intel.com>
-References: <20190405150658.237064784@linutronix.de>
- <20190405150930.129884669@linutronix.de>
+        Fri, 5 Apr 2019 16:55:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36441 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfDEUz6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 16:55:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z5so3915088pfn.3;
+        Fri, 05 Apr 2019 13:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6Mfz37qY9DmaYXfENP4Z+htB5yyptzgabJS8sJC+1/g=;
+        b=cLsK7EXo83ftfYOTyBJqTAC12dvy8KDTHjVvdfPkgHz0uFdkq2ATmiSsdu0J9dmErK
+         gh2E+pohWI5H0xjRhykVkr3+ImwMHcXSlZhTTlNob0dY0qjjn4Qcespyicawf2eCxRDB
+         BOUlRFzlYW8UgQHbN7LiF8Po9FQi84LAMKYTCWIy8CyOfAcpH4JNKD3uFDNcre6TkVoW
+         PJeFA/VyaZ1D3a1F3Sv7lizvV5vL+t77nIHiYihKIFecJw9RNJi/kS3iKBSA9FmyKwhw
+         DIXvLgi4HpZk/yiIJd2qpw0P2jKGeQ2L7TFESbOuzi/3X86s7XwzKZ4KcPtcBf+kALxe
+         Xx/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=6Mfz37qY9DmaYXfENP4Z+htB5yyptzgabJS8sJC+1/g=;
+        b=pjrYIwbIzFiz6ObDzVgavOvnJ9/UUC8aKxNqw0C/VzpXLmmyewzMC/E9aTyVKStyby
+         1Afb/QWfneHucdc0bPemgSoIJw0h9l010yDKqblTnfG2QmsbZEWeXALjLuoIdv4HtQMf
+         zvoOEMKY+k9JSBTAuga0QQ0EA5fja3wLLeU1i6NdefMhtOxgQAyn1pHxyZA6W14jIt58
+         8SZbB65f9+vAW0zWS0z2D3apNoetPge9ez2vDlR0ffItaQpWcz1b6CCGiKhpy2RWOe+P
+         RRRWUk1/mWFBcsvS6BoYDc1Z4TAPZKINe55HOTBhXB8ZJUs09upIRdIefEZA4fkBd+iv
+         Cr2Q==
+X-Gm-Message-State: APjAAAXeshD7Z/9VNNOCE4EUO54WRUCDvIWORlflDaURTq53cSl+RK/s
+        4s3uqhw4ZWdchzl+Rz6wjVI=
+X-Google-Smtp-Source: APXvYqyNaUd3JADUyZ7ZT1m0mFdGTzx84ccg0rxCeIA+60BVs8jccQjc8nS6oxalkt67P6jE51yQOA==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr15212949pfc.9.1554497757604;
+        Fri, 05 Apr 2019 13:55:57 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x6sm2373877pfb.171.2019.04.05.13.55.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 13:55:56 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 13:55:55 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] watchdog: alim7101: Mark expected switch fall-through
+Message-ID: <20190405205555.GA20974@roeck-us.net>
+References: <20190320181658.GA6749@embeddedor>
+ <e041fd69-0cbc-edb8-cc30-037b333e29cc@roeck-us.net>
+ <9a839da8-d2ba-a856-16a7-2ed180ca7864@embeddedor.com>
+ <779afa51-5700-ccb1-6761-b51e4227ef81@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190405150930.129884669@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <779afa51-5700-ccb1-6761-b51e4227ef81@embeddedor.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 05:07:17PM +0200, Thomas Gleixner wrote:
-> The debug IST stack is actually two separate debug stacks to handle #DB
-> recursion. This is required because the CPU starts always at top of stack
-> on exception entry, which means on #DB recursion the second #DB would
-> overwrite the stack of the first.
+On Fri, Apr 05, 2019 at 01:04:27PM -0500, Gustavo A. R. Silva wrote:
+> Hi all,
 > 
-> The low level entry code therefore adjusts the top of stack on entry so a
-> secondary #DB starts from a different stack page. But the stack pages are
-> adjacent without a guard page between them.
+> Friendly ping:
 > 
-> Split the debug stack into 3 stacks which are separated by guard pages. The
-> 3rd stack is never mapped into the cpu_entry_area and is only there to
-> catch triple #DB nesting:
-> 
->       --- top of DB_stack	<- Initial stack
->       --- end of DB_stack
->       	  guard page
-> 
->       --- top of DB1_stack	<- Top of stack after entering first #DB
->       --- end of DB1_stack
->       	  guard page
-> 
->       --- top of DB2_stack	<- Top of stack after entering second #DB
->       --- end of DB2_stack	   
->       	  guard page
-> 
-> If DB2 would not act as the final guard hole, a second #DB would point the
-> top of #DB stack to the stack below #DB1 which would be valid and not catch
-> the not so desired triple nesting.
-> 
-> The backing store does not allocate any memory for DB2 and its guard page
-> as it is not going to be mapped into the cpu_entry_area.
-> 
->  - Adjust the low level entry code so it adjusts top of #DB with the offset
->    between the stacks instead of exception stack size.
-> 
->  - Make the dumpstack code aware of the new stacks.
-> 
->  - Adjust the in_debug_stack() implementation and move it into the NMI code
->    where it belongs. As this is NMI hotpath code, it just checks the full
->    area between top of DB_stack and bottom of DB1_stack without checking
->    for the guard page. That's correct because the NMI cannot hit a
->    stackpointer pointing to the guard page between DB and DB1 stack.  Even
->    if it would, then the NMI operation still is unaffected, but the resume
->    of the debug exception on the topmost DB stack will crash by touching
->    the guard page.
-> 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
+> Who can take this?
 
-...
+I added it to my watchdog-next branch. Usually Wim will pick it up from there.
 
-> +static bool notrace is_debug_stack(unsigned long addr)
-> +{
-> +	struct cea_exception_stacks *cs = __this_cpu_read(cea_exception_stacks);
-> +	unsigned long top = CEA_ESTACK_TOP(cs, DB);
-> +	unsigned long bot = CEA_ESTACK_BOT(cs, DB1);
-> +
-> +	if (__this_cpu_read(debug_stack_usage))
-> +		return true;
-> +	/*
-> +	 * Note, this covers the guard page between DB and DB1 as well to
-> +	 * avoid two checks. But by all means @addr can never point into
-> +	 * the guard page.
-> +	 */
-> +	return addr > bot && addr < top;
+Guenter
 
-Isn't this an off by one error?  I.e. "return addr >= bot && addr < top".
-%rsp == bot is technically still in the DB1 stack even though the next
-PUSH/CALL will explode on the guard page.
-
-
-> +}
-> +NOKPROBE_SYMBOL(is_debug_stack);
->  #endif
->  
->  dotraplinkage notrace void
-> --- a/arch/x86/mm/cpu_entry_area.c
-> +++ b/arch/x86/mm/cpu_entry_area.c
-> @@ -98,10 +98,12 @@ static void __init percpu_setup_exceptio
->  
->  	/*
->  	 * The exceptions stack mappings in the per cpu area are protected
-> -	 * by guard pages so each stack must be mapped separately.
-> +	 * by guard pages so each stack must be mapped separately. DB2 is
-> +	 * not mapped; it just exists to catch triple nesting of #DB.
->  	 */
->  	cea_map_stack(DF);
->  	cea_map_stack(NMI);
-> +	cea_map_stack(DB1);
->  	cea_map_stack(DB);
->  	cea_map_stack(MCE);
->  }
 > 
+> Thanks
+> --
+> Gustavo
 > 
+> On 3/20/19 7:15 PM, Gustavo A. R. Silva wrote:
+> > 
+> > 
+> > On 3/20/19 7:12 PM, Guenter Roeck wrote:
+> >> On 3/20/19 11:16 AM, Gustavo A. R. Silva wrote:
+> >>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> >>> cases where we are expecting to fall through.
+> >>>
+> >>> This patch fixes the following warning:
+> >>>
+> >>> drivers/watchdog/alim7101_wdt.c: In function ‘fop_ioctl’:
+> >>> drivers/watchdog/alim7101_wdt.c:279:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >>>     wdt_keepalive();
+> >>>     ^~~~~~~~~~~~~~~
+> >>> drivers/watchdog/alim7101_wdt.c:282:2: note: here
+> >>>    case WDIOC_GETTIMEOUT:
+> >>>    ^~~~
+> >>>
+> >>> Notice that, in this particular case, the /* Fall through */
+> >>> comment is placed at the very bottom of the case statement,
+> >>> which is what GCC is expecting to find.
+> >>>
+> >>> Warning level 3 was used: -Wimplicit-fallthrough=3
+> >>>
+> >>> This patch is part of the ongoing efforts to enabling
+> >>> -Wimplicit-fallthrough.
+> >>>
+> >>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >>
+> >> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> >>
+> > 
+> > Thanks, Guenter. :)
+> > 
+> > --
+> > Gustavo
+> > 
+> >>> ---
+> >>>   drivers/watchdog/alim7101_wdt.c | 2 +-
+> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
+> >>> index 12f7ea62dddd..f5ada07e9202 100644
+> >>> --- a/drivers/watchdog/alim7101_wdt.c
+> >>> +++ b/drivers/watchdog/alim7101_wdt.c
+> >>> @@ -277,8 +277,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> >>>               return -EINVAL;
+> >>>           timeout = new_timeout;
+> >>>           wdt_keepalive();
+> >>> -        /* Fall through */
+> >>>       }
+> >>> +        /* Fall through */
+> >>>       case WDIOC_GETTIMEOUT:
+> >>>           return put_user(timeout, p);
+> >>>       default:
+> >>>
+> >>
