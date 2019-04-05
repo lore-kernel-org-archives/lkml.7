@@ -2,115 +2,108 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73E8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CFDC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A430F206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01058206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOZ322Ed"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JQtrxFaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfDEBLj (ORCPT
+        id S1730403AbfDEBLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 21:11:39 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45882 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbfDEBLj (ORCPT
+        Thu, 4 Apr 2019 21:11:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43606 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfDEBLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 21:11:39 -0400
-Received: by mail-pf1-f193.google.com with SMTP id e24so2278823pfi.12;
-        Thu, 04 Apr 2019 18:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+3zXcHYjgYEH0DqJApSQSnOjaZDldSwrpSHlOoc3kdY=;
-        b=aOZ322Edgs2XpFufMTJjBZ7vJR9FjPppXKJpp2TQaPmZDkFwMKZT1hS0cwc0Nz7lMm
-         J/v/92Y787rAWvIhpJaDeuPK+6yELa7ZMe+b52YdD8/9RuesZd3E0ZfJsAbQjoRq5Vzt
-         rrOPjAcqhon8mt1kHxeZAI9wneLFmDrwRyW0KPUv0dU6evANEpKpZoTZC49m+XTbk+YW
-         xuWxxNpt25UvOglk2BiUdCt7HnI/51eBjk8hBihKtiknd9qF0PPjZW3l9HsARSnly+SP
-         ORPV30qNaq9pILGGR+ZileOKRxC9J54CQW2Tz1J/TjVzOQhiRuY9ElBEf9mZUb/apimT
-         +NsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+3zXcHYjgYEH0DqJApSQSnOjaZDldSwrpSHlOoc3kdY=;
-        b=H55pA9Udf4+4nLRGuC5ocLIdfOWRzr6v/f/Z+S4Wjcb/4kqwKFalEondzQtQiGMKIw
-         NLCFQxmASZxFJFjJ/p6/u5w+2U+T3RBzNGZg/nIHD+Rq+xyJ2UJV9w51IT3odkd1lRIJ
-         8fkmJKZmP5jZaVxr7MvDC+4TeYFqzGn/QDGQCzOwUD5qE1Fnnk9ng4Mnz/E6V21nV8Qn
-         82QuTlcLmy7/nU5GDs1tPwxEN3sw5gr47pa8Skq+6nNvvGcFKIDHwGztvwwo9QyrdXzn
-         UmMQLm3tMZdVPmEAnlGjVY1qJ+Ez5V+xqMImr8JTtLfBqfSoQc4HqErf2AuOxGbjhuUZ
-         VRQA==
-X-Gm-Message-State: APjAAAXxI+jTEK1kq3lQjcvyOuZtaO/3U/rkwpRe93eooSJZ6vEdn3AI
-        pj5TCY/OTJfI/cTjd/aRZ7Zt9m0vd5eqOw==
-X-Google-Smtp-Source: APXvYqw+pXflK11fSVuKmYpvLblWud/XR9KiBz7sisBnoa4gHFW/wxXGbZp+HPLvkzY+HKgE7hBMYQ==
-X-Received: by 2002:a65:4844:: with SMTP id i4mr9081495pgs.347.1554426698316;
-        Thu, 04 Apr 2019 18:11:38 -0700 (PDT)
-Received: from maya190131 ([52.250.109.216])
-        by smtp.gmail.com with ESMTPSA id q87sm31553429pfa.133.2019.04.04.18.11.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 18:11:37 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 01:11:36 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] hv: Remove dependencies on guest page size
-Message-ID: <cover.1554426039.git.m.maya.nakamura@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 4 Apr 2019 21:11:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3518bEq117607;
+        Fri, 5 Apr 2019 01:11:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=CSaQ+vwd/SY4oxO6tdbB1QfPer03uXAwyhMCG3dJPCw=;
+ b=JQtrxFaNWoPIOXDc82RKdN1HXxgqrfA70ZU075uKBOiroU7o+oVx4W9g8Y7mY1B0RzrF
+ 2/UACY1cAlk/0jtrRMW2shTNrqtlmY8w/+tfmtxrTLaG4yAZE51I9OngwUIU3IJJ/iho
+ 7jis/vVzj4n+8Nj7mtWRzInqDSczpgKFFpaIWlbM8NoutWVvNSO6OCHMDLOluYgpY8Xx
+ 09hKWipP18WRK2Q4GID/WQmXIukLFX0B1oF091hla6dkW/Vn9Q42hKImTjyPxWLZHzsZ
+ +ISMU1/CcAhSQeXAqCuydJMO+XOp2rdsDT9ciFxKa/yDT7qyjrY4e/dmptHIujk77cqm HQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2rhyvtj98j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Apr 2019 01:11:32 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3519fwl088211;
+        Fri, 5 Apr 2019 01:11:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2rm8f6yxph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Apr 2019 01:11:31 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x351BTYW002785;
+        Fri, 5 Apr 2019 01:11:29 GMT
+Received: from linux.cn.oracle.com (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 18:11:28 -0700
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, konrad.wilk@oracle.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com, joe.jin@oracle.com,
+        srinivas.eeda@oracle.com, dongli.zhang@oracle.com
+Subject: [PATCH 1/1] swiotlb: dump used and total slots when swiotlb buffer is full
+Date:   Fri,  5 Apr 2019 09:15:25 +0800
+Message-Id: <1554426925-2431-1-git-send-email-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=777
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904050007
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=815 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904050007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Linux guest page size and hypervisor page size concepts are
-different, even though they happen to be the same value on x86. Hyper-V
-code mixes up the two, so this patchset begins to address that by
-creating and using a set of Hyper-V specific page definitions.
+So far the kernel only prints the requested size if swiotlb buffer if full.
+It is not possible to know whether it is simply an out of buffer, or it is
+because swiotlb cannot allocate buffer with the requested size due to
+fragmentation.
 
-A major benefit of those new definitions is that they support non-x86
-architectures, such as ARM64, that use different page sizes. On ARM64,
-the guest page size may not be 4096, and Hyper-V always runs with a page
-size of 4096.
+As 'io_tlb_used' is available since commit 71602fe6d4e9 ("swiotlb: add
+debugfs to track swiotlb buffer usage"), both 'io_tlb_used' and
+'io_tlb_nslabs' are printed when swiotlb buffer is full.
 
-In this patchset, the first two patches lay the foundation for the
-others, creating definitions and preparing for memory allocations of
-Hyper-V pages. Subsequent patches apply the definitions where the guest
-VM and Hyper-V communicate, and where the code intends to use the
-Hyper-V page size. The last two patches set the ring buffer size to a
-fixed value, removing the dependencies on the guest page size.
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+---
+ kernel/dma/swiotlb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This is the initial set of changes to the Hyper-V code, and future
-patches will make additional changes using the same foundation, for
-example, replace __vmalloc() and related functions when Hyper-V pages
-are intended.
-
-Maya Nakamura (6):
-  x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
-  x86: hv: hv_init.c: Replace alloc_page() with kmem_cache_alloc()
-  hv: vmbus: Replace page definition with Hyper-V specific one
-  x86: hv: mmu.c: Replace page definitions with Hyper-V specific ones
-  HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
-  Input: hv: Remove dependencies on PAGE_SIZE for ring buffer
-
- arch/x86/hyperv/hv_init.c             | 38 +++++++++++++++++++--------
- arch/x86/hyperv/mmu.c                 | 15 ++++++-----
- arch/x86/include/asm/hyperv-tlfs.h    | 12 ++++++++-
- drivers/hid/hid-hyperv.c              |  4 +--
- drivers/hv/hyperv_vmbus.h             |  8 +++---
- drivers/input/serio/hyperv-keyboard.c |  4 +--
- 6 files changed, 54 insertions(+), 27 deletions(-)
-
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 53012db..3f43b37 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -540,7 +540,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ not_found:
+ 	spin_unlock_irqrestore(&io_tlb_lock, flags);
+ 	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+-		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
++		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu, used %lu\n",
++			 size, io_tlb_nslabs, io_tlb_used);
+ 	return DMA_MAPPING_ERROR;
+ found:
+ 	io_tlb_used += nslots;
 -- 
-2.17.1
+2.7.4
 
