@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A3FC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0A8C282DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C0E2146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFE12146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BeP27YCs"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rWolV3ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbfDETgb (ORCPT
+        id S1731870AbfDETgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 15:36:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:52654 "EHLO
+        Fri, 5 Apr 2019 15:36:39 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59772 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731183AbfDETg3 (ORCPT
+        by vger.kernel.org with ESMTP id S1731183AbfDETgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 15:36:29 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35JYh9M004326
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 12:36:28 -0700
+        Fri, 5 Apr 2019 15:36:37 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35JaE9r014421
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 12:36:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=1OzIXCiyQ3ZJqmCdkZT3bEwg6Tmyss8qNl0BPBqkwsI=;
- b=BeP27YCsp0OR7Q5jBlbyU4LOZeMQVsACRnrV484/k/5h6weSzPFPakSdtxSg+ew6cLyB
- olk6LXAdlo5WCs7/SbKK0Hxeh5vJsJFZAB5rlbdA18mGs6Zuup9bc/Ao5Sd7+4xcjGid
- yDcDdljk2QuYvaRzmSJ2TLwdV4Fpc4fAobo= 
+ content-type; s=facebook; bh=pl12/NdtlfR2RoVDCaaGk0KA4kUGev5LOjeLWus4P3w=;
+ b=rWolV3apW2uTGnYYEgfeGuGkizH4cqaHybsTrEssvPUxqLf7zgGGM5Ha6KXd6s1Z58mm
+ eU4pYtnlour9il1KPTWU8brlceM42wh+isM7+ez/zvxgsMtAF4VAzmNn5mVwHhClpQ0+
+ IWLgz8sj9yHIHeBWMu1a4XyQWN1Bzw56oiM= 
 Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rpd598177-10
+        by mx0a-00082601.pphosted.com with ESMTP id 2rp6mfsjj7-19
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 12:36:28 -0700
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 12:36:37 -0700
 Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Fri, 5 Apr 2019 12:36:24 -0700
+ Fri, 5 Apr 2019 12:36:34 -0700
 Received: by dev082.prn2.facebook.com (Postfix, from userid 572249)
-        id 013A13701752; Fri,  5 Apr 2019 12:36:22 -0700 (PDT)
+        id 5D8D73701752; Fri,  5 Apr 2019 12:36:34 -0700 (PDT)
 Smtp-Origin-Hostprefix: dev
 From:   Andrey Ignatov <rdna@fb.com>
 Smtp-Origin-Hostname: dev082.prn2.facebook.com
@@ -53,9 +53,9 @@ CC:     Andrey Ignatov <rdna@fb.com>, <ast@kernel.org>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v3 bpf-next 01/21] bpf: Add base proto function for cgroup-bpf programs
-Date:   Fri, 5 Apr 2019 12:35:23 -0700
-Message-ID: <caa3d6730845e22ab5fe70fb9da8e467b2d024db.1554485409.git.rdna@fb.com>
+Subject: [PATCH v3 bpf-next 06/21] bpf: Add file_pos field to bpf_sysctl ctx
+Date:   Fri, 5 Apr 2019 12:35:28 -0700
+Message-ID: <cf2dca62c2ba3519ee2d44bc78b88cea18ba4ade.1554485409.git.rdna@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1554485409.git.rdna@fb.com>
 References: <cover.1554485409.git.rdna@fb.com>
@@ -71,44 +71,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kernel/bpf/cgroup.c contains only one program type and one
-proto function cgroup_dev_func_proto(). It'd be useful to have base
-proto function that can be reused for new cgroup-bpf program types
-coming soon.
+Add file_pos field to bpf_sysctl context to read and write sysctl file
+position at which sysctl is being accessed (read or written).
 
-Introduce cgroup_base_func_proto().
+The field can be used to e.g. override whole sysctl value on write to
+sysctl even when sys_write is called by user space with file_pos > 0. Or
+BPF program may reject such accesses.
 
 Signed-off-by: Andrey Ignatov <rdna@fb.com>
 ---
- kernel/bpf/cgroup.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/proc/proc_sysctl.c      |  2 +-
+ include/linux/bpf-cgroup.h |  9 ++++---
+ include/linux/filter.h     |  3 +++
+ include/uapi/linux/bpf.h   |  3 +++
+ kernel/bpf/cgroup.c        | 54 +++++++++++++++++++++++++++++++++++---
+ 5 files changed, 63 insertions(+), 8 deletions(-)
 
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 4d1ab22774f7..8371bbca1105 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -590,7 +590,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *buf,
+ 		goto out;
+ 
+ 	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, &count,
+-					   &new_buf);
++					   ppos, &new_buf);
+ 	if (error)
+ 		goto out;
+ 
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 1e97271f9a10..cb3c6b3b89c8 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -114,7 +114,8 @@ int __cgroup_bpf_check_dev_permission(short dev_type, u32 major, u32 minor,
+ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+ 				   struct ctl_table *table, int write,
+ 				   void __user *buf, size_t *pcount,
+-				   void **new_buf, enum bpf_attach_type type);
++				   loff_t *ppos, void **new_buf,
++				   enum bpf_attach_type type);
+ 
+ static inline enum bpf_cgroup_storage_type cgroup_storage_type(
+ 	struct bpf_map *map)
+@@ -262,12 +263,12 @@ int bpf_percpu_cgroup_storage_update(struct bpf_map *map, void *key,
+ })
+ 
+ 
+-#define BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, count, nbuf)       \
++#define BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, count, pos, nbuf)  \
+ ({									       \
+ 	int __ret = 0;							       \
+ 	if (cgroup_bpf_enabled)						       \
+ 		__ret = __cgroup_bpf_run_filter_sysctl(head, table, write,     \
+-						       buf, count, nbuf,       \
++						       buf, count, pos, nbuf,  \
+ 						       BPF_CGROUP_SYSCTL);     \
+ 	__ret;								       \
+ })
+@@ -340,7 +341,7 @@ static inline int bpf_percpu_cgroup_storage_update(struct bpf_map *map,
+ #define BPF_CGROUP_RUN_PROG_UDP6_SENDMSG_LOCK(sk, uaddr, t_ctx) ({ 0; })
+ #define BPF_CGROUP_RUN_PROG_SOCK_OPS(sock_ops) ({ 0; })
+ #define BPF_CGROUP_RUN_PROG_DEVICE_CGROUP(type,major,minor,access) ({ 0; })
+-#define BPF_CGROUP_RUN_PROG_SYSCTL(head,table,write,buf,count,nbuf) ({ 0; })
++#define BPF_CGROUP_RUN_PROG_SYSCTL(head,table,write,buf,count,pos,nbuf) ({ 0; })
+ 
+ #define for_each_cgroup_storage_type(stype) for (; false; )
+ 
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index a23653f9460c..fb0edad75971 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1188,6 +1188,9 @@ struct bpf_sysctl_kern {
+ 	size_t new_len;
+ 	int new_updated;
+ 	int write;
++	loff_t *ppos;
++	/* Temporary "register" for indirect stores to ppos. */
++	u64 tmp_reg;
+ };
+ 
+ #endif /* __LINUX_FILTER_H__ */
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index fed5b605449a..01faa286bb3c 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -3358,6 +3358,9 @@ struct bpf_sysctl {
+ 	__u32	write;		/* Sysctl is being read (= 0) or written (= 1).
+ 				 * Allows 1,2,4-byte read, but no write.
+ 				 */
++	__u32	file_pos;	/* Sysctl file position to read from, write to.
++				 * Allows 1,2,4-byte read an 4-byte write.
++				 */
+ };
+ 
+ #endif /* _UAPI__LINUX_BPF_H__ */
 diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 4e807973aa80..f6cd38746df2 100644
+index ba4e21986760..b2adf22139b3 100644
 --- a/kernel/bpf/cgroup.c
 +++ b/kernel/bpf/cgroup.c
-@@ -701,7 +701,7 @@ int __cgroup_bpf_check_dev_permission(short dev_type, u32 major, u32 minor,
- EXPORT_SYMBOL(__cgroup_bpf_check_dev_permission);
- 
- static const struct bpf_func_proto *
--cgroup_dev_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-+cgroup_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+@@ -782,6 +782,9 @@ const struct bpf_verifier_ops cg_dev_verifier_ops = {
+  * @pcount: value-result argument: value is size of buffer pointed to by @buf,
+  *	result is size of @new_buf if program set new value, initial value
+  *	otherwise
++ * @ppos: value-result argument: value is position at which read from or write
++ *	to sysctl is happening, result is new position if program overrode it,
++ *	initial value otherwise
+  * @new_buf: pointer to pointer to new buffer that will be allocated if program
+  *	overrides new value provided by user space on sysctl write
+  *	NOTE: it's caller responsibility to free *new_buf if it was set
+@@ -796,12 +799,14 @@ const struct bpf_verifier_ops cg_dev_verifier_ops = {
+ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+ 				   struct ctl_table *table, int write,
+ 				   void __user *buf, size_t *pcount,
+-				   void **new_buf, enum bpf_attach_type type)
++				   loff_t *ppos, void **new_buf,
++				   enum bpf_attach_type type)
  {
- 	switch (func_id) {
- 	case BPF_FUNC_map_lookup_elem:
-@@ -725,6 +725,12 @@ cgroup_dev_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	}
- }
+ 	struct bpf_sysctl_kern ctx = {
+ 		.head = head,
+ 		.table = table,
+ 		.write = write,
++		.ppos = ppos,
+ 		.cur_val = NULL,
+ 		.cur_len = PAGE_SIZE,
+ 		.new_val = NULL,
+@@ -1030,14 +1035,22 @@ static bool sysctl_is_valid_access(int off, int size, enum bpf_access_type type,
+ {
+ 	const int size_default = sizeof(__u32);
  
-+static const struct bpf_func_proto *
-+cgroup_dev_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-+{
-+	return cgroup_base_func_proto(func_id, prog);
-+}
+-	if (off < 0 || off + size > sizeof(struct bpf_sysctl) ||
+-	    off % size || type != BPF_READ)
++	if (off < 0 || off + size > sizeof(struct bpf_sysctl) || off % size)
+ 		return false;
+ 
+ 	switch (off) {
+ 	case offsetof(struct bpf_sysctl, write):
++		if (type != BPF_READ)
++			return false;
+ 		bpf_ctx_record_field_size(info, size_default);
+ 		return bpf_ctx_narrow_access_ok(off, size, size_default);
++	case offsetof(struct bpf_sysctl, file_pos):
++		if (type == BPF_READ) {
++			bpf_ctx_record_field_size(info, size_default);
++			return bpf_ctx_narrow_access_ok(off, size, size_default);
++		} else {
++			return size == size_default;
++		}
+ 	default:
+ 		return false;
+ 	}
+@@ -1059,6 +1072,41 @@ static u32 sysctl_convert_ctx_access(enum bpf_access_type type,
+ 						    write),
+ 				       target_size));
+ 		break;
++	case offsetof(struct bpf_sysctl, file_pos):
++		/* ppos is a pointer so it should be accessed via indirect
++		 * loads and stores. Also for stores additional temporary
++		 * register is used since neither src_reg nor dst_reg can be
++		 * overridden.
++		 */
++		if (type == BPF_WRITE) {
++			int treg = BPF_REG_9;
 +
- static bool cgroup_dev_is_valid_access(int off, int size,
- 				       enum bpf_access_type type,
- 				       const struct bpf_prog *prog,
++			if (si->src_reg == treg || si->dst_reg == treg)
++				--treg;
++			if (si->src_reg == treg || si->dst_reg == treg)
++				--treg;
++			*insn++ = BPF_STX_MEM(
++				BPF_DW, si->dst_reg, treg,
++				offsetof(struct bpf_sysctl_kern, tmp_reg));
++			*insn++ = BPF_LDX_MEM(
++				BPF_FIELD_SIZEOF(struct bpf_sysctl_kern, ppos),
++				treg, si->dst_reg,
++				offsetof(struct bpf_sysctl_kern, ppos));
++			*insn++ = BPF_STX_MEM(
++				BPF_SIZEOF(u32), treg, si->src_reg, 0);
++			*insn++ = BPF_LDX_MEM(
++				BPF_DW, treg, si->dst_reg,
++				offsetof(struct bpf_sysctl_kern, tmp_reg));
++		} else {
++			*insn++ = BPF_LDX_MEM(
++				BPF_FIELD_SIZEOF(struct bpf_sysctl_kern, ppos),
++				si->dst_reg, si->src_reg,
++				offsetof(struct bpf_sysctl_kern, ppos));
++			*insn++ = BPF_LDX_MEM(
++				BPF_SIZE(si->code), si->dst_reg, si->dst_reg, 0);
++		}
++		*target_size = sizeof(u32);
++		break;
+ 	}
+ 
+ 	return insn - insn_buf;
 -- 
 2.17.1
 
