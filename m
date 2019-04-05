@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26BFC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A76C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793482186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA842186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfDELhU (ORCPT
+        id S1731098AbfDELh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:37:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38701 "EHLO
+        Fri, 5 Apr 2019 07:37:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38589 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730642AbfDELhT (ORCPT
+        with ESMTP id S1730642AbfDELh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:37:19 -0400
+        Fri, 5 Apr 2019 07:37:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Bb9Mu2734349
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Bbnmc2734394
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:37:09 -0700
+        Fri, 5 Apr 2019 04:37:49 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35Bb8Pi2734346;
-        Fri, 5 Apr 2019 04:37:08 -0700
-Date:   Fri, 5 Apr 2019 04:37:08 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BbmxU2734391;
+        Fri, 5 Apr 2019 04:37:48 -0700
+Date:   Fri, 5 Apr 2019 04:37:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-qkrld0v7boc9uabjbd8csxux@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        hbathini@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, acme@redhat.com, namhyung@kernel.org,
-        adrian.hunter@intel.com
-Reply-To: linux-kernel@vger.kernel.org, jolsa@kernel.org,
-          namhyung@kernel.org, acme@redhat.com,
-          hbathini@linux.vnet.ibm.com, adrian.hunter@intel.com,
-          tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org
+From:   tip-bot for Thomas Richter <tipbot@zytor.com>
+Message-ID: <tip-7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, acme@redhat.com,
+        linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com,
+        schwidefsky@de.ibm.com, tmricht@linux.ibm.com, hpa@zytor.com,
+        brueckner@linux.vnet.ibm.com
+Reply-To: schwidefsky@de.ibm.com, tmricht@linux.ibm.com, hpa@zytor.com,
+          brueckner@linux.vnet.ibm.com, mingo@kernel.org,
+          tglx@linutronix.de, acme@redhat.com,
+          linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com
+In-Reply-To: <20190329133337.60255-1-tmricht@linux.ibm.com>
+References: <20190329133337.60255-1-tmricht@linux.ibm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tools: Add header defining used namespace
- struct to event.h
-Git-Commit-ID: 514c54039da970f953164c1960d0284f87db969d
+Subject: [tip:perf/core] perf list: Fix s390 counter long description for
+ L1D_RO_EXCL_WRITES
+Git-Commit-ID: 7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,39 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  514c54039da970f953164c1960d0284f87db969d
-Gitweb:     https://git.kernel.org/tip/514c54039da970f953164c1960d0284f87db969d
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 27 Mar 2019 15:22:52 -0300
+Commit-ID:  7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
+Gitweb:     https://git.kernel.org/tip/7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
+Author:     Thomas Richter <tmricht@linux.ibm.com>
+AuthorDate: Fri, 29 Mar 2019 14:33:37 +0100
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 1 Apr 2019 14:49:24 -0300
 
-perf tools: Add header defining used namespace struct to event.h
+perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES
 
-When adding the 'struct namespaces_event' to event.h, referencing the
-'struct perf_ns_link_info' type, we forgot to add the header where it is
-defined, getting that definition only by sheer luck.
+Command
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
-Link: https://lkml.kernel.org/n/tip-qkrld0v7boc9uabjbd8csxux@git.kernel.org
+  # perf list --long-desc pmu
+
+lists the long description of the available counters. For counter
+named L1D_RO_EXCL_WRITES on machine types 3906 and 3907 the long
+description contains the counter number 'Counter:128 Name:'
+prefix. This is wrong.
+
+The fix changes the description text and removes this prefix.
+
+Output before:
+
+  [root@m35lp76 perf]# ./perf list --long-desc pmu
+   ...
+   L1D_ONDRAWER_L4_SOURCED_WRITES
+    [A directory write to the Level-1 Data cache directory where the
+     returned cache line was sourced from On-Drawer Level-4 cache]
+
+   L1D_RO_EXCL_WRITES
+    [Counter:128 Name:L1D_RO_EXCL_WRITES A directory write to the Level-1
+     Data cache where the line was originally in a Read-Only state in the
+     cache but has been updated to be in the Exclusive state that allows
+     stores to the cache line]
+
+   ...
+
+Output after:
+
+  [root@m35lp76 perf]# ./perf list --long-desc pmu
+   ...
+   L1D_ONDRAWER_L4_SOURCED_WRITES
+    [A directory write to the Level-1 Data cache directory where the
+     returned cache line was sourced from On-Drawer Level-4 cache]
+
+   L1D_RO_EXCL_WRITES
+    [L1D_RO_EXCL_WRITES A directory write to the Level-1
+     Data cache where the line was originally in a Read-Only state in the
+     cache but has been updated to be in the Exclusive state that allows
+     stores to the cache line]
+
+   ...
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Fixes: 109d59b900e7 ("perf vendor events s390: Add JSON files for IBM z14")
+Link: http://lkml.kernel.org/r/20190329133337.60255-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/event.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 36ae7e92dab1..4e908ec1ef64 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -6,6 +6,7 @@
- #include <stdio.h>
- #include <linux/kernel.h>
- #include <linux/bpf.h>
-+#include <linux/perf_event.h>
- 
- #include "../perf.h"
- #include "build-id.h"
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+index e7a3524b748f..68618152ea2c 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+@@ -4,7 +4,7 @@
+ 		"EventCode": "128",
+ 		"EventName": "L1D_RO_EXCL_WRITES",
+ 		"BriefDescription": "L1D Read-only Exclusive Writes",
+-		"PublicDescription": "Counter:128	Name:L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
++		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
