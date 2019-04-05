@@ -2,233 +2,171 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5260BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA14EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100BB21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B2B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHq0rRgS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0w8xd4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfDEDNq (ORCPT
+        id S1729739AbfDEDO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:13:46 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44566 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbfDEDNp (ORCPT
+        Thu, 4 Apr 2019 23:14:56 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44925 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbfDEDO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:13:45 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d11so4131680edp.11
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:13:43 -0700 (PDT)
+        Thu, 4 Apr 2019 23:14:56 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h16so3893437ljg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JRLk73o3zdzwIeyVvfIEIgIijd2IU7f5ObPNEVJ4Uk=;
-        b=NHq0rRgSwNnu1x+JHk6N4YcwfOsV9hZcvVMfE6qV6BO/wk2mRcrUEcj3WC6cu01eI4
-         oWRDgbhtBxNfIJ2BlcLt0Flx6F8jtIB3Rgf9ar6EkRFSBYOH+pxIEk33S115qOFCAOOx
-         IY0XSba1SPLI/uN2ODIGAetRyopTQkbTmJyAbFKeOBzuFLAn+vGq4zapF5jyiyzBejW7
-         8rt590KbLxtrdzL+64nJg+b/nsGzfGxM3GoZ5CmdCLWneBE3HqJfFLMhHcuPx1zMjGI0
-         OGkvNxSuGwu/vt4b2HqvPzAA549s5Qm2JbLhBjGuPICiJxEp6p1H9+SgQpzKfU3g7LeT
-         aWGA==
+         :cc:content-transfer-encoding;
+        bh=f9KiPt/p8Is4HCAIioSqgaDyFNaRTjF2uyDxcVObocI=;
+        b=s0w8xd4N3SGdJ827goOS9vOrcuQQpEZacDpPcvZ7JA8AUmkyRlyrvIN3WRGxIjtg1m
+         vW9c7qSiX61JnpvmSdV5tE+rHK74n57hb/NK7Gjsg5gsr3ZB8RL/HM3TVdkS4UhFugwg
+         u8KHfTGJBct0TlwGxS/2GXc5tOdDbute9tFlXuzenqycZL/DaxBXF+xjuptctCLaERBE
+         LeHeCMs0vsvHv88eXiDutFYXeGOBuAyiwJymsF3arSh+naIqEzvJK4xpYM+NFRED4N6O
+         IkKtQi9Zs0/9ydlxaXm4EvNUhq21xgRJj5MkJ+Kb0GWqLuX2LPzn3+NtQts0eiKUAnMY
+         Rzpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JRLk73o3zdzwIeyVvfIEIgIijd2IU7f5ObPNEVJ4Uk=;
-        b=ix66txwoKR46vbWRlCEx653Kz0FiwuG86Wuy/6oMQPHyiKg1smJm2hJCeXzodvMJte
-         YrXE3y7FdesZCbkitJWrcdT7/5kAZx2O3OTBV622gCOHvSfwqHlU8v9V+7WBoiC0aGUf
-         fQr7P5wokoFs90XVF65sG+jhDhDrULw8FgAVe3haTIkJH9T9dnxcVFpYp+HjVJMmf4B5
-         axRloR7Gy1eKPOwYaFP07zl+odFQ8kkqSVhVi9/W4rO9asQRki41iy0wouehm7J3I+Fa
-         02rF4UtEd/zX8RS/RsKVhUfxoyQW9T8arwGM+AfP/eHBpbi5wVi6QSQA0yseG7lkaKXO
-         70bw==
-X-Gm-Message-State: APjAAAWxhPu9kqKdVnpxlVxHTKl6f+GeXsFYU6BVCrDYHSL8xXeUJ6zz
-        ugJ47BSxh/mDiG5bFnr03waRIeRLeT0/Mvg/8hE=
-X-Google-Smtp-Source: APXvYqyTWIC9LSPcGZ2dtyNFPvC0AesUA/LfXkH+3MdpjY9Q+HK47P7R6SwRIa2cE7UiTUnFrbc9PG2/m3r9zBwZkew=
-X-Received: by 2002:aa7:d0d3:: with SMTP id u19mr6276058edo.234.1554434023184;
- Thu, 04 Apr 2019 20:13:43 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f9KiPt/p8Is4HCAIioSqgaDyFNaRTjF2uyDxcVObocI=;
+        b=I3NaWDlNcz0lzqEHKXvs2m86HawiAfaEAMG2NPQIMWJWhrO+9lB2h7GBXV5sHR2pyC
+         4LMUg/tpBN2sm8pCN3FtDqNRUU395xC1BEgPiJM+xq0Wkg2RBUo9bjhozZhf32M6+VCp
+         rJSmiJ7cuOSyXPi4r7rK2vgdKIbiSQ6y5fRnqdo9AT8DsVvTM1SfWjAGzMn6RllowVAk
+         gKif2YFLsHmxAGYKXQfohADrdZMpzHDxkXCcfmrOA/cCNO9SBv9Tl1QZBnLeSZcjE7HX
+         hJmXPPXUtvTI+HokTH467OYSnGb3r/RDyDF1MN/MQbnG8k6uE2nvKeKncQbkxLdf+DLx
+         ofeg==
+X-Gm-Message-State: APjAAAWcdWk29nqn/MC7JZT93gHign273t+nndWtST4Nu3kwPS7gpQiE
+        2uF/bzonHy9bfHc3xU4ifuBPVa8U49+dykCOjjD3SA==
+X-Google-Smtp-Source: APXvYqz75/MJ7FC1kLkbl9+evPwCfpjwFSsoxhiveFXxMcDsW1f2eigAbf6QYJid8/rCrDWYfEiQX30wm3uS4r2rP7w=
+X-Received: by 2002:a2e:884a:: with SMTP id z10mr5327227ljj.21.1554434094078;
+ Thu, 04 Apr 2019 20:14:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com> <20190404071512.GE12864@dhcp22.suse.cz>
-In-Reply-To: <20190404071512.GE12864@dhcp22.suse.cz>
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date:   Fri, 5 Apr 2019 11:13:32 +0800
-Message-ID: <CAGWkznF-LV2BBjcSCmyJzqmYUUvxfNiLbtN5V8xwt3+=uHgqnQ@mail.gmail.com>
-Subject: Re: [PATCH] mm:workingset use real time to judge activity of the file page
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, geng.ren@unisoc.com
+References: <20190404084535.450029272@linuxfoundation.org>
+In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 5 Apr 2019 08:44:43 +0530
+Message-ID: <CA+G9fYv4Ce5vbAkFNtqOLoF66r5W4SAVzq=6DxuXC7r48N=hpw@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/91] 4.9.168-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-resend it via the right mailling list and rewrite the comments by ZY.
-
-On Thu, Apr 4, 2019 at 3:15 PM Michal Hocko <mhocko@kernel.org> wrote:
+On Thu, 4 Apr 2019 at 14:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> [Fixup email for Pavel and add Johannes]
+> This is the start of the stable review cycle for the 4.9.168 release.
+> There are 91 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> On Thu 04-04-19 11:30:17, Zhaoyang Huang wrote:
-> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> >
-> > In previous implementation, the number of refault pages is used
-> > for judging the refault period of each page, which is not precised as
-> > eviction of other files will be affect a lot on current cache.
-> > We introduce the timestamp into the workingset's entry and refault ratio
-> > to measure the file page's activity. It helps to decrease the affection
-> > of other files(average refault ratio can reflect the view of whole system
-> > 's memory).
-> > The patch is tested on an Android system, which can be described as
-> > comparing the launch time of an application between a huge memory
-> > consumption. The result is launch time decrease 50% and the page fault
-> > during the test decrease 80%.
-> >
-I don't understand what exactly you're saying here, can you please elaborate?
-
-The reason it's using distances instead of absolute time is because
-the ordering of the LRU is relative and not based on absolute time.
-
-E.g. if a page is accessed every 500ms, it depends on all other pages
-to determine whether this page is at the head or the tail of the LRU.
-
-So when you refault, in order to determine the relative position of
-the refaulted page in the LRU, you have to compare it to how fast that
-LRU is moving. The absolute refault time, or the average time between
-refaults, is not comparable to what's already in memory.
-
-comment by ZY
-For current implementation, it is hard to deal with the evaluation of
-refault period under the scenario of huge dropping of file pages
-within short time, which maybe caused by a high order allocation or
-continues single page allocation in KSWAPD. On the contrary, such page
-which having a big refault_distance will be deemed as INACTIVE
-wrongly, which will be reclaimed earlier than it should be and lead to
-page thrashing. So we introduce 'avg_refault_time' & 'refault_ratio'
-to judge if the refault is a accumulated thing or caused by a tight
-reclaiming. That is to say, a big refault_distance in a long time
-would also be inactive as the result of comparing it with ideal
-time(avg_refault_time: avg_refault_time = delta_lru_reclaimed_pages/
-avg_refault_retio (refault_ratio = lru->inactive_ages / time).
-> > Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
-> > ---
-> >  include/linux/mmzone.h |  2 ++
-> >  mm/workingset.c        | 24 +++++++++++++++++-------
-> >  2 files changed, 19 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> > index 32699b2..c38ba0a 100644
-> > --- a/include/linux/mmzone.h
-> > +++ b/include/linux/mmzone.h
-> > @@ -240,6 +240,8 @@ struct lruvec {
-> >       atomic_long_t                   inactive_age;
-> >       /* Refaults at the time of last reclaim cycle */
-> >       unsigned long                   refaults;
-> > +     atomic_long_t                   refaults_ratio;
-> > +     atomic_long_t                   prev_fault;
-> >  #ifdef CONFIG_MEMCG
-> >       struct pglist_data *pgdat;
-> >  #endif
-> > diff --git a/mm/workingset.c b/mm/workingset.c
-> > index 40ee02c..6361853 100644
-> > --- a/mm/workingset.c
-> > +++ b/mm/workingset.c
-> > @@ -159,7 +159,7 @@
-> >                        NODES_SHIFT +  \
-> >                        MEM_CGROUP_ID_SHIFT)
-> >  #define EVICTION_MASK        (~0UL >> EVICTION_SHIFT)
-> > -
-> > +#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
-> >  /*
-> >   * Eviction timestamps need to be able to cover the full range of
-> >   * actionable refaults. However, bits are tight in the radix tree
-> > @@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
-> >       eviction >>= bucket_order;
-> >       eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
-> >       eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
-> > +     eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
-> >       eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
-> >
-> >       return (void *)(eviction | RADIX_TREE_EXCEPTIONAL_ENTRY);
-> >  }
-> >
-> >  static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
-> > -                       unsigned long *evictionp)
-> > +                       unsigned long *evictionp, unsigned long *prev_jiffp)
-> >  {
-> >       unsigned long entry = (unsigned long)shadow;
-> >       int memcgid, nid;
-> > +     unsigned long prev_jiff;
-> >
-> >       entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
-> > +     entry >>= EVICTION_JIFFIES;
-> > +     prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
-> >       nid = entry & ((1UL << NODES_SHIFT) - 1);
-> >       entry >>= NODES_SHIFT;
-> >       memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
-> > @@ -195,6 +199,7 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
-> >       *memcgidp = memcgid;
-> >       *pgdat = NODE_DATA(nid);
-> >       *evictionp = entry << bucket_order;
-> > +     *prev_jiffp = prev_jiff;
-> >  }
-> >
-> >  /**
-> > @@ -242,8 +247,12 @@ bool workingset_refault(void *shadow)
-> >       unsigned long refault;
-> >       struct pglist_data *pgdat;
-> >       int memcgid;
-> > +     unsigned long refault_ratio;
-> > +     unsigned long prev_jiff;
-> > +     unsigned long avg_refault_time;
-> > +     unsigned long refault_time;
-> >
-> > -     unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
-> > +     unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_jiff);
-> >
-> >       rcu_read_lock();
-> >       /*
-> > @@ -288,10 +297,11 @@ bool workingset_refault(void *shadow)
-> >        * list is not a problem.
-> >        */
-> >       refault_distance = (refault - eviction) & EVICTION_MASK;
-> > -
-> >       inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
-> > -
-> > -     if (refault_distance <= active_file) {
-> > +     lruvec->refaults_ratio = atomic_long_read(&lruvec->inactive_age) / jiffies;
-> > +     refault_time = jiffies - prev_jiff;
-> > +     avg_refault_time = refault_distance / lruvec->refaults_ratio;
-> > +     if (refault_time <= avg_refault_time) {
-> >               inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-> >               rcu_read_unlock();
-> >               return true;
-> > @@ -521,7 +531,7 @@ static int __init workingset_init(void)
-> >        * some more pages at runtime, so keep working with up to
-> >        * double the initial memory by using totalram_pages as-is.
-> >        */
-> > -     timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
-> > +     timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT - EVICTION_JIFFIES;
-> >       max_order = fls_long(totalram_pages - 1);
-> >       if (max_order > timestamp_bits)
-> >               bucket_order = max_order - timestamp_bits;
-> > --
-> > 1.9.1
+> Responses should be made by Sat Apr  6 08:44:27 UTC 2019.
+> Anything received after that time might be too late.
 >
-> --
-> Michal Hocko
-> SUSE Labs
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.168-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.168-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: ba980237d739a2beb8f17095af6ce29de69ef51f
+git describe: v4.9.167-91-gba980237d739
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.167-91-gba980237d739
+
+No regressions (compared to build v4.9.166-149-gea283005c82d)
+
+No fixes (compared to build v4.9.166-149-gea283005c82d)
+
+Ran 22706 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
