@@ -2,96 +2,107 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 05:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9761C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6FA206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 05:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5479A206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uvIgdMlK"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wCbRnxyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfDEF62 (ORCPT
+        id S1728735AbfDEGBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 01:58:28 -0400
-Received: from ozlabs.org ([203.11.71.1]:39359 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfDEF62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 01:58:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44b8J13dTdz9sPS;
-        Fri,  5 Apr 2019 16:58:24 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554443905;
-        bh=uSUJVhIm2FfC7VwDwpkHmIuGe5C4VPwlZux6tHIj88s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uvIgdMlKjr9Se3x2xeDdoEh2LorI1ew/mTfvdq1Np+JzhFVY1WKMqYPeDnbgH/orJ
-         Kfi4crr2hJz7f8DwDBh3FokcOuTk+XrD8FSlenyZg7K3hkBBGF5BtNla8GuERGh7wc
-         Vo3ssUiE7JtUU6b4kcq/fScsOuYZJCD2p+KJL2KvKeYH5BCdrcHTKfpK4a44HH1d3s
-         BgSBm5ds5xvNl4JS8NopOs8a9EpE/AGgIdygEqZlh38TcCamn2Efvo5EyJQZ75JDHD
-         IRvU5PQAQVUMKoGg+LklDORViBfocFTqKDJg9cKgErJfNGLZ2vIwlumEmcgxMOdSu/
-         Y2v0kE0vM5Yig==
-Date:   Fri, 5 Apr 2019 16:58:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hoang Le <hoang.h.le@dektech.com.au>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20190405165824.534c5c39@canb.auug.org.au>
+        Fri, 5 Apr 2019 02:01:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45443 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEGBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 02:01:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s15so6417198wra.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 23:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8I8m7SSC/snr0cHsf2WBlkwE7bpgw/OQ5jKqCBoq9zo=;
+        b=wCbRnxyNLYVi4sK6lQm7TJGYYG8lp5FUVtlVJG6aY097PpRMyg6nRbW3h2OU3mSmfe
+         Z/2Dd8toqy/+d6M+wypyVE/QVDncGTa90b1UkJfwIrQdzuLnvUkdcYFDAnM9Pg4NDgvE
+         xWwhtsVCZXpR94MvLQhD9J+Iuo02G1yg4J5zd+36PXDualUnZZy67CzbtmfaeQp5oJGz
+         YyfQl89/SCjIQE2ijWgHUamQ5RrB53vkpNljo5f71agmlbc08SAaX7tnkF96x1DeIlag
+         g//su1j0BxdcEU4uEkmNQ8DrN8Isruybr4p83MLzgLo7SeNQj6ALF8FDr7PEWHr+zgwz
+         tCSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8I8m7SSC/snr0cHsf2WBlkwE7bpgw/OQ5jKqCBoq9zo=;
+        b=kv+AfiPJlS6fOdqcVcVcKxKrdh5K4SmqACCK1tmwDZToZ+BkhezE4UT+tfoOPh9At6
+         6XIO/2hTSmgx/fyi4Pbp+gCcpVWURA1FKsGVfV2+6fyXKGqjEHj1B8U0mxwSCayVoE/Z
+         sNc90yu84NGo2I966i09XLDsrlzhosuwJfXXXpPNsEOInJmIIi7I/tsz7UeJiEYjRBzW
+         L/ho/HiPEG3ZZIblH6iImKBH9J3sIAz6O4FaPDqxnDjeArXkr1JaQTICkMCEowKy0I56
+         o2VdMcfY1hSm67SPPpDEH1KYQVAH5+pVqMuk6krCgOWZRWrFTK1lVy1yEYkEmgOdVMVZ
+         e2nQ==
+X-Gm-Message-State: APjAAAWhkZpJ88p7kKkSI8D9Vamy3EXKsA5aZQYuYNRKmDOusivT+n08
+        3Em7G1fSRuWTa9LhM/3D7W6xKyOZGqJJ0hxQEd8wP30WtoYokA==
+X-Google-Smtp-Source: APXvYqwvVpi/LoncOYPYpBig+SQjHxP1DEaiXzYYe2cURFDrQOVHHYJ4xS0lDAEgDIJDOniOxhm435shCG4GgfH5Ksw=
+X-Received: by 2002:adf:f6c8:: with SMTP id y8mr6002760wrp.61.1554444081974;
+ Thu, 04 Apr 2019 23:01:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/7Qhfn2+Z5Gc5MXkc92/xL=A"; protocol="application/pgp-signature"
+References: <20190405054909.3238-1-anup.patel@wdc.com> <20190405055421.GA7087@infradead.org>
+In-Reply-To: <20190405055421.GA7087@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 5 Apr 2019 11:31:11 +0530
+Message-ID: <CAAhSdy0k0gSipzne1=agZzTWa0URoq3OH7vefJsr2=SEMyJ1tg@mail.gmail.com>
+Subject: Re: [PATCH v3] RISC-V: Fix Maximum Physical Memory 2GiB option for
+ 64bit systems
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7Qhfn2+Z5Gc5MXkc92/xL=A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 5, 2019 at 11:24 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Apr 05, 2019 at 05:49:34AM +0000, Anup Patel wrote:
+> > The Maximum Physical Memory 2GiB option for 64bit systems is currently
+> > broken because kernel hangs at boot-time when this option is enabled
+> > and the underlying system has more than 2GiB memory.
+> >
+> > This issue can be easily reproduced on SiFive Unleashed board where
+> > we have 8GiB of memory.
+> >
+> > This patch fixes above issue by removing unusable memory region in
+> > setup_bootmem().
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+>
+> Btw, what is the rationale behind even offering the 2GiB option and
+> the medlow model on 64-bit?  Do we reall have use cases where the
+> slightly more effient generated code matters so much to keep up
+> the support burden of this mostly unused and unusual configuration?
 
-Hi all,
+Yes, if we want to use medlow with 64bit then max physical memory
+can be 2GiB. Otherwise, I don't any practical use of restricting max
+physical memory to 2GiB on 64bit systems.
 
-In commit
+BTW, as-per latest revision of RISC-V priviledge spece the MMU SV32
+mode will be able to access 34bit physical memory (i.e. 16GiB) so
+max physical memory 2GiB will also be required for 32bit system for
+medlow.
 
-  e1279ff7aec1 ("tipc: add NULL pointer check")
-
-Fixes tag
-
-  Fixes: c55c8edafa9 ("tipc: smooth change between replicast and broadcast")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7Qhfn2+Z5Gc5MXkc92/xL=A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlym7oAACgkQAVBC80lX
-0GxNnAf/a4zGB5NFR0St3lnvtnIYoqb/NqjlLhC15g8GSZqBleyouduaOCOVEOT5
-+fFd1+inRH4uIi1uuoO1i6qnuSuRap9r7jN6BktugbT3kiI2W72eANUgQI885SUg
-Q5+ki+vpH0sVRH5J++LtkMpGVexNgervBH/zvnz+FUa8hTM8U8B/GWdhtGtmpLZF
-lLESEF5lRztLjW7YDeEkgEnhIIxmAAS5p0BdfEpdpQorERxW3uepFbm+m3TW1BFH
-ZwHxZRFFiSNQbkXsMNapMaJ0D24avxzpYFQlYotKsZqmsEHRI/DFt3xKGB6vCAz2
-s3iHJH2lIIODX/ei1nGztEnzseElRw==
-=cPma
------END PGP SIGNATURE-----
-
---Sig_/7Qhfn2+Z5Gc5MXkc92/xL=A--
+Regards,
+Anup
