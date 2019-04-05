@@ -2,96 +2,76 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0218C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1432C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E7F20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EF521872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbfDEMoM (ORCPT
+        id S1729269AbfDEMqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:44:12 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35001 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfDEMoM (ORCPT
+        Fri, 5 Apr 2019 08:46:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:52677 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfDEMqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:44:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Chtt02753966
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 05:43:55 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35Chs6x2753963;
-        Fri, 5 Apr 2019 05:43:54 -0700
-Date:   Fri, 5 Apr 2019 05:43:54 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kefeng Wang <tipbot@zytor.com>
-Message-ID: <tip-e8458e7afa855317b14915d7b86ab3caceea7eb6@git.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wangkefeng.wang@huawei.com, tglx@linutronix.de, mingo@kernel.org,
-        marc.zyngier@arm.com, mojha@codeaurora.org, hpa@zytor.com
-Reply-To: marc.zyngier@arm.com, tglx@linutronix.de, mingo@kernel.org,
-          hpa@zytor.com, mojha@codeaurora.org,
-          linux-arm-kernel@lists.infradead.org,
-          linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com
-In-Reply-To: <20190404074512.145533-1-wangkefeng.wang@huawei.com>
-References: <20190404074512.145533-1-wangkefeng.wang@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/urgent] genirq: Initialize request_mutex if
- CONFIG_SPARSE_IRQ=n
-Git-Commit-ID: e8458e7afa855317b14915d7b86ab3caceea7eb6
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 5 Apr 2019 08:46:23 -0400
+Received: from [192.168.178.52] ([109.104.35.214]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N6sSV-1gqm1E1a63-018NHQ; Fri, 05 Apr 2019 14:46:11 +0200
+Subject: Re: [PATCH 3/3] staging: vchiq: make wait events interruptible
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        phil@raspberrypi.org, eric@anholt.net,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190405113423.14495-1-nsaenzjulienne@suse.de>
+ <20190405113423.14495-4-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <10eaf3ec-8932-9e48-3e24-deeb66bf13c8@i2se.com>
+Date:   Fri, 5 Apr 2019 14:46:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190405113423.14495-4-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:eMMTL/QmwWuF80aUU5VcijEXZgSMgJzuJ76xPesMHo9pSY4V5Pn
+ Trp1Txz1lGNSCOrKh+q/D9du0RkUKr3O89T6o+LOfyE6thhLuJ/xV/fl7maJxoG4Wy1y6U4
+ w9SwIMX+km9CbTPCmTZgWg0Bj54AwCdMhkKJaBSz4bGnFQxqJiSLTxvbIrzvgk+N8vudSEi
+ 7UCf0ri9Yllok9/JRDrLQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V+Jft51AeS8=:A58GiCkNy9frmQxMt/HUaE
+ FD5wTe0cb5SU0bwGld2apABsL2iU6NpLjo6zDoufB+AqAju+Sge6l0XoOmjBvXQNsiEp16p8y
+ 9zq7Ua7p4DCLr82OAxytsfBzH8rw0VmIzpd01MUOBo7kSffQDBAOdHEqPUGqiYQI2YH/7Wj7z
+ FeIDoxwZtHakfmpm4fMXuLtcsI72gXn8gmU3iJix5ksQk/2BTNEAZZrNxuQT/+7lRfexCoi/c
+ oc9OLANUbabC9Twi3L/zARsgl60vvdWsWoEnzgGEgDQHmpUkmbhu7yq7ZGy/HDa9UlPF9csi5
+ 7vRXLWndwyAuareuYQX3wrYScbykS9m+EXN+4vJS3xZzjpPAX44qxX579f06sDywJK+HTe7lM
+ 5a3qGOrG6wUWygdhvNLet6ClQa4R6grBFrblxKwVjoz/ZSm5lyxDvBKthokuuoOHpe1kdZVf4
+ j30FH6XdBBbjKiauAt+Z84i0dLivCUHs7ftiihynMqQiFkuVc8f37tyng8y8d2nCMwvpi79Yu
+ dn377wI2PFtdOfsKS26O8GgNO7V5PR++dY5YpKk2V040WkksdNFZSeJCGl7yVMe/lkPeN8oEA
+ ClxHgwYPCFl0J5SN82HYxEymidEn8ipaKah8ejb8gnxh7sI/Id8asXpnyBccj8M/To/Tw6p+b
+ SbnQIZW68VcOueJRbck/FktpR72U5iWnW3NgxAkGfr/SsB6ZyXn32JGbr7LmRqHfRNkhMUwq4
+ 2LJZvidzCY4f+R/AxwAZlWMjVeEEHzhma8eBFA+Lso0y5xW5DA2MmknJn3U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e8458e7afa855317b14915d7b86ab3caceea7eb6
-Gitweb:     https://git.kernel.org/tip/e8458e7afa855317b14915d7b86ab3caceea7eb6
-Author:     Kefeng Wang <wangkefeng.wang@huawei.com>
-AuthorDate: Thu, 4 Apr 2019 15:45:12 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 5 Apr 2019 14:37:56 +0200
-
-genirq: Initialize request_mutex if CONFIG_SPARSE_IRQ=n
-
-When CONFIG_SPARSE_IRQ is disable, the request_mutex in struct irq_desc
-is not initialized which causes malfunction.
-
-Fixes: 9114014cf4e6 ("genirq: Add mutex to irq desc to serialize request/free_irq()")
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190404074512.145533-1-wangkefeng.wang@huawei.com
-
----
- kernel/irq/irqdesc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 13539e12cd80..9f8a709337cf 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -558,6 +558,7 @@ int __init early_irq_init(void)
- 		alloc_masks(&desc[i], node);
- 		raw_spin_lock_init(&desc[i].lock);
- 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
-+		mutex_init(&desc[i].request_mutex);
- 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
- 	}
- 	return arch_early_irq_init();
+Am 05.04.19 um 13:34 schrieb Nicolas Saenz Julienne:
+> The killable version of wait_event() is meant to be used on situations
+> where it's not meant to fail at all costs, but still have the convenience
+> of being able to kill it if really necessary. For instance it's used
+> while waiting on an page write on some file systems.
+>
+> Wait events in VCHIQ don't fit this criteria, as it's mainly used as an
+> interface to V4L2 and ALSA devices.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Shouldn't this have a Fixes tag?
