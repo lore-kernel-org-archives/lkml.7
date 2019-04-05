@@ -2,79 +2,99 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADE6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F11C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61F220700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B33E20700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbfDEMmW (ORCPT
+        id S1731010AbfDEMnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:42:22 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11901 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfDEMmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:42:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 05:42:21 -0700
-X-IronPort-AV: E=Sophos;i="5.60,312,1549958400"; 
-   d="scan'208";a="289025662"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2019 05:42:19 -0700
-Message-ID: <2790d298adb0d57a67a0a3c9bc9aa8c7c08f0a0d.camel@linux.intel.com>
-Subject: Re: [RFC PATCH] drm/i915: Don't panic on non-empty list of free
- cachelines
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        michal.wajdeczko@intel.com
-Date:   Fri, 05 Apr 2019 14:42:16 +0200
-In-Reply-To: <155446684177.8259.3979238916498240519@skylake-alporthouse-com>
-References: <20190405121331.6524-1-janusz.krzysztofik@linux.intel.com>
-         <155446684177.8259.3979238916498240519@skylake-alporthouse-com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
- 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 5 Apr 2019 08:43:39 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56075 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfDEMni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 08:43:38 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35ChBCP2753902
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 05:43:11 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35ChBJA2753899;
+        Fri, 5 Apr 2019 05:43:11 -0700
+Date:   Fri, 5 Apr 2019 05:43:11 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Dan Carpenter <tipbot@zytor.com>
+Message-ID: <tip-95c5c618fa4349b2ba13aebeabf71911208dfc5e@git.kernel.org>
+Cc:     tglx@linutronix.de, mojha@codeaurora.org, jason@lakedaemon.net,
+        marc.zyngier@arm.com, dan.carpenter@oracle.com, hpa@zytor.com,
+        mingo@kernel.org, jiaxun.yang@flygoat.com,
+        linux-kernel@vger.kernel.org
+Reply-To: jiaxun.yang@flygoat.com, linux-kernel@vger.kernel.org,
+          mojha@codeaurora.org, jason@lakedaemon.net, marc.zyngier@arm.com,
+          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+          dan.carpenter@oracle.com
+In-Reply-To: <20190329062136.GQ32613@kadam>
+References: <20190329062136.GQ32613@kadam>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:irq/urgent] irqchip/irq-ls1x: Missing error code in
+ ls1x_intc_of_init()
+Git-Commit-ID: 95c5c618fa4349b2ba13aebeabf71911208dfc5e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-05 at 13:20 +0100, Chris Wilson wrote:
-> Quoting Janusz Krzysztofik (2019-04-05 13:13:31)
-> > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > 
-> > If there are active users of a device during driver unbind, the
-> > driver
-> > now panics on non-empty list of free cachelines.
-> 
-> This panic is there to say that fini is being called with active
-> contexts, that it is being called too early. Those requests should be
-> cleaned up first, unpinning the contexts and resources, and so
-> letting
-> the timeline be freed.
+Commit-ID:  95c5c618fa4349b2ba13aebeabf71911208dfc5e
+Gitweb:     https://git.kernel.org/tip/95c5c618fa4349b2ba13aebeabf71911208dfc5e
+Author:     Dan Carpenter <dan.carpenter@oracle.com>
+AuthorDate: Fri, 29 Mar 2019 09:21:37 +0300
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 5 Apr 2019 14:37:56 +0200
 
-OK, I see.  But why panic?  Maybe a WARN() would be enough.
+irqchip/irq-ls1x: Missing error code in ls1x_intc_of_init()
 
-Thanks,
-Janusz
+Currently, when irq_domain_add_linear() fails, the error code does not get
+set so it returns zero which is wrong.  Fix it by setting the appropriate
+error code.
 
-> -Chris
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: kernel-janitors@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190329062136.GQ32613@kadam
 
+---
+ drivers/irqchip/irq-ls1x.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+index 86b72fbd3b45..353111a10413 100644
+--- a/drivers/irqchip/irq-ls1x.c
++++ b/drivers/irqchip/irq-ls1x.c
+@@ -130,6 +130,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 					     NULL);
+ 	if (!priv->domain) {
+ 		pr_err("ls1x-irq: cannot add IRQ domain\n");
++		err = -ENOMEM;
+ 		goto out_iounmap;
+ 	}
+ 
