@@ -2,143 +2,109 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED1EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DD2C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B852921852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238362186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jurQ5SnJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UskltlgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbfDERv1 (ORCPT
+        id S1731636AbfDERwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:51:27 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55577 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730870AbfDERv1 (ORCPT
+        Fri, 5 Apr 2019 13:52:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44087 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731597AbfDERwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:51:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id y134so4227009itc.5;
-        Fri, 05 Apr 2019 10:51:26 -0700 (PDT)
+        Fri, 5 Apr 2019 13:52:44 -0400
+Received: by mail-lf1-f65.google.com with SMTP id v71so4963566lfa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 10:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pLt+v812zAQ1Eq0dfJtxELVupjTeMeNtDAgindcFhzc=;
-        b=jurQ5SnJbmEVWOv2+37JCGoOtnxLMy/DJCIfK5jEopHTA++9MGRr9GN+F+qho2FwFg
-         cFQ+OY/hBKKuXbjkHRGAmcjE3rlTdvAhsqu6ojhhH0SMylSvY+HWVFZSoVH4K25ZDxYG
-         9rKv5/MiSuKbNt4eM53XKhd0V2q0yaKyZnbIGriExRWzZbTMglTf39U2sQ13ZNbZPeLl
-         80CrA4qThtgRFwuoAh1o8P80H1X3IGj2GL/uc+lpGrK9AiF3dzQjZu/WS5tbWXhn5sGT
-         epbr017NfrOz01f2Hwe+/N/xLpl3g3/4tujT80SJca2/CH16uqdix0NzpbkeMs8/Lyqy
-         HzoA==
+         :cc;
+        bh=FSpSosZdFZRPfx7A8yR39RXqE1Cn94GDH5CixHI+5eY=;
+        b=UskltlgPf+BwYotFvqC2/ydUItpjQpa9y4u9m9TblPK8dZIhVlyO+s52wNOUCGM3La
+         4YAkhP95kbBc7k/dp21l3Z6lvxJXEEnTs5O/N58kVFR+1rSYQzXEwKpihyIP0zWF6XJL
+         wus9F6ve3lBUVedtoH5pRra+oJ0jymNw86kL8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pLt+v812zAQ1Eq0dfJtxELVupjTeMeNtDAgindcFhzc=;
-        b=Oufb020RmYFMsmtLTkqvmXZUXouel94g9Np3i1iSM55HrJqq7bQjDmLrObhDKRIxod
-         Sd/U7hjoN3wLtyFU9nNoaTnVJA8cnbb+iCB/Z83QBWBujaYj/RsmHroA2a7+TljwUge+
-         rm7fjmnWd8o1+GHN2hB4eucKdQ0J3JDEs5zGoQpusppkp9Vb+sFcYXm+OQ0v6BuwVw7B
-         MI/wYaWcPs5NV6tPZ/TAX9+vvLsLnSV/Wlgy3JtZI2bNT3j/A6VumItTMv7ajFjTRir3
-         OiBdoxxxnfApr+0xxZt4im6OT20QF9+5U6ajSoBXFwxrDUY4Tegk342x69ipcHZCEkse
-         7ABA==
-X-Gm-Message-State: APjAAAWT4bj2Hnyd4/PQR3SD69BIraYAMZooEz/dfuaqrW2EMUdCQdFU
-        INvpxQFk0z5Qu9oEfPFPHuKepBm++eplZyU25wY=
-X-Google-Smtp-Source: APXvYqzuClokSRDlQvHWXNGOxoF0fmneEp8CXPqFxWoeEg8k2sgiGIxz4hKIZzTezJYJXvU7tRDJ0W9fFJGgrJbpNtU=
-X-Received: by 2002:a24:9a86:: with SMTP id l128mr9967479ite.126.1554486686213;
- Fri, 05 Apr 2019 10:51:26 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=FSpSosZdFZRPfx7A8yR39RXqE1Cn94GDH5CixHI+5eY=;
+        b=TH4VmFf6Qru6eZQt+etgQCN5oRoYJ1lRXJAmEr+SFKjivAHeoOr/fqMu8X7PZ5Slhg
+         yfqXS10YvO/NeG5nU+CB/STzCaZoVJr1OfHBG+HiXl+W47FPH4eFmkNHaqSQtbOUfw35
+         Dq9eJrgkvOKerEFs280tlyDGR4cmAJUttFOB/w5f6bEd4jOM6QScfFnQxAQa4LstWRAX
+         CH7i4W3e+YiaWPDgtBdCmwOSDN20LboUX4gK1nHwE5xDLGcw2TOb2ZL7x9xONZ4oEn8W
+         62EymbRPnxky4W6OJ/+cNPwrYLr/i2wC2ujnwCQMiRfkTDJfgty5rjvgIkAxz0h3sd+r
+         nR5w==
+X-Gm-Message-State: APjAAAXYUST8xekHtmL8nv9vPHxdZqJYRRpmlYir5e+4aAPG+hvRjO4+
+        2+Nv4wwTEPMN8eFfuh/pFRtMpgDUhZU=
+X-Google-Smtp-Source: APXvYqyz2SsUKLieXN4DGQ/p1dztjnOGCRAepSJBnQdBIfBj/wTQLVw9jV9EfnH/SJ0WDJ7JINp6Uw==
+X-Received: by 2002:ac2:5285:: with SMTP id q5mr7303854lfm.37.1554486762267;
+        Fri, 05 Apr 2019 10:52:42 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id d3sm4829729ljc.15.2019.04.05.10.52.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 10:52:41 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id j89so6035225ljb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 10:52:41 -0700 (PDT)
+X-Received: by 2002:a2e:9a49:: with SMTP id k9mr8195155ljj.84.1554486760470;
+ Fri, 05 Apr 2019 10:52:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-2-andrew.smirnov@gmail.com> <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
-In-Reply-To: <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 5 Apr 2019 10:51:14 -0700
-Message-ID: <CAHQ1cqEDiqn3KJeG62zqLm0tLv=+dgVHxSafm9_TYoi=VOMNhA@mail.gmail.com>
-Subject: Re: [PATCH v3 01/13] thermal: qoriq: Remove unnecessary DT node is
- NULL check
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190401180505.6621-1-evgreen@chromium.org> <20190405071455.GA30194@raj-desk2.iind.intel.com>
+In-Reply-To: <20190405071455.GA30194@raj-desk2.iind.intel.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 5 Apr 2019 10:52:04 -0700
+X-Gmail-Original-Message-ID: <CAE=gft7r+0s6M2KZLdcp33xvnxjX2Kqyg-vVk5dVVoC5PUOGqw@mail.gmail.com>
+Message-ID: <CAE=gft7r+0s6M2KZLdcp33xvnxjX2Kqyg-vVk5dVVoC5PUOGqw@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Report slp_s0 residency range
+To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 8:21 PM Daniel Lezcano <daniel.lezcano@linaro.org> w=
-rote:
+On Fri, Apr 5, 2019 at 12:28 AM Rajneesh Bhardwaj
+<rajneesh.bhardwaj@intel.com> wrote:
 >
-> On 01/04/2019 06:14, Andrey Smirnov wrote:
-> > This driver is meant to be used with Device Tree and there's no
-> > use-case where device's DT node is going to be NULL. Remove code
-> > protecting against that.
->
-> May be elaborate why is never going to be NULL?
->
-
-Hmm, I am not sure what can be elaborated further than what's already
-there. The driver is written to be instantiated via DT and there's no
-code that tries to do that via board code or anything like that. I am
-guessing you maybe read the description differently. Can you help me
-by giving an example of what you think needs clarifying?
-
-Thanks,
-Andrey Smirnov
-
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
->
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->
-> > ---
-> >  drivers/thermal/qoriq_thermal.c | 5 -----
-> >  1 file changed, 5 deletions(-)
+> On Mon, Apr 01, 2019 at 11:05:04AM -0700, Evan Green wrote:
+> > The PMC driver performs a 32-bit read on the sleep s0 residency counter,
+> > followed by a hard-coded multiplication to convert into microseconds.
+> > The maximum value this counter could have would be 0xffffffff*0x64
+> > microseconds, which by my calculations is about 4.9 days. This is well
+> > within a reasonable time period to observe an overflow.
 > >
-> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_th=
-ermal.c
-> > index 3b5f5b3fb1bc..7b364933bfb1 100644
-> > --- a/drivers/thermal/qoriq_thermal.c
-> > +++ b/drivers/thermal/qoriq_thermal.c
-> > @@ -193,11 +193,6 @@ static int qoriq_tmu_probe(struct platform_device =
-*pdev)
-> >       struct qoriq_tmu_data *data;
-> >       struct device_node *np =3D pdev->dev.of_node;
-> >
-> > -     if (!np) {
-> > -             dev_err(&pdev->dev, "Device OF-Node is NULL");
-> > -             return -ENODEV;
-> > -     }
-> > -
-> >       data =3D devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
-> >                           GFP_KERNEL);
-> >       if (!data)
-> >
+> > Usermode consumers watching slp_s0_residency_usec need to be aware of
+> > overflows, but have no idea what the maximum value of this counter is,
+> > given the hardcoded multiply of a 32-bit value by
+> > SPT_PMC_SLP_S0_RES_COUNTER_STEP.
 >
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+> This register is a 32 bit register untill ICL generation and a recent patch
+> from Rajat fixed the overflow https://patchwork.kernel.org/patch/10816103/
+> already so i am not sure how this will help userspace. I think the userspace
+> can still take care of any overflow concerns based on the information
+> available about this register in EDS so i feel exposing a new debugfs entry
+> just for the sake of knowing range is probably not needed.
+
+So you don't anticipate reusing this driver for other models where the
+factor of 100 might change, or the counter might be a different width?
+We can hardcode the multiply in usermode in order to detect when we've
+exceeded the 4.9 day rollover range, but it seemed brittle, and would
+break if this hardware implementation detail ever changed.
+-Evan
