@@ -2,106 +2,260 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08515C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F4AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7C021738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0640C21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="NIg/59lN"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ei8Tz4yR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfDENxw (ORCPT
+        id S1730492AbfDEN5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:53:52 -0400
-Received: from mout.gmx.net ([212.227.17.20]:42463 "EHLO mout.gmx.net"
+        Fri, 5 Apr 2019 09:57:21 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42692 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDENxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:53:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554472426;
-        bh=53RG4ZGmQNPTkwmRy5vzvKtSjJjq1u9O1NuRhhP8N48=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=NIg/59lNJNJzDzz6+4+7n+mw9lTNFuPOYqFiHgPQ9jQhUOmD6/xj2DdIcWOqOUgQ9
-         1FYB8m/EGmc6jYv5KMDIz2O+UsgeSycgqVFnAXupwygBAUWjHv2+nHepSqJRlGZ5Rh
-         DZjc24iuTgqs7D2B5hBgRt7dUf/kX5nM4TKwus6Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([113.116.49.152]) by mail.gmx.com
- (mrgmx101 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0MNuwp-1hI9mk1FvP-007Rs1; Fri, 05 Apr 2019 15:53:46 +0200
-From:   Chengguang Xu <cgxu519@gmx.com>
-To:     gregkh@linuxfoundation.org, dan.carpenter@oracle.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chengguang Xu <cgxu519@gmx.com>
-Subject: [PATCH] chardev: set variable ret to -EBUSY before checking minor range overlap
-Date:   Fri,  5 Apr 2019 21:53:06 +0800
-Message-Id: <20190405135306.10188-1-cgxu519@gmx.com>
-X-Mailer: git-send-email 2.17.2
-X-Provags-ID: V03:K1:kWpfzNfBvsLZx+Af3QxO0Zf+aUo0TxJvm5Sz9lAYnysj5vo0SnV
- 1QQKMSqoi5cGpARTcx1T8Bi6gc93RH3KSFLpaq9r8Heu1KZsYphqvOs5bxyDngfU6tWkCBo
- 0FcimWjUhQ2RSIQfGJzCTImjebCjgiyEip4ENktkYYsNsYjOZRp6uar+0O7d25Nv4+ZT09l
- 3nl1SNj8rovaVz+NUmWDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kJ2tiIhF5fY=:Gcp3wXqVy9lsfX0FR9USRw
- +om0uWyZmx0yoRWtdrqYN2yczh2jAEPcHZWxNEt6uLTMw4n6vGmNcyODy45k6fYuaX9XbIcae
- mEX+SyOGfRExbgX7+Yr6C/ulf0FLEVq3+6GZMrGmiYPxPkHtjAeLqEetb+QpdMkpYXqaNOhVn
- 2Od9dI21KPRXy2u8LtH87j8ivUKxw4mE8Cw4H1mvPa7YMaAqXk8YiarSzsZmrRKXTi0KHRFvF
- VvY11wfkcd08e7/8zVNFmWWs9KP2iRezHhr5wsIvIH+qVTcQJcf3J40JSU2wmiSLDFCbRpjoY
- 4d8aqrlDLK3l5w0Iq0Fw4bF41EEmRqDlwfnID2sLX7CIZ3F54ucdP1iSK4Udb+zy/U+c4bKig
- 0PdbKFOfA9K5ceqsjH9jAhjMnEeR7Ii/jR8ZtpJ57EiopII9xnsBA/hft5CVWxYnHeM5oQ+6X
- 2BkoUQFzFi8n4ZPWjdN9Xvx9kOCKH8RAGX7ojXQYDdwt5vcDV0QEB1mr8x23sI+a2H+6hLfdj
- 7dmuRghkKc6vkVJJTcAkZO74KiHKg67lRdqx3SGImMiAYrrZ6QyOmN9cCZUpTNjrEuBOW/3y8
- KfTm6U3s4w4AhZEczgP6KClKqMnBaU57TqXz0SHH0Nj1yzNT3EjhxOoOmcXespxmgB/woOzP2
- KDxViKliMPIxNe9IKqk1LRHW/VB96Tq1odrx9MxnHKIih0QDzElDorFfudrdjX8Idqv69u8YQ
- /89XJ1gGM2NfLtWEy6rb+S/UOyAcF8npDX/WLaKVzzoFGnGdf3YIsAlOqY2DkzQNhNhuxMk74
- LFw+D2oXuxgujsgpmx3J0/lNK5Ilj8AQFqJL7u/ibzeIwE+cgGZLfUesjXcxHDx+14AikfEDs
- 7yogCWY+dZuQgytf8ZBguNKW7rTHJIeUDbZyvIPoZ+JO07n1s+y2aZi2xt1hWH
-Content-Transfer-Encoding: quoted-printable
+        id S1726027AbfDEN5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 09:57:21 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E5271EC05A6;
+        Fri,  5 Apr 2019 15:57:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554472638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=O4UcyGkVKqjCMDV4RKEHL/ZfLzZq+tk55TxsL4ffLco=;
+        b=Ei8Tz4yR7zuJn7CJE0n6hAz17WJzl2w7nRekqRrJkkwm9Sz/RvpX4BO771fbchCcS0Et2t
+        LPkAwY8rKoOxG2rez//jKqS+1a0Yshr6pQN01btrJJLe9aI8+l1VGgaMdUHr7qYzPwRFQn
+        kO/gruRXjd/9x1fQyut47HXgp08BeYs=
+Date:   Fri, 5 Apr 2019 15:57:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC 2/5] x86/speculation: Add support for
+ 'cpu_spec_mitigations=' cmdline options
+Message-ID: <20190405135712.GF23348@zn.tnic>
+References: <cover.1554396090.git.jpoimboe@redhat.com>
+ <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When allocating dynamic major, the minor range overlap check
-in __register_chrdev_region() will not fail, so actually
-there is no real case to passing non negative error code to
-caller. However, set variable ret to -EBUSY before chekcking
-minor range overlap will avoid false-positive warning from
-code analyzing tool(like Smatch) and also make the code more
-easy to understand.
+On Thu, Apr 04, 2019 at 11:44:12AM -0500, Josh Poimboeuf wrote:
+> Configure x86 runtime CPU speculation bug mitigations in accordance with
+> the 'cpu_spec_mitigations=' cmdline options.  This affects Meltdown,
+> Spectre v2, Speculative Store Bypass, and L1TF.
+> 
+> The default behavior is unchanged.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         | 15 +++++++++
+>  arch/x86/include/asm/processor.h              |  1 +
+>  arch/x86/kernel/cpu/bugs.c                    | 32 ++++++++++++++++---
+>  arch/x86/kvm/vmx/vmx.c                        |  2 ++
+>  arch/x86/mm/pti.c                             |  4 ++-
+>  5 files changed, 49 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ac42e510bd6e..29dc03971630 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2552,6 +2552,11 @@
+>  
+>  			off
+>  				Disable all speculative CPU mitigations.
+> +				Equivalent to: nopti [x86]
+> +					       nospectre_v2 [x86]
+> +					       spectre_v2_user=off [x86]
+> +					       spec_store_bypass_disable=off [x86]
+> +					       l1tf=off [x86]
+>  
+>  			auto (default)
+>  				Mitigate all speculative CPU vulnerabilities,
+> @@ -2560,12 +2565,22 @@
+>  				surprised by SMT getting disabled across kernel
+>  				upgrades, or who have other ways of avoiding
+>  				SMT-based attacks.
+> +				Equivalent to: pti=auto [x86]
+> +					       spectre_v2=auto [x86]
+> +					       spectre_v2_user=auto [x86]
+> +					       spec_store_bypass_disable=auto [x86]
+> +					       l1tf=flush [x86]
+>  
+>  			auto,nosmt
+>  				Mitigate all speculative CPU vulnerabilities,
+>  				disabling SMT if needed.  This is for users who
+>  				always want to be fully mitigated, even if it
+>  				means losing SMT.
+> +				Equivalent to: pti=auto [x86]
+> +					       spectre_v2=auto [x86]
+> +					       spectre_v2_user=auto [x86]
+> +					       spec_store_bypass_disable=auto [x86]
+> +					       l1tf=flush,nosmt [x86]
+>  
+>  	mminit_loglevel=
+>  			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
 
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-=2D--
- fs/char_dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yap, those sets look ok.
 
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index df6a54045ac4..00dfe17871ac 100644
-=2D-- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -98,7 +98,7 @@ __register_chrdev_region(unsigned int major, unsigned in=
-t baseminor,
- 			   int minorct, const char *name)
- {
- 	struct char_device_struct *cd, *curr, *prev =3D NULL;
--	int ret -EBUSY;
-+	int ret;
- 	int i;
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 2bb3a648fc12..7e95b310f869 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -982,6 +982,7 @@ void microcode_check(void);
+>  
+>  enum l1tf_mitigations {
+>  	L1TF_MITIGATION_OFF,
+> +	L1TF_MITIGATION_DEFAULT,
+>  	L1TF_MITIGATION_FLUSH_NOWARN,
+>  	L1TF_MITIGATION_FLUSH,
+>  	L1TF_MITIGATION_FLUSH_NOSMT,
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 2da82eff0eb4..65b95fb95ba5 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -308,8 +308,11 @@ spectre_v2_parse_user_cmdline(enum spectre_v2_mitigation_cmd v2_cmd)
+>  
+>  	ret = cmdline_find_option(boot_command_line, "spectre_v2_user",
+>  				  arg, sizeof(arg));
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
+> +			return SPECTRE_V2_USER_CMD_NONE;
 
- 	if (major >=3D CHRDEV_MAJOR_MAX) {
-@@ -129,6 +129,7 @@ __register_chrdev_region(unsigned int major, unsigned =
-int baseminor,
- 		major =3D ret;
- 	}
+Instead of sprinkling that test in those three functions, just do it
+once above in check_bugs(), before those *_select_mitigation() functions
+get to run and depending on the value, you either run them or use the
+default settings, for the OFF case, for example.
 
-+	ret =3D -EBUSY;
- 	i =3D major_to_index(major);
- 	for (curr =3D chrdevs[i]; curr; prev =3D curr, curr =3D curr->next) {
- 		if (curr->major < major)
-=2D-
-2.17.2
+>  		return SPECTRE_V2_USER_CMD_AUTO;
+> +	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(v2_user_options); i++) {
+>  		if (match_option(arg, ret, v2_user_options[i].option)) {
+> @@ -444,8 +447,11 @@ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
+>  		return SPECTRE_V2_CMD_NONE;
+>  
+>  	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
+> +			return SPECTRE_V2_CMD_NONE;
+>  		return SPECTRE_V2_CMD_AUTO;
+> +	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
+>  		if (!match_option(arg, ret, mitigation_options[i].option))
+> @@ -677,8 +683,11 @@ static enum ssb_mitigation_cmd __init ssb_parse_cmdline(void)
+>  	} else {
+>  		ret = cmdline_find_option(boot_command_line, "spec_store_bypass_disable",
+>  					  arg, sizeof(arg));
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
+> +				return SPEC_STORE_BYPASS_CMD_NONE;
+>  			return SPEC_STORE_BYPASS_CMD_AUTO;
+> +		}
+>  
+>  		for (i = 0; i < ARRAY_SIZE(ssb_mitigation_options); i++) {
+>  			if (!match_option(arg, ret, ssb_mitigation_options[i].option))
+> @@ -955,7 +964,7 @@ void x86_spec_ctrl_setup_ap(void)
+>  #define pr_fmt(fmt)	"L1TF: " fmt
+>  
+>  /* Default mitigation for L1TF-affected CPUs */
+> -enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
+> +enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_DEFAULT;
+>  #if IS_ENABLED(CONFIG_KVM_INTEL)
+>  EXPORT_SYMBOL_GPL(l1tf_mitigation);
+>  #endif
+> @@ -1010,8 +1019,23 @@ static void __init l1tf_select_mitigation(void)
+>  
+>  	override_cache_bits(&boot_cpu_data);
+>  
+> +	if (l1tf_mitigation == L1TF_MITIGATION_DEFAULT) {
+> +		switch (cpu_spec_mitigations) {
+> +		case CPU_SPEC_MITIGATIONS_OFF:
+> +			l1tf_mitigation = L1TF_MITIGATION_OFF;
+> +			break;
+> +		case CPU_SPEC_MITIGATIONS_AUTO:
+> +			l1tf_mitigation = L1TF_MITIGATION_FLUSH;
+> +			break;
+> +		case CPU_SPEC_MITIGATIONS_AUTO_NOSMT:
+> +			l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
+> +			break;
+> +		}
+> +	}
+> +
+>  	switch (l1tf_mitigation) {
+>  	case L1TF_MITIGATION_OFF:
+> +	case L1TF_MITIGATION_DEFAULT:
+>  	case L1TF_MITIGATION_FLUSH_NOWARN:
+>  	case L1TF_MITIGATION_FLUSH:
+>  		break;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ab432a930ae8..83b5bdc3c777 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -233,6 +233,7 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+>  		case L1TF_MITIGATION_FLUSH_NOWARN:
+>  		case L1TF_MITIGATION_FLUSH:
+>  		case L1TF_MITIGATION_FLUSH_NOSMT:
+> +		case L1TF_MITIGATION_DEFAULT:
+>  			l1tf = VMENTER_L1D_FLUSH_COND;
+>  			break;
+>  		case L1TF_MITIGATION_FULL:
+> @@ -6686,6 +6687,7 @@ static int vmx_vm_init(struct kvm *kvm)
+>  		case L1TF_MITIGATION_FLUSH:
+>  		case L1TF_MITIGATION_FLUSH_NOSMT:
+>  		case L1TF_MITIGATION_FULL:
+> +		case L1TF_MITIGATION_DEFAULT:
+>  			/*
+>  			 * Warn upon starting the first VM in a potentially
+>  			 * insecure environment.
 
+The L1TF bits need to be a separate patch.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
