@@ -2,90 +2,83 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E0C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA27DC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41932146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F7121738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfDEQdr (ORCPT
+        id S1731583AbfDEQeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:33:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57670 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbfDEQdr (ORCPT
+        Fri, 5 Apr 2019 12:34:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:28119 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729269AbfDEQeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:33:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hCRmi-0003N7-Db; Fri, 05 Apr 2019 16:33:44 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: mptfusion: fix sign-extension on large shift of 1
-Date:   Fri,  5 Apr 2019 17:33:44 +0100
-Message-Id: <20190405163344.7287-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 5 Apr 2019 12:34:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-188-W7t3GGLlMV2RrwvroR2Fig-1; Fri, 05 Apr 2019 17:34:43 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 5 Apr 2019 17:35:50 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 5 Apr 2019 17:35:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Josh Poimboeuf' <jpoimboe@redhat.com>
+CC:     'Luis Ressel' <aranea@aixah.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] objtool: Don't use -Werror
+Thread-Topic: [PATCH] objtool: Don't use -Werror
+Thread-Index: AQHU68meTsW4XthB40qs85GeKW+DmKYtvJfg///yOYCAABLlUA==
+Date:   Fri, 5 Apr 2019 16:35:50 +0000
+Message-ID: <d3cb290b12974f1895ea235680f90ead@AcuMS.aculab.com>
+References: <20190405110151.2461-1-aranea@aixah.de>
+ <20190405123909.tupbgueie4czg2dd@treble>
+ <20190405142443.rgpwbgyym76xizad@vega.skynet.aixah.de>
+ <20190405143926.wmrkjsazlheeg6qs@treble>
+ <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
+ <a9dfc08702044b3db89c0584c0f79229@AcuMS.aculab.com>
+ <20190405162109.4hv6lqpd6manzjju@treble>
+In-Reply-To: <20190405162109.4hv6lqpd6manzjju@treble>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: W7t3GGLlMV2RrwvroR2Fig-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
-
-Shifting the int value 1 can lead to sign-extension overflow when the shift
-is 31 bits and ending up with the upper 32 bits being set.  Fix this by
-shifting 1ULL instead of 1.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/message/fusion/mptsas.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/message/fusion/mptsas.c b/drivers/message/fusion/mptsas.c
-index 6a79cd0ebe2b..e6e9dffe1b5c 100644
---- a/drivers/message/fusion/mptsas.c
-+++ b/drivers/message/fusion/mptsas.c
-@@ -854,7 +854,7 @@ mptsas_setup_wide_ports(MPT_ADAPTER *ioc, struct mptsas_portinfo *port_info)
- 		    "%s: [%p]: deleting phy = %d\n",
- 		    ioc->name, __func__, port_details, i));
- 		port_details->num_phys--;
--		port_details->phy_bitmask &= ~ (1 << phy_info->phy_id);
-+		port_details->phy_bitmask &= ~(1ULL << phy_info->phy_id);
- 		memset(&phy_info->attached, 0, sizeof(struct mptsas_devinfo));
- 		if (phy_info->phy) {
- 			devtprintk(ioc, dev_printk(KERN_DEBUG,
-@@ -889,7 +889,7 @@ mptsas_setup_wide_ports(MPT_ADAPTER *ioc, struct mptsas_portinfo *port_info)
- 			port_details->port_info = port_info;
- 			if (phy_info->phy_id < 64 )
- 				port_details->phy_bitmask |=
--				    (1 << phy_info->phy_id);
-+				    (1ULL << phy_info->phy_id);
- 			phy_info->sas_port_add_phy=1;
- 			dsaswideprintk(ioc, printk(MYIOC_s_DEBUG_FMT "\t\tForming port\n\t\t"
- 			    "phy_id=%d sas_address=0x%018llX\n",
-@@ -931,7 +931,7 @@ mptsas_setup_wide_ports(MPT_ADAPTER *ioc, struct mptsas_portinfo *port_info)
- 			phy_info_cmp->port_details = port_details;
- 			if (phy_info_cmp->phy_id < 64 )
- 				port_details->phy_bitmask |=
--				(1 << phy_info_cmp->phy_id);
-+				(1ULL << phy_info_cmp->phy_id);
- 			port_details->num_phys++;
- 		}
- 	}
--- 
-2.20.1
+RnJvbTogSm9zaCBQb2ltYm9ldWYNCj4gU2VudDogMDUgQXByaWwgMjAxOSAxNzoyMQ0KLi4NCj4g
+PiBGV0lXIEkgaGFkIHRvIHVwZGF0ZSBsaWJlbGYuc28gZnJvbSB2ZXJzaW9uIDAuMTUzIHRvIDAu
+MTY1IGluDQo+ID4gb3JkZXIgZm9yIHRoZSBhbWQ2NCBvcmMgdW53aW5kZXIgY29kZSBpbiBvYmp0
+b29sIHRvIG5vdCBnZW5lcmF0ZQ0KPiA+IGNvcnJ1cHQgb3V0cHV0IGZpbGVzLg0KPiA+IFRoYXQg
+aXMgYW4gVWJ1bnR1IDEzLjA0IHN5c3RlbSAtIG5vdGhpbmcgbGlrZSAxMCB5ZWFycyBvbGQuDQo+
+IA0KPiBBaC4gIEl0IHdvdWxkIGJlIGdyZWF0IGlmIHdlIGhhZCBhIHBhdGNoIHRvIGZhaWwgdGhl
+IGJ1aWxkIGZvciBvbGQNCj4gdmVyc2lvbnMgb2YgZWxmdXRpbHMtbGliZWxmIGFzIHdlbGwuDQoN
+CkkgdGhpbmsgdGhlIGNoZWNrIEkgYWRkZWQgZm9yIHRoYXQgc3BlY2lmaWMgZXJyb3IgZ290IGNv
+bW1pdHRlZC4NCkxvb2sgYXQgdGhlIGRlZmludGlvbiBvZiBjbWRfb2JqdG9vbCBpbiBzY3JpcHRz
+L01ha2VmaWxlLmJ1aWxkLg0KDQpBbHRob3VnaCBJIHNlZW0gdG8gaGF2ZSBhIGxvY2FsIGNoYW5n
+ZSB0byB0aGUgZGVmaW5pdGlvbiBvZg0KY21kX21vZHZlcnNpb25zX2MuDQpJdCBtaWdodCBiZSB0
+aGF0IHRoZSB2ZXJzaW9uIG9mIGEgY2hhbmdlIEkgbWFkZSB0aGF0IGdvdCBjb21taXR0ZWQNCmlz
+IG1pc3NpbmcgYW4gZXh0cmEgJCB3aGVuIHByb2Nlc3NpbmcgdGhlIHNhdmVkIG91dHB1dCBmcm9t
+ICdvYmpkdW1wIC1oJy4NCkl0IHVzZWQgdG8ganVzdCBwaXBlIGludG8gZ3JlcCAtIHNvIGxvc3Qg
+dGhlIGVycm9yIHJlc3VsdCBmcm9tIG9iamR1bXAuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVk
+IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
+cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
