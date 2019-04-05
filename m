@@ -2,166 +2,119 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACCEC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF53C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09F12146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5xUR7sT"
+	by mail.kernel.org (Postfix) with ESMTP id 5BBC82171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554487580;
+	bh=HK3C+WQAVoOovk03K17EVGE894FDOVP/NrAJyP885xg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=emhefhTcPvQdaMg2BAtLOu5NJEvDH+/PTXjgWaQzdQumoQhb0jQjmc2FRnb+G2LMn
+	 3W+tmMS5k0MYQjX5HVJTgw5Z6pjpwXF/ee0+MxqxTzi48wsJQFsyJdUsaMP9xI7X/s
+	 WZWPzdS53crR0Mp7DyB7ncawI+G7xB9VefrwDAhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbfDESFC (ORCPT
+        id S1731684AbfDESGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:05:02 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54107 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfDESFB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:05:01 -0400
-Received: by mail-it1-f194.google.com with SMTP id y204so10862718itf.3;
-        Fri, 05 Apr 2019 11:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Rs6lvFuWDLjGHtZaPICXxNnL6/JM32AelCBVVvSRrk=;
-        b=E5xUR7sTpZvwpcgRp+7J0ZpyBoP/K0uYR3RLKDvauWWv06VG0YBOuVBS7mjsAoLqCf
-         VXjWMbsTBs7UCSk7kb3WPj9gY/k+uWHJYZCgfWkULbd/jE/HpTmzBBseMFnMdBFL0ErE
-         Yh1qlwrPuk54zxTXXv9hkW3ihVaUKpgzi/zwQ4rAn7GSMvIfIDlvYMi21l2JPwv/NM63
-         DVV+c0v0tUFb5Apdw2fGzsFp9NEk5fCuwc8hA9C1miRKGdDt0AiGWyvcQmB5acVvOASn
-         DIhlfOB/aDCS/N5d7nzCK0gXWOOW32EymsnqGog+wbzilGNZUHi1z/c5XRxPi0MIsuSv
-         9z4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Rs6lvFuWDLjGHtZaPICXxNnL6/JM32AelCBVVvSRrk=;
-        b=Su1m8rfqnC0Le6fzoiDBivgvjNgGTQF5NQICtYcLCCWKBAmJFjhS/c8ZHDN6ULQbOM
-         8NNLsGEfn9eY8OiJrz7aYMYf1Np3oWxmI6ffZ5n4ykX+jmTuwiByou2J5edUm1ol1gEL
-         TeEqBdQSF3Vuj+RN/d4swS1SBxBCfIteCk2UM/b9bKV+yXdPW4H1K/q0Q3P53rO2WwQi
-         jeLcXwSCJu3Ago4M/LpfBIf+I7lFxQUj3VhriT/A+/0qYdD5aoOYWvV+7H5A1lVDjeuB
-         H8dE0pzK4DWAlQjK/VHZAAxjbUg5+nZqCT3m2tKVFuD8EyuWLe8Ug9wwYjYMeFLGxSN9
-         Xv7g==
-X-Gm-Message-State: APjAAAWFbO/0OFaYtzMARQ7Ew6QUp0DD5FSOar8d7ETH6FYptGWP29wz
-        AILp0JWlsCasLNGme0xZU9DT/jPATTkTVhL2gFY=
-X-Google-Smtp-Source: APXvYqzakkL66QnnGutHg4bQVznJQJ0uonaMO2QG03u06xsK3ITZSsCQlZIr4R7y2fpDyrNTPLDZQhpIwezyOEYLPTU=
-X-Received: by 2002:a24:4702:: with SMTP id t2mr9988913itb.105.1554487500644;
- Fri, 05 Apr 2019 11:05:00 -0700 (PDT)
+        Fri, 5 Apr 2019 14:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfDESGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 14:06:18 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A41142146F;
+        Fri,  5 Apr 2019 18:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554487577;
+        bh=HK3C+WQAVoOovk03K17EVGE894FDOVP/NrAJyP885xg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F8nWszjI7awFxRSTBbXrulQydNuEc5JnEQp1XJjzA/ZMndxtdqXdMifMZYxHW+tut
+         Ytcy308xnFaZu6IABLQ0xW8xG++uE7gZK1wlfeXNqPSssAPpDAYeTgl+mRaTUsoyCT
+         7CzcrvfuOEwjOfRcaYHzdN9mHfOrSORMx5RZULIw=
+Date:   Fri, 5 Apr 2019 13:06:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, wangkefeng.wang@huawei.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de, rafael@kernel.org,
+        linux-pci@vger.kernel.org, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        andy.shevchenko@gmail.com, catalin.marinas@arm.com, bp@suse.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
+ CPU MMIO regions
+Message-ID: <20190405180615.GB109021@google.com>
+References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
+ <1554393602-152448-4-git-send-email-john.garry@huawei.com>
+ <20190404164130.GA12203@roeck-us.net>
+ <24cc8006-0f0d-6b20-a466-e4a32a0bb656@huawei.com>
+ <20190404174336.GA10404@roeck-us.net>
+ <20190404185815.GA26522@google.com>
+ <2d0f583a-cabe-df4e-ad89-c1800d9b4804@huawei.com>
 MIME-Version: 1.0
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-8-andrew.smirnov@gmail.com> <fa3cf0ac-1015-4031-8cd4-cd5270e39fc7@linaro.org>
-In-Reply-To: <fa3cf0ac-1015-4031-8cd4-cd5270e39fc7@linaro.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 5 Apr 2019 11:04:49 -0700
-Message-ID: <CAHQ1cqGfSS0PHaM+QcEMzhxXN5F9vQEE=nWseSoRKbrEmkFHag@mail.gmail.com>
-Subject: Re: [PATCH v3 07/13] thermal: qoriq: Pass data to qoriq_tmu_calibration()
- directly
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d0f583a-cabe-df4e-ad89-c1800d9b4804@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 1:12 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 01/04/2019 06:14, Andrey Smirnov wrote:
-> > We can simplify error cleanup code if instead of passing a "struct
-> > platform_device *" to qoriq_tmu_calibration() and deriving a bunch of
-> > pointers from it, we pass those pointers directly. This way we won't
-> > be force to call platform_set_drvdata() as early in qoriq_tmu_probe()
-> > and consequently would be able to drop the "err_iomap" error path.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/thermal/qoriq_thermal.c | 22 +++++++++-------------
-> >  1 file changed, 9 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> > index 24a2a57f61c9..a3ddb55740e4 100644
-> > --- a/drivers/thermal/qoriq_thermal.c
-> > +++ b/drivers/thermal/qoriq_thermal.c
-> > @@ -139,16 +139,16 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
-> >       return 0;
-> >  }
-> >
-> > -static int qoriq_tmu_calibration(struct platform_device *pdev)
-> > +static int qoriq_tmu_calibration(struct device *dev,
-> > +                              struct qoriq_tmu_data *data)
-> >  {
-> >       int i, val, len;
-> >       u32 range[4];
-> >       const u32 *calibration;
-> > -     struct device_node *np = pdev->dev.of_node;
-> > -     struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
-> > +     struct device_node *np = dev->of_node;
-> >
-> >       if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
-> > -             dev_err(&pdev->dev, "missing calibration range.\n");
-> > +             dev_err(dev, "missing calibration range.\n");
-> >               return -ENODEV;
-> >       }
-> >
-> > @@ -160,7 +160,7 @@ static int qoriq_tmu_calibration(struct platform_device *pdev)
-> >
-> >       calibration = of_get_property(np, "fsl,tmu-calibration", &len);
-> >       if (calibration == NULL || len % 8) {
-> > -             dev_err(&pdev->dev, "invalid calibration data.\n");
-> > +             dev_err(dev, "invalid calibration data.\n");
-> >               return -ENODEV;
-> >       }
-> >
-> > @@ -198,20 +198,17 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
-> >       if (!data)
-> >               return -ENOMEM;
-> >
-> > -     platform_set_drvdata(pdev, data);
-> > -
-> >       data->little_endian = of_property_read_bool(np, "little-endian");
-> >
-> >       data->regs = of_iomap(np, 0);
-> >       if (!data->regs) {
-> >               dev_err(dev, "Failed to get memory region\n");
-> > -             ret = -ENODEV;
-> > -             goto err_iomap;
-> > +             return -ENODEV;
-> >       }
-> >
-> >       qoriq_tmu_init_device(data);    /* TMU initialization */
-> >
-> > -     ret = qoriq_tmu_calibration(pdev);      /* TMU calibration */
-> > +     ret = qoriq_tmu_calibration(dev, data); /* TMU calibration */
-> >       if (ret < 0)
-> >               goto err_tmu;
-> >
-> > @@ -222,14 +219,13 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
-> >               goto err_iomap;
->
-> s/goto err_iomap/goto err_tmu/ ?
->
+On Fri, Apr 05, 2019 at 09:10:27AM +0100, John Garry wrote:
+> On 04/04/2019 19:58, Bjorn Helgaas wrote:
+> > On Thu, Apr 04, 2019 at 10:43:36AM -0700, Guenter Roeck wrote:
+> > > On Thu, Apr 04, 2019 at 05:52:35PM +0100, John Garry wrote:
+> > > > > > Note that the f71805f driver does not call
+> > > > > > request_{muxed_}region(), as it should.
+> > > > 
+> > > > > ... which is the real problem, one that is not solved by this
+> > > > > patch. This may result in parallel and descructive accesses if
+> > > > > there is another device on the LPC bus, and another driver
+> > > > > accessing that device. Personally I'd rather have
+> > > > > request_muxed_region() added to the f71805f driver.
+> > > > 
+> > > > Right, we should and will still fix f71805f. If you recall, I did
+> > > > have the f71805f fix in the v1 series, but you committed that it
+> > > > was orthogonal, so I decided to take it out of this work for now.
+> > > > 
+> > > > And even if we fix up f71805f and other known drivers which don't
+> > > > call request_muxed_region(), we still need to police against these
+> > > > rogue accesses, which is what this patch attempts to do.
+> > > > 
+> > > Do we ? I am personally not convinced that LPC accesses _have_ to
+> > > occur through PCI on any given system.
+> > 
+> > On current systems, I suspect ISA/LPC devices are typically connected
+> > via a PCI-to-ISA/LPC bridge.  But AFAIK there's no actual requirement
+> > for that bridge, and there certainly *were* systems with ISA devices
+> > but no PCI at all.
+> > 
+> > IMO, if you want to build ISA drivers on your arch, you need to make
+> > sure the inb() probing done by those drivers works like it does on
+> > x86.  If there's no device there, the inb() should return 0xff with no
+> > fuss and no crash.
+> 
+> Right, and this is what I am attempting to do here.
+> 
+> So today a call to request_muxed_region() can still succeed even if no IO
+> space mapped.
+> 
+> As such, even well-behaved drivers like f71882fg can still crash the system,
+> as noted in RFC patch 1/4 ("resource: Request IO port regions from children
+> of ioport_resource").
 
-Ugh, not sure how I missed this. Will fix. Thanks for catching this!
+Maybe I'm missing something, but on x86, drivers like f71882fg do not
+crash the system because inb() *never* causes a crash.
 
-Thanks,
-Andrey Smirnov
+If you want to build that driver for ARM, I think you need to make
+sure that inb() on ARM also *never* causes a crash.  I don't think
+changing f71882fg and all the similar drivers is the right answer.
+
+Bjorn
