@@ -2,91 +2,67 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87721C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506F821855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554498817;
-	bh=tQBHfo1zQSHRmGi45vMjn4fdzO8w9ilCneck9mf2hLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P0jrGkXSIS3RH5x2p5qrDFN/MvFZMJVzpcsfemHNYwQAZp8kMRvj/fcFeF+OYuGw8
-	 XFu0i+gW49uvTaiDreRVh3uHSn547htGOkgq3aFQbuWfRlqikJWVyYlvFOebH4EJj1
-	 I97hFFwP/TUCG9b/5LfVjnsWJACGlpWAqqcaZNIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 033AA21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfDEVNf (ORCPT
+        id S1726479AbfDEVOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 17:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725967AbfDEVNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 17:13:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50682173C;
-        Fri,  5 Apr 2019 21:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554498815;
-        bh=tQBHfo1zQSHRmGi45vMjn4fdzO8w9ilCneck9mf2hLE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eyodfyfSW9CqeUzUJWAZ/M2Wf7tEe80NpqDJFaOINm2ZuFLoLm/XPodi6TbEt6qJS
-         CEGOBtLn351zSyvFJyj2smZuMbKm0hphXjlrZo3YzXdUCmm9THnSyVtPyhoPQIn9Ot
-         GWXmfuDYf+anSgN9/S38nr9ooS9iVClR0CTwAkqw=
-Date:   Fri, 5 Apr 2019 16:13:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add function 1 DMA alias quirk for Marvell 9170
- SATA controller
-Message-ID: <20190405211333.GA159318@google.com>
-References: <20190405152047.153417-1-andre.przywara@arm.com>
+        Fri, 5 Apr 2019 17:14:02 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49943 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfDEVOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 17:14:02 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hCW9t-000520-K2; Fri, 05 Apr 2019 23:13:57 +0200
+Date:   Fri, 5 Apr 2019 23:13:57 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH] x86/reboot: Use efi reboot for Acer TravelMate
+ X514-51T
+In-Reply-To: <20190401073514.2785-1-jian-hong@endlessm.com>
+Message-ID: <alpine.DEB.2.21.1904052311370.1802@nanos.tec.linutronix.de>
+References: <20190401073514.2785-1-jian-hong@endlessm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405152047.153417-1-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 04:20:47PM +0100, Andre Przywara wrote:
-> There is a Marvell 88SE9170 PCIe SATA controller I found on a board
-> here. Some quick testing with the ARM SMMU enabled reveals that it
-> suffers from the same requester ID mixup problems as the other Marvell
-> chips listed already.
-> 
-> Add the PCI vendor/device ID to the list of chips which need the
-> workaround.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On Mon, 1 Apr 2019, Jian-Hong Pan wrote:
+> +/*
+> + * Some machines require the "reboot=e" commandline options
+> + */
+> +static int __init set_efi_reboot(const struct dmi_system_id *d)
+> +{
+> +	if (reboot_type != BOOT_EFI) {
+> +		reboot_type = BOOT_EFI;
 
-Applied with stable tag to for-linus for v5.1, thanks!
+So if EFI is disabled in the kernel this will fall through to BOOT_BIOS. Is
+that intended behaviour?
 
-> ---
->  drivers/pci/quirks.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index a59ad09ce911..a077f67fe1da 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3877,6 +3877,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9128,
->  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
->  			 quirk_dma_func1_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
-> +			 quirk_dma_func1_alias);
->  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
->  			 quirk_dma_func1_alias);
-> -- 
-> 2.17.1
-> 
+> +		pr_info("%s series board detected. Selecting %s-method for reboot.\n",
+> +			d->ident, "EFI");
+
+Is thee a reason not to write "EFI" in the string itself?
+
+Thanks,
+
+	tglx
