@@ -2,64 +2,156 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C3EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F314C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8F2218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADC221855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfDEOjs (ORCPT
+        id S1731269AbfDEOkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:39:48 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48765 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDEOjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:39:47 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hCQ0N-0004qu-7m; Fri, 05 Apr 2019 16:39:43 +0200
-Date:   Fri, 5 Apr 2019 16:39:43 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Fri, 5 Apr 2019 10:40:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:50606 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfDEOkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:40:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8218C16A3;
+        Fri,  5 Apr 2019 07:40:04 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1593E3F68F;
+        Fri,  5 Apr 2019 07:39:59 -0700 (PDT)
+Subject: Re: [PATCH RFC 5/5] arm64/speculation: Add support for
+ 'cpu_spec_mitigations=' cmdline options
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
+        Jon Masters <jcm@redhat.com>, Jiri Kosina <jikos@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org,
-        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-Message-ID: <20190405143942.xtpq5443qbc4gziy@linutronix.de>
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190404105233.GD3567@e103592.cambridge.arm.com>
- <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <cover.1554396090.git.jpoimboe@redhat.com>
+ <5f70df57b19bbccc4a0d5d76134b4681c9a50b0b.1554396090.git.jpoimboe@redhat.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <be6ba8fe-b261-668a-05b9-7fa937ae650a@arm.com>
+Date:   Fri, 5 Apr 2019 15:39:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <5f70df57b19bbccc4a0d5d76134b4681c9a50b0b.1554396090.git.jpoimboe@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-05 10:02:45 [+0100], Julien Grall wrote:
-> RT folks already saw this corruption because local_bh_disable() does not
-> preempt on RT. They are carrying a patch (see "arm64: fpsimd: use
-> preemp_disable in addition to local_bh_disable()") to disable preemption
-> along with local_bh_disable().
+On 04/04/2019 17:44, Josh Poimboeuf wrote:
+> Configure arm64 runtime CPU speculation bug mitigations in accordance
+> with the 'cpu_spec_mitigations=' cmdline options.  This affects
+> Meltdown and Speculative Store Bypass.
 > 
-> Alternatively, Julia suggested to introduce a per-cpu lock to protect the
-> state. I am thinking to defer this for a follow-up patch. The changes in
-> this patch should make it easier because we now have helper to mark the
-> critical section.
+> The default behavior is unchanged.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 2 ++
+>  arch/arm64/kernel/cpu_errata.c                  | 4 ++++
+>  arch/arm64/kernel/cpufeature.c                  | 6 ++++++
+>  3 files changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index e838af96daa4..0b54385ee7a8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2553,11 +2553,13 @@
+>  			off
+>  				Disable all speculative CPU mitigations.
+>  				Equivalent to: nopti [x86, powerpc]
+> +					       kpti=0 [arm64]
+>  					       nospectre_v1 [powerpc]
+>  					       nospectre_v2 [x86, powerpc, s390]
+>  					       spectre_v2_user=off [x86]
+>  					       nobp=0 [s390]
+>  					       spec_store_bypass_disable=off [x86, powerpc]
+> +					       ssbd=force-off [arm64]
+>  					       l1tf=off [x86]
+>  
+>  			auto (default)
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index 9950bb0cbd52..db8d27e3fb1c 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/arm-smccc.h>
+>  #include <linux/psci.h>
+>  #include <linux/types.h>
+> +#include <linux/cpu.h>
+>  #include <asm/cpu.h>
+>  #include <asm/cputype.h>
+>  #include <asm/cpufeature.h>
+> @@ -385,6 +386,9 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
+>  		return false;
+>  	}
+>  
+> +	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
+> +		ssbd_state = ARM64_SSBD_FORCE_DISABLE;
+> +
+>  	switch (psci_ops.conduit) {
+>  	case PSCI_CONDUIT_HVC:
+>  		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 4061de10cea6..4512b582d50f 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/stop_machine.h>
+>  #include <linux/types.h>
+>  #include <linux/mm.h>
+> +#include <linux/cpu.h>
+>  #include <asm/cpu.h>
+>  #include <asm/cpufeature.h>
+>  #include <asm/cpu_ops.h>
+> @@ -978,6 +979,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+>  		__kpti_forced = -1;
+>  	}
+>  
+> +	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF) {
+> +		str = "cpu_spec_mitigations=off";
 
-A per-CPU lock? It has to be a raw_spinlock_t because a normal
-spin_lock() / local_lock() would allow scheduling and might be taken as
-part of the context switch or soon after.
+Might also be worth changing the initialisation of str, currently it is:
 
-Sebastian
+> 	char const *str = "command line option";
+
+But now we have two command line options, perhaps "kpti command line
+option".
+
+Steve
+
+> +		__kpti_forced = -1;
+> +	}
+> +
+>  	/* Forced? */
+>  	if (__kpti_forced) {
+>  		pr_info_once("kernel page table isolation forced %s by %s\n",
+> 
+
