@@ -2,109 +2,81 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CADCC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26079C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE84120657
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E957920854
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KuTn2dL2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JPYz3nEw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dW7MutkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfDEDfr (ORCPT
+        id S1729876AbfDEDgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:35:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53572 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfDEDfr (ORCPT
+        Thu, 4 Apr 2019 23:36:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46613 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729631AbfDEDgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:35:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6A44E60770; Fri,  5 Apr 2019 03:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554435346;
-        bh=pH5NRHK3JOeaMjJpO5sz2vfcWdz8zkPBSCKyEFpyFn4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=KuTn2dL2bUsnzb32vR7k+396N+otM2gShdUz4dX+6UzrlAsC/VnRC0Xqjmief3oQi
-         fjSZiTUYzWx0+K2uS3N+KzFfMDbuXDhh/Ke3eS06P7NddKqlUTfb2Z2EU9XvadY/ZC
-         29wAgQ941mPf2ID5m/6hha494ofAjHIRR4TpG0cw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8BA0860770;
-        Fri,  5 Apr 2019 03:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554435345;
-        bh=pH5NRHK3JOeaMjJpO5sz2vfcWdz8zkPBSCKyEFpyFn4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=JPYz3nEwwGDOn0+iOFXFqhd940EoF9pZiS/uMd4IHJs36+J6oBi6wAydHfmG23fy+
-         KEKx3hYqOJsve1esFr77LXDNjFwui5Ih5UO15EF+BRXLeoZ/pQ3H0Ash3mR0wzz55/
-         vg+KSwfCFwtpzLua9GNdaZ5eixAQsGJpHviwqBnI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8BA0860770
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        "open list\:ARM\/Rockchip SoC..." 
-        <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: Re: [PATCH] mwifiex: Make resume actually do something useful again on SDIO cards
-References: <20190404040106.40519-1-dianders@chromium.org>
-        <874l7egxdj.fsf@codeaurora.org>
-        <CA+ASDXNfOUmMEWYwts8PuiDaEjuoPK+tZ0BhDSSte5u5toydkA@mail.gmail.com>
-Date:   Fri, 05 Apr 2019 06:35:39 +0300
-In-Reply-To: <CA+ASDXNfOUmMEWYwts8PuiDaEjuoPK+tZ0BhDSSte5u5toydkA@mail.gmail.com>
-        (Brian Norris's message of "Thu, 4 Apr 2019 13:47:17 -0700")
-Message-ID: <87ef6hruno.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 4 Apr 2019 23:36:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h21so3915258ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:36:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8HYtJNnTL1rydVt3yKyaIYNXoqgoDNkL+zXW+PVMBXQ=;
+        b=dW7MutkREMGZjWeDGrfQNmpb5B8U3cid1xRYx788W1KHbKEVT2IYyyUqkXztrjF+Hb
+         n2bS5aQ/Vsvq+gGj7G6pFQ9zp8DUrHz/GNiUVpc57FyacF5I+0/sMxl9U1+hPSzdI+N0
+         NqdVyifOLmsD9+QbV+B007sO1x5d/OLmgrLW7M3QckQhza+CPNDTTu/D+wIw/Eire9+t
+         +HXS3/VTaCxxYELyKTU2AoFwvWIh1P5UMP8vo0wVLh04gTgEjetZyyJx1+hOrjMVw9uM
+         XoGaay3Ht7aRzzRtUBrdY3A76FgF1T2lbdVtE7wYAVt9jSECu6dSMytNEqipHOcC/SmM
+         LA1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8HYtJNnTL1rydVt3yKyaIYNXoqgoDNkL+zXW+PVMBXQ=;
+        b=qwmb4zcEfeVozhJGeFzQRhwTl/j0DAwp0mgV9WLrlgDVegBHLrBcrFOgBnxbbZZDKC
+         VMQJ5KzwNMcVmydMCiLTca5vuhIxw7PdXXJxAAvkZdixTNOFxS3xaCx0k8Obo0RGCeZx
+         jQiOGn1JnfRRaux45PPGtLOCJiX0Apm2DwL0I8xTZNVfV8KCEbu9YY/bWxDdb0vMUOKm
+         JhY6LYjaOLZ2j6qpr2XEaYrknUKdZZ7vcAdkS7BxK33lnX3EsW3BHld/XnSYb57NlS1F
+         U7gJhFinUb/DMLqh+uSHRkcAIPLuEU7H9xw81hA0qdTech2iqtcYEHlphkuwrso05Sk8
+         +9gw==
+X-Gm-Message-State: APjAAAX7dTTCN11qaKPEg9CmBukeRYy6xal7cMGdWfLZcFnvcjArWLFW
+        X7jDdl3Av/N29w1NQfd1J0gS9YeR8jcFjoRNyLsngA==
+X-Google-Smtp-Source: APXvYqw8G1zf9p/fcHWApohiQYAb5sW1uaT6nsmNt/eVyXnXWcFRQ+8IGI72chaFZJ7tjItZSuSflD8LhBeuIBND810=
+X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr5346674lja.49.1554435397995;
+ Thu, 04 Apr 2019 20:36:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190312151911.2207-1-pakki001@umn.edu>
+In-Reply-To: <20190312151911.2207-1-pakki001@umn.edu>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 5 Apr 2019 10:36:25 +0700
+Message-ID: <CACRpkdbnD8-VWjx2_JvtAhgupEB3YX7KJ7frMwBbTujEyc9Q6w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: axp209: Fix NULL pointer dereference after allocation
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+On Tue, Mar 12, 2019 at 10:19 PM Aditya Pakki <pakki001@umn.edu> wrote:
 
-> On Wed, Apr 3, 2019 at 10:20 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->> Douglas Anderson <dianders@chromium.org> writes:
->> > Fixes: fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent
->> > adapter status variables")
->> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>
->> I'm planning to queue this for 5.1.
+> axp20x_build_funcs_groups allocates groups via devm_kcalloc and tries to
+> dereference without checking for NULL. This patch avoids such a
+> scenario.
 >
-> With an explicit
->
-> Cc: <stable@vger.kernel.org>
->
-> please? Somebody would likely pick it up anyway, but it's nice to be
-> explicit.
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Ok, I'll add that.
+Patch applied.
 
-> Not that it really matters, but also:
->
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-
-This patchwork picks up automatically so I don't have to do anything.
-But I so wish it would do the same for Cc and Fixes tags :)
-
--- 
-Kalle Valo
+Yours,
+Linus Walleij
