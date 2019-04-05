@@ -2,99 +2,211 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DC0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CC7217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92658217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxgvdGX2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="aKqGcDQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbfDEKXy (ORCPT
+        id S1730809AbfDEKYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:23:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34179 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbfDEKXy (ORCPT
+        Fri, 5 Apr 2019 06:24:06 -0400
+Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:59696 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730292AbfDEKYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:23:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b3so3054186pfd.1;
-        Fri, 05 Apr 2019 03:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=c/J2FHNL2RG9r3+RRnc/Tl4gg3PBDI5fKZZjdoCOjyQ=;
-        b=SxgvdGX211/3mt8PUz104XBZuIHAqnfEEk2WkeR8XArvU5KJx69KG8yWUsKSlWeOFE
-         1K90Khz4iqN6Ou3Hw/p/EA6CDz2a6KAaezYkRLE6rPM8cTAE/BlYE7+KpC1U14b52IR1
-         vuuCET2wNZ68rcJW01+BX11zBD2FTM2wmk0FiR7dp4MJ2IDfAnG2zqYzndKl6pmznn8s
-         fOuG8g1kpR7z8MfdqybTEQs/tWvbaIMXmAVkqdvGQis8V3N+EUvr/mDVDv+kSMrK8Qkl
-         iL4SuG/mu+g1B6TN0bf7rwUon/3BACpcYQHfT1zUTbXuyT4dmiY7VyK0FssltIbSNWyC
-         wWzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=c/J2FHNL2RG9r3+RRnc/Tl4gg3PBDI5fKZZjdoCOjyQ=;
-        b=bxodFTdU/lEiqCFjIzpireCJckqfUlhTyVjsXroaoWTg4VST6Gl/vceCHt2AauXTfV
-         5pqqfaVNaA0089vDWW13iGPqaCq1tEdVXi3xspsk5t/TBSSd+UwOI1cGBhMlIoG5HXcT
-         kEIOOB5NuZYjo1/d7g7mm3wlfTi1LGyYw6HmO8YqxbMjE4GOh+8nvQU13g2TfD2g0N9Q
-         v9YbjnrOteSIr7d84ETt6d6MWtZDYtattnYAWLoHGmlSm8u73gxCz+7eu8zP+sW928b5
-         13a8+/4+SqOHsst43aYejKNjNLBOSDK/DyhrnW52EqVr33BukPTdArnGImF6V75eH6+o
-         3ReA==
-X-Gm-Message-State: APjAAAU7ta2X0JDHMLgGvWelOv25xeq03ePQB40vk5xHw4BJtOEBtsyU
-        VTdYwKM7N2Om6+pqqL2Oe68vQENIf8gHmAFVMAU=
-X-Google-Smtp-Source: APXvYqwpHnbM0eLZNcQx1Ztr33J4NRfJMpbY2jlIPOUlbZu4u1vqVi/reRM2YtChEpxyFXgVpBgv/bRNmnNuT0jLdbk=
-X-Received: by 2002:a63:1d26:: with SMTP id d38mr10358643pgd.357.1554459833250;
- Fri, 05 Apr 2019 03:23:53 -0700 (PDT)
+        Fri, 5 Apr 2019 06:24:06 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id A7C5D10C1E71;
+        Fri,  5 Apr 2019 03:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1554459845; bh=wGIOFzA1i6uCDK9mqWPvy7EL2eQ+N2+d4mr5L0P8xpg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=aKqGcDQ79cJEgWvp/JWsjytNZF2e8ONhOfr9jly1SXiGP8GsVFaCNQNcdmy+YfrfH
+         Kiwkba6HZmIlJ4wVNPpAlmT8eymSrqIiA7N3yMJf1ThrQy9RglELw8FkRFoD5ocZ4G
+         x0h4gpTRS4xz8c8EXmhVQuTugAFCI/TTDIi+rAU1ygmkBxliLe/a7R71ACkCDcaW5/
+         0BDTH/TaD8QhdlpWaS5U1JQvmZmwPMM4h1PUDGJ81F3kVTHtmYcrpnLxaIZ76my02b
+         kfgxx5bYm1jSBGHBn/fDrGXLRKXOMlFXHn6D5dbOaU+ANtubh8ucOand40ahCn1GG3
+         LwYNsYX09lZWw==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B6551A005D;
+        Fri,  5 Apr 2019 10:24:03 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 5 Apr 2019 03:24:03 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Fri,
+ 5 Apr 2019 12:24:01 +0200
+From:   Jose Abreu <jose.abreu@synopsys.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        "Leonidas P. Papadakos" <papadakospan@gmail.com>,
+        Jose Abreu <jose.abreu@synopsys.com>
+CC:     Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>,
+        =?utf-8?B?Q2hyaXN0b3BoIE3DvGxsbmVy?= 
+        <christoph.muellner@theobroma-systems.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>
+Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
+ offload for rockchip devices
+Thread-Topic: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
+ offload for rockchip devices
+Thread-Index: AQHU6Ld2BNOIyyJamEeC//pMtZni+6YnhciAgAADZICAAAGHgIAA920AgAAfNACAACI8cIAAipiAgAALMwCAALjx8IAAYG+AgAAFvgCAAASDgIAC4/Ow
+Date:   Fri, 5 Apr 2019 10:24:00 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
+References: <20190401181840.31255-1-papadakospan@gmail.com>
+ <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
+ <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
+ <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
+ <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
+ <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
+ <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
+ <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
+ <1554305721.1328.0@gmail.com> <1554306954.1328.1@gmail.com>
+ <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
+In-Reply-To: <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jYW05aFluSmxkVnhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MV1ZqTnpoa05tVTJMVFUzT0dNdE1URmxPUzFpTmpOaUxXWTBaREV3?=
+ =?utf-8?B?T0dVMk5tRTBNVnhoYldVdGRHVnpkRnhsWXpjNFpEWmxPQzAxTnpoakxURXha?=
+ =?utf-8?B?VGt0WWpZellpMW1OR1F4TURobE5qWmhOREZpYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?RXdOVFVpSUhROUlqRXpNVGs0T1RNek5ETTVOakUwTkRjNU1DSWdhRDBpV1da?=
+ =?utf-8?B?SWFtZFVOa2RDVUhSSmRuZDZRall3ZW05RVdsRTBTM0ozUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZEVjJwT1MzVnRaWFpWUVdRM0wwVklWMmQ0ZWtkek0z?=
+ =?utf-8?B?WTRVV1JoUkVoTllYZFBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVFclJsZGtjWGRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Received: by 2002:a17:90a:1781:0:0:0:0 with HTTP; Fri, 5 Apr 2019 03:23:52
- -0700 (PDT)
-In-Reply-To: <20190404031455.cn4cc5wxbn6izvwe@localhost>
-References: <20190404000958.15236-1-siddarajudh@gmail.com> <20190404031455.cn4cc5wxbn6izvwe@localhost>
-From:   Siddaraju DH <siddarajudh@gmail.com>
-Date:   Fri, 5 Apr 2019 15:53:52 +0530
-Message-ID: <CAGtA63dqBVQNzUMphSKTy_jH98YYVaxVAKYpWDFu3eCXJ0-ykQ@mail.gmail.com>
-Subject: Re: [PATCH] ptp/ptp_clock.c: Correct input parameter range check
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     john.stultz@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry if there are duplicate emails in your inbox. Trying to solve "We
-accept plain text only response but the message has HTML subpart"
-error from mail delivery subsystem.
-
-Thank you for the response with example Richard.
-Agree, it works. So I take back the statement in my commit message
-"Since the tv_sec field will be ZERO in this range, the user will not
-be able to specify the signedness of adjustment through the tv_sec
-field".
-
-Specifying a -1 ns adjustment like
-    tv_sec = 0
-    tv_nsec = -1
-looks pretty straight forward than specifying it like
-    tv_sec = -1
-    tv_nsec = 999999999.
-
-And the former way of specifying the adjustment is consistent with how
-we specify the values for positive adjustments.
-
-So, the question is "why are we blocking -ve number in tv_nsec"? As
-you mentioned, end of the day it's sum of tv_sec & tv_nsec.
-If there is really an advantage, just to keep things clear, we could
-have made tv_nsec/usec as "unsigned long" instead of "long". Right?
-For me, it doesn't look good to expect/restrict a signed input to be unsigned.
-
-Thanks,
-Siddaraju DH
+RnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4NCkRhdGU6IFdlZCwgQXBy
+IDAzLCAyMDE5IGF0IDE3OjEyOjAzDQoNCj4gWWVzLCBJIHdvdWxkIGV4cGVjdCBzb2Z0d2FyZSBj
+aGVja3N1bW1pbmcgdG8gaGF2ZSBhIG11Y2ggbW9yZSBub3RpY2VhYmxlIA0KPiBpbXBhY3QgKGlu
+IGZhY3QgSSd2ZSBhbHJlYWR5IGJlZW4gdHJ5aW5nIHRvIGdldCByb3VuZCB0byBiZW5jaG1hcmtp
+bmcgDQo+IHNvbWUgYXJtNjQgY2hlY2tzdW0gb3B0aW1pc2F0aW9ucyBvbiBteSBSSzMzMjggcHJl
+Y2lzZWx5IGJlY2F1c2Ugb2YgdGhpcyANCj4gaXNzdWUpLg0KPiANCg0KQ2FuIHlvdSBzaGFyZSB0
+aGUgb3B0aW1pemF0aW9ucyA/IPCfmIoNCg0KPiBJZiBJJ20gaW50ZXJwcmV0aW5nIHRoZSByZWdp
+c3RlciBkZXNjcmlwdGlvbnMgaW4gdGhlIFJvY2tjaGlwIFRSTXMgDQo+IGNvcnJlY3RseSwgaXQg
+c2VlbXMgbGlrZSBuby1wYmwteDggaXMgYSByZWxhdGl2ZWx5IGJpZyBoYW1tZXIgYW5kIHRoZXJl
+IA0KPiBzaG91bGQgc3RpbGwgYmUgcm9vbSB0byB0dW5lIHRoaW5ncyBhIGJpdCBjbG9zZXIgdG8g
+dGhlIG1heGltdW0gbGltaXRzIC0gDQo+IEknbGwgaGF2ZSBhbm90aGVyIHBsYXkgdGhpcyBldmVu
+aW5nIHRvIHNlZSBpZiBJJ3ZlIHVuZGVyc3Rvb2QgdGhpbmdzIHJpZ2h0Lg0KDQpZb3UgY2FuIHBs
+YXkgYXJvdW5kIGRpZmZlcmVudCBQQkwgdmFsdWVzIHdpdGhvdXQgdXNpbmcgdGhlIG5vLXBibC14
+OCBvcHRpb24uDQoNCkkgd291bGQgc3RhcnQgd2l0aCBQQkw9MHgxIGFuZCB0aGVuIGdvaW5nIHVw
+LiBJZiBQQkw9MHgxIGRvZXMgbm90IHdvcmsgdGhlbg0KYWRkIHRoZSBuby1wYmwteDggb3B0aW9u
+IGFuZCBzdGFydCB3aXRoIFBCTD0weDIwIGFuZCBrZWVwIGRlY3JlYXNpbmcuDQoNClRoYW5rcywN
+Ckpvc2UgTWlndWVsIEFicmV1DQoNCg==
