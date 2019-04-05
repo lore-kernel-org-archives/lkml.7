@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAAAC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD3C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFE8217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB63E217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554429628;
-	bh=Te1kiFSfjsbx6TQmnBwjrSwY8QFJjh4wWUe/ZUKuNWE=;
+	s=default; t=1554429634;
+	bh=6QaELTbwQbtaIaO1JQK52n+zDukXO9dsqnUxU40CLM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9LEXXRN/AWsju9PJWuwVviGGhlLyl311tld13nDTFAeNznmWTLlCNalFa4yAZSNl
-	 mhqZAQxJaUJfZAZiHPZMbrfkBjkKhrdzh0goY7EVm4Fz39PuPS6j3vCf7yVLtex5Pn
-	 7Ge6HtdtyZvLd3GDduhkkRGB4Z7EUIlllJWUl6do=
+	b=x0c/uhM1ALKguUFzurNfLULL2HYkIxaYhqSZVhI9kZytkRv0Oztl9a5VGLFL8FH/t
+	 2IMWZ4A8xItnjHXYDLgap1S/Bvdw/+KOYllofqggW2WfB6NHXXdOw9nx6Oe9I7fXyZ
+	 gFwYAredWfT9e66Zj4ViCD0J5mM6FLSS/BVJqjJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfDECA1 (ORCPT
+        id S1730839AbfDECAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 22:00:27 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:34887 "EHLO
+        Thu, 4 Apr 2019 22:00:33 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:40169 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727051AbfDECA0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727051AbfDECAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 22:00:26 -0400
+        Thu, 4 Apr 2019 22:00:32 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8D28B24D66;
-        Thu,  4 Apr 2019 22:00:25 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id E415524DCA;
+        Thu,  4 Apr 2019 22:00:31 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 04 Apr 2019 22:00:25 -0400
+  by compute3.internal (MEProxy); Thu, 04 Apr 2019 22:00:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=F5wlZTLbeYxNvK8jDdAkPtw7SafqfSrmofrPTK/quZQ=; b=1liXXXo2
-        sSNt/PiNhZt6ue+3PMt6qs7OONjY33X+ELGAB8JENgHEFagEf9kBsUoS5tLLZNFJ
-        4YNP9+MxkbK5WI/KcjkofMhUUETjNAQSWXIp0iiG23FSn6Y4Mau7fAjuFFGV8/9A
-        Xzq4HVIzKxfpXpG1Z7oMQ17uGGbbNNLdLLTQqgyFLnds+qoRJUuW1uTYMYaZr02n
-        kagv1fJCUpTpQbcefm2c639e5MPYJ78IL7sXEcrowTZIbmilLhjg8HVgayqv3EtY
-        nv1/sJpZnWXTkol6epsbwAuCG2BR3EFzQmLOAiZ0gPhWMiXDF0c0i6orNEnvQxfQ
-        l84uCCXSpKVagw==
-X-ME-Sender: <xms:ubamXPm91JCYPROOyrnda8H_YeGVT-4FyOltezjWY_Zzywe18tXKvQ>
+        fm2; bh=OIh1i/pL/R2We4uoijWBpxzbz97WTIRfGNaCQuscgvI=; b=lszIUx6u
+        jJGS7X7yfDaSzs+c3ppze2GzSDgeT/w7dqte0GCsalY/Dg1QEEVvMKTtjTe0PDIH
+        ICtohuJkBnoeBaws59JZUjnQVGgkLqO1BSScS/H5Ha5l55dDWVdmfD+2rVR5LeeE
+        q940Vbd+YqwTRKtypp/peE2IrWXjn9re4fqA2WRdK6b4kAcUW6F4Bo+27ZmIYMmg
+        H8pr3itIl64lsz51CPdkj7v7G16Bl0dWhwjZBCGG2D8EoUf6iK3bcbbb+e2t/KlN
+        9st2MH7PiPRSuyMdDCmVV89Jz95HO1AaC5mngYT9UE5ggq15ljfmlDdXycxqbDxr
+        w+hQnaHIrZbEaQ==
+X-ME-Sender: <xms:v7amXB-GG9ufhd-OOXy2gf3C_usBfmb1HrglG6Rjzf7YrEiirhlV-Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeigdehtdculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
@@ -51,14 +51,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeigdehtdculddtuddrgedutd
     ucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrh
     hnvghlrdhorhhgqeenucfkphepuddvgedrudegledruddugedrkeeinecurfgrrhgrmhep
     mhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpeef
-X-ME-Proxy: <xmx:ubamXEMw6T4JwFmBcQxkmC4fbz_9skpadVgGY6zYh6zEGJTvSJkN0w>
-    <xmx:ubamXO59IH6OibcvpkAs7Pw7hFIS_chi6bFFGj00yD_uhg_-jC4vSg>
-    <xmx:ubamXP0oWGRGgRTIEFnU2FxfhNcJyFmSE-fLhEkOAQJVy1ycAUWWZA>
-    <xmx:ubamXF87CbuZeDQy8ART-c7eVyuVWwmWMsuAHAipQdhNhmdk-EBM_Q>
+    hiiigvpeeg
+X-ME-Proxy: <xmx:v7amXAbOca749zNLam6qrYjhrIZ4MrQrI02TTLxLXscWqM4c7gT1Zg>
+    <xmx:v7amXFrP1bPPwszTQgunwqUVPm7cLPfUDucAvb3wxXVbfVOXTE9DnQ>
+    <xmx:v7amXAbBdHrzVD9RI9sqczoBabqAthexGEn5q1g7ZFt1-2DQxJR9AQ>
+    <xmx:v7amXDicIv87Il8vsO-K3tN6H90FoQmtqZDVq5D5hn2YI-oeWpQl9w>
 Received: from eros.localdomain (124-149-114-86.dyn.iinet.net.au [124.149.114.86])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 666DE10319;
-        Thu,  4 Apr 2019 22:00:19 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A7B8D10310;
+        Thu,  4 Apr 2019 22:00:25 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Shuah Khan <shuah@kernel.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -77,9 +77,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         kernel-hardening@lists.openwall.com,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/6] lib: Use new kselftest header
-Date:   Fri,  5 Apr 2019 12:58:57 +1100
-Message-Id: <20190405015859.32755-5-tobin@kernel.org>
+Subject: [PATCH v4 5/6] lib/string: Add strscpy_pad() function
+Date:   Fri,  5 Apr 2019 12:58:58 +1100
+Message-Id: <20190405015859.32755-6-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190405015859.32755-1-tobin@kernel.org>
 References: <20190405015859.32755-1-tobin@kernel.org>
@@ -90,118 +90,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We just added a new C header file for use with test modules that are
-intended to be run with kselftest.  We can reduce code duplication by
-using this header.
+We have a function to copy strings safely and we have a function to copy
+strings and zero the tail of the destination (if source string is
+shorter than destination buffer) but we do not have a function to do
+both at once.  This means developers must write this themselves if they
+desire this functionality.  This is a chore, and also leaves us open to
+off by one errors unnecessarily.
 
-Use new kselftest header to reduce code duplication in test_printf and
-test_bitmap test modules.
+Add a function that calls strscpy() then memset()s the tail to zero if
+the source string is shorter than the destination buffer.
 
 Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- lib/test_bitmap.c | 20 ++++----------------
- lib/test_printf.c | 23 +++++------------------
- 2 files changed, 9 insertions(+), 34 deletions(-)
+ include/linux/string.h |  4 ++++
+ lib/string.c           | 47 +++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 44 insertions(+), 7 deletions(-)
 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 6cd7d0740005..792d90608052 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -12,6 +12,8 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- 
-+#include "../tools/testing/selftests/kselftest_module.h"
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 7927b875f80c..bfe95bf5d07e 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -31,6 +31,10 @@ size_t strlcpy(char *, const char *, size_t);
+ #ifndef __HAVE_ARCH_STRSCPY
+ ssize_t strscpy(char *, const char *, size_t);
+ #endif
 +
- static unsigned total_tests __initdata;
- static unsigned failed_tests __initdata;
- 
-@@ -361,7 +363,7 @@ static void noinline __init test_mem_optimisations(void)
- 	}
- }
- 
--static int __init test_bitmap_init(void)
-+static void __init selftest(void)
- {
- 	test_zero_clear();
- 	test_fill_set();
-@@ -369,22 +371,8 @@ static int __init test_bitmap_init(void)
- 	test_bitmap_arr32();
- 	test_bitmap_parselist();
- 	test_mem_optimisations();
--
--	if (failed_tests == 0)
--		pr_info("all %u tests passed\n", total_tests);
--	else
--		pr_warn("failed %u out of %u tests\n",
--			failed_tests, total_tests);
--
--	return failed_tests ? -EINVAL : 0;
- }
- 
--static void __exit test_bitmap_cleanup(void)
--{
--}
--
--module_init(test_bitmap_init);
--module_exit(test_bitmap_cleanup);
--
-+KSTM_MODULE_LOADERS(test_bitmap);
- MODULE_AUTHOR("david decotigny <david.decotigny@googlers.com>");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 601e8519319a..f4fcc1c43739 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -21,6 +21,8 @@
- #include <linux/gfp.h>
- #include <linux/mm.h>
- 
-+#include "../tools/testing/selftests/kselftest_module.h"
++/* Wraps calls to strscpy()/memset(), no arch specific code required */
++ssize_t strscpy_pad(char *dest, const char *src, size_t count);
 +
- #define BUF_SIZE 256
- #define PAD_SIZE 16
- #define FILL_CHAR '$'
-@@ -590,12 +592,11 @@ test_pointer(void)
- 	flags();
- }
- 
--static int __init
--test_printf_init(void)
-+static void __init selftest(void)
+ #ifndef __HAVE_ARCH_STRCAT
+ extern char * strcat(char *, const char *);
+ #endif
+diff --git a/lib/string.c b/lib/string.c
+index 38e4ca08e757..3a3353512184 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -159,11 +159,9 @@ EXPORT_SYMBOL(strlcpy);
+  * @src: Where to copy the string from
+  * @count: Size of destination buffer
+  *
+- * Copy the string, or as much of it as fits, into the dest buffer.
+- * The routine returns the number of characters copied (not including
+- * the trailing NUL) or -E2BIG if the destination buffer wasn't big enough.
+- * The behavior is undefined if the string buffers overlap.
+- * The destination buffer is always NUL terminated, unless it's zero-sized.
++ * Copy the string, or as much of it as fits, into the dest buffer.  The
++ * behavior is undefined if the string buffers overlap.  The destination
++ * buffer is always NUL terminated, unless it's zero-sized.
+  *
+  * Preferred to strlcpy() since the API doesn't require reading memory
+  * from the src string beyond the specified "count" bytes, and since
+@@ -173,8 +171,10 @@ EXPORT_SYMBOL(strlcpy);
+  *
+  * Preferred to strncpy() since it always returns a valid string, and
+  * doesn't unnecessarily force the tail of the destination buffer to be
+- * zeroed.  If the zeroing is desired, it's likely cleaner to use strscpy()
+- * with an overflow test, then just memset() the tail of the dest buffer.
++ * zeroed.  If zeroing is desired please use strscpy_pad().
++ *
++ * Return: The number of characters copied (not including the trailing
++ *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+  */
+ ssize_t strscpy(char *dest, const char *src, size_t count)
  {
- 	alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
- 	if (!alloced_buffer)
--		return -ENOMEM;
-+		return;
- 	test_buffer = alloced_buffer + PAD_SIZE;
+@@ -237,6 +237,39 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
+ EXPORT_SYMBOL(strscpy);
+ #endif
  
- 	test_basic();
-@@ -604,22 +605,8 @@ test_printf_init(void)
- 	test_pointer();
- 
- 	kfree(alloced_buffer);
--
--	if (failed_tests == 0)
--		pr_info("all %u tests passed\n", total_tests);
--	else
--		pr_warn("failed %u out of %u tests\n", failed_tests, total_tests);
--
--	return failed_tests ? -EINVAL : 0;
- }
- 
--module_init(test_printf_init);
--
--static void __exit test_printf_exit(void)
--{
--}
--
--module_exit(test_printf_exit);
--
-+KSTM_MODULE_LOADERS(test_printf);
- MODULE_AUTHOR("Rasmus Villemoes <linux@rasmusvillemoes.dk>");
- MODULE_LICENSE("GPL");
++/**
++ * strscpy_pad() - Copy a C-string into a sized buffer
++ * @dest: Where to copy the string to
++ * @src: Where to copy the string from
++ * @count: Size of destination buffer
++ *
++ * Copy the string, or as much of it as fits, into the dest buffer.  The
++ * behavior is undefined if the string buffers overlap.  The destination
++ * buffer is always %NUL terminated, unless it's zero-sized.
++ *
++ * If the source string is shorter than the destination buffer, zeros
++ * the tail of the destination buffer.
++ *
++ * For full explanation of why you may want to consider using the
++ * 'strscpy' functions please see the function docstring for strscpy().
++ *
++ * Return: The number of characters copied (not including the trailing
++ *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
++ */
++ssize_t strscpy_pad(char *dest, const char *src, size_t count)
++{
++	ssize_t written;
++
++	written = strscpy(dest, src, count);
++	if (written < 0 || written == count - 1)
++		return written;
++
++	memset(dest + written + 1, 0, count - written - 1);
++
++	return written;
++}
++EXPORT_SYMBOL(strscpy_pad);
++
+ #ifndef __HAVE_ARCH_STRCAT
+ /**
+  * strcat - Append one %NUL-terminated string to another
 -- 
 2.21.0
 
