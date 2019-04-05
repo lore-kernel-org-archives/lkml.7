@@ -2,244 +2,148 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C67C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB4CC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5579621855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590E72175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="emPT1DI9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bc0tJq9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfDEWP1 (ORCPT
+        id S1726388AbfDEWTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:15:27 -0400
-Received: from mail-eopbgr720081.outbound.protection.outlook.com ([40.107.72.81]:9809
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726124AbfDEWP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:15:27 -0400
+        Fri, 5 Apr 2019 18:19:21 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50550 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfDEWTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 18:19:20 -0400
+Received: by mail-it1-f195.google.com with SMTP id q14so12071302itk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 15:19:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mQzrRNR9WFIPyqKEYWbKyY7kEJawWQdBKWlqpSWamH8=;
- b=emPT1DI98ZfIKGzGZIjOPYS6HJiXU2R0pNEjlu990WQsQ9LrXXdNx1HZs4IPKzZEM3fohOqJUh787D5pSHuSHW5j0YtJLHxVjZfoPSLnYIk9zaZ4hSvdBgWLlPwgZU6idobIvYEpGIVfD51szRw0DaiO/EGxEH6FEYoCYNMwlKE=
-Received: from BYAPR02MB5160.namprd02.prod.outlook.com (20.176.254.33) by
- BYAPR02MB5797.namprd02.prod.outlook.com (20.179.62.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Fri, 5 Apr 2019 22:15:21 +0000
-Received: from BYAPR02MB5160.namprd02.prod.outlook.com
- ([fe80::21a0:9cd3:90cb:7d7b]) by BYAPR02MB5160.namprd02.prod.outlook.com
- ([fe80::21a0:9cd3:90cb:7d7b%5]) with mapi id 15.20.1771.016; Fri, 5 Apr 2019
- 22:15:21 +0000
-From:   Sonal Santan <sonals@xilinx.com>
-To:     Jerome Glisse <jglisse@redhat.com>,
-        Ronan KERYELL <ronan@keryell.fr>
-CC:     Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Cyril Chemparathy <cyrilc@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lizhi Hou <lizhih@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        "airlied@redhat.com" <airlied@redhat.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        Ralph Wittig <wittig@xilinx.com>,
-        Ronan Keryell <rkeryell@xilinx.com>
-Subject: RE: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
-Thread-Topic: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
-Thread-Index: AQHU3p5QKbxkgyec50+i8ouG/VB2wqYc1UkAgAHB29CAAJggAIAAPv4AgAAifICAAJorkIAB71aAgAFS/HWABz6mAIADj/FQ
-Date:   Fri, 5 Apr 2019 22:15:21 +0000
-Message-ID: <BYAPR02MB5160C131CE3ED1E77E56947BBB510@BYAPR02MB5160.namprd02.prod.outlook.com>
-References: <20190319215401.6562-1-sonal.santan@xilinx.com>
- <20190325202810.GG2665@phenom.ffwll.local>
- <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
- <CAKMK7uHh5KNaTO+a4ZA+vPQcPKUBwODsx+pPCWNp3sxe9TFP0Q@mail.gmail.com>
- <BYAPR02MB51603A1AD72F704112B55B90BB580@BYAPR02MB5160.namprd02.prod.outlook.com>
- <20190327141137.GK2665@phenom.ffwll.local>
- <BYAPR02MB5160162639C2EAC6B19901B7BB590@BYAPR02MB5160.namprd02.prod.outlook.com>
- <CAPM=9tyLNOXCaKGQkCCmo4tt=Dny0j984-=q8utjwv-aX-Y6BQ@mail.gmail.com>
- <871s2pw4ld.fsf@fisel.enstb.org> <20190403154734.GA12818@redhat.com>
-In-Reply-To: <20190403154734.GA12818@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sonals@xilinx.com; 
-x-originating-ip: [149.199.62.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e8387bb-5345-4d24-af1a-08d6ba1431e7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BYAPR02MB5797;
-x-ms-traffictypediagnostic: BYAPR02MB5797:
-x-microsoft-antispam-prvs: <BYAPR02MB57979C392806B41D6DFF4C47BB510@BYAPR02MB5797.namprd02.prod.outlook.com>
-x-forefront-prvs: 0998671D02
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(346002)(396003)(366004)(13464003)(51744003)(189003)(199004)(5660300002)(8936002)(86362001)(107886003)(81156014)(53936002)(81166006)(71200400001)(71190400001)(3846002)(6116002)(478600001)(14454004)(6436002)(55016002)(68736007)(6506007)(7696005)(305945005)(7736002)(26005)(66574012)(99286004)(74316002)(102836004)(9686003)(14444005)(256004)(76176011)(2906002)(8676002)(186003)(6246003)(229853002)(53546011)(105586002)(4326008)(97736004)(106356001)(446003)(11346002)(476003)(486006)(33656002)(93886005)(54906003)(110136005)(52536014)(316002)(66066001)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5797;H:BYAPR02MB5160.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bo3qWuhze6HU3M0qYoYNUu+1NZwqLa0xw9ul4YAMHzrooltsJBYNZ8tJ7o6qHGzkKsPeMJeOgOXYANSnwv0K1MXh3Q7stlYdEo1fMKHp5zlENK59Qeq9kz5Uk4a9b9aL6F6dUIs+1pfB89p7PtoVK/v2SZC3d+i5BB95nq/z21cv0wYz4/A6K9wranPSPG6n5HnQobHfvHXlM/Usmhk4HfVv5jDz+XtTCX1bYwAecyXFB0YxoYOJVB2fqxSDGCcv7l8o8CxvhwYbScpja8oPiccVqpeGvgyJlzroImMdX9ug6haqMjF+PKFiSGY2EOKsqriiMZmeWKwvBkruWc35kgTYyQKlpoo0o7SfFZgAb0893IPqkN//QzKXKTWXzp3zYOa5tT0zbz8oIEHNzaUGsNgmCQTxAVmnVRLswPnJp2A=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p70rh8DzLMoO9YQR1wIHClyyXHDpqpEks55cuvOjfCY=;
+        b=Bc0tJq9N/sPYw85QXGSIH0hbEtzljs8EWItZ9MIwCmNwpRUoa/Wpc5hsHoxnO/te/o
+         O3F7X0+2bCdaluN6rPhO4hAZPUmPfFaaJIknDhttv3aW3vSR2RBpC49xL+P10rlIABz2
+         FtRzhFhWl+sdRw1u7SF5C+Ul/CUNeqzj2OmmTtoUzMM/nubLgmCHk1xDxXr9CenY1pcQ
+         b0moIO332HU3WYNlXK8fBIj84fYUgtIGZOcp9farU3QDzoBMhwPPDbrro6c1+P9Jk9BI
+         dtakwadfwEhfde93OHQh09dc8rKxnXgvtSMn54RFzPcjbCcm/hATCmPV1sGr1TIM37QO
+         ZEvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p70rh8DzLMoO9YQR1wIHClyyXHDpqpEks55cuvOjfCY=;
+        b=JMjBFdtUdBU854TV5hjijZa/CWlWJHOwwUGigwKzaKDNNCssKtirAWTTjqFRa/mDQZ
+         H/lzDB0TIh02t1oR7LB7X+SyRCYxWwmCayPJZX2bCBTLga338QBIspWiR0XvbRMKufPE
+         4SoAE0oEjiO8Q/jcXvr1m+aco2M/2llzmFDn6VriYsLlkjivQExswUz4H5W8TzKMzug9
+         /94Q8O3Kj3de/+RVsBybmVF+Cg+otI7VGpXoujDrhkE40/i+kqB7fNvs6TobK9h3CCVj
+         1neqDzpLunuOmM4DU/C/gOAk6BVYBvkhHwzdNjyRSw/p+U4/QNrMTZAiK6XqDwTT95Vs
+         qSAQ==
+X-Gm-Message-State: APjAAAXn1sczSKarwh7k3Xr0ogWUh+Ez1GAFDNohO9q0YDK9NcwYigdW
+        9Gkgb8bXNLuw8ehf/BlblY9y9TIOK9OaOUFqBbAQ3A==
+X-Google-Smtp-Source: APXvYqz8L0DRIH950OrISsoMW75m56cdjyA82W8JwtiaTtpNLc8MeWdCquXt/H6qVstvEF2gn6aGUbrGlapaBmieosc=
+X-Received: by 2002:a02:1a45:: with SMTP id 66mr11594981jai.124.1554502759204;
+ Fri, 05 Apr 2019 15:19:19 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8387bb-5345-4d24-af1a-08d6ba1431e7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2019 22:15:21.6891
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5797
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+ <CACdnJuumhkqTb4+1=QBiLmbW4xd3wW=MZu6Tj_KdaoTMhCN+Tg@mail.gmail.com>
+ <4ce5e057-0702-b0d5-7bb2-cea5b22e2efa@linux.ibm.com> <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
+ <2208f156-d441-3082-2f4c-8030c84ef788@linux.ibm.com> <CACdnJuu8OqMrSs0esOmf=ro9n00aYEQ-nikAh6v6sk+YAQw4cQ@mail.gmail.com>
+ <d79f47f8-9006-3a47-2bdc-58012cef5c7e@linux.ibm.com>
+In-Reply-To: <d79f47f8-9006-3a47-2bdc-58012cef5c7e@linux.ibm.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Fri, 5 Apr 2019 15:19:07 -0700
+Message-ID: <CACdnJuv_5A1_6CH1+Jn7SCrmW8Y6JuzsMmJoc1=_vn0nKdYMjQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+To:     Claudio Carvalho <cclaudio@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jerome Glisse [mailto:jglisse@redhat.com]
-> Sent: Wednesday, April 03, 2019 8:48 AM
-> To: Ronan KERYELL <ronan@keryell.fr>
-> Cc: Dave Airlie <airlied@gmail.com>; Sonal Santan <sonals@xilinx.com>;
-> Daniel Vetter <daniel@ffwll.ch>; dri-devel@lists.freedesktop.org;
-> gregkh@linuxfoundation.org; Cyril Chemparathy <cyrilc@xilinx.com>; linux-
-> kernel@vger.kernel.org; Lizhi Hou <lizhih@xilinx.com>; Michal Simek
-> <michals@xilinx.com>; airlied@redhat.com; linux-fpga@vger.kernel.org; Ral=
-ph
-> Wittig <wittig@xilinx.com>; Ronan Keryell <rkeryell@xilinx.com>
-> Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
->=20
-> On Fri, Mar 29, 2019 at 06:09:18PM -0700, Ronan KERYELL wrote:
-> > I am adding linux-fpga@vger.kernel.org, since this is why I missed
-> > this thread in the first place...
-> > >>>>> On Fri, 29 Mar 2019 14:56:17 +1000, Dave Airlie <airlied@gmail.co=
-m>
-> said:
-> >     Dave> On Thu, 28 Mar 2019 at 10:14, Sonal Santan <sonals@xilinx.com=
+On Fri, Apr 5, 2019 at 2:11 PM Claudio Carvalho <cclaudio@linux.ibm.com> wrote:
 >
-> wrote:
-> >     >>> From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch]
->=20
-> [...]
->=20
-> > Long answer:
-> >
-> > - processors, GPU and other digital circuits are designed from a lot of
-> >   elementary transistors, wires, capacitors, resistors... using some
-> >   very complex (and expensive) tools from some EDA companies but at the
-> >   end, after months of work, they come often with a "simple" public
-> >   interface, the... instruction set! So it is rather "easy" at the end
-> >   to generate some instructions with a compiler such as LLVM from a
-> >   description of this ISA or some reverse engineering. Note that even i=
-f
-> >   the ISA is public, it is very difficult to make another efficient
-> >   processor from scratch just from this ISA, so there is often no
-> >   concern about making this ISA public to develop the ecosystem ;
-> >
-> > - FPGA are field-programmable gate arrays, made also from a lot of
-> >   elementary transistors, wires, capacitors, resistors... but organized
-> >   in billions of very low-level elementary gates, memory elements, DSP
-> >   blocks, I/O blocks, clock generators, specific
-> >   accelerators... directly exposed to the user and that can be
-> >   programmed according to a configuration memory (the bitstream) that
-> >   details how to connect each part, routing element, configuring each
-> >   elemental piece of hardware.  So instead of just writing instructions
-> >   like on a CPU or a GPU, you need to configure each bit of the
-> >   architecture in such a way it does something interesting for
-> >   you. Concretely, you write some programs in RTL languages (Verilog,
-> >   VHDL) or higher-level (C/C++, OpenCL, SYCL...)  and you use some very
-> >   complex (and expensive) tools from some EDA companies to generate the
-> >   bitstream implementing an equivalent circuit with the same
-> >   semantics. Since the architecture is so low level, there is a direct
-> >   mapping between the configuration memory (bitstream) and the hardware
-> >   architecture itself, so if it is public then it is easy to duplicate
-> >   the FPGA itself and to start a new FPGA company. That is unfortunatel=
-y
-> >   something the existing FPGA companies do not want... ;-)
->=20
-> This is completely bogus argument, all FPGA documentation i have seen so =
-far
-> _extensively_ describe _each_ basic blocks within the FGPA, this does inc=
-lude
-> the excelent documentation Xilinx provide on the inner working and layout=
- of
-> Xilinx FPGA. Same apply to Altera, Atmel, Latice, ...
->=20
-> The extensive public documentation is enough for anyone with the money
-> and with half decent engineers to produce an FPGA.
->=20
-> The real know how of FPGA vendor is how to produce big chips on small
-> process capable to sustain high clock with the best power consumption
-> possible. This is the part where the years of experiences of each company=
- pay
-> off. The cost for anyone to come to the market is in the hundred of milli=
-ons
-> just in setup cost and to catch with established vendor on the hardware s=
-ide.
-> This without any garanty of revenue at the end.
->=20
-> The bitstream is only giving away which bits correspond to which wire whe=
-re
-> the LUT boolean table is store  ... Bitstream that have been reverse engi=
-neer
-> never revealed anything of value that was not already publicly documented=
-.
->=20
->=20
-> So no the bitstream has _no_ value, please prove me wrong with Latice
-> bitstream for instance. If anything the fact that Latice has a reverse en=
-gineer
-> bitstream has made that FPGA popular with the maker community as it allow=
-s
-> people to do experiment for which the closed source tools are an
-> impediment. So i would argue that open bitstream is actualy beneficial.
->=20
->=20
-> The only valid reason i have ever seen for hidding the bitstream is to pr=
-otect
-> the IP of the customer ie those customer that can pour quite a lot of mon=
-ey
-> on designing something with an FPGA and then wants to keep the
-> VHDL/Verilog protected and "safe" from reverse engineering.
->=20
-> But this is security by obscurity and FPGA company would be better off
-> providing strong bitstream encryption (and most already do but i have see=
-n
-> some paper on how to break them).
->=20
->=20
-> I rather not see any bogus argument to try to justify something that is n=
-ot
-> justifiable.
->=20
->=20
-> Daniel already stressed that we need to know what the bitstream can do an=
-d
-> it is even more important with FPGA where on some FPGA AFAICT the
-> bitstream can have total control over the PCIE BUS and thus can be use to
-> attack either main memory or other PCIE devices.
->=20
-> For instance with ATS/PASID you can have the device send pre-translated
-> request to the IOMMU and access any memory despite the IOMMU.
->=20
-> So without total confidence of what the bitstream can and can not do, and
-> thus without knowledge of the bitstream format and how it maps to LUT,
-> switch, cross- bar, clock, fix block (PCIE, DSP, DAC, ADC, ...) there is =
-no way for
-> someone independant to check anything.
->=20
->=20
+>
+> On 4/3/19 7:27 PM, Matthew Garrett wrote:
+> > Not supporting dbx seems like a pretty significant shortcoming. How
+> > are signatures meant to be revoked?
+>
+>
+> We began by focusing on certificates for keys that can be added at
+> runtime.  Before adding support for revocation, we plan to gather
+> additional use cases.  In the meantime, unwanted certificates can be
+> removed by the administrator.
 
-Thank you for your time and valuable feedback. I will work on addressing th=
-ese=20
-and get back.=20
+Based on our experience doing this in UEFI, that's insufficient - you
+want to be able to block individual binaries or leaf certificates
+without dropping trust in an intermediate certificate entirely.
 
--Sonal
-> Cheers,
-> J=E9r=F4me Glisse
+>
+> >
+> >> PK, KEK and db updates will be signed the same way, that is, using
+> >> userspace tooling like efitools in PowerNV. As for the authentication
+> >> descriptors, only the EFI_VARIABLE_AUTHENTICATION_2 descriptor will be
+> >> supported.
+> > Is this API documented?
+>
+>
+> The API is still a work in progress.  We are planning to publish a document
+> describing the current API and overall design shortly.
+
+Ok. How are the attributes interpreted by the API?
+
+> Perhaps the biggest departure is that the secure variables are stored in
+> flash memory that is not lockable.  In order to protect the secure
+> variables, hashes of the flash regions where they're stored are written to
+> TPM NVRAM indices.  The TPM NVRAM indices we use are write locked at
+> runtime.  The sysadmin enqueues update commands in flash.  During the next
+> boot, the firmware verifies and processes the commands to update the
+> certificate store and accompanying integrity hashes in the TPM NVRAM
+> indices and write locks them.  Before certificates read from flash are
+> used, the certificate store is hashed and compared against the hashes
+> stored from the TPM.  The one exception is the PK. We store it in a TPM
+> NVRAM index by itself rather than flash because updates to it must be
+> guaranteed to be atomic.
+
+What's the behaviour if multiple updates are enqueued? Does reading
+back show a mocked up updated variable or the original state?
+
+> > I think that depends on exactly what problem you're trying to solve.
+> > Some aspects of the EFI secure boot design end up mirroring the
+> > economics of the PC ecosystem rather than being inherently good design
+> > goals, so it'd be helpful to know whether you're taking this solution
+> > because you want the same three-level key infrastructure or because
+> > that just leaves you compatible with the tooling.
+>
+>
+> In our use case,  the three-level key hierarchy conveniently supports the
+> concept of (1) an administrator authority, who authorizes (2) other
+> organizations, e.g., distros, to provide (3) certificates for their code
+> signing keys.   By using efivars, we leverage pre-existing userspace EFI
+> tools to generate authenticated updates and certificates.  Additionally,
+> pre-existing kernel infrastructure simplifies efivars processing.
+
+I'm not really clear on the workflow here. Who's the administrator
+authority? When would they be updating the second level of keys? If
+there's no support for revocation, why would distributions need two
+levels of key in the system database rather than just distributing a
+single intermediate and signing their actual signing certs with that?
