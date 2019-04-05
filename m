@@ -2,214 +2,132 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EC6C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86797C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB1F21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D7A21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaXZcevV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYVGZvUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbfDEWMP (ORCPT
+        id S1726548AbfDEWMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:12:15 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34744 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfDEWMP (ORCPT
+        Fri, 5 Apr 2019 18:12:22 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39041 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfDEWMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:12:15 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so3743504plt.1;
-        Fri, 05 Apr 2019 15:12:14 -0700 (PDT)
+        Fri, 5 Apr 2019 18:12:20 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f10so910013otb.6;
+        Fri, 05 Apr 2019 15:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=6vIqu5AbJXGwURZ/x1P8u+8ZQ7uFngKRtabwAKH4lKk=;
-        b=AaXZcevVbqDJKo2yhUTaeeyqT+FTQEuobGRmKBpkrnlthtbbFwFfypEu9jOhKsOZVg
-         +UQg5E3SMZaW1yQbl+/bMWebkz3hqP+amJzksTp1Xk+xPQ1Tb7FOPWc5hbhHb+HrFUKK
-         p5ipXJf1eh3E4jHx1C1M2hiNS6fZ3/ssDYIwP9d3dX4BCOcO0TLkQVwHa5m+h2ErwDiV
-         rMbb/4KnTVKGmNTp1P5LdesEJvIf/3JGmSqPTDA1KASfjtIRyJfWjfeFv6lFof5ZwOO7
-         Wj1zx/qvHFJ2P7xjAH+VL7STVAkgMnpH6EVVOld6EgnSIlH6SYiEawhLbvIDXfAglLkC
-         MmCA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Cdv3udnHTbwrtk9vqEb69MgsYgkHtzDeDmyyoDKTZg=;
+        b=mYVGZvUPhp+bI21EMynGSP67s8HjwnHaEj8QWtKZH3zKRrwWnBJYQ+34nNk9HspsF5
+         CRfo2DDYD96K8ImZ8+RVoHIWW3bw9NLYAstAOQ9TfVpgraVfb2xtsccwp4IErOXG1Kag
+         40kc49y++0whSon6Meu0kjupEuoU82QQcNg8e6qg1jNabX5c8Uh+GvO+YxlORQxISgL1
+         jN45P8wgVIoU3icYBhFW3Y3VPmSpBmKMJ+4U4xoXHWJLlUBUcX/Vi7e2HOS3Y9oLVaua
+         S/4zGpP/rwhJGIW/yJnXgCg4mE/4u4sFAsRD11WHjZy7fLjzgcl/W4YPH4mDrq5g4myE
+         9gLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6vIqu5AbJXGwURZ/x1P8u+8ZQ7uFngKRtabwAKH4lKk=;
-        b=YA9j9G6vYigUH0Rnnm4YWZ5zjTA4G3rE5MzWitkk9lIkIXvf9Cd+J8+dEqwgc/c5RL
-         sFJDCqT5TLMf4/tR/mWsxXUzK4f0jPblo9Wel9xg6XlflJPxM20A1tMzKhy0kzVOinrR
-         Y5F5yyIBAssR3gZ3pDyEqHsa2WBK+mmwP4DqHFWGCsKelMYvN+zsF8GqTilceg0hvHpn
-         TjXcHmU3fETS6CqhAhz036ntIF/zwQGkLV79ZePUaUeDEC82iZrc+unX51GocdCdLkLG
-         2goVvgvTl95vAJ694g51EVA0KKppKO0BkC/VoTHB80zsNOGxLVRlTghMbfy66I5DDbC3
-         DCcw==
-X-Gm-Message-State: APjAAAXQ7ThirvFd/CnmSPADFH5xV81NnwCVD0xh0mDf3RF0v3jQPjtu
-        S0pgsYAyQ75Vh1Gl3+0jA/P3SMha
-X-Google-Smtp-Source: APXvYqwDFkg3s634IuCt/DDVsGVay2lJjERO15hTE9pSPT4JufXw1seluZxsaXsAI68OURcCjqb39A==
-X-Received: by 2002:a17:902:758d:: with SMTP id j13mr15626076pll.44.1554502334418;
-        Fri, 05 Apr 2019 15:12:14 -0700 (PDT)
-Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
-        by smtp.gmail.com with ESMTPSA id h11sm26078686pgq.57.2019.04.05.15.12.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 15:12:13 -0700 (PDT)
-Subject: [mm PATCH v7 1/4] mm: Use mm_zero_struct_page from SPARC on all 64b
- architectures
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     pavel.tatashin@microsoft.com, mhocko@suse.com,
-        dave.jiang@intel.com, linux-nvdimm@lists.01.org,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mingo@kernel.org, yi.z.zhang@linux.intel.com,
-        khalid.aziz@oracle.com, rppt@linux.vnet.ibm.com, vbabka@suse.cz,
-        sparclinux@vger.kernel.org, dan.j.williams@intel.com,
-        ldufour@linux.vnet.ibm.com, mgorman@techsingularity.net,
-        davem@davemloft.net, kirill.shutemov@linux.intel.com
-Date:   Fri, 05 Apr 2019 15:12:13 -0700
-Message-ID: <20190405221213.12227.9392.stgit@localhost.localdomain>
-In-Reply-To: <20190405221043.12227.19679.stgit@localhost.localdomain>
-References: <20190405221043.12227.19679.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Cdv3udnHTbwrtk9vqEb69MgsYgkHtzDeDmyyoDKTZg=;
+        b=MbDvdUM4wBOyTIubeoCwu77f21LgT2C9vEwQWwq6d7MhrXaJnXTtSBLUhtmJCR8c3J
+         /SGUKStcnXo9m4jgMNzEsEj5m4s6bqtfnnk9GmVjWPO/PfZOjVNTFts1nBoxY1sHagVC
+         6v/wQDXaTjWITN1V1HNgxyqqjQMo91zcuOAhJ4LrY12AIntT1DAu3wn/Rp+/EQS7BH5f
+         vyeO+GB9HFDVMSET6CjPaSaZ1bsd7jh3L42hYkz+/PJnczE+mYgx6PiPeyoTnVOUYq7W
+         CHwVI7H02GIskFSirlGKipKjmdy8S64ukwu3QERkK6oBRWheWtrasm5yzLhjEP/Abqyo
+         3LlA==
+X-Gm-Message-State: APjAAAXm7EgV4JZtTcMKgrRu/0NfC6T6fsBTM5v7gtLixPfE2x4O0l8D
+        rreTr/F3SwaAP31ZcXZlM0DHtvBOTlJkdHilwX4=
+X-Google-Smtp-Source: APXvYqwuDUvPNAPYZpk9BPpkCPkqXJhfjn6T7TIihrjVcahtd9OqyGWRl5cnUO13FkeWyxC0EnNdl2Rt+ZgFy5A7o6k=
+X-Received: by 2002:a05:6830:10c5:: with SMTP id z5mr10371161oto.107.1554502338956;
+ Fri, 05 Apr 2019 15:12:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20190322051759.15007-1-tomli@tomli.me> <20190322051759.15007-8-tomli@tomli.me>
+ <20190331190801.hxl57om56jskku5s@debian> <20190401174103.GF15736@localhost.localdomain>
+ <CGME20190402211010epcas2p3721fd8da621ee64c2b1a373d41cc89e7@epcas2p3.samsung.com>
+ <CADVatmPtQAfSC=UkYWHKUx98JK=PMcSZB29ULeQKTBLD9iPnkw@mail.gmail.com> <9c99beba-813d-e82a-6ce5-fd1ffec45022@samsung.com>
+In-Reply-To: <9c99beba-813d-e82a-6ce5-fd1ffec45022@samsung.com>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Fri, 5 Apr 2019 23:11:42 +0100
+Message-ID: <CADVatmMH+cLTCeQDbeR-K_sLFTbE6y_FwwF5B8Fnom7jLuQdhA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] MAINTAINERS: sm712fb: list myself as one maintainer.
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Tom Li <tomli@tomli.me>, Teddy Wang <teddy.wang@siliconmotion.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LFBDEV <linux-fbdev@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Wed, Apr 3, 2019 at 2:53 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+>
+>
+> On 04/02/2019 11:09 PM, Sudip Mukherjee wrote:
+> > On Mon, Apr 1, 2019 at 6:41 PM Tom Li <tomli@tomli.me> wrote:
+> >>
+> >> On Sun, Mar 31, 2019 at 08:08:01PM +0100, Sudip Mukherjee wrote:
+> >>> Technically I donot have any problem with this, you seem to know more
+> >>> about SM712 than I know. But Teddy Wang is also an existing maintainer
+> >>> and I think there should be an ack from him before this is accepted.
+> >>
+> >> Okay, I'll write a personal mail to Teddy. I think it could be a separate
+> >> patch to allow more time for communication, but the problem is that, if
+>
+> The first version of the patchset was posted on 2nd February and
+> Teddy was on Cc:. Unless there is an explicit NACK (with valid
+> rationale) from him lets assume that he is fine with having another
+> co-maintainer.
+>
+> >> the MAINTAINERS and the new changes are not merged at the same time, users
+> >> who have problems may unable to see my name and E-mail address for reporting
+> >> problems.
+> >
+> > git will not forget that you have done the changes. :)
+> > So anyone who has a problem only needs to do a "git blame" to see who
+> > has done it and the user will get your name and email to contact you.
+> > If that is the only reason you think your name is added as a
+>
+> The original patch description suggests that there is more than
+> that:
+>
+> "I have working on the sm712fb driver for a while and have some
+> familiarity with this hardware, I'll be helping working on and
+> testing problems of this driver, so add myself to the MAINTAINERS
+> file."
+>
+> > maintainer then I guess that is not a valid concern and then in that
+> > case I am not seeing any need to add your name in maintainer.
+> >
+> > Bartlomiej can you advise please.
+>
+> 2D acceleration seems to be an important contribution to the driver
+> (functionality wise and code wise -> it grows the driver source code
+> by ~25%) and it shows that Yifeng knows the driver well.
+>
+> He has also access to SM720 (you have SM712 only) to verify potential
+> issues with the future driver changes (I assume that he don't mind
+> getting Cc:ed on all driver related patches, not that there should be
+> much of them).
 
-Use the same approach that was already in use on Sparc on all the
-architectures that support a 64b long.
 
-This is mostly motivated by the fact that 7 to 10 store/move instructions
-are likely always going to be faster than having to call into a function
-that is not specialized for handling page init.
+Agreed with all the points.
 
-An added advantage to doing it this way is that the compiler can get away
-with combining writes in the __init_single_page call. As a result the
-memset call will be reduced to only about 4 write operations, or at least
-that is what I am seeing with GCC 6.2 as the flags, LRU pointers, and
-count/mapcount seem to be cancelling out at least 4 of the 8 assignments on
-my system.
 
-One change I had to make to the function was to reduce the minimum page
-size to 56 to support some powerpc64 configurations.
-
-This change should introduce no change on SPARC since it already had this
-code. In the case of x86_64 I saw a reduction from 3.75s to 2.80s when
-initializing 384GB of RAM per node. Pavel Tatashin tested on a system with
-Broadcom's Stingray CPU and 48GB of RAM and found that __init_single_page()
-takes 19.30ns / 64-byte struct page before this patch and with this patch
-it takes 17.33ns / 64-byte struct page. Mike Rapoport ran a similar test on
-a OpenPower (S812LC 8348-21C) with Power8 processor and 128GB or RAM. His
-results per 64-byte struct page were 4.68ns before, and 4.59ns after this
-patch.
-
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- arch/sparc/include/asm/pgtable_64.h |   30 --------------------------
- include/linux/mm.h                  |   41 ++++++++++++++++++++++++++++++++---
- 2 files changed, 38 insertions(+), 33 deletions(-)
-
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 1393a8ac596b..22500c3be7a9 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -231,36 +231,6 @@
- extern struct page *mem_map_zero;
- #define ZERO_PAGE(vaddr)	(mem_map_zero)
- 
--/* This macro must be updated when the size of struct page grows above 80
-- * or reduces below 64.
-- * The idea that compiler optimizes out switch() statement, and only
-- * leaves clrx instructions
-- */
--#define	mm_zero_struct_page(pp) do {					\
--	unsigned long *_pp = (void *)(pp);				\
--									\
--	 /* Check that struct page is either 64, 72, or 80 bytes */	\
--	BUILD_BUG_ON(sizeof(struct page) & 7);				\
--	BUILD_BUG_ON(sizeof(struct page) < 64);				\
--	BUILD_BUG_ON(sizeof(struct page) > 80);				\
--									\
--	switch (sizeof(struct page)) {					\
--	case 80:							\
--		_pp[9] = 0;	/* fallthrough */			\
--	case 72:							\
--		_pp[8] = 0;	/* fallthrough */			\
--	default:							\
--		_pp[7] = 0;						\
--		_pp[6] = 0;						\
--		_pp[5] = 0;						\
--		_pp[4] = 0;						\
--		_pp[3] = 0;						\
--		_pp[2] = 0;						\
--		_pp[1] = 0;						\
--		_pp[0] = 0;						\
--	}								\
--} while (0)
--
- /* PFNs are real physical page numbers.  However, mem_map only begins to record
-  * per-page information starting at pfn_base.  This is to handle systems where
-  * the first physical page in the machine is at some huge physical address,
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index fe52e266016e..f391c2d7c180 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -124,10 +124,45 @@ static inline void totalram_pages_set(long val)
- 
- /*
-  * On some architectures it is expensive to call memset() for small sizes.
-- * Those architectures should provide their own implementation of "struct page"
-- * zeroing by defining this macro in <asm/pgtable.h>.
-+ * If an architecture decides to implement their own version of
-+ * mm_zero_struct_page they should wrap the defines below in a #ifndef and
-+ * define their own version of this macro in <asm/pgtable.h>
-  */
--#ifndef mm_zero_struct_page
-+#if BITS_PER_LONG == 64
-+/* This function must be updated when the size of struct page grows above 80
-+ * or reduces below 56. The idea that compiler optimizes out switch()
-+ * statement, and only leaves move/store instructions. Also the compiler can
-+ * combine write statments if they are both assignments and can be reordered,
-+ * this can result in several of the writes here being dropped.
-+ */
-+#define	mm_zero_struct_page(pp) __mm_zero_struct_page(pp)
-+static inline void __mm_zero_struct_page(struct page *page)
-+{
-+	unsigned long *_pp = (void *)page;
-+
-+	 /* Check that struct page is either 56, 64, 72, or 80 bytes */
-+	BUILD_BUG_ON(sizeof(struct page) & 7);
-+	BUILD_BUG_ON(sizeof(struct page) < 56);
-+	BUILD_BUG_ON(sizeof(struct page) > 80);
-+
-+	switch (sizeof(struct page)) {
-+	case 80:
-+		_pp[9] = 0;	/* fallthrough */
-+	case 72:
-+		_pp[8] = 0;	/* fallthrough */
-+	case 64:
-+		_pp[7] = 0;	/* fallthrough */
-+	case 56:
-+		_pp[6] = 0;
-+		_pp[5] = 0;
-+		_pp[4] = 0;
-+		_pp[3] = 0;
-+		_pp[2] = 0;
-+		_pp[1] = 0;
-+		_pp[0] = 0;
-+	}
-+}
-+#else
- #define mm_zero_struct_page(pp)  ((void)memset((pp), 0, sizeof(struct page)))
- #endif
- 
-
+-- 
+Regards
+Sudip
