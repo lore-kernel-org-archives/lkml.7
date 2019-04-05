@@ -2,149 +2,133 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72247C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9556CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4242146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JWSC/NNc"
+	by mail.kernel.org (Postfix) with ESMTP id 5A3CD21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554479545;
+	bh=uCqjH6WSiHEuIJm7zv5pX1DuQt11Ycw4+/0/9uTHxuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R3Ie6RqoVurDi1Pi9qhnbfLSck9jpk4gPhgrK9YhIGGnQaUAxCA5BcKjGAUjKjOtN
+	 jwk8RvJOnaUTzvEtVqpOhga6uwmfsHAoHtpgrISIg/OvPFPO3kptSLOgZWDu7W1eQF
+	 tg7RHdlUbZ374gwsIkrrjgc+9ywQyT8XdiPfxB9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfDEPtm (ORCPT
+        id S1731305AbfDEPwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:49:42 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37057 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfDEPtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:49:41 -0400
-Received: by mail-vs1-f65.google.com with SMTP id w13so3772548vsc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L5oetkIZG68VNWmHkfR/Dw9MyRhI4MDOLdp/EBMOb1A=;
-        b=JWSC/NNcS/vfo9XVl1gVelgegdkriQ43+GdYvOZHbvazgHnSBJvWA5TsSYVaseq3eB
-         2ilxO0aNWGTqi0v4lAcyp5G2YHcIDbLqPBkcJLKa4Cv5jHyrj+mbtFeJBAb2Wgm2LvUP
-         Gs3tOpQY3Jm8tSFE7isnovNyDUAskZ6YHgkdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L5oetkIZG68VNWmHkfR/Dw9MyRhI4MDOLdp/EBMOb1A=;
-        b=ETWOERaijdJIobxaScjJXyqIcXUDPSVfbYFoLekvtjCUNrkaVT4FSk1MD0TyGjoBAj
-         eUsC5ZBa3cE0ptaOkzbRot4MJ7z9tcQfqaR4byM+kjJsjIpgLCgschWLvd6OelUzd7ZP
-         ji1sS3VAfwKUvSvdC/iLG0uwWc9s1ZNESdAfJ03+2qpHtVsYmGOCNhuMVoTZgasbTkKM
-         HB3sa7Tgq1+lxTwidnl22X8NI936XTfLKAeTc9FVKWs5o238ntW/SleahYXrEGPtM5+M
-         GXvNsA7xSn8QVP79MNi+UIrXfqlQpXS6IphRhsyOb/qkE+ICONjZ4ubtmTuugajP8LMC
-         BFEA==
-X-Gm-Message-State: APjAAAULIj+Q5K/GhVbCVut2vLV0wwYTcpiDgEN39JsRS6/BON6ddgnw
-        QNt/XV/gJLPoIIndAiSTo4O2YXh+/tU=
-X-Google-Smtp-Source: APXvYqw5EOSaVtlMUTaqkd4LgNCo5ItIakfr0ybTQXPAyJF67mNobcBmf6+TqmNolfjfglswXHzYpQ==
-X-Received: by 2002:a67:d38f:: with SMTP id b15mr8465036vsj.154.1554479379641;
-        Fri, 05 Apr 2019 08:49:39 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id o197sm25217362vkf.27.2019.04.05.08.49.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 08:49:38 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id f22so3763256vso.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:49:38 -0700 (PDT)
-X-Received: by 2002:a67:f04e:: with SMTP id q14mr8626492vsm.133.1554479377616;
- Fri, 05 Apr 2019 08:49:37 -0700 (PDT)
+        Fri, 5 Apr 2019 11:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbfDEPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:52:24 -0400
+Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7E32146F;
+        Fri,  5 Apr 2019 15:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554479543;
+        bh=uCqjH6WSiHEuIJm7zv5pX1DuQt11Ycw4+/0/9uTHxuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cqoGgsVNW4mPt6XPndxs+CwsAanm7TyhKEQGGabTvrP6YfEV2FOpJZT297TRSuxJD
+         IovnrXkFh9F3ZD/+jDArZ0NVD4+nmFjulHHjpANN+NqNRtacpyXfNMXYFHEUfL3lWl
+         mZvGdG+kRtPZ05jqGP2nqUCPMbFFZxYjeUDOs2Is=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E13743C08D5; Fri,  5 Apr 2019 17:52:20 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 17:52:20 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Claudiu.Beznea@microchip.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] add support for SAM9X60's shutdown controller
+Message-ID: <20190405155220.rsxrvv2yopij73de@earth.universe>
+References: <1550756716-3032-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-References: <20190405065217.125140-1-houtao1@huawei.com>
-In-Reply-To: <20190405065217.125140-1-houtao1@huawei.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Fri, 5 Apr 2019 08:49:26 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+939n0Sr2jZ69ga6Mf6ADo+5Y6E3q4QEFwwojR+JgA=g@mail.gmail.com>
-Message-ID: <CAGXu5j+939n0Sr2jZ69ga6Mf6ADo+5Y6E3q4QEFwwojR+JgA=g@mail.gmail.com>
-Subject: Re: [PATCH] sysctl: redefine zero as a unsigned long
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lcyamu3phuxokejg"
+Content-Disposition: inline
+In-Reply-To: <1550756716-3032-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 11:48 PM Hou Tao <houtao1@huawei.com> wrote:
->
-> We have got KASAN splat when tried to set /proc/sys/fs/file-max:
->
->   BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x3e4/0x8f0
->   Read of size 8 at addr ffff20000f9b2980 by task file-max.sh/36819
->
->   Call trace:
->    dump_backtrace+0x0/0x3f8
->    show_stack+0x3c/0x60
->    dump_stack+0x150/0x1a8
->    print_address_description+0x2b8/0x5a0
->    kasan_report+0x278/0x648
->    __asan_load8+0x124/0x170
->    __do_proc_doulongvec_minmax+0x3e4/0x8f0
->    proc_doulongvec_minmax+0x80/0xa0
->    proc_sys_call_handler+0x188/0x2a0
->    proc_sys_write+0x5c/0x80
->    __vfs_write+0x118/0x578
->    vfs_write+0x184/0x418
->    ksys_write+0xfc/0x1e8
->    __arm64_sys_write+0x88/0xa8
->    el0_svc_common+0x1a4/0x500
->    el0_svc_handler+0xb8/0x180
->    el0_svc+0x8/0xc
->
->   The buggy address belongs to the variable:
->    zero+0x0/0x40
->
-> The cause is that proc_doulongvec_minmax() is trying to cast an int
-> pointer (namely &zero) to a unsigned long pointer, and dereferencing it.
->
-> Although the warning seems does no harm, because zero will be placed
-> in a .bss section, but it's better to kill the KASAN warning by
-> redefining zero as a unsigned long, so it's OK whenever it is accessed
-> as an int or a a unsigned long.
->
-> An alternative fix seems to be set the minimal value of file-max to be 1,
-> so one_ul can be used instead, but I'm not sure whether or not a file-max
-> with a value of zero has special purpose (e.g., prohibit the file-related
-> activities of all no-privileged users).
->
-> Signed-off-by: Hou Tao <houtao1@huawei.com>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+--lcyamu3phuxokejg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Kees
+Hi,
 
-> ---
->  kernel/sysctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index e5da394d1ca3..03846e015013 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -124,7 +124,7 @@ static int sixty = 60;
->
->  static int __maybe_unused neg_one = -1;
->
-> -static int zero;
-> +static unsigned long zero;
->  static int __maybe_unused one = 1;
->  static int __maybe_unused two = 2;
->  static int __maybe_unused four = 4;
-> --
-> 2.16.2.dirty
->
+On Thu, Feb 21, 2019 at 01:45:44PM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>=20
+> Hi,
+>=20
+> This series adapt SAMA5D2's shutdown controller driver to work for
+> SAM9X60's shutdown controller. The difference is that SAM9X60 have
+> option for RTT timer wakeup.
+>=20
+> Thank you,
+> Claudiu Beznea
 
+Thanks, queued.
 
--- 
-Kees Cook
+-- Sebastian
+
+>=20
+> Changes in v2:
+> - collect Acked-by tags
+> - in patch 3/3 use "optional microchip,sam9x60-shdwc properties"
+>   string to specify that the introduced property is only for
+>   microchip,sam9x60-shdwc as specified above in case of
+>   atmel,<chip>-shdwc shutdown controllers
+> - in patch 3/3 keep only the optional property introduced by
+>   microchip,sam9x60-shwdwc (atmel,wakeup-rtt-timer)
+>=20
+> Claudiu Beznea (3):
+>   power: reset: at91-poweroff: add RTT wakeup capability
+>   power: reset: at91-poweroff: add support for SAM9X60
+>   dt-bindings: arm: atmel: add binding for SAM9X60 shutdown controller
+>=20
+>  .../devicetree/bindings/arm/atmel-sysregs.txt      |  6 +++++-
+>  drivers/power/reset/at91-sama5d2_shdwc.c           | 25 ++++++++++++++++=
+++++++
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+>=20
+> --=20
+> 2.7.4
+>=20
+
+--lcyamu3phuxokejg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynebQACgkQ2O7X88g7
++pqpPxAAqI8P+IVyhLmkU+Aes/7au2rBLOAfw5K9NPNj10VzVsfa7dZnpimaWvhX
+EqYXyPdPbcj5tAlRlWoVb77bgJvT4JaOQNS25fjR9gxx1IF0nTJm6ggcauFwECZM
+3iZ1O0cvZkMAeSlEW9eto9mg18lgUHDI8SDl5RqiEAa7KDKSrKr9/tKEt/K/Kdvz
+VA0QtNliTeTG9oYA8JhcPdjQqEpEcwWwoitB2MPWUHcoPw3HIxNRKBQRGjEdsgFQ
+rtmk33qHqlobo8gKcv69SCd+wvLu4pht444G5KVrkUdBTwb2rKnvyVqz+BIyxbFv
+fknCj9ZEi3AQMLwEkhQv+0LUvcT7aKGyvSnd2wTbI5//w6H/m3/aNCRD2wV/Qlfl
+eEFyHSmG3sLw5xJOkqNP0RTqUIDWrKMuIqY4C2sruEgfmVACiKhRWemQwWAHLqXQ
+yi1YwaTZbVkqZcgcYI5un8xJqlBUTy41vR6cI/IHrstWYrfX+FPv/oMT/muXurxa
+D1Sz3uwRI+kaakIgfvELyV3t2gxM5qokZ3ndQikPDrScnl8h2a7GLjRIjO3vpljT
+EqCl2utcFlj7sJIJUSMsbt/JYzwn60Rc9zCvGBs08Mpm4rHL4SRnMtXhYbiF7gtm
+1hsmLNo5NdLxnRizxtCm3WRJKxb/+t0jf9bEBVCkqqndhLTvIGw=
+=zRv5
+-----END PGP SIGNATURE-----
+
+--lcyamu3phuxokejg--
