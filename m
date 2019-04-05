@@ -2,87 +2,82 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE14C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935E02186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D232D21872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfDEJCE (ORCPT
+        id S1730479AbfDEJCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:02:04 -0400
-Received: from bastet.se.axis.com ([195.60.68.11]:49794 "EHLO
-        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbfDEJCD (ORCPT
+        Fri, 5 Apr 2019 05:02:40 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36685 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730392AbfDEJCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:02:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bastet.se.axis.com (Postfix) with ESMTP id B58511877B;
-        Fri,  5 Apr 2019 11:02:01 +0200 (CEST)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id xnQSVffxmNWq; Fri,  5 Apr 2019 11:01:58 +0200 (CEST)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-        by bastet.se.axis.com (Postfix) with ESMTPS id D806918795;
-        Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D8931E057;
-        Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9170B1E04F;
-        Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-        by boulder03.se.axis.com (Postfix) with ESMTP;
-        Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Received: from lnxartpec.se.axis.com (lnxartpec.se.axis.com [10.88.4.9])
-        by thoth.se.axis.com (Postfix) with ESMTP id 85185218E;
-        Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Received: by lnxartpec.se.axis.com (Postfix, from userid 10564)
-        id 751FA80D28; Fri,  5 Apr 2019 11:00:43 +0200 (CEST)
-Date:   Fri, 5 Apr 2019 11:00:43 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: Add NULL TTY driver
-Message-ID: <20190405090043.vnsftwpdm56cx2hr@axis.com>
-References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
- <20190403131213.GA4246@kroah.com>
- <20190403141109.3mdmqbt3mjxrie6k@axis.com>
- <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+        Fri, 5 Apr 2019 05:02:40 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 72C541BF20F;
+        Fri,  5 Apr 2019 09:02:37 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 11:02:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Message-ID: <20190405090236.e7vnyjzxmzfke3d6@flea>
+References: <20190404135736.8491-1-peron.clem@gmail.com>
+ <20190404135736.8491-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i56aap7rd27nepk5"
 Content-Disposition: inline
-In-Reply-To: <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-TM-AS-GCONF: 00
+In-Reply-To: <20190404135736.8491-2-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 10:39:43AM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 03.04.19 16:11, Vincent Whitchurch wrote:
-> 
-> > Especially on embedded systems, it would be convenient to have a simple
-> > way to disable the console (both for kernel and userspace) on a system
-> > which normally uses it, to free up the UART for other things.
-> 
-> Just symlinking to /dev/null does not work ?
 
-No, /dev/null does not support the TTY ioctls.
+--i56aap7rd27nepk5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> OTOH, if you're introducing a dummy console, wouldn't a ringbuffer that,
-> can be read out later, a better option ?
+On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron wrote:
+> Allwinner H6 has a watchog compatible with A31.
+>
+> Declare it in the device tree.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-There is already a ttyprintk driver in mainline to send these messages
-to the printk ring buffer if one is actually intrested in what is
-written to the console.  There's no option to enable it via console= in
-mainline but I have a patch for that too.
+Applied both, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--i56aap7rd27nepk5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKcZrAAKCRDj7w1vZxhR
+xR3gAQCY34vjcxADWfQ5Z+C5SPwkNCFOKEOyZ3eDzZ06nzHLqgD/cSvE0x/VcobX
+Et3afjWV59FzQcZonl7nzBDoAnQc6AM=
+=Ryow
+-----END PGP SIGNATURE-----
+
+--i56aap7rd27nepk5--
