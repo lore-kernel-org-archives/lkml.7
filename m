@@ -2,120 +2,98 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12181C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2442184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554479762;
-	bh=AIUQmEJXDsY3GEcph7bSt7nxSpV0ues5FfD1PAAI9Ts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pyOC7R/HnEak1MUye82erLeSZ5heb6xUFWk1PoYN4uvxtSd8+E3y4azpjwyvuwuMC
-	 XCFmLhCHmGDumoPNWkhSmRiM12SNPHMlYumSeGIJVm22ucDTInlWtWUYx82v1OiLSk
-	 GB3O/hbiN/1m5HMpljQZvc7LCW5LdgypO1MI23pI=
+	by mail.kernel.org (Postfix) with ESMTP id D84A52175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbfDEP4B (ORCPT
+        id S1731263AbfDEP6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:56:01 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36876 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfDEP4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:56:00 -0400
-Received: by mail-lf1-f65.google.com with SMTP id o19so4745974lfl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bKgYB2mVUR0Dy1jeWmsQ2zw6whgBFdaTcN8ryeRQxYU=;
-        b=En7g5DbTB0+7aRdhu8OBnPnZ9+ZlEJaR1r9ErWCI+duw4vATeEzKPCRpAobF+WRmk0
-         hjvTnZyoeMFjMTq3zXPjuW/XYqOBeZHT/hrtOM1N71erTIThOhp34DIwLc57sfvEujgh
-         I7shJ5vNJcv7aef6f+haCIepXeGasfuxVCBn4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bKgYB2mVUR0Dy1jeWmsQ2zw6whgBFdaTcN8ryeRQxYU=;
-        b=VAj83QXLGCzA3Zp5GOIXb1jkxIgo0msllKFoc6grLvUEtIG4EJ/xNkesdUN1+XkZYz
-         +46Pmamshge0sxbzxskPcxCLL8G6pWm1Pp592r8D+gxsE4nKIRj9OTSdw2R6WB/YRxVu
-         G8zry10Lhwx8LiNNC7HPxoL9l1Mq1Ib9Twr3X2kG7WcDt/8Uv6Da2uS53oveDHTKPmUs
-         wzuWs8XvABeM4gBnjbmWQoqDiuawpSEYj+MI0oHGIXJtxpygINQSxTs2Hxjw/NdyYUYG
-         gE6hto3jLANqdNRyIG/4ga61mxaw2ptc6sN4sXw4Mie35QGOAgFbX0lrLHN1kktjCIo+
-         cEzA==
-X-Gm-Message-State: APjAAAXFpAYFCV1PPof4B744+AFtv2nc/b5Reh0cthBwcQBHCI4sylk8
-        9n9p/ROmH4TKgQ77Zgs7RIFMq6Nimu8=
-X-Google-Smtp-Source: APXvYqxZ/uC/H9cJ2g3nPvxetceXX2mHLOoVEbLCUncko/AjceN8H63C1yF6AdvjZugHCXzUJFc40Q==
-X-Received: by 2002:ac2:5629:: with SMTP id b9mr3828841lff.100.1554479757141;
-        Fri, 05 Apr 2019 08:55:57 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id h6sm4427720lfj.77.2019.04.05.08.55.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 08:55:56 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id o19so4745897lfl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:55:55 -0700 (PDT)
-X-Received: by 2002:ac2:485a:: with SMTP id 26mr7146710lfy.128.1554479448457;
- Fri, 05 Apr 2019 08:50:48 -0700 (PDT)
+        Fri, 5 Apr 2019 11:58:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42228 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbfDEP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:58:37 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A0B77C049E24;
+        Fri,  5 Apr 2019 15:58:37 +0000 (UTC)
+Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17AA55D71B;
+        Fri,  5 Apr 2019 15:58:35 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 10:58:33 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Khalid Aziz <khalid.aziz@oracle.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] x86/entry: re-enable interrupts before exiting
+Message-ID: <20190405155833.bnp5lfa5u33zhznk@treble>
+References: <20190405153525.29587-1-tycho@tycho.ws>
 MIME-Version: 1.0
-References: <20190405135936.7266-1-will.deacon@arm.com> <20190405135936.7266-18-will.deacon@arm.com>
-In-Reply-To: <20190405135936.7266-18-will.deacon@arm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 5 Apr 2019 05:50:32 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wj6ymuXDS1Azr4fFJC7Z77zOfN5vaKZjDzUA4izvULWXg@mail.gmail.com>
-Message-ID: <CAHk-=wj6ymuXDS1Azr4fFJC7Z77zOfN5vaKZjDzUA4izvULWXg@mail.gmail.com>
-Subject: Re: [PATCH v2 17/21] drivers: Remove explicit invocations of mmiowb()
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190405153525.29587-1-tycho@tycho.ws>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 05 Apr 2019 15:58:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 4:01 AM Will Deacon <will.deacon@arm.com> wrote:
->
-> mmiowb() is now implied by spin_unlock() on architectures that require
-> it, so there is no reason to call it from driver code. This patch was
-> generated using coccinelle:
->
->         @mmiowb@
->         @@
->         - mmiowb();
+On Fri, Apr 05, 2019 at 09:35:24AM -0600, Tycho Andersen wrote:
+> If the kernel oopses in an interrupt, nothing re-enables interrupts:
+> 
+> Aug 23 19:30:27 xpfo kernel: [   38.302714] BUG: sleeping function called from invalid context at
+> ./include/linux/percpu-rwsem.h:33
+> Aug 23 19:30:27 xpfo kernel: [   38.303837] in_atomic(): 0, irqs_disabled(): 1, pid: 1970, name:
+> lkdtm_xpfo_test
+> Aug 23 19:30:27 xpfo kernel: [   38.304758] CPU: 3 PID: 1970 Comm: lkdtm_xpfo_test Tainted: G      D
+> 4.13.0-rc5+ #228
+> Aug 23 19:30:27 xpfo kernel: [   38.305813] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.10.1-1ubuntu1 04/01/2014
+> Aug 23 19:30:27 xpfo kernel: [   38.306926] Call Trace:
+> Aug 23 19:30:27 xpfo kernel: [   38.307243]  dump_stack+0x63/0x8b
+> Aug 23 19:30:27 xpfo kernel: [   38.307665]  ___might_sleep+0xec/0x110
+> Aug 23 19:30:27 xpfo kernel: [   38.308139]  __might_sleep+0x45/0x80
+> Aug 23 19:30:27 xpfo kernel: [   38.308593]  exit_signals+0x21/0x1c0
+> Aug 23 19:30:27 xpfo kernel: [   38.309046]  ? blocking_notifier_call_chain+0x11/0x20
+> Aug 23 19:30:27 xpfo kernel: [   38.309677]  do_exit+0x98/0xbf0
+> Aug 23 19:30:27 xpfo kernel: [   38.310078]  ? smp_reader+0x27/0x40 [lkdtm]
+> Aug 23 19:30:27 xpfo kernel: [   38.310604]  ? kthread+0x10f/0x150
+> Aug 23 19:30:27 xpfo kernel: [   38.311045]  ? read_user_with_flags+0x60/0x60 [lkdtm]
+> Aug 23 19:30:27 xpfo kernel: [   38.311680]  rewind_stack_do_exit+0x17/0x20
+> 
+> do_exit() expects to be called in a well-defined environment, so let's
+> re-enable interrupts after unwinding the stack, in case they were disabled.
+> 
+> Note that if any spinlocks are held, etc. we'll also get the above warning,
+> so this isn't a silver bullet. So, let's add a C helper in case someone
+> wants to add fancier lock busting or if we've forgotten to unwind something
+> else.
+> 
+> I've had to add back in the hack that Josh removed in 8c1f75587a18
+> ("x86/entry/64: Add unwind hint annotations") with the loop after the call,
+> because for whatever reason without that I get a warning:
+> 
+>   AS      arch/x86/entry/entry_64.o
+> arch/x86/entry/entry_64.o: warning: objtool: .entry.text: unexpected end of section
+> 
+> It seems to actually work fine for me though, since the new helper is also
+> __noreturn. Perhaps there's a better way to do this?
 
-So I love the patch series, and think we should just do it, but I do
-wonder if some of the drivers involved end up relying on memory
-ordering things (store_release -> load_aquire) and IO ordering rather
-than using locking...
+Unfortunately, objtool doesn't have a way to detect noreturn functions
+in other objects, so they're hard-coded in a list.  You can add
+__finish_rewind_stack_do_exit to the global_noreturns array in
+tools/objtool/check.c.
 
-Wouldn't such use now be broken on ia64 SN platforms? Do we care?
-
-So it might be worth noting that a lot of the mmiowb()s here weren't
-paired with spin_unlock?
-
-                    Linus
+-- 
+Josh
