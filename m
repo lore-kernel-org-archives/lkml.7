@@ -2,298 +2,157 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C2EC282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA88C282DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127AA21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQVCFkvU"
+	by mail.kernel.org (Postfix) with ESMTP id 620D821726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfDEWMa (ORCPT
+        id S1726636AbfDEWMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:12:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44498 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbfDEWM1 (ORCPT
+        Fri, 5 Apr 2019 18:12:35 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50023 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfDEWMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:12:27 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y13so3987978pfm.11;
-        Fri, 05 Apr 2019 15:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=dVuSGqGMdSL+lYB9NVdPOXJ/yezgrt5Vhv+/46VVp14=;
-        b=JQVCFkvUkfWotyAFTK0D20cgOePlePMZbaEA60cegN8gvROzBwq6nj7PYVeXVjhR8g
-         NZzIIiVk2R4QQvX6GA8mIKChjKmhPLCY+hYRKgEiuHzfsshVMvf0mOQlLzE+e0mG5L2U
-         prbcDAvY/fTOQJSxxCXfORrqJuu4QoAEf0wXdalbKvLm/vf/DkOoQZdivMOpzrNZP/lN
-         vkS06bjvHACsJldSdBM0ThykU5zprTeBnS46dQ8JZ9hcpXn47Zjhtzeah/QrVfh5i7Vh
-         PVnpqnU7tXzqfiMoHOm76lWBBUH+Mx2uwHhcCELcSLVlkTi6xJuNGIX7/LefnnkIlzvL
-         fIoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=dVuSGqGMdSL+lYB9NVdPOXJ/yezgrt5Vhv+/46VVp14=;
-        b=hfHdQE/Oy2cjdyKjt0olQRiI3WzSDWZbExk5SCHUBbwBIVVhnymS7YUx0njiQVPR/h
-         bPRe679slXRdnmDljkx8YWsgsRoSsFqkcoRvqP1Z9zGBHg4LBBf4dGOaxwLvmakGq8Xs
-         2cn8YZ+5ITCYae89tTOVynzrBWWRv84TUmdZyB8Vpgh6joxgbeTIHsYq5KQNRlwBOJfu
-         teRGu72MTm7Xccas2Ptr4DUocP9D3Mo7diSGTkkVgY5H9uEDOlQz+zyhZaGyPF5zz2FP
-         plXzMxCRX1+bl8FfC23jnD8Mu50ya6bY9dmEQeDcwpZnjKaYofbjsYZkVjKmborcaFoM
-         dd+Q==
-X-Gm-Message-State: APjAAAV7FN+12ExA5MSKwruoOBFNCZGMh+Z/eTspJzBHwNY9cpIq2MKJ
-        xTtEuHEV6auOjnw+rxL1WY8=
-X-Google-Smtp-Source: APXvYqxKbwb1VzShMBMk6QhT/5s3udfUks/YgS3lLw5sgTjR3Ne4rhJN++RLqGAP8qX1lUodDpAx3g==
-X-Received: by 2002:aa7:8289:: with SMTP id s9mr15095613pfm.208.1554502346930;
-        Fri, 05 Apr 2019 15:12:26 -0700 (PDT)
-Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
-        by smtp.gmail.com with ESMTPSA id f63sm30382350pfc.180.2019.04.05.15.12.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 15:12:26 -0700 (PDT)
-Subject: [mm PATCH v7 3/4] mm: Implement new zone specific memblock iterator
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     pavel.tatashin@microsoft.com, mhocko@suse.com,
-        dave.jiang@intel.com, linux-nvdimm@lists.01.org,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mingo@kernel.org, yi.z.zhang@linux.intel.com,
-        khalid.aziz@oracle.com, rppt@linux.vnet.ibm.com, vbabka@suse.cz,
-        sparclinux@vger.kernel.org, dan.j.williams@intel.com,
-        ldufour@linux.vnet.ibm.com, mgorman@techsingularity.net,
-        davem@davemloft.net, kirill.shutemov@linux.intel.com
-Date:   Fri, 05 Apr 2019 15:12:25 -0700
-Message-ID: <20190405221225.12227.22573.stgit@localhost.localdomain>
-In-Reply-To: <20190405221043.12227.19679.stgit@localhost.localdomain>
-References: <20190405221043.12227.19679.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 5 Apr 2019 18:12:22 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hCX4L-0005qK-38; Sat, 06 Apr 2019 00:12:17 +0200
+Date:   Sat, 6 Apr 2019 00:12:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jacky Bai <ping.bai@nxp.com>
+cc:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+In-Reply-To: <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+Message-ID: <alpine.DEB.2.21.1904060003140.1802@nanos.tec.linutronix.de>
+References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com> <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Wed, 3 Apr 2019, Jacky Bai wrote:
 
-Introduce a new iterator for_each_free_mem_pfn_range_in_zone.
+> From: Bai Ping <ping.bai@nxp.com>
+> 
+> The system counter (sys_ctr) is a programmable system counter
+> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+> It is intended for use in applications where the counter is always
+> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+> supports:
+>  - 56-bit counter width (roll-over time greater than 40 years)
+>  - compare frame(64-bit compare value) contains programmable interrupt
+>    generation
 
-This iterator will take care of making sure a given memory range provided
-is in fact contained within a zone. It takes are of all the bounds checking
-we were doing in deferred_grow_zone, and deferred_init_memmap. In addition
-it should help to speed up the search a bit by iterating until the end of a
-range is greater than the start of the zone pfn range, and will exit
-completely if the start is beyond the end of the zone.
+I hope that's a <= compare and not a == ....
 
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- include/linux/memblock.h |   25 ++++++++++++++++++
- mm/memblock.c            |   64 ++++++++++++++++++++++++++++++++++++++++++++++
- mm/page_alloc.c          |   31 +++++++++-------------
- 3 files changed, 101 insertions(+), 19 deletions(-)
+> +static void sysctr_timer_enable(bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(sys_ctr_base + CMPCR);
+> +	val &= ~SYS_CTR_EN;
+> +	if (enable)
+> +		val |= SYS_CTR_EN;
+> +
+> +	writel(val, sys_ctr_base + CMPCR);
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 294d5d80e150..f8b78892b977 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -240,6 +240,31 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
- 	     i >= 0; __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid))
- #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
- 
-+#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-+void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
-+				  unsigned long *out_spfn,
-+				  unsigned long *out_epfn);
-+/**
-+ * for_each_free_mem_range_in_zone - iterate through zone specific free
-+ * memblock areas
-+ * @i: u64 used as loop variable
-+ * @zone: zone in which all of the memory blocks reside
-+ * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
-+ * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
-+ *
-+ * Walks over free (memory && !reserved) areas of memblock in a specific
-+ * zone. Available once memblock and an empty zone is initialized. The main
-+ * assumption is that the zone start, end, and pgdat have been associated.
-+ * This way we can use the zone to determine NUMA node, and if a given part
-+ * of the memblock is valid for the zone.
-+ */
-+#define for_each_free_mem_pfn_range_in_zone(i, zone, p_start, p_end)	\
-+	for (i = 0,							\
-+	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end);	\
-+	     i != U64_MAX;					\
-+	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end))
-+#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
-+
- /**
-  * for_each_free_mem_range - iterate through free memblock areas
-  * @i: u64 used as loop variable
-diff --git a/mm/memblock.c b/mm/memblock.c
-index e7665cf914b1..28fa8926d9f8 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1255,6 +1255,70 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
- 	return 0;
- }
- #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
-+#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-+/**
-+ * __next_mem_pfn_range_in_zone - iterator for for_each_*_range_in_zone()
-+ *
-+ * @idx: pointer to u64 loop variable
-+ * @zone: zone in which all of the memory blocks reside
-+ * @out_spfn: ptr to ulong for start pfn of the range, can be %NULL
-+ * @out_epfn: ptr to ulong for end pfn of the range, can be %NULL
-+ *
-+ * This function is meant to be a zone/pfn specific wrapper for the
-+ * for_each_mem_range type iterators. Specifically they are used in the
-+ * deferred memory init routines and as such we were duplicating much of
-+ * this logic throughout the code. So instead of having it in multiple
-+ * locations it seemed like it would make more sense to centralize this to
-+ * one new iterator that does everything they need.
-+ */
-+void __init_memblock
-+__next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
-+			     unsigned long *out_spfn, unsigned long *out_epfn)
-+{
-+	int zone_nid = zone_to_nid(zone);
-+	phys_addr_t spa, epa;
-+	int nid;
-+
-+	__next_mem_range(idx, zone_nid, MEMBLOCK_NONE,
-+			 &memblock.memory, &memblock.reserved,
-+			 &spa, &epa, &nid);
-+
-+	while (*idx != U64_MAX) {
-+		unsigned long epfn = PFN_DOWN(epa);
-+		unsigned long spfn = PFN_UP(spa);
-+
-+		/*
-+		 * Verify the end is at least past the start of the zone and
-+		 * that we have at least one PFN to initialize.
-+		 */
-+		if (zone->zone_start_pfn < epfn && spfn < epfn) {
-+			/* if we went too far just stop searching */
-+			if (zone_end_pfn(zone) <= spfn) {
-+				*idx = U64_MAX;
-+				break;
-+			}
-+
-+			if (out_spfn)
-+				*out_spfn = max(zone->zone_start_pfn, spfn);
-+			if (out_epfn)
-+				*out_epfn = min(zone_end_pfn(zone), epfn);
-+
-+			return;
-+		}
-+
-+		__next_mem_range(idx, zone_nid, MEMBLOCK_NONE,
-+				 &memblock.memory, &memblock.reserved,
-+				 &spa, &epa, &nid);
-+	}
-+
-+	/* signal end of iteration */
-+	if (out_spfn)
-+		*out_spfn = ULONG_MAX;
-+	if (out_epfn)
-+		*out_epfn = 0;
-+}
-+
-+#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
- 
- /**
-  * memblock_alloc_range_nid - allocate boot memory block
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2d2bca9803d2..61467e28c966 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1613,11 +1613,9 @@ static unsigned long  __init deferred_init_pages(struct zone *zone,
- static int __init deferred_init_memmap(void *data)
- {
- 	pg_data_t *pgdat = data;
--	int nid = pgdat->node_id;
- 	unsigned long start = jiffies;
- 	unsigned long nr_pages = 0;
- 	unsigned long spfn, epfn, first_init_pfn, flags;
--	phys_addr_t spa, epa;
- 	int zid;
- 	struct zone *zone;
- 	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
-@@ -1654,14 +1652,12 @@ static int __init deferred_init_memmap(void *data)
- 	 * freeing pages we can access pages that are ahead (computing buddy
- 	 * page in __free_one_page()).
- 	 */
--	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
--		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
--		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
-+	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
-+		spfn = max_t(unsigned long, first_init_pfn, spfn);
- 		nr_pages += deferred_init_pages(zone, spfn, epfn);
- 	}
--	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
--		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
--		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
-+	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
-+		spfn = max_t(unsigned long, first_init_pfn, spfn);
- 		deferred_free_pages(spfn, epfn);
- 	}
- 	pgdat_resize_unlock(pgdat, &flags);
-@@ -1669,8 +1665,8 @@ static int __init deferred_init_memmap(void *data)
- 	/* Sanity check that the next zone really is unpopulated */
- 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
- 
--	pr_info("node %d initialised, %lu pages in %ums\n", nid, nr_pages,
--					jiffies_to_msecs(jiffies - start));
-+	pr_info("node %d initialised, %lu pages in %ums\n",
-+		pgdat->node_id,	nr_pages, jiffies_to_msecs(jiffies - start));
- 
- 	pgdat_init_report_one_done();
- 	return 0;
-@@ -1694,13 +1690,11 @@ static int __init deferred_init_memmap(void *data)
- static noinline bool __init
- deferred_grow_zone(struct zone *zone, unsigned int order)
- {
--	int nid = zone_to_nid(zone);
--	pg_data_t *pgdat = NODE_DATA(nid);
- 	unsigned long nr_pages_needed = ALIGN(1 << order, PAGES_PER_SECTION);
-+	pg_data_t *pgdat = zone->zone_pgdat;
- 	unsigned long nr_pages = 0;
- 	unsigned long first_init_pfn, spfn, epfn, t, flags;
- 	unsigned long first_deferred_pfn = pgdat->first_deferred_pfn;
--	phys_addr_t spa, epa;
- 	u64 i;
- 
- 	/* Only the last zone may have deferred pages */
-@@ -1736,9 +1730,8 @@ static int __init deferred_init_memmap(void *data)
- 		return false;
- 	}
- 
--	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
--		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
--		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
-+	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
-+		spfn = max_t(unsigned long, first_init_pfn, spfn);
- 
- 		while (spfn < epfn && nr_pages < nr_pages_needed) {
- 			t = ALIGN(spfn + PAGES_PER_SECTION, PAGES_PER_SECTION);
-@@ -1752,9 +1745,9 @@ static int __init deferred_init_memmap(void *data)
- 			break;
- 	}
- 
--	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
--		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
--		epfn = min_t(unsigned long, first_deferred_pfn, PFN_DOWN(epa));
-+	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
-+		spfn = max_t(unsigned long, first_init_pfn, spfn);
-+		epfn = min_t(unsigned long, first_deferred_pfn, epfn);
- 		deferred_free_pages(spfn, epfn);
- 
- 		if (first_deferred_pfn == epfn)
+This read is really just overhead. Why aren't you caching the control
+register value? It's not a self modifying register and I don't see
+concurrency here either.
 
+> +}
+> +
+> +static void sysctr_irq_acknowledge(void)
+> +{
+> +	/*
+> +	 * clear the enable bit(EN =0) will clear
+> +	 * the status bit(ISTAT = 0), then the interrupt
+> +	 * signal will be negated(acknowledged).
+> +	 */
+> +	sysctr_timer_enable(false);
+> +}
+> +
+> +static inline u64 sysctr_read_counter(void)
+> +{
+> +	u32 cnt_hi, tmp_hi, cnt_lo;
+> +
+> +	do {
+> +		cnt_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +		cnt_lo = readl_relaxed(sys_ctr_base + CNTCV_LO);
+> +		tmp_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +	} while (tmp_hi != cnt_hi);
+
+When will hardware people finally get it? Is it so damned hard to make the
+readout do:
+
+	lo = read_lo()		-> internally latches HI in hardware
+	hi = read_hi()		-> reads the latched value
+
+It's not rocket science, but it would spare these horrible read loops. But
+sure, performance happens in whitepapers and marketing slides ....
+
+> +
+> +	return  ((u64) cnt_hi << 32) | cnt_lo;
+> +}
+> +
+> +static int sysctr_set_next_event(unsigned long delta,
+> +				 struct clock_event_device *evt)
+> +{
+> +	u32 cmp_hi, cmp_lo;
+> +	u64 next;
+> +
+> +	sysctr_timer_enable(false);
+> +
+> +	next = sysctr_read_counter();
+> +
+> +	next += delta;
+> +
+> +	cmp_hi = (next >> 32) & 0x00fffff;
+> +	cmp_lo = next & 0xffffffff;
+> +
+> +	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
+> +	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
+
+Please document that this is a <= comparator. If that's not true then this
+function is broken for small deltas and delays between read_counter() and
+enable.
+
+> +
+> +	sysctr_timer_enable(true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
+> +{
+> +	sysctr_timer_enable(true);
+
+That's wrong. Why do you want to enable the timer here? When the state is
+set to one shot then the next operation is set_next_event() but before that
+nothing should ever come out of the timer.
+
+Thanks,
+
+	tglx
