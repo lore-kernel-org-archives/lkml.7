@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44858C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69052C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1254A218A6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395092186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQToVb8W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW6g/tH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfDELvB (ORCPT
+        id S1731220AbfDELvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:51:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35389 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731141AbfDELu7 (ORCPT
+        Fri, 5 Apr 2019 07:51:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54858 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731178AbfDELvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:50:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so6886816wmd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:50:57 -0700 (PDT)
+        Fri, 5 Apr 2019 07:51:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c1so6327034wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=utJGoRmoCt1Yac5uZqSPuhhOnZaRHyvqQEV4XOPwu9o=;
-        b=iQToVb8WaIhnC0kFylFioMF2Y9UqvJrZT3P6RyY9oir8Vgl5sB19XtviB6yuAE7oDm
-         FYNp67IebAZFj68B7FE2+QhvL2Z8WuTFOOeG6VfgCkUXKI/QRdh3TsE2sB6BJdKNNPtv
-         82+ODDhd8AP2EzpgFR77ymPF5vl5d78MkU0yI0cJZhtFCOKUGZ4BKppQfwcbyY+f3szf
-         SMxIE6Rc9NARa+qRt+iWhauQIzdI0oEIxuKqil+oDQMZBByBsSjOAZ3x5ZWBsNZol2pq
-         iAU2ZzyM3Olp6h1xHc3JRG4/jcPqnFEa6e7s3bga5naetU143x54BdFnrlsEDhVyrxEK
-         wzBw==
+        bh=SYxt71K5cDuYYPDOLPDo0W42xN9f7ymOpTx0siZ9uFE=;
+        b=OW6g/tH1grTVYgYEYMkJQbGS2cn6t1AC3p2IKqubQ54EQizIAuwEvs5JXVE4lGt/CR
+         6nc8o/065laVyJN1qVxfbX0FjRuuQoFeswJO0AI1pGzl2lJ6fdzIt9g2KpfTNRL3CNc+
+         Z+zSN86+hb/+/F80dpHjBNdJJdnTD2i/dVJLvQqcTbZ31khy40hMJPvsURuz9lWoj6Om
+         YBstLXaN8thPL23pihpdzG1E7H6E6wSR1jYXrGY18usTK0koOjV7CctYYxnkd2/H163Z
+         79GJuot18wl/YGx+KrtdW5wuaDT5y6KaQ/UxjgDaGhi/W78tSGfFOFgvdCKu1PNmY8FX
+         homA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=utJGoRmoCt1Yac5uZqSPuhhOnZaRHyvqQEV4XOPwu9o=;
-        b=O0fWDABmyif4fzkQ8QBEnUwnmBGP5YDh1g+lkmHdSmRFNDXSJuExZAfwqPQBgzDYOQ
-         F62M5BHo/Y2Tzq71dWmKayTq5P+rX2Xt1PNipkRGjssI3XWxyOSssvnsuELdGxGBtg1/
-         W9jbLE4Sopef317CQ7ZCLmIzqwFXtv7a1sX/AJPTpNSMLl/zyi5YYCtJGhRW1zW0shP8
-         FJ+fHrvd8gTGoFi7uxXBnPogifrcTJNWhmzk1vTqAvtaui+DnLpszYXR2ur53WtfTHgg
-         6TWa/Up+U8zBVA/xkqLTkdU/jfq86fPkIm1Ju8xylbh4UnUE2V55LyKSoMwq70+wW+Qk
-         kxog==
-X-Gm-Message-State: APjAAAWdhGgGMA55D5o8cj4aaJH9DQO9xBlm2dfGv+2M7oNn492AVLe0
-        V7N82FL1DbM39BWZ56cYgfY=
-X-Google-Smtp-Source: APXvYqwTeKzT4qf+7/FYVUNWvvkVTEMxThnfCNcy69yPA3QINTDt4y04btghmlO+O+nhMq0z0ijpkw==
-X-Received: by 2002:a1c:be0e:: with SMTP id o14mr7588888wmf.118.1554465057276;
-        Fri, 05 Apr 2019 04:50:57 -0700 (PDT)
+        bh=SYxt71K5cDuYYPDOLPDo0W42xN9f7ymOpTx0siZ9uFE=;
+        b=aN/vHuDFcFjplafGnw7d3pGnYAzGfk66F082low2Vcv5k8jpR1B0aLnUmsU3++WGt5
+         JtAwJGUfK4pzxRenRgCBGSnMF8ZKyKST6Z4OT+GMvCXH6VwnzxO4ENeV9jyVUgvkof/P
+         Iu1jMCmHGWBv9eLNdV0H5Itu37eVLWNnaJxeZvpXer3wqtblS/TmrhbwSOJadTBlOxAu
+         9HckaCJU9NKHsapyZu8UN/GGj5unx+hGY6P9VgWyoh8JekvuV1nPZXDGUKI377/WWRSX
+         6U2KWrlF24NHKQrj7QoKforeVKpciV0g6kXSm1pPdAe2b+mgDDKm+EY3o0oPkk3pM7f6
+         gqLg==
+X-Gm-Message-State: APjAAAUlqQTsOBq0ZJwPVpHuFp9SQchGaHQSCbqyoECKHZniDF0pgh1u
+        yPe3UmGbGTvM5/JPlH3y+ww=
+X-Google-Smtp-Source: APXvYqwxNkQmVZrUi1vsYyK/2xnLgyg9ZpKXI/epAYR9GMay32GRo4cEV01N9SqKEx6qeF1Eb2HGPQ==
+X-Received: by 2002:a1c:1d4:: with SMTP id 203mr8042987wmb.101.1554465059942;
+        Fri, 05 Apr 2019 04:50:59 -0700 (PDT)
 Received: from localhost.localdomain ([178.138.34.252])
-        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.50.54
+        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.50.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 04:50:56 -0700 (PDT)
+        Fri, 05 Apr 2019 04:50:59 -0700 (PDT)
 From:   Andra Danciu <andradanciu1997@gmail.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -63,9 +64,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     daniel.baluta@nxp.com, Andra Danciu <andradanciu1997@gmail.com>
-Subject: [PATCH 07/20] ASoC: imx-mc13783: Switch to SPDX identifier
-Date:   Fri,  5 Apr 2019 14:49:57 +0300
-Message-Id: <20190405115010.28838-8-andradanciu1997@gmail.com>
+Subject: [PATCH 08/20] ASoC: imx-pcm-fiq: Switch to SPDX identifier
+Date:   Fri,  5 Apr 2019 14:49:58 +0300
+Message-Id: <20190405115010.28838-9-andradanciu1997@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405115010.28838-1-andradanciu1997@gmail.com>
 References: <20190405115010.28838-1-andradanciu1997@gmail.com>
@@ -79,39 +80,38 @@ management.
 
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 ---
- sound/soc/fsl/imx-mc13783.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ sound/soc/fsl/imx-pcm-fiq.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-mc13783.c b/sound/soc/fsl/imx-mc13783.c
-index 9d19b808f634..545815a27074 100644
---- a/sound/soc/fsl/imx-mc13783.c
-+++ b/sound/soc/fsl/imx-mc13783.c
-@@ -1,17 +1,11 @@
+diff --git a/sound/soc/fsl/imx-pcm-fiq.c b/sound/soc/fsl/imx-pcm-fiq.c
+index 0578f3486847..c49aea4fba56 100644
+--- a/sound/soc/fsl/imx-pcm-fiq.c
++++ b/sound/soc/fsl/imx-pcm-fiq.c
+@@ -1,16 +1,11 @@
 -/*
-- * imx-mc13783.c  --  SoC audio for imx based boards with mc13783 codec
+- * imx-pcm-fiq.c  --  ALSA Soc Audio Layer
 - *
-- * Copyright 2012 Philippe Retornaz, <philippe.retornaz@epfl.ch>
+- * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
 - *
-- * Heavly based on phycore-mc13783:
-- * Copyright 2009 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+- * This code is based on code copyrighted by Freescale,
+- * Liam Girdwood, Javier Martin and probably others.
 - *
 - *  This program is free software; you can redistribute  it and/or modify it
 - *  under  the terms of  the GNU General  Public License as published by the
 - *  Free Software Foundation;  either version 2 of the  License, or (at your
 - *  option) any later version.
-- *
 - */
 +// SPDX-License-Identifier: GPL-2.0+
++// imx-pcm-fiq.c  --  ALSA Soc Audio Layer
 +//
-+// imx-mc13783.c  --  SoC audio for imx based boards with mc13783 codec
++// Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
 +//
-+// Copyright 2012 Philippe Retornaz, <philippe.retornaz@epfl.ch>
-+//
-+// Heavly based on phycore-mc13783:
-+// Copyright 2009 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
- 
- #include <linux/module.h>
- #include <linux/moduleparam.h>
++// This code is based on code copyrighted by Freescale,
++// Liam Girdwood, Javier Martin and probably others.
++
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
 -- 
 2.11.0
 
