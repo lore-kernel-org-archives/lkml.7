@@ -2,153 +2,104 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CE7C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E60C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505CB21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4606A21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rga+lCVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfDEOzj (ORCPT
+        id S1731390AbfDEOz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:55:39 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42901 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEOzi (ORCPT
+        Fri, 5 Apr 2019 10:55:59 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33314 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731153AbfDEOz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:55:38 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id AF5071C0008;
-        Fri,  5 Apr 2019 14:55:32 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 16:55:32 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Message-ID: <20190405145532.cstvbv3mxbzrmpxp@flea>
-References: <20190405102455.15311-1-tiny.windzz@gmail.com>
- <20190405102455.15311-3-tiny.windzz@gmail.com>
+        Fri, 5 Apr 2019 10:55:57 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35EtqeZ105041;
+        Fri, 5 Apr 2019 09:55:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554476152;
+        bh=e7jrKBHIqK3iSX1RKjHunom92Ly+W9M/nLg7I2Xlwg8=;
+        h=From:To:CC:Subject:Date;
+        b=rga+lCVgCS3Bw3FtNg6ZaMGimGW+aTtYF6JH+U5HPXhUf6lLzLxwmJrpeky8ooT9n
+         Tgze4za4XyY01z9KitJoj6F8MzgkTEZhvrSd0gWCaZKFoiH1KsEsYHtqbeuCjNtBEv
+         wxuN0MioBOivHxDzi2WUkl/dA8grH6+TaeEVqT7s=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35EtpHx077884
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 5 Apr 2019 09:55:52 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
+ 2019 09:55:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 5 Apr 2019 09:55:51 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35EtpIj081040;
+        Fri, 5 Apr 2019 09:55:51 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <lee.jones@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 0/6] LM36274 LMU Introduction
+Date:   Fri, 5 Apr 2019 09:55:34 -0500
+Message-ID: <20190405145540.27703-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oc2gi2ozpuz2hvkv"
-Content-Disposition: inline
-In-Reply-To: <20190405102455.15311-3-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello
 
---oc2gi2ozpuz2hvkv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch series adds the LM36274 to the TI LMU MFD driver as well as leverages
+the TI LMU framework.
 
-Hi,
+This work was done on top of v2 of the TI LMU rework series
+https://lore.kernel.org/patchwork/project/lkml/list/?series=389483
 
-On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value  based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
->
-> This change adds documentation for the DT bindings.
-> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-supported-hw: A single 32 bit bitmap value,
->   representing compatible HW:
-> 			0:      speedbin 0
-> 			1:      speedbin 1
-> 			2:      speedbin 2
-> 			3-31:   unused
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
->  1 file changed, 235 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
->
-> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> new file mode 100644
-> index 000000000000..80201d4e5147
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> @@ -0,0 +1,235 @@
-> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> +===================================
-> +
-> +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> +varies based on the silicon variant in use. Allwinner Process Voltage
-> +Scaling Tables defines the voltage and frequency value  based on the
-> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> +reads the efuse value from the SoC to provide the OPP framework with
-> +required information.
-> +
-> +Required properties:
-> +--------------------
-> +In 'cpus' nodes:
-> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> +
-> +In 'operating-points-v2' table:
-> +- compatible: Should be
-> +	- 'operating-points-v2-sunxi-cpu'.
-> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> +		efuse registers that has information about the
-> +		speedbin that is used to select the right frequency/voltage
-> +		value pair.
-> +		Please refer the for nvmem-cells
-> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-> +		and also examples below.
-> +
-> +In every OPP node:
-> +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
-> +		    Bitmap:
-> +			0:	speedbin 0
-> +			1:	speedbin 1
-> +			2:	speedbin 2
-> +			3-31:	unused
+I reused the lm363x regulator driver as I did not see it to be feasible to
+rewrite a driver that kinda already exists.
 
-I'm wondering if that's the right approach.
+Dan
 
-I guess we could also have three different OPP tables, and pass them
-all three through a phandle array, and have the kernel code select
-which one is relevant based on the SID content
+Dan Murphy (6):
+  regulator: lm363x: Make the gpio register enable flexible
+  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+  mfd: ti-lmu: Add LM36274 support to the ti-lmu
+  regulator: lm363x: Add support for LM36274
+  dt-bindings: leds: Add LED bindings for the LM36274
+  leds: lm36274: Introduce the TI LM36274 LED driver
 
-Another option would be to use the OF_DYNAMIC code to fill
-operating-points-v2 at kernel boot, before (or when) cpufreq kicks in.
+ .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+ drivers/leds/Kconfig                          |   9 +-
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |   5 +-
+ drivers/mfd/ti-lmu.c                          |  14 ++
+ drivers/regulator/Kconfig                     |   2 +-
+ drivers/regulator/lm363x-regulator.c          |  56 +++++-
+ include/linux/mfd/ti-lmu-register.h           |  23 +++
+ include/linux/mfd/ti-lmu.h                    |   4 +
+ 11 files changed, 417 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+ create mode 100644 drivers/leds/leds-lm36274.c
 
-ATF could also do that work.
+-- 
+2.19.0
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---oc2gi2ozpuz2hvkv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdsZAAKCRDj7w1vZxhR
-xVEsAQCXg2FeX4Go02z6Dxj2tdoeCR2wkl5QACmJ0aFB02r/vQEA5pPZGmheX74N
-k69PxJJ0pP8WhjoBRd4QLyifeKPolQE=
-=Q1iD
------END PGP SIGNATURE-----
-
---oc2gi2ozpuz2hvkv--
