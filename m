@@ -2,429 +2,482 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+X-Spam-Status: No, score=-4.9 required=3.0 tests=FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FAEC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DC5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5E72186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loiNFVGV"
+	by mail.kernel.org (Postfix) with ESMTP id 7B99520700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfDEMwW (ORCPT
+        id S1730626AbfDEMwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:52:22 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:34965 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfDEMwW (ORCPT
+        Fri, 5 Apr 2019 08:52:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52778 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfDEMwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:52:22 -0400
-Received: by mail-yb1-f194.google.com with SMTP id e12so2346290ybq.2;
-        Fri, 05 Apr 2019 05:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4X6driE4WExgVtCfqO3gzc044EgXrQW2x3kr34UtV0M=;
-        b=loiNFVGVFOR48fET+HbUajmaKdfJapg3R341xs/FgIqp6yaxOaGq9mMo3WDTNjzN5H
-         CnmHz00kR3JJUWa+WkUnPCar8YWzXcTJXezHkFkl9qjnYpt3vcymJndEqE/Gn6nRQAzq
-         hm1OTrUbWOk4N0dWIUPvl2tttZn10OqiheQJehPOTMOx3sY/FxgpWurf6a0SrAsTV04b
-         ClvUH0F6ExjtVvTziatuNHou47xiS/1zBRXuWpJ1+7IhCqvTeL6m1idimL6DhUIMcEtm
-         IumUlxyzYSy633DbqHRNUrv7jFsPEZ6lWi0E/Hx8jXM+/yA3sa9eoaxq4d7mSZZC0pev
-         PvUw==
+        Fri, 5 Apr 2019 08:52:30 -0400
+Received: from mail-ed1-f72.google.com ([209.85.208.72])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@canonical.com>)
+        id 1hCOKZ-00060p-FY
+        for linux-kernel@vger.kernel.org; Fri, 05 Apr 2019 12:52:27 +0000
+Received: by mail-ed1-f72.google.com with SMTP id n24so3171068edd.21
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 05:52:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4X6driE4WExgVtCfqO3gzc044EgXrQW2x3kr34UtV0M=;
-        b=p79i3s/otcIeLAamBKgSgfigMZHQXOFA/0NwAbotuft7Z8l70aDetKGr+WD4yQ3x5Y
-         B3ts5hkhLpqkXSnzKiT60goxno5kvWbD3WZAuqMD9+rLx+SJ42V5cyLAdv6Bi3hC6C4q
-         prIa74ZOnzKW/6d2DMyVKaWxv9mHu7bq0T7/nr/J/rOM2xNAaAYmyp5eEjja2lsWgEm8
-         1luY0m6cNIFAmZCts1bo6vReBcgX75RStyVANLa3Lh1io+km5lpu7udTWe8SkjBzU7jV
-         rW22ji0chJ+j/iMhP8pkMQkznDddu0YGyzelkbNFWmVfeDEbyKeJjcHk3xPVGGPeNVX9
-         vFTg==
-X-Gm-Message-State: APjAAAU3vSsFrIv2LAlNXv9Wwv5HIKNldjX0VYCCn5dttdwBGq/xFLBH
-        lfsPxaFzuPTl5bh0uBuI6wvGp82SgGo9G4/S4xY=
-X-Google-Smtp-Source: APXvYqxjgVT9KDGGfmuJS9Wp3nUSHTbJm9UyBxiH9Xeh7Uc+XBUn4yagGJbqLhx9OCoOk7wXqO2/YHJ5+1afRuPC9Vw=
-X-Received: by 2002:a25:5b55:: with SMTP id p82mr10738934ybb.23.1554468740476;
- Fri, 05 Apr 2019 05:52:20 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z4H8xoReIficPbLvY++Qi+2e9kBb9n0kTMMKgr7KOLM=;
+        b=GCjnSS+wl5+YUR7HJnJXEkB1qy/8CrEgCgPqti2XEfzkTTG6glRDwBMulyYrEPewaH
+         H+AOt9Ny9BCAS0rEj543IgylL85DuIDISGFNCU774eIhr2D20wADNp5V9v2h34bMjecJ
+         exk8SS7u/kt/eF0KH9N4amr5X78orADeDgYpr+GeLFPKp5r1F8S5XXprnSH+jGH0GVI1
+         SMuqzxC2DvW6Wfutgk2PqKfLxutvJan0NQGDRwVPzEs9ZhF4uuXB9qtx5WMqilTHyGQ4
+         Z0IpZN8qVMw931m1P3ir0N8KcBUmWDQvXGhkab0jVhfv/vlXauF+LhV9+oDjGBvsq686
+         vEGw==
+X-Gm-Message-State: APjAAAWXw1X2ksVWd4Rvnt0JhahgiLpg+1N1SVowxSgsRa1v70OJ/WPV
+        r4bsXf63xAhScIpTbiA4Mq1swVV9YPCUZp6C8enPsEpByYA4XyJ8qUzXWpWkGmkfT173ekdZwhR
+        GyY6CEd6nHERfUh+Sc6tP/iZPBNdIu2PbN2k2VBBXoQ==
+X-Received: by 2002:a17:906:8247:: with SMTP id f7mr7042866ejx.216.1554468747077;
+        Fri, 05 Apr 2019 05:52:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzv0tmqaQH3d5BQOh8gTj7WWTtWvjayrqrabzN6phWCtFsscprSQN51ogpW+y05fJ16ZVHeDQ==
+X-Received: by 2002:a17:906:8247:: with SMTP id f7mr7042843ejx.216.1554468746735;
+        Fri, 05 Apr 2019 05:52:26 -0700 (PDT)
+Received: from gmail.com ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z39sm6395968edz.26.2019.04.05.05.52.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Apr 2019 05:52:26 -0700 (PDT)
+From:   Christian Brauner <christian.brauner@canonical.com>
+X-Google-Original-From: Christian Brauner <christian.brauner@ubuntu.com>
+Date:   Fri, 5 Apr 2019 14:52:25 +0200
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 64/68] vfs: Convert devpts to use the new mount API
+Message-ID: <20190405125224.vvsus7disjwgskeq@gmail.com>
+References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
+ <155373052127.7602.17325161039679063335.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20190405122446.2101-1-peron.clem@gmail.com> <20190405122446.2101-5-peron.clem@gmail.com>
-In-Reply-To: <20190405122446.2101-5-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 5 Apr 2019 14:53:35 +0200
-Message-ID: <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <155373052127.7602.17325161039679063335.stgit@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Mar 27, 2019 at 11:48:41PM +0000, David Howells wrote:
+> Convert the devpts filesystem to the new internal mount API as the old
+> one will be obsoleted and removed.  This allows greater flexibility in
+> communication of mount parameters between userspace, the VFS and the
+> filesystem.
+> 
+> See Documentation/filesystems/mount_api.txt for more information.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> cc: Christian Brauner <christian.brauner@ubuntu.com>
 
-Adding this r_pio regulators make a new error in the bootlog :
+One nit below otherwise:
 
-[    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
-PL regulator
-[    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed for pi=
-n 352
-[    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
-(7081400.i2c) status -517
-[    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
-pin 352 (PL0) from group PL0  on device 7022000.pinctrl
-[    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
-reverse things back
+Acked-by: Christian Brauner <christian@brauner.io>
 
-PL0 and PL1 are SCK/SDA for the PMIC :(
-
-Clement
-
-On Fri, 5 Apr 2019 at 14:21, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
->
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 > ---
->
-> Thanks to Jagan and Icenowy, most of this devicetree is taken from their =
-works on
-> the OrangePi One Plus and Pine H64.
->
-> Changes in v2 (Thanks to Maxime Ripard):
->  - move MMC pinctrl to SOC dtsi
->  - add board to Sunxi YAML file
->  - add PIO/R_PIO regulators
->  - remove always_on from SDIO regulators
->
->
->  .../devicetree/bindings/arm/sunxi.yaml        |   5 +
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 256 ++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
-ts
->
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documenta=
-tion/devicetree/bindings/arm/sunxi.yaml
-> index 11563d3f7c65..9ab9b266881d 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -136,6 +136,11 @@ properties:
->            - const: lemaker,bananapro
->            - const: allwinner,sun7i-a20
->
-> +      - description: Beelink GS1
-> +        items:
-> +          - const: azw,beelink-gs1
-> +          - const: allwinner,sun50i-h6
+> 
+>  fs/devpts/inode.c |  265 +++++++++++++++++++++++++----------------------------
+>  1 file changed, 124 insertions(+), 141 deletions(-)
+> 
+> diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
+> index 553a3f3300ae..ed4a49012570 100644
+> --- a/fs/devpts/inode.c
+> +++ b/fs/devpts/inode.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/fs.h>
+> +#include <linux/fs_context.h>
+> +#include <linux/fs_parser.h>
+>  #include <linux/sched.h>
+>  #include <linux/namei.h>
+>  #include <linux/slab.h>
+> @@ -24,7 +26,6 @@
+>  #include <linux/magic.h>
+>  #include <linux/idr.h>
+>  #include <linux/devpts_fs.h>
+> -#include <linux/parser.h>
+>  #include <linux/fsnotify.h>
+>  #include <linux/seq_file.h>
+>  
+> @@ -109,14 +110,19 @@ enum {
+>  	Opt_err
+>  };
+>  
+> -static const match_table_t tokens = {
+> -	{Opt_uid, "uid=%u"},
+> -	{Opt_gid, "gid=%u"},
+> -	{Opt_mode, "mode=%o"},
+> -	{Opt_ptmxmode, "ptmxmode=%o"},
+> -	{Opt_newinstance, "newinstance"},
+> -	{Opt_max, "max=%d"},
+> -	{Opt_err, NULL}
+> +static const struct fs_parameter_spec devpts_param_specs[] = {
+> +	fsparam_u32	("gid",		Opt_gid),
+> +	fsparam_s32	("max",		Opt_max),
+> +	fsparam_u32oct	("mode",	Opt_mode),
+> +	fsparam_flag	("newinstance",	Opt_newinstance),
+> +	fsparam_u32oct	("ptmxmode",	Opt_ptmxmode),
+> +	fsparam_u32	("uid",		Opt_uid),
+> +	{}
+> +};
 > +
->        - description: Beelink X2
->          items:
->            - const: roofull,beelink-x2
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..2dd806a3d5c9 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dt=
-b
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> new file mode 100644
-> index 000000000000..d820a138522b
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +static const struct fs_parameter_description devpts_fs_parameters = {
+> +	.name		= "devpts",
+> +	.specs		= devpts_param_specs,
+>  };
+>  
+>  struct pts_fs_info {
+> @@ -236,93 +242,56 @@ void devpts_release(struct pts_fs_info *fsi)
+>  	deactivate_super(fsi->sb);
+>  }
+>  
+> -#define PARSE_MOUNT	0
+> -#define PARSE_REMOUNT	1
+> -
+>  /*
+> - * parse_mount_options():
+> - *	Set @opts to mount options specified in @data. If an option is not
+> - *	specified in @data, set it to its default value.
+> - *
+> - * Note: @data may be NULL (in which case all options are set to default).
+> + * devpts_parse_param - Parse mount parameters
+>   */
+> -static int parse_mount_options(char *data, int op, struct pts_mount_opts *opts)
+> +static int devpts_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  {
+> -	char *p;
+> +	struct pts_fs_info *fsi = fc->s_fs_info;
+> +	struct pts_mount_opts *opts = &fsi->mount_opts;
+> +	struct fs_parse_result result;
+>  	kuid_t uid;
+>  	kgid_t gid;
+> -
+> -	opts->setuid  = 0;
+> -	opts->setgid  = 0;
+> -	opts->uid     = GLOBAL_ROOT_UID;
+> -	opts->gid     = GLOBAL_ROOT_GID;
+> -	opts->mode    = DEVPTS_DEFAULT_MODE;
+> -	opts->ptmxmode = DEVPTS_DEFAULT_PTMX_MODE;
+> -	opts->max     = NR_UNIX98_PTY_MAX;
+> -
+> -	/* Only allow instances mounted from the initial mount
+> -	 * namespace to tap the reserve pool of ptys.
+> -	 */
+> -	if (op == PARSE_MOUNT)
+> -		opts->reserve =
+> -			(current->nsproxy->mnt_ns == init_task.nsproxy->mnt_ns);
+> -
+> -	while ((p = strsep(&data, ",")) != NULL) {
+> -		substring_t args[MAX_OPT_ARGS];
+> -		int token;
+> -		int option;
+> -
+> -		if (!*p)
+> -			continue;
+> -
+> -		token = match_token(p, tokens, args);
+> -		switch (token) {
+> -		case Opt_uid:
+> -			if (match_int(&args[0], &option))
+> -				return -EINVAL;
+> -			uid = make_kuid(current_user_ns(), option);
+> -			if (!uid_valid(uid))
+> -				return -EINVAL;
+> -			opts->uid = uid;
+> -			opts->setuid = 1;
+> -			break;
+> -		case Opt_gid:
+> -			if (match_int(&args[0], &option))
+> -				return -EINVAL;
+> -			gid = make_kgid(current_user_ns(), option);
+> -			if (!gid_valid(gid))
+> -				return -EINVAL;
+> -			opts->gid = gid;
+> -			opts->setgid = 1;
+> -			break;
+> -		case Opt_mode:
+> -			if (match_octal(&args[0], &option))
+> -				return -EINVAL;
+> -			opts->mode = option & S_IALLUGO;
+> -			break;
+> -		case Opt_ptmxmode:
+> -			if (match_octal(&args[0], &option))
+> -				return -EINVAL;
+> -			opts->ptmxmode = option & S_IALLUGO;
+> -			break;
+> -		case Opt_newinstance:
+> -			break;
+> -		case Opt_max:
+> -			if (match_int(&args[0], &option) ||
+> -			    option < 0 || option > NR_UNIX98_PTY_MAX)
+> -				return -EINVAL;
+> -			opts->max = option;
+> -			break;
+> -		default:
+> -			pr_err("called with bogus options\n");
+> -			return -EINVAL;
+> -		}
+> +	int opt;
+> +
+> +	opt = fs_parse(fc, &devpts_fs_parameters, param, &result);
+> +	if (opt < 0)
+> +		return opt;
+> +
+> +	switch (opt) {
+> +	case Opt_uid:
+> +		uid = make_kuid(current_user_ns(), result.uint_32);
+> +		if (!uid_valid(uid))
+> +			return invalf(fc, "Unknown uid");
+> +		opts->uid = uid;
+> +		opts->setuid = 1;
+> +		break;
+> +	case Opt_gid:
+> +		gid = make_kgid(current_user_ns(), result.uint_32);
+> +		if (!gid_valid(gid))
+> +			return invalf(fc, "Unknown gid");
+> +		opts->gid = gid;
+> +		opts->setgid = 1;
+> +		break;
+> +	case Opt_mode:
+> +		opts->mode = result.uint_32 & S_IALLUGO;
+> +		break;
+> +	case Opt_ptmxmode:
+> +		opts->ptmxmode = result.uint_32 & S_IALLUGO;
+> +		break;
+> +	case Opt_newinstance:
+> +		break;
+> +	case Opt_max:
+> +		if (result.uint_32 > NR_UNIX98_PTY_MAX)
+> +			return invalf(fc, "max out of range");
+> +		opts->max = result.uint_32;
+> +		break;
+>  	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int mknod_ptmx(struct super_block *sb)
+> +static int mknod_ptmx(struct super_block *sb, struct fs_context *fc)
+>  {
+>  	int mode;
+>  	int rc = -ENOMEM;
+> @@ -344,7 +313,7 @@ static int mknod_ptmx(struct super_block *sb)
+>  
+>  	dentry = d_alloc_name(root, "ptmx");
+>  	if (!dentry) {
+> -		pr_err("Unable to alloc dentry for ptmx node\n");
+> +		errorf(fc, "Unable to alloc dentry for ptmx node\n");
+>  		goto out;
+>  	}
+>  
+> @@ -353,7 +322,7 @@ static int mknod_ptmx(struct super_block *sb)
+>  	 */
+>  	inode = new_inode(sb);
+>  	if (!inode) {
+> -		pr_err("Unable to alloc inode for ptmx node\n");
+> +		errorf(fc, "Unable to alloc inode for ptmx node\n");
+>  		dput(dentry);
+>  		goto out;
+>  	}
+> @@ -384,13 +353,23 @@ static void update_ptmx_mode(struct pts_fs_info *fsi)
+>  	}
+>  }
+>  
+> -static int devpts_remount(struct super_block *sb, int *flags, char *data)
+> +static int devpts_reconfigure(struct fs_context *fc)
+>  {
+> -	int err;
+> -	struct pts_fs_info *fsi = DEVPTS_SB(sb);
+> -	struct pts_mount_opts *opts = &fsi->mount_opts;
+> +	struct pts_fs_info *fsi = DEVPTS_SB(fc->root->d_sb);
+> +	struct pts_fs_info *new = fc->s_fs_info;
+>  
+> -	err = parse_mount_options(data, PARSE_REMOUNT, opts);
+> +	/* Apply the revised options.  We don't want to change ->reserve.
+> +	 * Ideally, we'd update each option conditionally on it having being
+
+s/being/been/ ?
+
+> +	 * explicitly changed, but the default is to reset everything so that
+> +	 * would break UAPI...
+> +	 */
+> +	fsi->mount_opts.setuid		= new->mount_opts.setuid;
+> +	fsi->mount_opts.setgid		= new->mount_opts.setgid;
+> +	fsi->mount_opts.uid		= new->mount_opts.uid;
+> +	fsi->mount_opts.gid		= new->mount_opts.gid;
+> +	fsi->mount_opts.mode		= new->mount_opts.mode;
+> +	fsi->mount_opts.ptmxmode	= new->mount_opts.ptmxmode;
+> +	fsi->mount_opts.max		= new->mount_opts.max;
+>  
+>  	/*
+>  	 * parse_mount_options() restores options to default values
+> @@ -400,7 +379,7 @@ static int devpts_remount(struct super_block *sb, int *flags, char *data)
+>  	 */
+>  	update_ptmx_mode(fsi);
+>  
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static int devpts_show_options(struct seq_file *seq, struct dentry *root)
+> @@ -424,31 +403,13 @@ static int devpts_show_options(struct seq_file *seq, struct dentry *root)
+>  
+>  static const struct super_operations devpts_sops = {
+>  	.statfs		= simple_statfs,
+> -	.remount_fs	= devpts_remount,
+>  	.show_options	= devpts_show_options,
+>  };
+>  
+> -static void *new_pts_fs_info(struct super_block *sb)
+> -{
+> -	struct pts_fs_info *fsi;
+> -
+> -	fsi = kzalloc(sizeof(struct pts_fs_info), GFP_KERNEL);
+> -	if (!fsi)
+> -		return NULL;
+> -
+> -	ida_init(&fsi->allocated_ptys);
+> -	fsi->mount_opts.mode = DEVPTS_DEFAULT_MODE;
+> -	fsi->mount_opts.ptmxmode = DEVPTS_DEFAULT_PTMX_MODE;
+> -	fsi->sb = sb;
+> -
+> -	return fsi;
+> -}
+> -
+> -static int
+> -devpts_fill_super(struct super_block *s, void *data, int silent)
+> +static int devpts_fill_super(struct super_block *s, struct fs_context *fc)
+>  {
+> +	struct pts_fs_info *fsi = DEVPTS_SB(s);
+>  	struct inode *inode;
+> -	int error;
+>  
+>  	s->s_iflags &= ~SB_I_NODEV;
+>  	s->s_blocksize = 1024;
+> @@ -457,20 +418,12 @@ devpts_fill_super(struct super_block *s, void *data, int silent)
+>  	s->s_op = &devpts_sops;
+>  	s->s_d_op = &simple_dentry_operations;
+>  	s->s_time_gran = 1;
+> +	fsi->sb = s;
+>  
+> -	error = -ENOMEM;
+> -	s->s_fs_info = new_pts_fs_info(s);
+> -	if (!s->s_fs_info)
+> -		goto fail;
+> -
+> -	error = parse_mount_options(data, PARSE_MOUNT, &DEVPTS_SB(s)->mount_opts);
+> -	if (error)
+> -		goto fail;
+> -
+> -	error = -ENOMEM;
+>  	inode = new_inode(s);
+>  	if (!inode)
+> -		goto fail;
+> +		return -ENOMEM;
+> +
+>  	inode->i_ino = 1;
+>  	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+>  	inode->i_mode = S_IFDIR | S_IRUGO | S_IXUGO | S_IWUSR;
+> @@ -480,20 +433,11 @@ devpts_fill_super(struct super_block *s, void *data, int silent)
+>  
+>  	s->s_root = d_make_root(inode);
+>  	if (!s->s_root) {
+> -		pr_err("get root dentry failed\n");
+> -		goto fail;
+> +		errorf(fc, "get root dentry failed");
+> +		return -ENOMEM;
+>  	}
+>  
+> -	error = mknod_ptmx(s);
+> -	if (error)
+> -		goto fail_dput;
+> -
+> -	return 0;
+> -fail_dput:
+> -	dput(s->s_root);
+> -	s->s_root = NULL;
+> -fail:
+> -	return error;
+> +	return mknod_ptmx(s, fc);
+>  }
+>  
+>  /*
+> @@ -502,10 +446,48 @@ devpts_fill_super(struct super_block *s, void *data, int silent)
+>   *     Mount a new (private) instance of devpts.  PTYs created in this
+>   *     instance are independent of the PTYs in other devpts instances.
+>   */
+> -static struct dentry *devpts_mount(struct file_system_type *fs_type,
+> -	int flags, const char *dev_name, void *data)
+> +static int devpts_get_tree(struct fs_context *fc)
+> +{
+> +	return vfs_get_super(fc, vfs_get_independent_super, devpts_fill_super);
+> +}
+> +
+> +static void devpts_free_fc(struct fs_context *fc)
+> +{
+> +	kfree(fc->s_fs_info);
+> +}
+> +
+> +static const struct fs_context_operations devpts_context_ops = {
+> +	.free		= devpts_free_fc,
+> +	.parse_param	= devpts_parse_param,
+> +	.get_tree	= devpts_get_tree,
+> +	.reconfigure	= devpts_reconfigure,
+> +};
+> +
 > +/*
-> + * Copyright (C) 2019 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> + * Set up the filesystem mount context.
 > + */
+> +static int devpts_init_fs_context(struct fs_context *fc)
+>  {
+> -	return mount_nodev(fs_type, flags, data, devpts_fill_super);
+> +	struct pts_fs_info *fsi;
 > +
-> +/dts-v1/;
+> +	fsi = kzalloc(sizeof(struct pts_fs_info), GFP_KERNEL);
+> +	if (!fsi)
+> +		return -ENOMEM;
 > +
-> +#include "sun50i-h6.dtsi"
+> +	ida_init(&fsi->allocated_ptys);
+> +	fsi->mount_opts.uid     = GLOBAL_ROOT_UID;
+> +	fsi->mount_opts.gid     = GLOBAL_ROOT_GID;
+> +	fsi->mount_opts.mode    = DEVPTS_DEFAULT_MODE;
+> +	fsi->mount_opts.ptmxmode = DEVPTS_DEFAULT_PTMX_MODE;
+> +	fsi->mount_opts.max     = NR_UNIX98_PTY_MAX;
 > +
-> +#include <dt-bindings/gpio/gpio.h>
+> +	if (fc->purpose == FS_CONTEXT_FOR_MOUNT &&
+> +	    current->nsproxy->mnt_ns == init_task.nsproxy->mnt_ns)
+> +		fsi->mount_opts.reserve = true;
 > +
-> +/ {
-> +       model =3D "Beelink GS1";
-> +       compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
-> +
-> +       aliases {
-> +               ethernet0 =3D &emac;
-> +               serial0 =3D &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path =3D "serial0:115200n8";
-> +       };
-> +
-> +       connector {
-> +               compatible =3D "hdmi-connector";
-> +               type =3D "a";
-> +
-> +               port {
-> +                       hdmi_con_in: endpoint {
-> +                               remote-endpoint =3D <&hdmi_out_con>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       leds {
-> +               compatible =3D "gpio-leds";
-> +
-> +               power {
-> +                       label =3D "beelink:white:power";
-> +                       gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
-/
-> +                       default-state =3D "on";
-> +               };
-> +       };
-> +
-> +       reg_vcc5v: vcc5v {
-> +               /* board wide 5V supply directly from the DC jack */
-> +               compatible =3D "regulator-fixed";
-> +               regulator-name =3D "vcc-5v";
-> +               regulator-min-microvolt =3D <5000000>;
-> +               regulator-max-microvolt =3D <5000000>;
-> +               regulator-always-on;
-> +       };
-> +};
-> +
-> +&de {
-> +       status =3D "okay";
-> +};
-> +
-> +&ehci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&emac {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&ext_rgmii_pins>;
-> +       phy-mode =3D "rgmii";
-> +       phy-handle =3D <&ext_rgmii_phy>;
-> +       phy-supply =3D <&reg_aldo2>;
-> +       allwinner,rx-delay-ps =3D <0>;
-> +       allwinner,tx-delay-ps =3D <0>;
-> +       status =3D "okay";
-> +};
-> +
-> +&hdmi {
-> +       status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +       hdmi_out_con: endpoint {
-> +               remote-endpoint =3D <&hdmi_con_in>;
-> +       };
-> +};
-> +
-> +&mdio {
-> +       ext_rgmii_phy: ethernet-phy@1 {
-> +               compatible =3D "ethernet-phy-ieee802.3-c22";
-> +               reg =3D <1>;
-> +       };
-> +};
-> +
-> +&mmc0 {
-> +       vmmc-supply =3D <&reg_cldo1>;
-> +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-> +       bus-width =3D <4>;
-> +       status =3D "okay";
-> +};
-> +
-> +&mmc2 {
-> +       vmmc-supply =3D <&reg_cldo1>;
-> +       vqmmc-supply =3D <&reg_bldo2>;
-> +       non-removable;
-> +       cap-mmc-hw-reset;
-> +       bus-width =3D <8>;
-> +       status =3D "okay";
-> +};
-> +
-> +&ohci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&pio {
-> +       vcc-pd-supply =3D <&reg_cldo1>;
-> +       vcc-pg-supply =3D <&reg_aldo1>;
-> +};
-> +
-> +&r_i2c {
-> +       status =3D "okay";
-> +
-> +       axp805: pmic@36 {
-> +               compatible =3D "x-powers,axp805", "x-powers,axp806";
-> +               reg =3D <0x36>;
-> +               interrupt-parent =3D <&r_intc>;
-> +               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-controller;
-> +               #interrupt-cells =3D <1>;
-> +               x-powers,self-working-mode;
-> +               vina-supply =3D <&reg_vcc5v>;
-> +               vinb-supply =3D <&reg_vcc5v>;
-> +               vinc-supply =3D <&reg_vcc5v>;
-> +               vind-supply =3D <&reg_vcc5v>;
-> +               vine-supply =3D <&reg_vcc5v>;
-> +               aldoin-supply =3D <&reg_vcc5v>;
-> +               bldoin-supply =3D <&reg_vcc5v>;
-> +               cldoin-supply =3D <&reg_vcc5v>;
-> +
-> +               regulators {
-> +                       reg_aldo1: aldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-pl";
-> +                       };
-> +
-> +                       reg_aldo2: aldo2 {
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-ac200";
-> +                               regulator-enable-ramp-delay =3D <100000>;
-> +                       };
-> +
-> +                       reg_aldo3: aldo3 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc25-dram";
-> +                       };
-> +
-> +                       reg_bldo1: bldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc-bias-pll";
-> +                       };
-> +
-> +                       reg_bldo2: bldo2 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc-efuse-pcie-hdmi-i=
-o";
-> +                       };
-> +
-> +                       reg_bldo3: bldo3 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc-dcxoio";
-> +                       };
-> +
-> +                       bldo4 {
-> +                               /* unused */
-> +                       };
-> +
-> +                       reg_cldo1: cldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-3v3";
-> +                       };
-> +
-> +                       reg_cldo2: cldo2 {
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-wifi-1";
-> +                       };
-> +
-> +                       reg_cldo3: cldo3 {
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-wifi-2";
-> +                       };
-> +
-> +                       reg_dcdca: dcdca {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <810000>;
-> +                               regulator-max-microvolt =3D <1080000>;
-> +                               regulator-name =3D "vdd-cpu";
-> +                       };
-> +
-> +                       reg_dcdcc: dcdcc {
-> +                               regulator-min-microvolt =3D <810000>;
-> +                               regulator-max-microvolt =3D <1080000>;
-> +                               regulator-name =3D "vdd-gpu";
-> +                       };
-> +
-> +                       reg_dcdcd: dcdcd {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <960000>;
-> +                               regulator-max-microvolt =3D <960000>;
-> +                               regulator-name =3D "vdd-sys";
-> +                       };
-> +
-> +                       reg_dcdce: dcdce {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1200000>;
-> +                               regulator-max-microvolt =3D <1200000>;
-> +                               regulator-name =3D "vcc-dram";
-> +                       };
-> +
-> +                       sw {
-> +                               /* unused */
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&r_pio {
-> +       vcc-pl-supply =3D <&reg_aldo1>;
-> +       vcc-pm-supply =3D <&reg_aldo1>;
-> +};
-> +
-> +&uart0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&uart0_ph_pins>;
-> +       status =3D "okay";
-> +};
-> +
-> +&usb2otg {
-> +       dr_mode =3D "host";
-> +       status =3D "okay";
-> +};
-> +
-> +&usb2phy {
-> +       usb0_vbus-supply =3D <&reg_vcc5v>;
-> +       status =3D "okay";
-> +};
-> --
-> 2.17.1
->
+> +	fc->s_fs_info = fsi;
+> +	fc->ops = &devpts_context_ops;
+> +	return 0;
+>  }
+>  
+>  static void devpts_kill_sb(struct super_block *sb)
+> @@ -520,7 +502,8 @@ static void devpts_kill_sb(struct super_block *sb)
+>  
+>  static struct file_system_type devpts_fs_type = {
+>  	.name		= "devpts",
+> -	.mount		= devpts_mount,
+> +	.init_fs_context = devpts_init_fs_context,
+> +	.parameters	= &devpts_fs_parameters,
+>  	.kill_sb	= devpts_kill_sb,
+>  	.fs_flags	= FS_USERNS_MOUNT,
+>  };
+> 
