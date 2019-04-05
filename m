@@ -2,115 +2,100 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F5DC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC335C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15721206C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3AFB206C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oH0o6R5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfDEQ50 (ORCPT
+        id S1731517AbfDEQ7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:57:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56060 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 12:59:07 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42820 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfDEQ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:57:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726643AbfDEQ7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:59:06 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5E1E8535C;
-        Fri,  5 Apr 2019 16:57:25 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C8CA51A7CA;
-        Fri,  5 Apr 2019 16:57:17 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 11:57:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190405165715.fpgh4ggkmnqdtfwm@treble>
-References: <20190404172545.20928-1-kasong@redhat.com>
- <20190405140929.pycfea7drnpb2sug@treble>
- <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2EB041EC0A6C;
+        Fri,  5 Apr 2019 18:59:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554483545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gIWwUWkjNwyXcWAkqMClbIPFYAXC7NsNDkT2LPMv+/M=;
+        b=oH0o6R5DXao7pom1O5CWOFgFvUKvh6FSgbYb9AxLyUiuQOUIEK23cC22TwfWSYAJFgwkde
+        eQ1uAFXwVOBsmY20KUPX23PwMC8diIrBK7N+AZLExaWYQ3UqIzmKsML7FQqWG7Lu29j2Bd
+        DpY19euSqKzVdNaof9bYRZ/n0k9H7d0=
+Date:   Fri, 5 Apr 2019 18:58:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, kirill@shutemov.name,
+        keescook@chromium.org, yamada.masahiro@socionext.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        thgarnie@google.com, mike.travis@hpe.com, frank.ramsay@hpe.com
+Subject: Re: [PATCH 1/2] x86/mm/KASLR: Fix the wrong calculation of memory
+ region initial size
+Message-ID: <20190405165856.GJ23348@zn.tnic>
+References: <20190404020314.8162-1-bhe@redhat.com>
+ <20190404020314.8162-2-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 05 Apr 2019 16:57:25 +0000 (UTC)
+In-Reply-To: <20190404020314.8162-2-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 11:13:02PM +0800, Kairui Song wrote:
-> Hi Josh, thanks for the review, I tried again, using latest upstream
-> kernel commit ea2cec24c8d429ee6f99040e4eb6c7ad627fe777:
-> # uname -a
-> Linux localhost.localdomain 5.1.0-rc3+ #29 SMP Fri Apr 5 22:53:05 CST
-> 2019 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> Having following config:
-> > CONFIG_UNWINDER_ORC=y
-> > # CONFIG_UNWINDER_FRAME_POINTER is not set
-> and CONFIG_FRAME_POINTER is off too.
-> 
-> Then record something with perf (also latest upstream version):
-> ./perf record -g -e kmem:* -c 1
-> 
-> Interrupt it, then view the output:
-> perf script | less
-> 
-> Then I notice the stacktrace in kernle is incomplete like following.
-> Did I miss anything?
-> --------------
-> lvmetad   617 [000]    55.600786:                     kmem:kfree:
-> call_site=ffffffffb219e269 ptr=(nil)
->         ffffffffb22b2d1c kfree+0x11c (/lib/modules/5.1.0-rc3+/build/vmlinux)
->             7fba7e58fd0f __select+0x5f (/usr/lib64/libc-2.28.so)
-> 
-> kworker/u2:5-rp   171 [000]    55.628529:
-> kmem:kmem_cache_alloc: call_site=ffffffffb20e963d
-> ptr=0xffffa07f39c581e0 bytes_req=80 bytes_alloc=80
-> gfp_flags=GFP_ATOMIC
->         ffffffffb22b0dec kmem_cache_alloc+0x13c
-> (/lib/modules/5.1.0-rc3+/build/vmlinux)
-> -------------
-> 
-> And for the patch, I debugged the problem, and found how it happend:
-> The reason is that we use following code for fetching the registers on
-> a trace point:
-> ...snip...
-> #define perf_arch_fetch_caller_regs(regs, __ip) { \
-> (regs)->ip = (__ip); \
-> (regs)->bp = caller_frame_pointer(); \
-> (regs)->cs = __KERNEL_CS;
-> ...snip...
+On Thu, Apr 04, 2019 at 10:03:13AM +0800, Baoquan He wrote:
+> In memory region KASLR, __PHYSICAL_MASK_SHIFT is taken to calculate
 
-Thanks, I was able to recreate.  It only happens when unwinding from a
-tracepoint.  I haven't investigated yet, but
-perf_arch_fetch_caller_regs() looks highly suspect, since it's doing
-(regs)->bp = caller_frame_pointer(), even for ORC.
+What is "memory region KASLR"?
 
-My only explanation for how your patch works is that RBP just happens to
-point to somewhere higher on the stack, causing the unwinder to start at
-a semi-random location.  I suspect the real "fix" is that you're no
-longer passing the regs to unwind_start().
+> the initial size of the direct mapping region. This is correct in
+> the old code where __PHYSICAL_MASK_SHIFT was equal to MAX_PHYSMEM_BITS,
+> 46 bits, and only 4-level mode was supported.
+> 
+> Later, in commit:
+> b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52"),
+> __PHYSICAL_MASK_SHIFT was changed to be always 52 bits, no matter it's
+> 5-level or 4-level.
+> 
+> This is wrong for 4-level paging since it may cause randomness of KASLR
+> being greatly weakened in 4-level. For KASLR, we compare the sum of RAM
+> size and CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING with the size of the
+> max RAM which can be supported by system, then choose the bigger one as
+> the value to reserve space for the direct mapping region. The max RAM
+> supported in 4-level is 64 TB according to MAX_PHYSMEM_BITS. However,
+> here it's 4 PB in code to be compared with when __PHYSICAL_MASK_SHIFT is
+> mistakenly used. E.g in a system owning 64 TB RAM, it will reserve 74 TB
+> (which is 64 TB plus CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING). In fact
+> it should reserve 64 TB according to the algorithm which is supposed to
+> do. Obviously the extra 10 TB space should be saved to join randomization.
+
+It is not a trivial situation you're trying to explain and that
+paragraph is very very hard to understand. I can only rhyme up what
+you're trying to say.
+
+So please rewrite it using simple declarative sentences. Don't try to
+say three things in one sentence but say one thing in three sentences.
+Keep it simple.
+
+Thx.
 
 -- 
-Josh
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
