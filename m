@@ -2,93 +2,110 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A1BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F75C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6E521855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6658021852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D16wjhk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbfDEQJb (ORCPT
+        id S1731369AbfDEQL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:09:31 -0400
-Received: from foss.arm.com ([217.140.101.70]:52308 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731369AbfDEQJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:09:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FCF3168F;
-        Fri,  5 Apr 2019 09:09:28 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44EEF3F68F;
-        Fri,  5 Apr 2019 09:09:24 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 17:09:19 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 00/21] Remove Mysterious Macro Intended to Obscure
- Weird Behaviours (mmiowb())
-Message-ID: <20190405160919.GA7857@fuggles.cambridge.arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
- <CAHk-=wiarqZVH52VuKDiPk7Jqf1H-znf-NMoGkKnM7H08VN5fg@mail.gmail.com>
+        Fri, 5 Apr 2019 12:11:56 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:41130 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfDEQLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:11:55 -0400
+Received: by mail-vk1-f193.google.com with SMTP id d15so1563944vka.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GOJprSWArwF75lQLSAzQSsIcgxxq7UG+R9S9DkRS3IM=;
+        b=D16wjhk1TyIXtEn6++oug9RkB+TDG+Hg2MrVIHdZPLXAv1ij5N8Ng5n2zR/xksroYT
+         M425lFW0+58S5PcsYKvq8WRVSJEK5ba2mzO9E6aRY9Ugy5vw6ImkX/ZkDb3xqWa5/0Lm
+         QnOm0K/ov9UdBhfoa3KUqTduGhuULSrOmwde4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GOJprSWArwF75lQLSAzQSsIcgxxq7UG+R9S9DkRS3IM=;
+        b=CdaoLBU6rKpu/HOUNlVtDYCg93EzBaYpt1ILp+zg7S94KRfVfYw+tpRaU+i7F1i+sy
+         ZCkEThikWQatoHZmyEXnX+Tx1pjjuOkGb1H0VA3RC/0/RcAG+GdMYVyn4X49Usxw7EoV
+         bLOtgHUd61R9o4rajwIY/H6UKq8tZ/T6LUQcIRWXc5x2bTi/8ZTBDGymqqagoktW+eK7
+         jaaaH08SgGbQC/p1ynA7wgSCexx6TKwnxhVezgTDf75TQwUPr7n4BEz5+NS1Kni+Wsgh
+         VHec3VQnURTK9yQVzxceUm37ciQUG6CKu2E5p4U1ASJzEaEky+rMVG6jVlKtiPxNN59k
+         DTVQ==
+X-Gm-Message-State: APjAAAX6XTLcpp5r1qOSWMp6A0xeFnCq1LYBnKCQi6RntTAWCZ/WWPDt
+        3Bvfryk65INYTgGJsG6OsZ6cAkWrUcU=
+X-Google-Smtp-Source: APXvYqwkXb+kEOaliwarYdg+KZQ/hupwIJOjbS6mkhSQ/QmJKAs6a+GhqDqMLoqeTLCG0XLhPuqHxg==
+X-Received: by 2002:a1f:8c94:: with SMTP id o142mr8281164vkd.61.1554480712970;
+        Fri, 05 Apr 2019 09:11:52 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id u10sm10537065vku.34.2019.04.05.09.11.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 09:11:51 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id o10so1212628vsp.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:11:51 -0700 (PDT)
+X-Received: by 2002:a67:76c7:: with SMTP id r190mr8887333vsc.196.1554480710895;
+ Fri, 05 Apr 2019 09:11:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiarqZVH52VuKDiPk7Jqf1H-znf-NMoGkKnM7H08VN5fg@mail.gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <CAK7LNAQw7nPwykOEV5i+yWjkxzgf1gPa5ewFhDxbbn8XXjwFUA@mail.gmail.com>
+ <20190402070858.49597-1-ndesaulniers@google.com> <CAK7LNAQGUe0h2ti6_u5=y9KUrNStESdd=D=8K3NOiE08tt022w@mail.gmail.com>
+In-Reply-To: <CAK7LNAQGUe0h2ti6_u5=y9KUrNStESdd=D=8K3NOiE08tt022w@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Fri, 5 Apr 2019 09:11:39 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKZUP33Kz=nDPkUSj0Ksz5FOYTuuKAxv4N6xGEtFT645A@mail.gmail.com>
+Message-ID: <CAGXu5jKZUP33Kz=nDPkUSj0Ksz5FOYTuuKAxv4N6xGEtFT645A@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: lld: tell clang to use lld
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nathan Lynch <nathan_lynch@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 05:55:37AM -1000, Linus Torvalds wrote:
-> On Fri, Apr 5, 2019 at 3:59 AM Will Deacon <will.deacon@arm.com> wrote:
-> >
-> > I've also pushed this series out here:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/mmiowb
-> >
-> > and I would like to get it into -next once the first patch has been acked.
-> 
-> Ack on it all.
+On Fri, Apr 5, 2019 at 3:17 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> I want to propose alternative solution.
+> Please check the attached patches.
 
-Thanks.
+In both patches:
+> I changed the Makefile to use $(LD) rahter than $(CC). I confirmed
+> the same vdso.so.raw was still produced.
 
-> With the afore-mentioned slight worry about non-spinlocked IO
-> ordering, but I _think_ it's purely limited to ia64 and wmb() and
-> friends should work elsewhere?
-> 
-> Or did I miss something? I think the ia64() mb/rmb/wmb stuff only
-> works on normal memory on ia64.
+typo: rahter -> rather
 
-I was worried about RISC-V, but actually their wmb() is "fence ow,ow"
-which I think is stronger than their mmiowb() "fence o,w" implementation.
+In the 0001 patch of arch/arm/vdso/Makefile:
+> ...
+> -VDSO_LDFLAGS += $(call cc-ldoption, -fuse-ld=bfd)
+> +ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+> +           -z max-page-size=4096 -z common-page-size=4096 \
+> +           -nostdlib -shared \
+> +           $(call ld-option, --hash-style=sysv) \
+> +           $(call ld-option, --build-id) \
+> +           -T
 
-Everybody else should be fine with wmb() afaict, so if a driver writer
-is smart enough to want this ordering outside of spinlocks, they can
-do that for everybody apart from ia64.
+I see that "-fuse-ld=bfd" is explicitly dropped here, which could
+reintroduce the problem fixed in d2b30cd4b722 ("ARM: 8384/1: VDSO:
+force use of BFD linker") (and 3473f26592c1c). Does ld.gold still
+exhibit this problem? If so, we'll need to detect gold and force bfd
+still maybe?
 
-Will
+-- 
+Kees Cook
