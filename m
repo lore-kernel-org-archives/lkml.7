@@ -2,132 +2,115 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD54DC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D602C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5EF20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0DB620700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="najpfBIi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PfGSLmem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731549AbfDEQY1 (ORCPT
+        id S1731559AbfDEQZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:24:27 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38621 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfDEQY1 (ORCPT
+        Fri, 5 Apr 2019 12:25:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56930 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEQZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:24:27 -0400
-Received: by mail-yb1-f194.google.com with SMTP id w206so2449853ybg.5;
-        Fri, 05 Apr 2019 09:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DSOL+tWZjghaL+H4kv+T9sf5HBi8owquhf/5/RkxJjE=;
-        b=najpfBIiD70dmQdF1WJ2DjCryNoY/aUeTFQkTKw/PS6KYKPIzewQQvbvPfv6zRWr9F
-         f1ELQ7hlf8ja9ale4v2g8ACgnxBfHq00JWYPou3dx6EAF9a1jevjoML9tWO/yUfMIBPX
-         w5vwIPiiXljwflhqwUPuFmRRmHIcXPjFrQt8m/9LEg++1+0ZJCsfca82S3brFfyRCkJd
-         j5DMyfYDJa2I9S6Xx/KydtduFfXx5mjSvGBeVOt2GH5F2cQFwRTjnX+SxR8VMPrUeC2H
-         viB9odSzMuaMQkIY3pT32X5E2uHZkFfX7GMAoliXQ1qBJX2gRnltL0kBFVUF14O5WQX/
-         bsjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DSOL+tWZjghaL+H4kv+T9sf5HBi8owquhf/5/RkxJjE=;
-        b=K5B1gQ674yuhYREUUgrvVmtF9zxPSHWNBZvmUhKrS6mYiULw9wluCMilfmLNBibNr4
-         q/kxtlefLZTrnCRu+g6D20Umc/5nNzK75TpOKY7ZscgjFQbmvnio/zq9O7MgF/PyXUCH
-         ykur1W7yDJdVRXH92+/hIJfZfjCksjvXftlOMaLK9d/evwxJlJ2UTHZwGks1MH3lJdQo
-         ipy2RT2X+mU7kQngRXXj/PAyIN8s7VecmiJ4z42xYP7Fd3TxmDW3o4qolxB0NJWOAYPu
-         n2tYVqlhQerOABdSoBELQprdkZKz4LJ+CohP5QkOh2rnb8W1OPNMJUGvPPiBdT9RPhT7
-         GhkQ==
-X-Gm-Message-State: APjAAAUk/ObQBGHDNcZA5jiCasPRjjDAXejP0vZsP+b2FqaFiEOhKlMq
-        7ZxVhsB5TkOSFzdx4NUSopNShYT97xovJ0bTR3U=
-X-Google-Smtp-Source: APXvYqy4QjjWHm3bxQNqp7v7IJA4LcQa8Jk+9FKC4ls3kaWr4KTrPM8VKoXpvMH4bME0c0AZ/vmoAoqBw0Behy6jQzc=
-X-Received: by 2002:a25:868e:: with SMTP id z14mr11714901ybk.319.1554481466241;
- Fri, 05 Apr 2019 09:24:26 -0700 (PDT)
+        Fri, 5 Apr 2019 12:25:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3WvIIh71Jf+m/yxArRSdlThAUD6ygUgbn+vJRvbgDLU=; b=PfGSLmem03lp10otTY24vBlEV
+        L/RxOo+Yp9vO0wW0uOp7YUWbT6ocfi22lmodqg8804W/EoUwUPG7EjIsMRcVzft7a3Jfuno+qba8p
+        CwXr53OwrvhY9U917/bxrcQv39X1BBl5/6KPrgRDPNB1D8hI7fqjkC8V8ZhIWhRPaACMhd4Q0hw76
+        A/x40qfeN70/sSAstcWzwAusXxPsd9rRjCYsbvu02rg6bvdjEousS8ghlzjdJZHl7eDQ2y4JpNvC8
+        7aOucY3Wamt+I7tJY9O0YqaHnh15D4dyNQYaZrcSovfxZ3ci4eKEIaqV9z1Xkv7A5Q0MJpV1hvt4B
+        nIp33o2+g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hCReh-000647-M6; Fri, 05 Apr 2019 16:25:27 +0000
+Date:   Fri, 5 Apr 2019 09:25:27 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
+Message-ID: <20190405162527.GP22763@bombadil.infradead.org>
+References: <20190405045711.30339-1-bp@alien8.de>
+ <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
+ <20190405075251.GC23348@zn.tnic>
+ <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
+ <20190405082447.GD23348@zn.tnic>
+ <CAGXu5jK6+ZcJQqchySsMicEy-Kd=TFRTE1M_JdhX4TaJDAPiaQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190404135736.8491-1-peron.clem@gmail.com> <20190404135736.8491-2-peron.clem@gmail.com>
- <20190405090236.e7vnyjzxmzfke3d6@flea> <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
- <20190405145005.jmmwsvbateqssbyq@flea> <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
- <20190405150810.zjwtu6crzaz6ufhx@flea>
-In-Reply-To: <20190405150810.zjwtu6crzaz6ufhx@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 5 Apr 2019 18:24:53 +0200
-Message-ID: <CAJiuCccfmwxAqK1mTJ3eLO0RggV8sZTTKRy=fxFFenxn1hATvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Samuel Holland <samuel@sholland.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGXu5jK6+ZcJQqchySsMicEy-Kd=TFRTE1M_JdhX4TaJDAPiaQ@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, 5 Apr 2019 at 17:08, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
-e:
->
-> On Fri, Apr 05, 2019 at 10:59:35PM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Apr 5, 2019 at 10:50 PM Maxime Ripard <maxime.ripard@bootlin.co=
-m> wrote:
-> > >
-> > > On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
-> > > > On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootlin=
-.com> wrote:
-> > > > >
-> > > > > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=C3=A9ment P=C3=A9ron=
- wrote:
-> > > > > > Allwinner H6 has a watchog compatible with A31.
-> > > > > >
-> > > > > > Declare it in the device tree.
-> > > > > >
-> > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > > >
-> > > > > Applied both, thanks!
-> > > > > Maxime
-> > > >
-> > > > IIRC there are 3 watchdogs on the H6. One is the trusted watchdog,
-> > > > which should be reserved for underlying firmware.
-> > > >
-> > > > The other two are the normal and R-block watchdog. Although they
-> > > > look the same, the "normal" one can't reset the system. :(
-> > > > That one is actually the one ATF currently uses. So reboot doesn't
-> > > > work on the H6.
-
-Some users report that the reboot on the PineH64 actually works.
-
-Clement
-
-> > >
-> > > So that patch will not do anything then?
+On Fri, Apr 05, 2019 at 09:13:24AM -0700, Kees Cook wrote:
+> On Fri, Apr 5, 2019 at 1:24 AM Borislav Petkov <bp@alien8.de> wrote:
 > >
-> > I'm still on vacation, so I haven't checked the address of the new devi=
-ce.
-> > If it's the normal one, then yeah, it won't do anything. I've tried tha=
-t.
-> > IIRC Samuel (or someone else) on IRC also mentioned this.
->
-> It's the one in the timer that we've used since pretty much day 1 on
-> older SoCs, so I guess it qualifies as the normal one :)
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> > On Fri, Apr 05, 2019 at 10:09:31AM +0200, Rasmus Villemoes wrote:
+> > > On 05/04/2019 09.52, Borislav Petkov wrote:
+> > > > On Fri, Apr 05, 2019 at 08:26:45AM +0200, Rasmus Villemoes wrote:
+> > >
+> > > >> It computes a*b+c with overflow checking at each step. calc_size
+> > > >> is way too generic and doesn't say anything at all about how the
+> > > >> calc(ulation) is done.
+> > > >
+> > > > Ok, whatever.
+> > > >
+> > > > Then it would need at least a comment above it to state what it does. I
+> > > > don't want to go and parse the macros each time.
+> > >
+> > > It's an internal helper, and struct_size is fully kernel-doc'ed. But
+> > > yeah, a comment wouldn't hurt, and let's rename the parameters so they
+> > > match the abc naming.
+> > >
+> > > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> > > index 40b48e2133cb..6534a727cadb 100644
+> > > --- a/include/linux/overflow.h
+> > > +++ b/include/linux/overflow.h
+> > > @@ -278,11 +278,15 @@ static inline __must_check size_t
+> > > array3_size(size_t a, size_t b, size_t c)
+> > >         return bytes;
+> > >  }
+> > >
+> > > -static inline __must_check size_t __ab_c_size(size_t n, size_t size,
+> > > size_t c)
+> > > +/*
+> > > + * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
+> > > + * struct_size() below.
+> > > + */
+> 
+> May as well make this kern-doc too?
+
+I don't think that's a good idea; we should only document functions we
+want other people to use.
+
+> > > +static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+
+I could also go for renaming this to __size_ab_plus_c.
+
+For a bit of history ... the origins of this was a system which had
+alloc_ab (a * b)
+alloc_abc (a * b * c)
+alloc_ab_c (a * b + c)
+alloc_ab_cd (a * b + c * d)
+
+In the process of getting it upstreamed, it changed from kmalloc_ab_c to
+kmalloc(struct_size(...)) and we never bothered to change the name of
+__ab_c_size().
