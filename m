@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C54AC10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD2C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581062171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B00C218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554432205;
-	bh=w887v8sxzFbv/CsMamCuvj//gbnzSxEGIUB95ny3Yug=;
+	s=default; t=1554432207;
+	bh=ecQ3/QfLeGhLkjz7C3afJZ5i3XA770EpXrw9X8WRUVY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=x2WW7ryJ2/j9luNmI/Es1lWsbiPxaUNixajQJjN/xaRqquipZeW500CPsbZhCL8nQ
-	 uc2uVjSqUCS0SiBdFObKVV1hlzXdq5NCgdTRe1MWMcymzGGUPLF1Gwt9L3Nui4pvAu
-	 G/2PuYoxICS/6LfpwnYFldN+csd7960pm2ew17/Y=
+	b=VgsfKF3VCD3IMF1tl/LDrMjnNft4qktvj9ZRS/4XBgUjJNoPEgj+eWB9vF8p9xBb7
+	 nK9ERJKuhloU4+jvwmQUyP3zQmn1kMOqwwSLevwN8yi5dz7Nq6ryo7K+WmuTYXLq4y
+	 9IvtxR2XObpN9F69Ev3TCWoo/rkk6uZHye4SM2Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfDECnX (ORCPT
+        id S1729820AbfDECnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 22:43:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45242 "EHLO
+        Thu, 4 Apr 2019 22:43:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45366 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfDECnU (ORCPT
+        with ESMTP id S1727212AbfDECnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 22:43:20 -0400
+        Thu, 4 Apr 2019 22:43:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RPsuSXiJp8eJ2wLYwaPIG6LlDK/Z5J5+xdDQa/6lv7M=; b=FwfBgrY4PFZN
-        zk8py91cRjauDQpNMz0GEDwo/ATrGFLKFTmxHpJbLMHog42HqXKqggECEo2PPDCCDcOxkAX6cBWfE
-        50fZdR94RtAAb3md7H+ZvZBtHLiUcpDbAmzyCfa26Xf1Q9WhaZT7mOLD8XK1mPBTM1AiMFxdxxWlq
-        1z4BY=;
+        List-Archive; bh=iyswIuIXLt3/9SO6gpWFMWb/+gQjPoJq3Mser0iVGWo=; b=rDjpxvV24yve
+        YXNE2nt3nVR1rJJZ0OdBD0pI5hhgcYdIfMPeUz5bltpyJYiUlxd11DEtyb38/cg/T3VWFdBrjogpM
+        9eRuiIn0krX052Y8R+9CDzpk6WS6UvCZ0EeAk7hn9V7D8XCAQp6xqaaLK201VG3D1WHY3pUrN57j/
+        wL/Zs=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hCEp1-0005EL-87; Fri, 05 Apr 2019 02:43:15 +0000
+        id 1hCEp4-0005Eb-GJ; Fri, 05 Apr 2019 02:43:18 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 2A053441D3B; Fri,  5 Apr 2019 09:43:12 +0700 (+07)
+        id 7F18E441D3C; Fri,  5 Apr 2019 09:43:15 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
         Kevin Hilman <khilman@baylibre.com>,
         linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: meson: axg-frddr: add g12a support" to the asoc tree
-In-Reply-To:  <20190404111733.28705-5-jbrunet@baylibre.com>
+Subject: Applied "ASoC: meson: axg-toddr: add g12a support" to the asoc tree
+In-Reply-To:  <20190404111733.28705-4-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190405024312.2A053441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri,  5 Apr 2019 09:43:12 +0700 (+07)
+Message-Id: <20190405024315.7F18E441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri,  5 Apr 2019 09:43:15 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: axg-frddr: add g12a support
+   ASoC: meson: axg-toddr: add g12a support
 
 has been applied to the asoc tree at
 
@@ -91,205 +91,103 @@ to this mail.
 Thanks,
 Mark
 
-From fcced66f208d778aa2dea05910161689503c16bf Mon Sep 17 00:00:00 2001
+From a3c23a8ad4dc07100d916d75ca30c982288b868d Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 4 Apr 2019 13:17:31 +0200
-Subject: [PATCH] ASoC: meson: axg-frddr: add g12a support
+Date: Thu, 4 Apr 2019 13:17:30 +0200
+Subject: [PATCH] ASoC: meson: axg-toddr: add g12a support
 
-On the axg, frddr could only be connected to 1 downstream element, so the
-playback was possible on 1 interface only at a time.
-
-On the g12a, the frddr may connect and wait for the request of up to 3
-downstream elements. With this, it possible for single playback to be
-played on several interfaces at the same time.
-
-Like the toddr fifo, the g12a frddr also need to take care of resetting
-the read pointer to the initial fifo address when preparing a playback.
+Since the g12a SoC fifo can set the fifo initial start address, we must
+make sure to actually reset the write pointer to this address when
+starting a capture.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/axg-frddr.c | 143 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 140 insertions(+), 3 deletions(-)
+ sound/soc/meson/axg-toddr.c | 53 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/sound/soc/meson/axg-frddr.c b/sound/soc/meson/axg-frddr.c
-index a6f6f6a2eca8..2b8807737b2b 100644
---- a/sound/soc/meson/axg-frddr.c
-+++ b/sound/soc/meson/axg-frddr.c
-@@ -3,7 +3,9 @@
- // Copyright (c) 2018 BayLibre, SAS.
- // Author: Jerome Brunet <jbrunet@baylibre.com>
+diff --git a/sound/soc/meson/axg-toddr.c b/sound/soc/meson/axg-toddr.c
+index 0e9ca3882ae5..4f63e434fad4 100644
+--- a/sound/soc/meson/axg-toddr.c
++++ b/sound/soc/meson/axg-toddr.c
+@@ -24,6 +24,7 @@
+ #define CTRL0_TODDR_MSB_POS(x)		((x) << 8)
+ #define CTRL0_TODDR_LSB_POS_MASK	GENMASK(7, 3)
+ #define CTRL0_TODDR_LSB_POS(x)		((x) << 3)
++#define CTRL1_TODDR_FORCE_FINISH	BIT(25)
  
--/* This driver implements the frontend playback DAI of AXG based SoCs */
-+/*
-+ * This driver implements the frontend playback DAI of AXG and G12A based SoCs
-+ */
+ #define TODDR_MSB_POS	31
  
- #include <linux/clk.h>
- #include <linux/regmap.h>
-@@ -14,7 +16,29 @@
+@@ -33,6 +34,22 @@ static int axg_toddr_pcm_new(struct snd_soc_pcm_runtime *rtd,
+ 	return axg_fifo_pcm_new(rtd, SNDRV_PCM_STREAM_CAPTURE);
+ }
  
- #include "axg-fifo.h"
- 
--#define CTRL0_FRDDR_PP_MODE	BIT(30)
-+#define CTRL0_FRDDR_PP_MODE		BIT(30)
-+#define CTRL0_SEL1_EN_SHIFT		3
-+#define CTRL0_SEL2_SHIFT		4
-+#define CTRL0_SEL2_EN_SHIFT		7
-+#define CTRL0_SEL3_SHIFT		8
-+#define CTRL0_SEL3_EN_SHIFT		11
-+#define CTRL1_FRDDR_FORCE_FINISH	BIT(12)
-+
-+static int g12a_frddr_dai_prepare(struct snd_pcm_substream *substream,
++static int g12a_toddr_dai_prepare(struct snd_pcm_substream *substream,
 +				  struct snd_soc_dai *dai)
 +{
 +	struct axg_fifo *fifo = snd_soc_dai_get_drvdata(dai);
 +
-+	/* Reset the read pointer to the FIFO_INIT_ADDR */
++	/* Reset the write pointer to the FIFO_INIT_ADDR */
 +	regmap_update_bits(fifo->map, FIFO_CTRL1,
-+			   CTRL1_FRDDR_FORCE_FINISH, 0);
++			   CTRL1_TODDR_FORCE_FINISH, 0);
 +	regmap_update_bits(fifo->map, FIFO_CTRL1,
-+			   CTRL1_FRDDR_FORCE_FINISH, CTRL1_FRDDR_FORCE_FINISH);
++			   CTRL1_TODDR_FORCE_FINISH, CTRL1_TODDR_FORCE_FINISH);
 +	regmap_update_bits(fifo->map, FIFO_CTRL1,
-+			   CTRL1_FRDDR_FORCE_FINISH, 0);
++			   CTRL1_TODDR_FORCE_FINISH, 0);
 +
 +	return 0;
 +}
- 
- static int axg_frddr_dai_startup(struct snd_pcm_substream *substream,
- 				 struct snd_soc_dai *dai)
-@@ -119,10 +143,123 @@ static const struct axg_fifo_match_data axg_frddr_match_data = {
- 	.dai_drv	= &axg_frddr_dai_drv
++
+ static int axg_toddr_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -172,10 +189,46 @@ static const struct axg_fifo_match_data axg_toddr_match_data = {
+ 	.dai_drv	= &axg_toddr_dai_drv
  };
  
-+static const struct snd_soc_dai_ops g12a_frddr_ops = {
-+	.prepare	= g12a_frddr_dai_prepare,
-+	.startup	= axg_frddr_dai_startup,
-+	.shutdown	= axg_frddr_dai_shutdown,
++static const struct snd_soc_dai_ops g12a_toddr_ops = {
++	.prepare	= g12a_toddr_dai_prepare,
++	.hw_params	= axg_toddr_dai_hw_params,
++	.startup	= axg_toddr_dai_startup,
++	.shutdown	= axg_toddr_dai_shutdown,
 +};
 +
-+static struct snd_soc_dai_driver g12a_frddr_dai_drv = {
-+	.name = "FRDDR",
-+	.playback = {
-+		.stream_name	= "Playback",
++static struct snd_soc_dai_driver g12a_toddr_dai_drv = {
++	.name = "TODDR",
++	.capture = {
++		.stream_name	= "Capture",
 +		.channels_min	= 1,
 +		.channels_max	= AXG_FIFO_CH_MAX,
 +		.rates		= AXG_FIFO_RATES,
 +		.formats	= AXG_FIFO_FORMATS,
 +	},
-+	.ops		= &g12a_frddr_ops,
-+	.pcm_new	= axg_frddr_pcm_new,
++	.ops		= &g12a_toddr_ops,
++	.pcm_new	= axg_toddr_pcm_new,
 +};
 +
-+static const char * const g12a_frddr_sel_texts[] = {
-+	"OUT 0", "OUT 1", "OUT 2", "OUT 3", "OUT 4",
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(g12a_frddr_sel1_enum, FIFO_CTRL0, CTRL0_SEL_SHIFT,
-+			    g12a_frddr_sel_texts);
-+static SOC_ENUM_SINGLE_DECL(g12a_frddr_sel2_enum, FIFO_CTRL0, CTRL0_SEL2_SHIFT,
-+			    g12a_frddr_sel_texts);
-+static SOC_ENUM_SINGLE_DECL(g12a_frddr_sel3_enum, FIFO_CTRL0, CTRL0_SEL3_SHIFT,
-+			    g12a_frddr_sel_texts);
-+
-+static const struct snd_kcontrol_new g12a_frddr_out1_demux =
-+	SOC_DAPM_ENUM("Output Src 1", g12a_frddr_sel1_enum);
-+static const struct snd_kcontrol_new g12a_frddr_out2_demux =
-+	SOC_DAPM_ENUM("Output Src 2", g12a_frddr_sel2_enum);
-+static const struct snd_kcontrol_new g12a_frddr_out3_demux =
-+	SOC_DAPM_ENUM("Output Src 3", g12a_frddr_sel3_enum);
-+
-+static const struct snd_kcontrol_new g12a_frddr_out1_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL0,
-+				    CTRL0_SEL1_EN_SHIFT, 1, 0);
-+static const struct snd_kcontrol_new g12a_frddr_out2_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL0,
-+				    CTRL0_SEL2_EN_SHIFT, 1, 0);
-+static const struct snd_kcontrol_new g12a_frddr_out3_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL0,
-+				    CTRL0_SEL3_EN_SHIFT, 1, 0);
-+
-+static const struct snd_soc_dapm_widget g12a_frddr_dapm_widgets[] = {
-+	SND_SOC_DAPM_AIF_OUT("SRC 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SRC 2", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SRC 3", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_SWITCH("SRC 1 EN", SND_SOC_NOPM, 0, 0,
-+			    &g12a_frddr_out1_enable),
-+	SND_SOC_DAPM_SWITCH("SRC 2 EN", SND_SOC_NOPM, 0, 0,
-+			    &g12a_frddr_out2_enable),
-+	SND_SOC_DAPM_SWITCH("SRC 3 EN", SND_SOC_NOPM, 0, 0,
-+			    &g12a_frddr_out3_enable),
-+	SND_SOC_DAPM_DEMUX("SINK 1 SEL", SND_SOC_NOPM, 0, 0,
-+			   &g12a_frddr_out1_demux),
-+	SND_SOC_DAPM_DEMUX("SINK 2 SEL", SND_SOC_NOPM, 0, 0,
-+			   &g12a_frddr_out2_demux),
-+	SND_SOC_DAPM_DEMUX("SINK 3 SEL", SND_SOC_NOPM, 0, 0,
-+			   &g12a_frddr_out3_demux),
-+	SND_SOC_DAPM_AIF_OUT("OUT 0", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 2", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 3", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 4", NULL, 0, SND_SOC_NOPM, 0, 0),
-+};
-+
-+static const struct snd_soc_dapm_route g12a_frddr_dapm_routes[] = {
-+	{ "SRC 1", NULL, "Playback" },
-+	{ "SRC 2", NULL, "Playback" },
-+	{ "SRC 3", NULL, "Playback" },
-+	{ "SRC 1 EN", "Switch", "SRC 1" },
-+	{ "SRC 2 EN", "Switch", "SRC 2" },
-+	{ "SRC 3 EN", "Switch", "SRC 3" },
-+	{ "SINK 1 SEL", NULL, "SRC 1 EN" },
-+	{ "SINK 2 SEL", NULL, "SRC 2 EN" },
-+	{ "SINK 3 SEL", NULL, "SRC 3 EN" },
-+	{ "OUT 0", "OUT 0", "SINK 1 SEL" },
-+	{ "OUT 1", "OUT 1", "SINK 1 SEL" },
-+	{ "OUT 2", "OUT 2", "SINK 1 SEL" },
-+	{ "OUT 3", "OUT 3", "SINK 1 SEL" },
-+	{ "OUT 4", "OUT 4", "SINK 1 SEL" },
-+	{ "OUT 0", "OUT 0", "SINK 2 SEL" },
-+	{ "OUT 1", "OUT 1", "SINK 2 SEL" },
-+	{ "OUT 2", "OUT 2", "SINK 2 SEL" },
-+	{ "OUT 3", "OUT 3", "SINK 2 SEL" },
-+	{ "OUT 4", "OUT 4", "SINK 2 SEL" },
-+	{ "OUT 0", "OUT 0", "SINK 3 SEL" },
-+	{ "OUT 1", "OUT 1", "SINK 3 SEL" },
-+	{ "OUT 2", "OUT 2", "SINK 3 SEL" },
-+	{ "OUT 3", "OUT 3", "SINK 3 SEL" },
-+	{ "OUT 4", "OUT 4", "SINK 3 SEL" },
-+};
-+
-+static const struct snd_soc_component_driver g12a_frddr_component_drv = {
-+	.dapm_widgets		= g12a_frddr_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(g12a_frddr_dapm_widgets),
-+	.dapm_routes		= g12a_frddr_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(g12a_frddr_dapm_routes),
++static const struct snd_soc_component_driver g12a_toddr_component_drv = {
++	.dapm_widgets		= axg_toddr_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(axg_toddr_dapm_widgets),
++	.dapm_routes		= axg_toddr_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(axg_toddr_dapm_routes),
 +	.ops			= &g12a_fifo_pcm_ops
 +};
 +
-+static const struct axg_fifo_match_data g12a_frddr_match_data = {
-+	.component_drv	= &g12a_frddr_component_drv,
-+	.dai_drv	= &g12a_frddr_dai_drv
++static const struct axg_fifo_match_data g12a_toddr_match_data = {
++	.component_drv	= &g12a_toddr_component_drv,
++	.dai_drv	= &g12a_toddr_dai_drv
 +};
 +
- static const struct of_device_id axg_frddr_of_match[] = {
+ static const struct of_device_id axg_toddr_of_match[] = {
  	{
- 		.compatible = "amlogic,axg-frddr",
- 		.data = &axg_frddr_match_data,
+ 		.compatible = "amlogic,axg-toddr",
+ 		.data = &axg_toddr_match_data,
 +	}, {
-+		.compatible = "amlogic,g12a-frddr",
-+		.data = &g12a_frddr_match_data,
++		.compatible = "amlogic,g12a-toddr",
++		.data = &g12a_toddr_match_data,
  	}, {}
  };
- MODULE_DEVICE_TABLE(of, axg_frddr_of_match);
-@@ -136,6 +273,6 @@ static struct platform_driver axg_frddr_pdrv = {
- };
- module_platform_driver(axg_frddr_pdrv);
- 
--MODULE_DESCRIPTION("Amlogic AXG playback fifo driver");
-+MODULE_DESCRIPTION("Amlogic AXG/G12A playback fifo driver");
- MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
- MODULE_LICENSE("GPL v2");
+ MODULE_DEVICE_TABLE(of, axg_toddr_of_match);
 -- 
 2.20.1
 
