@@ -2,115 +2,117 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CF0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6304C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F19121850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B96C21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbfDENM5 convert rfc822-to-8bit (ORCPT
+        id S1730801AbfDENNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:12:57 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49149 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728743AbfDENM4 (ORCPT
+        Fri, 5 Apr 2019 09:13:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35803 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbfDENNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:12:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-181-6vYh5p5rN3el28GcHaPjhQ-1; Fri, 05 Apr 2019 14:12:53 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 5 Apr 2019 14:14:00 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 5 Apr 2019 14:14:00 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sai Prakash Ranjan' <saiprakash.ranjan@codeaurora.org>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mulu He <muluhe@codeaurora.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>
-CC:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] stm class: Fix out of bound access from bitmap allocation
-Thread-Topic: [PATCH] stm class: Fix out of bound access from bitmap
- allocation
-Thread-Index: AQHU66qDw2WxOhX8lUugt3I8pBQU16YtixUw
-Date:   Fri, 5 Apr 2019 13:14:00 +0000
-Message-ID: <fe3a301b03b84761a08d5b15962b8110@AcuMS.aculab.com>
-References: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 5 Apr 2019 09:13:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35DDJa12765940
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 06:13:20 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35DDJ5G2765937;
+        Fri, 5 Apr 2019 06:13:19 -0700
+Date:   Fri, 5 Apr 2019 06:13:19 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
+Message-ID: <tip-b5b447b6b4e899e0978b95cb42d272978f8c7b4d@git.kernel.org>
+Cc:     hpa@zytor.com, bp@alien8.de, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
+        valentin.schneider@arm.com
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+          tglx@linutronix.de, bp@alien8.de, mingo@kernel.org,
+          valentin.schneider@arm.com
+In-Reply-To: <20190311224752.8337-14-valentin.schneider@arm.com>
+References: <20190311224752.8337-14-valentin.schneider@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/entry] x86/entry: Remove unneeded need_resched() loop
+Git-Commit-ID: b5b447b6b4e899e0978b95cb42d272978f8c7b4d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-MC-Unique: 6vYh5p5rN3el28GcHaPjhQ-1
-X-Mimecast-Spam-Score: 0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan
-> Sent: 05 April 2019 13:23
-> 
-> From: Mulu He <muluhe@codeaurora.org>
-> 
-> Bitmap allocation works on array of unsigned longs and
-> for stm master allocation when the number of software
-> channels is 32, 4 bytes are allocated and there is a out of
-> bound access at the first 8 bytes access of bitmap region.
-> 
-> Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-> Signed-off-by: Mulu He <muluhe@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/hwtracing/stm/core.c | 2 +-
->  drivers/hwtracing/stm/stm.h  | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-> index 93ce3aa740a9..21a5838f6e67 100644
-> --- a/drivers/hwtracing/stm/core.c
-> +++ b/drivers/hwtracing/stm/core.c
-> @@ -168,7 +168,7 @@ static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
->  	struct stp_master *master;
->  	size_t size;
-> 
-> -	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
-> +	size = ALIGN(stm->data->sw_nchannels, STM_MASTER_SZ) / STM_MASTER_SZ;
+Commit-ID:  b5b447b6b4e899e0978b95cb42d272978f8c7b4d
+Gitweb:     https://git.kernel.org/tip/b5b447b6b4e899e0978b95cb42d272978f8c7b4d
+Author:     Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate: Mon, 11 Mar 2019 22:47:51 +0000
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 5 Apr 2019 15:08:03 +0200
 
-I'm not sure that using STP_MASTER_SZ improves readability at all.
+x86/entry: Remove unneeded need_resched() loop
 
-Is there something that gives the size of a bitmap for 'n' items?
+Since the enabling and disabling of IRQs within preempt_schedule_irq() is
+contained in a need_resched() loop, there is no need for the outer
+architecture specific loop.
 
-	David
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/20190311224752.8337-14-valentin.schneider@arm.com
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+---
+ arch/x86/entry/entry_32.S | 3 +--
+ arch/x86/entry/entry_64.S | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index d309f30cf7af..b1856fe9decf 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -766,13 +766,12 @@ END(ret_from_exception)
+ #ifdef CONFIG_PREEMPT
+ ENTRY(resume_kernel)
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
+-.Lneed_resched:
+ 	cmpl	$0, PER_CPU_VAR(__preempt_count)
+ 	jnz	restore_all_kernel
+ 	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
+ 	jz	restore_all_kernel
+ 	call	preempt_schedule_irq
+-	jmp	.Lneed_resched
++	jmp	restore_all_kernel
+ END(resume_kernel)
+ #endif
+ 
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 1f0efdb7b629..e7e270603fe7 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -645,10 +645,9 @@ retint_kernel:
+ 	/* Check if we need preemption */
+ 	btl	$9, EFLAGS(%rsp)		/* were interrupts off? */
+ 	jnc	1f
+-0:	cmpl	$0, PER_CPU_VAR(__preempt_count)
++	cmpl	$0, PER_CPU_VAR(__preempt_count)
+ 	jnz	1f
+ 	call	preempt_schedule_irq
+-	jmp	0b
+ 1:
+ #endif
+ 	/*
