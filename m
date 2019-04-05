@@ -2,151 +2,154 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D07BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA82C10F0F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E3F217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91ADF217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfDEK45 (ORCPT
+        id S1730802AbfDEK7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:56:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56168 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730283AbfDEK45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:56:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 883AF307D8E3;
-        Fri,  5 Apr 2019 10:56:56 +0000 (UTC)
-Received: from [10.36.117.47] (ovpn-117-47.ams2.redhat.com [10.36.117.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2287560491;
-        Fri,  5 Apr 2019 10:56:54 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm, memory_hotplug: provide a more generic
- restrictions for memory hotplug
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190404125916.10215-1-osalvador@suse.de>
- <20190404125916.10215-3-osalvador@suse.de>
- <880c5d09-7d4e-2a97-e826-a8a6572216b2@redhat.com>
- <20190404180144.lgpf6qgnp67ib5s7@d104.suse.de>
- <5f735328-3451-ebd7-048e-e83e74e2c622@redhat.com>
- <20190405071418.GN12864@dhcp22.suse.cz>
- <a4230528-dc7e-e17c-c363-e3da7961dbf1@redhat.com>
- <20190405103053.GO12864@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <b74c3cd3-1195-31a7-74b5-68bbc5ae5aff@redhat.com>
-Date:   Fri, 5 Apr 2019 12:56:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190405103053.GO12864@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 05 Apr 2019 10:56:56 +0000 (UTC)
+        Fri, 5 Apr 2019 06:59:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33973 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730546AbfDEK7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:59:33 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hCMZH-0006bS-94; Fri, 05 Apr 2019 12:59:31 +0200
+Message-ID: <1554461965.3060.5.camel@pengutronix.de>
+Subject: Re: [PATCH v3 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Tiffany Lin =?UTF-8?Q?=28=E6=9E=97=E6=85=A7=E7=8F=8A=29?= 
+        <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= 
+        <andrew-ct.chen@mediatek.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dave.stevenson@raspberrypi.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Date:   Fri, 05 Apr 2019 12:59:25 +0200
+In-Reply-To: <20190124100419.26492-2-tfiga@chromium.org>
+References: <20190124100419.26492-1-tfiga@chromium.org>
+         <20190124100419.26492-2-tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.04.19 12:30, Michal Hocko wrote:
-> On Fri 05-04-19 10:05:09, David Hildenbrand wrote:
->> On 05.04.19 09:14, Michal Hocko wrote:
->>> On Thu 04-04-19 20:27:41, David Hildenbrand wrote:
->>>> On 04.04.19 20:01, Oscar Salvador wrote:
->>> [...]
->>>>> But I am not really convinced by MHP_SYSTEM_RAM name, and I think we should stick
->>>>> with MHP_MEMBLOCK_API because it represents __what__ is that flag about and its
->>>>> function, e.g: create memory block devices.
->>>
->>> Exactly
->>
->> Fine with me for keeping what Oscar has.
->>
->>>
->>>> This nicely aligns with the sub-section memory add support discussion.
->>>>
->>>> MHP_MEMBLOCK_API immediately implies that
->>>>
->>>> - memory is used as system ram. Memory can be onlined/offlined. Markers
->>>>   at sections indicate if the section is online/offline.
->>>
->>> No there is no implication like that. It means only that the onlined
->>> memory has a sysfs interface. Nothing more, nothing less
->>
->> As soon as there is a online/offline interface, you *can* (and user
->> space usually *will*) online that memory. Onlining/offlining is only
->> defined for memory to be added to the buddy - memory to be used as
->> "system ram". Doing it for random device memory will not work / result
->> in undefined behavior.
+On Thu, 2019-01-24 at 19:04 +0900, Tomasz Figa wrote:
+> Due to complexity of the video decoding process, the V4L2 drivers of
+> stateful decoder hardware require specific sequences of V4L2 API calls
+> to be followed. These include capability enumeration, initialization,
+> decoding, seek, pause, dynamic resolution change, drain and end of
+> stream.
 > 
-> No, not really. We really do not care where the memory comes from. Is it
-> RAM, NVDIMM, $FOO_BAR_OF_A_FUTURE_BUZZ. We only do care that the memory
-> can be onlined - user triggered associated with a zone. The memory even
-> doesn't have to go to the page allocator.
+> Specifics of the above have been discussed during Media Workshops at
+> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
+> Conference Europe 2014 in Düsseldorf. The de facto Codec API that
+> originated at those events was later implemented by the drivers we already
+> have merged in mainline, such as s5p-mfc or coda.
 > 
+> The only thing missing was the real specification included as a part of
+> Linux Media documentation. Fix it now and document the decoder part of
+> the Codec API.
+> 
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> ---
+>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1076 +++++++++++++++++
+>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    5 +
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
+>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   40 +-
+>  Documentation/media/uapi/v4l/vidioc-g-fmt.rst |   14 +
+>  6 files changed, 1135 insertions(+), 15 deletions(-)
+>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+> 
+> diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentation/media/uapi/v4l/dev-decoder.rst
+> new file mode 100644
+> index 000000000000..b7db2352ad41
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
+> @@ -0,0 +1,1076 @@
+> +.. -*- coding: utf-8; mode: rst -*-
+> +
+> +.. _decoder:
+> +
+> +*************************************************
+> +Memory-to-memory Stateful Video Decoder Interface
+> +*************************************************
+> +
+[...]
+> +
+> +Drain
+> +=====
+> +
+[...]
+> +
+> +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_STOP`` call
+> +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the decoder is
+> +   stopped and it will accept, but not process, any newly queued ``OUTPUT``
+> +   buffers until the client issues any of the following operations:
+> +
+[...]
+> +
+> +.. note::
+> +
+> +   Once the drain sequence is initiated, the client needs to drive it to
+> +   completion, as described by the steps above, unless it aborts the process by
+> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
+> +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START`` or
+> +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progress and they
+> +   will fail with -EBUSY error code if attempted.
 
-Yes, true, I was rather meaning if the caller wants ZONE_DEVICE, memory
-block devices are never an option. So "how the memory is used" not
-"where memory comes from".
+Should the V4L2_DEC_CMD_STOP documentation in
+Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst:
 
-add_memory() vs. devm_memremap_pages().
+  * - ``V4L2_DEC_CMD_STOP``
+    - 1
+    - Stop the decoder. When the decoder is already stopped, this
+      command does nothing.
 
--- 
+be updated to mention that for mem2mem decoders this not only does
+nothing, but returns an -EBUSY error return value?
 
-Thanks,
+Also, if V4L2_DEC_CMD_STOP_IMMEDIATELY is set, should the decoder drop
+all pending buffers and signal EOS immediately? Should this be mentioned
+here?
 
-David / dhildenb
+> +   Although mandatory, the availability of decoder commands may be queried
+> +   using :c:func:`VIDIOC_TRY_DECODER_CMD`.
+
+Do the TRY_DECODER_CMD also return -EBUSY during the draining phase?
+
+regards
+Philipp
