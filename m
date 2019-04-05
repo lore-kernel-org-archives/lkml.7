@@ -5,64 +5,150 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C469C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9B5C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C782146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF212146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfDESui (ORCPT
+        id S1731692AbfDESz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:50:38 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49480 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731183AbfDESui (ORCPT
+        Fri, 5 Apr 2019 14:55:27 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:36252 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731183AbfDESz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:50:38 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hCTv9-0002U6-R3; Fri, 05 Apr 2019 20:50:36 +0200
-Date:   Fri, 5 Apr 2019 20:50:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Brown, Len" <len.brown@intel.com>
-cc:     Len Brown <lenb@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>
-Subject: RE: [PATCH 09/14] thermal/x86_pkg_temp_thermal: Support
- multi-die/package
-In-Reply-To: <1A7043D5F58CCB44A599DFD55ED4C9485C5D6F18@FMSMSX126.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.21.1904052050080.1802@nanos.tec.linutronix.de>
-References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com> <863054888eb8f1a595369c49ec24740501e9c175.1551160674.git.len.brown@intel.com> <alpine.DEB.2.21.1904052027280.1802@nanos.tec.linutronix.de>
- <1A7043D5F58CCB44A599DFD55ED4C9485C5D6F18@FMSMSX126.amr.corp.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Apr 2019 14:55:27 -0400
+Received: by mail-it1-f194.google.com with SMTP id y10so11267466itc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 11:55:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zcz/sKmP2HSiW6fy+3CoqixG4dXseL+/zdfyDvrPkn4=;
+        b=TvFnNYR57uUrTpLJiOP6LgdDt1h8F5U9n2tc4IMxbeXEKg3Ea/IZv7YN4p5NfDGPqP
+         n5b5TTikcENzawRXnRIJHzrJ5isVsKFE6jjOmvpV39ubUZztfM7ttQJffTrExfLSvabl
+         QsO5WRlHbPh9xbbr+H+2kaivftaAbnbWKiCDBKNO/5DtJocG7yHr2S/xu3jHfLiBdS2I
+         JHulcg7X4EDesD6ckftewsLha6SraVx9gR26wyki24C9PgQsJr2fHI2vmwyeb65Joev3
+         tybDba5jV6ylx+dPE96XqPtpONHK8fFiwIH09pdIcN+svZzNqidrOPAWrrZVGskOo/XS
+         M4cQ==
+X-Gm-Message-State: APjAAAX7QJD0ylv9C8LEv16MH9NZ5jQTHm6+H5BJo7oMPeELxzqxTDr6
+        9VPfxprSNKdNg2i2jdY1PrXe0HhzCE6Za1HCpGr2lQ==
+X-Google-Smtp-Source: APXvYqwRGfFen8jKU0AqFlCG0M/5JkAHwrpVXhNmjiUCLhzyUwQ/tVY1H6Kb5PK5yrC6bWeBuqilNft+4M83tofcca4=
+X-Received: by 2002:a24:65c8:: with SMTP id u191mr10745619itb.137.1554490525905;
+ Fri, 05 Apr 2019 11:55:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190404172545.20928-1-kasong@redhat.com> <20190405140929.pycfea7drnpb2sug@treble>
+ <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
+ <20190405165715.fpgh4ggkmnqdtfwm@treble> <CACPcB9fPk2G=_k=K-1xOpPKU_R9F32LDo_bQ+vkLYJ8tajedMA@mail.gmail.com>
+ <20190405172659.4hph4rocqgofkb73@treble>
+In-Reply-To: <20190405172659.4hph4rocqgofkb73@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Sat, 6 Apr 2019 02:55:14 +0800
+Message-ID: <CACPcB9edcYDfXGKdYwJ9tAZg4oXE1BnVjZ-fVs0pqybb5i+ahw@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Len,
+On Sat, Apr 6, 2019 at 1:27 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Sat, Apr 06, 2019 at 01:05:55AM +0800, Kairui Song wrote:
+> > On Sat, Apr 6, 2019 at 12:57 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > >
+> > > On Fri, Apr 05, 2019 at 11:13:02PM +0800, Kairui Song wrote:
+> > > > Hi Josh, thanks for the review, I tried again, using latest upstream
+> > > > kernel commit ea2cec24c8d429ee6f99040e4eb6c7ad627fe777:
+> > > > # uname -a
+> > > > Linux localhost.localdomain 5.1.0-rc3+ #29 SMP Fri Apr 5 22:53:05 CST
+> > > > 2019 x86_64 x86_64 x86_64 GNU/Linux
+> > > >
+> > > > Having following config:
+> > > > > CONFIG_UNWINDER_ORC=y
+> > > > > # CONFIG_UNWINDER_FRAME_POINTER is not set
+> > > > and CONFIG_FRAME_POINTER is off too.
+> > > >
+> > > > Then record something with perf (also latest upstream version):
+> > > > ./perf record -g -e kmem:* -c 1
+> > > >
+> > > > Interrupt it, then view the output:
+> > > > perf script | less
+> > > >
+> > > > Then I notice the stacktrace in kernle is incomplete like following.
+> > > > Did I miss anything?
+> > > > --------------
+> > > > lvmetad   617 [000]    55.600786:                     kmem:kfree:
+> > > > call_site=ffffffffb219e269 ptr=(nil)
+> > > >         ffffffffb22b2d1c kfree+0x11c (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> > > >             7fba7e58fd0f __select+0x5f (/usr/lib64/libc-2.28.so)
+> > > >
+> > > > kworker/u2:5-rp   171 [000]    55.628529:
+> > > > kmem:kmem_cache_alloc: call_site=ffffffffb20e963d
+> > > > ptr=0xffffa07f39c581e0 bytes_req=80 bytes_alloc=80
+> > > > gfp_flags=GFP_ATOMIC
+> > > >         ffffffffb22b0dec kmem_cache_alloc+0x13c
+> > > > (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> > > > -------------
+> > > >
+> > > > And for the patch, I debugged the problem, and found how it happend:
+> > > > The reason is that we use following code for fetching the registers on
+> > > > a trace point:
+> > > > ...snip...
+> > > > #define perf_arch_fetch_caller_regs(regs, __ip) { \
+> > > > (regs)->ip = (__ip); \
+> > > > (regs)->bp = caller_frame_pointer(); \
+> > > > (regs)->cs = __KERNEL_CS;
+> > > > ...snip...
+> > >
+> > > Thanks, I was able to recreate.  It only happens when unwinding from a
+> > > tracepoint.  I haven't investigated yet, but
+> > > perf_arch_fetch_caller_regs() looks highly suspect, since it's doing
+> > > (regs)->bp = caller_frame_pointer(), even for ORC.
+> > >
+> > > My only explanation for how your patch works is that RBP just happens to
+> > > point to somewhere higher on the stack, causing the unwinder to start at
+> > > a semi-random location.  I suspect the real "fix" is that you're no
+> > > longer passing the regs to unwind_start().
+> > >
+> >
+> > Yes that's right. Simply not passing regs to unwind_start will let the
+> > unwind start from the perf sample handling functions, and introduce a
+> > lot of "noise", so I let it skipped the frames until it reached the
+> > frame of the trace point. The regs->bp should still points to the
+> > stack base of the function which get called in the tracepoint that
+> > trigger perf sample, so let unwinder skip all the frames above it made
+> > it work.
+>
+> Ah, now I think I understand, thanks.  perf_arch_fetch_caller_regs()
+> puts it in regs->bp, and then perf_callchain_kernel() reads that value
+> to tell the unwinder where to start dumping the stack trace.  I guess
+> that explains why your patch works, though it still seems very odd that
+> perf_arch_fetch_caller_regs() is using regs->bp to store the frame
+> address.  Maybe regs->sp would be more appropriate.
+>
+> --
+> Josh
 
-On Fri, 5 Apr 2019, Brown, Len wrote:
-> > please add a new helper function topology_max_dies() and retrieve it from that.
-> 
-> I'll do this for Rui -- since his patch is in my x86 branch,
-> and it is already (very early) Saturday morning for him:-)
-> 
-> FYI, there were a couple of other small changes I made to that branch
-> in response to list feedback that I pushed, but didn't re-email out the series.
-> 
-> Thomas,
-> Let me know if you prefer me to re-email the series, or just send a git pull request.
+Right, thanks for the comment. And after second thought there are some
+other issues here in the patch indeed, it still won't fix the problem
+when used with ebpf and tracepoint, I made some mistake about handling
+the callchain with different ways, will rethink about this and post an
+update later.
 
-Mail is fine.
 
-Thanks,
-
-	tglx
+--
+Best Regards,
+Kairui Song
