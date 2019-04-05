@@ -2,203 +2,99 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B0CC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A145CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506822175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A23421738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbfDEKg7 (ORCPT
+        id S1730726AbfDEKkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:36:59 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45702 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfDEKg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:36:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF80168F;
-        Fri,  5 Apr 2019 03:36:58 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77EA3F557;
-        Fri,  5 Apr 2019 03:36:56 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] iommu: io-pgtable: Add ARM Mali midgard MMU page
- table format
-To:     Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, Sean Paul <sean@poorly.run>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>
-References: <20190401074730.12241-1-robh@kernel.org>
- <20190401074730.12241-2-robh@kernel.org>
- <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
- <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <0c5f474e-6dd4-8ba5-8c2b-52a99e9b1ca5@arm.com>
-Date:   Fri, 5 Apr 2019 11:36:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 5 Apr 2019 06:40:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44353 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730283AbfDEKkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:40:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35AeIaV2716343
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 03:40:18 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35AeIcH2716340;
+        Fri, 5 Apr 2019 03:40:18 -0700
+Date:   Fri, 5 Apr 2019 03:40:18 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kees Cook <tipbot@zytor.com>
+Message-ID: <tip-7c21383f3429dd70da39c0c7f1efa12377a47ab6@git.kernel.org>
+Cc:     mingo@redhat.com, keescook@chromium.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
+        hpa@zytor.com, bp@suse.de, ndesaulniers@google.com
+Reply-To: linux-kernel@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
+          hpa@zytor.com, mingo@redhat.com, tglx@linutronix.de,
+          keescook@chromium.org, bp@suse.de, ndesaulniers@google.com
+In-Reply-To: <20190404214027.GA7324@beast>
+References: <20190404214027.GA7324@beast>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/build] x86/build: Keep local relocations with ld.lld
+Git-Commit-ID: 7c21383f3429dd70da39c0c7f1efa12377a47ab6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/04/2019 10:51, Robin Murphy wrote:
-> Hi Steve,
-> 
-> On 05/04/2019 10:42, Steven Price wrote:
->> First let me say congratulations to everyone working on Panfrost - it's
->> an impressive achievement!
->>
->> Full disclosure: I used to work on the Mali kbase driver. And have been
->> playing around with running the Mali user-space blob with the Panfrost
->> kernel driver.
->>
->> On 01/04/2019 08:47, Rob Herring wrote:
->>> ARM Mali midgard GPU is similar to standard 64-bit stage 1 page
->>> tables, but
->>> have a few differences. Add a new format type to represent the
->>> format. The
->>> input address size is 48-bits and the output address size is 40-bits
->>> (and
->>> possibly less?). Note that the later bifrost GPUs follow the standard
->>> 64-bit stage 1 format.
->>>
->>> The differences in the format compared to 64-bit stage 1 format are:
->>>
->>> The 3rd level page entry bits are 0x1 instead of 0x3 for page entries.
->>>
->>> The access flags are not read-only and unprivileged, but read and write.
->>> This is similar to stage 2 entries, but the memory attributes field
->>> matches
->>> stage 1 being an index.
->>>
->>> The nG bit is not set by the vendor driver. This one didn't seem to
->>> matter,
->>> but we'll keep it aligned to the vendor driver.
->>
->> The nG bit should be ignored by the hardware.
->>
->> The MMU in Midgard/Bifrost has a quirk similar to
->> IO_PGTABLE_QUIRK_TLBI_ON_MAP - you must perform a cache flush for the
->> GPU to (reliably) pick up new page table mappings.
->>
->> You may not have seen this because of the use of the JS_CONFIG_START_MMU
->> bit - this effectively performs a cache flush and TLB invalidate before
->> starting a job, however when using a GPU like T760 (e.g. on the Firefly
->> RK3288) this bit isn't being set. In my testing on the Firefly board I
->> saw GPU page faults because of this.
->>
->> There's two options for fixing this - a patch like below adds the quirk
->> mode to the MMU. Or alternatively always set JS_CONFIG_START_MMU on
->> jobs. In my testing both options solve the page faults.
->>
->> To be honest I don't know the reasoning behind kbase making the
->> JS_CONFIG_START_MMU bit conditional - I'm not aware of any reason why it
->> can't always be set. My guess is performance, but I haven't benchmarked
->> the difference between this and JS_CONFIG_START_MMU.
->>
->> -----8<----------
->>  From e3f75c7f04e43238dfc579029b8c11fb6b4a0c18 Mon Sep 17 00:00:00 2001
->> From: Steven Price <steven.price@arm.com>
->> Date: Thu, 4 Apr 2019 15:53:17 +0100
->> Subject: [PATCH] iommu: io-pgtable: IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE
->>
->> Midgard/Bifrost GPUs require a TLB invalidation when mapping pages,
->> implement IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE iommu page table
->> formats and add the quirk bit to Panfrost.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   drivers/gpu/drm/panfrost/panfrost_mmu.c |  1 +
->>   drivers/iommu/io-pgtable-arm.c          | 11 +++++++++--
->>   2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> index f3aad8591cf4..094312074d66 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> @@ -343,6 +343,7 @@ int panfrost_mmu_init(struct panfrost_device *pfdev)
->>       mmu_write(pfdev, MMU_INT_MASK, ~0);
->>
->>       pfdev->mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
->> +        .quirks        = IO_PGTABLE_QUIRK_TLBI_ON_MAP,
->>           .pgsize_bitmap    = SZ_4K, // | SZ_2M | SZ_1G),
->>           .ias        = 48,
->>           .oas        = 40,    /* Should come from dma mask? */
->> diff --git a/drivers/iommu/io-pgtable-arm.c
->> b/drivers/iommu/io-pgtable-arm.c
->> index 84beea1f47a7..45fd7bbdf9aa 100644
->> --- a/drivers/iommu/io-pgtable-arm.c
->> +++ b/drivers/iommu/io-pgtable-arm.c
->> @@ -505,7 +505,13 @@ static int arm_lpae_map(struct io_pgtable_ops *ops,
->> unsigned long iova,
->>        * Synchronise all PTE updates for the new mapping before there's
->>        * a chance for anything to kick off a table walk for the new iova.
->>        */
->> -    wmb();
->> +    if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_TLBI_ON_MAP) {
->> +        io_pgtable_tlb_add_flush(&data->iop, iova, size,
->> +                     ARM_LPAE_BLOCK_SIZE(2, data), false);
-> 
-> For correctness (in case this ever ends up used for something with
-> VMSA-like invalidation behaviour), the granule would need to be "size"
-> here, rather than effectively hard-coded.
+Commit-ID:  7c21383f3429dd70da39c0c7f1efa12377a47ab6
+Gitweb:     https://git.kernel.org/tip/7c21383f3429dd70da39c0c7f1efa12377a47ab6
+Author:     Kees Cook <keescook@chromium.org>
+AuthorDate: Thu, 4 Apr 2019 14:40:27 -0700
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Fri, 5 Apr 2019 12:34:35 +0200
 
-Ah yes - I did rather just copy/paste this from io-pgtable-arm-v7s with
-minor fix-ups.
+x86/build: Keep local relocations with ld.lld
 
-> However, since Mali's invalidations appear to operate on arbitrary
-> ranges, it would probably be a lot more efficient for the driver to
-> handle this case directly, by just issuing a single big invalidation
-> after the for_each_sg() loop in panfrost_mmu_map().
+The LLVM linker (ld.lld) defaults to removing local relocations, which
+causes KASLR boot failures. ld.bfd and ld.gold already handle this
+correctly. This adds the explicit instruction "--discard-none" during
+the link phase. There is no change in output for ld.bfd and ld.gold,
+but ld.lld now produces an image with all the needed relocations.
 
-Yes - that would probably be a better option. Although I think
-personally I'd lean towards just using JS_CONFIG_START_MMU for most
-cases. The only thing that won't handle is modifying the MMU while the
-job is running (e.g. faulting in pages). But that can be handled
-internally in Panfrost by invalidating the exact region which is being
-populated.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: clang-built-linux@googlegroups.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
+Link: https://github.com/ClangBuiltLinux/linux/issues/404
+---
+ arch/x86/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Steve
-
-> Robin.
-> 
->> +        io_pgtable_tlb_sync(&data->iop);
->> +    } else {
->> +        wmb();
->> +    }
->>
->>       return ret;
->>   }
->> @@ -800,7 +806,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg
->> *cfg, void *cookie)
->>       struct arm_lpae_io_pgtable *data;
->>
->>       if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
->> IO_PGTABLE_QUIRK_NO_DMA |
->> -                IO_PGTABLE_QUIRK_NON_STRICT))
->> +                IO_PGTABLE_QUIRK_NON_STRICT |
->> +                IO_PGTABLE_QUIRK_TLBI_ON_MAP))
->>           return NULL;
->>
->>       data = arm_lpae_alloc_pgtable(cfg);
->>
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index a587805c6687..56e748a7679f 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
+ export BITS
+ 
+ ifdef CONFIG_X86_NEED_RELOCS
+-        LDFLAGS_vmlinux := --emit-relocs
++        LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
+ 
+ #
