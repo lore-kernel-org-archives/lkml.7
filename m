@@ -2,155 +2,599 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A73C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97827C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C7C21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLsK7EXo"
+	by mail.kernel.org (Postfix) with ESMTP id 49E9521855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfDEUz6 (ORCPT
+        id S1726637AbfDEU4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 16:55:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36441 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfDEUz6 (ORCPT
+        Fri, 5 Apr 2019 16:56:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38623 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfDEU4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 16:55:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z5so3915088pfn.3;
-        Fri, 05 Apr 2019 13:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6Mfz37qY9DmaYXfENP4Z+htB5yyptzgabJS8sJC+1/g=;
-        b=cLsK7EXo83ftfYOTyBJqTAC12dvy8KDTHjVvdfPkgHz0uFdkq2ATmiSsdu0J9dmErK
-         gh2E+pohWI5H0xjRhykVkr3+ImwMHcXSlZhTTlNob0dY0qjjn4Qcespyicawf2eCxRDB
-         BOUlRFzlYW8UgQHbN7LiF8Po9FQi84LAMKYTCWIy8CyOfAcpH4JNKD3uFDNcre6TkVoW
-         PJeFA/VyaZ1D3a1F3Sv7lizvV5vL+t77nIHiYihKIFecJw9RNJi/kS3iKBSA9FmyKwhw
-         DIXvLgi4HpZk/yiIJd2qpw0P2jKGeQ2L7TFESbOuzi/3X86s7XwzKZ4KcPtcBf+kALxe
-         Xx/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=6Mfz37qY9DmaYXfENP4Z+htB5yyptzgabJS8sJC+1/g=;
-        b=pjrYIwbIzFiz6ObDzVgavOvnJ9/UUC8aKxNqw0C/VzpXLmmyewzMC/E9aTyVKStyby
-         1Afb/QWfneHucdc0bPemgSoIJw0h9l010yDKqblTnfG2QmsbZEWeXALjLuoIdv4HtQMf
-         zvoOEMKY+k9JSBTAuga0QQ0EA5fja3wLLeU1i6NdefMhtOxgQAyn1pHxyZA6W14jIt58
-         8SZbB65f9+vAW0zWS0z2D3apNoetPge9ez2vDlR0ffItaQpWcz1b6CCGiKhpy2RWOe+P
-         RRRWUk1/mWFBcsvS6BoYDc1Z4TAPZKINe55HOTBhXB8ZJUs09upIRdIefEZA4fkBd+iv
-         Cr2Q==
-X-Gm-Message-State: APjAAAXeshD7Z/9VNNOCE4EUO54WRUCDvIWORlflDaURTq53cSl+RK/s
-        4s3uqhw4ZWdchzl+Rz6wjVI=
-X-Google-Smtp-Source: APXvYqyNaUd3JADUyZ7ZT1m0mFdGTzx84ccg0rxCeIA+60BVs8jccQjc8nS6oxalkt67P6jE51yQOA==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr15212949pfc.9.1554497757604;
-        Fri, 05 Apr 2019 13:55:57 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x6sm2373877pfb.171.2019.04.05.13.55.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 13:55:56 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 13:55:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] watchdog: alim7101: Mark expected switch fall-through
-Message-ID: <20190405205555.GA20974@roeck-us.net>
-References: <20190320181658.GA6749@embeddedor>
- <e041fd69-0cbc-edb8-cc30-037b333e29cc@roeck-us.net>
- <9a839da8-d2ba-a856-16a7-2ed180ca7864@embeddedor.com>
- <779afa51-5700-ccb1-6761-b51e4227ef81@embeddedor.com>
+        Fri, 5 Apr 2019 16:56:11 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Ku3lD2907801
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 13:56:03 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35Ku2Wf2907797;
+        Fri, 5 Apr 2019 13:56:02 -0700
+Date:   Fri, 5 Apr 2019 13:56:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Daniel Lezcano <tipbot@zytor.com>
+Message-ID: <tip-bbba0e7c5cdadb47a91edea1d5cd0caadbbb016f@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        daniel.lezcano@linaro.org, hpa@zytor.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, hpa@zytor.com, daniel.lezcano@linaro.org,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20190328151336.5316-2-daniel.lezcano@linaro.org>
+References: <20190328151336.5316-2-daniel.lezcano@linaro.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:irq/core] genirq/timings: Add array suffix computation code
+Git-Commit-ID: bbba0e7c5cdadb47a91edea1d5cd0caadbbb016f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <779afa51-5700-ccb1-6761-b51e4227ef81@embeddedor.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:04:27PM -0500, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping:
-> 
-> Who can take this?
+Commit-ID:  bbba0e7c5cdadb47a91edea1d5cd0caadbbb016f
+Gitweb:     https://git.kernel.org/tip/bbba0e7c5cdadb47a91edea1d5cd0caadbbb016f
+Author:     Daniel Lezcano <daniel.lezcano@linaro.org>
+AuthorDate: Thu, 28 Mar 2019 16:13:36 +0100
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 5 Apr 2019 22:51:29 +0200
 
-I added it to my watchdog-next branch. Usually Wim will pick it up from there.
+genirq/timings: Add array suffix computation code
 
-Guenter
+The previous approach based on the variance was discarding values from
+the timings when they were considered as anomalies as stated by the
+normal law statistical model.
 
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 3/20/19 7:15 PM, Gustavo A. R. Silva wrote:
-> > 
-> > 
-> > On 3/20/19 7:12 PM, Guenter Roeck wrote:
-> >> On 3/20/19 11:16 AM, Gustavo A. R. Silva wrote:
-> >>> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> >>> cases where we are expecting to fall through.
-> >>>
-> >>> This patch fixes the following warning:
-> >>>
-> >>> drivers/watchdog/alim7101_wdt.c: In function ‘fop_ioctl’:
-> >>> drivers/watchdog/alim7101_wdt.c:279:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >>>     wdt_keepalive();
-> >>>     ^~~~~~~~~~~~~~~
-> >>> drivers/watchdog/alim7101_wdt.c:282:2: note: here
-> >>>    case WDIOC_GETTIMEOUT:
-> >>>    ^~~~
-> >>>
-> >>> Notice that, in this particular case, the /* Fall through */
-> >>> comment is placed at the very bottom of the case statement,
-> >>> which is what GCC is expecting to find.
-> >>>
-> >>> Warning level 3 was used: -Wimplicit-fallthrough=3
-> >>>
-> >>> This patch is part of the ongoing efforts to enabling
-> >>> -Wimplicit-fallthrough.
-> >>>
-> >>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> >>
-> >> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> >>
-> > 
-> > Thanks, Guenter. :)
-> > 
-> > --
-> > Gustavo
-> > 
-> >>> ---
-> >>>   drivers/watchdog/alim7101_wdt.c | 2 +-
-> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
-> >>> index 12f7ea62dddd..f5ada07e9202 100644
-> >>> --- a/drivers/watchdog/alim7101_wdt.c
-> >>> +++ b/drivers/watchdog/alim7101_wdt.c
-> >>> @@ -277,8 +277,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> >>>               return -EINVAL;
-> >>>           timeout = new_timeout;
-> >>>           wdt_keepalive();
-> >>> -        /* Fall through */
-> >>>       }
-> >>> +        /* Fall through */
-> >>>       case WDIOC_GETTIMEOUT:
-> >>>           return put_user(timeout, p);
-> >>>       default:
-> >>>
-> >>
+However in the interrupt life, there can be multiple anomalies due to the
+nature of the device generating the interrupts, and most of the time a
+repeating pattern can be observed, that is particulary true for network,
+console, MMC or SSD devices.
+
+The variance approach missed the patterns and it was only able to deal with
+the interrupt coming in regular intervals, thus reducing considerably the
+scope of what is predictable.
+
+In order to find out the repeating patterns, the interrupt intervals are
+grouped in a ilog2 basis to create a suite of numbers with small
+amplitude. Every group contains an exponential moving average of the values
+belonging to the group. The array suffix, a data structure used for string
+searching, data compression, etc ..., is built from the suite of numbers
+and the suffixes are then searched in this suite.
+
+The tests showed the algorithm is able to find all repeating patterns,
+as well as regular interval in less than 1us on x86-i7.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: rjw@rjwysocki.net
+Cc: ulf.hansson@linaro.org
+Cc: linux-pm@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190328151336.5316-2-daniel.lezcano@linaro.org
+
+---
+ kernel/irq/timings.c | 462 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 457 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
+index 3cde046a2bc8..90c735da15d0 100644
+--- a/kernel/irq/timings.c
++++ b/kernel/irq/timings.c
+@@ -8,6 +8,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/idr.h>
+ #include <linux/irq.h>
++#include <linux/math64.h>
++#include <linux/log2.h>
+ 
+ #include <trace/events/irq.h>
+ 
+@@ -17,10 +19,6 @@ DEFINE_STATIC_KEY_FALSE(irq_timing_enabled);
+ 
+ DEFINE_PER_CPU(struct irq_timings, irq_timings);
+ 
+-struct irqt_stat {
+-	u64     next_evt;
+-};
+-
+ static DEFINE_IDR(irqt_stats);
+ 
+ void irq_timings_enable(void)
+@@ -33,6 +31,410 @@ void irq_timings_disable(void)
+ 	static_branch_disable(&irq_timing_enabled);
+ }
+ 
++/*
++ * The main goal of this algorithm is to predict the next interrupt
++ * occurrence on the current CPU.
++ *
++ * Currently, the interrupt timings are stored in a circular array
++ * buffer every time there is an interrupt, as a tuple: the interrupt
++ * number and the associated timestamp when the event occurred <irq,
++ * timestamp>.
++ *
++ * For every interrupt occurring in a short period of time, we can
++ * measure the elapsed time between the occurrences for the same
++ * interrupt and we end up with a suite of intervals. The experience
++ * showed the interrupts are often coming following a periodic
++ * pattern.
++ *
++ * The objective of the algorithm is to find out this periodic pattern
++ * in a fastest way and use its period to predict the next irq event.
++ *
++ * When the next interrupt event is requested, we are in the situation
++ * where the interrupts are disabled and the circular buffer
++ * containing the timings is filled with the events which happened
++ * after the previous next-interrupt-event request.
++ *
++ * At this point, we read the circular buffer and we fill the irq
++ * related statistics structure. After this step, the circular array
++ * containing the timings is empty because all the values are
++ * dispatched in their corresponding buffers.
++ *
++ * Now for each interrupt, we can predict the next event by using the
++ * suffix array, log interval and exponential moving average
++ *
++ * 1. Suffix array
++ *
++ * Suffix array is an array of all the suffixes of a string. It is
++ * widely used as a data structure for compression, text search, ...
++ * For instance for the word 'banana', the suffixes will be: 'banana'
++ * 'anana' 'nana' 'ana' 'na' 'a'
++ *
++ * Usually, the suffix array is sorted but for our purpose it is
++ * not necessary and won't provide any improvement in the context of
++ * the solved problem where we clearly define the boundaries of the
++ * search by a max period and min period.
++ *
++ * The suffix array will build a suite of intervals of different
++ * length and will look for the repetition of each suite. If the suite
++ * is repeating then we have the period because it is the length of
++ * the suite whatever its position in the buffer.
++ *
++ * 2. Log interval
++ *
++ * We saw the irq timings allow to compute the interval of the
++ * occurrences for a specific interrupt. We can reasonibly assume the
++ * longer is the interval, the higher is the error for the next event
++ * and we can consider storing those interval values into an array
++ * where each slot in the array correspond to an interval at the power
++ * of 2 of the index. For example, index 12 will contain values
++ * between 2^11 and 2^12.
++ *
++ * At the end we have an array of values where at each index defines a
++ * [2^index - 1, 2 ^ index] interval values allowing to store a large
++ * number of values inside a small array.
++ *
++ * For example, if we have the value 1123, then we store it at
++ * ilog2(1123) = 10 index value.
++ *
++ * Storing those value at the specific index is done by computing an
++ * exponential moving average for this specific slot. For instance,
++ * for values 1800, 1123, 1453, ... fall under the same slot (10) and
++ * the exponential moving average is computed every time a new value
++ * is stored at this slot.
++ *
++ * 3. Exponential Moving Average
++ *
++ * The EMA is largely used to track a signal for stocks or as a low
++ * pass filter. The magic of the formula, is it is very simple and the
++ * reactivity of the average can be tuned with the factors called
++ * alpha.
++ *
++ * The higher the alphas are, the faster the average respond to the
++ * signal change. In our case, if a slot in the array is a big
++ * interval, we can have numbers with a big difference between
++ * them. The impact of those differences in the average computation
++ * can be tuned by changing the alpha value.
++ *
++ *
++ *  -- The algorithm --
++ *
++ * We saw the different processing above, now let's see how they are
++ * used together.
++ *
++ * For each interrupt:
++ *	For each interval:
++ *		Compute the index = ilog2(interval)
++ *		Compute a new_ema(buffer[index], interval)
++ *		Store the index in a circular buffer
++ *
++ *	Compute the suffix array of the indexes
++ *
++ *	For each suffix:
++ *		If the suffix is reverse-found 3 times
++ *			Return suffix
++ *
++ *	Return Not found
++ *
++ * However we can not have endless suffix array to be build, it won't
++ * make sense and it will add an extra overhead, so we can restrict
++ * this to a maximum suffix length of 5 and a minimum suffix length of
++ * 2. The experience showed 5 is the majority of the maximum pattern
++ * period found for different devices.
++ *
++ * The result is a pattern finding less than 1us for an interrupt.
++ *
++ * Example based on real values:
++ *
++ * Example 1 : MMC write/read interrupt interval:
++ *
++ *	223947, 1240, 1384, 1386, 1386,
++ *	217416, 1236, 1384, 1386, 1387,
++ *	214719, 1241, 1386, 1387, 1384,
++ *	213696, 1234, 1384, 1386, 1388,
++ *	219904, 1240, 1385, 1389, 1385,
++ *	212240, 1240, 1386, 1386, 1386,
++ *	214415, 1236, 1384, 1386, 1387,
++ *	214276, 1234, 1384, 1388, ?
++ *
++ * For each element, apply ilog2(value)
++ *
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Max period of 5, we take the last (max_period * 3) 15 elements as
++ * we can be confident if the pattern repeats itself three times it is
++ * a repeating pattern.
++ *
++ *	             8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Suffixes are:
++ *
++ *  1) 8, 15, 8, 8, 8  <- max period
++ *  2) 8, 15, 8, 8
++ *  3) 8, 15, 8
++ *  4) 8, 15           <- min period
++ *
++ * From there we search the repeating pattern for each suffix.
++ *
++ * buffer: 8, 15, 8, 8, 8, 8, 15, 8, 8, 8, 8, 15, 8, 8, 8
++ *         |   |  |  |  |  |   |  |  |  |  |   |  |  |  |
++ *         8, 15, 8, 8, 8  |   |  |  |  |  |   |  |  |  |
++ *                         8, 15, 8, 8, 8  |   |  |  |  |
++ *                                         8, 15, 8, 8, 8
++ *
++ * When moving the suffix, we found exactly 3 matches.
++ *
++ * The first suffix with period 5 is repeating.
++ *
++ * The next event is (3 * max_period) % suffix_period
++ *
++ * In this example, the result 0, so the next event is suffix[0] => 8
++ *
++ * However, 8 is the index in the array of exponential moving average
++ * which was calculated on the fly when storing the values, so the
++ * interval is ema[8] = 1366
++ *
++ *
++ * Example 2:
++ *
++ *	4, 3, 5, 100,
++ *	3, 3, 5, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 5, 3, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 4, 5, 112,
++ *	4, 3, 4, 110
++ *
++ * ilog2
++ *
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Max period 5:
++ *	   0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Suffixes:
++ *
++ *  1) 0, 0, 4, 0, 0
++ *  2) 0, 0, 4, 0
++ *  3) 0, 0, 4
++ *  4) 0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  X
++ *         0, 0, 4, 0, 0, |  X
++ *                        0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
++ *         0, 0, 4, 0, |  |  |  |  |  |  |  |  |  |  |
++ *                     0, 0, 4, 0, |  |  |  |  |  |  |
++ *                                 0, 0, 4, 0, |  |  |
++ *                                             0  0  4
++ *
++ * Pattern is found 3 times, the remaining is 1 which results from
++ * (max_period * 3) % suffix_period. This value is the index in the
++ * suffix arrays. The suffix array for a period 4 has the value 4
++ * at index 1.
++ */
++#define EMA_ALPHA_VAL		64
++#define EMA_ALPHA_SHIFT		7
++
++#define PREDICTION_PERIOD_MIN	2
++#define PREDICTION_PERIOD_MAX	5
++#define PREDICTION_FACTOR	4
++#define PREDICTION_MAX		10 /* 2 ^ PREDICTION_MAX useconds */
++#define PREDICTION_BUFFER_SIZE	16 /* slots for EMAs, hardly more than 16 */
++
++struct irqt_stat {
++	u64	last_ts;
++	u64	ema_time[PREDICTION_BUFFER_SIZE];
++	int	timings[IRQ_TIMINGS_SIZE];
++	int	circ_timings[IRQ_TIMINGS_SIZE];
++	int	count;
++};
++
++/*
++ * Exponential moving average computation
++ */
++static u64 irq_timings_ema_new(u64 value, u64 ema_old)
++{
++	s64 diff;
++
++	if (unlikely(!ema_old))
++		return value;
++
++	diff = (value - ema_old) * EMA_ALPHA_VAL;
++	/*
++	 * We can use a s64 type variable to be added with the u64
++	 * ema_old variable as this one will never have its topmost
++	 * bit set, it will be always smaller than 2^63 nanosec
++	 * interrupt interval (292 years).
++	 */
++	return ema_old + (diff >> EMA_ALPHA_SHIFT);
++}
++
++static int irq_timings_next_event_index(int *buffer, size_t len, int period_max)
++{
++	int i;
++
++	/*
++	 * The buffer contains the suite of intervals, in a ilog2
++	 * basis, we are looking for a repetition. We point the
++	 * beginning of the search three times the length of the
++	 * period beginning at the end of the buffer. We do that for
++	 * each suffix.
++	 */
++	for (i = period_max; i >= PREDICTION_PERIOD_MIN ; i--) {
++
++		int *begin = &buffer[len - (i * 3)];
++		int *ptr = begin;
++
++		/*
++		 * We look if the suite with period 'i' repeat
++		 * itself. If it is truncated at the end, as it
++		 * repeats we can use the period to find out the next
++		 * element.
++		 */
++		while (!memcmp(ptr, begin, i * sizeof(*ptr))) {
++			ptr += i;
++			if (ptr >= &buffer[len])
++				return begin[((i * 3) % i)];
++		}
++	}
++
++	return -1;
++}
++
++static u64 __irq_timings_next_event(struct irqt_stat *irqs, int irq, u64 now)
++{
++	int index, i, period_max, count, start, min = INT_MAX;
++
++	if ((now - irqs->last_ts) >= NSEC_PER_SEC) {
++		irqs->count = irqs->last_ts = 0;
++		return U64_MAX;
++	}
++
++	/*
++	 * As we want to find three times the repetition, we need a
++	 * number of intervals greater or equal to three times the
++	 * maximum period, otherwise we truncate the max period.
++	 */
++	period_max = irqs->count > (3 * PREDICTION_PERIOD_MAX) ?
++		PREDICTION_PERIOD_MAX : irqs->count / 3;
++
++	/*
++	 * If we don't have enough irq timings for this prediction,
++	 * just bail out.
++	 */
++	if (period_max <= PREDICTION_PERIOD_MIN)
++		return U64_MAX;
++
++	/*
++	 * 'count' will depends if the circular buffer wrapped or not
++	 */
++	count = irqs->count < IRQ_TIMINGS_SIZE ?
++		irqs->count : IRQ_TIMINGS_SIZE;
++
++	start = irqs->count < IRQ_TIMINGS_SIZE ?
++		0 : (irqs->count & IRQ_TIMINGS_MASK);
++
++	/*
++	 * Copy the content of the circular buffer into another buffer
++	 * in order to linearize the buffer instead of dealing with
++	 * wrapping indexes and shifted array which will be prone to
++	 * error and extremelly difficult to debug.
++	 */
++	for (i = 0; i < count; i++) {
++		int index = (start + i) & IRQ_TIMINGS_MASK;
++
++		irqs->timings[i] = irqs->circ_timings[index];
++		min = min_t(int, irqs->timings[i], min);
++	}
++
++	index = irq_timings_next_event_index(irqs->timings, count, period_max);
++	if (index < 0)
++		return irqs->last_ts + irqs->ema_time[min];
++
++	return irqs->last_ts + irqs->ema_time[index];
++}
++
++static inline void irq_timings_store(int irq, struct irqt_stat *irqs, u64 ts)
++{
++	u64 old_ts = irqs->last_ts;
++	u64 interval;
++	int index;
++
++	/*
++	 * The timestamps are absolute time values, we need to compute
++	 * the timing interval between two interrupts.
++	 */
++	irqs->last_ts = ts;
++
++	/*
++	 * The interval type is u64 in order to deal with the same
++	 * type in our computation, that prevent mindfuck issues with
++	 * overflow, sign and division.
++	 */
++	interval = ts - old_ts;
++
++	/*
++	 * The interrupt triggered more than one second apart, that
++	 * ends the sequence as predictible for our purpose. In this
++	 * case, assume we have the beginning of a sequence and the
++	 * timestamp is the first value. As it is impossible to
++	 * predict anything at this point, return.
++	 *
++	 * Note the first timestamp of the sequence will always fall
++	 * in this test because the old_ts is zero. That is what we
++	 * want as we need another timestamp to compute an interval.
++	 */
++	if (interval >= NSEC_PER_SEC) {
++		irqs->count = 0;
++		return;
++	}
++
++	/*
++	 * Get the index in the ema table for this interrupt. The
++	 * PREDICTION_FACTOR increase the interval size for the array
++	 * of exponential average.
++	 */
++	index = likely(interval) ?
++		ilog2((interval >> 10) / PREDICTION_FACTOR) : 0;
++
++	/*
++	 * Store the index as an element of the pattern in another
++	 * circular array.
++	 */
++	irqs->circ_timings[irqs->count & IRQ_TIMINGS_MASK] = index;
++
++	irqs->ema_time[index] = irq_timings_ema_new(interval,
++						    irqs->ema_time[index]);
++
++	irqs->count++;
++}
++
+ /**
+  * irq_timings_next_event - Return when the next event is supposed to arrive
+  *
+@@ -61,6 +463,12 @@ void irq_timings_disable(void)
+  */
+ u64 irq_timings_next_event(u64 now)
+ {
++	struct irq_timings *irqts = this_cpu_ptr(&irq_timings);
++	struct irqt_stat *irqs;
++	struct irqt_stat __percpu *s;
++	u64 ts, next_evt = U64_MAX;
++	int i, irq = 0;
++
+ 	/*
+ 	 * This function must be called with the local irq disabled in
+ 	 * order to prevent the timings circular buffer to be updated
+@@ -68,7 +476,51 @@ u64 irq_timings_next_event(u64 now)
+ 	 */
+ 	lockdep_assert_irqs_disabled();
+ 
+-	return 0;
++	if (!irqts->count)
++		return next_evt;
++
++	/*
++	 * Number of elements in the circular buffer: If it happens it
++	 * was flushed before, then the number of elements could be
++	 * smaller than IRQ_TIMINGS_SIZE, so the count is used,
++	 * otherwise the array size is used as we wrapped. The index
++	 * begins from zero when we did not wrap. That could be done
++	 * in a nicer way with the proper circular array structure
++	 * type but with the cost of extra computation in the
++	 * interrupt handler hot path. We choose efficiency.
++	 *
++	 * Inject measured irq/timestamp to the pattern prediction
++	 * model while decrementing the counter because we consume the
++	 * data from our circular buffer.
++	 */
++
++	i = (irqts->count & IRQ_TIMINGS_MASK) - 1;
++	irqts->count = min(IRQ_TIMINGS_SIZE, irqts->count);
++
++	for (; irqts->count > 0; irqts->count--, i = (i + 1) & IRQ_TIMINGS_MASK) {
++		irq = irq_timing_decode(irqts->values[i], &ts);
++		s = idr_find(&irqt_stats, irq);
++		if (s)
++			irq_timings_store(irq, this_cpu_ptr(s), ts);
++	}
++
++	/*
++	 * Look in the list of interrupts' statistics, the earliest
++	 * next event.
++	 */
++	idr_for_each_entry(&irqt_stats, s, i) {
++
++		irqs = this_cpu_ptr(s);
++
++		ts = __irq_timings_next_event(irqs, i, now);
++		if (ts <= now)
++			return now;
++
++		if (ts < next_evt)
++			next_evt = ts;
++	}
++
++	return next_evt;
+ }
+ 
+ void irq_timings_free(int irq)
