@@ -2,95 +2,193 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EEEC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4BBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F9121726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24BE21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lYsILg2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfDEP1v (ORCPT
+        id S1731413AbfDEP2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:27:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37578 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726291AbfDEP1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:27:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4A6F0AE63;
-        Fri,  5 Apr 2019 15:27:50 +0000 (UTC)
-Subject: Re: [patch V2 25/29] x86/irq/32: Invoke irq_ctx_init() from
- init_IRQ()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20190405150658.237064784@linutronix.de>
- <20190405150930.696035459@linutronix.de>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <57f9916b-e08a-0ae2-fd8b-2e2da59f58eb@suse.com>
-Date:   Fri, 5 Apr 2019 17:27:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 5 Apr 2019 11:28:39 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34953 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEP2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:28:39 -0400
+Received: by mail-it1-f195.google.com with SMTP id w15so10180527itc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tIZ3qm9pXjxuNhy1+AdW9XxEPkH8NHyKBuiIWXegYWw=;
+        b=lYsILg2Rh1RCTpI1s5A4EqOD1CWy1qBNXu7bADpO5JAwwtMw1kwXjbVZgZap8M5wn9
+         mVD//q0eBClSX7o2kYrIyefEe+PTjZclK2lgJHnS/ZEhWFIAbqWwz76gw3wKk8B4pSlH
+         61Gi3kZsvfu+3HuhEN10GtoSJ6D5N0137cRUA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tIZ3qm9pXjxuNhy1+AdW9XxEPkH8NHyKBuiIWXegYWw=;
+        b=rbqsEIbKKMU60qUZd2OUwl0zpuj2j9VF6soQlupS/46YveNxu9zFYmDPk3M5rSvHDw
+         asT/gbrBS1wYpLBfrOW3w98gzl7xGi0nSp2LtwXAfIkZm4v+Fneosbg5+a9qNg3As6kq
+         T6BBHBvZmg6szzGWPpQMPBGphzdEKaR7vd+a79//GOf3se4nx8+TSXWOCZ8Y65UcQYNN
+         P8kvjbgyP2guobhR+7NFOJVfSzvV0Pc6plaQMKts9Uc4t9VM2W5yn40+MfCcVg4e1Qlw
+         XfnQq5L6EJtU30/CPmofq7xjbYcUCOIGJIWAESH1WgNQESRrKtiSZ6jfPReAYEYpZVM5
+         SaoA==
+X-Gm-Message-State: APjAAAW8aUKefcqKLgefon5a46m67oWIZ89AN++rMAZ4hUWFxwxpoUQp
+        fLvtxF4+fYWp8s0U4GvB+PXHtA==
+X-Google-Smtp-Source: APXvYqyEk+cLgS5S669v1x71FvVim5ngJZ5HmXOe6LnxJXXOGlBSPYJIHvL8ONxyTjnOy7AHpJMyPg==
+X-Received: by 2002:a05:660c:202:: with SMTP id y2mr10682281itj.0.1554478118243;
+        Fri, 05 Apr 2019 08:28:38 -0700 (PDT)
+Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:3175:8c2d:44b6:cfea])
+        by smtp.gmail.com with ESMTPSA id g1sm8493113ion.2.2019.04.05.08.28.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 05 Apr 2019 08:28:37 -0700 (PDT)
+From:   twawrzynczak@chromium.org
+To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/chrome: mfd/cros_ec_debugfs: Add debugfs entry to retrieve EC uptime.
+Date:   Fri,  5 Apr 2019 09:28:34 -0600
+Message-Id: <20190405152834.7725-1-twawrzynczak@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190325170250.2547-1-twawrzynczak@chromium.org>
+References: <20190325170250.2547-1-twawrzynczak@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190405150930.696035459@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/04/2019 17:07, Thomas Gleixner wrote:
-> irq_ctx_init() is invoked from native_init_IRQ() or from xen_init_IRQ()
-> code. There is no reason to have this split. The interrupt stacks must be
-> allocated no matter what.
-> 
-> Invoke it from init_IRQ() before invoking the native or XEN init
-> implementation.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Juergen Gross <jgross@suse.com>
+From: Tim Wawrzynczak <twawrzynczak@chromium.org>
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+The new debugfs entry 'uptime' is being made available to userspace so that
+a userspace daemon can synchronize EC logs with host time.
 
+Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
+---
+Changelist:
+ - Moved uptime file from sysfs to debugfs (/sys/kernel/debug/cros_ec/uptime)
+ - Fixed ordering of local variables in cros_ec_uptime_read.
+Tested against ChromeOS kernel v4.14
+---
+ Documentation/ABI/testing/debugfs-cros-ec | 10 +++++
+ drivers/platform/chrome/cros_ec_debugfs.c | 54 +++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
 
-Juergen
+diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+new file mode 100644
+index 000000000000..24b781c67a4c
+--- /dev/null
++++ b/Documentation/ABI/testing/debugfs-cros-ec
+@@ -0,0 +1,10 @@
++What:		/sys/kernel/debug/cros_ec/uptime
++Date:		March 2019
++KernelVersion:	5.1
++Description:
++		Read-only.
++		Reads the EC's current uptime information
++		(using EC_CMD_GET_UPTIME_INFO) and prints
++		time_since_ec_boot_ms into the file.
++		This is used for synchronizing AP host time
++		with the cros_ec log.
+diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+index 71308766e891..3ea42008a59e 100644
+--- a/drivers/platform/chrome/cros_ec_debugfs.c
++++ b/drivers/platform/chrome/cros_ec_debugfs.c
+@@ -201,6 +201,40 @@ static int cros_ec_console_log_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++static ssize_t cros_ec_uptime_read(struct file *file,
++				   char __user *user_buf,
++				   size_t count,
++				   loff_t *ppos)
++{
++	struct cros_ec_debugfs *debug_info = file->private_data;
++	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
++	struct {
++		struct cros_ec_command msg;
++		struct ec_response_uptime_info resp;
++	} __packed ec_buf;
++	struct ec_response_uptime_info *resp;
++	struct cros_ec_command *msg;
++	char read_buf[32];
++	int ret;
++
++	msg = &ec_buf.msg;
++	resp = (struct ec_response_uptime_info *)msg->data;
++
++	msg->command = EC_CMD_GET_UPTIME_INFO;
++	msg->version = 0;
++	msg->insize = sizeof(*resp);
++	msg->outsize = 0;
++
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	if (ret < 0)
++		return ret;
++
++	ret = scnprintf(read_buf, sizeof(read_buf), "%u\n",
++			resp->time_since_ec_boot_ms);
++
++	return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
++}
++
+ static ssize_t cros_ec_pdinfo_read(struct file *file,
+ 				   char __user *user_buf,
+ 				   size_t count,
+@@ -269,6 +303,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
+ 	.llseek = default_llseek,
+ };
+ 
++const struct file_operations cros_ec_uptime_fops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.read = cros_ec_uptime_read,
++	.llseek = default_llseek,
++};
++
+ static int ec_read_version_supported(struct cros_ec_dev *ec)
+ {
+ 	struct ec_params_get_cmd_versions_v1 *params;
+@@ -413,6 +454,15 @@ static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
+ 	return 0;
+ }
+ 
++static int cros_ec_create_uptime(struct cros_ec_debugfs *debug_info)
++{
++	if (!debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
++				&cros_ec_uptime_fops))
++		return -ENOMEM;
++
++	return 0;
++}
++
+ static int cros_ec_debugfs_probe(struct platform_device *pd)
+ {
+ 	struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
+@@ -442,6 +492,10 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+ 	if (ret)
+ 		goto remove_log;
+ 
++	ret = cros_ec_create_uptime(debug_info);
++	if (ret)
++		goto remove_log;
++
+ 	ec->debug_info = debug_info;
+ 
+ 	dev_set_drvdata(&pd->dev, ec);
+-- 
+2.20.1
+
