@@ -2,153 +2,245 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9B5C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1334EC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF212146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2AD2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554490727;
+	bh=jD5xzicU+7ZXVYfabqjsIAi+ZftcZLuosrYDdzxVhhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cvrrX0Om0WTy/g8Ha0qjkl97HnsYq95d+pjTADeTPE0Yn6DZaGr//8zZkvwLaBDWT
+	 QYHApZRp9OEkz1zwLimqCT7teKeHwIU7WBv/PT0yhFi1XnkK61ueKudC9eHwqm/SuT
+	 HCUv7OdqRk78SGaUktaF9Lrap9wPtvG96iPYMMG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbfDESz1 (ORCPT
+        id S1731707AbfDES6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:55:27 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:36252 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731183AbfDESz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:55:27 -0400
-Received: by mail-it1-f194.google.com with SMTP id y10so11267466itc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 11:55:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zcz/sKmP2HSiW6fy+3CoqixG4dXseL+/zdfyDvrPkn4=;
-        b=TvFnNYR57uUrTpLJiOP6LgdDt1h8F5U9n2tc4IMxbeXEKg3Ea/IZv7YN4p5NfDGPqP
-         n5b5TTikcENzawRXnRIJHzrJ5isVsKFE6jjOmvpV39ubUZztfM7ttQJffTrExfLSvabl
-         QsO5WRlHbPh9xbbr+H+2kaivftaAbnbWKiCDBKNO/5DtJocG7yHr2S/xu3jHfLiBdS2I
-         JHulcg7X4EDesD6ckftewsLha6SraVx9gR26wyki24C9PgQsJr2fHI2vmwyeb65Joev3
-         tybDba5jV6ylx+dPE96XqPtpONHK8fFiwIH09pdIcN+svZzNqidrOPAWrrZVGskOo/XS
-         M4cQ==
-X-Gm-Message-State: APjAAAX7QJD0ylv9C8LEv16MH9NZ5jQTHm6+H5BJo7oMPeELxzqxTDr6
-        9VPfxprSNKdNg2i2jdY1PrXe0HhzCE6Za1HCpGr2lQ==
-X-Google-Smtp-Source: APXvYqwRGfFen8jKU0AqFlCG0M/5JkAHwrpVXhNmjiUCLhzyUwQ/tVY1H6Kb5PK5yrC6bWeBuqilNft+4M83tofcca4=
-X-Received: by 2002:a24:65c8:: with SMTP id u191mr10745619itb.137.1554490525905;
- Fri, 05 Apr 2019 11:55:25 -0700 (PDT)
+        Fri, 5 Apr 2019 14:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731183AbfDES6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 14:58:46 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7A52171F;
+        Fri,  5 Apr 2019 18:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554490724;
+        bh=jD5xzicU+7ZXVYfabqjsIAi+ZftcZLuosrYDdzxVhhA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1M0yqwpifnmo4YaHHKK/7CI1VMvd/HbH8LRZPGxdWc2MfobxlzElQixK8D51bDP+c
+         OP3cP5gSzZXtO27Kl8kSlyyDjPQXredtHLoK4IQ/IauJnjw8lYhOspflwIxmC2Jg//
+         ly9rbRGBEMgoKe2V5CevRaa1CZFFjIQ+DubOakHY=
+Date:   Fri, 5 Apr 2019 13:58:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com,
+        skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org,
+        heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net,
+        maxime.ripard@bootlin.com, andy.gross@linaro.org,
+        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
+        enric.balletbo@collabora.com, ezequiel@collabora.com,
+        stefan.wahren@i2se.com, marc.w.gonzalez@free.fr,
+        l.stach@pengutronix.de, tpiepho@impinj.com,
+        hayashi.kunihiko@socionext.com, yue.wang@amlogic.com,
+        shawn.lin@rock-chips.com, xiaowei.bao@nxp.com,
+        devicetree@vger.kernel.org, mmaddireddy@nvidia.com,
+        kthota@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190405185842.GC26522@google.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
+ <20190329203159.GG24180@google.com>
+ <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
+ <20190402183110.GE141706@google.com>
+ <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
+ <20190403173641.GI141706@google.com>
+ <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
 MIME-Version: 1.0
-References: <20190404172545.20928-1-kasong@redhat.com> <20190405140929.pycfea7drnpb2sug@treble>
- <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
- <20190405165715.fpgh4ggkmnqdtfwm@treble> <CACPcB9fPk2G=_k=K-1xOpPKU_R9F32LDo_bQ+vkLYJ8tajedMA@mail.gmail.com>
- <20190405172659.4hph4rocqgofkb73@treble>
-In-Reply-To: <20190405172659.4hph4rocqgofkb73@treble>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Sat, 6 Apr 2019 02:55:14 +0800
-Message-ID: <CACPcB9edcYDfXGKdYwJ9tAZg4oXE1BnVjZ-fVs0pqybb5i+ahw@mail.gmail.com>
-Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 6, 2019 at 1:27 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
+> On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
+> > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
+> > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
+> > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
+> > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
+> > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
+> > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
+> > > > > > > present in Tegra194 SoC.
+> > > > 
+> > > >     - Why does this chip require pcie_pme_disable_msi()?  The only other
+> > > >       use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
+> > > >       ("PCI PM: Make it possible to force using INTx for PCIe PME
+> > > >       signaling").
+> > > 
+> > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
+> > 
+> > What does the spec say about this?  Is hardware supposed to
+> > support MSI for PME?  Given that MSI Wind U-100 and Tegra194 are
+> > the only two cases we know about where PME via MSI isn't
+> > supported, it seems like there must be either a requirement for
+> > that or some mechanism for the OS to figure this out, e.g., a
+> > capability bit.
 >
-> On Sat, Apr 06, 2019 at 01:05:55AM +0800, Kairui Song wrote:
-> > On Sat, Apr 6, 2019 at 12:57 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > On Fri, Apr 05, 2019 at 11:13:02PM +0800, Kairui Song wrote:
-> > > > Hi Josh, thanks for the review, I tried again, using latest upstream
-> > > > kernel commit ea2cec24c8d429ee6f99040e4eb6c7ad627fe777:
-> > > > # uname -a
-> > > > Linux localhost.localdomain 5.1.0-rc3+ #29 SMP Fri Apr 5 22:53:05 CST
-> > > > 2019 x86_64 x86_64 x86_64 GNU/Linux
-> > > >
-> > > > Having following config:
-> > > > > CONFIG_UNWINDER_ORC=y
-> > > > > # CONFIG_UNWINDER_FRAME_POINTER is not set
-> > > > and CONFIG_FRAME_POINTER is off too.
-> > > >
-> > > > Then record something with perf (also latest upstream version):
-> > > > ./perf record -g -e kmem:* -c 1
-> > > >
-> > > > Interrupt it, then view the output:
-> > > > perf script | less
-> > > >
-> > > > Then I notice the stacktrace in kernle is incomplete like following.
-> > > > Did I miss anything?
-> > > > --------------
-> > > > lvmetad   617 [000]    55.600786:                     kmem:kfree:
-> > > > call_site=ffffffffb219e269 ptr=(nil)
-> > > >         ffffffffb22b2d1c kfree+0x11c (/lib/modules/5.1.0-rc3+/build/vmlinux)
-> > > >             7fba7e58fd0f __select+0x5f (/usr/lib64/libc-2.28.so)
-> > > >
-> > > > kworker/u2:5-rp   171 [000]    55.628529:
-> > > > kmem:kmem_cache_alloc: call_site=ffffffffb20e963d
-> > > > ptr=0xffffa07f39c581e0 bytes_req=80 bytes_alloc=80
-> > > > gfp_flags=GFP_ATOMIC
-> > > >         ffffffffb22b0dec kmem_cache_alloc+0x13c
-> > > > (/lib/modules/5.1.0-rc3+/build/vmlinux)
-> > > > -------------
-> > > >
-> > > > And for the patch, I debugged the problem, and found how it happend:
-> > > > The reason is that we use following code for fetching the registers on
-> > > > a trace point:
-> > > > ...snip...
-> > > > #define perf_arch_fetch_caller_regs(regs, __ip) { \
-> > > > (regs)->ip = (__ip); \
-> > > > (regs)->bp = caller_frame_pointer(); \
-> > > > (regs)->cs = __KERNEL_CS;
-> > > > ...snip...
-> > >
-> > > Thanks, I was able to recreate.  It only happens when unwinding from a
-> > > tracepoint.  I haven't investigated yet, but
-> > > perf_arch_fetch_caller_regs() looks highly suspect, since it's doing
-> > > (regs)->bp = caller_frame_pointer(), even for ORC.
-> > >
-> > > My only explanation for how your patch works is that RBP just happens to
-> > > point to somewhere higher on the stack, causing the unwinder to start at
-> > > a semi-random location.  I suspect the real "fix" is that you're no
-> > > longer passing the regs to unwind_start().
-> > >
-> >
-> > Yes that's right. Simply not passing regs to unwind_start will let the
-> > unwind start from the perf sample handling functions, and introduce a
-> > lot of "noise", so I let it skipped the frames until it reached the
-> > frame of the trace point. The regs->bp should still points to the
-> > stack base of the function which get called in the tracepoint that
-> > trigger perf sample, so let unwinder skip all the frames above it made
-> > it work.
+> AFAIU, Spec doesn't say anything about whether PME interrupt should
+> be through MSI or by other means. As far as Tegra194 is concerned,
+> there are only two interrupt lanes that go from PCIe IP to GIC, one
+> being legacy interrupt (that represents legacy interrupts coming
+> over PCIe bus from downstream devices and also the events happening
+> internal to root port) and the other being MSI interrupt (that
+> represents MSI interrupts coming over PCIe bus from downstream
+> devices). Since hardware folks had a choice to route PME interrupts
+> either through legacy interrupt line or through MSI interrupt line
+> and legacy interrupt line was chosen as a design choice. That being
+> the case at hardware level, I tried to inform the same through
+> pcie_pme_disable_msi() to PCIe sub-system that PME interrupts are
+> not expected over MSI.
+
+There's something wrong here.  Either the question of how PME is
+signaled is generic and the spec provides a way for the OS to discover
+that method, or it's part of the device-specific architecture that
+each host bridge driver has to know about its device.  If the former,
+we need to make the PCI core smart enough to figure it out.  If the
+latter, we need a better interface than this ad hoc
+pcie_pme_disable_msi() thing.  But if it is truly the latter, your
+current code is sufficient and we can refine it over time.
+
+> > > > > > I see that an earlier patch added "bus" to struct pcie_port.
+> > > > > > I think it would be better to somehow connect to the
+> > > > > > pci_host_bridge struct.  Several other drivers already do
+> > > > > > this; see uses of pci_host_bridge_from_priv().
+> > > > > 
+> > > > > All non-DesignWare based implementations save their private data
+> > > > > structure in 'private' pointer of struct pci_host_bridge and use
+> > > > > pci_host_bridge_from_priv() to get it back. But, DesignWare
+> > > > > based implementations save pcie_port in 'sysdata' and nothing in
+> > > > > 'private' pointer. So,  I'm not sure if
+> > > > > pci_host_bridge_from_priv() can be used in this case. Please do
+> > > > > let me know if you think otherwise.
+> > > > 
+> > > > DesignWare-based drivers should have a way to retrieve the
+> > > > pci_host_bridge pointer.  It doesn't have to be *exactly* the same
+> > > > as non-DesignWare drivers, but it should be similar.
+> > > 
+> > > I gave my reasoning as to why with the current code, it is not
+> > > possible to get the pci_host_bridge structure pointer from struct
+> > > pcie_port pointer in another thread as a reply to Thierry Reding's
+> > > comments. Since Jishen'g changes to support remove functionality are
+> > > accepted, I think using bus pointer saved in struct pcie_port
+> > > pointer shouldn't be any issue now. Please do let me know if that is
+> > > something not acceptable.
+> > > 
+> > > > > > That would give you the bus, as well as flags like
+> > > > > > no_ext_tags, native_aer, etc, which this driver, being a host
+> > > > > > bridge driver that's responsible for this part of the
+> > > > > > firmware/OS interface, may conceivably need.
+> > 
+> > I think saving the pp->root_bus pointer as Jisheng's patch does is a
+> > sub-optimal solution.  If we figure out how to save the
+> > pci_host_bridge pointer, we automatically get the root bus pointer as
+> > well.
+> > 
+> > It may require some restructuring to save the pci_host_bridge pointer,
+> > but I doubt it's really *impossible*.
 >
-> Ah, now I think I understand, thanks.  perf_arch_fetch_caller_regs()
-> puts it in regs->bp, and then perf_callchain_kernel() reads that value
-> to tell the unwinder where to start dumping the stack trace.  I guess
-> that explains why your patch works, though it still seems very odd that
-> perf_arch_fetch_caller_regs() is using regs->bp to store the frame
-> address.  Maybe regs->sp would be more appropriate.
+> Is it OK to save pci_host_bridge pointer in pcie_port structure
+> directly? I see that as another way to get pci_host_bridge pointer
+> from pcie_port structure. My understanding is that, to get
+> pci_host_bridge pointer, either pcie_port structure should be part
+> of pci_host_bridge structure (which is the case with all non-DW
+> implementations) or pcie_port should have a pointer to some
+> structure which is directly (and not by means of a pointer) part of
+> pci_host_bridge structure so that container_of() can be used to get
+> pci_host_bridge.  As I see, there is no data object of
+> pci_host_bridge whose pointer is saved in pcie_port structure. In
+> fact, in reverse, pcie_port's struct dev pointer is saved as parent
+> to pci_host_bridge's struct dev. So, another way would be to iterate
+> over the children of pcie_port's struct dev pointer to find
+> pci_host_bridge's dev pointer and from there get pci_host_bridge
+> through container_of. But, I think is complicating it more than
+> using bus pointer from pcie_port. I'm not sure if I'm able to convey
+> the issue I'm facing here to get pci_host_bridge from pcie_port, but
+> doing any other thing seems complicating it even more.
+
+What I suspect should happen eventually is the DWC driver should call
+devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
+That would require a little reorganization of the DWC data structures,
+but it would be good to be more consistent.
+
+For now, I think stashing the pointer in pcie_port or dw_pcie would be
+OK.  I'm not 100% clear on the difference, but it looks like either
+should be common across all the DWC drivers, which is what we want.
+
+(Tangent, dw_pcie_host_init() currently uses pci_alloc_host_bridge(),
+not devm_pci_alloc_host_bridge(), even though it uses other devm
+interfaces.  This looks like a probable buglet.)
+
+(Tangent 2, devm_pci_alloc_host_bridge() doesn't initialize
+bridge->native_aer, etc, as pci_alloc_host_bridge() does.  This looks
+like my fault from 02bfeb484230 ("PCI/portdrv: Simplify PCIe feature
+permission checking"), and it probably means none of those PCIe
+services work correctly for these native host bridge drivers.)
+
+> > > > > > > +static int tegra_pcie_dw_runtime_suspend(struct device *dev)
+> > > > > > > +{
+> > > > > > > +	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
+> > > > > > > +
+> > > > > > > +	tegra_pcie_downstream_dev_to_D0(pcie);
+> > > > > > > +
+> > > > > > > +	pci_stop_root_bus(pcie->pci.pp.bus);
+> > > > > > > +	pci_remove_root_bus(pcie->pci.pp.bus);
+> > > > > > 
+> > > > > > Why are you calling these?  No other drivers do this except in
+> > > > > > their .remove() methods.  Is there something special about
+> > > > > > Tegra, or is this something the other drivers *should* be
+> > > > > > doing?
+> > > > > 
+> > > > > Since this API is called by remove, I'm removing the hierarchy
+> > > > > to safely bring down all the devices. I'll have to re-visit this
+> > > > > part as Jisheng Zhang's patches
+> > > > > https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+> > > > > are now approved and I need to verify this part after
+> > > > > cherry-picking Jisheng's changes.
+> > > > 
+> > > > Tegra194 should do this the same way as other drivers, independent
+> > > > of Jisheng's changes.
+> > > 
+> > > When other Designware implementations add remove functionality, even
+> > > they should be calling these APIs (Jisheng also mentioned the same
+> > > in his commit message)
+> > 
+> > My point is that these APIs should be called from driver .remove()
+> > methods, not from .runtime_suspend() methods.
 >
-> --
-> Josh
+> .remove() internally calls pm_runtime_put_sync() API which calls
+> .runtime_suspend(). I made a new patch to add a host_deinit() call
+> which make all these calls. Since host_init() is called from inside
+> .runtime_resume() of this driver, to be in sync, I'm now calling
+> host_deinit() from inside .runtime_suspend() API.
 
-Right, thanks for the comment. And after second thought there are some
-other issues here in the patch indeed, it still won't fix the problem
-when used with ebpf and tracepoint, I made some mistake about handling
-the callchain with different ways, will rethink about this and post an
-update later.
+I think this is wrong.  pci_stop_root_bus() will detach all the
+drivers from all the devices.  We don't want to do that if we're
+merely runtime suspending the host bridge, do we?
 
-
---
-Best Regards,
-Kairui Song
+Bjorn
