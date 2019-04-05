@@ -2,93 +2,108 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E18C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02847C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B7721872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A9A21872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a5k5MLHg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GvdVdZRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbfDEMF0 (ORCPT
+        id S1729641AbfDEMKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:05:26 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57607 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfDEMF0 (ORCPT
+        Fri, 5 Apr 2019 08:10:20 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46274 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfDEMKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:05:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35C5CYa2743193
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 05:05:13 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35C5CD62743189;
-        Fri, 5 Apr 2019 05:05:12 -0700
-Date:   Fri, 5 Apr 2019 05:05:12 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-4fa5ecda2bf96be7464eb406df8aba9d89260227@git.kernel.org>
-Cc:     jpoimboe@redhat.com, tglx@linutronix.de, lkp@intel.com,
-        peterz@infradead.org, mingo@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, lkp@intel.com,
-          tglx@linutronix.de, mingo@kernel.org, jpoimboe@redhat.com,
-          peterz@infradead.org
-In-Reply-To: <3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com>
-References: <3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Add rewind_stack_do_exit() to the
- noreturn list
-Git-Commit-ID: 4fa5ecda2bf96be7464eb406df8aba9d89260227
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 5 Apr 2019 08:10:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CBDEA60E59; Fri,  5 Apr 2019 12:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554466219;
+        bh=PkDkxY6JlcVrOZdN2LV1ttq74DT8+wLBsYSqUzu8L7k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=a5k5MLHgW1/1t8BHly1JqKpy0BlgM2fJNr5OQe1tZjiSpZm+gxNHJ6l17lALywG5H
+         v+K/nRn9fmkxlVR33OaW1h3kgakTIng/T8VI9ESHrDu9+JAsYxf/jlpx7/nwqWOA4h
+         rXVh0M5FFPPUjk/qTPl99ki+2oLGlToICncrQ6wk=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CF3D660E59;
+        Fri,  5 Apr 2019 12:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554466215;
+        bh=PkDkxY6JlcVrOZdN2LV1ttq74DT8+wLBsYSqUzu8L7k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GvdVdZRbisrmbAQSHeic25IE6ODywSIFuquMmPbkbI+91euxkuOQENfMqjs5MilqH
+         EPNQOFkIHUJGdlm0P2HfKBcYkp8wm3Pke/zhWrgJ75fiv85WMyU/FxNEbmnYtYcsbu
+         C8uJu/KAst0KvI6g5Q0NGpR6ekvQP+wAG7u9cW+g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CF3D660E59
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 01/20] ASoC: imx-pcm: Switch to SPDX identifier
+To:     Andra Danciu <andradanciu1997@gmail.com>, timur@kernel.org,
+        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, linux-imx@nxp.com,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     daniel.baluta@nxp.com
+References: <20190405115010.28838-1-andradanciu1997@gmail.com>
+ <20190405115010.28838-2-andradanciu1997@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <0508e035-1b4f-346b-bd9a-ccb34c41a69b@codeaurora.org>
+Date:   Fri, 5 Apr 2019 17:40:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190405115010.28838-2-andradanciu1997@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4fa5ecda2bf96be7464eb406df8aba9d89260227
-Gitweb:     https://git.kernel.org/tip/4fa5ecda2bf96be7464eb406df8aba9d89260227
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Thu, 4 Apr 2019 12:17:35 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 5 Apr 2019 13:30:51 +0200
 
-objtool: Add rewind_stack_do_exit() to the noreturn list
+On 4/5/2019 5:19 PM, Andra Danciu wrote:
+> Adopt the SPDX license identifier headers to ease license compliance
+> management.
+>
+> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-This fixes the following warning seen on GCC 7.3:
-
-  arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_regs()
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com
-
----
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5dde107083c6..479196aeb409 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -165,6 +165,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"fortify_panic",
- 		"usercopy_abort",
- 		"machine_real_restart",
-+		"rewind_stack_do_exit",
- 	};
- 
- 	if (func->bind == STB_WEAK)
+Cheers,
+-Mukesh
+> ---
+>   sound/soc/fsl/imx-pcm.h | 6 +-----
+>   1 file changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
+> index 133c4470acad..5dd406774d3e 100644
+> --- a/sound/soc/fsl/imx-pcm.h
+> +++ b/sound/soc/fsl/imx-pcm.h
+> @@ -1,13 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
+>    *
+>    * This code is based on code copyrighted by Freescale,
+>    * Liam Girdwood, Javier Martin and probably others.
+> - *
+> - * This program is free software; you can redistribute  it and/or modify it
+> - * under  the terms of  the GNU General  Public License as published by the
+> - * Free Software Foundation;  either version 2 of the  License, or (at your
+> - * option) any later version.
+>    */
+>   
+>   #ifndef _IMX_PCM_H
