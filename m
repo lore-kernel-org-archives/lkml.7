@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F56C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD6921738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA11321872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554472176;
-	bh=bUAg6EAurqjHSyc4YImb/XTHcFPiojfgfAa23OOiarI=;
+	s=default; t=1554472231;
+	bh=DMiIHM54l+v6TDCFo5GJg0LsMf/TNEW9BlpPao9RmMo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X4bPQezGXCE2y6gfa90IrljnzwV4chgQJto+Qq6tlOPEB0Y6k2fy/sEIQLs9GVuCb
-	 jTIVBQsPDghdhie9jAE5L6hco1MLni/6z9d0YLsGkXwD5RSUltGoVql1n7pyogFawQ
-	 Ra87Ecpu/BP2met7+VM2ZBVsEZn8rEzJWEIGeELE=
+	b=l0nqfJisf5XneEUizwT+pRoDwpfRVYITvz4osaXHLr9ca8tbf9uMNUGTFAN6LJTG6
+	 C/IUQINBNgeCYcZ3MGEzMGhgVZYqrrlS1Y151Rk734vmuUcyRHoFq+bSsWOk6y5VFP
+	 3Bog/xbuicoUVv7HYAU+G3InLR2IxAgam7LRD778=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbfDENte (ORCPT
+        id S1731127AbfDENu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36994 "EHLO mail.kernel.org"
+        Fri, 5 Apr 2019 09:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDENte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:49:34 -0400
+        id S1726594AbfDENu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 09:50:29 -0400
 Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554682186A;
-        Fri,  5 Apr 2019 13:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED6C21738;
+        Fri,  5 Apr 2019 13:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554472172;
-        bh=bUAg6EAurqjHSyc4YImb/XTHcFPiojfgfAa23OOiarI=;
+        s=default; t=1554472227;
+        bh=DMiIHM54l+v6TDCFo5GJg0LsMf/TNEW9BlpPao9RmMo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RZ4wKu+XAsyDH+lRmMqnm6r8SD+aIIJrwtzBcEsqpyNErHc+iR6AyoUy5vLzEfhNY
-         O3n7TbZC/VohEkTUngSpnXPBT1kzDhjWZXpMdJYuQNhN0D0L4FtHKZWbu6TsMxbCsk
-         Mn1OgJXCzxPEdipP9/P/fWnLdRMuIKP8EQY9BFPg=
+        b=OSvHYJ+NHUFU5yDDz8DVr/zmS5rMaO7SNPEDJQusgFEkRRMyhKFD+Ra41gLqLkAb6
+         wJWT6f0F3qS8faCFWNOm7Ge5p6ghlQHEphnqP8zPCVUkWC38Y5ppgt2eCvUiGB9CQF
+         YFQ836/lVV+e7nsxHBn80CcwyoyJo8Blk4qhUr0s=
 Received: by earth.universe (Postfix, from userid 1000)
-        id 59FB23C08D5; Fri,  5 Apr 2019 15:49:30 +0200 (CEST)
-Date:   Fri, 5 Apr 2019 15:49:30 +0200
+        id AE04B3C08D5; Fri,  5 Apr 2019 15:50:25 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 15:50:25 +0200
 From:   Sebastian Reichel <sre@kernel.org>
 To:     Lubomir Rintel <lkundrak@v3.sk>
 Cc:     Darren Hart <dvhart@infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] power: supply: olpc_battery: Have the framework
- register sysfs files for us
-Message-ID: <20190405134930.acntvwnep3ne6uol@earth.universe>
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 09/10] power: supply: olpc_battery: Add OLPC XO 1.75
+ support
+Message-ID: <20190405135025.v4sn33mkgdrsjvtm@earth.universe>
 References: <20190310162419.11861-1-lkundrak@v3.sk>
- <20190310162419.11861-11-lkundrak@v3.sk>
+ <20190310162419.11861-10-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="unphcry5q6yu32bu"
+        protocol="application/pgp-signature"; boundary="zr6rkb6gtz4ibzpy"
 Content-Disposition: inline
-In-Reply-To: <20190310162419.11861-11-lkundrak@v3.sk>
+In-Reply-To: <20190310162419.11861-10-lkundrak@v3.sk>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,20 +66,19 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---unphcry5q6yu32bu
+--zr6rkb6gtz4ibzpy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sun, Mar 10, 2019 at 05:24:19PM +0100, Lubomir Rintel wrote:
-> The power framework gained ability to register groups of sysfs
-> attributes in commit cef8fe6a382c ("power: supply: core: add support for
-> custom sysfs attributes").
+On Sun, Mar 10, 2019 at 05:24:18PM +0100, Lubomir Rintel wrote:
+> The battery and the protocol are essentially the same as OLPC XO 1.5,
+> but the responses from the EC are LSB first.
 >=20
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Suggested-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 >=20
 > ---
 
@@ -88,170 +87,129 @@ Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 -- Sebastian
 
 > Changes since v5:
-> - Added this patch
+> - s/int little_endian/bool little_endian/
 >=20
->  drivers/power/supply/olpc_battery.c | 64 ++++++++++++++++-------------
->  1 file changed, 35 insertions(+), 29 deletions(-)
+> Changes since v2:
+> - Fix the version conditional
+>=20
+> Changes since v1:
+> - s/s16 ecword_to_cpu/u16 ecword_to_cpu/
+> - s/u16 ec_byte/u16 ec_word/
+>=20
+>  drivers/power/supply/olpc_battery.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
 >=20
 > diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
 lpc_battery.c
-> index 0d67158c13d6..c628d3a47e14 100644
+> index 8be44c717d85..0d67158c13d6 100644
 > --- a/drivers/power/supply/olpc_battery.c
 > +++ b/drivers/power/supply/olpc_battery.c
-> @@ -551,7 +551,7 @@ static ssize_t olpc_bat_eeprom_read(struct file *filp=
-, struct kobject *kobj,
->  	return count;
->  }
-> =20
-> -static const struct bin_attribute olpc_bat_eeprom =3D {
-> +static struct bin_attribute olpc_bat_eeprom =3D {
->  	.attr =3D {
->  		.name =3D "eeprom",
->  		.mode =3D S_IRUGO,
-> @@ -575,7 +575,7 @@ static ssize_t olpc_bat_error_read(struct device *dev,
->  	return sprintf(buf, "%d\n", ec_byte);
->  }
-> =20
-> -static const struct device_attribute olpc_bat_error =3D {
-> +static struct device_attribute olpc_bat_error =3D {
->  	.attr =3D {
->  		.name =3D "error",
->  		.mode =3D S_IRUGO,
-> @@ -583,6 +583,27 @@ static const struct device_attribute olpc_bat_error =
-=3D {
->  	.show =3D olpc_bat_error_read,
+> @@ -58,6 +58,7 @@ struct olpc_battery_data {
+>  	struct power_supply *olpc_bat;
+>  	char bat_serial[17];
+>  	bool new_proto;
+> +	bool little_endian;
 >  };
 > =20
-> +static struct attribute *olpc_bat_sysfs_attrs[] =3D {
-> +	&olpc_bat_error.attr,
-> +	NULL
-> +};
-> +
-> +static struct bin_attribute *olpc_bat_sysfs_bin_attrs[] =3D {
-> +	&olpc_bat_eeprom,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group olpc_bat_sysfs_group =3D {
-> +	.attrs =3D olpc_bat_sysfs_attrs,
-> +	.bin_attrs =3D olpc_bat_sysfs_bin_attrs,
-> +
-> +};
-> +
-> +static const struct attribute_group *olpc_bat_sysfs_groups[] =3D {
-> +	&olpc_bat_sysfs_group,
-> +	NULL
-> +};
+>  /*********************************************************************
+> @@ -323,6 +324,14 @@ static int olpc_bat_get_voltage_max_design(union pow=
+er_supply_propval *val)
+>  	return ret;
+>  }
+> =20
+> +static u16 ecword_to_cpu(struct olpc_battery_data *data, u16 ec_word)
+> +{
+> +	if (data->little_endian)
+> +		return le16_to_cpu(ec_word);
+> +	else
+> +		return be16_to_cpu(ec_word);
+> +}
 > +
 >  /*********************************************************************
->   *		Initialisation
+>   *		Battery properties
 >   *********************************************************************/
-> @@ -615,7 +636,8 @@ static int olpc_battery_suspend(struct platform_devic=
-e *pdev,
+> @@ -395,7 +404,7 @@ static int olpc_bat_get_property(struct power_supply =
+*psy,
+>  		if (ret)
+>  			return ret;
 > =20
->  static int olpc_battery_probe(struct platform_device *pdev)
->  {
-> -	struct power_supply_config psy_cfg =3D {};
-> +	struct power_supply_config bat_psy_cfg =3D {};
-> +	struct power_supply_config ac_psy_cfg =3D {};
->  	struct olpc_battery_data *data;
->  	uint8_t status;
->  	uint8_t ecver;
-> @@ -654,10 +676,11 @@ static int olpc_battery_probe(struct platform_devic=
-e *pdev)
+> -		val->intval =3D (s16)be16_to_cpu(ec_word) * 9760L / 32;
+> +		val->intval =3D ecword_to_cpu(data, ec_word) * 9760L / 32;
+>  		break;
+>  	case POWER_SUPPLY_PROP_CURRENT_AVG:
+>  	case POWER_SUPPLY_PROP_CURRENT_NOW:
+> @@ -403,7 +412,7 @@ static int olpc_bat_get_property(struct power_supply =
+*psy,
+>  		if (ret)
+>  			return ret;
 > =20
->  	/* Ignore the status. It doesn't actually matter */
+> -		val->intval =3D (s16)be16_to_cpu(ec_word) * 15625L / 120;
+> +		val->intval =3D ecword_to_cpu(data, ec_word) * 15625L / 120;
+>  		break;
+>  	case POWER_SUPPLY_PROP_CAPACITY:
+>  		ret =3D olpc_ec_cmd(EC_BAT_SOC, NULL, 0, &ec_byte, 1);
+> @@ -434,21 +443,21 @@ static int olpc_bat_get_property(struct power_suppl=
+y *psy,
+>  		if (ret)
+>  			return ret;
 > =20
-> -	psy_cfg.of_node =3D pdev->dev.of_node;
-> -	psy_cfg.drv_data =3D data;
-> +	ac_psy_cfg.of_node =3D pdev->dev.of_node;
-> +	ac_psy_cfg.drv_data =3D data;
+> -		val->intval =3D (s16)be16_to_cpu(ec_word) * 10 / 256;
+> +		val->intval =3D ecword_to_cpu(data, ec_word) * 10 / 256;
+>  		break;
+>  	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+>  		ret =3D olpc_ec_cmd(EC_AMB_TEMP, NULL, 0, (void *)&ec_word, 2);
+>  		if (ret)
+>  			return ret;
 > =20
-> -	data->olpc_ac =3D devm_power_supply_register(&pdev->dev, &olpc_ac_desc,=
- &psy_cfg);
-> +	data->olpc_ac =3D devm_power_supply_register(&pdev->dev, &olpc_ac_desc,
-> +								&ac_psy_cfg);
->  	if (IS_ERR(data->olpc_ac))
->  		return PTR_ERR(data->olpc_ac);
+> -		val->intval =3D (int)be16_to_cpu(ec_word) * 10 / 256;
+> +		val->intval =3D (int)ecword_to_cpu(data, ec_word) * 10 / 256;
+>  		break;
+>  	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
+>  		ret =3D olpc_ec_cmd(EC_BAT_ACR, NULL, 0, (void *)&ec_word, 2);
+>  		if (ret)
+>  			return ret;
 > =20
-> @@ -671,37 +694,21 @@ static int olpc_battery_probe(struct platform_devic=
-e *pdev)
->  		olpc_bat_desc.num_properties =3D ARRAY_SIZE(olpc_xo1_bat_props);
->  	}
+> -		val->intval =3D (s16)be16_to_cpu(ec_word) * 6250 / 15;
+> +		val->intval =3D ecword_to_cpu(data, ec_word) * 6250 / 15;
+>  		break;
+>  	case POWER_SUPPLY_PROP_SERIAL_NUMBER:
+>  		ret =3D olpc_ec_cmd(EC_BAT_SERIAL, NULL, 0, (void *)&ser_buf, 8);
+> @@ -622,7 +631,11 @@ static int olpc_battery_probe(struct platform_device=
+ *pdev)
+>  	if (ret)
+>  		return ret;
 > =20
-> -	data->olpc_bat =3D devm_power_supply_register(&pdev->dev, &olpc_bat_des=
-c, &psy_cfg);
-> +	bat_psy_cfg.of_node =3D pdev->dev.of_node;
-> +	bat_psy_cfg.drv_data =3D data;
-> +	bat_psy_cfg.attr_grp =3D olpc_bat_sysfs_groups;
-> +
-> +	data->olpc_bat =3D devm_power_supply_register(&pdev->dev, &olpc_bat_des=
-c,
-> +								&bat_psy_cfg);
->  	if (IS_ERR(data->olpc_bat))
->  		return PTR_ERR(data->olpc_bat);
-> =20
-> -	ret =3D device_create_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret =3D device_create_file(&data->olpc_bat->dev, &olpc_bat_error);
-> -	if (ret)
-> -		goto error_failed;
-> -
->  	if (olpc_ec_wakeup_available()) {
->  		device_set_wakeup_capable(&data->olpc_ac->dev, true);
->  		device_set_wakeup_capable(&data->olpc_bat->dev, true);
->  	}
-> =20
->  	return 0;
-> -
-> -error_failed:
-> -	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
-> -	return ret;
-> -}
-> -
-> -static int olpc_battery_remove(struct platform_device *pdev)
-> -{
-> -	struct olpc_battery_data *data =3D platform_get_drvdata(pdev);
-> -
-> -	device_remove_file(&data->olpc_bat->dev, &olpc_bat_error);
-> -	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
-> -	return 0;
->  }
-> =20
->  static const struct of_device_id olpc_battery_ids[] =3D {
-> @@ -717,7 +724,6 @@ static struct platform_driver olpc_battery_driver =3D=
- {
->  		.of_match_table =3D olpc_battery_ids,
->  	},
->  	.probe =3D olpc_battery_probe,
-> -	.remove =3D olpc_battery_remove,
->  	.suspend =3D olpc_battery_suspend,
->  };
-> =20
+> -	if (ecver > 0x44) {
+> +	if (of_find_compatible_node(NULL, NULL, "olpc,xo1.75-ec")) {
+> +		/* XO 1.75 */
+> +		data->new_proto =3D true;
+> +		data->little_endian =3D true;
+> +	} else if (ecver > 0x44) {
+>  		/* XO 1 or 1.5 with a new EC firmware. */
+>  		data->new_proto =3D true;
+>  	} else if (ecver < 0x44) {
 > --=20
 > 2.20.1
 >=20
 
---unphcry5q6yu32bu
+--zr6rkb6gtz4ibzpy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynXOoACgkQ2O7X88g7
-+po67Q/+JS2eQ+iEKpeTffBWTUvRYiV+Fpj+B6N7E5rO1DOK5TnhWXyobmNpfz69
-AaNMYf1e+c4w5555zZxRZ/itZesLirJmJ205XeUPWDpfr5y1mGNiCpDq+7BBSyRk
-0pNitWKWjaae9gIPfXz1iOBz1s35HFquIM34OPqxRZ2TsuLyfeJ+OJgVKiaETTSe
-kJJ78Xe1F7rKNlXf0I6pkO+8FipBuTadlBXcn3sC90aFx5ewnGyCs5AhvnjYnIJV
-iJ+jeIS5c0EVeUMD9X7DEk4wPQGJEIHbUUx2DJ0hZkr26Nx1xCxYVWGltSBCVtfr
-woEv2A7d+GL9zIkznZz6FAuGPxT1WKM9F8lFlkiq+8bQ6vZpFmNtscVrvnIkue6N
-+v/EF9E2/zNfsP8e7dBo6DuVmBq255uMkL6IZlu5DiucpKWQhre3AjKC/RuZqq1w
-yavx/Ga81EvoKt2uCPJwgqAJSoYVlAaVog56Qa5Sa2HWmRPL7vPhGBi2TG56vtbU
-T7vmAKHW6yt88uHr7zgQ8EJULeGgmNJhJGaMrP5846Vp6cvwTk6YozNCrXQ4CShs
-avrpOBjJQ6iukLBEWDxozfBF1TM/2FRZUeDYadUuQVJuEBgHkUunb0WPmwMmQOMW
-Cl78VeVF5iLctfjEStiOPalgZhIvjWo5RGQyUP05Si8pABkvft4=
-=LZl8
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynXSEACgkQ2O7X88g7
++ppOKw//et6UMKFAZCoUWBKGPxze0tyeRPa/oo9hnQop3QzOHxAsyZRIpgJ9PYnE
+PGzNvZc3/CNgaBjIt1HFS1A5NXWmW77Go8NrEo8R1y4bYJ7MyxAc9hD2FOS6b7/A
+gRxexw9yf9RAq0s8xeUHOGcf2i9OwX2+StGkyMixPPh90R9hE7bPufCKzzoBabRx
+inIZ3FT9UB8wP6aCgGhENHjKlZYnbIM4Jbd3G4u0d7ZiOVMxA2LnEuU7lQRx0sjw
+o02bXLk0/UsECSDiq+wwhSI8S3p8KeRrI6EB5vNnfuvzGGPTGkbzr5guc8g1XMb6
+Rkm+ZA0tgAO+PI4/KmQoyX3qbJxvEa/2fCOQBXrL200XFk/WuKNSyHameLY5HmKa
+1YAirLEGjzo+e87HznGunCAxaoIQRM5eunh+yAbIybSlgb0Gr7FbrdpOB5Gcn3zr
+D5KP/GEgGrk/7Z51cEfG5iuZ7PzaB+wVy8QoDWJ1hKl4AG3uANkw1zmogorljLyk
+JuWOgGvRhAbATVkC83IWFZwTT6VyMWGAWHsb8SYqYT1SHTHl5HJv+xm0AMJWD3e3
+g0Bb2QgPYQiDyw2vl56SYGMiMvHP4iWcDaNPI0eBRFk+Qt+y7Vw6wYcnGGqVDuuP
+JxYvgJboBKXWIMqkddMyncOY1vEH5iRTUiWsPuZrGlBoTp9bKUE=
+=mpI2
 -----END PGP SIGNATURE-----
 
---unphcry5q6yu32bu--
+--zr6rkb6gtz4ibzpy--
