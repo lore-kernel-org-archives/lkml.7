@@ -6,78 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3937AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8EEC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091B421871
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F56218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554508214;
-	bh=u3P4tk1kvMghjUHx88TH8Usa4r9gAwWAha6tlz56KsA=;
+	s=default; t=1554508218;
+	bh=cV4KojDww8ghKRnroe/+5yFSac1Q07I+KKePpbDgHIs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=dPpENHgtm/NmBsd5eukXzQF2Ln2kbCnuR4CHOZGYDkh6KhLtjr4qqS2PzoMqeXx2A
-	 DBeYXNpoErTDd7LJ1djoXMKk/jK6wjEtunfS/YJk36/D5pcQGzxkxAwaVUUAnKoUIi
-	 RgUSoQjaogkto6GSG8OIqxygMYDLQAVHAVz/1UYw=
+	b=yxnfI+wOeLLJgQKQOM4etcLiboS+tpX/8GxcoTqi5u4KzYaw8h9kHHG///kcx5HvS
+	 eDCFFXClgmB4WwgQ3eIWt1v0wRkPYNLebmYLdhmyGt5dNLgQ4z9DWvgOFa5VTGVt9z
+	 TlTvFlyta1tjBdDhsMW9FkLCBTuThfV7EUSWNZck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfDEXuI (ORCPT
+        id S1726544AbfDEXuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:50:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
+        Fri, 5 Apr 2019 19:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbfDEXuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:50:07 -0400
-Subject: Re: [GIT PULL] tracing/syscalls: Remove args i and n from
- syscall_get_arguments()
+        id S1726353AbfDEXuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:50:08 -0400
+Subject: Re: [GIT PULL] KVM fixes for Linux 5.1-rc4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1554508207;
-        bh=u3P4tk1kvMghjUHx88TH8Usa4r9gAwWAha6tlz56KsA=;
+        bh=cV4KojDww8ghKRnroe/+5yFSac1Q07I+KKePpbDgHIs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Prb93HlEMEuzcLEq9LLGPDErx4xR4SaPcM82hoq/3T0rMEQBvahURCQCIUZAUOQS1
-         mnpfJpGPEvXgnnl36ovEsYNg7IPn2zqZ9EPQzTTvl2dAcjN9cVc6S05euTFHyLaeZF
-         zM3hYVFjFlZL3vBqvUzhGmf5pGvOBOYqit9/YyoM=
+        b=DgEZfXca7QKmhln0pns9Q+ST1x/gHyTvzHKAc8LEUhxZkLvb147z3GFIqKa3q33Lc
+         kj0aGUN9hWdgVj9+3fiNHAf/DTiHIBLeTWBwFCtp6Hy4kxHXi2Cjl9nspYWeHpVdxm
+         VGbTteTd3QmQd/KnChV7el/FLEH7XLvQVvRA2oyI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190405101832.1273bfac@gandalf.local.home>
-References: <20190405101832.1273bfac@gandalf.local.home>
+In-Reply-To: <1554504347-8396-1-git-send-email-pbonzini@redhat.com>
+References: <1554504347-8396-1-git-send-email-pbonzini@redhat.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190405101832.1273bfac@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
- trace-5.1-rc3
-X-PR-Tracked-Commit-Id: 32d92586629a8b3637a3c9361709818e25f327ad
+X-PR-Tracked-Message-Id: <1554504347-8396-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: c73f4c998e1fd4249b9edfa39e23f4fda2b9b041
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 970b766cfd3f3cb7275bf51144b1678c547882fc
-Message-Id: <155450820724.23520.4400725686653324143.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: bc5725f97408ce78e61735858a113f514738ba3b
+Message-Id: <155450820772.23520.14483709064431854316.pr-tracker-bot@kernel.org>
 Date:   Fri, 05 Apr 2019 23:50:07 +0000
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Palmer Dabbelt <palmer@sifive.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 5 Apr 2019 10:18:32 -0400:
+The pull request you sent on Sat,  6 Apr 2019 00:45:47 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-5.1-rc3
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/970b766cfd3f3cb7275bf51144b1678c547882fc
+https://git.kernel.org/torvalds/c/bc5725f97408ce78e61735858a113f514738ba3b
 
 Thank you!
 
