@@ -2,150 +2,169 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F16C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A10C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B0621871
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025221871
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfDELio (ORCPT
+        id S1731144AbfDELis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:38:44 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33621 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730642AbfDELio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:38:44 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BcYjH2734462
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:38:35 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BcYaG2734459;
-        Fri, 5 Apr 2019 04:38:34 -0700
-Date:   Fri, 5 Apr 2019 04:38:34 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-c2b3c170db610896e4e633cba2135045333811c2@git.kernel.org>
-Cc:     tglx@linutronix.de, hpa@zytor.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
-        ak@linux.intel.com
-Reply-To: mingo@kernel.org, ak@linux.intel.com, acme@redhat.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          jolsa@kernel.org, hpa@zytor.com
-In-Reply-To: <20190326221823.11518-2-andi@firstfloor.org>
-References: <20190326221823.11518-2-andi@firstfloor.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf stat: Revert checks for duration_time
-Git-Commit-ID: c2b3c170db610896e4e633cba2135045333811c2
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 5 Apr 2019 07:38:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50163 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730642AbfDELis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 07:38:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 04:38:47 -0700
+X-IronPort-AV: E=Sophos;i="5.60,312,1549958400"; 
+   d="scan'208";a="131720024"
+Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2019 04:38:45 -0700
+Message-ID: <f5b2d3d661c9a19b4e354ed525c054af467de557.camel@linux.intel.com>
+Subject: Re: [PATCH] drm/i915: Use drm_dev_unplug()
+From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        michal.wajdeczko@intel.com
+Date:   Fri, 05 Apr 2019 13:38:43 +0200
+In-Reply-To: <155445268803.8259.16095445514284244974@skylake-alporthouse-com>
+References: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
+         <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
+         <51c51c4d1a2facbc1dfb240b94377027e263872e.camel@linux.intel.com>
+         <155445268803.8259.16095445514284244974@skylake-alporthouse-com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
+ 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c2b3c170db610896e4e633cba2135045333811c2
-Gitweb:     https://git.kernel.org/tip/c2b3c170db610896e4e633cba2135045333811c2
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Tue, 26 Mar 2019 15:18:20 -0700
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Apr 2019 14:49:24 -0300
+On Fri, 2019-04-05 at 09:24 +0100, Chris Wilson wrote:
+> Quoting Janusz Krzysztofik (2019-04-05 09:11:54)
+> > On Fri, 2019-04-05 at 08:41 +0100, Chris Wilson wrote:
+> > > Quoting Janusz Krzysztofik (2019-04-05 08:26:57)
+> > > > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
+> > > > 
+> > > > The driver does not currently support unbinding from a device
+> > > > which
+> > > > is
+> > > > in use.  Since open file descriptors may still be pointing into
+> > > > kernel
+> > > > memory where the device structures used to be, entirely correct
+> > > > kernel
+> > > > panics protect the driver from being unbound as we should not
+> > > > be
+> > > > unbinding it before those dangling pointers have been made
+> > > > safe.
+> > > > 
+> > > > According to the documentation found inside
+> > > > drivers/gpu/drm/drm_drv.c,
+> > > > drm_dev_unplug() should be used instead of drm_dev_unregister()
+> > > > in
+> > > > order to make a device inaccessible to users as soon as it is
+> > > > unpluged.
+> > > > Follow that advice to make those possibly dangling pointers
+> > > > safe,
+> > > > protected by DRM layer from a user who is otherwise left
+> > > > pointing
+> > > > into
+> > > > possibly reused kernel memory after the driver has been unbound
+> > > > from
+> > > > the device.
+> > > > 
+> > > > Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com
+> > > > >
+> > > > ---
+> > > >  drivers/gpu/drm/i915/i915_drv.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/i915/i915_drv.c
+> > > > b/drivers/gpu/drm/i915/i915_drv.c
+> > > > index 9df65d386d11..66163378c481 100644
+> > > > --- a/drivers/gpu/drm/i915/i915_drv.c
+> > > > +++ b/drivers/gpu/drm/i915/i915_drv.c
+> > > > @@ -1596,7 +1596,7 @@ static void i915_driver_unregister(struct
+> > > > drm_i915_private *dev_priv)
+> > > >         i915_pmu_unregister(dev_priv);
+> > > >  
+> > > >         i915_teardown_sysfs(dev_priv);
+> > > > -       drm_dev_unregister(&dev_priv->drm);
+> > > > +       drm_dev_unplug(&dev_priv->drm);
+> > > 
+> > > I think we may have our onion inverted here. We want to stop the
+> > > users
+> > > as the first step, then start removing the entries. (That will
+> > > also
+> > > nicely invert the order from register, which is what we typically
+> > > expect).
+> > > 
+> > > After calling i915_driver_unregister(); call
+> > > i915_gem_set_wedged() to
+> > > immediately (give or take external fences) cancel inflight
+> > > operations.
+> > 
+> > OK, thanks.  Do you prefer them squashed or as serparate patches?
+> 
+> Quite happy to do the s/unregister/unplug/ and move in one go. Have a
+> pre-emptive
+> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+> on that as that seems to be the right thing to do.
+> 
+> And there should be no issues in placing a i915_gem_set_wedged()
+> immediately after the call to i915_driver_unregister, so if you
+> include
+> a line of commentary about why, for example
+> 
+> /*
+>  * After unregistering the device to prevent any new users, cancel
+>  * all in-flight requests so that we can quickly unbind the active
+>  * resources.
+>  */
+> i915_gem_set_wedged(dev_priv);
+> 
+> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
 
-perf stat: Revert checks for duration_time
+I've given it some testing, no side effects with test workloads I've
+tried, and looks like it at least helps to prevent from making the
+device actually wedged.
 
-This reverts e864c5ca145e ("perf stat: Hide internal duration_time
-counter") but doing it manually since the code has now moved to a
-different file.
+With these two patches, plus the one we discussed yesterday, and yet
+another one I'm going to submit soon, I'm now able to unbind the driver
+from a device while a workload is running on it, unload the module,
+reload it and successfully perform basic GEM health checks, all in a
+quick succession :-).
 
-The next patch will properly implement duration_time as a full event, so
-no need to hide it anymore.
+Unfortunately, not 100% reproducible, as well as not the case with
+device unplug simulated by writing 1 to device/remove sysfs file.
+Surely that needs the work you describe below to be done first.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190326221823.11518-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/stat-display.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+Thanks for your cooperation,
+Janusz
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6d043c78f3c2..3324f23c7efc 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -18,11 +18,6 @@
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
- 
--static bool is_duration_time(struct perf_evsel *evsel)
--{
--	return !strcmp(evsel->name, "duration_time");
--}
--
- static void print_running(struct perf_stat_config *config,
- 			  u64 run, u64 ena)
- {
-@@ -628,9 +623,6 @@ static void print_aggr(struct perf_stat_config *config,
- 		ad.id = id = config->aggr_map->map[s];
- 		first = true;
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
--
- 			ad.val = ad.ena = ad.run = 0;
- 			ad.nr = 0;
- 			if (!collect_data(config, counter, aggr_cb, &ad))
-@@ -848,8 +840,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- 		if (prefix)
- 			fputs(prefix, config->output);
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			if (first) {
- 				aggr_printout(config, counter, cpu, 0);
- 				first = false;
-@@ -906,8 +896,6 @@ static void print_metric_headers(struct perf_stat_config *config,
- 
- 	/* Print metrics headers only */
- 	evlist__for_each_entry(evlist, counter) {
--		if (is_duration_time(counter))
--			continue;
- 		os.evsel = counter;
- 		out.ctx = &os;
- 		out.print_metric = print_metric_header;
-@@ -1136,15 +1124,11 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 		break;
- 	case AGGR_THREAD:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_aggr_thread(config, _target, counter, prefix);
- 		}
- 		break;
- 	case AGGR_GLOBAL:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_counter_aggr(config, counter, prefix);
- 		}
- 		if (metric_only)
-@@ -1155,8 +1139,6 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 			print_no_aggr_metric(config, evlist, prefix);
- 		else {
- 			evlist__for_each_entry(evlist, counter) {
--				if (is_duration_time(counter))
--					continue;
- 				print_counter(config, counter, prefix);
- 			}
- 		}
+
+> 
+> I think overall though, we need to go through i915_driver_unload()
+> and
+> push the module cleanup operations to i915_driver_release -- that
+> will
+> take a bit of surgery to separate the different phases that are
+> currently smashed together.
+> -Chris
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
