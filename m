@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09615C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750ECC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D142B2146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFA72146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbfDEStl (ORCPT
+        id S1731739AbfDESu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:49:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43758 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 14:50:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56442 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbfDEStl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:49:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1731183AbfDESu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 14:50:29 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7AE0E3168EC1;
-        Fri,  5 Apr 2019 18:49:40 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1A7A589C44;
+        Fri,  5 Apr 2019 18:50:28 +0000 (UTC)
 Received: from [10.36.112.53] (ovpn-112-53.ams2.redhat.com [10.36.112.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75B0C60143;
-        Fri,  5 Apr 2019 18:49:37 +0000 (UTC)
-Subject: Re: [patch] kvm: svm: fix potential get_num_contig_pages overflow
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26B671001DC8;
+        Fri,  5 Apr 2019 18:50:14 +0000 (UTC)
+Subject: Re: [patch] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
 To:     David Rientjes <rientjes@google.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Cfir Cohen <cfir@google.com>,
         Brijesh Singh <brijesh.singh@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <alpine.DEB.2.21.1903191517380.256304@chino.kir.corp.google.com>
+        Joerg Roedel <joro@8bytes.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.1903251146160.188887@chino.kir.corp.google.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
@@ -93,67 +92,73 @@ Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
  DduC0U3xYkfbGAUvbxeepjgzp0uEnBXfPTy09JGpgWbg0w91GyfT/ujKaGd4vxG2Ei+MMNDm
  S1SMx7wu0evvQ5kT9NPzyq8R2GIhVSiAd2jioGuTjX6AZCFv3ToO53DliFMkVTecLptsXaes
  uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <7a0590c0-330c-3144-94f2-3edcc7a92739@redhat.com>
-Date:   Fri, 5 Apr 2019 20:49:33 +0200
+Message-ID: <7b33b8fb-fa6b-5fbb-8166-218aef5216f2@redhat.com>
+Date:   Fri, 5 Apr 2019 20:50:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1903191517380.256304@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.1903251146160.188887@chino.kir.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 05 Apr 2019 18:49:40 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 05 Apr 2019 18:50:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/19 23:19, David Rientjes wrote:
-> get_num_contig_pages() could potentially overflow int so make its type 
-> consistent with its usage.
+On 25/03/19 19:47, David Rientjes wrote:
+> This ensures that the address and length provided to DBG_DECRYPT and
+> DBG_ENCRYPT do not cause an overflow.
+> 
+> At the same time, pass the actual number of pages pinned in memory to
+> sev_unpin_memory() as a cleanup.
 > 
 > Reported-by: Cfir Cohen <cfir@google.com>
 > Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
->  arch/x86/kvm/svm.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  arch/x86/kvm/svm.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 > 
 > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
 > --- a/arch/x86/kvm/svm.c
 > +++ b/arch/x86/kvm/svm.c
-> @@ -6422,11 +6422,11 @@ static int sev_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> -static int get_num_contig_pages(int idx, struct page **inpages,
-> -				unsigned long npages)
-> +static unsigned long get_num_contig_pages(unsigned long idx,
-> +				struct page **inpages, unsigned long npages)
->  {
->  	unsigned long paddr, next_paddr;
-> -	int i = idx + 1, pages = 1;
-> +	unsigned long i = idx + 1, pages = 1;
->  
->  	/* find the number of contiguous pages starting from idx */
->  	paddr = __sme_page_pa(inpages[idx]);
-> @@ -6445,12 +6445,12 @@ static int get_num_contig_pages(int idx, struct page **inpages,
->  
->  static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  {
-> -	unsigned long vaddr, vaddr_end, next_vaddr, npages, size;
-> +	unsigned long vaddr, vaddr_end, next_vaddr, npages, pages, size, i;
->  	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
->  	struct kvm_sev_launch_update_data params;
->  	struct sev_data_launch_update_data *data;
->  	struct page **inpages;
-> -	int i, ret, pages;
+> @@ -6799,7 +6799,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+>  	struct page **src_p, **dst_p;
+>  	struct kvm_sev_dbg debug;
+>  	unsigned long n;
+> -	int ret, size;
+> +	unsigned int size;
 > +	int ret;
 >  
 >  	if (!sev_guest(kvm))
 >  		return -ENOTTY;
+> @@ -6807,6 +6808,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+>  	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
+>  		return -EFAULT;
+>  
+> +	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
+> +		return -EINVAL;
+> +	if (!debug.dst_uaddr)
+> +		return -EINVAL;
+> +
+>  	vaddr = debug.src_uaddr;
+>  	size = debug.len;
+>  	vaddr_end = vaddr + size;
+> @@ -6857,8 +6863,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+>  						     dst_vaddr,
+>  						     len, &argp->error);
+>  
+> -		sev_unpin_memory(kvm, src_p, 1);
+> -		sev_unpin_memory(kvm, dst_p, 1);
+> +		sev_unpin_memory(kvm, src_p, n);
+> +		sev_unpin_memory(kvm, dst_p, n);
+>  
+>  		if (ret)
+>  			goto err;
 > 
 
-I had missed it, and now I've queued it.
+Queued, thanks.
 
 Paolo
