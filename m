@@ -2,240 +2,145 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D904EC282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B4BC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D1F2146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334F92171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rB7uAacH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbfDER74 (ORCPT
+        id S1731637AbfDESAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:59:56 -0400
-Received: from mleia.com ([178.79.152.223]:44228 "EHLO mail.mleia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbfDER74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:59:56 -0400
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 2A04F45F08A;
-        Fri,  5 Apr 2019 18:59:53 +0100 (BST)
-Subject: Re: [PATCH] watchdog: Convert to use devm_platform_ioremap_resource
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joel Stanley <joel@jms.id.au>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wan ZongShun <mcuos.com@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>, Barry Song <baohua@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-References: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
-From:   Vladimir Zapolskiy <vz@mleia.com>
-Message-ID: <112ed5c1-1761-2d04-fd9c-49fc9ef3d8f7@mleia.com>
-Date:   Fri, 5 Apr 2019 20:59:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Fri, 5 Apr 2019 14:00:55 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55315 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730668AbfDESAy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 14:00:54 -0400
+Received: by mail-it1-f196.google.com with SMTP id y134so4270572itc.5;
+        Fri, 05 Apr 2019 11:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oCaDQmiJL/X47i3bgtEG1syx0kJKWNxdc16W7+zcL20=;
+        b=rB7uAacH+iiZtVmotfwFm8/R1+xQrfoB6ODSYqKT5hKThPzccLBDtgswlOt7m7x7d0
+         M1O8Nr5hmreTR8Lyo/2SkqGij5hIm0XDGJw7es641cQqDheZ0QDXcVsLyQ1Ek9CF8E+W
+         dJ+enrl3TOwOacGepLOrkcJ2NSwMGDe/NYwVfVlK4Q4E+UImBEFMRVjSdlYl3A1Gwilw
+         20VLvnVkTwQoI3CnNN9qc6wxg2ADchwnEGL9pGLZmfPyms2G1hXS1X71dBxquhhTwF6P
+         jDV4gwgwCmc/mROhMr4PjAm5Xtr9cw8yCXgYaJHbKFw4lHHJqRxY5HKHPZmwZoieco3S
+         sRig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oCaDQmiJL/X47i3bgtEG1syx0kJKWNxdc16W7+zcL20=;
+        b=cvwJ20+U3el2p0yEjpICnh+wA1dUR5a/pViRZ/acsXcRVoSAWSULl6NAbfhohhoRiX
+         YpE+cZo+/9x6AjQ7LZjIgbqTLAs4MyM7FUuNM9dw4UO1hhNuNpjDHgZyICr2sC1jjEkm
+         WEB1CLGChOjP8mMtt8oiyfJR02xcfHACx+zyWS3AsaLrPXf1FW3g+d3f8bz5g5MijKUt
+         Rel11JE+gZzFc5KoCV7U5lDuRbeIHV/q+WVtQKobfCI48Mp0o9X/XZRlOA0ApolKfHl5
+         2weiKrbeW61VbOkxg+/rv3BvwRGx8IhN46BOQgMM0QPV7G7NAEVxvWmomv5fphP0Dkm3
+         oCbg==
+X-Gm-Message-State: APjAAAUVf1VegYpK9fzNfaDv0RW6JHec+w3MiCm1DI6qMhRcrkB2W4Hp
+        aAJkdQ1PA8Dcq5nN6vpG8rZt6bYkGTlc20kIBvk=
+X-Google-Smtp-Source: APXvYqxucVFAaPp/xE9z+oVE7uhoGh0lj+QJID0u26C4aw1OJ90RDfkdL0wmthx0sF+h3ERPrOaDt0pX+RML17wGoUk=
+X-Received: by 2002:a02:942c:: with SMTP id a41mr10706212jai.61.1554487253900;
+ Fri, 05 Apr 2019 11:00:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20190405_185953_209427_E116B2E0 
-X-CRM114-Status: GOOD (  23.59  )
+References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
+ <20190401041418.5999-6-andrew.smirnov@gmail.com> <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
+In-Reply-To: <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 5 Apr 2019 11:00:42 -0700
+Message-ID: <CAHQ1cqEJbXKdoqqwKjkD_yPjv52Y9w+XOOKxqFpPN23q-qnFaw@mail.gmail.com>
+Subject: Re: [PATCH v3 05/13] thermal: qoriq: Embed per-sensor data into
+ struct qoriq_tmu_data
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/2019 10:01 PM, Guenter Roeck wrote:
-> Use devm_platform_ioremap_resource to reduce source code size,
-> improve readability, and reduce the likelyhood of bugs.
-> 
-> The conversion was done automatically with coccinelle using the
-> following semantic patch.
-> 
-> @r@
-> identifier res, pdev;
-> expression a;
-> expression index;
-> expression e;
-> @@
-> 
-> <+...
-> - res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> - a = devm_ioremap_resource(e, res);
-> + a = devm_platform_ioremap_resource(pdev, index);
-> ...+>
-> 
-> @depends on r@
-> identifier r.res;
-> @@
-> - struct resource *res;
->   ... when != res
-> 
-> @@
-> identifier res, pdev;
-> expression index;
-> expression a;
-> @@
-> - struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> - a = devm_ioremap_resource(&pdev->dev, res);
-> + a = devm_platform_ioremap_resource(pdev, index);
-> 
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Baruch Siach <baruch@tkos.co.il>
-> Cc: Keguang Zhang <keguang.zhang@gmail.com>
-> Cc: Vladimir Zapolskiy <vz@mleia.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Avi Fishman <avifishman70@gmail.com>
-> Cc: Nancy Yuen <yuenn@google.com>
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Wan ZongShun <mcuos.com@gmail.com>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Barry Song <baohua@kernel.org>
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/watchdog/asm9260_wdt.c    | 4 +---
->  drivers/watchdog/aspeed_wdt.c     | 4 +---
->  drivers/watchdog/at91sam9_wdt.c   | 4 +---
->  drivers/watchdog/ath79_wdt.c      | 4 +---
->  drivers/watchdog/atlas7_wdt.c     | 4 +---
->  drivers/watchdog/bcm7038_wdt.c    | 4 +---
->  drivers/watchdog/bcm_kona_wdt.c   | 4 +---
->  drivers/watchdog/cadence_wdt.c    | 4 +---
->  drivers/watchdog/coh901327_wdt.c  | 4 +---
->  drivers/watchdog/davinci_wdt.c    | 4 +---
->  drivers/watchdog/digicolor_wdt.c  | 4 +---
->  drivers/watchdog/dw_wdt.c         | 4 +---
->  drivers/watchdog/ep93xx_wdt.c     | 4 +---
->  drivers/watchdog/ftwdt010_wdt.c   | 4 +---
->  drivers/watchdog/imgpdc_wdt.c     | 4 +---
->  drivers/watchdog/jz4740_wdt.c     | 4 +---
->  drivers/watchdog/lantiq_wdt.c     | 4 +---
->  drivers/watchdog/loongson1_wdt.c  | 4 +---
->  drivers/watchdog/lpc18xx_wdt.c    | 4 +---
->  drivers/watchdog/max63xx_wdt.c    | 4 +---
->  drivers/watchdog/meson_gxbb_wdt.c | 4 +---
->  drivers/watchdog/meson_wdt.c      | 4 +---
->  drivers/watchdog/moxart_wdt.c     | 4 +---
->  drivers/watchdog/mpc8xxx_wdt.c    | 3 +--
->  drivers/watchdog/mt7621_wdt.c     | 5 +----
->  drivers/watchdog/mtk_wdt.c        | 4 +---
->  drivers/watchdog/npcm_wdt.c       | 4 +---
->  drivers/watchdog/nuc900_wdt.c     | 4 +---
->  drivers/watchdog/of_xilinx_wdt.c  | 4 +---
->  drivers/watchdog/omap_wdt.c       | 4 +---
->  drivers/watchdog/orion_wdt.c      | 6 ++----
->  drivers/watchdog/pic32-dmt.c      | 4 +---
->  drivers/watchdog/pic32-wdt.c      | 4 +---
->  drivers/watchdog/pnx4008_wdt.c    | 4 +---
->  drivers/watchdog/renesas_wdt.c    | 4 +---
->  drivers/watchdog/rt2880_wdt.c     | 4 +---
->  drivers/watchdog/rtd119x_wdt.c    | 4 +---
->  drivers/watchdog/rza_wdt.c        | 4 +---
->  drivers/watchdog/s3c2410_wdt.c    | 4 +---
->  drivers/watchdog/sama5d4_wdt.c    | 4 +---
->  drivers/watchdog/sbsa_gwdt.c      | 7 ++-----
->  drivers/watchdog/shwdt.c          | 4 +---
->  drivers/watchdog/sirfsoc_wdt.c    | 4 +---
->  drivers/watchdog/sprd_wdt.c       | 4 +---
->  drivers/watchdog/st_lpc_wdt.c     | 4 +---
->  drivers/watchdog/stm32_iwdg.c     | 4 +---
->  drivers/watchdog/sunxi_wdt.c      | 4 +---
->  drivers/watchdog/tangox_wdt.c     | 4 +---
->  drivers/watchdog/tegra_wdt.c      | 4 +---
->  drivers/watchdog/ts72xx_wdt.c     | 7 ++-----
->  drivers/watchdog/txx9wdt.c        | 4 +---
->  drivers/watchdog/zx2967_wdt.c     | 4 +---
->  52 files changed, 55 insertions(+), 161 deletions(-)
+On Thu, Apr 4, 2019 at 12:57 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 01/04/2019 06:14, Andrey Smirnov wrote:
+> > Embed per-sensor data into struct qoriq_tmu_data so we can drop the
+> > code allocating it. This also allows us to get rid of per-sensor back
+> > reference to struct qoriq_tmu_data since now its address can be
+> > caluclated using container_of().
+>
+> This seems to be a repeating pattern, drivers are forced to put a back
+> pointer in the thermal sensor structure to regain access to the
+> container structure in the get_temp callback.
+>
+> It would make sense to pass the sensor id to the get_temp callback as we
+> register with the sensor id.
+>
 
-[snip]
+I'll rebase this series on the two patches you submitted.
 
-> diff --git a/drivers/watchdog/lpc18xx_wdt.c b/drivers/watchdog/lpc18xx_wdt.c
-> index 331cadb459ac..f6f66634cedf 100644
-> --- a/drivers/watchdog/lpc18xx_wdt.c
-> +++ b/drivers/watchdog/lpc18xx_wdt.c
-> @@ -204,15 +204,13 @@ static int lpc18xx_wdt_probe(struct platform_device *pdev)
->  {
->  	struct lpc18xx_wdt_dev *lpc18xx_wdt;
->  	struct device *dev = &pdev->dev;
-> -	struct resource *res;
->  	int ret;
->  
->  	lpc18xx_wdt = devm_kzalloc(dev, sizeof(*lpc18xx_wdt), GFP_KERNEL);
->  	if (!lpc18xx_wdt)
->  		return -ENOMEM;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	lpc18xx_wdt->base = devm_ioremap_resource(dev, res);
-> +	lpc18xx_wdt->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(lpc18xx_wdt->base))
->  		return PTR_ERR(lpc18xx_wdt->base);
->  
+> One comment below.
+>
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Eduardo Valentin <edubezval@gmail.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/thermal/qoriq_thermal.c | 20 ++++++++------------
+> >  1 file changed, 8 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> > index e281bdcfa11f..deb5cb6a0baf 100644
+> > --- a/drivers/thermal/qoriq_thermal.c
+> > +++ b/drivers/thermal/qoriq_thermal.c
+> > @@ -59,22 +59,24 @@ struct qoriq_tmu_regs {
+> >       u32 ttr3cr;             /* Temperature Range 3 Control Register */
+> >  };
+> >
+> > -struct qoriq_tmu_data;
+> > -
+> >  /*
+> >   * Thermal zone data
+> >   */
+> >  struct qoriq_sensor {
+> > -     struct qoriq_tmu_data           *qdata;
+> >       int                             id;
+> >  };>
+> >  struct qoriq_tmu_data {
+> >       struct qoriq_tmu_regs __iomem *regs;
+> >       bool little_endian;
+>
+> Why not replace the little_endian boolean by a couple of callback
+> read/write and assign them to ioread32|ioread32be at init time.
+>
+> That will kill the tmu_read and tmu_write functions and from there you
+> can figure out how to remove the qdata backpointer. In addition, it will
+> save a few instructions to test the boolean.
+>
 
-[snip]
+I am sure you've seen it by now, but little_endian is going away in
+this series in regmap conversion patch.
 
-> diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
-> index 8e261799c84e..24c266a9e1dc 100644
-> --- a/drivers/watchdog/pnx4008_wdt.c
-> +++ b/drivers/watchdog/pnx4008_wdt.c
-> @@ -185,13 +185,11 @@ static struct watchdog_device pnx4008_wdd = {
->  
->  static int pnx4008_wdt_probe(struct platform_device *pdev)
->  {
-> -	struct resource *r;
->  	int ret = 0;
->  
->  	watchdog_init_timeout(&pnx4008_wdd, heartbeat, &pdev->dev);
->  
-> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	wdt_base = devm_ioremap_resource(&pdev->dev, r);
-> +	wdt_base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(wdt_base))
->  		return PTR_ERR(wdt_base);
->  
-
-For lpc18xx_wdt.c and pnx4008_wdt.c:
-
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-
---
-Best wishes,
-Vladimir
+Thanks
+Andrey Smirnov
