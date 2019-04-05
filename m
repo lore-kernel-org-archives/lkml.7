@@ -2,86 +2,67 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BF5C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD49CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E964A218D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554477300;
-	bh=XldWfUiTk8M1HflN2nFqkLxk0kmjDuE7eO2L7iVce3M=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dU0BM0p815ge+L7Zhrlt2pGuSVIP/Dq339IDkAeMOrTW6vZMis+aFZ29E4m/HUFu+
-	 yScxSenMpNggYq+KwFj+9jcOJm+BLXnNAFTuCP6MnadcEhxJvZXvdNlWyyPaZu+3JG
-	 m1njYEUIWsyPmid/5F4UV3hTni+R6PnC0wx/i4bA=
+	by mail.kernel.org (Postfix) with ESMTP id AC4DE218A6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbfDEPO6 (ORCPT
+        id S1731458AbfDEPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
+        Fri, 5 Apr 2019 11:15:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50876 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfDEPO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:14:58 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726291AbfDEPPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:15:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD5D218A6;
-        Fri,  5 Apr 2019 15:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554477297;
-        bh=XldWfUiTk8M1HflN2nFqkLxk0kmjDuE7eO2L7iVce3M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FO/PqDG/eeEz2DbM/UL+y0nZERVcWmURvl3XisN34OIcV06rPrkpSUvEVX2NDyhIE
-         8l9LqjGsyB7g6wPtm+CGEoGda7Sp27pNilHD0eLsFRq7M0pBzQtoGnegKI2nCalNLh
-         Hxpn0a8l/PyLoFC53BW4Je5Jm/vK06cNwxm1k8TM=
-Subject: Re: [PATCH 4.19 000/187] 4.19.34-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e825ff93-feeb-949a-78db-33c71b31e7a7@kernel.org>
-Date:   Fri, 5 Apr 2019 09:14:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mx1.redhat.com (Postfix) with ESMTPS id DE65CDD9C0;
+        Fri,  5 Apr 2019 15:15:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52F0061358;
+        Fri,  5 Apr 2019 15:15:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190401193931.GA1135@embeddedor>
+References: <20190401193931.GA1135@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     dhowells@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH net-next] rxrpc: Mark expected switch fall-through
 MIME-Version: 1.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <19487.1554477352.1@warthog.procyon.org.uk>
+Date:   Fri, 05 Apr 2019 16:15:52 +0100
+Message-ID: <19488.1554477352@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 05 Apr 2019 15:15:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 2:45 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.34 release.
-> There are 187 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat Apr  6 08:44:30 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.34-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
 
-Compiled and booted on my test system. No dmesg regressions.
+>  		/* Fall through and set IPv4 options too otherwise we don't get
+>  		 * errors from IPv4 packets sent through the IPv6 socket.
+>  		 */
+> -
+> +		/* Fall through */
 
-thanks,
--- Shuah
+Er, no.  Please (a) don't remove the blank line that's providing visual
+separation and (b) observe that the previous comment already says "Fall
+through" right at the beginning, so NAK.
+
+If the compiler doesn't recognise this, then fix the compiler please.
+
+David
