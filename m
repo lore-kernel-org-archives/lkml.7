@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FAAC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73358C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00326206DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B9520989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kxkfH5Wu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Il2QjpRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731215AbfDEO3F (ORCPT
+        id S1731333AbfDEO3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:29:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34880 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEO3E (ORCPT
+        Fri, 5 Apr 2019 10:29:10 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53098 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfDEO3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:29:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35ESxjc027163;
-        Fri, 5 Apr 2019 09:28:59 -0500
+        Fri, 5 Apr 2019 10:29:05 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35ET0tY089637;
+        Fri, 5 Apr 2019 09:29:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554474539;
-        bh=NBktdYTIazawuNMPKbEferZ57VgJ9abP0lXcSPPbEMg=;
-        h=From:To:CC:Subject:Date;
-        b=kxkfH5WufgacBgDiDIqRWljhJlZRgYqowDFel8fnjVozq3OWTM3c5XUtYZMxjRX6e
-         sYLQPo5Z5XUirv2IOdtAzA8/zmPMrq9pA1KbP56S/boZLMe/nNXhY1WgBwjytycnQu
-         2uHpK9i1f8aSI8MH5CM7fdqCVLlxX7wb9Z0W1Dnw=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35ESxog083462
+        s=ti-com-17Q1; t=1554474540;
+        bh=zqm1hBHFfdO4YMtugMA0V6m95kfmSUrb8oGe+mm6qhA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Il2QjpRJhyx8zheTjUH461hOUKdV9BVU47G2YE0EMC4tDtJDrqup9z8XDdRV58i25
+         RJ0ilvYWpBqU/EfbBSmemWAIdEAtHlzHmf4pFLSBuNtja1IchPgTITE8HaRjumfJyE
+         E/Wo+v4k7cY+8qWuAg/A9b0BSjh9f3QHD2r0No7Q=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35ET0m9080276
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Apr 2019 09:28:59 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 5 Apr 2019 09:29:00 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
- 2019 09:28:59 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:29:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Fri, 5 Apr 2019 09:28:59 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35ESw5Q038934;
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35ESxXs038953;
         Fri, 5 Apr 2019 09:28:59 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <lee.jones@linaro.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 1/6] dt-bindings: mfd: LMU: Add the ramp up/down property
-Date:   Fri, 5 Apr 2019 09:28:50 -0500
-Message-ID: <20190405142855.3969-1-dmurphy@ti.com>
+Subject: [PATCH v2 5/6] mfd: ti-lmu: Remove support for LM3697
+Date:   Fri, 5 Apr 2019 09:28:54 -0500
+Message-ID: <20190405142855.3969-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.12.2
+In-Reply-To: <20190405142855.3969-1-dmurphy@ti.com>
+References: <20190405142855.3969-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -65,75 +67,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the ramp-up and ramp-down property in the binding.
-Removing the "sec" from the property definition as seconds is
-implied.
+Remove support for the LM3697 from the ti-lmu driver in favor of a
+dedicated LED driver.
 
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v2 - Fixed commit message as this was not just a modification but adding documentation
-https://lore.kernel.org/patchwork/patch/1054504/
+v2 - Fixed commit message LF, removed leds/Kconfig from patch. -
+https://lore.kernel.org/patchwork/patch/1054502/
 
- .../devicetree/bindings/mfd/ti-lmu.txt        | 20 ++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/mfd/Kconfig                 |  2 +-
+ drivers/mfd/ti-lmu.c                | 17 -----------
+ include/linux/mfd/ti-lmu-register.h | 44 -----------------------------
+ include/linux/mfd/ti-lmu.h          |  1 -
+ 4 files changed, 1 insertion(+), 63 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index 86ca786d54fc..adae96c79d39 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -25,6 +25,12 @@ Required properties:
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 26ad6468d13a..fcae244229b3 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1312,7 +1312,7 @@ config MFD_TI_LMU
+ 	help
+ 	  Say yes here to enable support for TI LMU chips.
  
- Optional property:
-   - enable-gpios: A GPIO specifier for hardware enable pin.
-+  - ramp-up-ms: Current ramping from one brightness level to
-+		the a higher brightness level.
-+		Range from 2048 us - 117.44 s
-+  - ramp-down-ms: Current ramping from one brightness level to
-+		  the a lower brightness level.
-+		  Range from 2048 us - 117.44 s
+-	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
++	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
+ 	  It consists of backlight, LED and regulator driver.
+ 	  It provides consistent device controls for lighting functions.
  
- Required node:
-   - backlight: All LMU devices have backlight child nodes.
-@@ -90,7 +96,7 @@ lm3631@29 {
- 
- 		lcd_bl {
- 			led-sources = <0 1>;
--			ramp-up-msec = <300>;
-+			ramp-up-ms = <300>;
- 		};
- 	};
+diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
+index b06cb908d1aa..89b1c5b584af 100644
+--- a/drivers/mfd/ti-lmu.c
++++ b/drivers/mfd/ti-lmu.c
+@@ -111,20 +111,6 @@ static const struct mfd_cell lm3695_devices[] = {
+ 	},
  };
-@@ -152,15 +158,15 @@ lm3633@36 {
- 		main {
- 			label = "main_lcd";
- 			led-sources = <1 2>;
--			ramp-up-msec = <500>;
--			ramp-down-msec = <500>;
-+			ramp-up-ms = <500>;
-+			ramp-down-ms = <500>;
- 		};
  
- 		front {
- 			label = "front_lcd";
- 			led-sources = <0>;
--			ramp-up-msec = <1000>;
--			ramp-down-msec = <0>;
-+			ramp-up-ms = <1000>;
-+			ramp-down-ms = <0>;
- 		};
- 	};
+-static const struct mfd_cell lm3697_devices[] = {
+-	{
+-		.name          = "ti-lmu-backlight",
+-		.id            = LM3697,
+-		.of_compatible = "ti,lm3697-backlight",
+-	},
+-	/* Monitoring driver for open/short circuit detection */
+-	{
+-		.name          = "ti-lmu-fault-monitor",
+-		.id            = LM3697,
+-		.of_compatible = "ti,lm3697-fault-monitor",
+-	},
+-};
+-
+ #define TI_LMU_DATA(chip, max_reg)		\
+ static const struct ti_lmu_data chip##_data =	\
+ {						\
+@@ -137,7 +123,6 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
+ TI_LMU_DATA(lm3632, LM3632_MAX_REG);
+ TI_LMU_DATA(lm3633, LM3633_MAX_REG);
+ TI_LMU_DATA(lm3695, LM3695_MAX_REG);
+-TI_LMU_DATA(lm3697, LM3697_MAX_REG);
  
-@@ -212,8 +218,8 @@ lm3697@36 {
+ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+@@ -206,7 +191,6 @@ static const struct of_device_id ti_lmu_of_match[] = {
+ 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
+ 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
+ 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
+-	{ .compatible = "ti,lm3697", .data = &lm3697_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
+@@ -216,7 +200,6 @@ static const struct i2c_device_id ti_lmu_ids[] = {
+ 	{ "lm3632", LM3632 },
+ 	{ "lm3633", LM3633 },
+ 	{ "lm3695", LM3695 },
+-	{ "lm3697", LM3697 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
+diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
+index f09510561a55..76998b01764b 100644
+--- a/include/linux/mfd/ti-lmu-register.h
++++ b/include/linux/mfd/ti-lmu-register.h
+@@ -189,48 +189,4 @@
+ #define LM3695_REG_BRT_MSB			0x14
  
- 		lcd {
- 			led-sources = <0 1 2>;
--			ramp-up-msec = <200>;
--			ramp-down-msec = <200>;
-+			ramp-up-ms = <200>;
-+			ramp-down-ms = <200>;
- 		};
- 	};
+ #define LM3695_MAX_REG				0x14
+-
+-/* LM3697 */
+-#define LM3697_REG_HVLED_OUTPUT_CFG		0x10
+-#define LM3697_HVLED1_CFG_MASK			BIT(0)
+-#define LM3697_HVLED2_CFG_MASK			BIT(1)
+-#define LM3697_HVLED3_CFG_MASK			BIT(2)
+-#define LM3697_HVLED1_CFG_SHIFT			0
+-#define LM3697_HVLED2_CFG_SHIFT			1
+-#define LM3697_HVLED3_CFG_SHIFT			2
+-
+-#define LM3697_REG_BL0_RAMP			0x11
+-#define LM3697_REG_BL1_RAMP			0x12
+-#define LM3697_RAMPUP_MASK			0xF0
+-#define LM3697_RAMPUP_SHIFT			4
+-#define LM3697_RAMPDN_MASK			0x0F
+-#define LM3697_RAMPDN_SHIFT			0
+-
+-#define LM3697_REG_RAMP_CONF			0x14
+-#define LM3697_RAMP_MASK			0x0F
+-#define LM3697_RAMP_EACH			0x05
+-
+-#define LM3697_REG_PWM_CFG			0x1C
+-#define LM3697_PWM_A_MASK			BIT(0)
+-#define LM3697_PWM_B_MASK			BIT(1)
+-
+-#define LM3697_REG_IMAX_A			0x17
+-#define LM3697_REG_IMAX_B			0x18
+-
+-#define LM3697_REG_FEEDBACK_ENABLE		0x19
+-
+-#define LM3697_REG_BRT_A_LSB			0x20
+-#define LM3697_REG_BRT_A_MSB			0x21
+-#define LM3697_REG_BRT_B_LSB			0x22
+-#define LM3697_REG_BRT_B_MSB			0x23
+-
+-#define LM3697_REG_ENABLE			0x24
+-
+-#define LM3697_REG_OPEN_FAULT_STATUS		0xB0
+-
+-#define LM3697_REG_SHORT_FAULT_STATUS		0xB2
+-
+-#define LM3697_REG_MONITOR_ENABLE		0xB4
+-
+-#define LM3697_MAX_REG				0xB4
+ #endif
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index 7762c1bce55d..54e9d272e81c 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -26,7 +26,6 @@ enum ti_lmu_id {
+ 	LM3632,
+ 	LM3633,
+ 	LM3695,
+-	LM3697,
+ 	LMU_MAX_ID,
+ };
  
 -- 
 2.19.0
