@@ -2,193 +2,194 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5593C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60580C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B4521738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gWrSIU4d"
+	by mail.kernel.org (Postfix) with ESMTP id 2B0B021738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbfDEKEW (ORCPT
+        id S1730715AbfDEKGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:04:22 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50705 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729820AbfDEKEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:04:22 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190405100420euoutp026ac28eb7b399116e3acea306c3f324e1~Si_qQkczR3265932659euoutp02p
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2019 10:04:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190405100420euoutp026ac28eb7b399116e3acea306c3f324e1~Si_qQkczR3265932659euoutp02p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554458661;
-        bh=wJxu88QKAoJYLl+pjjEVp3qcRsEpmjOxn6M3JKU4xkY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=gWrSIU4drh3Ji9tJ7KhxBXD99iiqaHo0JgWliqeBPhSZC7kpektWPsodjrs+U0vr1
-         pNM8lDFx4lN7eLpb26wdSAkYdk2+BuoNzYyDdSHk7lRZklNDJ36S/dPzU6jEK4lAY8
-         aysAfotdZyXVMMU2nvsd1ZHhTVMUkNoHgqA4IB3s=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190405100420eucas1p13833313cae3cdd0efbf6231d9db86dac~Si_pgspxp0410404104eucas1p13;
-        Fri,  5 Apr 2019 10:04:20 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id D8.F0.04325.32827AC5; Fri,  5
-        Apr 2019 11:04:19 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190405100419eucas1p29fc3a14c724915ff7d613be655ab7d53~Si_oklw4E0766007660eucas1p2U;
-        Fri,  5 Apr 2019 10:04:19 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190405100418eusmtrp17b0eb94ad411189d0db9f60bb008ea08~Si_oWe7mb2985229852eusmtrp1M;
-        Fri,  5 Apr 2019 10:04:18 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-2e-5ca728234c20
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8F.FD.04146.22827AC5; Fri,  5
-        Apr 2019 11:04:18 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190405100418eusmtip2f27d7cbd686c5c03000ac14d371248d5~Si_nzX85l2755127551eusmtip2u;
-        Fri,  5 Apr 2019 10:04:18 +0000 (GMT)
-Subject: Re: [PATCH RFC 2/8] soc: samsung: Exynos chipid driver update
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        pankaj.dubey@samsung.com,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <5d80718b-57ad-33cd-80ff-03c01266a143@samsung.com>
-Date:   Fri, 5 Apr 2019 12:04:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 5 Apr 2019 06:06:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60156 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729820AbfDEKGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:06:23 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EBD4688AC4;
+        Fri,  5 Apr 2019 10:06:22 +0000 (UTC)
+Received: from trillian.uncooperative.org.com (ovpn-112-13.rdu2.redhat.com [10.10.112.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4F04646CD;
+        Fri,  5 Apr 2019 10:06:18 +0000 (UTC)
+From:   Peter Jones <pjones@redhat.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH] ath10k: Don't log a traceback on invalid event IDs.
+Date:   Fri,  5 Apr 2019 12:05:08 +0200
+Message-Id: <20190405100508.12679-1-pjones@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPcJrctz5E8GX2ke804FBifpfYm5D_=H4MguTg_Cq2CPng@mail.gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7djPc7rKGstjDKZ3mFpsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gs1h65y26x9PpFJovbjSvYLBZt/cJu
-        0br3CLsDr8eaeWsYPTat6mTz2Lyk3qNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgytm/dzFZw
-        UbRi6cmvbA2MTYJdjJwcEgImElP6d7N1MXJxCAmsYJS4924HI4TzhVFi2eUVzCBVQgKfGSUu
-        bLOF6ej83s4CUbScUeLb5w9QzltGic7GZUwgVcICbhJHVl5jBbFFBDQlrv/9zgpSxCxwmlli
-        +8wOFpAEm4ChRO/RPqB9HBy8AnYSR+6HgoRZBFQk1t5eAFYiKhAhcf/YBrA5vAKCEidnPgGL
-        cwoESvRMmwYWZxYQl2j6shLKlpfY/nYOM8guCYF77BI/Oz6yQ5ztItF35ReULSzx6vgWKFtG
-        4vTkHhaIhmZGiZ7dt9khnAmMEvePL2CEqLKWOHz8IivIpcxA76zfpQ8RdpTounmcGSQsIcAn
-        ceOtIMQRfBKTtk2HCvNKdLQJQVSrSPxeNZ0JwpaS6H7yn2UCo9IsJK/NQvLOLCTvzELYu4CR
-        ZRWjeGppcW56arFxXmq5XnFibnFpXrpecn7uJkZg+jr97/jXHYz7/iQdYhTgYFTi4dVgWhYj
-        xJpYVlyZe4hRgoNZSYRXbiVQiDclsbIqtSg/vqg0J7X4EKM0B4uSOG81w4NoIYH0xJLU7NTU
-        gtQimCwTB6dUA2P5YZ1HKW6hcSYpRnXtzbz2jPFpstvk/wvtvvOAX0T80kKrpOY+Xh3mxVyV
-        GuYiy+ziTqyXnyn/s2Z97691yatXv1nOFXy6YtVmY1kRzcZDEg//HNbk4HP857xuTvuNmWz9
-        2z33l0af3+q8P6Dchf9Kr/H/N5tse0zrZ5z8XW5odf2JX4NDlxJLcUaioRZzUXEiAOTCbFBb
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xe7pKGstjDE5sNbXYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C02Pb7GanF51xw2ixnn9zFZrD1yl91i6fWLTBa3G1ewWSza+oXd
-        onXvEXYHXo8189Ywemxa1cnmsXlJvUffllWMHp83yQWwRunZFOWXlqQqZOQXl9gqRRtaGOkZ
-        WlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlbN+6ma3gomjF0pNf2RoYmwS7GDk5JARM
-        JDq/t7N0MXJxCAksZZSY1fmGtYuRAyghJTG/RQmiRljiz7UuNoia14wSL87+YgVJCAu4SRxZ
-        eQ3MFhHQlLj+9zsrSBGzwGlmidVvtkFN7WCSmHblBxtIFZuAoUTv0T5GkA28AnYSR+6HgoRZ
-        BFQk1t5ewAJiiwpESJx5vwLM5hUQlDg58wmYzSkQKNEzbRrYMmYBdYk/8y4xQ9jiEk1fVkLF
-        5SW2v53DPIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwHjd
-        duzn5h2MlzYGH2IU4GBU4uFtYFkWI8SaWFZcmXuIUYKDWUmEV24lUIg3JbGyKrUoP76oNCe1
-        +BCjKdBzE5mlRJPzgakkryTe0NTQ3MLS0NzY3NjMQkmc97xBZZSQQHpiSWp2ampBahFMHxMH
-        p1QDo5U8s9bMKe2aer5zT+ifUFGuf3j8b8iTKeJ2dhs4Ftiw2UlsTvvw3Lj8iKVd0a/2J36b
-        tX/yXMrZP9GqQ5ihZ/FbkbKUgCTDx1Nnxgc98Dd9zcgc63xkX+lpnh+rZ36Sqim+yLc881fU
-        RCWW7MP6vx609kgd5VvLO//0QsEDNyI0vd1f3n7trsRSnJFoqMVcVJwIAD0T6bTtAgAA
-X-CMS-MailID: 20190405100419eucas1p29fc3a14c724915ff7d613be655ab7d53
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190404172229epcas2p25a819e37035b26ccf53613e880bdcacf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190404172229epcas2p25a819e37035b26ccf53613e880bdcacf
-References: <CGME20190404172229epcas2p25a819e37035b26ccf53613e880bdcacf@epcas2p2.samsung.com>
-        <20190404171735.12815-1-s.nawrocki@samsung.com>
-        <20190404171735.12815-3-s.nawrocki@samsung.com>
-        <CAJKOXPcJrctz5E8GX2ke804FBifpfYm5D_=H4MguTg_Cq2CPng@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 05 Apr 2019 10:06:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/19 11:22, Krzysztof Kozlowski wrote:
-> On Thu, 4 Apr 2019 at 19:22, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->>
->> This patch adds definition of selected CHIP ID register offsets
->> and register bit field definitions for Exynos5422 SoC.
->>
->> exynos_chipid_read() helper function is added to allow reading
->> the CHIP ID block registers.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  drivers/soc/samsung/exynos-chipid.c | 16 +++++-----
->>  drivers/soc/samsung/exynos-chipid.h | 48 +++++++++++++++++++++++++++++
->>  2 files changed, 57 insertions(+), 7 deletions(-)
->>  create mode 100644 drivers/soc/samsung/exynos-chipid.h
->>
->> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
->> index 5cb018807817..4920f0ef2c55 100644
->> --- a/drivers/soc/samsung/exynos-chipid.c
->> +++ b/drivers/soc/samsung/exynos-chipid.c
->> @@ -16,10 +16,7 @@
+Very frequently upon resume from suspend, we see tracebacks like:
 
->> -#define EXYNOS_SUBREV_MASK     (0xF << 4)
->> -#define EXYNOS_MAINREV_MASK    (0xF << 0)
->> -#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
->> -#define EXYNOS_MASK            0xFFFFF000
-> 
-> Create hex-addresses in first commit in lower case.
+ath10k_pci 0000:02:00.0: unsupported HTC service id: 1536
+ath10k_pci 0000:02:00.0: Unknown eventid: 118809
+WARNING: CPU: 1 PID: 23135 at drivers/net/wireless/ath/ath10k/mac.c:5650 ath10k_bss_info_changed+0xe8e/0xfd0 [ath10k_core]
+Modules linked in: ...
+CPU: 1 PID: 23135 Comm: kworker/u16:54 Not tainted 4.20.15-200.fc29.x86_64 #1
+Hardware name: ...
+Workqueue: events_unbound async_run_entry_fn
+RIP: 0010:ath10k_bss_info_changed+0xe8e/0xfd0 [ath10k_core]
+Code: 89 c1 89 f2 4c 89 d7 48 c7 c6 60 7e ed c0 4c 89 4c 24 10 89 44 24 08 e8 e0 35 00 00 8b 44 24 08 4c 8b 4c 24 10 e9 22 f8 ff ff <0f> 0b e9 7a f4 ff ff 8b b3 70 01 00 00 89 f2 89 c1 48 c7 c6 20 7e
+RSP: 0018:ffffaba5456b7cc0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8d9b612a33a0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 00000000fffffe01 RDI: ffffffffc0cca4ae
+RBP: 00000000020674ff R08: 0000000000200000 R09: 0000000000000000
+R10: ffff8d9a6d490700 R11: 0000000039a6c800 R12: ffff8d9b612a33a8
+R13: ffff8d9b4bd31580 R14: ffff8d9b4bd31580 R15: ffff8d9b612a3500
+FS:  0000000000000000(0000) GS:ffff8d9b66440000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000556cca653b66 CR3: 000000027920a001 CR4: 00000000003606e0
+Call Trace:
+ ? ath10k_conf_tx+0x7a/0x4b0 [ath10k_core]
+ ieee80211_bss_info_change_notify+0xab/0x1a0 [mac80211]
+ ieee80211_reconfig+0x66c/0x1300 [mac80211]
+ ? __switch_to_asm+0x34/0x70
+ ? __switch_to_asm+0x34/0x70
+ ? __switch_to_asm+0x40/0x70
+ wiphy_resume+0x7f/0x120 [cfg80211]
+ ? index_show+0x20/0x20 [cfg80211]
+ dpm_run_callback+0x59/0x150
+ device_resume+0xac/0x1f0
+ async_resume+0x19/0x30
+ async_run_entry_fn+0x39/0x160
+ process_one_work+0x1a1/0x3a0
+ worker_thread+0x30/0x380
+ ? process_one_work+0x3a0/0x3a0
+ kthread+0x112/0x130
+ ? kthread_create_on_node+0x60/0x60
+ ret_from_fork+0x35/0x40
+---[ end trace 0afe382792dba858 ]---
 
->> +static void __iomem *exynos_chipid_base;
-> 
-> No, this was removed in Pankaj's version v6 -> v7 and I do not want it
-> to be file-scope. Having it file-scope is error prone and prevents
-> having multiple instances (I do not expect having more than one but
-> still code should be rather nicely generic).
+These errors are completely transient, and the card goes back to working
+perfectly fine afterwards.  I suspect the driver is just reading an
+uninitialized buffer as the card comes back up.
 
-I'm going to switch to using regmap so that will not be needed any 
-more, together with exynos_chipid_read() helper. Then the header
-file would be moved to include/linux/soc/samsung.
+In any case, there's no point in treating this as a major problem and
+logging a full register dump and a traceback; just logginng an INFO
+message saying that it happened is enough.  This patch does that.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ drivers/net/wireless/ath/ath10k/htc.c     | 4 ++--
+ drivers/net/wireless/ath/ath10k/sdio.c    | 2 +-
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 2 +-
+ drivers/net/wireless/ath/ath10k/wmi.c     | 8 ++++----
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/htc.c b/drivers/net/wireless/ath/ath10k/htc.c
+index 805a7f8a04f..c244889b72e 100644
+--- a/drivers/net/wireless/ath/ath10k/htc.c
++++ b/drivers/net/wireless/ath/ath10k/htc.c
+@@ -799,7 +799,7 @@ int ath10k_htc_connect_service(struct ath10k_htc *htc,
+ 						&ep->ul_pipe_id,
+ 						&ep->dl_pipe_id);
+ 	if (status) {
+-		ath10k_warn(ar, "unsupported HTC service id: %d\n",
++		ath10k_info(ar, "unsupported HTC service id: %d\n",
+ 			    ep->service_id);
+ 		return status;
+ 	}
+@@ -877,7 +877,7 @@ static bool ath10k_htc_pktlog_svc_supported(struct ath10k *ar)
+ 						&ul_pipe_id,
+ 						&dl_pipe_id);
+ 	if (status) {
+-		ath10k_warn(ar, "unsupported HTC service id: %d\n",
++		ath10k_info(ar, "unsupported HTC service id: %d\n",
+ 			    ATH10K_HTC_SVC_ID_HTT_LOG_MSG);
  
->> +unsigned int exynos_chipid_read(unsigned int offset)
->> +{
->> +       return readl_relaxed(exynos_chipid_base + offset);
->> +}
-
->> diff --git a/drivers/soc/samsung/exynos-chipid.h b/drivers/soc/samsung/exynos-chipid.h
->> new file mode 100644
->> index 000000000000..826a12c25fa2
->> --- /dev/null
->> +++ b/drivers/soc/samsung/exynos-chipid.h
->> @@ -0,0 +1,48 @@
-
->> +#define EXYNOS_CHIPID_REG_PRO_ID       0x00
->> + #define EXYNOS_SUBREV_MASK            (0xf << 4)
->> + #define EXYNOS_MAINREV_MASK           (0xf << 0)
->> + #define EXYNOS_REV_MASK               (EXYNOS_SUBREV_MASK | \
->> +                                        EXYNOS_MAINREV_MASK)
->> + #define EXYNOS_MASK                   0xfffff000
->> +
->> +#define EXYNOS_CHIPID_REG_PKG_ID       0x04
-> 
-> Can you comment that these are fields from this register?
-> The same in second one.
-
-OK, I will add some comment here.
+ 		return false;
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index fae56c67766..a265225216e 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -1871,7 +1871,7 @@ static int ath10k_sdio_hif_map_service_to_pipe(struct ath10k *ar,
+ 			   ar_sdio->mbox_addr[eid], ar_sdio->mbox_size[eid]);
+ 		break;
+ 	default:
+-		ath10k_warn(ar, "unsupported HTC service id: %d\n",
++		ath10k_info(ar, "unsupported HTC service id: %d\n",
+ 			    service_id);
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 582fb11f648..ca990c8d306 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -614,7 +614,7 @@ static void ath10k_wmi_tlv_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		ath10k_wmi_event_mgmt_tx_bundle_compl(ar, skb);
+ 		break;
+ 	default:
+-		ath10k_dbg(ar, ATH10K_DBG_WMI, "Unknown eventid: %d\n", id);
++		ath10k_info(ar, ATH10K_DBG_WMI, "Unknown eventid: %d\n", id);
+ 		break;
+ 	}
  
->> + #define EXYNOS5422_IDS_OFFSET         24
->> + #define EXYNOS5422_IDS_MASK           0xff
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 98a90e49d66..f4fa406d9fe 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -5850,7 +5850,7 @@ static void ath10k_wmi_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		ath10k_wmi_event_service_available(ar, skb);
+ 		break;
+ 	default:
+-		ath10k_warn(ar, "Unknown eventid: %d\n", id);
++		ath10k_info(ar, "Unknown eventid: %d\n", id);
+ 		break;
+ 	}
+ 
+@@ -5981,7 +5981,7 @@ static void ath10k_wmi_10_1_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		/* ignore utf events */
+ 		break;
+ 	default:
+-		ath10k_warn(ar, "Unknown eventid: %d\n", id);
++		ath10k_info(ar, "Unknown eventid: %d\n", id);
+ 		break;
+ 	}
+ 
+@@ -6130,7 +6130,7 @@ static void ath10k_wmi_10_2_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		ath10k_wmi_event_peer_sta_ps_state_chg(ar, skb);
+ 		break;
+ 	default:
+-		ath10k_warn(ar, "Unknown eventid: %d\n", id);
++		ath10k_info(ar, "Unknown eventid: %d\n", id);
+ 		break;
+ 	}
+ 
+@@ -6250,7 +6250,7 @@ static void ath10k_wmi_10_4_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		ath10k_wmi_event_peer_sta_ps_state_chg(ar, skb);
+ 		break;
+ 	default:
+-		ath10k_warn(ar, "Unknown eventid: %d\n", id);
++		ath10k_info(ar, "Unknown eventid: %d\n", id);
+ 		break;
+ 	}
+ 
 -- 
-Regards,
-Sylwester
+2.20.1
+
