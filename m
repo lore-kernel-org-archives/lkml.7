@@ -4,48 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A76C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F16C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA842186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B0621871
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfDELh7 (ORCPT
+        id S1731114AbfDELio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:37:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38589 "EHLO
+        Fri, 5 Apr 2019 07:38:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33621 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730642AbfDELh7 (ORCPT
+        with ESMTP id S1730642AbfDELio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:37:59 -0400
+        Fri, 5 Apr 2019 07:38:44 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Bbnmc2734394
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BcYjH2734462
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:37:49 -0700
+        Fri, 5 Apr 2019 04:38:35 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BbmxU2734391;
-        Fri, 5 Apr 2019 04:37:48 -0700
-Date:   Fri, 5 Apr 2019 04:37:48 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BcYaG2734459;
+        Fri, 5 Apr 2019 04:38:34 -0700
+Date:   Fri, 5 Apr 2019 04:38:34 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Richter <tipbot@zytor.com>
-Message-ID: <tip-7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, acme@redhat.com,
-        linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com,
-        schwidefsky@de.ibm.com, tmricht@linux.ibm.com, hpa@zytor.com,
-        brueckner@linux.vnet.ibm.com
-Reply-To: schwidefsky@de.ibm.com, tmricht@linux.ibm.com, hpa@zytor.com,
-          brueckner@linux.vnet.ibm.com, mingo@kernel.org,
-          tglx@linutronix.de, acme@redhat.com,
-          linux-kernel@vger.kernel.org, heiko.carstens@de.ibm.com
-In-Reply-To: <20190329133337.60255-1-tmricht@linux.ibm.com>
-References: <20190329133337.60255-1-tmricht@linux.ibm.com>
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-c2b3c170db610896e4e633cba2135045333811c2@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
+        ak@linux.intel.com
+Reply-To: mingo@kernel.org, ak@linux.intel.com, acme@redhat.com,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org,
+          jolsa@kernel.org, hpa@zytor.com
+In-Reply-To: <20190326221823.11518-2-andi@firstfloor.org>
+References: <20190326221823.11518-2-andi@firstfloor.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf list: Fix s390 counter long description for
- L1D_RO_EXCL_WRITES
-Git-Commit-ID: 7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
+Subject: [tip:perf/core] perf stat: Revert checks for duration_time
+Git-Commit-ID: c2b3c170db610896e4e633cba2135045333811c2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -59,79 +56,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
-Gitweb:     https://git.kernel.org/tip/7fcfa9a2d9a7c1b428d61992c2deaa9e37a437b0
-Author:     Thomas Richter <tmricht@linux.ibm.com>
-AuthorDate: Fri, 29 Mar 2019 14:33:37 +0100
+Commit-ID:  c2b3c170db610896e4e633cba2135045333811c2
+Gitweb:     https://git.kernel.org/tip/c2b3c170db610896e4e633cba2135045333811c2
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Tue, 26 Mar 2019 15:18:20 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 1 Apr 2019 14:49:24 -0300
 
-perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES
+perf stat: Revert checks for duration_time
 
-Command
+This reverts e864c5ca145e ("perf stat: Hide internal duration_time
+counter") but doing it manually since the code has now moved to a
+different file.
 
-  # perf list --long-desc pmu
+The next patch will properly implement duration_time as a full event, so
+no need to hide it anymore.
 
-lists the long description of the available counters. For counter
-named L1D_RO_EXCL_WRITES on machine types 3906 and 3907 the long
-description contains the counter number 'Counter:128 Name:'
-prefix. This is wrong.
-
-The fix changes the description text and removes this prefix.
-
-Output before:
-
-  [root@m35lp76 perf]# ./perf list --long-desc pmu
-   ...
-   L1D_ONDRAWER_L4_SOURCED_WRITES
-    [A directory write to the Level-1 Data cache directory where the
-     returned cache line was sourced from On-Drawer Level-4 cache]
-
-   L1D_RO_EXCL_WRITES
-    [Counter:128 Name:L1D_RO_EXCL_WRITES A directory write to the Level-1
-     Data cache where the line was originally in a Read-Only state in the
-     cache but has been updated to be in the Exclusive state that allows
-     stores to the cache line]
-
-   ...
-
-Output after:
-
-  [root@m35lp76 perf]# ./perf list --long-desc pmu
-   ...
-   L1D_ONDRAWER_L4_SOURCED_WRITES
-    [A directory write to the Level-1 Data cache directory where the
-     returned cache line was sourced from On-Drawer Level-4 cache]
-
-   L1D_RO_EXCL_WRITES
-    [L1D_RO_EXCL_WRITES A directory write to the Level-1
-     Data cache where the line was originally in a Read-Only state in the
-     cache but has been updated to be in the Exclusive state that allows
-     stores to the cache line]
-
-   ...
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Fixes: 109d59b900e7 ("perf vendor events s390: Add JSON files for IBM z14")
-Link: http://lkml.kernel.org/r/20190329133337.60255-1-tmricht@linux.ibm.com
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190326221823.11518-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat-display.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-index e7a3524b748f..68618152ea2c 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-@@ -4,7 +4,7 @@
- 		"EventCode": "128",
- 		"EventName": "L1D_RO_EXCL_WRITES",
- 		"BriefDescription": "L1D Read-only Exclusive Writes",
--		"PublicDescription": "Counter:128	Name:L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 6d043c78f3c2..3324f23c7efc 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -18,11 +18,6 @@
+ #define CNTR_NOT_SUPPORTED	"<not supported>"
+ #define CNTR_NOT_COUNTED	"<not counted>"
+ 
+-static bool is_duration_time(struct perf_evsel *evsel)
+-{
+-	return !strcmp(evsel->name, "duration_time");
+-}
+-
+ static void print_running(struct perf_stat_config *config,
+ 			  u64 run, u64 ena)
+ {
+@@ -628,9 +623,6 @@ static void print_aggr(struct perf_stat_config *config,
+ 		ad.id = id = config->aggr_map->map[s];
+ 		first = true;
+ 		evlist__for_each_entry(evlist, counter) {
+-			if (is_duration_time(counter))
+-				continue;
+-
+ 			ad.val = ad.ena = ad.run = 0;
+ 			ad.nr = 0;
+ 			if (!collect_data(config, counter, aggr_cb, &ad))
+@@ -848,8 +840,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 		if (prefix)
+ 			fputs(prefix, config->output);
+ 		evlist__for_each_entry(evlist, counter) {
+-			if (is_duration_time(counter))
+-				continue;
+ 			if (first) {
+ 				aggr_printout(config, counter, cpu, 0);
+ 				first = false;
+@@ -906,8 +896,6 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 
+ 	/* Print metrics headers only */
+ 	evlist__for_each_entry(evlist, counter) {
+-		if (is_duration_time(counter))
+-			continue;
+ 		os.evsel = counter;
+ 		out.ctx = &os;
+ 		out.print_metric = print_metric_header;
+@@ -1136,15 +1124,11 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
+ 		break;
+ 	case AGGR_THREAD:
+ 		evlist__for_each_entry(evlist, counter) {
+-			if (is_duration_time(counter))
+-				continue;
+ 			print_aggr_thread(config, _target, counter, prefix);
+ 		}
+ 		break;
+ 	case AGGR_GLOBAL:
+ 		evlist__for_each_entry(evlist, counter) {
+-			if (is_duration_time(counter))
+-				continue;
+ 			print_counter_aggr(config, counter, prefix);
+ 		}
+ 		if (metric_only)
+@@ -1155,8 +1139,6 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
+ 			print_no_aggr_metric(config, evlist, prefix);
+ 		else {
+ 			evlist__for_each_entry(evlist, counter) {
+-				if (is_duration_time(counter))
+-					continue;
+ 				print_counter(config, counter, prefix);
+ 			}
+ 		}
