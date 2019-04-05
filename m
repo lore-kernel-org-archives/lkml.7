@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4639DC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02AC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB5F20651
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1348820989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfDERdg (ORCPT
+        id S1731772AbfDERdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:33:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35914 "EHLO
+        Fri, 5 Apr 2019 13:33:39 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35930 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731477AbfDERde (ORCPT
+        with ESMTP id S1731667AbfDERdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:33:34 -0400
+        Fri, 5 Apr 2019 13:33:37 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 0F6832822B3
+        with ESMTPSA id B414E2822B2
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     lee.jones@linaro.org
 Cc:     gwendal@chromium.org, bleung@chromium.org,
         linux-kernel@vger.kernel.org, groeck@chromium.org,
         kernel@collabora.com, dtor@chromium.org,
-        rushikesh.s.kadam@intel.com
-Subject: [PATCH v2 1/4] mfd: cros_ec: Update the EC feature codes
-Date:   Fri,  5 Apr 2019 19:33:21 +0200
-Message-Id: <20190405173324.22118-2-enric.balletbo@collabora.com>
+        rushikesh.s.kadam@intel.com,
+        Vincent Palatin <vpalatin@chromium.org>
+Subject: [PATCH v2 3/4] mfd: cros_ec: instantiate properly CrOS FP MCU device
+Date:   Fri,  5 Apr 2019 19:33:23 +0200
+Message-Id: <20190405173324.22118-4-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190405173324.22118-1-enric.balletbo@collabora.com>
 References: <20190405173324.22118-1-enric.balletbo@collabora.com>
@@ -42,79 +43,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the feature enum for the Chromebook Embedded Controller to the
-latest version. Some of these enums are still not used in the kernel but
-we might be also interested on have these enums up to date. Userspace
-can use them to query the features to the EC via the cros-ec character
-device.
+Support Fingerprint MCU as a special of CrOS EC devices. The current FP
+MCU uses the same EC SPI protocol v3 as other CrOS EC devices on a SPI
+bus.
 
-While here, also fix a typo in one comment in the enum.
+When a MCU has fingerprint support (aka EC_FEATURE_FINGERPRINT), it is
+instantiated as a special CrOS EC device with device name 'cros_fp'. So
+regardless of the probing order between the actual cros_ec and cros_fp,
+the userspace and other kernel drivers should not confuse them.
 
+Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
-Changes in v2:
-- Add a patch to introduce the required enums to build.
+Changes in v2: None
 
- include/linux/mfd/cros_ec_commands.h | 34 +++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ drivers/mfd/cros_ec_dev.c   | 10 ++++++++++
+ include/linux/mfd/cros_ec.h |  1 +
+ 2 files changed, 11 insertions(+)
 
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 1cdb07c0ece1..dcec96f01879 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -840,7 +840,7 @@ enum ec_feature_code {
- 	 * (Common Smart Battery System Interface Specification)
- 	 */
- 	EC_FEATURE_SMART_BATTERY = 18,
--	/* EC can dectect when the host hangs. */
-+	/* EC can detect when the host hangs. */
- 	EC_FEATURE_HANG_DETECT = 19,
- 	/* Report power information, for pit only */
- 	EC_FEATURE_PMU = 20,
-@@ -852,10 +852,42 @@ enum ec_feature_code {
- 	EC_FEATURE_USB_MUX = 23,
- 	/* Motion Sensor code has an internal software FIFO */
- 	EC_FEATURE_MOTION_SENSE_FIFO = 24,
-+	/* Support temporary secure vstore */
-+	EC_FEATURE_VSTORE = 25,
-+	/* EC decides on USB-C SS mux state, muxes configured by host */
-+	EC_FEATURE_USBC_SS_MUX_VIRTUAL = 26,
- 	/* EC has RTC feature that can be controlled by host commands */
- 	EC_FEATURE_RTC = 27,
-+	/* The MCU exposes a Fingerprint sensor */
-+	EC_FEATURE_FINGERPRINT = 28,
-+	/* The MCU exposes a Touchpad */
-+	EC_FEATURE_TOUCHPAD = 29,
-+	/* The MCU has RWSIG task enabled */
-+	EC_FEATURE_RWSIG = 30,
-+	/* EC has device events support */
-+	EC_FEATURE_DEVICE_EVENT = 31,
-+	/* EC supports the unified wake masks for LPC/eSPI systems */
-+	EC_FEATURE_UNIFIED_WAKE_MASKS = 32,
-+	/* EC supports 64-bit host events */
-+	EC_FEATURE_HOST_EVENT64 = 33,
-+	/* EC runs code in RAM (not in place, a.k.a. XIP) */
-+	EC_FEATURE_EXEC_IN_RAM = 34,
- 	/* EC supports CEC commands */
- 	EC_FEATURE_CEC = 35,
-+	/* EC supports tight sensor timestamping. */
-+	EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS = 36,
-+	/*
-+	 * EC supports tablet mode detection aligned to Chrome and allows
-+	 * setting of threshold by host command using
-+	 * MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE.
-+	 */
-+	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
-+	/* EC supports audio codec. */
-+	EC_FEATURE_AUDIO_CODEC = 38,
-+	/* EC Supports SCP. */
-+	EC_FEATURE_SCP = 39,
-+	/* The MCU is an Integrated Sensor Hub */
-+	EC_FEATURE_ISH = 40,
- };
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 1daccd4e05a3..79746e817cdb 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -636,6 +636,16 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	device_initialize(&ec->class_dev);
+ 	cdev_init(&ec->cdev, &fops);
  
- #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
++	/* Check whether this is actually a Fingerprint MCU rather than an EC */
++	if (cros_ec_check_features(ec, EC_FEATURE_FINGERPRINT)) {
++		dev_info(dev, "CrOS Fingerprint MCU detected.\n");
++		/*
++		 * Help userspace differentiating ECs from FP MCU,
++		 * regardless of the probing order.
++		 */
++		ec_platform->ec_name = CROS_EC_DEV_FP_NAME;
++	}
++
+ 	/*
+ 	 * Check whether this is actually an Integrated Sensor Hub (ISH)
+ 	 * rather than an EC.
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index ce50628aa5e7..b393bd4e4b73 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -23,6 +23,7 @@
+ #include <linux/mutex.h>
+ 
+ #define CROS_EC_DEV_NAME	"cros_ec"
++#define CROS_EC_DEV_FP_NAME	"cros_fp"
+ #define CROS_EC_DEV_ISH_NAME	"cros_ish"
+ #define CROS_EC_DEV_PD_NAME	"cros_pd"
+ 
 -- 
 2.20.1
 
