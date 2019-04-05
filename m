@@ -2,92 +2,96 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897A5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A38217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D8321872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZhtaXoCh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZjmK+H8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfDEDYQ (ORCPT
+        id S1729860AbfDEDZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:24:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48636 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfDEDYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jRHLGjsSpnMNMqpwFJNevcBN06h08Z51JVnzqEP2O/c=; b=ZhtaXoChaqGEyYGJ+8LTG64Et
-        w09ibo7DUWHZN6fWYEGKrJfkgdyFOPniXB0biEH02TLCNMa8t9Gdf/iXjhxbN7KDBLQX7OmgA3mrm
-        kJlm3FtIi+rCOHX8Wz8OLrMXkE/lckB0UAkj5bI3bM46u3k/3WInFgqb8TshQnBIevkkJDDvbkJYo
-        /aqvlxJI+Rg/ivvKVNea0RnUdFRln27s2pm3QRHUVUUiGks3U7gDPZbuqLTDM8xPPtDKmjqoa9wlL
-        PyTINlGYH1t4e6e6fUQOUvIsYcFWaa9WP+atJn4qteq62LRcHHQAwcMM/vzUzaHUgxzQ8iXwScpsX
-        9A02vccPA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hCFST-0002pE-Jf; Fri, 05 Apr 2019 03:24:01 +0000
-Date:   Thu, 4 Apr 2019 20:24:01 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm:workingset use real time to judge activity of the
- file page
-Message-ID: <20190405032401.GN22763@bombadil.infradead.org>
-References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+        Thu, 4 Apr 2019 23:25:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:37629 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729810AbfDEDZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 23:25:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44b4vC2bmXz9sNm;
+        Fri,  5 Apr 2019 14:25:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554434711;
+        bh=yI/Tm6FiLVjDEmn+s1KtqKXdOwHLdWBClm4fYWhiz0s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZjmK+H8vNcdolwypkfRaa6JzF8DfqJyJezzzJt1fwUC+o4VnE43eKMjlpSFhbvmP5
+         NnrF2eJCCvUV0860sojjthaVoi/Cv37txRNBeJw42CqFMDaRlWrYFiMwSRMZXy8d35
+         p05jqLiiSA8Mz6YtAu9RFgtJK5aIaw7WkK1KMeXQAWtkCLk/WEwc858nGmFWDL2K7M
+         fZNDiIw1SF/VkQDthx29hZKvsZbfPtKTW4BkS1C+BmWlz4tZNToGsdUspTZS88vxWf
+         +BrlzQgS4yjKmI4cL7Mz9hyZiq33SnwwUGLQQRg7DHFTo7ooLusR1PsIlB4Hm66NLU
+         eTN/dgcCxWwZQ==
+Date:   Fri, 5 Apr 2019 14:25:10 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: linux-next: build warning after merge of the scsi tree
+Message-ID: <20190405142347.1f264cdf@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/qG1lbi3eneWefH0rN68cbG3"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 11:30:17AM +0800, Zhaoyang Huang wrote:
-> +++ b/mm/workingset.c
-> @@ -159,7 +159,7 @@
->  			 NODES_SHIFT +	\
->  			 MEM_CGROUP_ID_SHIFT)
->  #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
-> -
-> +#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
->  /*
->   * Eviction timestamps need to be able to cover the full range of
->   * actionable refaults. However, bits are tight in the radix tree
-> @@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
->  	eviction >>= bucket_order;
->  	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
->  	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
-> +	eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
->  	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+--Sig_/qG1lbi3eneWefH0rN68cbG3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-... this isn't against current, or even 5.0.
+Hi James,
 
->  	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
-> +	entry >>= EVICTION_JIFFIES;
-> +	prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
+After merging the scsi tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-These two lines are in the wrong order.  So you're getting (effectively) a
-random answer in your 'prev_jiff', which means your testing isn't thorough
-enough.  I suspect you're only testing cases you're expecting to improve,
-and you aren't testing to make sure that other cases don't regress.
+drivers/scsi/lpfc/lpfc_nvme.c:2140:1: warning: 'lpfc_nvme_lport_unreg_wait'=
+ defined but not used [-Wunused-function]
+ lpfc_nvme_lport_unreg_wait(struct lpfc_vport *vport,
+ ^~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Introduced by commit
+
+  3999df75bccb ("scsi: lpfc: Declare local functions static")
+
+It use is guarded by IS_ENABLED(CONFIG_NVME_FC).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qG1lbi3eneWefH0rN68cbG3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlymypYACgkQAVBC80lX
+0Gw9Qwf+PcECZy9lorHevXKLfXYKO0tk7/o2Q3/5l6jBl+G5QmsK7MwZbjHvu1pf
+7bXNjYtE+HZnwMDQGFxiYQwa/X2cUmXRj92YcJT62AZjy+uRyxrjjvHxkSKNziYW
+7djP+G9pxzuMfXDhmVsac9K3kDx1p+12Ii1mSQgm0ZI5au+X+Ic7U5KEbOcS+KtH
+OzCW882RqKvVMpfurHq8NgI18IcNxMx8uY+sQdMjYYSIo8GZLf1Qx9k0uo3y6B5j
+RZDMZBGzUI1w4I6mtjmK7NT2zPrZvGGpWSQqfmBubFU+z3g1DEqT/dJBOhJ9cBFX
+BPfezKbTGo7k+sK62tmqP0OPA+hrjg==
+=w1Bb
+-----END PGP SIGNATURE-----
+
+--Sig_/qG1lbi3eneWefH0rN68cbG3--
