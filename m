@@ -2,86 +2,159 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_TVD_FUZZY_SECURITIES,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8986C10F24
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FFCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84932186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FD221738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfDEQPo (ORCPT
+        id S1731577AbfDEQQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:15:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48152 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 12:16:34 -0400
+Received: from rosenzweig.io ([107.170.207.86]:42410 "EHLO rosenzweig.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731500AbfDEQPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:15:44 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 65681C0828B7;
-        Fri,  5 Apr 2019 16:15:44 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCE625D9C4;
-        Fri,  5 Apr 2019 16:15:43 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 11:15:41 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Luis Ressel <aranea@aixah.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] objtool: Don't use -Werror
-Message-ID: <20190405161541.6rs7iz4w4dj72azm@treble>
-References: <20190405110151.2461-1-aranea@aixah.de>
- <20190405123909.tupbgueie4czg2dd@treble>
- <20190405142443.rgpwbgyym76xizad@vega.skynet.aixah.de>
- <20190405143926.wmrkjsazlheeg6qs@treble>
- <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
+        id S1730492AbfDEQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:16:34 -0400
+Received: by rosenzweig.io (Postfix, from userid 1000)
+        id E97EE609B7; Fri,  5 Apr 2019 09:16:32 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 09:16:32 -0700
+From:   Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        Sean Paul <sean@poorly.run>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        iommu@lists.linux-foundation.org,
+        "Marty E . Plummer" <hanetzer@startmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
+Message-ID: <20190405161632.GA9160@rosenzweig.io>
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-4-robh@kernel.org>
+ <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 05 Apr 2019 16:15:44 +0000 (UTC)
+In-Reply-To: <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 06:05:50PM +0200, Luis Ressel wrote:
-> On Fri, Apr 05, 2019 at 09:39:26AM -0500, Josh Poimboeuf wrote:
+> I'm also somewhat surprised that you don't need loads of other
+> properties from the GPU - in particular knowing the number of shader
+> cores is useful for allocating the right amount of memory for TLS (and
+> can't be obtained purely from the GPU_ID).
+
+Since I have no idea what TLS is (and in my notes, I've come across the
+acronym once ever and have it as a "??"), I'm not sure how to respond to
+that... We don't know how to allocate memory for the GPU-internal data
+structures (the tiler heap, for instance, but also a few others I've
+just named "misc_0" and "scratchpad" -- guessing one of those is for
+"TLS"). With kbase, I took the worst-case strategy of allocating
+gigantic chunks on startup with tiny commit counts and GROW_ON_GPF set.
+With the new driver, well, our memory consumption is scary since
+implementing GROW_ON_GPF in an upstream-friendly way is a bit more work
+and isn't expected to hit the 5.2 window.
+
+Given this is kernel facing, I'm hoping 're able to share some answers
+here?
+
+> I think this comment might have survived since the very earliest version
+> of the Midgard driver! :)
+
+^_^
+
+> But I'm not sure anything will attempt to lock a region spanning two
+> pages like that.
+
+At least at the moment, I align everything kernel-facing to page
+granularity in userspace, so it's not a cornercase I'm going to hit
+anytime soon. Still probably better to have it technically correct.
+
+> To be fair only for BASE_HW_ISSUE_6367/T60X - but yes it's not a
+> pleasant workaround. There's no way on that hardware to reliably drain
+> the write buffer other than waiting.
+
+*wishing T60X disappeared intensifies* ;)
+
+Granted there are enough other errata specific to it that aren't worked
+around here that, well, it makes you wonder ;)
+
+> Do we have a good way of user space determining which requirements are
+> supported by the driver? At the moment it's just the one. kbase outgeew
+> the original u16 and has an ugly "compat_core_req", so I suspect you're
+> going to need to add several more along the way.
+
+Oh, so that's why compat_/core_req is split off! I thought somebody just
+thought it would be "fun" to break the UABI ;)
+
+I've definitely issues using the wrong core_req field for the kbase I
+had setup, that set me back a little bit on RK3399/T860 bringup *purses
+lips*
+
+To be fair, bunches of the kbase reqs are for soft jobs, which I don't
+feel are a good fit for how the Panfrost kernel works. If we need to
+implement functionality corresponding to softjobs, that would likely be
+done with dedicated ioctl(s), instead of affecting the core_req field.
+
+On that note
+
+> You might also want to consider being able to submit more than one job
+> chain at a time - but that could easily be implemented using a new ioctl
+> in the future.
+
+The issue with that at the bottom is having to introduce something akin
+to kbase's annoyingly intra-job-chain dependency management (read: I
+still don't understand how FBOs are supposed to work with kbase ;) ),
+which AFAIK we push off to userspace right now via standard fencing. If
+we want to submit batches at a time, we would potentially need to
+express those somewhat complex dependency trees, which is a lot of work
+for diminishing returns at this stage. Future ioctl indeed...
+
+> There's no SUBMIT_CL in this posting? I think you just need s/_CL//.
+
++1
+
+> You are probably going to want flags for at least:
 > 
-> > Hm, I would actually argue the reverse.  Warnings are generally bad and
-> > -Werror is useful for ensuring that we don't have any.  For warnings
-> > that don't provide value, we just disable those individual warnings.
+>  * No execute/No read/No write (good for security, especially with
+> buffer sharing between processes)
 > 
-> Sure, during development it's an excellent idea to investigate compiler
-> warnings, and -Werror can be useful for that. But the Linux kernel is
-> built by countless users in wildly varying environments, and it's almost
-> a given that someone will use a compiler that'll complain about a valid
-> part of your code whose style it considers bad.
+>  * Alignment (shader programs have quite strict alignment requirements,
+> I believe kbase just ensures that the shader memory block doesn't cross
+> a 16MB boundary which covers most cases).
+> 
+>  * Page fault behaviour (kbase has GROW_ON_GPF)
+> 
+>  * Coherency management
 
-Maybe so, but objtool only supports two compilers: GCC and clang.  And
-only one version of libelf ;-)
++1 for all of these. This is piped through in userspace (for kbase), but
+the corresponding functionality isn't there yet in the Panfrost kernel.
+You're right there should at least be a flags field for future use.
 
-> As an example, the warning that's breaking the build for me is -Wundef
-> complaining about several "#if UNDEFINED_IDENTIFIER" constructs in the
-> libelf headers. (I agree with gcc in considering this bad style, but
-> it's perfectly valid C, and there probably wasn't a warning about it
-> back when this header was written.)
+> One issue that I haven't got to the bottom of is that I can trigger a
+> lockdep splat:
 
-I consider that a good thing, because I *want* the build to be broken
-when somebody uses a bad version of libelf.  A patch to produce a more
-useful error message (e.g., "bad version of libelf") would be welcome of
-course.
+Oh, "fun"...
 
-If/when we get to the point where there's a valid use case for warnings
-in the objtool build, I would consider this patch.  But we don't seem to
-be there yet.
+> This is with the below simple reproducer:
 
--- 
-Josh
+@Rob, ideas?
+
+> Other than that in my testing (on a Firefly RK3288) I didn't experience
+> any problems pushing jobs from the ARM userspace blob through it.
+
+Nice!
+
+Besides what was mentioned above, any other functionality you'll need
+for that? (e.g. the infamous replay workaround...)
