@@ -5,57 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD989C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1EBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE9221872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE62521872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTLf8ikW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gK/yz/qG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbfDELvU (ORCPT
+        id S1731286AbfDELvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:51:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36341 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731268AbfDELvQ (ORCPT
+        Fri, 5 Apr 2019 07:51:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46958 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDELvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:51:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y13so7656719wrd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:51:15 -0700 (PDT)
+        Fri, 5 Apr 2019 07:51:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t17so7569455wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z4hOLEy1KAA39sFWNk89CJxULZaItnMmPfy0ZrsUguQ=;
-        b=uTLf8ikWgZGaU5U704onyfDUodYw6lCqifcV6omsTrKn4JHBdcCZAZLs5gpSrH6twO
-         4EjX+jRArj24uk1brErJRDIG4EN/cx05I+NdmSAfe5uKOsFUKhUdFLhMnEeEYR6XSDID
-         IeKbRIGSwopflQDoyfj1SLCLXwtw7NhEWiYA3vww9V/xPmvsrPnFEEUvkYo6KumHCvso
-         vkSG63fdjibxtbBTGyoCMn4wQn7nUXEASDSEL0PKl8qJM6jxmkMW2HdNN+XxskN3IAbX
-         KSHoYDihVRStp+vKqC2EEo7wTdVDdcEIOSekPMfpdJAfRj1LTs8UXqdghcsOxganz87W
-         cOSA==
+        bh=eVtJaCRQkL06Lgj4cYGTrwycXVpfjWzOTw0Y4T0ycL4=;
+        b=gK/yz/qGLluaLr0VEbpy4b/NOkCKfLa23Mq3oyuyjXjAd+BmnANAhTrMPaVhd9kmXW
+         q7KA7hjlTjKhk6vEyrs2q7BEsCTNmBtk7QParQgv9OZMB4dq+xOeZTfdzDKghG0nVorA
+         bZYCe6PlcaDffA5MyIx4MsIeumV8T+/PpYoRcd3iS+FH/uJTz4Ja1yAbS0KnbKFih6tU
+         ZTI3fQvu/9lnbtJM3oA1mowkFRJTAWC3GuziGZAE9uJIHs0JGnep/C3vD3GmcMFdC6oH
+         7N+UMqqe2D1QrIJc3E4IQYMhw3BL2576iDieyfpQXySvudn5McQ4I2TXMEVW9uu9DScf
+         ILBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=z4hOLEy1KAA39sFWNk89CJxULZaItnMmPfy0ZrsUguQ=;
-        b=INUo2uWBHQnWJOyVq+LtNcesMMYKhsDvzQhWaof192Nc1yGSNlf8c5zceKYkGhCkV+
-         q8Ol0SOr805GGnRYhkSw6iF5EkxAJcao7a6iLPYtr4hEOS73XgxXc7CGgmp0lCllQSy6
-         WNWRBvwpa+V2rKegPPx42ZUbER6U8m3aJHH9AytsyyAqXdMU+8DaGE5KrMLGJsXi4MQD
-         0CNGITTjtDF/OyFktxfLO34Jim2frnNWfBBEAu0/FMFH1mh9kJN2PTzCyebt+Npv/bMr
-         B1j9Nkt/5ZC5WqvIap+dkJfLg5CAJuYKopDHPBfVAlW10E+1Hn3n57heHO9j/RS785+M
-         T22A==
-X-Gm-Message-State: APjAAAURd6J65NvqVY9sWG9eQlXQV8lviARNXG0BmKCU/tk6LTm+1gUD
-        dHffI2jPmgI8JazZ+OCS2j0=
-X-Google-Smtp-Source: APXvYqzXXzPbcrL114rjzAe/hUC5/G0u+3qzwTXWsA6V4W4RWDRI+5ISLM+d1K9vaj7I6i0v+FmTbw==
-X-Received: by 2002:adf:f10c:: with SMTP id r12mr8008718wro.216.1554465074869;
-        Fri, 05 Apr 2019 04:51:14 -0700 (PDT)
+        bh=eVtJaCRQkL06Lgj4cYGTrwycXVpfjWzOTw0Y4T0ycL4=;
+        b=Ux7q0d2k64d20mXO90f/mqka5E0SQ1sDcFPTFuZUJ/9CnMSUlH2xAEsiLkseyaAXBq
+         DFnf/BWNPaT54NZcwOpirG/1TXTSf1qGwPwgA9wYXL3RnZrVebb5p6OZux9ab2Cc7IDv
+         NhExJKxa+4FCdJ77J+FVEYqvQnu8YFHVAZpF+UafBmMceKoi6PFtASAjoxAEhPX1m4Ym
+         p3TbJZ1eV/oqRot2oTv4K+OYreAi3ld42GXv8eTAyl8q3nmMixUzcTh8GpQgOWwGIAJO
+         290qS6oyIEB9q/Z4XS8LGfactVvCMrnmtakrTURlq7Iv9HhJEZmCcg6R2e0Wi4CghCJ9
+         b2VA==
+X-Gm-Message-State: APjAAAX1wQU2+L5auZhmRYy6BDgJ9VI08uB0F987sU3G32Oa6PHcv05x
+        GC73RL+MTl9ZSyNJpWmvKdA=
+X-Google-Smtp-Source: APXvYqxsNu+QSOxKTRBs+pDbZjipKEmZVsheIqMIax4sUKKoTDW5BJEcsbARSm+yBpfjBkMmYYM6+A==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr6380191wrs.155.1554465072316;
+        Fri, 05 Apr 2019 04:51:12 -0700 (PDT)
 Received: from localhost.localdomain ([178.138.34.252])
-        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.51.12
+        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.51.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 04:51:14 -0700 (PDT)
+        Fri, 05 Apr 2019 04:51:11 -0700 (PDT)
 From:   Andra Danciu <andradanciu1997@gmail.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -64,9 +63,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     daniel.baluta@nxp.com, Andra Danciu <andradanciu1997@gmail.com>
-Subject: [PATCH 14/20] ASoC: mpc8610_hpcd: Switch to SPDX identifier
-Date:   Fri,  5 Apr 2019 14:50:04 +0300
-Message-Id: <20190405115010.28838-15-andradanciu1997@gmail.com>
+Subject: [PATCH 13/20] ASoC: mpc5200_psc_i2s: Switch to SPDX identifier
+Date:   Fri,  5 Apr 2019 14:50:03 +0300
+Message-Id: <20190405115010.28838-14-andradanciu1997@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405115010.28838-1-andradanciu1997@gmail.com>
 References: <20190405115010.28838-1-andradanciu1997@gmail.com>
@@ -80,35 +79,31 @@ management.
 
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 ---
- sound/soc/fsl/mpc8610_hpcd.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ sound/soc/fsl/mpc5200_psc_i2s.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/fsl/mpc8610_hpcd.c b/sound/soc/fsl/mpc8610_hpcd.c
-index a639b52c16f6..f6261a3eeb0f 100644
---- a/sound/soc/fsl/mpc8610_hpcd.c
-+++ b/sound/soc/fsl/mpc8610_hpcd.c
-@@ -1,14 +1,10 @@
--/**
-- * Freescale MPC8610HPCD ALSA SoC Machine driver
+diff --git a/sound/soc/fsl/mpc5200_psc_i2s.c b/sound/soc/fsl/mpc5200_psc_i2s.c
+index d8232943ccb6..6de97461ba25 100644
+--- a/sound/soc/fsl/mpc5200_psc_i2s.c
++++ b/sound/soc/fsl/mpc5200_psc_i2s.c
+@@ -1,10 +1,10 @@
+-/*
+- * Freescale MPC5200 PSC in I2S mode
+- * ALSA SoC Digital Audio Interface (DAI) driver
 - *
-- * Author: Timur Tabi <timur@freescale.com>
-- *
-- * Copyright 2007-2010 Freescale Semiconductor, Inc.
-- *
-- * This file is licensed under the terms of the GNU General Public License
-- * version 2.  This program is licensed "as is" without any warranty of any
-- * kind, whether express or implied.
+- * Copyright (C) 2008 Secret Lab Technologies Ltd.
+- * Copyright (C) 2009 Jon Smirl, Digispeaker
 - */
-+// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL
 +//
-+// Freescale MPC8610HPCD ALSA SoC Machine driver
++// Freescale MPC5200 PSC in I2S mode
++// ALSA SoC Digital Audio Interface (DAI) driver
 +//
-+// Author: Timur Tabi <timur@freescale.com>
-+//
-+// Copyright 2007-2010 Freescale Semiconductor, Inc.
++// Copyright (C) 2008 Secret Lab Technologies Ltd.
++// Copyright (C) 2009 Jon Smirl, Digispeaker
  
  #include <linux/module.h>
- #include <linux/interrupt.h>
+ #include <linux/of_device.h>
 -- 
 2.11.0
 
