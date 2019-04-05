@@ -2,115 +2,94 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F246C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C582EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526982186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DAybXbOS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nVUwHoXl"
+	by mail.kernel.org (Postfix) with ESMTP id 8846120652
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554460257;
+	bh=hVgHTrmUCickUmqGfi+43T0tLcwG+pSRYSJa/fC7Dcg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Q/fwsn/ngqQ9ryU/Pcchf4mW2mr+CAW0ro7q6a+WB6Fg14eNTLzIdJ97gimshUGr
+	 H1fl85wv2slt4qJ5O+VIU6zRgyi00ZjzcAqDDGW3iCcBApFLSzz/Xdis+8XEL+2C3D
+	 +qQMMXkr7L8PVkyjE5WLy0IMloH0DMJ/A10TCmaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfDEK0B (ORCPT
+        id S1730702AbfDEKa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:26:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37982 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730467AbfDEK0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:26:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C4C4961791; Fri,  5 Apr 2019 10:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554459959;
-        bh=ecfe3QXZi1M0P/wrkMh/PeD8+1p8Ao18xx7AYBbOP38=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DAybXbOSvr598IxSExehXC10CxSbpOl6T+PVF+NXZpg7Pawowx0fLuM0zQSWsfxoB
-         kyOAffjHFTpxo2Q4m17Xq74b+DDajrTRH4O9tmgEPnvFjrcvXGZpc7Jt5/CpgqcMOT
-         7KUY14oBX98KeAfEas3GpogucQp9B+J+7VCxSg5k=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EDB96177C;
-        Fri,  5 Apr 2019 10:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554459929;
-        bh=ecfe3QXZi1M0P/wrkMh/PeD8+1p8Ao18xx7AYBbOP38=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nVUwHoXlhGYXf4pfk93QNCIPvh1uowlBZGNrTfm7l9AV03f8Ub3W8y6BDikA/SZNv
-         LSAKeS9EEKdz8/mCnjSX32tITFS7LoZcPX7bUtRClE/gSVJeBIDwTlYuAy0hlj9mvj
-         yiUf7h6dvjat4+B/mnWmWCv5YPu+7bV1SdE/xlWg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2EDB96177C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] stm class: Fix channel free in stm output free path
-Date:   Fri,  5 Apr 2019 15:54:42 +0530
-Message-Id: <20190405102442.25718-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 5 Apr 2019 06:30:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60350 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730579AbfDEKa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:30:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D67E3B07D;
+        Fri,  5 Apr 2019 10:30:54 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 12:30:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] mm, memory_hotplug: provide a more generic
+ restrictions for memory hotplug
+Message-ID: <20190405103053.GO12864@dhcp22.suse.cz>
+References: <20190404125916.10215-1-osalvador@suse.de>
+ <20190404125916.10215-3-osalvador@suse.de>
+ <880c5d09-7d4e-2a97-e826-a8a6572216b2@redhat.com>
+ <20190404180144.lgpf6qgnp67ib5s7@d104.suse.de>
+ <5f735328-3451-ebd7-048e-e83e74e2c622@redhat.com>
+ <20190405071418.GN12864@dhcp22.suse.cz>
+ <a4230528-dc7e-e17c-c363-e3da7961dbf1@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a4230528-dc7e-e17c-c363-e3da7961dbf1@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tingwei Zhang <tingwei@codeaurora.org>
+On Fri 05-04-19 10:05:09, David Hildenbrand wrote:
+> On 05.04.19 09:14, Michal Hocko wrote:
+> > On Thu 04-04-19 20:27:41, David Hildenbrand wrote:
+> >> On 04.04.19 20:01, Oscar Salvador wrote:
+> > [...]
+> >>> But I am not really convinced by MHP_SYSTEM_RAM name, and I think we should stick
+> >>> with MHP_MEMBLOCK_API because it represents __what__ is that flag about and its
+> >>> function, e.g: create memory block devices.
+> > 
+> > Exactly
+> 
+> Fine with me for keeping what Oscar has.
+> 
+> > 
+> >> This nicely aligns with the sub-section memory add support discussion.
+> >>
+> >> MHP_MEMBLOCK_API immediately implies that
+> >>
+> >> - memory is used as system ram. Memory can be onlined/offlined. Markers
+> >>   at sections indicate if the section is online/offline.
+> > 
+> > No there is no implication like that. It means only that the onlined
+> > memory has a sysfs interface. Nothing more, nothing less
+> 
+> As soon as there is a online/offline interface, you *can* (and user
+> space usually *will*) online that memory. Onlining/offlining is only
+> defined for memory to be added to the buddy - memory to be used as
+> "system ram". Doing it for random device memory will not work / result
+> in undefined behavior.
 
-Number of free masters is not set correctly in stm
-free path. Fix this by properly adding the number
-of output channels before setting them to 0 in
-stm_output_disclaim().
-
-Currently it is equivalent to doing nothing since
-master->nr_free is incremented by 0.
-
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: stable@vger.kernel.org
----
- drivers/hwtracing/stm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index c7ba8acfd4d5..5b5807cbcf7c 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -218,8 +218,8 @@ stm_output_disclaim(struct stm_device *stm, struct stm_output *output)
- 	bitmap_release_region(&master->chan_map[0], output->channel,
- 			      ilog2(output->nr_chans));
- 
--	output->nr_chans = 0;
- 	master->nr_free += output->nr_chans;
-+	output->nr_chans = 0;
- }
- 
- /*
+No, not really. We really do not care where the memory comes from. Is it
+RAM, NVDIMM, $FOO_BAR_OF_A_FUTURE_BUZZ. We only do care that the memory
+can be onlined - user triggered associated with a zone. The memory even
+doesn't have to go to the page allocator.
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Michal Hocko
+SUSE Labs
