@@ -2,108 +2,100 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB79C282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638DFC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDA721773
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554496648;
-	bh=lkXfXLb6Nio46/ZeLdZm/xm+RmZFUfnRAf6GLw8hUmk=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=RJDnRqox8fXtOPowArmDaccjasf+srxWBuouSub6NusB3/PUwCdALde6nAfWOXryr
-	 d8ZXMoM0nNRONcDhiNjlOhQFalluTPkbb/aA7lCsmzd/0uNqp4oz0rJq/wSf5Omb4q
-	 Sj5y7f39Tbfw0N8V+ohGMWwvRCQUHUT3CngAPyY0=
+	by mail.kernel.org (Postfix) with ESMTP id 31EAA2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfDEUh0 (ORCPT
+        id S1726397AbfDEUiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 16:37:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfDEUh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 16:37:26 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 690402146F;
-        Fri,  5 Apr 2019 20:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554496645;
-        bh=lkXfXLb6Nio46/ZeLdZm/xm+RmZFUfnRAf6GLw8hUmk=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=AYw4Tlw3wIBCb1rniLIcUhH+HKbKkRZvODn1sHsUfGEiFPZtVGQn4c4ElYolsIhw/
-         OxsUqqV/R6CzTMiOerbeD34pR/oCkG2V9JfiW6XaH/Gyn86WNCG+QueQELTR8dPEPG
-         fmbqODGYWD8TVvi1IMKRh4tCNAvQWye4PpBfwW28=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 5 Apr 2019 16:38:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49795 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfDEUiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 16:38:52 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hCVbs-0004Ju-N2; Fri, 05 Apr 2019 22:38:48 +0200
+Date:   Fri, 5 Apr 2019 22:38:48 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Baoquan He <bhe@redhat.com>
+cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        mingo@kernel.org, bp@alien8.de, hpa@zytor.com, dyoung@redhat.com,
+        x86@kernel.org
+Subject: Re: [PATCH v3 2/3] x86/kexec/64: Error out if try to jump to old
+ 4-level kernel from 5-level kernel
+In-Reply-To: <20190312103051.18086-3-bhe@redhat.com>
+Message-ID: <alpine.DEB.2.21.1904052223120.1802@nanos.tec.linutronix.de>
+References: <20190312103051.18086-1-bhe@redhat.com> <20190312103051.18086-3-bhe@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
-References: <20190404215344.6330-1-sboyd@kernel.org> <20190404215344.6330-2-sboyd@kernel.org> <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks list
-Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>
-Message-ID: <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 05 Apr 2019 13:37:24 -0700
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vaittinen, Matti (2019-04-04 23:51:43)
-> On Thu, 2019-04-04 at 14:53 -0700, Stephen Boyd wrote:
-> > We recently introduced a change to support devm clk lookups. That
-> > change
-> > introduced a code-path that used clk_find() without holding the
-> > 'clocks_mutex'. Unfortunately, clk_find() iterates over the 'clocks'
-> > list and so we need to prevent the list from being modified while
-> > iterating over it by holding the mutex. Similarly, we don't need to
-> > hold
-> > the 'clocks_mutex' besides when we're dereferencing the clk_lookup
-> > pointer
->=20
-> /// Snip
->=20
-> > -out:
-> > +static struct clk_lookup *clk_find(const char *dev_id, const char
-> > *con_id)
-> > +{
-> > +     struct clk_lookup *cl;
-> > +
-> > +     mutex_lock(&clocks_mutex);
-> > +     cl =3D __clk_find(dev_id, con_id);
-> >       mutex_unlock(&clocks_mutex);
-> > =20
-> > -     return cl ? clk : ERR_PTR(-ENOENT);
-> > +     return cl;
-> > +}
->=20
-> I am not an expert on this but reading commit message abowe and seeing
-> the code for clk_find() looks a bit scary. If I understand it
-> correctly, the clocks_mutex should be held when dereferencing the
-> clk_lookup returned by clk_find. The clk_find implementation drops the
-> lock before returning - which makes me think I miss something here. How
-> can the caller ever safely dereference returned clk_lookup pointer?
-> Just reading abowe makes me think that lock should be taken by whoever
-> is calling the clk_find, and dropped only after caller has used the
-> found clk_lookup for whatever caller intends to use it. Maybe I am
-> missing something?
->=20
+On Tue, 12 Mar 2019, Baoquan He wrote:
 
-The only user after this patch (devm) is doing a pointer comparison so
-it looks OK. But yes, in general there shouldn't be users of clk_find()
-that dereference the pointer because there isn't any protection besides
-the mutex.
+> In relocate_kernel() CR4.LA57 flag is set before kexec jumping if
+> the kernel has 5-level paging enabled. Then in boot/compressed/head_64.S,
+> it will check if the booting kernel is in 4-level or 5-level paging
+> mode, and handle accordingly. However, the old kernel which doesn't
+> contain the 5-level codes doesn't know how to cope with it, then #GP
+> triggered.
 
+The above is more than confusing. I assume you want to say:
+
+  If the running kernel has 5-level paging activated, the 5-level paging
+  mode is preserved across kexec. If the kexec'ed kernel does not contain
+  support for handling active 5-level paging mode in the decompressor, the
+  decompressor will crash with #GP.
+
+> Instead of triggering #GP during kexec kernel boot, error out during
+> kexec loading if find out we are trying to jump to old 4-level kernel
+> from 5-level kernel.
+
+Prevent this situation at load time. If 5-level paging is active, check the
+xloadflags whether the kexec kernel can handle 5-level paging at least in
+the decompressor. If not, reject the load attempt.
+ 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 1f3b77367948..4c9c079b5673 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -321,6 +321,11 @@ static int bzImage64_probe(const char *buf, unsigned long len)
+>  		return ret;
+>  	}
+>  
+> +	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
+> +		pr_err("Can not jump to old 4-level kernel from 5-level kernel.\n");
+
+This is confusing at best.
+
+     	"bzImage cannot handle 5-level paging mode\n"
+
+or something like this.
+
+> +		return ret;
+
+Thanks,
+
+	tglx
