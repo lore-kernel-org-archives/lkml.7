@@ -2,70 +2,203 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4366C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B0CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF012171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506822175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfDEKg3 (ORCPT
+        id S1730826AbfDEKg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:36:29 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:55866 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbfDEKg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:36:29 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 7DC372161C;
-        Fri,  5 Apr 2019 12:36:27 +0200 (CEST)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 6990720C6D;
-        Fri,  5 Apr 2019 12:36:27 +0200 (CEST)
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH] arm64: dts: qcom: msm8998: Fix blsp2_i2c5 address
-Message-ID: <464822ba-8bf9-a287-bf6c-05988c7d9f88@free.fr>
-Date:   Fri, 5 Apr 2019 12:36:27 +0200
+        Fri, 5 Apr 2019 06:36:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45702 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730329AbfDEKg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:36:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF80168F;
+        Fri,  5 Apr 2019 03:36:58 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77EA3F557;
+        Fri,  5 Apr 2019 03:36:56 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] iommu: io-pgtable: Add ARM Mali midgard MMU page
+ table format
+To:     Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, Sean Paul <sean@poorly.run>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-2-robh@kernel.org>
+ <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
+ <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <0c5f474e-6dd4-8ba5-8c2b-52a99e9b1ca5@arm.com>
+Date:   Fri, 5 Apr 2019 11:36:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Apr  5 12:36:27 2019 +0200 (CEST)
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blsp1_i2c1 is at 0x0c175000
-blsp2_i2c5 is at 0x0c1ba000 (the label is correct)
+On 05/04/2019 10:51, Robin Murphy wrote:
+> Hi Steve,
+> 
+> On 05/04/2019 10:42, Steven Price wrote:
+>> First let me say congratulations to everyone working on Panfrost - it's
+>> an impressive achievement!
+>>
+>> Full disclosure: I used to work on the Mali kbase driver. And have been
+>> playing around with running the Mali user-space blob with the Panfrost
+>> kernel driver.
+>>
+>> On 01/04/2019 08:47, Rob Herring wrote:
+>>> ARM Mali midgard GPU is similar to standard 64-bit stage 1 page
+>>> tables, but
+>>> have a few differences. Add a new format type to represent the
+>>> format. The
+>>> input address size is 48-bits and the output address size is 40-bits
+>>> (and
+>>> possibly less?). Note that the later bifrost GPUs follow the standard
+>>> 64-bit stage 1 format.
+>>>
+>>> The differences in the format compared to 64-bit stage 1 format are:
+>>>
+>>> The 3rd level page entry bits are 0x1 instead of 0x3 for page entries.
+>>>
+>>> The access flags are not read-only and unprivileged, but read and write.
+>>> This is similar to stage 2 entries, but the memory attributes field
+>>> matches
+>>> stage 1 being an index.
+>>>
+>>> The nG bit is not set by the vendor driver. This one didn't seem to
+>>> matter,
+>>> but we'll keep it aligned to the vendor driver.
+>>
+>> The nG bit should be ignored by the hardware.
+>>
+>> The MMU in Midgard/Bifrost has a quirk similar to
+>> IO_PGTABLE_QUIRK_TLBI_ON_MAP - you must perform a cache flush for the
+>> GPU to (reliably) pick up new page table mappings.
+>>
+>> You may not have seen this because of the use of the JS_CONFIG_START_MMU
+>> bit - this effectively performs a cache flush and TLB invalidate before
+>> starting a job, however when using a GPU like T760 (e.g. on the Firefly
+>> RK3288) this bit isn't being set. In my testing on the Firefly board I
+>> saw GPU page faults because of this.
+>>
+>> There's two options for fixing this - a patch like below adds the quirk
+>> mode to the MMU. Or alternatively always set JS_CONFIG_START_MMU on
+>> jobs. In my testing both options solve the page faults.
+>>
+>> To be honest I don't know the reasoning behind kbase making the
+>> JS_CONFIG_START_MMU bit conditional - I'm not aware of any reason why it
+>> can't always be set. My guess is performance, but I haven't benchmarked
+>> the difference between this and JS_CONFIG_START_MMU.
+>>
+>> -----8<----------
+>>  From e3f75c7f04e43238dfc579029b8c11fb6b4a0c18 Mon Sep 17 00:00:00 2001
+>> From: Steven Price <steven.price@arm.com>
+>> Date: Thu, 4 Apr 2019 15:53:17 +0100
+>> Subject: [PATCH] iommu: io-pgtable: IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE
+>>
+>> Midgard/Bifrost GPUs require a TLB invalidation when mapping pages,
+>> implement IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE iommu page table
+>> formats and add the quirk bit to Panfrost.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>   drivers/gpu/drm/panfrost/panfrost_mmu.c |  1 +
+>>   drivers/iommu/io-pgtable-arm.c          | 11 +++++++++--
+>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> index f3aad8591cf4..094312074d66 100644
+>> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> @@ -343,6 +343,7 @@ int panfrost_mmu_init(struct panfrost_device *pfdev)
+>>       mmu_write(pfdev, MMU_INT_MASK, ~0);
+>>
+>>       pfdev->mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
+>> +        .quirks        = IO_PGTABLE_QUIRK_TLBI_ON_MAP,
+>>           .pgsize_bitmap    = SZ_4K, // | SZ_2M | SZ_1G),
+>>           .ias        = 48,
+>>           .oas        = 40,    /* Should come from dma mask? */
+>> diff --git a/drivers/iommu/io-pgtable-arm.c
+>> b/drivers/iommu/io-pgtable-arm.c
+>> index 84beea1f47a7..45fd7bbdf9aa 100644
+>> --- a/drivers/iommu/io-pgtable-arm.c
+>> +++ b/drivers/iommu/io-pgtable-arm.c
+>> @@ -505,7 +505,13 @@ static int arm_lpae_map(struct io_pgtable_ops *ops,
+>> unsigned long iova,
+>>        * Synchronise all PTE updates for the new mapping before there's
+>>        * a chance for anything to kick off a table walk for the new iova.
+>>        */
+>> -    wmb();
+>> +    if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_TLBI_ON_MAP) {
+>> +        io_pgtable_tlb_add_flush(&data->iop, iova, size,
+>> +                     ARM_LPAE_BLOCK_SIZE(2, data), false);
+> 
+> For correctness (in case this ever ends up used for something with
+> VMSA-like invalidation behaviour), the granule would need to be "size"
+> here, rather than effectively hard-coded.
 
-Fixes: 1e71d0c273d0a ("arm64: dts: qcom: msm8998: Enumerate i2c controllers")
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ah yes - I did rather just copy/paste this from io-pgtable-arm-v7s with
+minor fix-ups.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index a692cbc8dd84..57426bde7580 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -982,7 +982,7 @@
- 
- 		blsp2_i2c5: i2c@c1ba000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
--			reg = <0x0c175000 0x600>;
-+			reg = <0x0c1ba000 0x600>;
- 			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>,
--- 
-2.17.1
+> However, since Mali's invalidations appear to operate on arbitrary
+> ranges, it would probably be a lot more efficient for the driver to
+> handle this case directly, by just issuing a single big invalidation
+> after the for_each_sg() loop in panfrost_mmu_map().
+
+Yes - that would probably be a better option. Although I think
+personally I'd lean towards just using JS_CONFIG_START_MMU for most
+cases. The only thing that won't handle is modifying the MMU while the
+job is running (e.g. faulting in pages). But that can be handled
+internally in Panfrost by invalidating the exact region which is being
+populated.
+
+Steve
+
+> Robin.
+> 
+>> +        io_pgtable_tlb_sync(&data->iop);
+>> +    } else {
+>> +        wmb();
+>> +    }
+>>
+>>       return ret;
+>>   }
+>> @@ -800,7 +806,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg
+>> *cfg, void *cookie)
+>>       struct arm_lpae_io_pgtable *data;
+>>
+>>       if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+>> IO_PGTABLE_QUIRK_NO_DMA |
+>> -                IO_PGTABLE_QUIRK_NON_STRICT))
+>> +                IO_PGTABLE_QUIRK_NON_STRICT |
+>> +                IO_PGTABLE_QUIRK_TLBI_ON_MAP))
+>>           return NULL;
+>>
+>>       data = arm_lpae_alloc_pgtable(cfg);
+>>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
