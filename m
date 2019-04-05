@@ -2,100 +2,116 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FA3C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B67DC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54873217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A55A21738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhw6cGdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbfDEQia (ORCPT
+        id S1731546AbfDEQjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:38:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11380 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfDEQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:38:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 09:38:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,313,1549958400"; 
-   d="scan'208";a="131783465"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga008.jf.intel.com with ESMTP; 05 Apr 2019 09:38:29 -0700
-Date:   Fri, 5 Apr 2019 09:38:29 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [patch V2 03/29] x86/irq/64: Remove a hardcoded irq_stack_union
- access
-Message-ID: <20190405163829.GC19359@linux.intel.com>
-References: <20190405150658.237064784@linutronix.de>
- <20190405150928.684985548@linutronix.de>
- <20190405163727.GB19359@linux.intel.com>
+        Fri, 5 Apr 2019 12:39:00 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43376 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfDEQjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:39:00 -0400
+Received: by mail-yw1-f67.google.com with SMTP id j66so2522051ywc.10;
+        Fri, 05 Apr 2019 09:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EaFTLz3Df/RsEJgJoXR4FLEpu4tPIcSpK3McOBuHvwA=;
+        b=mhw6cGdh3e8Rt7u0g8jAL0/2EZP4NNCnCMO+qHmYD5HkzBxuKN7z+5HnHlkY7VSncT
+         2Ng3dnkFhe5AZEbU8Ah7Uce6bnNkXC68vWzz6x6jdiUKWpYPWRz8jEOP6hfuS76NAfCa
+         VOddrcW4B72MO8gBfdJYsja52RaWS6OQJgAjZgbHZ/Zw38yxBmrlmz4YjjYeHwXxNDrv
+         99jFyqs8fw9Nf8fqatpQhgfGLsPPDI2xg4k1yDZKztvl7tyVtWO+hZde7utHnFDjtucn
+         BncaVnerxjdfiDc7rl7tcruAXMNyHHKhSPnNVG/GDR8286S7n4AQFmB2FLHHp9wcjbrI
+         vCJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EaFTLz3Df/RsEJgJoXR4FLEpu4tPIcSpK3McOBuHvwA=;
+        b=RGd2KrmB4xEjiJI5LWUccHfM3KpFszae+q3xfcnVkjAasuFeX49ZJt9oRg0cggeasl
+         GITvdLd8AKnAmloZJToKjOy36ly0C32rpN2jDM+uOnRM1Jwu7EoQk44z9UcWp/OIFqvU
+         3ucMc2ON9d1LjpnwlygSm+s1K73WMB9oLMf9k57bFn0kpJWOP2VRR4dDP+iLKsCauvL2
+         XGQ+rIfxPB9U1I5WVVyfi7tDa1w8uM8xXFfsU97mHFhegj10LwHaAS4B8AT2+fLItfQg
+         3/OZpAcgSm01YdKL/Bk+O3lgxuIfq1mARcKiLRyENJYd2iLR07OiOuqAbGRvX1+R4gD4
+         thRw==
+X-Gm-Message-State: APjAAAWXqgwH9Z3otnLQXP4FoAu9Zu4VrVbhVqqR5uyzs+DYZbpekEhw
+        P/oJCkpGtXbcz6NqJO9gxN+RTkCYGxRLaz4HUtI=
+X-Google-Smtp-Source: APXvYqyFBSCyux5xCAwyr0AFo7eC9w4xTQRCuo0XMEOV4Vv89zKv1/bX/3Uu1xBrC5mSTln6ZeMUntiBYpMe24Q3sSA=
+X-Received: by 2002:a81:7895:: with SMTP id t143mr11278742ywc.156.1554482338951;
+ Fri, 05 Apr 2019 09:38:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405163727.GB19359@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190405122446.2101-1-peron.clem@gmail.com> <20190405122446.2101-5-peron.clem@gmail.com>
+ <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com> <20190405151100.jjjg55z7sg35ijxw@flea>
+In-Reply-To: <20190405151100.jjjg55z7sg35ijxw@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Fri, 5 Apr 2019 18:40:23 +0200
+Message-ID: <CAJiuCcdVsiKRxLFKnmAPnApi2EJANbuQf9WUESGE+LBP8zpD+A@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 09:37:27AM -0700, Sean Christopherson wrote:
-> On Fri, Apr 05, 2019 at 05:07:01PM +0200, Thomas Gleixner wrote:
-> > From: Andy Lutomirski <luto@kernel.org>
-> > 
-> > stack_overflow_check() is using both irq_stack_ptr and irq_stack_union to
-> > find the IRQ stack. That's going to break when vmapped irq stacks are
-> > introduced.
-> > 
-> > Change it to just use irq_stack_ptr.
-> > 
-> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > 
-> > ---
-> >  arch/x86/kernel/irq_64.c |    3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > --- a/arch/x86/kernel/irq_64.c
-> > +++ b/arch/x86/kernel/irq_64.c
-> > @@ -55,9 +55,8 @@ static inline void stack_overflow_check(
-> >  	    regs->sp <= curbase + THREAD_SIZE)
-> >  		return;
-> >  
-> > -	irq_stack_top = (u64)this_cpu_ptr(irq_stack_union.irq_stack) +
-> > -			STACK_TOP_MARGIN;
-> >  	irq_stack_bottom = (u64)__this_cpu_read(irq_stack_ptr);
-> > +	irq_stack_top = irq_stack_bottom - IRQ_STACK_SIZE + STACK_TOP_MARGIN;
-> 
-> Not introduced in this patch, but the names for top and bottom are flipped,
-> both for irq_stack and estack.  STACK_TOP_MARGIN should also be
-> STACK_BOTTOM_MARGIN.  The actual checks are functionally correct, but holy
-> hell does it make reading the code confusing, and the WARN prints backwards
-> information.
-> 
-> E.g.:
-> 
->   swapper/10 has overflown the kernel stack
-> 
->     cur:ffffc900000bc000,sp:ffff888277b03f78
->     irq stk top-bottom:ffff888277b00080-ffff888277b04000
->     exception stk top-bottom:fffffe00001b4080-fffffe00001b9000
-> 
-> 
-> Printing out top-bottom for "cur" would also probably be helpful.
-> 
-> Let me know if you'd like me to send a patch, or if you'll fold a change
-> into this series.
+Hi,
 
-And hello patch 03/29.  *sigh*
+On Fri, 5 Apr 2019 at 17:11, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
+e:
+>
+> On Fri, Apr 05, 2019 at 02:53:35PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
+> >
+> > Adding this r_pio regulators make a new error in the bootlog :
+> >
+> > [    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
+> > PL regulator
+> > [    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed fo=
+r pin 352
+> > [    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
+> > (7081400.i2c) status -517
+> > [    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
+> > pin 352 (PL0) from group PL0  on device 7022000.pinctrl
+> > [    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
+> > reverse things back
+> >
+> > PL0 and PL1 are SCK/SDA for the PMIC :(
+>
+> How was this DT tested then?
+
+There was a mistake when I tested the patch v2 and only saw this after
+posting the patch.
+
+Can I submit a V3 without pio / r_pio regulators ? (+ the yaml patch separa=
+ted)
+
+Thanks,
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
