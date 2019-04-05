@@ -2,171 +2,92 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4ED21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A38217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIZoq/tp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZhtaXoCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfDEDQb (ORCPT
+        id S1729803AbfDEDYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:16:31 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45536 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbfDEDQb (ORCPT
+        Thu, 4 Apr 2019 23:24:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48636 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfDEDYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:16:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y6so3892616ljd.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R7iCZnPcrxhQugxMFUz3OkN4+WLc3XpfqP5yq6ICQnA=;
-        b=xIZoq/tpHSXLm+dcgjth+tlTmKJC41ifJi1GS4xh477ePCyQbBHizD4WGA6glXiF8V
-         179xU308dukUhBhgmW8kUxmtSBXbyqFW5KMBXK7tFrmUlLvm/i7AgiIfCWWts4FyLpoj
-         /urvLYEGY2jdIuRKliCPvA1CCtw+NOgTapqtu+JKA1A8W6n9/mQNNgzs4wpjcpySAiHn
-         PQXTwztgqdfkbWc9E5GduJ/Ka3mz0VYe1ykbV4Mqw/Lz12dpCWq6+3KQuaLS721u2DMK
-         38H6vL8Lmz/2ttfG2KTMb5jstatRFOrHUNuJyiGRS4Ae9vxFep5IatkDcNW7XPY08iL2
-         C2hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R7iCZnPcrxhQugxMFUz3OkN4+WLc3XpfqP5yq6ICQnA=;
-        b=KPgBbZZpuGn0VEibVDQIM6Q9EU6dmPhC30zkFcE7sIeYK6bzOcgoF36Dr4SstarA1O
-         VXmWhqaya4SJmqVZXtEvJtM91LOp5wgRNRPonEWtSCk7G5FLHurZJlUoQQtH6F3QSYS5
-         69MHwVhsQ5DSXQ8skVUlYj7MGFQigGGo7jtCHnELThpGCNWCiQCZLzgHAaHeQ2mdY/23
-         JOyzBsSGZv9ISUpQdcF+dmOT6fhgvpigxlcRZ2IYDUTZZiFVCDhOXCes4s8DgC0dQyGy
-         Asq5N2W83RYaHvjjQf+8uBE7eTkfPrmLp8SMBksvu6HSoDYEqfHycvNoZzzT1h9iMmCK
-         GPFg==
-X-Gm-Message-State: APjAAAW7cJ/Wy46j4Z+8Vyp1xs1PiVRN8td5Jny/NRwiOtDlJrbRz6ma
-        D+o21Xbk1AHJlKmar/3IAWFZRsYLF5tQxa5AURg1kg==
-X-Google-Smtp-Source: APXvYqxSJJ58PsTUS2XmJEl7rpRXr7GVTBlpeUFKEdpCmaQ4xp84UF0EHUSlgBaSAfktmB1VbxR3Pghgf+dErL/RFyo=
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr5225556ljg.64.1554434189533;
- Thu, 04 Apr 2019 20:16:29 -0700 (PDT)
+        Thu, 4 Apr 2019 23:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jRHLGjsSpnMNMqpwFJNevcBN06h08Z51JVnzqEP2O/c=; b=ZhtaXoChaqGEyYGJ+8LTG64Et
+        w09ibo7DUWHZN6fWYEGKrJfkgdyFOPniXB0biEH02TLCNMa8t9Gdf/iXjhxbN7KDBLQX7OmgA3mrm
+        kJlm3FtIi+rCOHX8Wz8OLrMXkE/lckB0UAkj5bI3bM46u3k/3WInFgqb8TshQnBIevkkJDDvbkJYo
+        /aqvlxJI+Rg/ivvKVNea0RnUdFRln27s2pm3QRHUVUUiGks3U7gDPZbuqLTDM8xPPtDKmjqoa9wlL
+        PyTINlGYH1t4e6e6fUQOUvIsYcFWaa9WP+atJn4qteq62LRcHHQAwcMM/vzUzaHUgxzQ8iXwScpsX
+        9A02vccPA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hCFST-0002pE-Jf; Fri, 05 Apr 2019 03:24:01 +0000
+Date:   Thu, 4 Apr 2019 20:24:01 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm:workingset use real time to judge activity of the
+ file page
+Message-ID: <20190405032401.GN22763@bombadil.infradead.org>
+References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
 MIME-Version: 1.0
-References: <20190404084545.245659903@linuxfoundation.org>
-In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 5 Apr 2019 08:46:18 +0530
-Message-ID: <CA+G9fYs3s1xcB=yDNVwVFfmdeCYPfa6MzRczbXsL7Gy-dbDWXw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/121] 4.14.111-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 at 14:24, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.111 release.
-> There are 121 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat Apr  6 08:44:23 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.111-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, Apr 04, 2019 at 11:30:17AM +0800, Zhaoyang Huang wrote:
+> +++ b/mm/workingset.c
+> @@ -159,7 +159,7 @@
+>  			 NODES_SHIFT +	\
+>  			 MEM_CGROUP_ID_SHIFT)
+>  #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
+> -
+> +#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
+>  /*
+>   * Eviction timestamps need to be able to cover the full range of
+>   * actionable refaults. However, bits are tight in the radix tree
+> @@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+>  	eviction >>= bucket_order;
+>  	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+>  	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+> +	eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
+>  	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+... this isn't against current, or even 5.0.
 
-Summary
-------------------------------------------------------------------------
+>  	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
+> +	entry >>= EVICTION_JIFFIES;
+> +	prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
 
-kernel: 4.14.111-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 4c8aee9c89b14fe8bba63a014b2ec11588683406
-git describe: v4.14.110-121-g4c8aee9c89b1
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.110-121-g4c8aee9c89b1
+These two lines are in the wrong order.  So you're getting (effectively) a
+random answer in your 'prev_jiff', which means your testing isn't thorough
+enough.  I suspect you're only testing cases you're expecting to improve,
+and you aren't testing to make sure that other cases don't regress.
 
-No regressions (compared to build v4.14.109-230-g662f0922cca4)
-
-No fixes (compared to build v4.14.109-230-g662f0922cca4)
-
-Ran 23331 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
