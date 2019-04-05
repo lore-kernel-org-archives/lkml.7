@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B89C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CC5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F942218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD672190B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731601AbfDEPLR (ORCPT
+        id S1731615AbfDEPLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:11:17 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48885 "EHLO
+        Fri, 5 Apr 2019 11:11:19 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48905 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731554AbfDEPLO (ORCPT
+        with ESMTP id S1731580AbfDEPLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:11:14 -0400
+        Fri, 5 Apr 2019 11:11:17 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hCQUr-0005sQ-BT; Fri, 05 Apr 2019 17:11:13 +0200
-Message-Id: <20190405150929.574147028@linutronix.de>
+        id 1hCQUs-0005si-W3; Fri, 05 Apr 2019 17:11:15 +0200
+Message-Id: <20190405150929.757597617@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 05 Apr 2019 17:07:11 +0200
+Date:   Fri, 05 Apr 2019 17:07:13 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V2 13/29] x86/irq/64: Use cpu entry area instead of orig_ist
+Subject: [patch V2 15/29] x86/cpu: Prepare TSS.IST setup for guard pages
 References: <20190405150658.237064784@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,57 +41,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orig_ist[] array is a shadow copy of the IST array in the TSS. The
-reason why it exists is that older kernels used two TSS variants with
-different pointers into the debug stack. orig_ist[] contains the real
-starting points.
+Convert the TSS.IST setup code to use the cpu entry area information
+directly instead of assuming a linear mapping of the IST stacks.
 
-There is no point anymore to do so because the same information can be
-retrieved using the base address of the cpu entry area mapping and the
-offsets of the various exception stacks.
+The store to orig_ist[] is no longer required as there are no users
+anymore.
 
-No functional change. Preparation for removing orig_ist.
+This is the last preparatory step for IST guard pages.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/irq_64.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -18,6 +18,8 @@
- #include <linux/uaccess.h>
- #include <linux/smp.h>
- #include <linux/sched/task_stack.h>
-+
-+#include <asm/cpu_entry_area.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
+ arch/x86/kernel/cpu/common.c |   35 +++++++----------------------------
+ 1 file changed, 7 insertions(+), 28 deletions(-)
+
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -507,19 +507,6 @@ void load_percpu_segment(int cpu)
+ DEFINE_PER_CPU(struct cpu_entry_area *, cpu_entry_area);
+ #endif
  
-@@ -43,10 +45,9 @@ static inline void stack_overflow_check(
+-#ifdef CONFIG_X86_64
+-/*
+- * Special IST stacks which the CPU switches to when it calls
+- * an IST-marked descriptor entry. Up to 7 stacks (hardware
+- * limit), all of them are 4K, except the debug stack which
+- * is 8K.
+- */
+-static const unsigned int exception_stack_sizes[N_EXCEPTION_STACKS] = {
+-	  [0 ... N_EXCEPTION_STACKS - 1]	= EXCEPTION_STKSZ,
+-	  [ISTACK_DB]				= DEBUG_STKSZ
+-};
+-#endif
+-
+ /* Load the original GDT from the per-cpu structure */
+ void load_direct_gdt(int cpu)
  {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
- #define STACK_MARGIN	128
+@@ -1690,17 +1677,14 @@ static void setup_getcpu(int cpu)
+  * initialized (naturally) in the bootstrap process, such as the GDT
+  * and IDT. We reload them nevertheless, this function acts as a
+  * 'CPU state barrier', nothing should get across.
+- * A lot of state is already set up in PDA init for 64 bit
+  */
+ #ifdef CONFIG_X86_64
+ 
+ void cpu_init(void)
+ {
 -	struct orig_ist *oist;
--	u64 irq_stack_top, irq_stack_bottom;
--	u64 estack_top, estack_bottom;
-+	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
- 	u64 curbase = (u64)task_stack_page(current);
-+	struct cea_exception_stacks *estacks;
++	int cpu = raw_smp_processor_id();
+ 	struct task_struct *me;
+ 	struct tss_struct *t;
+-	unsigned long v;
+-	int cpu = raw_smp_processor_id();
+ 	int i;
  
- 	if (user_mode(regs))
- 		return;
-@@ -60,9 +61,9 @@ static inline void stack_overflow_check(
- 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
+ 	wait_for_master_cpu(cpu);
+@@ -1715,7 +1699,6 @@ void cpu_init(void)
+ 		load_ucode_ap();
  
--	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[ISTACK_DB];
--	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
-+	estacks = __this_cpu_read(cea_exception_stacks);
-+	estack_top = CEA_ESTACK_TOP(estacks, DB);
-+	estack_bottom = CEA_ESTACK_BOT(estacks, DB) + STACK_MARGIN;
- 	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
- 		return;
+ 	t = &per_cpu(cpu_tss_rw, cpu);
+-	oist = &per_cpu(orig_ist, cpu);
  
+ #ifdef CONFIG_NUMA
+ 	if (this_cpu_read(numa_node) == 0 &&
+@@ -1753,16 +1736,12 @@ void cpu_init(void)
+ 	/*
+ 	 * set up and load the per-CPU TSS
+ 	 */
+-	if (!oist->ist[0]) {
+-		char *estacks = (char *)&get_cpu_entry_area(cpu)->estacks;
+-
+-		for (v = 0; v < N_EXCEPTION_STACKS; v++) {
+-			estacks += exception_stack_sizes[v];
+-			oist->ist[v] = t->x86_tss.ist[v] =
+-					(unsigned long)estacks;
+-			if (v == ISTACK_DB)
+-				per_cpu(debug_stack_addr, cpu) = (unsigned long)estacks;
+-		}
++	if (!t->x86_tss.ist[0]) {
++		t->x86_tss.ist[ISTACK_DF] = __this_cpu_ist_top_va(DF);
++		t->x86_tss.ist[ISTACK_NMI] = __this_cpu_ist_top_va(NMI);
++		t->x86_tss.ist[ISTACK_DB] = __this_cpu_ist_top_va(DB);
++		t->x86_tss.ist[ISTACK_MCE] = __this_cpu_ist_top_va(MCE);
++		per_cpu(debug_stack_addr, cpu) = t->x86_tss.ist[ISTACK_DB];
+ 	}
+ 
+ 	t->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
 
 
