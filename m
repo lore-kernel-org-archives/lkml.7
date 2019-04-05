@@ -2,125 +2,182 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F256AC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05BFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F36217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5627E217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DUU3S6K9"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qoW/NLTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfDEJ1B (ORCPT
+        id S1730577AbfDEJ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:27:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52586 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbfDEJ1A (ORCPT
+        Fri, 5 Apr 2019 05:28:24 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25454 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730448AbfDEJ2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:27:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rmRDRrrBXgpiFDAiERO2uKmXa8X/tU5EIcxD32jyuDU=; b=DUU3S6K9fk2LZLZBwYd5G85s8
-        7hRxUH82o2RVAFEieQaA4AH/uYBqBwEHED+NuJYdHChfKUaknh2DFRQvt1M/OQOxnJed+rhUzcaXA
-        uRgV6uG+PD2cujVzlPmqUhhECEM/+sokRGk/9w5+/9JG5I6tZ6im8P6ldl5lcds0K2ju8bq4zN8oH
-        9LWQ00e7x15kXO+RarWC2WRvOs7ws8Fiq75lutv/WNxZ/Eo6Ag7WoHRmhmvK9inqxUT+QeZk42pSO
-        gXM2fAChDo2k2BgH2/tYr0KiumGTedf6NOfYqzdk5Kgb3mX1/6cPZ2OaIAGR/CcTK3vXtUgQK9kKU
-        96oPRNJ6Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hCL7j-0007KR-1H; Fri, 05 Apr 2019 09:26:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6A9C7200BB74D; Fri,  5 Apr 2019 11:26:57 +0200 (CEST)
-Date:   Fri, 5 Apr 2019 11:26:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH] sched/core: expand sched_getaffinity(2) to return number
- of CPUs
-Message-ID: <20190405092657.GD4038@hirez.programming.kicks-ass.net>
-References: <20190403200809.GA13876@avx2>
- <20190404084249.GS4038@hirez.programming.kicks-ass.net>
- <20190404180230.GA14800@avx2>
+        Fri, 5 Apr 2019 05:28:24 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x359QAd5028061;
+        Fri, 5 Apr 2019 11:27:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=U4x9fcXFNftjJOYqvmBBUzk/hhIqNaud8Vh3hEG7MVU=;
+ b=qoW/NLTzqMYg7z6VppTQwKZ5y89s3oT9jowGJmOu0YmpphcI66smAwmln+GqiLnYBESo
+ TTLwaupL8V6ssTHCFHSsW3DFQZkZ2AQK2ctHq7oiyNnIWC2SW0j+cGha6iE8Rd7gYngO
+ cJ6Y4yWdZN3LVYVqzXKukirmYIO8brXEhmhsebrduJKO91RRGyNUR7cc4epncxlfWGFr
+ r814yBCIv7qiRYFHxdaDaD66k/kgy6m9z/Qh4IaW3itdxpgDucitYl2QEH3B4kdSzjxb
+ CHfUvAcQcebe3D6UHTbrdlvMi/cV+0Lrk/gjuv9GUXIC1wqyhM9TFTbrvQKg35V4LeZF 7A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rmgevgbuu-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 05 Apr 2019 11:27:03 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 15A0634;
+        Fri,  5 Apr 2019 09:27:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D763D2607;
+        Fri,  5 Apr 2019 09:27:02 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 5 Apr 2019
+ 11:27:02 +0200
+Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 5 Apr 2019 11:27:02 +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>
+Subject: [PATCH] ASoC: stm32: simplify dai driver initialisation
+Date:   Fri, 5 Apr 2019 11:26:27 +0200
+Message-ID: <1554456387-3088-1-git-send-email-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404180230.GA14800@avx2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.131]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 09:02:30PM +0300, Alexey Dobriyan wrote:
-> On Thu, Apr 04, 2019 at 10:42:49AM +0200, Peter Zijlstra wrote:
-> > On Wed, Apr 03, 2019 at 11:08:09PM +0300, Alexey Dobriyan wrote:
-> > > Currently there is no easy way to get the number of CPUs on the system.
-> > 
-> > And this patch doesn't change that :-)
-> 
-> It does! Application or a library could do one idempotent system call
-> in a constructor.
+Suppress the useless dynamic allocation of the dai driver structure.
 
-You said: "get the number of CPUs on the system", but what this call
-actually returns is: "size of CPU bitmask", these two things are
-distinctly not the same.
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ sound/soc/stm/stm32_sai_sub.c | 43 +++++++++----------------------------------
+ 1 file changed, 9 insertions(+), 34 deletions(-)
 
-> > The point is that nr_cpu_ids is the length of the bitmap, but does not
-> > contain information on how many CPUs are in the system. Consider the
-> > case where the bitmap is sparse.
-> 
-> I understand that but how do you ship number of CPUs _and_ possible mask
-> in one go?
-
-You don't, possible mask is unrelated to number of CPUs and both are
-unrelated to bitmap size.
-
-In particular:
-
-  nr_cpus <= nr_possible_cpus <= nr_cpumask_bits
-
-In absurdum an architecture could choose to iterate its CPUs as
-1024*cpuid, just for giggles. Then suppose it has two sockets, and 16
-CPUs per socket and only the second socket is populated.
-
-The we get:
-
-  nr_cpumask_bits = 32k
-  nr_possible_cpus = 32
-  nr_cpus = 16
-
-see what I mean?
-
-Now, luckily we typically don't have crap like that, but I suspect that
-with a little creative ACPI table magic we could actually get something
-slightly less absurd but still non-trivial even on x86.
-
-Also see how num_possible_cpus() is defined as
-cpumask_weight(cpu_possible_mask), which is very much not nr_cpu_ids in
-the generic case.
-
-> > > Nobody seems to parse "/sys/devices/system/cpu/possible".
-> > > Even if someone does, parsing sysfs is much slower than necessary.
-> > 
-> > True; but I suppose glibc already does lots of that anyway, right? It
-> > does contain the right information.
-> 
-> sched_getaffinity(3) does sched_getaffinity(2) + memset()
-> 
-> sysconf(_SC_NPROCESSORS_ONLN) does "/sys/devices/system/cpu/online"
-> 
-> sysconf(_SC_NPROCESSORS_CONF) does readdir("/sys/devices/system/cpu")
-> which is 5 syscalls. I'm not sure which cpumask readdir represents.
-
-It counts the number of CPUs, which is strictly not the same as the
-bitmap size.
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 3dd54bc..e3b021c 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -109,7 +109,7 @@ struct stm32_sai_sub_data {
+ 	struct regmap *regmap;
+ 	const struct regmap_config *regmap_config;
+ 	struct snd_dmaengine_dai_dma_data dma_params;
+-	struct snd_soc_dai_driver *cpu_dai_drv;
++	struct snd_soc_dai_driver cpu_dai_drv;
+ 	struct snd_soc_dai *cpu_dai;
+ 	struct snd_pcm_substream *substream;
+ 	struct stm32_sai_data *pdata;
+@@ -1204,8 +1204,7 @@ static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
+ 	.periods_max = 8,
+ };
+ 
+-static struct snd_soc_dai_driver stm32_sai_playback_dai[] = {
+-{
++static struct snd_soc_dai_driver stm32_sai_playback_dai = {
+ 		.probe = stm32_sai_dai_probe,
+ 		.pcm_new = stm32_sai_pcm_new,
+ 		.id = 1, /* avoid call to fmt_single_name() */
+@@ -1222,11 +1221,9 @@ static struct snd_soc_dai_driver stm32_sai_playback_dai[] = {
+ 				SNDRV_PCM_FMTBIT_S32_LE,
+ 		},
+ 		.ops = &stm32_sai_pcm_dai_ops,
+-	}
+ };
+ 
+-static struct snd_soc_dai_driver stm32_sai_capture_dai[] = {
+-{
++static struct snd_soc_dai_driver stm32_sai_capture_dai = {
+ 		.probe = stm32_sai_dai_probe,
+ 		.id = 1, /* avoid call to fmt_single_name() */
+ 		.capture = {
+@@ -1242,7 +1239,6 @@ static struct snd_soc_dai_driver stm32_sai_capture_dai[] = {
+ 				SNDRV_PCM_FMTBIT_S32_LE,
+ 		},
+ 		.ops = &stm32_sai_pcm_dai_ops,
+-	}
+ };
+ 
+ static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
+@@ -1411,29 +1407,6 @@ static int stm32_sai_sub_parse_of(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
+-static int stm32_sai_sub_dais_init(struct platform_device *pdev,
+-				   struct stm32_sai_sub_data *sai)
+-{
+-	sai->cpu_dai_drv = devm_kzalloc(&pdev->dev,
+-					sizeof(struct snd_soc_dai_driver),
+-					GFP_KERNEL);
+-	if (!sai->cpu_dai_drv)
+-		return -ENOMEM;
+-
+-	if (STM_SAI_IS_PLAYBACK(sai)) {
+-		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
+-		       sizeof(stm32_sai_playback_dai));
+-		sai->cpu_dai_drv->playback.stream_name = sai->cpu_dai_drv->name;
+-	} else {
+-		memcpy(sai->cpu_dai_drv, &stm32_sai_capture_dai,
+-		       sizeof(stm32_sai_capture_dai));
+-		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
+-	}
+-	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
+-
+-	return 0;
+-}
+-
+ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_sai_sub_data *sai;
+@@ -1465,9 +1438,11 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = stm32_sai_sub_dais_init(pdev, sai);
+-	if (ret)
+-		return ret;
++	if (STM_SAI_IS_PLAYBACK(sai))
++		sai->cpu_dai_drv = stm32_sai_playback_dai;
++	else
++		sai->cpu_dai_drv = stm32_sai_capture_dai;
++	sai->cpu_dai_drv.name = dev_name(&pdev->dev);
+ 
+ 	ret = devm_request_irq(&pdev->dev, sai->pdata->irq, stm32_sai_isr,
+ 			       IRQF_SHARED, dev_name(&pdev->dev), sai);
+@@ -1477,7 +1452,7 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
+-					      sai->cpu_dai_drv, 1);
++					      &sai->cpu_dai_drv, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.7.4
 
