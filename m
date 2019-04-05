@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75308C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA9C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E88A21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FDE21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LGT5tiEg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DYTVAFj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfDEO4S (ORCPT
+        id S1731482AbfDEO4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:56:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33322 "EHLO
+        Fri, 5 Apr 2019 10:56:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33312 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfDEOz5 (ORCPT
+        with ESMTP id S1731115AbfDEOz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Apr 2019 10:55:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35Etr6d105050;
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35Etr3q105058;
         Fri, 5 Apr 2019 09:55:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1554476153;
-        bh=dTEdE8TGqtDH/6NU2l1aZ1YRAJN9b9+Cexyp47E/TP8=;
+        bh=yol9W4T7d+wJar/2rbqMVHKIUbI4T3sfDoNbcW62Uho=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LGT5tiEg8G/u5sIi4yH6UMaEOak8HuiINGE0QemJqKrgmhU0IJxIQIBeATFoGPiuh
-         FVnA0FPNbxXEV2NKFUcvq/0Kl+pGcfoC2Km81YVqI1ppr2+jG5V2VVLGQTkByapvdz
-         S/eiMrQ/1EODzVw+zCRqXT1VrHzjC5T7/5Zf67aE=
+        b=DYTVAFj4ZSn6F2D8cqPZoZKmaKwYLarGKwhvXsJ1ySc4DU7MLngMoPCNHHFHvIkuB
+         t7KNjal5Xr8WgXQvpfn55IQs5CX8Lg+PSpmDoVh149p7mJZ+jG9EkI4JGcw4wvTsZ9
+         7XgzblHlGJlx7Ol5Tvej8IPoqjUvQF/PneFasl6Q=
 Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35EtqaX123314
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35Etrl7077892
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Apr 2019 09:55:52 -0500
+        Fri, 5 Apr 2019 09:55:53 -0500
 Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
  (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
  2019 09:55:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
  (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Fri, 5 Apr 2019 09:55:52 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35EtqPV086623;
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35Etqqk033344;
         Fri, 5 Apr 2019 09:55:52 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <lee.jones@linaro.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 3/6] mfd: ti-lmu: Add LM36274 support to the ti-lmu
-Date:   Fri, 5 Apr 2019 09:55:37 -0500
-Message-ID: <20190405145540.27703-4-dmurphy@ti.com>
+Subject: [PATCH 4/6] regulator: lm363x: Add support for LM36274
+Date:   Fri, 5 Apr 2019 09:55:38 -0500
+Message-ID: <20190405145540.27703-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.12.2
 In-Reply-To: <20190405145540.27703-1-dmurphy@ti.com>
 References: <20190405145540.27703-1-dmurphy@ti.com>
@@ -67,132 +67,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the LM36274 register support to the ti-lmu MFD driver.
+Adding regulator support for the LM36274 backlight driver.
+This device can leverage this existing code as the functionality
+and registers are common enough between the LM36274 and the LM363x
+series of devices.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/mfd/Kconfig                 |  5 ++---
- drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
- include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
- include/linux/mfd/ti-lmu.h          |  4 ++++
- 4 files changed, 43 insertions(+), 3 deletions(-)
+ drivers/regulator/Kconfig            |  2 +-
+ drivers/regulator/lm363x-regulator.c | 52 ++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index fcae244229b3..5606411038bb 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1311,9 +1311,8 @@ config MFD_TI_LMU
- 	select REGMAP_I2C
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index b7f249ee5e68..23252ae81fdf 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -362,7 +362,7 @@ config REGULATOR_LM363X
+ 	tristate "TI LM363X voltage regulators"
+ 	depends on MFD_TI_LMU
  	help
- 	  Say yes here to enable support for TI LMU chips.
--
--	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
--	  It consists of backlight, LED and regulator driver.
-+	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and
-+	  LM36274.  It consists of backlight, LED and regulator driver.
- 	  It provides consistent device controls for lighting functions.
+-	  This driver supports LM3631 and LM3632 voltage regulators for
++	  This driver supports LM3631, LM3632 and LM36274 voltage regulators for
+ 	  the LCD bias.
+ 	  One boost output voltage is configurable and always on.
+ 	  Other LDOs are used for the display module.
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index 382b1cecdd93..1944677b1448 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -37,6 +37,11 @@
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
  
- config MFD_OMAP_USB_HOST
-diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
-index 89b1c5b584af..691ab9dd6236 100644
---- a/drivers/mfd/ti-lmu.c
-+++ b/drivers/mfd/ti-lmu.c
-@@ -111,6 +111,17 @@ static const struct mfd_cell lm3695_devices[] = {
- 	},
- };
- 
-+static const struct mfd_cell lm36274_devices[] = {
-+	LM363X_REGULATOR(LM36274_BOOST),
-+	LM363X_REGULATOR(LM36274_LDO_POS),
-+	LM363X_REGULATOR(LM36274_LDO_NEG),
-+	{
-+		.name          = "lm36274-leds",
-+		.id            = LM36274,
-+		.of_compatible = "ti,lm36274-backlight",
-+	},
-+};
-+
- #define TI_LMU_DATA(chip, max_reg)		\
- static const struct ti_lmu_data chip##_data =	\
- {						\
-@@ -123,6 +134,7 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
- TI_LMU_DATA(lm3632, LM3632_MAX_REG);
- TI_LMU_DATA(lm3633, LM3633_MAX_REG);
- TI_LMU_DATA(lm3695, LM3695_MAX_REG);
-+TI_LMU_DATA(lm36274, LM36274_MAX_REG);
- 
- static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- {
-@@ -191,6 +203,7 @@ static const struct of_device_id ti_lmu_of_match[] = {
- 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
- 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
- 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
-+	{ .compatible = "ti,lm36274", .data = &lm36274_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
-@@ -200,6 +213,7 @@ static const struct i2c_device_id ti_lmu_ids[] = {
- 	{ "lm3632", LM3632 },
- 	{ "lm3633", LM3633 },
- 	{ "lm3695", LM3695 },
-+	{ "lm36274", LM36274 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
-diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
-index 76998b01764b..076d8dea38fd 100644
---- a/include/linux/mfd/ti-lmu-register.h
-+++ b/include/linux/mfd/ti-lmu-register.h
-@@ -189,4 +189,27 @@
- #define LM3695_REG_BRT_MSB			0x14
- 
- #define LM3695_MAX_REG				0x14
-+
 +/* LM36274 */
-+#define LM36274_REG_REV				0x01
-+#define LM36274_REG_BL_CFG_1			0x02
-+#define LM36274_REG_BL_CFG_2			0x03
-+#define LM36274_REG_BRT_LSB			0x04
-+#define LM36274_REG_BRT_MSB			0x05
-+#define LM36274_REG_BL_EN			0x08
++#define LM36274_BOOST_VSEL_MAX		0x3f
++#define LM36274_LDO_VSEL_MAX		0x34
++#define LM36274_VOLTAGE_MIN		4000000
 +
-+#define LM36274_REG_BIAS_CONFIG_1		0x09
-+#define LM36274_EXT_EN_MASK			BIT(0)
-+#define LM36274_EN_VNEG_MASK			BIT(1)
-+#define LM36274_EN_VPOS_MASK			BIT(2)
+ /* Common */
+ #define LM363X_STEP_50mV		50000
+ #define LM363X_STEP_500mV		500000
+@@ -217,6 +222,51 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
+ 		.enable_reg     = LM3632_REG_BIAS_CONFIG,
+ 		.enable_mask    = LM3632_EN_VNEG_MASK,
+ 	},
 +
-+#define LM36274_REG_BIAS_CONFIG_2		0x0a
-+#define LM36274_REG_BIAS_CONFIG_3		0x0b
-+#define LM36274_REG_VOUT_BOOST			0x0c
-+#define LM36274_REG_VOUT_POS			0x0d
-+#define LM36274_REG_VOUT_NEG			0x0e
-+#define LM36274_VOUT_MASK			0x3F
-+
-+#define LM36274_MAX_REG				0x13
-+
- #endif
-diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
-index 54e9d272e81c..0957598c7d41 100644
---- a/include/linux/mfd/ti-lmu.h
-+++ b/include/linux/mfd/ti-lmu.h
-@@ -26,6 +26,7 @@ enum ti_lmu_id {
- 	LM3632,
- 	LM3633,
- 	LM3695,
-+	LM36274,
- 	LMU_MAX_ID,
++	/* LM36274 */
++	{
++		.name           = "vboost",
++		.of_match	= "vboost",
++		.id             = LM36274_BOOST,
++		.ops            = &lm363x_boost_voltage_table_ops,
++		.n_voltages     = LM36274_BOOST_VSEL_MAX,
++		.min_uV         = LM36274_VOLTAGE_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM36274_REG_VOUT_BOOST,
++		.vsel_mask      = LM36274_VOUT_MASK,
++	},
++	{
++		.name           = "ldo_vpos",
++		.of_match	= "vpos",
++		.id             = LM36274_LDO_POS,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM36274_LDO_VSEL_MAX,
++		.min_uV         = LM36274_VOLTAGE_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM36274_REG_VOUT_POS,
++		.vsel_mask      = LM36274_VOUT_MASK,
++		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
++		.enable_mask    = LM36274_EN_VPOS_MASK,
++	},
++	{
++		.name           = "ldo_vneg",
++		.of_match	= "vneg",
++		.id             = LM36274_LDO_NEG,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM36274_LDO_VSEL_MAX,
++		.min_uV         = LM36274_VOLTAGE_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM36274_REG_VOUT_NEG,
++		.vsel_mask      = LM36274_VOUT_MASK,
++		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
++		.enable_mask    = LM36274_EN_VNEG_MASK,
++	},
  };
  
-@@ -67,6 +68,9 @@ enum lm363x_regulator_id {
- 	LM3632_BOOST,		/* Boost output */
- 	LM3632_LDO_POS,		/* Positive display bias output */
- 	LM3632_LDO_NEG,		/* Negative display bias output */
-+	LM36274_BOOST,		/* Boost output */
-+	LM36274_LDO_POS,	/* Positive display bias output */
-+	LM36274_LDO_NEG,	/* Negative display bias output */
- };
- 
- /**
+ static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev, int id)
+@@ -229,9 +279,11 @@ static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev,
+ 	 */
+ 	switch (id) {
+ 	case LM3632_LDO_POS:
++	case LM36274_LDO_POS:
+ 		return gpiod_get_index_optional(dev, "enable", 0,
+ 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
+ 	case LM3632_LDO_NEG:
++	case LM36274_LDO_NEG:
+ 		return gpiod_get_index_optional(dev, "enable", 1,
+ 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
+ 	default:
 -- 
 2.19.0
 
