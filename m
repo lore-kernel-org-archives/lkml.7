@@ -2,238 +2,156 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42E6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840D2C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB042186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1802186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554472795;
+	bh=SH3hi1nePzhLHjLCJLW6uRcos6S1EVYQqeNfHFVTQf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yxZRFTZ86JuyvAZ86oWUqMZxxctersSPFFPAb2Puzv0oIDeinh3wFtWwEL7z2kIV0
+	 qOm8izxlmIN5h0Kf8zdnylOG3+uDs0reRs9pIZI5lcWpM/V7y8GkkB8t793+XXoD/U
+	 q/cnaSsExmVt4AARrfjXKcamlO/CJyMeNQqIOAzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfDEN7u (ORCPT
+        id S1731206AbfDEN7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:59:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49002 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDEN7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:59:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F9C11993;
-        Fri,  5 Apr 2019 06:59:48 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9B4B3F68F;
-        Fri,  5 Apr 2019 06:59:44 -0700 (PDT)
-From:   Will Deacon <will.deacon@arm.com>
-To:     linux-arch@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O BARRIER EFFECTS" section
-Date:   Fri,  5 Apr 2019 14:59:16 +0100
-Message-Id: <20190405135936.7266-2-will.deacon@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
+        Fri, 5 Apr 2019 09:59:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731191AbfDEN7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 09:59:52 -0400
+Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665BA21850;
+        Fri,  5 Apr 2019 13:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554472790;
+        bh=SH3hi1nePzhLHjLCJLW6uRcos6S1EVYQqeNfHFVTQf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C+QeqKJGNdOetqdMBbMjZSxne1b1UFU6nzt/q7EeaVoAbd/+MoxUCJ+7OL51Nfdt+
+         vSQ1xfEqdbA5mjTtv9IEPI63M0xuSb7CkYpqa7jzVsXMbIUoKooZy3SX2WhMavZqC6
+         OD7ZkDe7bW0rshb0h9Zg6qRqrSY5VufR92xMez/s=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 63DD93C08D5; Fri,  5 Apr 2019 15:59:48 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 15:59:48 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Darren Hart <dvhart@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 04/10] x86, olpc: Use a correct version when making up a
+ battery node
+Message-ID: <20190405135948.wnwv2qq3wz7bzsog@earth.universe>
+References: <20190310162419.11861-1-lkundrak@v3.sk>
+ <20190310162419.11861-5-lkundrak@v3.sk>
+ <alpine.DEB.2.21.1903230020270.2157@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cicfdoeib2e7lfta"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903230020270.2157@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
-x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
-This is largely because I/O ordering is a horrible can of worms, but also
-because the document has stagnated as our understanding has evolved.
 
-Attempt to address some of that, by rewriting the section based on
-recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
-find a way to formalise this stuff, but for now let's at least try to
-make the English easier to understand.
+--cicfdoeib2e7lfta
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Daniel Lustig <dlustig@nvidia.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
- Documentation/memory-barriers.txt | 115 +++++++++++++++++++++++---------------
- 1 file changed, 70 insertions(+), 45 deletions(-)
+Hi,
 
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index 1c22b21ae922..5eb6f4c6a133 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -2599,72 +2599,97 @@ likely, then interrupt-disabling locks should be used to guarantee ordering.
- KERNEL I/O BARRIER EFFECTS
- ==========================
- 
--When accessing I/O memory, drivers should use the appropriate accessor
--functions:
-+Interfacing with peripherals via I/O accesses is deeply architecture and device
-+specific. Therefore, drivers which are inherently non-portable may rely on
-+specific behaviours of their target systems in order to achieve synchronization
-+in the most lightweight manner possible. For drivers intending to be portable
-+between multiple architectures and bus implementations, the kernel offers a
-+series of accessor functions that provide various degrees of ordering
-+guarantees:
- 
-- (*) inX(), outX():
-+ (*) readX(), writeX():
- 
--     These are intended to talk to I/O space rather than memory space, but
--     that's primarily a CPU-specific concept.  The i386 and x86_64 processors
--     do indeed have special I/O space access cycles and instructions, but many
--     CPUs don't have such a concept.
-+     The readX() and writeX() MMIO accessors take a pointer to the peripheral
-+     being accessed as an __iomem * parameter. For pointers mapped with the
-+     default I/O attributes (e.g. those returned by ioremap()), then the
-+     ordering guarantees are as follows:
- 
--     The PCI bus, amongst others, defines an I/O space concept which - on such
--     CPUs as i386 and x86_64 - readily maps to the CPU's concept of I/O
--     space.  However, it may also be mapped as a virtual I/O space in the CPU's
--     memory map, particularly on those CPUs that don't support alternate I/O
--     spaces.
-+     1. All readX() and writeX() accesses to the same peripheral are ordered
-+        with respect to each other. For example, this ensures that MMIO register
-+	writes by the CPU to a particular device will arrive in program order.
- 
--     Accesses to this space may be fully synchronous (as on i386), but
--     intermediary bridges (such as the PCI host bridge) may not fully honour
--     that.
-+     2. A writeX() by the CPU to the peripheral will first wait for the
-+        completion of all prior CPU writes to memory. For example, this ensures
-+        that writes by the CPU to an outbound DMA buffer allocated by
-+        dma_alloc_coherent() will be visible to a DMA engine when the CPU writes
-+        to its MMIO control register to trigger the transfer.
- 
--     They are guaranteed to be fully ordered with respect to each other.
-+     3. A readX() by the CPU from the peripheral will complete before any
-+	subsequent CPU reads from memory can begin. For example, this ensures
-+	that reads by the CPU from an incoming DMA buffer allocated by
-+	dma_alloc_coherent() will not see stale data after reading from the DMA
-+	engine's MMIO status register to establish that the DMA transfer has
-+	completed.
- 
--     They are not guaranteed to be fully ordered with respect to other types of
--     memory and I/O operation.
-+     4. A readX() by the CPU from the peripheral will complete before any
-+	subsequent delay() loop can begin execution. For example, this ensures
-+	that two MMIO register writes by the CPU to a peripheral will arrive at
-+	least 1us apart if the first write is immediately read back with readX()
-+	and udelay(1) is called prior to the second writeX().
- 
-- (*) readX(), writeX():
-+     __iomem pointers obtained with non-default attributes (e.g. those returned
-+     by ioremap_wc()) are unlikely to provide many of these guarantees.
- 
--     Whether these are guaranteed to be fully ordered and uncombined with
--     respect to each other on the issuing CPU depends on the characteristics
--     defined for the memory window through which they're accessing.  On later
--     i386 architecture machines, for example, this is controlled by way of the
--     MTRR registers.
-+ (*) readX_relaxed(), writeX_relaxed():
- 
--     Ordinarily, these will be guaranteed to be fully ordered and uncombined,
--     provided they're not accessing a prefetchable device.
-+     These are similar to readX() and writeX(), but provide weaker memory
-+     ordering guarantees. Specifically, they do not guarantee ordering with
-+     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
-+     but they are still guaranteed to be ordered with respect to other accesses
-+     to the same peripheral when operating on __iomem pointers mapped with the
-+     default I/O attributes.
- 
--     However, intermediary hardware (such as a PCI bridge) may indulge in
--     deferral if it so wishes; to flush a store, a load from the same location
--     is preferred[*], but a load from the same device or from configuration
--     space should suffice for PCI.
-+ (*) readsX(), writesX():
- 
--     [*] NOTE! attempting to load from the same location as was written to may
--	 cause a malfunction - consider the 16550 Rx/Tx serial registers for
--	 example.
-+     The readsX() and writesX() MMIO accessors are designed for accessing
-+     register-based, memory-mapped FIFOs residing on peripherals that are not
-+     capable of performing DMA. Consequently, they provide only the ordering
-+     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
- 
--     Used with prefetchable I/O memory, an mmiowb() barrier may be required to
--     force stores to be ordered.
-+ (*) inX(), outX():
- 
--     Please refer to the PCI specification for more information on interactions
--     between PCI transactions.
-+     The inX() and outX() accessors are intended to access legacy port-mapped
-+     I/O peripherals, which may require special instructions on some
-+     architectures (notably x86). The port number of the peripheral being
-+     accessed is passed as an argument.
- 
-- (*) readX_relaxed(), writeX_relaxed()
-+     Since many CPU architectures ultimately access these peripherals via an
-+     internal virtual memory mapping, the portable ordering guarantees provided
-+     by inX() and outX() are the same as those provided by readX() and writeX()
-+     respectively when accessing a mapping with the default I/O attributes.
- 
--     These are similar to readX() and writeX(), but provide weaker memory
--     ordering guarantees.  Specifically, they do not guarantee ordering with
--     respect to normal memory accesses (e.g. DMA buffers) nor do they guarantee
--     ordering with respect to LOCK or UNLOCK operations.  If the latter is
--     required, an mmiowb() barrier can be used.  Note that relaxed accesses to
--     the same peripheral are guaranteed to be ordered with respect to each
--     other.
-+     Device drivers may expect outX() to emit a non-posted write transaction
-+     that waits for a completion response from the I/O peripheral before
-+     returning. This is not guaranteed by all architectures and is therefore
-+     not part of the portable ordering semantics.
-+
-+ (*) insX(), outsX():
-+
-+     As above, the insX() and outsX() accessors provide the same ordering
-+     guarantees as readsX() and writesX() respectively when accessing a mapping
-+     with the default I/O attributes.
- 
-  (*) ioreadX(), iowriteX()
- 
-      These will perform appropriately for the type of access they're actually
-      doing, be it inX()/outX() or readX()/writeX().
- 
-+All of these accessors assume that the underlying peripheral is little-endian,
-+and will therefore perform byte-swapping operations on big-endian architectures.
-+
-+Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
-+operations is a dangerous sport which may require the use of mmiowb(). See the
-+subsection "Acquires vs I/O accesses" for more information.
- 
- ========================================
- ASSUMED MINIMUM EXECUTION ORDERING MODEL
--- 
-2.11.0
+On Sat, Mar 23, 2019 at 12:25:58AM +0100, Thomas Gleixner wrote:
+> On Sun, 10 Mar 2019, Lubomir Rintel wrote:
+>=20
+> Subject prefix ...
+>=20
+> > The XO-1 and XO-1.5 batteries apparently differ in an ability to report
+> > ambient temperature. We need to use a different compatible string for t=
+he
+> > XO-1.5 battery.
+> >=20
+> > Previously olpc_dt_fixup() used the presence od the battery node's
+>=20
+> s/od/of/
+>=20
+> > =20
+> > +int olpc_dt_compatible_match(phandle node, const char *compat)
+> > +{
+> > +	char buf[64];
+> > +	int plen;
+> > +	char *p;
+> > +	int len;
+>=20
+> Please coalesce variables of the same type. No point in wasting space.
+>=20
+> 	char buf[64], *p;
+> 	int plen, len;
+>=20
+> Hmm?
+>=20
+> > +
+> > +		if (olpc_dt_compatible_match(node, "olpc,xo1-battery")) {
+> > +			/* If we have a olpc,xo1-battery compatible, then we're
+> > +			 * running a new enough firmware that already has
+> > +			 * the dcon node.
+> > +			 */
+>=20
+> Comment style:
+>=20
+>        		 	 /*
+> 			  * This is a proper multi line comment even
+> 			  * if networking people use that horrible style
+> 			  * above.
+> 			  */
+>=20
+> With those nitpicks fixed:
+>=20
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
+Looks like this is the last required change before this can be
+merged. Assuming Lubomir sends a fixed series soon, how should
+it be merged?
+
+a) I get a pull-request with a immutable branch for patch 2-4
+b) Complete patchset goes in via x86
+c) Complete patchset goes in via power-supply
+
+I'm fine with all variants.
+
+-- Sebastian
+
+--cicfdoeib2e7lfta
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynX1QACgkQ2O7X88g7
++ppT6hAAnwa8NzJM9yXdDEp4T6Ci3Aiq3Nus2/3mrQwSI66pYQkangJzm0S1wy8u
+p9Y/SUD1PXtAKPtcnfh6uKp78gsqig+SmKaVC6CU415NuewyjzXDh0jnDAYGjR71
+QfofvUZc/l2X5Dl0AzpiUHp3uGb90pkAGqbo3hLdLGRfM6ZQUMs56uC2qyhYBj/U
+P2hi6sDnpCFGzk+5JkL2oR/XSuq4EUeJXoRfUsvMyFfmwKewbZCi9yONn6HVy9tF
+DfI6ATIbicDQ8RqaLFAcSFukIL/z0B1KTrc8W49b3XPMLbsmF5jm4iEYJem99k2p
+MD8pp0JSJudbDwD/rw2GseyAI1JS7qcAysdMQ8AvXqk8zjG3h+qtcopeCM9IZJmJ
+sK1UPEwY9uIuzrAylGw0HyqRPrPvDU3GUNC49+N7M2GA2Se0GSatkwc+FmAnhaUV
+6BvGQSkVPU2sANVYdy9bRgPGXscJcCZ5Bodmd/70tYlFfKQgUY5Cs6R1YWSs4CSd
+nInDgYrUnG8zggqWbFnVt+XIg+6Gzrf6w4d3AABBxin7x+beno98pLx/nUeVa1Wh
+jvYzTn1cfq52ZmayrkwLTHnnljCqoYhuAXK8JLsijO5PNJyfPbRH2ptADTBtbW+W
+UlfEol9hp7SGMwBFJKZ06ksvpl+JqQJuDrhHeOfBlQdfOeKG0II=
+=Fcpl
+-----END PGP SIGNATURE-----
+
+--cicfdoeib2e7lfta--
