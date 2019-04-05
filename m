@@ -2,152 +2,107 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706BAC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E19C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487CE205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4FB205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfDEOU5 (ORCPT
+        id S1731161AbfDEOVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:20:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42700 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfDEOU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:20:56 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BEC5C308FF32;
-        Fri,  5 Apr 2019 14:20:55 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 92E925D705;
-        Fri,  5 Apr 2019 14:20:50 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 09:20:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations='
- cmdline options
-Message-ID: <20190405142048.burthk2jnpcvi2om@treble>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
- <20190405131211.GE23348@zn.tnic>
+        Fri, 5 Apr 2019 10:21:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43608 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726730AbfDEOVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:21:46 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8FCA0EB8A12F5A7454F4;
+        Fri,  5 Apr 2019 22:21:38 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
+ 22:21:32 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <andriy.shevchenko@linux.intel.com>, <linus.walleij@linaro.org>,
+        <bgolaszewski@baylibre.com>, <rjw@rjwysocki.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] gpio: merrifield: Fix build err without CONFIG_ACPI
+Date:   Fri, 5 Apr 2019 22:21:12 +0800
+Message-ID: <20190405142112.26592-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190404103925.25652-1-yuehaibing@huawei.com>
+References: <20190404103925.25652-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190405131211.GE23348@zn.tnic>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 05 Apr 2019 14:20:56 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 03:12:11PM +0200, Borislav Petkov wrote:
-> On Thu, Apr 04, 2019 at 11:44:11AM -0500, Josh Poimboeuf wrote:
-> > Keeping track of the number of mitigations for all the CPU speculation
-> > bugs has become overwhelming for many users.  It's getting more and more
-> > complicated to decide which mitigations are needed for a given
-> > architecture.  Complicating matters is the fact that each arch tends to
-> > their own custom way to mitigate the same vulnerability.
-> 
-> Yap, we definitely need something like that.
-> 
-> > Most users fall into a few basic categories:
-> > 
-> > a) they want all mitigations off;
-> > 
-> > b) they want all reasonable mitigations on, with SMT enabled even if
-> >    it's vulnerable; or
-> 
-> Uff, "reasonable" - there's the bikeshed waiting to happen.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Luckily the defaults have already been chosen.  So "reasonable" just
-means to use the defaults.
+When building CONFIG_ACPI is not set
+gcc warn this:
 
-> > c) they want all reasonable mitigations on, with SMT disabled if
-> >    vulnerable.
-> > 
-> > Define a set of curated, arch-independent options, each of which is an
-> > aggregation of existing options:
-> > 
-> > - cpu_spec_mitigations=off: Disable all mitigations.
-> 
-> "cpu_spec_mitigations" is too long, TBH.
-> 
-> Imagine yourself in a loud, noisy data center - you basically can't wait
-> to leave - crouched over a keyboard in an impossible position, having
-> to type that thing and then making a typo. Whoops, too late, already
-> pressed Enter. Shiiiit!
+drivers/gpio/gpio-merrifield.c: In function mrfld_gpio_get_pinctrl_dev_name:
+drivers/gpio/gpio-merrifield.c:388:19: error: dereferencing pointer to incomplete type struct acpi_device
+   put_device(&adev->dev);
+                   ^
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes:d00d2109c367 ("gpio: merrifield: Convert to use acpi_dev_get_first_match_dev()")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: rework patch use put_acpi_device helper
+---
+ drivers/gpio/gpio-merrifield.c | 2 +-
+ include/linux/acpi.h           | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Sure, it's a bit long.  But it's also easier to remember and more
-self-documenting than any shortened option I could come up with.
-
-In your scenario, the fact that it's so easy to remember would save the
-day, since you wouldn't have to go look up some obscure shortened option
-name in the documentation :-)
-
-Suggestions are welcome but I couldn't come up with a reasonable shorter
-option.
-
-> Now you have to wait at least 15 mins for the damn single-threaded added
-> value BIOS crap to noodle through all the cores just so you can try
-> again, because you just rebooted the box.
-> 
-> And I know, my ideas for shorter cmdline options are crazy, like
-> 
-> cpu_spec_mtg=
-> 
-> which people would say, yuck, unreadable...
-
-I agree with those people.  In my world "mtg" is short for meeting.
-
-> Oh, I know! How about
-> 
-> cpu_vulns=
-> 
-> ?
-
-No, because
-
-a) We aren't enabling/disabling *vulnerabilities*, but rather
-   mitigations;
-
-b) We aren't enabling/disabling *all* CPU mitigations, only the
-   speculative ones.
-
-> We already have /sys/devices/system/cpu/vulnerabilities so it'll be the
-> same as that. Less things to remember.
-
-Except that it's not called "cpu_vulns"...
-
+diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
+index 2383dc7..99ca18c 100644
+--- a/drivers/gpio/gpio-merrifield.c
++++ b/drivers/gpio/gpio-merrifield.c
+@@ -385,7 +385,7 @@ static const char *mrfld_gpio_get_pinctrl_dev_name(struct mrfld_gpio *priv)
+ 	adev = acpi_dev_get_first_match_dev("INTC1002", NULL, -1);
+ 	if (adev) {
+ 		name = devm_kstrdup(priv->dev, acpi_dev_name(adev), GFP_KERNEL);
+-		put_device(&adev->dev);
++		put_acpi_device(adev);
+ 	} else {
+ 		name = "pinctrl-merrifield";
+ 	}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index a1bd789..2563e13 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1331,12 +1331,19 @@ static inline int find_acpi_cpu_cache_topology(unsigned int cpu, int level)
+ 
+ #ifdef CONFIG_ACPI
+ extern int acpi_platform_notify(struct device *dev, enum kobject_action action);
++
++static inline void put_acpi_device(struct acpi_device *adev)
++{
++	put_device(&adev->dev);
++}
+ #else
+ static inline int
+ acpi_platform_notify(struct device *dev, enum kobject_action action)
+ {
+ 	return 0;
+ }
++
++static inline void put_acpi_device(struct acpi_device *adev) {}
+ #endif
+ 
+ #endif	/*_LINUX_ACPI_H*/
 -- 
-Josh
+2.7.4
+
+
