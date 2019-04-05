@@ -2,157 +2,248 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E2CC10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC18C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8AD217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EA3206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfDECPS (ORCPT
+        id S1729423AbfDECRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 22:15:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37500 "EHLO huawei.com"
+        Thu, 4 Apr 2019 22:17:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5669 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727212AbfDECPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 22:15:18 -0400
+        id S1727051AbfDECRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 22:17:24 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C8DF4BC2572B1E34737A;
-        Fri,  5 Apr 2019 10:15:14 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+        by Forcepoint Email with ESMTP id 900A4657617139DA5EEF;
+        Fri,  5 Apr 2019 10:17:21 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS410-HUB.china.huawei.com
  (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 10:15:08 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <tim@cyberelk.net>, <axboe@kernel.dk>, <rdunlap@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] paride/pcd: Fix potential NULL pointer dereference and mem leak
-Date:   Fri, 5 Apr 2019 10:14:58 +0800
-Message-ID: <20190405021458.29872-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+ 10:17:15 +0800
+Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
+ regions
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
+ <20190403030546.23718-3-chenzhou10@huawei.com>
+ <20190403112929.GA7715@rapoport-lnx>
+ <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
+ <20190404144408.GA6433@rapoport-lnx>
+CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
+        <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
+Date:   Fri, 5 Apr 2019 10:17:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
+In-Reply-To: <20190404144408.GA6433@rapoport-lnx>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Hi Mike,
 
-Syzkaller report this:
+On 2019/4/4 22:44, Mike Rapoport wrote:
+> Hi,
+> 
+> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
+>> Hi Mike,
+>>
+>> On 2019/4/3 19:29, Mike Rapoport wrote:
+>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
+>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+>>>> there may be two crash kernel regions, one is below 4G, the other is
+>>>> above 4G.
+>>>>
+>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
+>>>> property under node /chosen,
+>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+>>>>
+>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>> ---
+>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
+>>>>  include/linux/memblock.h |  1 +
+>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>> index ceb2a25..769c77a 100644
+>>>> --- a/arch/arm64/mm/init.c
+>>>> +++ b/arch/arm64/mm/init.c
+>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
+>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>>>  
+>>>>  #ifdef CONFIG_KEXEC_CORE
+>>>> +# define CRASH_MAX_USABLE_RANGES        2
+>>>> +
+>>>>  static int __init reserve_crashkernel_low(void)
+>>>>  {
+>>>>  	unsigned long long base, low_base = 0, low_size = 0;
+>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>  		const char *uname, int depth, void *data)
+>>>>  {
+>>>>  	struct memblock_region *usablemem = data;
+>>>> -	const __be32 *reg;
+>>>> -	int len;
+>>>> +	const __be32 *reg, *endp;
+>>>> +	int len, nr = 0;
+>>>>  
+>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>>>>  		return 0;
+>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>>>>  		return 1;
+>>>>  
+>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>> +	endp = reg + (len / sizeof(__be32));
+>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>> +
+>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+>>>> +			break;
+>>>> +	}
+>>>>  
+>>>>  	return 1;
+>>>>  }
+>>>>  
+>>>>  static void __init fdt_enforce_memory_region(void)
+>>>>  {
+>>>> -	struct memblock_region reg = {
+>>>> -		.size = 0,
+>>>> -	};
+>>>> -
+>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+>>>> -
+>>>> -	if (reg.size)
+>>>> -		memblock_cap_memory_range(reg.base, reg.size);
+>>>> +	int i, cnt = 0;
+>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+>>>> +
+>>>> +	memset(regs, 0, sizeof(regs));
+>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
+>>>> +
+>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
+>>>> +		if (regs[i].size)
+>>>> +			cnt++;
+>>>> +		else
+>>>> +			break;
+>>>> +	if (cnt)
+>>>> +		memblock_cap_memory_ranges(regs, cnt);
+>>>
+>>> Why not simply call memblock_cap_memory_range() for each region?
+>>
+>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
+>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
+>> on kdump capture kernel.
+> 
+> Thanks for the clarification.
+> I still think that memblock_cap_memory_ranges() is overly complex. 
+> 
+> How about doing something like this:
+> 
+> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
+> removing the range in the middle?
 
-pcd: pcd version 1.07, major 46, nice 0
-pcd0: Autoprobe failed
-pcd: No CD-ROM drive found
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 4525 Comm: syz-executor.0 Not tainted 5.1.0-rc3+ #8
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:pcd_init+0x95c/0x1000 [pcd]
-Code: c4 ab f7 48 89 d8 48 c1 e8 03 80 3c 28 00 74 08 48 89 df e8 56 a3 da f7 4c 8b 23 49 8d bc 24 80 05 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 74 05 e8 39 a3 da f7 49 8b bc 24 80 05 00 00 e8 cc b2
-RSP: 0018:ffff8881e84df880 EFLAGS: 00010202
-RAX: 00000000000000b0 RBX: ffffffffc155a088 RCX: ffffffffc1508935
-RDX: 0000000000040000 RSI: ffffc900014f0000 RDI: 0000000000000580
-RBP: dffffc0000000000 R08: ffffed103ee658b8 R09: ffffed103ee658b8
-R10: 0000000000000001 R11: ffffed103ee658b7 R12: 0000000000000000
-R13: ffffffffc155a778 R14: ffffffffc155a4a8 R15: 0000000000000003
-FS:  00007fe71bee3700(0000) GS:ffff8881f7300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055a7334441a8 CR3: 00000001e9674003 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- ? 0xffffffffc1508000
- ? 0xffffffffc1508000
- do_one_initcall+0xbc/0x47d init/main.c:901
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe71bee2c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007fe71bee2c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe71bee36bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-Modules linked in: pcd(+) paride solos_pci atm ts_fsm rtc_mt6397 mac80211 nhc_mobility nhc_udp nhc_ipv6 nhc_hop nhc_dest nhc_fragment nhc_routing 6lowpan rtc_cros_ec memconsole intel_xhci_usb_role_switch roles rtc_wm8350 usbcore industrialio_triggered_buffer kfifo_buf industrialio asc7621 dm_era dm_persistent_data dm_bufio dm_mod tpm gnss_ubx gnss_serial serdev gnss max2165 cpufreq_dt hid_penmount hid menf21bmc_wdt rc_core n_tracesink ide_gd_mod cdns_csi2tx v4l2_fwnode videodev media pinctrl_lewisburg pinctrl_intel iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel aes_x86_64 crypto_simd
- ide_pci_generic piix input_leds cryptd glue_helper psmouse ide_core intel_agp serio_raw intel_gtt ata_generic i2c_piix4 agpgart pata_acpi parport_pc parport floppy rtc_cmos sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: bmc150_magn]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
----[ end trace d873691c3cd69f56 ]---
+Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
+That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
+matter.
 
-If alloc_disk fails in pcd_init_units, cd->disk will be
-NULL, however in pcd_detect and pcd_exit, it's not check
-this before free.It may result a NULL pointer dereference.
+I agree with you, your idea is better.
 
-Also when register_blkdev failed, blk_cleanup_queue() and
-blk_mq_free_tag_set() should be called to free resources.
+Thanks,
+Chen Zhou
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 81b74ac68c28 ("paride/pcd: cleanup queues when detection fails")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/block/paride/pcd.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-index 377a694..6d415b2 100644
---- a/drivers/block/paride/pcd.c
-+++ b/drivers/block/paride/pcd.c
-@@ -314,6 +314,7 @@ static void pcd_init_units(void)
- 		disk->queue = blk_mq_init_sq_queue(&cd->tag_set, &pcd_mq_ops,
- 						   1, BLK_MQ_F_SHOULD_MERGE);
- 		if (IS_ERR(disk->queue)) {
-+			put_disk(disk);
- 			disk->queue = NULL;
- 			continue;
- 		}
-@@ -750,6 +751,8 @@ static int pcd_detect(void)
- 
- 	printk("%s: No CD-ROM drive found\n", name);
- 	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
-+		if (!cd->disk)
-+			continue;
- 		blk_cleanup_queue(cd->disk->queue);
- 		cd->disk->queue = NULL;
- 		blk_mq_free_tag_set(&cd->tag_set);
-@@ -1010,8 +1013,14 @@ static int __init pcd_init(void)
- 	pcd_probe_capabilities();
- 
- 	if (register_blkdev(major, name)) {
--		for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++)
-+		for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
-+			if (!cd->disk)
-+				continue;
-+
-+			blk_cleanup_queue(cd->disk->queue);
-+			blk_mq_free_tag_set(&cd->tag_set);
- 			put_disk(cd->disk);
-+		}
- 		return -EBUSY;
- 	}
- 
-@@ -1032,6 +1041,9 @@ static void __exit pcd_exit(void)
- 	int unit;
- 
- 	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
-+		if (!cd->disk)
-+			continue;
-+
- 		if (cd->present) {
- 			del_gendisk(cd->disk);
- 			pi_release(cd->pi);
--- 
-2.7.4
-
+>  
+>> Thanks,
+>> Chen Zhou
+>>
+>>>
+>>>>  }
+>>>>  
+>>>>  void __init arm64_memblock_init(void)
+>>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>>>> index 47e3c06..aeade34 100644
+>>>> --- a/include/linux/memblock.h
+>>>> +++ b/include/linux/memblock.h
+>>>> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
+>>>>  phys_addr_t memblock_end_of_DRAM(void);
+>>>>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>>>>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+>>>> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
+>>>>  void memblock_mem_limit_remove_map(phys_addr_t limit);
+>>>>  bool memblock_is_memory(phys_addr_t addr);
+>>>>  bool memblock_is_map_memory(phys_addr_t addr);
+>>>> diff --git a/mm/memblock.c b/mm/memblock.c
+>>>> index 28fa8926..1a7f4ee7c 100644
+>>>> --- a/mm/memblock.c
+>>>> +++ b/mm/memblock.c
+>>>> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+>>>>  			base + size, PHYS_ADDR_MAX);
+>>>>  }
+>>>>  
+>>>> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
+>>>> +{
+>>>> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+>>>> +	int i, j, ret, nr = 0;
+>>>> +
+>>>> +	for (i = 0; i < cnt; i++) {
+>>>> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
+>>>> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
+>>>> +		if (ret)
+>>>> +			break;
+>>>> +		nr++;
+>>>> +	}
+>>>> +	if (!nr)
+>>>> +		return;
+>>>> +
+>>>> +	/* remove all the MAP regions */
+>>>> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
+>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>> +
+>>>> +	for (i = nr - 1; i > 0; i--)
+>>>> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
+>>>> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
+>>>> +				memblock_remove_region(&memblock.memory, j);
+>>>> +
+>>>> +	for (i = start_rgn[0] - 1; i >= 0; i--)
+>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>> +
+>>>> +	/* truncate the reserved regions */
+>>>> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
+>>>> +
+>>>> +	for (i = nr - 1; i > 0; i--)
+>>>> +		memblock_remove_range(&memblock.reserved,
+>>>> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
+>>>> +
+>>>> +	memblock_remove_range(&memblock.reserved,
+>>>> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
+>>>> +}
+>>>> +
+>>>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>>>>  {
+>>>>  	phys_addr_t max_addr;
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>>
+>>
+> 
 
