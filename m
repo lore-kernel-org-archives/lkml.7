@@ -2,31 +2,31 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159EBC282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F59C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FB62186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0E3218D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Ie4dENao"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Vdywhg2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfDEXqE (ORCPT
+        id S1726559AbfDEXp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:46:04 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53232 "EHLO vps.xff.cz"
+        Fri, 5 Apr 2019 19:45:29 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53004 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfDEXpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:45:30 -0400
+        id S1726326AbfDEXpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:45:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554507924; bh=17z8A4sEMKnnEksrPWwK/sfPIoAwgLtqI1F147/6Uhk=;
+        t=1554507922; bh=g7ekrFktYb/u2XNA4S7sLVfjVJZ1r8B0jkp+qyuXKEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ie4dENaoddqprlXQ4Y4cy0odUf3GA+Gh3gzKrfINdywpPNgpLREUCteRbuCGb1fCj
-         g07rXQBM5FgQTEIn5QFZCnh2OQwUlMb94d2JS9i8CxJzVg6JGwtTIuEJhKPnL4eqFw
-         uScuCjXwX1NIGVFtlXgHhkd7+MC7c1nGGA6qlxg8=
+        b=Vdywhg2oduEzZOSmd83SRokQOx3H1JVCVuuB3RLE9N89S7MZcnWeaLizonwnvlpg3
+         oL3nnUzJLzAaOXwRGMbBNO8XWNdSy/+FCHMawmOSwl/ZtawJx5oCbPwbUEuarPMq0u
+         wNro3RhJYERSrCUeG77eA9HP7+TuNGF07hscEImE=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -53,9 +53,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
-Date:   Sat,  6 Apr 2019 01:45:10 +0200
-Message-Id: <20190405234514.6183-9-megous@megous.com>
+Subject: [PATCH 03/12] dt-bindings: display: sun4i-drm: Add DDC power supply
+Date:   Sat,  6 Apr 2019 01:45:05 +0200
+Message-Id: <20190405234514.6183-4-megous@megous.com>
 In-Reply-To: <20190405234514.6183-1-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 MIME-Version: 1.0
@@ -67,30 +67,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Some Allwinner SoC using boards need to enable a regulator
+for the DDC bus to be usable.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 91fecab58836..dccad79da90c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -238,6 +238,15 @@
- 				bias-pull-up;
- 			};
+Add binding documentation for it.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 31ab72cba3d4..31474fb92313 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -104,6 +104,7 @@ Required properties:
+     output, usually to an HDMI connector.
  
-+
-+			mmc1_pins: mmc1-pins {
-+				pins = "PG0", "PG1", "PG2", "PG3",
-+				       "PG4", "PG5";
-+				function = "mmc1";
-+				drive-strength = <30>;
-+				bias-pull-up;
-+			};
-+
- 			mmc2_pins: mmc2-pins {
- 				pins = "PC1", "PC4", "PC5", "PC6",
- 				       "PC7", "PC8", "PC9", "PC10",
+ Optional properties:
++  - ddc-supply: the VCC power supply for the DDC bus
+   - hvcc-supply: the VCC power supply of the controller
+ 
+ DWC HDMI PHY
 -- 
 2.21.0
 
