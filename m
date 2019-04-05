@@ -2,45 +2,60 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33189C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE74C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62AD21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A6820700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hGM5kXEO"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Ob/lnvjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfDEXbD (ORCPT
+        id S1726425AbfDEXpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:31:03 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52628 "EHLO vps.xff.cz"
+        Fri, 5 Apr 2019 19:45:23 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52884 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfDEXbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:31:02 -0400
+        id S1725973AbfDEXpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:45:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554507059; bh=5FBBWDSpPtZMdhBDFsBPV22g8KeWvr/wPWjm6s61Oow=;
+        t=1554507920; bh=/RoD9OslD/yH1LdQ1birMG0d1kCxzgoTgbE7QUS3/ao=;
         h=From:To:Cc:Subject:Date:From;
-        b=hGM5kXEOuATeYK5LJtWwc85HVTo5yIY0BxLXlvoBsTxLJzXygRnCNBGVaYx0WdE3l
-         m3YRs/1Lkuln6lpTwhfs43Lrd4Y80ukCKOK/4bEx+nLRd/bSWS6NHC2KLhKIO9ba9u
-         idYFR9ehU0h9HWAM4g5DSosTT5dem/rndjOvJavE=
+        b=Ob/lnvjyHnDCHFdGL4m9OAOCZQ+hTOU0LtDUeDDCOCxSTXdVumlPR+1Lj241Sk+pq
+         wmXkz4DjC9lr1l9VAswR2aYVPinTak6n4kEm/mnUg3rujq9xxxDUkaM7Rx6sqX3/rz
+         3xb02Cr1CIYuPZzZLx14lJAIOHvaThXuE23Pvw+g=
 From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com
-Cc:     Ondrej Jirman <megous@megous.com>,
+To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
-        A10),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm: sun4i: Fix NULL/invalid pointer dereference in sun8i_tcon_top_un/bind
-Date:   Sat,  6 Apr 2019 01:30:48 +0200
-Message-Id: <20190405233048.3823-1-megous@megous.com>
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: [PATCH 00/12] Add support for Orange Pi 3
+Date:   Sat,  6 Apr 2019 01:45:02 +0200
+Message-Id: <20190405234514.6183-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,64 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-There are two problems here:
+This series implements support for Xunlong Orange Pi 3 board.
 
-1. Not all clk_data->hws[] need to be initialized, depending on various
-   configured quirks. This leads to NULL ptr deref in
-   clk_hw_unregister_gate() in sun8i_tcon_top_unbind()
-2. If there is error when registering the clk_data->hws[],
-   err_unregister_gates error path will try to unregister
-   IS_ERR()=true (invalid) pointer.
+Unfortunately, this board needs some small driver patches, so I have
+split the boards DT patch into chunks that require patches for drivers
+in various subsystems:
 
-For problem (1) I have this stack trace:
+- Basic DT for the board  (patch 1)
+- HDMI support            (patches 2, 3, 4)
+- Ethernet support        (patches 5, 6, 7)
+- WiFi support            (patches 8, 9, 10, 11, 12)
 
-Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000008
-Call trace:
- clk_hw_unregister+0x8/0x18
- clk_hw_unregister_gate+0x14/0x28
- sun8i_tcon_top_unbind+0x2c/0x60
- component_unbind.isra.4+0x2c/0x50
- component_bind_all+0x1d4/0x230
- sun4i_drv_bind+0xc4/0x1a0
- try_to_bring_up_master+0x164/0x1c0
- __component_add+0xa0/0x168
- component_add+0x10/0x18
- sun8i_dw_hdmi_probe+0x18/0x20
- platform_drv_probe+0x3c/0x70
- really_probe+0xcc/0x278
- driver_probe_device+0x34/0xa8
+This patch is also needed to not get segfault on boot: 
+  https://lkml.org/lkml/2019/4/5/856
 
-Problem (2) was identified by head scratching.
+Please take a look.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+regards,
+  Ondrej Jirman
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index fc36e0c10a37..b1e7c76e9c17 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -227,7 +227,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
--		if (clk_data->hws[i])
-+		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
- 	clk_disable_unprepare(tcon_top->bus);
- err_assert_reset:
-@@ -245,7 +245,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
- 
- 	of_clk_del_provider(dev->of_node);
- 	for (i = 0; i < CLK_NUM; i++)
--		clk_hw_unregister_gate(clk_data->hws[i]);
-+		if (clk_data->hws[i])
-+			clk_hw_unregister_gate(clk_data->hws[i]);
- 
- 	clk_disable_unprepare(tcon_top->bus);
- 	reset_control_assert(tcon_top->rst);
+Icenowy Zheng (2):
+  net: stmmac: sun8i: add support for Allwinner H6 EMAC
+  net: stmmac: sun8i: force select external PHY when no internal one
+
+Ondrej Jirman (10):
+  arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
+  drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
+  dt-bindings: display: sun4i-drm: Add DDC power supply
+  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+  arm64: dts: allwinner: orange-pi-3: Enable ethernet
+  arm64: dts: allwinner: h6: Add MMC1 pins
+  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+  pinctrl: sunxi: Support I/O bias voltage setting on H6
+  brcmfmac: Loading the correct firmware for brcm43456
+  arm64: dts: allwinner: orange-pi-3: Enable WiFi
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 339 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 ++
+ .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  50 ++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   7 +-
+ 12 files changed, 433 insertions(+), 21 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+
 -- 
 2.21.0
 
