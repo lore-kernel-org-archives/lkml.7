@@ -2,108 +2,146 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CFDC4360F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F34C10F0F
 	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01058206B7
+	by mail.kernel.org (Postfix) with ESMTP id 2EF5B217D6
 	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JQtrxFaN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e4AOwV2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfDEBLw (ORCPT
+        id S1730505AbfDEBLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 21:11:52 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43606 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbfDEBLv (ORCPT
+        Thu, 4 Apr 2019 21:11:53 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43642 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730335AbfDEBLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 21:11:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3518bEq117607;
-        Fri, 5 Apr 2019 01:11:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=CSaQ+vwd/SY4oxO6tdbB1QfPer03uXAwyhMCG3dJPCw=;
- b=JQtrxFaNWoPIOXDc82RKdN1HXxgqrfA70ZU075uKBOiroU7o+oVx4W9g8Y7mY1B0RzrF
- 2/UACY1cAlk/0jtrRMW2shTNrqtlmY8w/+tfmtxrTLaG4yAZE51I9OngwUIU3IJJ/iho
- 7jis/vVzj4n+8Nj7mtWRzInqDSczpgKFFpaIWlbM8NoutWVvNSO6OCHMDLOluYgpY8Xx
- 09hKWipP18WRK2Q4GID/WQmXIukLFX0B1oF091hla6dkW/Vn9Q42hKImTjyPxWLZHzsZ
- +ISMU1/CcAhSQeXAqCuydJMO+XOp2rdsDT9ciFxKa/yDT7qyjrY4e/dmptHIujk77cqm HQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2rhyvtj98j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 01:11:32 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3519fwl088211;
-        Fri, 5 Apr 2019 01:11:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2rm8f6yxph-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 01:11:31 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x351BTYW002785;
-        Fri, 5 Apr 2019 01:11:29 GMT
-Received: from linux.cn.oracle.com (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 18:11:28 -0700
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, konrad.wilk@oracle.com, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com, joe.jin@oracle.com,
-        srinivas.eeda@oracle.com, dongli.zhang@oracle.com
-Subject: [PATCH 1/1] swiotlb: dump used and total slots when swiotlb buffer is full
-Date:   Fri,  5 Apr 2019 09:15:25 +0800
-Message-Id: <1554426925-2431-1-git-send-email-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=777
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904050007
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=815 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904050007
+        Thu, 4 Apr 2019 21:11:52 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x351BP61108213;
+        Thu, 4 Apr 2019 20:11:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554426685;
+        bh=ONCTjnaJiqFp3Buz0U41D3loWM6yqRLMRDv2UE2iGAI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e4AOwV2W8qinHDqHIixun8l1FGejRs88qujW++N+dT+iBxOWne7+REUk6++Nsevlq
+         VWV0x2vyXc+8xiEy0od0xzuOsQ5cDA45vOHdx78QNmorF2CLU6d5ubUEld8DzZHoAZ
+         m9lCJw+UDspbemDeXRlt5NBxfdckE1Cu+nIdkc6c=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x351BORi097114
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 20:11:24 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
+ 2019 20:11:24 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Apr 2019 20:11:24 -0500
+Received: from [172.22.84.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x351BO5q073623;
+        Thu, 4 Apr 2019 20:11:24 -0500
+Subject: Re: [PATCH v3 02/25] dt-bindings: leds: Add LED_FUNCTION definitions
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        <linux-leds@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pavel@ucw.cz>, <robh@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-3-jacek.anaszewski@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c7c92db0-55e5-afba-c8ab-66e221b48b82@ti.com>
+Date:   Thu, 4 Apr 2019 20:11:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190331175501.23471-3-jacek.anaszewski@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far the kernel only prints the requested size if swiotlb buffer if full.
-It is not possible to know whether it is simply an out of buffer, or it is
-because swiotlb cannot allocate buffer with the requested size due to
-fragmentation.
+On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
+> Add initial set of common LED function definitions for use in Device Tree.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> ---
+>  include/dt-bindings/leds/common.h | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index e171d0a6beb2..0325db5b4208 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -19,4 +19,40 @@
+>  #define LEDS_BOOST_ADAPTIVE	1
+>  #define LEDS_BOOST_FIXED	2
+>  
+> +/* Standard LED functions */
+> +#define LED_FUNCTION_ACTIVITY "activity"
+> +#define LED_FUNCTION_ALARM "alarm"
+> +#define LED_FUNCTION_BACKLIGHT "backlight"
+> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+> +#define LED_FUNCTION_BOOT "boot"
+> +#define LED_FUNCTION_CHARGE "charge"
+> +#define LED_FUNCTION_DEBUG "debug"
+> +#define LED_FUNCTION_DISK "disk"
+> +#define LED_FUNCTION_DISK_ERR "disk-err"
+> +#define LED_FUNCTION_DISK_READ "disk-read"
+> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+> +#define LED_FUNCTION_FAULT "fault"
+> +#define LED_FUNCTION_FLASH "flash"
+> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+> +#define LED_FUNCTION_INDICATOR "indicator"
+> +#define LED_FUNCTION_KEYBOARD "keyboard"
+> +#define LED_FUNCTION_KEYPAD "keypad"
+> +#define LED_FUNCTION_LAN "lan"
+> +#define LED_FUNCTION_MMC "mmc"
+> +#define LED_FUNCTION_NAND "nand"
+> +#define LED_FUNCTION_ON "on"
+> +#define LED_FUNCTION_PROGRAMMING "programming"
+> +#define LED_FUNCTION_POWER "power"
+> +#define LED_FUNCTION_RX "rx"
+> +#define LED_FUNCTION_SD "sd"
+> +#define LED_FUNCTION_STANDBY "standby"
+> +#define LED_FUNCTION_STATUS "status"
+> +#define LED_FUNCTION_TORCH "torch"
+> +#define LED_FUNCTION_TV "tv"
+> +#define LED_FUNCTION_TX "tx"
+> +#define LED_FUNCTION_USB "usb"
+> +#define LED_FUNCTION_WAN "wan"
+> +#define LED_FUNCTION_WLAN "wlan"
+> +#define LED_FUNCTION_WPS "wps"
+> +
+>  #endif /* __DT_BINDINGS_LEDS_H */
+> 
 
-As 'io_tlb_used' is available since commit 71602fe6d4e9 ("swiotlb: add
-debugfs to track swiotlb buffer usage"), both 'io_tlb_used' and
-'io_tlb_nslabs' are printed when swiotlb buffer is full.
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- kernel/dma/swiotlb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 53012db..3f43b37 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -540,7 +540,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- not_found:
- 	spin_unlock_irqrestore(&io_tlb_lock, flags);
- 	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
--		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
-+		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu, used %lu\n",
-+			 size, io_tlb_nslabs, io_tlb_used);
- 	return DMA_MAPPING_ERROR;
- found:
- 	io_tlb_used += nslots;
 -- 
-2.7.4
-
+------------------
+Dan Murphy
