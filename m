@@ -2,186 +2,105 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EE4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A5BC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC8C21872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E666021850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kcruy+Hz";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kcruy+Hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbfDEOBf (ORCPT
+        id S1731295AbfDEOCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:01:35 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49470 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731452AbfDEOAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DCC01A25;
-        Fri,  5 Apr 2019 07:00:34 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 97E873F68F;
-        Fri,  5 Apr 2019 07:00:30 -0700 (PDT)
-From:   Will Deacon <will.deacon@arm.com>
-To:     linux-arch@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 12/21] ia64/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-Date:   Fri,  5 Apr 2019 14:59:27 +0100
-Message-Id: <20190405135936.7266-13-will.deacon@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
+        Fri, 5 Apr 2019 10:02:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52102 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfDEOCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:02:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B40686030E; Fri,  5 Apr 2019 14:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554472943;
+        bh=2NlJK2q5IAxwjEfWd7EahOK0DtN0b/aMY639kvFutGs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kcruy+HzfMYXxzLdXHaU45qyrIvjqGAvexPMAPvvHjJU9PJtrF3xkQwz16agREkHQ
+         jwxZ93oRpxY8nC4CD4LNUyNQOO8wnvS67sDu2lQkNGtAp9QnKe6ZyoUjw43guAmIX2
+         mw/0G3KVoYqPpGVm2NxLPPLCxqLMnO1uAPgK2gqw=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6994F6047C;
+        Fri,  5 Apr 2019 14:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554472943;
+        bh=2NlJK2q5IAxwjEfWd7EahOK0DtN0b/aMY639kvFutGs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kcruy+HzfMYXxzLdXHaU45qyrIvjqGAvexPMAPvvHjJU9PJtrF3xkQwz16agREkHQ
+         jwxZ93oRpxY8nC4CD4LNUyNQOO8wnvS67sDu2lQkNGtAp9QnKe6ZyoUjw43guAmIX2
+         mw/0G3KVoYqPpGVm2NxLPPLCxqLMnO1uAPgK2gqw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6994F6047C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998: Fix blsp2_i2c5 address
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <464822ba-8bf9-a287-bf6c-05988c7d9f88@free.fr>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <c9b0d6c6-a55e-91b4-80aa-42d3cee4e319@codeaurora.org>
+Date:   Fri, 5 Apr 2019 08:02:20 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <464822ba-8bf9-a287-bf6c-05988c7d9f88@free.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mmiowb() macro is horribly difficult to use and drivers will continue
-to work most of the time if they omit a call when it is required.
+On 4/5/2019 4:36 AM, Marc Gonzalez wrote:
+> blsp1_i2c1 is at 0x0c175000
+> blsp2_i2c5 is at 0x0c1ba000 (the label is correct)
+> 
+> Fixes: 1e71d0c273d0a ("arm64: dts: qcom: msm8998: Enumerate i2c controllers")
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+>   arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index a692cbc8dd84..57426bde7580 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -982,7 +982,7 @@
+>   
+>   		blsp2_i2c5: i2c@c1ba000 {
+>   			compatible = "qcom,i2c-qup-v2.2.1";
+> -			reg = <0x0c175000 0x600>;
+> +			reg = <0x0c1ba000 0x600>;
+>   			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+>   
+>   			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>,
+> 
 
-Rather than rely on driver authors getting this right, push mmiowb() into
-arch_spin_unlock() for ia64. If this is deemed to be a performance issue,
-a subsequent optimisation could make use of ARCH_HAS_MMIOWB to elide
-the barrier in cases where no I/O writes were performed inside the
-critical section.
+Whoops.  Nice catch.
 
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
- arch/ia64/include/asm/Kbuild     |  1 -
- arch/ia64/include/asm/io.h       | 17 -----------------
- arch/ia64/include/asm/mmiowb.h   | 25 +++++++++++++++++++++++++
- arch/ia64/include/asm/spinlock.h |  2 ++
- 4 files changed, 27 insertions(+), 18 deletions(-)
- create mode 100644 arch/ia64/include/asm/mmiowb.h
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-diff --git a/arch/ia64/include/asm/Kbuild b/arch/ia64/include/asm/Kbuild
-index cabfe0280c33..11f191689c9e 100644
---- a/arch/ia64/include/asm/Kbuild
-+++ b/arch/ia64/include/asm/Kbuild
-@@ -5,7 +5,6 @@ generic-y += irq_work.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += mm-arch-hooks.h
--generic-y += mmiowb.h
- generic-y += preempt.h
- generic-y += trace_clock.h
- generic-y += vtime.h
-diff --git a/arch/ia64/include/asm/io.h b/arch/ia64/include/asm/io.h
-index 1e6fef69bb01..a511d62d447a 100644
---- a/arch/ia64/include/asm/io.h
-+++ b/arch/ia64/include/asm/io.h
-@@ -113,20 +113,6 @@ extern int valid_mmap_phys_addr_range (unsigned long pfn, size_t count);
-  */
- #define __ia64_mf_a()	ia64_mfa()
- 
--/**
-- * ___ia64_mmiowb - I/O write barrier
-- *
-- * Ensure ordering of I/O space writes.  This will make sure that writes
-- * following the barrier will arrive after all previous writes.  For most
-- * ia64 platforms, this is a simple 'mf.a' instruction.
-- *
-- * See Documentation/driver-api/device-io.rst for more information.
-- */
--static inline void ___ia64_mmiowb(void)
--{
--	ia64_mfa();
--}
--
- static inline void*
- __ia64_mk_io_addr (unsigned long port)
- {
-@@ -161,7 +147,6 @@ __ia64_mk_io_addr (unsigned long port)
- #define __ia64_writew	___ia64_writew
- #define __ia64_writel	___ia64_writel
- #define __ia64_writeq	___ia64_writeq
--#define __ia64_mmiowb	___ia64_mmiowb
- 
- /*
-  * For the in/out routines, we need to do "mf.a" _after_ doing the I/O access to ensure
-@@ -296,7 +281,6 @@ __outsl (unsigned long port, const void *src, unsigned long count)
- #define __outb		platform_outb
- #define __outw		platform_outw
- #define __outl		platform_outl
--#define __mmiowb	platform_mmiowb
- 
- #define inb(p)		__inb(p)
- #define inw(p)		__inw(p)
-@@ -310,7 +294,6 @@ __outsl (unsigned long port, const void *src, unsigned long count)
- #define outsb(p,s,c)	__outsb(p,s,c)
- #define outsw(p,s,c)	__outsw(p,s,c)
- #define outsl(p,s,c)	__outsl(p,s,c)
--#define mmiowb()	__mmiowb()
- 
- /*
-  * The address passed to these functions are ioremap()ped already.
-diff --git a/arch/ia64/include/asm/mmiowb.h b/arch/ia64/include/asm/mmiowb.h
-new file mode 100644
-index 000000000000..297b85ac84a0
---- /dev/null
-+++ b/arch/ia64/include/asm/mmiowb.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _ASM_IA64_MMIOWB_H
-+#define _ASM_IA64_MMIOWB_H
-+
-+#include <asm/machvec.h>
-+
-+/**
-+ * ___ia64_mmiowb - I/O write barrier
-+ *
-+ * Ensure ordering of I/O space writes.  This will make sure that writes
-+ * following the barrier will arrive after all previous writes.  For most
-+ * ia64 platforms, this is a simple 'mf.a' instruction.
-+ */
-+static inline void ___ia64_mmiowb(void)
-+{
-+	ia64_mfa();
-+}
-+
-+#define __ia64_mmiowb	___ia64_mmiowb
-+#define mmiowb()	platform_mmiowb()
-+
-+#include <asm-generic/mmiowb.h>
-+
-+#endif	/* _ASM_IA64_MMIOWB_H */
-diff --git a/arch/ia64/include/asm/spinlock.h b/arch/ia64/include/asm/spinlock.h
-index afd0b3121b4c..5f620e66384e 100644
---- a/arch/ia64/include/asm/spinlock.h
-+++ b/arch/ia64/include/asm/spinlock.h
-@@ -73,6 +73,8 @@ static __always_inline void __ticket_spin_unlock(arch_spinlock_t *lock)
- {
- 	unsigned short	*p = (unsigned short *)&lock->lock + 1, tmp;
- 
-+	/* This could be optimised with ARCH_HAS_MMIOWB */
-+	mmiowb();
- 	asm volatile ("ld2.bias %0=[%1]" : "=r"(tmp) : "r"(p));
- 	WRITE_ONCE(*p, (tmp + 2) & ~1);
- }
 -- 
-2.11.0
-
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
