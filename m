@@ -2,89 +2,88 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A07C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D752CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDAD217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D4B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:46:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EiSExjjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbfDEHlc convert rfc822-to-8bit (ORCPT
+        id S1730191AbfDEHqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 03:41:32 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:52974 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729142AbfDEHlc (ORCPT
+        Fri, 5 Apr 2019 03:46:51 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39327 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfDEHqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 03:41:32 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16139798-1500050 
-        for multiple; Fri, 05 Apr 2019 08:41:19 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 5 Apr 2019 03:46:51 -0400
+Received: by mail-yw1-f66.google.com with SMTP id z9so1982317ywd.6
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 00:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G+gd4faDAtq/OW4Rmwo1J0jG1l1BL+UhKsEyr7fipbk=;
+        b=EiSExjjd1MCNvFUIdMch5YBNiGWeYUo37xiNXJUS9i7HzMucN+OiMBek89bsavX7ql
+         Lyx5nLzQJTU1VLDGBs/DY2LASExSwEQUfyvwPqWfwSAQz4kuZN9p9geI7LXjE/o7+D64
+         rIC/cEP04sX689IE5TPwIsYlwc3VVRZ7BxKoX8qJSEoucjhwxSAFIt23JJFJHpcjEe05
+         zqeZ1pZrmJrZ64xZ0MePsxJ4JX4HRVHEynQBzjV29GVPfRPM2pl78R/jNvVcN9kmMRku
+         qmVWA5HFVGfwyoJtRezdilRyL9PYtxsKBsvHE8xMHuzE5vBGN+VWIXmKIYRqBlLoQzB/
+         7iKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G+gd4faDAtq/OW4Rmwo1J0jG1l1BL+UhKsEyr7fipbk=;
+        b=TlUgy9ILVsAxmfLtC9tygQgdX7KTylmgjuyFNF6dzftaTIpUfokXDjS8Sh6z5eezAM
+         MtvQ6zF+k9BBUv+55VQ0ZBHn5evCFhS1JwMFOr67wOThY/UXuUt8gWAtJp50DVJ0H6WO
+         WiSdFvieB99OXzFwFJj7lil7kkMjfIlGfh+m3y0dwdICjtbn4mU+5K+rVX7mgg3iR6Bn
+         lTBWpyiVcGwSUXc+aOfXHVDjA8z6gs5JLlyDUPeohJa7JvgUQwmuOUch8m0hKsnPr927
+         xxt5ZNli4z/WTW2MTANTGlDSDPUib7/y2uVUEaQmMDUpZ62fBuvg3P/sZuh5pexD8578
+         zPrw==
+X-Gm-Message-State: APjAAAU9LvqzsL5pavLFoHV8c7jNMfLFPhXHyLYR/A6VclmArOwwT7Wx
+        pVU+//FJgEfrafQB7jOURgeTV4v23e6r6jj3nhCasGDerJ9BQw==
+X-Google-Smtp-Source: APXvYqz3VqqgU/EjWNlgQQ6kMGe+m1gjI6z81wC8M8WvnsrIILFHrfEGQDwnN+S2ylPwC3NMwGfymTPl9w+KnNzLJB0=
+X-Received: by 2002:a81:9249:: with SMTP id j70mr8883187ywg.371.1554450410273;
+ Fri, 05 Apr 2019 00:46:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        michal.wajdeczko@intel.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-References: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
-Message-ID: <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] drm/i915: Use drm_dev_unplug()
-Date:   Fri, 05 Apr 2019 08:41:16 +0100
+References: <20190404144603.27682-1-colin.king@canonical.com>
+In-Reply-To: <20190404144603.27682-1-colin.king@canonical.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 5 Apr 2019 00:46:39 -0700
+Message-ID: <CANn89iLsp+Nii7Y-ppBnLbinR7e=vVJ6QsMjBVLjcAKs9zQaRA@mail.gmail.com>
+Subject: Re: [PATCH] tcp: remove redundant check on tskb
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Janusz Krzysztofik (2019-04-05 08:26:57)
-> From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> 
-> The driver does not currently support unbinding from a device which is
-> in use.  Since open file descriptors may still be pointing into kernel
-> memory where the device structures used to be, entirely correct kernel
-> panics protect the driver from being unbound as we should not be
-> unbinding it before those dangling pointers have been made safe.
-> 
-> According to the documentation found inside drivers/gpu/drm/drm_drv.c,
-> drm_dev_unplug() should be used instead of drm_dev_unregister() in
-> order to make a device inaccessible to users as soon as it is unpluged.
-> Follow that advice to make those possibly dangling pointers safe,
-> protected by DRM layer from a user who is otherwise left pointing into
-> possibly reused kernel memory after the driver has been unbound from
-> the device.
-> 
-> Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> ---
->  drivers/gpu/drm/i915/i915_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-> index 9df65d386d11..66163378c481 100644
-> --- a/drivers/gpu/drm/i915/i915_drv.c
-> +++ b/drivers/gpu/drm/i915/i915_drv.c
-> @@ -1596,7 +1596,7 @@ static void i915_driver_unregister(struct drm_i915_private *dev_priv)
->         i915_pmu_unregister(dev_priv);
->  
->         i915_teardown_sysfs(dev_priv);
-> -       drm_dev_unregister(&dev_priv->drm);
-> +       drm_dev_unplug(&dev_priv->drm);
+On Thu, Apr 4, 2019 at 7:46 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The non-null check on tskb is always false because it is in an else
+> path of a check on tskb and hence tskb is null in this code block.
+> This is check is therefore redundant and can be removed as well
+> as the label coalesc.
+>...
 
-I think we may have our onion inverted here. We want to stop the users
-as the first step, then start removing the entries. (That will also
-nicely invert the order from register, which is what we typically
-expect).
+> Addresses-Coverity: ("Logically dead code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-After calling i915_driver_unregister(); call i915_gem_set_wedged() to
-immediately (give or take external fences) cancel inflight operations.
--Chris
+SGTM, thanks.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
