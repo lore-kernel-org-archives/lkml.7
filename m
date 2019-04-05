@@ -2,415 +2,123 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF795C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF19CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7362186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B071921871
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lS90n7M0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfDELuN (ORCPT
+        id S1730620AbfDELue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:50:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52719 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfDELuM (ORCPT
+        Fri, 5 Apr 2019 07:50:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54781 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfDELue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:50:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Bnk0K2737853
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:49:46 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35Bnj6O2737850;
-        Fri, 5 Apr 2019 04:49:45 -0700
-Date:   Fri, 5 Apr 2019 04:49:45 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-69769ce159cbfd7567815a86cfc3ea63423de61b@git.kernel.org>
-Cc:     rostedt@goodmis.org, jolsa@redhat.com, tstoyanov@vmware.com,
-        akpm@linux-foundation.org, namhyung@kernel.org, tglx@linutronix.de,
-        acme@redhat.com, hpa@zytor.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, acme@redhat.com, hpa@zytor.com,
-          namhyung@kernel.org, jolsa@redhat.com, rostedt@goodmis.org,
-          tstoyanov@vmware.com, akpm@linux-foundation.org
-In-Reply-To: <20190401164344.627724996@goodmis.org>
-References: <20190401164344.627724996@goodmis.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tools, tools lib traceevent: Rename "pevent"
- member of struct tep_event to "tep"
-Git-Commit-ID: 69769ce159cbfd7567815a86cfc3ea63423de61b
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Fri, 5 Apr 2019 07:50:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c1so6325503wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4vA423L0B512xMUlryz6tq1OFnDQMAXtE1k4y9JTwU8=;
+        b=lS90n7M0sIJmX7378Mlz1DffDMeuP7nsstODg05YV2EbsaPm4nNU3KJpDHXWzaIXPr
+         u6BwJmnXogDkgdA07PegcKKmUp6YCdPT7tOss+AOzoyMDOarhk9PZJKu6ihaXhUBzBQL
+         S38Q3k8Znd/pZnCXaQ9qMyHJq0ib0FlVsD9FuAMFnBkc+hosdjKDbHkOcM+qYDeoHG8o
+         IYl1hiFdL3+wXX81p1/JZV6KyEboZotMJc1dofcK7JsxLjbxOtKW3GzADTc8J9/29HPI
+         9jEhLqPwmX69OpH29al9vrbtf0WFaxJ/ZBQHNGUsOVaxAYg88ErvpX/I3pAbWu8VfMIe
+         O7OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4vA423L0B512xMUlryz6tq1OFnDQMAXtE1k4y9JTwU8=;
+        b=eAnW+86FUO+e10ViKBalgw5TtLrCu6C8SkkrkxPq3xgSHaQW8SkoNTFP2b2XLENFm5
+         MnRGp+ntoov0wo5m0iEeQ3Z2cAAJ47CmTgGDr9zSZA+0vWxW3MOvGKk+BXG4Rz/Vm4S8
+         BsDeap56YTiqIg3cEKtWwQ/FO2M+BbUvr9TNC1iG5AttFub6h66asMOfjihLQv/qTKGX
+         N/lJLll0evctIrUwtgMiqqi+izRy2fjN6ekFWXYb2ba3cYaUT6ydlc1+/h1XBCbF4Vw5
+         4DLrf0qSJ/0HvufeQi+5lR/CkQ+kUtJwoKLKTH6i2L7cCktcoSl5iVND0ceQwlmg2wGN
+         v+ww==
+X-Gm-Message-State: APjAAAXXrJSFckbJFu1GKkZHdsdcvcF0q/IJsBiMLkJiWwvMCLIh5IxC
+        yEhFjUMuTg+x76pKautrzk4=
+X-Google-Smtp-Source: APXvYqx9Z2lotprdS0f7CAgDP62VLBrh+tflNBNFTwLPW4sxxK1RN4/7CCyU+7WRBw65MpzQfZVdgg==
+X-Received: by 2002:a1c:4d02:: with SMTP id o2mr7556344wmh.134.1554465032373;
+        Fri, 05 Apr 2019 04:50:32 -0700 (PDT)
+Received: from localhost.localdomain ([178.138.34.252])
+        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.50.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 04:50:31 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     daniel.baluta@nxp.com, Andra Danciu <andradanciu1997@gmail.com>
+Subject: [PATCH 00/20] Switch to SPDX identifier
+Date:   Fri,  5 Apr 2019 14:49:50 +0300
+Message-Id: <20190405115010.28838-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  69769ce159cbfd7567815a86cfc3ea63423de61b
-Gitweb:     https://git.kernel.org/tip/69769ce159cbfd7567815a86cfc3ea63423de61b
-Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Mon, 1 Apr 2019 12:43:18 -0400
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Apr 2019 15:18:10 -0300
+This patch set switches to SPDX identifier inside the fsl directory.
 
-perf tools, tools lib traceevent: Rename "pevent" member of struct tep_event to "tep"
+Andra Danciu (20):
+  ASoC: imx-pcm: Switch to SPDX identifier
+  ASoC: efika-audio-fabric.c: Switch to SPDX identifier
+  ASoC: eukrea-tlv320: Switch to SPDX identifier
+  ASoC: fsl-dma: Switch to SPDX identifier
+  ASoC: imx-audmux: Switch to SPDX identifier
+  ASoC: imx-es8328: Switch to SPDX identifier
+  ASoC: imx-mc13783: Switch to SPDX identifier
+  ASoC: imx-pcm-fiq: Switch to SPDX identifier
+  ASoC: imx-spdif: Switch to SPDX identifier
+  ASoC: imx-ssi: Switch to SPDX identifier
+  ASoC: mpc5200_dma: Switch to SPDX identifier
+  ASoC: mpc5200_psc_ac97: Switch to SPDX identifier
+  ASoC: mpc5200_psc_i2s: Switch to SPDX identifier
+  ASoC: mpc8610_hpcd: Switch to SPDX identifier
+  ASoC: mx27vis-aic32x4: Switch to SPDX identifier
+  ASoC: p1022_ds: Switch to SPDX identifier
+  ASoC: p1022_rdk: Switch to SPDX identifier
+  ASoC: pcm030-audio-fabric: Switch to SPDX identifier
+  ASoC: phycore-ac97: Switch to SPDX identifier
+  ASoC: wm1133-ev1: Switch to SPDX identifier
 
-The member "pevent" of the struct tep_event is renamed to "tep". This
-makes the struct consistent with the chosen naming convention:
+ sound/soc/fsl/efika-audio-fabric.c  | 17 ++++-------
+ sound/soc/fsl/eukrea-tlv320.c       | 26 +++++++----------
+ sound/soc/fsl/fsl_dma.c             | 26 +++++++----------
+ sound/soc/fsl/fsl_dma.h             |  5 +---
+ sound/soc/fsl/imx-audmux.c          | 26 ++++++-----------
+ sound/soc/fsl/imx-es8328.c          | 15 +++-------
+ sound/soc/fsl/imx-mc13783.c         | 22 ++++++--------
+ sound/soc/fsl/imx-pcm-fiq.c         | 21 ++++++--------
+ sound/soc/fsl/imx-pcm.h             |  6 +---
+ sound/soc/fsl/imx-spdif.c           | 13 ++-------
+ sound/soc/fsl/imx-ssi.c             | 57 ++++++++++++++++---------------------
+ sound/soc/fsl/imx-ssi.h             |  6 +---
+ sound/soc/fsl/mpc5200_dma.c         | 14 ++++-----
+ sound/soc/fsl/mpc5200_psc_ac97.c    | 16 ++++-------
+ sound/soc/fsl/mpc5200_psc_i2s.c     | 14 ++++-----
+ sound/soc/fsl/mpc8610_hpcd.c        | 18 +++++-------
+ sound/soc/fsl/mx27vis-aic32x4.c     | 29 +++++--------------
+ sound/soc/fsl/p1022_ds.c            | 18 +++++-------
+ sound/soc/fsl/p1022_rdk.c           | 32 +++++++++------------
+ sound/soc/fsl/pcm030-audio-fabric.c | 18 +++++-------
+ sound/soc/fsl/phycore-ac97.c        | 16 ++++-------
+ sound/soc/fsl/wm1133-ev1.c          | 21 ++++++--------
+ 22 files changed, 161 insertions(+), 275 deletions(-)
 
-  tep (trace event parser), instead of the old pevent.
+-- 
+2.11.0
 
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/linux-trace-devel/20190401132111.13727-3-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190401164344.627724996@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/traceevent/event-parse.c                 | 32 +++++++++++-----------
- tools/lib/traceevent/event-parse.h                 |  2 +-
- tools/lib/traceevent/parse-filter.c                |  6 ++--
- tools/lib/traceevent/plugin_function.c             |  2 +-
- tools/lib/traceevent/plugin_kmem.c                 |  4 +--
- tools/lib/traceevent/plugin_kvm.c                  |  4 +--
- tools/lib/traceevent/plugin_sched_switch.c         |  2 +-
- tools/perf/builtin-kmem.c                          |  2 +-
- tools/perf/util/data-convert-bt.c                  |  4 +--
- tools/perf/util/python.c                           |  2 +-
- .../perf/util/scripting-engines/trace-event-perl.c |  2 +-
- .../util/scripting-engines/trace-event-python.c    |  2 +-
- tools/perf/util/trace-event-parse.c                |  2 +-
- 13 files changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index ceefa9b3d726..70ea638156f2 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -804,7 +804,7 @@ static int add_event(struct tep_handle *pevent, struct tep_event *event)
- 	pevent->events[i] = event;
- 	pevent->nr_events++;
- 
--	event->pevent = pevent;
-+	event->tep = pevent;
- 
- 	return 0;
- }
-@@ -1656,8 +1656,8 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 			else if (field->flags & TEP_FIELD_IS_STRING)
- 				field->elementsize = 1;
- 			else if (field->flags & TEP_FIELD_IS_LONG)
--				field->elementsize = event->pevent ?
--						     event->pevent->long_size :
-+				field->elementsize = event->tep ?
-+						     event->tep->long_size :
- 						     sizeof(long);
- 		} else
- 			field->elementsize = field->size;
-@@ -3075,7 +3075,7 @@ process_function(struct tep_event *event, struct tep_print_arg *arg,
- 		return process_dynamic_array_len(event, arg, tok);
- 	}
- 
--	func = find_func_handler(event->pevent, token);
-+	func = find_func_handler(event->tep, token);
- 	if (func) {
- 		free_token(token);
- 		return process_func_handler(event, func, arg, tok);
-@@ -3405,7 +3405,7 @@ int tep_read_number_field(struct tep_format_field *field, const void *data,
- 	case 2:
- 	case 4:
- 	case 8:
--		*value = tep_read_number(field->event->pevent,
-+		*value = tep_read_number(field->event->tep,
- 					 data + field->offset, field->size);
- 		return 0;
- 	default:
-@@ -3566,7 +3566,7 @@ tep_find_event_by_name(struct tep_handle *tep,
- static unsigned long long
- eval_num_arg(void *data, int size, struct tep_event *event, struct tep_print_arg *arg)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long val = 0;
- 	unsigned long long left, right;
- 	struct tep_print_arg *typearg = NULL;
-@@ -3907,7 +3907,7 @@ static void print_str_arg(struct trace_seq *s, void *data, int size,
- 			  struct tep_event *event, const char *format,
- 			  int len_arg, struct tep_print_arg *arg)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_print_flag_sym *flag;
- 	struct tep_format_field *field;
- 	struct printk_map *printk;
-@@ -4256,7 +4256,7 @@ static void free_args(struct tep_print_arg *args)
- 
- static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_format_field *field, *ip_field;
- 	struct tep_print_arg *args, *arg, **next;
- 	unsigned long long ip, val;
-@@ -4434,7 +4434,7 @@ static char *
- get_bprint_format(void *data, int size __maybe_unused,
- 		  struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long addr;
- 	struct tep_format_field *field;
- 	struct printk_map *printk;
-@@ -4835,7 +4835,7 @@ void tep_print_field(struct trace_seq *s, void *data,
- {
- 	unsigned long long val;
- 	unsigned int offset, len, i;
--	struct tep_handle *pevent = field->event->pevent;
-+	struct tep_handle *pevent = field->event->tep;
- 
- 	if (field->flags & TEP_FIELD_IS_ARRAY) {
- 		offset = field->offset;
-@@ -4910,7 +4910,7 @@ void tep_print_fields(struct trace_seq *s, void *data,
- 
- static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_print_fmt *print_fmt = &event->print_fmt;
- 	struct tep_print_arg *arg = print_fmt->args;
- 	struct tep_print_arg *args = NULL;
-@@ -5424,7 +5424,7 @@ void tep_event_info(struct trace_seq *s, struct tep_event *event,
- {
- 	int print_pretty = 1;
- 
--	if (event->pevent->print_raw || (event->flags & TEP_EVENT_FL_PRINTRAW))
-+	if (event->tep->print_raw || (event->flags & TEP_EVENT_FL_PRINTRAW))
- 		tep_print_fields(s, record->data, record->size, event);
- 	else {
- 
-@@ -6163,7 +6163,7 @@ enum tep_errno __tep_parse_format(struct tep_event **eventp,
- 	}
- 
- 	/* Add pevent to event so that it can be referenced */
--	event->pevent = pevent;
-+	event->tep = pevent;
- 
- 	ret = event_read_format(event);
- 	if (ret < 0) {
-@@ -6357,8 +6357,8 @@ void *tep_get_field_raw(struct trace_seq *s, struct tep_event *event,
- 
- 	offset = field->offset;
- 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
--		offset = tep_read_number(event->pevent,
--					    data + offset, field->size);
-+		offset = tep_read_number(event->tep,
-+					 data + offset, field->size);
- 		*len = offset >> 16;
- 		offset &= 0xffff;
- 	} else
-@@ -6492,7 +6492,7 @@ int tep_print_func_field(struct trace_seq *s, const char *fmt,
- 			 struct tep_record *record, int err)
- {
- 	struct tep_format_field *field = tep_find_field(event, name);
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long val;
- 	struct func_map *func;
- 	char tmp[128];
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 2720a30ef86b..de7ace173e75 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -278,7 +278,7 @@ struct tep_print_fmt {
- };
- 
- struct tep_event {
--	struct tep_handle	*pevent;
-+	struct tep_handle	*tep;
- 	char			*name;
- 	int			id;
- 	int			flags;
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 5d8f9d9bc253..123358209297 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1528,8 +1528,8 @@ get_comm(struct tep_event *event, struct tep_record *record)
- 	const char *comm;
- 	int pid;
- 
--	pid = tep_data_pid(event->pevent, record);
--	comm = tep_data_comm_from_pid(event->pevent, pid);
-+	pid = tep_data_pid(event->tep, record);
-+	comm = tep_data_comm_from_pid(event->tep, pid);
- 	return comm;
- }
- 
-@@ -1727,7 +1727,7 @@ static const char *get_field_str(struct tep_filter_arg *arg, struct tep_record *
- 
- 	} else {
- 		event = arg->str.field->event;
--		pevent = event->pevent;
-+		pevent = event->tep;
- 		addr = get_value(event, arg->str.field, record);
- 
- 		if (arg->str.field->flags & (TEP_FIELD_IS_POINTER | TEP_FIELD_IS_LONG))
-diff --git a/tools/lib/traceevent/plugin_function.c b/tools/lib/traceevent/plugin_function.c
-index e93f33bd705f..d6a8df060614 100644
---- a/tools/lib/traceevent/plugin_function.c
-+++ b/tools/lib/traceevent/plugin_function.c
-@@ -126,7 +126,7 @@ static int add_and_get_index(const char *parent, const char *child, int cpu)
- static int function_handler(struct trace_seq *s, struct tep_record *record,
- 			    struct tep_event *event, void *context)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long function;
- 	unsigned long long pfunction;
- 	const char *func;
-diff --git a/tools/lib/traceevent/plugin_kmem.c b/tools/lib/traceevent/plugin_kmem.c
-index c09bafdd8377..edaec5d962c3 100644
---- a/tools/lib/traceevent/plugin_kmem.c
-+++ b/tools/lib/traceevent/plugin_kmem.c
-@@ -39,11 +39,11 @@ static int call_site_handler(struct trace_seq *s, struct tep_record *record,
- 	if (tep_read_number_field(field, data, &val))
- 		return 1;
- 
--	func = tep_find_function(event->pevent, val);
-+	func = tep_find_function(event->tep, val);
- 	if (!func)
- 		return 1;
- 
--	addr = tep_find_function_address(event->pevent, val);
-+	addr = tep_find_function_address(event->tep, val);
- 
- 	trace_seq_printf(s, "(%s+0x%x) ", func, (int)(val - addr));
- 	return 1;
-diff --git a/tools/lib/traceevent/plugin_kvm.c b/tools/lib/traceevent/plugin_kvm.c
-index 472298c2b531..c8e623065a7e 100644
---- a/tools/lib/traceevent/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugin_kvm.c
-@@ -389,8 +389,8 @@ static int kvm_mmu_print_role(struct trace_seq *s, struct tep_record *record,
- 	 * We can only use the structure if file is of the same
- 	 * endianness.
- 	 */
--	if (tep_is_file_bigendian(event->pevent) ==
--	    tep_is_local_bigendian(event->pevent)) {
-+	if (tep_is_file_bigendian(event->tep) ==
-+	    tep_is_local_bigendian(event->tep)) {
- 
- 		trace_seq_printf(s, "%u q%u%s %s%s %spae %snxe %swp%s%s%s",
- 				 role.level,
-diff --git a/tools/lib/traceevent/plugin_sched_switch.c b/tools/lib/traceevent/plugin_sched_switch.c
-index 701c22913cf8..957389a0ff7a 100644
---- a/tools/lib/traceevent/plugin_sched_switch.c
-+++ b/tools/lib/traceevent/plugin_sched_switch.c
-@@ -62,7 +62,7 @@ static void write_and_save_comm(struct tep_format_field *field,
- 	comm = &s->buffer[len];
- 
- 	/* Help out the comm to ids. This will handle dups */
--	tep_register_comm(field->event->pevent, comm, pid);
-+	tep_register_comm(field->event->tep, comm, pid);
- }
- 
- static int sched_wakeup_handler(struct trace_seq *s,
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index fa520f4b8095..b80eee455111 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1975,7 +1975,7 @@ int cmd_kmem(int argc, const char **argv)
- 			goto out_delete;
- 		}
- 
--		kmem_page_size = tep_get_page_size(evsel->tp_format->pevent);
-+		kmem_page_size = tep_get_page_size(evsel->tp_format->tep);
- 		symbol_conf.use_callchain = true;
- 	}
- 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 26af43ad9ddd..e0311c9750ad 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -310,7 +310,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
- 	if (flags & TEP_FIELD_IS_DYNAMIC) {
- 		unsigned long long tmp_val;
- 
--		tmp_val = tep_read_number(fmtf->event->pevent,
-+		tmp_val = tep_read_number(fmtf->event->tep,
- 					  data + offset, len);
- 		offset = tmp_val;
- 		len = offset >> 16;
-@@ -354,7 +354,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
- 			unsigned long long value_int;
- 
- 			value_int = tep_read_number(
--					fmtf->event->pevent,
-+					fmtf->event->tep,
- 					data + offset + i * len, len);
- 
- 			if (!(flags & TEP_FIELD_IS_SIGNED))
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index dda0ac978b1e..6aa7e2352e16 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -342,7 +342,7 @@ static bool is_tracepoint(struct pyrf_event *pevent)
- static PyObject*
- tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
- {
--	struct tep_handle *pevent = field->event->pevent;
-+	struct tep_handle *pevent = field->event->tep;
- 	void *data = pe->sample.raw_data;
- 	PyObject *ret = NULL;
- 	unsigned long long val;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 5f06378a482b..61aa7f3df915 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -372,7 +372,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 	ns = nsecs - s * NSEC_PER_SEC;
- 
- 	scripting_context->event_data = data;
--	scripting_context->pevent = evsel->tp_format->pevent;
-+	scripting_context->pevent = evsel->tp_format->tep;
- 
- 	ENTER;
- 	SAVETMPS;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 09604c6508f0..22f52b669871 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -837,7 +837,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	ns = nsecs - s * NSEC_PER_SEC;
- 
- 	scripting_context->event_data = data;
--	scripting_context->pevent = evsel->tp_format->pevent;
-+	scripting_context->pevent = evsel->tp_format->tep;
- 
- 	context = _PyCapsule_New(scripting_context, NULL, NULL);
- 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index ad74be1f0e42..863955e4094e 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -111,7 +111,7 @@ raw_field_value(struct tep_event *event, const char *name, void *data)
- 
- unsigned long long read_size(struct tep_event *event, void *ptr, int size)
- {
--	return tep_read_number(event->pevent, ptr, size);
-+	return tep_read_number(event->tep, ptr, size);
- }
- 
- void event_format__fprintf(struct tep_event *event,
