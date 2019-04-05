@@ -2,184 +2,166 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E78C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACCEC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDB32146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09F12146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5xUR7sT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfDESEc (ORCPT
+        id S1731670AbfDESFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:04:32 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.23]:34700 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728683AbfDESEb (ORCPT
+        Fri, 5 Apr 2019 14:05:02 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54107 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728683AbfDESFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:04:31 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 1CC47122A2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2019 13:04:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id CTCYhf8sb4FKpCTCYhAXu5; Fri, 05 Apr 2019 13:04:30 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=36608 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hCTCX-000rHG-KS; Fri, 05 Apr 2019 13:04:29 -0500
-Subject: Re: [PATCH] watchdog: alim7101: Mark expected switch fall-through
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190320181658.GA6749@embeddedor>
- <e041fd69-0cbc-edb8-cc30-037b333e29cc@roeck-us.net>
- <9a839da8-d2ba-a856-16a7-2ed180ca7864@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <779afa51-5700-ccb1-6761-b51e4227ef81@embeddedor.com>
-Date:   Fri, 5 Apr 2019 13:04:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 14:05:01 -0400
+Received: by mail-it1-f194.google.com with SMTP id y204so10862718itf.3;
+        Fri, 05 Apr 2019 11:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Rs6lvFuWDLjGHtZaPICXxNnL6/JM32AelCBVVvSRrk=;
+        b=E5xUR7sTpZvwpcgRp+7J0ZpyBoP/K0uYR3RLKDvauWWv06VG0YBOuVBS7mjsAoLqCf
+         VXjWMbsTBs7UCSk7kb3WPj9gY/k+uWHJYZCgfWkULbd/jE/HpTmzBBseMFnMdBFL0ErE
+         Yh1qlwrPuk54zxTXXv9hkW3ihVaUKpgzi/zwQ4rAn7GSMvIfIDlvYMi21l2JPwv/NM63
+         DVV+c0v0tUFb5Apdw2fGzsFp9NEk5fCuwc8hA9C1miRKGdDt0AiGWyvcQmB5acVvOASn
+         DIhlfOB/aDCS/N5d7nzCK0gXWOOW32EymsnqGog+wbzilGNZUHi1z/c5XRxPi0MIsuSv
+         9z4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Rs6lvFuWDLjGHtZaPICXxNnL6/JM32AelCBVVvSRrk=;
+        b=Su1m8rfqnC0Le6fzoiDBivgvjNgGTQF5NQICtYcLCCWKBAmJFjhS/c8ZHDN6ULQbOM
+         8NNLsGEfn9eY8OiJrz7aYMYf1Np3oWxmI6ffZ5n4ykX+jmTuwiByou2J5edUm1ol1gEL
+         TeEqBdQSF3Vuj+RN/d4swS1SBxBCfIteCk2UM/b9bKV+yXdPW4H1K/q0Q3P53rO2WwQi
+         jeLcXwSCJu3Ago4M/LpfBIf+I7lFxQUj3VhriT/A+/0qYdD5aoOYWvV+7H5A1lVDjeuB
+         H8dE0pzK4DWAlQjK/VHZAAxjbUg5+nZqCT3m2tKVFuD8EyuWLe8Ug9wwYjYMeFLGxSN9
+         Xv7g==
+X-Gm-Message-State: APjAAAWFbO/0OFaYtzMARQ7Ew6QUp0DD5FSOar8d7ETH6FYptGWP29wz
+        AILp0JWlsCasLNGme0xZU9DT/jPATTkTVhL2gFY=
+X-Google-Smtp-Source: APXvYqzakkL66QnnGutHg4bQVznJQJ0uonaMO2QG03u06xsK3ITZSsCQlZIr4R7y2fpDyrNTPLDZQhpIwezyOEYLPTU=
+X-Received: by 2002:a24:4702:: with SMTP id t2mr9988913itb.105.1554487500644;
+ Fri, 05 Apr 2019 11:05:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9a839da8-d2ba-a856-16a7-2ed180ca7864@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hCTCX-000rHG-KS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:36608
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
+ <20190401041418.5999-8-andrew.smirnov@gmail.com> <fa3cf0ac-1015-4031-8cd4-cd5270e39fc7@linaro.org>
+In-Reply-To: <fa3cf0ac-1015-4031-8cd4-cd5270e39fc7@linaro.org>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 5 Apr 2019 11:04:49 -0700
+Message-ID: <CAHQ1cqGfSS0PHaM+QcEMzhxXN5F9vQEE=nWseSoRKbrEmkFHag@mail.gmail.com>
+Subject: Re: [PATCH v3 07/13] thermal: qoriq: Pass data to qoriq_tmu_calibration()
+ directly
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Thu, Apr 4, 2019 at 1:12 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> On 01/04/2019 06:14, Andrey Smirnov wrote:
+> > We can simplify error cleanup code if instead of passing a "struct
+> > platform_device *" to qoriq_tmu_calibration() and deriving a bunch of
+> > pointers from it, we pass those pointers directly. This way we won't
+> > be force to call platform_set_drvdata() as early in qoriq_tmu_probe()
+> > and consequently would be able to drop the "err_iomap" error path.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Eduardo Valentin <edubezval@gmail.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/thermal/qoriq_thermal.c | 22 +++++++++-------------
+> >  1 file changed, 9 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> > index 24a2a57f61c9..a3ddb55740e4 100644
+> > --- a/drivers/thermal/qoriq_thermal.c
+> > +++ b/drivers/thermal/qoriq_thermal.c
+> > @@ -139,16 +139,16 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
+> >       return 0;
+> >  }
+> >
+> > -static int qoriq_tmu_calibration(struct platform_device *pdev)
+> > +static int qoriq_tmu_calibration(struct device *dev,
+> > +                              struct qoriq_tmu_data *data)
+> >  {
+> >       int i, val, len;
+> >       u32 range[4];
+> >       const u32 *calibration;
+> > -     struct device_node *np = pdev->dev.of_node;
+> > -     struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
+> > +     struct device_node *np = dev->of_node;
+> >
+> >       if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
+> > -             dev_err(&pdev->dev, "missing calibration range.\n");
+> > +             dev_err(dev, "missing calibration range.\n");
+> >               return -ENODEV;
+> >       }
+> >
+> > @@ -160,7 +160,7 @@ static int qoriq_tmu_calibration(struct platform_device *pdev)
+> >
+> >       calibration = of_get_property(np, "fsl,tmu-calibration", &len);
+> >       if (calibration == NULL || len % 8) {
+> > -             dev_err(&pdev->dev, "invalid calibration data.\n");
+> > +             dev_err(dev, "invalid calibration data.\n");
+> >               return -ENODEV;
+> >       }
+> >
+> > @@ -198,20 +198,17 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+> >       if (!data)
+> >               return -ENOMEM;
+> >
+> > -     platform_set_drvdata(pdev, data);
+> > -
+> >       data->little_endian = of_property_read_bool(np, "little-endian");
+> >
+> >       data->regs = of_iomap(np, 0);
+> >       if (!data->regs) {
+> >               dev_err(dev, "Failed to get memory region\n");
+> > -             ret = -ENODEV;
+> > -             goto err_iomap;
+> > +             return -ENODEV;
+> >       }
+> >
+> >       qoriq_tmu_init_device(data);    /* TMU initialization */
+> >
+> > -     ret = qoriq_tmu_calibration(pdev);      /* TMU calibration */
+> > +     ret = qoriq_tmu_calibration(dev, data); /* TMU calibration */
+> >       if (ret < 0)
+> >               goto err_tmu;
+> >
+> > @@ -222,14 +219,13 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+> >               goto err_iomap;
+>
+> s/goto err_iomap/goto err_tmu/ ?
+>
 
-Friendly ping:
+Ugh, not sure how I missed this. Will fix. Thanks for catching this!
 
-Who can take this?
-
-Thanks
---
-Gustavo
-
-On 3/20/19 7:15 PM, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 3/20/19 7:12 PM, Guenter Roeck wrote:
->> On 3/20/19 11:16 AM, Gustavo A. R. Silva wrote:
->>> In preparation to enabling -Wimplicit-fallthrough, mark switch
->>> cases where we are expecting to fall through.
->>>
->>> This patch fixes the following warning:
->>>
->>> drivers/watchdog/alim7101_wdt.c: In function ‘fop_ioctl’:
->>> drivers/watchdog/alim7101_wdt.c:279:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>     wdt_keepalive();
->>>     ^~~~~~~~~~~~~~~
->>> drivers/watchdog/alim7101_wdt.c:282:2: note: here
->>>    case WDIOC_GETTIMEOUT:
->>>    ^~~~
->>>
->>> Notice that, in this particular case, the /* Fall through */
->>> comment is placed at the very bottom of the case statement,
->>> which is what GCC is expecting to find.
->>>
->>> Warning level 3 was used: -Wimplicit-fallthrough=3
->>>
->>> This patch is part of the ongoing efforts to enabling
->>> -Wimplicit-fallthrough.
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
-> 
-> Thanks, Guenter. :)
-> 
-> --
-> Gustavo
-> 
->>> ---
->>>   drivers/watchdog/alim7101_wdt.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
->>> index 12f7ea62dddd..f5ada07e9202 100644
->>> --- a/drivers/watchdog/alim7101_wdt.c
->>> +++ b/drivers/watchdog/alim7101_wdt.c
->>> @@ -277,8 +277,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->>>               return -EINVAL;
->>>           timeout = new_timeout;
->>>           wdt_keepalive();
->>> -        /* Fall through */
->>>       }
->>> +        /* Fall through */
->>>       case WDIOC_GETTIMEOUT:
->>>           return put_user(timeout, p);
->>>       default:
->>>
->>
+Thanks,
+Andrey Smirnov
