@@ -2,154 +2,237 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA82C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD8C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91ADF217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FC4217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfDEK7e (ORCPT
+        id S1730826AbfDELBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:59:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33973 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730546AbfDEK7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:59:33 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hCMZH-0006bS-94; Fri, 05 Apr 2019 12:59:31 +0200
-Message-ID: <1554461965.3060.5.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] media: docs-rst: Document memory-to-memory video
- decoder interface
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Tiffany Lin =?UTF-8?Q?=28=E6=9E=97=E6=85=A7=E7=8F=8A=29?= 
-        <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Date:   Fri, 05 Apr 2019 12:59:25 +0200
-In-Reply-To: <20190124100419.26492-2-tfiga@chromium.org>
-References: <20190124100419.26492-1-tfiga@chromium.org>
-         <20190124100419.26492-2-tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 5 Apr 2019 07:01:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:45944 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730546AbfDELBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 07:01:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FA6A168F;
+        Fri,  5 Apr 2019 04:01:04 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DACD33F557;
+        Fri,  5 Apr 2019 04:01:00 -0700 (PDT)
+Subject: Re: [PATCH v8 7/9] KVM: arm/arm64: context-switch ptrauth registers
+To:     Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+ <1554172037-4516-8-git-send-email-amit.kachhap@arm.com>
+ <efe4fd6b-7f1f-c8b7-0667-e2bf636dcf4f@arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <4065308b-20ed-31ba-9fe9-f8a63531444e@arm.com>
+Date:   Fri, 5 Apr 2019 16:30:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <efe4fd6b-7f1f-c8b7-0667-e2bf636dcf4f@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-01-24 at 19:04 +0900, Tomasz Figa wrote:
-> Due to complexity of the video decoding process, the V4L2 drivers of
-> stateful decoder hardware require specific sequences of V4L2 API calls
-> to be followed. These include capability enumeration, initialization,
-> decoding, seek, pause, dynamic resolution change, drain and end of
-> stream.
+Hi Kristina,
+
+On 4/5/19 12:59 AM, Kristina Martsenko wrote:
+> On 02/04/2019 03:27, Amit Daniel Kachhap wrote:
+>> From: Mark Rutland <mark.rutland@arm.com>
+>>
+>> When pointer authentication is supported, a guest may wish to use it.
+>> This patch adds the necessary KVM infrastructure for this to work, with
+>> a semi-lazy context switch of the pointer auth state.
 > 
-> Specifics of the above have been discussed during Media Workshops at
-> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
-> Conference Europe 2014 in Düsseldorf. The de facto Codec API that
-> originated at those events was later implemented by the drivers we already
-> have merged in mainline, such as s5p-mfc or coda.
+> [...]
 > 
-> The only thing missing was the real specification included as a part of
-> Linux Media documentation. Fix it now and document the decoder part of
-> the Codec API.
+>> diff --git a/arch/arm64/include/asm/kvm_ptrauth_asm.h b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+>> new file mode 100644
+>> index 0000000..65f99e9
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+>> @@ -0,0 +1,106 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* arch/arm64/include/asm/kvm_ptrauth_asm.h: Guest/host ptrauth save/restore
+>> + * Copyright 2019 Arm Limited
+>> + * Author: Mark Rutland <mark.rutland@arm.com>
+>> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> + */
+>> +
+>> +#ifndef __ASM_KVM_PTRAUTH_ASM_H
+>> +#define __ASM_KVM_PTRAUTH_ASM_H
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#define __ptrauth_save_key(regs, key)						\
+>> +({										\
+>> +	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
+>> +	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
+>> +})
+>> +
+>> +#define __ptrauth_save_state(ctxt)						\
+>> +({										\
+>> +	__ptrauth_save_key(ctxt->sys_regs, APIA);				\
+>> +	__ptrauth_save_key(ctxt->sys_regs, APIB);				\
+>> +	__ptrauth_save_key(ctxt->sys_regs, APDA);				\
+>> +	__ptrauth_save_key(ctxt->sys_regs, APDB);				\
+>> +	__ptrauth_save_key(ctxt->sys_regs, APGA);				\
+>> +})
+>> +
+>> +#else /* __ASSEMBLY__ */
+>> +
+>> +#include <asm/sysreg.h>
+>> +
+>> +#ifdef	CONFIG_ARM64_PTR_AUTH
+>> +
+>> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
+>> +
+>> +/*
+>> + * CPU_AP*_EL1 values exceed immediate offset range (512) for stp instruction
+>> + * so below macros takes CPU_APIAKEYLO_EL1 as base and calculates the offset of
+>> + * the keys from this base to avoid an extra add instruction. These macros
+>> + * assumes the keys offsets are aligned in a specific increasing order.
+>> + */
+>> +.macro	ptrauth_save_state base, reg1, reg2
+>> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+>> +.endm
+>> +
+>> +.macro	ptrauth_restore_state base, reg1, reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+>> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+>> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+>> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+>> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+>> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
+>> +.endm
+>> +
+>> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+>> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+>> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+>> +	cbz	\reg1, 1f
+>> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+>> +1:
 > 
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> ---
->  Documentation/media/uapi/v4l/dev-decoder.rst  | 1076 +++++++++++++++++
->  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    5 +
->  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
->  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
->  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   40 +-
->  Documentation/media/uapi/v4l/vidioc-g-fmt.rst |   14 +
->  6 files changed, 1135 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+> Nit: the label in assembly macros is usually a larger number (see
+> assembler.h or alternative.h for example). I think this is to avoid
+> future accidents like
 > 
-> diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentation/media/uapi/v4l/dev-decoder.rst
-> new file mode 100644
-> index 000000000000..b7db2352ad41
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
-> @@ -0,0 +1,1076 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _decoder:
-> +
-> +*************************************************
-> +Memory-to-memory Stateful Video Decoder Interface
-> +*************************************************
-> +
-[...]
-> +
-> +Drain
-> +=====
-> +
-[...]
-> +
-> +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_STOP`` call
-> +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the decoder is
-> +   stopped and it will accept, but not process, any newly queued ``OUTPUT``
-> +   buffers until the client issues any of the following operations:
-> +
-[...]
-> +
-> +.. note::
-> +
-> +   Once the drain sequence is initiated, the client needs to drive it to
-> +   completion, as described by the steps above, unless it aborts the process by
-> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
-> +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START`` or
-> +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progress and they
-> +   will fail with -EBUSY error code if attempted.
+> 	cbz	x0, 1f
+> 	ptrauth_switch_to_guest	x1, x2, x3, x4
+> 	add	x5, x5, x6
+> 1:
+> 	...
+> 
+> where the code would incorrectly branch to the label inside
+> ptrauth_switch_to_guest, instead of the one after it.
+Yes agree that these kind of labels are problematic. I will update in 
+the next iteration.
 
-Should the V4L2_DEC_CMD_STOP documentation in
-Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst:
-
-  * - ``V4L2_DEC_CMD_STOP``
-    - 1
-    - Stop the decoder. When the decoder is already stopped, this
-      command does nothing.
-
-be updated to mention that for mem2mem decoders this not only does
-nothing, but returns an -EBUSY error return value?
-
-Also, if V4L2_DEC_CMD_STOP_IMMEDIATELY is set, should the decoder drop
-all pending buffers and signal EOS immediately? Should this be mentioned
-here?
-
-> +   Although mandatory, the availability of decoder commands may be queried
-> +   using :c:func:`VIDIOC_TRY_DECODER_CMD`.
-
-Do the TRY_DECODER_CMD also return -EBUSY during the draining phase?
-
-regards
-Philipp
+Thanks,
+Amit Daniel
+> 
+> Thanks,
+> Kristina
+> 
+>> +.endm
+>> +
+>> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+>> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+>> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+>> +	cbz	\reg1, 2f
+>> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_save_state	\reg1, \reg2, \reg3
+>> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+>> +	isb
+>> +2:
+>> +.endm
+>> +
+>> +#else /* !CONFIG_ARM64_PTR_AUTH */
+>> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+>> +.endm
+>> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+>> +.endm
+>> +#endif /* CONFIG_ARM64_PTR_AUTH */
+>> +#endif /* __ASSEMBLY__ */
+>> +#endif /* __ASM_KVM_PTRAUTH_ASM_H */
+> 
+>> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+>> index 675fdc1..3a70213 100644
+>> --- a/arch/arm64/kvm/hyp/entry.S
+>> +++ b/arch/arm64/kvm/hyp/entry.S
+>> @@ -24,6 +24,7 @@
+>>   #include <asm/kvm_arm.h>
+>>   #include <asm/kvm_asm.h>
+>>   #include <asm/kvm_mmu.h>
+>> +#include <asm/kvm_ptrauth_asm.h>
+>>   
+>>   #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
+>>   #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
+>> @@ -64,6 +65,9 @@ ENTRY(__guest_enter)
+>>   
+>>   	add	x18, x0, #VCPU_CONTEXT
+>>   
+>> +	// Macro ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3).
+>> +	ptrauth_switch_to_guest x18, x0, x1, x2
+>> +
+>>   	// Restore guest regs x0-x17
+>>   	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
+>>   	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
+>> @@ -118,6 +122,9 @@ ENTRY(__guest_exit)
+>>   
+>>   	get_host_ctxt	x2, x3
+>>   
+>> +	// Macro ptrauth_switch_to_host(guest cxt, host cxt, tmp1, tmp2, tmp3).
+>> +	ptrauth_switch_to_host x1, x2, x3, x4, x5
+>> +
+>>   	// Now restore the host regs
+>>   	restore_callee_saved_regs x2
+>>   
