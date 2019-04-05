@@ -4,92 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B920C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0BAC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D32217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F89221850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfDEMjN (ORCPT
+        id S1729987AbfDEMka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:39:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34542 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 08:40:30 -0400
+Received: from smtp.asem.it ([151.1.184.197]:56361 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDEMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:39:12 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7AAA30027B5;
-        Fri,  5 Apr 2019 12:39:12 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDAB55D71B;
-        Fri,  5 Apr 2019 12:39:11 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 07:39:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Luis Ressel <aranea@aixah.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] objtool: Don't use -Werror
-Message-ID: <20190405123909.tupbgueie4czg2dd@treble>
-References: <20190405110151.2461-1-aranea@aixah.de>
+        id S1726027AbfDEMka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 08:40:30 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003794723.MSG 
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 14:40:25 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Fri, 5
+ Apr 2019 14:40:24 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Fri, 5 Apr 2019 14:40:24 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] spi: pxa2xxx: change "no DMA channels..." msg from debug to warning
+Date:   Fri, 5 Apr 2019 14:40:22 +0200
+Message-ID: <1554468022-17416-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190405110151.2461-1-aranea@aixah.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 05 Apr 2019 12:39:12 +0000 (UTC)
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0210.5CA74CB9.000D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:01:50PM +0200, Luis Ressel wrote:
-> -Werror can be handy for development, but enabling it for production
-> builds is a bad idea -- other compilers might produce unexpected
-> warnings, or #included library headers might trigger warnings.
-> 
-> In my case, libelf's (not elfutil's!) headers trigger several -Wundef
-> warnings. This wasn't a problem before 056d28d135bc, since gcc doesn't
-> emit warnings for system headers, but now that there's a
-> -I/usr/include/libelf/ in the gcc command line, those warnings appear
-> and break the build.
+Change the type of the diagnostic message:
 
-Hi Luis,
+"no DMA channels available, using PIO"
 
-What version of libelf are you using?  AFAIK, the non-elfutils version
-of libelf is buggy and has been unmaintained for 10 years.
+from debug to warning.
 
-> CC'ing stable@ since 056d28d135bc has also been included in stable
-> versions.
-> 
-> Fixes: 056d28d135bc ("objtool: Query pkg-config for libelf location")
-> Signed-off-by: Luis Ressel <aranea@aixah.de>
-> Cc: stable@vger.kernel.org
-> ---
->  tools/objtool/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index 53f8be0f4a1f..ad2c11a881db 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -34,7 +34,7 @@ INCLUDES := -I$(srctree)/tools/include \
->  	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
->  	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
->  WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
-> -CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-> +CFLAGS   += $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
->  LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
->  
->  # Allow old libelf to be used:
-> -- 
-> 2.21.0
-> 
+The lack of an available DMA channel is very important regard the
+spi-pxa2xx performance. The transfer speed can be reduced more than 50%.
 
+So it is very important to warn the user about this, without enabling
+the full SPI debug with CONFIG_SPI_DEBUG.
+
+Moreover, enabling the full SPI debug only to enable this specific
+debug message, the dmesg buffer fills quickly with a lot of
+repetitive information during the SPI data transfer.
+This cause the loss of all the first important messages
+written during the initialization.
+
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/spi/spi-pxa2xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 6160fe0..f7068cc 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1696,7 +1696,7 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 	if (platform_info->enable_dma) {
+ 		status = pxa2xx_spi_dma_setup(drv_data);
+ 		if (status) {
+-			dev_dbg(dev, "no DMA channels available, using PIO\n");
++			dev_warn(dev, "no DMA channels available, using PIO\n");
+ 			platform_info->enable_dma = false;
+ 		} else {
+ 			controller->can_dma = pxa2xx_spi_can_dma;
 -- 
-Josh
+2.7.4
+
