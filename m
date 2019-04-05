@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE656C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EECC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A879221852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E3121852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfDEOAP (ORCPT
+        id S1731402AbfDEOAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:00:15 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49266 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbfDEOAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:14 -0400
+        Fri, 5 Apr 2019 10:00:19 -0400
+Received: from foss.arm.com ([217.140.101.70]:49306 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731383AbfDEOAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEC2116A3;
-        Fri,  5 Apr 2019 07:00:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0809019BF;
+        Fri,  5 Apr 2019 07:00:18 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8B06B3F68F;
-        Fri,  5 Apr 2019 07:00:09 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BBAE3F68F;
+        Fri,  5 Apr 2019 07:00:13 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 07/21] x86/io: Remove useless definition of mmiowb()
-Date:   Fri,  5 Apr 2019 14:59:22 +0100
-Message-Id: <20190405135936.7266-8-will.deacon@arm.com>
+Subject: [PATCH v2 08/21] nds32/io: Remove useless definition of mmiowb()
+Date:   Fri,  5 Apr 2019 14:59:23 +0100
+Message-Id: <20190405135936.7266-9-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -59,29 +59,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86 maps mmiowb() to barrier(), but this is superfluous because a
-compiler barrier is already implied by spin_unlock(). Since x86 also
-includes asm-generic/io.h in its asm/io.h file, we can remove the
-definition entirely and pick up the dummy definition from core code.
+mmiowb() only makes sense for SMP platforms, so we can remove it
+entirely for nds32.
 
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/x86/include/asm/io.h | 2 --
+ arch/nds32/include/asm/io.h | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 686247db3106..a06a9f8294ea 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -90,8 +90,6 @@ build_mmio_write(__writel, "l", unsigned int, "r", )
- #define __raw_writew __writew
- #define __raw_writel __writel
+diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
+index 71cd226d6863..5ef8ae5ba833 100644
+--- a/arch/nds32/include/asm/io.h
++++ b/arch/nds32/include/asm/io.h
+@@ -55,8 +55,6 @@ static inline u32 __raw_readl(const volatile void __iomem *addr)
+ #define __iormb()               rmb()
+ #define __iowmb()               wmb()
  
--#define mmiowb() barrier()
+-#define mmiowb()        __asm__ __volatile__ ("msync all" : : : "memory");
 -
- #ifdef CONFIG_X86_64
- 
- build_mmio_read(readq, "q", u64, "=r", :"memory")
+ /*
+  * {read,write}{b,w,l,q}_relaxed() are like the regular version, but
+  * are not guaranteed to provide ordering against spinlocks or memory
 -- 
 2.11.0
 
