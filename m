@@ -2,173 +2,129 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65B0C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE34BC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FD8217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762B3206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XyM9PeOw"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TfPkypfM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FQyFVAjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfDEGeU (ORCPT
+        id S1729783AbfDEGrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:34:20 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38748 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfDEGeT (ORCPT
+        Fri, 5 Apr 2019 02:47:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53892 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEGrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:34:19 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a6so3549698lfl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 23:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/A4eS3TP5mVKzSW3Q2OV3ZHPo5yBQt6fIKWbpp9cS/s=;
-        b=XyM9PeOwEdvcMc+RXrZiK5dgVyljt9VHiwj+83NYLfRBfnxAHEqN5NIDvsGeyAdjff
-         cd6mGkhGhLdv4FX2nDSoP3CFNLtxvTJdSrywgm0hw2AaSEokQuv04A6flV/asMbZ3A6e
-         /sFnbXT/IBu1rGoCIg4IMqGtvQa8jdz2C1XhEhw8MKrIOP7+sGp1Vv9mu7WfCblLjnr3
-         EzfEYBeZkctG4Nvn0z3WmPOnPiZslw4SpGTYsVgTKeJvogwmLvW5GvHoO5s0OZmYnXjv
-         yZuaATULSMnPuhu+yAicl0pzADz5xn1QM6n/5k86dbk8z+YAvIF5F8oocg1maGK+xv4x
-         omyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/A4eS3TP5mVKzSW3Q2OV3ZHPo5yBQt6fIKWbpp9cS/s=;
-        b=ba/kiyvvxHEs1tCCkrazqq9l+zJZi17tkY/99X0fa3n2Nl+6iZ9PswKsRIkkZ4r1Ap
-         0ZT8yP6bOqtwqRM2aTm9R0H23gmnavYjTkSREUlHtvPq2EvRie8wn/WOxFdYbfsQ+D+z
-         O5y/9FabohIql2xrszQLtgVfpnNVCT45mbtwO+dm0VqLeTU258hCNh6EAwPxTZv7cFfm
-         8KHVp5/pv3nBW0CxC2ROPB2mxYPhurfWXTTQYHzR0qtTeMFo45LIN3LEEhKTnHW2984g
-         AR3jWKpH/qwEuAZC4KCppJjBua+f9eKnVgzKxAmBFF4k+/Iu9IHUV8DTPRDxbnrd7Egq
-         xn0Q==
-X-Gm-Message-State: APjAAAVBJYtPweRYKXEGMQgKlBXMkkXCK66+6nwTEKjyJil9fi6jfgkp
-        AFTSfkGGyK9MRwtYWcT8tInst/3xOR1wZGwryiyzauRfmlE=
-X-Google-Smtp-Source: APXvYqypFYiKl4YkkTQTIfV2Ydz1mypHNnOLjI/EAwjK53TUmQfJvFG5oaV9w0ljw1j9NqZmrSfFQQ9dG/qZjBeh2Vs=
-X-Received: by 2002:ac2:4563:: with SMTP id k3mr5430061lfm.101.1554446057628;
- Thu, 04 Apr 2019 23:34:17 -0700 (PDT)
+        Fri, 5 Apr 2019 02:47:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 75FB2609F3; Fri,  5 Apr 2019 06:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554446829;
+        bh=GW7WCqZ/kt/rcIsbdZNdWqoDeu0IwQVDlnNoiYbbT7c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TfPkypfM0c7Pna0sgW/vH2h2g+KXgl7bA/KSe8Ob+XPEeBjHNkuOYwnTJWWrRBtU/
+         Rakw+XO1ixl0FNh/f6CiSj4NWz2NcIriGoHJ0s2m7zqVRh2rmkqk0RBUhaHrln+yCv
+         hlmv2KkszjB1pX4BgJ01CHp2dk99MVi8QP9hUAQQ=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67D016087A;
+        Fri,  5 Apr 2019 06:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554446828;
+        bh=GW7WCqZ/kt/rcIsbdZNdWqoDeu0IwQVDlnNoiYbbT7c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FQyFVAjgf40UU4imQ/DuAFDjziMBSOA0r3Yj8xzXvqiC932+wpddHdAAZ1obXb9yf
+         8RakB2buW0IG2ro7QmoAkyE6JtXdXYs1Ghfu8Vq57Tgc58aUPVj55oaGSb79i2acqh
+         63YWi5wXHDTTmQaow7xqGKhoTV6FZzrHFDOTxlbs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67D016087A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] tcp: remove redundant check on tskb
+To:     Colin King <colin.king@canonical.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190404144603.27682-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <b4c8d1bc-0ecf-21cb-fe11-ebe5d7e91712@codeaurora.org>
+Date:   Fri, 5 Apr 2019 12:17:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190404084619.236418459@linuxfoundation.org>
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 5 Apr 2019 12:03:28 +0530
-Message-ID: <CA+G9fYtJrZxcnV35PYoJecUEAZpXXO1uz3g6+HKccpdshpeKZQ@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/246] 5.0.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190404144603.27682-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 at 14:38, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+
+On 4/4/2019 8:16 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> This is the start of the stable review cycle for the 5.0.7 release.
-> There are 246 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> The non-null check on tskb is always false because it is in an else
+> path of a check on tskb and hence tskb is null in this code block.
+> This is check is therefore redundant and can be removed as well
+> as the label coalesc.
 >
-> Responses should be made by Sat Apr  6 08:44:36 UTC 2019.
-> Anything received after that time might be too late.
+> if (tsbk) {
+>          ...
+> } else {
+>          ...
+>          if (unlikely(!skb)) {
+>                  if (tskb)       /* can never be true, redundant code */
+>                          goto coalesc;
+>                  return;
+>          }
+> }
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.7-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
+> Addresses-Coverity: ("Logically dead code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+> ---
+>   net/ipv4/tcp_output.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> thanks,
->
-> greg k-h
->
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.0.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: c3237e4b7d6eb01257dc3fb88eca7e17e526aab5
-git describe: v5.0.6-248-gc3237e4b7d6e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.6-248-gc3237e4b7d6e
-
-No regressions (compared to build v5.0.5-394-gcfe061443e1b)
-
-No fixes (compared to build v5.0.5-394-gcfe061443e1b)
-
-Ran 23618 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index e265d1aeeb66..32061928b054 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -3088,7 +3088,6 @@ void tcp_send_fin(struct sock *sk)
+>   		tskb = skb_rb_last(&sk->tcp_rtx_queue);
+>   
+>   	if (tskb) {
+> -coalesce:
+>   		TCP_SKB_CB(tskb)->tcp_flags |= TCPHDR_FIN;
+>   		TCP_SKB_CB(tskb)->end_seq++;
+>   		tp->write_seq++;
+> @@ -3104,11 +3103,9 @@ void tcp_send_fin(struct sock *sk)
+>   		}
+>   	} else {
+>   		skb = alloc_skb_fclone(MAX_TCP_HEADER, sk->sk_allocation);
+> -		if (unlikely(!skb)) {
+> -			if (tskb)
+> -				goto coalesce;
+> +		if (unlikely(!skb))
+>   			return;
+> -		}
+> +
+>   		INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
+>   		skb_reserve(skb, MAX_TCP_HEADER);
+>   		sk_forced_mem_schedule(sk, skb->truesize);
