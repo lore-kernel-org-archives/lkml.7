@@ -2,224 +2,168 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D40C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A00621850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rlZLpqWa"
+	by mail.kernel.org (Postfix) with ESMTP id D867A20645
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfDEKRk (ORCPT
+        id S1730800AbfDEKTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:17:40 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:64933 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730512AbfDEKRj (ORCPT
+        Fri, 5 Apr 2019 06:19:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40770 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730283AbfDEKTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:17:39 -0400
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x35AHRus030643;
-        Fri, 5 Apr 2019 19:17:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x35AHRus030643
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554459448;
-        bh=KzCUIXCIRpJ6mQ94WJb4kq/tCoGKLTGlGupi3uFPm+w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rlZLpqWa++pwtVWQImJ0ObMWm8EpcfcdQzylxynbwJY5O11pLBJ+SsISiM+GOcXvM
-         Jghb1vezms2GllJmARoNtfo7G45cwrJSPPkZJekR9XHrX+TUvdEYzEFysT1bHs0fJx
-         XVu3/2P5VYMScLiwra6a2cNq1oZmu5iOrOi4sF1K5MBZbr692VIootpFxUqM7lzpC9
-         LzBJsun5hqSjpG6WRQCeYLkTBEGdOPZMl170Xu/Fz5yflFcrh/qWzfKlIw087JFAPh
-         QJBtOcUgMgPVBOlJ59qri9VXxxH88VoNnN8m+4Hhbeb/6skqW+jyIkfWdpPqPdsvhb
-         Br7THV1fXFVIA==
-X-Nifty-SrcIP: [209.85.221.176]
-Received: by mail-vk1-f176.google.com with SMTP id w140so1321403vkd.3;
-        Fri, 05 Apr 2019 03:17:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAUrHAG30Y96cgIRezFNcbRTVXLLVWOuodrhStfAOc1Cnot7LsSQ
-        T9KaiCQsJAQuDXvXB1rEcBVN5JtFT2TmggyId/U=
-X-Google-Smtp-Source: APXvYqxfbwp9QuNskIva/2KZFfaktyYA3Xp6oZ5MU/HEHyszXsIv5yAzawwUYgvnAPt3pnUKO+sSJixSli8oRRrWxrc=
-X-Received: by 2002:a1f:b3c6:: with SMTP id c189mr4533015vkf.33.1554459446944;
- Fri, 05 Apr 2019 03:17:26 -0700 (PDT)
+        Fri, 5 Apr 2019 06:19:01 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35ADUtb094854
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 06:19:00 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rp430b6as-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 06:19:00 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Fri, 5 Apr 2019 11:18:57 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 5 Apr 2019 11:18:55 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x35AIshp44302338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Apr 2019 10:18:54 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DB9CAE056;
+        Fri,  5 Apr 2019 10:18:54 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3CE20AE057;
+        Fri,  5 Apr 2019 10:18:54 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.152.212.134])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Apr 2019 10:18:54 +0000 (GMT)
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+ <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+From:   Thomas-Mich Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Date:   Fri, 5 Apr 2019 12:18:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <CAK7LNAQw7nPwykOEV5i+yWjkxzgf1gPa5ewFhDxbbn8XXjwFUA@mail.gmail.com>
- <20190402070858.49597-1-ndesaulniers@google.com>
-In-Reply-To: <20190402070858.49597-1-ndesaulniers@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 5 Apr 2019 19:16:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQGUe0h2ti6_u5=y9KUrNStESdd=D=8K3NOiE08tt022w@mail.gmail.com>
-Message-ID: <CAK7LNAQGUe0h2ti6_u5=y9KUrNStESdd=D=8K3NOiE08tt022w@mail.gmail.com>
-Subject: Re: [PATCH v3] Makefile: lld: tell clang to use lld
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000002794cc0585c5cb81"
+In-Reply-To: <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040510-0020-0000-0000-0000032C979D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040510-0021-0000-0000-0000217EAF49
+Message-Id: <05164ef1-418f-1c66-21f8-2c8ef3242218@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904050073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000002794cc0585c5cb81
-Content-Type: text/plain; charset="UTF-8"
+On 4/4/19 3:03 PM, Peter Zijlstra wrote:
+> On Thu, Apr 04, 2019 at 01:09:09PM +0200, Peter Zijlstra wrote:
+> 
+>> That is not entirely the scenario I talked about, but *groan*.
+>>
+>> So what I meant was:
+>>
+>> 	CPU-0							CPU-n
+>>
+>> 	__schedule()
+>> 	  local_irq_disable()
+>>
+>> 	  ...
+>> 	    deactivate_task(prev);
+>>
+>> 								try_to_wake_up(@p)
+>> 								  ...
+>> 								  smp_cond_load_acquire(&p->on_cpu, !VAL);
+>>
+>> 	  <PMI>
+>> 	    ..
+>> 	    perf_event_disable_inatomic()
+>> 	      event->pending_disable = 1;
+>> 	      irq_work_queue() /* self-IPI */
+>> 	  </PMI>
+>>
+>> 	  context_switch()
+>> 	    prepare_task_switch()
+>> 	      perf_event_task_sched_out()
+>> 	        // the above chain that clears pending_disable
+>>
+>> 	    finish_task_switch()
+>> 	      finish_task()
+>> 	        smp_store_release(prev->on_cpu, 0);
+>> 								  /* finally.... */
+>> 								// take woken
+>> 								// context_switch to @p
+>> 	      finish_lock_switch()
+>> 	        raw_spin_unlock_irq()
+>> 		/* w00t, IRQs enabled, self-IPI time */
+>> 	        <self-IPI>
+>> 		  perf_pending_event()
+>> 		    // event->pending_disable == 0
+>> 		</self-IPI>
+>>
+>>
+>> What you're suggesting, is that the time between:
+>>
+>>   smp_store_release(prev->on_cpu, 0);
+>>
+>> and
+>>
+>>   <self-IPI>
+>>
+>> on CPU-0 is sufficient for CPU-n to context switch to the task, enable
+>> the event there, trigger a PMI that calls perf_event_disable_inatomic()
+>> _again_ (this would mean irq_work_queue() failing, which we don't check)
+>> (and schedule out again, although that's not required).
+>>
+>> This being virt that might actually be possible if (v)CPU-0 takes a nap
+>> I suppose.
+>>
+>> Let me think about this a little more...
+> 
+> Does the below cure things? It's not exactly pretty, but it could just
+> do the trick.
+> 
 
-On Tue, Apr 2, 2019 at 4:09 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> This is needed because clang doesn't select which linker to use based on
-> $LD but rather -fuse-ld={bfd,gold,lld,<absolute path to linker>}.  This
-> is problematic especially for cc-ldoption, which checks for linker flag
-> support via invoking the compiler, rather than the linker.
->
-> Select the linker via absolute path from $PATH via `which`. This allows
-> you to build with:
->
-> $ make LD=ld.lld
-> $ make LD=ld.lld-8
-> $ make LD=/path/to/ld.lld
->
-> Add -Qunused-arguments to KBUILD_CPPFLAGS when using LLD, as otherwise
-> Clang likes to complain about -fuse-lld= being unused when compiling but
-> not linking (-c) such as when cc-option is used.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/342
-> Link: https://github.com/ClangBuiltLinux/linux/issues/366
-> Link: https://github.com/ClangBuiltLinux/linux/issues/357
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V2->V3:
-> * Use absolute path based on `which $LD` as per Masahiro.
+Thanks a lot for the patch, I have built a new kernel and let it run over the week end.
 
-This is not what I suggested.  I wanted to say:
-"You cannot do this for GCC, so do not do it at all".
-
-I want to propose alternative solution.
-Please check the attached patches.
-
-To apply 0002, you need the following as a prerequisite:
-
-https://lore.kernel.org/patchwork/patch/1057685/
+s390 does not have a PMI, all interrupts (including the measurement interrupts from 
+the PMU) are normal, maskable interrupts.
 
 
-
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
 --
-Best Regards
-Masahiro Yamada
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
---0000000000002794cc0585c5cb81
-Content-Type: application/x-patch; 
-	name="0001-ARM-vdso-use-LD-instead-of-CC-to-link-VDSO.patch"
-Content-Disposition: attachment; 
-	filename="0001-ARM-vdso-use-LD-instead-of-CC-to-link-VDSO.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_ju3wsehm0>
-X-Attachment-Id: f_ju3wsehm0
-
-RnJvbSA3ZmNiNzgwNjk5MWQ5YjY0NDE3Mzg3OWMzYzFmY2JiZGVkNTMyNDM1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5tYXNhaGlyb0Bzb2Np
-b25leHQuY29tPgpEYXRlOiBGcmksIDUgQXByIDIwMTkgMTc6NDY6MTQgKzA5MDAKU3ViamVjdDog
-W1BBVENIIDEvMl0gQVJNOiB2ZHNvOiB1c2UgJChMRCkgaW5zdGVhZCBvZiAkKENDKSB0byBsaW5r
-IFZEU08KCldlIHVzZSAkKExEKSB0byBsaW5rIHZtbGludXgsIG1vZHVsZXMsIGRlY29tcHJlc3Nv
-cnMsIGV0Yy4KClZEU08gaXMgdGhlIG9ubHkgZXhjZXB0aW9uYWwgY2FzZSB3aGVyZSAkKENDKSBp
-cyB1c2VkIGFzIHRoZSBmcm9udGVuZApvZiBsaW5raW5nLCBidXQgSSBkbyBub3Qga25vdyB3aHku
-IFZEU08gdXNlcyBhIHNwZWNpYWwgbGlua2VyIHNjcmlwdCwKYW5kIGRvZXMgbm90IGxpbmsgc3Rh
-bmRhcmQgbGlicmFyaWVzIGF0IGFsbC4KCkkgY2hhbmdlZCB0aGUgTWFrZWZpbGUgdG8gdXNlICQo
-TEQpIHJhaHRlciB0aGFuICQoQ0MpLiBJIGNvbmZpcm1lZAp0aGUgc2FtZSB2ZHNvLnNvLnJhdyB3
-YXMgc3RpbGwgcHJvZHVjZWQuCgpVc2VycyB3aWxsIGJlIGFibGUgdG8gdXNlIHRoZWlyIGZhdm9y
-aXRlIGxpbmtlciAoZS5nLiBsbGQgaW5zdGVhZCBvZgpvZiBiZmQpIGJ5IHBhc3NpbmcgTEQ9IGZy
-b20gdGhlIGNvbW1hbmQgbGluZS4KCk15IHBsYW4gaXMgdG8gcmV3cml0ZSBhbGwgVkRTTyBNYWtl
-ZmlsZXMgdG8gdXNlICQoTEQpLCB0aGVuIGRlbGV0ZQpjYy1sZG9wdGlvbi4KClNpZ25lZC1vZmYt
-Ynk6IE1hc2FoaXJvIFlhbWFkYSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+Ci0tLQog
-YXJjaC9hcm0vdmRzby9NYWtlZmlsZSB8IDIxICsrKysrKysrLS0tLS0tLS0tLS0tLQogMSBmaWxl
-IGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vdmRzby9NYWtlZmlsZSBiL2FyY2gvYXJtL3Zkc28vTWFrZWZpbGUKaW5kZXggZjRl
-ZmZmOWQzYWZiLi5mYWRmNTU0ZDkzOTEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL3Zkc28vTWFrZWZp
-bGUKKysrIGIvYXJjaC9hcm0vdmRzby9NYWtlZmlsZQpAQCAtMTAsMTIgKzEwLDEyIEBAIG9iai12
-ZHNvIDo9ICQoYWRkcHJlZml4ICQob2JqKS8sICQob2JqLXZkc28pKQogY2NmbGFncy15IDo9IC1m
-UElDIC1mbm8tY29tbW9uIC1mbm8tYnVpbHRpbiAtZm5vLXN0YWNrLXByb3RlY3RvcgogY2NmbGFn
-cy15ICs9IC1ERElTQUJMRV9CUkFOQ0hfUFJPRklMSU5HCiAKLVZEU09fTERGTEFHUyA6PSAtV2ws
-LUJzeW1ib2xpYyAtV2wsLS1uby11bmRlZmluZWQgLVdsLC1zb25hbWU9bGludXgtdmRzby5zby4x
-Ci1WRFNPX0xERkxBR1MgKz0gLVdsLC16LG1heC1wYWdlLXNpemU9NDA5NiAtV2wsLXosY29tbW9u
-LXBhZ2Utc2l6ZT00MDk2Ci1WRFNPX0xERkxBR1MgKz0gLW5vc3RkbGliIC1zaGFyZWQKLVZEU09f
-TERGTEFHUyArPSAkKGNhbGwgY2MtbGRvcHRpb24sIC1XbCQoY29tbWEpLS1oYXNoLXN0eWxlPXN5
-c3YpCi1WRFNPX0xERkxBR1MgKz0gJChjYWxsIGNjLWxkb3B0aW9uLCAtV2wkKGNvbW1hKS0tYnVp
-bGQtaWQpCi1WRFNPX0xERkxBR1MgKz0gJChjYWxsIGNjLWxkb3B0aW9uLCAtZnVzZS1sZD1iZmQp
-CitsZGZsYWdzLXkgPSAtQnN5bWJvbGljIC0tbm8tdW5kZWZpbmVkIC1zb25hbWU9bGludXgtdmRz
-by5zby4xIFwKKwkgICAgLXogbWF4LXBhZ2Utc2l6ZT00MDk2IC16IGNvbW1vbi1wYWdlLXNpemU9
-NDA5NiBcCisJICAgIC1ub3N0ZGxpYiAtc2hhcmVkIFwKKwkgICAgJChjYWxsIGxkLW9wdGlvbiwg
-LS1oYXNoLXN0eWxlPXN5c3YpIFwKKwkgICAgJChjYWxsIGxkLW9wdGlvbiwgLS1idWlsZC1pZCkg
-XAorCSAgICAtVAogCiBvYmotJChDT05GSUdfVkRTTykgKz0gdmRzby5vCiBleHRyYS0kKENPTkZJ
-R19WRFNPKSArPSB2ZHNvLmxkcwpAQCAtMzcsOCArMzcsOCBAQCBLQ09WX0lOU1RSVU1FTlQgOj0g
-bgogJChvYmopL3Zkc28ubyA6ICQob2JqKS92ZHNvLnNvCiAKICMgTGluayBydWxlIGZvciB0aGUg
-LnNvIGZpbGUKLSQob2JqKS92ZHNvLnNvLnJhdzogJChzcmMpL3Zkc28ubGRzICQob2JqLXZkc28p
-IEZPUkNFCi0JJChjYWxsIGlmX2NoYW5nZWQsdmRzb2xkKQorJChvYmopL3Zkc28uc28ucmF3OiAk
-KG9iaikvdmRzby5sZHMgJChvYmotdmRzbykgRk9SQ0UKKwkkKGNhbGwgaWZfY2hhbmdlZCxsZCkK
-IAogJChvYmopL3Zkc28uc28uZGJnOiAkKG9iaikvdmRzby5zby5yYXcgJChvYmopL3Zkc29tdW5n
-ZSBGT1JDRQogCSQoY2FsbCBpZl9jaGFuZ2VkLHZkc29tdW5nZSkKQEAgLTQ4LDExICs0OCw2IEBA
-ICQob2JqKS8lLnNvOiBPQkpDT1BZRkxBR1MgOj0gLVMKICQob2JqKS8lLnNvOiAkKG9iaikvJS5z
-by5kYmcgRk9SQ0UKIAkkKGNhbGwgaWZfY2hhbmdlZCxvYmpjb3B5KQogCi0jIEFjdHVhbCBidWls
-ZCBjb21tYW5kcwotcXVpZXRfY21kX3Zkc29sZCA9IFZEU08gICAgJEAKLSAgICAgIGNtZF92ZHNv
-bGQgPSAkKENDKSAkKGNfZmxhZ3MpICQoVkRTT19MREZMQUdTKSBcCi0gICAgICAgICAgICAgICAg
-ICAgLVdsLC1UICQoZmlsdGVyICUubGRzLCReKSAkKGZpbHRlciAlLm8sJF4pIC1vICRACi0KIHF1
-aWV0X2NtZF92ZHNvbXVuZ2UgPSBNVU5HRSAgICRACiAgICAgICBjbWRfdmRzb211bmdlID0gJChv
-Ymp0cmVlKS8kKG9iaikvdmRzb211bmdlICQ8ICRACiAKLS0gCjIuMTcuMQoK
---0000000000002794cc0585c5cb81
-Content-Type: application/x-patch; 
-	name="0002-arm64-vdso-use-LD-instead-of-CC-to-link-VDSO.patch"
-Content-Disposition: attachment; 
-	filename="0002-arm64-vdso-use-LD-instead-of-CC-to-link-VDSO.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_ju3wsjwn1>
-X-Attachment-Id: f_ju3wsjwn1
-
-RnJvbSBkYjkzYWJhNTA4NmViYzA1NThjMTkzMTAxZDU2YzJlNWE1ODc4ZGRhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5tYXNhaGlyb0Bzb2Np
-b25leHQuY29tPgpEYXRlOiBUaHUsIDQgQXByIDIwMTkgMjM6NDA6MTggKzA5MDAKU3ViamVjdDog
-W1BBVENIIDIvMl0gYXJtNjQ6IHZkc286IHVzZSAkKExEKSBpbnN0ZWFkIG9mICQoQ0MpIHRvIGxp
-bmsgVkRTTwoKV2UgdXNlICQoTEQpIHRvIGxpbmsgdm1saW51eCwgbW9kdWxlcywgZGVjb21wcmVz
-c29ycywgZXRjLgoKVkRTTyBpcyB0aGUgb25seSBleGNlcHRpb25hbCBjYXNlIHdoZXJlICQoQ0Mp
-IGlzIHVzZWQgYXMgdGhlIGZyb250ZW5kCm9mIGxpbmtpbmcsIGJ1dCBJIGRvIG5vdCBrbm93IHdo
-eS4gVkRTTyB1c2VzIGEgc3BlY2lhbCBsaW5rZXIgc2NyaXB0LAphbmQgZG9lcyBub3QgbGluayBz
-dGFuZGFyZCBsaWJyYXJpZXMgYXQgYWxsLgoKSSBjaGFuZ2VkIHRoZSBNYWtlZmlsZSB0byB1c2Ug
-JChMRCkgcmFodGVyIHRoYW4gJChDQykuIEkgdGVzdGVkLCBhbmQKVkRTTyBzdGlsbCB3b3JrZWQu
-CgpVc2VycyB3aWxsIGJlIGFibGUgdG8gdXNlIHRoZWlyIGZhdm9yaXRlIGxpbmtlciAoZS5nLiBs
-bGQgaW5zdGVhZCBvZgpvZiBiZmQpIGJ5IHBhc3NpbmcgTEQ9IGZyb20gdGhlIGNvbW1hbmQgbGlu
-ZS4KCk15IHBsYW4gaXMgdG8gcmV3cml0ZSBhbGwgVkRTTyBNYWtlZmlsZXMgdG8gdXNlICQoTEQp
-LCB0aGVuIGRlbGV0ZQpjYy1sZG9wdGlvbi4KClNpZ25lZC1vZmYtYnk6IE1hc2FoaXJvIFlhbWFk
-YSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+Ci0tLQogYXJjaC9hcm02NC9rZXJuZWwv
-dmRzby9NYWtlZmlsZSB8IDEzICsrKy0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2Vy
-dGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2VybmVs
-L3Zkc28vTWFrZWZpbGUgYi9hcmNoL2FybTY0L2tlcm5lbC92ZHNvL01ha2VmaWxlCmluZGV4IGEw
-YWY2YmY2YzExYi4uNzQ0YjlkYmFiYTAzIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2tlcm5lbC92
-ZHNvL01ha2VmaWxlCisrKyBiL2FyY2gvYXJtNjQva2VybmVsL3Zkc28vTWFrZWZpbGUKQEAgLTEy
-LDE3ICsxMiwxMiBAQCBvYmotdmRzbyA6PSBnZXR0aW1lb2ZkYXkubyBub3RlLm8gc2lncmV0dXJu
-Lm8KIHRhcmdldHMgOj0gJChvYmotdmRzbykgdmRzby5zbyB2ZHNvLnNvLmRiZwogb2JqLXZkc28g
-Oj0gJChhZGRwcmVmaXggJChvYmopLywgJChvYmotdmRzbykpCiAKLWNjZmxhZ3MteSA6PSAtc2hh
-cmVkIC1mbm8tY29tbW9uIC1mbm8tYnVpbHRpbgotY2NmbGFncy15ICs9IC1ub3N0ZGxpYiAtV2ws
-LXNvbmFtZT1saW51eC12ZHNvLnNvLjEgXAotCQkkKGNhbGwgY2MtbGRvcHRpb24sIC1XbCQoY29t
-bWEpLS1oYXNoLXN0eWxlPXN5c3YpCitsZGZsYWdzLXkgOj0gLXNoYXJlZCAtbm9zdGRsaWIgLXNv
-bmFtZT1saW51eC12ZHNvLnNvLjEgXAorCQkkKGNhbGwgbGQtb3B0aW9uLCAtLWhhc2gtc3R5bGU9
-c3lzdikgLW4gLVQKIAogIyBEaXNhYmxlIGdjb3YgcHJvZmlsaW5nIGZvciBWRFNPIGNvZGUKIEdD
-T1ZfUFJPRklMRSA6PSBuCiAKLSMgV29ya2Fyb3VuZCBmb3IgYmFyZS1tZXRhbCAoRUxGKSB0b29s
-Y2hhaW5zIHRoYXQgbmVnbGVjdCB0byBwYXNzIC1zaGFyZWQKLSMgZG93biB0byBjb2xsZWN0Miwg
-cmVzdWx0aW5nIGluIHNpbGVudCBjb3JydXB0aW9uIG9mIHRoZSB2RFNPIGltYWdlLgotY2NmbGFn
-cy15ICs9IC1XbCwtc2hhcmVkCi0KIG9iai15ICs9IHZkc28ubwogZXh0cmEteSArPSB2ZHNvLmxk
-cwogQ1BQRkxBR1NfdmRzby5sZHMgKz0gLVAgLUMgLVUkKEFSQ0gpCkBAIC0zMiw3ICsyNyw3IEBA
-ICQob2JqKS92ZHNvLm8gOiAkKG9iaikvdmRzby5zbwogCiAjIExpbmsgcnVsZSBmb3IgdGhlIC5z
-byBmaWxlLCAubGRzIGhhcyB0byBiZSBmaXJzdAogJChvYmopL3Zkc28uc28uZGJnOiAkKG9iaikv
-dmRzby5sZHMgJChvYmotdmRzbykgRk9SQ0UKLQkkKGNhbGwgaWZfY2hhbmdlZCx2ZHNvbGQpCisJ
-JChjYWxsIGlmX2NoYW5nZWQsbGQpCiAKICMgU3RyaXAgcnVsZSBmb3IgdGhlIC5zbyBmaWxlCiAk
-KG9iaikvJS5zbzogT0JKQ09QWUZMQUdTIDo9IC1TCkBAIC01Miw4ICs0Nyw2IEBAICQob2JqLXZk
-c28pOiAlLm86ICUuUyBGT1JDRQogCSQoY2FsbCBpZl9jaGFuZ2VkX2RlcCx2ZHNvYXMpCiAKICMg
-QWN0dWFsIGJ1aWxkIGNvbW1hbmRzCi1xdWlldF9jbWRfdmRzb2xkID0gVkRTT0wgICAkQAotICAg
-ICAgY21kX3Zkc29sZCA9ICQoQ0MpICQoY19mbGFncykgLVdsLC1uIC1XbCwtVCAkKHJlYWwtcHJl
-cmVxcykgLW8gJEAKIHF1aWV0X2NtZF92ZHNvYXMgPSBWRFNPQSAgICRACiAgICAgICBjbWRfdmRz
-b2FzID0gJChDQykgJChhX2ZsYWdzKSAtYyAtbyAkQCAkPAogCi0tIAoyLjE3LjEKCg==
---0000000000002794cc0585c5cb81--
