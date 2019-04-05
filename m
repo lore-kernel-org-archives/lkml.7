@@ -2,108 +2,129 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFAEC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A5DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0655D21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S/PNY0r+"
+	by mail.kernel.org (Postfix) with ESMTP id BD18821726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfDEPhA (ORCPT
+        id S1731390AbfDEPiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:37:00 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1711 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbfDEPg7 (ORCPT
+        Fri, 5 Apr 2019 11:38:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41551 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfDEPiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:36:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca7761f0000>; Fri, 05 Apr 2019 08:37:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Apr 2019 08:36:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Apr 2019 08:36:58 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
- 2019 15:36:56 +0000
-Subject: Re: [PATCH 4.9 00/91] 4.9.168-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190404084535.450029272@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <277b9d9a-bcc3-6013-be4f-2fe25e193af9@nvidia.com>
-Date:   Fri, 5 Apr 2019 16:36:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 5 Apr 2019 11:38:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so6003204otb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:38:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=Qqyktl9dpwCcjGJcKMTHlRd6muYfE+fK8iJlpavdGXI=;
+        b=LXfdQxJ/b44SLzYrZeOJ3nl35fmNraBCPwVrT1ZG/tBWU/Ug/2RRA0/MaeYp/AEMf0
+         pXNfnTpdUhqV/8D2Nmn/WJaELm7e1ILm1qgvO6lqXHcksv/RbsHKJXv+lm8L8n7Fevcy
+         4r57icdqWaP6CvaUBuzzc54JvJI2BDj+2Q1e4+zwNi910vRj2rwb4zHbHvn4Gl5512Az
+         Y7pdTjlr9hjJJ8pt8iWUal+bDo7XMinhh6yGlO4wP/KbZGsk13X8ZcOsviUKXy2P8wyV
+         a2yS9IVgFTCCvg7qeqmp1w/RIqT4txYwevBMnn0GbfW2Tqc9/WyPlX3UkJr5WZDoTgm7
+         UYiw==
+X-Gm-Message-State: APjAAAUNwehN5YEXGbwFQpYHA3F6caOduuUAfjNpqGotz8xggDCSFWcS
+        JsiFClWIkvIt1WxikpQ+A034cpGAXPWQzVCXmdWpWb6U
+X-Google-Smtp-Source: APXvYqwMD4F8WqE+WSFWqQtQk5byLcYwdTVNa0rTGBHIhI4ojnqzDpIAAdfo3AWONhx0PFR4rLetNSmkeUQhnUfh+94=
+X-Received: by 2002:a9d:5e15:: with SMTP id d21mr9335213oti.138.1554478680174;
+ Fri, 05 Apr 2019 08:38:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554478623; bh=W6X2fBL8AbsmBjgM7TWHSPAiHPt0Yabs2CNXYyaBWyo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=S/PNY0r+J7Kd/9wOwtU9pgzd3AUhtJoxL3M6d+foGrpN+z32zb9rF0qTsmYEaNT3Z
-         1pXyExoTn7qutgzK9HSAa5foLmP/eFyPLbTgf58vDQgcYk8B7OMEBt0KGw/5pijelz
-         4r8Lyp9D/lcxebLzuEwUpn9FAfjwATeU+A52HwwvZ+8Uqy1nkF4B3lrq4Xh3LZ4EqO
-         vZE4wGpuwZ3GVXP1jgOsnNoV0Ko8RG4pME6F0eatjen2IV76bD/BZSNswIMf15qGuE
-         /rwiuowfhXWB4CWjuQ2btbNnPLs7rL5sNtGUSgl8T5HS/5HayBTu8/QQNdL6lzumDI
-         10zRNqtGemYFQ==
+References: <1554478619-12239-1-git-send-email-jsavitz@redhat.com>
+In-Reply-To: <1554478619-12239-1-git-send-email-jsavitz@redhat.com>
+From:   Joel Savitz <jsavitz@redhat.com>
+Date:   Fri, 5 Apr 2019 11:37:49 -0400
+Message-ID: <CAL1p7m6aArGDokWN9vFzd+ARbPdfBR+YFim_GrZvk2wYcCFQZQ@mail.gmail.com>
+Subject: Fwd: [RESEND PATCH] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+---------- Forwarded message ---------
+From: Joel Savitz <jsavitz@redhat.com>
+Date: Fri, Apr 5, 2019 at 11:37 AM
+Subject: [RESEND PATCH] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+To: <pauld@redhat.com>
+Cc: Joel Savitz <jsavitz@redhat.com>, Li Zefan <lizefan@huawei.com>,
+<cgroups@vger.kernel.org>
 
-On 04/04/2019 09:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.168 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat Apr  6 08:44:27 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.168-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 
-All tests are passing for Tegra ...
+If a process is limited by taskset (i.e. cpuset) to only be allowed to
+run on cpu N, and then cpu N is offlined via hotplug, the process will
+be assigned the current value of its cpuset cgroup's effective_cpus field
+in a call to do_set_cpus_allowed() in cpuset_cpus_allowed_fallback().
+This argument's value does not makes sense for this case, because
+task_cs(tsk)->effective_cpus is modified by cpuset_hotplug_workfn()
+to reflect the new value of cpu_active_mask after cpu N is removed from
+the mask. While this may make sense for the cgroup affinity mask, it
+does not make sense on a per-task basis, as a task that was previously
+limited to only be run on cpu N will be limited to every cpu _except_ for
+cpu N after it is offlined/onlined via hotplug.
 
-Test results for stable-v4.9:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    22 tests:	22 pass, 0 fail
+Pre-patch behavior:
 
-Linux version:	4.9.168-rc1-gea28300
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+        $ grep Cpus /proc/$$/status
+        Cpus_allowed:   ff
+        Cpus_allowed_list:      0-7
 
-Cheers
-Jon
+        $ taskset -p 4 $$
+        pid 19202's current affinity mask: f
+        pid 19202's new affinity mask: 4
 
--- 
-nvpublic
+        $ grep Cpus /proc/self/status
+        Cpus_allowed:   04
+        Cpus_allowed_list:      2
+
+        # echo off > /sys/devices/system/cpu/cpu2/online
+        $ grep Cpus /proc/$$/status
+        Cpus_allowed:   0b
+        Cpus_allowed_list:      0-1,3
+
+        # echo on > /sys/devices/system/cpu/cpu2/online
+        $ grep Cpus /proc/$$/status
+        Cpus_allowed:   0b
+        Cpus_allowed_list:      0-1,3
+
+On a patched system, the final grep produces the following
+output instead:
+
+        $ grep Cpus /proc/$$/status
+        Cpus_allowed:   ff
+        Cpus_allowed_list:      0-7
+
+This patch changes the above behavior by instead simply resetting the mask
+to cpu_possible_mask.
+
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ kernel/cgroup/cpuset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 479743db6c37..5f65a2167bdf 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3243,7 +3243,7 @@ void cpuset_cpus_allowed(struct task_struct
+*tsk, struct cpumask *pmask)
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ {
+        rcu_read_lock();
+-       do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
++       do_set_cpus_allowed(tsk, cpu_possible_mask);
+        rcu_read_unlock();
+
+        /*
+--
+2.20.1
