@@ -2,598 +2,1276 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997BBC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5098BC10F24
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466D0206C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3BD2184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VV57eLcO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XB1h9YI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731333AbfDEQJL (ORCPT
+        id S1731474AbfDEQJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:09:11 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32612 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726135AbfDEQJL (ORCPT
+        Fri, 5 Apr 2019 12:09:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48128 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731369AbfDEQJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:09:11 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35G7edn003201;
-        Fri, 5 Apr 2019 18:08:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=KDhYfUXfUB4CpV7vjS76jwEVSAeh/63nqKgBXL0TtLk=;
- b=VV57eLcODlUZYvODzOJaWVdhNFuJ91s8IFd43T94EHhJuGwMdfXkB9eD+BS3Ji0ci4K3
- szMjzL4O1Y8ySbuVmKZEjmWfkQyQWvBQTeKLjIijMPKOvciFYZPDK/UUUNn66VegX7xH
- 6xTEA9U7+Yu2U2Kxt1c/BBe39kVdF8ajyexa9LELE6wOCEZiz5E4CCxjeGTOiWMcWVED
- 4KMnbXmR20mBTr/nxx8i4DA0h8Vnw9unXjqLuvV8AXf0ADzFRyiBq6YcLM5/QUw9g7IJ
- 3xWfWn1feriBRC3gFUSwYqHlryuqmeM1hqVGjrKCyek8fpR/ZffGD5gZc9KiA8CLi7sC sw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rmharjuwe-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 05 Apr 2019 18:08:55 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2A343A;
-        Fri,  5 Apr 2019 16:08:53 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AABED4F9A;
-        Fri,  5 Apr 2019 16:08:53 +0000 (GMT)
-Received: from [10.48.0.131] (10.75.127.50) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 5 Apr
- 2019 18:08:52 +0200
-Subject: Re: [PATCH 2/2] tty: add rpmsg driver
-To:     xiang xiao <xiaoxiang781216@gmail.com>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com>
- <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
- <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
- <4857555a-812d-0b96-9a70-2984ffb50ca9@st.com>
- <CAH2Cfb8NzsOZDt8zBypY9ZiD6oOFWUBkZoPpKfU97ZRF_O0z+A@mail.gmail.com>
- <770c71bc-f387-62b6-f799-07ba6446e7e8@st.com>
- <CAH2Cfb87Wacgsh=xz9h9kgwYgBkxNBDbcDJ4W3uPs2LiKbTD9A@mail.gmail.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
- 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
- 8mOik8I/F6EW8XyQAA2P
-Message-ID: <760819dc-4c26-b492-a0ba-8b27c189d5b1@st.com>
-Date:   Fri, 5 Apr 2019 18:08:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 12:09:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=n16YjBsAXXVFBKSF1LR0s0GzB1EPVSSpbXsiBnuaMbs=; b=XB1h9YI9nArajCRn0C3ZTxEil
+        wrG5nbGFuIZixZskbBuZ4y4t5P+tavtuZxtlxBBpJPC802JsCcuW8IvD6B20DNvfM7aQn7zj7X6LG
+        n4jl+R2nP2dJzdwz8DypV2+xZYKB8Q1EX8fnW3kwRDfpIVgKki5lxdVkikUITZ1RG8kmk/94yPsaZ
+        ybcVgFELeoeSJj/MU6E/zYkY3Gkc3FawEyQjbLNN+NXg3vLYGKVWt+jm+dmHzoJFEt4qZDDpPEDO6
+        Lou0etjSg9/LhegSN3U+uJYS/n5cgCucDaX10Aa9HplLKpG3s/1KfAOSbfSCC5qZg0IeKwlmPdLtp
+        d69NIiX4w==;
+Received: from 089144198096.atnat0007.highway.a1.net ([89.144.198.96] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hCRP5-0007Vz-LG; Fri, 05 Apr 2019 16:09:20 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     torvalds@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] block: remove CONFIG_LBDAF
+Date:   Fri,  5 Apr 2019 18:08:59 +0200
+Message-Id: <20190405160859.5288-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAH2Cfb87Wacgsh=xz9h9kgwYgBkxNBDbcDJ4W3uPs2LiKbTD9A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_12:,,
- signatures=0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently support for 64-bit sector_t and blkcnt_t is optional on 32-bit
+architectures.  These types are required to support block device and/or
+file sizes larger than 2 TiB, and have generally defaulted to on for
+a long time.  Enabling the option only increases the i386 tinyconfig
+size by 145 bytes, and many data structures already always use
+64-bit values for their in-core and on-disk data structures anyway,
+so there should not be a large change in dynamic memory usage either.
 
+Dropping this option removes a somewhat weird non-default config that
+has cause various bugs or compiler warnings when actually used.
 
-On 4/5/19 4:03 PM, xiang xiao wrote:
-> On Fri, Apr 5, 2019 at 8:33 PM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
->>
->>
->>
->> On 4/5/19 12:12 PM, xiang xiao wrote:
->>> On Fri, Apr 5, 2019 at 12:14 AM Arnaud Pouliquen
->>> <arnaud.pouliquen@st.com> wrote:
->>>>
->>>> Hello Xiang,
->>>>
->>>>
->>>> On 4/3/19 2:47 PM, xiang xiao wrote:
->>>>> On Thu, Mar 21, 2019 at 11:48 PM Fabien Dessenne <fabien.dessenne@st.com> wrote:
->>>>>>
->>>>>> This driver exposes a standard tty interface on top of the rpmsg
->>>>>> framework through the "rpmsg-tty-channel" rpmsg service.
->>>>>>
->>>>>> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
->>>>>> per rpmsg endpoint.
->>>>>>
->>>>>
->>>>> How to support multi-instances from the same remoteproc instance? I
->>>>> saw that the channel name is fixed to "rpmsg-tty-channel" which mean
->>>>> only one channel can be created for each remote side.
->>>> The driver is multi-instance based on muti-endpoints on top of the
->>>> "rpmsg-tty-channel" service.
->>>> On remote side you just have to call rpmsg_create_ept with destination
->>>> address set to ANY. The result is a NS service announcement that trigs a
->>>>  probe with a new endpoint.
->>>> You can find code example for the remote side here:
->>>> https://github.com/STMicroelectronics/STM32CubeMP1/blob/master/Projects/STM32MP157C-DK2/Applications/OpenAMP/OpenAMP_TTY_echo/Src/main.c
->>>
->>> Demo code create two uarts(huart0 and huart1), and both use the same
->>> channel name( "rpmsg-tty-channel").
->>> But rpmsg_create_channel in kernel will complain the duplication:
->>> /* make sure a similar channel doesn't already exist */
->>> tmp = rpmsg_find_device(dev, chinfo);
->>> if (tmp) {
->>>         /* decrement the matched device's refcount back */
->>>         put_device(tmp);
->>>         dev_err(dev, "channel %s:%x:%x already exist\n",
->>>                    chinfo->name, chinfo->src, chinfo->dst);
->>>         return NULL;
->>> }
->>> Do you have some local change not upstream yet?
->> Nothing is missing. There is no complain as the function
->> rpmsg_device_match returns 0, because the chinfo->dst (that corresponds
->> to the remote ept address) is different.
->>
-> 
-> Yes, you are right.
-> 
->> If i well remember you have also a similar implementation of the service
->> on your side. Do you see any incompatibility with your implementation?
->>
-> 
-> Our implementation is similar to yours, but has two major difference:
-> 1.Each instance has a different channel name but share the same prefix
-> "rpmsg-tty*", the benefit is that:
->    a.Device name(/dev/tty*) is derived from rpmsg-tty*, instead the
-> random /dev/ttyRPMSGx
->    b.Don't need tty_idr to allocate the unique device id
-I understand the need but in your implementation it look like you hack
-the rpmsg service to instantiate your tty... you introduce a kind of
-meta rpmsg tty service with sub-service related to the serial content.
-Not sure that this could be upstreamed...
-proposal to integrate your need in the ST driver: it seems possible to
-have /dev/ttyRPMSGx with x corresponding to the remote endpoint address?
-So if you want to have a fixed tty name you can fix the remote endpoint.
-Is it something reasonable for you?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ Documentation/process/submit-checklist.rst    | 27 +++++++---------
+ .../translations/ja_JP/SubmitChecklist        | 22 ++++++-------
+ arch/arc/configs/haps_hs_defconfig            |  1 -
+ arch/arc/configs/haps_hs_smp_defconfig        |  1 -
+ arch/arc/configs/nsim_700_defconfig           |  1 -
+ arch/arc/configs/nsim_hs_defconfig            |  1 -
+ arch/arc/configs/nsim_hs_smp_defconfig        |  1 -
+ arch/arc/configs/nsimosci_defconfig           |  1 -
+ arch/arc/configs/nsimosci_hs_defconfig        |  1 -
+ arch/arc/configs/nsimosci_hs_smp_defconfig    |  1 -
+ arch/arm/configs/aspeed_g4_defconfig          |  1 -
+ arch/arm/configs/aspeed_g5_defconfig          |  1 -
+ arch/arm/configs/at91_dt_defconfig            |  1 -
+ arch/arm/configs/clps711x_defconfig           |  1 -
+ arch/arm/configs/efm32_defconfig              |  1 -
+ arch/arm/configs/ezx_defconfig                |  1 -
+ arch/arm/configs/h3600_defconfig              |  1 -
+ arch/arm/configs/imote2_defconfig             |  1 -
+ arch/arm/configs/moxart_defconfig             |  1 -
+ arch/arm/configs/multi_v4t_defconfig          |  1 -
+ arch/arm/configs/omap1_defconfig              |  1 -
+ arch/arm/configs/stm32_defconfig              |  1 -
+ arch/arm/configs/u300_defconfig               |  1 -
+ arch/arm/configs/vexpress_defconfig           |  1 -
+ arch/m68k/configs/amcore_defconfig            |  1 -
+ arch/m68k/configs/m5475evb_defconfig          |  1 -
+ arch/m68k/configs/stmark2_defconfig           |  1 -
+ arch/mips/configs/ar7_defconfig               |  1 -
+ arch/mips/configs/decstation_defconfig        |  1 -
+ arch/mips/configs/decstation_r4k_defconfig    |  1 -
+ arch/mips/configs/loongson1b_defconfig        |  1 -
+ arch/mips/configs/loongson1c_defconfig        |  1 -
+ arch/mips/configs/rb532_defconfig             |  1 -
+ arch/mips/configs/rbtx49xx_defconfig          |  1 -
+ arch/parisc/configs/generic-32bit_defconfig   |  1 -
+ arch/sh/configs/apsh4ad0a_defconfig           |  1 -
+ arch/sh/configs/ecovec24-romimage_defconfig   |  1 -
+ arch/sh/configs/rsk7264_defconfig             |  1 -
+ arch/sh/configs/rsk7269_defconfig             |  1 -
+ arch/sh/configs/sh7785lcr_32bit_defconfig     |  1 -
+ block/Kconfig                                 | 24 --------------
+ drivers/block/drbd/drbd_int.h                 |  5 ---
+ drivers/block/ps3disk.c                       |  4 +--
+ drivers/md/dm-exception-store.h               | 28 ++--------------
+ drivers/md/dm-integrity.c                     |  8 ++---
+ drivers/md/md.c                               |  6 ++--
+ drivers/nvdimm/pfn_devs.c                     |  4 +--
+ drivers/scsi/sd.c                             | 32 -------------------
+ fs/ext4/resize.c                              |  2 --
+ fs/ext4/super.c                               | 32 ++++---------------
+ fs/gfs2/Kconfig                               |  1 -
+ fs/nfs/Kconfig                                |  1 -
+ fs/ocfs2/super.c                              | 10 ------
+ fs/stack.c                                    | 15 ++++-----
+ fs/xfs/Kconfig                                |  1 -
+ fs/xfs/xfs_super.c                            | 10 +-----
+ include/linux/genhd.h                         |  8 ++---
+ include/linux/kernel.h                        | 14 ++------
+ include/linux/types.h                         |  5 ---
+ lib/Kconfig.debug                             |  1 -
+ .../formal/srcu-cbmc/include/linux/types.h    |  4 ---
+ 61 files changed, 52 insertions(+), 250 deletions(-)
 
+diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
+index 367353c54949..c88867b173d9 100644
+--- a/Documentation/process/submit-checklist.rst
++++ b/Documentation/process/submit-checklist.rst
+@@ -72,47 +72,44 @@ and elsewhere regarding submitting Linux kernel patches.
+ 13) Has been build- and runtime tested with and without ``CONFIG_SMP`` and
+     ``CONFIG_PREEMPT.``
+ 
+-14) If the patch affects IO/Disk, etc: has been tested with and without
+-    ``CONFIG_LBDAF.``
++16) All codepaths have been exercised with all lockdep features enabled.
+ 
+-15) All codepaths have been exercised with all lockdep features enabled.
++17) All new ``/proc`` entries are documented under ``Documentation/``
+ 
+-16) All new ``/proc`` entries are documented under ``Documentation/``
+-
+-17) All new kernel boot parameters are documented in
++18) All new kernel boot parameters are documented in
+     ``Documentation/admin-guide/kernel-parameters.rst``.
+ 
+-18) All new module parameters are documented with ``MODULE_PARM_DESC()``
++19) All new module parameters are documented with ``MODULE_PARM_DESC()``
+ 
+-19) All new userspace interfaces are documented in ``Documentation/ABI/``.
++20) All new userspace interfaces are documented in ``Documentation/ABI/``.
+     See ``Documentation/ABI/README`` for more information.
+     Patches that change userspace interfaces should be CCed to
+     linux-api@vger.kernel.org.
+ 
+-20) Check that it all passes ``make headers_check``.
++21) Check that it all passes ``make headers_check``.
+ 
+-21) Has been checked with injection of at least slab and page-allocation
++22) Has been checked with injection of at least slab and page-allocation
+     failures.  See ``Documentation/fault-injection/``.
+ 
+     If the new code is substantial, addition of subsystem-specific fault
+     injection might be appropriate.
+ 
+-22) Newly-added code has been compiled with ``gcc -W`` (use
++23) Newly-added code has been compiled with ``gcc -W`` (use
+     ``make EXTRA_CFLAGS=-W``).  This will generate lots of noise, but is good
+     for finding bugs like "warning: comparison between signed and unsigned".
+ 
+-23) Tested after it has been merged into the -mm patchset to make sure
++24) Tested after it has been merged into the -mm patchset to make sure
+     that it still works with all of the other queued patches and various
+     changes in the VM, VFS, and other subsystems.
+ 
+-24) All memory barriers {e.g., ``barrier()``, ``rmb()``, ``wmb()``} need a
++25) All memory barriers {e.g., ``barrier()``, ``rmb()``, ``wmb()``} need a
+     comment in the source code that explains the logic of what they are doing
+     and why.
+ 
+-25) If any ioctl's are added by the patch, then also update
++26) If any ioctl's are added by the patch, then also update
+     ``Documentation/ioctl/ioctl-number.txt``.
+ 
+-26) If your modified source code depends on or uses any of the kernel
++27) If your modified source code depends on or uses any of the kernel
+     APIs or features that are related to the following ``Kconfig`` symbols,
+     then test multiple builds with the related ``Kconfig`` symbols disabled
+     and/or ``=m`` (if that option is available) [not all of these at the
+diff --git a/Documentation/translations/ja_JP/SubmitChecklist b/Documentation/translations/ja_JP/SubmitChecklist
+index 60c7c35ac517..b42220d3d46c 100644
+--- a/Documentation/translations/ja_JP/SubmitChecklist
++++ b/Documentation/translations/ja_JP/SubmitChecklist
+@@ -74,38 +74,34 @@ Linux カーネルパッチ投稿者向けチェックリスト
+ 13: CONFIG_SMP, CONFIG_PREEMPT を有効にした場合と無効にした場合の両方で
+     ビルドした上、動作確認を行ってください。
+ 
+-14: もしパッチがディスクのI/O性能などに影響を与えるようであれば、
+-    'CONFIG_LBDAF'オプションを有効にした場合と無効にした場合の両方で
+-    テストを実施してみてください。
++14: lockdepの機能を全て有効にした上で、全てのコードパスを評価してください。
+ 
+-15: lockdepの機能を全て有効にした上で、全てのコードパスを評価してください。
+-
+-16: /proc に新しいエントリを追加した場合には、Documentation/ 配下に
++15: /proc に新しいエントリを追加した場合には、Documentation/ 配下に
+     必ずドキュメントを追加してください。
+ 
+-17: 新しいブートパラメータを追加した場合には、
++16: 新しいブートパラメータを追加した場合には、
+     必ずDocumentation/admin-guide/kernel-parameters.rst に説明を追加してください。
+ 
+-18: 新しくmoduleにパラメータを追加した場合には、MODULE_PARM_DESC()を
++17: 新しくmoduleにパラメータを追加した場合には、MODULE_PARM_DESC()を
+     利用して必ずその説明を記述してください。
+ 
+-19: 新しいuserspaceインタフェースを作成した場合には、Documentation/ABI/ に
++18: 新しいuserspaceインタフェースを作成した場合には、Documentation/ABI/ に
+     Documentation/ABI/README を参考にして必ずドキュメントを追加してください。
+ 
+-20: 'make headers_check'を実行して全く問題がないことを確認してください。
++19: 'make headers_check'を実行して全く問題がないことを確認してください。
+ 
+-21: 少なくともslabアロケーションとpageアロケーションに失敗した場合の
++20: 少なくともslabアロケーションとpageアロケーションに失敗した場合の
+     挙動について、fault-injectionを利用して確認してください。
+     Documentation/fault-injection/ を参照してください。
+ 
+     追加したコードがかなりの量であったならば、サブシステム特有の
+     fault-injectionを追加したほうが良いかもしれません。
+ 
+-22: 新たに追加したコードは、`gcc -W'でコンパイルしてください。
++21: 新たに追加したコードは、`gcc -W'でコンパイルしてください。
+     このオプションは大量の不要なメッセージを出力しますが、
+     "warning: comparison between signed and unsigned" のようなメッセージは、
+     バグを見つけるのに役に立ちます。
+ 
+-23: 投稿したパッチが -mm パッチセットにマージされた後、全ての既存のパッチや
++22: 投稿したパッチが -mm パッチセットにマージされた後、全ての既存のパッチや
+     VM, VFS およびその他のサブシステムに関する様々な変更と、現時点でも共存
+     できることを確認するテストを行ってください。
+diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
+index f56cc2070c11..b117e6c16d41 100644
+--- a/arch/arc/configs/haps_hs_defconfig
++++ b/arch/arc/configs/haps_hs_defconfig
+@@ -15,7 +15,6 @@ CONFIG_PERF_EVENTS=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_SLAB=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/haps_hs_smp_defconfig b/arch/arc/configs/haps_hs_smp_defconfig
+index b6f2482c7e74..33a787c375e2 100644
+--- a/arch/arc/configs/haps_hs_smp_defconfig
++++ b/arch/arc/configs/haps_hs_smp_defconfig
+@@ -17,7 +17,6 @@ CONFIG_PERF_EVENTS=y
+ CONFIG_SLAB=y
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsim_700_defconfig b/arch/arc/configs/nsim_700_defconfig
+index 318e4cd29629..de398c7b10b3 100644
+--- a/arch/arc/configs/nsim_700_defconfig
++++ b/arch/arc/configs/nsim_700_defconfig
+@@ -18,7 +18,6 @@ CONFIG_PERF_EVENTS=y
+ CONFIG_ISA_ARCOMPACT=y
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsim_hs_defconfig b/arch/arc/configs/nsim_hs_defconfig
+index c15807b0e0c1..2dbd34a9ff07 100644
+--- a/arch/arc/configs/nsim_hs_defconfig
++++ b/arch/arc/configs/nsim_hs_defconfig
+@@ -20,7 +20,6 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsim_hs_smp_defconfig b/arch/arc/configs/nsim_hs_smp_defconfig
+index 65e983fd942b..c7135f1e2583 100644
+--- a/arch/arc/configs/nsim_hs_smp_defconfig
++++ b/arch/arc/configs/nsim_hs_smp_defconfig
+@@ -18,7 +18,6 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsimosci_defconfig b/arch/arc/configs/nsimosci_defconfig
+index 08c5b99ac341..385a71d3c478 100644
+--- a/arch/arc/configs/nsimosci_defconfig
++++ b/arch/arc/configs/nsimosci_defconfig
+@@ -18,7 +18,6 @@ CONFIG_PERF_EVENTS=y
+ CONFIG_ISA_ARCOMPACT=y
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsimosci_hs_defconfig b/arch/arc/configs/nsimosci_hs_defconfig
+index 5b5e26d67955..248a2c3bdc12 100644
+--- a/arch/arc/configs/nsimosci_hs_defconfig
++++ b/arch/arc/configs/nsimosci_hs_defconfig
+@@ -17,7 +17,6 @@ CONFIG_PERF_EVENTS=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arc/configs/nsimosci_hs_smp_defconfig b/arch/arc/configs/nsimosci_hs_smp_defconfig
+index 26af9b2f7fcb..1a4bc7b660fb 100644
+--- a/arch/arc/configs/nsimosci_hs_smp_defconfig
++++ b/arch/arc/configs/nsimosci_hs_smp_defconfig
+@@ -12,7 +12,6 @@ CONFIG_PERF_EVENTS=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/aspeed_g4_defconfig b/arch/arm/configs/aspeed_g4_defconfig
+index 1446262921b4..bdbade6af9c7 100644
+--- a/arch/arm/configs/aspeed_g4_defconfig
++++ b/arch/arm/configs/aspeed_g4_defconfig
+@@ -23,7 +23,6 @@ CONFIG_SLAB_FREELIST_RANDOM=y
+ CONFIG_JUMP_LABEL=y
+ CONFIG_STRICT_KERNEL_RWX=y
+ CONFIG_GCC_PLUGINS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_BLK_DEBUG_FS is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index 02fa3a41add5..4bde84eae4eb 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -23,7 +23,6 @@ CONFIG_SLAB_FREELIST_RANDOM=y
+ CONFIG_JUMP_LABEL=y
+ CONFIG_STRICT_KERNEL_RWX=y
+ CONFIG_GCC_PLUGINS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_BLK_DEBUG_FS is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
+index e4b1be66b3f5..b7752929975c 100644
+--- a/arch/arm/configs/at91_dt_defconfig
++++ b/arch/arm/configs/at91_dt_defconfig
+@@ -9,7 +9,6 @@ CONFIG_EMBEDDED=y
+ CONFIG_SLAB=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/clps711x_defconfig b/arch/arm/configs/clps711x_defconfig
+index fc105c9178cc..09ae750164e0 100644
+--- a/arch/arm/configs/clps711x_defconfig
++++ b/arch/arm/configs/clps711x_defconfig
+@@ -6,7 +6,6 @@ CONFIG_RD_LZMA=y
+ CONFIG_EMBEDDED=y
+ CONFIG_SLOB=y
+ CONFIG_JUMP_LABEL=y
+-# CONFIG_LBDAF is not set
+ CONFIG_PARTITION_ADVANCED=y
+ # CONFIG_IOSCHED_CFQ is not set
+ CONFIG_ARCH_CLPS711X=y
+diff --git a/arch/arm/configs/efm32_defconfig b/arch/arm/configs/efm32_defconfig
+index ee42158f41ec..10ea92513a69 100644
+--- a/arch/arm/configs/efm32_defconfig
++++ b/arch/arm/configs/efm32_defconfig
+@@ -11,7 +11,6 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_SLUB_DEBUG is not set
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/ezx_defconfig b/arch/arm/configs/ezx_defconfig
+index 484e51fbd4a6..e3afca5bd9d6 100644
+--- a/arch/arm/configs/ezx_defconfig
++++ b/arch/arm/configs/ezx_defconfig
+@@ -13,7 +13,6 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_CFQ is not set
+ CONFIG_ARCH_PXA=y
+diff --git a/arch/arm/configs/h3600_defconfig b/arch/arm/configs/h3600_defconfig
+index ebeca11faa48..175881b7da7c 100644
+--- a/arch/arm/configs/h3600_defconfig
++++ b/arch/arm/configs/h3600_defconfig
+@@ -4,7 +4,6 @@ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/imote2_defconfig b/arch/arm/configs/imote2_defconfig
+index f204017c26b9..9b779e13e05d 100644
+--- a/arch/arm/configs/imote2_defconfig
++++ b/arch/arm/configs/imote2_defconfig
+@@ -12,7 +12,6 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_CFQ is not set
+ CONFIG_ARCH_PXA=y
+diff --git a/arch/arm/configs/moxart_defconfig b/arch/arm/configs/moxart_defconfig
+index 078228a19339..6a11669fa536 100644
+--- a/arch/arm/configs/moxart_defconfig
++++ b/arch/arm/configs/moxart_defconfig
+@@ -15,7 +15,6 @@ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_SLUB_DEBUG is not set
+ # CONFIG_COMPAT_BRK is not set
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ CONFIG_ARCH_MULTI_V4=y
+diff --git a/arch/arm/configs/multi_v4t_defconfig b/arch/arm/configs/multi_v4t_defconfig
+index 9a6390c172d6..eeea0c41138b 100644
+--- a/arch/arm/configs/multi_v4t_defconfig
++++ b/arch/arm/configs/multi_v4t_defconfig
+@@ -5,7 +5,6 @@ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EMBEDDED=y
+ CONFIG_SLOB=y
+ CONFIG_JUMP_LABEL=y
+-# CONFIG_LBDAF is not set
+ CONFIG_PARTITION_ADVANCED=y
+ # CONFIG_IOSCHED_CFQ is not set
+ CONFIG_ARCH_MULTI_V4T=y
+diff --git a/arch/arm/configs/omap1_defconfig b/arch/arm/configs/omap1_defconfig
+index cfc00b0961ec..8448a7f407a4 100644
+--- a/arch/arm/configs/omap1_defconfig
++++ b/arch/arm/configs/omap1_defconfig
+@@ -17,7 +17,6 @@ CONFIG_OPROFILE=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 0258ba891376..152321d2893e 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -13,7 +13,6 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_SLUB_DEBUG is not set
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/u300_defconfig b/arch/arm/configs/u300_defconfig
+index 36d77406e31b..831ba6a9ee8b 100644
+--- a/arch/arm/configs/u300_defconfig
++++ b/arch/arm/configs/u300_defconfig
+@@ -9,7 +9,6 @@ CONFIG_EXPERT=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/arm/configs/vexpress_defconfig b/arch/arm/configs/vexpress_defconfig
+index 392ed3b3613c..484d77a7f589 100644
+--- a/arch/arm/configs/vexpress_defconfig
++++ b/arch/arm/configs/vexpress_defconfig
+@@ -14,7 +14,6 @@ CONFIG_PROFILING=y
+ CONFIG_OPROFILE=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/m68k/configs/amcore_defconfig b/arch/m68k/configs/amcore_defconfig
+index 0857cdbfde0c..d5e683dd885d 100644
+--- a/arch/m68k/configs/amcore_defconfig
++++ b/arch/m68k/configs/amcore_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_SLUB_DEBUG is not set
+ # CONFIG_COMPAT_BRK is not set
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_CFQ is not set
+ # CONFIG_MMU is not set
+diff --git a/arch/m68k/configs/m5475evb_defconfig b/arch/m68k/configs/m5475evb_defconfig
+index 4f4ccd13c11b..434bd3750966 100644
+--- a/arch/m68k/configs/m5475evb_defconfig
++++ b/arch/m68k/configs/m5475evb_defconfig
+@@ -11,7 +11,6 @@ CONFIG_SYSCTL_SYSCALL=y
+ # CONFIG_AIO is not set
+ CONFIG_EMBEDDED=y
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/m68k/configs/stmark2_defconfig b/arch/m68k/configs/stmark2_defconfig
+index 69f23c7b0497..27fa9465d19d 100644
+--- a/arch/m68k/configs/stmark2_defconfig
++++ b/arch/m68k/configs/stmark2_defconfig
+@@ -17,7 +17,6 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_COMPAT_BRK is not set
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_BLK_CMDLINE_PARSER=y
+ # CONFIG_MMU is not set
+diff --git a/arch/mips/configs/ar7_defconfig b/arch/mips/configs/ar7_defconfig
+index 9fbfb6e5c7d2..c83fdf649327 100644
+--- a/arch/mips/configs/ar7_defconfig
++++ b/arch/mips/configs/ar7_defconfig
+@@ -18,7 +18,6 @@ CONFIG_KEXEC=y
+ # CONFIG_SECCOMP is not set
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_BSD_DISKLABEL=y
+diff --git a/arch/mips/configs/decstation_defconfig b/arch/mips/configs/decstation_defconfig
+index 0c86ed86266a..30a6eafdb1d0 100644
+--- a/arch/mips/configs/decstation_defconfig
++++ b/arch/mips/configs/decstation_defconfig
+@@ -17,7 +17,6 @@ CONFIG_TC=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_SRCVERSION_ALL=y
+-# CONFIG_LBDAF is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_OSF_PARTITION=y
+ # CONFIG_EFI_PARTITION is not set
+diff --git a/arch/mips/configs/decstation_r4k_defconfig b/arch/mips/configs/decstation_r4k_defconfig
+index 0e54ab2680ce..e2b58dbf4aa9 100644
+--- a/arch/mips/configs/decstation_r4k_defconfig
++++ b/arch/mips/configs/decstation_r4k_defconfig
+@@ -16,7 +16,6 @@ CONFIG_TC=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_SRCVERSION_ALL=y
+-# CONFIG_LBDAF is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_OSF_PARTITION=y
+ # CONFIG_EFI_PARTITION is not set
+diff --git a/arch/mips/configs/loongson1b_defconfig b/arch/mips/configs/loongson1b_defconfig
+index b064d68a5424..aa7e98c5f5fc 100644
+--- a/arch/mips/configs/loongson1b_defconfig
++++ b/arch/mips/configs/loongson1b_defconfig
+@@ -19,7 +19,6 @@ CONFIG_MACH_LOONGSON32=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_NET=y
+diff --git a/arch/mips/configs/loongson1c_defconfig b/arch/mips/configs/loongson1c_defconfig
+index 5d76559b56cd..520e7ef35383 100644
+--- a/arch/mips/configs/loongson1c_defconfig
++++ b/arch/mips/configs/loongson1c_defconfig
+@@ -20,7 +20,6 @@ CONFIG_LOONGSON1_LS1C=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_NET=y
+diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
+index 7befe05fd813..ed1038f62a2c 100644
+--- a/arch/mips/configs/rb532_defconfig
++++ b/arch/mips/configs/rb532_defconfig
+@@ -19,7 +19,6 @@ CONFIG_PCI=y
+ # CONFIG_PCI_QUIRKS is not set
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MAC_PARTITION=y
+diff --git a/arch/mips/configs/rbtx49xx_defconfig b/arch/mips/configs/rbtx49xx_defconfig
+index 50a2c9ad583f..b0f0c5f9ad9d 100644
+--- a/arch/mips/configs/rbtx49xx_defconfig
++++ b/arch/mips/configs/rbtx49xx_defconfig
+@@ -17,7 +17,6 @@ CONFIG_TOSHIBA_RBTX4938_MPLEX_KEEP=y
+ CONFIG_PCI=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+diff --git a/arch/parisc/configs/generic-32bit_defconfig b/arch/parisc/configs/generic-32bit_defconfig
+index 37ae4b57c001..a8f9bbef0975 100644
+--- a/arch/parisc/configs/generic-32bit_defconfig
++++ b/arch/parisc/configs/generic-32bit_defconfig
+@@ -14,7 +14,6 @@ CONFIG_SLAB=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PA7100LC=y
+ CONFIG_SMP=y
+diff --git a/arch/sh/configs/apsh4ad0a_defconfig b/arch/sh/configs/apsh4ad0a_defconfig
+index 825c641726c4..d0d9ebc7165b 100644
+--- a/arch/sh/configs/apsh4ad0a_defconfig
++++ b/arch/sh/configs/apsh4ad0a_defconfig
+@@ -19,7 +19,6 @@ CONFIG_SLAB=y
+ CONFIG_PROFILING=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_CFQ_GROUP_IOSCHED=y
+ CONFIG_CPU_SUBTYPE_SH7786=y
+diff --git a/arch/sh/configs/ecovec24-romimage_defconfig b/arch/sh/configs/ecovec24-romimage_defconfig
+index 0c5dfccbfe37..bdb61d1d0127 100644
+--- a/arch/sh/configs/ecovec24-romimage_defconfig
++++ b/arch/sh/configs/ecovec24-romimage_defconfig
+@@ -7,7 +7,6 @@ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_KALLSYMS is not set
+ CONFIG_SLAB=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_CPU_SUBTYPE_SH7724=y
+ CONFIG_MEMORY_SIZE=0x10000000
+diff --git a/arch/sh/configs/rsk7264_defconfig b/arch/sh/configs/rsk7264_defconfig
+index 2b9b731fc86b..ad003ee469ea 100644
+--- a/arch/sh/configs/rsk7264_defconfig
++++ b/arch/sh/configs/rsk7264_defconfig
+@@ -16,7 +16,6 @@ CONFIG_PERF_COUNTERS=y
+ CONFIG_SLAB=y
+ CONFIG_MMAP_ALLOW_UNINITIALIZED=y
+ CONFIG_PROFILING=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ # CONFIG_IOSCHED_DEADLINE is not set
+diff --git a/arch/sh/configs/rsk7269_defconfig b/arch/sh/configs/rsk7269_defconfig
+index d041f7bcb84c..27fc01d58cf8 100644
+--- a/arch/sh/configs/rsk7269_defconfig
++++ b/arch/sh/configs/rsk7269_defconfig
+@@ -3,7 +3,6 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ CONFIG_SLAB=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+diff --git a/arch/sh/configs/sh7785lcr_32bit_defconfig b/arch/sh/configs/sh7785lcr_32bit_defconfig
+index 2ddf5ca7094e..a89ccc15af23 100644
+--- a/arch/sh/configs/sh7785lcr_32bit_defconfig
++++ b/arch/sh/configs/sh7785lcr_32bit_defconfig
+@@ -11,7 +11,6 @@ CONFIG_PROFILING=y
+ CONFIG_GCOV_KERNEL=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_CPU_SUBTYPE_SH7785=y
+ CONFIG_MEMORY_START=0x40000000
+diff --git a/block/Kconfig b/block/Kconfig
+index 028bc085dac8..1b220101a9cb 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -26,30 +26,6 @@ menuconfig BLOCK
+ 
+ if BLOCK
+ 
+-config LBDAF
+-	bool "Support for large (2TB+) block devices and files"
+-	depends on !64BIT
+-	default y
+-	help
+-	  Enable block devices or files of size 2TB and larger.
+-
+-	  This option is required to support the full capacity of large
+-	  (2TB+) block devices, including RAID, disk, Network Block Device,
+-	  Logical Volume Manager (LVM) and loopback.
+-	
+-	  This option also enables support for single files larger than
+-	  2TB.
+-
+-	  The ext4 filesystem requires that this feature be enabled in
+-	  order to support filesystems that have the huge_file feature
+-	  enabled.  Otherwise, it will refuse to mount in the read-write
+-	  mode any filesystems that use the huge_file feature, which is
+-	  enabled by default by mke2fs.ext4.
+-
+-	  The GFS2 filesystem also requires this feature.
+-
+-	  If unsure, say Y.
+-
+ config BLK_SCSI_REQUEST
+ 	bool
+ 
+diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
+index 000a2f4c0e92..acd7af3630e9 100644
+--- a/drivers/block/drbd/drbd_int.h
++++ b/drivers/block/drbd/drbd_int.h
+@@ -1317,10 +1317,6 @@ struct bm_extent {
+ 
+ #define DRBD_MAX_SECTORS_FIXED_BM \
+ 	  ((MD_128MB_SECT - MD_32kB_SECT - MD_4kB_SECT) * (1LL<<(BM_EXT_SHIFT-9)))
+-#if !defined(CONFIG_LBDAF) && BITS_PER_LONG == 32
+-#define DRBD_MAX_SECTORS      DRBD_MAX_SECTORS_32
+-#define DRBD_MAX_SECTORS_FLEX DRBD_MAX_SECTORS_32
+-#else
+ #define DRBD_MAX_SECTORS      DRBD_MAX_SECTORS_FIXED_BM
+ /* 16 TB in units of sectors */
+ #if BITS_PER_LONG == 32
+@@ -1333,7 +1329,6 @@ struct bm_extent {
+ #define DRBD_MAX_SECTORS_FLEX (1UL << 51)
+ /* corresponds to (1UL << 38) bits right now. */
+ #endif
+-#endif
+ 
+ /* Estimate max bio size as 256 * PAGE_SIZE,
+  * so for typical PAGE_SIZE of 4k, that is (1<<20) Byte.
+diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
+index 4e1d9b31f60c..cc61c5ce3ad5 100644
+--- a/drivers/block/ps3disk.c
++++ b/drivers/block/ps3disk.c
+@@ -102,7 +102,7 @@ static void ps3disk_scatter_gather(struct ps3_storage_device *dev,
+ 
+ 	rq_for_each_segment(bvec, req, iter) {
+ 		unsigned long flags;
+-		dev_dbg(&dev->sbd.core, "%s:%u: bio %u: %u sectors from %lu\n",
++		dev_dbg(&dev->sbd.core, "%s:%u: bio %u: %u sectors from %llu\n",
+ 			__func__, __LINE__, i, bio_sectors(iter.bio),
+ 			iter.bio->bi_iter.bi_sector);
+ 
+@@ -496,7 +496,7 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
+ 		     dev->regions[dev->region_idx].size*priv->blocking_factor);
+ 
+ 	dev_info(&dev->sbd.core,
+-		 "%s is a %s (%llu MiB total, %lu MiB for OtherOS)\n",
++		 "%s is a %s (%llu MiB total, %llu MiB for OtherOS)\n",
+ 		 gendisk->disk_name, priv->model, priv->raw_capacity >> 11,
+ 		 get_capacity(gendisk) >> 11);
+ 
+diff --git a/drivers/md/dm-exception-store.h b/drivers/md/dm-exception-store.h
+index 12b5216c2cfe..721efc493942 100644
+--- a/drivers/md/dm-exception-store.h
++++ b/drivers/md/dm-exception-store.h
+@@ -135,9 +135,8 @@ struct dm_dev *dm_snap_cow(struct dm_snapshot *snap);
+ /*
+  * Funtions to manipulate consecutive chunks
+  */
+-#  if defined(CONFIG_LBDAF) || (BITS_PER_LONG == 64)
+-#    define DM_CHUNK_CONSECUTIVE_BITS 8
+-#    define DM_CHUNK_NUMBER_BITS 56
++#define DM_CHUNK_CONSECUTIVE_BITS 8
++#define DM_CHUNK_NUMBER_BITS 56
+ 
+ static inline chunk_t dm_chunk_number(chunk_t chunk)
+ {
+@@ -163,29 +162,6 @@ static inline void dm_consecutive_chunk_count_dec(struct dm_exception *e)
+ 	e->new_chunk -= (1ULL << DM_CHUNK_NUMBER_BITS);
+ }
+ 
+-#  else
+-#    define DM_CHUNK_CONSECUTIVE_BITS 0
+-
+-static inline chunk_t dm_chunk_number(chunk_t chunk)
+-{
+-	return chunk;
+-}
+-
+-static inline unsigned dm_consecutive_chunk_count(struct dm_exception *e)
+-{
+-	return 0;
+-}
+-
+-static inline void dm_consecutive_chunk_count_inc(struct dm_exception *e)
+-{
+-}
+-
+-static inline void dm_consecutive_chunk_count_dec(struct dm_exception *e)
+-{
+-}
+-
+-#  endif
+-
+ /*
+  * Return the number of sectors in the device.
+  */
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index d57d997a52c8..0eb56ba89a7f 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -88,14 +88,10 @@ struct journal_entry {
+ 
+ #if BITS_PER_LONG == 64
+ #define journal_entry_set_sector(je, x)		do { smp_wmb(); WRITE_ONCE((je)->u.sector, cpu_to_le64(x)); } while (0)
+-#define journal_entry_get_sector(je)		le64_to_cpu((je)->u.sector)
+-#elif defined(CONFIG_LBDAF)
+-#define journal_entry_set_sector(je, x)		do { (je)->u.s.sector_lo = cpu_to_le32(x); smp_wmb(); WRITE_ONCE((je)->u.s.sector_hi, cpu_to_le32((x) >> 32)); } while (0)
+-#define journal_entry_get_sector(je)		le64_to_cpu((je)->u.sector)
+ #else
+-#define journal_entry_set_sector(je, x)		do { (je)->u.s.sector_lo = cpu_to_le32(x); smp_wmb(); WRITE_ONCE((je)->u.s.sector_hi, cpu_to_le32(0)); } while (0)
+-#define journal_entry_get_sector(je)		le32_to_cpu((je)->u.s.sector_lo)
++#define journal_entry_set_sector(je, x)		do { (je)->u.s.sector_lo = cpu_to_le32(x); smp_wmb(); WRITE_ONCE((je)->u.s.sector_hi, cpu_to_le32((x) >> 32)); } while (0)
+ #endif
++#define journal_entry_get_sector(je)		le64_to_cpu((je)->u.sector)
+ #define journal_entry_is_unused(je)		((je)->u.s.sector_hi == cpu_to_le32(-1))
+ #define journal_entry_set_unused(je)		do { ((je)->u.s.sector_hi = cpu_to_le32(-1)); } while (0)
+ #define journal_entry_is_inprogress(je)		((je)->u.s.sector_hi == cpu_to_le32(-2))
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 3cd662c2863c..1f344b9b95f8 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1105,8 +1105,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 	 * (not needed for Linear and RAID0 as metadata doesn't
+ 	 * record this size)
+ 	 */
+-	if (IS_ENABLED(CONFIG_LBDAF) && (u64)rdev->sectors >= (2ULL << 32) &&
+-	    sb->level >= 1)
++	if ((u64)rdev->sectors >= (2ULL << 32) && sb->level >= 1)
+ 		rdev->sectors = (sector_t)(2ULL << 32) - 2;
+ 
+ 	if (rdev->sectors < ((sector_t)sb->size) * 2 && sb->level >= 1)
+@@ -1404,8 +1403,7 @@ super_90_rdev_size_change(struct md_rdev *rdev, sector_t num_sectors)
+ 	/* Limit to 4TB as metadata cannot record more than that.
+ 	 * 4TB == 2^32 KB, or 2*2^32 sectors.
+ 	 */
+-	if (IS_ENABLED(CONFIG_LBDAF) && (u64)num_sectors >= (2ULL << 32) &&
+-	    rdev->mddev->level >= 1)
++	if ((u64)num_sectors >= (2ULL << 32) && rdev->mddev->level >= 1)
+ 		num_sectors = (sector_t)(2ULL << 32) - 2;
+ 	do {
+ 		md_super_write(rdev->mddev, rdev, rdev->sb_start, rdev->sb_size,
+diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+index d271bd731af7..01f40672507f 100644
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -391,7 +391,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+ 		bb_present = badblocks_check(&nd_region->bb, meta_start,
+ 				meta_num, &first_bad, &num_bad);
+ 		if (bb_present) {
+-			dev_dbg(&nd_pfn->dev, "meta: %x badblocks at %lx\n",
++			dev_dbg(&nd_pfn->dev, "meta: %x badblocks at %llx\n",
+ 					num_bad, first_bad);
+ 			nsoff = ALIGN_DOWN((nd_region->ndr_start
+ 					+ (first_bad << 9)) - nsio->res.start,
+@@ -410,7 +410,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+ 			}
+ 			if (rc) {
+ 				dev_err(&nd_pfn->dev,
+-					"error clearing %x badblocks at %lx\n",
++					"error clearing %x badblocks at %llx\n",
+ 					num_bad, first_bad);
+ 				return rc;
+ 			}
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 2b2bc4b49d78..92c34d93e051 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2256,22 +2256,6 @@ static void read_capacity_error(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 
+ #define READ_CAPACITY_RETRIES_ON_RESET	10
+ 
+-/*
+- * Ensure that we don't overflow sector_t when CONFIG_LBDAF is not set
+- * and the reported logical block size is bigger than 512 bytes. Note
+- * that last_sector is a u64 and therefore logical_to_sectors() is not
+- * applicable.
+- */
+-static bool sd_addressable_capacity(u64 lba, unsigned int sector_size)
+-{
+-	u64 last_sector = (lba + 1ULL) << (ilog2(sector_size) - 9);
+-
+-	if (sizeof(sector_t) == 4 && last_sector > U32_MAX)
+-		return false;
+-
+-	return true;
+-}
+-
+ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 						unsigned char *buffer)
+ {
+@@ -2337,14 +2321,6 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 		return -ENODEV;
+ 	}
+ 
+-	if (!sd_addressable_capacity(lba, sector_size)) {
+-		sd_printk(KERN_ERR, sdkp, "Too big for this kernel. Use a "
+-			"kernel compiled with support for large block "
+-			"devices.\n");
+-		sdkp->capacity = 0;
+-		return -EOVERFLOW;
+-	}
+-
+ 	/* Logical blocks per physical block exponent */
+ 	sdkp->physical_block_size = (1 << (buffer[13] & 0xf)) * sector_size;
+ 
+@@ -2426,14 +2402,6 @@ static int read_capacity_10(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 		return sector_size;
+ 	}
+ 
+-	if (!sd_addressable_capacity(lba, sector_size)) {
+-		sd_printk(KERN_ERR, sdkp, "Too big for this kernel. Use a "
+-			"kernel compiled with support for large block "
+-			"devices.\n");
+-		sdkp->capacity = 0;
+-		return -EOVERFLOW;
+-	}
+-
+ 	sdkp->capacity = lba + 1;
+ 	sdkp->physical_block_size = sector_size;
+ 	return sector_size;
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index e7ae26e36c9c..38faf661e237 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -1760,8 +1760,6 @@ int ext4_group_extend(struct super_block *sb, struct ext4_super_block *es,
+ 		ext4_msg(sb, KERN_ERR,
+ 			 "filesystem too large to resize to %llu blocks safely",
+ 			 n_blocks_count);
+-		if (sizeof(sector_t) < 8)
+-			ext4_warning(sb, "CONFIG_LBDAF not enabled");
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 6ed4eb81e674..d10e9e724bdd 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2706,13 +2706,9 @@ static loff_t ext4_max_size(int blkbits, int has_huge_files)
+ 	loff_t res;
+ 	loff_t upper_limit = MAX_LFS_FILESIZE;
+ 
+-	/* small i_blocks in vfs inode? */
+-	if (!has_huge_files || sizeof(blkcnt_t) < sizeof(u64)) {
+-		/*
+-		 * CONFIG_LBDAF is not enabled implies the inode
+-		 * i_block represent total blocks in 512 bytes
+-		 * 32 == size of vfs inode i_blocks * 8
+-		 */
++	BUILD_BUG_ON(sizeof(blkcnt_t) < sizeof(u64));
++
++	if (!has_huge_files) {
+ 		upper_limit = (1LL << 32) - 1;
+ 
+ 		/* total blocks in file system block size */
+@@ -2753,11 +2749,11 @@ static loff_t ext4_max_bitmap_size(int bits, int has_huge_files)
+ 	 * number of 512-byte sectors of the file.
+ 	 */
+ 
+-	if (!has_huge_files || sizeof(blkcnt_t) < sizeof(u64)) {
++	if (!has_huge_files) {
+ 		/*
+-		 * !has_huge_files or CONFIG_LBDAF not enabled implies that
+-		 * the inode i_block field represents total file blocks in
+-		 * 2^32 512-byte sectors == size of vfs inode i_blocks * 8
++		 * !has_huge_files or implies that the inode i_block field
++		 * represents total file blocks in 2^32 512-byte sectors ==
++		 * size of vfs inode i_blocks * 8
+ 		 */
+ 		upper_limit = (1LL << 32) - 1;
+ 
+@@ -2897,18 +2893,6 @@ static int ext4_feature_set_ok(struct super_block *sb, int readonly)
+ 				~EXT4_FEATURE_RO_COMPAT_SUPP));
+ 		return 0;
+ 	}
+-	/*
+-	 * Large file size enabled file system can only be mounted
+-	 * read-write on 32-bit systems if kernel is built with CONFIG_LBDAF
+-	 */
+-	if (ext4_has_feature_huge_file(sb)) {
+-		if (sizeof(blkcnt_t) < sizeof(u64)) {
+-			ext4_msg(sb, KERN_ERR, "Filesystem with huge files "
+-				 "cannot be mounted RDWR without "
+-				 "CONFIG_LBDAF");
+-			return 0;
+-		}
+-	}
+ 	if (ext4_has_feature_bigalloc(sb) && !ext4_has_feature_extents(sb)) {
+ 		ext4_msg(sb, KERN_ERR,
+ 			 "Can't support bigalloc feature without "
+@@ -4057,8 +4041,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (err) {
+ 		ext4_msg(sb, KERN_ERR, "filesystem"
+ 			 " too large to mount safely on this system");
+-		if (sizeof(sector_t) < 8)
+-			ext4_msg(sb, KERN_WARNING, "CONFIG_LBDAF not enabled");
+ 		goto failed_mount;
+ 	}
+ 
+diff --git a/fs/gfs2/Kconfig b/fs/gfs2/Kconfig
+index 3ed2b088dcfd..6a1e499543f5 100644
+--- a/fs/gfs2/Kconfig
++++ b/fs/gfs2/Kconfig
+@@ -1,6 +1,5 @@
+ config GFS2_FS
+ 	tristate "GFS2 file system support"
+-	depends on (64BIT || LBDAF)
+ 	select FS_POSIX_ACL
+ 	select CRC32
+ 	select LIBCRC32C
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 5f93cfacb3d1..69d02cf8cf37 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -121,7 +121,6 @@ config PNFS_FILE_LAYOUT
+ config PNFS_BLOCK
+ 	tristate
+ 	depends on NFS_V4_1 && BLK_DEV_DM
+-	depends on 64BIT || LBDAF
+ 	default NFS_V4
+ 
+ config PNFS_FLEXFILE_LAYOUT
+diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
+index 96ae7cedd487..fc3d29eceb2f 100644
+--- a/fs/ocfs2/super.c
++++ b/fs/ocfs2/super.c
+@@ -600,7 +600,6 @@ static unsigned long long ocfs2_max_file_offset(unsigned int bbits,
+ 	 */
+ 
+ #if BITS_PER_LONG == 32
+-# if defined(CONFIG_LBDAF)
+ 	BUILD_BUG_ON(sizeof(sector_t) != 8);
+ 	/*
+ 	 * We might be limited by page cache size.
+@@ -614,15 +613,6 @@ static unsigned long long ocfs2_max_file_offset(unsigned int bbits,
+ 		 */
+ 		bitshift = 31;
+ 	}
+-# else
+-	/*
+-	 * We are limited by the size of sector_t. Use block size, as
+-	 * that's what we expose to the VFS.
+-	 */
+-	bytes = 1 << bbits;
+-	trim = 1;
+-	bitshift = 31;
+-# endif
+ #endif
+ 
+ 	/*
+diff --git a/fs/stack.c b/fs/stack.c
+index a54e33ed10f1..664ed35558bd 100644
+--- a/fs/stack.c
++++ b/fs/stack.c
+@@ -21,11 +21,10 @@ void fsstack_copy_inode_size(struct inode *dst, struct inode *src)
+ 	i_size = i_size_read(src);
+ 
+ 	/*
+-	 * But if CONFIG_LBDAF (on 32-bit), we ought to make an effort to
+-	 * keep the two halves of i_blocks in sync despite SMP or PREEMPT -
+-	 * though stat's generic_fillattr() doesn't bother, and we won't be
+-	 * applying quotas (where i_blocks does become important) at the
+-	 * upper level.
++	 * But on 32-bit, we ought to make an effort to keep the two halves of
++	 * i_blocks in sync despite SMP or PREEMPT - though stat's
++	 * generic_fillattr() doesn't bother, and we won't be applying quotas
++	 * (where i_blocks does become important) at the upper level.
+ 	 *
+ 	 * We don't actually know what locking is used at the lower level;
+ 	 * but if it's a filesystem that supports quotas, it will be using
+@@ -44,9 +43,9 @@ void fsstack_copy_inode_size(struct inode *dst, struct inode *src)
+ 	 * include/linux/fs.h).  We don't necessarily hold i_mutex when this
+ 	 * is called, so take i_lock for that case.
+ 	 *
+-	 * And if CONFIG_LBDAF (on 32-bit), continue our effort to keep the
+-	 * two halves of i_blocks in sync despite SMP or PREEMPT: use i_lock
+-	 * for that case too, and do both at once by combining the tests.
++	 * And if on 32-bit, continue our effort to keep the two halves of
++	 * i_blocks in sync despite SMP or PREEMPT: use i_lock  for that case
++	 * too, and do both at once by combining the tests.
+ 	 *
+ 	 * There is none of this locking overhead in the 64-bit case.
+ 	 */
+diff --git a/fs/xfs/Kconfig b/fs/xfs/Kconfig
+index 457ac9f97377..99af5e5bda9f 100644
+--- a/fs/xfs/Kconfig
++++ b/fs/xfs/Kconfig
+@@ -1,7 +1,6 @@
+ config XFS_FS
+ 	tristate "XFS filesystem support"
+ 	depends on BLOCK
+-	depends on (64BIT || LBDAF)
+ 	select EXPORTFS
+ 	select LIBCRC32C
+ 	select FS_IOMAP
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index f093ea244849..703b6be063ef 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -539,26 +539,18 @@ xfs_max_file_offset(
+ 
+ 	/* Figure out maximum filesize, on Linux this can depend on
+ 	 * the filesystem blocksize (on 32 bit platforms).
+-	 * __block_write_begin does this in an [unsigned] long...
++	 * __block_write_begin does this in an [unsigned] long long...
+ 	 *      page->index << (PAGE_SHIFT - bbits)
+ 	 * So, for page sized blocks (4K on 32 bit platforms),
+ 	 * this wraps at around 8Tb (hence MAX_LFS_FILESIZE which is
+ 	 *      (((u64)PAGE_SIZE << (BITS_PER_LONG-1))-1)
+ 	 * but for smaller blocksizes it is less (bbits = log2 bsize).
+-	 * Note1: get_block_t takes a long (implicit cast from above)
+-	 * Note2: The Large Block Device (LBD and HAVE_SECTOR_T) patch
+-	 * can optionally convert the [unsigned] long from above into
+-	 * an [unsigned] long long.
+ 	 */
+ 
+ #if BITS_PER_LONG == 32
+-# if defined(CONFIG_LBDAF)
+ 	ASSERT(sizeof(sector_t) == 8);
+ 	pagefactor = PAGE_SIZE;
+ 	bitshift = BITS_PER_LONG;
+-# else
+-	pagefactor = PAGE_SIZE >> (PAGE_SHIFT - blockshift);
+-# endif
+ #endif
+ 
+ 	return (((uint64_t)pagefactor) << bitshift) - 1;
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 06c0fd594097..98076b1b5e48 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -714,7 +714,7 @@ static inline void hd_free_part(struct hd_struct *part)
+  */
+ static inline sector_t part_nr_sects_read(struct hd_struct *part)
+ {
+-#if BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_SMP)
++#if BITS_PER_LONG==32 && defined(CONFIG_SMP)
+ 	sector_t nr_sects;
+ 	unsigned seq;
+ 	do {
+@@ -722,7 +722,7 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
+ 		nr_sects = part->nr_sects;
+ 	} while (read_seqcount_retry(&part->nr_sects_seq, seq));
+ 	return nr_sects;
+-#elif BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_PREEMPT)
++#elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPT)
+ 	sector_t nr_sects;
+ 
+ 	preempt_disable();
+@@ -741,11 +741,11 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
+  */
+ static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
+ {
+-#if BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_SMP)
++#if BITS_PER_LONG==32 && defined(CONFIG_SMP)
+ 	write_seqcount_begin(&part->nr_sects_seq);
+ 	part->nr_sects = size;
+ 	write_seqcount_end(&part->nr_sects_seq);
+-#elif BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_PREEMPT)
++#elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPT)
+ 	preempt_disable();
+ 	part->nr_sects = size;
+ 	preempt_enable();
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 34a5036debd3..24ef5a018a5e 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -17,6 +17,7 @@
+ #include <asm/byteorder.h>
+ #include <asm/div64.h>
+ #include <uapi/linux/kernel.h>
++#include <asm/div64.h>
+ 
+ #define STACK_MAGIC	0xdeadbeef
+ 
+@@ -175,18 +176,7 @@
+ #define _RET_IP_		(unsigned long)__builtin_return_address(0)
+ #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
+ 
+-#ifdef CONFIG_LBDAF
+-# define sector_div(a, b) do_div(a, b)
+-#else
+-# define sector_div(n, b)( \
+-{ \
+-	int _res; \
+-	_res = (n) % (b); \
+-	(n) /= (b); \
+-	_res; \
+-} \
+-)
+-#endif
++#define sector_div(a, b) do_div(a, b)
+ 
+ /**
+  * upper_32_bits - return bits 32-63 of a number
+diff --git a/include/linux/types.h b/include/linux/types.h
+index cc0dbbe551d5..231114ae38f4 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -127,13 +127,8 @@ typedef s64			int64_t;
+  *
+  * blkcnt_t is the type of the inode's block count.
+  */
+-#ifdef CONFIG_LBDAF
+ typedef u64 sector_t;
+ typedef u64 blkcnt_t;
+-#else
+-typedef unsigned long sector_t;
+-typedef unsigned long blkcnt_t;
+-#endif
+ 
+ /*
+  * The type of an index into the pagecache.
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 0d9e81779e37..d8781786cf63 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1927,7 +1927,6 @@ config TEST_STATIC_KEYS
+ config TEST_KMOD
+ 	tristate "kmod stress tester"
+ 	depends on m
+-	depends on BLOCK && (64BIT || LBDAF)	  # for XFS, BTRFS
+ 	depends on NETDEVICES && NET_CORE && INET # for TUN
+ 	select TEST_LKM
+ 	select XFS_FS
+diff --git a/tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h b/tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h
+index d27285f8ee82..8bc960e5e713 100644
+--- a/tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h
++++ b/tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h
+@@ -59,11 +59,7 @@ typedef		__u32		uint32_t;
+  *
+  * blkcnt_t is the type of the inode's block count.
+  */
+-#ifdef CONFIG_LBDAF
+ typedef u64 sector_t;
+-#else
+-typedef unsigned long sector_t;
+-#endif
+ 
+ /*
+  * The type of an index into the pagecache.
+-- 
+2.20.1
 
-> 2.Each transfer need get response from peer to avoid the buffer
-> overflow. This is very important if the peer use pull
-> model(read/write) instead of push model(callback).
-I not sure to understand your point... You mean that you assume that the
-driver should be blocked until a response from the remote side?
-This seems not compatible with a "generic" tty and with Johan remarks:
-"Just a drive-by comment; it looks like rpmsg_send() may block, but
-the tty-driver write() callback must never sleep."
-
-Why no just let rpmsg should manage the case with no Tx buffer free,
-with a rpmsg_trysend...
-
-> 
-> Here is the patch for kernel side:
-> https://github.com/xiaoxiang781216/linux/commit/f04d2386eb11e0781f0eb47d99fae838abf7eb53
-> https://github.com/xiaoxiang781216/linux/commit/1a41be362d916eb9104bf21065cb38a0a63d2e91
-> 
-> And RTOS side:
-> https://github.com/PineconeCode/nuttx/blob/song-u1/include/nuttx/serial/uart_rpmsg.h
-> https://github.com/PineconeCode/nuttx/blob/song-u1/drivers/serial/uart_rpmsg.c
-> 
-> Maybe, we can consider how to unify these two implementation into one.
-Yes sure.
-
-> 
->>>
->>>> using some wrapper functions available here:
->>>> https://github.com/STMicroelectronics/STM32CubeMP1/tree/master/Middlewares/Third_Party/OpenAMP
->>>>
->>>>
->>>> Best Regards
->>>> Arnaud
->>>>
->>>>>
->>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>>>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
->>>>>> ---
->>>>>>  drivers/tty/Kconfig     |   9 ++
->>>>>>  drivers/tty/Makefile    |   1 +
->>>>>>  drivers/tty/rpmsg_tty.c | 309 ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>  3 files changed, 319 insertions(+)
->>>>>>  create mode 100644 drivers/tty/rpmsg_tty.c
->>>>>>
->>>>>> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
->>>>>> index 0840d27..42696e6 100644
->>>>>> --- a/drivers/tty/Kconfig
->>>>>> +++ b/drivers/tty/Kconfig
->>>>>> @@ -441,4 +441,13 @@ config VCC
->>>>>>         depends on SUN_LDOMS
->>>>>>         help
->>>>>>           Support for Sun logical domain consoles.
->>>>>> +
->>>>>> +config RPMSG_TTY
->>>>>> +       tristate "RPMSG tty driver"
->>>>>> +       depends on RPMSG
->>>>>> +       help
->>>>>> +         Say y here to export rpmsg endpoints as tty devices, usually found
->>>>>> +         in /dev/ttyRPMSGx.
->>>>>> +         This makes it possible for user-space programs to send and receive
->>>>>> +         rpmsg messages as a standard tty protocol.
->>>>>>  endif # TTY
->>>>>> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
->>>>>> index c72cafd..90a98a2 100644
->>>>>> --- a/drivers/tty/Makefile
->>>>>> +++ b/drivers/tty/Makefile
->>>>>> @@ -33,5 +33,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
->>>>>>  obj-$(CONFIG_GOLDFISH_TTY)     += goldfish.o
->>>>>>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
->>>>>>  obj-$(CONFIG_VCC)              += vcc.o
->>>>>> +obj-$(CONFIG_RPMSG_TTY)                += rpmsg_tty.o
->>>>>>
->>>>>>  obj-y += ipwireless/
->>>>>> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
->>>>>> new file mode 100644
->>>>>> index 0000000..9c2a629
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/tty/rpmsg_tty.c
->>>>>> @@ -0,0 +1,309 @@
->>>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>>> +/*
->>>>>> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
->>>>>> + * Authors: Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
->>>>>> + *          Fabien Dessenne <fabien.dessenne@st.com> for STMicroelectronics.
->>>>>> + * Derived from the imx-rpmsg and omap-rpmsg implementations.
->>>>>> + */
->>>>>> +
->>>>>> +#include <linux/module.h>
->>>>>> +#include <linux/rpmsg.h>
->>>>>> +#include <linux/slab.h>
->>>>>> +#include <linux/tty.h>
->>>>>> +#include <linux/tty_flip.h>
->>>>>> +
->>>>>> +#define MAX_TTY_RPMSG          32
->>>>>> +
->>>>>> +static DEFINE_IDR(tty_idr);            /* tty instance id */
->>>>>> +static DEFINE_MUTEX(idr_lock);         /* protects tty_idr */
->>>>>> +
->>>>>> +static struct tty_driver *rpmsg_tty_driver;
->>>>>> +
->>>>>> +struct rpmsg_tty_port {
->>>>>> +       struct tty_port         port;   /* TTY port data */
->>>>>> +       unsigned int            id;     /* TTY rpmsg index */
->>>>>> +       spinlock_t              rx_lock; /* message reception lock */
->>>>>> +       struct rpmsg_device     *rpdev; /* rpmsg device */
->>>>>> +};
->>>>>> +
->>>>>> +static int rpmsg_tty_cb(struct rpmsg_device *rpdev, void *data, int len,
->>>>>> +                       void *priv, u32 src)
->>>>>> +{
->>>>>> +       int space;
->>>>>> +       unsigned char *cbuf;
->>>>>> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
->>>>>> +
->>>>>> +       dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
->>>>>> +
->>>>>> +       print_hex_dump_debug(__func__, DUMP_PREFIX_NONE, 16, 1, data, len,
->>>>>> +                            true);
->>>>>> +
->>>>>> +       /* Flush the recv-ed none-zero data to tty node */
->>>>>> +       if (!len)
->>>>>> +               return -EINVAL;
->>>>>> +
->>>>>> +       spin_lock(&cport->rx_lock);
->>>>>> +       space = tty_prepare_flip_string(&cport->port, &cbuf, len);
->>>>>> +       if (space <= 0) {
->>>>>> +               dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
->>>>>> +               spin_unlock(&cport->rx_lock);
->>>>>> +               return -ENOMEM;
->>>>>> +       }
->>>>>> +
->>>>>> +       if (space != len)
->>>>>> +               dev_warn(&rpdev->dev, "Trunc buffer from %d to %d\n",
->>>>>> +                        len, space);
->>>>>> +
->>>>>> +       memcpy(cbuf, data, space);
->>>>>> +       tty_flip_buffer_push(&cport->port);
->>>>>> +       spin_unlock(&cport->rx_lock);
->>>>>> +
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static int rpmsg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
->>>>>> +{
->>>>>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->>>>>> +
->>>>>> +       if (!cport) {
->>>>>> +               dev_err(tty->dev, "cannot get cport\n");
->>>>>> +               return -ENODEV;
->>>>>> +       }
->>>>>> +
->>>>>> +       return tty_port_install(&cport->port, driver, tty);
->>>>>> +}
->>>>>> +
->>>>>> +static int rpmsg_tty_open(struct tty_struct *tty, struct file *filp)
->>>>>> +{
->>>>>> +       return tty_port_open(tty->port, tty, filp);
->>>>>> +}
->>>>>> +
->>>>>> +static void rpmsg_tty_close(struct tty_struct *tty, struct file *filp)
->>>>>> +{
->>>>>> +       return tty_port_close(tty->port, tty, filp);
->>>>>> +}
->>>>>> +
->>>>>> +static int rpmsg_tty_write(struct tty_struct *tty, const unsigned char *buf,
->>>>>> +                          int total)
->>>>>> +{
->>>>>> +       int count, ret = 0;
->>>>>> +       const unsigned char *tbuf;
->>>>>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->>>>>> +       struct rpmsg_device *rpdev;
->>>>>> +       int msg_size;
->>>>>> +
->>>>>> +       if (!cport) {
->>>>>> +               dev_err(tty->dev, "cannot get cport\n");
->>>>>> +               return -ENODEV;
->>>>>> +       }
->>>>>> +
->>>>>> +       rpdev = cport->rpdev;
->>>>>> +
->>>>>> +       dev_dbg(&rpdev->dev, "%s: send message from tty->index = %d\n",
->>>>>> +               __func__, tty->index);
->>>>>> +
->>>>>> +       if (!buf) {
->>>>>> +               dev_err(&rpdev->dev, "buf shouldn't be null.\n");
->>>>>> +               return -ENOMEM;
->>>>>> +       }
->>>>>> +
->>>>>> +       msg_size = rpmsg_get_buf_payload_size(rpdev->ept);
->>>>>> +       if (msg_size < 0)
->>>>>> +               return msg_size;
->>>>>> +
->>>>>> +       count = total;
->>>>>> +       tbuf = buf;
->>>>>> +       do {
->>>>>> +               /* send a message to our remote processor */
->>>>>> +               ret = rpmsg_send(rpdev->ept, (void *)tbuf,
->>>>>> +                                min(count, msg_size));
->>>>>> +               if (ret) {
->>>>>> +                       dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
->>>>>> +                       return ret;
->>>>>> +               }
->>>>>> +
->>>>>> +               if (count > msg_size) {
->>>>>> +                       count -= msg_size;
->>>>>> +                       tbuf += msg_size;
->>>>>> +               } else {
->>>>>> +                       count = 0;
->>>>>> +               }
->>>>>> +       } while (count > 0);
->>>>>> +
->>>>>
->>>>> We need the flow control(or handshake) here, otherwise it's very easy
->>>>> to lose the data if kernel keep send the data as fast as possible.
->>>>>
->>>>>> +       return total;
->>>>>> +}
->>>>>> +
->>>>>> +static int rpmsg_tty_write_room(struct tty_struct *tty)
->>>>>> +{
->>>>>> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->>>>>> +
->>>>>> +       if (!cport) {
->>>>>> +               dev_err(tty->dev, "cannot get cport\n");
->>>>>> +               return -ENODEV;
->>>>>> +       }
->>>>>> +
->>>>>> +       /* report the space in the rpmsg buffer */
->>>>>> +       return rpmsg_get_buf_payload_size(cport->rpdev->ept);
->>>>>> +}
->>>>>> +
->>>>>> +static const struct tty_operations rpmsg_tty_ops = {
->>>>>> +       .install        = rpmsg_tty_install,
->>>>>> +       .open           = rpmsg_tty_open,
->>>>>> +       .close          = rpmsg_tty_close,
->>>>>> +       .write          = rpmsg_tty_write,
->>>>>> +       .write_room     = rpmsg_tty_write_room,
->>>>>> +};
->>>>>> +
->>>>>> +struct rpmsg_tty_port *rpmsg_tty_alloc_cport(void)
->>>>>> +{
->>>>>> +       struct rpmsg_tty_port *cport;
->>>>>> +
->>>>>> +       cport = kzalloc(sizeof(*cport), GFP_KERNEL);
->>>>>> +       if (!cport)
->>>>>> +               return ERR_PTR(-ENOMEM);
->>>>>> +
->>>>>> +       mutex_lock(&idr_lock);
->>>>>> +       cport->id = idr_alloc(&tty_idr, cport, 0, MAX_TTY_RPMSG, GFP_KERNEL);
->>>>>> +       mutex_unlock(&idr_lock);
->>>>>> +
->>>>>> +       if (cport->id < 0) {
->>>>>> +               kfree(cport);
->>>>>> +               return ERR_PTR(-ENOSPC);
->>>>>> +       }
->>>>>> +
->>>>>> +       return cport;
->>>>>> +}
->>>>>> +
->>>>>> +static void rpmsg_tty_release_cport(struct rpmsg_tty_port *cport)
->>>>>> +{
->>>>>> +       mutex_lock(&idr_lock);
->>>>>> +       idr_remove(&tty_idr, cport->id);
->>>>>> +       mutex_unlock(&idr_lock);
->>>>>> +
->>>>>> +       kfree(cport);
->>>>>> +}
->>>>>> +
->>>>>> +static int rpmsg_tty_probe(struct rpmsg_device *rpdev)
->>>>>> +{
->>>>>> +       struct rpmsg_tty_port *cport;
->>>>>> +       struct device *tty_dev;
->>>>>> +       int ret;
->>>>>> +
->>>>>> +       cport = rpmsg_tty_alloc_cport();
->>>>>> +       if (IS_ERR(cport)) {
->>>>>> +               dev_err(&rpdev->dev, "failed to alloc tty port\n");
->>>>>> +               return PTR_ERR(cport);
->>>>>> +       }
->>>>>> +
->>>>>> +       tty_port_init(&cport->port);
->>>>>> +       cport->port.low_latency = cport->port.flags | ASYNC_LOW_LATENCY;
->>>>>> +
->>>>>> +       tty_dev = tty_port_register_device(&cport->port, rpmsg_tty_driver,
->>>>>> +                                          cport->id, &rpdev->dev);
->>>>>> +       if (IS_ERR(tty_dev)) {
->>>>>> +               dev_err(&rpdev->dev, "failed to register tty port\n");
->>>>>> +               ret = PTR_ERR(tty_dev);
->>>>>> +               goto err_destroy;
->>>>>> +       }
->>>>>> +
->>>>>> +       spin_lock_init(&cport->rx_lock);
->>>>>> +       cport->rpdev = rpdev;
->>>>>> +
->>>>>> +       dev_set_drvdata(&rpdev->dev, cport);
->>>>>> +
->>>>>> +       dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x : ttyRPMSG%d\n",
->>>>>> +                rpdev->src, rpdev->dst, cport->id);
->>>>>> +
->>>>>> +       return 0;
->>>>>> +
->>>>>> +err_destroy:
->>>>>> +       tty_port_destroy(&cport->port);
->>>>>> +       rpmsg_tty_release_cport(cport);
->>>>>> +       return ret;
->>>>>> +}
->>>>>> +
->>>>>> +static void rpmsg_tty_remove(struct rpmsg_device *rpdev)
->>>>>> +{
->>>>>> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
->>>>>> +
->>>>>> +       dev_info(&rpdev->dev, "removing rpmsg tty device %d\n", cport->id);
->>>>>> +
->>>>>> +       /* User hang up to release the tty */
->>>>>> +       if (tty_port_initialized(&cport->port))
->>>>>> +               tty_port_tty_hangup(&cport->port, false);
->>>>>> +
->>>>>> +       tty_unregister_device(rpmsg_tty_driver, cport->id);
->>>>>> +       tty_port_destroy(&cport->port);
->>>>>> +
->>>>>> +       rpmsg_tty_release_cport(cport);
->>>>>> +}
->>>>>> +
->>>>>> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
->>>>>> +       { .name = "rpmsg-tty-channel" },
->>>>>> +       { },
->>>>>> +};
->>>>>> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_driver_tty_id_table);
->>>>>> +
->>>>>> +static struct rpmsg_driver rpmsg_tty_rpmsg_drv = {
->>>>>> +       .drv.name       = KBUILD_MODNAME,
->>>>>> +       .id_table       = rpmsg_driver_tty_id_table,
->>>>>> +       .probe          = rpmsg_tty_probe,
->>>>>> +       .callback       = rpmsg_tty_cb,
->>>>>> +       .remove         = rpmsg_tty_remove,
->>>>>> +};
->>>>>> +
->>>>>> +static int __init rpmsg_tty_init(void)
->>>>>> +{
->>>>>> +       int err;
->>>>>> +
->>>>>> +       rpmsg_tty_driver = tty_alloc_driver(MAX_TTY_RPMSG, TTY_DRIVER_REAL_RAW |
->>>>>> +                                           TTY_DRIVER_DYNAMIC_DEV);
->>>>>> +       if (IS_ERR(rpmsg_tty_driver))
->>>>>> +               return PTR_ERR(rpmsg_tty_driver);
->>>>>> +
->>>>>> +       rpmsg_tty_driver->driver_name = "rpmsg_tty";
->>>>>> +       rpmsg_tty_driver->name = "ttyRPMSG";
->>>>>> +       rpmsg_tty_driver->major = 0;
->>>>>> +       rpmsg_tty_driver->type = TTY_DRIVER_TYPE_CONSOLE;
->>>>>> +       rpmsg_tty_driver->init_termios = tty_std_termios;
->>>>>> +
->>>>>> +       tty_set_operations(rpmsg_tty_driver, &rpmsg_tty_ops);
->>>>>> +
->>>>>> +       err = tty_register_driver(rpmsg_tty_driver);
->>>>>> +       if (err < 0) {
->>>>>> +               pr_err("Couldn't install rpmsg tty driver: err %d\n", err);
->>>>>> +               goto error_put;
->>>>>> +       }
->>>>>> +
->>>>>> +       err = register_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
->>>>>> +       if (err < 0) {
->>>>>> +               pr_err("Couldn't register rpmsg tty driver: err %d\n", err);
->>>>>> +               goto error_unregister;
->>>>>> +       }
->>>>>> +
->>>>>> +       return 0;
->>>>>> +
->>>>>> +error_unregister:
->>>>>> +       tty_unregister_driver(rpmsg_tty_driver);
->>>>>> +
->>>>>> +error_put:
->>>>>> +       put_tty_driver(rpmsg_tty_driver);
->>>>>> +
->>>>>> +       return err;
->>>>>> +}
->>>>>> +
->>>>>> +static void __exit rpmsg_tty_exit(void)
->>>>>> +{
->>>>>> +       unregister_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
->>>>>> +       tty_unregister_driver(rpmsg_tty_driver);
->>>>>> +       put_tty_driver(rpmsg_tty_driver);
->>>>>> +       idr_destroy(&tty_idr);
->>>>>> +}
->>>>>> +
->>>>>> +module_init(rpmsg_tty_init);
->>>>>> +module_exit(rpmsg_tty_exit);
->>>>>> +
->>>>>> +MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
->>>>>> +MODULE_AUTHOR("Fabien Dessenne <fabien.dessenne@st.com>");
->>>>>> +MODULE_DESCRIPTION("virtio remote processor messaging tty driver");
->>>>>> +MODULE_LICENSE("GPL v2");
->>>>>> --
->>>>>> 2.7.4
->>>>>>
