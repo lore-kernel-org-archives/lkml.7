@@ -2,177 +2,115 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C7AC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CF0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B0E218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W/hHlYqT"
+	by mail.kernel.org (Postfix) with ESMTP id 4F19121850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfDENMW (ORCPT
+        id S1730424AbfDENM5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:12:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35380 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDENMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:12:21 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9ED3F1EC0104;
-        Fri,  5 Apr 2019 15:12:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554469939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0PtObtUbIUtRj5xTEtTQd7chnLlXqEY1n/Wt3CU011Q=;
-        b=W/hHlYqTe/u/bUCJGIvbWrNUBfT1HO1LNiFSjZdUVC8wz0HByWEeFVSXK1hzBTacd9I2X4
-        CuOsWOEgE3IX7gT6Btm9nvNpXAcu0//CcwP4Ih8Jf6DC69+VKEGH6tcQyB5uAR3mrw4/eK
-        AjfjimryC8XXbwofPlxDno66fGvsXdw=
-Date:   Fri, 5 Apr 2019 15:12:11 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Fri, 5 Apr 2019 09:12:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49149 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728743AbfDENM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 09:12:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-181-6vYh5p5rN3el28GcHaPjhQ-1; Fri, 05 Apr 2019 14:12:53 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 5 Apr 2019 14:14:00 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 5 Apr 2019 14:14:00 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sai Prakash Ranjan' <saiprakash.ranjan@codeaurora.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations='
- cmdline options
-Message-ID: <20190405131211.GE23348@zn.tnic>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
+        Mulu He <muluhe@codeaurora.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>
+CC:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] stm class: Fix out of bound access from bitmap allocation
+Thread-Topic: [PATCH] stm class: Fix out of bound access from bitmap
+ allocation
+Thread-Index: AQHU66qDw2WxOhX8lUugt3I8pBQU16YtixUw
+Date:   Fri, 5 Apr 2019 13:14:00 +0000
+Message-ID: <fe3a301b03b84761a08d5b15962b8110@AcuMS.aculab.com>
+References: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: 6vYh5p5rN3el28GcHaPjhQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 11:44:11AM -0500, Josh Poimboeuf wrote:
-> Keeping track of the number of mitigations for all the CPU speculation
-> bugs has become overwhelming for many users.  It's getting more and more
-> complicated to decide which mitigations are needed for a given
-> architecture.  Complicating matters is the fact that each arch tends to
-> their own custom way to mitigate the same vulnerability.
-
-Yap, we definitely need something like that.
-
-> Most users fall into a few basic categories:
+From: Sai Prakash Ranjan
+> Sent: 05 April 2019 13:23
 > 
-> a) they want all mitigations off;
+> From: Mulu He <muluhe@codeaurora.org>
 > 
-> b) they want all reasonable mitigations on, with SMT enabled even if
->    it's vulnerable; or
-
-Uff, "reasonable" - there's the bikeshed waiting to happen.
-
-> c) they want all reasonable mitigations on, with SMT disabled if
->    vulnerable.
+> Bitmap allocation works on array of unsigned longs and
+> for stm master allocation when the number of software
+> channels is 32, 4 bytes are allocated and there is a out of
+> bound access at the first 8 bytes access of bitmap region.
 > 
-> Define a set of curated, arch-independent options, each of which is an
-> aggregation of existing options:
-> 
-> - cpu_spec_mitigations=off: Disable all mitigations.
-
-"cpu_spec_mitigations" is too long, TBH.
-
-Imagine yourself in a loud, noisy data center - you basically can't wait
-to leave - crouched over a keyboard in an impossible position, having
-to type that thing and then making a typo. Whoops, too late, already
-pressed Enter. Shiiiit!
-
-Now you have to wait at least 15 mins for the damn single-threaded added
-value BIOS crap to noodle through all the cores just so you can try
-again, because you just rebooted the box.
-
-And I know, my ideas for shorter cmdline options are crazy, like
-
-cpu_spec_mtg=
-
-which people would say, yuck, unreadable...
-
-Oh, I know! How about
-
-cpu_vulns=
-
-?
-
-We already have /sys/devices/system/cpu/vulnerabilities so it'll be the
-same as that. Less things to remember.
-
-> - cpu_spec_mitigations=auto: [default] Enable all the default
->   mitigations, but leave SMT enabled, even if it's vulnerable.
-> 
-> - cpu_spec_mitigations=auto,nosmt: Enable all the default mitigations,
->   disabling SMT if needed by a mitigation.
-
-Yah, the suboption choices make sense to me.
-
-> 
-> Currently, these options are placeholders which don't actually do
-> anything.  They will be fleshed out in upcoming patches.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+> Signed-off-by: Mulu He <muluhe@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Cc: stable@vger.kernel.org
 > ---
->  .../admin-guide/kernel-parameters.txt         | 23 +++++++++++++++++++
->  include/linux/cpu.h                           |  8 +++++++
->  kernel/cpu.c                                  | 15 ++++++++++++
->  3 files changed, 46 insertions(+)
+>  drivers/hwtracing/stm/core.c | 2 +-
+>  drivers/hwtracing/stm/stm.h  | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c4d830003b21..ac42e510bd6e 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2544,6 +2544,29 @@
->  			in the "bleeding edge" mini2440 support kernel at
->  			http://repo.or.cz/w/linux-2.6/mini2440.git
->  
-> +	cpu_spec_mitigations=
-> +			[KNL] Control mitigations for CPU speculation
-> +			vulnerabilities on affected CPUs.  This is a set of
-> +			curated, arch-independent options, each of which is an
-> +			aggregation of existing options.
-> +
-> +			off
-> +				Disable all speculative CPU mitigations.
+> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+> index 93ce3aa740a9..21a5838f6e67 100644
+> --- a/drivers/hwtracing/stm/core.c
+> +++ b/drivers/hwtracing/stm/core.c
+> @@ -168,7 +168,7 @@ static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
+>  	struct stp_master *master;
+>  	size_t size;
+> 
+> -	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
+> +	size = ALIGN(stm->data->sw_nchannels, STM_MASTER_SZ) / STM_MASTER_SZ;
 
-Alias to
+I'm not sure that using STP_MASTER_SZ improves readability at all.
 
-cpu_vulns=make_linux_fast_again
+Is there something that gives the size of a bitmap for 'n' items?
 
-:-P
+	David
 
--- 
-Regards/Gruss,
-    Boris.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
