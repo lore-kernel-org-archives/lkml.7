@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A7FC10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD989C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C9621872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE9221872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDFmTs46"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTLf8ikW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbfDELvW (ORCPT
+        id S1731303AbfDELvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:51:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50478 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731283AbfDELvS (ORCPT
+        Fri, 5 Apr 2019 07:51:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36341 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731268AbfDELvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:51:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z11so6387924wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:51:17 -0700 (PDT)
+        Fri, 5 Apr 2019 07:51:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y13so7656719wrd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2x51jPIH0NpTAZwd31yHCUn90dvk+fsja0ZQlVXpmSo=;
-        b=nDFmTs46L0+WI6A3YT9/47BbL7eFFMUPGOridJqHcPWw7SzJkXp+Lja6JlMdsrxceP
-         sNR0NtVKOyTm52rxqvnvhuB2GxwevorkKoFFLwYvr0wOHB1E2IWNesH08sT9ZM7h4ivy
-         ciQwK99X6VH3MsF8YoUZDBljHIEoJaGvFwiF5vvQeaz6kZefdBbZtgeQYQKJqSnmsR1+
-         3VqeXSNpBoTASHm/VY51ktLNFJHKfN47RWD3F0VnnOhK3wMBgd0mJ3gFCkQlsGcbiLbx
-         nonwov5GXgpeL9rj55uyKCmDZ/HcfhLspYSseGR7/NBLQNvnPtLt9LPn1xa7bm+B6yQF
-         89Mg==
+        bh=z4hOLEy1KAA39sFWNk89CJxULZaItnMmPfy0ZrsUguQ=;
+        b=uTLf8ikWgZGaU5U704onyfDUodYw6lCqifcV6omsTrKn4JHBdcCZAZLs5gpSrH6twO
+         4EjX+jRArj24uk1brErJRDIG4EN/cx05I+NdmSAfe5uKOsFUKhUdFLhMnEeEYR6XSDID
+         IeKbRIGSwopflQDoyfj1SLCLXwtw7NhEWiYA3vww9V/xPmvsrPnFEEUvkYo6KumHCvso
+         vkSG63fdjibxtbBTGyoCMn4wQn7nUXEASDSEL0PKl8qJM6jxmkMW2HdNN+XxskN3IAbX
+         KSHoYDihVRStp+vKqC2EEo7wTdVDdcEIOSekPMfpdJAfRj1LTs8UXqdghcsOxganz87W
+         cOSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2x51jPIH0NpTAZwd31yHCUn90dvk+fsja0ZQlVXpmSo=;
-        b=uSCrCVfEng2frP5tXilpeAVho7OHec3r7OcnalSrzYn/Ozwv5JBz7Gk9ddjDIPAEbq
-         fLSPTJ2LlQ5rKX9Q9oqyiVc3f9WIQpgsil9L5EigZ0ljEEJ22FisyseTsVK/3QAm90nu
-         iIDo/3CzJW+ZOiwUhEfhuMLro0DbEboivsLbviPbe3NgMABq+oKCe5EcZEf+3maQv6nX
-         ceH7+OEuBKRpoYMjxUw//aT7VaEO3jG+TzKX4D8QkpbW2HVplsWyxnWyF9WTAHaQheCl
-         LWnPMXtCMMDfzgWsqAmsBnfyuL0nQwA8Q5xEjTQlZBOs6FgyHIDLoT9CF/3A4SIq9JKx
-         fY2w==
-X-Gm-Message-State: APjAAAXM30QzLofQSt1EarWX/U+vsYBsPO9nGZ5cFNKlMCWhe2W28PXg
-        YUoqALFkpKpSLFshrNiWHR/g26t/7Mdg+w==
-X-Google-Smtp-Source: APXvYqwUdMHMsHxcn6/slTQiQuYvpjaiOMopOrkv83+I9j98fnppMMtAfD9bfMu3zYD2K0jK4Yrh9g==
-X-Received: by 2002:a1c:a00a:: with SMTP id j10mr8063071wme.15.1554465077155;
-        Fri, 05 Apr 2019 04:51:17 -0700 (PDT)
+        bh=z4hOLEy1KAA39sFWNk89CJxULZaItnMmPfy0ZrsUguQ=;
+        b=INUo2uWBHQnWJOyVq+LtNcesMMYKhsDvzQhWaof192Nc1yGSNlf8c5zceKYkGhCkV+
+         q8Ol0SOr805GGnRYhkSw6iF5EkxAJcao7a6iLPYtr4hEOS73XgxXc7CGgmp0lCllQSy6
+         WNWRBvwpa+V2rKegPPx42ZUbER6U8m3aJHH9AytsyyAqXdMU+8DaGE5KrMLGJsXi4MQD
+         0CNGITTjtDF/OyFktxfLO34Jim2frnNWfBBEAu0/FMFH1mh9kJN2PTzCyebt+Npv/bMr
+         B1j9Nkt/5ZC5WqvIap+dkJfLg5CAJuYKopDHPBfVAlW10E+1Hn3n57heHO9j/RS785+M
+         T22A==
+X-Gm-Message-State: APjAAAURd6J65NvqVY9sWG9eQlXQV8lviARNXG0BmKCU/tk6LTm+1gUD
+        dHffI2jPmgI8JazZ+OCS2j0=
+X-Google-Smtp-Source: APXvYqzXXzPbcrL114rjzAe/hUC5/G0u+3qzwTXWsA6V4W4RWDRI+5ISLM+d1K9vaj7I6i0v+FmTbw==
+X-Received: by 2002:adf:f10c:: with SMTP id r12mr8008718wro.216.1554465074869;
+        Fri, 05 Apr 2019 04:51:14 -0700 (PDT)
 Received: from localhost.localdomain ([178.138.34.252])
-        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.51.14
+        by smtp.gmail.com with ESMTPSA id s203sm2881479wmf.14.2019.04.05.04.51.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 04:51:16 -0700 (PDT)
+        Fri, 05 Apr 2019 04:51:14 -0700 (PDT)
 From:   Andra Danciu <andradanciu1997@gmail.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -64,9 +64,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     daniel.baluta@nxp.com, Andra Danciu <andradanciu1997@gmail.com>
-Subject: [PATCH 15/20] ASoC: mx27vis-aic32x4: Switch to SPDX identifier
-Date:   Fri,  5 Apr 2019 14:50:05 +0300
-Message-Id: <20190405115010.28838-16-andradanciu1997@gmail.com>
+Subject: [PATCH 14/20] ASoC: mpc8610_hpcd: Switch to SPDX identifier
+Date:   Fri,  5 Apr 2019 14:50:04 +0300
+Message-Id: <20190405115010.28838-15-andradanciu1997@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405115010.28838-1-andradanciu1997@gmail.com>
 References: <20190405115010.28838-1-andradanciu1997@gmail.com>
@@ -80,46 +80,35 @@ management.
 
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 ---
- sound/soc/fsl/mx27vis-aic32x4.c | 29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ sound/soc/fsl/mpc8610_hpcd.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/fsl/mx27vis-aic32x4.c b/sound/soc/fsl/mx27vis-aic32x4.c
-index d7ec3d20065c..37a4520aef62 100644
---- a/sound/soc/fsl/mx27vis-aic32x4.c
-+++ b/sound/soc/fsl/mx27vis-aic32x4.c
-@@ -1,25 +1,10 @@
--/*
-- * mx27vis-aic32x4.c
+diff --git a/sound/soc/fsl/mpc8610_hpcd.c b/sound/soc/fsl/mpc8610_hpcd.c
+index a639b52c16f6..f6261a3eeb0f 100644
+--- a/sound/soc/fsl/mpc8610_hpcd.c
++++ b/sound/soc/fsl/mpc8610_hpcd.c
+@@ -1,14 +1,10 @@
+-/**
+- * Freescale MPC8610HPCD ALSA SoC Machine driver
 - *
-- * Copyright 2011 Vista Silicon S.L.
+- * Author: Timur Tabi <timur@freescale.com>
 - *
-- * Author: Javier Martin <javier.martin@vista-silicon.com>
+- * Copyright 2007-2010 Freescale Semiconductor, Inc.
 - *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-- * MA 02110-1301, USA.
+- * This file is licensed under the terms of the GNU General Public License
+- * version 2.  This program is licensed "as is" without any warranty of any
+- * kind, whether express or implied.
 - */
-+// SPDX-License-Identifier: GPL-2.0+
++// SPDX-License-Identifier: GPL-2.0
 +//
-+// mx27vis-aic32x4.c
++// Freescale MPC8610HPCD ALSA SoC Machine driver
 +//
-+// Copyright 2011 Vista Silicon S.L.
++// Author: Timur Tabi <timur@freescale.com>
 +//
-+// Author: Javier Martin <javier.martin@vista-silicon.com>
++// Copyright 2007-2010 Freescale Semiconductor, Inc.
  
  #include <linux/module.h>
- #include <linux/moduleparam.h>
+ #include <linux/interrupt.h>
 -- 
 2.11.0
 
