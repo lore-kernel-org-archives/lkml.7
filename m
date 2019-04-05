@@ -6,76 +6,85 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C640C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD81DC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B8C20989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7BE2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfDEWDE (ORCPT
+        id S1726384AbfDEWLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:03:04 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:48948 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726124AbfDEWDD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:03:03 -0400
-Received: from mr1.cc.vt.edu (mr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x35LRkEN006317
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 17:27:46 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x35LRe2T010393
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 17:27:45 -0400
-Received: by mail-qk1-f198.google.com with SMTP id f196so6154328qke.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 14:27:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:date:message-id;
-        bh=Y79cdCdF/M5lgfA1xcm93DhUSoi2n3NbM7Cae4JkvcY=;
-        b=YiyL9E+xrrMSUunzwq4zZ9lU3NEZIgxJyxjDXSF/frKKTONBJwFWrgV4GckOsdoP4R
-         KLxgnIipYh2BjGtHGiImXVzR2KRXLL/J7XQfCv15TxeDGpz5CwURdLji8pEudJBLC+no
-         CA+Dh0PFXSFzuu0UEGakwjbhP4BLYhAtGfkxda6liaG1Ky6AMRYIqk8LTd3CXz/c5Ueo
-         x7xCWKW7xeaZZvZvzWhNvRoyZgCoHAZEXBYt/0EYLCcUiuEbrx2vLcj3lnTrTDlpK/iV
-         GGbRfuDH4LERXZuqzB0sTKIKu4hoj1R7POCWmY69vj2hThpPMHrz9OvCYS1gcmhx6IpG
-         guAg==
-X-Gm-Message-State: APjAAAXoavwUpV4PFj1D2XNYPPLOD8UnMKppnwPlv9g430GGUXrraRYY
-        XKz2MF/mFE7h+yew4zQbJBFAIx/vHVDUopNjyr5+CboEpQLkkpTB4v5/tEpOZ80D9ZqJcJGB8eO
-        d7h/XgqY60yRZ0NhCOYRUf8RmfweZ+L0wfS8=
-X-Received: by 2002:a0c:d092:: with SMTP id z18mr11840008qvg.14.1554499660608;
-        Fri, 05 Apr 2019 14:27:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxNuR6TLAZ7r/bEEXsC7ygCFH1VT8BXKCBf0qPFgAa9qRwr3vE1qxeJ67tezCv9L036/cZsYg==
-X-Received: by 2002:a0c:d092:: with SMTP id z18mr11839994qvg.14.1554499660359;
-        Fri, 05 Apr 2019 14:27:40 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::9ca])
-        by smtp.gmail.com with ESMTPSA id p62sm6308944qkd.27.2019.04.05.14.27.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 14:27:38 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Pankaj Suryawanshi <suryawanshipankaj@yahoo.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "kernelnewbies@kernelnewbies.org" <kernelnewbies@kernelnewbies.org>
-Subject: Re: How to calculate page address to PFN in user space.
-In-reply-to: <1536252828.16026118.1554461687939@mail.yahoo.com>
-References: <1536252828.16026118.1554461687939.ref@mail.yahoo.com>
- <1536252828.16026118.1554461687939@mail.yahoo.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Fri, 05 Apr 2019 17:27:37 -0400
-Message-ID: <6977.1554499657@turing-police>
+        Fri, 5 Apr 2019 18:11:52 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58256 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfDEWLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 18:11:51 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hCX3s-0004Vs-37; Fri, 05 Apr 2019 16:11:48 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Andrew Maier <andrew.maier@eideticom.com>
+References: <20190401193302.12813-1-logang@deltatee.com>
+ <20190405213939.GC159318@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <f7f06f17-b644-dfea-e355-f44c8e920a33@deltatee.com>
+Date:   Fri, 5 Apr 2019 16:11:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190405213939.GC159318@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: andrew.maier@eideticom.com, sbates@raithlin.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] PCI: Fix issue with "pci=disable_acs_redir" parameter
+ being ignored
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 05 Apr 2019 10:54:47 -0000, Pankaj Suryawanshi said:
 
-> I have PFN of all processes in user space, how to calculate page address to PFN.
 
-*All* user processes?  That's going to be a lot of PFN's.  What problem are you trying
-to solve here?
+On 2019-04-05 3:39 p.m., Bjorn Helgaas wrote:
+>> -static const char *disable_acs_redir_param;
+>> +static char disable_acs_redir_param[COMMAND_LINE_SIZE];
+> 
+> I certainly acknowledge the problem, but I'm a little hesitant to add
+> a static buffer of 256-4096 bytes (2048 on x86, arm64, powerpc, sparc)
+> for a relatively low-usage situation.  The memory usage doesn't seem
+> in proportion to the value-add.
+> 
+> Ugh, and we allocate another similar buffer for
+> resource_alignment_param[], which I would guess is also rarely used.
 
-(Hint - under what cases does the kernel care about the PFN of *any* user page?)
+Yeah, I was looking for a better solution and eventually decided to just
+copy what was done in the past.
+
+> Since disable_acs_redir_param[] and resource_alignment_param[] are
+> both read-only and big enough to hold the entire command line, we
+> should be able to share a single buffer between them if we made the
+> parsers a little smarter.  
+
+That sounds like a good idea that I didn't think of. If I can't find
+something better, I'll do that.
+
+> In fact, I bet there's already a static
+> copy lying around somewhere for /proc/cmdline.
+
+There are lots of copies of cmdline around, but none that are available
+for early param. I did a sampling of some of the other early params but
+none seem to be anywhere near as complex as the PCI one and I haven't
+yet found one that needs to keep a copy of any or all of the command line.
+
+In any case, I'll keep digging and try to get a better patch for you
+shortly.
+
+Logan
