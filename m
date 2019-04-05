@@ -2,186 +2,115 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEDC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F5DC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1DE520989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tFbxiFCj"
+	by mail.kernel.org (Postfix) with ESMTP id 15721206C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfDEQ4f (ORCPT
+        id S1731536AbfDEQ50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:56:35 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33174 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfDEQ4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:56:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id e5so5460998oii.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xavCft+C6hfoU6dVK4RbtLhBzX2Anxg99S9rWxDEYx0=;
-        b=tFbxiFCj5OvH6SJQqvHiAcjrMt5420iIjxgkILb1RM44b50Hjp33zCOaEC5xyj3KqT
-         5Ll2LohthpbLBhxt1bJa1rwmN/4K2IB2YEcqVqbEn/DSpS59gBFy/B/hc0eFUDxaPu9J
-         N884im08a3qquWjvqFxOvDe63X8T4h3IQ6v6JirVrBDd43mUL4bxO4y85XdfhPqmgAnF
-         aCCjQFKNmXTdrMkkLZmfSV9N+S7bwwBVl+HNgCZdUE8s2s0JdEZ8gV0JEOOL5oqaEG3S
-         U9DMqbfD68OfH3E4iYFyo8jmWEMK5rh8fNOAW1y8f+gy/8fGTWo4JTUyepMASxcIvC1Y
-         wMfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xavCft+C6hfoU6dVK4RbtLhBzX2Anxg99S9rWxDEYx0=;
-        b=jACkhEgRkQx5a74ddO2ssWAj2RHZZjQj5AyPhaUNQaE5aYGHEPyuCehY+ysTwCzXAe
-         IbigdRxbXZsOEhErfjcCnWxkN7YaTIqVi9ezDIU4MIKjy9agiQInOzRfLR5P/Rs174wd
-         d23q3FXn1eDOprMvmwPP5ayf87HPKfn3tn2hEkWNn1qvPMk3wkJtionRd1P+XXuZIv0m
-         ckIBw0SVq7QXXRbV6f7ZNsu5w7LCgdVzZPOpiUU7yONqXUUtEUqqSOiJOw6KBn1sNspF
-         9X6hYqHagb/5mAqYET2SRuYTWi801bW+/Y2ufv8NFcXgZiLGNYq1hoB+7dkneaUSzvNW
-         9qmw==
-X-Gm-Message-State: APjAAAVO56YW72KJRH+0t0i8t3WbdZ21EMkKt9mLOQK8tZcbtMdQlOZk
-        oPdMDuH/dLPRJbfwjJcT6RrLnrjGn9vksaQjFyNbWQ==
-X-Google-Smtp-Source: APXvYqwBHpXfBFhHch+BoQ2/9YwlCAStfJv2kGHIns1Jas0uMBB5rQNTCvAIXmb/6bBYetz/3sIH2fwI0z826ndqqUI=
-X-Received: by 2002:aca:e64f:: with SMTP id d76mr8406772oih.105.1554483393559;
- Fri, 05 Apr 2019 09:56:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190405121857.0000718a@huawei.com> <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
- <20190405172342.00006a56@huawei.com>
-In-Reply-To: <20190405172342.00006a56@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Apr 2019 09:56:22 -0700
-Message-ID: <CAPcyv4hxBFcJKbVVgNiE4UYXZS4XY9hfE8W9mN+VrcWS9AvJLw@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a device
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+        Fri, 5 Apr 2019 12:57:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56060 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbfDEQ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:57:26 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C5E1E8535C;
+        Fri,  5 Apr 2019 16:57:25 +0000 (UTC)
+Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C8CA51A7CA;
+        Fri,  5 Apr 2019 16:57:17 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 11:57:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without
+ CONFIG_FRAME_POINTER
+Message-ID: <20190405165715.fpgh4ggkmnqdtfwm@treble>
+References: <20190404172545.20928-1-kasong@redhat.com>
+ <20190405140929.pycfea7drnpb2sug@treble>
+ <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACPcB9f7v4SU37YWKmUr=+iFWqL8hRapp1GPX+H8ixvGwzHsHA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 05 Apr 2019 16:57:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 9:24 AM Jonathan Cameron
-<jonathan.cameron@huawei.com> wrote:
->
-> On Fri, 5 Apr 2019 08:43:03 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
-> > <jonathan.cameron@huawei.com> wrote:
-> > >
-> > > On Thu, 4 Apr 2019 12:08:49 -0700
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
-> > > > properties described by the ACPI HMAT is expected to have an application
-> > > > specific consumer.
-> > > >
-> > > > Those consumers may want 100% of the memory capacity to be reserved from
-> > > > any usage by the kernel. By default, with this enabling, a platform
-> > > > device is created to represent this differentiated resource.
-> > > >
-> > > > A follow on change arranges for device-dax to claim these devices by
-> > > > default and provide an mmap interface for the target application.
-> > > > However, if the administrator prefers that some or all of the special
-> > > > purpose memory is made available to the core-mm the device-dax hotplug
-> > > > facility can be used to online the memory with its own numa node.
-> > > >
-> > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > Cc: Len Brown <lenb@kernel.org>
-> > > > Cc: Keith Busch <keith.busch@intel.com>
-> > > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > >
-> > > Hi Dan,
-> > >
-> > > Great to see you getting this discussion going so fast and in
-> > > general the approach makes sense to me.
-> > >
-> > > I'm a little confused why HMAT has anything to do with this.
-> > > SPM is defined either via the attribute in SRAT SPA entries,
-> > > EF_MEMORY_SP or via the EFI memory map.
-> > >
-> > > Whether it is in HMAT or not isn't all that relevant.
-> > > Back in the days of the reservation hint (so before yesterday :)
-> > > it was relevant obviously but that's no longer true.
-> > >
-> > > So what am I missing?
-> >
-> > It's a good question, and an assumption I should have explicitly
-> > declared in the changelog. The problem with EFI_MEMORY_SP is the same
-> > as the problem with the EfiPersistentMemory type, it isn't precise
-> > enough on its own for the kernel to delineate 'type' or
-> > device/replaceable-unit boundaries. For example, I expect one
-> > EFI_MEMORY_SP range of a specific type may be contiguous with another
-> > range of a different type. Similar to the NFIT there is no requirement
-> > in the specification that platform firmware inject multiple range
-> > entries. Instead that precision is left to the SRAT + HMAT, or the
-> > NFIT in the case of PMEM.
->
-> Absolutely, as long as they are all SPM, they could be anywhere in
-> the system.
->
-> >
-> > Conversely, and thinking through this a bit more, if a memory range is
-> > "special", but the platform fails to enumerate it in HMAT I think
-> > Linux should scream loudly that the firmware is broken and leave the
-> > range alone. The "scream loudly" piece is missing in the current set,
-> > but the "leave the range alone" functionality is included.
->
-> I am certainly keen on screaming if the various entries are inconsistent
-> but am not sure they necessarily are here.
->
-> So there are a couple of ways we could get an SPM range defined.
-> The key thing here is that firmware should be attempting to describe
-> what it has to some degree somewhere.  If not it won't get a good
-> result ;)  So if there is no SRAT then you are on your own. SCREAM!
->
-> 1. Directly in the memory map.  If there is no other information then
->    tough luck the kernel can only sensibly handle it as one device.
->    Or not at all, which seems like a reasonable decision to me.
->    SCREAM
->
-> 2. In memory map + a proximity domain entry in SRAT.  Given memory
->    with different characteristics should be in different proximity
->    domains anyway - this should be fairly precise. The slight snag
->    here is that the fine grained nature of SRAT is actually a side
->    effect of HMAT, so not sure well platforms have traditional
->    describe their more subtle differences.
->
-> 3. In NFIT as NFIT SPA carries the memory attribute.  Not sure if
->    we should scream if this disagrees with the memory map.
->
-> 4. In HMAT?  Now this changed in ACPI 6.3 to clean up the 'messy'
->    prior relationship between it and SRAT.  Now HMAT no longer has
->    memory address ranges as you observed.  That means, to describe
->    properties of memory, it has to use the proximity domains of
->    SRAT.  It provides lots of additional info about those domains
->    but it is SRAT that defines them.
->
-> So I would argue that HMAT itself doesn't tell us anything useful.
-> SRAT certainly does though so I think this should be coming from
-> SRAT (or NFIT as that also defines the required precision)
+On Fri, Apr 05, 2019 at 11:13:02PM +0800, Kairui Song wrote:
+> Hi Josh, thanks for the review, I tried again, using latest upstream
+> kernel commit ea2cec24c8d429ee6f99040e4eb6c7ad627fe777:
+> # uname -a
+> Linux localhost.localdomain 5.1.0-rc3+ #29 SMP Fri Apr 5 22:53:05 CST
+> 2019 x86_64 x86_64 x86_64 GNU/Linux
+> 
+> Having following config:
+> > CONFIG_UNWINDER_ORC=y
+> > # CONFIG_UNWINDER_FRAME_POINTER is not set
+> and CONFIG_FRAME_POINTER is off too.
+> 
+> Then record something with perf (also latest upstream version):
+> ./perf record -g -e kmem:* -c 1
+> 
+> Interrupt it, then view the output:
+> perf script | less
+> 
+> Then I notice the stacktrace in kernle is incomplete like following.
+> Did I miss anything?
+> --------------
+> lvmetad   617 [000]    55.600786:                     kmem:kfree:
+> call_site=ffffffffb219e269 ptr=(nil)
+>         ffffffffb22b2d1c kfree+0x11c (/lib/modules/5.1.0-rc3+/build/vmlinux)
+>             7fba7e58fd0f __select+0x5f (/usr/lib64/libc-2.28.so)
+> 
+> kworker/u2:5-rp   171 [000]    55.628529:
+> kmem:kmem_cache_alloc: call_site=ffffffffb20e963d
+> ptr=0xffffa07f39c581e0 bytes_req=80 bytes_alloc=80
+> gfp_flags=GFP_ATOMIC
+>         ffffffffb22b0dec kmem_cache_alloc+0x13c
+> (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> -------------
+> 
+> And for the patch, I debugged the problem, and found how it happend:
+> The reason is that we use following code for fetching the registers on
+> a trace point:
+> ...snip...
+> #define perf_arch_fetch_caller_regs(regs, __ip) { \
+> (regs)->ip = (__ip); \
+> (regs)->bp = caller_frame_pointer(); \
+> (regs)->cs = __KERNEL_CS;
+> ...snip...
 
-I agree, yes, SRAT by itself is sufficient for this "precision"
-concern. However, do we, core Linux developers, really want to
-encourage platform vendors that they can ignore deploying HMAT data
-and get Linux to honor that sub-case for EFI_MEMORY_SP? My personal
-experience is that platform firmware will take advantage of almost any
-opportunity to minimize the data it provides to the OS. The only hard
-lever Linux has to encourage platform firmware to give complete data
-is to decline to support configurations that have incomplete data.
+Thanks, I was able to recreate.  It only happens when unwinding from a
+tracepoint.  I haven't investigated yet, but
+perf_arch_fetch_caller_regs() looks highly suspect, since it's doing
+(regs)->bp = caller_frame_pointer(), even for ORC.
+
+My only explanation for how your patch works is that RBP just happens to
+point to somewhere higher on the stack, causing the unwinder to start at
+a semi-random location.  I suspect the real "fix" is that you're no
+longer passing the regs to unwind_start().
+
+-- 
+Josh
