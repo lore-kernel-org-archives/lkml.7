@@ -5,36 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F0C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDAC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033AA21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E782173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfDEVOC (ORCPT
+        id S1726468AbfDEVPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 17:14:02 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49943 "EHLO
+        Fri, 5 Apr 2019 17:15:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49947 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfDEVOC (ORCPT
+        with ESMTP id S1725973AbfDEVPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 17:14:02 -0400
+        Fri, 5 Apr 2019 17:15:38 -0400
 Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hCW9t-000520-K2; Fri, 05 Apr 2019 23:13:57 +0200
-Date:   Fri, 5 Apr 2019 23:13:57 +0200 (CEST)
+        id 1hCWBS-00053A-Sw; Fri, 05 Apr 2019 23:15:35 +0200
+Date:   Fri, 5 Apr 2019 23:15:34 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH] x86/reboot: Use efi reboot for Acer TravelMate
- X514-51T
-In-Reply-To: <20190401073514.2785-1-jian-hong@endlessm.com>
-Message-ID: <alpine.DEB.2.21.1904052311370.1802@nanos.tec.linutronix.de>
-References: <20190401073514.2785-1-jian-hong@endlessm.com>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+Subject: Re: [PATCH V2 1/2] trace,x86: Add external_interrupts to the
+ irq_vectors class
+In-Reply-To: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
+Message-ID: <alpine.DEB.2.21.1904052314410.1802@nanos.tec.linutronix.de>
+References: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,23 +49,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019, Jian-Hong Pan wrote:
-> +/*
-> + * Some machines require the "reboot=e" commandline options
-> + */
-> +static int __init set_efi_reboot(const struct dmi_system_id *d)
-> +{
-> +	if (reboot_type != BOOT_EFI) {
-> +		reboot_type = BOOT_EFI;
+On Mon, 1 Apr 2019, Daniel Bristot de Oliveira wrote:
 
-So if EFI is disabled in the kernel this will fall through to BOOT_BIOS. Is
-that intended behaviour?
+> Currently, the irq_vectors is showing the entry and exit events for
+> the interrupts of the architecture, but not for external interrupts.
 
-> +		pr_info("%s series board detected. Selecting %s-method for reboot.\n",
-> +			d->ident, "EFI");
-
-Is thee a reason not to write "EFI" in the string itself?
+Those are covered by the irq tracepoints. Is there a really good reason why
+we need both?
 
 Thanks,
 
 	tglx
+
