@@ -2,182 +2,111 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05BFC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3DAC10F0F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5627E217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BE4217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qoW/NLTz"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r/ZjpvBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfDEJ2Y (ORCPT
+        id S1730466AbfDEJey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:28:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25454 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730448AbfDEJ2Y (ORCPT
+        Fri, 5 Apr 2019 05:34:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35742 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfDEJex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:28:24 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x359QAd5028061;
-        Fri, 5 Apr 2019 11:27:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=U4x9fcXFNftjJOYqvmBBUzk/hhIqNaud8Vh3hEG7MVU=;
- b=qoW/NLTzqMYg7z6VppTQwKZ5y89s3oT9jowGJmOu0YmpphcI66smAwmln+GqiLnYBESo
- TTLwaupL8V6ssTHCFHSsW3DFQZkZ2AQK2ctHq7oiyNnIWC2SW0j+cGha6iE8Rd7gYngO
- cJ6Y4yWdZN3LVYVqzXKukirmYIO8brXEhmhsebrduJKO91RRGyNUR7cc4epncxlfWGFr
- r814yBCIv7qiRYFHxdaDaD66k/kgy6m9z/Qh4IaW3itdxpgDucitYl2QEH3B4kdSzjxb
- CHfUvAcQcebe3D6UHTbrdlvMi/cV+0Lrk/gjuv9GUXIC1wqyhM9TFTbrvQKg35V4LeZF 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rmgevgbuu-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 05 Apr 2019 11:27:03 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 15A0634;
-        Fri,  5 Apr 2019 09:27:03 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D763D2607;
-        Fri,  5 Apr 2019 09:27:02 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 5 Apr 2019
- 11:27:02 +0200
-Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 5 Apr 2019 11:27:02 +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH] ASoC: stm32: simplify dai driver initialisation
-Date:   Fri, 5 Apr 2019 11:26:27 +0200
-Message-ID: <1554456387-3088-1-git-send-email-arnaud.pouliquen@st.com>
+        Fri, 5 Apr 2019 05:34:53 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y197so6444657wmd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 02:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fz9EPEHZSbLtHDD5+rIBQCaRRRyRpD3y58aszM7OC1M=;
+        b=r/ZjpvBYAraw906oRFPytsbCsFtLER7NWdhTE/lL4LsI81FinGC3U4WChCLSbo+zCJ
+         MVTplNBgCEZICA+TAlfuLdAXq26XRQkTANF4uhTgluM6+2MIfEZsRBa/lIJPb2iRUZMN
+         EH3XSizxWy2RLGhjB13PAEtgF1AzFFuOY9d8proPEk5eTIPhOg1Rc3OO4DRDah3zAqNU
+         IiMvv1C5FVILFeMX7vpDGu1zixJnT/WIs7Qe0zzU4J/HqB0ZfJ1FBXtigMYiHImi1Ion
+         +WMIyMg5kcgsbbzM3TBELEItGQn8mEIO6B5yLwOPRrgKLmU0WfuJQ0zY7pN73jcqCaIq
+         FPLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fz9EPEHZSbLtHDD5+rIBQCaRRRyRpD3y58aszM7OC1M=;
+        b=EzjFJ8vYL7LQI5kzVES0r/Gy4ITau+Tndo9SW2qad1B56pwJv9+6BBjO3k6G0IReBy
+         cecd2khvsF5EVMqzNidOjUXp/emVUJfLytL6WUqUXlBoITHI0XE/Fz7/jOmyS1+88O64
+         r1f0ZaaAZRiiX+ycM+lZm06XwFrzLZxx3EhUO05HgpnNV2qRrd5evGVT6MLxph0IT7br
+         bT4ybH48wZ90112l1KkI3bybquZcXZOeJlkXe52kyVK2czXQ90J386bwDha31ElT8MrE
+         gIbLwqeYNkBJs52ennQxhMRrNe3kJiTrct+xkn14HgQq3FkmcyuDx4EKORtMwvQSTLFF
+         M3sQ==
+X-Gm-Message-State: APjAAAU2Lv0Amu/ZHCmuZE6VDuiWocmMff4ce4prIlt3G43yl2homzZ4
+        reXxHKufuLECyLRy5Diic/eozg==
+X-Google-Smtp-Source: APXvYqz46289NmUfhiaVvoLkz5/puBjns4wtGK/R7y5t8anUa9l49SbrJo0UxzOkvnQxLFrG4rIFuA==
+X-Received: by 2002:a1c:7d42:: with SMTP id y63mr7268106wmc.113.1554456891982;
+        Fri, 05 Apr 2019 02:34:51 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id t15sm1954128wmt.2.2019.04.05.02.34.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 05 Apr 2019 02:34:51 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH 0/3] Add PAT6125 optical tracker driver
+Date:   Fri,  5 Apr 2019 09:34:27 +0000
+Message-Id: <1554456870-8104-1-git-send-email-amergnat@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.131]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_06:,,
- signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suppress the useless dynamic allocation of the dai driver structure.
+PixArt Imaging PAT6125 is a miniature low power optical navigation chip using
+LASER light source enabling digital surface tracking.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- sound/soc/stm/stm32_sai_sub.c | 43 +++++++++----------------------------------
- 1 file changed, 9 insertions(+), 34 deletions(-)
+This device driver use IIO API to provide ponctual and/or buffered data.
+The data is the delta value between two position traveled, depend on
+CPI (Counts Per Inch) resolution setting chosen. The retrived data is
+composed by two values, delta on the X and Y axis.
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 3dd54bc..e3b021c 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -109,7 +109,7 @@ struct stm32_sai_sub_data {
- 	struct regmap *regmap;
- 	const struct regmap_config *regmap_config;
- 	struct snd_dmaengine_dai_dma_data dma_params;
--	struct snd_soc_dai_driver *cpu_dai_drv;
-+	struct snd_soc_dai_driver cpu_dai_drv;
- 	struct snd_soc_dai *cpu_dai;
- 	struct snd_pcm_substream *substream;
- 	struct stm32_sai_data *pdata;
-@@ -1204,8 +1204,7 @@ static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
- 	.periods_max = 8,
- };
- 
--static struct snd_soc_dai_driver stm32_sai_playback_dai[] = {
--{
-+static struct snd_soc_dai_driver stm32_sai_playback_dai = {
- 		.probe = stm32_sai_dai_probe,
- 		.pcm_new = stm32_sai_pcm_new,
- 		.id = 1, /* avoid call to fmt_single_name() */
-@@ -1222,11 +1221,9 @@ static struct snd_soc_dai_driver stm32_sai_playback_dai[] = {
- 				SNDRV_PCM_FMTBIT_S32_LE,
- 		},
- 		.ops = &stm32_sai_pcm_dai_ops,
--	}
- };
- 
--static struct snd_soc_dai_driver stm32_sai_capture_dai[] = {
--{
-+static struct snd_soc_dai_driver stm32_sai_capture_dai = {
- 		.probe = stm32_sai_dai_probe,
- 		.id = 1, /* avoid call to fmt_single_name() */
- 		.capture = {
-@@ -1242,7 +1239,6 @@ static struct snd_soc_dai_driver stm32_sai_capture_dai[] = {
- 				SNDRV_PCM_FMTBIT_S32_LE,
- 		},
- 		.ops = &stm32_sai_pcm_dai_ops,
--	}
- };
- 
- static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
-@@ -1411,29 +1407,6 @@ static int stm32_sai_sub_parse_of(struct platform_device *pdev,
- 	return 0;
- }
- 
--static int stm32_sai_sub_dais_init(struct platform_device *pdev,
--				   struct stm32_sai_sub_data *sai)
--{
--	sai->cpu_dai_drv = devm_kzalloc(&pdev->dev,
--					sizeof(struct snd_soc_dai_driver),
--					GFP_KERNEL);
--	if (!sai->cpu_dai_drv)
--		return -ENOMEM;
--
--	if (STM_SAI_IS_PLAYBACK(sai)) {
--		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
--		       sizeof(stm32_sai_playback_dai));
--		sai->cpu_dai_drv->playback.stream_name = sai->cpu_dai_drv->name;
--	} else {
--		memcpy(sai->cpu_dai_drv, &stm32_sai_capture_dai,
--		       sizeof(stm32_sai_capture_dai));
--		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
--	}
--	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
--
--	return 0;
--}
--
- static int stm32_sai_sub_probe(struct platform_device *pdev)
- {
- 	struct stm32_sai_sub_data *sai;
-@@ -1465,9 +1438,11 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = stm32_sai_sub_dais_init(pdev, sai);
--	if (ret)
--		return ret;
-+	if (STM_SAI_IS_PLAYBACK(sai))
-+		sai->cpu_dai_drv = stm32_sai_playback_dai;
-+	else
-+		sai->cpu_dai_drv = stm32_sai_capture_dai;
-+	sai->cpu_dai_drv.name = dev_name(&pdev->dev);
- 
- 	ret = devm_request_irq(&pdev->dev, sai->pdata->irq, stm32_sai_isr,
- 			       IRQF_SHARED, dev_name(&pdev->dev), sai);
-@@ -1477,7 +1452,7 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
--					      sai->cpu_dai_drv, 1);
-+					      &sai->cpu_dai_drv, 1);
- 	if (ret)
- 		return ret;
- 
+Unfortunately, the device doesn't support "on-the-fly" configuration.
+
+This patchset :
+- Update vendor prefix
+- Add the bindings for this device
+- Add the device driver
+- Add directory for optical tracker devices
+
+Alexandre Mergnat (3):
+  dt-bindings: Add pixart vendor
+  dt-bindings: iio: ot: Add docs pat9125
+  iio: Add PAT9125 optical tracker sensor
+
+ .../devicetree/bindings/iio/ot/pat9125.txt         |  18 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/ot/Kconfig                             |  16 +
+ drivers/iio/ot/Makefile                            |   6 +
+ drivers/iio/ot/pat9125.c                           | 407 +++++++++++++++++++++
+ 7 files changed, 450 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/ot/pat9125.txt
+ create mode 100644 drivers/iio/ot/Kconfig
+ create mode 100644 drivers/iio/ot/Makefile
+ create mode 100644 drivers/iio/ot/pat9125.c
+
 -- 
 2.7.4
 
