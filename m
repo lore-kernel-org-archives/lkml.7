@@ -2,96 +2,85 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2B9C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1F7C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9672B2175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n0DSYxNG"
+	by mail.kernel.org (Postfix) with ESMTP id 069C12175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfDEPVJ (ORCPT
+        id S1731453AbfDEPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:21:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:56134 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfDEPVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:21:08 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E7261EC0573;
-        Fri,  5 Apr 2019 17:21:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554477666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iDAYjkAyIWnha+hRrIioKjCAQIv1rTI/qLj+vcxwcpc=;
-        b=n0DSYxNGilBQhjNQm/CXDBONub8/fMd8HxV9dhI62sXIUWk3SEpBBwZWpwxFkvBD+CdJfW
-        BNgaXDMF0VYgiIHrpMtDQT/NReIRo8u/Oa58ELGifLTM7SAQCqSDzB5IZpNMcJHF7aLShq
-        1ouepG5+1j9HYlF479TkyBJI4VdU6Vo=
-Date:   Fri, 5 Apr 2019 17:20:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations='
- cmdline options
-Message-ID: <20190405152059.GG23348@zn.tnic>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
- <20190405131211.GE23348@zn.tnic>
- <20190405142048.burthk2jnpcvi2om@treble>
+        Fri, 5 Apr 2019 11:21:16 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38873 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEPVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:21:16 -0400
+Received: by mail-it1-f195.google.com with SMTP id f22so10125793ita.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:21:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uh0ShQqIbBMkLRYP0daxYFjdegJIus2IHRa2hCK0ZgY=;
+        b=oL5oIVZkquwRNJDae1r8YPeVxWMIrOPhdjqjxIDP6p75jaKNdFfYxDJQSX7CFtdfet
+         sASJ1AcKN5tyaGSDnfYZDNKeH9l6FZ3vr3GerHJC7TNeCaINPpqlFvzQrhq3N7kKJW4i
+         Ii3pjAPp5Cnwe9RaQH7qinVzwKgQXv6FyOMJAC3pm5R0sqPA3wJmGm6w7G3UTR4myoLs
+         /0TWDSNVzYxS0pVVESBbxI7EiPN51pMBFf61CLSsaX3hFmH5Hn+k6r05eLr8bGTUGG+d
+         1xzaQbEY9vvKc1JuUmI6XgtJq3u77wHA9mcXLe6WuxRlYg7WVbv5kB+f9xQDy0M433R9
+         nAvw==
+X-Gm-Message-State: APjAAAWwqtjOv/o5EkMtqozYf2c0iB99vdI9vfJB3/JxwoHJnjtN+M19
+        DagkaenVHcx3PTSOVnmDUoSg0e5CPgNYVzXBWYeodw==
+X-Google-Smtp-Source: APXvYqzUMicJkVoctqrHq8H0L7Pl8bcYyYlWzQd4WmWJ/kpbfIOot7Gj6RArCsenAjEV1mJ/Z/OHrdv+wsuFw8tKWZk=
+X-Received: by 2002:a02:6951:: with SMTP id e78mr4087132jac.132.1554477675541;
+ Fri, 05 Apr 2019 08:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190405142048.burthk2jnpcvi2om@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190404172545.20928-1-kasong@redhat.com> <20190405071704.GC4038@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190405071704.GC4038@hirez.programming.kicks-ass.net>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 5 Apr 2019 23:21:03 +0800
+Message-ID: <CACPcB9eV37uuXyKw6KrJhpZM6j4OtjrW1JUixpaS=KpvG41NYQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 09:20:48AM -0500, Josh Poimboeuf wrote:
-> In your scenario, the fact that it's so easy to remember would save the
-> day, since you wouldn't have to go look up some obscure shortened option
-> name in the documentation :-)
+On Fri, Apr 5, 2019 at 3:17 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> And you forgot to Cc Josh..
+>
 
-No no, the idea is for the short option to be memorable.
+Hi, thanks for the reply and Cc more people, I just copies the list
+from ./scripts/get_maintainer.pl, will pay more attention next time.
 
-> Suggestions are welcome but I couldn't come up with a reasonable shorter
-> option.
+> >
+> > Just found with ORC unwinder the perf callchain is unusable, and this
+> > seems fixes it well, any suggestion is welcome, thanks!
+>
+> That whole .direct stuff is horrible crap.
+>
 
-Same here.
+Sorry if I did anything dumb, but I didn't find a better way to make
+it work so sent this RFC... Would you mind tell me what I'm doing
+wrong, or give any suggestion about how should I improve it?
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+--
+Best Regards,
+Kairui Song
