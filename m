@@ -6,59 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CD2C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913CCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A213A206DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D432206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554429309;
-	bh=4YBWuakowF3IbNneYISPXSY6Fi3V8Ar/5NvUefw/7Vs=;
+	s=default; t=1554429314;
+	bh=on9IqATf/L/xlgukEDSlD2aZlZ4dQ/8c3AfLE6yRcyg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wR5YvmrfcmL73Qbvj+GUCXq0niDMohMoImJ1l14gPIcCo7gp/hIHuhUIcft6BIcHT
-	 J8Pdl+GZHqMjbPWx7zV26cN8i2ozCccu5+dysRbUpNQead8/Qeav8eXb8saU8uMHmr
-	 3DLm3YFyiyXIb1SyVv9BmVI6W3uMxJMX9kaxRgVk=
+	b=zSz7iyCK/PFVKw+Dsv0gcfTuPWyFeEBXmQZPE0ewOg4b3RY9J/bmCceT7MRWkwnkh
+	 HN3p0Bd6vtIBBjj75aO36/8lvMemY/iyzHlqV+G+EvYsIc43i5RAQ7lXNEORM5l+uE
+	 KMX41u/ToZ/L5sAF9dxJ8OtaX2vdawY8SxNMBpas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfDEBzI (ORCPT
+        id S1730866AbfDEBzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 21:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43452 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 21:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1727051AbfDEBzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 21:55:08 -0400
-Subject: Re: [GIT PULL] MFD fixes for v5.1
+Subject: Re: [GIT PULL] Power management material for v5.1-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554429307;
-        bh=4YBWuakowF3IbNneYISPXSY6Fi3V8Ar/5NvUefw/7Vs=;
+        s=default; t=1554429308;
+        bh=on9IqATf/L/xlgukEDSlD2aZlZ4dQ/8c3AfLE6yRcyg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=k3CJTgDJR7C+Uqu5EamUiS3igHdaDeDMunKNRRRpYQ2DdgTJqU5NpbtaLyAAMVgQv
-         EqAkfyMW2754xaFlk20wMDvfRMjojl3u1sd/IghNdxDtIceB40fPwBVhkXymo3md5P
-         spVQbhfs8wrNtgmhLEr5nNCw4RE4FlMrN9g4S6Bo=
+        b=ZixwNwk7hhbciLCsQbpRhnAGwJF8cf2jRxBeyImurReRc18CsT3hYmSf0VBgLW19V
+         zNDtpUkjNa2v/b9L1h0m1YEST5/u2DbJjx+hxLoXqQ/XOKDn0yyLo7DdXWYC4sboZb
+         Da1P2LkbVaZodQc3yA1dg4q4hbl9e/sRxbhz/dJk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190404093747.GU6830@dell>
-References: <20190404093747.GU6830@dell>
+In-Reply-To: <CAJZ5v0gC4WmXra1RXCxQ8-xa2xfx6PaSost_sf9XUL4wTVeRNQ@mail.gmail.com>
+References: <CAJZ5v0gC4WmXra1RXCxQ8-xa2xfx6PaSost_sf9XUL4wTVeRNQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190404093747.GU6830@dell>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.1
-X-PR-Tracked-Commit-Id: a05a2e7998ab1badcf80aed47b5313934fd131fa
+X-PR-Tracked-Message-Id: <CAJZ5v0gC4WmXra1RXCxQ8-xa2xfx6PaSost_sf9XUL4wTVeRNQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.1-rc4
+X-PR-Tracked-Commit-Id: 58b0cf8e2418c05ed277c83b5529bd0568bfcc78
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9db6ce4ecefb03698cb2875c1a46b9513303a9bf
-Message-Id: <155442930747.31474.5818866356498302925.pr-tracker-bot@kernel.org>
-Date:   Fri, 05 Apr 2019 01:55:07 +0000
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 20ad549488d53cb6742770b49e324a3396022da2
+Message-Id: <155442930821.31474.13864366337396334272.pr-tracker-bot@kernel.org>
+Date:   Fri, 05 Apr 2019 01:55:08 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 4 Apr 2019 10:37:47 +0100:
+The pull request you sent on Thu, 4 Apr 2019 22:32:04 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.1-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9db6ce4ecefb03698cb2875c1a46b9513303a9bf
+https://git.kernel.org/torvalds/c/20ad549488d53cb6742770b49e324a3396022da2
 
 Thank you!
 
