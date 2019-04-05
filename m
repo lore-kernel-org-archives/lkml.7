@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A6EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D4C217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A2F217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554434831;
-	bh=PeosnoJsASLGHGDkcEr0qEqJS759tgZOGId3GXn/oLg=;
+	s=default; t=1554434835;
+	bh=XZe46RCMNCJii9MtzwLLJL/vme2lRgttLGcnWFyjCo8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=l5sbWla9XOGJUqA6dRXtdjy0DnOXDwGgBOf5OicKDk4z7VkruITCXhkOP/OyAz1bC
-	 VxlfY/q8bX021PgabE6WjbusMjCudw0IZHx2wKlYdQfYF0yQS0iJpM/X31lU3837ef
-	 VPUrXoBtbc4RoehFURgYdOxwNKTdsbVD6v5FQwv0=
+	b=YvSiTVSGnJGLHopHvMQ709IbZlmH1yKrXeAlRFkTspELFssB8QrLICnfT5iqq+OKX
+	 VSKIn1DBVWWtOjCYrazDz5t3mOLfkNRDx53b1ssd6xN6mcSwqkzSBTd8tJgRyX1I+w
+	 ms0Yhz9use4KqtCIF7TG1WkKoaHbYREoG2+zbHm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfDED1L (ORCPT
+        id S1730369AbfDED1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:27:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34304 "EHLO
+        Thu, 4 Apr 2019 23:27:14 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34334 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730206AbfDED1I (ORCPT
+        with ESMTP id S1730237AbfDED1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:27:08 -0400
+        Thu, 4 Apr 2019 23:27:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=6GiShkSlUpQjLX2JiUpt8qcdBiDgg++yAgsf0vFVEZ0=; b=vm68pmyob70H
-        vHbp93PxwBfj/0qHG8+EH5UgdT5Hvj0gQGcPEakqnx1naXlSQFg/j3WMr9VUSRpXTB4tWp9DU5KYN
-        XOA/Qglu8f59iPuQsCBOW/CS5gP0rIbWu7eCbcXGrFlGemHKqaGaXfVls0sfxD6n5DPZp1uL0D8uO
-        IoxEo=;
+        List-Archive; bh=xdSl9JUhngWotCtrT0gu8jVzPA3wB87/bI4tFDht9FY=; b=Lobcdkaf4HRQ
+        8GAOVQZdQ3+M/vAgegaorWA26LlgFHNsEjh32RuyBiaFeAwaeme3ox3OoOx6SsMZz1ptQ6yDjQHQl
+        P96CrKWt0TmL1XdkmLlLV9/1ZAM4uJgjp5rzWHiBZVNEbjZRgB9adpatIhDH6PLPF5Hu3pZqcP7Fl
+        gjFlI=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hCFVJ-0005ga-Ud; Fri, 05 Apr 2019 03:26:58 +0000
+        id 1hCFVQ-0005gq-7f; Fri, 05 Apr 2019 03:27:04 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id ED4A8441D3D; Fri,  5 Apr 2019 10:26:54 +0700 (+07)
+        id 14731441D3C; Fri,  5 Apr 2019 10:27:01 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: tegra114: dump SPI registers during timeout" to the spi tree
-In-Reply-To:  <1554423259-26056-5-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: tegra114: de-assert CS before SPI mode change" to the spi tree
+In-Reply-To:  <1554423259-26056-3-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190405032654.ED4A8441D3D@finisterre.ee.mobilebroadband>
-Date:   Fri,  5 Apr 2019 10:26:54 +0700 (+07)
+Message-Id: <20190405032701.14731441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri,  5 Apr 2019 10:27:01 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra114: dump SPI registers during timeout
+   spi: tegra114: de-assert CS before SPI mode change
 
 has been applied to the spi tree at
 
@@ -91,77 +91,79 @@ to this mail.
 Thanks,
 Mark
 
-From a0253c8fa18129f423c22f175a83d81423e60715 Mon Sep 17 00:00:00 2001
+From f3e182c33e534f4caeb255a3ab927debc0d222aa Mon Sep 17 00:00:00 2001
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Thu, 4 Apr 2019 17:14:04 -0700
-Subject: [PATCH] spi: tegra114: dump SPI registers during timeout
+Date: Thu, 4 Apr 2019 17:14:02 -0700
+Subject: [PATCH] spi: tegra114: de-assert CS before SPI mode change
 
-This patch dumps SPI registers on transfer error or timeout for debug
-purpose.
+With SW CS, during the transfer completion CS is de-asserted by writing
+default command1 register value to SPI_COMMAND1 register. With this both
+mode and CS state are set at the same time and if current transfer mode
+is different to default SPI mode and if mode change happens prior to CS
+de-assert, clock polarity can change while CS is active before transfer
+finishes.
+
+This causes Slave to see spurious clock edges resulting in data mismatch.
+
+This patch fixes this by de-asserting CS before writing SPI_COMMAND1 to
+its default value so through out the transfer it will be in same SPI mode.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/spi/spi-tegra114.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 8c33bf056196..99019f6d2d84 100644
+index 09cfae3abce2..8de002fc6943 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -874,6 +874,20 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
+@@ -856,6 +856,19 @@ static void tegra_spi_transfer_delay(int delay)
+ 	udelay(delay % 1000);
  }
  
-+static void tegra_spi_dump_regs(struct tegra_spi_data *tspi)
++static void tegra_spi_transfer_end(struct spi_device *spi)
 +{
-+	dev_dbg(tspi->dev, "============ SPI REGISTER DUMP ============\n");
-+	dev_dbg(tspi->dev, "Command1:    0x%08x | Command2:    0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_COMMAND1),
-+		tegra_spi_readl(tspi, SPI_COMMAND2));
-+	dev_dbg(tspi->dev, "DMA_CTL:     0x%08x | DMA_BLK:     0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_DMA_CTL),
-+		tegra_spi_readl(tspi, SPI_DMA_BLK));
-+	dev_dbg(tspi->dev, "TRANS_STAT:  0x%08x | FIFO_STATUS: 0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_TRANS_STATUS),
-+		tegra_spi_readl(tspi, SPI_FIFO_STATUS));
++	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
++	int cs_val = (spi->mode & SPI_CS_HIGH) ? 0 : 1;
++
++	if (cs_val)
++		tspi->command1_reg |= SPI_CS_SW_VAL;
++	else
++		tspi->command1_reg &= ~SPI_CS_SW_VAL;
++	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
++	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
 +}
 +
  static int tegra_spi_transfer_one_message(struct spi_master *master,
  			struct spi_message *msg)
  {
-@@ -920,6 +934,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			    (tspi->cur_direction & DATA_DIR_RX))
- 				dmaengine_terminate_all(tspi->rx_dma_chan);
- 			ret = -EIO;
-+			tegra_spi_dump_regs(tspi);
- 			tegra_spi_flush_fifos(tspi);
- 			reset_control_assert(tspi->rst);
- 			udelay(2);
-@@ -930,6 +945,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 		if (tspi->tx_status ||  tspi->rx_status) {
- 			dev_err(tspi->dev, "Error in Transfer\n");
- 			ret = -EIO;
-+			tegra_spi_dump_regs(tspi);
- 			goto complete_xfer;
+@@ -918,8 +931,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 
+ complete_xfer:
+ 		if (ret < 0 || skip) {
+-			tegra_spi_writel(tspi, tspi->def_command1_reg,
+-					SPI_COMMAND1);
++			tegra_spi_transfer_end(spi);
+ 			tegra_spi_transfer_delay(xfer->delay_usecs);
+ 			goto exit;
+ 		} else if (list_is_last(&xfer->transfer_list,
+@@ -927,13 +939,11 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 			if (xfer->cs_change)
+ 				tspi->cs_control = spi;
+ 			else {
+-				tegra_spi_writel(tspi, tspi->def_command1_reg,
+-						SPI_COMMAND1);
++				tegra_spi_transfer_end(spi);
+ 				tegra_spi_transfer_delay(xfer->delay_usecs);
+ 			}
+ 		} else if (xfer->cs_change) {
+-			tegra_spi_writel(tspi, tspi->def_command1_reg,
+-					SPI_COMMAND1);
++			tegra_spi_transfer_end(spi);
+ 			tegra_spi_transfer_delay(xfer->delay_usecs);
  		}
- 		msg->actual_length += xfer->len;
-@@ -971,6 +987,7 @@ static irqreturn_t handle_cpu_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "CpuXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_dump_regs(tspi);
- 		tegra_spi_flush_fifos(tspi);
- 		complete(&tspi->xfer_completion);
- 		spin_unlock_irqrestore(&tspi->lock, flags);
-@@ -1045,6 +1062,7 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "DmaXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_dump_regs(tspi);
- 		tegra_spi_flush_fifos(tspi);
- 		complete(&tspi->xfer_completion);
- 		spin_unlock_irqrestore(&tspi->lock, flags);
+ 
 -- 
 2.20.1
 
