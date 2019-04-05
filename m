@@ -2,222 +2,136 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC72C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4610C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F09B20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B336D2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdhnNrTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfDEH2z (ORCPT
+        id S1730242AbfDEHae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 03:28:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60812 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbfDEH2z (ORCPT
+        Fri, 5 Apr 2019 03:30:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34708 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfDEHae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 03:28:55 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x357K65D015884
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 03:28:54 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rp131kkfr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 03:28:53 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Fri, 5 Apr 2019 08:28:51 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 5 Apr 2019 08:28:49 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x357SmiL48890026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Apr 2019 07:28:48 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CDA811C050;
-        Fri,  5 Apr 2019 07:28:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 985E211C058;
-        Fri,  5 Apr 2019 07:28:47 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Apr 2019 07:28:47 +0000 (GMT)
-Received: from [9.81.192.72] (unknown [9.81.192.72])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0E418A0195;
-        Fri,  5 Apr 2019 18:28:43 +1100 (AEDT)
-Subject: Re: [PATCH v4 4/4] ocxl: Remove some unused exported symbols
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190320053448.2098-1-alastair@au1.ibm.com>
- <20190325053456.14599-1-alastair@au1.ibm.com>
- <20190325053456.14599-5-alastair@au1.ibm.com>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Fri, 5 Apr 2019 18:28:43 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 03:30:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y6so2574455plt.1;
+        Fri, 05 Apr 2019 00:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VOrnHXSxYndVz4s82/4h/nLN4u1uE1Ep10yXCThvdm0=;
+        b=fdhnNrTQsWoBprPQFsOKO0qtUwHG1MALvjx54XZ4ZDabC4VsHr4sXxQPV90cIRKB9S
+         A4HyhnKuxvjDnkM3cp1izfJgnMdcFr9k28jxQRmwsMC0UzyCII1DXGHss/V0aGqdY1zt
+         6PtNxys4pXN4QL/XaN1X50ia2k7LvxjKcnJRQ55hUK9uVUtaryGaMwJTTQaph1t5LZQA
+         Tn4vuE9TokRhh57oR2/TN3FLM09Eul0Q8a19O1WyhOIFa2pT6315GT4kpSBBN3NYLtu8
+         MO5XPG7SVC7R083C5LJLCfm+OE+PFVZu+2QvwsSpTZvNmPKqev6KBD1dS25gx86ZRacX
+         09UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VOrnHXSxYndVz4s82/4h/nLN4u1uE1Ep10yXCThvdm0=;
+        b=AAMfriRX9bb7qY3zLkWltwx9hxFLjJ0GLXqrb9DH5HFIFMq1MfnMrScRL1SNubVGSm
+         EKHblA2lCH2QY2e8gZHonlqr9TY82gLKTJj50FcOu6L/MEFjZDph2WOxQlz11CrKzJjN
+         YUp+XfulwKKtojiYu7SxO41xGRNg4JJIy1/0MNRwj0pe8VSHCj427xR65kvyKPuUqhlA
+         a6uscrkJxvNBjxqdoNekf+2utAwjD/DjMcLpWqMKumWa04WeK0DPRY3HoTcj59Pld4Sm
+         zQuYuO9Nkc1CNY9CQHYJBwhQkU22TNjQT5nEtkT1KwqOjO1oCIMMsIbLGB2GvsW6fM/6
+         DW4A==
+X-Gm-Message-State: APjAAAXc4OfbesTng0odgFRzBdpVlE2fL5pBl6gnBjSChV/BtWc/ZMY8
+        DBShbj+kzyU1/1/jXDroG+E=
+X-Google-Smtp-Source: APXvYqy6cMT4BHanKoFfkkZ4mv5VUjuezy/ovsrrzAUBs16QcxyaNtZOtHBBCxosKXxoz/z1+fPluw==
+X-Received: by 2002:a17:902:b407:: with SMTP id x7mr11503526plr.288.1554449433145;
+        Fri, 05 Apr 2019 00:30:33 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id u5sm17042269pfm.121.2019.04.05.00.30.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 00:30:32 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
+Date:   Fri,  5 Apr 2019 00:30:20 -0700
+Message-Id: <20190405073020.10361-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190325053456.14599-5-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19040507-0016-0000-0000-0000026B85EE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040507-0017-0000-0000-000032C79DAB
-Message-Id: <6e5f56ab-1cea-8bce-4d1c-c7432f275145@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=953 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904050054
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/3/19 4:34 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Remove some unused exported symbols.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Fix a similar endless event loop as was done in commit 8dcf32175b4e
+("i2c: prevent endless uevent loop with CONFIG_I2C_DEBUG_CORE"):
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+  The culprit is the dev_dbg printk in the i2c uevent handler. If
+  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
+  in an endless loop with systemd-journald.
 
-> ---
->   drivers/misc/ocxl/config.c        |  4 +---
->   drivers/misc/ocxl/ocxl_internal.h | 23 +++++++++++++++++++++++
->   include/misc/ocxl.h               | 23 -----------------------
->   3 files changed, 24 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index 4dc11897237d..5e65acb8e134 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -2,8 +2,8 @@
->   // Copyright 2017 IBM Corp.
->   #include <linux/pci.h>
->   #include <asm/pnv-ocxl.h>
-> -#include <misc/ocxl.h>
->   #include <misc/ocxl-config.h>
-> +#include "ocxl_internal.h"
->   
->   #define EXTRACT_BIT(val, bit) (!!(val & BIT(bit)))
->   #define EXTRACT_BITS(val, s, e) ((val & GENMASK(e, s)) >> s)
-> @@ -299,7 +299,6 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
->   	}
->   	return 1;
->   }
-> -EXPORT_SYMBOL_GPL(ocxl_config_check_afu_index);
->   
->   static int read_afu_name(struct pci_dev *dev, struct ocxl_fn_config *fn,
->   			struct ocxl_afu_config *afu)
-> @@ -535,7 +534,6 @@ int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count)
->   {
->   	return pnv_ocxl_get_pasid_count(dev, count);
->   }
-> -EXPORT_SYMBOL_GPL(ocxl_config_get_pasid_info);
->   
->   void ocxl_config_set_afu_pasid(struct pci_dev *dev, int pos, int pasid_base,
->   			u32 pasid_count_log)
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 321b29e77f45..06fd98c989c8 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -107,6 +107,29 @@ void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
->   int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
->   void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
->   
-> +/*
-> + * Get the max PASID value that can be used by the function
-> + */
-> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-> +
-> +/*
-> + * Check if an AFU index is valid for the given function.
-> + *
-> + * AFU indexes can be sparse, so a driver should check all indexes up
-> + * to the maximum found in the function description
-> + */
-> +int ocxl_config_check_afu_index(struct pci_dev *dev,
-> +				struct ocxl_fn_config *fn, int afu_idx);
-> +
-> +/**
-> + * Update values within a Process Element
-> + *
-> + * link_handle: the link handle associated with the process element
-> + * pasid: the PASID for the AFU context
-> + * tid: the new thread id for the process element
-> + */
-> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-> +
->   struct ocxl_context *ocxl_context_alloc(void);
->   int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
->   			struct address_space *mapping);
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 4544573cc93c..9530d3be1b30 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -56,15 +56,6 @@ struct ocxl_fn_config {
->   int ocxl_config_read_function(struct pci_dev *dev,
->   				struct ocxl_fn_config *fn);
->   
-> -/*
-> - * Check if an AFU index is valid for the given function.
-> - *
-> - * AFU indexes can be sparse, so a driver should check all indexes up
-> - * to the maximum found in the function description
-> - */
-> -int ocxl_config_check_afu_index(struct pci_dev *dev,
-> -				struct ocxl_fn_config *fn, int afu_idx);
-> -
->   /*
->    * Read the configuration space of a function for the AFU specified by
->    * the index 'afu_idx'. Fills in a ocxl_afu_config structure
-> @@ -74,11 +65,6 @@ int ocxl_config_read_afu(struct pci_dev *dev,
->   				struct ocxl_afu_config *afu,
->   				u8 afu_idx);
->   
-> -/*
-> - * Get the max PASID value that can be used by the function
-> - */
-> -int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-> -
->   /*
->    * Tell an AFU, by writing in the configuration space, the PASIDs that
->    * it can use. Range starts at 'pasid_base' and its size is a multiple
-> @@ -188,15 +174,6 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->   		void *xsl_err_data);
->   
-> -/**
-> - * Update values within a Process Element
-> - *
-> - * link_handle: the link handle associated with the process element
-> - * pasid: the PASID for the AFU context
-> - * tid: the new thread id for the process element
-> - */
-> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-> -
->   /*
->    * Remove a Process Element from the Shared Process Area for a link
->    */
-> 
+  This happens if user-space scans the system log and reads the uevent
+  file to get information about a newly created device, which seems
+  fair use to me. Unfortunately reading the "uevent" file uses the
+  same function that runs for creating the uevent for a new device,
+  generating the next syslog entry
 
+Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
+in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
+seems to have been fixed. Change debug prints to use pr_debug insted
+to resolve the issue.
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/power/supply/power_supply_sysfs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index dce24f596160..5e91946731fd 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -383,14 +383,14 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	char *prop_buf;
+ 	char *attrname;
+ 
+-	dev_dbg(dev, "uevent\n");
++	pr_debug("%s: uevent\n", dev_name(dev));
+ 
+ 	if (!psy || !psy->desc) {
+ 		dev_dbg(dev, "No power supply yet\n");
+ 		return ret;
+ 	}
+ 
+-	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
++	pr_debug("%s: POWER_SUPPLY_NAME=%s\n", dev_name(dev), psy->desc->name);
+ 
+ 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
+ 	if (ret)
+@@ -427,7 +427,8 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 			goto out;
+ 		}
+ 
+-		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
++		pr_debug("%s: prop %s=%s\n", dev_name(dev), attrname,
++			 prop_buf);
+ 
+ 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
+ 		kfree(attrname);
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+2.20.1
 
