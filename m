@@ -2,70 +2,115 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1234C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF2AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9928F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1E22171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gkBvUWDN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfDELJC (ORCPT
+        id S1730839AbfDELJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:09:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57516 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbfDELJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:09:02 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 21BB489C47;
-        Fri,  5 Apr 2019 11:09:02 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-233.ams2.redhat.com [10.36.116.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9999A5D707;
-        Fri,  5 Apr 2019 11:09:00 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH] sched/core: expand sched_getaffinity(2) to return number of CPUs
-References: <20190403200809.GA13876@avx2>
-        <20190404084249.GS4038@hirez.programming.kicks-ass.net>
-        <87wok83gfs.fsf@oldenburg2.str.redhat.com>
-        <20190405110415.GP12232@hirez.programming.kicks-ass.net>
-Date:   Fri, 05 Apr 2019 13:08:58 +0200
-In-Reply-To: <20190405110415.GP12232@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 5 Apr 2019 13:04:15 +0200")
-Message-ID: <87ftqw3e0l.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 5 Apr 2019 07:09:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38856 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730497AbfDELJn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 07:09:43 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35B9cbC034532;
+        Fri, 5 Apr 2019 06:09:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554462578;
+        bh=cc5C4Ev6b/Z8tKWNia1m1RrFdLhXEhYVkQZa0D9vnmA=;
+        h=From:To:CC:Subject:Date;
+        b=gkBvUWDNwrep/MfNHYD69+Wl9nYWunFqZoQ2dkQMKfwf+hIeS3ZhtTo9NRpAWGVhB
+         hZqR3adI0EjvEM8vjS8CWyI8Ik9iSBTFYwwhL8kfFJvDPj6UvHmMUBI8XpgH51xlrJ
+         MAuLr1orkptcgbMOdB1bWVYTgV/8jhi2zbnHBcb8=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35B9c8c019926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 5 Apr 2019 06:09:38 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
+ 2019 06:09:38 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 5 Apr 2019 06:09:38 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35B9aS0100251;
+        Fri, 5 Apr 2019 06:09:36 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>, <rogerq@ti.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 0/5] PHY: Add support for SERDES in TI's AM654 platform
+Date:   Fri, 5 Apr 2019 16:38:29 +0530
+Message-ID: <20190405110834.13083-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 05 Apr 2019 11:09:02 +0000 (UTC)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Zijlstra:
+This patch series
+  *) adds support for SERDES module in am654
+  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
+the reset callback can access registers.
+  *) Add *release* phy_ops to be invoked when the consumer relinquishes
+PHY
 
-> On Fri, Apr 05, 2019 at 12:16:39PM +0200, Florian Weimer wrote:
->
->> > True; but I suppose glibc already does lots of that anyway, right? It
->> > does contain the right information.
->> 
->> If I recall correctly my last investigation,
->> /sys/devices/system/cpu/possible does not reflect the size of the
->> affinity mask, either.
->
-> Strictly speaking correct; the bitmap can be longer than the highest
-> possible cpu number, however the remainder would be 0-padding and could
-> thus be stripped without issue.
+Changes from v3:
+  *) Moved SERDES driver to use regfield
+  *) Removed reg-names binding and updated Documentation for
+     power-domains
 
-Doesn't the kernel still enforce the larget bitmap in sched_getaffinity,
-even if the bits are always zero?
+Changes from v2:
+  *) Fix typos pointed out by Roger
+  *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
+  *) Add Roger's patch to support all CLKSEL values.
 
-Thanks,
-Florian
+Changes from v1:
+  *) Add *release* phy ops
+  *) Populate release phy_ops in phy-am654-serdes to cleanup
+initializations done in of_xlate
+
+Kishon Vijay Abraham I (4):
+  phy: core: Add *release* phy_ops invoked when the consumer
+    relinquishes PHY
+  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
+    reset callback
+  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
+    AM654x SoC
+  phy: ti: Add a new SERDES driver for TI's AM654x SoC
+
+Roger Quadros (1):
+  phy: ti: am654-serdes: Support all clksel values
+
+ .../bindings/phy/ti,phy-am654-serdes.txt      |  82 +++
+ drivers/phy/phy-core.c                        |  11 +
+ drivers/phy/ti/Kconfig                        |  12 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-serdes.c             | 658 ++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
+ include/linux/phy/phy.h                       |   2 +
+ 7 files changed, 779 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+ create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
+
+-- 
+2.17.1
+
