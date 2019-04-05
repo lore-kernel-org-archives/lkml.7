@@ -3,84 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1F7C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C16EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069C12175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD242186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731453AbfDEPVQ (ORCPT
+        id S1731498AbfDEPVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:21:16 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38873 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfDEPVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:21:16 -0400
-Received: by mail-it1-f195.google.com with SMTP id f22so10125793ita.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:21:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uh0ShQqIbBMkLRYP0daxYFjdegJIus2IHRa2hCK0ZgY=;
-        b=oL5oIVZkquwRNJDae1r8YPeVxWMIrOPhdjqjxIDP6p75jaKNdFfYxDJQSX7CFtdfet
-         sASJ1AcKN5tyaGSDnfYZDNKeH9l6FZ3vr3GerHJC7TNeCaINPpqlFvzQrhq3N7kKJW4i
-         Ii3pjAPp5Cnwe9RaQH7qinVzwKgQXv6FyOMJAC3pm5R0sqPA3wJmGm6w7G3UTR4myoLs
-         /0TWDSNVzYxS0pVVESBbxI7EiPN51pMBFf61CLSsaX3hFmH5Hn+k6r05eLr8bGTUGG+d
-         1xzaQbEY9vvKc1JuUmI6XgtJq3u77wHA9mcXLe6WuxRlYg7WVbv5kB+f9xQDy0M433R9
-         nAvw==
-X-Gm-Message-State: APjAAAWwqtjOv/o5EkMtqozYf2c0iB99vdI9vfJB3/JxwoHJnjtN+M19
-        DagkaenVHcx3PTSOVnmDUoSg0e5CPgNYVzXBWYeodw==
-X-Google-Smtp-Source: APXvYqzUMicJkVoctqrHq8H0L7Pl8bcYyYlWzQd4WmWJ/kpbfIOot7Gj6RArCsenAjEV1mJ/Z/OHrdv+wsuFw8tKWZk=
-X-Received: by 2002:a02:6951:: with SMTP id e78mr4087132jac.132.1554477675541;
- Fri, 05 Apr 2019 08:21:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190404172545.20928-1-kasong@redhat.com> <20190405071704.GC4038@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190405071704.GC4038@hirez.programming.kicks-ass.net>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 5 Apr 2019 23:21:03 +0800
-Message-ID: <CACPcB9eV37uuXyKw6KrJhpZM6j4OtjrW1JUixpaS=KpvG41NYQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 5 Apr 2019 11:21:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36080 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726291AbfDEPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:21:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3C228AD9C;
+        Fri,  5 Apr 2019 15:21:17 +0000 (UTC)
+Date:   Fri, 05 Apr 2019 17:21:15 +0200
+Message-ID: <s5h8swoxytw.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Timo Wischer <twischer@de.adit-jv.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] ALSA: pcm: Add snd_pcm_ops for snd_pcm_link()
+In-Reply-To: <00d97a34-c055-c7ef-dbfd-e17c0f6cfff3@de.adit-jv.com>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+        <1553586574-18608-1-git-send-email-twischer@de.adit-jv.com>
+        <1553586574-18608-5-git-send-email-twischer@de.adit-jv.com>
+        <s5ho95ym3s7.wl-tiwai@suse.de>
+        <3ad5c313-ba2c-b541-8930-3f2515dfca72@de.adit-jv.com>
+        <s5hr2at67ew.wl-tiwai@suse.de>
+        <68cfbf7a-5f1e-50d2-2b97-4d3c5d360b36@de.adit-jv.com>
+        <s5ha7hh62yg.wl-tiwai@suse.de>
+        <c99f074c-99e2-7213-6738-67d08d44d030@de.adit-jv.com>
+        <s5hef6slm00.wl-tiwai@suse.de>
+        <00f4c8db-44cf-b555-f3ca-42916b1e7ceb@de.adit-jv.com>
+        <s5h7ecklkr2.wl-tiwai@suse.de>
+        <00d97a34-c055-c7ef-dbfd-e17c0f6cfff3@de.adit-jv.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 3:17 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> And you forgot to Cc Josh..
->
+On Thu, 04 Apr 2019 12:18:33 +0200,
+Timo Wischer wrote:
+> 
+> >>> In principle, the PCM ops is supposed to be safe for operating a
+> >>> certain stuff.  If a state change may happen during the operation,
+> >>> this should be called inside PCM stream lock.  So the design of the
+> >>> new callback itself is fragile.
+> >>>
+> >>> then, it comes to a point to re-setup the timer at the link change.
+> >>> The idea is interesting, but it's a wrong usage of PCM link feature,
+> >>> to be honest.
+> >>>
+> >>> That said, I find the changes up to patch 8 are acceptable (with some
+> >>> fixes expected), but the link feature isn't.
+> 
+> Hi Takashi,
+> 
+> could you provide your feedback to the other patches?
 
-Hi, thanks for the reply and Cc more people, I just copies the list
-from ./scripts/get_maintainer.pl, will pay more attention next time.
+The patch 4 must be superfluous, at least.  The trigger callback is
+called within the stream lock, so you really don't need to save
+flags.
 
-> >
-> > Just found with ORC unwinder the perf callchain is unusable, and this
-> > seems fixes it well, any suggestion is welcome, thanks!
->
-> That whole .direct stuff is horrible crap.
->
+The patch 8 needs more consideration.  I'm not fond of the current way
+to select the timer source.  For example, the ALSA timer source isn't
+necessarily bound with cards.  It can be a hrtimer, or system timer
+backend ALSA global timer, too.  This can't be chosen in the suggested
+way.  Also, the use of tasklet is superfluous.  The timer instance can
+be called via tasklet by itself if you pass the flag properly.
 
-Sorry if I did anything dumb, but I didn't find a better way to make
-it work so sent this RFC... Would you mind tell me what I'm doing
-wrong, or give any suggestion about how should I improve it?
+> I would like to apply these 8 patches first and then I would provide
+> an addition patch to get an ALSA control to select the sound timer.
+> I fear this would be the best idea (replacing the snd_pcm_link()
+> feature) because the ALSA control is accessible by any audio user and
+> we could use ALSA hooks to select the right sound timer when opening
+> an ALSA device.
 
---
-Best Regards,
-Kairui Song
+It depends on the implementation.  Usually you "lock" such a control
+that is bound with a PCM stream at opening, so that other process
+won't be able to change.  Such a trick is used for the dynamic routing
+via control element for emu10k1, for example.
+
+But, whether it's really usable, I don't know.  Let's see.
+
+
+thanks,
+
+Takashi
