@@ -2,228 +2,109 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF0BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F993C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08BA217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D71217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P98WmS/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfDEDDw (ORCPT
+        id S1729694AbfDEDFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:03:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6252 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727051AbfDEDDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:03:52 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 77E4C68E05D71F357661;
-        Fri,  5 Apr 2019 11:03:49 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 11:03:41 +0800
-Subject: Re: [PATCH 1/3] arm64: kdump: support reserving crashkernel above 4G
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-2-chenzhou10@huawei.com>
- <20190404144618.GB6433@rapoport-lnx>
-CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <59ef4532-2402-3887-2794-b503827fac5a@huawei.com>
-Date:   Fri, 5 Apr 2019 11:03:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 4 Apr 2019 23:05:38 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41732 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbfDEDFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 23:05:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so4330796otb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=acerVwGXVYRB1QaSa8rRXqPFWxvmvFOp/eGpIp+tp1I=;
+        b=P98WmS/rusRQerU4Rn+NTuayxV0xqBtlyHwlIZ8efPQZ7iEFjnJIHZY4ljgFX3q07v
+         1Ba0VIe7q8AtcYh0KzGCkS/zCoVxmueWti833UrczBI/sqmsCSw0dsMwxMpGXhKyaChq
+         d29rmmME/Xi1VsdvMZjiP7MkDVLNhxJW1FSseaZVygBfQ6O1P73eBJfmH0h3VjH5Osts
+         IKEdJ4vhc5E+MBKrmzCj//PbofS7H3gnOolmkpGV1mjZSKXxEDoi7TuGYli2hZY/ChRN
+         Tj1CkkTaUhz0khvD+Bo45wL1NH+KhdAnNx/4OPw7vsgrFHd0Gr4aQ0i2SLHvOy0Y8oDU
+         CcSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=acerVwGXVYRB1QaSa8rRXqPFWxvmvFOp/eGpIp+tp1I=;
+        b=QBtomcWr9b5VeVyQa3agJVofS/X+/DroUGr0VLF/sOPhCXvrJw5ab+lBoQUTN3p3oL
+         rIOTl3d62Zgy0zuxe7pG2SaAySx7gXh3n+jMfAlccUiWjllOYsCSkKh9K4U5WS34GBz8
+         ksR1hWGCQ2cB2dbxO8u+T0LW85gtDvGtt8Q6NsXLi4huzrywL4NNmjlRAl/9Ms6GsYec
+         7zlf1TpE2UhijNj+3MYOXymzR6DJO6E2Jpy7dDiANOSAXWn46okzpX8CsgVtUy8sYseo
+         fOkdFoDjbrFuJIjXkpbCGHgyCu8xI9iJI8/Hrx4+m1TI/5SRcdcHvn/tRVXLqW6KTCW+
+         hJXw==
+X-Gm-Message-State: APjAAAWsXMrh2wP85VG2tXfNskzzQ28VuPrXkTySbS3nVQGwYPciwVfc
+        r0fwBoRzPGJaBqK5ryo0DetQx0TJrL0jfAhVEB0=
+X-Google-Smtp-Source: APXvYqyw9jbEWw+A2nLH/1Kay9ZHogPE7kiq6p5epmpD2BoZeHe3lOkKuZYnxKwHe8shtTsqB2QJf+Aswr5rhrT90a8=
+X-Received: by 2002:a9d:68cb:: with SMTP id i11mr6758007oto.237.1554433537604;
+ Thu, 04 Apr 2019 20:05:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190404144618.GB6433@rapoport-lnx>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+References: <20190404185235.5257-1-nilhase25@gmail.com>
+In-Reply-To: <20190404185235.5257-1-nilhase25@gmail.com>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Fri, 5 Apr 2019 11:05:26 +0800
+Message-ID: <CAJsYDVKHmW7TtvuUb8mhZ0X1Or15EEA39eNtQqVf9F8vqVoEig@mail.gmail.com>
+Subject: Re: [PATCH] MT7621-SPI: spi-mt7621: Fix alignment and style problems
+ Fixed Coding function and style issues
+To:     Nilesh Hase <nilhase25@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        NeilBrown <neil@brown.name>, Stefan Roese <sr@denx.de>,
+        sankalpnegi2310@gmail.com, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
-Hi Mike,
+On Fri, Apr 5, 2019 at 2:53 AM Nilesh Hase <nilhase25@gmail.com> wrote:
+>
+> Fix checkpatch issues: "CHECK: Alignment should match open parenthesis"
+>
+> Signed-off-by: Nilesh Hase <nilhase25@gmail.com>
+> ---
+>  drivers/staging/mt7621-spi/spi-mt7621.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
+> index b509f9fe3346..6fa9876f5a92 100644
+> --- a/drivers/staging/mt7621-spi/spi-mt7621.c
+> +++ b/drivers/staging/mt7621-spi/spi-mt7621.c
+FYI This file doesn't exist now. The driver has been moved into
+drivers/spi by this commit:
+cbd66c626e16 spi: mt7621: Move SPI driver out of staging
 
-On 2019/4/4 22:46, Mike Rapoport wrote:
-> Hi,
-> 
-> On Wed, Apr 03, 2019 at 11:05:44AM +0800, Chen Zhou wrote:
->> When crashkernel is reserved above 4G in memory, kernel should
->> reserve some amount of low memory for swiotlb and some DMA buffers.
->>
->> Kernel would try to allocate at least 256M below 4G automatically
->> as x86_64 if crashkernel is above 4G. Meanwhile, support
->> crashkernel=X,[high,low] in arm64.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/arm64/kernel/setup.c |  3 ++
->>  arch/arm64/mm/init.c      | 71 +++++++++++++++++++++++++++++++++++++++++++++--
->>  2 files changed, 71 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->> index 413d566..82cd9a0 100644
->> --- a/arch/arm64/kernel/setup.c
->> +++ b/arch/arm64/kernel/setup.c
->> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
->>  			request_resource(res, &kernel_data);
->>  #ifdef CONFIG_KEXEC_CORE
->>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
->> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
->> +		    crashk_low_res.end <= res->end)
->> +			request_resource(res, &crashk_low_res);
->>  		if (crashk_res.end && crashk_res.start >= res->start &&
->>  		    crashk_res.end <= res->end)
->>  			request_resource(res, &crashk_res);
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 6bc1350..ceb2a25 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -64,6 +64,57 @@ EXPORT_SYMBOL(memstart_addr);
->>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->> +static int __init reserve_crashkernel_low(void)
->> +{
->> +	unsigned long long base, low_base = 0, low_size = 0;
->> +	unsigned long total_low_mem;
->> +	int ret;
->> +
->> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->> +
->> +	/* crashkernel=Y,low */
->> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
->> +	if (ret) {
->> +		/*
->> +		 * two parts from lib/swiotlb.c:
->> +		 * -swiotlb size: user-specified with swiotlb= or default.
->> +		 *
->> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
->> +		 * to 8M for other buffers that may need to stay low too. Also
->> +		 * make sure we allocate enough extra low memory so that we
->> +		 * don't run out of DMA buffers for 32-bit devices.
->> +		 */
->> +		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
->> +	} else {
->> +		/* passed with crashkernel=0,low ? */
->> +		if (!low_size)
->> +			return 0;
->> +	}
->> +
->> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, SZ_2M);
->> +	if (!low_base) {
->> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->> +				(unsigned long)(low_size >> 20));
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ret = memblock_reserve(low_base, low_size);
->> +	if (ret) {
->> +		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
->> +		return ret;
->> +	}
->> +
->> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
->> +			(unsigned long)(low_size >> 20),
->> +			(unsigned long)(low_base >> 20),
->> +			(unsigned long)(total_low_mem >> 20));
->> +
->> +	crashk_low_res.start = low_base;
->> +	crashk_low_res.end   = low_base + low_size - 1;
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->>   * reserve_crashkernel() - reserves memory for crash kernel
->>   *
->> @@ -74,19 +125,28 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  static void __init reserve_crashkernel(void)
->>  {
->>  	unsigned long long crash_base, crash_size;
->> +	bool high = false;
->>  	int ret;
->>  
->>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->>  				&crash_size, &crash_base);
->>  	/* no crashkernel= or invalid value specified */
->> -	if (ret || !crash_size)
->> -		return;
->> +	if (ret || !crash_size) {
->> +		/* crashkernel=X,high */
->> +		ret = parse_crashkernel_high(boot_command_line, memblock_phys_mem_size(),
->> +				&crash_size, &crash_base);
->> +		if (ret || !crash_size)
->> +			return;
->> +		high = true;
->> +	}
->>  
->>  	crash_size = PAGE_ALIGN(crash_size);
->>  
->>  	if (crash_base == 0) {
->>  		/* Current arm64 boot protocol requires 2MB alignment */
->> -		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
->> +		crash_base = memblock_find_in_range(0,
->> +				high ? memblock_end_of_DRAM()
->> +				: ARCH_LOW_ADDRESS_LIMIT,
->>  				crash_size, SZ_2M);
->>  		if (crash_base == 0) {
->>  			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->> @@ -112,6 +172,11 @@ static void __init reserve_crashkernel(void)
->>  	}
->>  	memblock_reserve(crash_base, crash_size);
->>  
->> +	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
->> +		memblock_free(crash_base, crash_size);
->> +		return;
->> +	}
->> +
-> 
-> This very reminds what x86 does. Any chance some of the code can be reused
-> rather than duplicated?
-
-As i said in the comment, i transport reserve_crashkernel_low() from x86_64. There are minor
-differences. In arm64, we don't need to do insert_resource(), we do request_resource()
-in request_standard_resources() later.
-
-How about doing like this:
-
-move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-and do in x86 like this:
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -573,9 +573,12 @@ static void __init reserve_crashkernel(void)
-                return;
-        }
-
--       if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
--               memblock_free(crash_base, crash_size);
--               return;
-+       if (crash_base >= (1ULL << 32)) {
-+               if (reserve_crashkernel_low()) {
-+                       memblock_free(crash_base, crash_size);
-+                       return;
-+               } else
-+                       insert_resource(&iomem_resource, &crashk_low_res);
-        }
-
-> 
->>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->>  		crash_base, crash_base + crash_size, crash_size >> 20);
->>  
->> -- 
->> 2.7.4
->>
-> 
-
+It's in linux-next-20190329 and later tags.
+> @@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
+>         struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
+>
+>         if ((spi->max_speed_hz == 0) ||
+> -               (spi->max_speed_hz > (rs->sys_freq / 2)))
+> +           (spi->max_speed_hz > (rs->sys_freq / 2)))
+>                 spi->max_speed_hz = (rs->sys_freq / 2);
+>
+>         if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
+> --
+> 2.20.1
+>
+Regards,
+ Chuanhong Guo
