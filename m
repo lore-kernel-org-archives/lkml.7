@@ -2,98 +2,124 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA5C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9FFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84A52175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03512184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554479934;
+	bh=/ujAI0kuX6MbKlnCRJSqfOUbAHxk336H5FdchUMBFdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aVpdnFi9E6fxAygFrMohnqGAyaA+7sq9frsWIAkXrsGpu2tZ/761R9nE2QkmX0rje
+	 5vhGCN1LKMwxaaQ8eTaZ3mZns88kHcFVB5kERFrdKktbQpcla41dTpYuFnlWnq9Gio
+	 WdHTl+xrya+5YU21q167/wUAx1BxbHwcny3VqApc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfDEP6i (ORCPT
+        id S1731430AbfDEP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:58:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42228 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 11:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfDEP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:58:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726135AbfDEP6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:58:53 -0400
+Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A0B77C049E24;
-        Fri,  5 Apr 2019 15:58:37 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17AA55D71B;
-        Fri,  5 Apr 2019 15:58:35 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 10:58:33 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Khalid Aziz <khalid.aziz@oracle.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] x86/entry: re-enable interrupts before exiting
-Message-ID: <20190405155833.bnp5lfa5u33zhznk@treble>
-References: <20190405153525.29587-1-tycho@tycho.ws>
+        by mail.kernel.org (Postfix) with ESMTPSA id A45712175B;
+        Fri,  5 Apr 2019 15:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554479932;
+        bh=/ujAI0kuX6MbKlnCRJSqfOUbAHxk336H5FdchUMBFdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M2ZSOEjEH4eiKEShrjCIw5hwobHM7nWl6K7kHeEwrocG9ZhacjknVyzmAWpOMiEiN
+         Ionumne7iliFcloGLC/7DyO3ubOg2RM0r93ykKUI41hI0QoeJNqUa8fFCvVE6yBvox
+         CD82Is92aQiCE23qkmunfnVcqbkyRfsQsWFTmcdw=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A86603C08D5; Fri,  5 Apr 2019 17:58:50 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 17:58:50 +0200
+From:   sre <sre@kernel.org>
+To:     =?utf-8?B?5b2t57qi?= <elicec@foxmail.com>
+Cc:     linux-pm <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] power:ds2782:Fix description error
+Message-ID: <20190405155850.j3f35qiov7hg5pfo@earth.universe>
+References: <tencent_408CB7922C1972D02ACDB8E48E4218092507@qq.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hdhbftm6bszhjotw"
 Content-Disposition: inline
-In-Reply-To: <20190405153525.29587-1-tycho@tycho.ws>
+In-Reply-To: <tencent_408CB7922C1972D02ACDB8E48E4218092507@qq.com>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 05 Apr 2019 15:58:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 09:35:24AM -0600, Tycho Andersen wrote:
-> If the kernel oopses in an interrupt, nothing re-enables interrupts:
-> 
-> Aug 23 19:30:27 xpfo kernel: [   38.302714] BUG: sleeping function called from invalid context at
-> ./include/linux/percpu-rwsem.h:33
-> Aug 23 19:30:27 xpfo kernel: [   38.303837] in_atomic(): 0, irqs_disabled(): 1, pid: 1970, name:
-> lkdtm_xpfo_test
-> Aug 23 19:30:27 xpfo kernel: [   38.304758] CPU: 3 PID: 1970 Comm: lkdtm_xpfo_test Tainted: G      D
-> 4.13.0-rc5+ #228
-> Aug 23 19:30:27 xpfo kernel: [   38.305813] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.10.1-1ubuntu1 04/01/2014
-> Aug 23 19:30:27 xpfo kernel: [   38.306926] Call Trace:
-> Aug 23 19:30:27 xpfo kernel: [   38.307243]  dump_stack+0x63/0x8b
-> Aug 23 19:30:27 xpfo kernel: [   38.307665]  ___might_sleep+0xec/0x110
-> Aug 23 19:30:27 xpfo kernel: [   38.308139]  __might_sleep+0x45/0x80
-> Aug 23 19:30:27 xpfo kernel: [   38.308593]  exit_signals+0x21/0x1c0
-> Aug 23 19:30:27 xpfo kernel: [   38.309046]  ? blocking_notifier_call_chain+0x11/0x20
-> Aug 23 19:30:27 xpfo kernel: [   38.309677]  do_exit+0x98/0xbf0
-> Aug 23 19:30:27 xpfo kernel: [   38.310078]  ? smp_reader+0x27/0x40 [lkdtm]
-> Aug 23 19:30:27 xpfo kernel: [   38.310604]  ? kthread+0x10f/0x150
-> Aug 23 19:30:27 xpfo kernel: [   38.311045]  ? read_user_with_flags+0x60/0x60 [lkdtm]
-> Aug 23 19:30:27 xpfo kernel: [   38.311680]  rewind_stack_do_exit+0x17/0x20
-> 
-> do_exit() expects to be called in a well-defined environment, so let's
-> re-enable interrupts after unwinding the stack, in case they were disabled.
-> 
-> Note that if any spinlocks are held, etc. we'll also get the above warning,
-> so this isn't a silver bullet. So, let's add a C helper in case someone
-> wants to add fancier lock busting or if we've forgotten to unwind something
-> else.
-> 
-> I've had to add back in the hack that Josh removed in 8c1f75587a18
-> ("x86/entry/64: Add unwind hint annotations") with the loop after the call,
-> because for whatever reason without that I get a warning:
-> 
->   AS      arch/x86/entry/entry_64.o
-> arch/x86/entry/entry_64.o: warning: objtool: .entry.text: unexpected end of section
-> 
-> It seems to actually work fine for me though, since the new helper is also
-> __noreturn. Perhaps there's a better way to do this?
 
-Unfortunately, objtool doesn't have a way to detect noreturn functions
-in other objects, so they're hard-coded in a list.  You can add
-__finish_rewind_stack_do_exit to the global_noreturns array in
-tools/objtool/check.c.
+--hdhbftm6bszhjotw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Josh
+Hi,
+
+On Wed, Feb 20, 2019 at 04:32:29PM +0800, =E5=BD=AD=E7=BA=A2 wrote:
+> After add support for ds2786 battery gas gauge=EF=BC=8Cthe description
+> didn't update. fix it.
+>=20
+> Signed-off-by: HongPeng <elicec@foxmail.com>
+> ---
+
+The patch does not apply due to a spelling fix in the description
+(Gauage -> Gauge). Also your name in From does not match the name
+in the Signed-off-by (SoB) and the one from SoB seems to miss a
+space.
+
+-- Sebastian
+
+>  drivers/power/supply/ds2782_battery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/ds2782_battery.c b/drivers/power/supply=
+/ds2782_battery.c
+> index a1b7e0592245..924e99d1e69e 100644
+> --- a/drivers/power/supply/ds2782_battery.c
+> +++ b/drivers/power/supply/ds2782_battery.c
+> @@ -471,5 +471,5 @@ static struct i2c_driver ds278x_battery_driver =3D {
+>  module_i2c_driver(ds278x_battery_driver);
+> =20
+>  MODULE_AUTHOR("Ryan Mallon");
+> -MODULE_DESCRIPTION("Maxim/Dallas DS2782 Stand-Alone Fuel Gauage IC drive=
+r");
+> +MODULE_DESCRIPTION("Maxim/Dallas DS2782/DS2786 Stand-Alone Fuel Gauage I=
+C driver");
+>  MODULE_LICENSE("GPL");
+> --=20
+> 2.17.1
+
+--hdhbftm6bszhjotw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynezoACgkQ2O7X88g7
++por0xAAhqSxQkhQqPwnHJq9mNddmBX/H6tS91EL0bhP4jIUTuXnZ9lEzlxdnnbP
+IV6GfrDOI89JtwvfxhiWXTMqUrm9XK/A9eTPcin+li98pF05eQ0btM1/kL9b9Soe
+KMiwW/ZElYr/oxkwQE+gB+uIdCQA0SpH9x/EPRKLGjSUSntytsyyR4kcnJYy8UW9
+Jlg7KGB9e27KZKBnuDBg8XBKttdddVXjcotwupJXP7VnG/Sz1xuvpg03QOtsmB9d
+ixL1fbWhbz6FJeg5BZgxLOaLkoz86BH68WjxPVhBqiggZHLvTil0MbIXyaluy/n4
+ppDUdb5RKMpq13+EvD7LyxprLWqcanfAklm35Eo6lJ+fL+4M8JMptbMd8IPF2sPG
+FIpn4+cGZErsF4j0TO9GQNZG6pnc+/ICbIyNvJLESyX1hOYetM3K81eC3MkAPpMV
+AQJRrJMHFPlcJv/d5bXwhOiDlayUpVMlC/BE61TKH6fCfS1yA5i3wYECX7OucM/p
+9MIeYO4Gx2UpUi+buCKWfHk6+s1C3UucdThRRZcNah438cp1h40QR1zwEkWcaiby
+tRzV27LcCe/yMIUVYQSyIDvdh/R+6MtAAGIJcPyUxs7stZA96T7Q8yO5wQbh+Tsc
+XJFhzKR1JZ8hlf+Nz6rViJzm5pCM0KYvlyjDlvVNYRGIC+Euc7w=
+=lVby
+-----END PGP SIGNATURE-----
+
+--hdhbftm6bszhjotw--
