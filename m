@@ -2,92 +2,126 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E280DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE59EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF6F21872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB7E218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TMXHlKgv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PGvqBadW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbfDEMWM (ORCPT
+        id S1730243AbfDEMXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:22:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53826 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726663AbfDEMWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:22:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C51E2AF76;
-        Fri,  5 Apr 2019 12:22:10 +0000 (UTC)
-Message-ID: <0e7d2e00050cca6ffd05b8d85af33be99aaad10c.camel@suse.de>
-Subject: Re: [PATCH 1/3] Revert "staging: vchiq_2835_arm: quit using custom
- down_interruptible()"
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, stefan.wahren@i2se.com,
-        devel@driverdev.osuosl.org,
+        Fri, 5 Apr 2019 08:23:17 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40466 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbfDEMXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 08:23:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7A73B60F3E; Fri,  5 Apr 2019 12:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554466995;
+        bh=VdLQ+pvShXErJhD2SzInzqS+Emmcdl/7Bmayue6mIjA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TMXHlKgvhOEcD0CgV9e8qdKPLLspHU9IDyaGkHj0ak3HyCcabXN35P56db+OjSDOb
+         zxK8J2R9seGcqbb10cKxmZxTEmpD0jFJRvigIHCZUkMD0HaBT9n/BefmkzcTP9dsDP
+         9RWWAXytbFx4kaeGKWQq4lARglLYovSdIQ2XFMA0=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B717C60DAD;
+        Fri,  5 Apr 2019 12:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554466993;
+        bh=VdLQ+pvShXErJhD2SzInzqS+Emmcdl/7Bmayue6mIjA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PGvqBadW6Gv0vu5F3eylkRTQ9Wyll3nMHaSkjvYu+hVAyRgEdIJO4gGEderxkyMBf
+         aLsYuR2cg7HgtzrikdedW6yolLYBnipa17lYgN1bgGgfcIX4OIg0Ob++jR6xEG7ywE
+         HBJi099KwPLcGzWn0pT1iYxwRsxkf1dqt7Y2LJdg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B717C60DAD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        phil@raspberrypi.org, eric@anholt.net,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 05 Apr 2019 14:22:09 +0200
-In-Reply-To: <20190405120217.GP32590@kadam>
-References: <20190405113423.14495-1-nsaenzjulienne@suse.de>
-         <20190405113423.14495-2-nsaenzjulienne@suse.de>
-         <20190405120217.GP32590@kadam>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/V7XpRpqdhfiJ+NA+tX1"
-User-Agent: Evolution 3.30.5 
+        Mulu He <muluhe@codeaurora.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] stm class: Fix out of bound access from bitmap allocation
+Date:   Fri,  5 Apr 2019 17:52:56 +0530
+Message-Id: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mulu He <muluhe@codeaurora.org>
 
---=-/V7XpRpqdhfiJ+NA+tX1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Bitmap allocation works on array of unsigned longs and
+for stm master allocation when the number of software
+channels is 32, 4 bytes are allocated and there is a out of
+bound access at the first 8 bytes access of bitmap region.
 
-On Fri, 2019-04-05 at 15:02 +0300, Dan Carpenter wrote:
-> On Fri, Apr 05, 2019 at 01:34:20PM +0200, Nicolas Saenz Julienne wrote:
-> > This reverts commit ff5979ad86368425b7da3a25f4e84650b51ff5fd.
-> > ---
->=20
-> Git kind of sets you up for failure with reverts...
->=20
-> Fix the subject, add a commit message and a Signed off by etc.  We need
-> all the regular stuff.  See commit 75ae193626de ("dm: revert
-> 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES *
-> PAGE_SIZE")") for an example of how to do it nicely.
->=20
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+Signed-off-by: Mulu He <muluhe@codeaurora.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/hwtracing/stm/core.c | 2 +-
+ drivers/hwtracing/stm/stm.h  | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Will do, Thanks!
-
-> regards,
-> dan carpenter
->=20
-
-
---=-/V7XpRpqdhfiJ+NA+tX1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlynSHEACgkQlfZmHno8
-x/5sxQf/cztkEfGjBScMKbToZz6ppcakZMlsMQn3H9S0hX5Yc3Li3Bzp2GWOBML1
-71aaHvGdinYWh77smNen3jpNj1opRVubOHH0+reeMO0tR6Wx2ZcBa7J7KUBiHfMV
-binf0PD1qO/KP0umz1Lw+wp7Xg2nsfpBlmDZEPyQcbR2HPD5DNnXJ0gefXUlv9gc
-apMXKQ36RAQnkVNC+/OTK2rT5wa2VXKPIEmCHIaF2g7MHnXsQS6+jJR81bRiTNO3
-Bh96wkZNfSpIMP+71dlEQBdfkPhnTkDqUcTHyo/nSNw5bEaK3EE2OMOcp9obdTBi
-4jVqsSEbZEOygOIuvm0lIcrxr8CZzA==
-=goUN
------END PGP SIGNATURE-----
-
---=-/V7XpRpqdhfiJ+NA+tX1--
+diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+index 93ce3aa740a9..21a5838f6e67 100644
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -168,7 +168,7 @@ static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
+ 	struct stp_master *master;
+ 	size_t size;
+ 
+-	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
++	size = ALIGN(stm->data->sw_nchannels, STM_MASTER_SZ) / STM_MASTER_SZ;
+ 	size += sizeof(struct stp_master);
+ 	master = kzalloc(size, GFP_ATOMIC);
+ 	if (!master)
+diff --git a/drivers/hwtracing/stm/stm.h b/drivers/hwtracing/stm/stm.h
+index 3569439d53bb..10eac550c75f 100644
+--- a/drivers/hwtracing/stm/stm.h
++++ b/drivers/hwtracing/stm/stm.h
+@@ -12,6 +12,8 @@
+ 
+ #include <linux/configfs.h>
+ 
++#define STM_MASTER_SZ sizeof(unsigned long)
++
+ struct stp_policy;
+ struct stp_policy_node;
+ struct stm_protocol_driver;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
