@@ -2,222 +2,311 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFABEC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBA4C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AE8206C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkfCg7iQ"
+	by mail.kernel.org (Postfix) with ESMTP id 827BD2184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 13:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554471959;
+	bh=NKOdgxQGaPufsJZoIxuGITxWwcI9efA+28yFRx0mruM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kKwzudqiElKqZHUR17+aBM4QsLIzvCcfcFnQlg/U77QtcP0M2Qu6T3JbtKIOgdGXx
+	 9RyhyyWq3/v9Xc7LKv+ViK22rM+invTGjWMglO4loKS5u7PPZH0+66lbtN2dqrEd0c
+	 q4DYNbemRPNqRH7q/YplI/HTeynJDMHXK6yssHB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfDENmQ (ORCPT
+        id S1729833AbfDENp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 09:42:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45069 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfDENmQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 09:42:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y3so3093133pgk.12;
-        Fri, 05 Apr 2019 06:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/tdzLJiuuuH/k42nytiU69DlIEy/5fN1NXYhETaelTw=;
-        b=pkfCg7iQrILeRL7uPg7GYy6gDijLnk1zXE7RfzI/1Ru/qVNzDDqVpEyhISJuxLLh+f
-         gTKGVU1wMGR4a2KKRgVaKKn93dIOwHXsHAmNmbXGDMzRpR1nUwgv8quNchQWoQM3MG2j
-         OnQzat42oIUOpASapQrWMt2f9n2vpnLweSdvtebKmhOpJzbexdI1SjHK9LbS3FUXT3vZ
-         Ox1b+DOGv1cCV6FvzOmbqQs8K0r7N9AdTKVjWTfdxPVRnCODsFOO3fhB2asNJFZG9FaK
-         VIZExJus1jcU+REh9pbqXlpnEQQuSzm57ePnROM5uUgvB6o3UkOhCwNPoM72q8/Akbo2
-         wD7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/tdzLJiuuuH/k42nytiU69DlIEy/5fN1NXYhETaelTw=;
-        b=JHLihe8BTtcIibHbw2wzJrK3NmWUIx3NSajP2GDMh6BUR6m0Uox9Tpj5lYwVyu+VZQ
-         smOMMzaMvuoEUFsaYClOuMD3Umwnt6lwU89H+L3o/pEqGUOfI/jlBCpRy917ZN2zi8nG
-         GhOcfy2YUip3fH1vchjGg89LWSXaSYjijwt/KPd5FGloN9rH4Jf2470Mw8TfX14yAAjC
-         eswZiebiaD/U1CLOi3M/jln90ivFDgwIUE1nZZRAsr7SD0g7LGdxpxekNOelcXE1dYGu
-         GxdNCEQcQEVTm5DsRKHhdDTHQVsBhj6b+Im8xR8aUl1bM6wjDbZRW8lHGJ87HtIG6eTJ
-         hwEg==
-X-Gm-Message-State: APjAAAU9eR0ihuP8zOFsjKBmIE2+GimjE2fpWarFApAn80l7I6hojzu1
-        f+ZN+aERoVuhrMxO+ESerfduO2Sk
-X-Google-Smtp-Source: APXvYqzRJLif+zCKiQpOQDMvmBzxmLJMQWBDL49ard8OwmaNNJ0zgd8nNLMWvAKeVbU4tvk2tOhxhg==
-X-Received: by 2002:a63:fa54:: with SMTP id g20mr11603632pgk.242.1554471734774;
-        Fri, 05 Apr 2019 06:42:14 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i126sm31912534pfc.101.2019.04.05.06.42.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 06:42:14 -0700 (PDT)
-Subject: Re: [PATCH v2] usb: typec: tcpm: collision avoidance
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kyle Tso <kyletso@google.com>
-Cc:     gregkh@linuxfoundation.org, badhri@google.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190322121745.159768-1-kyletso@google.com>
- <20190404141345.GF21319@kuha.fi.intel.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net>
-Date:   Fri, 5 Apr 2019 06:42:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 09:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfDENp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 09:45:58 -0400
+Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7107C206C0;
+        Fri,  5 Apr 2019 13:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554471956;
+        bh=NKOdgxQGaPufsJZoIxuGITxWwcI9efA+28yFRx0mruM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=quaXf62SrbcG2o61izc7EiJbAKmy7iZzbsJ+VMfV8Sp4RUzsFqjxbRNeLDgQLdMZZ
+         IN5jI4s/3zNzvuhPg8nbZ4msA6Aa1sTjWtjvRBholzs+F8McOWEQm15lED4PyB7SkS
+         ZCzTbVilqCATHojDciozrJuUB8nLgRyuesCcDX24=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C2B2B3C08D5; Fri,  5 Apr 2019 15:45:53 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 15:45:53 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 06/10] power: supply: olpc_battery: Move priv data to a
+ struct
+Message-ID: <20190405134553.ahntfz7aggzg7hdd@earth.universe>
+References: <20190310162419.11861-1-lkundrak@v3.sk>
+ <20190310162419.11861-7-lkundrak@v3.sk>
 MIME-Version: 1.0
-In-Reply-To: <20190404141345.GF21319@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lcxnf65dmsdxorj7"
+Content-Disposition: inline
+In-Reply-To: <20190310162419.11861-7-lkundrak@v3.sk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 7:13 AM, Heikki Krogerus wrote:
-> Hi,
-> 
-> On Fri, Mar 22, 2019 at 08:17:45PM +0800, Kyle Tso wrote:
->> This patch provides the implementation of Collision Avoidance introduced
->> in PD3.0. The start of each Atomic Message Sequence (AMS) initiated by
->> the port will be denied if the current AMS is not interruptible. The
->> Source port will set the CC to SinkTxNG if it is going to initiate an
->> AMS, and SinkTxOk otherwise. Meanwhile, any AMS initiated by a Sink port
->> will be denied in TCPM if the port partner (Source) sets SinkTxNG except
->> for HARD_RESET and SOFT_RESET.
-> 
-> I tested this with my GDBWin which has fusb302. When I plug-in
-> DisplayPort adapter, the partner device never gets registered, and I
-> see steady flow of warnings from fusb302:
-> 
 
-FWIW, I made multiple attempts to review the patch. Each time I get stuck
-after a while and notice that I don't understand what is going on.
+--lcxnf65dmsdxorj7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Maybe the state machine needs a complete overhaul. It seems to have reached
-a point where it is getting too complex to understand what is going on.
+Hi,
 
-> [  693.391176] Vconn is on during toggle start
-> [  693.391250] WARNING: CPU: 2 PID: 30 at drivers/usb/typec/tcpm/fusb302.c:562 fusb302_set_toggling+0x129/0x130 [fusb302]
-> [  693.400293] Modules linked in: intel_xhci_usb_role_switch fusb302 tcpm roles pi3usb30532 i915 typec intel_gtt intel_cht_int33fe
-> [  693.406309] CPU: 2 PID: 30 Comm: kworker/u8:1 Tainted: G        W         5.1.0-rc3-heikki+ #17
-> [  693.408434] cht_wcove_pwrsrc cht_wcove_pwrsrc: Could not detect charger type
-> [  693.412278] Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
-> [  693.412283] Workqueue: i2c-fusb302 tcpm_state_machine_work [tcpm]
-> [  693.424256] RIP: 0010:fusb302_set_toggling+0x129/0x130 [fusb302]
-> [  693.427234] Code: 89 df e8 da ef ff ff 85 c0 78 c6 c6 83 b0 01 00 00 00 eb b7 b9 02 00 00 00 e9 48 ff ff ff 48 c7 c7 20 e8 21 a0 e8 8e 0c e4 e0 <0f> 0b e9 58 ff ff ff 41 55 4c 8d 6f e8 41 54 41 89 f4 55 53 48 8d
-> [  693.436204] RSP: 0000:ffffc9000076bd90 EFLAGS: 00010286
-> [  693.439174] RAX: 0000000000000000 RBX: ffff888178080028 RCX: 0000000000000000
-> [  693.442157] RDX: 000000000000001f RSI: ffffffff8259051f RDI: ffffffff8259091f
-> [  693.445130] RBP: 0000000000000003 R08: ffffffff82590500 R09: 00000000000202c0
-> [  693.448100] R10: 0000010cb24a3d18 R11: 000000000000001e R12: ffff8881780801b0
-> [  693.451086] R13: ffffffffa021e4e5 R14: 0000000000000003 R15: ffff888178080040
-> [  693.454060] FS:  0000000000000000(0000) GS:ffff88817bb00000(0000) knlGS:0000000000000000
-> [  693.460009] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  693.462984] CR2: 00000000f7fb74a0 CR3: 000000000200d000 CR4: 00000000001006e0
-> [  693.465969] Call Trace:
-> [  693.468937]  tcpm_set_cc+0xb9/0x170 [fusb302]
-> [  693.471894]  tcpm_ams_start+0x1b8/0x2a0 [tcpm]
+On Sun, Mar 10, 2019 at 05:24:15PM +0100, Lubomir Rintel wrote:
+> The global variables for private data are not too nice. I'd like some
+> more, and that would clutter the global name space even further.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-tcpm_ams_start() sets TYPEC_CC_RP_1_5 unconditionally, no matter what. This causes
-the fusb302 code to start toggling. As such, it may well attempt to start toggling
-in the wrong state.
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Guenter
+-- Sebastian
 
-> [  693.474855]  ? _cond_resched+0x10/0x20
-> [  693.477807]  tcpm_state_machine_work+0x57e/0x28f6 [tcpm]
-> [  693.480776]  ? tcpm_pd_event_handler+0x111/0x320 [tcpm]
-> [  693.483743]  process_one_work+0x1da/0x410
-> [  693.486703]  worker_thread+0x28/0x3c0
-> [  693.489651]  ? process_one_work+0x410/0x410
-> [  693.492603]  kthread+0x10b/0x130
-> [  693.495548]  ? kthread_create_on_node+0x60/0x60
-> [  693.498506]  ret_from_fork+0x1f/0x30
-> 
-> 
-> Here's the tcpm debugfs log:
-> 
-> [  692.553000] CC1: 0 -> 2, CC2: 0 -> 1 [state DRP_TOGGLING, polarity 0, connected]
-> [  692.553016] state change DRP_TOGGLING -> SRC_ATTACH_WAIT
-> [  692.553056] pending state change SRC_ATTACH_WAIT -> SNK_TRY @ 200 ms
-> [  692.757402] state change SRC_ATTACH_WAIT -> SNK_TRY [delayed 200 ms]
-> [  692.757410] cc:=2
-> [  692.761946] pending state change SNK_TRY -> SNK_TRY_WAIT @ 100 ms
-> [  692.869308] state change SNK_TRY -> SNK_TRY_WAIT [delayed 100 ms]
-> [  692.869313] state change SNK_TRY_WAIT -> SRC_TRYWAIT
-> [  692.869317] cc:=3
-> [  692.873657] pending state change SRC_TRYWAIT -> SRC_TRYWAIT_UNATTACHED @ 100 ms
-> [  692.882524] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_TRYWAIT, polarity 0, connected]
-> [  692.882537] state change SRC_TRYWAIT -> SRC_TRYWAIT_DEBOUNCE
-> [  692.882567] pending state change SRC_TRYWAIT_DEBOUNCE -> SRC_ATTACHED @ 200 ms
-> [  693.085337] state change SRC_TRYWAIT_DEBOUNCE -> SRC_ATTACHED [delayed 200 ms]
-> [  693.085347] polarity 0
-> [  693.085352] Requesting mux state 1, usb-role 1, orientation 1
-> [  693.346845] vconn:=1
-> [  693.347174] vbus:=1 charge=0
-> [  693.358340] pending state change SRC_ATTACHED -> SRC_UNATTACHED @ 480 ms
-> [  693.378702] VBUS on
-> [  693.378711] state change SRC_ATTACHED -> SRC_STARTUP
-> [  693.378741] AMS POWER_NEGOTIATION start
-> [  693.378745] cc:=4
-> [  693.505321] state change SRC_STARTUP -> AMS_START in AMS POWER_NEGOTIATION
-> [  693.505325] state change AMS_START -> SRC_SEND_CAPABILITIES in AMS POWER_NEGOTIATION
-> [  693.505327] PD TX, header: 0x11a1
-> [  693.613296] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES @ 150 ms in AMS POWER_NEGOTIATION
-> [  693.613309] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_SEND_CAPABILITIES, polarity 0, connected]
-> [  693.765730] state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES [delayed 150 ms]
-> [  693.765753] PD TX, header: 0x11a1
-> [  693.770016] PD TX complete, status: 0
-> [  693.770261] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES_TIMEOUT @ 150 ms in AMS POWER_NEGOTIATION
-> [  693.775178] PD RX, header: 0x1042 [1]
-> [  693.775195] state change SRC_SEND_CAPABILITIES -> SRC_NEGOTIATE_CAPABILITIES
-> [  693.775236] Requested 5000 mV, 400 mA for 400 / 900 mA
-> [  693.775244] PD TX, header: 0x363
-> [  693.778253] PD TX complete, status: 0
-> [  693.778363] pending state change SRC_NEGOTIATE_CAPABILITIES -> SRC_TRANSITION_SUPPLY @ 35 ms
-> [  693.803463] Received hard reset
-> [  693.803473] state change SRC_NEGOTIATE_CAPABILITIES -> HARD_RESET_START
-> [  693.806323] pending state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF @ 30 ms
-> [  693.837400] state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF [delayed 30 ms]
-> [  693.837414] vconn:=1
-> [  693.837426] vbus:=0 charge=0
-> [  693.843380] Requesting mux state 1, usb-role 1, orientation 1
-> [  693.844554] pending state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON @ 760 ms
-> [  693.844575] VBUS off
-> [  693.844580] state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON
-> [  693.844617] vbus:=1 charge=0
-> [  693.850688] pending state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED @ 480 ms
-> [  693.868706] VBUS on
-> [  693.868713] state change SRC_HARD_RESET_VBUS_ON -> SRC_STARTUP
-> [  693.868742] AMS POWER_NEGOTIATION start
-> [  693.868749] cc:=4
-> [  694.101422] state change SRC_STARTUP -> AMS_START in AMS POWER_NEGOTIATION
-> [  694.101425] state change AMS_START -> SRC_SEND_CAPABILITIES in AMS POWER_NEGOTIATION
-> [  694.101428] PD TX, header: 0x11a1
-> [  694.205301] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES @ 150 ms in AMS POWER_NEGOTIATION
-> [  694.205317] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_SEND_CAPABILITIES, polarity 0, connected]
-> [  694.325808] Received hard reset
-> [  694.325816] state change SRC_SEND_CAPABILITIES -> HARD_RESET_START in AMS NONE_AMS
-> [  694.329208] pending state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF @ 30 ms in AMS NONE_AMS
-> [  694.359394] state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF [delayed 30 ms]
-> [  694.359401] vconn:=1
-> [  694.359408] vbus:=0 charge=0
-> [  694.366321] Requesting mux state 1, usb-role 1, orientation 1
-> [  694.367685] pending state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON @ 760 ms in AMS NONE_AMS
-> [  694.367700] VBUS off
-> [  694.367704] state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON in AMS NONE_AMS
-> [  694.367721] vbus:=1 charge=0
-> [  694.374175] pending state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED @ 480 ms in AMS NONE_AMS
-> [  694.374194] CC1: 2 -> 0, CC2: 1 -> 0 [state SRC_HARD_RESET_VBUS_ON, polarity 0, disconnected]
-> [  694.374201] state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED in AMS NONE_AMS
-> [  694.631957] Start DRP toggling
-> 
-> 
-> thanks,
-> 
+>=20
+> ---
+> Changes since v4:
+> - Bring some more code that was misplaced here.
+>=20
+> Changes since v2:
+> - Bring the allocaton of the priv data structure here
+>=20
+> Changes since v1:
+> - Split out the move to devm_* into a separate patch
+>=20
+>  drivers/power/supply/olpc_battery.c | 78 ++++++++++++++++++-----------
+>  1 file changed, 48 insertions(+), 30 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
+lpc_battery.c
+> index 3dcf5e19f329..f7bb9bedd893 100644
+> --- a/drivers/power/supply/olpc_battery.c
+> +++ b/drivers/power/supply/olpc_battery.c
+> @@ -53,6 +53,12 @@
+> =20
+>  #define BAT_ADDR_MFR_TYPE	0x5F
+> =20
+> +struct olpc_battery_data {
+> +	struct power_supply *olpc_ac;
+> +	struct power_supply *olpc_bat;
+> +	char bat_serial[17];
+> +};
+> +
+>  /*********************************************************************
+>   *		Power
+>   *********************************************************************/
+> @@ -91,11 +97,8 @@ static const struct power_supply_desc olpc_ac_desc =3D=
+ {
+>  	.get_property =3D olpc_ac_get_prop,
+>  };
+> =20
+> -static struct power_supply *olpc_ac;
+> -
+> -static char bat_serial[17]; /* Ick */
+> -
+> -static int olpc_bat_get_status(union power_supply_propval *val, uint8_t =
+ec_byte)
+> +static int olpc_bat_get_status(struct olpc_battery_data *data,
+> +		union power_supply_propval *val, uint8_t ec_byte)
+>  {
+>  	if (olpc_platform_info.ecver > 0x44) {
+>  		if (ec_byte & (BAT_STAT_CHARGING | BAT_STAT_TRICKLE))
+> @@ -326,6 +329,7 @@ static int olpc_bat_get_property(struct power_supply =
+*psy,
+>  				 enum power_supply_property psp,
+>  				 union power_supply_propval *val)
+>  {
+> +	struct olpc_battery_data *data =3D power_supply_get_drvdata(psy);
+>  	int ret =3D 0;
+>  	__be16 ec_word;
+>  	uint8_t ec_byte;
+> @@ -347,7 +351,7 @@ static int olpc_bat_get_property(struct power_supply =
+*psy,
+> =20
+>  	switch (psp) {
+>  	case POWER_SUPPLY_PROP_STATUS:
+> -		ret =3D olpc_bat_get_status(val, ec_byte);
+> +		ret =3D olpc_bat_get_status(data, val, ec_byte);
+>  		if (ret)
+>  			return ret;
+>  		break;
+> @@ -450,8 +454,8 @@ static int olpc_bat_get_property(struct power_supply =
+*psy,
+>  		if (ret)
+>  			return ret;
+> =20
+> -		sprintf(bat_serial, "%016llx", (long long)be64_to_cpu(ser_buf));
+> -		val->strval =3D bat_serial;
+> +		sprintf(data->bat_serial, "%016llx", (long long)be64_to_cpu(ser_buf));
+> +		val->strval =3D data->bat_serial;
+>  		break;
+>  	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
+>  		ret =3D olpc_bat_get_voltage_max_design(val);
+> @@ -579,17 +583,17 @@ static struct power_supply_desc olpc_bat_desc =3D {
+>  	.use_for_apm =3D 1,
+>  };
+> =20
+> -static struct power_supply *olpc_bat;
+> -
+>  static int olpc_battery_suspend(struct platform_device *pdev,
+>  				pm_message_t state)
+>  {
+> -	if (device_may_wakeup(&olpc_ac->dev))
+> +	struct olpc_battery_data *data =3D platform_get_drvdata(pdev);
+> +
+> +	if (device_may_wakeup(&data->olpc_ac->dev))
+>  		olpc_ec_wakeup_set(EC_SCI_SRC_ACPWR);
+>  	else
+>  		olpc_ec_wakeup_clear(EC_SCI_SRC_ACPWR);
+> =20
+> -	if (device_may_wakeup(&olpc_bat->dev))
+> +	if (device_may_wakeup(&data->olpc_bat->dev))
+>  		olpc_ec_wakeup_set(EC_SCI_SRC_BATTERY | EC_SCI_SRC_BATSOC
+>  				   | EC_SCI_SRC_BATERR);
+>  	else
+> @@ -601,8 +605,15 @@ static int olpc_battery_suspend(struct platform_devi=
+ce *pdev,
+> =20
+>  static int olpc_battery_probe(struct platform_device *pdev)
+>  {
+> -	int ret;
+> +	struct power_supply_config psy_cfg =3D {};
+> +	struct olpc_battery_data *data;
+>  	uint8_t status;
+> +	int ret;
+> +
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, data);
+> =20
+>  	/*
+>  	 * We've seen a number of EC protocol changes; this driver requires
+> @@ -620,9 +631,13 @@ static int olpc_battery_probe(struct platform_device=
+ *pdev)
+> =20
+>  	/* Ignore the status. It doesn't actually matter */
+> =20
+> -	olpc_ac =3D power_supply_register(&pdev->dev, &olpc_ac_desc, NULL);
+> -	if (IS_ERR(olpc_ac))
+> -		return PTR_ERR(olpc_ac);
+> +	psy_cfg.of_node =3D pdev->dev.of_node;
+> +	psy_cfg.drv_data =3D data;
+> +
+> +	data->olpc_ac =3D power_supply_register(&pdev->dev, &olpc_ac_desc, &psy=
+_cfg);
+> +	if (IS_ERR(data->olpc_ac))
+> +		return PTR_ERR(data->olpc_ac);
+> +
+>  	if (of_device_is_compatible(pdev->dev.of_node, "olpc,xo1.5-battery")) {
+>  		/* XO-1.5 */
+>  		olpc_bat_desc.properties =3D olpc_xo15_bat_props;
+> @@ -633,42 +648,45 @@ static int olpc_battery_probe(struct platform_devic=
+e *pdev)
+>  		olpc_bat_desc.num_properties =3D ARRAY_SIZE(olpc_xo1_bat_props);
+>  	}
+> =20
+> -	olpc_bat =3D power_supply_register(&pdev->dev, &olpc_bat_desc, NULL);
+> -	if (IS_ERR(olpc_bat)) {
+> -		ret =3D PTR_ERR(olpc_bat);
+> +	data->olpc_bat =3D power_supply_register(&pdev->dev, &olpc_bat_desc, &p=
+sy_cfg);
+> +	if (IS_ERR(data->olpc_bat)) {
+> +		ret =3D PTR_ERR(data->olpc_bat);
+>  		goto battery_failed;
+>  	}
+> =20
+> -	ret =3D device_create_bin_file(&olpc_bat->dev, &olpc_bat_eeprom);
+> +	ret =3D device_create_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
+>  	if (ret)
+>  		goto eeprom_failed;
+> =20
+> -	ret =3D device_create_file(&olpc_bat->dev, &olpc_bat_error);
+> +	ret =3D device_create_file(&data->olpc_bat->dev, &olpc_bat_error);
+>  	if (ret)
+>  		goto error_failed;
+> =20
+>  	if (olpc_ec_wakeup_available()) {
+> -		device_set_wakeup_capable(&olpc_ac->dev, true);
+> -		device_set_wakeup_capable(&olpc_bat->dev, true);
+> +		device_set_wakeup_capable(&data->olpc_ac->dev, true);
+> +		device_set_wakeup_capable(&data->olpc_bat->dev, true);
+>  	}
+> =20
+>  	return 0;
+> =20
+>  error_failed:
+> -	device_remove_bin_file(&olpc_bat->dev, &olpc_bat_eeprom);
+> +	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
+>  eeprom_failed:
+> -	power_supply_unregister(olpc_bat);
+> +	power_supply_unregister(data->olpc_bat);
+>  battery_failed:
+> -	power_supply_unregister(olpc_ac);
+> +	power_supply_unregister(data->olpc_ac);
+>  	return ret;
+>  }
+> =20
+>  static int olpc_battery_remove(struct platform_device *pdev)
+>  {
+> -	device_remove_file(&olpc_bat->dev, &olpc_bat_error);
+> -	device_remove_bin_file(&olpc_bat->dev, &olpc_bat_eeprom);
+> -	power_supply_unregister(olpc_bat);
+> -	power_supply_unregister(olpc_ac);
+> +	struct olpc_battery_data *data =3D platform_get_drvdata(pdev);
+> +
+> +	device_remove_file(&data->olpc_bat->dev, &olpc_bat_error);
+> +	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
+> +	power_supply_unregister(data->olpc_bat);
+> +	power_supply_unregister(data->olpc_ac);
+> +
+>  	return 0;
+>  }
+> =20
+> --=20
+> 2.20.1
+>=20
 
+--lcxnf65dmsdxorj7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynXAQACgkQ2O7X88g7
++prmTw//WvOnV38fHWbDKo5jQ2UqxNuxuaBiWdFDWc/d4PzNouyCDCoiqc2EOwft
+xKLdzg3FOn/MB8Mgl64jCLa22b+swgIspe08DFYFPHburwYtBxBZiukJrMilzt7q
+ANVJMrp92pb12lXk+TVjHNl5L15deRFxP6Dq2WTFyfAj5N0qvaCmTWTR03MpvALK
+69Dncw02zAAUlEh1hgilRlJO1psB3EoHwdI5rv998Lppb2+donByw2F0Pn4Eq2/j
+H0sRI6ky9ni/An68oGGvWW8Z27zdbQaAr7KwBjG/FXaS4Ntc1LQblQCNrJ/ZeRmf
+/nXa6zJ2k7Ra+Np5Pta/VIWVgvBD4HHskABq0L7DkTV1kzjdB4P7c5tpEhEsolZg
+E8lFvx1r6BP7MXPkcDhoBtu8bE6joMxunYeFUQ7iUw1bo46LLBo5BXl9BsuY0usO
+5PvNLiG3KBpRqFROCCPztolqUJueiBdle3HgS/g4zHlEqUK+wB8WW/02G5QAE6X3
+JS63y5DRp48LwL1wTNX9Oe2KdIFkns3VDf08K2eXyrwoPiv43PT8KjLpHMM0yhKG
+T5+h0x7LiHEl12OkfxBL7dcDbHUPWj758gUJDQBYiepgOsq9H/DhFrZOnelqL8sw
+ddx459jyPSnzRbGawgW5lPv8Y0RmQCQHMQL0yPs31JuBZhr7RU4=
+=pSCJ
+-----END PGP SIGNATURE-----
+
+--lcxnf65dmsdxorj7--
