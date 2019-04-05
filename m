@@ -2,169 +2,195 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A10C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB911C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0025221871
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACDE2186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfDELis (ORCPT
+        id S1731019AbfDELkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:38:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:50163 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730642AbfDELis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:38:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 04:38:47 -0700
-X-IronPort-AV: E=Sophos;i="5.60,312,1549958400"; 
-   d="scan'208";a="131720024"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2019 04:38:45 -0700
-Message-ID: <f5b2d3d661c9a19b4e354ed525c054af467de557.camel@linux.intel.com>
-Subject: Re: [PATCH] drm/i915: Use drm_dev_unplug()
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        michal.wajdeczko@intel.com
-Date:   Fri, 05 Apr 2019 13:38:43 +0200
-In-Reply-To: <155445268803.8259.16095445514284244974@skylake-alporthouse-com>
-References: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
-         <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
-         <51c51c4d1a2facbc1dfb240b94377027e263872e.camel@linux.intel.com>
-         <155445268803.8259.16095445514284244974@skylake-alporthouse-com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
- 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 5 Apr 2019 07:40:47 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38529 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730596AbfDELkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 07:40:46 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BecYW2734849
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 04:40:38 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BecDf2734846;
+        Fri, 5 Apr 2019 04:40:38 -0700
+Date:   Fri, 5 Apr 2019 04:40:38 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-5e0861baa3fa73e8bd861a4b7ba7fa992b1dff82@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
+        jolsa@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        ak@linux.intel.com
+Reply-To: hpa@zytor.com, tglx@linutronix.de, ak@linux.intel.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
+          jolsa@kernel.org
+In-Reply-To: <20190326221823.11518-5-andi@firstfloor.org>
+References: <20190326221823.11518-5-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf list: Output tool events
+Git-Commit-ID: 5e0861baa3fa73e8bd861a4b7ba7fa992b1dff82
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-05 at 09:24 +0100, Chris Wilson wrote:
-> Quoting Janusz Krzysztofik (2019-04-05 09:11:54)
-> > On Fri, 2019-04-05 at 08:41 +0100, Chris Wilson wrote:
-> > > Quoting Janusz Krzysztofik (2019-04-05 08:26:57)
-> > > > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > > > 
-> > > > The driver does not currently support unbinding from a device
-> > > > which
-> > > > is
-> > > > in use.  Since open file descriptors may still be pointing into
-> > > > kernel
-> > > > memory where the device structures used to be, entirely correct
-> > > > kernel
-> > > > panics protect the driver from being unbound as we should not
-> > > > be
-> > > > unbinding it before those dangling pointers have been made
-> > > > safe.
-> > > > 
-> > > > According to the documentation found inside
-> > > > drivers/gpu/drm/drm_drv.c,
-> > > > drm_dev_unplug() should be used instead of drm_dev_unregister()
-> > > > in
-> > > > order to make a device inaccessible to users as soon as it is
-> > > > unpluged.
-> > > > Follow that advice to make those possibly dangling pointers
-> > > > safe,
-> > > > protected by DRM layer from a user who is otherwise left
-> > > > pointing
-> > > > into
-> > > > possibly reused kernel memory after the driver has been unbound
-> > > > from
-> > > > the device.
-> > > > 
-> > > > Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com
-> > > > >
-> > > > ---
-> > > >  drivers/gpu/drm/i915/i915_drv.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/i915/i915_drv.c
-> > > > b/drivers/gpu/drm/i915/i915_drv.c
-> > > > index 9df65d386d11..66163378c481 100644
-> > > > --- a/drivers/gpu/drm/i915/i915_drv.c
-> > > > +++ b/drivers/gpu/drm/i915/i915_drv.c
-> > > > @@ -1596,7 +1596,7 @@ static void i915_driver_unregister(struct
-> > > > drm_i915_private *dev_priv)
-> > > >         i915_pmu_unregister(dev_priv);
-> > > >  
-> > > >         i915_teardown_sysfs(dev_priv);
-> > > > -       drm_dev_unregister(&dev_priv->drm);
-> > > > +       drm_dev_unplug(&dev_priv->drm);
-> > > 
-> > > I think we may have our onion inverted here. We want to stop the
-> > > users
-> > > as the first step, then start removing the entries. (That will
-> > > also
-> > > nicely invert the order from register, which is what we typically
-> > > expect).
-> > > 
-> > > After calling i915_driver_unregister(); call
-> > > i915_gem_set_wedged() to
-> > > immediately (give or take external fences) cancel inflight
-> > > operations.
-> > 
-> > OK, thanks.  Do you prefer them squashed or as serparate patches?
-> 
-> Quite happy to do the s/unregister/unplug/ and move in one go. Have a
-> pre-emptive
-> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-> on that as that seems to be the right thing to do.
-> 
-> And there should be no issues in placing a i915_gem_set_wedged()
-> immediately after the call to i915_driver_unregister, so if you
-> include
-> a line of commentary about why, for example
-> 
-> /*
->  * After unregistering the device to prevent any new users, cancel
->  * all in-flight requests so that we can quickly unbind the active
->  * resources.
->  */
-> i915_gem_set_wedged(dev_priv);
-> 
-> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Commit-ID:  5e0861baa3fa73e8bd861a4b7ba7fa992b1dff82
+Gitweb:     https://git.kernel.org/tip/5e0861baa3fa73e8bd861a4b7ba7fa992b1dff82
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Tue, 26 Mar 2019 15:18:23 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 1 Apr 2019 14:49:25 -0300
 
-I've given it some testing, no side effects with test workloads I've
-tried, and looks like it at least helps to prevent from making the
-device actually wedged.
+perf list: Output tool events
 
-With these two patches, plus the one we discussed yesterday, and yet
-another one I'm going to submit soon, I'm now able to unbind the driver
-from a device while a workload is running on it, unload the module,
-reload it and successfully perform basic GEM health checks, all in a
-quick succession :-).
+Add support in 'perf list' to output tool internal events, currently
+only 'duration_time'.
 
-Unfortunately, not 100% reproducible, as well as not the case with
-device unplug simulated by writing 1 to device/remove sysfs file.
-Surely that needs the work you describe below to be done first.
+Committer testing:
 
-Thanks for your cooperation,
-Janusz
+  $ perf list dur*
 
+  List of pre-defined events (to be used in -e):
 
-> 
-> I think overall though, we need to go through i915_driver_unload()
-> and
-> push the module cleanup operations to i915_driver_release -- that
-> will
-> take a bit of surgery to separate the different phases that are
-> currently smashed together.
-> -Chris
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+    duration_time                                      [Tool event]
 
+  Metric Groups:
+
+  $ perf list sw
+
+  List of pre-defined events (to be used in -e):
+
+    alignment-faults                                   [Software event]
+    bpf-output                                         [Software event]
+    context-switches OR cs                             [Software event]
+    cpu-clock                                          [Software event]
+    cpu-migrations OR migrations                       [Software event]
+    dummy                                              [Software event]
+    emulation-faults                                   [Software event]
+    major-faults                                       [Software event]
+    minor-faults                                       [Software event]
+    page-faults OR faults                              [Software event]
+    task-clock                                         [Software event]
+
+    duration_time                                      [Tool event]
+
+  $ perf list | grep duration
+    duration_time                                      [Tool event]
+         [L1D miss outstandings duration in cycles]
+          page walk duration are excluded in Skylake]
+          load. EPT page walk duration are excluded in Skylake]
+          page walk duration are excluded in Skylake]
+          store. EPT page walk duration are excluded in Skylake]
+          (instruction fetch) request. EPT page walk duration are excluded in
+          instruction fetch request. EPT page walk duration are excluded in
+  $
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190326221823.11518-5-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-list.c      |  6 ++++--
+ tools/perf/util/parse-events.c | 20 ++++++++++++++++++++
+ tools/perf/util/parse-events.h |  1 +
+ 3 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index a8394b4f1167..e0312a1c4792 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -70,10 +70,11 @@ int cmd_list(int argc, const char **argv)
+ 			print_symbol_events(NULL, PERF_TYPE_HARDWARE,
+ 					event_symbols_hw, PERF_COUNT_HW_MAX, raw_dump);
+ 		else if (strcmp(argv[i], "sw") == 0 ||
+-			 strcmp(argv[i], "software") == 0)
++			 strcmp(argv[i], "software") == 0) {
+ 			print_symbol_events(NULL, PERF_TYPE_SOFTWARE,
+ 					event_symbols_sw, PERF_COUNT_SW_MAX, raw_dump);
+-		else if (strcmp(argv[i], "cache") == 0 ||
++			print_tool_events(NULL, raw_dump);
++		} else if (strcmp(argv[i], "cache") == 0 ||
+ 			 strcmp(argv[i], "hwcache") == 0)
+ 			print_hwcache_events(NULL, raw_dump);
+ 		else if (strcmp(argv[i], "pmu") == 0)
+@@ -113,6 +114,7 @@ int cmd_list(int argc, const char **argv)
+ 					    event_symbols_hw, PERF_COUNT_HW_MAX, raw_dump);
+ 			print_symbol_events(s, PERF_TYPE_SOFTWARE,
+ 					    event_symbols_sw, PERF_COUNT_SW_MAX, raw_dump);
++			print_tool_events(s, raw_dump);
+ 			print_hwcache_events(s, raw_dump);
+ 			print_pmu_events(s, raw_dump, !desc_flag,
+ 						long_desc_flag,
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 98c0fadaedb9..4432bfe039fd 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2457,6 +2457,25 @@ out_enomem:
+ 	return evt_num;
+ }
+ 
++static void print_tool_event(const char *name, const char *event_glob,
++			     bool name_only)
++{
++	if (event_glob && !strglobmatch(name, event_glob))
++		return;
++	if (name_only)
++		printf("%s ", name);
++	else
++		printf("  %-50s [%s]\n", name, "Tool event");
++
++}
++
++void print_tool_events(const char *event_glob, bool name_only)
++{
++	print_tool_event("duration_time", event_glob, name_only);
++	if (pager_in_use())
++		printf("\n");
++}
++
+ void print_symbol_events(const char *event_glob, unsigned type,
+ 				struct event_symbol *syms, unsigned max,
+ 				bool name_only)
+@@ -2540,6 +2559,7 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 
+ 	print_symbol_events(event_glob, PERF_TYPE_SOFTWARE,
+ 			    event_symbols_sw, PERF_COUNT_SW_MAX, name_only);
++	print_tool_events(event_glob, name_only);
+ 
+ 	print_hwcache_events(event_glob, name_only);
+ 
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 0c1f5b98f636..a052cd6ac63e 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -204,6 +204,7 @@ extern struct event_symbol event_symbols_sw[];
+ void print_symbol_events(const char *event_glob, unsigned type,
+ 				struct event_symbol *syms, unsigned max,
+ 				bool name_only);
++void print_tool_events(const char *event_glob, bool name_only);
+ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
+ 			     bool name_only);
+ int print_hwcache_events(const char *event_glob, bool name_only);
