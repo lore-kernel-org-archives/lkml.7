@@ -2,112 +2,134 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91AEC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA33DC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740802171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED5D2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="paZEgbl0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qQmvzlSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfDEWrK (ORCPT
+        id S1726353AbfDEWuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:47:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34661 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfDEWrC (ORCPT
+        Fri, 5 Apr 2019 18:50:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41178 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfDEWuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:47:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so9748833wrq.1;
-        Fri, 05 Apr 2019 15:47:00 -0700 (PDT)
+        Fri, 5 Apr 2019 18:50:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so4039441pfd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 15:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eHbCkhdoOpnF8F/axoSBJ39P2CF2Q6TWQy+leIkw+5c=;
-        b=paZEgbl0ANuDUeSLzJfs7pQ1oPQlb/YOXIvvxEfU74A3NrzUQwf1Yc6oScSCvbD+Jj
-         3KmO0eKfnNPwt0ZGC8NsmngSU1Ap/FI4zn/Q3nkeEmuSgYrI82VDEs9TDAH4hgqHMPo9
-         MNYXbq88Z5UF/azLTqN+eMYGyth6SacvrnjYuiTSCqPTUNkHKErDDJI5RmkbG8cFRQB1
-         UEWEK/GznewViPqsGfwYX23jQSZKV5d2TDLMBQ9SfQTBtfe4IrfJQpVnPUSMjtTImSWG
-         V2oHCaQ6BfsJi0aUTFT6Ovb288PTBd34dU90NbqyQbIfhwXJCmpOnYAJ8cTlUV29zCZ/
-         akJQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WZyhCqqHVZgZD5mC+F681yCOX1N1HxcM8DUVwE70YdU=;
+        b=qQmvzlSj13+4WjjF4FulxWOd4AqkIpbBLYq+x5xoHzacVUHBQVX1SuxsSfnswUO6iG
+         2xGiQ7EZBoa8jGsNgxHafxilBaix5OjIhGx1Fop6oVWkdUZjQtxMhKnVaNl67KuZVthj
+         jLrKJ+i1g2atA6hFeia3AmJSIjSTxkzannh0GUuZL2Y+XVukGsmDqHuRUOnLGGzljbj2
+         IW8A08BmXXy7UJW/5ku7UUQ1uNbupiQOV7GTEcC3v35il8wv6DZiayQxipQXMRuEzsC8
+         B2buMe0LDFg26vmYhab2Pu3zQ2roe4y7kc4slIj6r1r1i8ygtrY77SVBpn67B+M8OwCx
+         BNBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=eHbCkhdoOpnF8F/axoSBJ39P2CF2Q6TWQy+leIkw+5c=;
-        b=G+IjQKaMw8JAW96ginxquMqM1JjqUoih2LqX25DHYhTW6OitYtDNLb2a78sBfc0CTp
-         AgkcblNBrgapiKp3yBDMf9tRFHU833V6uaSIosvYaoOHeZSAiHeu/6AXuek8i23kdoTE
-         DgoP2qNLXGtNwR1PC2DP8/enblv3C167tfA0+zdktHuxWIxRbHWOkP7OZmERv6E1soGL
-         P2muB7BexTSBxmpI6pAfM5nEwVv7ajNjeq0ZjmnowP6bYNMXpr8v2qm9btJZHIRlhDJr
-         COJT3Sb3lVPXecB10AfqHCsZaTBiQSJT9yPXEaK1/K3+6DL08tHtE572mWlWBa+udNNb
-         iYIQ==
-X-Gm-Message-State: APjAAAVfJtPqwNmQ6hhzI6CnCBAaf0qiB4FjC4k4awkiE1psCrNQDpw2
-        5oihJqRUZDeok2DXmdfH87nUrJaN
-X-Google-Smtp-Source: APXvYqzZNWG9stoUbB/7xPZQMf6GOKatODqaThK8bn68OzEh/P/z5nngdZjU2CtcJLb+6M6EFDNdMg==
-X-Received: by 2002:adf:db05:: with SMTP id s5mr10428695wri.247.1554504419660;
-        Fri, 05 Apr 2019 15:46:59 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 7sm81190791wrc.81.2019.04.05.15.46.58
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WZyhCqqHVZgZD5mC+F681yCOX1N1HxcM8DUVwE70YdU=;
+        b=czU46iJMR/BUicXUx0jpxF35neIJx/ejetYhLPt1ELNg7v6Z9vYpFQrRr7BC8XJJzc
+         OlSk43zxv+pXv3L73xvUZd+HE9WVklT0ROEYlPahQMe1m1dsFVMfBpjpJ1ekQyM9XBZC
+         dXZHmU625oVGjIto1ybmlr5bVRccayM06xVj3DJYyI/zEV0I9pZ4qF2ktC9mnaEw213T
+         RI3WXNpwjVbWWZhc09bYpSDRn7pgOok79rVumiWUlQ/ygxOn/CRKKuYFVirRvNdXj+G4
+         1vE4vN2lItSQY9sRYzS0rWeFEqtUamqmqUpiD1OQXfTPn9nZeDtEPnyHT4olWyoUlIaG
+         WK/A==
+X-Gm-Message-State: APjAAAX5bu6u2VZIdxDM6jgqj843KU23FhJEieGxaUhePkSubbLqx1rd
+        65I+xzHXaCgtyu9fwW/qTt6MkQ==
+X-Google-Smtp-Source: APXvYqz55cY4lXzprdh1MLetOKDbsPZYYuSOc9z70wD8yC+TlKBPaP/2h5zd6BA2gTQ8c9VlEJsLTA==
+X-Received: by 2002:a63:6f0a:: with SMTP id k10mr14373126pgc.78.1554504614814;
+        Fri, 05 Apr 2019 15:50:14 -0700 (PDT)
+Received: from [10.156.37.38] ([116.84.217.55])
+        by smtp.googlemail.com with ESMTPSA id m7sm35159407pgg.62.2019.04.05.15.50.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 15:46:59 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Marc Orr <marcorr@google.com>
-Subject: [PATCH 2/2] KVM: x86: nVMX: fix x2APIC VTPR read intercept
-Date:   Sat,  6 Apr 2019 00:46:56 +0200
-Message-Id: <1554504416-8720-3-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1554504416-8720-1-git-send-email-pbonzini@redhat.com>
-References: <1554504416-8720-1-git-send-email-pbonzini@redhat.com>
+        Fri, 05 Apr 2019 15:50:14 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH] Staging: greybus: Fix spinlock_t definition
+ without comment
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Cc:     devel@driverdev.osuosl.org, elder@kernel.org, johan@kernel.org,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
+References: <20190405200046.20600-1-madhumithabiw@gmail.com>
+ <20190405205304.GS32590@kadam>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <fd59f7d5-84a0-35ca-b096-a1d2c7e30336@linaro.org>
+Date:   Fri, 5 Apr 2019 17:50:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190405205304.GS32590@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Orr <marcorr@google.com>
+On 4/5/19 3:53 PM, Dan Carpenter wrote:
+> On Fri, Apr 05, 2019 at 03:00:46PM -0500, Madhumitha Prabakaran
+> wrote:
+>> Fix spinlock_t definition without comment.
+>> 
+>> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 
-Referring to the "VIRTUALIZING MSR-BASED APIC ACCESSES" chapter of the
-SDM, when "virtualize x2APIC mode" is 1 and "APIC-register
-virtualization" is 0, a RDMSR of 808H should return the VTPR from the
-virtual APIC page.
+Madhumitha, the reason one would want a comment associated with
+a lock field in a structure is to get some understanding of why
+it's needed.  Saying "protect structure fields" is not enough,
+because that can pretty much be assumed, so a comment like that
+adds no value.
 
-However, for nested, KVM currently fails to disable the read intercept
-for this MSR. This means that a RDMSR exit takes precedence over
-"virtualize x2APIC mode", and KVM passes through L1's TPR to L2,
-instead of sourcing the value from L2's virtual APIC page.
+Looking at the code, you can see the lock field protects the
+connection's operations list.  It also appears to be needed
+for accessing the state field (reading or updating).
 
-This patch fixes the issue by disabling the read intercept, in VMCS02,
-for the VTPR when "APIC-register virtualization" is 0.
+Given that, a better comment might be:
 
-The issue described above and fix prescribed here, were verified with
-a related patch in kvm-unit-tests titled "Test VMX's virtualize x2APIC
-mode w/ nested".
+        spinlock_t                      lock;	/* operations list and state */
 
-Signed-off-by: Marc Orr <marcorr@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Fixes: c992384bde84f ("KVM: vmx: speed up MSR bitmap merge")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> --- drivers/staging/greybus/connection.h | 2 +- 1 file changed, 1
+>> insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/staging/greybus/connection.h
+>> b/drivers/staging/greybus/connection.h index
+>> 5ca3befc0636..0aedd246e94a 100644 ---
+>> a/drivers/staging/greybus/connection.h +++
+>> b/drivers/staging/greybus/connection.h @@ -47,7 +47,7 @@ struct
+>> gb_connection { unsigned long			flags;
+>> 
+>> struct mutex			mutex; -	spinlock_t			lock; +	spinlock_t			lock; /*
+>> Protect structure fields */ enum gb_connection_state	state;
+> 
+> What does the mutex do then?  Why can't we just use the spinlock for 
+> everything?
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 897d70e3d291..7ec9bb1dd723 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -578,7 +578,7 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 		nested_vmx_disable_intercept_for_msr(
- 			msr_bitmap_l1, msr_bitmap_l0,
- 			X2APIC_MSR(APIC_TASKPRI),
--			MSR_TYPE_W);
-+			MSR_TYPE_R | MSR_TYPE_W);
- 
- 		if (nested_cpu_has_vid(vmcs12)) {
- 			nested_vmx_disable_intercept_for_msr(
--- 
-1.8.3.1
+The mutex needs to be held during enable and disable of a connection.
+Johan might be able to give you a more complete answer but these
+operations (or at least the enable) need to block, so can't hold a
+spinlock.
+
+					-Alex
+
+> I did glance at the code and it wasn't immediately obvious to me.
+> 
+> regards, dan carpenter
+> 
+> _______________________________________________ greybus-dev mailing
+> list greybus-dev@lists.linaro.org 
+> https://lists.linaro.org/mailman/listinfo/greybus-dev
+> 
 
