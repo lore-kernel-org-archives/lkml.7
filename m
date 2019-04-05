@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36FC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B9C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E019320700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD5820700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CbSBObez"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="E7KBcA4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfDEXpe (ORCPT
+        id S1726726AbfDEXph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:45:34 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53236 "EHLO vps.xff.cz"
+        Fri, 5 Apr 2019 19:45:37 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53340 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfDEXpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:45:30 -0400
+        id S1726310AbfDEXpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:45:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554507924; bh=PAJuJoAE0FDcTBQGXPNd5/MCZ/q2/gHxAF4V8V3I9ns=;
+        t=1554507925; bh=LhKRrW0VZAWlwYr+NVOHhX0KGuDNwmtQcujH4vpUefU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbSBObezduiQZ/XIzoAZ1UuxDB8PYzyXBrXEFQof9WNFSz188LQbIcA24+iGIUaRD
-         wzyN/c4mUiT77uHsFe+PPh8zrCdShbQtb6LqLMlLoZy/Tf8MRjZodHAIcpSb7tMfr/
-         NmCsAx0Ev8nvOvcCkdj3e2Cp2VlFaI5k+ukQBs9s=
+        b=E7KBcA4VVi99ofHNaX4Q7W98vkZJM/l/9H+abMp00ahZAlIZchGYAp9Krql+csB4j
+         Efclmv0A4QbqHJhGYUkFvowzJY6Rl6bL5tYUxaXOVXc62xHyqWyc/8QIzPcYiZ58um
+         OpXCwj/GIAdjJPI9IWIWvcpnf0KyqHQKNbYu20CQ=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -54,9 +54,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Date:   Sat,  6 Apr 2019 01:45:09 +0200
-Message-Id: <20190405234514.6183-8-megous@megous.com>
+Subject: [PATCH 10/12] pinctrl: sunxi: Support I/O bias voltage setting on H6
+Date:   Sat,  6 Apr 2019 01:45:12 +0200
+Message-Id: <20190405234514.6183-11-megous@megous.com>
 In-Reply-To: <20190405234514.6183-1-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 MIME-Version: 1.0
@@ -68,99 +68,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-According to the phy datasheet, both regulators need to be enabled
-at the same time, but we can only specify a single phy-supply in
-the DT.
+H6 SoC has a "pio group withstand voltage mode" register (datasheet
+description), that needs to be used to select either 1.8V or 3.3V
+I/O mode, based on what voltage is powering the respective pin
+banks and is thus used for I/O signals.
 
-This can be achieved by making one regulator depedning on the
-other via vin-supply. While it's not a technically correct
-description of the hardware, it achieves the purpose.
+Add support for configuring this register according to the voltage
+of the pin bank regulator (if enabled).
 
-All values of RX/TX delay were tested exhaustively and a middle
-one of the working values was chosen.
+This is similar to the support for I/O bias voltage setting patch
+for A80 and the same concerns apply. (see commit 402bfb3c135213dc
+Support I/O bias voltage setting on A80).
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 14 ++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  3 +++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 644946749088..5270142527f5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -15,6 +15,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
- 
- 	chosen {
-@@ -64,6 +65,27 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
- 	};
-+
-+	/*
-+	 * The board uses 2.5V RGMII signalling. Power sequence
-+	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-+	 * power rails at the same time and to wait 100ms.
-+	 */
-+	reg_gmac_2v5: gmac-2v5 {
-+                compatible = "regulator-fixed";
-+                regulator-name = "gmac-2v5";
-+                regulator-min-microvolt = <2500000>;
-+                regulator-max-microvolt = <2500000>;
-+                startup-delay-us = <100000>;
-+                enable-active-high;
-+                gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-+
-+                /* The real parent of gmac-2v5 is reg_vcc5v, but we need
-+                 * to enable two regulators to power the phy. This is one
-+                 * way to achieve that.
-+                 */
-+                vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-+        };
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+index ef4268cc6227..30b1befa8ed8 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
+ 	.irq_banks = 4,
+ 	.irq_bank_map = h6_irq_bank_map,
+ 	.irq_read_needs_mux = true,
++	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
  };
  
- &cpu0 {
-@@ -82,6 +104,17 @@
- 	status = "okay";
- };
+ static int h6_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 9f329fec77cf..59a4ed396d92 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 					 unsigned pin,
+ 					 struct regulator *supply)
+ {
++	unsigned short bank = pin / PINS_PER_BANK;
++	unsigned long flags;
+ 	u32 val, reg;
+ 	int uV;
  
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_gmac_2v5>;
-+	allwinner,rx-delay-ps = <1500>;
-+	allwinner,tx-delay-ps = <700>;
-+	status = "okay";
-+};
+@@ -639,6 +641,18 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+ 		reg &= ~IO_BIAS_MASK;
+ 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
++		val = uV <= 1800000 ? 1 : 0;
 +
- &hdmi {
- 	ddc-supply = <&reg_ddc>;
- 	status = "okay";
-@@ -93,6 +126,17 @@
- 	};
- };
++		dev_info(pctl->dev,
++			 "Setting voltage bias to %sV on bank P%c\n",
++			 val ? "1.8" : "3.3", 'A' + bank);
++
++		raw_spin_lock_irqsave(&pctl->lock, flags);
++		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
++		reg &= ~(1 << bank);
++		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
++		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+ 	}
  
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
+ 	return 0;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index 476772f91dba..3a66376f141b 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -95,7 +95,10 @@
+ #define PINCTRL_SUN7I_A20	BIT(7)
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ 
++#define PIO_POW_MOD_SEL_REG	0x340
 +
-+		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-+		reset-assert-us = <15000>;
-+		reset-deassert-us = <40000>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
+ #define IO_BIAS_CFG_V1		1
++#define IO_BIAS_CFG_V2		2
+ 
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
 -- 
 2.21.0
 
