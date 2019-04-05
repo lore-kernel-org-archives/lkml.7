@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D080C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D1C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8E121871
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D02221871
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfDEMD1 (ORCPT
+        id S1731098AbfDEMDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:03:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49143 "EHLO
+        Fri, 5 Apr 2019 08:03:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39231 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEMD1 (ORCPT
+        with ESMTP id S1726389AbfDEMDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:03:27 -0400
+        Fri, 5 Apr 2019 08:03:50 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35C2xA22741062
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35C3eBo2741353
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 05:02:59 -0700
+        Fri, 5 Apr 2019 05:03:40 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35C2x802741059;
-        Fri, 5 Apr 2019 05:02:59 -0700
-Date:   Fri, 5 Apr 2019 05:02:59 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35C3eAE2741350;
+        Fri, 5 Apr 2019 05:03:40 -0700
+Date:   Fri, 5 Apr 2019 05:03:40 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-f3ef08583ea61eb4d86dfb33f0e0ebe2bc4f6e64@git.kernel.org>
-Cc:     hpa@zytor.com, jolsa@kernel.org, mingo@kernel.org, acme@redhat.com,
-        tglx@linutronix.de, kan.liang@intel.com, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Reply-To: mingo@kernel.org, acme@redhat.com, tglx@linutronix.de,
-          kan.liang@intel.com, ak@linux.intel.com,
-          linux-kernel@vger.kernel.org, jolsa@kernel.org, hpa@zytor.com
+Message-ID: <tip-c53dd58988385c3f0861ea1d487489bad8cc69a7@git.kernel.org>
+Cc:     kan.liang@intel.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, mingo@kernel.org, acme@redhat.com,
+        ak@linux.intel.com, jolsa@kernel.org, hpa@zytor.com
+Reply-To: jolsa@kernel.org, ak@linux.intel.com, hpa@zytor.com,
+          mingo@kernel.org, acme@redhat.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, kan.liang@intel.com
 In-Reply-To: <20190315165219.GA21223@tassilo.jf.intel.com>
 References: <20190315165219.GA21223@tassilo.jf.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf vendor events intel: Update Goldmont to v13
-Git-Commit-ID: f3ef08583ea61eb4d86dfb33f0e0ebe2bc4f6e64
+Subject: [tip:perf/core] perf vendor events intel: Update GoldmontPlus to
+ v1.01
+Git-Commit-ID: c53dd58988385c3f0861ea1d487489bad8cc69a7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -56,14 +57,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f3ef08583ea61eb4d86dfb33f0e0ebe2bc4f6e64
-Gitweb:     https://git.kernel.org/tip/f3ef08583ea61eb4d86dfb33f0e0ebe2bc4f6e64
+Commit-ID:  c53dd58988385c3f0861ea1d487489bad8cc69a7
+Gitweb:     https://git.kernel.org/tip/c53dd58988385c3f0861ea1d487489bad8cc69a7
 Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Thu, 14 Mar 2019 14:55:34 -0700
+AuthorDate: Thu, 14 Mar 2019 14:55:53 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Apr 2019 15:23:44 -0300
+CommitDate: Mon, 1 Apr 2019 15:23:46 -0300
 
-perf vendor events intel: Update Goldmont to v13
+perf vendor events intel: Update GoldmontPlus to v1.01
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
@@ -71,18 +72,17 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Link: https://lkml.kernel.org/r/20190315165219.GA21223@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/goldmont/cache.json | 1244 ++++----------------
- .../perf/pmu-events/arch/x86/goldmont/memory.json  |  260 ----
- .../pmu-events/arch/x86/goldmont/pipeline.json     |    5 +-
- .../arch/x86/goldmont/virtual-memory.json          |    9 +-
- 4 files changed, 259 insertions(+), 1259 deletions(-)
+ .../pmu-events/arch/x86/goldmontplus/cache.json    | 74 +++++++++++++---------
+ .../pmu-events/arch/x86/goldmontplus/pipeline.json |  5 +-
+ .../arch/x86/goldmontplus/virtual-memory.json      |  9 ++-
+ 3 files changed, 51 insertions(+), 37 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/cache.json b/tools/perf/pmu-events/arch/x86/goldmont/cache.json
-index f8bbe087b0f8..52a105666afc 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/cache.json
-@@ -77,7 +77,8 @@
-         "UMask": "0x21",
+diff --git a/tools/perf/pmu-events/arch/x86/goldmontplus/cache.json b/tools/perf/pmu-events/arch/x86/goldmontplus/cache.json
+index b4791b443a66..5a6ac8285ad4 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmontplus/cache.json
++++ b/tools/perf/pmu-events/arch/x86/goldmontplus/cache.json
+@@ -92,7 +92,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Locked load uops retired (Precise event capable)"
@@ -91,8 +91,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -88,7 +89,8 @@
-         "UMask": "0x41",
+@@ -104,7 +105,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that split a cache-line (Precise event capable)"
@@ -101,8 +101,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -99,7 +101,8 @@
-         "UMask": "0x42",
+@@ -116,7 +118,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.SPLIT_STORES",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Stores uops retired that split a cache-line (Precise event capable)"
@@ -111,8 +111,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -110,7 +113,8 @@
-         "UMask": "0x43",
+@@ -128,7 +131,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.SPLIT",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Memory uops retired that split a cache-line (Precise event capable)"
@@ -121,8 +121,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -121,7 +125,8 @@
-         "UMask": "0x81",
+@@ -140,7 +144,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired (Precise event capable)"
@@ -131,8 +131,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -132,7 +137,8 @@
-         "UMask": "0x82",
+@@ -152,7 +157,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Store uops retired (Precise event capable)"
@@ -141,8 +141,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -143,7 +149,8 @@
-         "UMask": "0x83",
+@@ -164,7 +170,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.ALL",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Memory uops retired (Precise event capable)"
@@ -151,8 +151,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -154,7 +161,8 @@
-         "UMask": "0x1",
+@@ -176,7 +183,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that hit L1 data cache (Precise event capable)"
@@ -161,8 +161,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -165,7 +173,8 @@
-         "UMask": "0x2",
+@@ -188,7 +196,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that hit L2 (Precise event capable)"
@@ -171,8 +171,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -176,7 +185,8 @@
-         "UMask": "0x8",
+@@ -200,7 +209,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that missed L1 data cache (Precise event capable)"
@@ -181,8 +181,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -187,7 +197,8 @@
-         "UMask": "0x10",
+@@ -212,7 +222,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that missed L2 (Precise event capable)"
@@ -191,8 +191,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -198,7 +209,8 @@
-         "UMask": "0x20",
+@@ -224,7 +235,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.HITM",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Memory uop retired where cross core or cross module HITM occurred (Precise event capable)"
@@ -201,8 +201,8 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -209,7 +221,8 @@
-         "UMask": "0x40",
+@@ -236,7 +248,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.WCB_HIT",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Loads retired that hit WCB (Precise event capable)"
@@ -211,2233 +211,189 @@ index f8bbe087b0f8..52a105666afc 100644
      },
      {
          "PEBS": "2",
-@@ -220,26 +233,14 @@
-         "UMask": "0x80",
+@@ -248,7 +261,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Loads retired that came from DRAM (Precise event capable)"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x40000032b7 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_READ.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
 +        "BriefDescription": "Loads retired that came from DRAM (Precise event capable)",
 +        "Data_LA": "1"
      },
      {
          "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x36000032b7 ",
-+        "MSRValue": "0x36000032b7",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_MISS.ANY",
-@@ -252,7 +253,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x10000032b7 ",
-+        "MSRValue": "0x10000032b7",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_MISS.HITM_OTHER_CORE",
-@@ -265,7 +266,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x04000032b7 ",
-+        "MSRValue": "0x04000032b7",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -278,20 +279,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x02000032b7 ",
-+        "MSRValue": "0x02000032b7",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -292,7 +306,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.",
+-        "BriefDescription": "Counts demand cacheable data reads of full cache lines true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts demand cacheable data reads of full cache lines true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x00000432b7 ",
-+        "MSRValue": "0x00000432b7",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_HIT",
-@@ -300,37 +301,11 @@
-         "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x00000132b7 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_READ.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000000022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000022 ",
-+        "MSRValue": "0x3600000022",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.ANY",
-@@ -343,7 +318,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000022 ",
-+        "MSRValue": "0x1000000022",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.HITM_OTHER_CORE",
-@@ -356,1164 +331,566 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200000022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000040022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000043091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000013091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000043010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000013010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000008000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600008000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000008000 ",
-+        "MSRValue": "0x0400000022",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400008000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200008000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000048000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000018000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000044800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000014800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000044000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000014000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x3600002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.ANY",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0400002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0200002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module. ",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000042000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that hit the L2 cache.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000012000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000001000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
+@@ -367,7 +381,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
+-        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600001000 ",
-+        "MSRValue": "0x0200000022",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -442,7 +456,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache.",
-+        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.",
+-        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000001000 ",
-+        "MSRValue": "0x0000040022",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -517,7 +531,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that hit the L2 cache.",
+-        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400001000 ",
-+        "MSRValue": "0x3600003091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -592,7 +606,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache.",
+-        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200001000 ",
-+        "MSRValue": "0x1000003091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -667,7 +681,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
+-        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000041000 ",
-+        "MSRValue": "0x0400003091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -742,7 +756,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that hit the L2 cache.",
-+        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
+-        "BriefDescription": "Counts bus lock and split lock requests true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts bus lock and split lock requests true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000011000 ",
-+        "MSRValue": "0x0200003091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -817,7 +831,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts data reads (demand & prefetch) that true miss for the L2 cache with a snoop miss in the other processor module.",
+-        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads (demand & prefetch) that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000800 ",
-+        "MSRValue": "0x0000043091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_HIT",
-+        "MSRIndex": "0x1a6,0x1a7",
+@@ -892,7 +906,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts data reads (demand & prefetch) that hit the L2 cache.",
+-        "BriefDescription": "Counts data cache lines requests by software prefetch instructions true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data cache lines requests by software prefetch instructions true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000800 ",
-+        "MSRValue": "0x3600003010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -967,7 +981,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache.",
-+        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache.",
+-        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000800 ",
-+        "MSRValue": "0x1000003010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -1042,7 +1056,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
+-        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000800 ",
-+        "MSRValue": "0x0400003010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -1117,7 +1131,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
+-        "BriefDescription": "Counts requests to the uncore subsystem true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts requests to the uncore subsystem true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000800 ",
-+        "MSRValue": "0x0200003010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -1192,7 +1206,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that true miss for the L2 cache with a snoop miss in the other processor module.",
+-        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040800 ",
-+        "MSRValue": "0x0000043010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -1267,7 +1281,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that hit the L2 cache.",
-+        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that hit the L2 cache.",
+-        "BriefDescription": "Counts data reads (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data reads (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000010800 ",
-+        "MSRValue": "0x1000008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
+@@ -1342,7 +1356,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
+-        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000400 ",
-+        "MSRValue": "0x0400008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
+@@ -1417,7 +1431,7 @@
+         "PDIR_COUNTER": "na",
+         "MSRIndex": "0x1a6, 0x1a7",
          "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
+-        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module. ",
++        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) true miss for the L2 cache with a snoop miss in the other processor module.",
          "Offcore": "1"
      },
      {
+diff --git a/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json b/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
+index ccf1aed69197..e3fa1a0ba71b 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
+@@ -3,7 +3,6 @@
+         "PEBS": "2",
          "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts requests to the uncore subsystem that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000400 ",
-+        "MSRValue": "0x0200008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that miss the L2 cache.",
-+        "BriefDescription": "Counts requests to the uncore subsystem that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts requests to the uncore subsystem that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000400 ",
-+        "MSRValue": "0x0000048000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts requests to the uncore subsystem that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts requests to the uncore subsystem that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000400 ",
-+        "MSRValue": "0x0000018000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_RESPONSE",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts requests to the uncore subsystem that have any transaction responses from the uncore subsystem.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000400 ",
-+        "MSRValue": "0x3600004800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040400 ",
-+        "MSRValue": "0x0000044800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that hit the L2 cache.",
-+        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000010400 ",
-+        "MSRValue": "0x3600004000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000200 ",
-+        "MSRValue": "0x1000004000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.HITM_OTHER_CORE",
-+        "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000200 ",
-+        "MSRValue": "0x0400004000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache.",
-+        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000200 ",
-+        "MSRValue": "0x0200004000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000200 ",
-+        "MSRValue": "0x0000044000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000200 ",
-+        "MSRValue": "0x3600002000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040200 ",
-+        "MSRValue": "0x1000002000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that hit the L2 cache.",
-+        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000010200 ",
-+        "MSRValue": "0x0400002000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000100 ",
-+        "MSRValue": "0x0200002000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000100 ",
-+        "MSRValue": "0x0000042000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache.",
-+        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000100 ",
-+        "MSRValue": "0x3600001000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000100 ",
-+        "MSRValue": "0x1000001000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000100 ",
-+        "MSRValue": "0x0400001000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040100 ",
-+        "MSRValue": "0x0200001000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that hit the L2 cache.",
-+        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000010100 ",
-+        "MSRValue": "0x0000041000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000080 ",
-+        "MSRValue": "0x3600000800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.ANY",
-+        "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000080 ",
-+        "MSRValue": "0x1000000800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.ANY",
-+        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.HITM_OTHER_CORE",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache.",
-+        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000080 ",
-+        "MSRValue": "0x0400000800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.HITM_OTHER_CORE",
-+        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
-+        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000080 ",
-+        "MSRValue": "0x0200000800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-+        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required.",
-+        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000080 ",
-+        "MSRValue": "0x0000040800",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-+        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that hit the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts bus lock and split lock requests that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040080 ",
-+        "MSRValue": "0x0000010400",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_HIT",
-+        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.ANY_RESPONSE",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that hit the L2 cache.",
-+        "BriefDescription": "Counts bus lock and split lock requests that have any transaction responses from the uncore subsystem.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000010080 ",
-+        "MSRValue": "0x3600000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.ANY_RESPONSE",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.ANY",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that have any transaction responses from the uncore subsystem.",
-+        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-+        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000020 ",
-+        "MSRValue": "0x3600000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.OUTSTANDING",
--        "MSRIndex": "0x1a6",
-+        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.ANY",
-+        "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
-+        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000020 ",
-+        "MSRValue": "0x3600000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_MISS.ANY",
-@@ -1526,7 +903,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000020 ",
-+        "MSRValue": "0x1000000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_MISS.HITM_OTHER_CORE",
-@@ -1539,7 +916,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000020 ",
-+        "MSRValue": "0x0400000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -1552,20 +929,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000020 ",
-+        "MSRValue": "0x0200000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040020 ",
-+        "MSRValue": "0x0000040020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_HIT",
-@@ -1574,37 +951,11 @@
-         "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010020 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000000010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000010 ",
-+        "MSRValue": "0x3600000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_MISS.ANY",
-@@ -1617,7 +968,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000010 ",
-+        "MSRValue": "0x1000000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_MISS.HITM_OTHER_CORE",
-@@ -1630,7 +981,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000010 ",
-+        "MSRValue": "0x0400000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -1643,20 +994,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000010 ",
-+        "MSRValue": "0x0200000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040010 ",
-+        "MSRValue": "0x0000040010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_HIT",
-@@ -1665,37 +1016,11 @@
-         "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x4000000008 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.COREWB.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that are outstanding, per cycle, from the time of the L2 miss to when any response is received.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000008 ",
-+        "MSRValue": "0x3600000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L2_MISS.ANY",
-@@ -1708,7 +1033,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000008 ",
-+        "MSRValue": "0x1000000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L2_MISS.HITM_OTHER_CORE",
-@@ -1721,7 +1046,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000008 ",
-+        "MSRValue": "0x0400000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -1734,20 +1059,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000008 ",
-+        "MSRValue": "0x0200000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040008 ",
-+        "MSRValue": "0x0000040008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L2_HIT",
-@@ -1756,24 +1081,11 @@
-         "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010008 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.COREWB.ANY_RESPONSE",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000004 ",
-+        "MSRValue": "0x4000000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.OUTSTANDING",
-@@ -1786,7 +1098,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000004 ",
-+        "MSRValue": "0x3600000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_MISS.ANY",
-@@ -1795,24 +1107,11 @@
-         "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x1000000004 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_MISS.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000004 ",
-+        "MSRValue": "0x0400000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -1825,20 +1124,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000004 ",
-+        "MSRValue": "0x0200000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040004 ",
-+        "MSRValue": "0x0000040004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_HIT",
-@@ -1847,24 +1146,11 @@
-         "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010004 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000002 ",
-+        "MSRValue": "0x4000000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.OUTSTANDING",
-@@ -1877,7 +1163,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000002 ",
-+        "MSRValue": "0x3600000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_MISS.ANY",
-@@ -1890,7 +1176,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000002 ",
-+        "MSRValue": "0x1000000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_MISS.HITM_OTHER_CORE",
-@@ -1903,7 +1189,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000002 ",
-+        "MSRValue": "0x0400000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -1916,20 +1202,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000002 ",
-+        "MSRValue": "0x0200000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040002 ",
-+        "MSRValue": "0x0000040002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_HIT",
-@@ -1938,24 +1224,11 @@
-         "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that hit the L2 cache.",
-         "Offcore": "1"
-     },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010002 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
--    },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that are outstanding, per cycle, from the time of the L2 miss to when any response is received. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x4000000001 ",
-+        "MSRValue": "0x4000000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.OUTSTANDING",
-@@ -1968,7 +1241,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that miss the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x3600000001 ",
-+        "MSRValue": "0x3600000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_MISS.ANY",
-@@ -1981,7 +1254,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that miss the L2 cache with a snoop hit in the other processor module, data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x1000000001 ",
-+        "MSRValue": "0x1000000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_MISS.HITM_OTHER_CORE",
-@@ -1994,7 +1267,7 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that miss the L2 cache with a snoop hit in the other processor module, no data forwarding is required. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0400000001 ",
-+        "MSRValue": "0x0400000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_MISS.HIT_OTHER_CORE_NO_FWD",
-@@ -2007,20 +1280,20 @@
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that true miss for the L2 cache with a snoop miss in the other processor module.  Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0200000001 ",
-+        "MSRValue": "0x0200000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_MISS.SNOOP_MISS_OR_NO_SNOOP_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand cacheable data reads of full cache lines that true miss for the L2 cache with a snoop miss in the other processor module. ",
-+        "BriefDescription": "Counts demand cacheable data reads of full cache lines that true miss for the L2 cache with a snoop miss in the other processor module.",
-         "Offcore": "1"
-     },
-     {
-         "CollectPEBSRecord": "1",
-         "PublicDescription": "Counts demand cacheable data reads of full cache lines that hit the L2 cache. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
-         "EventCode": "0xB7",
--        "MSRValue": "0x0000040001 ",
-+        "MSRValue": "0x0000040001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_HIT",
-@@ -2028,18 +1301,5 @@
-         "SampleAfterValue": "100007",
-         "BriefDescription": "Counts demand cacheable data reads of full cache lines that hit the L2 cache.",
-         "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand cacheable data reads of full cache lines that have any transaction responses from the uncore subsystem. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x0000010001 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand cacheable data reads of full cache lines that have any transaction responses from the uncore subsystem.",
--        "Offcore": "1"
-     }
- ]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/memory.json b/tools/perf/pmu-events/arch/x86/goldmont/memory.json
-index 690cebd12a94..197dc76d49dd 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/memory.json
-@@ -30,265 +30,5 @@
-         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "Machine clears due to memory ordering issue"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x20000032b7 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data read, code read, and read for ownership (RFO) requests (demand & prefetch) that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000022 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests (demand & prefetch) that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads (demand & prefetch) that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000003091",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads (demand & prefetch) that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000003010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_PF_DATA_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data reads generated by L1 or L2 prefetchers that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts requests to the uncore subsystem that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000008000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts requests to the uncore subsystem that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000004800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts any data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000004000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_STREAMING_STORES.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts partial cache line data writes to uncacheable write combining (USWC) memory region  that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000002000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache line reads generated by hardware L1 data cache prefetcher that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000001000 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.SW_PREFETCH.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cache lines requests by software prefetch instructions that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000800 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.FULL_STREAMING_STORES.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts full cache line data writes to uncacheable write combining (USWC) memory region and full cache-line non-temporal writes that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts bus lock and split lock requests that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000400 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts bus lock and split lock requests that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000200 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.UC_CODE_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts code reads in uncacheable (UC) memory region that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000100 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of demand write requests (RFO) generated by a write to partial data cache line, including the writes to uncacheable (UC) and write through (WT), and write protected (WP) types of memory that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000080 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand data partial reads, including data in uncacheable (UC) or uncacheable write combining (USWC) memory types that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000020 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts reads for ownership (RFO) requests generated by L2 prefetcher that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000010 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts data cacheline reads generated by hardware L2 cache prefetcher that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000008 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.COREWB.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts the number of writeback transactions caused by L1 or L2 cache evictions that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000004 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand instruction cacheline and I-side prefetch requests that miss the instruction cache that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000002 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand reads for ownership (RFO) requests generated by a write to full data cache line that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
--    },
--    {
--        "CollectPEBSRecord": "1",
--        "PublicDescription": "Counts demand cacheable data reads of full cache lines that miss the L2 cache and targets non-DRAM system address. Requires MSR_OFFCORE_RESP[0,1] to specify request type and response. (duplicated for both MSRs)",
--        "EventCode": "0xB7",
--        "MSRValue": "0x2000000001 ",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L2_MISS.NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100007",
--        "BriefDescription": "Counts demand cacheable data reads of full cache lines that miss the L2 cache and targets non-DRAM system address.",
--        "Offcore": "1"
-     }
- ]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json b/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
-index 254788af8ab6..6342368accf8 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
-@@ -1,7 +1,6 @@
- [
-     {
          "PublicDescription": "Counts the number of instructions that retire execution. For instructions that consist of multiple uops, this event counts the retirement of the last uop of the instruction. The counter continues counting during hardware interrupts, traps, and inside interrupt handlers.  This event uses fixed counter 0.  You cannot collect a PEBs record for this event.",
 -        "EventCode": "0x00",
          "Counter": "Fixed counter 0",
          "UMask": "0x1",
-         "EventName": "INST_RETIRED.ANY",
-@@ -10,7 +9,6 @@
-     },
+         "PEBScounters": "32",
+@@ -15,7 +14,6 @@
      {
+         "CollectPEBSRecord": "1",
          "PublicDescription": "Counts the number of core cycles while the core is not in a halt state.  The core enters the halt state when it is running the HLT instruction. In mobile systems the core frequency may change from time to time. For this reason this event may have a changing ratio with regards to time.  This event uses fixed counter 1.  You cannot collect a PEBs record for this event.",
 -        "EventCode": "0x00",
          "Counter": "Fixed counter 1",
          "UMask": "0x2",
-         "EventName": "CPU_CLK_UNHALTED.CORE",
-@@ -19,7 +17,6 @@
-     },
+         "PEBScounters": "33",
+@@ -27,7 +25,6 @@
      {
+         "CollectPEBSRecord": "1",
          "PublicDescription": "Counts the number of reference cycles that the core is not in a halt state. The core enters the halt state when it is running the HLT instruction.  In mobile systems the core frequency may change from time.  This event is not affected by core frequency changes but counts as if the core is running at the maximum frequency all the time.  This event uses fixed counter 2.  You cannot collect a PEBs record for this event.",
 -        "EventCode": "0x00",
          "Counter": "Fixed counter 2",
          "UMask": "0x3",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-@@ -188,7 +185,7 @@
+         "PEBScounters": "34",
+@@ -231,7 +228,7 @@
      },
      {
          "CollectPEBSRecord": "1",
@@ -2446,12 +402,12 @@ index 254788af8ab6..6342368accf8 100644
          "EventCode": "0xC3",
          "Counter": "0,1,2,3",
          "UMask": "0x1",
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json b/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
-index 9805198d3f5f..343d66bbd777 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
-@@ -48,7 +48,8 @@
-         "UMask": "0x11",
+diff --git a/tools/perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json b/tools/perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json
+index 0b53a3b0dfb8..0d32fd26ded1 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json
+@@ -189,7 +189,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_LOADS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Load uops retired that missed the DTLB (Precise event capable)"
@@ -2460,8 +416,8 @@ index 9805198d3f5f..343d66bbd777 100644
      },
      {
          "PEBS": "2",
-@@ -59,7 +60,8 @@
-         "UMask": "0x12",
+@@ -201,7 +202,8 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_STORES",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Store uops retired that missed the DTLB (Precise event capable)"
@@ -2470,8 +426,8 @@ index 9805198d3f5f..343d66bbd777 100644
      },
      {
          "PEBS": "2",
-@@ -70,6 +72,7 @@
-         "UMask": "0x13",
+@@ -213,6 +215,7 @@
+         "PEBScounters": "0,1,2,3",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS",
          "SampleAfterValue": "200003",
 -        "BriefDescription": "Memory uops retired that missed the DTLB (Precise event capable)"
