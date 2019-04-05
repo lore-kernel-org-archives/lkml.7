@@ -2,461 +2,178 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F47C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EA021738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CO6/Lnqk"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8D721738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfDEJt7 (ORCPT
+        id S1730565AbfDEJvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:49:59 -0400
-Received: from mail-eopbgr40086.outbound.protection.outlook.com ([40.107.4.86]:58694
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730283AbfDEJt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:49:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ux3WbzD5eBra1AAKuSBo/x15vqNLwyHvZGWFd0LasvI=;
- b=CO6/Lnqk5U2JsJlvsBBq+cRwme2/ynT66lgxLJnPST3GgJ8WXP9CznZyoE+AgDoC/xKe/lrLSR5EUiWHfUHb6s4/27W1+/XjXpOjcqA6lH3U1UZTwkknO3a7MVCWzj+EK/vjjvFdD1l/MmO2XNwi5M1vD8bUV8kWY+y9RzaPEIU=
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.172.255.18) by
- VI1PR0402MB3438.eurprd04.prod.outlook.com (52.134.3.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.20; Fri, 5 Apr 2019 09:49:53 +0000
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::f808:5ebf:a573:3ea1]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::f808:5ebf:a573:3ea1%8]) with mapi id 15.20.1771.011; Fri, 5 Apr 2019
- 09:49:53 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>
-Subject: [PATCH v2] soc: fsl: add DPAA2 console support
-Thread-Topic: [PATCH v2] soc: fsl: add DPAA2 console support
-Thread-Index: AQHU65TqrQUYR0icdEesQWx5i8mITg==
-Date:   Fri, 5 Apr 2019 09:49:53 +0000
-Message-ID: <1554457764-7027-1-git-send-email-ioana.ciornei@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VE1PR08CA0033.eurprd08.prod.outlook.com
- (2603:10a6:803:104::46) To VI1PR0402MB2800.eurprd04.prod.outlook.com
- (2603:10a6:800:ad::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ioana.ciornei@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5439f818-d0cb-4806-0270-08d6b9ac0d4d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3438;
-x-ms-traffictypediagnostic: VI1PR0402MB3438:
-x-microsoft-antispam-prvs: <VI1PR0402MB343809736D42B204019A3BA4E0510@VI1PR0402MB3438.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0998671D02
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(366004)(189003)(199004)(316002)(4326008)(50226002)(6862004)(26005)(36756003)(478600001)(99286004)(2616005)(476003)(86362001)(305945005)(386003)(52116002)(66066001)(68736007)(6506007)(97736004)(8676002)(486006)(7736002)(6436002)(54906003)(102836004)(37006003)(6636002)(14454004)(105586002)(2906002)(256004)(6116002)(8936002)(6512007)(186003)(106356001)(14444005)(71190400001)(6486002)(25786009)(5660300002)(44832011)(53936002)(3846002)(71200400001)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3438;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mzHFWeFHJrR006v6PDDBS5LF9D2ICYT/AqUYGK9H8NFrAq+jeeMGbJ4pFZi2t0qT4y8v9gIq1xNvayreLjc5Nh/BEU8HELJXREMId/sdBufLK7UOr0eR71lrxn7jJkpLbKux1kC/vvDDPMPAHcWox5hV+YYSv5bwVnBYQYn6BdlxejMsM1dXfQJepOvn+SgQgFSn1uMyFQQYfIFaZyDNgZHzPKlToBneGabgNgsfqoJIRC+UWB+40NZw3ImY0oqWncAAJXXXGnCRMGT0cygQ+OxQkl6bwhg3xpUXif5gsRilDbLiAjw4iDiXMK6nbQwJzmb1oFAXojujFrF/rUyJ13790F98Ytm94XYbTV5IUNa2Ua0YQMPOiPHJ5jotCY4hr88GXjWBQiB8Y1SQ9yD5UcNfS9ibZdS/h3Xz++Mqr4o=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 5 Apr 2019 05:51:43 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44878 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730232AbfDEJvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 05:51:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FEAF168F;
+        Fri,  5 Apr 2019 02:51:42 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571B83F721;
+        Fri,  5 Apr 2019 02:51:40 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] iommu: io-pgtable: Add ARM Mali midgard MMU page
+ table format
+To:     Steven Price <steven.price@arm.com>, Rob Herring <robh@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Sean Paul <sean@poorly.run>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        iommu@lists.linux-foundation.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-2-robh@kernel.org>
+ <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
+Date:   Fri, 5 Apr 2019 10:51:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5439f818-d0cb-4806-0270-08d6b9ac0d4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2019 09:49:53.1480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3438
+In-Reply-To: <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds DPAA2 MC and AIOP console log support.
+Hi Steve,
 
-The platform driver probes on the "fsl,dpaa2-console" device tree node
-which describes the base firmware address needed in order to infer the
-start address of both firmware logs: MC and AIOP.
-It then exports two misc char devices which can be used to dump
-the needed logs.
+On 05/04/2019 10:42, Steven Price wrote:
+> First let me say congratulations to everyone working on Panfrost - it's
+> an impressive achievement!
+> 
+> Full disclosure: I used to work on the Mali kbase driver. And have been
+> playing around with running the Mali user-space blob with the Panfrost
+> kernel driver.
+> 
+> On 01/04/2019 08:47, Rob Herring wrote:
+>> ARM Mali midgard GPU is similar to standard 64-bit stage 1 page tables, but
+>> have a few differences. Add a new format type to represent the format. The
+>> input address size is 48-bits and the output address size is 40-bits (and
+>> possibly less?). Note that the later bifrost GPUs follow the standard
+>> 64-bit stage 1 format.
+>>
+>> The differences in the format compared to 64-bit stage 1 format are:
+>>
+>> The 3rd level page entry bits are 0x1 instead of 0x3 for page entries.
+>>
+>> The access flags are not read-only and unprivileged, but read and write.
+>> This is similar to stage 2 entries, but the memory attributes field matches
+>> stage 1 being an index.
+>>
+>> The nG bit is not set by the vendor driver. This one didn't seem to matter,
+>> but we'll keep it aligned to the vendor driver.
+> 
+> The nG bit should be ignored by the hardware.
+> 
+> The MMU in Midgard/Bifrost has a quirk similar to
+> IO_PGTABLE_QUIRK_TLBI_ON_MAP - you must perform a cache flush for the
+> GPU to (reliably) pick up new page table mappings.
+> 
+> You may not have seen this because of the use of the JS_CONFIG_START_MMU
+> bit - this effectively performs a cache flush and TLB invalidate before
+> starting a job, however when using a GPU like T760 (e.g. on the Firefly
+> RK3288) this bit isn't being set. In my testing on the Firefly board I
+> saw GPU page faults because of this.
+> 
+> There's two options for fixing this - a patch like below adds the quirk
+> mode to the MMU. Or alternatively always set JS_CONFIG_START_MMU on
+> jobs. In my testing both options solve the page faults.
+> 
+> To be honest I don't know the reasoning behind kbase making the
+> JS_CONFIG_START_MMU bit conditional - I'm not aware of any reason why it
+> can't always be set. My guess is performance, but I haven't benchmarked
+> the difference between this and JS_CONFIG_START_MMU.
+> 
+> -----8<----------
+>  From e3f75c7f04e43238dfc579029b8c11fb6b4a0c18 Mon Sep 17 00:00:00 2001
+> From: Steven Price <steven.price@arm.com>
+> Date: Thu, 4 Apr 2019 15:53:17 +0100
+> Subject: [PATCH] iommu: io-pgtable: IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE
+> 
+> Midgard/Bifrost GPUs require a TLB invalidation when mapping pages,
+> implement IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE iommu page table
+> formats and add the quirk bit to Panfrost.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   drivers/gpu/drm/panfrost/panfrost_mmu.c |  1 +
+>   drivers/iommu/io-pgtable-arm.c          | 11 +++++++++--
+>   2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> index f3aad8591cf4..094312074d66 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> @@ -343,6 +343,7 @@ int panfrost_mmu_init(struct panfrost_device *pfdev)
+>   	mmu_write(pfdev, MMU_INT_MASK, ~0);
+> 
+>   	pfdev->mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
+> +		.quirks		= IO_PGTABLE_QUIRK_TLBI_ON_MAP,
+>   		.pgsize_bitmap	= SZ_4K, // | SZ_2M | SZ_1G),
+>   		.ias		= 48,
+>   		.oas		= 40,	/* Should come from dma mask? */
+> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+> index 84beea1f47a7..45fd7bbdf9aa 100644
+> --- a/drivers/iommu/io-pgtable-arm.c
+> +++ b/drivers/iommu/io-pgtable-arm.c
+> @@ -505,7 +505,13 @@ static int arm_lpae_map(struct io_pgtable_ops *ops,
+> unsigned long iova,
+>   	 * Synchronise all PTE updates for the new mapping before there's
+>   	 * a chance for anything to kick off a table walk for the new iova.
+>   	 */
+> -	wmb();
+> +	if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_TLBI_ON_MAP) {
+> +		io_pgtable_tlb_add_flush(&data->iop, iova, size,
+> +					 ARM_LPAE_BLOCK_SIZE(2, data), false);
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
----
-Changes in v2:
- - adjust the COMPILE_TEST dependencies
- - remove the duplicate "dpaa2-console" print prefix
- - move driver description and author at the bottom
- - do not leak 'cd' structure in _open
+For correctness (in case this ever ends up used for something with 
+VMSA-like invalidation behaviour), the granule would need to be "size" 
+here, rather than effectively hard-coded.
 
- drivers/soc/fsl/Kconfig         |  10 ++
- drivers/soc/fsl/Makefile        |   1 +
- drivers/soc/fsl/dpaa2-console.c | 312 ++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 323 insertions(+)
- create mode 100644 drivers/soc/fsl/dpaa2-console.c
+However, since Mali's invalidations appear to operate on arbitrary 
+ranges, it would probably be a lot more efficient for the driver to 
+handle this case directly, by just issuing a single big invalidation 
+after the for_each_sg() loop in panfrost_mmu_map().
 
-diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-index 61f8e1433d0a..b6804c04e96f 100644
---- a/drivers/soc/fsl/Kconfig
-+++ b/drivers/soc/fsl/Kconfig
-@@ -29,4 +29,14 @@ config FSL_MC_DPIO
- 	  other DPAA2 objects. This driver does not expose the DPIO
- 	  objects individually, but groups them under a service layer
- 	  API.
-+
-+config DPAA2_CONSOLE
-+	tristate "QorIQ DPAA2 console driver"
-+	depends on OF && (ARCH_LAYERSCAPE || COMPILE_TEST)
-+	default y
-+	help
-+	  Console driver for DPAA2 platforms. Exports 2 char devices,
-+	  /dev/dpaa2_mc_console and /dev/dpaa2_aiop_console,
-+	  which can be used to dump the Management Complex and AIOP
-+	  firmware logs.
- endmenu
-diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-index 803ef1bfb5ff..57762c9fc7da 100644
---- a/drivers/soc/fsl/Makefile
-+++ b/drivers/soc/fsl/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_QUICC_ENGINE)		+=3D qe/
- obj-$(CONFIG_CPM)			+=3D qe/
- obj-$(CONFIG_FSL_GUTS)			+=3D guts.o
- obj-$(CONFIG_FSL_MC_DPIO) 		+=3D dpio/
-+obj-$(CONFIG_DPAA2_CONSOLE)		+=3D dpaa2-console.o
-diff --git a/drivers/soc/fsl/dpaa2-console.c b/drivers/soc/fsl/dpaa2-consol=
-e.c
-new file mode 100644
-index 000000000000..37e582e818d3
---- /dev/null
-+++ b/drivers/soc/fsl/dpaa2-console.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Freescale DPAA2 Platforms Console Driver
-+ *
-+ * Copyright 2015-2016 Freescale Semiconductor Inc.
-+ * Copyright 2018 NXP
-+ */
-+
-+#define pr_fmt(fmt) "dpaa2-console: " fmt
-+
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/miscdevice.h>
-+#include <linux/uaccess.h>
-+#include <linux/slab.h>
-+#include <linux/fs.h>
-+#include <linux/io.h>
-+
-+/* MC firmware base low/high registers indexes */
-+#define MCFBALR_OFFSET 0
-+#define MCFBAHR_OFFSET 1
-+
-+/* Bit masks used to get the most/least significant part of the MC base ad=
-dr */
-+#define MC_FW_ADDR_MASK_HIGH 0x1FFFF
-+#define MC_FW_ADDR_MASK_LOW  0xE0000000
-+
-+#define MC_BUFFER_OFFSET 0x01000000
-+#define MC_BUFFER_SIZE   (1024 * 1024 * 16)
-+#define MC_OFFSET_DELTA  MC_BUFFER_OFFSET
-+
-+#define AIOP_BUFFER_OFFSET 0x06000000
-+#define AIOP_BUFFER_SIZE   (1024 * 1024 * 16)
-+#define AIOP_OFFSET_DELTA  0
-+
-+#define LOG_HEADER_FLAG_BUFFER_WRAPAROUND 0x80000000
-+#define LAST_BYTE(a) ((a) & ~(LOG_HEADER_FLAG_BUFFER_WRAPAROUND))
-+
-+/* MC and AIOP Magic words */
-+#define MAGIC_MC   0x4d430100
-+#define MAGIC_AIOP 0x41494F50
-+
-+struct log_header {
-+	__le32 magic_word;
-+	char reserved[4];
-+	__le32 buf_start;
-+	__le32 buf_length;
-+	__le32 last_byte;
-+};
-+
-+struct console_data {
-+	char *map_addr;
-+	struct log_header *hdr;
-+	char *start_addr;
-+	char *end_addr;
-+	char *end_of_data;
-+	char *cur_ptr;
-+};
-+
-+struct resource mc_base_addr;
-+
-+static inline void adjust_end(struct console_data *cd)
-+{
-+	u32 last_byte =3D readl(&cd->hdr->last_byte);
-+
-+	cd->end_of_data =3D cd->start_addr + LAST_BYTE(last_byte);
-+}
-+
-+static u64 get_mc_fw_base_address(void)
-+{
-+	u64 mcfwbase =3D 0ULL;
-+	u32 *mcfbaregs;
-+
-+	mcfbaregs =3D (u32 *)ioremap(mc_base_addr.start,
-+				   resource_size(&mc_base_addr));
-+	if (!mcfbaregs) {
-+		pr_err("could not map MC Firmaware Base registers\n");
-+		return -EIO;
-+	}
-+
-+	mcfwbase  =3D readl(mcfbaregs + MCFBAHR_OFFSET) & MC_FW_ADDR_MASK_HIGH;
-+	mcfwbase <<=3D 32;
-+	mcfwbase |=3D readl(mcfbaregs + MCFBALR_OFFSET) & MC_FW_ADDR_MASK_LOW;
-+	iounmap(mcfbaregs);
-+
-+	pr_debug("MC base address at 0x%016llx\n", mcfwbase);
-+	return mcfwbase;
-+}
-+
-+static ssize_t dpaa2_console_size(struct console_data *cd)
-+{
-+	ssize_t size;
-+
-+	if (cd->cur_ptr <=3D cd->end_of_data)
-+		size =3D cd->end_of_data - cd->cur_ptr;
-+	else
-+		size =3D (cd->end_addr - cd->cur_ptr) +
-+			(cd->end_of_data - cd->start_addr);
-+
-+	return size;
-+}
-+
-+static int dpaa2_generic_console_open(struct inode *node, struct file *fp,
-+				      u64 offset, u64 size,
-+				      u32 expected_magic,
-+				      u32 offset_delta)
-+{
-+	u32 read_magic, wrapped, last_byte, buf_start, buf_length;
-+	struct console_data *cd;
-+	u64 base_addr;
-+	int err;
-+
-+	cd =3D kmalloc(sizeof(*cd), GFP_KERNEL);
-+	if (!cd)
-+		return -ENOMEM;
-+
-+	base_addr =3D get_mc_fw_base_address();
-+	if (base_addr < 0) {
-+		err =3D -EIO;
-+		goto err_fwba;
-+	}
-+
-+	cd->map_addr =3D ioremap(base_addr + offset, size);
-+	if (!cd->map_addr) {
-+		pr_err("cannot map console log memory\n");
-+		err =3D -EIO;
-+		goto err_ioremap;
-+	}
-+
-+	cd->hdr =3D (struct log_header *)cd->map_addr;
-+	read_magic =3D readl(&cd->hdr->magic_word);
-+	last_byte =3D readl(&cd->hdr->last_byte);
-+	buf_start =3D readl(&cd->hdr->buf_start);
-+	buf_length =3D readl(&cd->hdr->buf_length);
-+
-+	if (read_magic !=3D expected_magic) {
-+		pr_warn("expected =3D %08x, read =3D %08x\n",
-+			expected_magic, read_magic);
-+		err =3D -EIO;
-+		goto err_magic;
-+	}
-+
-+	cd->start_addr =3D cd->map_addr + buf_start - offset_delta;
-+	cd->end_addr =3D cd->start_addr + buf_length;
-+
-+	wrapped =3D last_byte & LOG_HEADER_FLAG_BUFFER_WRAPAROUND;
-+
-+	adjust_end(cd);
-+	if (wrapped && cd->end_of_data !=3D cd->end_addr)
-+		cd->cur_ptr =3D cd->end_of_data + 1;
-+	else
-+		cd->cur_ptr =3D cd->start_addr;
-+
-+	fp->private_data =3D cd;
-+
-+	return 0;
-+
-+err_magic:
-+	iounmap(cd->map_addr);
-+
-+err_ioremap:
-+err_fwba:
-+	kfree(cd);
-+
-+	return err;
-+}
-+
-+static int dpaa2_mc_console_open(struct inode *node, struct file *fp)
-+{
-+	return dpaa2_generic_console_open(node, fp,
-+					  MC_BUFFER_OFFSET, MC_BUFFER_SIZE,
-+					  MAGIC_MC, MC_OFFSET_DELTA);
-+}
-+
-+static int dpaa2_aiop_console_open(struct inode *node, struct file *fp)
-+{
-+	return dpaa2_generic_console_open(node, fp,
-+					  AIOP_BUFFER_OFFSET, AIOP_BUFFER_SIZE,
-+					  MAGIC_AIOP, AIOP_OFFSET_DELTA);
-+}
-+
-+static int dpaa2_console_close(struct inode *node, struct file *fp)
-+{
-+	struct console_data *cd =3D fp->private_data;
-+
-+	iounmap(cd->map_addr);
-+	kfree(cd);
-+	return 0;
-+}
-+
-+static ssize_t dpaa2_console_read(struct file *fp, char __user *buf,
-+				  size_t count, loff_t *f_pos)
-+{
-+	struct console_data *cd =3D fp->private_data;
-+	size_t bytes =3D dpaa2_console_size(cd);
-+	size_t bytes_end =3D cd->end_addr - cd->cur_ptr;
-+	size_t written =3D 0;
-+
-+	/* Check if we need to adjust the end of data addr */
-+	adjust_end(cd);
-+
-+	if (cd->end_of_data =3D=3D cd->cur_ptr)
-+		return 0;
-+
-+	if (count < bytes)
-+		bytes =3D count;
-+
-+	if (bytes > bytes_end) {
-+		if (copy_to_user(buf, cd->cur_ptr, bytes_end))
-+			return -EFAULT;
-+		buf +=3D bytes_end;
-+		cd->cur_ptr =3D cd->start_addr;
-+		bytes -=3D bytes_end;
-+		written +=3D bytes_end;
-+	}
-+
-+	if (copy_to_user(buf, cd->cur_ptr, bytes))
-+		return -EFAULT;
-+	cd->cur_ptr +=3D bytes;
-+	written +=3D bytes;
-+
-+	return written;
-+}
-+
-+static const struct file_operations dpaa2_mc_console_fops =3D {
-+	.owner          =3D THIS_MODULE,
-+	.open           =3D dpaa2_mc_console_open,
-+	.release        =3D dpaa2_console_close,
-+	.read           =3D dpaa2_console_read,
-+};
-+
-+static struct miscdevice dpaa2_mc_console_dev =3D {
-+	.minor =3D MISC_DYNAMIC_MINOR,
-+	.name =3D "dpaa2_mc_console",
-+	.fops =3D &dpaa2_mc_console_fops
-+};
-+
-+static const struct file_operations dpaa2_aiop_console_fops =3D {
-+	.owner          =3D THIS_MODULE,
-+	.open           =3D dpaa2_aiop_console_open,
-+	.release        =3D dpaa2_console_close,
-+	.read           =3D dpaa2_console_read,
-+};
-+
-+static struct miscdevice dpaa2_aiop_console_dev =3D {
-+	.minor =3D MISC_DYNAMIC_MINOR,
-+	.name =3D "dpaa2_aiop_console",
-+	.fops =3D &dpaa2_aiop_console_fops
-+};
-+
-+static int dpaa2_console_probe(struct platform_device *pdev)
-+{
-+	int error;
-+
-+	error =3D of_address_to_resource(pdev->dev.of_node, 0, &mc_base_addr);
-+	if (error < 0) {
-+		pr_err("of_address_to_resource() failed for %pOF with %d\n",
-+		       pdev->dev.of_node, error);
-+		return error;
-+	}
-+
-+	error =3D misc_register(&dpaa2_mc_console_dev);
-+	if (error) {
-+		pr_err("cannot register device %s\n",
-+		       dpaa2_mc_console_dev.name);
-+		goto err_register_mc;
-+	}
-+
-+	error =3D misc_register(&dpaa2_aiop_console_dev);
-+	if (error) {
-+		pr_err("cannot register device %s\n",
-+		       dpaa2_aiop_console_dev.name);
-+		goto err_register_aiop;
-+	}
-+
-+	return 0;
-+
-+err_register_aiop:
-+	misc_deregister(&dpaa2_mc_console_dev);
-+err_register_mc:
-+	return error;
-+}
-+
-+static int dpaa2_console_remove(struct platform_device *pdev)
-+{
-+	misc_deregister(&dpaa2_mc_console_dev);
-+	misc_deregister(&dpaa2_aiop_console_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id dpaa2_console_match_table[] =3D {
-+	{ .compatible =3D "fsl,dpaa2-console",},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, dpaa2_console_match_table);
-+
-+static struct platform_driver dpaa2_console_driver =3D {
-+	.driver =3D {
-+		   .name =3D "dpaa2-console",
-+		   .pm =3D NULL,
-+		   .of_match_table =3D dpaa2_console_match_table,
-+		   },
-+	.probe =3D dpaa2_console_probe,
-+	.remove =3D dpaa2_console_remove,
-+};
-+module_platform_driver(dpaa2_console_driver);
-+
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_AUTHOR("Roy Pledge <roy.pledge@nxp.com>");
-+MODULE_DESCRIPTION("DPAA2 console driver");
---=20
-1.9.1
+Robin.
 
+> +		io_pgtable_tlb_sync(&data->iop);
+> +	} else {
+> +		wmb();
+> +	}
+> 
+>   	return ret;
+>   }
+> @@ -800,7 +806,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg
+> *cfg, void *cookie)
+>   	struct arm_lpae_io_pgtable *data;
+> 
+>   	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS | IO_PGTABLE_QUIRK_NO_DMA |
+> -			    IO_PGTABLE_QUIRK_NON_STRICT))
+> +			    IO_PGTABLE_QUIRK_NON_STRICT |
+> +			    IO_PGTABLE_QUIRK_TLBI_ON_MAP))
+>   		return NULL;
+> 
+>   	data = arm_lpae_alloc_pgtable(cfg);
+> 
