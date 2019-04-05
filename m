@@ -3,104 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0129CC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAABC10F0A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF273204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99E3204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbfDEQFo (ORCPT
+        id S1731507AbfDEQFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:05:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38760 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfDEQFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:05:44 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D639544FA7;
-        Fri,  5 Apr 2019 16:05:43 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C756660C8D;
-        Fri,  5 Apr 2019 16:05:38 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 11:05:36 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 2/5] x86/speculation: Add support for
- 'cpu_spec_mitigations=' cmdline options
-Message-ID: <20190405160536.sks2hmo6sxnxg3tl@treble>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
- <20190405135712.GF23348@zn.tnic>
- <20190405143101.ksj7ayjis4p52dgt@treble>
- <20190405152650.GH23348@zn.tnic>
+        Fri, 5 Apr 2019 12:05:54 -0400
+Received: from wp260.webpack.hosteurope.de ([80.237.133.29]:45278 "EHLO
+        wp260.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726135AbfDEQFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:05:54 -0400
+Received: from hsi-kbw-46-223-87-231.hsi.kabel-badenwuerttemberg.de ([46.223.87.231] helo=vega.skynet.aixah.de); authenticated
+        by wp260.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1hCRLj-0002n4-EF; Fri, 05 Apr 2019 18:05:51 +0200
+Received: by vega.skynet.aixah.de (Postfix, from userid 1005)
+        id E67E4E5352; Fri,  5 Apr 2019 18:05:50 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 18:05:50 +0200
+From:   Luis Ressel <aranea@aixah.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] objtool: Don't use -Werror
+Message-ID: <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
+References: <20190405110151.2461-1-aranea@aixah.de>
+ <20190405123909.tupbgueie4czg2dd@treble>
+ <20190405142443.rgpwbgyym76xizad@vega.skynet.aixah.de>
+ <20190405143926.wmrkjsazlheeg6qs@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405152650.GH23348@zn.tnic>
+In-Reply-To: <20190405143926.wmrkjsazlheeg6qs@treble>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 05 Apr 2019 16:05:44 +0000 (UTC)
+X-bounce-key: webpack.hosteurope.de;aranea@aixah.de;1554480353;b6aa34e8;
+X-HE-SMSGID: 1hCRLj-0002n4-EF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 05:26:50PM +0200, Borislav Petkov wrote:
-> On Fri, Apr 05, 2019 at 09:31:01AM -0500, Josh Poimboeuf wrote:
-> > My thinking was that the individual options could be used to override
-> > the global option.  But maybe that's overkill?  I dunno.
-> 
-> You mean if the user deliberately types:
-> 
-> "cpu_spec_mitigations=off spectre_v2=auto"
-> 
-> on the cmdline to turn off all and then enable only one?
-> 
-> Hmm, yap, sounds like an overkill to me. Then I'd probably do:
-> 
-> 	pr_err("Make up your mind already!\n");
-> 	return;
-> 
-> :-))
-> 
-> I'd say let's do the simpler and cleaner thing now and think about
-> supporting this overkill when it really turns out that it is needed.
+On Fri, Apr 05, 2019 at 09:39:26AM -0500, Josh Poimboeuf wrote:
 
-Fair enough.
+> Hm, I would actually argue the reverse.  Warnings are generally bad and
+> -Werror is useful for ensuring that we don't have any.  For warnings
+> that don't provide value, we just disable those individual warnings.
 
-> > I assume you mean just the part where L1TF_MITIGATION_DEFAULT is added?
-> 
-> Yap.
+Sure, during development it's an excellent idea to investigate compiler
+warnings, and -Werror can be useful for that. But the Linux kernel is
+built by countless users in wildly varying environments, and it's almost
+a given that someone will use a compiler that'll complain about a valid
+part of your code whose style it considers bad.
 
-Ok.
+As an example, the warning that's breaking the build for me is -Wundef
+complaining about several "#if UNDEFINED_IDENTIFIER" constructs in the
+libelf headers. (I agree with gcc in considering this bad style, but
+it's perfectly valid C, and there probably wasn't a warning about it
+back when this header was written.)
 
--- 
-Josh
+Regards,
+Luis
