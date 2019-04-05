@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B554C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA69C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0622721872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8349218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbfDEOBP (ORCPT
+        id S1731462AbfDEOAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:01:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:49868 "EHLO foss.arm.com"
+        Fri, 5 Apr 2019 10:00:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:49432 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730587AbfDEOBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:01:13 -0400
+        id S1731437AbfDEOAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 072201BF7;
-        Fri,  5 Apr 2019 07:01:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 562AB1B55;
+        Fri,  5 Apr 2019 07:00:30 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2CC9C3F68F;
-        Fri,  5 Apr 2019 07:01:09 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80DCA3F68F;
+        Fri,  5 Apr 2019 07:00:26 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 21/21] arch: Remove dummy mmiowb() definitions from arch code
-Date:   Fri,  5 Apr 2019 14:59:36 +0100
-Message-Id: <20190405135936.7266-22-will.deacon@arm.com>
+Subject: [PATCH v2 11/21] mips/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
+Date:   Fri,  5 Apr 2019 14:59:26 +0100
+Message-Id: <20190405135936.7266-12-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -59,100 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that no driver code is using mmiowb() directly, we can remove the
-dummy definitions remaining in architectures that don't make use of
-asm-generic/io.h, as well as the definition in asm-generic/io,h itself.
+The mmiowb() macro is horribly difficult to use and drivers will continue
+to work most of the time if they omit a call when it is required.
 
+Rather than rely on driver authors getting this right, push mmiowb() into
+arch_spin_unlock() for mips. If this is deemed to be a performance issue,
+a subsequent optimisation could make use of ARCH_HAS_MMIOWB to elide
+the barrier in cases where no I/O writes were performed inside the
+critical section.
+
+Acked-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/alpha/include/asm/io.h       | 2 --
- arch/hexagon/include/asm/io.h     | 2 --
- arch/parisc/include/asm/io.h      | 2 --
- arch/powerpc/include/asm/mmiowb.h | 2 --
- arch/sparc/include/asm/io_64.h    | 2 --
- include/asm-generic/io.h          | 4 ----
- 6 files changed, 14 deletions(-)
+ arch/mips/include/asm/Kbuild     |  1 -
+ arch/mips/include/asm/io.h       |  3 ---
+ arch/mips/include/asm/mmiowb.h   | 11 +++++++++++
+ arch/mips/include/asm/spinlock.h | 15 +++++++++++++++
+ 4 files changed, 26 insertions(+), 4 deletions(-)
+ create mode 100644 arch/mips/include/asm/mmiowb.h
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index 4c533fc94d62..ccf9d65166bb 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -513,8 +513,6 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
- #define writel_relaxed(b, addr)	__raw_writel(b, addr)
- #define writeq_relaxed(b, addr)	__raw_writeq(b, addr)
+diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
+index bf39c2253ec8..87b86cdf126a 100644
+--- a/arch/mips/include/asm/Kbuild
++++ b/arch/mips/include/asm/Kbuild
+@@ -12,7 +12,6 @@ generic-y += irq_work.h
+ generic-y += local64.h
+ generic-y += mcs_spinlock.h
+ generic-y += mm-arch-hooks.h
+-generic-y += mmiowb.h
+ generic-y += msi.h
+ generic-y += parport.h
+ generic-y += percpu.h
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 845fbbc7a2e3..29997e42480e 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -102,9 +102,6 @@ static inline void set_io_port_base(unsigned long base)
+ #define iobarrier_w() wmb()
+ #define iobarrier_sync() iob()
  
--#define mmiowb()
+-/* Some callers use this older API instead.  */
+-#define mmiowb() iobarrier_w()
 -
  /*
-  * String version of IO memory access ops:
-  */
-diff --git a/arch/hexagon/include/asm/io.h b/arch/hexagon/include/asm/io.h
-index e17262ad125e..3d0ae09c2b8e 100644
---- a/arch/hexagon/include/asm/io.h
-+++ b/arch/hexagon/include/asm/io.h
-@@ -184,8 +184,6 @@ static inline void writel(u32 data, volatile void __iomem *addr)
- #define writew_relaxed __raw_writew
- #define writel_relaxed __raw_writel
+  *     virt_to_phys    -       map virtual addresses to physical
+  *     @address: address to remap
+diff --git a/arch/mips/include/asm/mmiowb.h b/arch/mips/include/asm/mmiowb.h
+new file mode 100644
+index 000000000000..a40824e3ef8e
+--- /dev/null
++++ b/arch/mips/include/asm/mmiowb.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_MMIOWB_H
++#define _ASM_MMIOWB_H
++
++#include <asm/io.h>
++
++#define mmiowb()	iobarrier_w()
++
++#include <asm-generic/mmiowb.h>
++
++#endif	/* _ASM_MMIOWB_H */
+diff --git a/arch/mips/include/asm/spinlock.h b/arch/mips/include/asm/spinlock.h
+index ee81297d9117..8a88eb265516 100644
+--- a/arch/mips/include/asm/spinlock.h
++++ b/arch/mips/include/asm/spinlock.h
+@@ -11,6 +11,21 @@
  
--#define mmiowb()
--
- /*
-  * Need an mtype somewhere in here, for cache type deals?
-  * This is probably too long for an inline.
-diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
-index 30a8315d5c07..93d37010b375 100644
---- a/arch/parisc/include/asm/io.h
-+++ b/arch/parisc/include/asm/io.h
-@@ -229,8 +229,6 @@ static inline void writeq(unsigned long long q, volatile void __iomem *addr)
- #define writel_relaxed(l, addr)	writel(l, addr)
- #define writeq_relaxed(q, addr)	writeq(q, addr)
+ #include <asm/processor.h>
+ #include <asm/qrwlock.h>
++
++#include <asm-generic/qspinlock_types.h>
++
++#define	queued_spin_unlock queued_spin_unlock
++/**
++ * queued_spin_unlock - release a queued spinlock
++ * @lock : Pointer to queued spinlock structure
++ */
++static inline void queued_spin_unlock(struct qspinlock *lock)
++{
++	/* This could be optimised with ARCH_HAS_MMIOWB */
++	mmiowb();
++	smp_store_release(&lock->locked, 0);
++}
++
+ #include <asm/qspinlock.h>
  
--#define mmiowb() do { } while (0)
--
- void memset_io(volatile void __iomem *addr, unsigned char val, int count);
- void memcpy_fromio(void *dst, const volatile void __iomem *src, int count);
- void memcpy_toio(volatile void __iomem *dst, const void *src, int count);
-diff --git a/arch/powerpc/include/asm/mmiowb.h b/arch/powerpc/include/asm/mmiowb.h
-index b10180613507..74a00127eb20 100644
---- a/arch/powerpc/include/asm/mmiowb.h
-+++ b/arch/powerpc/include/asm/mmiowb.h
-@@ -11,8 +11,6 @@
- #define arch_mmiowb_state()	(&local_paca->mmiowb_state)
- #define mmiowb()		mb()
- 
--#else
--#define mmiowb()		do { } while (0)
- #endif /* CONFIG_MMIOWB */
- 
- #include <asm-generic/mmiowb.h>
-diff --git a/arch/sparc/include/asm/io_64.h b/arch/sparc/include/asm/io_64.h
-index b162c23ae8c2..688911051b44 100644
---- a/arch/sparc/include/asm/io_64.h
-+++ b/arch/sparc/include/asm/io_64.h
-@@ -396,8 +396,6 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src,
- 	}
- }
- 
--#define mmiowb()
--
- #ifdef __KERNEL__
- 
- /* On sparc64 we have the whole physical IO address space accessible
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index bc490a746602..8f3bf95a36d1 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -22,10 +22,6 @@
- #include <asm/mmiowb.h>
- #include <asm-generic/pci_iomap.h>
- 
--#ifndef mmiowb
--#define mmiowb() do {} while (0)
--#endif
--
- #ifndef __io_br
- #define __io_br()      barrier()
- #endif
+ #endif /* _ASM_SPINLOCK_H */
 -- 
 2.11.0
 
