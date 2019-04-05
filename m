@@ -3,36 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89D6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0132BC10F0F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7DD218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC1B218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfDEPL2 (ORCPT
+        id S1731689AbfDEPL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:11:28 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48955 "EHLO
+        Fri, 5 Apr 2019 11:11:29 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48967 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731648AbfDEPLZ (ORCPT
+        with ESMTP id S1731662AbfDEPL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:11:25 -0400
+        Fri, 5 Apr 2019 11:11:27 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hCQV0-0005uO-8i; Fri, 05 Apr 2019 17:11:22 +0200
-Message-Id: <20190405150930.590799465@linutronix.de>
+        id 1hCQV1-0005uy-Je; Fri, 05 Apr 2019 17:11:23 +0200
+Message-Id: <20190405150930.696035459@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 05 Apr 2019 17:07:22 +0200
+Date:   Fri, 05 Apr 2019 17:07:23 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V2 24/29] x86/irq/64: Rename irq_stack_ptr to hardirq_stack_ptr
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [patch V2 25/29] x86/irq/32: Invoke irq_ctx_init() from init_IRQ()
 References: <20190405150658.237064784@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,83 +42,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preparatory patch to share code with 32bit.
+irq_ctx_init() is invoked from native_init_IRQ() or from xen_init_IRQ()
+code. There is no reason to have this split. The interrupt stacks must be
+allocated no matter what.
+
+Invoke it from init_IRQ() before invoking the native or XEN init
+implementation.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Juergen Gross <jgross@suse.com>
 ---
- arch/x86/entry/entry_64.S        |    2 +-
- arch/x86/include/asm/processor.h |    2 +-
- arch/x86/kernel/cpu/common.c     |    2 +-
- arch/x86/kernel/dumpstack_64.c   |    2 +-
- arch/x86/kernel/irq_64.c         |    2 +-
- arch/x86/kernel/setup_percpu.c   |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/irqinit.c        |    4 ++--
+ drivers/xen/events/events_base.c |    1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -431,7 +431,7 @@ END(irq_entries_start)
- 	 */
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -91,6 +91,8 @@ void __init init_IRQ(void)
+ 	for (i = 0; i < nr_legacy_irqs(); i++)
+ 		per_cpu(vector_irq, 0)[ISA_IRQ_VECTOR(i)] = irq_to_desc(i);
  
- 	movq	\old_rsp, PER_CPU_VAR(irq_stack_union + IRQ_STACK_SIZE - 8)
--	movq	PER_CPU_VAR(irq_stack_ptr), %rsp
-+	movq	PER_CPU_VAR(hardirq_stack_ptr), %rsp
- 
- #ifdef CONFIG_DEBUG_ENTRY
- 	/*
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -396,7 +396,7 @@ static inline unsigned long cpu_kernelmo
- 	return (unsigned long)per_cpu(irq_stack_union.gs_base, cpu);
++	irq_ctx_init(smp_processor_id());
++
+ 	x86_init.irqs.intr_init();
  }
  
--DECLARE_PER_CPU(char *, irq_stack_ptr);
-+DECLARE_PER_CPU(char *, hardirq_stack_ptr);
- DECLARE_PER_CPU(unsigned int, irq_count);
- extern asmlinkage void ignore_sysret(void);
+@@ -104,6 +106,4 @@ void __init native_init_IRQ(void)
  
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1510,7 +1510,7 @@ DEFINE_PER_CPU(struct task_struct *, cur
- 	&init_task;
- EXPORT_PER_CPU_SYMBOL(current_task);
+ 	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs())
+ 		setup_irq(2, &irq2);
+-
+-	irq_ctx_init(smp_processor_id());
+ }
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1687,7 +1687,6 @@ void __init xen_init_IRQ(void)
  
--DEFINE_PER_CPU(char *, irq_stack_ptr) =
-+DEFINE_PER_CPU(char *, hardirq_stack_ptr) =
- 	init_per_cpu_var(irq_stack_union.irq_stack) + IRQ_STACK_SIZE;
- 
- DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -120,7 +120,7 @@ static bool in_exception_stack(unsigned
- 
- static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
- {
--	unsigned long *end   = (unsigned long *)this_cpu_read(irq_stack_ptr);
-+	unsigned long *end   = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
- 	unsigned long *begin = end - (IRQ_STACK_SIZE / sizeof(long));
- 
- 	/*
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -56,7 +56,7 @@ static inline void stack_overflow_check(
- 	    regs->sp <= curbase + THREAD_SIZE)
- 		return;
- 
--	irq_stack_top = (u64)__this_cpu_read(irq_stack_ptr);
-+	irq_stack_top = (u64)__this_cpu_read(hardirq_stack_ptr);
- 	irq_stack_bottom = irq_stack_top - IRQ_STACK_SIZE + STACK_MARGIN;
- 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -245,7 +245,7 @@ void __init setup_per_cpu_areas(void)
- 			early_per_cpu_map(x86_cpu_to_logical_apicid, cpu);
- #endif
- #ifdef CONFIG_X86_64
--		per_cpu(irq_stack_ptr, cpu) =
-+		per_cpu(hardirq_stack_ptr, cpu) =
- 			per_cpu(irq_stack_union.irq_stack, cpu) +
- 			IRQ_STACK_SIZE;
- #endif
+ #ifdef CONFIG_X86
+ 	if (xen_pv_domain()) {
+-		irq_ctx_init(smp_processor_id());
+ 		if (xen_initial_domain())
+ 			pci_xen_initial_domain();
+ 	}
 
 
