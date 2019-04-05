@@ -2,212 +2,112 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D65C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAF8C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3576221855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088D82146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5XdNNIY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfDEUuf (ORCPT
+        id S1726442AbfDEUxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 16:50:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29671 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfDEUuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 16:50:35 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 13:50:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,313,1549958400"; 
-   d="scan'208";a="146951965"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Apr 2019 13:50:34 -0700
-Date:   Fri, 5 Apr 2019 13:50:34 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [patch V2 09/29] x86/exceptions: Add structs for exception stacks
-Message-ID: <20190405205034.GD15808@linux.intel.com>
-References: <20190405150658.237064784@linutronix.de>
- <20190405150929.221851363@linutronix.de>
- <20190405204838.GC15808@linux.intel.com>
+        Fri, 5 Apr 2019 16:53:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41658 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfDEUxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 16:53:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x35KiHo7076971;
+        Fri, 5 Apr 2019 20:53:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=/wiGaL8KBO5La3rMfmp4c8G/b2nDVKkYa+pBxyh9Eb0=;
+ b=5XdNNIY58aO95dxCQiR+tqMTIk+ySOS4jxOeyP9Ue+cwq3khfr51KM0aAO09AbLYsl7V
+ ApW2UA5mIvl4y78DnGcYa6e7Hoya2na01hVXuqIVh5Ef1eUyMFUWx0Rt4HYwDqZCf/QR
+ 6ZnO4XJivOi82cKuSFiNUlR2OWELdlzGfax0bPsSUcT/xTjor/ysLugZLNLG2CXXR4YK
+ ipAgKa0blUuTETGGErTEn+/EJa+4SClFzPdm3jKU2YXvfV9y5JqiZetA+D5PbNQ06Tig
+ L1rG0PYYz3Q9zF66yMMo0Ao7OqiusJffUvYAXRxCfltpYSxUXZWjt1odo+VasjGUtTmZ TQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2rj13qpwph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Apr 2019 20:53:17 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x35KqIOV023190;
+        Fri, 5 Apr 2019 20:53:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rp357tv2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Apr 2019 20:53:16 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x35KrFSg004231;
+        Fri, 5 Apr 2019 20:53:15 GMT
+Received: from kadam (/41.202.241.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Apr 2019 13:53:14 -0700
+Date:   Fri, 5 Apr 2019 23:53:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: greybus: Fix spinlock_t definition without
+ comment
+Message-ID: <20190405205304.GS32590@kadam>
+References: <20190405200046.20600-1-madhumithabiw@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405204838.GC15808@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190405200046.20600-1-madhumithabiw@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9218 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=909
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904050138
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9218 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=942 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904050138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:48:38PM -0700, Sean Christopherson wrote:
-> On Fri, Apr 05, 2019 at 05:07:07PM +0200, Thomas Gleixner wrote:
-> > At the moment everything assumes a full linear mapping of the various
-> > exception stacks. Adding guard pages to the cpu entry area mapping of the
-> > exception stacks will break that assumption.
-> > 
-> > As a preparatory step convert both the real storage and the effective
-> > mapping in the cpu entry area from character arrays to structures.
-> > 
-> > To ensure that both arrays have the same ordering and the same size of the
-> > individual stacks fill the members with a macro. The guard size is the only
-> > difference between the two resulting structures. For now both have guard
-> > size 0 until the preparation of all usage sites is done.
-> > 
-> > Provide a couple of helper macros which are used in the following
-> > conversions.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > ---
-> >  arch/x86/include/asm/cpu_entry_area.h |   51 ++++++++++++++++++++++++++++++----
-> >  arch/x86/kernel/cpu/common.c          |    2 -
-> >  arch/x86/mm/cpu_entry_area.c          |    8 ++---
-> >  3 files changed, 50 insertions(+), 11 deletions(-)
-> > 
-> > --- a/arch/x86/include/asm/cpu_entry_area.h
-> > +++ b/arch/x86/include/asm/cpu_entry_area.h
-> > @@ -7,6 +7,50 @@
-> >  #include <asm/processor.h>
-> >  #include <asm/intel_ds.h>
-> >  
-> > +#ifdef CONFIG_X86_64
-> > +
-> > +/* Macro to enforce the same ordering and stack sizes */
-> > +#define ESTACKS_MEMBERS(guardsize)		\
-> > +	char	DF_stack[EXCEPTION_STKSZ];	\
-> > +	char	DF_stack_guard[guardsize];	\
-> > +	char	NMI_stack[EXCEPTION_STKSZ];	\
-> > +	char	NMI_stack_guard[guardsize];	\
-> > +	char	DB_stack[DEBUG_STKSZ];		\
-> > +	char	DB_stack_guard[guardsize];	\
-> > +	char	MCE_stack[EXCEPTION_STKSZ];	\
-> > +	char	MCE_stack_guard[guardsize];	\
+On Fri, Apr 05, 2019 at 03:00:46PM -0500, Madhumitha Prabakaran wrote:
+> Fix spinlock_t definition without comment.
 > 
-> Conceptually, shouldn't the stack guard precede its associated stack
-> since the stacks grow down?  And don't we want a guard page below the
-> DF_stack?  There could still be a guard page above MCE_stack,
-> e.g. IST_stack_guard or something.
+> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+> ---
+>  drivers/staging/greybus/connection.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> E.g. the example in patch "Speedup in_exception_stack()" also suggests
+> diff --git a/drivers/staging/greybus/connection.h b/drivers/staging/greybus/connection.h
+> index 5ca3befc0636..0aedd246e94a 100644
+> --- a/drivers/staging/greybus/connection.h
+> +++ b/drivers/staging/greybus/connection.h
+> @@ -47,7 +47,7 @@ struct gb_connection {
+>  	unsigned long			flags;
+>  
+>  	struct mutex			mutex;
+> -	spinlock_t			lock;
+> +	spinlock_t			lock; /* Protect structure fields */
+>  	enum gb_connection_state	state;
 
-Gah, the example is from "x86/exceptions: Split debug IST stack".
+What does the mutex do then?  Why can't we just use the spinlock for
+everything?
 
-> that "guard page" is associated with the stack physical above it:
-> 
->       --- top of DB_stack       <- Initial stack
->       --- end of DB_stack
->           guard page
-> 
->       --- top of DB1_stack      <- Top of stack after entering first #DB
->       --- end of DB1_stack
->           guard page
-> 
->       --- top of DB2_stack      <- Top of stack after entering second #DB
->       --- end of DB2_stack
->           guard page
-> 
-> > +
-> > +/* The exception stacks linear storage. No guard pages required */
-> > +struct exception_stacks {
-> > +	ESTACKS_MEMBERS(0)
-> > +};
-> > +
-> > +/*
-> > + * The effective cpu entry area mapping with guard pages. Guard size is
-> > + * zero until the code which makes assumptions about linear mapping is
-> > + * cleaned up.
-> > + */
-> > +struct cea_exception_stacks {
-> > +	ESTACKS_MEMBERS(0)
-> > +};
-> > +
-> > +#define CEA_ESTACK_TOP(ceastp, st)			\
-> > +	((unsigned long)&(ceastp)->st## _stack_guard)
-> 
-> IMO, using the stack guard to define the top of stack is unnecessarily
-> confusing and fragile, e.g. reordering the names of the stack guards
-> would break this macro.
-> 
-> What about:
-> 
-> #define CEA_ESTACK_TOP(ceastp, st)			\
-> 	(CEA_ESTACK_BOT(ceastp, st) + CEA_ESTACK_SIZE(st))
-> 
-> > +#define CEA_ESTACK_BOT(ceastp, st)			\
-> > +	((unsigned long)&(ceastp)->st## _stack)
-> > +
-> > +#define CEA_ESTACK_OFFS(st)					\
-> > +	offsetof(struct cea_exception_stacks, st## _stack)
-> > +
-> > +#define CEA_ESTACK_SIZE(st)					\
-> > +	sizeof(((struct cea_exception_stacks *)0)->st## _stack)
-> > +
-> > +#define CEA_ESTACK_PAGES					\
-> > +	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
-> > +
-> > +#endif
-> > +
-> >  /*
-> >   * cpu_entry_area is a percpu region that contains things needed by the CPU
-> >   * and early entry/exit code.  Real types aren't used for all fields here
-> > @@ -32,12 +76,9 @@ struct cpu_entry_area {
-> >  
-> >  #ifdef CONFIG_X86_64
-> >  	/*
-> > -	 * Exception stacks used for IST entries.
-> > -	 *
-> > -	 * In the future, this should have a separate slot for each stack
-> > -	 * with guard pages between them.
-> > +	 * Exception stacks used for IST entries with guard pages.
-> >  	 */
-> > -	char exception_stacks[(N_EXCEPTION_STACKS - 1) * EXCEPTION_STKSZ + DEBUG_STKSZ];
-> > +	struct cea_exception_stacks estacks;
-> >  #endif
-> >  #ifdef CONFIG_CPU_SUP_INTEL
-> >  	/*
-> > --- a/arch/x86/kernel/cpu/common.c
-> > +++ b/arch/x86/kernel/cpu/common.c
-> > @@ -1754,7 +1754,7 @@ void cpu_init(void)
-> >  	 * set up and load the per-CPU TSS
-> >  	 */
-> >  	if (!oist->ist[0]) {
-> > -		char *estacks = get_cpu_entry_area(cpu)->exception_stacks;
-> > +		char *estacks = (char *)&get_cpu_entry_area(cpu)->estacks;
-> >  
-> >  		for (v = 0; v < N_EXCEPTION_STACKS; v++) {
-> >  			estacks += exception_stack_sizes[v];
-> > --- a/arch/x86/mm/cpu_entry_area.c
-> > +++ b/arch/x86/mm/cpu_entry_area.c
-> > @@ -13,8 +13,7 @@
-> >  static DEFINE_PER_CPU_PAGE_ALIGNED(struct entry_stack_page, entry_stack_storage);
-> >  
-> >  #ifdef CONFIG_X86_64
-> > -static DEFINE_PER_CPU_PAGE_ALIGNED(char, exception_stacks
-> > -	[(N_EXCEPTION_STACKS - 1) * EXCEPTION_STKSZ + DEBUG_STKSZ]);
-> > +static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
-> >  #endif
-> >  
-> >  struct cpu_entry_area *get_cpu_entry_area(int cpu)
-> > @@ -138,9 +137,8 @@ static void __init setup_cpu_entry_area(
-> >  #ifdef CONFIG_X86_64
-> >  	BUILD_BUG_ON(sizeof(exception_stacks) % PAGE_SIZE != 0);
-> >  	BUILD_BUG_ON(sizeof(exception_stacks) !=
-> > -		     sizeof(((struct cpu_entry_area *)0)->exception_stacks));
-> > -	cea_map_percpu_pages(&cea->exception_stacks,
-> > -			     &per_cpu(exception_stacks, cpu),
-> > +		     sizeof(((struct cpu_entry_area *)0)->estacks));
-> > +	cea_map_percpu_pages(&cea->estacks, &per_cpu(exception_stacks, cpu),
-> >  			     sizeof(exception_stacks) / PAGE_SIZE, PAGE_KERNEL);
-> >  #endif
-> >  	percpu_setup_debug_store(cpu);
-> > 
-> > 
+I did glance at the code and it wasn't immediately obvious to me.
+
+regards,
+dan carpenter
+
