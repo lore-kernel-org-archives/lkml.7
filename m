@@ -2,135 +2,126 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D98C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA5B21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45ADD2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfDELKu (ORCPT
+        id S1731139AbfDELLA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:10:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36066 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbfDELKu (ORCPT
+        Fri, 5 Apr 2019 07:11:00 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:44482 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730596AbfDELK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:10:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h18so6724502wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:10:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=nw4byI8wl4u5RByJyIYhrTxED0BA1Q5a4JjGb2r3NJM=;
-        b=lZYABp6A4Uw+d3+6Mf1PtVALYVOR/ngg9noXJkickv+WpL0LiC/+GtTplg+lr4hTL1
-         Dz2jQvmSNn4lHtCfKX8cEPBlqnGjFLbRSxrQn/UB76fGOI8uj3o9GyWF9a9TfjPtc0FT
-         yhJ2xjkJ3vlWi8XXVb7t2hdJSjW7+r0DnoyCvV4js+dIEdSqSzou3SfRT7RIYD8ZkBnG
-         2ibHJQIUpB6XWZolHbZUWMyAVfmonaq04xGJ2X40R0kgAx04Tu+dzUEC7g3/XAfYUdhE
-         hhGmlAbt1Dcq48X3yS7/+ZXm2DPAWgw/dX/jqkXTG8OTRx/jd08EDWXXRbkLNyXQ53Fr
-         E3wg==
-X-Gm-Message-State: APjAAAXF31U2QMZ3TNvo/UKmTXEWM76kXP2PevfUYaTtJ96kRhZhhffx
-        RQN7tGozb9rRpv/bbjAgEomb8rpjnUQ=
-X-Google-Smtp-Source: APXvYqyaepktI4unLI1mrcLgEOg9achbNy+5FFcyBwaxHCD8K3Hi8IYouC6KhIhti4fV4uP+8QfkAA==
-X-Received: by 2002:a05:600c:291:: with SMTP id 17mr7087148wmk.17.1554462648238;
-        Fri, 05 Apr 2019 04:10:48 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 7sm76640266wrc.81.2019.04.05.04.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 04:10:47 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] x86: hv: mmu.c: Replace page definitions with Hyper-V specific ones
-In-Reply-To: <3bc5d60092473815fbd90422875233fb6075285b.1554426040.git.m.maya.nakamura@gmail.com>
-References: <cover.1554426039.git.m.maya.nakamura@gmail.com> <3bc5d60092473815fbd90422875233fb6075285b.1554426040.git.m.maya.nakamura@gmail.com>
-Date:   Fri, 05 Apr 2019 13:10:46 +0200
-Message-ID: <87zhp4iu6h.fsf@vitty.brq.redhat.com>
+        Fri, 5 Apr 2019 07:10:59 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-21-ei3ZT4hrNcSfinsZJ8tdxw-1; Fri, 05 Apr 2019 12:10:56 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
+ 5 Apr 2019 12:12:03 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 5 Apr 2019 12:12:03 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Ingo Molnar' <mingo@kernel.org>,
+        Alexander Potapenko <glider@google.com>
+CC:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "jyknight@google.com" <jyknight@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: RE: [PATCH v2] x86/asm: fix assembly constraints in bitops
+Thread-Topic: [PATCH v2] x86/asm: fix assembly constraints in bitops
+Thread-Index: AQHU65N45ims1sqDDECRt8+l+UbnY6YtaHaA
+Date:   Fri, 5 Apr 2019 11:12:03 +0000
+Message-ID: <00ac2060e69c4e06915ca51c1308a73e@AcuMS.aculab.com>
+References: <20190402112813.193378-1-glider@google.com>
+ <20190405093931.GA28890@gmail.com>
+In-Reply-To: <20190405093931.GA28890@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MC-Unique: ei3ZT4hrNcSfinsZJ8tdxw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+From: Ingo Molnar
+> Sent: 05 April 2019 10:40
+> 
+> * Alexander Potapenko <glider@google.com> wrote:
+> 
+> > 1. Use memory clobber in bitops that touch arbitrary memory
+> >
+> > Certain bit operations that read/write bits take a base pointer and an
+> > arbitrarily large offset to address the bit relative to that base.
+> > Inline assembly constraints aren't expressive enough to tell the
+> > compiler that the assembly directive is going to touch a specific memory
+> > location of unknown size, therefore we have to use the "memory" clobber
+> > to indicate that the assembly is going to access memory locations other
+> > than those listed in the inputs/outputs.
+> > To indicate that BTR/BTS instructions don't necessarily touch the first
+> > sizeof(long) bytes of the argument, we also move the address to assembly
+> > inputs.
+> >
+> > This particular change leads to size increase of 124 kernel functions in
+> > a defconfig build. For some of them the diff is in NOP operations, other
+> > end up re-reading values from memory and may potentially slow down the
+> > execution. But without these clobbers the compiler is free to cache
+> > the contents of the bitmaps and use them as if they weren't changed by
+> > the inline assembly.
+> >
+> > 2. Use byte-sized arguments for operations touching single bytes.
+> >
+> > Passing a long value to ANDB/ORB/XORB instructions makes the compiler
+> > treat sizeof(long) bytes as being clobbered, which isn't the case. This
+> > may theoretically lead to worse code in the case of heavy optimization.
+> >
+...
+> 
+> I'm wondering what the primary motivation for the patch is:
+> 
+>  - Does it fix an actual miscompilation, or only a theoretical miscompilation?
+> 
+>  - If it fixes an existing miscompilation:
+> 
+>    - Does it fix a miscompilation triggered by current/future versions of GCC?
+>    - Does it fix a miscompilation triggered by current/future versions of Clang?
+> 
+>  - Also, is the miscompilation triggered by 'usual' kernel configs, or
+>    does it require exotics such as weird debug options or GCC plugins,
+>    etc?
+> 
+> I.e. a bit more context would be useful.
 
-> Replace PAGE_SHIFT, PAGE_SIZE, and PAGE_MASK with HV_HYP_PAGE_SHIFT,
-> HV_HYP_PAGE_SIZE, and HV_HYP_PAGE_MASK, respectively, because the guest
-> page size and hypervisor page size concepts are different, even though
-> they happen to be the same value on x86.
->
-> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> ---
->  arch/x86/hyperv/mmu.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-> index e65d7fe6489f..175f6dcc7362 100644
-> --- a/arch/x86/hyperv/mmu.c
-> +++ b/arch/x86/hyperv/mmu.c
-> @@ -15,7 +15,7 @@
->  #include <asm/trace/hyperv.h>
->  
->  /* Each gva in gva_list encodes up to 4096 pages to flush */
-> -#define HV_TLB_FLUSH_UNIT (4096 * PAGE_SIZE)
-> +#define HV_TLB_FLUSH_UNIT (4096 * HV_HYP_PAGE_SIZE)
->  
->  static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
->  				      const struct flush_tlb_info *info);
-> @@ -32,15 +32,15 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
->  	do {
->  		diff = end > cur ? end - cur : 0;
->  
-> -		gva_list[gva_n] = cur & PAGE_MASK;
-> +		gva_list[gva_n] = cur & HV_HYP_PAGE_MASK;
+The missing memory clobber (change 1) can cause very difficult to debug bugs.
+Simple things like gcc deciding to inline a function can change the order
+of memory accesses.
+Having the wrong just isn't worth the trouble it can cause.
 
-I'm not sure this is correct: here we're expressing guest virtual
-addresses in need of flushing, this should be unrelated to the
-hypervisor page size.
+	David
 
->  		/*
->  		 * Lower 12 bits encode the number of additional
->  		 * pages to flush (in addition to the 'cur' page).
->  		 */
->  		if (diff >= HV_TLB_FLUSH_UNIT)
-> -			gva_list[gva_n] |= ~PAGE_MASK;
-> +			gva_list[gva_n] |= ~HV_HYP_PAGE_MASK;
->  		else if (diff)
-> -			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
-> +			gva_list[gva_n] |= (diff - 1) >> HV_HYP_PAGE_SHIFT;
->  
->  		cur += HV_TLB_FLUSH_UNIT;
->  		gva_n++;
-> @@ -129,7 +129,8 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
->  	 * We can flush not more than max_gvas with one hypercall. Flush the
->  	 * whole address space if we were asked to do more.
->  	 */
-> -	max_gvas = (PAGE_SIZE - sizeof(*flush)) / sizeof(flush->gva_list[0]);
-> +	max_gvas = (HV_HYP_PAGE_SIZE - sizeof(*flush)) /
-> +		    sizeof(flush->gva_list[0]);
->  
->  	if (info->end == TLB_FLUSH_ALL) {
->  		flush->flags |= HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY;
-> @@ -200,9 +201,9 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
->  	 * whole address space if we were asked to do more.
->  	 */
->  	max_gvas =
-> -		(PAGE_SIZE - sizeof(*flush) - nr_bank *
-> +		(HV_HYP_PAGE_SIZE - sizeof(*flush) - nr_bank *
->  		 sizeof(flush->hv_vp_set.bank_contents[0])) /
-> -		sizeof(flush->gva_list[0]);
-> +		 sizeof(flush->gva_list[0]);
->  
->  	if (info->end == TLB_FLUSH_ALL) {
->  		flush->flags |= HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY;
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
--- 
-Vitaly
