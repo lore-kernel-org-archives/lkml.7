@@ -2,101 +2,81 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F008C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAA6C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595872175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC1921855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hhB0cFIi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W7wtC6fT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDEXG0 (ORCPT
+        id S1726352AbfDEXK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:06:26 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38577 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbfDEXGZ (ORCPT
+        Fri, 5 Apr 2019 19:10:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50136 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfDEXK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:06:25 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g37so3787634plb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 16:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uVEvPh3CJM8jI6uy1N0HYD/6nCQAa5wIkVtsUWNVwkA=;
-        b=hhB0cFIi7pUc/rpAXFoMMPK/zDACB3ZjkP7djfYhOU4Bm2g5xlzUEicYITvnjBNdsx
-         Q8Kzz0/mZ55Du+HdxnIYCgU17xxigrKKsJme1uwwbPteGVnueEx7pdoRJ9tePKLqIKVO
-         LAibxPnmsIhcnEP3clfH+0cI65MseNXJW4n8MgfHMUM1pxxrh/RjqDu5XiwWx/+wd7eD
-         qYT3tBkaXr/3HYurTe2QqQyFG3X8dGnuAx/skjEysPNb1la7psY9E2O4ZPQk8LdzJfQK
-         1T4atpZrKI/qj2m73HmtCU81upd7qOOGPJvFnFubMADdkSXsyS+DGaF9ExjMjsEKPJi0
-         3qiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uVEvPh3CJM8jI6uy1N0HYD/6nCQAa5wIkVtsUWNVwkA=;
-        b=JPezlOQywrY5z0Pi4buT6lYUM+vU+UXI7pgFRJwueWV3r3/8lm29qSUZvumHqD+O0/
-         YnifUa2eVuclxINcLHuw4Zs8MNlg/LfSPiPY+lWiYUcaDfssZprE2IKi8yDRwO+xS8G/
-         vkirn+IhNRMOOEf1CT+JZ6KxyrvrVbDWQi4IZ8qgpcRylogyGHvQMmdRaEgFL9Fl/J64
-         dXqstdeqkhWCW6+6eUcIXg8fL5vkWH3ewp7K7l7TKIHsvg8F7ZfLxiVkWaLmLCLlCfU8
-         G8bhbPFnnj41SLp44r3REG4mo+NdiDGmlFjMndejCudFZFpeb/QQOXVGDKIKEd6HrKbS
-         OqQg==
-X-Gm-Message-State: APjAAAVjoWbumISn4W+6sNrUyqt1bjzhg/0hfmOluPScEHe9sOI9P1BM
-        ZAA3omL0NFzPQua76INDGEw0SRbvm5vvLA==
-X-Google-Smtp-Source: APXvYqx5VSDqeMMl3CoyMudTcnJwltWcRx8CcGMa3S81BTjlzBQXHj00TJ1Be7K6h4bRSJcfNxRAcg==
-X-Received: by 2002:a17:902:b68e:: with SMTP id c14mr15356913pls.49.1554505584543;
-        Fri, 05 Apr 2019 16:06:24 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id y12sm63498276pgq.64.2019.04.05.16.06.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 16:06:22 -0700 (PDT)
-Subject: Re: [PATCH] xsysace: Fix error handling in ace_setup
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        Fri, 5 Apr 2019 19:10:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4uPEFjI26CdrZO1+hQCYaNO97SmBbyFBxeR8pvlemBk=; b=W7wtC6fTAnbedRNUPmRjl3ZIP
+        bYIykBLVZyflrKrIkmKXzv172A3oxW6wsA12GN6E/b67dRSAkmyEvnAyPTNE03MMOQ/a/F6BxvkHO
+        yZVyEdB6X+dGhcb913IcLHnYvF9udUeeo1TLmZp9MXLoO0jmWuFlan0AxLxVN4PG6gl1NHlWo0Kq4
+        UwqOzpG/Y0aKP0Cke+X9asOjnCOyzujGImMK5amP1nBoNhJYhQ7mYHTBo3Duf2kNYDh4RhJIM9KnE
+        Y5gL8tslDU3bx67yeWoFa8sBdX5jrOUJDNVaVcGHeO6xnbF/86MyhbWbOsh3TfIel6cL6Z97A2N7m
+        E3vyg0XTQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hCXyc-0007th-7n; Fri, 05 Apr 2019 23:10:26 +0000
+Date:   Fri, 5 Apr 2019 16:10:26 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1550594996-11453-1-git-send-email-linux@roeck-us.net>
- <20190405224458.GA19556@roeck-us.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0c428aac-f488-525a-49d1-506ce92be418@kernel.dk>
-Date:   Fri, 5 Apr 2019 17:06:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: Re: [PATCH] kernel-doc: Let backtick and backslash escape percent
+ sign
+Message-ID: <20190405231024.GR22763@bombadil.infradead.org>
+References: <20190405211820.17617-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190405224458.GA19556@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405211820.17617-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/19 4:44 PM, Guenter Roeck wrote:
-> Hi,
+On Fri, Apr 05, 2019 at 02:18:20PM -0700, Sean Christopherson wrote:
+> There are a handful of instances where kernel doc comments want an
+> actual '%' in the final output, e.g. vsnprintf() wants to display "%n"
+> and "%p" to document format specifiers, and assembly functions that use
+> a custom call ABI may want to document their register usage, e.g. %eax.
 > 
-> On Tue, Feb 19, 2019 at 08:49:56AM -0800, Guenter Roeck wrote:
->> If xace hardware reports a bad version number, the error handling code
->> in ace_setup() calls put_disk(), followed by queue cleanup. However, since
->> the disk data structure has the queue pointer set, put_disk() also
->> cleans and releases the queue. This results in blk_cleanup_queue()
->> accessing an already released data structure, which in turn may result
->> in a crash such as the following.
->>
+> Because kernel-doc unconditionally interprets '%' followed by a word
+> character as a constant definition, i.e. %CONST, it's impossible to get
+> an actual '%\w' when kernel-doc is used to translate comments into rst
+> format.  Treat backtick and backlash as escaping '%', the former to
+> handle '%' in a ``LITERAL``, and the latter to allow '%' when using
+> standard formatting.
 > 
-> This crash is now quite persistent in mainline. The fix didn't make it.
-> Should I stop testing virtex-ml507 with qemu ?
+> An alternative option would be to define a fancier set of rules for
+> interpreting '%' so that explicit escaping would not be required.  For
+> example, require "%CONST" to be preceded by a recognized set of
+> characters, e.g. whitespace, opening parenthesis, etc...  But the list
+> of recognized characters is quite large even in the current code base,
+> and using '\' to escape is more common and intuitive, i.e. most people
+> will naturally try doing "\%..." to get the desired formatting, whereas
+> losing %CONST formatting because of an unrecognized character is likely
+> to cause confusion.
 
-I've applied the fix now.
-
-But given Michal's comments, should we kill the driver for 5.2?
-
--- 
-Jens Axboe
-
+Would it make sense to have %% turn into % rather than forcing quotation
+marks?
