@@ -2,132 +2,129 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF18C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B4DC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590F92184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qWxjCJ2C"
+	by mail.kernel.org (Postfix) with ESMTP id 9201E21852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554479001;
+	bh=GOgLyq5QBzoqNiw/jYFcfoGprsdnF7AsBTYJcwppRhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ziok/kyJNFmRp/p46e1XJJ1yhQB2LtddsAcQzQti8O/Wot6U/Tf8mGCDq/gHsUthV
+	 bklgS4cmuzTm2tPsLcjobv9hTnC+1cBfHOTIXBXQPMLphK7x/5iUAjjZ1dAsiw1TgU
+	 VMBYw0aw/WHgHrZIllwb9NqzLccN/RUHEz/Jj02c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfDEPnQ (ORCPT
+        id S1731483AbfDEPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:43:16 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46584 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfDEPnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:43:15 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x188so5191505oia.13
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sj5ur8Cq/BuzaN2ifegKjnKHNZadsvVGhfJ737scZtM=;
-        b=qWxjCJ2C4YTGaRB9VBshlOczs86lXXi96/4MUM4KFNW57aHk+Y9NUay569AN2AVEAO
-         Ew58BrpoYq3qi38QUMzCX4V3c6JMBwOQsD8Q/e6wvqNwRgeBKSLn5/AGWqh7sXQAyVFk
-         MhYEexjZPJHL4F9KNMa+iE7I2xdyjpQ8lLA/rQjxnIZtVIhmnI3Tj/YRPtO2jUVyHBYV
-         O8ZeJpoyAuDCVbZmR1CDJoKl4dtDEI2cMii1Vo/Jrz19wwDwZhGpZ7O4iApIt+QJwvDQ
-         R0lacbsDF32fVMi22CzeDw38/8YGXp0LzKsO5dOflq27gqrNcwTw0QvEONmv7tyuEvaj
-         X4RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sj5ur8Cq/BuzaN2ifegKjnKHNZadsvVGhfJ737scZtM=;
-        b=JB4tWbTrZxXwZE11DJO/KXt+Q97TyN4O/cqqUliV7RgQcUxtEPBQEzozb6Qzx+yIPJ
-         ehZNBC+9JllkWpStaD0YeBjXeLWD3wuSb3qQY78X4ZVW7sOeN/+i9V/plDZqPRKCZFi/
-         +QEP3M6n2uHJUCmO5sEuK/biUre+yqepPkHhEje9mmkenHDAz525sRkee+FmbiyNhXFm
-         mr8rhBgCRntKbkY21tvPvKzgHJu2Zwv86GgkzDEf+LTawaHKMNnB6Xxxh5JeXPc0mKmU
-         oj56SJJgj0BAa9g6BRBhk0zRtRqHzE3k/u0bvolgXS8VAjQ8BjUfT4AuUGj+bYCFq4EB
-         saCQ==
-X-Gm-Message-State: APjAAAXvxI2BduUHos4tm4MQBCAkN/9xnnF7qDVF6QDte4azYNY8+yNZ
-        J2OvTPw8TMDfSKTfwwaZg2mfIHP4dwnihlvTAZ2fMw==
-X-Google-Smtp-Source: APXvYqwQIzEcgHJH2g95bHHSuUp6aFniNQQWMvFvEkdIRFFMM2bkcnOv77ZAMvXPrUVmGRcaUKHxXOM3RDJblZB6Pkg=
-X-Received: by 2002:aca:aa57:: with SMTP id t84mr7929156oie.149.1554478994621;
- Fri, 05 Apr 2019 08:43:14 -0700 (PDT)
+        Fri, 5 Apr 2019 11:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfDEPnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:43:20 -0400
+Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E202184B;
+        Fri,  5 Apr 2019 15:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554478999;
+        bh=GOgLyq5QBzoqNiw/jYFcfoGprsdnF7AsBTYJcwppRhk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MnXzkO3WTUA1IpX/ZQfts5jWYWlBJl6tbi0CezX0kJGyZrDEZpK+v93R1LQvQbz0o
+         fxmmDcvgiHLXFEsW/yCowWQ5M+dMi8mxzm0L8xnxgN80dksYoffVoTWPrbQU1bePjo
+         ucBeN/bVaKWtuQc1BPUhqDnptQ7f/3W3kH4P2IKY=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 30F313C08D5; Fri,  5 Apr 2019 17:43:17 +0200 (CEST)
+Date:   Fri, 5 Apr 2019 17:43:17 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: gpio-charger: Add
+ status-gpios property
+Message-ID: <20190405154317.suqovb4u2bgceqf7@earth.universe>
+References: <20190226150437.3704-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
-References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190405121857.0000718a@huawei.com>
-In-Reply-To: <20190405121857.0000718a@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Apr 2019 08:43:03 -0700
-Message-ID: <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a device
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lgrrqna5ih6dueed"
+Content-Disposition: inline
+In-Reply-To: <20190226150437.3704-1-contact@artur-rojek.eu>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
-<jonathan.cameron@huawei.com> wrote:
->
-> On Thu, 4 Apr 2019 12:08:49 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
-> > properties described by the ACPI HMAT is expected to have an application
-> > specific consumer.
-> >
-> > Those consumers may want 100% of the memory capacity to be reserved from
-> > any usage by the kernel. By default, with this enabling, a platform
-> > device is created to represent this differentiated resource.
-> >
-> > A follow on change arranges for device-dax to claim these devices by
-> > default and provide an mmap interface for the target application.
-> > However, if the administrator prefers that some or all of the special
-> > purpose memory is made available to the core-mm the device-dax hotplug
-> > facility can be used to online the memory with its own numa node.
-> >
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Hi Dan,
->
-> Great to see you getting this discussion going so fast and in
-> general the approach makes sense to me.
->
-> I'm a little confused why HMAT has anything to do with this.
-> SPM is defined either via the attribute in SRAT SPA entries,
-> EF_MEMORY_SP or via the EFI memory map.
->
-> Whether it is in HMAT or not isn't all that relevant.
-> Back in the days of the reservation hint (so before yesterday :)
-> it was relevant obviously but that's no longer true.
->
-> So what am I missing?
 
-It's a good question, and an assumption I should have explicitly
-declared in the changelog. The problem with EFI_MEMORY_SP is the same
-as the problem with the EfiPersistentMemory type, it isn't precise
-enough on its own for the kernel to delineate 'type' or
-device/replaceable-unit boundaries. For example, I expect one
-EFI_MEMORY_SP range of a specific type may be contiguous with another
-range of a different type. Similar to the NFIT there is no requirement
-in the specification that platform firmware inject multiple range
-entries. Instead that precision is left to the SRAT + HMAT, or the
-NFIT in the case of PMEM.
+--lgrrqna5ih6dueed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Conversely, and thinking through this a bit more, if a memory range is
-"special", but the platform fails to enumerate it in HMAT I think
-Linux should scream loudly that the firmware is broken and leave the
-range alone. The "scream loudly" piece is missing in the current set,
-but the "leave the range alone" functionality is included.
+Hi,
+
+On Tue, Feb 26, 2019 at 04:04:36PM +0100, Artur Rojek wrote:
+> Add documentation for the "status-gpios" property.
+> Update the "gpios" property with a valid example.
+>=20
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>=20
+> Changes:
+>=20
+> v2: - add a better description for the "status-gpios" property,
+>     - add valid examples for the "gpios" and "status-gpios" properties
+>=20
+>  .../devicetree/bindings/power/supply/gpio-charger.txt       | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
+txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> index adbb5dc5b6e9..999cc245543c 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> @@ -14,12 +14,16 @@ Required properties :
+>       usb-cdp (USB charging downstream port)
+>       usb-aca (USB accessory charger adapter)
+> =20
+> +Optional properties:
+> + - status-gpios: GPIO indicating whether a battery is charging.
+
+I think it's better to name this charge-status-gpios, since charger
+may provide all kind of status GPIOs. For example the existing
+gpios property (also bad name, but cannot be changed easily now),
+which provides AC online status.
+
+Otherwise the binding and the driver patch looks good to me.
+
+-- Sebastian
+
+--lgrrqna5ih6dueed
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynd44ACgkQ2O7X88g7
++prPzw//XO6mDUEhOYJsXTr2FPrYOHrHWEs0rLyj3x+5rOaOuVTb5LXAPtE2iCNZ
+8J5/tZ48z9gAm4K16h5N6LIyMewU29E43ouzDDVZ60/k28gOFsZ/tSDT/lgUZiQg
+irKv/yjn1txoQcQbb+aHRdHpXp/SBKFcU4T1iDT8EsU7bN4a3GW4WZQJPpSvAQhh
+eQCWBiPAadNIyfJcQjmnUPtG8YQT3TCVDV8cXjMwV9nfc+3FKkMtZXW7rrsqdrVC
+pukRRokwok4ogfJ5UF8UPJ/KkDO7aerKJ1vu2Ms8u+Mkz7k+OJAlUffTevlUXJX8
+agi+XJHumq0OelOvgr4jowJ+Yh0Y2jcGX2iaw4DomNC7UPVXkzwhdMzIsdUKfULE
+vxaznLsAOjRODTCJ+Dnd6te3qFNmMIP3v2K/8dmrQinfUEJheuxGrxVyRalSRVtX
+B1yO1c6aHdiRAuxxIx+UlDOgHv4xzhbL4lzCxCFVXz5jj9H4jwPpwyI/YblLpu/p
+njCBTlwpffeDwzWubkbxm3qyvqJcQgab3Wr7B0Y182djl8URipKqzeCGHc55V1In
+7s2SE7ViXp4dUe2BeO963FpFDL0HKmFDq/wDpy2ix3yPPZyISmnRBwcFPPO50/ue
+Mn5VCHi50BMIZegBPUQsGoKh03TbrmPa+0XmdW8qeOiIYi+M9t4=
+=SUiH
+-----END PGP SIGNATURE-----
+
+--lgrrqna5ih6dueed--
