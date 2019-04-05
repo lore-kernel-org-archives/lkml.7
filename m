@@ -2,89 +2,156 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EC3C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BECCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00326206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281D820700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Zg0OG1/2";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="m6GiGw6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfDEGsP (ORCPT
+        id S1729631AbfDEGuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:48:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38618 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726389AbfDEGsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:48:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95C77B613;
-        Fri,  5 Apr 2019 06:48:13 +0000 (UTC)
-Subject: Re: [PATCH] xen: use struct_size() helper in kzalloc()
-To:     Andrea Righi <andrea.righi@canonical.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20190403052636.GC21532@xps-13>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ae3a31f9-d254-fd68-2257-2337fbfefa70@suse.com>
-Date:   Fri, 5 Apr 2019 08:48:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 5 Apr 2019 02:50:02 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:44774 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726389AbfDEGuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 02:50:02 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x356kPsl008194;
+        Thu, 4 Apr 2019 23:49:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=HhqynMrsXDvwWZ2vJRTUq+EeGXyfLLq3QuQOM/Z5wCQ=;
+ b=Zg0OG1/2E5y0RBiUqTl6VmiNN8h2whKmtlELAjyqGAOIjxM4lgUjmiVPONFNKac6yaR3
+ zGpytxQEHvOXuiDU+bidAacJn0JlQbjxGl4vFa9EwQYKgGVP/5eZRXTG0UVCsKasnZ7Q
+ eyZMXv/yMF6PKP9j/7qmVFgEB3p01LGQKNSRwN0MCJOnfl/YyYuec07HNWIArAAZYd7R
+ Z9meE/bbzW96d8mafu52fZOxkPZPwli7/Tjy4Wd3MM6+tLZmXqfvfLMV4B1j71iNJjSd
+ yjPgVXiW+fE3PA5EcL2SWrP8ceU44GVEIPa5Eyex7KEERJTiBjwbIsoqMkpUpfmNnw4H +w== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2rnv96159r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 04 Apr 2019 23:49:51 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 4 Apr
+ 2019 23:49:40 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 4 Apr 2019 23:49:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HhqynMrsXDvwWZ2vJRTUq+EeGXyfLLq3QuQOM/Z5wCQ=;
+ b=m6GiGw6K+lyXsAI23Vh2ldJ+9j9tMEJAXIyjd34djw+eg/2fqBHTE54pie8aVRel7/ksFezjNhKYsV+DKnw7lov/+suy0WxCnrVMj7b4BrIyNiV17I20Ac9aOMcB4o0O6nD5tX6QmAB6Ybc4HJnrOHHKe1fznqDw42U1HxYuks8=
+Received: from BL0PR18MB2305.namprd18.prod.outlook.com (52.132.30.25) by
+ BL0PR18MB2322.namprd18.prod.outlook.com (52.132.30.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.19; Fri, 5 Apr 2019 06:49:35 +0000
+Received: from BL0PR18MB2305.namprd18.prod.outlook.com
+ ([fe80::d42:95e4:7e1c:76b6]) by BL0PR18MB2305.namprd18.prod.outlook.com
+ ([fe80::d42:95e4:7e1c:76b6%5]) with mapi id 15.20.1750.017; Fri, 5 Apr 2019
+ 06:49:35 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Moving to @marvell.com addresses for Cavium
+ ThunderX2
+Thread-Topic: [PATCH] MAINTAINERS: Moving to @marvell.com addresses for Cavium
+ ThunderX2
+Thread-Index: AQHU39Z7ml8v/3ZEokigx4+LKvn4qKYtN8IA
+Date:   Fri, 5 Apr 2019 06:49:35 +0000
+Message-ID: <20190405064930.kur553xvpx7rugq5@rric.localdomain>
+References: <20190321110741.19177-1-rrichter@marvell.com>
+In-Reply-To: <20190321110741.19177-1-rrichter@marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0202CA0023.eurprd02.prod.outlook.com
+ (2603:10a6:203:69::33) To BL0PR18MB2305.namprd18.prod.outlook.com
+ (2603:10b6:207:43::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.12.173.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 22d70794-69d3-4040-713c-08d6b992dd4a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BL0PR18MB2322;
+x-ms-traffictypediagnostic: BL0PR18MB2322:
+x-microsoft-antispam-prvs: <BL0PR18MB2322BE780AE9F32A68DCDBCDD9510@BL0PR18MB2322.namprd18.prod.outlook.com>
+x-forefront-prvs: 0998671D02
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(396003)(346002)(189003)(199004)(6506007)(53546011)(71190400001)(2906002)(386003)(99286004)(71200400001)(102836004)(478600001)(97736004)(8936002)(8676002)(86362001)(14454004)(229853002)(6116002)(81166006)(76176011)(6486002)(81156014)(3846002)(26005)(486006)(68736007)(52116002)(25786009)(66066001)(6246003)(476003)(186003)(105586002)(6436002)(4326008)(256004)(53936002)(106356001)(5660300002)(110136005)(305945005)(7736002)(4744005)(446003)(54906003)(11346002)(316002)(1076003)(9686003)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR18MB2322;H:BL0PR18MB2305.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cqkXmvalQrGAMoAQUGjeqYZ2fclcKZj1/hxsnsG2XHdlyQ8IUJSgvXH81mKKQl1v6f8E+V3qEEeBpKQIBhhzsDjgDZZSCOx2P6m2LO8RBrnrwiHQj2fKHbx7cwICSCdfP1UjQRpxsBsUP9QZlga2oU3QQQuvuYUwjJYn1vGadqfLpbib0E7JSjx3u1diVsQm8oigvZ3phmUhft1bXxmTg/Lwr2Gi/i5DoVQjPpS2dx7qGRH0PPlgKYdeMD1UtrL975+gTUMkF7CXP0j5C2Y+4AVaPQRWgVofuVTRiQTdyUim7kk+GryBCTpZCS/ztEDiI03jlJem4mkXM3J1qCmMQJn/eG3uUAFbXCcQqJP8rT2RSE4XPezAG8r2KogzSzcIHwFjnxVcqvvdUr/WbWT4uDn23M+IUwQ7vyZqNzmHa2A=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3CA7D16C3808AF42BFD6E7506BC2A034@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190403052636.GC21532@xps-13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22d70794-69d3-4040-713c-08d6b992dd4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2019 06:49:35.4625
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2322
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 07:26, Andrea Righi wrote:
-> struct privcmd_buf_vma_private has a zero-sized array at the end
-> (pages), use the new struct_size() helper to determine the proper
-> allocation size and avoid potential type mistakes.
-> 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+On 21.03.19 11:08:59, Robert Richter wrote:
+> Our @cavium.com addresses will be switched off soon. Using
+> @marvell.com addresses from now on.
+>=20
+> Cc: Jayachandran C <jnair@marvell.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  MAINTAINERS | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Pushed to xen/tip.git for-linus-5.1b
+Rob,
 
+could you route this patch through dt/next? Please let me know if you
+need anything to apply this.
 
-Juergen
+Thanks,
 
+-Robert
+
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a7432224930b..37f0a2aed4bb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3507,8 +3507,8 @@ S:	Supported
+>  F:	drivers/crypto/cavium/cpt/
+> =20
+>  CAVIUM THUNDERX2 ARM64 SOC
+> -M:	Robert Richter <rrichter@cavium.com>
+> -M:	Jayachandran C <jnair@caviumnetworks.com>
+> +M:	Robert Richter <rrichter@marvell.com>
+> +M:	Jayachandran C <jnair@marvell.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm64/boot/dts/cavium/thunder2-99xx*
+> --=20
+> 2.20.1
+>=20
