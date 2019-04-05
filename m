@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346B0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE656C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4D2218D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A879221852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbfDEOAL (ORCPT
+        id S1731377AbfDEOAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:00:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49214 "EHLO
+        Fri, 5 Apr 2019 10:00:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49266 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbfDEOAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:09 -0400
+        id S1731306AbfDEOAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4995B1993;
-        Fri,  5 Apr 2019 07:00:09 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEC2116A3;
+        Fri,  5 Apr 2019 07:00:13 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66A863F68F;
-        Fri,  5 Apr 2019 07:00:05 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8B06B3F68F;
+        Fri,  5 Apr 2019 07:00:09 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 06/21] arm64/io: Remove useless definition of mmiowb()
-Date:   Fri,  5 Apr 2019 14:59:21 +0100
-Message-Id: <20190405135936.7266-7-will.deacon@arm.com>
+Subject: [PATCH v2 07/21] x86/io: Remove useless definition of mmiowb()
+Date:   Fri,  5 Apr 2019 14:59:22 +0100
+Message-Id: <20190405135936.7266-8-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -59,29 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 includes asm-generic/io.h, which provides a dummy definition of
-mmiowb() if one isn't already provided by the architecture.
-
-Remove the useless definition.
+x86 maps mmiowb() to barrier(), but this is superfluous because a
+compiler barrier is already implied by spin_unlock(). Since x86 also
+includes asm-generic/io.h in its asm/io.h file, we can remove the
+definition entirely and pick up the dummy definition from core code.
 
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/arm64/include/asm/io.h | 2 --
+ arch/x86/include/asm/io.h | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 8bb7210ac286..b807cb9b517d 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -124,8 +124,6 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
- #define __io_par(v)		__iormb(v)
- #define __iowmb()		wmb()
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 686247db3106..a06a9f8294ea 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -90,8 +90,6 @@ build_mmio_write(__writel, "l", unsigned int, "r", )
+ #define __raw_writew __writew
+ #define __raw_writel __writel
  
--#define mmiowb()		do { } while (0)
+-#define mmiowb() barrier()
 -
- /*
-  * Relaxed I/O memory access primitives. These follow the Device memory
-  * ordering rules but do not guarantee any ordering relative to Normal memory
+ #ifdef CONFIG_X86_64
+ 
+ build_mmio_read(readq, "q", u64, "=r", :"memory")
 -- 
 2.11.0
 
