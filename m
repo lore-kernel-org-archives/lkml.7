@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF2DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41799C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2378221871
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182462186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbfDELlZ (ORCPT
+        id S1731167AbfDELl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:41:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52859 "EHLO
+        Fri, 5 Apr 2019 07:41:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49373 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbfDELlZ (ORCPT
+        with ESMTP id S1730283AbfDELl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:41:25 -0400
+        Fri, 5 Apr 2019 07:41:56 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BdFZD2734719
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BfJWJ2734925
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:39:15 -0700
+        Fri, 5 Apr 2019 04:41:19 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BdFlX2734716;
-        Fri, 5 Apr 2019 04:39:15 -0700
-Date:   Fri, 5 Apr 2019 04:39:15 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BfIFP2734920;
+        Fri, 5 Apr 2019 04:41:18 -0700
+Date:   Fri, 5 Apr 2019 04:41:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-f0fbb114e3025f3f737a1e1c5c39c5b2b2e671bd@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, jolsa@kernel.org, ak@linux.intel.com,
-        acme@redhat.com, mingo@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com
-Reply-To: jolsa@kernel.org, hpa@zytor.com, acme@redhat.com,
-          mingo@kernel.org, ak@linux.intel.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de
-In-Reply-To: <20190326221823.11518-3-andi@firstfloor.org>
-References: <20190326221823.11518-3-andi@firstfloor.org>
+From:   "tip-bot for Steven Rostedt (VMware)" <tipbot@zytor.com>
+Message-ID: <tip-328b82b7497787cf4e4856a216dbf4e8a54c06a6@git.kernel.org>
+Cc:     hpa@zytor.com, mingo@kernel.org, jolsa@redhat.com,
+        tglx@linutronix.de, rostedt@goodmis.org, akpm@linux-foundation.org,
+        tstoyanov@vmware.com, namhyung@kernel.org, acme@redhat.com,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com,
+          tstoyanov@vmware.com, namhyung@kernel.org, rostedt@goodmis.org,
+          akpm@linux-foundation.org, tglx@linutronix.de, mingo@kernel.org,
+          jolsa@redhat.com, hpa@zytor.com
+In-Reply-To: <20190401164342.837312153@goodmis.org>
+References: <20190401164342.837312153@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf stat: Implement duration_time as a proper
- event
-Git-Commit-ID: f0fbb114e3025f3f737a1e1c5c39c5b2b2e671bd
+Subject: [tip:perf/core] tools lib traceevent: Handle trace_printk() "%px"
+Git-Commit-ID: 328b82b7497787cf4e4856a216dbf4e8a54c06a6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,333 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f0fbb114e3025f3f737a1e1c5c39c5b2b2e671bd
-Gitweb:     https://git.kernel.org/tip/f0fbb114e3025f3f737a1e1c5c39c5b2b2e671bd
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Tue, 26 Mar 2019 15:18:21 -0700
+Commit-ID:  328b82b7497787cf4e4856a216dbf4e8a54c06a6
+Gitweb:     https://git.kernel.org/tip/328b82b7497787cf4e4856a216dbf4e8a54c06a6
+Author:     Steven Rostedt (VMware) <rostedt@goodmis.org>
+AuthorDate: Mon, 1 Apr 2019 12:43:06 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Apr 2019 14:49:24 -0300
+CommitDate: Mon, 1 Apr 2019 15:18:08 -0300
 
-perf stat: Implement duration_time as a proper event
+tools lib traceevent: Handle trace_printk() "%px"
 
-The perf metric expression use 'duration_time' internally to normalize
-events.  Normal 'perf stat' without -x also prints the duration time.
-But when using -x, the interval is not output anywhere, which is
-inconvenient for any post processing which often wants to normalize
-values to time.
+With security updates, %p in the kernel is hashed to protect true kernel
+locations. But trace_printk() is not allowed in production systems, and
+when a pointer is used, there are many times that the actual address is
+needed. "%px" produces the real address. But libtraceevent does not know how
+to handle that extension. Add it.
 
-So implement 'duration_time' as a proper perf event that can be
-specified explicitely with -e.
-
-The previous implementation of 'duration_time' only worked for metric
-processing. This adds the concept of a tool event that is handled by the
-tool. On the kernel level it is still mapped to the dummy software
-event, but the values are not read anymore, but instead computed by the
-tool.
-
-Add proper plumbing to handle this in the event parser, and display it
-in 'perf stat'. We don't want 'duration_time' to be added up, so it's
-only printed for the first CPU.
-
-% perf stat -e duration_time,cycles true
-
- Performance counter stats for 'true':
-
-           555,476 ns   duration_time
-           771,958      cycles
-
-       0.000555476 seconds time elapsed
-
-       0.000644000 seconds user
-       0.000000000 seconds sys
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190326221823.11518-3-andi@firstfloor.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lkml.kernel.org/r/20190401164342.837312153@goodmis.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c      | 28 +++++++++++++++++++++-------
- tools/perf/util/evsel.h        |  6 ++++++
- tools/perf/util/parse-events.c | 38 +++++++++++++++++++++++++++++++++-----
- tools/perf/util/parse-events.h |  4 ++++
- tools/perf/util/parse-events.l | 11 ++++++++++-
- tools/perf/util/parse-events.y | 12 ++++++++++++
- 6 files changed, 86 insertions(+), 13 deletions(-)
+ tools/lib/traceevent/event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 49ee3c2033ec..7f9c4b7f5d69 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -244,11 +244,25 @@ perf_evsel__write_stat_event(struct perf_evsel *counter, u32 cpu, u32 thread,
- 					   process_synthesized_event, NULL);
- }
- 
-+static int read_single_counter(struct perf_evsel *counter, int cpu,
-+			       int thread, struct timespec *rs)
-+{
-+	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
-+		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
-+		struct perf_counts_values *count =
-+			perf_counts(counter->counts, cpu, thread);
-+		count->ena = count->run = val;
-+		count->val = val;
-+		return 0;
-+	}
-+	return perf_evsel__read_counter(counter, cpu, thread);
-+}
-+
- /*
-  * Read out the results of a single counter:
-  * do not aggregate counts across CPUs in system-wide mode
-  */
--static int read_counter(struct perf_evsel *counter)
-+static int read_counter(struct perf_evsel *counter, struct timespec *rs)
- {
- 	int nthreads = thread_map__nr(evsel_list->threads);
- 	int ncpus, cpu, thread;
-@@ -275,7 +289,7 @@ static int read_counter(struct perf_evsel *counter)
- 			 * (via perf_evsel__read_counter) and sets threir count->loaded.
- 			 */
- 			if (!count->loaded &&
--			    perf_evsel__read_counter(counter, cpu, thread)) {
-+			    read_single_counter(counter, cpu, thread, rs)) {
- 				counter->counts->scaled = -1;
- 				perf_counts(counter->counts, cpu, thread)->ena = 0;
- 				perf_counts(counter->counts, cpu, thread)->run = 0;
-@@ -304,13 +318,13 @@ static int read_counter(struct perf_evsel *counter)
- 	return 0;
- }
- 
--static void read_counters(void)
-+static void read_counters(struct timespec *rs)
- {
- 	struct perf_evsel *counter;
- 	int ret;
- 
- 	evlist__for_each_entry(evsel_list, counter) {
--		ret = read_counter(counter);
-+		ret = read_counter(counter, rs);
- 		if (ret)
- 			pr_debug("failed to read counter %s\n", counter->name);
- 
-@@ -323,11 +337,11 @@ static void process_interval(void)
- {
- 	struct timespec ts, rs;
- 
--	read_counters();
--
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
- 
-+	read_counters(&rs);
-+
- 	if (STAT_RECORD) {
- 		if (WRITE_STAT_ROUND_EVENT(rs.tv_sec * NSEC_PER_SEC + rs.tv_nsec, INTERVAL))
- 			pr_err("failed to write stat round event\n");
-@@ -593,7 +607,7 @@ try_again:
- 	 * avoid arbitrary skew, we must read all counters before closing any
- 	 * group leaders.
- 	 */
--	read_counters();
-+	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
- 	perf_evlist__close(evsel_list);
- 
- 	return WEXITSTATUS(status);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 0f2c6c93d721..6d190cbf1070 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -75,6 +75,11 @@ struct perf_stat_evsel;
- 
- typedef int (perf_evsel__sb_cb_t)(union perf_event *event, void *data);
- 
-+enum perf_tool_event {
-+	PERF_TOOL_NONE		= 0,
-+	PERF_TOOL_DURATION_TIME = 1,
-+};
-+
- /** struct perf_evsel - event selector
-  *
-  * @evlist - evlist this evsel is in, if it is in one.
-@@ -121,6 +126,7 @@ struct perf_evsel {
- 	unsigned int		sample_size;
- 	int			id_pos;
- 	int			is_pos;
-+	enum perf_tool_event	tool_event;
- 	bool			uniquified_name;
- 	bool			snapshot;
- 	bool 			supported;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5ef4939408f2..98c0fadaedb9 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -317,10 +317,12 @@ static struct perf_evsel *
- __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
- 	    char *name, struct perf_pmu *pmu,
--	    struct list_head *config_terms, bool auto_merge_stats)
-+	    struct list_head *config_terms, bool auto_merge_stats,
-+	    const char *cpu_list)
- {
- 	struct perf_evsel *evsel;
--	struct cpu_map *cpus = pmu ? pmu->cpus : NULL;
-+	struct cpu_map *cpus = pmu ? pmu->cpus :
-+			       cpu_list ? cpu_map__new(cpu_list) : NULL;
- 
- 	event_attr_init(attr);
- 
-@@ -348,7 +350,25 @@ static int add_event(struct list_head *list, int *idx,
- 		     struct perf_event_attr *attr, char *name,
- 		     struct list_head *config_terms)
- {
--	return __add_event(list, idx, attr, name, NULL, config_terms, false) ? 0 : -ENOMEM;
-+	return __add_event(list, idx, attr, name, NULL, config_terms, false, NULL) ? 0 : -ENOMEM;
-+}
-+
-+static int add_event_tool(struct list_head *list, int *idx,
-+			  enum perf_tool_event tool_event)
-+{
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_SOFTWARE,
-+		.config = PERF_COUNT_SW_DUMMY,
-+	};
-+
-+	evsel = __add_event(list, idx, &attr, NULL, NULL, NULL, false, "0");
-+	if (!evsel)
-+		return -ENOMEM;
-+	evsel->tool_event = tool_event;
-+	if (tool_event == PERF_TOOL_DURATION_TIME)
-+		evsel->unit = strdup("ns");
-+	return 0;
- }
- 
- static int parse_aliases(char *str, const char *names[][PERF_EVSEL__MAX_ALIASES], int size)
-@@ -1233,6 +1253,13 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 			 get_config_name(head_config), &config_terms);
- }
- 
-+int parse_events_add_tool(struct parse_events_state *parse_state,
-+			  struct list_head *list,
-+			  enum perf_tool_event tool_event)
-+{
-+	return add_event_tool(list, &parse_state->idx, tool_event);
-+}
-+
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
-@@ -1267,7 +1294,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 	if (!head_config) {
- 		attr.type = pmu->type;
--		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL, auto_merge_stats);
-+		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL,
-+				    auto_merge_stats, NULL);
- 		if (evsel) {
- 			evsel->pmu_name = name;
- 			evsel->use_uncore_alias = use_uncore_alias;
-@@ -1295,7 +1323,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 	evsel = __add_event(list, &parse_state->idx, &attr,
- 			    get_config_name(head_config), pmu,
--			    &config_terms, auto_merge_stats);
-+			    &config_terms, auto_merge_stats, NULL);
- 	if (evsel) {
- 		evsel->unit = info.unit;
- 		evsel->scale = info.scale;
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 5ed035cbcbb7..0c1f5b98f636 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -160,6 +160,10 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 			     struct list_head *list,
- 			     u32 type, u64 config,
- 			     struct list_head *head_config);
-+enum perf_tool_event;
-+int parse_events_add_tool(struct parse_events_state *parse_state,
-+			  struct list_head *list,
-+			  enum perf_tool_event tool_event);
- int parse_events_add_cache(struct list_head *list, int *idx,
- 			   char *type, char *op_result1, char *op_result2,
- 			   struct parse_events_error *error,
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 7805c71aaae2..c54bfe88626c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -15,6 +15,7 @@
- #include "../perf.h"
- #include "parse-events.h"
- #include "parse-events-bison.h"
-+#include "evsel.h"
- 
- char *parse_events_get_text(yyscan_t yyscanner);
- YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
-@@ -154,6 +155,14 @@ static int sym(yyscan_t scanner, int type, int config)
- 	return type == PERF_TYPE_HARDWARE ? PE_VALUE_SYM_HW : PE_VALUE_SYM_SW;
- }
- 
-+static int tool(yyscan_t scanner, enum perf_tool_event event)
-+{
-+	YYSTYPE *yylval = parse_events_get_lval(scanner);
-+
-+	yylval->num = event;
-+	return PE_VALUE_SYM_TOOL;
-+}
-+
- static int term(yyscan_t scanner, int type)
- {
- 	YYSTYPE *yylval = parse_events_get_lval(scanner);
-@@ -322,7 +331,7 @@ cpu-migrations|migrations			{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COU
- alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_ALIGNMENT_FAULTS); }
- emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
- dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
--duration_time					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
-+duration_time					{ return tool(yyscanner, PERF_TOOL_DURATION_TIME); }
- bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
- 
- 	/*
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 44819bdb037d..6ad8d4914969 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include "util.h"
- #include "pmu.h"
-+#include "evsel.h"
- #include "debug.h"
- #include "parse-events.h"
- #include "parse-events-bison.h"
-@@ -45,6 +46,7 @@ static void inc_group_count(struct list_head *list,
- 
- %token PE_START_EVENTS PE_START_TERMS
- %token PE_VALUE PE_VALUE_SYM_HW PE_VALUE_SYM_SW PE_RAW PE_TERM
-+%token PE_VALUE_SYM_TOOL
- %token PE_EVENT_NAME
- %token PE_NAME
- %token PE_BPF_OBJECT PE_BPF_SOURCE
-@@ -58,6 +60,7 @@ static void inc_group_count(struct list_head *list,
- %type <num> PE_VALUE
- %type <num> PE_VALUE_SYM_HW
- %type <num> PE_VALUE_SYM_SW
-+%type <num> PE_VALUE_SYM_TOOL
- %type <num> PE_RAW
- %type <num> PE_TERM
- %type <str> PE_NAME
-@@ -321,6 +324,15 @@ value_sym sep_slash_slash_dc
- 	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, NULL));
- 	$$ = list;
- }
-+|
-+PE_VALUE_SYM_TOOL sep_slash_slash_dc
-+{
-+	struct list_head *list;
-+
-+	ALLOC_LIST(list);
-+	ABORT_ON(parse_events_add_tool(_parse_state, list, $1));
-+	$$ = list;
-+}
- 
- event_legacy_cache:
- PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT '-' PE_NAME_CACHE_OP_RESULT opt_event_config
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 87494c7c619d..2ebb257ce7ba 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4338,6 +4338,7 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+ 					case 'S':
+ 					case 'f':
+ 					case 'F':
++					case 'x':
+ 						break;
+ 					default:
+ 						/*
