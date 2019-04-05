@@ -2,86 +2,110 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBF2C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D700AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016092186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554477971;
-	bh=Yd19cceZas1RrOQnW0hnUhxqls1bSIc881Q/zgx6iqw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=D8eHoaWtbSxwjvfDyIU1qa5ag474a2DEZfF+relLBfHN9WG2WHCZmjO7zOQ28w03j
-	 Lb5myygG3ALUnyJcmDKYj9+qBr82pr8cvQBrIaT4JGhIfUv1WpoaNjLQHUkIs4xAWB
-	 7/V95oHxUruT6iAdSajLnReglv/cWips/YAxSASA=
+	by mail.kernel.org (Postfix) with ESMTP id A8B682184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kPnz31QV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfDEP0J (ORCPT
+        id S1731362AbfDEP0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
+        Fri, 5 Apr 2019 11:26:55 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57100 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfDEP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:26:09 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726291AbfDEP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:26:55 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAC321852;
-        Fri,  5 Apr 2019 15:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554477968;
-        bh=Yd19cceZas1RrOQnW0hnUhxqls1bSIc881Q/zgx6iqw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cRGPGIbMPn61+ZoJIjAxLxrI7DI0rTxyuHors2owhp3bWqqY6dqzMtJvg6SRwwkX6
-         6QFT6nlxxkgxstULOZZCAdfVIeTr0Tj3Us/32ZEKpKjmoCwRNccNH8yEQBUuH5PKfv
-         wtlEpbhdktuQMTxkXbs5FuClE4hv1Yt8VcRTgnBk=
-Subject: Re: [PATCH 4.9 00/91] 4.9.168-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190404084535.450029272@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <bb9a5118-73ad-dfa7-919d-8f03d8428b78@kernel.org>
-Date:   Fri, 5 Apr 2019 09:26:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E9B8D1EC037C;
+        Fri,  5 Apr 2019 17:26:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554478013;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=O0cTCgEX36c/m5EFCMWGNXRJyyFq2WbwhodTsWiALgI=;
+        b=kPnz31QV8uhWtABEfU/bzWN08N6g06VYZQKpLw/d60BAas9iufZP6+ugGuHLDNatjI+Bxk
+        O01LlJ/jGQp0X14n6OZiEPvLxxZbpo7/16SEDIpNKgXFq4wRRaLUH38BbzWuzSLKjTJpEG
+        EmWaFNLgoHbV8753hjlVcLKkmLlALqo=
+Date:   Fri, 5 Apr 2019 17:26:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC 2/5] x86/speculation: Add support for
+ 'cpu_spec_mitigations=' cmdline options
+Message-ID: <20190405152650.GH23348@zn.tnic>
+References: <cover.1554396090.git.jpoimboe@redhat.com>
+ <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
+ <20190405135712.GF23348@zn.tnic>
+ <20190405143101.ksj7ayjis4p52dgt@treble>
 MIME-Version: 1.0
-In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190405143101.ksj7ayjis4p52dgt@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 2:46 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.168 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat Apr  6 08:44:27 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.168-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Fri, Apr 05, 2019 at 09:31:01AM -0500, Josh Poimboeuf wrote:
+> My thinking was that the individual options could be used to override
+> the global option.  But maybe that's overkill?  I dunno.
 
-Compiled and booted on my test system. No dmesg regressions.
+You mean if the user deliberately types:
 
-thanks,
--- Shuah
+"cpu_spec_mitigations=off spectre_v2=auto"
+
+on the cmdline to turn off all and then enable only one?
+
+Hmm, yap, sounds like an overkill to me. Then I'd probably do:
+
+	pr_err("Make up your mind already!\n");
+	return;
+
+:-))
+
+I'd say let's do the simpler and cleaner thing now and think about
+supporting this overkill when it really turns out that it is needed.
+
+> I assume you mean just the part where L1TF_MITIGATION_DEFAULT is added?
+
+Yap.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
