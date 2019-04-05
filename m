@@ -3,177 +3,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEFCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8D721738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566C921738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfDEJvn (ORCPT
+        id S1730702AbfDEJwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:51:43 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44878 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730232AbfDEJvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:51:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FEAF168F;
-        Fri,  5 Apr 2019 02:51:42 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571B83F721;
-        Fri,  5 Apr 2019 02:51:40 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] iommu: io-pgtable: Add ARM Mali midgard MMU page
- table format
-To:     Steven Price <steven.price@arm.com>, Rob Herring <robh@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
+        Fri, 5 Apr 2019 05:52:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55268 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730512AbfDEJwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 05:52:24 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CB8E9308FC4D;
+        Fri,  5 Apr 2019 09:52:23 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D79961001DD5;
+        Fri,  5 Apr 2019 09:52:20 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 3A82C1750B; Fri,  5 Apr 2019 11:52:20 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     noralf@tronnes.org, sam@ravnborg.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        iommu@lists.linux-foundation.org,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190401074730.12241-1-robh@kernel.org>
- <20190401074730.12241-2-robh@kernel.org>
- <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
-Date:   Fri, 5 Apr 2019 10:51:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 2/5] drm: add drm_fb_memcpy_dstclip() helper
+Date:   Fri,  5 Apr 2019 11:52:16 +0200
+Message-Id: <20190405095219.9231-3-kraxel@redhat.com>
+In-Reply-To: <20190405095219.9231-1-kraxel@redhat.com>
+References: <20190405095219.9231-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 05 Apr 2019 09:52:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+It is a drm_fb_memcpy() variant which checks the clip rectangle for the
+destination too.
 
-On 05/04/2019 10:42, Steven Price wrote:
-> First let me say congratulations to everyone working on Panfrost - it's
-> an impressive achievement!
-> 
-> Full disclosure: I used to work on the Mali kbase driver. And have been
-> playing around with running the Mali user-space blob with the Panfrost
-> kernel driver.
-> 
-> On 01/04/2019 08:47, Rob Herring wrote:
->> ARM Mali midgard GPU is similar to standard 64-bit stage 1 page tables, but
->> have a few differences. Add a new format type to represent the format. The
->> input address size is 48-bits and the output address size is 40-bits (and
->> possibly less?). Note that the later bifrost GPUs follow the standard
->> 64-bit stage 1 format.
->>
->> The differences in the format compared to 64-bit stage 1 format are:
->>
->> The 3rd level page entry bits are 0x1 instead of 0x3 for page entries.
->>
->> The access flags are not read-only and unprivileged, but read and write.
->> This is similar to stage 2 entries, but the memory attributes field matches
->> stage 1 being an index.
->>
->> The nG bit is not set by the vendor driver. This one didn't seem to matter,
->> but we'll keep it aligned to the vendor driver.
-> 
-> The nG bit should be ignored by the hardware.
-> 
-> The MMU in Midgard/Bifrost has a quirk similar to
-> IO_PGTABLE_QUIRK_TLBI_ON_MAP - you must perform a cache flush for the
-> GPU to (reliably) pick up new page table mappings.
-> 
-> You may not have seen this because of the use of the JS_CONFIG_START_MMU
-> bit - this effectively performs a cache flush and TLB invalidate before
-> starting a job, however when using a GPU like T760 (e.g. on the Firefly
-> RK3288) this bit isn't being set. In my testing on the Firefly board I
-> saw GPU page faults because of this.
-> 
-> There's two options for fixing this - a patch like below adds the quirk
-> mode to the MMU. Or alternatively always set JS_CONFIG_START_MMU on
-> jobs. In my testing both options solve the page faults.
-> 
-> To be honest I don't know the reasoning behind kbase making the
-> JS_CONFIG_START_MMU bit conditional - I'm not aware of any reason why it
-> can't always be set. My guess is performance, but I haven't benchmarked
-> the difference between this and JS_CONFIG_START_MMU.
-> 
-> -----8<----------
->  From e3f75c7f04e43238dfc579029b8c11fb6b4a0c18 Mon Sep 17 00:00:00 2001
-> From: Steven Price <steven.price@arm.com>
-> Date: Thu, 4 Apr 2019 15:53:17 +0100
-> Subject: [PATCH] iommu: io-pgtable: IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE
-> 
-> Midgard/Bifrost GPUs require a TLB invalidation when mapping pages,
-> implement IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE iommu page table
-> formats and add the quirk bit to Panfrost.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   drivers/gpu/drm/panfrost/panfrost_mmu.c |  1 +
->   drivers/iommu/io-pgtable-arm.c          | 11 +++++++++--
->   2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index f3aad8591cf4..094312074d66 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -343,6 +343,7 @@ int panfrost_mmu_init(struct panfrost_device *pfdev)
->   	mmu_write(pfdev, MMU_INT_MASK, ~0);
-> 
->   	pfdev->mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
-> +		.quirks		= IO_PGTABLE_QUIRK_TLBI_ON_MAP,
->   		.pgsize_bitmap	= SZ_4K, // | SZ_2M | SZ_1G),
->   		.ias		= 48,
->   		.oas		= 40,	/* Should come from dma mask? */
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 84beea1f47a7..45fd7bbdf9aa 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -505,7 +505,13 @@ static int arm_lpae_map(struct io_pgtable_ops *ops,
-> unsigned long iova,
->   	 * Synchronise all PTE updates for the new mapping before there's
->   	 * a chance for anything to kick off a table walk for the new iova.
->   	 */
-> -	wmb();
-> +	if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_TLBI_ON_MAP) {
-> +		io_pgtable_tlb_add_flush(&data->iop, iova, size,
-> +					 ARM_LPAE_BLOCK_SIZE(2, data), false);
+Common code between drm_fb_memcpy() and drm_fb_memcpy_dstclip() was
+factored out into the drm_fb_memcpy_lines() helper function.
 
-For correctness (in case this ever ends up used for something with 
-VMSA-like invalidation behaviour), the granule would need to be "size" 
-here, rather than effectively hard-coded.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_format_helper.h     |  2 ++
+ drivers/gpu/drm/drm_format_helper.c | 51 ++++++++++++++++++++++++-----
+ 2 files changed, 45 insertions(+), 8 deletions(-)
 
-However, since Mali's invalidations appear to operate on arbitrary 
-ranges, it would probably be a lot more efficient for the driver to 
-handle this case directly, by just issuing a single big invalidation 
-after the for_each_sg() loop in panfrost_mmu_map().
+diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
+index 5a7ada6b0bef..c52b7b9a25f0 100644
+--- a/include/drm/drm_format_helper.h
++++ b/include/drm/drm_format_helper.h
+@@ -15,6 +15,8 @@ struct drm_rect;
+ 
+ void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+ 		   struct drm_rect *clip);
++void drm_fb_memcpy_dstclip(void *dst, void *vaddr, struct drm_framebuffer *fb,
++			   struct drm_rect *clip);
+ void drm_fb_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+ 		   struct drm_rect *clip);
+ void drm_fb_xrgb8888_to_rgb565(u16 *dst, void *vaddr,
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index 62bb4913d6f6..55a2d629a75f 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -16,30 +16,65 @@
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_rect.h>
+ 
++static void drm_fb_memcpy_lines(void *dst, unsigned int dst_pitch,
++				void *src, unsigned int src_pitch,
++				unsigned int linelength, unsigned int lines)
++{
++	int line;
++
++	for (line = 0; line < lines; line++) {
++		memcpy(dst, src, linelength);
++		src += src_pitch;
++		dst += dst_pitch;
++	}
++}
++
+ /**
+  * drm_fb_memcpy - Copy clip buffer
+  * @dst: Destination buffer
+  * @vaddr: Source buffer
+  * @fb: DRM framebuffer
+  * @clip: Clip rectangle area to copy
++ *
++ * This function does not apply clipping on dst, i.e. the destination
++ * is a small buffer containing the clip rect only.
+  */
+ void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+ 		   struct drm_rect *clip)
+ {
+ 	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
+-	unsigned int pitch = fb->pitches[0];
+-	void *src = vaddr + (clip->y1 * pitch) + (clip->x1 * cpp);
++	unsigned int offset = (clip->y1 * fb->pitches[0]) + (clip->x1 * cpp);
+ 	size_t len = (clip->x2 - clip->x1) * cpp;
+-	unsigned int y;
+ 
+-	for (y = clip->y1; y < clip->y2; y++) {
+-		memcpy(dst, src, len);
+-		src += pitch;
+-		dst += len;
+-	}
++	drm_fb_memcpy_lines(dst, len,
++			    vaddr + offset, fb->pitches[0],
++			    len, clip->y2 - clip->y1);
+ }
+ EXPORT_SYMBOL(drm_fb_memcpy);
+ 
++/**
++ * drm_fb_memcpy_dstclip - Copy clip buffer
++ * @dst: Destination buffer
++ * @vaddr: Source buffer
++ * @fb: DRM framebuffer
++ * @clip: Clip rectangle area to copy
++ *
++ * This function applies clipping on dst, i.e. the destination is a
++ * full framebuffer but only the clip rect content is copied over.
++ */
++void drm_fb_memcpy_dstclip(void *dst, void *vaddr, struct drm_framebuffer *fb,
++			   struct drm_rect *clip)
++{
++	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
++	unsigned int offset = (clip->y1 * fb->pitches[0]) + (clip->x1 * cpp);
++	size_t len = (clip->x2 - clip->x1) * cpp;
++
++	drm_fb_memcpy_lines(dst + offset, fb->pitches[0],
++			    vaddr + offset, fb->pitches[0],
++			    len, clip->y2 - clip->y1);
++}
++EXPORT_SYMBOL(drm_fb_memcpy_dstclip);
++
+ /**
+  * drm_fb_swab16 - Swap bytes into clip buffer
+  * @dst: RGB565 destination buffer
+-- 
+2.18.1
 
-Robin.
-
-> +		io_pgtable_tlb_sync(&data->iop);
-> +	} else {
-> +		wmb();
-> +	}
-> 
->   	return ret;
->   }
-> @@ -800,7 +806,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg
-> *cfg, void *cookie)
->   	struct arm_lpae_io_pgtable *data;
-> 
->   	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS | IO_PGTABLE_QUIRK_NO_DMA |
-> -			    IO_PGTABLE_QUIRK_NON_STRICT))
-> +			    IO_PGTABLE_QUIRK_NON_STRICT |
-> +			    IO_PGTABLE_QUIRK_TLBI_ON_MAP))
->   		return NULL;
-> 
->   	data = arm_lpae_alloc_pgtable(cfg);
-> 
