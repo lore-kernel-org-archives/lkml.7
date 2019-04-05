@@ -2,141 +2,78 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA9FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8FFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0320121872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E30A2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfDEPa5 (ORCPT
+        id S1731452AbfDEPcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:30:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35268 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfDEPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:30:57 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D00553082AFD;
-        Fri,  5 Apr 2019 15:30:56 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA39A60BFB;
-        Fri,  5 Apr 2019 15:30:50 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 10:30:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 5 Apr 2019 11:32:17 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49161 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfDEPcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:32:17 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hCQp8-0006lb-C9; Fri, 05 Apr 2019 17:32:10 +0200
+Date:   Fri, 5 Apr 2019 17:32:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
         Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 2/5] x86/speculation: Add support for
- 'cpu_spec_mitigations=' cmdline options
-Message-ID: <20190405153048.knaizips2n27fwtx@treble>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
- <20190405135712.GF23348@zn.tnic>
- <5ccc7515-33e6-b726-833e-9553ab0f4c6a@infradead.org>
+        Simon Schricker <sschricker@suse.de>,
+        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH] PM / arch: x86: Rework the MSR_IA32_ENERGY_PERF_BIAS
+ handling
+In-Reply-To: <CAJZ5v0hz3KFtmsP+8Qbee7KrV4BBOUzReUmK8BWH52+hwekt=Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904051731510.1802@nanos.tec.linutronix.de>
+References: <2816566.rddYshD6lm@aspire.rjw.lan> <20190321075807.GK6058@hirez.programming.kicks-ass.net> <CAJZ5v0hz3KFtmsP+8Qbee7KrV4BBOUzReUmK8BWH52+hwekt=Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5ccc7515-33e6-b726-833e-9553ab0f4c6a@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 05 Apr 2019 15:30:57 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 08:18:09AM -0700, Randy Dunlap wrote:
-> On 4/5/19 6:57 AM, Borislav Petkov wrote:
-> > On Thu, Apr 04, 2019 at 11:44:12AM -0500, Josh Poimboeuf wrote:
-> >> Configure x86 runtime CPU speculation bug mitigations in accordance with
-> >> the 'cpu_spec_mitigations=' cmdline options.  This affects Meltdown,
-> >> Spectre v2, Speculative Store Bypass, and L1TF.
-> >>
-> >> The default behavior is unchanged.
-> >>
-> >> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> >> ---
-> >>  .../admin-guide/kernel-parameters.txt         | 15 +++++++++
-> >>  arch/x86/include/asm/processor.h              |  1 +
-> >>  arch/x86/kernel/cpu/bugs.c                    | 32 ++++++++++++++++---
-> >>  arch/x86/kvm/vmx/vmx.c                        |  2 ++
-> >>  arch/x86/mm/pti.c                             |  4 ++-
-> >>  5 files changed, 49 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >> index ac42e510bd6e..29dc03971630 100644
-> >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >> @@ -2552,6 +2552,11 @@
-> >>  
-> >>  			off
-> >>  				Disable all speculative CPU mitigations.
-> >> +				Equivalent to: nopti [x86]
-> >> +					       nospectre_v2 [x86]
-> >> +					       spectre_v2_user=off [x86]
-> >> +					       spec_store_bypass_disable=off [x86]
-> >> +					       l1tf=off [x86]
-> >>  
-> >>  			auto (default)
-> >>  				Mitigate all speculative CPU vulnerabilities,
-> >> @@ -2560,12 +2565,22 @@
-> >>  				surprised by SMT getting disabled across kernel
-> >>  				upgrades, or who have other ways of avoiding
-> >>  				SMT-based attacks.
-> >> +				Equivalent to: pti=auto [x86]
-> >> +					       spectre_v2=auto [x86]
-> >> +					       spectre_v2_user=auto [x86]
-> >> +					       spec_store_bypass_disable=auto [x86]
-> >> +					       l1tf=flush [x86]
-> >>  
-> >>  			auto,nosmt
-> >>  				Mitigate all speculative CPU vulnerabilities,
-> >>  				disabling SMT if needed.  This is for users who
-> >>  				always want to be fully mitigated, even if it
-> >>  				means losing SMT.
-> >> +				Equivalent to: pti=auto [x86]
-> >> +					       spectre_v2=auto [x86]
-> >> +					       spectre_v2_user=auto [x86]
-> >> +					       spec_store_bypass_disable=auto [x86]
-> >> +					       l1tf=flush,nosmt [x86]
-> >>  
-> >>  	mminit_loglevel=
-> >>  			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
-> > 
-> > Yap, those sets look ok.
+On Thu, 21 Mar 2019, Rafael J. Wysocki wrote:
+
+> On Thu, Mar 21, 2019 at 8:58 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Mar 21, 2019 at 01:00:52AM +0100, Rafael J. Wysocki wrote:
+> > > + * The Performance and Energy Bias Hint (EPB) allows software to specify its
+> > > + * preference with respect to the power-performance tradeoffs present in the
+> > > + * processor.  Generally, the EPB is expected to be set by user space through
+> > > + * the generic MSR interface (with the help of the x86_energy_perf_policy tool),
+> > > + * but there are two reasons for the kernel to touch it.
+> >
+> > So I hate /dev/msr with a passion. It is absolute atrocious crap.
+> >
+> > Please, just make a real interface for this if it is important.
 > 
-> nit:  s/x86/X86/g
-> according to Documentation/admin-guide/kernel-parameters.rst
+> That's the plan going forward, this is just documenting the current situation.
+> 
+> Do you have any particular concerns regarding this patch?
 
-Ah, I didn't realize I was conforming to a standard.  I will update the
-other arch strings as well.  Thanks.
+No.
 
--- 
-Josh
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
