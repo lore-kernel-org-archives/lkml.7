@@ -2,97 +2,134 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEEFC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA9C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D552171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC251217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvIhhoax"
+	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="bIvu/Pik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfDEB5U (ORCPT
+        id S1729908AbfDEB7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 21:57:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41345 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbfDEB5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 21:57:19 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w30so5679851qta.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 18:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=54yZrRjG9bCP1gV5fr4Ytj4h7K4n9WdItHA3563uuYc=;
-        b=QvIhhoax8RG3P01PiGmOrA/Ke404vdQQYwGbhueMjDPD5Muel65vErLK0Q+UDbIt43
-         BirCtDUFH1m6FOtzwMmaOB4QQKCdpptfIsvtrdq7+uMwukt+gD9twISaF9OHq0c9axXF
-         ofU05QF4gys2EfxO7lL5ZEEL6i3L2y1xxgNRElJSBqPP3HQZmlC7K4+rhmFIzA4O2jrq
-         YqX8AsRKH0U8w29WXBMmdZX5MjYka80gA10IEfSThL8HajAospB3uBV1z+ghIgZorrxD
-         y6Sn/Dy5cXanAvFFXJpKZNlhXRRW6Eqgjsd9FNSURxq2VqdZ2b6kcdTpcTloy5AXNBYL
-         pd+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=54yZrRjG9bCP1gV5fr4Ytj4h7K4n9WdItHA3563uuYc=;
-        b=QliSvyrB9zW+GYjRrvy9GnLcaFjUNUAqP6S1e5gjmsdi9ZR/BERkY6UqrgUh/kmGCq
-         QGIscHCk7HQLWGT1sbPqA9SYAgSroc9Ns7u1QMqSlYSZx2KR1XBk69QfNYN6dekr3kBM
-         pvSGnJN3zQMoH+04E/3BGGm6SO4rZ0MX/AgHaRjV5yslUqK++e2krW3yKpkavrEfW3WX
-         HxwkDfqC7QeGJfQxi0vkWUEzQXwlDKEcA/bfd1344fFeSlxt4dY9aAaCMEX6A2wfuIem
-         zzQ/RD/8Oqw0KiBVVmdBLdcsdW2eCM2Xe4BC3FCWx1tJg7RH4JcdiK5vXremriFwTKS3
-         Z/fA==
-X-Gm-Message-State: APjAAAU+w8qP8W/61kk4y3PKJXaQ6BwFrIvGjECgjH1K/lGIQGx4/ol2
-        l3D84KxXfwhKgEXrds/dJ9w=
-X-Google-Smtp-Source: APXvYqxXQ5vDLAgkTu/cNLSzycVx+JvGRBnGAIRGbrUAW6r4ofqWHK96qBsJ/EeBba63HY/mFLABYg==
-X-Received: by 2002:a0c:c165:: with SMTP id i34mr8012966qvh.6.1554429438708;
-        Thu, 04 Apr 2019 18:57:18 -0700 (PDT)
-Received: from localhost.localdomain ([187.104.167.160])
-        by smtp.gmail.com with ESMTPSA id 27sm5417831qtp.49.2019.04.04.18.57.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 18:57:18 -0700 (PDT)
-From:   Caio Salvador Rohwedder <caiosalvador96@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     johnfwhitmore@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: [PATCH] staging: rtl8192u: ieee80211: add space around '==' and before '('
-Date:   Thu,  4 Apr 2019 22:56:46 -0300
-Message-Id: <20190405015646.20672-1-caiosalvador96@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 4 Apr 2019 21:59:05 -0400
+Received: from mx.sdf.org ([205.166.94.20]:60673 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727051AbfDEB7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 21:59:05 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x351wrFM003299
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Fri, 5 Apr 2019 01:58:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
+        t=1554429539; bh=qS7JQ7wN+w0wiDP0k4ZcziyusQw8j9igF6uhtwSZIcw=;
+        h=Date:From:Subject:To:Cc;
+        b=bIvu/Pik2EVALCBSiniZHhoW94BU2ojePphFK5Vp1+F9CPFvg+Q+uRamejPsBpI1J
+         uo5czmzmEzslXsVNm8Sv2Cb/MHFunCTZMS0pkYQDXKt5L9bKqhl3Y5mzNTqln26sjz
+         OVP0IZtPLgh7lq75KaTUXkRlBOVKoCc27UN42w88=
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x351wr9f016512;
+        Fri, 5 Apr 2019 01:58:53 GMT
+Date:   Fri, 5 Apr 2019 01:58:53 GMT
+Message-Id: <201904050158.x351wr9f016512@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Subject: [PATCH v3] ubsan: Avoid unnecessary 128-bit shifts
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        George Spelvin <lkml@sdf.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch coding style errors on rtl819x_TSProc.c
-- space required before the open parenthesis '('
-- spaces required around that '=='
+If CONFIG_ARCH_SUPPORTS_INT128, s_max is 128 bits, and variable
+sign-extending shifts of such a double-word data type are a non-trivial
+amount of code and complexity.  Do a single-word sign-extension *before*
+the cast to (s_max), greatly simplifying the object code.
 
-Signed-off-by: Caio Salvador Rohwedder <caiosalvador96@gmail.com>
+Rasmus Villemoes suggested using sign_extend* from <linux/bitops.h>.
+
+On s390 (and perhaps some other arches), gcc implements variable
+128-bit shifts using an __ashrti3 helper function which the kernel
+doesn't provide, causing a link error.  In that case, this patch is
+a prerequisite for enabling INT128 support.  Andrey Ryabinin has gven
+permission for any arch that needs it to cherry-pick it so they don't
+have to wait for ubsan to be merged into Linus' tree.
+
+We *could*, alternatively, implement __ashrti3, but that becomes dead as
+soon as this patch is merged, so it seems like a waste of time and its
+absence discourages people from adding inefficient code.  Note that the
+shifts in <math64.h> (unsigned, and by a compile-time constant amount)
+are simpler and generated inline.
+
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Acked-By: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Feedback-from: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: linux-s390@vger.kernel.org
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 ---
- drivers/staging/rtl8192u/ieee80211/rtl819x_TSProc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/bitops.h |  7 +++++++
+ lib/ubsan.c            | 13 +++++--------
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/rtl8192u/ieee80211/rtl819x_TSProc.c b/drivers/staging/rtl8192u/ieee80211/rtl819x_TSProc.c
-index c76715ffa08b..0af1a87a5545 100644
---- a/drivers/staging/rtl8192u/ieee80211/rtl819x_TSProc.c
-+++ b/drivers/staging/rtl8192u/ieee80211/rtl819x_TSProc.c
-@@ -373,7 +373,7 @@ bool GetTs(
- 			if(!list_empty(pUnusedList)) {
- 				(*ppTS) = list_entry(pUnusedList->next, struct ts_common_info, list);
- 				list_del_init(&(*ppTS)->list);
--				if(TxRxSelect==TX_DIR) {
-+				if (TxRxSelect == TX_DIR) {
- 					struct tx_ts_record *tmp = container_of(*ppTS, struct tx_ts_record, ts_common_info);
- 					ResetTxTsEntry(tmp);
- 				} else {
+v3:	Added sign_extend_long() to sign_extend{32,64} in <linux/bitops.h>.
+	Used sign_extend_long rather than hand-rolling sign extension.
+	Changed to more uniform if ... else if ... else ... structure.
+v2:	Eliminated redundant cast to (s_max).
+        Rewrote commit message without "is this the right thing to do?"
+        verbiage.
+        Incorporated ack from Andrey Ryabinin.
+
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index 705f7c442691..8d33c2bfe6c5 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -157,6 +157,13 @@ static inline __s64 sign_extend64(__u64 value, int index)
+ 	return (__s64)(value << shift) >> shift;
+ }
+ 
++static inline long sign_extend_long(unsigned long value, int index)
++{
++	if (sizeof(value) == 4)
++		return sign_extend32(value);
++	return sign_extend64(value);
++}
++
+ static inline unsigned fls_long(unsigned long l)
+ {
+ 	if (sizeof(l) == 4)
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index e4162f59a81c..24d4920317e4 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -88,15 +88,12 @@ static bool is_inline_int(struct type_descriptor *type)
+ 
+ static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
+ {
+-	if (is_inline_int(type)) {
+-		unsigned extra_bits = sizeof(s_max)*8 - type_bit_width(type);
+-		return ((s_max)val) << extra_bits >> extra_bits;
+-	}
++	if (is_inline_int(type))
++		return sign_extend_long(val, type_bit_width(type) - 1);
+-
+-	if (type_bit_width(type) == 64)
++	else if (type_bit_width(type) == 64)
+ 		return *(s64 *)val;
+-
+-	return *(s_max *)val;
++	else
++		return *(s_max *)val;
+ }
+ 
+ static bool val_is_negative(struct type_descriptor *type, unsigned long val)
 -- 
-2.21.0
+2.20.1
 
