@@ -2,118 +2,92 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7894FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E280DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466BF218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1ZsIldM"
+	by mail.kernel.org (Postfix) with ESMTP id BAF6F21872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbfDEMVh (ORCPT
+        id S1731035AbfDEMWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:21:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55658 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfDEMVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:21:33 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o25so6424729wmf.5;
-        Fri, 05 Apr 2019 05:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Oy9YhvfUPRMYIBS/a2j0RiN4RT+0mQKFaTFf9z0FhJU=;
-        b=C1ZsIldMMXm51Mw9MCSUocnqPHdkUzBhMi45J/ec7FjUR2QoTte+nSpih5V9GAQ9Xf
-         8iB5nogZF5qFPwCG3nHCzMdc3189kAlQLCXUIktBMMPV/BMrWbXsKfYB8L3qFcPMuJAA
-         Z5LbS92K8nYRoGN2b6YZTgslLcFODLO5X2+SkpWSNe4JSVMR2jQUrnx2XfIwUU1vKb8U
-         60ZHesPAQLSHw2UQvjXZtCVQFyCkZlzzRocqXWAAOHKANNPAPGbT2ok+HAMCDAWF/fkq
-         13kgPfCjh0rVfR+QbJcwrI8Ctg6uAaRlOTXY9NkJZ7iBxOR/9zRNPUcjnvJv1XS4farQ
-         0YMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Oy9YhvfUPRMYIBS/a2j0RiN4RT+0mQKFaTFf9z0FhJU=;
-        b=FyF84WzsHhXV95VVSzMFdh9G7LgJbxCG7mNhLrIZZb7/fujS5xpOrRmKZd65X+fQQW
-         7qaEGX/nTIklZntB3Z/pVMBZm5A1+4YAnhqmTrd5UbWwdORirOYS27I3rATHYPyC0xW/
-         2cV1+nZqtBsEr/xJdPqlYlAqg0kUB+7E/XOWYBWdfSf+8MBC0LPkKTYJwMDNmvrWsDXN
-         PxnzagtR/RuQ7qAgztBONlF+dmJQ50cHSaalK4ZOb4VppWzcckHwCphB8IrYvHOxZdE8
-         PzRnGUs2fESfC27ucNgaducRPzzD9iKdTrz0A594TsVKs2FjPqjtFEhLZxyBb5iXXUkj
-         2vnA==
-X-Gm-Message-State: APjAAAWcIZUtG3SJlcKGQPOa/FsZq7AXh3YDt7HDH/sXjIU4Q1aBosHI
-        1Tl/Lr3yqXjwhNXSWPwBBDk=
-X-Google-Smtp-Source: APXvYqzLeDz3H8pUFYlu5UUH7++wtSuKxj44ZtW7yhkWEFU3vE9q5oVlACHD8ewUY3kV4j5IXsfCLQ==
-X-Received: by 2002:a1c:cf0b:: with SMTP id f11mr1888219wmg.26.1554466891838;
-        Fri, 05 Apr 2019 05:21:31 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id d14sm34454123wro.79.2019.04.05.05.21.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 05:21:31 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 2/5] arm64: dts: allwinner: h6: pine64: Add PIO regulators
-Date:   Fri,  5 Apr 2019 14:24:43 +0200
-Message-Id: <20190405122446.2101-2-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190405122446.2101-1-peron.clem@gmail.com>
-References: <20190405122446.2101-1-peron.clem@gmail.com>
+        Fri, 5 Apr 2019 08:22:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53826 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726663AbfDEMWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 08:22:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C51E2AF76;
+        Fri,  5 Apr 2019 12:22:10 +0000 (UTC)
+Message-ID: <0e7d2e00050cca6ffd05b8d85af33be99aaad10c.camel@suse.de>
+Subject: Re: [PATCH 1/3] Revert "staging: vchiq_2835_arm: quit using custom
+ down_interruptible()"
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, stefan.wahren@i2se.com,
+        devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        phil@raspberrypi.org, eric@anholt.net,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 05 Apr 2019 14:22:09 +0200
+In-Reply-To: <20190405120217.GP32590@kadam>
+References: <20190405113423.14495-1-nsaenzjulienne@suse.de>
+         <20190405113423.14495-2-nsaenzjulienne@suse.de>
+         <20190405120217.GP32590@kadam>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-/V7XpRpqdhfiJ+NA+tX1"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PIO regulators for Pine64 board.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--=-/V7XpRpqdhfiJ+NA+tX1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index bdb8470fc8dc..8b0b7675a53c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -131,6 +131,12 @@
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pc-supply = <&reg_bldo2>;
-+	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_bldo2>;
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
-@@ -251,6 +257,11 @@
- 	};
- };
- 
-+&r_pio {
-+	vcc-pl-supply = <&reg_aldo1>;
-+	vcc-pm-supply = <&reg_bldo2>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
--- 
-2.17.1
+On Fri, 2019-04-05 at 15:02 +0300, Dan Carpenter wrote:
+> On Fri, Apr 05, 2019 at 01:34:20PM +0200, Nicolas Saenz Julienne wrote:
+> > This reverts commit ff5979ad86368425b7da3a25f4e84650b51ff5fd.
+> > ---
+>=20
+> Git kind of sets you up for failure with reverts...
+>=20
+> Fix the subject, add a commit message and a Signed off by etc.  We need
+> all the regular stuff.  See commit 75ae193626de ("dm: revert
+> 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES *
+> PAGE_SIZE")") for an example of how to do it nicely.
+>=20
+
+Will do, Thanks!
+
+> regards,
+> dan carpenter
+>=20
+
+
+--=-/V7XpRpqdhfiJ+NA+tX1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlynSHEACgkQlfZmHno8
+x/5sxQf/cztkEfGjBScMKbToZz6ppcakZMlsMQn3H9S0hX5Yc3Li3Bzp2GWOBML1
+71aaHvGdinYWh77smNen3jpNj1opRVubOHH0+reeMO0tR6Wx2ZcBa7J7KUBiHfMV
+binf0PD1qO/KP0umz1Lw+wp7Xg2nsfpBlmDZEPyQcbR2HPD5DNnXJ0gefXUlv9gc
+apMXKQ36RAQnkVNC+/OTK2rT5wa2VXKPIEmCHIaF2g7MHnXsQS6+jJR81bRiTNO3
+Bh96wkZNfSpIMP+71dlEQBdfkPhnTkDqUcTHyo/nSNw5bEaK3EE2OMOcp9obdTBi
+4jVqsSEbZEOygOIuvm0lIcrxr8CZzA==
+=goUN
+-----END PGP SIGNATURE-----
+
+--=-/V7XpRpqdhfiJ+NA+tX1--
 
