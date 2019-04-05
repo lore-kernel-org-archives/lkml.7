@@ -7,97 +7,202 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42350C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A03F21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066452171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KgrmUA3s"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sbw7sGw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfDELJt (ORCPT
+        id S1731033AbfDELJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:09:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50344 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730497AbfDELJr (ORCPT
+        Fri, 5 Apr 2019 07:09:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38502 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730927AbfDELJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:09:47 -0400
+        Fri, 5 Apr 2019 07:09:50 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35B9hoB129252;
-        Fri, 5 Apr 2019 06:09:43 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35B9jWw045354;
+        Fri, 5 Apr 2019 06:09:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554462583;
-        bh=/QInjG/03abJVlZotne87DnL13Y9btTLzIL3PeoAEIk=;
+        s=ti-com-17Q1; t=1554462585;
+        bh=09NfpQBBcuRlAxaBWRtoet4oO0ojA9XKaxiPm5ReBS4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KgrmUA3sMtHCUW24sYcBUpAVLH4LEqw5rj/e/2nN7XqB+RugNI6acaAmjuSSjAFtc
-         RkMNFfS543jdS5YhntqYZuXmepcqgY4xNE+4YSgmMf1pj0LV2UN2bvC1ktoIjSJNzS
-         kvKvXpMwkbOo5P2wkm+Q/dg0Kq7x9Ou7DoF1rlkk=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35B9hbr019994
+        b=Sbw7sGw2vXgu2KZtpC7tYv0RLsD00/leKDXa4wb60JrD8y5xHRC5mInpwe3rj6oQl
+         nEHaPOjwgsS/ozhIVTfQqZlkYQbPefdDLIntMPl32GbwwdooHPSlj1+ClvQfhg53cY
+         xhY/meiYbBcZqilESdAe5qLwE3UliNW2QkFUadUY=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35B9jx1020039
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Apr 2019 06:09:43 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 5 Apr 2019 06:09:45 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
- 2019 06:09:42 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 06:09:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Apr 2019 06:09:42 -0500
+ Frontend Transport; Fri, 5 Apr 2019 06:09:45 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35B9aS2100251;
-        Fri, 5 Apr 2019 06:09:41 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35B9aS3100251;
+        Fri, 5 Apr 2019 06:09:43 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>, <rogerq@ti.com>
 CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v4 2/5] phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking reset callback
-Date:   Fri, 5 Apr 2019 16:38:31 +0530
-Message-ID: <20190405110834.13083-3-kishon@ti.com>
+Subject: [PATCH v4 3/5] dt-bindings: phy: ti: Add dt binding documentation for SERDES in AM654x SoC
+Date:   Fri, 5 Apr 2019 16:38:32 +0530
+Message-ID: <20190405110834.13083-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190405110834.13083-1-kishon@ti.com>
 References: <20190405110834.13083-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PHY drivers may try to access PHY registers in the ->reset() callback.
-Invoke phy_pm_runtime_get_sync() before invoking the ->reset() callback
-so that the PHY drivers don't have to enable clocks by themselves before
-accessing PHY registers.
+AM654x has two SERDES instances. Each instance has three input clocks
+(left input, externel reference clock and right input) and two output
+clocks (left output and right output) in addition to a PLL mux clock
+which the SERDES uses for Clock Multiplier Unit (CMU refclock).
+The PLL mux clock can select from one of the three input clocks.
+The right output can select between left input and external reference
+clock while the left output can select between the right input and
+external reference clock.
+
+The left and right input reference clock of SERDES0 and SERDES1
+respectively are connected to the SoC clock. In the case of two lane
+SERDES personality card, the left input of SERDES1 is connected to
+the right output of SERDES0 in a chained fashion.
+
+See section "Reference Clock Distribution" of AM65x Sitara Processors
+TRM (SPRUID7 – April 2018) for more details.
+
+Add dt-binding documentation in order to represent all these different
+configurations in device tree.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/phy-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/phy/ti,phy-am654-serdes.txt      | 82 +++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    | 13 +++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index b9a4ebf35dd3..c147ba843f0b 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -384,10 +384,16 @@ int phy_reset(struct phy *phy)
- 	if (!phy || !phy->ops->reset)
- 		return 0;
- 
-+	ret = phy_pm_runtime_get_sync(phy);
-+	if (ret < 0 && ret != -ENOTSUPP)
-+		return ret;
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt b/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+new file mode 100644
+index 000000000000..64b286d2d398
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+@@ -0,0 +1,82 @@
++TI AM654 SERDES
 +
- 	mutex_lock(&phy->mutex);
- 	ret = phy->ops->reset(phy);
- 	mutex_unlock(&phy->mutex);
- 
-+	phy_pm_runtime_put(phy);
++Required properties:
++ - compatible: Should be "ti,phy-am654-serdes"
++ - reg : Address and length of the register set for the device.
++ - #phy-cells: determine the number of cells that should be given in the
++	phandle while referencing this phy. Should be "2". The 1st cell
++	corresponds to the phy type (should be one of the types specified in
++	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
++	lane function.
++	If SERDES0 is referenced 2nd cell should be:
++		0 - USB3
++		1 - PCIe0 Lane0
++		2 - ICSS2 SGMII Lane0
++	If SERDES1 is referenced 2nd cell should be:
++		0 - PCIe1 Lane0
++		1 - PCIe0 Lane1
++		2 - ICSS2 SGMII Lane1
++ - power-domains: As documented by the generic PM domain bindings in
++	Documentation/devicetree/bindings/power/power_domain.txt.
++ - clocks: List of clock-specifiers representing the input to the SERDES.
++	Should have 3 items representing the left input clock, external
++	reference clock and right input clock in that order.
++ - clock-output-names: List of clock names for each of the clock outputs of
++	SERDES. Should have 3 items for CMU reference clock,
++	left output clock and right output clock in that order.
++ - assigned-clocks: As defined in
++	Documentation/devicetree/bindings/clock/clock-bindings.txt
++ - assigned-clock-parents: As defined in
++	Documentation/devicetree/bindings/clock/clock-bindings.txt
++ - #clock-cells: Should be <1> to choose between the 3 output clocks.
++	Defined in Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(phy_reset);
++   The following macros are defined in dt-bindings/phy/phy-am654-serdes.h
++   for selecting the correct reference clock. This can be used while
++   specifying the clocks created by SERDES.
++	=> AM654_SERDES_CMU_REFCLK
++	=> AM654_SERDES_LO_REFCLK
++	=> AM654_SERDES_RO_REFCLK
++
++ - mux-controls: Phandle to the multiplexer that is used to select the lane
++	function. See #phy-cells above to see the multiplex values.
++
++Example:
++
++Example for SERDES0 is given below. It has 3 clock inputs;
++left input reference clock as indicated by <&k3_clks 153 4>, external
++reference clock as indicated by <&k3_clks 153 1> and right input
++reference clock as indicated by <&serdes1 AM654_SERDES_LO_REFCLK>. (The
++right input of SERDES0 is connected to the left output of SERDES1).
++
++SERDES0 registers 3 clock outputs as indicated in clock-output-names. The
++first refers to the CMU reference clock, second refers to the left output
++reference clock and the third refers to the right output reference clock.
++
++The assigned-clocks and assigned-clock-parents is used here to set the
++parent of left input reference clock to MAINHSDIV_CLKOUT4 and parent of
++CMU reference clock to left input reference clock.
++
++serdes0: serdes@900000 {
++	compatible = "ti,phy-am654-serdes";
++	reg = <0x0 0x900000 0x0 0x2000>;
++	reg-names = "serdes";
++	#phy-cells = <2>;
++	power-domains = <&k3_pds 153>;
++	clocks = <&k3_clks 153 4>, <&k3_clks 153 1>,
++			<&serdes1 AM654_SERDES_LO_REFCLK>;
++	clock-output-names = "serdes0_cmu_refclk", "serdes0_lo_refclk",
++				"serdes0_ro_refclk";
++	assigned-clocks = <&k3_clks 153 4>, <&serdes0 AM654_SERDES_CMU_REFCLK>;
++	assigned-clock-parents = <&k3_clks 153 8>, <&k3_clks 153 4>;
++	ti,serdes-clk = <&serdes0_clk>;
++	mux-controls = <&serdes_mux 0>;
++	#clock-cells = <1>;
++};
++
++Example for PCIe consumer node using the SERDES PHY specifier is given below.
++&pcie0_rc {
++        num-lanes = <2>;
++        phys = <&serdes0 PHY_TYPE_PCIE 1>, <&serdes1 PHY_TYPE_PCIE 1>;
++        phy-names = "pcie-phy0", "pcie-phy1";
++};
+diff --git a/include/dt-bindings/phy/phy-am654-serdes.h b/include/dt-bindings/phy/phy-am654-serdes.h
+new file mode 100644
+index 000000000000..e8d901729ed9
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-am654-serdes.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for AM654 SERDES.
++ */
++
++#ifndef _DT_BINDINGS_AM654_SERDES
++#define _DT_BINDINGS_AM654_SERDES
++
++#define AM654_SERDES_CMU_REFCLK	0
++#define AM654_SERDES_LO_REFCLK	1
++#define AM654_SERDES_RO_REFCLK	2
++
++#endif /* _DT_BINDINGS_AM654_SERDES */
 -- 
 2.17.1
 
