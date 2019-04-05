@@ -2,118 +2,159 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21671C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B2BC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E438B21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554481281;
-	bh=Z3tviJih0+15O1Nb6US4Iyl03qQjNm32YQmCCZxfLlA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YcmcVgEvhvU6sY3A2+BgF6aOmzfGe7bD2/D2btnlIcPIlHLnW12kIhhhOcQkmQer5
-	 ZxVRbhjvLD4RxDoKgKHe2oRAzB5MtKFF8hkBjdn3O0pbS7gKRuzmt7dwB4bt60639o
-	 jHGM7ytccKWr1TNWWGFTv2XDFzNo+tVrBXr2D0pw=
+	by mail.kernel.org (Postfix) with ESMTP id B7D9B206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfDEQVT (ORCPT
+        id S1731457AbfDEQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:21:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40562 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDEQVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:21:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a28so4795698lfo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IdetWNEnisWQAQYmIJGyWPDqSKAMlwQ2iqzDQXP0p+8=;
-        b=OMV+xg5lSItr4wLh0Je8qw5ygAbEwUKu/ynLo/l085HP2U14GhMb/TGB+zuQkXYNJ/
-         djSrrkUB+7wZDJnaHIAT1X1HdKANsLlrLDuy/A9KmSodkz0rezcErFLnqKFxOW7olOXI
-         NrEJypYeTTsyF5GrlopQHDqYh3E53Fou+94X0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IdetWNEnisWQAQYmIJGyWPDqSKAMlwQ2iqzDQXP0p+8=;
-        b=iuWCWclssd2I/KtUU59LkS4fwFBPhYXVRH0wANKAh+b2lc6/gEzHWS2Gr76zJv0OX3
-         T+sI1HnyGZLUyZzXAn6DiDAnbANTlZA2a/qKMjXQ+nvYnps5kLGHNGMYs7Y/avwunn++
-         MsjKmohLZ89rJ97wpHg5So+jwRfhQYiM4ZJvg3METlp9HKE4pmEjjj+YI7pZdVe2X7mo
-         AROwts+6D7NBRcGI0HVyYCfzkiME77L5eZmgsd55EILHiV/9Qm5h56szNLqF3xAI4FTy
-         +jU0HRpSwvqDmZcGm9KmfzWMHCLFl+f+R0VsA9+z8l03eRdLqIPiP/3dFVLawDjwjcV2
-         kNkA==
-X-Gm-Message-State: APjAAAWfW32HGAnOSBeK/C6WFljlzhA5QaCNiR3NKhLTF0vXqQ52j8z3
-        m1lB21IRX4dODd9YSLA6PHtUSI2SQGA=
-X-Google-Smtp-Source: APXvYqwRno7Skh663JFG4qKkBiMevhmm9ynXwLRWlCIwhsGoF0EtRlrgk+oDLAqvBu+2PUHlde0prg==
-X-Received: by 2002:a19:974f:: with SMTP id z76mr7101316lfd.89.1554481276498;
-        Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id o12sm1326320lfl.66.2019.04.05.09.21.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id v14so4863407lfi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
-X-Received: by 2002:ac2:44c3:: with SMTP id d3mr6977387lfm.14.1554480928669;
- Fri, 05 Apr 2019 09:15:28 -0700 (PDT)
+        Fri, 5 Apr 2019 12:23:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726291AbfDEQX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:23:59 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 871727FFD3959E33668B;
+        Sat,  6 Apr 2019 00:23:56 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Sat, 6 Apr 2019
+ 00:23:55 +0800
+Date:   Fri, 5 Apr 2019 17:23:42 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a
+ device
+Message-ID: <20190405172342.00006a56@huawei.com>
+In-Reply-To: <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20190405121857.0000718a@huawei.com>
+        <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20190405135936.7266-1-will.deacon@arm.com> <CAHk-=wiarqZVH52VuKDiPk7Jqf1H-znf-NMoGkKnM7H08VN5fg@mail.gmail.com>
- <20190405160919.GA7857@fuggles.cambridge.arm.com>
-In-Reply-To: <20190405160919.GA7857@fuggles.cambridge.arm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 5 Apr 2019 06:15:12 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wiBQwAL5hoLD9-EmCAf1N9CUmUkuj_jJhUCsboNLy-uLw@mail.gmail.com>
-Message-ID: <CAHk-=wiBQwAL5hoLD9-EmCAf1N9CUmUkuj_jJhUCsboNLy-uLw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/21] Remove Mysterious Macro Intended to Obscure
- Weird Behaviours (mmiowb())
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 6:09 AM Will Deacon <will.deacon@arm.com> wrote:
+On Fri, 5 Apr 2019 08:43:03 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
+> <jonathan.cameron@huawei.com> wrote:
 > >
-> > Or did I miss something? I think the ia64() mb/rmb/wmb stuff only
-> > works on normal memory on ia64.
->
-> I was worried about RISC-V, but actually their wmb() is "fence ow,ow"
-> which I think is stronger than their mmiowb() "fence o,w" implementation.
+> > On Thu, 4 Apr 2019 12:08:49 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
+> > > properties described by the ACPI HMAT is expected to have an application
+> > > specific consumer.
+> > >
+> > > Those consumers may want 100% of the memory capacity to be reserved from
+> > > any usage by the kernel. By default, with this enabling, a platform
+> > > device is created to represent this differentiated resource.
+> > >
+> > > A follow on change arranges for device-dax to claim these devices by
+> > > default and provide an mmap interface for the target application.
+> > > However, if the administrator prefers that some or all of the special
+> > > purpose memory is made available to the core-mm the device-dax hotplug
+> > > facility can be used to online the memory with its own numa node.
+> > >
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Len Brown <lenb@kernel.org>
+> > > Cc: Keith Busch <keith.busch@intel.com>
+> > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> >
+> > Hi Dan,
+> >
+> > Great to see you getting this discussion going so fast and in
+> > general the approach makes sense to me.
+> >
+> > I'm a little confused why HMAT has anything to do with this.
+> > SPM is defined either via the attribute in SRAT SPA entries,
+> > EF_MEMORY_SP or via the EFI memory map.
+> >
+> > Whether it is in HMAT or not isn't all that relevant.
+> > Back in the days of the reservation hint (so before yesterday :)
+> > it was relevant obviously but that's no longer true.
+> >
+> > So what am I missing?  
+> 
+> It's a good question, and an assumption I should have explicitly
+> declared in the changelog. The problem with EFI_MEMORY_SP is the same
+> as the problem with the EfiPersistentMemory type, it isn't precise
+> enough on its own for the kernel to delineate 'type' or
+> device/replaceable-unit boundaries. For example, I expect one
+> EFI_MEMORY_SP range of a specific type may be contiguous with another
+> range of a different type. Similar to the NFIT there is no requirement
+> in the specification that platform firmware inject multiple range
+> entries. Instead that precision is left to the SRAT + HMAT, or the
+> NFIT in the case of PMEM.
 
-Also with smp_store_release -> smp_load_acquire kind of ordering?
+Absolutely, as long as they are all SPM, they could be anywhere in
+the system.
 
-Again, this is not at all a NAK - I think we should do this - just
-perhaps a request to add a note to the commit and make people aware of
-the issue.
+> 
+> Conversely, and thinking through this a bit more, if a memory range is
+> "special", but the platform fails to enumerate it in HMAT I think
+> Linux should scream loudly that the firmware is broken and leave the
+> range alone. The "scream loudly" piece is missing in the current set,
+> but the "leave the range alone" functionality is included.
 
-I suspect very few drivers use non-locking serialization to begin with.
+I am certainly keen on screaming if the various entries are inconsistent
+but am not sure they necessarily are here.
 
-                 Linus
+So there are a couple of ways we could get an SPM range defined.
+The key thing here is that firmware should be attempting to describe
+what it has to some degree somewhere.  If not it won't get a good
+result ;)  So if there is no SRAT then you are on your own. SCREAM!
+
+1. Directly in the memory map.  If there is no other information then
+   tough luck the kernel can only sensibly handle it as one device.
+   Or not at all, which seems like a reasonable decision to me.
+   SCREAM
+
+2. In memory map + a proximity domain entry in SRAT.  Given memory
+   with different characteristics should be in different proximity
+   domains anyway - this should be fairly precise. The slight snag
+   here is that the fine grained nature of SRAT is actually a side
+   effect of HMAT, so not sure well platforms have traditional
+   describe their more subtle differences.
+
+3. In NFIT as NFIT SPA carries the memory attribute.  Not sure if
+   we should scream if this disagrees with the memory map.
+
+4. In HMAT?  Now this changed in ACPI 6.3 to clean up the 'messy'
+   prior relationship between it and SRAT.  Now HMAT no longer has
+   memory address ranges as you observed.  That means, to describe
+   properties of memory, it has to use the proximity domains of
+   SRAT.  It provides lots of additional info about those domains
+   but it is SRAT that defines them.
+
+So I would argue that HMAT itself doesn't tell us anything useful.
+SRAT certainly does though so I think this should be coming from
+SRAT (or NFIT as that also defines the required precision)
+
+Jonathan
+
+
+
