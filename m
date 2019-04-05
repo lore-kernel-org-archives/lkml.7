@@ -2,144 +2,316 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C694FC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B4AC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91FFB21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="O2iDRTx2"
+	by mail.kernel.org (Postfix) with ESMTP id EA26121726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfDEVdH (ORCPT
+        id S1726360AbfDEVhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 17:33:07 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:38816 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfDEVdH (ORCPT
+        Fri, 5 Apr 2019 17:37:45 -0400
+Received: from a2nlsmtp01-03.prod.iad2.secureserver.net ([198.71.225.37]:53672
+        "EHLO a2nlsmtp01-03.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725973AbfDEVhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 17:33:07 -0400
-Received: by mail-wr1-f51.google.com with SMTP id k11so9599930wro.5
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 14:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyvK4CkZko+1ZyXXLKPTfOXhwHWsjBk4NGNi5kyz4ww=;
-        b=O2iDRTx2YqKVdqsXf/hpIVGmWx1FL0Mnjf0ZmwXLxDgXD/BvYDgJHorj3Y0ZQatMfV
-         G+xz5D8lmKF7hn6cywb0gThedPnuxLwaMybU1zzFjzuKk8LF4S65ly7tNOkOBC3jJVzA
-         xChQink66guhFbwqQ9aNIahLCmszemWpHhI0Qo+MllBz6jbRLCVVGBEyBv9ftZn6KUx4
-         6iY9Oz6ByjLF/lo3VWjXosUPW9onHbJwwYtxWaEcIRdSMSUrZIc8qIFsWCUn9CnX5tLF
-         owR8n7VIgyXT1vS6zTAETU5HCXKQnUmw3OivIve/QX4iNL02UsVCU5kzKGqGimRlc8Tc
-         0IPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyvK4CkZko+1ZyXXLKPTfOXhwHWsjBk4NGNi5kyz4ww=;
-        b=T2PnBdMne6qsh7LMstbZjFoo9J0itkxqV5m44kGNVHwBGw3LJE9G1IeBgpAtJMY63F
-         OGz/kXJzK+RiVXXjJVjz1oK55Cl4182Tp5y0iNUtmQAtRdfQ0jjCboEuGcm60Oq58Mti
-         Cj7Ye3iWbeuu26v+a16Is79C4qatXq7rmygMLqQ1Hl7lXpSfcuNiHt2j1SL29BaiWxW3
-         XqnjDx+5aFrqhKgTHEtwxTgYhr3n96Dk26pbDmyK1rYBjfRHHn3x9q6jRyeYP3AMZTAO
-         613d7XonXqlHjn5UJKaom10W1nt0z/g0f6JDmvR2RJbhMO4wSp0ov2qB2B/BCf+Bvr2X
-         8oPg==
-X-Gm-Message-State: APjAAAXNMfT4gGSpPwizjZXmxh7QbcI6e3LLnNoLxJI82Dc9UCLX/Zgw
-        Nq6+uYeUD+P+G3rQulooi5be761ndCvWuKAwVFGfLQ==
-X-Google-Smtp-Source: APXvYqwIenadDP1gIaPT2VZVsLHbl3lT+ta3Izq3owqgDG2GVGUa7Xa4HO41346PpP8r/aNSGNy+A+8yhYNt091Up/w=
-X-Received: by 2002:a5d:6406:: with SMTP id z6mr10523988wru.266.1554499637318;
- Fri, 05 Apr 2019 14:27:17 -0700 (PDT)
+        Fri, 5 Apr 2019 17:37:45 -0400
+Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
+        by : HOSTING RELAY : with ESMTP
+        id CWVvhh1UqiCMnCWVvhowpd; Fri, 05 Apr 2019 14:36:43 -0700
+x-originating-ip: 107.180.71.197
+Received: from longli by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
+        (envelope-from <longli@linuxonhyperv2.linuxonhyperv.com>)
+        id 1hCWVv-0006Lw-2r; Fri, 05 Apr 2019 14:36:43 -0700
+From:   Long Li <longli@linuxonhyperv.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch (resend) 1/5] cifs: smbd: Don't destroy transport on RDMA disconnect
+Date:   Fri,  5 Apr 2019 21:36:31 +0000
+Message-Id: <20190405213635.24383-1-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <CANSNSoWL-2hP6j+nQwjr26vUmvyJ_Y1c9CrJ4bHnuqYCXhecdg@mail.gmail.com>
- <Pine.LNX.4.44L0.1904041509280.1288-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1904041509280.1288-100000@iolanthe.rowland.org>
-From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
-Date:   Fri, 5 Apr 2019 16:27:06 -0500
-Message-ID: <CANSNSoVGLEkRE5DPyVhPVdsCbu44SOu0Tpf7smWjPUn_qwRHHA@mail.gmail.com>
-Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Reply-To: longli@microsoft.com
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfEk+qRx/dCxIImn/vsS34Cf9Zf7yd+fapvd7fsuU8+aPsqRI3OHmP3vmGRVZzjZ1v8uFJ0ZT2A/1RxTJKBG3T49cT6XN1TQdImyjjSjP/1mVzGsiVJ5m
+ 5mimR5WipjRf3OnYOAGb2f04M8Kx6jFd/rg2xdE0XHAT0UkLGp9/crBMGgbaxQ5feeqZ3ts/sM5rXmKw2I+mikMX4LmVMNgWtPgLEOxx6ycy+wuVv6kEmPuL
+ gQ+zLDqoREyvM4nbtKpubWrV74G1DPqXe1ciP++9A3ACHmgu8qaptIGmhXc219PGHBRZXPh4ByQXvVpE3/EdZp60hrCkHuAgfT6LHcjOQkZlLqHdXqzrk/Io
+ rU6GSTtrXi4bDH6NyNh/qdK/T0tsqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 2:14 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> Okay.  You could try skipping that pci_write_config_byte() call.  The
-> following loop would probably time out, and you might find that the
-> code crashes later on.
->
-> You could also try setting try_handoff to 0 near the start of the
-> routine.  Your system plus the Comtrol PCI card could have the same
-> sort of bug as reported in Bugzilla #77021.
+From: Long Li <longli@microsoft.com>
 
-I tried both of those options and the output was similar, here is the output
-with try_handoff set to 0. In both cases the box then hangs on initializing
-pstore. Excuse my ignorance on understanding how having the Comtrol
-card present would effect the USB handoff, but would there be any
-value in trying to boot this box via UEFI, rather than via the BIOS? Does
-UEFI handle the handoff differently?
+Now upper layer is handling the transport shutdown and reconnect, remove
+the code that handling transport shutdown on RDMA disconnect.
 
-[   11.391514] DEBUG: Passed quirk_usb_disable_ehci 945
-[   11.397250] DEBUG: Passed quirk_usb_disable_ehci 950
-[   11.402988] DEBUG: Passed quirk_usb_disable_ehci 958
-[   11.408724] DEBUG: Passed quirk_usb_disable_ehci 964
-[   11.414461] DEBUG: Passed quirk_usb_disable_ehci 968
-[   11.420197] DEBUG: Passed ehci_bios_handoff 849
-[   11.425448] DEBUG: Passed ehci_bios_handoff 889
-[   11.430699] DEBUG: Passed ehci_bios_handoff 902
-[   11.435952] DEBUG: Passed ehci_bios_handoff 918
-[   11.441203] DEBUG: Passed ehci_bios_handoff 926
-[   11.446455] DEBUG: Passed quirk_usb_disable_ehci 981
-[   11.452292] DEBUG: Passed quirk_usb_disable_ehci 1009
-[   11.458180] pci 0000:00:1d.0: quirk_usb_early_handoff+0x0/0x865
-took 82350 usecs
-[   11.466568] pci 0000:01:00.0: calling  quirk_e100_interrupt+0x0/0x1a0 @ 1
-[   11.474249] pci 0000:01:00.0: quirk_e100_interrupt+0x0/0x1a0 took 0 usecs
-[   11.481931] pci 0000:01:00.1: calling  quirk_e100_interrupt+0x0/0x1a0 @ 1
-[   11.489612] pci 0000:01:00.1: quirk_e100_interrupt+0x0/0x1a0 took 0 usecs
-[   11.497296] pci 0000:03:00.0: calling  quirk_blacklist_vpd+0x0/0x30 @ 1
-[   11.504783] pci 0000:03:00.0: [Firmware Bug]: disabling VPD access
-(can't determine size of non-standard VPD format)
-[   11.516663] pci 0000:03:00.0: quirk_blacklist_vpd+0x0/0x30 took 11600 usecs
-[   11.524538] pci 0000:07:00.0: calling  quirk_e100_interrupt+0x0/0x1a0 @ 1
-[   11.532219] pci 0000:07:00.0: quirk_e100_interrupt+0x0/0x1a0 took 0 usecs
-[   11.539901] pci 0000:07:00.1: calling  quirk_e100_interrupt+0x0/0x1a0 @ 1
-[   11.547582] pci 0000:07:00.1: quirk_e100_interrupt+0x0/0x1a0 took 0 usecs
-[   11.555374] pci 0000:0b:00.0: calling  pci_fixup_video+0x0/0x110 @ 1
-[   11.562797] pci 0000:0b:00.0: Video device with shadowed ROM at
-[mem 0x000c0000-0x000dffff]
-[   11.572248] pci 0000:0b:00.0: pci_fixup_video+0x0/0x110 took 9453 usecs
-[   11.579991] Unpacking initramfs...
-[   11.923856] Freeing initrd memory: 22636K
-[   11.950050] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-[   11.957345] software IO TLB: mapped [mem 0x76289000-0x7a289000] (64MB)
-[   11.967721] Initialise system trusted keyrings
-[   11.972908] workingset: timestamp_bits=40 max_order=27 bucket_order=0
-[   11.981517] zbud: loaded
-[   12.138528] Key type asymmetric registered
-[   12.143201] Asymmetric key parser 'x509' registered
-[   12.148754] Block layer SCSI generic (bsg) driver version 0.4
-loaded (major 247)
-[   12.157245] io scheduler mq-deadline registered
-[   12.163318] pcieport 0000:00:01.0: Signaling PME with IRQ 25
-[   12.169926] pcieport 0000:00:02.0: Signaling PME with IRQ 26
-[   12.176519] pcieport 0000:00:03.0: Signaling PME with IRQ 27
-[   12.183109] pcieport 0000:00:03.2: Signaling PME with IRQ 28
-[   12.189678] pcieport 0000:00:1c.0: Signaling PME with IRQ 29
-[   12.196248] pcieport 0000:00:1c.4: Signaling PME with IRQ 30
-[   12.202833] pcieport 0000:00:1c.7: Signaling PME with IRQ 31
-[   12.212006] pcieport 0000:80:01.0: Signaling PME with IRQ 33
-[   12.218609] pcieport 0000:80:03.0: Signaling PME with IRQ 34
-[   12.225404] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
-[   12.238133] ERST: Error Record Serialization Table (ERST) support
-is initialized.
-[   12.246614] pstore: Registered erst as persistent store backend
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ fs/cifs/cifs_debug.c |   8 ++--
+ fs/cifs/smbdirect.c  | 120 +++------------------------------------------------
+ fs/cifs/smbdirect.h  |   9 ----
+ 3 files changed, 10 insertions(+), 127 deletions(-)
+
+diff --git a/fs/cifs/cifs_debug.c b/fs/cifs/cifs_debug.c
+index 19ed9ab..5ff0b3d 100644
+--- a/fs/cifs/cifs_debug.c
++++ b/fs/cifs/cifs_debug.c
+@@ -312,12 +312,10 @@ static int cifs_debug_data_proc_show(struct seq_file *m, void *v)
+ 			atomic_read(&server->smbd_conn->send_credits),
+ 			atomic_read(&server->smbd_conn->receive_credits),
+ 			server->smbd_conn->receive_credit_target);
+-		seq_printf(m, "\nPending send_pending: %x send_payload_pending:"
+-			" %x smbd_send_pending: %x smbd_recv_pending: %x",
++		seq_printf(m, "\nPending send_pending: %x "
++			"send_payload_pending: %x",
+ 			atomic_read(&server->smbd_conn->send_pending),
+-			atomic_read(&server->smbd_conn->send_payload_pending),
+-			server->smbd_conn->smbd_send_pending,
+-			server->smbd_conn->smbd_recv_pending);
++			atomic_read(&server->smbd_conn->send_payload_pending));
+ 		seq_printf(m, "\nReceive buffers count_receive_queue: %x "
+ 			"count_empty_packet_queue: %x",
+ 			server->smbd_conn->count_receive_queue,
+diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+index 06449cf..7259427 100644
+--- a/fs/cifs/smbdirect.c
++++ b/fs/cifs/smbdirect.c
+@@ -164,95 +164,6 @@ do {									\
+ #define log_rdma_mr(level, fmt, args...) \
+ 		log_rdma(level, LOG_RDMA_MR, fmt, ##args)
+ 
+-/*
+- * Destroy the transport and related RDMA and memory resources
+- * Need to go through all the pending counters and make sure on one is using
+- * the transport while it is destroyed
+- */
+-static void smbd_destroy_rdma_work(struct work_struct *work)
+-{
+-	struct smbd_response *response;
+-	struct smbd_connection *info =
+-		container_of(work, struct smbd_connection, destroy_work);
+-	unsigned long flags;
+-
+-	log_rdma_event(INFO, "destroying qp\n");
+-	ib_drain_qp(info->id->qp);
+-	rdma_destroy_qp(info->id);
+-
+-	/* Unblock all I/O waiting on the send queue */
+-	wake_up_interruptible_all(&info->wait_send_queue);
+-
+-	log_rdma_event(INFO, "cancelling idle timer\n");
+-	cancel_delayed_work_sync(&info->idle_timer_work);
+-	log_rdma_event(INFO, "cancelling send immediate work\n");
+-	cancel_delayed_work_sync(&info->send_immediate_work);
+-
+-	log_rdma_event(INFO, "wait for all send to finish\n");
+-	wait_event(info->wait_smbd_send_pending,
+-		info->smbd_send_pending == 0);
+-
+-	log_rdma_event(INFO, "wait for all recv to finish\n");
+-	wake_up_interruptible(&info->wait_reassembly_queue);
+-	wait_event(info->wait_smbd_recv_pending,
+-		info->smbd_recv_pending == 0);
+-
+-	log_rdma_event(INFO, "wait for all send posted to IB to finish\n");
+-	wait_event(info->wait_send_pending,
+-		atomic_read(&info->send_pending) == 0);
+-	wait_event(info->wait_send_payload_pending,
+-		atomic_read(&info->send_payload_pending) == 0);
+-
+-	log_rdma_event(INFO, "freeing mr list\n");
+-	wake_up_interruptible_all(&info->wait_mr);
+-	wait_event(info->wait_for_mr_cleanup,
+-		atomic_read(&info->mr_used_count) == 0);
+-	destroy_mr_list(info);
+-
+-	/* It's not posssible for upper layer to get to reassembly */
+-	log_rdma_event(INFO, "drain the reassembly queue\n");
+-	do {
+-		spin_lock_irqsave(&info->reassembly_queue_lock, flags);
+-		response = _get_first_reassembly(info);
+-		if (response) {
+-			list_del(&response->list);
+-			spin_unlock_irqrestore(
+-				&info->reassembly_queue_lock, flags);
+-			put_receive_buffer(info, response);
+-		} else
+-			spin_unlock_irqrestore(&info->reassembly_queue_lock, flags);
+-	} while (response);
+-
+-	info->reassembly_data_length = 0;
+-
+-	log_rdma_event(INFO, "free receive buffers\n");
+-	wait_event(info->wait_receive_queues,
+-		info->count_receive_queue + info->count_empty_packet_queue
+-			== info->receive_credit_max);
+-	destroy_receive_buffers(info);
+-
+-	ib_free_cq(info->send_cq);
+-	ib_free_cq(info->recv_cq);
+-	ib_dealloc_pd(info->pd);
+-	rdma_destroy_id(info->id);
+-
+-	/* free mempools */
+-	mempool_destroy(info->request_mempool);
+-	kmem_cache_destroy(info->request_cache);
+-
+-	mempool_destroy(info->response_mempool);
+-	kmem_cache_destroy(info->response_cache);
+-
+-	info->transport_status = SMBD_DESTROYED;
+-	wake_up_all(&info->wait_destroy);
+-}
+-
+-static int smbd_process_disconnected(struct smbd_connection *info)
+-{
+-	schedule_work(&info->destroy_work);
+-	return 0;
+-}
+-
+ static void smbd_disconnect_rdma_work(struct work_struct *work)
+ {
+ 	struct smbd_connection *info =
+@@ -319,8 +230,7 @@ static int smbd_conn_upcall(
+ 		}
+ 
+ 		info->transport_status = SMBD_DISCONNECTED;
+-		smbd_process_disconnected(info);
+-		wake_up(&info->disconn_wait);
++		wake_up_interruptible(&info->disconn_wait);
+ 		wake_up_interruptible(&info->wait_reassembly_queue);
+ 		wake_up_interruptible_all(&info->wait_send_queue);
+ 		break;
+@@ -1501,7 +1411,7 @@ void smbd_destroy(struct TCP_Server_Info *server)
+ 	if (info->transport_status != SMBD_DISCONNECTED) {
+ 		rdma_disconnect(server->smbd_conn->id);
+ 		log_rdma_event(INFO, "wait for transport being disconnected\n");
+-		wait_event(
++		wait_event_interruptible(
+ 			info->disconn_wait,
+ 			info->transport_status == SMBD_DISCONNECTED);
+ 	}
+@@ -1849,12 +1759,6 @@ static struct smbd_connection *_smbd_get_connection(
+ 	queue_delayed_work(info->workqueue, &info->idle_timer_work,
+ 		info->keep_alive_interval*HZ);
+ 
+-	init_waitqueue_head(&info->wait_smbd_send_pending);
+-	info->smbd_send_pending = 0;
+-
+-	init_waitqueue_head(&info->wait_smbd_recv_pending);
+-	info->smbd_recv_pending = 0;
+-
+ 	init_waitqueue_head(&info->wait_send_pending);
+ 	atomic_set(&info->send_pending, 0);
+ 
+@@ -1862,7 +1766,6 @@ static struct smbd_connection *_smbd_get_connection(
+ 	atomic_set(&info->send_payload_pending, 0);
+ 
+ 	INIT_WORK(&info->disconnect_work, smbd_disconnect_rdma_work);
+-	INIT_WORK(&info->destroy_work, smbd_destroy_rdma_work);
+ 	INIT_WORK(&info->recv_done_work, smbd_recv_done_work);
+ 	INIT_WORK(&info->post_send_credits_work, smbd_post_send_credits);
+ 	info->new_credits_offered = 0;
+@@ -1956,11 +1859,6 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+ 	int rc;
+ 
+ again:
+-	if (info->transport_status != SMBD_CONNECTED) {
+-		log_read(ERR, "disconnected\n");
+-		return -ENODEV;
+-	}
+-
+ 	/*
+ 	 * No need to hold the reassembly queue lock all the time as we are
+ 	 * the only one reading from the front of the queue. The transport
+@@ -2076,6 +1974,11 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+ 	if (rc)
+ 		return -ENODEV;
+ 
++	if (info->transport_status != SMBD_CONNECTED) {
++		log_read(ERR, "disconnected\n");
++		return 0;
++	}
++
+ 	goto again;
+ }
+ 
+@@ -2126,8 +2029,6 @@ int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+ 	unsigned int to_read, page_offset;
+ 	int rc;
+ 
+-	info->smbd_recv_pending++;
+-
+ 	if (iov_iter_rw(&msg->msg_iter) == WRITE) {
+ 		/* It's a bug in upper layer to get there */
+ 		cifs_dbg(VFS, "CIFS: invalid msg iter dir %u\n",
+@@ -2158,9 +2059,6 @@ int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+ 	}
+ 
+ out:
+-	info->smbd_recv_pending--;
+-	wake_up(&info->wait_smbd_recv_pending);
+-
+ 	/* SMBDirect will read it all or nothing */
+ 	if (rc > 0)
+ 		msg->msg_iter.count = 0;
+@@ -2186,7 +2084,6 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
+ 	struct kvec *iov;
+ 	int rc;
+ 
+-	info->smbd_send_pending++;
+ 	if (info->transport_status != SMBD_CONNECTED) {
+ 		rc = -ENODEV;
+ 		goto done;
+@@ -2342,9 +2239,6 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
+ 	wait_event(info->wait_send_payload_pending,
+ 		atomic_read(&info->send_payload_pending) == 0);
+ 
+-	info->smbd_send_pending--;
+-	wake_up(&info->wait_smbd_send_pending);
+-
+ 	return rc;
+ }
+ 
+diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
+index 73cc923..a3c7b3d 100644
+--- a/fs/cifs/smbdirect.h
++++ b/fs/cifs/smbdirect.h
+@@ -70,13 +70,11 @@ struct smbd_connection {
+ 	int ri_rc;
+ 	struct completion ri_done;
+ 	wait_queue_head_t conn_wait;
+-	wait_queue_head_t wait_destroy;
+ 	wait_queue_head_t disconn_wait;
+ 
+ 	struct completion negotiate_completion;
+ 	bool negotiate_done;
+ 
+-	struct work_struct destroy_work;
+ 	struct work_struct disconnect_work;
+ 	struct work_struct recv_done_work;
+ 	struct work_struct post_send_credits_work;
+@@ -124,13 +122,6 @@ struct smbd_connection {
+ 	wait_queue_head_t wait_for_mr_cleanup;
+ 
+ 	/* Activity accoutning */
+-	/* Pending reqeusts issued from upper layer */
+-	int smbd_send_pending;
+-	wait_queue_head_t wait_smbd_send_pending;
+-
+-	int smbd_recv_pending;
+-	wait_queue_head_t wait_smbd_recv_pending;
+-
+ 	atomic_t send_pending;
+ 	wait_queue_head_t wait_send_pending;
+ 	atomic_t send_payload_pending;
+-- 
+2.7.4
+
