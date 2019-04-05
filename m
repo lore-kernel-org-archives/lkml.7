@@ -2,87 +2,87 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4541C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DACC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69662217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554476504;
-	bh=9vYWpFpMZTjNHdWZBUkYas2kLuoiir0RK9UmuJCdGdc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qG6rX3Q7oTUGIzQEIZeF1mj52jazm9ubgFJhbetO/kw1OXQ7ycPGUJ4jk8NpXMr4P
-	 eqxMNNPy/7LL0EnHmc6MWActOcRaUAl5wJo4YZiCLeQTBcLWMfKueDupGJwmDvwE7X
-	 uF3oJZyPoZ9Ts1OtkYQoVcWAD0NSv+LoKhNni0Ic=
+	by mail.kernel.org (Postfix) with ESMTP id 4623E217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731405AbfDEPBn (ORCPT
+        id S1730866AbfDEPHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfDEPBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:01:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1D7206DF;
-        Fri,  5 Apr 2019 15:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554476502;
-        bh=9vYWpFpMZTjNHdWZBUkYas2kLuoiir0RK9UmuJCdGdc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CJmCujUWJu2cyYpMTmpAj9WN4SrGTncTnZO39TMRnATVExkUY1LvPBK9uqMPOpfNv
-         hYw0RFHGzJspNpqK5xTY2m1oM8qov6aNQe+8sRqIlhjPg3XFwJBm7HBKbHTbXF96Fe
-         NpInw9k3FUFa7ogastMWh0/gpO6TmmIXqZIiMOIY=
-Subject: Re: [PATCH 5.0 000/246] 5.0.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f3b2926a-657a-f003-8e00-217d8cfb8f49@kernel.org>
-Date:   Fri, 5 Apr 2019 09:01:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 11:07:10 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48263 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEPHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:07:10 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2512F1BF206;
+        Fri,  5 Apr 2019 15:07:06 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 17:07:06 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     wens@csie.org, robh@kernel.org, johan@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH v2 5/5] ARM: dts: sun8i: tbs-a711: Enable
+ UART2 (for NEO-6M GPS module)
+Message-ID: <20190405150706.jyeght2bbw7xgxf7@flea>
+References: <20190401115616.21337-1-megous@megous.com>
+ <20190401115616.21337-6-megous@megous.com>
+ <20190404124322.aejij7qomgoco37u@core.my.home>
 MIME-Version: 1.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uwakmiup36vvgwaj"
+Content-Disposition: inline
+In-Reply-To: <20190404124322.aejij7qomgoco37u@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 2:45 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.7 release.
-> There are 246 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat Apr  6 08:44:36 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
+--uwakmiup36vvgwaj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
--- Shuah
+On Thu, Apr 04, 2019 at 02:43:22PM +0200, Ond=C5=99ej Jirman wrote:
+> Hello Maxime,
+>
+> On Mon, Apr 01, 2019 at 01:56:16PM +0200, megous via linux-sunxi wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
+> > Enable UART2 to gain access to the module from userspace.
+>
+> Other GPS bits are now applied (thank you, Johan), so if this last bit
+> can go in too via a sunxi tree, the series will be complete.
 
+Applied, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--uwakmiup36vvgwaj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdvGgAKCRDj7w1vZxhR
+xRxXAQC03Gta5to+qN1+5WtOWtjTcudQ9DDHqL2MXyLIF7+XngEAmb8woERoUW7A
+2uUvjtVRFN+dv8zaqPe/H1grGjLfPQY=
+=DaMZ
+-----END PGP SIGNATURE-----
+
+--uwakmiup36vvgwaj--
