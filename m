@@ -2,271 +2,97 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA796C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACB3C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B652B20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9F52186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UgBFdxGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfDEDrj (ORCPT
+        id S1729941AbfDEDy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:47:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6253 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728735AbfDEDrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:47:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 210BC442ADFA0137B934;
-        Fri,  5 Apr 2019 11:47:37 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 11:47:28 +0800
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
- <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
- <20190404144408.GA6433@rapoport-lnx>
- <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
-CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
-Date:   Fri, 5 Apr 2019 11:47:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 4 Apr 2019 23:54:57 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44639 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729769AbfDEDy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 23:54:57 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v71so3292642lfa.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2fmX8L8mVM4NgXf1g6sWhqGWg2W4HcpcrPAHYFtDCt8=;
+        b=UgBFdxGk4+iN7NvDvKO+FAV9JoRsB9UxPq2WVWObq3KFOG9x6fMEX/uwqBXfXk5Bet
+         1tkdntV+KpNxcUxH94mNAjoCXmfbAbaiplVTXPeNW4W/1jXBT/zkX/q6DGDUkGb8YkiH
+         ov7R3zvrPHA7O6MBJqDVFrgjwjmTq6zFG1s1OM0a3GwlOM0DEaJ+4meFz4nTlCajlIwC
+         vgIpsscQHE8xyxOQsAZCV6j4wlX9YIPK/HBjaqTW70OV2H21MGlee4gn5HrOqqN69tk7
+         MbcJC4fY7/VaUZCgfdCJ2/onV6ID9MpzhKsBHj8IXwBMZ9VFh4bm/eNc4G74o2FnlyiU
+         glKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2fmX8L8mVM4NgXf1g6sWhqGWg2W4HcpcrPAHYFtDCt8=;
+        b=jTFreI7EUBjepf1MUA/9P4xbUbQ7Qdp6R4fN1aWBW60ZgoBnvZu6Lx5isv/3/uyQii
+         un7Ek5+zIt2/42Yo6+MYpIRVmSYhgFQ3ocQ6jxgRTOWnUlq8MezYnXcfS0tl+DYjZ1lS
+         19czgMAiNDPqaUSdWemd/XxDUBwj9F00KqC6sWmhGVvA20YFHbc6adAUXtVTWCBSFeyq
+         pkzyJ0RZwS+S9EWJw9K6uOUwY+Yg9ZzqHk/Z2DDIt+3F6PzQQQj0P50Q08dL2YjZ7ZxG
+         f3Kd0vrUXNpqUbhK5XAy2hSBhDSKO0lIcl+pv+IJHN0uKXf06tQ1fJH9tbkUn5n6XHG4
+         GJhQ==
+X-Gm-Message-State: APjAAAW0ushU6CQssfXdsAuhIMFyNC6ciJohJ2uLRfpAB/lKElondVWt
+        Sf4FIrCDZxKZsObEN2XWRYBosA==
+X-Google-Smtp-Source: APXvYqxW/kC8uTisJp2RkN1WX4o9fXwBzzXDH6b88HrbQm73taNxn5gY59AOQsHBx6GKc0Or1kidFg==
+X-Received: by 2002:ac2:4554:: with SMTP id j20mr5518950lfm.112.1554436495446;
+        Thu, 04 Apr 2019 20:54:55 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id i24sm4417633ljb.31.2019.04.04.20.54.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Apr 2019 20:54:54 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     robh+dt@kernel.org, georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, vkoul@kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH 0/3] Add QCS404 interconnect provider driver
+Date:   Fri,  5 Apr 2019 10:54:43 +0700
+Message-Id: <20190405035446.31886-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+Add driver to support scaling of the on-chip interconnects on QCS404-based
+platforms. Also add the necessary device-tree nodes, so that the driver for
+each NoC can probe and register as interconnect-provider.
 
-On 2019/4/5 10:17, Chen Zhou wrote:
-> Hi Mike,
-> 
-> On 2019/4/4 22:44, Mike Rapoport wrote:
->> Hi,
->>
->> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
->>> Hi Mike,
->>>
->>> On 2019/4/3 19:29, Mike Rapoport wrote:
->>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
->>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
->>>>> there may be two crash kernel regions, one is below 4G, the other is
->>>>> above 4G.
->>>>>
->>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
->>>>> property under node /chosen,
->>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>>>>
->>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>>>> ---
->>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
->>>>>  include/linux/memblock.h |  1 +
->>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
->>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>>> index ceb2a25..769c77a 100644
->>>>> --- a/arch/arm64/mm/init.c
->>>>> +++ b/arch/arm64/mm/init.c
->>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
->>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>>>>  
->>>>>  #ifdef CONFIG_KEXEC_CORE
->>>>> +# define CRASH_MAX_USABLE_RANGES        2
->>>>> +
->>>>>  static int __init reserve_crashkernel_low(void)
->>>>>  {
->>>>>  	unsigned long long base, low_base = 0, low_size = 0;
->>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>>  		const char *uname, int depth, void *data)
->>>>>  {
->>>>>  	struct memblock_region *usablemem = data;
->>>>> -	const __be32 *reg;
->>>>> -	int len;
->>>>> +	const __be32 *reg, *endp;
->>>>> +	int len, nr = 0;
->>>>>  
->>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>>>>  		return 0;
->>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>>>>  		return 1;
->>>>>  
->>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>>> +	endp = reg + (len / sizeof(__be32));
->>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>>> +
->>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->>>>> +			break;
->>>>> +	}
->>>>>  
->>>>>  	return 1;
->>>>>  }
->>>>>  
->>>>>  static void __init fdt_enforce_memory_region(void)
->>>>>  {
->>>>> -	struct memblock_region reg = {
->>>>> -		.size = 0,
->>>>> -	};
->>>>> -
->>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->>>>> -
->>>>> -	if (reg.size)
->>>>> -		memblock_cap_memory_range(reg.base, reg.size);
->>>>> +	int i, cnt = 0;
->>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
->>>>> +
->>>>> +	memset(regs, 0, sizeof(regs));
->>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
->>>>> +
->>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
->>>>> +		if (regs[i].size)
->>>>> +			cnt++;
->>>>> +		else
->>>>> +			break;
->>>>> +	if (cnt)
->>>>> +		memblock_cap_memory_ranges(regs, cnt);
->>>>
->>>> Why not simply call memblock_cap_memory_range() for each region?
->>>
->>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
->>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
->>> on kdump capture kernel.
->>
->> Thanks for the clarification.
->> I still think that memblock_cap_memory_ranges() is overly complex. 
->>
->> How about doing something like this:
->>
->> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
->> removing the range in the middle?
-> 
-> Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
-> That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
-> matter.
-> 
-> I agree with you, your idea is better.
-> 
-> Thanks,
-> Chen Zhou
+Bjorn Andersson (1):
+  interconnect: qcom: Add QCS404 interconnect provider driver
 
-Sorry, just ignore my previous reply, I got that wrong.
+Georgi Djakov (2):
+  dt-bindings: interconnect: Add Qualcomm QCS404 DT bindings
+  arm64: dts: qcs404: Add interconnect provider DT nodes
 
-I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
-firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
-directly and the extra remove operation may be complex.
-
-For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
-Besides, memblock_cap_memory_ranges() is also applicable for one region.
-
-How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
-
-Thanks,
-Chen Zhou
-
-> 
->>  
->>> Thanks,
->>> Chen Zhou
->>>
->>>>
->>>>>  }
->>>>>  
->>>>>  void __init arm64_memblock_init(void)
->>>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->>>>> index 47e3c06..aeade34 100644
->>>>> --- a/include/linux/memblock.h
->>>>> +++ b/include/linux/memblock.h
->>>>> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
->>>>>  phys_addr_t memblock_end_of_DRAM(void);
->>>>>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
->>>>>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
->>>>> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
->>>>>  void memblock_mem_limit_remove_map(phys_addr_t limit);
->>>>>  bool memblock_is_memory(phys_addr_t addr);
->>>>>  bool memblock_is_map_memory(phys_addr_t addr);
->>>>> diff --git a/mm/memblock.c b/mm/memblock.c
->>>>> index 28fa8926..1a7f4ee7c 100644
->>>>> --- a/mm/memblock.c
->>>>> +++ b/mm/memblock.c
->>>>> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
->>>>>  			base + size, PHYS_ADDR_MAX);
->>>>>  }
->>>>>  
->>>>> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
->>>>> +{
->>>>> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
->>>>> +	int i, j, ret, nr = 0;
->>>>> +
->>>>> +	for (i = 0; i < cnt; i++) {
->>>>> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
->>>>> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
->>>>> +		if (ret)
->>>>> +			break;
->>>>> +		nr++;
->>>>> +	}
->>>>> +	if (!nr)
->>>>> +		return;
->>>>> +
->>>>> +	/* remove all the MAP regions */
->>>>> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
->>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->>>>> +			memblock_remove_region(&memblock.memory, i);
->>>>> +
->>>>> +	for (i = nr - 1; i > 0; i--)
->>>>> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
->>>>> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
->>>>> +				memblock_remove_region(&memblock.memory, j);
->>>>> +
->>>>> +	for (i = start_rgn[0] - 1; i >= 0; i--)
->>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->>>>> +			memblock_remove_region(&memblock.memory, i);
->>>>> +
->>>>> +	/* truncate the reserved regions */
->>>>> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
->>>>> +
->>>>> +	for (i = nr - 1; i > 0; i--)
->>>>> +		memblock_remove_range(&memblock.reserved,
->>>>> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
->>>>> +
->>>>> +	memblock_remove_range(&memblock.reserved,
->>>>> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
->>>>> +}
->>>>> +
->>>>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->>>>>  {
->>>>>  	phys_addr_t max_addr;
->>>>> -- 
->>>>> 2.7.4
->>>>>
->>>>
->>>
->>
-> 
-> 
-> .
-> 
+ .../bindings/interconnect/qcom,qcs404.txt     |  45 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  25 +
+ drivers/interconnect/qcom/Kconfig             |   8 +
+ drivers/interconnect/qcom/Makefile            |   2 +
+ drivers/interconnect/qcom/qcs404.c            | 488 ++++++++++++++++++
+ drivers/interconnect/qcom/qcs404_ids.h        |  86 +++
+ .../dt-bindings/interconnect/qcom,qcs404.h    |  88 ++++
+ 7 files changed, 742 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+ create mode 100644 drivers/interconnect/qcom/qcs404.c
+ create mode 100644 drivers/interconnect/qcom/qcs404_ids.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
 
