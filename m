@@ -2,219 +2,418 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C927C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2F4C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059DF218D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8CF2186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbfDELbH (ORCPT
+        id S1731010AbfDELcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:31:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44010 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730703AbfDELbH (ORCPT
+        Fri, 5 Apr 2019 07:32:50 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:32911 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730497AbfDELct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:31:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k17so7522865wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=fTBOSUKpnb4iZC2klHF3NUVyOEn0t9VM8wGyJuSdIy8=;
-        b=qtBMax5muUYF6DLOlJ2mn/vuCf0pdWBXGumQUlzPvAGTHOOdqvjLWPOUsY+PePqze0
-         QQ8w6NYFjmHwUxdc+i4yLi+JecTTFPe7hAom/hRv7A9WsKvliq38IRGabm3i9yB8f8s1
-         0C4mmDFf32Y6yKUvf4ZtjXt3815stC1KMCfM16tpJiAu/20aj54WRC3Z8b6zGncNDjOA
-         7FpOIDit3KvfTXExQ2nLpEhSawSX9okq/fE9emo+zqLo03jj+AXxDV9NtF+iM32aYBN+
-         TV+m1s6KVKSCohv5HgHW/MewbrjAYxIJQlloY0jxZWRfRyi2fO1HgVieac29F7EOPZan
-         +Q0w==
-X-Gm-Message-State: APjAAAXvi+XI4gEnqdeVx3XFUN70toXhaDyFfEM2oNciMbwN7DYznM/A
-        oRL2XQH7xO1m8zS0LBVo7JN7iiP8+14=
-X-Google-Smtp-Source: APXvYqyJQZLVhgZzXy/XWh1fpOWWyB0nheoKBglixP6Qy62FKpVOi6lD5zuIcn1Q1VOF2xT804tUzw==
-X-Received: by 2002:adf:eb02:: with SMTP id s2mr8649900wrn.29.1554463864618;
-        Fri, 05 Apr 2019 04:31:04 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n13sm25207808wrw.67.2019.04.05.04.31.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 04:31:03 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] x86: hv: hv_init.c: Replace alloc_page() with kmem_cache_alloc()
-In-Reply-To: <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com>
-References: <cover.1554426039.git.m.maya.nakamura@gmail.com> <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com>
-Date:   Fri, 05 Apr 2019 13:31:02 +0200
-Message-ID: <87wok8it8p.fsf@vitty.brq.redhat.com>
+        Fri, 5 Apr 2019 07:32:49 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hCN5D-00074K-OP; Fri, 05 Apr 2019 07:32:40 -0400
+Date:   Fri, 5 Apr 2019 07:32:03 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+Message-ID: <20190405113203.GC18498@hmswarspite.think-freely.org>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAHC9VhQpk6cFZckQH+LQmQmirVzLm_GH57ZD3-76y-59G=DocQ@mail.gmail.com>
+ <20190402113150.GA17593@hmswarspite.think-freely.org>
+ <20190404214006.jcgmjb4u6iobu42s@madcap2.tricolour.ca>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404214006.jcgmjb4u6iobu42s@madcap2.tricolour.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+On Thu, Apr 04, 2019 at 05:40:06PM -0400, Richard Guy Briggs wrote:
+> On 2019-04-02 07:31, Neil Horman wrote:
+> > On Mon, Apr 01, 2019 at 10:50:03AM -0400, Paul Moore wrote:
+> > > On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > Audit events could happen in a network namespace outside of a task
+> > > > context due to packets received from the net that trigger an auditing
+> > > > rule prior to being associated with a running task.  The network
+> > > > namespace could be in use by multiple containers by association to the
+> > > > tasks in that network namespace.  We still want a way to attribute
+> > > > these events to any potential containers.  Keep a list per network
+> > > > namespace to track these audit container identifiiers.
+> > > >
+> > > > Add/increment the audit container identifier on:
+> > > > - initial setting of the audit container identifier via /proc
+> > > > - clone/fork call that inherits an audit container identifier
+> > > > - unshare call that inherits an audit container identifier
+> > > > - setns call that inherits an audit container identifier
+> > > > Delete/decrement the audit container identifier on:
+> > > > - an inherited audit container identifier dropped when child set
+> > > > - process exit
+> > > > - unshare call that drops a net namespace
+> > > > - setns call that drops a net namespace
+> > > >
+> > > > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > >  include/linux/audit.h | 19 ++++++++++++
+> > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > > >  kernel/nsproxy.c      |  4 +++
+> > > >  3 files changed, 106 insertions(+), 3 deletions(-)
+> > > 
+> > > ...
+> > > 
+> > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > index cf448599ef34..7fa3194f5342 100644
+> > > > --- a/kernel/audit.c
+> > > > +++ b/kernel/audit.c
+> > > > @@ -72,6 +72,7 @@
+> > > >  #include <linux/freezer.h>
+> > > >  #include <linux/pid_namespace.h>
+> > > >  #include <net/netns/generic.h>
+> > > > +#include <net/net_namespace.h>
+> > > >
+> > > >  #include "audit.h"
+> > > >
+> > > > @@ -99,9 +100,13 @@
+> > > >  /**
+> > > >   * struct audit_net - audit private network namespace data
+> > > >   * @sk: communication socket
+> > > > + * @contid_list: audit container identifier list
+> > > > + * @contid_list_lock audit container identifier list lock
+> > > >   */
+> > > >  struct audit_net {
+> > > >         struct sock *sk;
+> > > > +       struct list_head contid_list;
+> > > > +       spinlock_t contid_list_lock;
+> > > >  };
+> > > >
+> > > >  /**
+> > > > @@ -275,8 +280,11 @@ struct audit_task_info init_struct_audit = {
+> > > >  void audit_free(struct task_struct *tsk)
+> > > >  {
+> > > >         struct audit_task_info *info = tsk->audit;
+> > > > +       struct nsproxy *ns = tsk->nsproxy;
+> > > >
+> > > >         audit_free_syscall(tsk);
+> > > > +       if (ns)
+> > > > +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
+> > > >         /* Freeing the audit_task_info struct must be performed after
+> > > >          * audit_log_exit() due to need for loginuid and sessionid.
+> > > >          */
+> > > > @@ -376,6 +384,73 @@ static struct sock *audit_get_sk(const struct net *net)
+> > > >         return aunet->sk;
+> > > >  }
+> > > >
+> > > > +void audit_netns_contid_add(struct net *net, u64 contid)
+> > > > +{
+> > > > +       struct audit_net *aunet = net_generic(net, audit_net_id);
+> > > > +       struct list_head *contid_list = &aunet->contid_list;
+> > > > +       struct audit_contid *cont;
+> > > > +
+> > > > +       if (!audit_contid_valid(contid))
+> > > > +               return;
+> > > > +       if (!aunet)
+> > > > +               return;
+> > > 
+> > > We should move the contid_list assignment below this check, or decide
+> > > that aunet is always going to valid (?) and get rid of this check
+> > > completely.
+> > > 
+> > I'm not sure why that would be needed.  Finding the net_id list is an operation
+> > of a map relating net namespaces to lists, not contids to lists.  We could do
+> > it, sure, but since they're unrelated operations, I don't think we experience
+> > any slowdowns from doing it this way.
+> > 
+> > > > +       spin_lock(&aunet->contid_list_lock);
+> > > > +       if (!list_empty(contid_list))
+> > > 
+> > > We don't need the list_empty() check here do we?  I think we can just
+> > > call list_for_each_entry_rcu(), yes?
+> > > 
+> > This is true, the list_empty check is redundant, and the for loop will fall
+> > through if the list is empty.
+> > 
+> > > > +               list_for_each_entry_rcu(cont, contid_list, list)
+> > > > +                       if (cont->id == contid) {
+> > > > +                               refcount_inc(&cont->refcount);
+> > > > +                               goto out;
+> > > > +                       }
+> > > > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> > > 
+> > > If you had to guess, what do you think is going to be more common:
+> > > bumping the refcount of an existing entry in the list, or adding a new
+> > > entry?  I'm asking because I always get a little nervous when doing
+> > > allocations while holding a spinlock.  Yes, you are doing it with
+> > > GFP_ATOMIC, but it still seems like something to try and avoid if this
+> > > is going to approach 50%.  However, if the new entry is rare then the
+> > > extra work of always doing the allocation before taking the lock and
+> > > then freeing it afterwards might be a bad tradeoff.
+> > > 
+> > I think this is another way of asking, will multiple processes exist in the same
+> > network namespace?  That is to say, will we expect a process to create a net
+> > namespace, and then have other processes enter that namespace (thereby
+> > triggering multiple calls to audit_netns_contid_add with the same net pointer
+> > and cont id).  Given that the kubernetes notion of a pod is almost by definition
+> > multiple containers sharing a network namespace, I think the answer is that we
+> > will be strongly biased towards the refcount_inc case, rather than the kmalloc
+> > case.  I could be wrong, but I think this is likely already in the optimized
+> > order.
+> 
+> I had a stab at doing a GFP_KERNEL alloc before the spinlock and releasing it
+> after if it wasn't needed (in Patch#1 below).  I also went one step further and
+> converted it to kmem_cache (in Patch#2 below).
+> 
+> > > My gut feeling says we might do about as many allocations as refcount
+> > > bumps, but I could be thinking about this wrong.
+> > > 
+> > > Moving the allocation outside the spinlock might also open the door to
+> > > doing this as GFP_KERNEL, which is a good thing, but I haven't looked
+> > > at the callers to see if that is possible (it may not be).  That's an
+> > > exercise left to the patch author (if he hasn't done that already).
+> 
+> Both appear to work, but after successfully running both the contid test and
+> audit_testsuite, once I start to push that test system a bit harder I end up
+> with a deadlock warning.
+> 
+> I am having trouble understanding why since it happens both without and with
+> the kmem_cache options, so it must be another part of the code that is
+> triggering it.  The task_lock is being held at this point in
+> audit_set_contid().  I haven't tried changing this alloc over to a GFP_ATOMIC
+> to see if that prevents it, just as a debugging check...
+> At this point, I'm inclined to leave it as it was without these two patches
+> since it works and there doesn't seem to be an obvious best way given the
+> uncertainty of the potential workloads.
+> 
+I would agree.  The trace below says that, when you use GFP_KERNEL, you are
+allowing the memory subsystem to block the memory allocating task on memory
+reclaim operations (effectively to sleep until kswapd reclaims sufficient memory
+to grant the allocation), but kswapd wants to lock the task that is doing the
+allocation with task_lock, which the task calling kmalloc(...,GFP_KEREL) already
+holds, ergo, deadlock.
 
-> Switch from the function that allocates a single Linux guest page to a
-> different one to use a Hyper-V page because the guest page size and
-> hypervisor page size concepts are different, even though they happen to
-> be the same value on x86.
->
-> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> ---
->  arch/x86/hyperv/hv_init.c | 38 +++++++++++++++++++++++++++-----------
->  1 file changed, 27 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index e4ba467a9fc6..5f946135aa18 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -31,6 +31,7 @@
->  #include <linux/hyperv.h>
->  #include <linux/slab.h>
->  #include <linux/cpuhotplug.h>
-> +#include <asm/set_memory.h>
->  
->  #ifdef CONFIG_HYPERV_TSCPAGE
->  
-> @@ -98,18 +99,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->  u32 hv_max_vp_index;
->  EXPORT_SYMBOL_GPL(hv_max_vp_index);
->  
-> +struct kmem_cache *cachep;
-> +EXPORT_SYMBOL_GPL(cachep);
-> +
->  static int hv_cpu_init(unsigned int cpu)
+In short, you can't hold a tasks lock while preforming a sleeping operation
+involving memory allocation. You either need to use GFP_ATOMIC, or release the
+tasks lock before allocating memory with GFP_KERNEL.  Given the possible race
+conditions surrounding releasing and re-aquiring the lock, I'm inclined to say
+just use GFP_ATOMIC
+
+Neil
+
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.1.0-rc1-ghak90-audit-containerID.v6.3+ #80 Not tainted
+> ------------------------------------------------------
+> kswapd0/41 is trying to acquire lock:
+> 0000000006a8c88b (&(&p->alloc_lock)->rlock){+.+.}, at: create_task_io_context+0xe9/0x150
+> 
+> but task is already holding lock:
+> 0000000010aadb74 (fs_reclaim){+.+.}, at: __fs_reclaim_acquire+0x5/0x40
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (fs_reclaim){+.+.}:
+>        __fs_reclaim_acquire+0x2c/0x40
+>        kmem_cache_alloc_trace+0x30/0x230
+>        audit_netns_contid_add.part.12+0xcf/0x210
+>        audit_set_contid+0x18f/0x480
+>        proc_contid_write+0x74/0x110
+>        vfs_write+0xad/0x1b0
+>        ksys_write+0x55/0xc0
+>        do_syscall_64+0x60/0x210
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
+>        lock_acquire+0xd4/0x1c0
+>        _raw_spin_lock+0x2e/0x40
+>        create_task_io_context+0xe9/0x150
+>        generic_make_request_checks+0x8b4/0x970
+>        generic_make_request+0xbb/0x570
+>        submit_bio+0x6e/0x130
+>        __swap_writepage+0x281/0x420
+>        shmem_writepage+0x1d3/0x350
+>        pageout.isra.54+0x1e9/0x3f0
+>        shrink_page_list+0xa9f/0xe60
+>        shrink_inactive_list+0x263/0x6e0
+>        shrink_node_memcg+0x376/0x7c0
+>        shrink_node+0xdd/0x470
+>        balance_pgdat+0x26c/0x570
+>        kswapd+0x191/0x4f0
+>        kthread+0xf8/0x130
+>        ret_from_fork+0x3a/0x50
+> 
+> other info that might help us debug this:
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(fs_reclaim);
+>                                lock(&(&p->alloc_lock)->rlock);
+>                                lock(fs_reclaim);
+>   lock(&(&p->alloc_lock)->rlock);
+> 
+>  *** DEADLOCK ***
+> 
+> 1 lock held by kswapd0/41:
+>  #0: 0000000010aadb74 (fs_reclaim){+.+.}, at: __fs_reclaim_acquire+0x5/0x40
+> 
+> > > paul moore
+> 
+> Patch#1:
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -388,7 +388,7 @@ void audit_netns_contid_add(struct net *net, u64 contid)
 >  {
->  	u64 msr_vp_index;
->  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
->  	void **input_arg;
-> -	struct page *pg;
+>         struct audit_net *aunet;
+>         struct list_head *contid_list;
+> -       struct audit_contid *cont;
+> +       struct audit_contid *cont, *newcont;
 >  
->  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	pg = alloc_page(GFP_KERNEL);
-> -	if (unlikely(!pg))
-> +	*input_arg = kmem_cache_alloc(cachep, GFP_KERNEL);
-
-I'm not sure use of kmem_cache is justified here: pages we allocate are
-not cache-line and all these allocations are supposed to persist for the
-lifetime of the guest. In case you think that even on x86 it will be
-possible to see PAGE_SIZE != HV_HYP_PAGE_SIZE you can use alloc_pages()
-instead.
-
-Also, in case the idea is to generalize stuff, what will happen if
-PAGE_SIZE > HV_HYP_PAGE_SIZE? Who will guarantee proper alignment?
-
-I think we can leave hypercall arguments, vp_assist and similar pages
-alone for now: the code is not going to be shared among architectures
-anyways.
-
+>         if (!net)
+>                 return;
+> @@ -398,18 +398,19 @@ void audit_netns_contid_add(struct net *net, u64 contid)
+>         if (!aunet)
+>                 return;
+>         contid_list = &aunet->contid_list;
+> +       newcont = kmalloc(sizeof(struct audit_contid), GFP_KERNEL);
+>         spin_lock(&aunet->contid_list_lock);
+>         list_for_each_entry_rcu(cont, contid_list, list)
+>                 if (cont->id == contid) {
+>                         refcount_inc(&cont->refcount);
+> +                       kfree(newcont);
+>                         goto out;
+>                 }
+> -       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> -       if (cont) {
+> -               INIT_LIST_HEAD(&cont->list);
+> -               cont->id = contid;
+> -               refcount_set(&cont->refcount, 1);
+> -               list_add_rcu(&cont->list, contid_list);
+> +       if (newcont) {
+> +               INIT_LIST_HEAD(&newcont->list);
+> +               newcont->id = contid;
+> +               refcount_set(&newcont->refcount, 1);
+> +               list_add_rcu(&newcont->list, contid_list);
+>         }
+>  out:
+>         spin_unlock(&aunet->contid_list_lock);
+> 
+> 
+> Patch#2:
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -222,12 +222,16 @@ struct audit_reply {
+>  };
+>  
+>  static struct kmem_cache *audit_task_cache;
+> +static struct kmem_cache *audit_contid_cache;
+>  
+>  void __init audit_task_init(void)
+>  {
+>         audit_task_cache = kmem_cache_create("audit_task",
+>                                              sizeof(struct audit_task_info),
+>                                              0, SLAB_PANIC, NULL);
+> +       audit_contid_cache = kmem_cache_create("audit_contid",
+> +                                            sizeof(struct audit_contid),
+> +                                            0, SLAB_PANIC, NULL);
+>  }
+>  
+>  /**
+> @@ -388,7 +392,7 @@ void audit_netns_contid_add(struct net *net, u64 contid)
+>  {
+>         struct audit_net *aunet;
+>         struct list_head *contid_list;
+> -       struct audit_contid *cont;
+> +       struct audit_contid *cont, *newcont;
+>  
+>         if (!net)
+>                 return;
+> @@ -398,23 +402,32 @@ void audit_netns_contid_add(struct net *net, u64 contid)
+>         if (!aunet)
+>                 return;
+>         contid_list = &aunet->contid_list;
+> +       newcont = kmem_cache_alloc(audit_contid_cache, GFP_KERNEL);
+>         spin_lock(&aunet->contid_list_lock);
+>         list_for_each_entry_rcu(cont, contid_list, list)
+>                 if (cont->id == contid) {
+>                         refcount_inc(&cont->refcount);
+> +                       kmem_cache_free(audit_contid_cache, newcont);
+>                         goto out;
+>                 }
+> -       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> -       if (cont) {
+> -               INIT_LIST_HEAD(&cont->list);
+> -               cont->id = contid;
+> -               refcount_set(&cont->refcount, 1);
+> -               list_add_rcu(&cont->list, contid_list);
+> +       if (newcont) {
+> +               INIT_LIST_HEAD(&newcont->list);
+> +               newcont->id = contid;
+> +               refcount_set(&newcont->refcount, 1);
+> +               list_add_rcu(&newcont->list, contid_list);
+>         }
+>  out:
+>         spin_unlock(&aunet->contid_list_lock);
+>  }
+>  
+> +static void audit_contid_free(struct rcu_head *rcu)
+> +{
+> +       struct audit_contid *cont;
 > +
-> +	if (unlikely(!*input_arg))
->  		return -ENOMEM;
-> -	*input_arg = page_address(pg);
->  
->  	hv_get_vp_index(msr_vp_index);
->  
-> @@ -122,14 +125,12 @@ static int hv_cpu_init(unsigned int cpu)
->  		return 0;
->  
->  	if (!*hvp)
-> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
-> +		*hvp = kmem_cache_alloc(cachep, GFP_KERNEL);
->  
->  	if (*hvp) {
->  		u64 val;
->  
-> -		val = vmalloc_to_pfn(*hvp);
-> -		val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
-> -			HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
-> +		val = virt_to_phys(*hvp) | HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
->  
->  		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
->  	}
-> @@ -233,17 +234,22 @@ static int hv_cpu_die(unsigned int cpu)
->  	unsigned long flags;
->  	void **input_arg;
->  	void *input_pg = NULL;
-> +	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
->  
->  	local_irq_save(flags);
->  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
->  	input_pg = *input_arg;
->  	*input_arg = NULL;
->  	local_irq_restore(flags);
-> -	free_page((unsigned long)input_pg);
-> +	kmem_cache_free(cachep, input_pg);
-> +	input_pg = NULL;
->  
->  	if (hv_vp_assist_page && hv_vp_assist_page[cpu])
->  		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
->  
-> +	kmem_cache_free(cachep, *hvp);
-> +	*hvp = NULL;
+> +       cont = container_of(rcu, struct audit_contid, rcu);
+> +       kmem_cache_free(audit_contid_cache, cont);
+> +}
 > +
->  	if (hv_reenlightenment_cb == NULL)
->  		return 0;
->  
-> @@ -325,6 +331,11 @@ void __init hyperv_init(void)
->  		goto free_vp_index;
->  	}
->  
-> +	cachep = kmem_cache_create("hyperv_pages", HV_HYP_PAGE_SIZE,
-> +				   HV_HYP_PAGE_SIZE, 0, NULL);
-> +	if (!cachep)
-> +		goto free_vp_assist_page;
-> +
->  	cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/hyperv_init:online",
->  				  hv_cpu_init, hv_cpu_die);
->  	if (cpuhp < 0)
-> @@ -338,7 +349,10 @@ void __init hyperv_init(void)
->  	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
->  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
->  
-> -	hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX);
-> +	hv_hypercall_pg = kmem_cache_alloc(cachep, GFP_KERNEL);
-> +	if (hv_hypercall_pg)
-> +		set_memory_x((unsigned long)hv_hypercall_pg, 1);
-
-_RX is not writeable, right?
-
-> +
->  	if (hv_hypercall_pg == NULL) {
->  		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
->  		goto remove_cpuhp_state;
-> @@ -346,7 +360,8 @@ void __init hyperv_init(void)
->  
->  	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->  	hypercall_msr.enable = 1;
-> -	hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
-> +	hypercall_msr.guest_physical_address = virt_to_phys(hv_hypercall_pg) >>
-> +		HV_HYP_PAGE_SHIFT;
->  	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->  
->  	hv_apic_init();
-> @@ -416,6 +431,7 @@ void hyperv_cleanup(void)
->  	 * let hypercall operations fail safely rather than
->  	 * panic the kernel for using invalid hypercall page
->  	 */
-> +	kmem_cache_free(cachep, hv_hypercall_pg);
-
-Please don't do that: hyperv_cleanup() is called on kexec/kdump and
-we're trying to do the bare minimum to allow next kernel to boot. Doing
-excessive work here will likely lead to consequent problems (we're
-already crashing the case it's kdump!).
-
->  	hv_hypercall_pg = NULL;
->  
->  	/* Reset the hypercall page */
-
--- 
-Vitaly
+>  void audit_netns_contid_del(struct net *net, u64 contid)
+>  {
+>         struct audit_net *aunet;
+> @@ -434,7 +447,7 @@ void audit_netns_contid_del(struct net *net, u64 contid)
+>                 if (cont->id == contid) {
+>                         if (refcount_dec_and_test(&cont->refcount)) {
+>                                 list_del_rcu(&cont->list);
+> -                               kfree_rcu(cont, rcu);
+> +                               call_rcu(&cont->rcu, audit_contid_free);
+>                         }
+>                         break;
+>                 }
+> 
+> - RGB
+> 
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
+> 
