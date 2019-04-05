@@ -3,39 +3,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6031C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B726C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EAB20989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D006620989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfDEV75 (ORCPT
+        id S1726531AbfDEWAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 17:59:57 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50002 "EHLO
+        Fri, 5 Apr 2019 18:00:44 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50011 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDEV75 (ORCPT
+        with ESMTP id S1726124AbfDEWAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 17:59:57 -0400
+        Fri, 5 Apr 2019 18:00:43 -0400
 Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hCWsN-0005hH-82; Fri, 05 Apr 2019 23:59:55 +0200
-Date:   Fri, 5 Apr 2019 23:59:54 +0200 (CEST)
+        id 1hCWt6-0005ik-O4; Sat, 06 Apr 2019 00:00:40 +0200
+Date:   Sat, 6 Apr 2019 00:00:40 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>
-cc:     LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 1/3] x86/microcode/intel: Refactor Intel microcode blob
- loading
-In-Reply-To: <20190405133010.24249-2-bp@alien8.de>
-Message-ID: <alpine.DEB.2.21.1904052359390.1802@nanos.tec.linutronix.de>
-References: <20190405133010.24249-1-bp@alien8.de> <20190405133010.24249-2-bp@alien8.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [patch V2 17/29] x86/exceptions: Disconnect IST index and stack
+ order
+In-Reply-To: <20190405215713.rv46kr5fhl3z3m4z@treble>
+Message-ID: <alpine.DEB.2.21.1904060000260.1802@nanos.tec.linutronix.de>
+References: <20190405150658.237064784@linutronix.de> <20190405150929.938480649@linutronix.de> <20190405215713.rv46kr5fhl3z3m4z@treble>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,22 +46,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Apr 2019, Borislav Petkov wrote:
+On Fri, 5 Apr 2019, Josh Poimboeuf wrote:
 
-> From: Jann Horn <jannh@google.com>
+> On Fri, Apr 05, 2019 at 05:07:15PM +0200, Thomas Gleixner wrote:
+> > +/*
+> > + * The exception stack ordering in [cea_]exception_stacks
+> > + */
+> > +enum exception_stack_ordering {
+> > +	ISTACK_DF,
+> > +	ISTACK_NMI,
+> > +	ISTACK_DB,
+> > +	ISTACK_MCE,
+> > +	N_EXCEPTION_STACKS
+> > +};
 > 
-> Change generic_load_microcode() to use the iov_iter API instead of a
-> clumsy open-coded version which has to pay attention to __user data
-> or kernel data, depending on the loading method. This allows to avoid
-> explicit casting between user and kernel pointers.
-> 
-> Because the iov_iter API makes it hard to read the same location twice,
-> as a side effect, also fix a double-read of the microcode header (which
-> could e.g. lead to out-of-bounds reads in microcode_sanity_check()).
-> 
-> Not that it matters much, only root is allowed to load microcode
-> anyway...
+> While clever, it reads as "interrupt stack" to me.  ESTACK or IST_STACK
+> would be infinitely better.
 
-Nice!
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Fair enough.
