@@ -2,109 +2,240 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F13C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D904EC282DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3302063F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5RFetQe"
+	by mail.kernel.org (Postfix) with ESMTP id A8D1F2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbfDER64 (ORCPT
+        id S1731658AbfDER74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:58:56 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:37075 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfDER64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:58:56 -0400
-Received: by mail-wr1-f44.google.com with SMTP id w10so9044399wrm.4;
-        Fri, 05 Apr 2019 10:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=5XQVS7t9m90qdPGpy4MI72WNqmJlj0KlB6QjPVJbtik=;
-        b=J5RFetQe9mWtcazqoTkqbDlgl1dulNZGqjluyuRxf9e857Q+3HO2jORVv4djfLq2+9
-         FOsNap9hHQQ2/t0/mi1NEscqXl7fC7japUQ+dAaP2r9d51ZQs+zIRrEJmnrP4a8yRQZ8
-         PHN+8Fi+ST/oo6igY2T712C9cIMlT5ETAysUnd2UrX554EeYmBgyBUNRwo2koFhHjnen
-         2LlolljrjMGRq5CM+YwW8J1o6UxanY8JffXuPtjRFqgbGYtgmAGC9t3aaN4aC6LSSPg0
-         lqZfnNlunQBUecorb4JFy7f52JMjgLuwQmNvLM2gJFFbnRabyfEQWiPVFKfZrBKAqF8L
-         UxTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=5XQVS7t9m90qdPGpy4MI72WNqmJlj0KlB6QjPVJbtik=;
-        b=Bn4JEJ08i28eh/CT4HRndSlwG1gGyaID0GOuOIzVxj4xUYIo+N/pLRtz6CP1Fowt+I
-         r6as47SJQl1Ropk0n6sCgormkln4lz9dJrsXG8evmvVcUWztSKRMenDWYhR8LVQvYuSW
-         meJPRQrj/EjKOrSTrp4zMC/hMTcuTep+ajsDslHL9phCiYBa7nJPLsnZ5+cz4Nm3AKbH
-         FLGLSN6QSUxyBDfrY8OMmWptdyaMu59Rb6zHGZ69/uXtivZqXwAstxNv7F7jEwVNUtK3
-         d50+LAQO3DY97/+qJGOh99kTp9HTTXx3F7PGYddXbquthr6me+ANURlsKh5FlJhZyAwO
-         e4SA==
-X-Gm-Message-State: APjAAAVSkcQRZQfBng65mY+m2eAkVq0SNhtKTqGJS/qwVzXI/uxht7Vu
-        kvAEpFXKBuGfOdIGMWjLDORD52dvNNAKtw==
-X-Google-Smtp-Source: APXvYqxGgdoFHF6mR9jHdQsNuen/gmlaOrYV2DZ9uOHkg+5VCA8kqhDlOcMTbaz2NMp8z+VvVrFM+g==
-X-Received: by 2002:a5d:4c88:: with SMTP id z8mr9186221wrs.291.1554487134218;
-        Fri, 05 Apr 2019 10:58:54 -0700 (PDT)
-Received: from X555LD ([2a02:85f:510:b900:9cd8:5174:23da:3e1d])
-        by smtp.gmail.com with ESMTPSA id o4sm5325874wmo.20.2019.04.05.10.58.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Apr 2019 10:58:53 -0700 (PDT)
-Date:   Fri, 05 Apr 2019 20:58:49 +0300
-From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-To:     Jose Abreu <jose.abreu@synopsys.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>,
-        Christoph =?iso-8859-1?q?M=FCllner?= 
-        <christoph.muellner@theobroma-systems.com>,
+        Fri, 5 Apr 2019 13:59:56 -0400
+Received: from mleia.com ([178.79.152.223]:44228 "EHLO mail.mleia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730870AbfDER74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 13:59:56 -0400
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id 2A04F45F08A;
+        Fri,  5 Apr 2019 18:59:53 +0100 (BST)
+Subject: Re: [PATCH] watchdog: Convert to use devm_platform_ioremap_resource
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>, Barry Song <baohua@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Message-Id: <1554487129.1193.0@gmail.com>
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
-        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
-        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
-        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
-        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
-        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
-        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
-        <1554305721.1328.0@gmail.com> <1554306954.1328.1@gmail.com>
-        <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
-X-Mailer: geary/3.32.0
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <112ed5c1-1761-2d04-fd9c-49fc9ef3d8f7@mleia.com>
+Date:   Fri, 5 Apr 2019 20:59:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+In-Reply-To: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20190405_185953_209427_E116B2E0 
+X-CRM114-Status: GOOD (  23.59  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> You can play around different PBL values without using the no-pbl-x8 
-> option.
+On 04/02/2019 10:01 PM, Guenter Roeck wrote:
+> Use devm_platform_ioremap_resource to reduce source code size,
+> improve readability, and reduce the likelyhood of bugs.
 > 
-> I would start with PBL=0x1 and then going up. If PBL=0x1 does not 
-> work then
-> add the no-pbl-x8 option and start with PBL=0x20 and keep decreasing.
+> The conversion was done automatically with coccinelle using the
+> following semantic patch.
 > 
-> Thanks,
-> Jose Miguel Abreu
+> @r@
+> identifier res, pdev;
+> expression a;
+> expression index;
+> expression e;
+> @@
 > 
+> <+...
+> - res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> - a = devm_ioremap_resource(e, res);
+> + a = devm_platform_ioremap_resource(pdev, index);
+> ...+>
+> 
+> @depends on r@
+> identifier r.res;
+> @@
+> - struct resource *res;
+>   ... when != res
+> 
+> @@
+> identifier res, pdev;
+> expression index;
+> expression a;
+> @@
+> - struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> - a = devm_ioremap_resource(&pdev->dev, res);
+> + a = devm_platform_ioremap_resource(pdev, index);
+> 
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Baruch Siach <baruch@tkos.co.il>
+> Cc: Keguang Zhang <keguang.zhang@gmail.com>
+> Cc: Vladimir Zapolskiy <vz@mleia.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Avi Fishman <avifishman70@gmail.com>
+> Cc: Nancy Yuen <yuenn@google.com>
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: Wan ZongShun <mcuos.com@gmail.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Barry Song <baohua@kernel.org>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Patrice Chotard <patrice.chotard@st.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  drivers/watchdog/asm9260_wdt.c    | 4 +---
+>  drivers/watchdog/aspeed_wdt.c     | 4 +---
+>  drivers/watchdog/at91sam9_wdt.c   | 4 +---
+>  drivers/watchdog/ath79_wdt.c      | 4 +---
+>  drivers/watchdog/atlas7_wdt.c     | 4 +---
+>  drivers/watchdog/bcm7038_wdt.c    | 4 +---
+>  drivers/watchdog/bcm_kona_wdt.c   | 4 +---
+>  drivers/watchdog/cadence_wdt.c    | 4 +---
+>  drivers/watchdog/coh901327_wdt.c  | 4 +---
+>  drivers/watchdog/davinci_wdt.c    | 4 +---
+>  drivers/watchdog/digicolor_wdt.c  | 4 +---
+>  drivers/watchdog/dw_wdt.c         | 4 +---
+>  drivers/watchdog/ep93xx_wdt.c     | 4 +---
+>  drivers/watchdog/ftwdt010_wdt.c   | 4 +---
+>  drivers/watchdog/imgpdc_wdt.c     | 4 +---
+>  drivers/watchdog/jz4740_wdt.c     | 4 +---
+>  drivers/watchdog/lantiq_wdt.c     | 4 +---
+>  drivers/watchdog/loongson1_wdt.c  | 4 +---
+>  drivers/watchdog/lpc18xx_wdt.c    | 4 +---
+>  drivers/watchdog/max63xx_wdt.c    | 4 +---
+>  drivers/watchdog/meson_gxbb_wdt.c | 4 +---
+>  drivers/watchdog/meson_wdt.c      | 4 +---
+>  drivers/watchdog/moxart_wdt.c     | 4 +---
+>  drivers/watchdog/mpc8xxx_wdt.c    | 3 +--
+>  drivers/watchdog/mt7621_wdt.c     | 5 +----
+>  drivers/watchdog/mtk_wdt.c        | 4 +---
+>  drivers/watchdog/npcm_wdt.c       | 4 +---
+>  drivers/watchdog/nuc900_wdt.c     | 4 +---
+>  drivers/watchdog/of_xilinx_wdt.c  | 4 +---
+>  drivers/watchdog/omap_wdt.c       | 4 +---
+>  drivers/watchdog/orion_wdt.c      | 6 ++----
+>  drivers/watchdog/pic32-dmt.c      | 4 +---
+>  drivers/watchdog/pic32-wdt.c      | 4 +---
+>  drivers/watchdog/pnx4008_wdt.c    | 4 +---
+>  drivers/watchdog/renesas_wdt.c    | 4 +---
+>  drivers/watchdog/rt2880_wdt.c     | 4 +---
+>  drivers/watchdog/rtd119x_wdt.c    | 4 +---
+>  drivers/watchdog/rza_wdt.c        | 4 +---
+>  drivers/watchdog/s3c2410_wdt.c    | 4 +---
+>  drivers/watchdog/sama5d4_wdt.c    | 4 +---
+>  drivers/watchdog/sbsa_gwdt.c      | 7 ++-----
+>  drivers/watchdog/shwdt.c          | 4 +---
+>  drivers/watchdog/sirfsoc_wdt.c    | 4 +---
+>  drivers/watchdog/sprd_wdt.c       | 4 +---
+>  drivers/watchdog/st_lpc_wdt.c     | 4 +---
+>  drivers/watchdog/stm32_iwdg.c     | 4 +---
+>  drivers/watchdog/sunxi_wdt.c      | 4 +---
+>  drivers/watchdog/tangox_wdt.c     | 4 +---
+>  drivers/watchdog/tegra_wdt.c      | 4 +---
+>  drivers/watchdog/ts72xx_wdt.c     | 7 ++-----
+>  drivers/watchdog/txx9wdt.c        | 4 +---
+>  drivers/watchdog/zx2967_wdt.c     | 4 +---
+>  52 files changed, 55 insertions(+), 161 deletions(-)
 
-Okay, so setting snps,txpbl = <0x1>; seems to work. Is that our best 
-value or do higher values yield better performance?
+[snip]
 
+> diff --git a/drivers/watchdog/lpc18xx_wdt.c b/drivers/watchdog/lpc18xx_wdt.c
+> index 331cadb459ac..f6f66634cedf 100644
+> --- a/drivers/watchdog/lpc18xx_wdt.c
+> +++ b/drivers/watchdog/lpc18xx_wdt.c
+> @@ -204,15 +204,13 @@ static int lpc18xx_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct lpc18xx_wdt_dev *lpc18xx_wdt;
+>  	struct device *dev = &pdev->dev;
+> -	struct resource *res;
+>  	int ret;
+>  
+>  	lpc18xx_wdt = devm_kzalloc(dev, sizeof(*lpc18xx_wdt), GFP_KERNEL);
+>  	if (!lpc18xx_wdt)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	lpc18xx_wdt->base = devm_ioremap_resource(dev, res);
+> +	lpc18xx_wdt->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(lpc18xx_wdt->base))
+>  		return PTR_ERR(lpc18xx_wdt->base);
+>  
 
+[snip]
+
+> diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
+> index 8e261799c84e..24c266a9e1dc 100644
+> --- a/drivers/watchdog/pnx4008_wdt.c
+> +++ b/drivers/watchdog/pnx4008_wdt.c
+> @@ -185,13 +185,11 @@ static struct watchdog_device pnx4008_wdd = {
+>  
+>  static int pnx4008_wdt_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *r;
+>  	int ret = 0;
+>  
+>  	watchdog_init_timeout(&pnx4008_wdd, heartbeat, &pdev->dev);
+>  
+> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	wdt_base = devm_ioremap_resource(&pdev->dev, r);
+> +	wdt_base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(wdt_base))
+>  		return PTR_ERR(wdt_base);
+>  
+
+For lpc18xx_wdt.c and pnx4008_wdt.c:
+
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+
+--
+Best wishes,
+Vladimir
