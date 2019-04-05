@@ -2,104 +2,270 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4C7C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DCCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD23620700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97F520700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554447225;
+	bh=5sd2Pjd4Jh5084/FkyH61IiZeLrFS4gGpPfAfewaLs4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uLDqb5ZuRMSVvXIhL/RkWP6dzyseN970j9+ZkHDehJ5ttFc9K4cqkUqcBiuMPHSKo
+	 TbxkF+g4YGnKCGxD/A7DNDKPtNeZUW8olPvMptsKR2jECo7T76ww4mKd/ciq2aixJM
+	 8jJpl8z/ZYWADpNDsE6saOQ/IAEfZdpZmMwkfaiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfDEGvu (ORCPT
+        id S1729896AbfDEGxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:51:50 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:57390 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfDEGvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:51:50 -0400
-X-AuditID: c0a8fbf4-519ff700000014c1-2c-5ca6fb04cd18
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 47.48.05313.40BF6AC5; Fri,  5 Apr 2019 08:51:48 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Fri, 5 Apr 2019 08:51:44 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>
-CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
-Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks
- list
-Thread-Topic: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating
- clocks list
-Thread-Index: AQHU6zDhsEv70ksLMUWTxM/SG851haYtACOA
-Date:   Fri, 5 Apr 2019 06:51:43 +0000
-Message-ID: <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
-References: <20190404215344.6330-1-sboyd@kernel.org>
-         <20190404215344.6330-2-sboyd@kernel.org>
-In-Reply-To: <20190404215344.6330-2-sboyd@kernel.org>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <754FC85CFB2A034C9293C1B78B81256A@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 5 Apr 2019 02:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfDEGxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 02:53:44 -0400
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DA4620700;
+        Fri,  5 Apr 2019 06:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554447222;
+        bh=5sd2Pjd4Jh5084/FkyH61IiZeLrFS4gGpPfAfewaLs4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1dlN7chYZS+TVmb8zdQr6iirsi6VwtQt8IR4pzV3w0HA37r0oYpWRnkTewhKqlyPs
+         AudOG/7ddeElECg74621rGRo4wIFqY89JrL/9gMj+mG/AwhINo/2qQ9GWm12af8Mzn
+         80dxcFVl8WIUYrGcA6H2agyRZNccmJjtc1wIWVLM=
+Received: by mail-lj1-f169.google.com with SMTP id j89so4292082ljb.1;
+        Thu, 04 Apr 2019 23:53:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAXGADyEArjusNjdEiLOoJOnPeTcL3uVuaXTjaRJfnU+hdt3NrqY
+        JaJWsISpWab/8mCY+OyRWt0dCB6yoa1gGllHIiA=
+X-Google-Smtp-Source: APXvYqzP23FYcD3MpcPV2oNhiADO83cgjXrxoM+e/GG258SZybDjf8TdoaYIfb7KY4sY76mhmnrnx9uZmXLX/nZMUGg=
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr5763751lje.22.1554447220691;
+ Thu, 04 Apr 2019 23:53:40 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUURznzcyu4zH1Wq+XltBSQkaWkTYftKwlWL+EYJ9iS0cdd8U9bHbX
-        1MyElPKoDDRxUwvzqjwXsggtXaXSgoiVLcMCj5I8OsywTbNmdvL49P7vd/x//8f7k7jstjSA
-        TNWbWE7PaOVSD6KnabFjN7HYoNp7w+5Bz4z14/TQuJr+XvJBQtsfVUlpW3k3oPsuPpbQrweP
-        0suODoJ22l5h0e5Ku+M1rvz6tsBNWdN8Vmm/chlTto/dkyitdwulyh/WoFi3E56RiYwpIy5V
-        rd9zMMFTM9RSKU3vh5nz5TZpHiiBRcCdRHA/elNwFRQBD1IGHQB1dv8hxMszgEovvMSKAElK
-        YSQqGnYTDD4wAdVf/4ELGhzOYujjbLOL8IZx6P3INC6KjqNfD6aBWO9D+ZMzmFATcDt6VtHn
-        wil4DPVOTblwGd+0z1Hv6uMOw1He/TqXBsCtqDDvi0uDQ39k/bQgEaeGqK7rFS7Wvujz+PJ/
-        XI66naOEMDMOd6K2R3tEazSaG2wnxHobKisedRNH2IQGKieIUuBnWZdgWXNb1rkt69yWde5b
-        QHIXIB2TqlUzJjYslGPNoZxBo+OPJIPOCsRvnn8I/tpibACSQO5FnRxvUMkkTIYxS2cDm0lM
-        7kvFVvDQhkRDcpaGMWriObOWNdoAInG5DxV0h+eoZCYrm+UMK1QgScj9qTONZSoZFJLTWDad
-        5VbYLSQpRxTzmzdu4lg1m5mSqjWt0RjpLjT3CPAxsvpklmPMJk28sC3xRn5dBMqLzz3nFHKN
-        6YyOR0XrINhF9tSOVuPkbO9kNS4j9AY9G+BPHRGSoCDVmPWrQVPAn3+vN1UosF785q/2meIj
-        MD6CNt8UIkzMGhWQB9C30aUBekiSs2AKPuDTOefp7KuKwiaSPA8/CSRa25oqAjf6KSJys08t
-        1OQMa1tQD/nwZ8yhOqfjRYQyeDZBZTV5b097N56x93TlluKq5zvCryH7+drGlIjJ+JElSf5T
-        xZ2vrSpF6+6U0lyFYl4TVa6eCcu8NL3QlUTVlx1RhMgJo4YJC8E5I/MPPB2zJLYDAAA=
+References: <CGME20190404172224epcas2p21b449c0ae8e36f7e800ae67c18db35a2@epcas2p2.samsung.com>
+ <20190404171735.12815-1-s.nawrocki@samsung.com> <20190404171735.12815-2-s.nawrocki@samsung.com>
+In-Reply-To: <20190404171735.12815-2-s.nawrocki@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 5 Apr 2019 08:53:29 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdtdvQg69PLO4+aGAWjth-NzGToJUUPN0Jw6=zTCz9Bbw@mail.gmail.com>
+Message-ID: <CAJKOXPdtdvQg69PLO4+aGAWjth-NzGToJUUPN0Jw6=zTCz9Bbw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/8] soc: samsung: Add exynos chipid driver support
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        pankaj.dubey@samsung.com,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB0YWtpbmcgY2FyZSBvZiB0aGlzIQ0KDQpPbiBU
-aHUsIDIwMTktMDQtMDQgYXQgMTQ6NTMgLTA3MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gV2Ug
-cmVjZW50bHkgaW50cm9kdWNlZCBhIGNoYW5nZSB0byBzdXBwb3J0IGRldm0gY2xrIGxvb2t1cHMu
-IFRoYXQNCj4gY2hhbmdlDQo+IGludHJvZHVjZWQgYSBjb2RlLXBhdGggdGhhdCB1c2VkIGNsa19m
-aW5kKCkgd2l0aG91dCBob2xkaW5nIHRoZQ0KPiAnY2xvY2tzX211dGV4Jy4gVW5mb3J0dW5hdGVs
-eSwgY2xrX2ZpbmQoKSBpdGVyYXRlcyBvdmVyIHRoZSAnY2xvY2tzJw0KPiBsaXN0IGFuZCBzbyB3
-ZSBuZWVkIHRvIHByZXZlbnQgdGhlIGxpc3QgZnJvbSBiZWluZyBtb2RpZmllZCB3aGlsZQ0KPiBp
-dGVyYXRpbmcgb3ZlciBpdCBieSBob2xkaW5nIHRoZSBtdXRleC4gU2ltaWxhcmx5LCB3ZSBkb24n
-dCBuZWVkIHRvDQo+IGhvbGQNCj4gdGhlICdjbG9ja3NfbXV0ZXgnIGJlc2lkZXMgd2hlbiB3ZSdy
-ZSBkZXJlZmVyZW5jaW5nIHRoZSBjbGtfbG9va3VwDQo+IHBvaW50ZXINCg0KLy8vIFNuaXANCg0K
-PiAtb3V0Og0KPiArc3RhdGljIHN0cnVjdCBjbGtfbG9va3VwICpjbGtfZmluZChjb25zdCBjaGFy
-ICpkZXZfaWQsIGNvbnN0IGNoYXINCj4gKmNvbl9pZCkNCj4gK3sNCj4gKwlzdHJ1Y3QgY2xrX2xv
-b2t1cCAqY2w7DQo+ICsNCj4gKwltdXRleF9sb2NrKCZjbG9ja3NfbXV0ZXgpOw0KPiArCWNsID0g
-X19jbGtfZmluZChkZXZfaWQsIGNvbl9pZCk7DQo+ICAJbXV0ZXhfdW5sb2NrKCZjbG9ja3NfbXV0
-ZXgpOw0KPiAgDQo+IC0JcmV0dXJuIGNsID8gY2xrIDogRVJSX1BUUigtRU5PRU5UKTsNCj4gKwly
-ZXR1cm4gY2w7DQo+ICt9DQoNCkkgYW0gbm90IGFuIGV4cGVydCBvbiB0aGlzIGJ1dCByZWFkaW5n
-IGNvbW1pdCBtZXNzYWdlIGFib3dlIGFuZCBzZWVpbmcNCnRoZSBjb2RlIGZvciBjbGtfZmluZCgp
-IGxvb2tzIGEgYml0IHNjYXJ5LiBJZiBJIHVuZGVyc3RhbmQgaXQNCmNvcnJlY3RseSwgdGhlIGNs
-b2Nrc19tdXRleCBzaG91bGQgYmUgaGVsZCB3aGVuIGRlcmVmZXJlbmNpbmcgdGhlDQpjbGtfbG9v
-a3VwIHJldHVybmVkIGJ5IGNsa19maW5kLiBUaGUgY2xrX2ZpbmQgaW1wbGVtZW50YXRpb24gZHJv
-cHMgdGhlDQpsb2NrIGJlZm9yZSByZXR1cm5pbmcgLSB3aGljaCBtYWtlcyBtZSB0aGluayBJIG1p
-c3Mgc29tZXRoaW5nIGhlcmUuIEhvdw0KY2FuIHRoZSBjYWxsZXIgZXZlciBzYWZlbHkgZGVyZWZl
-cmVuY2UgcmV0dXJuZWQgY2xrX2xvb2t1cCBwb2ludGVyPw0KSnVzdCByZWFkaW5nIGFib3dlIG1h
-a2VzIG1lIHRoaW5rIHRoYXQgbG9jayBzaG91bGQgYmUgdGFrZW4gYnkgd2hvZXZlcg0KaXMgY2Fs
-bGluZyB0aGUgY2xrX2ZpbmQsIGFuZCBkcm9wcGVkIG9ubHkgYWZ0ZXIgY2FsbGVyIGhhcyB1c2Vk
-IHRoZQ0KZm91bmQgY2xrX2xvb2t1cCBmb3Igd2hhdGV2ZXIgY2FsbGVyIGludGVuZHMgdG8gdXNl
-IGl0LiBNYXliZSBJIGFtDQptaXNzaW5nIHNvbWV0aGluZz8NCg0KQnIsDQoJTWF0dGkgVmFpdHRp
-bmVuDQo=
+On Thu, 4 Apr 2019 at 19:22, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>
+> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+>
+> Exynos SoCs have Chipid, for identification of product IDs and SoC
+> revisions. This patch intends to provide initialization code for all
+> these functionalities, at the same time it provides some sysfs entries
+> for accessing these information to user-space.
+>
+> This driver uses existing binding for exynos-chipid.
+>
+> Changes by Bartlomiej:
+> - fixed return values on errors
+> - removed bogus kfree_const()
+> - added missing Exynos4210 EVT0 id
+> - converted code to use EXYNOS_MASK define
+> - fixed np use after of_node_put()
+> - fixed too early use of dev_info()
+> - made driver fail for unknown SoC-s
+> - added SPDX tag
+> - updated Copyrights
+>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> [m.szyprowski: for suggestion and code snippet of product_id_to_soc_id]
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Toy need to add your SoB here.
+
+> ---
+>  drivers/soc/samsung/Kconfig         |   5 ++
+>  drivers/soc/samsung/Makefile        |   2 +
+>  drivers/soc/samsung/exynos-chipid.c | 111 ++++++++++++++++++++++++++++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 drivers/soc/samsung/exynos-chipid.c
+>
+> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+> index 2186285fda92..2905f5262197 100644
+> --- a/drivers/soc/samsung/Kconfig
+> +++ b/drivers/soc/samsung/Kconfig
+> @@ -7,6 +7,11 @@ menuconfig SOC_SAMSUNG
+>
+>  if SOC_SAMSUNG
+>
+> +config EXYNOS_CHIPID
+> +       bool "Exynos Chipid controller driver" if COMPILE_TEST
+> +       depends on ARCH_EXYNOS || COMPILE_TEST
+> +       select SOC_BUS
+> +
+>  config EXYNOS_PMU
+>         bool "Exynos PMU controller driver" if COMPILE_TEST
+>         depends on ARCH_EXYNOS || ((ARM || ARM64) && COMPILE_TEST)
+> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+> index 29f294baac6e..3b6a8797416c 100644
+> --- a/drivers/soc/samsung/Makefile
+> +++ b/drivers/soc/samsung/Makefile
+> @@ -1,4 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +
+> +obj-$(CONFIG_EXYNOS_CHIPID)    += exynos-chipid.o
+>  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
+>
+>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
+> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> new file mode 100644
+> index 000000000000..5cb018807817
+> --- /dev/null
+> +++ b/drivers/soc/samsung/exynos-chipid.c
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 Samsung Electronics Co., Ltd.
+> + *           http://www.samsung.com/
+> + *
+> + * EXYNOS - CHIP ID support
+> + * Author: Pankaj Dubey <pankaj.dubey@samsung.com>
+> + * Author: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+
+I commented Bartlomiej's patch which you included here. I did not
+receive any further feedback from him so I do not know whether he
+agrees with my comments or not... but if you send the same patch again
+without addressing these comments, I feel like ignored.
+
+I stopped on first ignored comment.
+
+Therefore please address be sure that you addressed my comments from
+Bartlomiej's patchset. If you do not agree with them, please let me
+know. The comments are here:
+https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=43565&state=*
+
+Best regards,
+Krzysztof
+
+> +#include <linux/slab.h>
+> +#include <linux/sys_soc.h>
+> +
+> +#define EXYNOS_SUBREV_MASK     (0xF << 4)
+> +#define EXYNOS_MAINREV_MASK    (0xF << 0)
+> +#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+> +#define EXYNOS_MASK            0xFFFFF000
+> +
+> +static const struct exynos_soc_id {
+> +       const char *name;
+> +       unsigned int id;
+> +} soc_ids[] = {
+> +       { "EXYNOS3250", 0xE3472000 },
+> +       { "EXYNOS4210", 0x43200000 },   /* EVT0 revision */
+> +       { "EXYNOS4210", 0x43210000 },
+> +       { "EXYNOS4212", 0x43220000 },
+> +       { "EXYNOS4412", 0xE4412000 },
+> +       { "EXYNOS5250", 0x43520000 },
+> +       { "EXYNOS5260", 0xE5260000 },
+> +       { "EXYNOS5410", 0xE5410000 },
+> +       { "EXYNOS5420", 0xE5420000 },
+> +       { "EXYNOS5440", 0xE5440000 },
+> +       { "EXYNOS5800", 0xE5422000 },
+> +       { "EXYNOS7420", 0xE7420000 },
+> +       { "EXYNOS5433", 0xE5433000 },
+> +};
+> +
+> +static const char * __init product_id_to_soc_id(unsigned int product_id)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(soc_ids); i++)
+> +               if ((product_id & EXYNOS_MASK) == soc_ids[i].id)
+> +                       return soc_ids[i].name;
+> +       return NULL;
+> +}
+> +
+> +int __init exynos_chipid_early_init(void)
+> +{
+> +       struct soc_device_attribute *soc_dev_attr;
+> +       void __iomem *exynos_chipid_base;
+> +       struct soc_device *soc_dev;
+> +       struct device_node *root;
+> +       struct device_node *np;
+> +       u32 product_id;
+> +       u32 revision;
+> +
+> +       /* look up for chipid node */
+> +       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
+> +       if (!np)
+> +               return -ENODEV;
+> +
+> +       exynos_chipid_base = of_iomap(np, 0);
+> +       of_node_put(np);
+> +
+> +       if (!exynos_chipid_base) {
+> +               pr_err("Failed to map SoC chipid\n");
+> +               return -ENXIO;
+> +       }
+> +
+> +       product_id = readl_relaxed(exynos_chipid_base);
+> +       revision = product_id & EXYNOS_REV_MASK;
+> +       iounmap(exynos_chipid_base);
+> +
+> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +       if (!soc_dev_attr)
+> +               return -ENOMEM;
+> +
+> +       soc_dev_attr->family = "Samsung Exynos";
+> +
+> +       root = of_find_node_by_path("/");
+> +       of_property_read_string(root, "model", &soc_dev_attr->machine);
+> +       of_node_put(root);
+> +
+> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x", revision);
+> +       soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
+> +       if (!soc_dev_attr->soc_id) {
+> +               pr_err("Unknown SoC\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* please note that the actual registration will be deferred */
+> +       soc_dev = soc_device_register(soc_dev_attr);
+> +       if (IS_ERR(soc_dev)) {
+> +               kfree(soc_dev_attr->revision);
+> +               kfree(soc_dev_attr);
+> +               return PTR_ERR(soc_dev);
+> +       }
+> +
+> +       /* it is too early to use dev_info() here (soc_dev is NULL) */
+> +       pr_info("soc soc0: Exynos: CPU[%s] PRO_ID[0x%x] REV[0x%x] Detected\n",
+> +               soc_dev_attr->soc_id, product_id, revision);
+> +
+> +       return 0;
+> +}
+> +early_initcall(exynos_chipid_early_init);
+> --
+> 2.17.1
+>
