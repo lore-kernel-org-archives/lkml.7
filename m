@@ -4,61 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113D2C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758EEC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65862171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454AD2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554432214;
-	bh=rJu7BJrG5V5pBx4Ikx52YPoZuwjoYsobrLiaONiRXNc=;
+	s=default; t=1554432233;
+	bh=Q6KYgaJWUfltBlEH43MxZxIxSO1KhtI0EBZcoDQ3QE4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=db2Y6YHsSSx3zAQms5PvU4mwn5fmN3CzZmE2JxfT6RWUDaC+kQI+8A8aVyHzqjOj4
-	 XNqg4JYFhR3iP96afoFsCbLr9Kh3n6jwD9kX5L65S3OS3+q653m/JUJWvQAAcRHF8Y
-	 R0Y0P48PgXekEmMMOn6U4IAFwEiLo51VDwsMBjuA=
+	b=clzgEuJdC/RatowFYuKg1vH1jd0qoW6zdEZj77TH9bWfg3YIZUXhJejUy9ltUA7/w
+	 1qv+2Ec6hcMECdEXQ/I93UeeQky1JW1pElXFXYnMjwCtdeEeLFdB4gl/i7jWnC/TH1
+	 asZ/jtCY85W7ZLwe/+43mELlImv+ciJ01KZpMEhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfDECnd (ORCPT
+        id S1729977AbfDECnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 22:43:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45558 "EHLO
+        Thu, 4 Apr 2019 22:43:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46150 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729836AbfDECn3 (ORCPT
+        with ESMTP id S1729836AbfDECnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 22:43:29 -0400
+        Thu, 4 Apr 2019 22:43:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=YsmSJtNCxKg43zce1gbaVnEzvg0ut/5r48aLgcV/8r0=; b=Jho69nc2vyHP
-        3Jydpw0Jojl44Umfoq+SYMRV5qg41QGi+AYC9iKS+pMOGwDZyIpiq6DL3Piy7FmozhbO8lI/p0TDp
-        Bd3EU7z9JwGvsFsod/wu7Wpfu1RLGasIloL0oAPqnQT3liDA8zprDyYi+agRk8sw98zQGm/jFBzsj
-        JgQrw=;
+        List-Archive; bh=YWN5kl2aehB7aELXTYMvmKujXiQtY12lPlQ3d8lxx+k=; b=NNWa9fg5/6dR
+        zjd/Jsfj4cmkXVcHsgmLoEe3l0c81FO050tYN7XTpUvIpMXlaJDSr+qqnBSMJNxbVMOyBEDb9ojps
+        9OT8stEsQjJVtjfT4ZAUyhNuS4MOxWrWVh2gkriM4A+GLMFFtkNa18+G8IIT4vO4sZ6wJhEgUFyNb
+        orbtI=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hCEpA-0005Ey-Sm; Fri, 05 Apr 2019 02:43:25 +0000
+        id 1hCEpV-0005Fg-MV; Fri, 05 Apr 2019 02:43:45 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 05F3C441D3C; Fri,  5 Apr 2019 09:43:22 +0700 (+07)
+        id 7F755441D3B; Fri,  5 Apr 2019 09:43:42 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: meson: add g12a compatibles" to the asoc tree
-In-Reply-To:  <20190404111733.28705-2-jbrunet@baylibre.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: core: Avoid potential deadlock on regulator_unregister" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190405024322.05F3C441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri,  5 Apr 2019 09:43:21 +0700 (+07)
+Message-Id: <20190405024342.7F755441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri,  5 Apr 2019 09:43:42 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: add g12a compatibles
+   regulator: core: Avoid potential deadlock on regulator_unregister
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,97 +85,58 @@ to this mail.
 Thanks,
 Mark
 
-From 679f4e6cfd45bcc14bb563576e419ac9e43fad7c Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 4 Apr 2019 13:17:28 +0200
-Subject: [PATCH] ASoC: meson: add g12a compatibles
+From 063773011d33bb36588a90385aa9eb75d13c6d80 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Thu, 4 Apr 2019 16:32:18 +0100
+Subject: [PATCH] regulator: core: Avoid potential deadlock on
+ regulator_unregister
 
-Add new compatible strings for the g12a devices.
-Audio wise, the g12a is fairly to close to the axg, yet some differences
-need to be handled.
+Lockdep reports the following issue on my setup:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Possible unsafe locking scenario:
+
+CPU0                    CPU1
+----                    ----
+lock((work_completion)(&(&rdev->disable_work)->work));
+                        lock(regulator_list_mutex);
+                        lock((work_completion)(&(&rdev->disable_work)->work));
+lock(regulator_list_mutex);
+
+The problem is that regulator_unregister takes the
+regulator_list_mutex and then calls flush_work on disable_work. But
+regulator_disable_work calls regulator_lock_dependent which will
+also take the regulator_list_mutex. Resulting in a deadlock if the
+flush_work call actually needs to flush the work.
+
+Fix this issue by moving the flush_work outside of the
+regulator_list_mutex. The list mutex is not used to guard the point at
+which the delayed work is queued, so its use adds no additional safety.
+
+Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt  | 4 +++-
- Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt   | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-spdifin.txt         | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-spdifout.txt        | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt  | 4 +++-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/regulator/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-index 3dfc2515e5c6..4330fc9dca6d 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-@@ -2,7 +2,9 @@
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 968dcd9d7a07..8573dd0871fd 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5061,10 +5061,11 @@ void regulator_unregister(struct regulator_dev *rdev)
+ 		regulator_put(rdev->supply);
+ 	}
  
- Required properties:
- - compatible: 'amlogic,axg-toddr' or
--	      'amlogic,axg-frddr'
-+	      'amlogic,axg-toddr' or
-+	      'amlogic,g12a-frddr' or
-+	      'amlogic,g12a-toddr'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - interrupts: interrupt specifier for the fifo.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-index 5672d0bc5b16..73f473a9365f 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-@@ -1,7 +1,8 @@
- * Amlogic Audio PDM input
++	flush_work(&rdev->disable_work.work);
++
+ 	mutex_lock(&regulator_list_mutex);
  
- Required properties:
--- compatible: 'amlogic,axg-pdm'
-+- compatible: 'amlogic,axg-pdm' or
-+	      'amlogic,g12a-pdm'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - clocks: list of clock phandle, one for each entry clock-names.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-index 2e6cb7d9b202..0b82504fa419 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-@@ -1,7 +1,8 @@
- * Amlogic Audio SPDIF Input
- 
- Required properties:
--- compatible: 'amlogic,axg-spdifin'
-+- compatible: 'amlogic,axg-spdifin' or
-+	      'amlogic,g12a-spdifin'
- - interrupts: interrupt specifier for the spdif input.
- - clocks: list of clock phandle, one for each entry clock-names.
- - clock-names: should contain the following:
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-index 521c38ad89e7..826152730508 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-@@ -1,7 +1,8 @@
- * Amlogic Audio SPDIF Output
- 
- Required properties:
--- compatible: 'amlogic,axg-spdifout'
-+- compatible: 'amlogic,axg-spdifout' or
-+	      'amlogic,g12a-spdifout'
- - clocks: list of clock phandle, one for each entry clock-names.
- - clock-names: should contain the following:
-   * "pclk" : peripheral clock.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-index 1c1b7490554e..3b94a715a0b9 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-@@ -2,7 +2,9 @@
- 
- Required properties:
- - compatible: 'amlogic,axg-tdmin' or
--	      'amlogic,axg-tdmout'
-+	      'amlogic,axg-tdmout' or
-+	      'amlogic,g12a-tdmin' or
-+	      'amlogic,g12a-tdmout'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - clocks: list of clock phandle, one for each entry clock-names.
+ 	debugfs_remove_recursive(rdev->debugfs);
+-	flush_work(&rdev->disable_work.work);
+ 	WARN_ON(rdev->open_count);
+ 	regulator_remove_coupling(rdev);
+ 	unset_regulator_supplies(rdev);
 -- 
 2.20.1
 
