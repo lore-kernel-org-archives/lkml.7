@@ -6,215 +6,179 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44570C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEAC2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C27F21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfDELTN (ORCPT
+        id S1730918AbfDELVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:19:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730827AbfDELTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:19:13 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1975FDF69102902D2836;
-        Fri,  5 Apr 2019 19:19:10 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 19:19:08 +0800
-Date:   Fri, 5 Apr 2019 12:18:57 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        <vishal.l.verma@intel.com>, <x86@kernel.org>, <linux-mm@kvack.org>,
-        <linux-nvdimm@lists.01.org>
-Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a
- device
-Message-ID: <20190405121857.0000718a@huawei.com>
-In-Reply-To: <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 5 Apr 2019 07:21:20 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:33760 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730642AbfDELVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 07:21:20 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id CMuGhdnRIiLOmCMuKhrhT6; Fri, 05 Apr 2019 13:21:17 +0200
+Subject: Re: [PATCH v3 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
+        <tiffany.lin@mediatek.com>,
+        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
+        <andrew-ct.chen@mediatek.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dave.stevenson@raspberrypi.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+References: <20190124100419.26492-1-tfiga@chromium.org>
+ <20190124100419.26492-2-tfiga@chromium.org>
+ <1554461965.3060.5.camel@pengutronix.de>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8f05866a-1244-5e85-9b37-409526970779@xs4all.nl>
+Date:   Fri, 5 Apr 2019 13:21:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1554461965.3060.5.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfAgHsef+F0DFXR/v8CDzi/DLT0POqaPx+JOL5PdP0bfe1Jt1lwSt7Tdd31zzhh0eK+rLk3jXxow9/1hkOzT0FWTtgvLSSzkGhotvdCSb6RM5W28akiyr
+ WKfL4dRMgXU3scyJFy3OYSdlmgy/rZYZjuTDoVE1yh7vejct3ogajufyyl8wQUWMbgsFxsVLnlCSlkiIYf+LPu93Xu58X2V1uNS4niIDC6PasN/xnsKUfxWI
+ mB3QMp0jqsvKhCouPURDSrj8yOoMxdiQhq9qs+fGlvDW+qei/k7K/r9CQ/j2BwBRRQkOmRJVxFvSOSfIAHMvgWPIX5Kz5oHZmjGPc3GuxVJlGer3LYwjLleH
+ LXf/Pk1eTHjV9lqAcNp5JX4CSPH9xaEkCQyPUmYCCXGYobaByk5yftYNP/gXAsm+3Upf1EoO3+UcMlHE5YqsthAh4rNsmpdDL4pmsOFk31naE1M87jY/hX+z
+ aCVqBaEtJio6qSIpTmd442lkfmA5n96+ngUN7YKrz1YJOE8k/1jEMG9lQjWHVL+VH03Ylz6wPcIptHY9POXVxdGal1vEh4Qvf6f5aM2LxIEwK+F5J48hN+LL
+ lMtYLV+CRAAE5veG4rwED3TCTdZV/oXNcflF0AJ77wqzq7A5kyRmmCRChGd85OjJGcTci7D1A/KoSa2J5gIQyUlKFaGVP7y5bz3KeCJ49PrQMCHkQgI6m7DX
+ w6sidIH+i+OLvi76k5tnAMtBPheI2cOe/Mlkw4MHeMzqVpX+bUEzhNgRy6da45albtaKTXk+VcwLd12MV2AibX/1GLRq+di+0zYeqmF2CF9w9Tlzcvm1D46v
+ FiOo7yHpFCtj/hvmPltSefsTq2IOIdVadN2KEqkFM67oQXArmSOkErWvH3tK88qamMMBPji4tGXG0eOWKcc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 12:08:49 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
-> properties described by the ACPI HMAT is expected to have an application
-> specific consumer.
+On 4/5/19 12:59 PM, Philipp Zabel wrote:
+> On Thu, 2019-01-24 at 19:04 +0900, Tomasz Figa wrote:
+>> Due to complexity of the video decoding process, the V4L2 drivers of
+>> stateful decoder hardware require specific sequences of V4L2 API calls
+>> to be followed. These include capability enumeration, initialization,
+>> decoding, seek, pause, dynamic resolution change, drain and end of
+>> stream.
+>>
+>> Specifics of the above have been discussed during Media Workshops at
+>> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
+>> Conference Europe 2014 in Düsseldorf. The de facto Codec API that
+>> originated at those events was later implemented by the drivers we already
+>> have merged in mainline, such as s5p-mfc or coda.
+>>
+>> The only thing missing was the real specification included as a part of
+>> Linux Media documentation. Fix it now and document the decoder part of
+>> the Codec API.
+>>
+>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+>> ---
+>>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1076 +++++++++++++++++
+>>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    5 +
+>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
+>>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
+>>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   40 +-
+>>  Documentation/media/uapi/v4l/vidioc-g-fmt.rst |   14 +
+>>  6 files changed, 1135 insertions(+), 15 deletions(-)
+>>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>>
+>> diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentation/media/uapi/v4l/dev-decoder.rst
+>> new file mode 100644
+>> index 000000000000..b7db2352ad41
+>> --- /dev/null
+>> +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
+>> @@ -0,0 +1,1076 @@
+>> +.. -*- coding: utf-8; mode: rst -*-
+>> +
+>> +.. _decoder:
+>> +
+>> +*************************************************
+>> +Memory-to-memory Stateful Video Decoder Interface
+>> +*************************************************
+>> +
+> [...]
+>> +
+>> +Drain
+>> +=====
+>> +
+> [...]
+>> +
+>> +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_STOP`` call
+>> +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the decoder is
+>> +   stopped and it will accept, but not process, any newly queued ``OUTPUT``
+>> +   buffers until the client issues any of the following operations:
+>> +
+> [...]
+>> +
+>> +.. note::
+>> +
+>> +   Once the drain sequence is initiated, the client needs to drive it to
+>> +   completion, as described by the steps above, unless it aborts the process by
+>> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
+>> +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START`` or
+>> +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progress and they
+>> +   will fail with -EBUSY error code if attempted.
 > 
-> Those consumers may want 100% of the memory capacity to be reserved from
-> any usage by the kernel. By default, with this enabling, a platform
-> device is created to represent this differentiated resource.
+> Should the V4L2_DEC_CMD_STOP documentation in
+> Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst:
 > 
-> A follow on change arranges for device-dax to claim these devices by
-> default and provide an mmap interface for the target application.
-> However, if the administrator prefers that some or all of the special
-> purpose memory is made available to the core-mm the device-dax hotplug
-> facility can be used to online the memory with its own numa node.
+>   * - ``V4L2_DEC_CMD_STOP``
+>     - 1
+>     - Stop the decoder. When the decoder is already stopped, this
+>       command does nothing.
 > 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> be updated to mention that for mem2mem decoders this not only does
+> nothing, but returns an -EBUSY error return value?
 
-Hi Dan,
+Yes. Basically in this case the STOP is still in progress, so returning
+EBUSY makes sense and should be documented.
 
-Great to see you getting this discussion going so fast and in
-general the approach makes sense to me.
-
-I'm a little confused why HMAT has anything to do with this.
-SPM is defined either via the attribute in SRAT SPA entries,
-EF_MEMORY_SP or via the EFI memory map.
-
-Whether it is in HMAT or not isn't all that relevant.
-Back in the days of the reservation hint (so before yesterday :)
-it was relevant obviously but that's no longer true.
-
-So what am I missing?
-
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/acpi/hmat/Kconfig |    1 +
->  drivers/acpi/hmat/hmat.c  |   63 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/memregion.h |    3 ++
->  3 files changed, 67 insertions(+)
 > 
-> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/hmat/Kconfig
-> index 95a29964dbea..4fcf76e8aa1d 100644
-> --- a/drivers/acpi/hmat/Kconfig
-> +++ b/drivers/acpi/hmat/Kconfig
-> @@ -3,6 +3,7 @@ config ACPI_HMAT
->  	bool "ACPI Heterogeneous Memory Attribute Table Support"
->  	depends on ACPI_NUMA
->  	select HMEM_REPORTING
-> +	select MEMREGION
->  	help
->  	 If set, this option has the kernel parse and report the
->  	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> index e7ae44c8d359..482360004ea0 100644
-> --- a/drivers/acpi/hmat/hmat.c
-> +++ b/drivers/acpi/hmat/hmat.c
-> @@ -13,6 +13,9 @@
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/list.h>
-> +#include <linux/mm.h>
-> +#include <linux/memregion.h>
-> +#include <linux/platform_device.h>
->  #include <linux/list_sort.h>
->  #include <linux/node.h>
->  #include <linux/sysfs.h>
-> @@ -612,6 +615,65 @@ static __init void hmat_register_target_perf(struct memory_target *target)
->  	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
->  }
->  
-> +static __init void hmat_register_target_device(struct memory_target *target)
-> +{
-> +	struct memregion_info info;
-> +	struct resource res = {
-> +		.start = target->start,
-> +		.end = target->start + target->size - 1,
-> +		.flags = IORESOURCE_MEM,
-> +		.desc = IORES_DESC_APPLICATION_RESERVED,
-> +	};
-> +	struct platform_device *pdev;
-> +	int rc, id;
-> +
-> +	if (region_intersects(target->start, target->size, IORESOURCE_MEM,
-> +				IORES_DESC_APPLICATION_RESERVED)
-> +			!= REGION_INTERSECTS)
-> +		return;
-> +
-> +	id = memregion_alloc();
-> +	if (id < 0) {
-> +		pr_err("acpi/hmat: memregion allocation failure for %pr\n", &res);
-> +		return;
-> +	}
-> +
-> +	pdev = platform_device_alloc("hmem", id);
-> +	if (!pdev) {
-> +		pr_err("acpi/hmat: hmem device allocation failure for %pr\n", &res);
-> +		goto out_pdev;
-> +	}
-> +
-> +	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->processor_pxm);
-> +	info = (struct memregion_info) {
-> +		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
-> +	};
-> +	rc = platform_device_add_data(pdev, &info, sizeof(info));
-> +	if (rc < 0) {
-> +		pr_err("acpi/hmat: hmem memregion_info allocation failure for %pr\n", &res);
-> +		goto out_pdev;
-> +	}
-> +
-> +	rc = platform_device_add_resources(pdev, &res, 1);
-> +	if (rc < 0) {
-> +		pr_err("acpi/hmat: hmem resource allocation failure for %pr\n", &res);
-> +		goto out_resource;
-> +	}
-> +
-> +	rc = platform_device_add(pdev);
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev, "acpi/hmat: device add failed for %pr\n", &res);
-> +		goto out_resource;
-> +	}
-> +
-> +	return;
-> +
-> +out_resource:
-> +	put_device(&pdev->dev);
-> +out_pdev:
-> +	memregion_free(id);
-> +}
-> +
->  static __init void hmat_register_targets(void)
->  {
->  	struct memory_target *target;
-> @@ -619,6 +681,7 @@ static __init void hmat_register_targets(void)
->  	list_for_each_entry(target, &targets, node) {
->  		hmat_register_target_initiators(target);
->  		hmat_register_target_perf(target);
-> +		hmat_register_target_device(target);
->  	}
->  }
->  
-> diff --git a/include/linux/memregion.h b/include/linux/memregion.h
-> index 99fa47793b49..5de2ac7fcf5e 100644
-> --- a/include/linux/memregion.h
-> +++ b/include/linux/memregion.h
-> @@ -1,6 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #ifndef _MEMREGION_H_
->  #define _MEMREGION_H_
-> +struct memregion_info {
-> +	int target_node;
-> +};
->  int memregion_alloc(void);
->  void memregion_free(int id);
->  #endif /* _MEMREGION_H_ */
-> 
+> Also, if V4L2_DEC_CMD_STOP_IMMEDIATELY is set, should the decoder drop
+> all pending buffers and signal EOS immediately? Should this be mentioned
+> here?
 
+Hmm, the decoder spec says that flags should be set to 0, and current codec
+drivers explicitly disallow a non-0 flags value.
+
+I'm not sure if there is a practical use-case for V4L2_DEC_CMD_STOP_IMMEDIATELY
+in the context of a decoder. If you want to stop immediately, then just call
+streamoff on the OUTPUT queue.
+
+> 
+>> +   Although mandatory, the availability of decoder commands may be queried
+>> +   using :c:func:`VIDIOC_TRY_DECODER_CMD`.
+> 
+> Do the TRY_DECODER_CMD also return -EBUSY during the draining phase?
+
+No.
+
+Regards,
+
+	Hans
+
+> 
+> regards
+> Philipp
+> 
 
