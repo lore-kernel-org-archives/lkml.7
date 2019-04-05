@@ -2,112 +2,118 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAF8C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5D6C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088D82146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB112146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 20:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5XdNNIY5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vvcZJcfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfDEUxY (ORCPT
+        id S1726532AbfDEUxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 16:53:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41658 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfDEUxY (ORCPT
+        Fri, 5 Apr 2019 16:53:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40486 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfDEUxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 16:53:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x35KiHo7076971;
-        Fri, 5 Apr 2019 20:53:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=/wiGaL8KBO5La3rMfmp4c8G/b2nDVKkYa+pBxyh9Eb0=;
- b=5XdNNIY58aO95dxCQiR+tqMTIk+ySOS4jxOeyP9Ue+cwq3khfr51KM0aAO09AbLYsl7V
- ApW2UA5mIvl4y78DnGcYa6e7Hoya2na01hVXuqIVh5Ef1eUyMFUWx0Rt4HYwDqZCf/QR
- 6ZnO4XJivOi82cKuSFiNUlR2OWELdlzGfax0bPsSUcT/xTjor/ysLugZLNLG2CXXR4YK
- ipAgKa0blUuTETGGErTEn+/EJa+4SClFzPdm3jKU2YXvfV9y5JqiZetA+D5PbNQ06Tig
- L1rG0PYYz3Q9zF66yMMo0Ao7OqiusJffUvYAXRxCfltpYSxUXZWjt1odo+VasjGUtTmZ TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2rj13qpwph-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 20:53:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x35KqIOV023190;
-        Fri, 5 Apr 2019 20:53:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2rp357tv2b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 20:53:16 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x35KrFSg004231;
-        Fri, 5 Apr 2019 20:53:15 GMT
-Received: from kadam (/41.202.241.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Apr 2019 13:53:14 -0700
-Date:   Fri, 5 Apr 2019 23:53:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
-Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: greybus: Fix spinlock_t definition without
- comment
-Message-ID: <20190405205304.GS32590@kadam>
-References: <20190405200046.20600-1-madhumithabiw@gmail.com>
+        Fri, 5 Apr 2019 16:53:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qPpY7SdDW7r3x2SvRLZa6oTeC61f0Lf4xqFd4AYQ6GA=; b=vvcZJcfIagkaJrYDm0M2vEba0y
+        yzTCC/6VdTTdfCEH5jY6T3gV0uQ736tui34CVRjnR+Wzux+ak7Qt/IfDIWB3J/9PAZBT06YB4nQ/w
+        d0g/OWYDQxu4uUWEDA4vo8X1UWGTxjq0zVg9k/xZQV92drD8TTtKnNXJXGxHAMt86rqOW0nhaI+VL
+        U8mW8V1eNRfQM/dFmosMpfTmPXJNgpX4n2zs7Rx1/25u3sfTPoxR3HwYI+D5xU4AlDZcxVTTDDUAk
+        Yj/zQ9NzAsbXmSCcVapeGg7Ptoldyk16lNdPUCxAqbu+zP0Oik33p76J38I9gZpdSESVWl/N4OfcT
+        kNOUF2hg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hCVq8-0007V7-Kr; Fri, 05 Apr 2019 20:53:32 +0000
+Subject: Re: linux-next: Tree for Apr 3 (objtool)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190403192407.13a99513@canb.auug.org.au>
+ <d37e0909-cacc-7c6c-4376-33891fa69f53@infradead.org>
+ <20190403205305.tqqwttjytunzgtub@treble>
+ <6a2455b9-5c02-99dc-e41c-e6b7d1c3118d@infradead.org>
+ <20190404171618.6u36y5zu3euvd4zp@treble>
+ <9e4eb742-f306-7aea-a3d7-9abbb244bb55@infradead.org>
+Message-ID: <15ed85f4-bf2e-da91-71c1-46875d1c6e3f@infradead.org>
+Date:   Fri, 5 Apr 2019 13:53:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405200046.20600-1-madhumithabiw@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9218 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=909
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904050138
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9218 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=942 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904050138
+In-Reply-To: <9e4eb742-f306-7aea-a3d7-9abbb244bb55@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 03:00:46PM -0500, Madhumitha Prabakaran wrote:
-> Fix spinlock_t definition without comment.
+On 4/4/19 1:51 PM, Randy Dunlap wrote:
+> On 4/4/19 10:16 AM, Josh Poimboeuf wrote:
+>> On Wed, Apr 03, 2019 at 03:29:17PM -0700, Randy Dunlap wrote:
+>>> On 4/3/19 1:53 PM, Josh Poimboeuf wrote:
+>>>> On Wed, Apr 03, 2019 at 08:02:43AM -0700, Randy Dunlap wrote:
+>>>>> On 4/3/19 1:24 AM, Stephen Rothwell wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> Changes since 20190402:
+>>>>>>
+>>>>>
+>>>>> on x86_64:
+>>>>>
+>>>>> arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x909: unreachable instruction
+>>>>
+>>>> Your .o file looks odd.  I can't recreate the issue when I build the
+>>>> same object.
+>>>
+>>> This (randconfig) build has tracing enabled?  Could that have anything to do
+>>> with it?
+>>
+>> No, I can't see any reasonable explanation for it other than a buggy
+>> toolchain.
+>>
+>>> The randconfig file is attached.
+>>
+>> I still can't recreate with your randconfig.
+>>
+>>>> Did the issue only just now show up?  Can you bisect it?  What version
+>>>> of binutils are you using?
+>>>
+>>>> ld -v
+>>> GNU ld (GNU Binutils; openSUSE Leap 42.3) 2.31.1.20180828-19
+>>>
+>>>
+>>> My build logs show it first occurred (in my randconfig builds) in
+>>> linux-next-20190204.
+>>
+>> It seems really odd.  Can you do a bisect?
+>>
 > 
-> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> ---
->  drivers/staging/greybus/connection.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Sure, I'll give it a try.
 > 
-> diff --git a/drivers/staging/greybus/connection.h b/drivers/staging/greybus/connection.h
-> index 5ca3befc0636..0aedd246e94a 100644
-> --- a/drivers/staging/greybus/connection.h
-> +++ b/drivers/staging/greybus/connection.h
-> @@ -47,7 +47,7 @@ struct gb_connection {
->  	unsigned long			flags;
->  
->  	struct mutex			mutex;
-> -	spinlock_t			lock;
-> +	spinlock_t			lock; /* Protect structure fields */
->  	enum gb_connection_state	state;
 
-What does the mutex do then?  Why can't we just use the spinlock for
-everything?
+That didn't work very well.  First I narrowed the problem down to between
+4.16 (good) and 4.17-rc1 (bad), then I did the git bisects, and ended up
+pointing to a SCSI driver patch.
 
-I did glance at the code and it wasn't immediately obvious to me.
+I'm inclined to suspect that it's a padding problem, i.e. toolchain problem
+like you suggested.
 
-regards,
-dan carpenter
-
+-- 
+~Randy
