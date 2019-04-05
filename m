@@ -2,86 +2,132 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC9C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF18C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE92A2184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590F92184B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:43:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qWxjCJ2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbfDEPnF (ORCPT
+        id S1731430AbfDEPnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:43:05 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49189 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfDEPnF (ORCPT
+        Fri, 5 Apr 2019 11:43:16 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46584 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEPnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:43:05 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hCQzb-000729-Py; Fri, 05 Apr 2019 17:42:59 +0200
-Date:   Fri, 5 Apr 2019 17:42:59 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-Message-ID: <20190405154259.3g3fv72miizm64hc@linutronix.de>
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190404105233.GD3567@e103592.cambridge.arm.com>
- <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
- <20190405143942.xtpq5443qbc4gziy@linutronix.de>
- <dabf5b36-d22e-e8a3-c01f-6b0f5b3be710@arm.com>
+        Fri, 5 Apr 2019 11:43:15 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x188so5191505oia.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sj5ur8Cq/BuzaN2ifegKjnKHNZadsvVGhfJ737scZtM=;
+        b=qWxjCJ2C4YTGaRB9VBshlOczs86lXXi96/4MUM4KFNW57aHk+Y9NUay569AN2AVEAO
+         Ew58BrpoYq3qi38QUMzCX4V3c6JMBwOQsD8Q/e6wvqNwRgeBKSLn5/AGWqh7sXQAyVFk
+         MhYEexjZPJHL4F9KNMa+iE7I2xdyjpQ8lLA/rQjxnIZtVIhmnI3Tj/YRPtO2jUVyHBYV
+         O8ZeJpoyAuDCVbZmR1CDJoKl4dtDEI2cMii1Vo/Jrz19wwDwZhGpZ7O4iApIt+QJwvDQ
+         R0lacbsDF32fVMi22CzeDw38/8YGXp0LzKsO5dOflq27gqrNcwTw0QvEONmv7tyuEvaj
+         X4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sj5ur8Cq/BuzaN2ifegKjnKHNZadsvVGhfJ737scZtM=;
+        b=JB4tWbTrZxXwZE11DJO/KXt+Q97TyN4O/cqqUliV7RgQcUxtEPBQEzozb6Qzx+yIPJ
+         ehZNBC+9JllkWpStaD0YeBjXeLWD3wuSb3qQY78X4ZVW7sOeN/+i9V/plDZqPRKCZFi/
+         +QEP3M6n2uHJUCmO5sEuK/biUre+yqepPkHhEje9mmkenHDAz525sRkee+FmbiyNhXFm
+         mr8rhBgCRntKbkY21tvPvKzgHJu2Zwv86GgkzDEf+LTawaHKMNnB6Xxxh5JeXPc0mKmU
+         oj56SJJgj0BAa9g6BRBhk0zRtRqHzE3k/u0bvolgXS8VAjQ8BjUfT4AuUGj+bYCFq4EB
+         saCQ==
+X-Gm-Message-State: APjAAAXvxI2BduUHos4tm4MQBCAkN/9xnnF7qDVF6QDte4azYNY8+yNZ
+        J2OvTPw8TMDfSKTfwwaZg2mfIHP4dwnihlvTAZ2fMw==
+X-Google-Smtp-Source: APXvYqwQIzEcgHJH2g95bHHSuUp6aFniNQQWMvFvEkdIRFFMM2bkcnOv77ZAMvXPrUVmGRcaUKHxXOM3RDJblZB6Pkg=
+X-Received: by 2002:aca:aa57:: with SMTP id t84mr7929156oie.149.1554478994621;
+ Fri, 05 Apr 2019 08:43:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dabf5b36-d22e-e8a3-c01f-6b0f5b3be710@arm.com>
-User-Agent: NeoMutt/20180716
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190405121857.0000718a@huawei.com>
+In-Reply-To: <20190405121857.0000718a@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 5 Apr 2019 08:43:03 -0700
+Message-ID: <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a device
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-05 16:17:50 [+0100], Julien Grall wrote:
-> Hi,
-Hi,
+On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
+<jonathan.cameron@huawei.com> wrote:
+>
+> On Thu, 4 Apr 2019 12:08:49 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
+> > properties described by the ACPI HMAT is expected to have an application
+> > specific consumer.
+> >
+> > Those consumers may want 100% of the memory capacity to be reserved from
+> > any usage by the kernel. By default, with this enabling, a platform
+> > device is created to represent this differentiated resource.
+> >
+> > A follow on change arranges for device-dax to claim these devices by
+> > default and provide an mmap interface for the target application.
+> > However, if the administrator prefers that some or all of the special
+> > purpose memory is made available to the core-mm the device-dax hotplug
+> > facility can be used to online the memory with its own numa node.
+> >
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Len Brown <lenb@kernel.org>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Hi Dan,
+>
+> Great to see you getting this discussion going so fast and in
+> general the approach makes sense to me.
+>
+> I'm a little confused why HMAT has anything to do with this.
+> SPM is defined either via the attribute in SRAT SPA entries,
+> EF_MEMORY_SP or via the EFI memory map.
+>
+> Whether it is in HMAT or not isn't all that relevant.
+> Back in the days of the reservation hint (so before yesterday :)
+> it was relevant obviously but that's no longer true.
+>
+> So what am I missing?
 
-> > A per-CPU lock? It has to be a raw_spinlock_t because a normal
-> > spin_lock() / local_lock() would allow scheduling and might be taken as
-> > part of the context switch or soon after.
-> raw_spinlock_t would not work here without disabling preemption. Otherwise
-> you may end up to recurse on the lock and therefore deadlock. But then it
-> raise the question of the usefulness of the lock here.
-> 
-> However, I don't really understand why allowing the scheduling would be a
-> problem here. Is it a concern because we will waste cycle trying to
-> restore/save a context that will be scratched as soon as we release the
-> lock?
+It's a good question, and an assumption I should have explicitly
+declared in the changelog. The problem with EFI_MEMORY_SP is the same
+as the problem with the EfiPersistentMemory type, it isn't precise
+enough on its own for the kernel to delineate 'type' or
+device/replaceable-unit boundaries. For example, I expect one
+EFI_MEMORY_SP range of a specific type may be contiguous with another
+range of a different type. Similar to the NFIT there is no requirement
+in the specification that platform firmware inject multiple range
+entries. Instead that precision is left to the SRAT + HMAT, or the
+NFIT in the case of PMEM.
 
-If you hold the lock within the kernel thread and every kernel thread
-acquires it before doing any SIMD operations then you are good. It could
-be a sleeping lock. What happens if you hold the lock, are scheduled out
-and a user task is about to be scheduled? How do you force the kernel
-thread out / give up the FPU registers?
-
-That preempt_disable() + local_bh_disable() might not be the pretties
-thing but how bad is it actually?
-Latency wise you can't schedule(). From RT point of view you need to
-enable preemption while going from page to page because of the possible
-kmap() or kmalloc() (on baldy aligned src/dst) with the crypto's
-page-walk code.
-If that is not good enough latency wise you could do
-kernel_fpu_resched() after a few iterations. Currently I'm trying to get
-kernel_fpu_begin()/end() cheap on x86 so it doesn't always store/restore
-the FPU context. Then kernel_fpu_resched() shouldn't be that bad.
-
-> Cheers,
-
-Sebastian
+Conversely, and thinking through this a bit more, if a memory range is
+"special", but the platform fails to enumerate it in HMAT I think
+Linux should scream loudly that the firmware is broken and leave the
+range alone. The "scream loudly" piece is missing in the current set,
+but the "leave the range alone" functionality is included.
