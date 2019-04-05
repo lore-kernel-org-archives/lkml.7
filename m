@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFDC20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E019320700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aRRAU1g/"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CbSBObez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDEXpc (ORCPT
+        id S1726672AbfDEXpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:45:32 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53110 "EHLO vps.xff.cz"
+        Fri, 5 Apr 2019 19:45:34 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53236 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfDEXp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:45:26 -0400
+        id S1726446AbfDEXpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:45:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554507923; bh=9sBa/x4rOB2AVivmG3/l1tDMopdUGPQTQlyQMH/xsqk=;
+        t=1554507924; bh=PAJuJoAE0FDcTBQGXPNd5/MCZ/q2/gHxAF4V8V3I9ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRRAU1g/69ghks7wcLox0q8Evc4sixu9ydhof1nYcgzsUBg7C1kh0Dg4rU8SFM3bQ
-         pPwWAQGqgqtTcJMxfaKGZH1ljvHUJ+0uvuGn+AlljbFse0TSxU8qBcu0/Xk7ML5RMa
-         TdvnkgDsrlxhkWRG0TS/XtG+xof3we+Skta2Tt1k=
+        b=CbSBObezduiQZ/XIzoAZ1UuxDB8PYzyXBrXEFQof9WNFSz188LQbIcA24+iGIUaRD
+         wzyN/c4mUiT77uHsFe+PPh8zrCdShbQtb6LqLMlLoZy/Tf8MRjZodHAIcpSb7tMfr/
+         NmCsAx0Ev8nvOvcCkdj3e2Cp2VlFaI5k+ukQBs9s=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
+Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -54,9 +54,9 @@ Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH 06/12] net: stmmac: sun8i: force select external PHY when no internal one
-Date:   Sat,  6 Apr 2019 01:45:08 +0200
-Message-Id: <20190405234514.6183-7-megous@megous.com>
+Subject: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date:   Sat,  6 Apr 2019 01:45:09 +0200
+Message-Id: <20190405234514.6183-8-megous@megous.com>
 In-Reply-To: <20190405234514.6183-1-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 MIME-Version: 1.0
@@ -66,40 +66,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Ondrej Jirman <megous@megous.com>
 
-The PHY selection bit also exists on SoCs without an internal PHY; if
-it's set to 1 (internal PHY) then the MAC will not make use of any PHY.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E.
+According to the phy datasheet, both regulators need to be enabled
+at the same time, but we can only specify a single phy-supply in
+the DT.
 
-This problem appears when adapting for H6, which has no real internal
-PHY (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200
-chip, via RMII interface at GPIO bank A), but the PHY selection bit is
-set.
+This can be achieved by making one regulator depedning on the
+other via vin-supply. While it's not a technically correct
+description of the hardware, it achieves the purpose.
 
-Force the PHY selection bit to 0 when no external PHY to select this
-problem.
+All values of RX/TX delay were tested exhaustively and a middle
+one of the working values was chosen.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index e3e3dc44b33b..bd340e77b2ea 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -908,6 +908,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		 * address. No need to mask it again.
- 		 */
- 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-+	} else {
-+		/* For SoCs without internal PHY the PHY selection bit should be
-+		 * set to 0 (external PHY).
-+		 */
-+		reg &= ~(H3_EPHY_SELECT);
- 	}
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 644946749088..5270142527f5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
- 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -64,6 +65,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
++
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence
++	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
++	 * power rails at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++                compatible = "regulator-fixed";
++                regulator-name = "gmac-2v5";
++                regulator-min-microvolt = <2500000>;
++                regulator-max-microvolt = <2500000>;
++                startup-delay-us = <100000>;
++                enable-active-high;
++                gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++
++                /* The real parent of gmac-2v5 is reg_vcc5v, but we need
++                 * to enable two regulators to power the phy. This is one
++                 * way to achieve that.
++                 */
++                vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
++        };
+ };
+ 
+ &cpu0 {
+@@ -82,6 +104,17 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	ddc-supply = <&reg_ddc>;
+ 	status = "okay";
+@@ -93,6 +126,17 @@
+ 	};
+ };
+ 
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
 -- 
 2.21.0
 
