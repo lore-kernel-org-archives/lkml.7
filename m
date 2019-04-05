@@ -2,126 +2,155 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9123C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AE8C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23A220663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423D021726
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbfDEOnZ (ORCPT
+        id S1731323AbfDEOoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:43:25 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50732 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfDEOnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:43:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CA1A16A3;
-        Fri,  5 Apr 2019 07:43:24 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54D313F68F;
-        Fri,  5 Apr 2019 07:43:22 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 15:43:10 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        marc.zyngier@arm.com, suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v6 09/10] arm64: add sysfs vulnerability show for
- speculative store bypass
-Message-ID: <20190405144310.GA7662@fuggles.cambridge.arm.com>
-References: <20190321230557.45107-1-jeremy.linton@arm.com>
- <20190321230557.45107-10-jeremy.linton@arm.com>
- <20190403165005.GA17500@fuggles.cambridge.arm.com>
- <20190405111022.6ef0b7bb@donnerap.cambridge.arm.com>
+        Fri, 5 Apr 2019 10:44:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:13287 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfDEOoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:44:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AFEB43005148;
+        Fri,  5 Apr 2019 14:44:05 +0000 (UTC)
+Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DDE991001E81;
+        Fri,  5 Apr 2019 14:43:59 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 09:43:56 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
+        Jon Masters <jcm@redhat.com>, Jiri Kosina <jikos@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC 5/5] arm64/speculation: Add support for
+ 'cpu_spec_mitigations=' cmdline options
+Message-ID: <20190405144356.zdi7fwoanz72xduh@treble>
+References: <cover.1554396090.git.jpoimboe@redhat.com>
+ <5f70df57b19bbccc4a0d5d76134b4681c9a50b0b.1554396090.git.jpoimboe@redhat.com>
+ <be6ba8fe-b261-668a-05b9-7fa937ae650a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190405111022.6ef0b7bb@donnerap.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <be6ba8fe-b261-668a-05b9-7fa937ae650a@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 05 Apr 2019 14:44:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 11:10:22AM +0100, Andre Przywara wrote:
-> On Wed, 3 Apr 2019 17:50:05 +0100
-> Will Deacon <will.deacon@arm.com> wrote:
-> 
-> > Hi Jeremy,
+On Fri, Apr 05, 2019 at 03:39:58PM +0100, Steven Price wrote:
+> On 04/04/2019 17:44, Josh Poimboeuf wrote:
+> > Configure arm64 runtime CPU speculation bug mitigations in accordance
+> > with the 'cpu_spec_mitigations=' cmdline options.  This affects
+> > Meltdown and Speculative Store Bypass.
 > > 
-> > On Thu, Mar 21, 2019 at 06:05:56PM -0500, Jeremy Linton wrote:
-> > > Return status based on ssbd_state and the arm64 SSBS feature. If
-> > > the mitigation is disabled, or the firmware isn't responding then
-> > > return the expected machine state based on a new blacklist of known
-> > > vulnerable cores.
-> > > 
-> > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> > > Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > > ---
-> > >  arch/arm64/kernel/cpu_errata.c | 44 ++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 44 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> > > index 6958dcdabf7d..172ffbabd597 100644
-> > > --- a/arch/arm64/kernel/cpu_errata.c
-> > > +++ b/arch/arm64/kernel/cpu_errata.c
-> > > @@ -278,6 +278,7 @@ static int detect_harden_bp_fw(void)
-> > >  DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
-> > >  
-> > >  int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
-> > > +static bool __ssb_safe = true;
-> > >  
-> > >  static const struct ssbd_options {
-> > >  	const char	*str;
-> > > @@ -386,6 +387,9 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
-> > >  
-> > >  	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-> > >  
-> > > +	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
-> > > +		__ssb_safe = false;
-> > > +  
+> > The default behavior is unchanged.
 > > 
-> > Does this mean that we assume that CPUs not present in our table are not
-> > affected by speculative store bypass?
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt | 2 ++
+> >  arch/arm64/kernel/cpu_errata.c                  | 4 ++++
+> >  arch/arm64/kernel/cpufeature.c                  | 6 ++++++
+> >  3 files changed, 12 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index e838af96daa4..0b54385ee7a8 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -2553,11 +2553,13 @@
+> >  			off
+> >  				Disable all speculative CPU mitigations.
+> >  				Equivalent to: nopti [x86, powerpc]
+> > +					       kpti=0 [arm64]
+> >  					       nospectre_v1 [powerpc]
+> >  					       nospectre_v2 [x86, powerpc, s390]
+> >  					       spectre_v2_user=off [x86]
+> >  					       nobp=0 [s390]
+> >  					       spec_store_bypass_disable=off [x86, powerpc]
+> > +					       ssbd=force-off [arm64]
+> >  					       l1tf=off [x86]
+> >  
+> >  			auto (default)
+> > diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> > index 9950bb0cbd52..db8d27e3fb1c 100644
+> > --- a/arch/arm64/kernel/cpu_errata.c
+> > +++ b/arch/arm64/kernel/cpu_errata.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/arm-smccc.h>
+> >  #include <linux/psci.h>
+> >  #include <linux/types.h>
+> > +#include <linux/cpu.h>
+> >  #include <asm/cpu.h>
+> >  #include <asm/cputype.h>
+> >  #include <asm/cpufeature.h>
+> > @@ -385,6 +386,9 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
+> >  		return false;
+> >  	}
+> >  
+> > +	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
+> > +		ssbd_state = ARM64_SSBD_FORCE_DISABLE;
+> > +
+> >  	switch (psci_ops.conduit) {
+> >  	case PSCI_CONDUIT_HVC:
+> >  		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index 4061de10cea6..4512b582d50f 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/stop_machine.h>
+> >  #include <linux/types.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/cpu.h>
+> >  #include <asm/cpu.h>
+> >  #include <asm/cpufeature.h>
+> >  #include <asm/cpu_ops.h>
+> > @@ -978,6 +979,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+> >  		__kpti_forced = -1;
+> >  	}
+> >  
+> > +	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF) {
+> > +		str = "cpu_spec_mitigations=off";
 > 
-> No, not affected are only those where we either have SSBS or the firmware
-> explicitly returns SMCCC_RET_NOT_REQUIRED. This is governed by ssbd_state.
-> So this doesn't affect correctness.
-
-I don't think that's true. My TX2, for example, says "Not affected" for
-spec_store_bypass, but we don't actually know whether it's affected or
-not and so it should report "Vulnerable" instead, like we do for spectre_v2
-on the same machine.
-
-> __ssb_safe is an additional state just used for the sysfs output. But
-> indeed it looks like this is wrong if the CPU is both not listed and the
-> system doesn't provide the firmware interface: AFAICS we would report "Not
-> affected" in this case.
-
-Yes, that's what I was getting at.
-
-> > I don't think that's a good
-> > assumption, because we don't necessary have knowledge about partner or
-> > future CPU implementations, so I think any CPU lists really have to be
-> > whitelists like they are for the other vulnerabilities.
+> Might also be worth changing the initialisation of str, currently it is:
 > 
-> I think the idea was to cover all those "legacy" systems which have
-> older cores (no SSBS), but didn't get an firmware update. So your old Seattle
-> would truthfully report "Vulnerable", but any random A53 device would
-> report "Not affected", even with ancient firmware.
+> > 	char const *str = "command line option";
+> 
+> But now we have two command line options, perhaps "kpti command line
+> option".
 
-The only manageable way to deal with this is to use a whitelist, just like
-we do for the other vulnerabilities. We shouldn't have to update it for
-long because newer cores should have SSBS.
+Yes, agreed, thanks.
 
-Will
+-- 
+Josh
