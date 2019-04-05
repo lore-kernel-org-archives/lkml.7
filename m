@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EECC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD84C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E3121852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADF021852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbfDEOAT (ORCPT
+        id S1731423AbfDEOA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:00:19 -0400
-Received: from foss.arm.com ([217.140.101.70]:49306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731383AbfDEOAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:18 -0400
+        Fri, 5 Apr 2019 10:00:26 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49352 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731383AbfDEOAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:22 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0809019BF;
-        Fri,  5 Apr 2019 07:00:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27FDE1AED;
+        Fri,  5 Apr 2019 07:00:22 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BBAE3F68F;
-        Fri,  5 Apr 2019 07:00:13 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48DB73F68F;
+        Fri,  5 Apr 2019 07:00:18 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 08/21] nds32/io: Remove useless definition of mmiowb()
-Date:   Fri,  5 Apr 2019 14:59:23 +0100
-Message-Id: <20190405135936.7266-9-will.deacon@arm.com>
+Subject: [PATCH v2 09/21] m68k/io: Remove useless definition of mmiowb()
+Date:   Fri,  5 Apr 2019 14:59:24 +0100
+Message-Id: <20190405135936.7266-10-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -59,27 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mmiowb() only makes sense for SMP platforms, so we can remove it
-entirely for nds32.
+m68k includes asm-generic/io.h, which provides a dummy definition of
+mmiowb() if one isn't already provided by the architecture.
 
+Remove the useless definition.
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/nds32/include/asm/io.h | 2 --
+ arch/m68k/include/asm/io_mm.h | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
-index 71cd226d6863..5ef8ae5ba833 100644
---- a/arch/nds32/include/asm/io.h
-+++ b/arch/nds32/include/asm/io.h
-@@ -55,8 +55,6 @@ static inline u32 __raw_readl(const volatile void __iomem *addr)
- #define __iormb()               rmb()
- #define __iowmb()               wmb()
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index 782b78f8a048..6c03ca5bc436 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -377,8 +377,6 @@ static inline void isa_delay(void)
+ #define writesw(port, buf, nr)    raw_outsw((port), (u16 *)(buf), (nr))
+ #define writesl(port, buf, nr)    raw_outsl((port), (u32 *)(buf), (nr))
  
--#define mmiowb()        __asm__ __volatile__ ("msync all" : : : "memory");
+-#define mmiowb()
 -
- /*
-  * {read,write}{b,w,l,q}_relaxed() are like the regular version, but
-  * are not guaranteed to provide ordering against spinlocks or memory
+ #ifndef CONFIG_SUN3
+ #define IO_SPACE_LIMIT 0xffff
+ #else
 -- 
 2.11.0
 
