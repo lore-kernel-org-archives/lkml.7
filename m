@@ -2,139 +2,182 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88136C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7572CC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5267E20651
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNCqCz97"
+	by mail.kernel.org (Postfix) with ESMTP id 4437120651
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 21:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfDEVJj (ORCPT
+        id S1726419AbfDEVLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 17:09:39 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34076 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbfDEVJj (ORCPT
+        Fri, 5 Apr 2019 17:11:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40604 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726124AbfDEVLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 17:09:39 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k2so9119188qtm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 14:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hlvqjJ71IdQgqvjxcDUbhRTR92CUVqGx773ACTAuimg=;
-        b=qNCqCz974UPRnHm/JuY8FldQaLD22YPBWXEl/+qmgKFWIVIMHqvqlYMdfOgy3ByoCi
-         QMlVi6N0GFgOk7r/SHziPDtWm+LefjaFPOvPnMOR0PLeWJCOJEcpCd4sEzcNMpKPxge5
-         WlZJ+L0eppfi8GBb9B5MVOTL0pBC7Dv7Xp6DQ0gltKbTKACGgVmLN7tx+StP5NM5u7jL
-         V/rfuHqTpbG1kIltHCA0s7L72VxAhxK1Q4BLqvKMUJukMZT8ahepq1lcZ5b2grKplftG
-         dXUnQ8LDjmjzQM1Gd3TdBv9ISp+tKoJTDUoGKOBMD+aVdCWfQ6hOf9t2tnYDQklf3M9t
-         3mvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hlvqjJ71IdQgqvjxcDUbhRTR92CUVqGx773ACTAuimg=;
-        b=FNC0TWpxFKFMInybUwgSZVbfV0FBvgK1J43WiVOwIUf/c+pR7EzTYSEJ9VznPqX4oq
-         8a1VqgPh6yfvUU1kg3zOO1HgFOfrpzVMFTmzE29DNidvTHdYJZM5F/208F5ol2XgV4OF
-         mMY3efxe8ocRMXZsVYIH4bsycjyVcy5mfkWskYNbOvzcFsj1uPPs+P8cwwxHFmfl0LDV
-         D43YF9zUxoII4JXuWaQnjOH6yP1Z2gmLBrnOXeTTJrfOY9RunwguofmRlDHgCWl7rkSK
-         47bCHL1lhriQkG6zageHBkIg4a5jdsPQnkyjAthMQXJVelliGGKBArsuAOGSxKWBpCsd
-         Et9g==
-X-Gm-Message-State: APjAAAUys4A2RIs02oJxNJdJqPdVFbEtuz3k9tb90o61nSRNb+PiIEME
-        g2WwWYK4qCKKaWkUo1b/dLP6WSKQV4uNbTwFRuw=
-X-Google-Smtp-Source: APXvYqztdxJMLgKPgd031T52CCdg+Vebyh3eegUQ7TVuRLI7ke05IGyU6u9wl3oqCcQH7vpxMvUvZb1dQRJ4EzM90+I=
-X-Received: by 2002:a0c:b523:: with SMTP id d35mr12441418qve.104.1554498578206;
- Fri, 05 Apr 2019 14:09:38 -0700 (PDT)
+        Fri, 5 Apr 2019 17:11:46 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35L8m1E083468
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 17:11:45 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rpddd3as0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 17:11:44 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <cclaudio@linux.ibm.com>;
+        Fri, 5 Apr 2019 22:11:44 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 5 Apr 2019 22:11:40 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x35LBd7q55312562
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Apr 2019 21:11:39 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3309A7805E;
+        Fri,  5 Apr 2019 21:11:39 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 270367805C;
+        Fri,  5 Apr 2019 21:11:36 +0000 (GMT)
+Received: from [9.85.129.145] (unknown [9.85.129.145])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Apr 2019 21:11:35 +0000 (GMT)
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+ <CACdnJuumhkqTb4+1=QBiLmbW4xd3wW=MZu6Tj_KdaoTMhCN+Tg@mail.gmail.com>
+ <4ce5e057-0702-b0d5-7bb2-cea5b22e2efa@linux.ibm.com>
+ <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
+ <2208f156-d441-3082-2f4c-8030c84ef788@linux.ibm.com>
+ <CACdnJuu8OqMrSs0esOmf=ro9n00aYEQ-nikAh6v6sk+YAQw4cQ@mail.gmail.com>
+From:   Claudio Carvalho <cclaudio@linux.ibm.com>
+Date:   Fri, 5 Apr 2019 18:11:34 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190403135403.9472-1-enric.balletbo@collabora.com> <CABXOdTcaHCPJ18kEJopV6BsoeVvfX66s1v_kpdatgzaqBus7Gw@mail.gmail.com>
-In-Reply-To: <CABXOdTcaHCPJ18kEJopV6BsoeVvfX66s1v_kpdatgzaqBus7Gw@mail.gmail.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Fri, 5 Apr 2019 23:09:27 +0200
-Message-ID: <CAFqH_51DiDut1ROeWtTddoK4PdbKFdbuMOGt8LaeyZXFZ2-w0w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/chrome: Add CrOS USB PD logging driver
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>, jflat@chromium.org,
-        kernel@collabora.com, Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        Dmitry Torokhov <dtor@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACdnJuu8OqMrSs0esOmf=ro9n00aYEQ-nikAh6v6sk+YAQw4cQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19040521-0016-0000-0000-0000099D0EF5
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010875; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184848; UDB=6.00620420; IPR=6.00965590;
+ MB=3.00026311; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-05 21:11:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040521-0017-0000-0000-000042B5C1F8
+Message-Id: <d79f47f8-9006-3a47-2bdc-58012cef5c7e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904050140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
 
-Missatge de Guenter Roeck <groeck@google.com> del dia dv., 5 d=E2=80=99abr.
-2019 a les 21:59:
+On 4/3/19 7:27 PM, Matthew Garrett wrote:
+> On Tue, Apr 2, 2019 at 4:31 PM Claudio Carvalho <cclaudio@linux.ibm.com> wrote:
+>>
+>> On 4/2/19 6:51 PM, Matthew Garrett wrote:
+>>> So you implement the full PK/KEK/db/dbx/dbt infrastructure, and
+>>> updates are signed in the same way?
+>> For the first version, our firmware will implement a simplistic PK, KEK and
+>> db infrastructure (without dbx and dbt) where only the Setup and User modes
+>> will be supported.
+> Not supporting dbx seems like a pretty significant shortcoming. How
+> are signatures meant to be revoked?
+
+
+We began by focusing on certificates for keys that can be added at
+runtime.  Before adding support for revocation, we plan to gather
+additional use cases.  In the meantime, unwanted certificates can be
+removed by the administrator.
+
+
 >
-> Hi Enric,
+>> PK, KEK and db updates will be signed the same way, that is, using
+>> userspace tooling like efitools in PowerNV. As for the authentication
+>> descriptors, only the EFI_VARIABLE_AUTHENTICATION_2 descriptor will be
+>> supported.
+> Is this API documented?
+
+
+The API is still a work in progress.  We are planning to publish a document
+describing the current API and overall design shortly.
+
+Perhaps the biggest departure is that the secure variables are stored in
+flash memory that is not lockable.  In order to protect the secure
+variables, hashes of the flash regions where they're stored are written to
+TPM NVRAM indices.  The TPM NVRAM indices we use are write locked at
+runtime.  The sysadmin enqueues update commands in flash.  During the next
+boot, the firmware verifies and processes the commands to update the
+certificate store and accompanying integrity hashes in the TPM NVRAM
+indices and write locks them.  Before certificates read from flash are
+used, the certificate store is hashed and compared against the hashes
+stored from the TPM.  The one exception is the PK. We store it in a TPM
+NVRAM index by itself rather than flash because updates to it must be
+guaranteed to be atomic.
+
+
+>>> In that case we might be better off with a generic interface for this
+>>> purpose that we can expose on all platforms that implement a secure
+>>> boot key hierarchy. Having an efivarfs that doesn't allow the creation
+>>> of arbitrary attributes may break other existing userland
+>>> expectations.
+>>>
+>> For what it's worth, gsmi uses the efivars infrastructure for EFI-like
+>> variables.
+> My recollection is that at the time the Chromebook firmware still had
+> EFI underpinnings and the gsmi code was largely just an alternate
+> mechanism for calling into something that was fundamentally the EFI
+> variable store. With hindsight I don't think layering this was the
+> right move - we've adjusted the semantics of efivarfs on more than one
+> occasion to deal with the behaviour of real-world EFI platforms, and I
+> don't think it's helpful to end up in a situation where we're trying
+> to keep behaviour consistent among entirely different firmware
+> interfaces.
 >
-> On Wed, Apr 3, 2019 at 6:54 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> >
-> > From: Guenter Roeck <groeck@chromium.org>
-> >
-> > The CrOS USB PD logging feature is logically separate functionality of
-> > the charge manager, hence has its own driver. The driver logs the event
-> > data for the USB PD charger available in some ChromeOS Embedded
-> > Controllers.
-> >
-> > Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> > [remove APPEND_STRING macro and minor cleanups]
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > ---
-> >
-> [ ... ]
->
-> > +
-> > +static void cros_usbpd_print_log_entry(struct ec_response_pd_log *r,
-> > +                                      ktime_t tstamp)
-> > +{
-> [ ... ]
-> > +
-> > +       pr_info("PDLOG %d/%02d/%02d %02d:%02d:%02d.%03lld P%d %s\n",
-> > +               rt.tm_year + 1900, rt.tm_mon + 1, rt.tm_mday,
-> > +               rt.tm_hour, rt.tm_min, rt.tm_sec,
-> > +               ktime_to_ms(tstamp) % MSEC_PER_SEC,
->
-> 0day rightfully complains that this introduces a 64-bit divide
-> operation. I don't know if do_div() works here since it tries to
-> modify the first parameter. Maybe we need an interim variable to store
-> ktime_to_ms(tstamp). Something like
->
->     s64 temp =3D ktime_to_ms(tstamp);
->     ...
->                     do_div(temp, MSEC_PER_SEC),
->
+>> What might a generic interface look like?  It would have to work for
+>> existing secure boot solutions - including EFI - which would seem to imply
+>> changes to userspace tools.
+> I think that depends on exactly what problem you're trying to solve.
+> Some aspects of the EFI secure boot design end up mirroring the
+> economics of the PC ecosystem rather than being inherently good design
+> goals, so it'd be helpful to know whether you're taking this solution
+> because you want the same three-level key infrastructure or because
+> that just leaves you compatible with the tooling.
 
-I did something similar this afternoon and pushed again for the auto
-builders to play with.
 
-+ div_s64_rem(ktime_to_ms(tstamp), MSEC_PER_SEC, &rem);
+In our use case,  the three-level key hierarchy conveniently supports the
+concept of (1) an administrator authority, who authorizes (2) other
+organizations, e.g., distros, to provide (3) certificates for their code
+signing keys.   By using efivars, we leverage pre-existing userspace EFI
+tools to generate authenticated updates and certificates.  Additionally,
+pre-existing kernel infrastructure simplifies efivars processing.  
 
-Unfortunately, 0day now reports another error
 
-drivers/platform/chrome/cros_usbpd_logger.o: In function
-`cros_usbpd_print_log_entry':
->> cros_usbpd_logger.c:(.text+0x5a0): undefined reference to `__aeabi_ldivm=
-od'
+Thanks,
+Claudio
 
-I'll investigate in more detail Monday morning.
-
-Thanks
-- Enric
-
-> Guenter
