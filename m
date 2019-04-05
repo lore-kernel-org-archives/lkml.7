@@ -2,99 +2,91 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6C1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8B0C10F0F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01EA20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Q/ym5/fN"
+	by mail.kernel.org (Postfix) with ESMTP id 5DE492186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfDEMww (ORCPT
+        id S1731077AbfDEMw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:52:52 -0400
-Received: from mout.gmx.net ([212.227.15.15]:46335 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfDEMww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:52:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554468765;
-        bh=vXSDomUnLiJ+uBbA6YtrqFgFnMYyMhAKEQ3lEaA7f6E=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Q/ym5/fNsUFPCI0xOgOaqAqWxMg9TVx2sAUVQphHwlXnx+OZTyENe36tgpCkvyxbo
-         TdxaT42GTTQ5PG4sn1vmZak7MiwuWD4dYoKLeF5W33cs7DekcnRYhExzDTqLeJuL9e
-         mpsInz5rAaLEaAP3Wdh65d0YVg5KmU0K29jgLNKQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [45.33.50.49] ([45.33.50.49]) by web-mail.gmx.net
- (3c-app-mailcom-bs08.server.lan [172.19.170.176]) (via HTTP); Fri, 5 Apr
- 2019 14:52:45 +0200
-MIME-Version: 1.0
-Message-ID: <trinity-8d6161e4-195d-4885-a75d-62d071c59212-1554468765740@3c-app-mailcom-bs08>
-From:   "Chengguang Xu" <cgxu519@gmx.com>
-To:     "Greg KH" <gregkh@linuxfoundation.org>
-Cc:     dan.carpenter@oracle.com, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] chardev: code cleanup for
- __register_chrdev_region()
-Content-Type: text/plain; charset=UTF-8
+        Fri, 5 Apr 2019 08:52:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41688 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfDEMw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 08:52:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r4so7866811wrq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 05:52:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EW1iRvrg5K6TjD6nnhdvhI3KeiKEUzEaHdll4xzFTIc=;
+        b=hdAwFZvtPZt8zGaaoyers1SzbrW3IHptYjPfz7CBa0QlWKYu2pk9sP3HBm7wDxCRaT
+         43tn64SAXthl27J7YUgl4Bc9PTQNOahPdK95D+Bu5dD5ZXmQRzrTwuHVw41amIA+hi5N
+         eadrNGXQWcYxgni5XJ4gfM1kekUNWMhWlKjo7b1MVSzhTCIEnlhHFK0u9atRZhyoOPjB
+         BxlsRyY6CMLMapRjL7ipslcKWY2koluqz45stfbVFAxcjcSp2QyxzA9Pm3oJGuiNchz9
+         BmGzbedlZW7PIDYAwlcmllyFGxYPEzu3K8DfQuq2S+jADwkrQ40R7ZfVWmXu8Wq5LC7R
+         Q6tQ==
+X-Gm-Message-State: APjAAAXLdbK2KRVilI4geenEjyCfX8WKamBJuO0a04j+/aajuf0ds4tH
+        7aVgqVAkpVqseag958A7jPokNA==
+X-Google-Smtp-Source: APXvYqz1OsR7IHd1R6J2TnGo8qVvJXo1lkgzSX0htq+0Swd44QqIBWB/srudLC8xVbI5iS0mPjMlwQ==
+X-Received: by 2002:adf:9427:: with SMTP id 36mr8604947wrq.128.1554468774993;
+        Fri, 05 Apr 2019 05:52:54 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.174.33])
+        by smtp.gmail.com with ESMTPSA id x14sm2761573wmj.3.2019.04.05.05.52.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 05:52:54 -0700 (PDT)
 Date:   Fri, 5 Apr 2019 14:52:45 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20190405123246.GE2299@kroah.com>
-References: <20190405112711.25275-1-cgxu519@gmx.com>
- <20190405112711.25275-3-cgxu519@gmx.com> <20190405123246.GE2299@kroah.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:6IVBWgazUj5kBXGjYJ4892elvQOCN8xCvp8jkJ53wPOBImYLW0JVjwZ2nHXOo+aNpyaDg
- B6g+o4wfFv1Fpt3c3mvFtmhSHxgE+UApKh+mdxQ/q5SaZGrh3ziJB1VuTkS7F4hmvJitRfGtWrGE
- L3VQM2jrNWp0kKUHZPcer7LOrwjrvYvBR3Q/Jq2MGyPiqMqRQIvIYeKyDumyQ1YvZI9u6PwHmOH3
- QcclLqMj96ak8bFvxRc2Bs/Un24qLRpFmnfLJTnu/6823h7VQHI3UV6p79g6KYfKh4u8fwJI0TVt
- /o=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:URroLL+E7OQ=:CUEqpajrcKq+rtJ0W8isAV
- YRpIk0AkYGcE7WCG3YJ6u+8nbGlwDQF/PkxrEhuwnePs4H5ogOVsOcOC6pDP+PZGFUbY1adV6
- OMsqkLvx9RZ8B6aZ6B5VDhQMwj4Cjr+WWtzGg23sM5T0OkZWaRceyEXvclYo0LgZtqYdWV+DX
- Ol/rrJF4P7EemYVz7VnwZn4hlA0qLdQWz5WNNrXmwCf/laZt3fHfYKQnYIxlsgfVqOu/A4eWg
- WJVytc0xOVx4oMAXrYze7vZzwXz8vHgSjRXLbPecJvGS2DtkBjIFSiFsTzAeGhYELkILEJ/uk
- EqRgXqvaEeGsmdNwkQTWaDDS9Bw+inHGfqGppi5PXNRxLwY4QdIfR5PPG3vpPfVV9n0/w7Feh
- 2Yil6zazGInBGdX6novs8NieLVDhp1++hDnLFdxW174iMvCa1/8qKolslegJ+jaXKaeWUz4Wl
- N7F/me7OAav62HZvHVPeiuziZ4xf+k9UrltgCWXGmk2umGYanP+dsVDVfo8H8mAQcWhl6s06J
- 1aKe1e29J8pDxHvqs02pUyWZ/ZMbOyHngj/ilcDG9DIwfvl2tKdtGoq2JXgC3EDrdDWc+uO4R
- NJ1yJT6D8ftts=
-Content-Transfer-Encoding: quoted-printable
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v7 1/7] sched/topology: Adding function
+ partition_sched_domains_locked()
+Message-ID: <20190405125245.GB5453@localhost.localdomain>
+References: <20190403084650.4414-1-juri.lelli@redhat.com>
+ <20190403084650.4414-2-juri.lelli@redhat.com>
+ <20190405120434.GS12232@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405120434.GS12232@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Sent: Friday, April 05, 2019 at 8:32 PM
-> From: "Greg KH" <gregkh@linuxfoundation.org>
-> To: "Chengguang Xu" <cgxu519@gmx.com>
-> Cc: dan.carpenter@oracle.com, linux-fsdevel@vger.kernel.org, viro@zeniv.=
-linux.org.uk, linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3 3/4] chardev: code cleanup for __register_chrdev_=
-region()
->
-> On Fri, Apr 05, 2019 at 07:27:10PM +0800, Chengguang Xu wrote:
-> > It's just code cleanup, not functional change.
-> >
-> > Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-> > ---
-> > v1->v2:
-> > - Split fix and cleanup patches.
-> > - Remove printing minor range in chrdev_show().
-> >
-> > v2->v3:
-> > - Set variable ret to '-EBUSY' before checking minor range overlap.
->
-> Can you just send the follow-on patch that does the v3 change as I have
-> already taken your series.
+Hi,
 
-OK, I'll send another patch for it.
+On 05/04/19 14:04, Peter Zijlstra wrote:
+> On Wed, Apr 03, 2019 at 10:46:44AM +0200, Juri Lelli wrote:
+> > +/*
+> > + * Call with hotplug lock held
+> 
+> Is that spelled like:
+> 
+> 	lockdep_assert_cpus_held();
+> 
+> ?
 
-Thanks.
-Chengguang.
+Indeed, but I had that in previous versions and we removed that in v5
+because it can lead to false positives [1,2]. IIRC, problem has to do
+with hotplug and the fact that rebuilding from hotplug runs the
+callbacks on the newly onlined CPU, not the task that acquired the lock.
+
+Best,
+
+- Juri
+
+1 - https://lore.kernel.org/lkml/20180903142801.20046-1-juri.lelli@redhat.com/
+2 - https://lore.kernel.org/lkml/20180613121711.5018-2-juri.lelli@redhat.com/
