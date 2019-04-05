@@ -2,106 +2,190 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C7C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB252C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3B62184B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8773A206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbfDERdr (ORCPT
+        id S1731536AbfDERkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:33:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35922 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730565AbfDERdg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:33:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D396A2822B0
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     lee.jones@linaro.org
-Cc:     gwendal@chromium.org, bleung@chromium.org,
-        linux-kernel@vger.kernel.org, groeck@chromium.org,
-        kernel@collabora.com, dtor@chromium.org,
-        rushikesh.s.kadam@intel.com,
-        Andy Shevchenko <andry.shevchenko@intel.com>
-Subject: [PATCH v2 2/4] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-Date:   Fri,  5 Apr 2019 19:33:22 +0200
-Message-Id: <20190405173324.22118-3-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190405173324.22118-1-enric.balletbo@collabora.com>
-References: <20190405173324.22118-1-enric.balletbo@collabora.com>
+        Fri, 5 Apr 2019 13:40:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730329AbfDERkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 13:40:14 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A61415B06BD25B8608BE;
+        Sat,  6 Apr 2019 01:40:05 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Sat, 6 Apr 2019
+ 01:39:56 +0800
+Date:   Fri, 5 Apr 2019 18:39:45 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a
+ device
+Message-ID: <20190405183945.0000155f@huawei.com>
+In-Reply-To: <CAPcyv4hxBFcJKbVVgNiE4UYXZS4XY9hfE8W9mN+VrcWS9AvJLw@mail.gmail.com>
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20190405121857.0000718a@huawei.com>
+        <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
+        <20190405172342.00006a56@huawei.com>
+        <CAPcyv4hxBFcJKbVVgNiE4UYXZS4XY9hfE8W9mN+VrcWS9AvJLw@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+On Fri, 5 Apr 2019 09:56:22 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Integrated Sensor Hub (ISH) is also a MCU running EC
-having feature bit EC_FEATURE_ISH. Instantiate it as
-a special CrOS EC device with device name 'cros_ish'.
+> On Fri, Apr 5, 2019 at 9:24 AM Jonathan Cameron
+> <jonathan.cameron@huawei.com> wrote:
+> >
+> > On Fri, 5 Apr 2019 08:43:03 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
+> > > <jonathan.cameron@huawei.com> wrote:  
+> > > >
+> > > > On Thu, 4 Apr 2019 12:08:49 -0700
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >  
+> > > > > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
+> > > > > properties described by the ACPI HMAT is expected to have an application
+> > > > > specific consumer.
+> > > > >
+> > > > > Those consumers may want 100% of the memory capacity to be reserved from
+> > > > > any usage by the kernel. By default, with this enabling, a platform
+> > > > > device is created to represent this differentiated resource.
+> > > > >
+> > > > > A follow on change arranges for device-dax to claim these devices by
+> > > > > default and provide an mmap interface for the target application.
+> > > > > However, if the administrator prefers that some or all of the special
+> > > > > purpose memory is made available to the core-mm the device-dax hotplug
+> > > > > facility can be used to online the memory with its own numa node.
+> > > > >
+> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > Cc: Len Brown <lenb@kernel.org>
+> > > > > Cc: Keith Busch <keith.busch@intel.com>
+> > > > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > > >
+> > > > Hi Dan,
+> > > >
+> > > > Great to see you getting this discussion going so fast and in
+> > > > general the approach makes sense to me.
+> > > >
+> > > > I'm a little confused why HMAT has anything to do with this.
+> > > > SPM is defined either via the attribute in SRAT SPA entries,
+> > > > EF_MEMORY_SP or via the EFI memory map.
+> > > >
+> > > > Whether it is in HMAT or not isn't all that relevant.
+> > > > Back in the days of the reservation hint (so before yesterday :)
+> > > > it was relevant obviously but that's no longer true.
+> > > >
+> > > > So what am I missing?  
+> > >
+> > > It's a good question, and an assumption I should have explicitly
+> > > declared in the changelog. The problem with EFI_MEMORY_SP is the same
+> > > as the problem with the EfiPersistentMemory type, it isn't precise
+> > > enough on its own for the kernel to delineate 'type' or
+> > > device/replaceable-unit boundaries. For example, I expect one
+> > > EFI_MEMORY_SP range of a specific type may be contiguous with another
+> > > range of a different type. Similar to the NFIT there is no requirement
+> > > in the specification that platform firmware inject multiple range
+> > > entries. Instead that precision is left to the SRAT + HMAT, or the
+> > > NFIT in the case of PMEM.  
+> >
+> > Absolutely, as long as they are all SPM, they could be anywhere in
+> > the system.
+> >  
+> > >
+> > > Conversely, and thinking through this a bit more, if a memory range is
+> > > "special", but the platform fails to enumerate it in HMAT I think
+> > > Linux should scream loudly that the firmware is broken and leave the
+> > > range alone. The "scream loudly" piece is missing in the current set,
+> > > but the "leave the range alone" functionality is included.  
+> >
+> > I am certainly keen on screaming if the various entries are inconsistent
+> > but am not sure they necessarily are here.
+> >
+> > So there are a couple of ways we could get an SPM range defined.
+> > The key thing here is that firmware should be attempting to describe
+> > what it has to some degree somewhere.  If not it won't get a good
+> > result ;)  So if there is no SRAT then you are on your own. SCREAM!
+> >
+> > 1. Directly in the memory map.  If there is no other information then
+> >    tough luck the kernel can only sensibly handle it as one device.
+> >    Or not at all, which seems like a reasonable decision to me.
+> >    SCREAM
+> >
+> > 2. In memory map + a proximity domain entry in SRAT.  Given memory
+> >    with different characteristics should be in different proximity
+> >    domains anyway - this should be fairly precise. The slight snag
+> >    here is that the fine grained nature of SRAT is actually a side
+> >    effect of HMAT, so not sure well platforms have traditional
+> >    describe their more subtle differences.
+> >
+> > 3. In NFIT as NFIT SPA carries the memory attribute.  Not sure if
+> >    we should scream if this disagrees with the memory map.
+> >
+> > 4. In HMAT?  Now this changed in ACPI 6.3 to clean up the 'messy'
+> >    prior relationship between it and SRAT.  Now HMAT no longer has
+> >    memory address ranges as you observed.  That means, to describe
+> >    properties of memory, it has to use the proximity domains of
+> >    SRAT.  It provides lots of additional info about those domains
+> >    but it is SRAT that defines them.
+> >
+> > So I would argue that HMAT itself doesn't tell us anything useful.
+> > SRAT certainly does though so I think this should be coming from
+> > SRAT (or NFIT as that also defines the required precision)  
+> 
+> I agree, yes, SRAT by itself is sufficient for this "precision"
+> concern. However, do we, core Linux developers, really want to
+> encourage platform vendors that they can ignore deploying HMAT data
+> and get Linux to honor that sub-case for EFI_MEMORY_SP? My personal
+> experience is that platform firmware will take advantage of almost any
+> opportunity to minimize the data it provides to the OS. The only hard
+> lever Linux has to encourage platform firmware to give complete data
+> is to decline to support configurations that have incomplete data.
+> 
 
-Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Andy Shevchenko <andry.shevchenko@intel.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+If we decide as a community that this is the way we want to go, I'm
+happy to politely point it out to our firmware people (who are a more
+proactive group on detailed system descriptions than many!)
 
-Changes in v2:
-- Add a patch to instantiate the CrOS ISH device to the series.
+If we make this a clearly stated policy, perhaps via some comments
+in the code or Documentation/ that that would be even better
+and avoid people taking the 'but you could support my firmware'
+line in the future.
 
- drivers/mfd/cros_ec_dev.c   | 13 +++++++++++++
- include/linux/mfd/cros_ec.h |  5 +++--
- 2 files changed, 16 insertions(+), 2 deletions(-)
+I'll see if I can reach out to other OS vendors as well so we
+can present a unified front on this (perhaps after a few days, just
+in case we have any dissenting voices here!)
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 99cfdb5b71ef..1daccd4e05a3 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -636,6 +636,19 @@ static int ec_device_probe(struct platform_device *pdev)
- 	device_initialize(&ec->class_dev);
- 	cdev_init(&ec->cdev, &fops);
- 
-+	/*
-+	 * Check whether this is actually an Integrated Sensor Hub (ISH)
-+	 * rather than an EC.
-+	 */
-+	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
-+		dev_info(dev, "CrOS ISH MCU detected.\n");
-+		/*
-+		 * Help userspace differentiating ECs from ISH MCU,
-+		 * regardless of the probing order.
-+		 */
-+		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
-+	}
-+
- 	/*
- 	 * Add the class device
- 	 * Link to the character device for creating the /dev entry
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index b6442201f77f..ce50628aa5e7 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -22,8 +22,9 @@
- #include <linux/mfd/cros_ec_commands.h>
- #include <linux/mutex.h>
- 
--#define CROS_EC_DEV_NAME "cros_ec"
--#define CROS_EC_DEV_PD_NAME "cros_pd"
-+#define CROS_EC_DEV_NAME	"cros_ec"
-+#define CROS_EC_DEV_ISH_NAME	"cros_ish"
-+#define CROS_EC_DEV_PD_NAME	"cros_pd"
- 
- /*
-  * The EC is unresponsive for a time after a reboot command.  Add a
--- 
-2.20.1
+Thanks,
+
+Jonathan
 
