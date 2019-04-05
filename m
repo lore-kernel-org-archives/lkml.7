@@ -2,109 +2,112 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B803C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0750DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1CA21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CVOuphJ4"
+	by mail.kernel.org (Postfix) with ESMTP id D2D532175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbfDEPkM (ORCPT
+        id S1731453AbfDEPkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:40:12 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1888 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfDEPkL (ORCPT
+        Fri, 5 Apr 2019 11:40:25 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41096 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfDEPkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:40:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca776df0000>; Fri, 05 Apr 2019 08:40:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Apr 2019 08:40:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Apr 2019 08:40:11 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
- 2019 15:40:08 +0000
-Subject: Re: [PATCH 5.0 000/246] 5.0.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d1c881e4-7538-8b4e-7db4-35047d6b71c6@nvidia.com>
-Date:   Fri, 5 Apr 2019 16:40:06 +0100
+        Fri, 5 Apr 2019 11:40:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w30so7862384qta.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 08:40:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dg22T3baDIhfCrRLPvN5DXD5MUJ7qj8e6W0LfPeHBFI=;
+        b=TlhlqKWYHUPllvySCb9JLICkSMFQu1ZxFQNgiX6xEPTQN5n1nSG7XqMy6eFjXf3j/q
+         0wZ+bHXn7lcmGBlfS8OT3wR4/O1xOCEbSv80h8IIB/vkMHq4HassbXAsBjrrRAzcHKoU
+         UuYDMAzKwYQ/gf/qEOPNZdI7F9RvGd4Y9Fom3jkBwN66kmh3iAxLWT4kRbQlkEafmo48
+         lAjzDiB1/xM/n9Bavyqd00Kjf5ZOtc3bdsobUF2m83ywgzwPABkq9njKB3Z5nWLqbP6a
+         iqzdjnTJ3nDMFs441gxUq9CWg+1JQF7Io2BNzx30dJUSc7IfXilMiGEbyOrqtOiiEWEC
+         OI6g==
+X-Gm-Message-State: APjAAAUXP9kjEic2H8l5q5j/hf2jGBis129FAR8St3iZV8IzxTR8D+jn
+        1udYxanzzRxdhTWzewpIkVnUzw==
+X-Google-Smtp-Source: APXvYqw7+REQ0WAMBsllvENvMWZAaNd1dqJh1SUSpgQl/kq6RCWBPgB7N3oDIvNlP6khbao1n7zyRQ==
+X-Received: by 2002:a0c:8738:: with SMTP id 53mr10612534qvh.210.1554478823762;
+        Fri, 05 Apr 2019 08:40:23 -0700 (PDT)
+Received: from [10.150.73.190] (214.sub-174-240-132.myvzw.com. [174.240.132.214])
+        by smtp.gmail.com with ESMTPSA id g34sm15309819qtc.9.2019.04.05.08.40.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 08:40:22 -0700 (PDT)
+Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and
+ thread creation (v7)
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, carlos <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
+ <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
+ <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
+ <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
+ <87lg0tosfz.fsf@concordia.ellerman.id.au>
+ <87pnq4zxyj.fsf@oldenburg2.str.redhat.com>
+ <ce6f9db3-bf85-7aec-4bae-998e6fd629e1@redhat.com>
+ <87y34o4xt3.fsf@oldenburg2.str.redhat.com>
+From:   Carlos O'Donell <codonell@redhat.com>
+Message-ID: <43f97ddb-c8df-27ea-9517-63252ebd3183@redhat.com>
+Date:   Fri, 5 Apr 2019 11:40:16 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <87y34o4xt3.fsf@oldenburg2.str.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554478815; bh=7d8kZZl6hSScOgG/fEcy7Z4/AMCsjNCcLSNo1qQBrY0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CVOuphJ481vYjC2A3xi3cfHGST95NkHrZ7XCl7zS+Z7XGvXPMxcVf5kJcYW1CxAtr
-         Ko/DD1KMaGu1vSEalu/5zwMnJFVjAwCVUwtMI1KEuk5jMoi0iWMwsjGeirr+3RmU4j
-         +C3eIpqz6yMRGRiIA5XVLfjEKlQLZGIcPjTfe8Bs6ZuCiUnacdnURMABMhrzA/8T9f
-         csj6XwhdaUQKeblPKQxioSjdJE1wmVSrhuRuRK2q+l85+ZB1UBWHilHUkJyUht2PyT
-         E1nLGgNf3s6+njni8BxriXrD6c7Ob2ziNby5NyIYO5VS+uk+/Kve+OtwZU2TvhFdeZ
-         mLb/cK1e1gxhw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/04/2019 09:45, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.7 release.
-> There are 246 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 4/5/19 5:16 AM, Florian Weimer wrote:
+> * Carlos O'Donell:
+>> It is valuable that it be a trap, particularly for constant pools because
+>> it means that a jump into the constant pool will trap.
 > 
-> Responses should be made by Sat Apr  6 08:44:36 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Sorry, I don't understand why this matters in this context.  Would you
+> please elaborate?
 
-All tests are passing for Tegra ...
+Sorry, I wasn't very clear.
 
-Test results for stable-v5.0:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    30 tests:	30 pass, 0 fail
+My point is only that any accidental jumps, either with off-by-one (like you
+fixed in gcc/glibc's signal unwinding most recently), result in a process fault
+rather than executing RSEQ_SIG as a valid instruction *and then* continuing
+onwards to the handler.
 
-Linux version:	5.0.7-rc1-gcfe0614
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
+A process fault is achieved either by a trap, or an invalid instruction, or
+a privileged insn (like suggested for MIPS in this thread).
 
 -- 
-nvpublic
+Cheers,
+Carlos.
