@@ -2,109 +2,121 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA50C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89553C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0062175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5369F2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+3kTvoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfDEIKq (ORCPT
+        id S1730292AbfDEILb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:10:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbfDEIKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:10:46 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DC704323CCF8F62B0DB1;
-        Fri,  5 Apr 2019 16:10:43 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
- 16:10:35 +0800
-Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
- <1554393602-152448-4-git-send-email-john.garry@huawei.com>
- <20190404164130.GA12203@roeck-us.net>
- <24cc8006-0f0d-6b20-a466-e4a32a0bb656@huawei.com>
- <20190404174336.GA10404@roeck-us.net> <20190404185815.GA26522@google.com>
-CC:     <wangkefeng.wang@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <arnd@arndb.de>, <rafael@kernel.org>, <linux-pci@vger.kernel.org>,
-        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <andy.shevchenko@gmail.com>,
-        <catalin.marinas@arm.com>, <bp@suse.de>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2d0f583a-cabe-df4e-ad89-c1800d9b4804@huawei.com>
-Date:   Fri, 5 Apr 2019 09:10:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 5 Apr 2019 04:11:31 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41782 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEILa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 04:11:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f6so2658699pgs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 01:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sEA6p5JevwHNXaBrdUMxSWF58a6asPN8krCKpHrLb0c=;
+        b=r+3kTvoYzn0O1if9OqvGksQTGdf8qEqBr8lXNxyqOnNmn3f+3zq8APRfdAi4uO5GQy
+         TbIOvA9ZZB+eOT5KQaLK+Y1j27fTPApHiQP7brYNgoJ2tSb36ZnN54EawjRxOAXm8WE5
+         fuH1Fhfiyz4KmxDa1Jyix+juNMJP5DqVv5Iwe6QlFyU8GTVX/e1CbsG0ZSooQzZXZOzs
+         YurlxeNLDdsCm6G+0RUhMQDNyB7e1GHA8Ceo/NOj+cE2dFHuqbQdtkD2OBl1vDlSDVWt
+         JUOmTH7xPHRk9PID0UdS1xBu0sIYvaJ0G9reQTbi3H+vIj/pwC8gll/Ht7cKEhopDL7h
+         16Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=sEA6p5JevwHNXaBrdUMxSWF58a6asPN8krCKpHrLb0c=;
+        b=ixQR4e7ej8wsfjjDyHCztFFBboTmWs0/EbU7NWs5QblvnYWulPr6fWfUOGuKhzn1Cw
+         CnNd87M9t8WHzHMdqVVOStmOO9BbqS8dXWbG2jcvKxETV22VJ9H6Bj8mzSUDlUoqYngj
+         0TEU1F7kKMTBWu86MgU3UFhIztG2BA66YvzYV6/v/rWwbVFHgQo6y1YRxoTv3p8gqD/R
+         xatbrZO/Hu0nVbDE2GxeJiGdEzC2MZjDA6iewKdfDP6+yh4o8QPYtzWlROtI6uhzCsS0
+         6dLIANVai5RhlMbYqUFyFHJvFr91tR3NFEXm7SIaSiiDT3JWDmXudP+aXpBe8LYWoLsQ
+         qadw==
+X-Gm-Message-State: APjAAAV88S5vjTxtQEVAI9BTkeNRE9pmg0r5ciQGAcxNtHYWBy1E8hIx
+        JPzO0Et0cIN3ot6kKt29R6c=
+X-Google-Smtp-Source: APXvYqzv1g6cLhtiDeerYEh7TUahcMOk+J7i6/lfgwKZ8QWWcg2vnnwhBjs+6GFgAF982jt6tHQQDQ==
+X-Received: by 2002:a65:47c6:: with SMTP id f6mr10535790pgs.173.1554451889641;
+        Fri, 05 Apr 2019 01:11:29 -0700 (PDT)
+Received: from voyager.jms.id.au ([45.124.203.18])
+        by smtp.gmail.com with ESMTPSA id u5sm17188985pfm.121.2019.04.05.01.11.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 01:11:28 -0700 (PDT)
+Received: by voyager.jms.id.au (sSMTP sendmail emulation); Fri, 05 Apr 2019 18:41:18 +1030
+From:   Joel Stanley <joel@jms.id.au>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] drm: aspeed: Clean up Kconfig options
+Date:   Fri,  5 Apr 2019 18:41:17 +1030
+Message-Id: <20190405081117.27339-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190404185815.GA26522@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/04/2019 19:58, Bjorn Helgaas wrote:
-> On Thu, Apr 04, 2019 at 10:43:36AM -0700, Guenter Roeck wrote:
->> On Thu, Apr 04, 2019 at 05:52:35PM +0100, John Garry wrote:
->>>>> Note that the f71805f driver does not call
->>>>> request_{muxed_}region(), as it should.
->>>
->>>> ... which is the real problem, one that is not solved by this
->>>> patch. This may result in parallel and descructive accesses if
->>>> there is another device on the LPC bus, and another driver
->>>> accessing that device. Personally I'd rather have
->>>> request_muxed_region() added to the f71805f driver.
->>>
->>> Right, we should and will still fix f71805f. If you recall, I did
->>> have the f71805f fix in the v1 series, but you committed that it
->>> was orthogonal, so I decided to take it out of this work for now.
->>>
->>> And even if we fix up f71805f and other known drivers which don't
->>> call request_muxed_region(), we still need to police against these
->>> rogue accesses, which is what this patch attempts to do.
->>>
->> Do we ? I am personally not convinced that LPC accesses _have_ to
->> occur through PCI on any given system.
->
-> On current systems, I suspect ISA/LPC devices are typically connected
-> via a PCI-to-ISA/LPC bridge.  But AFAIK there's no actual requirement
-> for that bridge, and there certainly *were* systems with ISA devices
-> but no PCI at all.
->
-> IMO, if you want to build ISA drivers on your arch, you need to make
-> sure the inb() probing done by those drivers works like it does on
-> x86.  If there's no device there, the inb() should return 0xff with no
-> fuss and no crash.
+The GFX IP is inside of the ASPEED BMC SoC so there is little use
+enabling it on a kernel that does not support ASPEED.
 
-Right, and this is what I am attempting to do here.
+When building with COMPILE_TEST the architecture many not have CMA
+support, so to avoid breaking the build we only select these options if
+the architecture supports the contiguous allocator.
 
-So today a call to request_muxed_region() can still succeed even if no 
-IO space mapped.
+I suspect the DRM_PANEL came from a cut/paste error.
 
-As such, even well-behaved drivers like f71882fg can still crash the 
-system, as noted in RFC patch 1/4 ("resource: Request IO port regions 
-from children of ioport_resource").
+Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+This fixes the powerpc next-20190405 build. Sorry Stephen!
 
-Thanks,
-John
+v2: Clean up as well as fix the build
+v1: https://lore.kernel.org/lkml/20190405052830.27899-1-joel@jms.id.au/
 
->
-> Bjorn
->
-> .
->
+ drivers/gpu/drm/aspeed/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/aspeed/Kconfig b/drivers/gpu/drm/aspeed/Kconfig
+index 42b74d18a41b..cccab520e02f 100644
+--- a/drivers/gpu/drm/aspeed/Kconfig
++++ b/drivers/gpu/drm/aspeed/Kconfig
+@@ -1,11 +1,11 @@
+ config DRM_ASPEED_GFX
+ 	tristate "ASPEED BMC Display Controller"
+ 	depends on DRM && OF
++	depends on (COMPILE_TEST || ARCH_ASPEED)
+ 	select DRM_KMS_HELPER
+ 	select DRM_KMS_CMA_HELPER
+-	select DRM_PANEL
+-	select DMA_CMA
+-	select CMA
++	select DMA_CMA if HAVE_DMA_CONTIGUOUS
++	select CMA if HAVE_DMA_CONTIGUOUS
+ 	select MFD_SYSCON
+ 	help
+ 	  Chose this option if you have an ASPEED AST2500 SOC Display
+-- 
+2.20.1
 
