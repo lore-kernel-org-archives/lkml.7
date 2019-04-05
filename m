@@ -2,113 +2,271 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328F3C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA796C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08B120854
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:45:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ccj5pzWT"
+	by mail.kernel.org (Postfix) with ESMTP id B652B20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfDEDpi (ORCPT
+        id S1729916AbfDEDrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:45:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36074 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbfDEDpi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:45:38 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d18so3339981lfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 20:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AUbX4djAyyi+s9bVfpiZbDANbAWTvBQOJj+v3RZuk1M=;
-        b=ccj5pzWTa2V0cTRl1RwgKcAHpFEzbVMIsLOihyVlgV0tZM1Ri8TcvipRFi7SAUVlnY
-         qufAOS902dhfAHPBJD3HS8ZKXfqIvwID4rOvs8x4RUb/sCQQhNtQgJ2Re9ACPTdmt/ly
-         I3evO4CZAFPugsgojmIdpM/x9bfLtVIRM/v7cnzht2J0F0IQHZMlMgllZuKuyJVQ0kp6
-         wEXYzMhTVxscbZkK9mp77Huz+jjQBqVXMPRcQUYGCHYu8980Ll5fVBAXg2nKCRYAFSMu
-         8IMhA6PVuXOz8ypo/lcj8EZgWWoMbPVWLm5BrrnHNWXaqfsrIMvwV/9mqlc0A4yl8EUN
-         f/KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AUbX4djAyyi+s9bVfpiZbDANbAWTvBQOJj+v3RZuk1M=;
-        b=iytpEP0AJ6t6MqEJLPUO/YxKLu0T8L40xHXHEsT7WLIvSzfOO4Ns9/6VoOu3okzPuM
-         kxyjwdz2cXlYPzOnTfznxAso6qqypUM8JuOXy+WIPyajZNE9p8+M739pEiVaEDHqOdnb
-         arJpzT52MzEsMOIWZvi3KFVKoYPTvTcrFwQfIyh7tO7xLgGhnZbeajkeGL6533OZ8/Dy
-         zNK6lwrlKyFB6S7vY7qnGJbM/XLPzFH1uPx6Uc7+HmN65yzf7I1bZh5SF2Ag3PuTIRu+
-         exK78Z2f4QvbcdOfw8Ioe1ZbMs3BAYNloxMJNujU9mPLiPzqA10do0GmNK9NZtVfMuja
-         po4w==
-X-Gm-Message-State: APjAAAX0mc405K6tkfVX/z7jCoQNLDTijEJgqlp+RxRm+h94CKA4P+T6
-        A/0ncxodLrB6Lb0s2p5TR2nnSAAGazNkwbTxggNpmw==
-X-Google-Smtp-Source: APXvYqyJ7Gkdqw2xrxBa9vz+O18I6zhy9aUXGVCgnRDw/2SOVaeI8Hj+0uxQXf2NzvVo7ZqfjmmLmFZ3NoM3t+5OJxM=
-X-Received: by 2002:ac2:4285:: with SMTP id m5mr5164199lfh.103.1554435936349;
- Thu, 04 Apr 2019 20:45:36 -0700 (PDT)
+        Thu, 4 Apr 2019 23:47:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6253 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728735AbfDEDrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 23:47:39 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 210BC442ADFA0137B934;
+        Fri,  5 Apr 2019 11:47:37 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
+ 11:47:28 +0800
+Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
+ regions
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
+ <20190403030546.23718-3-chenzhou10@huawei.com>
+ <20190403112929.GA7715@rapoport-lnx>
+ <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
+ <20190404144408.GA6433@rapoport-lnx>
+ <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
+CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
+        <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
+Date:   Fri, 5 Apr 2019 11:47:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20190401033535.16910-1-zhiyong.tao@mediatek.com> <20190401033535.16910-5-zhiyong.tao@mediatek.com>
-In-Reply-To: <20190401033535.16910-5-zhiyong.tao@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 5 Apr 2019 10:45:24 +0700
-Message-ID: <CACRpkdb8T71y9TZFXhefArKhbtPPe2b4syGWx6LwFaFkANEk4g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] pinctrl: add drive for I2C related pins on MT8183
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com,
-        hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>,
-        chuanjia.liu@mediatek.com, Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 10:35 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+Hi Mike,
 
-> This patch provides the advanced drive for I2C used pins on MT8183.
-> The detail strength specification description of the I2C pin:
-> When E1=0/E0=0, the strength is 0.125mA.
-> When E1=0/E0=1, the strength is 0.25mA.
-> When E1=1/E0=0, the strength is 0.5mA.
-> When E1=1/E0=1, the strength is 1mA.
-> For I2C pins, there are existing generic driving setup and the above
-> specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
-> driving adjustment in generic driving setup. But in specific driving
-> setup, they can support 0.125/0.25/0.5/1mA adjustment.
-> If we enable specific driving setup for I2C pins,
-> the existing generic driving setup will be disabled.
-> For some special features, we need the I2C pins specific driving setup.
-> The specific driving setup is controlled by E1E0EN.
-> So we need add extra vendor driving preperty instead of the generic
-> driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
-> to describe the specific driving setup property.
-> "XXX" means the value of E1E0EN. So the valid arguments of
-> "mediatek,drive-strength-adv" are from 0 to 7.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+On 2019/4/5 10:17, Chen Zhou wrote:
+> Hi Mike,
+> 
+> On 2019/4/4 22:44, Mike Rapoport wrote:
+>> Hi,
+>>
+>> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
+>>> Hi Mike,
+>>>
+>>> On 2019/4/3 19:29, Mike Rapoport wrote:
+>>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
+>>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+>>>>> there may be two crash kernel regions, one is below 4G, the other is
+>>>>> above 4G.
+>>>>>
+>>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
+>>>>> property under node /chosen,
+>>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+>>>>>
+>>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>>> ---
+>>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
+>>>>>  include/linux/memblock.h |  1 +
+>>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
+>>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>>> index ceb2a25..769c77a 100644
+>>>>> --- a/arch/arm64/mm/init.c
+>>>>> +++ b/arch/arm64/mm/init.c
+>>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
+>>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>>>>  
+>>>>>  #ifdef CONFIG_KEXEC_CORE
+>>>>> +# define CRASH_MAX_USABLE_RANGES        2
+>>>>> +
+>>>>>  static int __init reserve_crashkernel_low(void)
+>>>>>  {
+>>>>>  	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>>  		const char *uname, int depth, void *data)
+>>>>>  {
+>>>>>  	struct memblock_region *usablemem = data;
+>>>>> -	const __be32 *reg;
+>>>>> -	int len;
+>>>>> +	const __be32 *reg, *endp;
+>>>>> +	int len, nr = 0;
+>>>>>  
+>>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>>>>>  		return 0;
+>>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>>>>>  		return 1;
+>>>>>  
+>>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>>> +	endp = reg + (len / sizeof(__be32));
+>>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+>>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>>> +
+>>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+>>>>> +			break;
+>>>>> +	}
+>>>>>  
+>>>>>  	return 1;
+>>>>>  }
+>>>>>  
+>>>>>  static void __init fdt_enforce_memory_region(void)
+>>>>>  {
+>>>>> -	struct memblock_region reg = {
+>>>>> -		.size = 0,
+>>>>> -	};
+>>>>> -
+>>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+>>>>> -
+>>>>> -	if (reg.size)
+>>>>> -		memblock_cap_memory_range(reg.base, reg.size);
+>>>>> +	int i, cnt = 0;
+>>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+>>>>> +
+>>>>> +	memset(regs, 0, sizeof(regs));
+>>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
+>>>>> +
+>>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
+>>>>> +		if (regs[i].size)
+>>>>> +			cnt++;
+>>>>> +		else
+>>>>> +			break;
+>>>>> +	if (cnt)
+>>>>> +		memblock_cap_memory_ranges(regs, cnt);
+>>>>
+>>>> Why not simply call memblock_cap_memory_range() for each region?
+>>>
+>>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
+>>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
+>>> on kdump capture kernel.
+>>
+>> Thanks for the clarification.
+>> I still think that memblock_cap_memory_ranges() is overly complex. 
+>>
+>> How about doing something like this:
+>>
+>> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
+>> removing the range in the middle?
+> 
+> Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
+> That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
+> matter.
+> 
+> I agree with you, your idea is better.
+> 
+> Thanks,
+> Chen Zhou
 
-Patch applied tentatively to the pin control tree.
+Sorry, just ignore my previous reply, I got that wrong.
 
-If other MTK maintainers have opinions we might need to patch on
-top or revert it, but it looks OK to me so I put it in.
+I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
+firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
+directly and the extra remove operation may be complex.
 
-Yours,
-Linus Walleij
+For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
+Besides, memblock_cap_memory_ranges() is also applicable for one region.
+
+How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
+
+Thanks,
+Chen Zhou
+
+> 
+>>  
+>>> Thanks,
+>>> Chen Zhou
+>>>
+>>>>
+>>>>>  }
+>>>>>  
+>>>>>  void __init arm64_memblock_init(void)
+>>>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>>>>> index 47e3c06..aeade34 100644
+>>>>> --- a/include/linux/memblock.h
+>>>>> +++ b/include/linux/memblock.h
+>>>>> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
+>>>>>  phys_addr_t memblock_end_of_DRAM(void);
+>>>>>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>>>>>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+>>>>> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
+>>>>>  void memblock_mem_limit_remove_map(phys_addr_t limit);
+>>>>>  bool memblock_is_memory(phys_addr_t addr);
+>>>>>  bool memblock_is_map_memory(phys_addr_t addr);
+>>>>> diff --git a/mm/memblock.c b/mm/memblock.c
+>>>>> index 28fa8926..1a7f4ee7c 100644
+>>>>> --- a/mm/memblock.c
+>>>>> +++ b/mm/memblock.c
+>>>>> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+>>>>>  			base + size, PHYS_ADDR_MAX);
+>>>>>  }
+>>>>>  
+>>>>> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
+>>>>> +{
+>>>>> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+>>>>> +	int i, j, ret, nr = 0;
+>>>>> +
+>>>>> +	for (i = 0; i < cnt; i++) {
+>>>>> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
+>>>>> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
+>>>>> +		if (ret)
+>>>>> +			break;
+>>>>> +		nr++;
+>>>>> +	}
+>>>>> +	if (!nr)
+>>>>> +		return;
+>>>>> +
+>>>>> +	/* remove all the MAP regions */
+>>>>> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
+>>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>>> +
+>>>>> +	for (i = nr - 1; i > 0; i--)
+>>>>> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
+>>>>> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
+>>>>> +				memblock_remove_region(&memblock.memory, j);
+>>>>> +
+>>>>> +	for (i = start_rgn[0] - 1; i >= 0; i--)
+>>>>> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>>>> +			memblock_remove_region(&memblock.memory, i);
+>>>>> +
+>>>>> +	/* truncate the reserved regions */
+>>>>> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
+>>>>> +
+>>>>> +	for (i = nr - 1; i > 0; i--)
+>>>>> +		memblock_remove_range(&memblock.reserved,
+>>>>> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
+>>>>> +
+>>>>> +	memblock_remove_range(&memblock.reserved,
+>>>>> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
+>>>>> +}
+>>>>> +
+>>>>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>>>>>  {
+>>>>>  	phys_addr_t max_addr;
+>>>>> -- 
+>>>>> 2.7.4
+>>>>>
+>>>>
+>>>
+>>
+> 
+> 
+> .
+> 
+
