@@ -2,121 +2,164 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0482DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3932FC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B916A2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VEtENkkC"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE5220652
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfDELne (ORCPT
+        id S1729754AbfDELoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:43:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40509 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfDELne (ORCPT
+        Fri, 5 Apr 2019 07:44:01 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54819 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfDELoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:43:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so7603473wre.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 04:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gpfxNDWzN/lDwOzvYsaszMMS2bWA067N9o6KMdno+Sg=;
-        b=VEtENkkChRlawaWLGL0UktdTMqQvT6OIdAqkP1vVlh5CM+ixrKMGoJIJd3Tai3Vzn2
-         ijrv5I/k+JzIyztt3GpNXlhq+XRFdfDNqrF3MnzZn+f1aZhMvRTZDVKQ3HQ9zuCs734W
-         4rFzXzw7jM6qc0obHbli+/rDVbeym7gpZNCxiAIboEXeV/gjvkppGczGiLX7prNr5JlD
-         mGKlhn2vzzf00B9kKfvzHivnT5yRNMkmbcfdTDPhOkjaF759XUaUArY7A32yXwcQb5Hr
-         jub2Qx5YKDUxga4/UfHhMmeV7JRTx/sEm6vGGVP2IfqjHCyKAk0QywbaGT5yd9TNZQgO
-         b60w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gpfxNDWzN/lDwOzvYsaszMMS2bWA067N9o6KMdno+Sg=;
-        b=PXkZL+DzB6N/HrJIv6iRKdZ+036QMLuuzh8rvNKIRbuVwTjUfbdgNThXI9u+4QKu2d
-         FFj4/RiQt6/T2z4OMvIfmDwpZ8OM9Zotu4STm3qyBcgHKwAJPvv4U8FFHsZDXQlEN4sC
-         vFZAN+LEpLyuUSNRYsXB/0mtSyaCyPMBNK5I32NmMkBTzjCv0ipE9MUKwCPuOGzgt+hW
-         LQ2REzsY49zgagJi/uHo7NwscP61u/GOJGNDCq/3Pv2YYPUxtic6Oc4BCs5TZUZ9wo8v
-         HiJ3Zn4Wsk/PJVAw4nkKMvd0KP7dyhmi4/Iv8kc6/JrJ2+77O6kHILbLyK8YLfL09asa
-         LKbw==
-X-Gm-Message-State: APjAAAVQVQ8fLiq3KGdmJJYPvsHBKJbuZk6c4ATieMJFgFerQjjWI6a1
-        DNb6InBdBRXI0YBrSBHMvMdWhV31eENiDJCRaC+87g==
-X-Google-Smtp-Source: APXvYqxNhn/S888Oagmx6upP9dvFkew+zCKkT/hl+Jj/FWTLJNOGsjms5kXSveGWQFKaTn6E/NMw4uXDVNDmyzFNjrM=
-X-Received: by 2002:adf:e9c1:: with SMTP id l1mr8021048wrn.270.1554464612316;
- Fri, 05 Apr 2019 04:43:32 -0700 (PDT)
+        Fri, 5 Apr 2019 07:44:01 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BhQiN2735296
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 04:43:26 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BhQe82735293;
+        Fri, 5 Apr 2019 04:43:26 -0700
+Date:   Fri, 5 Apr 2019 04:43:26 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Steven Rostedt (Red Hat)" <tipbot@zytor.com>
+Message-ID: <tip-70df6a7311186a7ab0b19f481dee4ca540a73837@git.kernel.org>
+Cc:     namhyung@kernel.org, hpa@zytor.com, mingo@kernel.org,
+        tstoyanov@vmware.com, akpm@linux-foundation.org,
+        tglx@linutronix.de, acme@redhat.com, rostedt@goodmis.org,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org
+Reply-To: namhyung@kernel.org, hpa@zytor.com, tstoyanov@vmware.com,
+          akpm@linux-foundation.org, mingo@kernel.org, tglx@linutronix.de,
+          jolsa@redhat.com, rostedt@goodmis.org, acme@redhat.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190401164343.257591565@goodmis.org>
+References: <20190401164343.257591565@goodmis.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] tools lib traceevent: Add more debugging to see
+ various internal ring buffer entries
+Git-Commit-ID: 70df6a7311186a7ab0b19f481dee4ca540a73837
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190403205652.183496-1-sean@poorly.run>
-In-Reply-To: <20190403205652.183496-1-sean@poorly.run>
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-Date:   Fri, 5 Apr 2019 13:43:21 +0200
-Message-ID: <CAMO6nax7zzzgAzh=F+JTSb6+KxZrOGZAX-t2G8JbyRBubDk6fw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/gpu/meson: Remove link to meson_canvas.c
-To:     Sean Paul <sean@poorly.run>
-Cc:     dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
-On Wed, Apr 3, 2019 at 10:56 PM Sean Paul <sean@poorly.run> wrote:
->
-> From: Sean Paul <seanpaul@chromium.org>
->
-> The file was removed in the below patch and is causing this error:
-> WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -function Canvas ../drivers/gpu/drm/meson/meson_canvas.c' failed with return code
->
-> Fixes: 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
-> Cc: Maxime Jourdan <mjourdan@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-amlogic@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> ---
->  Documentation/gpu/meson.rst | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
-> index 479f6f51a13b..b9e2f9aa3bd8 100644
-> --- a/Documentation/gpu/meson.rst
-> +++ b/Documentation/gpu/meson.rst
-> @@ -42,12 +42,6 @@ Video Encoder
->  .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
->     :doc: Video Encoder
->
-> -Video Canvas Management
-> -=======================
-> -
-> -.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
-> -   :doc: Canvas
-> -
->  Video Clocks
->  ============
->
-> --
-> Sean Paul, Software Engineer, Google / Chromium OS
->
+Commit-ID:  70df6a7311186a7ab0b19f481dee4ca540a73837
+Gitweb:     https://git.kernel.org/tip/70df6a7311186a7ab0b19f481dee4ca540a73837
+Author:     Steven Rostedt (Red Hat) <rostedt@goodmis.org>
+AuthorDate: Mon, 1 Apr 2019 12:43:09 -0400
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 1 Apr 2019 15:18:09 -0300
 
-Thanks for the patch, I missed that completely!
+tools lib traceevent: Add more debugging to see various internal ring buffer entries
 
-Maxime
+When trace-cmd report --debug is set, show the internal ring buffer
+entries like time-extends and padding. This requires adding new kbuffer
+API to retrieve these items.
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lkml.kernel.org/r/20190401164343.257591565@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/lib/traceevent/kbuffer-parse.c | 49 ++++++++++++++++++++++++++++++++++++
+ tools/lib/traceevent/kbuffer.h       | 13 ++++++++++
+ 2 files changed, 62 insertions(+)
+
+diff --git a/tools/lib/traceevent/kbuffer-parse.c b/tools/lib/traceevent/kbuffer-parse.c
+index af2a1f3b7424..b887e7437d67 100644
+--- a/tools/lib/traceevent/kbuffer-parse.c
++++ b/tools/lib/traceevent/kbuffer-parse.c
+@@ -727,3 +727,52 @@ int kbuffer_start_of_data(struct kbuffer *kbuf)
+ {
+ 	return kbuf->start;
+ }
++
++/**
++ * kbuffer_raw_get - get raw buffer info
++ * @kbuf:	The kbuffer
++ * @subbuf:	Start of mapped subbuffer
++ * @info:	Info descriptor to fill in
++ *
++ * For debugging. This can return internals of the ring buffer.
++ * Expects to have info->next set to what it will read.
++ * The type, length and timestamp delta will be filled in, and
++ * @info->next will be updated to the next element.
++ * The @subbuf is used to know if the info is passed the end of
++ * data and NULL will be returned if it is.
++ */
++struct kbuffer_raw_info *
++kbuffer_raw_get(struct kbuffer *kbuf, void *subbuf, struct kbuffer_raw_info *info)
++{
++	unsigned long long flags;
++	unsigned long long delta;
++	unsigned int type_len;
++	unsigned int size;
++	int start;
++	int length;
++	void *ptr = info->next;
++
++	if (!kbuf || !subbuf)
++		return NULL;
++
++	if (kbuf->flags & KBUFFER_FL_LONG_8)
++		start = 16;
++	else
++		start = 12;
++
++	flags = read_long(kbuf, subbuf + 8);
++	size = (unsigned int)flags & COMMIT_MASK;
++
++	if (ptr < subbuf || ptr >= subbuf + start + size)
++		return NULL;
++
++	type_len = translate_data(kbuf, ptr, &ptr, &delta, &length);
++
++	info->next = ptr + length;
++
++	info->type = type_len;
++	info->delta = delta;
++	info->length = length;
++
++	return info;
++}
+diff --git a/tools/lib/traceevent/kbuffer.h b/tools/lib/traceevent/kbuffer.h
+index 03dce757553f..ed4d697fc137 100644
+--- a/tools/lib/traceevent/kbuffer.h
++++ b/tools/lib/traceevent/kbuffer.h
+@@ -65,4 +65,17 @@ int kbuffer_subbuffer_size(struct kbuffer *kbuf);
+ void kbuffer_set_old_format(struct kbuffer *kbuf);
+ int kbuffer_start_of_data(struct kbuffer *kbuf);
+ 
++/* Debugging */
++
++struct kbuffer_raw_info {
++	int			type;
++	int			length;
++	unsigned long long	delta;
++	void			*next;
++};
++
++/* Read raw data */
++struct kbuffer_raw_info *kbuffer_raw_get(struct kbuffer *kbuf, void *subbuf,
++					 struct kbuffer_raw_info *info);
++
+ #endif /* _K_BUFFER_H */
