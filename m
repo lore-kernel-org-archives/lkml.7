@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB933C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 00:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 00:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7977E217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 00:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B87217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 00:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WncwU6KM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ih/pm8Oj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfDEAOs (ORCPT
+        id S1731038AbfDEAOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 20:14:48 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:6464 "EHLO
+        Thu, 4 Apr 2019 20:14:50 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6469 "EHLO
         hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfDEAOf (ORCPT
+        with ESMTP id S1730748AbfDEAOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 20:14:35 -0400
+        Thu, 4 Apr 2019 20:14:37 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca69dee0000>; Thu, 04 Apr 2019 17:14:38 -0700
+        id <B5ca69df00000>; Thu, 04 Apr 2019 17:14:40 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 04 Apr 2019 17:14:34 -0700
+  Thu, 04 Apr 2019 17:14:36 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 04 Apr 2019 17:14:34 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
- 2019 00:14:34 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
- 2019 00:14:34 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 5 Apr 2019 00:14:34 +0000
+        by hqpgpgate101.nvidia.com on Thu, 04 Apr 2019 17:14:36 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
+ 2019 00:14:36 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Apr
+ 2019 00:14:35 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 5 Apr 2019 00:14:35 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.48]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ca69de90000>; Thu, 04 Apr 2019 17:14:33 -0700
+        id <B5ca69deb0000>; Thu, 04 Apr 2019 17:14:35 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <talho@nvidia.com>, <skomatineni@nvidia.com>, <broonie@kernel.org>,
@@ -49,9 +49,9 @@ To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
 CC:     <ldewangan@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V2 15/20] spi: tegra114: add support for hw based cs
-Date:   Thu, 4 Apr 2019 17:14:14 -0700
-Message-ID: <1554423259-26056-15-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V2 17/20] spi: add a method for configuring CS timing
+Date:   Thu, 4 Apr 2019 17:14:16 -0700
+Message-ID: <1554423259-26056-17-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
 References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
@@ -59,122 +59,100 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554423278; bh=JRUsxCMfpWHlDFuo7VUekAeVhb9AF9fKugnCNtKqUFs=;
+        t=1554423280; bh=yYi0UrUtMHHtP9i2rMmF5tslLkBm87A6yTmqmEVnwV4=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=WncwU6KMwSABTEDbUx7RwlC9/vhgSgjYpdumAjNpKK2citoIgcKBKWgwqSzNJwG8C
-         wqePROFllJwlyXtBiSRJGKNMVHqRU2RMnAFQrKEv+wJm20AaL4s2U9ufhxa5KDP5O5
-         jbsRrtcMjQxXRwHzltNgzmlN5M3lsal6oMUh+VLQPq4DsDIQdfsKqNhr9W5hctRVZ0
-         fMNIpJ1fIwTpdXoCrxhEcBudN5IGExMdI5WfTCPjDVcty8NTU/dCa/cK3ruEXOrdJA
-         Aeu6We1rTuqPCpuNBXwoldG86mQvKKV9ypfuBQMS4e46XK1gXc7FR0bVqA59wuWZ1L
-         QnsPvcdO9Vvgw==
+        b=Ih/pm8Oj+5bpx16nvw0DsYQIhOTXcJjlsvEJZYEN7UR7U2BOZq5JaNuWI4YlyiqQ+
+         dM+6K+v0oy+mqK5fHrAS4niuogD4foNAWfJdf1lyaJhBDQCy6uHhhQLkoyd1u9vNWT
+         JCRex7HIY3zfxs/DT0VRQtdK7uiFYZlzN/v4vh6tXayqI+4KeQuuCGhS5B8lDiilnj
+         +mT/c3H8ZoyQuRaDw9wswpzKYypfxnVqHfHjJ3UQovCLk2q/1HGahyYpeTd8XHPZjP
+         U5y5LRzjkJrtej4ETnHUmD5RyDnOXcHpUoAv37Nymt/TPoILYMmpiwpGM4Fn6NPlz0
+         8ZNiVpS34ugbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra SPI controller supports both HW and SW based CS control
-for SPI transfers.
+This patch creates set_cs_timing SPI master optional method for
+SPI masters to implement configuring CS timing if applicable.
 
-This patch adds support for HW based CS control where CS is driven
-to active state during the transfer and is driven inactive at the
-end of the transfer directly by the HW.
-
-This patch enables the use of HW based CS only for single transfers
-without cs_change request.
+This patch also creates spi_cs_timing accessory for SPI clients to
+use for requesting SPI master controllers to configure device requested
+CS setup time, hold time and inactive delay.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/spi/spi-tegra114.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+ drivers/spi/spi.c       | 15 +++++++++++++++
+ include/linux/spi/spi.h | 15 +++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 209ec05a349f..5cc347b345b1 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -198,6 +198,7 @@ struct tegra_spi_data {
- 	unsigned				dma_buf_size;
- 	unsigned				max_buf_size;
- 	bool					is_curr_dma_xfer;
-+	bool					use_hw_based_cs;
- 
- 	struct completion			rx_dma_complete;
- 	struct completion			tx_dma_complete;
-@@ -728,7 +729,8 @@ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 97ce047a776b..0f92329e990f 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2995,6 +2995,21 @@ int spi_setup(struct spi_device *spi)
  }
+ EXPORT_SYMBOL_GPL(spi_setup);
  
- static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
--		struct spi_transfer *t, bool is_first_of_msg)
-+		struct spi_transfer *t, bool is_first_of_msg,
-+		bool is_single_xfer)
- {
- 	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
- 	struct tegra_spi_client_state *cstate = spi->controller_state;
-@@ -787,11 +789,17 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 		} else
- 			tegra_spi_writel(tspi, command1, SPI_COMMAND1);
- 
--		command1 |= SPI_CS_SW_HW;
--		if (spi->mode & SPI_CS_HIGH)
--			command1 |= SPI_CS_SW_VAL;
--		else
--			command1 &= ~SPI_CS_SW_VAL;
-+		if (is_single_xfer && !(t->cs_change)) {
-+			tspi->use_hw_based_cs = true;
-+			command1 &= ~(SPI_CS_SW_HW | SPI_CS_SW_VAL);
-+		} else {
-+			tspi->use_hw_based_cs = false;
-+			command1 |= SPI_CS_SW_HW;
-+			if (spi->mode & SPI_CS_HIGH)
-+				command1 |= SPI_CS_SW_VAL;
-+			else
-+				command1 &= ~SPI_CS_SW_VAL;
-+		}
- 
- 		if (cstate->cs_gpio_valid) {
- 			int val = (spi->mode & SPI_CS_HIGH) ? 1 : 0;
-@@ -956,11 +964,14 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
- 	if (cstate->cs_gpio_valid)
- 		gpio_set_value(spi->cs_gpio, cs_val);
- 
--	if (cs_val)
--		tspi->command1_reg |= SPI_CS_SW_VAL;
--	else
--		tspi->command1_reg &= ~SPI_CS_SW_VAL;
--	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	if (!tspi->use_hw_based_cs) {
-+		if (cs_val)
-+			tspi->command1_reg |= SPI_CS_SW_VAL;
-+		else
-+			tspi->command1_reg &= ~SPI_CS_SW_VAL;
-+		tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	}
++/**
++ * spi_set_cs_timing - configure CS setup, hold, and inactive delays
++ * @spi: the device that requires specific CS timing configuration
++ * @setup: CS setup time in terms of clock count
++ * @hold: CS hold time in terms of clock count
++ * @inactive_dly: CS inactive delay between transfers in terms of clock count
++ */
++void spi_set_cs_timing(struct spi_device *spi, u8 setup, u8 hold,
++		       u8 inactive_dly)
++{
++	if (spi->controller->set_cs_timing)
++		spi->controller->set_cs_timing(spi, setup, hold, inactive_dly);
++}
++EXPORT_SYMBOL_GPL(spi_set_cs_timing);
 +
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
- }
+ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
+ {
+ 	struct spi_controller *ctlr = spi->controller;
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index d5c86b763f43..fc4d21b4c2e4 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -331,6 +331,9 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+  *	must fail if an unrecognized or unsupported mode is requested.
+  *	It's always safe to call this unless transfers are pending on
+  *	the device whose settings are being modified.
++ * @set_cs_timing: optional hook for SPI devices to request SPI master
++ * controller for configuring specific CS setup time, hold time and inactive
++ * delay interms of clock counts
+  * @transfer: adds a message to the controller's transfer queue.
+  * @cleanup: frees controller-specific state
+  * @can_dma: determine whether this controller supports DMA
+@@ -364,6 +367,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+  * @unprepare_transfer_hardware: there are currently no more messages on the
+  *	queue so the subsystem notifies the driver that it may relax the
+  *	hardware by issuing this call
++ *
+  * @set_cs: set the logic level of the chip select line.  May be called
+  *          from interrupt context.
+  * @prepare_message: set up the controller to transfer a single message,
+@@ -489,6 +493,17 @@ struct spi_controller {
+ 	 */
+ 	int			(*setup)(struct spi_device *spi);
  
-@@ -987,16 +998,19 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 	struct spi_device *spi = msg->spi;
- 	int ret;
- 	bool skip = false;
-+	int single_xfer;
- 
- 	msg->status = 0;
- 	msg->actual_length = 0;
- 
-+	single_xfer = list_is_singular(&msg->transfers);
- 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
- 		u32 cmd1;
- 
- 		reinit_completion(&tspi->xfer_completion);
- 
--		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg);
-+		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
-+						    single_xfer);
- 
- 		if (!xfer->len) {
- 			ret = 0;
++	/*
++	 * set_cs_timing() method is for SPI controllers that supports
++	 * configuring CS timing.
++	 *
++	 * This hook allows SPI client drivers to request SPI controllers
++	 * to configure specific CS timing through spi_set_cs_timing() after
++	 * spi_setup().
++	 */
++	void (*set_cs_timing)(struct spi_device *spi, u8 setup_clk_cycles,
++			      u8 hold_clk_cycles, u8 inactive_clk_cycles);
++
+ 	/* bidirectional bulk transfers
+ 	 *
+ 	 * + The transfer() method may not sleep; its main role is
 -- 
 2.7.4
 
