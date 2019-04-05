@@ -2,32 +2,31 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42892C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159EBC282DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1009D2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FB62186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:46:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aBgzGDif"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Ie4dENao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfDEXp5 (ORCPT
+        id S1726814AbfDEXqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:45:57 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53086 "EHLO vps.xff.cz"
+        Fri, 5 Apr 2019 19:46:04 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53232 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbfDEXpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:45:31 -0400
+        id S1726451AbfDEXpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:45:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554507926; bh=ZNOGG0aTZAwovMi2umW8ToHPPCFWOtl8YJbHvB4Q3ec=;
+        t=1554507924; bh=17z8A4sEMKnnEksrPWwK/sfPIoAwgLtqI1F147/6Uhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBgzGDifDzDPLcOXSPUz2a/WKyKZDgw8k2t6ZG4ftTf15dt8RkPQjUrilUNiFoZ9j
-         sEw/6uaruJmbe2l8pkkX9PodsBqj8T6pasohK1QFvlwO2bIncdbJMZuoDVXyocB40l
-         70xxx3/9O28FYo3xSSb61QMg2HMurXpgvn/YWEWY=
+        b=Ie4dENaoddqprlXQ4Y4cy0odUf3GA+Gh3gzKrfINdywpPNgpLREUCteRbuCGb1fCj
+         g07rXQBM5FgQTEIn5QFZCnh2OQwUlMb94d2JS9i8CxJzVg6JGwtTIuEJhKPnL4eqFw
+         uScuCjXwX1NIGVFtlXgHhkd7+MC7c1nGGA6qlxg8=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -54,9 +53,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH 11/12] brcmfmac: Loading the correct firmware for brcm43456
-Date:   Sat,  6 Apr 2019 01:45:13 +0200
-Message-Id: <20190405234514.6183-12-megous@megous.com>
+Subject: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
+Date:   Sat,  6 Apr 2019 01:45:10 +0200
+Message-Id: <20190405234514.6183-9-megous@megous.com>
 In-Reply-To: <20190405234514.6183-1-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 MIME-Version: 1.0
@@ -68,37 +67,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-SDIO based brcm43456 is currently misdetected as brcm43455 and the wrong
-firmware name is used. Correct the detection and load the correct
-firmware file. Chiprev for brcm43456 is "9".
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index a06af0cd4a7f..22b73da42822 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -622,6 +622,7 @@ BRCMF_FW_DEF(43430A0, "brcmfmac43430a0-sdio");
- /* Note the names are not postfixed with a1 for backward compatibility */
- BRCMF_FW_DEF(43430A1, "brcmfmac43430-sdio");
- BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
-+BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
- BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
- BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
-@@ -642,7 +643,8 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_4339_CHIP_ID, 0xFFFFFFFF, 4339),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0x00000001, 43430A0),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0xFFFFFFFE, 43430A1),
--	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFFC0, 43455),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0x00000200, 43456),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
- 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
- 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
- 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 91fecab58836..dccad79da90c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -238,6 +238,15 @@
+ 				bias-pull-up;
+ 			};
+ 
++
++			mmc1_pins: mmc1-pins {
++				pins = "PG0", "PG1", "PG2", "PG3",
++				       "PG4", "PG5";
++				function = "mmc1";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
++
+ 			mmc2_pins: mmc2-pins {
+ 				pins = "PC1", "PC4", "PC5", "PC6",
+ 				       "PC7", "PC8", "PC9", "PC10",
 -- 
 2.21.0
 
