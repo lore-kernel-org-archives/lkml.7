@@ -2,112 +2,156 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6939C10F0F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F640C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867B3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67009217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfDEJQ0 (ORCPT
+        id S1730479AbfDEJRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:16:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41022 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729728AbfDEJQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:16:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36E1B87648;
-        Fri,  5 Apr 2019 09:16:25 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-233.ams2.redhat.com [10.36.116.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDB44261C6;
-        Fri,  5 Apr 2019 09:16:15 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Carlos O'Donell <codonell@redhat.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, carlos <carlos@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and thread creation (v7)
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
-        <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
-        <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
-        <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
-        <87lg0tosfz.fsf@concordia.ellerman.id.au>
-        <87pnq4zxyj.fsf@oldenburg2.str.redhat.com>
-        <ce6f9db3-bf85-7aec-4bae-998e6fd629e1@redhat.com>
-Date:   Fri, 05 Apr 2019 11:16:08 +0200
-In-Reply-To: <ce6f9db3-bf85-7aec-4bae-998e6fd629e1@redhat.com> (Carlos
-        O'Donell's message of "Thu, 4 Apr 2019 16:32:53 -0400")
-Message-ID: <87y34o4xt3.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 05 Apr 2019 09:16:26 +0000 (UTC)
+        Fri, 5 Apr 2019 05:17:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57316 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729728AbfDEJRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 05:17:10 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x359BSAk052490
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 05:17:09 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rp4308k15-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 05:17:09 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 5 Apr 2019 10:17:07 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 5 Apr 2019 10:17:04 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x359H3vO56295500
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Apr 2019 09:17:03 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9728652054;
+        Fri,  5 Apr 2019 09:17:03 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 56E2E52067;
+        Fri,  5 Apr 2019 09:17:02 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
+        ego@linux.vnet.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/2] Auto-promotion logic for cpuidle states
+Date:   Fri,  5 Apr 2019 04:16:45 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19040509-0012-0000-0000-0000030B9169
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040509-0013-0000-0000-00002143A4DA
+Message-Id: <20190405091647.4169-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=811 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904050068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Carlos O'Donell:
+Currently, the cpuidle governors (menu/ladder) determine what idle state a
+idling CPU should enter into based on heuristics that depend on the idle
+history on that CPU. Given that no predictive heuristic is perfect, there
+are cases where the governor predicts a shallow idle state, hoping that
+the CPU will be busy soon. However, if no new workload is scheduled on
+that CPU in the near future, the CPU will end up in the shallow state.
 
-> On 4/2/19 3:08 AM, Florian Weimer wrote:
->> * Michael Ellerman:
->>
->>> I'm a bit vague on what we're trying to do here.
->>>
->>> But it seems like you want some sort of "eye catcher" prior to the branch?
->>>
->>> That value is a valid instruction on current CPUs (rlwimi.
->>> r5,r24,6,1,9), and even if it wasn't it could become one in future.
->>>
->>> If you change it to 0x8053530 that is both a valid instruction and is a
->>> nop (conditional trap immediate but with no conditions set).
->>
->> I think we need something that is very unlikely to appear in the
->> instruction stream.  It's just a marker.  The instruction will never be
->> executed, and it does not have to be a trap, either (I believe that a
->> standard trap instruction would be a bad choice).
->
-> I assume you want to avoid a standard trap instruction because it would
-> be common, and so not meet the intent of the RSEQ_SIG choice as being something
-> that is *uncommon* right?
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a lite stop state, as such lite states will
+inhibit SMT folding, thereby depriving the other threads in the core from
+using the core resources.
 
-Ideally, RSEQ_SIG would be something that does not show up in the
-instruction stream at all, so that it is a reliable marker for the start
-of an rseq handler.  I assume the intent here is that the kernel
-provides some validation on the program counter it reads from the rseq
-area, so that we do not end up with some easily-abused gadget in every
-process image.
+To address this, such lite states need to be autopromoted. The cpuidle-core
+can queue timer to correspond with the residency value of the next
+available state. Thus leading to auto-promotion to a deeper idle state as
+soon as possible.
 
-> It is valuable that it be a trap, particularly for constant pools because
-> it means that a jump into the constant pool will trap.
+Experiment
+----------
+I performed experiments for three scenarios to collect some data.
 
-Sorry, I don't understand why this matters in this context.  Would you
-please elaborate?
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
 
-Thanks,
-Florian
+case 2 : With tick retained(as suggested) -
+
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally,
+observation was
+
+=========================================================
+sample		min            max           99percentile
+20		4ms            12ms          4ms
+=========================================================
+*ms = milliseconds
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a
+ 	  timer)
+
+============================================================
+sample		min		max		99percentile
+============================================================
+20		144us		192us     	144us
+============================================================
+*us = microseconds
+
+In this patch, we queue a timer just before entering into a stop0_lite
+state. The timer fires at (residency of next available state + exit latency
+of next available state * 2). Let's say if next state(stop0) is available
+which has residency of 20us, it should get out in as low as (20+2*2)*8
+[Based on the forumla (residency + 2xlatency)*history length] microseconds
+= 192us. Ideally we would expect 8 iterations, it was observed to get out
+in 6-7 iterations. Even if let's say stop2 is next available state(stop0
+and stop1 both are unavailable), it would take (100+2*10)*8 = 960us to get
+into stop2.
+
+So, We are able to get out of stop0_lite generally in 150us(with this
+patch) as compared to 4ms(with tick retained). As stated earlier, we do not
+want to get stuck into stop0_lite as it inhibits SMT folding for other
+sibling threads, depriving them of core resources. Current patch is using
+auto-promotion only for stop0_lite, as it gives performance benefit(primary
+reason) along with lowering down power consumption. We may extend this
+model for other states in future.
+
+Abhishek Goel (2):
+  cpuidle : auto-promotion for cpuidle states
+  cpuidle : Add auto-promotion flag to cpuidle flags
+
+ arch/powerpc/include/asm/opal-api.h |  1 +
+ drivers/cpuidle/Kconfig             |  4 ++
+ drivers/cpuidle/cpuidle-powernv.c   | 13 +++++-
+ drivers/cpuidle/cpuidle.c           | 68 ++++++++++++++++++++++++++++-
+ drivers/cpuidle/governors/ladder.c  |  3 +-
+ drivers/cpuidle/governors/menu.c    | 22 +++++++++-
+ include/linux/cpuidle.h             | 10 ++++-
+ 7 files changed, 115 insertions(+), 6 deletions(-)
+
+-- 
+2.17.1
+
