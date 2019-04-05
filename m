@@ -2,111 +2,77 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57E8C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB21217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C0E217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SqtWiuLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfDEHtW (ORCPT
+        id S1730053AbfDEHw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 03:49:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37158 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbfDEHtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 03:49:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w10so6797287wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 00:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U8q/dV+jUyLM8P4IzxbEg7fTh9kBuUuI18cx/4ZklsM=;
-        b=n1Y2ZsRzUxCq6gLS6TxCBqgR3BPEpgnhVi8DmYQzSzKg5NH84CKXWOaOrydop/5qpx
-         lMINDFYxYmdUs9lWKiEp9RhihvVU6E54A1Reu+d+GaAWBbejsrY3pajYeQ7DUAct6L57
-         y5ULuUMntKYsfSR1W/me/dQefyPGE3fwRyIYgb3LGhwBSo72h58+33BwR0OaKWZ216eM
-         Stzxo5BCTbUT4Wy0UEVRlLEpBHLqxui0sid3KkZGSaTYOjNCvv8ZVuFAK0DKK033VEa6
-         7Kvg7JE/d4oBz77J+4CgPCZncJ/+xhNgpKw6WRNj0BpRgQtYfbFVCijq5A0cXwzp47e9
-         xWdA==
-X-Gm-Message-State: APjAAAXUi7iRiFY1Yo0ChrYoYs6JMcnfDlbzvoFlbLucG1hub4ZI1iqp
-        brbgOPsfRTG5E5WGw2Q8/FCkyw==
-X-Google-Smtp-Source: APXvYqyqeoNmMQ7J44y2LQjEeu6SgtcE8ycj3r91YErfV/9hNc17FDEY2Zios7sL8s1ylZy+pfKLew==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr7107520wrw.301.1554450560539;
-        Fri, 05 Apr 2019 00:49:20 -0700 (PDT)
-Received: from steredhat (host35-203-static.12-87-b.business.telecomitalia.it. [87.12.203.35])
-        by smtp.gmail.com with ESMTPSA id d17sm29653957wrw.88.2019.04.05.00.49.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 00:49:19 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 09:49:17 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
- throughput
-Message-ID: <20190405074917.ooftpalmploq6x3b@steredhat>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
- <20190404114643-mutt-send-email-mst@kernel.org>
- <20190404164715.sycigtccwq2rziuz@steredhat>
- <20190404140345-mutt-send-email-mst@kernel.org>
+        Fri, 5 Apr 2019 03:52:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60656 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfDEHw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 03:52:59 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CE8A41EC014B;
+        Fri,  5 Apr 2019 09:52:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554450778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/cfTzYDJaAnN1Q6fZ5GPr1oND5hFzMjZFFN2qH7bmJA=;
+        b=SqtWiuLxmHz4oo/TEx4j2vbfJ2WoK31AM1XkwuVVSzFHkU9/eDFryVtt/rSBBUOPs4AM1W
+        Z0vs3tLUTMSlrQszivpKwaBJe4FQtWoGp52jvqkNz3Z+irrGwOPXIVAXtyjb5hBjz2huER
+        NszNve5b8CSoGUDGeoGU7ROlUJ+LFR4=
+Date:   Fri, 5 Apr 2019 09:52:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
+Message-ID: <20190405075251.GC23348@zn.tnic>
+References: <20190405045711.30339-1-bp@alien8.de>
+ <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190404140345-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 02:04:10PM -0400, Michael S. Tsirkin wrote:
-> On Thu, Apr 04, 2019 at 06:47:15PM +0200, Stefano Garzarella wrote:
-> > On Thu, Apr 04, 2019 at 11:52:46AM -0400, Michael S. Tsirkin wrote:
-> > > I simply love it that you have analysed the individual impact of
-> > > each patch! Great job!
-> > 
-> > Thanks! I followed Stefan's suggestions!
-> > 
-> > > 
-> > > For comparison's sake, it could be IMHO benefitial to add a column
-> > > with virtio-net+vhost-net performance.
-> > > 
-> > > This will both give us an idea about whether the vsock layer introduces
-> > > inefficiencies, and whether the virtio-net idea has merit.
-> > > 
-> > 
-> > Sure, I already did TCP tests on virtio-net + vhost, starting qemu in
-> > this way:
-> >   $ qemu-system-x86_64 ... \
-> >       -netdev tap,id=net0,vhost=on,ifname=tap0,script=no,downscript=no \
-> >       -device virtio-net-pci,netdev=net0
-> > 
-> > I did also a test using TCP_NODELAY, just to be fair, because VSOCK
-> > doesn't implement something like this.
-> 
-> Why not?
-> 
+On Fri, Apr 05, 2019 at 08:26:45AM +0200, Rasmus Villemoes wrote:
+> I like the current color.
 
-I think because originally VSOCK was designed to be simple and
-low-latency, but of course we can introduce something like that.
+Color?
 
-Current implementation directly copy the buffer from the user-space in a
-virtio_vsock_pkt and enqueue it to be transmitted.
+> It computes a*b+c with overflow checking at each step. calc_size
+> is way too generic and doesn't say anything at all about how the
+> calc(ulation) is done.
 
-Maybe we can introduce a buffer per socket where accumulate bytes and
-send it when it is full or when a timer is fired . We can also introduce
-a VSOCK_NODELAY (maybe using the same value of TCP_NODELAY for
-compatibility) to send the buffer immediately for low-latency use cases.
+Ok, whatever.
 
-What do you think?
+Then it would need at least a comment above it to state what it does. I
+don't want to go and parse the macros each time.
 
-Thanks,
-Stefano
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
