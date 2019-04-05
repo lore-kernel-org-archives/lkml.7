@@ -2,122 +2,83 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153D0C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEEAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D840321738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fW+DzFqF"
+	by mail.kernel.org (Postfix) with ESMTP id F06CB21738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 18:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbfDESjE (ORCPT
+        id S1731769AbfDESjL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 14:39:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51164 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731654AbfDESjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 14:39:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z11so7787358wmi.0;
-        Fri, 05 Apr 2019 11:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=mnvm+9lesrHyZqhSf2DoFjOXCqh3DHNocnRafDoBvnU=;
-        b=fW+DzFqFbD0upjz5OkgEDADjshaXIn/BqDQfjGmGCp0SyMyNq+tUgh1wDQOQQJOCAv
-         ux5g8dkXO1zIXUoYYPvYXWM4PcldnpGN4qZnGDK1fimCYWf4O0QWDPNa+l43Sg3SeFRp
-         vSSxUk49v7w6uFirCi69WEk9bkSUiqHH2nSAqcI2VAznXYI3fsrnv6Cw2QZT2cpHonxf
-         ocCqGdPdmGzAS/9cLCyfXo3bO2U6zilGt6h01b0CWidL+mShhd53LNE45cEokGdfutlW
-         iH6wDl5q8kYPoUL8ITA5Aa+Yv8nWJePWTwduUQsnnH8EVDyZhvwg9jU2JU+9cfgTloxd
-         9CaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=mnvm+9lesrHyZqhSf2DoFjOXCqh3DHNocnRafDoBvnU=;
-        b=iVnI2Eq5BspUtHNv3cWAgmggRAg9pGeJxwRJQsVp2ZRzmoOUJK+1zyU5Y44Yf3ieBz
-         hSyQTmcUj5OPtvCjxEHAacdHg7bmsvhzsxucRzgvI+6Vm6tW3qdqhQ9bF3gX3NgiGnAl
-         D23uxyd/qlU8h31Ls9JTfBU9xoo5esKMGaMJshMyWkBfnITQ6c2BUVaBeQMPabRrh69G
-         HxwU7yYhKM4f3V6JD4IsVhvvHNXShNMmTObGI44ZwQoz+H6b1A4p7qCfUh8wi4bLIbBk
-         PzRvnuSU1+ShpkjxunFFEeveP4ATBL3/ldJi2lrfHug+3sVodBW0Buf05gfuCdKk8Rta
-         fQtg==
-X-Gm-Message-State: APjAAAXfUz9ltdOdGk/1gxJ7j6sBU82Pu8KWZrVAlRAScVwqpDlfu3au
-        GTRPtNxXUNi+s/KR0ZEoZaU=
-X-Google-Smtp-Source: APXvYqzd32h1p6+liIpTJLGKdw02MqhYo0FSBEMYzOa7UyDUwduaaOWFBxvy9zOJLHzHpX2uhTHdRA==
-X-Received: by 2002:a1c:9cd1:: with SMTP id f200mr9086912wme.91.1554489542281;
-        Fri, 05 Apr 2019 11:39:02 -0700 (PDT)
-Received: from X555LD ([2a02:85f:510:b900:9cd8:5174:23da:3e1d])
-        by smtp.gmail.com with ESMTPSA id z13sm30968302wrw.36.2019.04.05.11.38.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Apr 2019 11:39:01 -0700 (PDT)
-Date:   Fri, 05 Apr 2019 21:38:57 +0300
-From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: Re: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jose Abreu <jose.abreu@synopsys.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>,
-        Christoph =?iso-8859-1?q?M=FCllner?= 
-        <christoph.muellner@theobroma-systems.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Message-Id: <1554489537.1199.0@gmail.com>
-In-Reply-To: <85c1d945-d49b-3350-6ff4-a058c5a8c1d7@arm.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
-        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
-        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
-        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
-        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
-        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
-        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
-        <1554305721.1328.0@gmail.com> <1554306954.1328.1@gmail.com>
-        <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
-        <1554488052.1193.1@gmail.com> <85c1d945-d49b-3350-6ff4-a058c5a8c1d7@arm.com>
-X-Mailer: geary/3.32.0
+        Fri, 5 Apr 2019 14:39:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59393 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731739AbfDESjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 14:39:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Apr 2019 11:39:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,313,1549958400"; 
+   d="scan'208";a="146929052"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Apr 2019 11:39:09 -0700
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 5 Apr 2019 11:39:09 -0700
+Received: from fmsmsx126.amr.corp.intel.com ([169.254.1.215]) by
+ fmsmsx156.amr.corp.intel.com ([169.254.13.6]) with mapi id 14.03.0415.000;
+ Fri, 5 Apr 2019 11:39:08 -0700
+From:   "Brown, Len" <len.brown@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH 09/14] thermal/x86_pkg_temp_thermal: Support
+ multi-die/package
+Thread-Topic: [PATCH 09/14] thermal/x86_pkg_temp_thermal: Support
+ multi-die/package
+Thread-Index: AQHUzZt9XVGEFiSV7US9S23DFCIOnKYulScA//+LqiA=
+Date:   Fri, 5 Apr 2019 18:39:08 +0000
+Message-ID: <1A7043D5F58CCB44A599DFD55ED4C9485C5D6F18@FMSMSX126.amr.corp.intel.com>
+References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
+ <863054888eb8f1a595369c49ec24740501e9c175.1551160674.git.len.brown@intel.com>
+ <alpine.DEB.2.21.1904052027280.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904052027280.1802@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODg4ZjJmZDUtOWQyZC00NmE4LWE4ZjktYTUwYjQ4MTZkZDk0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQ1hNZzVJOFFhXC9NcUNjYkNcL1wvTURENFlHNlhRXC9KbWdNYlFxVkNcL3prdmd3dEVhY1p4ZkF5d256NWVVWjBsTHlBIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> What's your overall setup? So far with my RK3328 box I've found that 
-> with an IPv4 link and an MTU of 2000 I have to dial PBL right down to 
-> 1 or 2 (with no-pbl-x8 as well) to prevent Tx stalling, and with the 
-> MTU bumped up to 3000 it just won't play at any PBL setting...
-> 
-> Robin.
+> please add a new helper function topology_max_dies() and retrieve it from that.
 
-I'm using a Libre Computer Renegade with RK3328 SoC(maybe it's a board 
-specific thing?)
-I'm using txpbl as from what I can gather, the rx has no issues, no 
-need to change it.
+I'll do this for Rui -- since his patch is in my x86 branch,
+and it is already (very early) Saturday morning for him:-)
 
-When it comes to rx,
-running the server (iperf3 -s) on the Renegade and iperf3 -c 
-<renegade_ip> on my laptop,
-I get about 940 Mbps. It's always been like that, satisfactory.
+FYI, there were a couple of other small changes I made to that branch
+in response to list feedback that I pushed, but didn't re-email out the series.
 
-When it comes to tx (the one all the fuss is about)
-I eventually find that just with snps,txpbl = <0x21>, and no other pbl 
-thing set I get about 905 Mbps on average sent to my laptop, now 
-running the iperf3 server.
+Thomas,
+Let me know if you prefer me to re-email the series, or just send a git pull request.
 
-I must say I haven't touched the MTUs but I never needed to as the 
-issue presented itself in normal usage. Simple iperf tests will fail 
-after same kilobytes if no tweaks are applied.
-
+Thanks,
+-Len
 
