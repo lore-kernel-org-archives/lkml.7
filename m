@@ -2,119 +2,151 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48455C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CFDC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9F82146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C5E2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 19:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="HfgWPH4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbfDETcq (ORCPT
+        id S1731809AbfDETej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 15:32:46 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49555 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731611AbfDETcq (ORCPT
+        Fri, 5 Apr 2019 15:34:39 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:39886 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731611AbfDETej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 15:32:46 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hCUZn-0003KL-U0; Fri, 05 Apr 2019 21:32:36 +0200
-Date:   Fri, 5 Apr 2019 21:32:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Aubrey Li <aubrey.li@linux.intel.com>
-cc:     mingo@redhat.com, Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, ak@linux.intel.com,
-        tim.c.chen@linux.intel.com, dave.hansen@intel.com,
-        arjan@linux.intel.com, aubrey.li@intel.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v13 1/3] /proc/pid/status: Add support for architecture
- specific output
-In-Reply-To: <20190224044400.34975-1-aubrey.li@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
-References: <20190224044400.34975-1-aubrey.li@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Apr 2019 15:34:39 -0400
+Received: by mail-yw1-f67.google.com with SMTP id z9so2724209ywd.6
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 12:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1sjVKmuXhVLeJPdr6cYXHsdrlxlSdoGqHJzj+qjCJSs=;
+        b=HfgWPH4lmgDv9Qm0wYYM0YSX7p/5J223RCotchxn0ig0HNWwDhe/bfWVmalb193d+I
+         lrSYGHixHykp4b+WeCxeycJ/svB6kvxsN+UXOJi1C5bs2uEaNAG3AOfiWt2wgqQERAr0
+         1SohWesg5Fv8XldsD5eXKqmrmm3KYjF11BAyd198U2aTSiRg4Lw8/OB99zOrnjTxR8G6
+         drwgt3ljZjnPYahC1LoK+Si0axTfGOM53Td8UQoso65gA0S3MTUWEjHiVcMxxsjE59lT
+         sUN7s7ubUd0p3Dr/LhZyQ3obCwowCTyhqiBTubree0nTzEcUGCiD4jMql98aqVcjv+kW
+         2C+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1sjVKmuXhVLeJPdr6cYXHsdrlxlSdoGqHJzj+qjCJSs=;
+        b=cOBZPu5exX59m1wMtv+O6OeTOejiiPU8CpbxJFhlYmOJ3NesvtkPsqJ22/3S1PP5h/
+         6ZX774gn5xIxu8kEfE8Ouosmj29uAIFaD/6Zd4tQu7iKIKfAEqIZLs4C1ur8D5+RgCPr
+         DCsvDvI4GdiinjnGSChxz6BxUbA3L95LSinq2WINlAuWHmXE4m7Sh8QMO3s19yDPIE8O
+         BtYsf55MF2v9d+Myt6bfBUqcCXfb3j0vGXsdNY/fSiLE5JHTiIRdCAx5geYRN7XDfR62
+         xfw6/8yLbGWaVDkcAKPXWHRcHDBDgfnGbbtwAuVID4oJzqkVxz0xR87NNrazPvQcpCO0
+         v69w==
+X-Gm-Message-State: APjAAAW+eQSBi4ltwkArjho8JhSqFL3tsPr0ndgW0RAi99MPWhOVyZB4
+        QL6GcV3ulAXD1aIR7yDjoq8fqw==
+X-Google-Smtp-Source: APXvYqxk+cL+z20oWBBFdNBy37Mukg0IUnBl8tYoZHrHcuTh6/tRYi4d+gW2Ki0eiXpsR6xBfKjr5A==
+X-Received: by 2002:a81:91d7:: with SMTP id i206mr12039871ywg.87.1554492877686;
+        Fri, 05 Apr 2019 12:34:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:180::777e])
+        by smtp.gmail.com with ESMTPSA id 23sm7668952ywq.91.2019.04.05.12.34.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 12:34:36 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 15:34:35 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm:workingset use real time to judge activity of the
+ file page
+Message-ID: <20190405193435.GA16947@cmpxchg.org>
+References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+ <20190404163914.GA4229@cmpxchg.org>
+ <CAGWkznHeGeiHWSF-gPmSW=AWQcEybHroOuP4CSbW4rKq12LtNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGWkznHeGeiHWSF-gPmSW=AWQcEybHroOuP4CSbW4rKq12LtNw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Feb 2019, Aubrey Li wrote:
+On Fri, Apr 05, 2019 at 07:23:46AM +0800, Zhaoyang Huang wrote:
+> On Fri, Apr 5, 2019 at 12:39 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Thu, Apr 04, 2019 at 11:30:17AM +0800, Zhaoyang Huang wrote:
+> > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> > >
+> > > In previous implementation, the number of refault pages is used
+> > > for judging the refault period of each page, which is not precised as
+> > > eviction of other files will be affect a lot on current cache.
+> > > We introduce the timestamp into the workingset's entry and refault ratio
+> > > to measure the file page's activity. It helps to decrease the affection
+> > > of other files(average refault ratio can reflect the view of whole system
+> > > 's memory).
+> >
+> > I don't understand what exactly you're saying here, can you please
+> > elaborate?
+> >
+> > The reason it's using distances instead of absolute time is because
+> > the ordering of the LRU is relative and not based on absolute time.
+> >
+> > E.g. if a page is accessed every 500ms, it depends on all other pages
+> > to determine whether this page is at the head or the tail of the LRU.
+> >
+> > So when you refault, in order to determine the relative position of
+> > the refaulted page in the LRU, you have to compare it to how fast that
+> > LRU is moving. The absolute refault time, or the average time between
+> > refaults, is not comparable to what's already in memory.
+> How do you know how long time did these pages' dropping taken.Actruly,
+> a quick dropping of large mount of pages will be wrongly deemed as
+> slow dropping instead of the exact hard situation.That is to say, 100
+> pages per million second or per second have same impaction on
+> calculating the refault distance, which may cause less protection on
+> this page cache for former scenario and introduce page thrashing.
+> especially when global reclaim, a round of kswapd reclaiming that
+> waked up by a high order allocation or large number of single page
+> allocations may cause such things as all pages within the node are
+> counted in the same lru. This commit can decreasing above things by
+> comparing refault time of single page with avg_refault_time =
+> delta_lru_reclaimed_pages/ avg_refault_retio (refault_ratio =
+> lru->inactive_ages / time).
 
-> The architecture specific information of the running processes could
-> be useful to the userland. Add support to examine process architecture
-> specific information externally.
-> 
-> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Arjan van de Ven <arjan@linux.intel.com>
+When something like a higher-order allocation drops a large number of
+file pages, it's *intentional* that the pages that were evicted before
+them become less valuable and less likely to be activated on
+refault. There is a finite amount of in-memory LRU space and the pages
+that have been evicted the most recently have precedence because they
+have the highest proven access frequency.
 
-This really lacks
+Of course, when a large amount of the cache that was pushed out in
+between is not re-used again, and don't claim their space in memory,
+it would be great if we could then activate the older pages that *are*
+re-used again in their stead.
 
-Cc: Linux API <linux-api@vger.kernel.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+But that would require us being able to look into the future. When an
+old page refaults, we don't know if a younger page is still going to
+refault with a shorter refault distance or not. If it won't, then we
+were right to activate it. If it will refault, then we put something
+on the active list whose reuse frequency is too low to be able to fit
+into memory, and we thrash the hottest pages in the system.
 
-Cc'ed now.
-
-> ---
->  fs/proc/array.c         | 5 +++++
->  include/linux/proc_fs.h | 2 ++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/fs/proc/array.c b/fs/proc/array.c
-> index 9d428d5a0ac8..ea7a981f289c 100644
-> --- a/fs/proc/array.c
-> +++ b/fs/proc/array.c
-> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->  	seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->  }
->  
-> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
-> +{
-> +}
-> +
->  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->  			struct pid *pid, struct task_struct *task)
->  {
-> @@ -424,6 +428,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->  	task_cpus_allowed(m, task);
->  	cpuset_task_status_allowed(m, task);
->  	task_context_switch_counts(m, task);
-> +	arch_proc_pid_status(m, task);
->  	return 0;
->  }
->  
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-> index d0e1f1522a78..1de9ba1b064f 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -73,6 +73,8 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
->  						    int (*show)(struct seq_file *, void *),
->  						    proc_write_t write,
->  						    void *data);
-> +/* Add support for architecture specific output in /proc/pid/status */
-> +extern void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
->  
->  #else /* CONFIG_PROC_FS */
->  
-> -- 
-> 2.17.1
-> 
-> 
+As Matthew says, you are fairly randomly making refault activations
+more aggressive (especially with that timestamp unpacking bug), and
+while that expectedly boosts workload transition / startup, it comes
+at the cost of disrupting stable states because you can flood a very
+active in-ram workingset with completely cold cache pages simply
+because they refault uniformly wrt each other.
