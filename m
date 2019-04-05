@@ -2,324 +2,123 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDC2C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B4CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942AF2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116B92186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ScOJu+Io"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfDELr2 (ORCPT
+        id S1729994AbfDELsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:47:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47595 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDELr2 (ORCPT
+        Fri, 5 Apr 2019 07:48:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59222 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfDELsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:47:28 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35Bl3Ci2737368
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 5 Apr 2019 04:47:03 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35Bl3Fa2737365;
-        Fri, 5 Apr 2019 04:47:03 -0700
-Date:   Fri, 5 Apr 2019 04:47:03 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-a634b278ec2504fdd2acd694f5158ae79016fb70@git.kernel.org>
-Cc:     tglx@linutronix.de, akpm@linux-foundation.org, namhyung@kernel.org,
-        hpa@zytor.com, rostedt@goodmis.org, tstoyanov@vmware.com,
-        acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com
-Reply-To: mingo@kernel.org, acme@redhat.com, jolsa@redhat.com,
-          linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-          tglx@linutronix.de, rostedt@goodmis.org, tstoyanov@vmware.com,
-          namhyung@kernel.org, hpa@zytor.com
-In-Reply-To: <20190401164343.968458918@goodmis.org>
-References: <20190326154328.28718-4-tstoyanov@vmware.com>
-        <20190401164343.968458918@goodmis.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Remove tep filter trivial
- APIs
-Git-Commit-ID: a634b278ec2504fdd2acd694f5158ae79016fb70
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 5 Apr 2019 07:48:03 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35BlxLR018470;
+        Fri, 5 Apr 2019 06:47:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554464879;
+        bh=h+lKNV/tyP7GgAYGMMmtMgrqmcB1TwERoQ2EC30aoAo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ScOJu+IodmOn0gqgdHSl706CSSi9CNNGTE7G9SwYqi2NQq7lrYT99w65oNx0RheiT
+         GSr8/IIOrMgNK9T+a3rnxPqdHBbf1jv3/rIb3m2uc0EkLcyYzVObe+qw5ZK3JPyHD5
+         yJlD9ysei+veXm6Mw2+vezTQ1oSvF0Slc27hGIHM=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35BlxMq068211
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 5 Apr 2019 06:47:59 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
+ 2019 06:47:59 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 5 Apr 2019 06:47:59 -0500
+Received: from [172.22.78.91] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35Blwb4026676;
+        Fri, 5 Apr 2019 06:47:59 -0500
+Subject: Re: [PATCH v3 10/25] dt-bindings: lp8860: Add function and color
+ properties
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        <linux-leds@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pavel@ucw.cz>, <robh@kernel.org>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-11-jacek.anaszewski@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ed50b431-eaec-0470-649b-4fc50801a075@ti.com>
+Date:   Fri, 5 Apr 2019 06:47:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190331175501.23471-11-jacek.anaszewski@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a634b278ec2504fdd2acd694f5158ae79016fb70
-Gitweb:     https://git.kernel.org/tip/a634b278ec2504fdd2acd694f5158ae79016fb70
-Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Mon, 1 Apr 2019 12:43:14 -0400
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Apr 2019 15:18:09 -0300
+Jacek
 
-tools lib traceevent: Remove tep filter trivial APIs
+On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
+> Refer to new "function" and "color" properties and mark "label"
+> as deprecated.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> index 5f0e892ad759..9863220db4ba 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> @@ -20,12 +20,16 @@ Required child properties:
+>  	- reg : 0
+>  
+>  Optional child properties:
+> -	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- function : see Documentation/devicetree/bindings/leds/common.txt
+> +	- color : see Documentation/devicetree/bindings/leds/common.txt
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+>  	- linux,default-trigger :
+>  	   see Documentation/devicetree/bindings/leds/common.txt
+>  
+>  Example:
+>  
+> +#include <dt-bindings/leds/common.h>
+> +
+>  led-controller@2d {
+>  	compatible = "ti,lp8860";
+>  	#address-cells = <1>;
+> @@ -36,7 +40,8 @@ led-controller@2d {
+>  
+>  	led@0 {
+>  		reg = <0>;
+> -		label = "white:backlight";
+> +		function = LED_FUNCTION_BACKLIGHT;
+> +		color = <LED_COLOR_ID_WHITE>;
+>  		linux,default-trigger = "backlight";
+>  	};
+>  }
+> 
 
-This patch removes trivial filter tep APIs:
-
-  enum tep_filter_trivial_type
-  tep_filter_event_has_trivial()
-  tep_update_trivial()
-  tep_filter_clear_trivial()
-
-Trivial filters is an optimization, used only in the first version of
-KernelShark. The API is deprecated, the next KernelShark release does
-not use it.
-
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20190326154328.28718-4-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190401164343.968458918@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/traceevent/event-parse.h  |  16 ----
- tools/lib/traceevent/parse-filter.c | 169 ------------------------------------
- 2 files changed, 185 deletions(-)
-
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index be082f9692f1..3833d1384599 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -732,12 +732,6 @@ struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent);
- #define FILTER_MISS		TEP_ERRNO__FILTER_MISS
- #define FILTER_MATCH		TEP_ERRNO__FILTER_MATCH
- 
--enum tep_filter_trivial_type {
--	TEP_FILTER_TRIVIAL_FALSE,
--	TEP_FILTER_TRIVIAL_TRUE,
--	TEP_FILTER_TRIVIAL_BOTH,
--};
--
- enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
- 					 const char *filter_str);
- 
-@@ -752,9 +746,6 @@ int tep_event_filtered(struct tep_event_filter *filter,
- 
- void tep_filter_reset(struct tep_event_filter *filter);
- 
--int tep_filter_clear_trivial(struct tep_event_filter *filter,
--			     enum tep_filter_trivial_type type);
--
- void tep_filter_free(struct tep_event_filter *filter);
- 
- char *tep_filter_make_string(struct tep_event_filter *filter, int event_id);
-@@ -762,15 +753,8 @@ char *tep_filter_make_string(struct tep_event_filter *filter, int event_id);
- int tep_filter_remove_event(struct tep_event_filter *filter,
- 			    int event_id);
- 
--int tep_filter_event_has_trivial(struct tep_event_filter *filter,
--				 int event_id,
--				 enum tep_filter_trivial_type type);
--
- int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *source);
- 
--int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
--			enum tep_filter_trivial_type type);
--
- int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter *filter2);
- 
- #endif /* _PARSE_EVENTS_H */
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index cb5ce66dab6e..4ffd8b25a852 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1522,167 +1522,6 @@ int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *sour
- 	return ret;
- }
- 
--
--/**
-- * tep_update_trivial - update the trivial filters with the given filter
-- * @dest - the filter to update
-- * @source - the filter as the source of the update
-- * @type - the type of trivial filter to update.
-- *
-- * Scan dest for trivial events matching @type to replace with the source.
-- *
-- * Returns 0 on success and -1 if there was a problem updating, but
-- *   events may have still been updated on error.
-- */
--int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
--		       enum tep_filter_trivial_type type)
--{
--	struct tep_handle *src_pevent;
--	struct tep_handle *dest_pevent;
--	struct tep_event *event;
--	struct tep_filter_type *filter_type;
--	struct tep_filter_arg *arg;
--	char *str;
--	int i;
--
--	src_pevent = source->pevent;
--	dest_pevent = dest->pevent;
--
--	/* Do nothing if either of the filters has nothing to filter */
--	if (!dest->filters || !source->filters)
--		return 0;
--
--	for (i = 0; i < dest->filters; i++) {
--		filter_type = &dest->event_filters[i];
--		arg = filter_type->filter;
--		if (arg->type != TEP_FILTER_ARG_BOOLEAN)
--			continue;
--		if ((arg->boolean.value && type == TEP_FILTER_TRIVIAL_FALSE) ||
--		    (!arg->boolean.value && type == TEP_FILTER_TRIVIAL_TRUE))
--			continue;
--
--		event = filter_type->event;
--
--		if (src_pevent != dest_pevent) {
--			/* do a look up */
--			event = tep_find_event_by_name(src_pevent,
--						       event->system,
--						       event->name);
--			if (!event)
--				return -1;
--		}
--
--		str = tep_filter_make_string(source, event->id);
--		if (!str)
--			continue;
--
--		/* Don't bother if the filter is trivial too */
--		if (strcmp(str, "TRUE") != 0 && strcmp(str, "FALSE") != 0)
--			filter_event(dest, event, str, NULL);
--		free(str);
--	}
--	return 0;
--}
--
--/**
-- * tep_filter_clear_trivial - clear TRUE and FALSE filters
-- * @filter: the filter to remove trivial filters from
-- * @type: remove only true, false, or both
-- *
-- * Removes filters that only contain a TRUE or FALES boolean arg.
-- *
-- * Returns 0 on success and -1 if there was a problem.
-- */
--int tep_filter_clear_trivial(struct tep_event_filter *filter,
--			     enum tep_filter_trivial_type type)
--{
--	struct tep_filter_type *filter_type;
--	int count = 0;
--	int *ids = NULL;
--	int i;
--
--	if (!filter->filters)
--		return 0;
--
--	/*
--	 * Two steps, first get all ids with trivial filters.
--	 *  then remove those ids.
--	 */
--	for (i = 0; i < filter->filters; i++) {
--		int *new_ids;
--
--		filter_type = &filter->event_filters[i];
--		if (filter_type->filter->type != TEP_FILTER_ARG_BOOLEAN)
--			continue;
--		switch (type) {
--		case TEP_FILTER_TRIVIAL_FALSE:
--			if (filter_type->filter->boolean.value)
--				continue;
--			break;
--		case TEP_FILTER_TRIVIAL_TRUE:
--			if (!filter_type->filter->boolean.value)
--				continue;
--		default:
--			break;
--		}
--
--		new_ids = realloc(ids, sizeof(*ids) * (count + 1));
--		if (!new_ids) {
--			free(ids);
--			return -1;
--		}
--
--		ids = new_ids;
--		ids[count++] = filter_type->event_id;
--	}
--
--	if (!count)
--		return 0;
--
--	for (i = 0; i < count; i++)
--		tep_filter_remove_event(filter, ids[i]);
--
--	free(ids);
--	return 0;
--}
--
--/**
-- * tep_filter_event_has_trivial - return true event contains trivial filter
-- * @filter: the filter with the information
-- * @event_id: the id of the event to test
-- * @type: trivial type to test for (TRUE, FALSE, EITHER)
-- *
-- * Returns 1 if the event contains a matching trivial type
-- *  otherwise 0.
-- */
--int tep_filter_event_has_trivial(struct tep_event_filter *filter,
--				 int event_id,
--				 enum tep_filter_trivial_type type)
--{
--	struct tep_filter_type *filter_type;
--
--	if (!filter->filters)
--		return 0;
--
--	filter_type = find_filter_type(filter, event_id);
--
--	if (!filter_type)
--		return 0;
--
--	if (filter_type->filter->type != TEP_FILTER_ARG_BOOLEAN)
--		return 0;
--
--	switch (type) {
--	case TEP_FILTER_TRIVIAL_FALSE:
--		return !filter_type->filter->boolean.value;
--
--	case TEP_FILTER_TRIVIAL_TRUE:
--		return filter_type->filter->boolean.value;
--	default:
--		return 1;
--	}
--}
--
- static int test_filter(struct tep_event *event, struct tep_filter_arg *arg,
- 		       struct tep_record *record, enum tep_errno *err);
- 
-@@ -2409,14 +2248,6 @@ int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter
- 			break;
- 		if (filter_type1->filter->type != filter_type2->filter->type)
- 			break;
--		switch (filter_type1->filter->type) {
--		case TEP_FILTER_TRIVIAL_FALSE:
--		case TEP_FILTER_TRIVIAL_TRUE:
--			/* trivial types just need the type compared */
--			continue;
--		default:
--			break;
--		}
- 		/* The best way to compare complex filters is with strings */
- 		str1 = arg_to_str(filter1, filter_type1->filter);
- 		str2 = arg_to_str(filter2, filter_type2->filter);
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+-- 
+------------------
+Dan Murphy
