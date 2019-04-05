@@ -2,157 +2,97 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670C0C282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9310C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365422171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782C921855
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 22:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uV5MvX+o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K90MYp24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfDEWpC (ORCPT
+        id S1726524AbfDEWpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 18:45:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34704 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfDEWpC (ORCPT
+        Fri, 5 Apr 2019 18:45:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39308 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfDEWpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 18:45:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so3780033plt.1;
-        Fri, 05 Apr 2019 15:45:01 -0700 (PDT)
+        Fri, 5 Apr 2019 18:45:51 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so8714080wmk.4;
+        Fri, 05 Apr 2019 15:45:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aWEecOU3ZLSpruRw1eiZyJO4itUOhyN98xsznH722UA=;
-        b=uV5MvX+ounc9QDg4AN2thG1LOUs6R9PPGD7NB2eY446G3H+GRwcx4eaJw9YUUyW2JB
-         35yifCkMqN77NqWiW4aujPKxplibGVFnk65ubaRgjGK37aoKJLdhtTpkGF+sAGGhn7Zj
-         wYRe7OSF7OpQFSdbgnYDJzaSEkFcLS94V0dRw2zUw+bv8bFlaEkdorHXA6FwdFMXfgFs
-         2uJNgoiDytA+c5e6a29NLo6KUccar12jFd+RZ1vtDVD7U164W9NS4rkIHBvoZWXqSglV
-         ikWZ11GmaRaWaDh9A+sPdcAzsATEm3l3oWYbnixjeoX/3Hr0N91xczf2ddFg3rErSOCx
-         RwtA==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=FFpEk03c9ahTRub7HYZoRsZjJqVGUEo+G6NgtqMIg+s=;
+        b=K90MYp241QslH82Wi3YPxrm0YcAZLrcYcDnjZFlZuY+VJHPuEKwCNwR8y6gYDJDWIo
+         M8PFz+t0pVxEn4KsMgi6rvgtcRlK/fI1jWaUym/0BXoYdxorse1rvVGq8SYDDvfVGj6f
+         TrsSSXwyyJiVbfLsjTV9JFnfuApbIvZZraPfWNPxOPJ+IpNmBQObLJZTfR2aZNr/9ypc
+         9DxViW70a2gMUfqB30I9XjEDKQqzQ4SCcZfaiNdGjCwLLlCvf8BnIwlNVd3XK1unNAE4
+         f/GqO1uhMkPEupjYGkQVur9vqnqg9XoxRx0ktp427EsuAetXo/J3tI7j/jQfvKd33cmM
+         NVUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aWEecOU3ZLSpruRw1eiZyJO4itUOhyN98xsznH722UA=;
-        b=o4AdLloaft7PKRRHAqRNPZWAYTjKyRdLhzha6xe6Ysl1rO43W8RK+/3FaM9TZ4/BDW
-         eiJimiwI+0Rgikc3ozRGEJ2oHZ3cmNc5qi0WD6PxZ9kFFgMjnqy4RRDsLhA3sa4wxCRG
-         n30xQiA8OFSHss+9uJg9lA0dQdbvWjPXi6+rbZmz9TRMg39BLhN+o6zJYWJGeSgy7PrK
-         Gol2/2km/A4SfE1gGEY+XdqkvmsdJ0D9nHnwdndZyvO82FG1FgYi3LM9xdvXIOr+KFHz
-         DhztH8nlyXxBOye1+GO1XVk2Mt4D/gsSl1XwSs7fdhCIJ1+tbpV7Jkkh6iYo9texrbMG
-         62kA==
-X-Gm-Message-State: APjAAAUlauN/D7neZoKoAdPlk+VLmDv0KE3CYPM2iVx/XDGGsTSP4fyv
-        LT6UqAn492uiqOn2Meg5CnjF1tdj
-X-Google-Smtp-Source: APXvYqy6EF7mgWkAk54FFi86v2T2k5ihXgjErgXquERF/kqyDItWyXbdLzLXG/U+3J0C+U+WlV8QPQ==
-X-Received: by 2002:a17:902:9a83:: with SMTP id w3mr15873502plp.241.1554504301077;
-        Fri, 05 Apr 2019 15:45:01 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 20sm30910819pfn.131.2019.04.05.15.44.59
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=FFpEk03c9ahTRub7HYZoRsZjJqVGUEo+G6NgtqMIg+s=;
+        b=DGMkL1u1+uhjBHJH56ocy4kiTLvr9oTyD5TMHkHIbEyiLaXAVD3Esi14IJMRIFIWcO
+         qOSrtKvuL0HRsRKo6m6oX7VMDMVoBKFV+idd0+QxRFLhfgw+GBQRSw/bfV3zA0DadrWT
+         kjsCxCkBVp2zY6FFy11oa8ASfz7XaQ1ncaQA2w/Ola6wKlQaFBFh9ptda8HgG/t1L3Fo
+         1OD0jctSyPItOakMCSpLqx2zC/U6yd70pHr9axiGWV8KG1L4QXWACJumnyXPoVowC5aR
+         GjgkQED4vIHswKIL8Fhs6KZMwiCnj0wRjNvZ7dPjsFvLwhjBzqqrZaxiUc3wD9y4eOtv
+         mWaQ==
+X-Gm-Message-State: APjAAAXNlTBhMvdiugtAc+h0+g3ruP0El/LNi2pqMA8mkukOSl6hH9/o
+        3RbbB53RCIOd+JQ9WCyDED6tVvxk
+X-Google-Smtp-Source: APXvYqyyMHWt92ahhPhr3ewDct5EapbcKq+oNGEnhMXcvbAG7fCWJbuo8qJhcU91hk9g8u9OAmTWrw==
+X-Received: by 2002:a1c:21c1:: with SMTP id h184mr8993070wmh.128.1554504349211;
+        Fri, 05 Apr 2019 15:45:49 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id v16sm44352867wro.48.2019.04.05.15.45.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 15:44:59 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 15:44:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xsysace: Fix error handling in ace_setup
-Message-ID: <20190405224458.GA19556@roeck-us.net>
-References: <1550594996-11453-1-git-send-email-linux@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550594996-11453-1-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 05 Apr 2019 15:45:48 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 5.1-rc4
+Date:   Sat,  6 Apr 2019 00:45:47 +0200
+Message-Id: <1554504347-8396-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Linus,
 
-On Tue, Feb 19, 2019 at 08:49:56AM -0800, Guenter Roeck wrote:
-> If xace hardware reports a bad version number, the error handling code
-> in ace_setup() calls put_disk(), followed by queue cleanup. However, since
-> the disk data structure has the queue pointer set, put_disk() also
-> cleans and releases the queue. This results in blk_cleanup_queue()
-> accessing an already released data structure, which in turn may result
-> in a crash such as the following.
-> 
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-This crash is now quite persistent in mainline. The fix didn't make it.
-Should I stop testing virtex-ml507 with qemu ?
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
-Guenter
+are available in the git repository at:
 
-> [   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
-> [   10.681826] Faulting instruction address: 0xc0431480
-> [   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
-> [   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
-> [   10.682387] Modules linked in:
-> [   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
-> [   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
-> [   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
-> [   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
-> [   10.683236] DEAR: 00000040 ESR: 00000000
-> [   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
-> [   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
-> [   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
-> [   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
-> [   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
-> [   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
-> [   10.684602] Call Trace:
-> [   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
-> [   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
-> [   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
-> [   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
-> [   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
-> [   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
-> [   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
-> [   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
-> [   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
-> [   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
-> [   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
-> [   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
-> [   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
-> [   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
-> [   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
-> [   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
-> [   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
-> [   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
-> [   10.687349] Instruction dump:
-> [   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
-> [   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
-> [   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
-> 
-> Fix the problem by setting the disk queue pointer to NULL before calling
-> put_disk(). A more comprehensive fix might be to rearrange the code
-> to check the hardware version before initializing data structures,
-> but I don't know if this would have undesirable side effects, and
-> it would increase the complexity of backporting the fix to older kernels.
-> 
-> Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->  drivers/block/xsysace.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-> index 87ccef4bd69e..32a21b8d1d85 100644
-> --- a/drivers/block/xsysace.c
-> +++ b/drivers/block/xsysace.c
-> @@ -1090,6 +1090,8 @@ static int ace_setup(struct ace_device *ace)
->  	return 0;
->  
->  err_read:
-> +	/* prevent double queue cleanup */
-> +	ace->gd->queue = NULL;
->  	put_disk(ace->gd);
->  err_alloc_disk:
->  	blk_cleanup_queue(ace->queue);
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to c73f4c998e1fd4249b9edfa39e23f4fda2b9b041:
+
+  KVM: x86: nVMX: fix x2APIC VTPR read intercept (2019-04-05 21:08:30 +0200)
+
+----------------------------------------------------------------
+x86 fixes for overflows and other nastiness.
+
+----------------------------------------------------------------
+David Rientjes (2):
+      kvm: svm: fix potential get_num_contig_pages overflow
+      KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
+
+Marc Orr (2):
+      KVM: x86: nVMX: close leak of L0's x2APIC MSRs (CVE-2019-3887)
+      KVM: x86: nVMX: fix x2APIC VTPR read intercept
+
+ arch/x86/kvm/svm.c        | 22 +++++++++-----
+ arch/x86/kvm/vmx/nested.c | 74 ++++++++++++++++++++++++++++-------------------
+ 2 files changed, 59 insertions(+), 37 deletions(-)
