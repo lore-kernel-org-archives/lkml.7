@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA69C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EE4C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8349218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC8C21872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbfDEOAg (ORCPT
+        id S1731195AbfDEOBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:00:36 -0400
-Received: from foss.arm.com ([217.140.101.70]:49432 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731437AbfDEOAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:30 -0400
+        Fri, 5 Apr 2019 10:01:35 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49470 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731452AbfDEOAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 562AB1B55;
-        Fri,  5 Apr 2019 07:00:30 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DCC01A25;
+        Fri,  5 Apr 2019 07:00:34 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80DCA3F68F;
-        Fri,  5 Apr 2019 07:00:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 97E873F68F;
+        Fri,  5 Apr 2019 07:00:30 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 11/21] mips/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-Date:   Fri,  5 Apr 2019 14:59:26 +0100
-Message-Id: <20190405135936.7266-12-will.deacon@arm.com>
+Subject: [PATCH v2 12/21] ia64/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
+Date:   Fri,  5 Apr 2019 14:59:27 +0100
+Message-Id: <20190405135936.7266-13-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -63,90 +63,125 @@ The mmiowb() macro is horribly difficult to use and drivers will continue
 to work most of the time if they omit a call when it is required.
 
 Rather than rely on driver authors getting this right, push mmiowb() into
-arch_spin_unlock() for mips. If this is deemed to be a performance issue,
+arch_spin_unlock() for ia64. If this is deemed to be a performance issue,
 a subsequent optimisation could make use of ARCH_HAS_MMIOWB to elide
 the barrier in cases where no I/O writes were performed inside the
 critical section.
 
-Acked-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/mips/include/asm/Kbuild     |  1 -
- arch/mips/include/asm/io.h       |  3 ---
- arch/mips/include/asm/mmiowb.h   | 11 +++++++++++
- arch/mips/include/asm/spinlock.h | 15 +++++++++++++++
- 4 files changed, 26 insertions(+), 4 deletions(-)
- create mode 100644 arch/mips/include/asm/mmiowb.h
+ arch/ia64/include/asm/Kbuild     |  1 -
+ arch/ia64/include/asm/io.h       | 17 -----------------
+ arch/ia64/include/asm/mmiowb.h   | 25 +++++++++++++++++++++++++
+ arch/ia64/include/asm/spinlock.h |  2 ++
+ 4 files changed, 27 insertions(+), 18 deletions(-)
+ create mode 100644 arch/ia64/include/asm/mmiowb.h
 
-diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-index bf39c2253ec8..87b86cdf126a 100644
---- a/arch/mips/include/asm/Kbuild
-+++ b/arch/mips/include/asm/Kbuild
-@@ -12,7 +12,6 @@ generic-y += irq_work.h
- generic-y += local64.h
+diff --git a/arch/ia64/include/asm/Kbuild b/arch/ia64/include/asm/Kbuild
+index cabfe0280c33..11f191689c9e 100644
+--- a/arch/ia64/include/asm/Kbuild
++++ b/arch/ia64/include/asm/Kbuild
+@@ -5,7 +5,6 @@ generic-y += irq_work.h
+ generic-y += kvm_para.h
  generic-y += mcs_spinlock.h
  generic-y += mm-arch-hooks.h
 -generic-y += mmiowb.h
- generic-y += msi.h
- generic-y += parport.h
- generic-y += percpu.h
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 845fbbc7a2e3..29997e42480e 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -102,9 +102,6 @@ static inline void set_io_port_base(unsigned long base)
- #define iobarrier_w() wmb()
- #define iobarrier_sync() iob()
+ generic-y += preempt.h
+ generic-y += trace_clock.h
+ generic-y += vtime.h
+diff --git a/arch/ia64/include/asm/io.h b/arch/ia64/include/asm/io.h
+index 1e6fef69bb01..a511d62d447a 100644
+--- a/arch/ia64/include/asm/io.h
++++ b/arch/ia64/include/asm/io.h
+@@ -113,20 +113,6 @@ extern int valid_mmap_phys_addr_range (unsigned long pfn, size_t count);
+  */
+ #define __ia64_mf_a()	ia64_mfa()
  
--/* Some callers use this older API instead.  */
--#define mmiowb() iobarrier_w()
+-/**
+- * ___ia64_mmiowb - I/O write barrier
+- *
+- * Ensure ordering of I/O space writes.  This will make sure that writes
+- * following the barrier will arrive after all previous writes.  For most
+- * ia64 platforms, this is a simple 'mf.a' instruction.
+- *
+- * See Documentation/driver-api/device-io.rst for more information.
+- */
+-static inline void ___ia64_mmiowb(void)
+-{
+-	ia64_mfa();
+-}
 -
+ static inline void*
+ __ia64_mk_io_addr (unsigned long port)
+ {
+@@ -161,7 +147,6 @@ __ia64_mk_io_addr (unsigned long port)
+ #define __ia64_writew	___ia64_writew
+ #define __ia64_writel	___ia64_writel
+ #define __ia64_writeq	___ia64_writeq
+-#define __ia64_mmiowb	___ia64_mmiowb
+ 
  /*
-  *     virt_to_phys    -       map virtual addresses to physical
-  *     @address: address to remap
-diff --git a/arch/mips/include/asm/mmiowb.h b/arch/mips/include/asm/mmiowb.h
+  * For the in/out routines, we need to do "mf.a" _after_ doing the I/O access to ensure
+@@ -296,7 +281,6 @@ __outsl (unsigned long port, const void *src, unsigned long count)
+ #define __outb		platform_outb
+ #define __outw		platform_outw
+ #define __outl		platform_outl
+-#define __mmiowb	platform_mmiowb
+ 
+ #define inb(p)		__inb(p)
+ #define inw(p)		__inw(p)
+@@ -310,7 +294,6 @@ __outsl (unsigned long port, const void *src, unsigned long count)
+ #define outsb(p,s,c)	__outsb(p,s,c)
+ #define outsw(p,s,c)	__outsw(p,s,c)
+ #define outsl(p,s,c)	__outsl(p,s,c)
+-#define mmiowb()	__mmiowb()
+ 
+ /*
+  * The address passed to these functions are ioremap()ped already.
+diff --git a/arch/ia64/include/asm/mmiowb.h b/arch/ia64/include/asm/mmiowb.h
 new file mode 100644
-index 000000000000..a40824e3ef8e
+index 000000000000..297b85ac84a0
 --- /dev/null
-+++ b/arch/mips/include/asm/mmiowb.h
-@@ -0,0 +1,11 @@
++++ b/arch/ia64/include/asm/mmiowb.h
+@@ -0,0 +1,25 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_MMIOWB_H
-+#define _ASM_MMIOWB_H
 +
-+#include <asm/io.h>
++#ifndef _ASM_IA64_MMIOWB_H
++#define _ASM_IA64_MMIOWB_H
 +
-+#define mmiowb()	iobarrier_w()
++#include <asm/machvec.h>
++
++/**
++ * ___ia64_mmiowb - I/O write barrier
++ *
++ * Ensure ordering of I/O space writes.  This will make sure that writes
++ * following the barrier will arrive after all previous writes.  For most
++ * ia64 platforms, this is a simple 'mf.a' instruction.
++ */
++static inline void ___ia64_mmiowb(void)
++{
++	ia64_mfa();
++}
++
++#define __ia64_mmiowb	___ia64_mmiowb
++#define mmiowb()	platform_mmiowb()
 +
 +#include <asm-generic/mmiowb.h>
 +
-+#endif	/* _ASM_MMIOWB_H */
-diff --git a/arch/mips/include/asm/spinlock.h b/arch/mips/include/asm/spinlock.h
-index ee81297d9117..8a88eb265516 100644
---- a/arch/mips/include/asm/spinlock.h
-+++ b/arch/mips/include/asm/spinlock.h
-@@ -11,6 +11,21 @@
++#endif	/* _ASM_IA64_MMIOWB_H */
+diff --git a/arch/ia64/include/asm/spinlock.h b/arch/ia64/include/asm/spinlock.h
+index afd0b3121b4c..5f620e66384e 100644
+--- a/arch/ia64/include/asm/spinlock.h
++++ b/arch/ia64/include/asm/spinlock.h
+@@ -73,6 +73,8 @@ static __always_inline void __ticket_spin_unlock(arch_spinlock_t *lock)
+ {
+ 	unsigned short	*p = (unsigned short *)&lock->lock + 1, tmp;
  
- #include <asm/processor.h>
- #include <asm/qrwlock.h>
-+
-+#include <asm-generic/qspinlock_types.h>
-+
-+#define	queued_spin_unlock queued_spin_unlock
-+/**
-+ * queued_spin_unlock - release a queued spinlock
-+ * @lock : Pointer to queued spinlock structure
-+ */
-+static inline void queued_spin_unlock(struct qspinlock *lock)
-+{
 +	/* This could be optimised with ARCH_HAS_MMIOWB */
 +	mmiowb();
-+	smp_store_release(&lock->locked, 0);
-+}
-+
- #include <asm/qspinlock.h>
- 
- #endif /* _ASM_SPINLOCK_H */
+ 	asm volatile ("ld2.bias %0=[%1]" : "=r"(tmp) : "r"(p));
+ 	WRITE_ONCE(*p, (tmp + 2) & ~1);
+ }
 -- 
 2.11.0
 
