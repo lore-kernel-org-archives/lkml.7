@@ -2,179 +2,215 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBCCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28009217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2423F2186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 12:31:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="corF11M1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Jpt699g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfDEMbM (ORCPT
+        id S1730929AbfDEMbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 08:31:12 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48087 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730329AbfDEMbM (ORCPT
+        Fri, 5 Apr 2019 08:31:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51268 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730329AbfDEMbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 08:31:12 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hCNzl-0000uO-Gy; Fri, 05 Apr 2019 14:30:57 +0200
-Date:   Fri, 5 Apr 2019 14:30:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Subject: Re: [PATCH v6 12/20] kvm/vmx: Emulate MSR TEST_CTL
-In-Reply-To: <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
-Message-ID: <alpine.DEB.2.21.1904051400230.1802@nanos.tec.linutronix.de>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com> <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Apr 2019 08:31:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DB3756141D; Fri,  5 Apr 2019 12:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554467481;
+        bh=R4NzVp2BiDHcxcbakRqk/K2HHSaHW6gyMsaAUCyuPgg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=corF11M1tsgdl4nqD8SEw+wJh2n6GCPtuvoYbxDSiGutF8XuHeKNmW9JTzubL/65v
+         asSc3NxImEmhPCQj3SiJyd8EIwEZOOo/1uPTkAHDWfSUnnjpwqmn93ZrxwdcOpQ68R
+         ITJgt/NZdObQR2YqM7rpr/DrAJMFho1Ok17evzm8=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AFB5D6141D;
+        Fri,  5 Apr 2019 12:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554467479;
+        bh=R4NzVp2BiDHcxcbakRqk/K2HHSaHW6gyMsaAUCyuPgg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Jpt699g+S9Mq2GJ1rk8KvppgP4K5o1L03KSipBM+sWvo3mMSmpsbaqSxcSs78ovHU
+         Rw40wFPeT+0NpguSuIzfiGCvsGU5+vW2mmNraad5pNQ+C5wUImPCZkdtWkdXD0nPY1
+         WOJEDqJNNk7401twoe1o4hcr+C5Sv8Vf39e3ofAM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AFB5D6141D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v0] kernfs: Skip kernfs_put of parent from child node
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Gaurav Kohli <gkohli@codeaurora.org>
+Cc:     tj@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <1554463267-30841-1-git-send-email-gkohli@codeaurora.org>
+ <20190405113304.GA28420@kroah.com>
+ <a491b524-54e2-839d-d8e6-c21e7ab7fdd1@codeaurora.org>
+ <20190405121020.GA32479@kroah.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <50a69f9a-506c-c83c-0289-2a739d42f35b@codeaurora.org>
+Date:   Fri, 5 Apr 2019 18:01:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190405121020.GA32479@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, Fenghua Yu wrote:
-> @@ -1663,6 +1663,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u32 index;
->  
->  	switch (msr_info->index) {
-> +	case MSR_TEST_CTL:
-> +		if (!msr_info->host_initiated &&
-> +		    !(vcpu->arch.core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
 
-Errm? If the MSR_TEST_CTL is exposed to the guest via CPUID then the
-rdmsr() in the guest is not supposed to fail just because
-CORE_CAP_SPLIT_LOCK_DETECT is not set.
+On 4/5/2019 5:40 PM, Greg KH wrote:
+> On Fri, Apr 05, 2019 at 05:13:00PM +0530, Gaurav Kohli wrote:
+>> On 4/5/2019 5:03 PM, Greg KH wrote:
+>>> On Fri, Apr 05, 2019 at 04:51:07PM +0530, Gaurav Kohli wrote:
+>>>> While adding kernfs node for child to the parent kernfs
+>>>> node and when child node founds that parent kn count is
+>>>> zero, then below comes like:
+>>>>
+>>>> WARNING: fs/kernfs/dir.c:494 kernfs_get+0x64/0x88
+>>>>
+>>>> This indicates that parent is in kernfs_put path/ or already
+>>>> freed, and if the child node keeps continue to
+>>>> make new kernfs node, then there is chance of
+>>>> below race for parent node:
+>>>>
+>>>> CPU0				         CPU1
+>>>> //Parent node			         //child node
+>>>> kernfs_put
+>>>> atomic_dec_and_test(&kn->count)
+>>>> //count is 0, so continue
+>>>> 					  kernfs_new_node(child)
+>>>> 					  kernfs_get(parent);
+>>>> 					  //increment parent count to 1
+>>>> 					  //warning come as parent count is 0
+>>>> 					  /* link in */
+>>>> 					  kernfs_add_one(kn);
+>>>> 					  // this should fail as parent is
+>>>> 					  //in free path.
+>>>> 					  kernfs_put(child)
+>>>> kmem_cache_free(parent)
+>>>> 					  kmem_cache_free(child)
+>>>> 					  kn = parent
+>>>> 					  atomic_dec_and_test(&kn->count))
+>>>> 					  //this is 0 now, so release will
+>>>> 					  continue for parent.
+>>>> 					  kmem_cache_free(parent)
+>>>>
+>>>> To prevent this race, child simply has to decrement count of parent
+>>>> kernfs node and keep continue the free path for itself.
+>>>>
+>>>> Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
+>>>> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+>>>>
+>>>> diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+>>>> index b84d635..d5a36e8 100644
+>>>> --- a/fs/kernfs/dir.c
+>>>> +++ b/fs/kernfs/dir.c
+>>>> @@ -515,7 +515,6 @@ void kernfs_put(struct kernfs_node *kn)
+>>>>    	if (!kn || !atomic_dec_and_test(&kn->count))
+>>>>    		return;
+>>>>    	root = kernfs_root(kn);
+>>>> - repeat:
+>>>>    	/*
+>>>>    	 * Moving/renaming is always done while holding reference.
+>>>>    	 * kn->parent won't change beneath us.
+>>>> @@ -545,8 +544,8 @@ void kernfs_put(struct kernfs_node *kn)
+>>>>    	kn = parent;
+>>>>    	if (kn) {
+>>>> -		if (atomic_dec_and_test(&kn->count))
+>>>> -			goto repeat;
+>>>> +	/* Parent may be on free path, so simply decrement the count */
+>>> That's the wrong indentation :(
+>>>
+>>> And how are you hitting this issue?  What user of kernfs is causing
+>>> this?
+>> Hi Greg,
+>>
+>> Thanks,  will fix comment indentation, seen during sys-executor running:
+>>
+>> We have only one instance , In logs below warning also came:
+>>
+>> WARNING: CPU: 4 kernel/msm-4.14/fs/kernfs/dir.c:494 kernfs_get+0x64/0x88
+>>
+>> which indicated parent is in put path.
+>>
+>> [  160.125151] Disabling lock debugging due to kernel taint
+>> [  160.130626] INFO: Allocated in __kernfs_new_node+0x8c/0x3c0 age=11 cpu=2
+>> pid=7098
+>> [  160.138314]     kmem_cache_alloc+0x358/0x388
+>> [  160.142445]     __kernfs_new_node+0x8c/0x3c0
+>> [  160.146590]     kernfs_new_node+0x80/0xc8
+>> [  160.150462]     kernfs_create_dir_ns+0x44/0xfc
+>> [  160.154777]     sysfs_create_dir_ns+0xa8/0x130
+>> [  160.158416] CPU5: update max cpu_capacity 1024
+>> [  160.159085]     kobject_add_internal+0x278/0x650
+>> [  160.163567]     kobject_add_varg+0xe0/0x130
+>> [  160.167606]     kobject_add+0x15c/0x1d0
+>> [  160.168452] CPU5: update max cpu_capacity 780
+>> [  160.171287]     get_device_parent+0x2d0/0x34c
+>> [  160.175510]     device_add+0x240/0xde0
+>> [  160.178371] CPU6: update max cpu_capacity 916
+>> [  160.179108]     input_register_device+0x5f4/0xa0c
+>> [  160.183686]     uinput_ioctl_handler+0x1184/0x2198
+>> [  160.202436] INFO: Freed in kernfs_put+0x2c8/0x434 age=14 cpu=0 pid=7096
+>> [  160.209230]     kernfs_put+0x2c8/0x434
+>> [  160.212825]     kobject_del+0x50/0xcc
+>> [  160.216332]     cleanup_glue_dir+0x124/0x16c
+>> [  160.220456]     device_del+0x55c/0x5c8
+>> [  160.224047]     __input_unregister_device+0x274/0x2a8
+>> [  160.228974]     input_unregister_device+0x90/0xd0
+>> [  160.233553]     uinput_destroy_device+0x15c/0x1dc
+>> [  160.238131]     uinput_release+0x44/0x5c
+>> [  160.241898]     __fput+0x1f4/0x4e4
+>> [  160.245127]     ____fput+0x20/0x2c
+>>
+>>
+>> during code review, I have found race between kernfs parent put call and
+>> child get call.
+> So this is a sysfs usage of this?
+>
+yes
 
-vmx->msr_test_ctl holds the proper value, which is either 0 or
-CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported.
+>    Using input devices or cpu devices
+> for the stress test?
 
-So the chek needs to be guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY).
+input devices ..
 
-> +			return 1;
-> +		msr_info->data = vmx->msr_test_ctl;
-> +		break;
->  #ifdef CONFIG_X86_64
->  	case MSR_FS_BASE:
->  		msr_info->data = vmcs_readl(GUEST_FS_BASE);
-> @@ -1797,6 +1803,14 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u32 index;
->  
->  	switch (msr_index) {
-> +	case MSR_TEST_CTL:
-> +		if (!(vcpu->arch.core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
-> +			return 1;
+[ 1714.090310] input: syz1 as /devices/virtual/input/input191
+[ 1714.223037] input: syz1 as /devices/virtual/input/input192
 
-Again, this wants to be a check for the availability of the MSR in the
-guest cpuid and not to the CORE_CAP_SPLIT_LOCK_DETECT magic bit.
+..
 
-> +
-> +		if (data & ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT)
-> +			return 1;
+[ 1714.428228] input: syz1 as /devices/virtual/input/input193
 
-and this one wants to be:
+..
+[ 1714.528256] input: syz1 as /devices/virtual/input/input194
+..
 
-		if (data & vmx->msr_test_ctl_mask)
+[ 1714.756481] input: syz1 as /devices/virtual/input/input195
+..
+[ 1714.831920] input: syz1 as /devices/virtual/input/input196
 
-so additional bits can be enabled later on at exactly one point in the
-code, i.e. during vm init.
+..
 
-> +		vmx->msr_test_ctl = data;
-> +		break;
->  
-> +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
-> +{
-> +	u64 host_msr_test_ctl;
-> +
-> +	/* if TEST_CTL MSR doesn't exist on the hardware, do nothing */
-> +	if (rdmsrl_safe(MSR_TEST_CTL, &host_msr_test_ctl))
-> +		return;
+Cheers,
+Mukesh
 
-Yikes. So on hosts which do not have MSR_TEST_CTL this takes a fault on
-every VM enter. The host knows whether it has this MSR or not.
-
-Even if it exists there is no point to do the rdmsr on every vmenter. The
-value should be cached per cpu. It only changes when:
-
-      1) #AC triggers in kernel space
-
-      2) The sysfs knob is flipped
-
-#1 It happens either _BEFORE_ or _AFTER_ atomic_switch_msr_test_ctl().  In
-   both cases the cached value is correct in atomic_switch_msr_test_ctl().
-   
-   If it happens _AFTER_ atomic_switch_msr_test_ctl() then the VMEXIT will
-   restore the enabled bit, but there is nothing you can do about that.
-
-#2 CANNOT happen in the context of vcpu_run().
-
-So this wants to be:
-
-   host_msr_test_ctl = this_cpu_read(msr_test_ctl_cache);
-
-> +	if (host_msr_test_ctl == vmx->msr_test_ctl)
-> +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
-> +	else
-> +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
-> +				      host_msr_test_ctl, false);
-> +}
-> +
-
->  u64 kvm_get_core_capability(void)
->  {
-> -	return 0;
-> +	u64 data;
-> +
-> +	rdmsrl_safe(MSR_IA32_CORE_CAPABILITY, &data);
-
-  	if (!boot_cpu_has(X86_FEATURE_CORE_CAPABILITY))
-		return 0;
-
-> +	/* mask non-virtualizable functions */
-> +	data &= CORE_CAP_SPLIT_LOCK_DETECT;
-
-Why?
-
-> +	/*
-> +	 * There will be a list of FMS values that have split lock detection
-> +	 * but lack the CORE CAPABILITY MSR. In this case, set
-> +	 * CORE_CAP_SPLIT_LOCK_DETECT since we emulate MSR CORE_CAPABILITY.
-
-That's completely wrong. X86_FEATURE_SPLIT_LOCK_DETECT is set when the
-capability is enumerated in CPUID or it's set via the FMS quirk.
-
-So:
-	data = 0;
-> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-> +		data |= CORE_CAP_SPLIT_LOCK_DETECT;
-> +
-> +	return data;
-
-is absolutely sufficient.
-
-Thanks,
-
-	tglx
+>
+> thanks,
+>
+> greg k-h
