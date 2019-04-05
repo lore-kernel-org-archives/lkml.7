@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DA4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65686C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2282E2175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB9D2175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731795AbfDEPM1 (ORCPT
+        id S1731587AbfDEPLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:12:27 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48908 "EHLO
+        Fri, 5 Apr 2019 11:11:16 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48881 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731600AbfDEPLS (ORCPT
+        with ESMTP id S1731452AbfDEPLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:11:18 -0400
+        Fri, 5 Apr 2019 11:11:14 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hCQUu-0005tC-3V; Fri, 05 Apr 2019 17:11:16 +0200
-Message-Id: <20190405150929.847848733@linutronix.de>
+        id 1hCQUq-0005sK-OE; Fri, 05 Apr 2019 17:11:12 +0200
+Message-Id: <20190405150929.486735069@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 05 Apr 2019 17:07:14 +0200
+Date:   Fri, 05 Apr 2019 17:07:10 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V2 16/29] x86/cpu: Remove orig_ist array
+Subject: [patch V2 12/29] x86/traps: Use cpu_entry_area instead of orig_ist
 References: <20190405150658.237064784@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,47 +41,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All users gone.
+The orig_ist[] array is a shadow copy of the IST array in the TSS. The
+reason why it exists is that older kernels used two TSS variants with
+different pointers into the debug stack. orig_ist[] contains the real
+starting points.
+
+There is no point anymore to do so because the same information can be
+retrieved using the base address of the cpu entry area mapping and the
+offsets of the various exception stacks.
+
+No functional change. Preparation for removing orig_ist.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/processor.h |    9 ---------
- arch/x86/kernel/cpu/common.c     |    6 ------
- 2 files changed, 15 deletions(-)
+ arch/x86/mm/fault.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -374,16 +374,7 @@ DECLARE_PER_CPU(unsigned long, cpu_curre
- #define cpu_current_top_of_stack cpu_tss_rw.x86_tss.sp1
- #endif
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -28,6 +28,7 @@
+ #include <asm/mmu_context.h>		/* vma_pkey()			*/
+ #include <asm/efi.h>			/* efi_recover_from_page_fault()*/
+ #include <asm/desc.h>			/* store_idt(), ...		*/
++#include <asm/cpu_entry_area.h>		/* exception stack		*/
  
--/*
-- * Save the original ist values for checking stack pointers during debugging
-- */
--struct orig_ist {
--	unsigned long		ist[7];
--};
--
- #ifdef CONFIG_X86_64
--DECLARE_PER_CPU(struct orig_ist, orig_ist);
--
- union irq_stack_union {
- 	char irq_stack[IRQ_STACK_SIZE];
- 	/*
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1549,12 +1549,6 @@ void syscall_init(void)
- 	       X86_EFLAGS_IOPL|X86_EFLAGS_AC|X86_EFLAGS_NT);
- }
- 
--/*
-- * Copies of the original ist values from the tss are only accessed during
-- * debugging, no special alignment required.
-- */
--DEFINE_PER_CPU(struct orig_ist, orig_ist);
--
- static DEFINE_PER_CPU(unsigned long, debug_stack_addr);
- DEFINE_PER_CPU(int, debug_stack_usage);
- 
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/exceptions.h>
+@@ -793,7 +794,7 @@ no_context(struct pt_regs *regs, unsigne
+ 	if (is_vmalloc_addr((void *)address) &&
+ 	    (((unsigned long)tsk->stack - 1 - address < PAGE_SIZE) ||
+ 	     address - ((unsigned long)tsk->stack + THREAD_SIZE) < PAGE_SIZE)) {
+-		unsigned long stack = this_cpu_read(orig_ist.ist[ISTACK_DF]) - sizeof(void *);
++		unsigned long stack = __this_cpu_ist_top_va(DF) - sizeof(void *);
+ 		/*
+ 		 * We're likely to be running with very little stack space
+ 		 * left.  It's plausible that we'd hit this condition but
 
 
