@@ -2,128 +2,147 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A89C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FB9C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBEA217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30238217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aFBL7JZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbfDEIZH convert rfc822-to-8bit (ORCPT
+        id S1730329AbfDEI2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:25:07 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:58208 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730392AbfDEIZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:25:06 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16140366-1500050 
-        for multiple; Fri, 05 Apr 2019 09:24:51 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 5 Apr 2019 04:28:22 -0400
+Received: from mout.web.de ([217.72.192.78]:51529 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729728AbfDEI2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 04:28:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1554452883;
+        bh=XRX84ZtdMGVYeH8chuq8YwJCETck4E0oU3Y8DgKUkXM=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=aFBL7JZXcPx5TayMAU/mwoBGPfjdVNZfZqJOFGIO2w/1YRGhUDRRXo1VU7ED9UPEm
+         sHOSa5btY7t7XOzdeww91gs8X1LTmjS40gZ1Sw0FOmPOmbaf2vjut2UCrfBHoSGlCS
+         4W1/MDTkndTVE0oEIiUbJRkubNanUZT17pA804A0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.156.119]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHXxg-1hDRCY44o0-003Ngt; Fri, 05
+ Apr 2019 10:28:03 +0200
+Cc:     linux-kernel@vger.kernel.org,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Wingman Kwok <w-kwok2@ti.com>, Yi Wang <wang.yi59@zte.com.cn>
+References: <1553223849-7143-3-git-send-email-wen.yang99@zte.com.cn>
+Subject: Re: [PATCH 3/3] ethernet: ti: fix possible object reference leak
+To:     Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <1a90f282-4664-f9e6-45d1-7b3b6a0a3104@web.de>
+Date:   Fri, 5 Apr 2019 10:27:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <51c51c4d1a2facbc1dfb240b94377027e263872e.camel@linux.intel.com>
-Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        michal.wajdeczko@intel.com,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-References: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
- <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
- <51c51c4d1a2facbc1dfb240b94377027e263872e.camel@linux.intel.com>
-Message-ID: <155445268803.8259.16095445514284244974@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] drm/i915: Use drm_dev_unplug()
-Date:   Fri, 05 Apr 2019 09:24:48 +0100
+In-Reply-To: <1553223849-7143-3-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QlyFCLrHu9eMxGGqjqqa+rQ6ofXdf3VL/1qm774lEdlRFyhtI01
+ tNBcKbkXqrAQvOFWW5oxfaWxGW2Dv+WPaoBB7e1muOB2oTXHWxhPtOWhKfE2/AkXxxzjsHx
+ RCBEuQF8ocyqsJcX5i1hUcycWbVCee3ycd1cutbwn2WR0X/UCQa8RLbFupZO4gVQHKG5BcD
+ 1Qfgtkdq+mQpKYeErFGOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:J1Rn1xCQikw=:VeqQOv2gjy71xEfmTc8cgO
+ d85ojXjma8HiAp22uwhzzOr6+s+NiHvr/RqgThba9APEcwzfoA1zjEemaJqq/czmPvzM88aBt
+ 3Ep35a5tS0Nea6kT2X2V2EtlN/FxFrHUae0dY5kDDoqlyutlemvzwfu+zXBZLsLwV0mkeM9J+
+ YI0PPwIOwtbZ+QwbaBnxdvX5ZhZb0yEDhd4iaAil6S/eL9N+lcs3w4dNs/QG37qU1HHUsOQQv
+ kMYnVhBEwPUzYsCMqMl1ErEUcEn8y5ch3xUN5DMnYW2n8O8H8lqD5DpcaY3BctmsxCmuPKzKF
+ 2VgUGBWIjShybcqIR/Y7EePa7KW+srVRC1JonyqRG9u6O4llfhyAZJvoclRfaHbkh0qY0qMOu
+ TVq6UUIjRKvH96cmg2GbDmobmsJtU2SLspuqtZfm/206S+Pps7HRKSPpcxVeOxP6fq536v1ub
+ LOzpBBoLmeRMKn3ye2wW2lYv8lf9DHk3I2a1Wq4WBP2TfAKkQfmT10iZfxMiP6gJ+uAjz1PSo
+ NINTkBf+Uf9seasonLpkvqKTyX5PQ5954lEGXBvM35QFUt4NoxuDF291O1t99ACmxB+pTAfup
+ +Xp4TeUyEgmLm82SxhM4Xp3mWfBo/SdJD65DTl/0SMcYDQbn5jQPYdGqb52eOYwDBWTNKAoFV
+ GITdMsJ/ID65GK4R61JGfdv1hVUSApiUW8ZqjsZqERBJwTCjx+f2xiH1QMdaMBcDVs6NmPpRx
+ L+sdw19UwdtgyBmddLjG/1mfQusrnSZyJgYfvGwD01Xf2s4laGGi3MKF8kCTy4dGt4xDipUdC
+ JzQf+aeh5Y7AnDA9WHJa3vSmat8JtF9gDGna4eTrO+JWLRIIt6jPFtRUgQiCuVz6q0zHBR+vh
+ L1REYxpNhwuX1a81jXu5XRmuD+VlLL7vmzNdvQRnPPEqwJnxMojUjs/LjvYBVRyLA/r+bqJZk
+ gU3iiHZw+Kw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Janusz Krzysztofik (2019-04-05 09:11:54)
-> On Fri, 2019-04-05 at 08:41 +0100, Chris Wilson wrote:
-> > Quoting Janusz Krzysztofik (2019-04-05 08:26:57)
-> > > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > > 
-> > > The driver does not currently support unbinding from a device which
-> > > is
-> > > in use.  Since open file descriptors may still be pointing into
-> > > kernel
-> > > memory where the device structures used to be, entirely correct
-> > > kernel
-> > > panics protect the driver from being unbound as we should not be
-> > > unbinding it before those dangling pointers have been made safe.
-> > > 
-> > > According to the documentation found inside
-> > > drivers/gpu/drm/drm_drv.c,
-> > > drm_dev_unplug() should be used instead of drm_dev_unregister() in
-> > > order to make a device inaccessible to users as soon as it is
-> > > unpluged.
-> > > Follow that advice to make those possibly dangling pointers safe,
-> > > protected by DRM layer from a user who is otherwise left pointing
-> > > into
-> > > possibly reused kernel memory after the driver has been unbound
-> > > from
-> > > the device.
-> > > 
-> > > Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > > ---
-> > >  drivers/gpu/drm/i915/i915_drv.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/i915/i915_drv.c
-> > > b/drivers/gpu/drm/i915/i915_drv.c
-> > > index 9df65d386d11..66163378c481 100644
-> > > --- a/drivers/gpu/drm/i915/i915_drv.c
-> > > +++ b/drivers/gpu/drm/i915/i915_drv.c
-> > > @@ -1596,7 +1596,7 @@ static void i915_driver_unregister(struct
-> > > drm_i915_private *dev_priv)
-> > >         i915_pmu_unregister(dev_priv);
-> > >  
-> > >         i915_teardown_sysfs(dev_priv);
-> > > -       drm_dev_unregister(&dev_priv->drm);
-> > > +       drm_dev_unplug(&dev_priv->drm);
-> > 
-> > I think we may have our onion inverted here. We want to stop the
-> > users
-> > as the first step, then start removing the entries. (That will also
-> > nicely invert the order from register, which is what we typically
-> > expect).
-> > 
-> > After calling i915_driver_unregister(); call i915_gem_set_wedged() to
-> > immediately (give or take external fences) cancel inflight
-> > operations.
-> 
-> OK, thanks.  Do you prefer them squashed or as serparate patches?
+> @@ -3657,12 +3657,16 @@  static int gbe_probe(struct netcp_device *netcp=
+_device, struct device *dev,
+>
+>  	ret =3D netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
+>  				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
+> -	if (ret)
+> +	if (ret) {
+> +		of_node_put(interfaces);
+>  		return ret;
+> +	}
+>
+>  	ret =3D netcp_txpipe_open(&gbe_dev->tx_pipe);
+> -	if (ret)
+> +	if (ret) {
+> +		of_node_put(interfaces);
+>  		return ret;
+> +	}
+>
+>  	/* Create network interfaces */
+>  	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
 
-Quite happy to do the s/unregister/unplug/ and move in one go. Have a
-pre-emptive
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-on that as that seems to be the right thing to do.
+Would you like to move such duplicate statements to an additional jump tar=
+get
+for the desired exception handling?
 
-And there should be no issues in placing a i915_gem_set_wedged()
-immediately after the call to i915_driver_unregister, so if you include
-a line of commentary about why, for example
-
-/*
- * After unregistering the device to prevent any new users, cancel
- * all in-flight requests so that we can quickly unbind the active
- * resources.
- */
-i915_gem_set_wedged(dev_priv);
-
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-
-I think overall though, we need to go through i915_driver_unload() and
-push the module cleanup operations to i915_driver_release -- that will
-take a bit of surgery to separate the different phases that are
-currently smashed together.
--Chris
+Regards,
+Markus
