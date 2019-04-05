@@ -2,107 +2,98 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E83C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C31FC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADFF217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:21:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gQmeHuuf"
+	by mail.kernel.org (Postfix) with ESMTP id E5626217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbfDEJVK (ORCPT
+        id S1730551AbfDEJWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:21:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51068 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729792AbfDEJVK (ORCPT
+        Fri, 5 Apr 2019 05:22:55 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34127 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730024AbfDEJWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:21:10 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3597abN009606;
-        Fri, 5 Apr 2019 11:20:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=bWyYs3FLREqLOO9oEvteJUqDuDSaML0/Ki1ImkwlKEw=;
- b=gQmeHuufyYc1zkAJxLyqIr1KZZuFHy4p1UbL3oHIP/KzQXA8pVSoYY51KaMxZyoDW6DH
- OLKBnWghfJTHBrtjQ/2FyeNCAAxN9/Ymlhfeh1GExHpTXCQniLJ5dNRxJZTzgFJWWY3K
- TamBlV6/YfPX6G3HVpX18pZmx5/ZRxU8uzT88kWOQ5irjfjex7QwvwUNnhMMgr9lh0f3
- S+CNkPtlzbHBg4FSI/JZowrnhAl8RUpbYhjUBQfHoc6aZAu36PLEQ5sQjQEJhrAqiy8Z
- vIol20AR+fvADry39ka8bC+4SfQpcjvOdDBEIs41rgmJ1jyeFc4GPi27UXL/mSmfqKRO Ag== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rmh5yrm0k-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 05 Apr 2019 11:20:16 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C38AA31;
-        Fri,  5 Apr 2019 09:20:06 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8EB85164B;
-        Fri,  5 Apr 2019 09:20:06 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 5 Apr 2019
- 11:20:06 +0200
-Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 5 Apr 2019 11:20:06 +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH] ASoC: stm32: fix sai driver name initialisation
-Date:   Fri, 5 Apr 2019 11:19:11 +0200
-Message-ID: <1554455951-2755-1-git-send-email-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 5 Apr 2019 05:22:55 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-46-Dt0vwYpzMOC1c-bTu-iR7Q-1; Fri, 05 Apr 2019 10:22:52 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 5 Apr 2019 10:23:59 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 5 Apr 2019 10:23:59 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Thomas Gleixner' <tglx@linutronix.de>
+CC:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@alien8.de>,
+        'H Peter Anvin' <hpa@zytor.com>,
+        "'Dave Hansen'" <dave.hansen@intel.com>,
+        'Paolo Bonzini' <pbonzini@redhat.com>,
+        'Ashok Raj' <ashok.raj@intel.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Kalle Valo' <kvalo@codeaurora.org>,
+        'Xiaoyao Li ' <xiaoyao.li@intel.com>,
+        'Michael Chan' <michael.chan@broadcom.com>,
+        'Ravi V Shankar' <ravi.v.shankar@intel.com>,
+        'linux-kernel' <linux-kernel@vger.kernel.org>,
+        'x86' <x86@kernel.org>,
+        "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v6 04/20] x86/split_lock: Align x86_capability to unsigned
+ long to avoid split locked access
+Thread-Topic: [PATCH v6 04/20] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Thread-Index: AQHU6mTrt6127B4KeUCFmArv0ksdfKYsEdZAgAAdv4D///hjgIABIu0A
+Date:   Fri, 5 Apr 2019 09:23:59 +0000
+Message-ID: <4eb8949c2351479993027459644e0446@AcuMS.aculab.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-5-git-send-email-fenghua.yu@intel.com>
+ <73ecc9de54c3424da3cddd1a34cb8701@AcuMS.aculab.com>
+ <c0d43317cce34389ac4a1e91e97d909b@AcuMS.aculab.com>
+ <alpine.DEB.2.21.1904041833480.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904041833480.1802@nanos.tec.linutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.131]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_06:,,
- signatures=0
+X-MC-Unique: Dt0vwYpzMOC1c-bTu-iR7Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the sai driver structure overwriting which results in
-a cpu dai name equal NULL.
-
-Fixes: 3e086ed ("ASoC: stm32: add SAI driver")
-
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- sound/soc/stm/stm32_sai_sub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 2a90641..3dd54bc 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1420,7 +1420,6 @@ static int stm32_sai_sub_dais_init(struct platform_device *pdev,
- 	if (!sai->cpu_dai_drv)
- 		return -ENOMEM;
- 
--	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
- 	if (STM_SAI_IS_PLAYBACK(sai)) {
- 		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
- 		       sizeof(stm32_sai_playback_dai));
-@@ -1430,6 +1429,7 @@ static int stm32_sai_sub_dais_init(struct platform_device *pdev,
- 		       sizeof(stm32_sai_capture_dai));
- 		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
- 	}
-+	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
- 
- 	return 0;
- }
--- 
-2.7.4
+RnJvbTogVGhvbWFzIEdsZWl4bmVyIFttYWlsdG86dGdseEBsaW51dHJvbml4LmRlXQ0KPiANCj4g
+T24gVGh1LCA0IEFwciAyMDE5LCBEYXZpZCBMYWlnaHQgd3JvdGU6DQouLi4NCj4gYml0b3BzIG9w
+ZXJhdGUgb24gdW5zaWduZWQgbG9uZyBhcnJheXMsIHNvIHRoZSBSTVcgb24gdGhlIGFmZmVjdGVk
+IGFycmF5DQo+IG1lbWJlciBoYXMgdG8gYmUgYXRvbWljIHZzLiBvdGhlciBSTVcgb3BlcmF0aW9u
+cyBvbiB0aGUgc2FtZSBhcnJheQ0KPiBtZW1iZXIuIElmIHdlIG1ha2UgdGhlIGJpdG9wcyAzMmJp
+dCB3aWRlIG9uIHg4Ni82NCB3ZSBicmVhayB0aGF0Lg0KPiANCj4gU28gc2VsZWN0aW5nIDY0Yml0
+IGFjY2VzcyAoUkVYLlcgcHJlZml4KSBpcyBjb3JyZWN0IGFuZCBoYXMgdG8gc3RheS4NCg0KRXZl
+biBpZiB0aGUgbG9jayBoYWQgYSBmaW5lIGdyYW51bGFyaXR5IGl0IHNob3VsZG4ndCBtYXR0ZXIg
+d2hldGhlcg0KdHdvIFJNVyBvcGVyYXRpb25zIG9uIGRpZmZlcmVudCBwYXJ0cyBvZiB0aGUgc2Ft
+ZSAnbG9uZycgaGFwcGVuZWQNCmF0IHRoZSBzYW1lIHRpbWUuDQpJU1RSIHNvbWUgb2YgdGhlICdj
+b25zdGFudCBiaXQgb2Zmc2V0JyBhcmUgZG9uZSB3aXRoIGJ5dGUgc2l6ZWQNCmxvY2tlZCB0cmFu
+c2ZlcnMuDQoNClRoZSBwcm9ibGVtIGhlcmUgaXMgdGhhdCB0aGUgYml0bWFwIGlzIGRlZmluZWQg
+YXMgX191MzJbXSBub3QNCnVuc2lnbmVkIGxvbmdbXS4NCg0KLQlfX3UzMgkJCXg4Nl9jYXBhYmls
+aXR5W05DQVBJTlRTICsgTkJVR0lOVFNdOw0KKwkvKiBVbnNpZ25lZCBsb25nIGFsaWdubWVudCB0
+byBhdm9pZCBzcGxpdCBsb2NrIGluIGF0b21pYyBiaXRtYXAgb3BzICovDQorCV9fdTMyCQkJeDg2
+X2NhcGFiaWxpdHlbTkNBUElOVFMgKyBOQlVHSU5UU10NCisJCQkJX19hbGlnbmVkKHNpemVvZih1
+bnNpZ25lZCBsb25nKSk7DQoNClNvbWV3aGVyZSB0aGVyZSBpcyBhIGNhc3QuLi4uLg0KDQoJRGF2
+aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
+IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
+ODYgKFdhbGVzKQ0K
 
