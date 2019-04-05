@@ -2,197 +2,151 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B283C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEEFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C178206DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7EA206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UdaFI7DJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbfDEObN (ORCPT
+        id S1731082AbfDEOdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:31:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47592 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730587AbfDEObN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:31:13 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E645E308FF30;
-        Fri,  5 Apr 2019 14:31:12 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFB2F60C7A;
-        Fri,  5 Apr 2019 14:31:03 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 09:31:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 2/5] x86/speculation: Add support for
- 'cpu_spec_mitigations=' cmdline options
-Message-ID: <20190405143101.ksj7ayjis4p52dgt@treble>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <78c63cb08f36f55407f534d49cc2543079e44dbb.1554396090.git.jpoimboe@redhat.com>
- <20190405135712.GF23348@zn.tnic>
+        Fri, 5 Apr 2019 10:33:04 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35714 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfDEOdE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:33:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so3148710plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 07:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ex/VBjEd/JvWsygdRpVbzxGn6ImSWZQZBntpxZBqwxQ=;
+        b=UdaFI7DJIorSFpdBunamjGRpmB+du56HY3Md0GuFiPbz5T4Dwas8+1xnKMI+c8E8W6
+         fYLb2H5Gx+FuvVGPgDBy1tDik0jToY5GUYODxpDTlWX4tjCmEj8ioE0H5ZtM62ZuBv7P
+         NvkPm+ztRS1XAz7+zPsAKlQcJWMQ00Y2qW5L7KN/GCHvypkvZ0lT2NoqCmtCQ/EamD4G
+         rvYUS400BNXilLuCoKGjy5dFejV8YCopPSnDy2dbjHsSJIMiBd1xNLNFcV2ywwyf/j24
+         9dQlghKWVTV4ohYUUtBvrLJXuEjrgv1B605BRUhNAXdnkRkbK5GEl6j79rDvYL9Vku71
+         xOgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ex/VBjEd/JvWsygdRpVbzxGn6ImSWZQZBntpxZBqwxQ=;
+        b=tYdLNaO0sX1H69GKqPaQQPMmi01gMAkKsvDFKuo9uBaA9FOP0soUCtq8pX5PCc+nLW
+         zUUN5q264Rg2YoZyN8qRvCGhsFuvVIWyeYFOAn9TPF7ZME8ClsS1F3OKQbX0YCdBQyD/
+         DsCJCJ6SFL7KI6gPQrzMrDtD+79fP8+yD9K/H5T4QlbdvM0dCVdQG5x6ITaMvf7V++Y2
+         yZOjRhcXe1ej2Ij0apDcENzxSPF1UTyNm+Ajj6dKJXIf/oyXdOqd8xcwqC2+ooIgtg8R
+         gY7FyIqgci6k/wZ8eU1yGnQcCL1bBpukUq6v0xz97+q+mRaqWFCj5mIkFnrA1tAP4Qot
+         c5+g==
+X-Gm-Message-State: APjAAAVqoCBu2oXbrsFcZCcwcRIrj0PicajToKGsz/ncQLIZ7c/oensj
+        3XJlFbq08+/EsLjYpifEWTn42Q==
+X-Google-Smtp-Source: APXvYqxJxCTwHD3HvYHzJdYRu7YORbLq2Ss/yc5737cwFsHDRN1JVnX1csBB9Pa/Qkzfpd8vqmgeWg==
+X-Received: by 2002:a17:902:2ba7:: with SMTP id l36mr12887641plb.237.1554474783313;
+        Fri, 05 Apr 2019 07:33:03 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y12sm62498782pgq.64.2019.04.05.07.32.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 07:33:02 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 21:32:54 +0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, vkoul@kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Message-ID: <20190405143254.GM1843@tuxbook-pro>
+References: <20190405035446.31886-1-georgi.djakov@linaro.org>
+ <20190405035446.31886-2-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405135712.GF23348@zn.tnic>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 05 Apr 2019 14:31:13 +0000 (UTC)
+In-Reply-To: <20190405035446.31886-2-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 03:57:12PM +0200, Borislav Petkov wrote:
-> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> > index 2bb3a648fc12..7e95b310f869 100644
-> > --- a/arch/x86/include/asm/processor.h
-> > +++ b/arch/x86/include/asm/processor.h
-> > @@ -982,6 +982,7 @@ void microcode_check(void);
-> >  
-> >  enum l1tf_mitigations {
-> >  	L1TF_MITIGATION_OFF,
-> > +	L1TF_MITIGATION_DEFAULT,
-> >  	L1TF_MITIGATION_FLUSH_NOWARN,
-> >  	L1TF_MITIGATION_FLUSH,
-> >  	L1TF_MITIGATION_FLUSH_NOSMT,
-> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> > index 2da82eff0eb4..65b95fb95ba5 100644
-> > --- a/arch/x86/kernel/cpu/bugs.c
-> > +++ b/arch/x86/kernel/cpu/bugs.c
-> > @@ -308,8 +308,11 @@ spectre_v2_parse_user_cmdline(enum spectre_v2_mitigation_cmd v2_cmd)
-> >  
-> >  	ret = cmdline_find_option(boot_command_line, "spectre_v2_user",
-> >  				  arg, sizeof(arg));
-> > -	if (ret < 0)
-> > +	if (ret < 0) {
-> > +		if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
-> > +			return SPECTRE_V2_USER_CMD_NONE;
+On Fri 05 Apr 10:54 +07 2019, Georgi Djakov wrote:
+
+> The Qualcomm QCS404 platform has several buses that could be controlled
+> and tuned according to the bandwidth demand.
 > 
-> Instead of sprinkling that test in those three functions, just do it
-> once above in check_bugs(), before those *_select_mitigation() functions
-> get to run and depending on the value, you either run them or use the
-> default settings, for the OFF case, for example.
-
-My thinking was that the individual options could be used to override
-the global option.  But maybe that's overkill?  I dunno.
-
-> >  		return SPECTRE_V2_USER_CMD_AUTO;
-> > +	}
-> >  
-> >  	for (i = 0; i < ARRAY_SIZE(v2_user_options); i++) {
-> >  		if (match_option(arg, ret, v2_user_options[i].option)) {
-> > @@ -444,8 +447,11 @@ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
-> >  		return SPECTRE_V2_CMD_NONE;
-> >  
-> >  	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
-> > -	if (ret < 0)
-> > +	if (ret < 0) {
-> > +		if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
-> > +			return SPECTRE_V2_CMD_NONE;
-> >  		return SPECTRE_V2_CMD_AUTO;
-> > +	}
-> >  
-> >  	for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
-> >  		if (!match_option(arg, ret, mitigation_options[i].option))
-> > @@ -677,8 +683,11 @@ static enum ssb_mitigation_cmd __init ssb_parse_cmdline(void)
-> >  	} else {
-> >  		ret = cmdline_find_option(boot_command_line, "spec_store_bypass_disable",
-> >  					  arg, sizeof(arg));
-> > -		if (ret < 0)
-> > +		if (ret < 0) {
-> > +			if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
-> > +				return SPEC_STORE_BYPASS_CMD_NONE;
-> >  			return SPEC_STORE_BYPASS_CMD_AUTO;
-> > +		}
-> >  
-> >  		for (i = 0; i < ARRAY_SIZE(ssb_mitigation_options); i++) {
-> >  			if (!match_option(arg, ret, ssb_mitigation_options[i].option))
-> > @@ -955,7 +964,7 @@ void x86_spec_ctrl_setup_ap(void)
-> >  #define pr_fmt(fmt)	"L1TF: " fmt
-> >  
-> >  /* Default mitigation for L1TF-affected CPUs */
-> > -enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
-> > +enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_DEFAULT;
-> >  #if IS_ENABLED(CONFIG_KVM_INTEL)
-> >  EXPORT_SYMBOL_GPL(l1tf_mitigation);
-> >  #endif
-> > @@ -1010,8 +1019,23 @@ static void __init l1tf_select_mitigation(void)
-> >  
-> >  	override_cache_bits(&boot_cpu_data);
-> >  
-> > +	if (l1tf_mitigation == L1TF_MITIGATION_DEFAULT) {
-> > +		switch (cpu_spec_mitigations) {
-> > +		case CPU_SPEC_MITIGATIONS_OFF:
-> > +			l1tf_mitigation = L1TF_MITIGATION_OFF;
-> > +			break;
-> > +		case CPU_SPEC_MITIGATIONS_AUTO:
-> > +			l1tf_mitigation = L1TF_MITIGATION_FLUSH;
-> > +			break;
-> > +		case CPU_SPEC_MITIGATIONS_AUTO_NOSMT:
-> > +			l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> >  	switch (l1tf_mitigation) {
-> >  	case L1TF_MITIGATION_OFF:
-> > +	case L1TF_MITIGATION_DEFAULT:
-> >  	case L1TF_MITIGATION_FLUSH_NOWARN:
-> >  	case L1TF_MITIGATION_FLUSH:
-> >  		break;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index ab432a930ae8..83b5bdc3c777 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -233,6 +233,7 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
-> >  		case L1TF_MITIGATION_FLUSH_NOWARN:
-> >  		case L1TF_MITIGATION_FLUSH:
-> >  		case L1TF_MITIGATION_FLUSH_NOSMT:
-> > +		case L1TF_MITIGATION_DEFAULT:
-> >  			l1tf = VMENTER_L1D_FLUSH_COND;
-> >  			break;
-> >  		case L1TF_MITIGATION_FULL:
-> > @@ -6686,6 +6687,7 @@ static int vmx_vm_init(struct kvm *kvm)
-> >  		case L1TF_MITIGATION_FLUSH:
-> >  		case L1TF_MITIGATION_FLUSH_NOSMT:
-> >  		case L1TF_MITIGATION_FULL:
-> > +		case L1TF_MITIGATION_DEFAULT:
-> >  			/*
-> >  			 * Warn upon starting the first VM in a potentially
-> >  			 * insecure environment.
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
 > 
-> The L1TF bits need to be a separate patch.
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> new file mode 100644
+> index 000000000000..2ea63ea827d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> @@ -0,0 +1,45 @@
+> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> +-----------------------------------------------------------
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +			"qcom,qcs404-bimc"
 
-I assume you mean just the part where L1TF_MITIGATION_DEFAULT is added?
+As this is a hardware block available in mmio register space I think you
+better represent this on the mmio (soc) bus - and then represent the
+link to rpm as a child node of the rpm.
 
--- 
-Josh
+Apart from that this looks good.
+
+Regards,
+Bjorn
+
+> +			"qcom,qcs404-pcnoc"
+> +			"qcom,qcs404-snoc"
+> +- #interconnect-cells : should contain 1
+> +
+> +Optional properties :
+> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+> +
+> +Example:
+> +
+> +rpm-glink {
+> +	...
+> +	rpm_requests: glink-channel {
+> +		...
+> +		bimc: interconnect@0 {
+> +			compatible = "qcom,qcs404-bimc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus_clk", "bus_a_clk";
+> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +		};
+> +
+> +		pnoc: interconnect@1 {
+> +			compatible = "qcom,qcs404-pcnoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus_clk", "bus_a_clk";
+> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +		};
+> +
+> +		snoc: interconnect@2 {
+> +			compatible = "qcom,qcs404-snoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus_clk", "bus_a_clk";
+> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +		};
+> +	};
+> +};
