@@ -2,91 +2,118 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A934C10F24
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21671C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F95206C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E438B21738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554481281;
+	bh=Z3tviJih0+15O1Nb6US4Iyl03qQjNm32YQmCCZxfLlA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YcmcVgEvhvU6sY3A2+BgF6aOmzfGe7bD2/D2btnlIcPIlHLnW12kIhhhOcQkmQer5
+	 ZxVRbhjvLD4RxDoKgKHe2oRAzB5MtKFF8hkBjdn3O0pbS7gKRuzmt7dwB4bt60639o
+	 jHGM7ytccKWr1TNWWGFTv2XDFzNo+tVrBXr2D0pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfDEQVN (ORCPT
+        id S1731536AbfDEQVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:21:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46634 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfDEQVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:21:13 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8690F3060498;
-        Fri,  5 Apr 2019 16:21:13 +0000 (UTC)
-Received: from treble (ovpn-123-87.rdu2.redhat.com [10.10.123.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 830FB26546;
-        Fri,  5 Apr 2019 16:21:11 +0000 (UTC)
-Date:   Fri, 5 Apr 2019 11:21:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Luis Ressel' <aranea@aixah.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] objtool: Don't use -Werror
-Message-ID: <20190405162109.4hv6lqpd6manzjju@treble>
-References: <20190405110151.2461-1-aranea@aixah.de>
- <20190405123909.tupbgueie4czg2dd@treble>
- <20190405142443.rgpwbgyym76xizad@vega.skynet.aixah.de>
- <20190405143926.wmrkjsazlheeg6qs@treble>
- <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
- <a9dfc08702044b3db89c0584c0f79229@AcuMS.aculab.com>
+        Fri, 5 Apr 2019 12:21:19 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40562 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDEQVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:21:19 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a28so4795698lfo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IdetWNEnisWQAQYmIJGyWPDqSKAMlwQ2iqzDQXP0p+8=;
+        b=OMV+xg5lSItr4wLh0Je8qw5ygAbEwUKu/ynLo/l085HP2U14GhMb/TGB+zuQkXYNJ/
+         djSrrkUB+7wZDJnaHIAT1X1HdKANsLlrLDuy/A9KmSodkz0rezcErFLnqKFxOW7olOXI
+         NrEJypYeTTsyF5GrlopQHDqYh3E53Fou+94X0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IdetWNEnisWQAQYmIJGyWPDqSKAMlwQ2iqzDQXP0p+8=;
+        b=iuWCWclssd2I/KtUU59LkS4fwFBPhYXVRH0wANKAh+b2lc6/gEzHWS2Gr76zJv0OX3
+         T+sI1HnyGZLUyZzXAn6DiDAnbANTlZA2a/qKMjXQ+nvYnps5kLGHNGMYs7Y/avwunn++
+         MsjKmohLZ89rJ97wpHg5So+jwRfhQYiM4ZJvg3METlp9HKE4pmEjjj+YI7pZdVe2X7mo
+         AROwts+6D7NBRcGI0HVyYCfzkiME77L5eZmgsd55EILHiV/9Qm5h56szNLqF3xAI4FTy
+         +jU0HRpSwvqDmZcGm9KmfzWMHCLFl+f+R0VsA9+z8l03eRdLqIPiP/3dFVLawDjwjcV2
+         kNkA==
+X-Gm-Message-State: APjAAAWfW32HGAnOSBeK/C6WFljlzhA5QaCNiR3NKhLTF0vXqQ52j8z3
+        m1lB21IRX4dODd9YSLA6PHtUSI2SQGA=
+X-Google-Smtp-Source: APXvYqwRno7Skh663JFG4qKkBiMevhmm9ynXwLRWlCIwhsGoF0EtRlrgk+oDLAqvBu+2PUHlde0prg==
+X-Received: by 2002:a19:974f:: with SMTP id z76mr7101316lfd.89.1554481276498;
+        Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id o12sm1326320lfl.66.2019.04.05.09.21.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id v14so4863407lfi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 09:21:16 -0700 (PDT)
+X-Received: by 2002:ac2:44c3:: with SMTP id d3mr6977387lfm.14.1554480928669;
+ Fri, 05 Apr 2019 09:15:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a9dfc08702044b3db89c0584c0f79229@AcuMS.aculab.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 05 Apr 2019 16:21:13 +0000 (UTC)
+References: <20190405135936.7266-1-will.deacon@arm.com> <CAHk-=wiarqZVH52VuKDiPk7Jqf1H-znf-NMoGkKnM7H08VN5fg@mail.gmail.com>
+ <20190405160919.GA7857@fuggles.cambridge.arm.com>
+In-Reply-To: <20190405160919.GA7857@fuggles.cambridge.arm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 5 Apr 2019 06:15:12 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wiBQwAL5hoLD9-EmCAf1N9CUmUkuj_jJhUCsboNLy-uLw@mail.gmail.com>
+Message-ID: <CAHk-=wiBQwAL5hoLD9-EmCAf1N9CUmUkuj_jJhUCsboNLy-uLw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/21] Remove Mysterious Macro Intended to Obscure
+ Weird Behaviours (mmiowb())
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 04:16:14PM +0000, David Laight wrote:
-> From: Luis Ressel
-> > Sent: 05 April 2019 17:06
-> > On Fri, Apr 05, 2019 at 09:39:26AM -0500, Josh Poimboeuf wrote:
-> > 
-> > > Hm, I would actually argue the reverse.  Warnings are generally bad and
-> > > -Werror is useful for ensuring that we don't have any.  For warnings
-> > > that don't provide value, we just disable those individual warnings.
-> > 
-> > Sure, during development it's an excellent idea to investigate compiler
-> > warnings, and -Werror can be useful for that. But the Linux kernel is
-> > built by countless users in wildly varying environments, and it's almost
-> > a given that someone will use a compiler that'll complain about a valid
-> > part of your code whose style it considers bad.
-> > 
-> > As an example, the warning that's breaking the build for me is -Wundef
-> > complaining about several "#if UNDEFINED_IDENTIFIER" constructs in the
-> > libelf headers. (I agree with gcc in considering this bad style, but
-> > it's perfectly valid C, and there probably wasn't a warning about it
-> > back when this header was written.)
-> 
-> In which case you should be looking at a way of removing -Wundef
-> not removing -Werror.
+On Fri, Apr 5, 2019 at 6:09 AM Will Deacon <will.deacon@arm.com> wrote:
+> >
+> > Or did I miss something? I think the ia64() mb/rmb/wmb stuff only
+> > works on normal memory on ia64.
+>
+> I was worried about RISC-V, but actually their wmb() is "fence ow,ow"
+> which I think is stronger than their mmiowb() "fence o,w" implementation.
 
-Agreed.
+Also with smp_store_release -> smp_load_acquire kind of ordering?
 
-> FWIW I had to update libelf.so from version 0.153 to 0.165 in
-> order for the amd64 orc unwinder code in objtool to not generate
-> corrupt output files.
-> That is an Ubuntu 13.04 system - nothing like 10 years old.
+Again, this is not at all a NAK - I think we should do this - just
+perhaps a request to add a note to the commit and make people aware of
+the issue.
 
-Ah.  It would be great if we had a patch to fail the build for old
-versions of elfutils-libelf as well.
+I suspect very few drivers use non-locking serialization to begin with.
 
--- 
-Josh
+                 Linus
