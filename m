@@ -2,96 +2,132 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897A5C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49E3C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D8321872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZjmK+H8v"
+	by mail.kernel.org (Postfix) with ESMTP id A9C76217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554434799;
+	bh=hISdXM4ch+2fykgMGeTwLcdfvzSLbojSpn1PoRQFtX4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ojsK6a8DyVKjl1i2mI6r4DA/tpSHIieAqp6r/mrALLgpeWPsMeBQwcZe+Kr/7LW5I
+	 4pfAnzvyY5s4FA6m/VtM+sAUhBIgI+RjKyjPq7dxCzSdkBAxmj0KiBNVeTAkXuJD3O
+	 0AUmElxSG9k7DNb2s1OsUgqPJm4TkWNPhKZqIA7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfDEDZO (ORCPT
+        id S1729794AbfDED0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:25:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:37629 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729810AbfDEDZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:25:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44b4vC2bmXz9sNm;
-        Fri,  5 Apr 2019 14:25:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554434711;
-        bh=yI/Tm6FiLVjDEmn+s1KtqKXdOwHLdWBClm4fYWhiz0s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZjmK+H8vNcdolwypkfRaa6JzF8DfqJyJezzzJt1fwUC+o4VnE43eKMjlpSFhbvmP5
-         NnrF2eJCCvUV0860sojjthaVoi/Cv37txRNBeJw42CqFMDaRlWrYFiMwSRMZXy8d35
-         p05jqLiiSA8Mz6YtAu9RFgtJK5aIaw7WkK1KMeXQAWtkCLk/WEwc858nGmFWDL2K7M
-         fZNDiIw1SF/VkQDthx29hZKvsZbfPtKTW4BkS1C+BmWlz4tZNToGsdUspTZS88vxWf
-         +BrlzQgS4yjKmI4cL7Mz9hyZiq33SnwwUGLQQRg7DHFTo7ooLusR1PsIlB4Hm66NLU
-         eTN/dgcCxWwZQ==
-Date:   Fri, 5 Apr 2019 14:25:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: linux-next: build warning after merge of the scsi tree
-Message-ID: <20190405142347.1f264cdf@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qG1lbi3eneWefH0rN68cbG3"; protocol="application/pgp-signature"
+        Thu, 4 Apr 2019 23:26:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33344 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbfDED0h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 23:26:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Ii7LGS/+Jq+L28mX8GKrZLN7me2uvsEabd/9uCIhDbY=; b=FUw0s0jkwByF
+        h61E8nk9iSFVKQi50pqb11W1CHAjEWMGBIo0tdE2TTvAixtB8gm1bmTvwSrkxjgf7fNK3jCnhTuXP
+        pY8M8ubRbgNG945AjPBt0i0XqAdaaBMcKjK/J/WV6Vsx0/LssjVEig6IpJnc1JLw7/6IvGN2bsJUr
+        d3Hjg=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hCFUw-0005fi-UA; Fri, 05 Apr 2019 03:26:35 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id AAA1C441D3B; Fri,  5 Apr 2019 10:26:31 +0700 (+07)
+From:   Mark Brown <broonie@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: gpio: Drop unused pdev field in struct spi_gpio" to the spi tree
+In-Reply-To:  <20190403040133.1459-10-andrew.smirnov@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190405032631.AAA1C441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri,  5 Apr 2019 10:26:31 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qG1lbi3eneWefH0rN68cbG3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The patch
 
-Hi James,
+   spi: gpio: Drop unused pdev field in struct spi_gpio
 
-After merging the scsi tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+has been applied to the spi tree at
 
-drivers/scsi/lpfc/lpfc_nvme.c:2140:1: warning: 'lpfc_nvme_lport_unreg_wait'=
- defined but not used [-Wunused-function]
- lpfc_nvme_lport_unreg_wait(struct lpfc_vport *vport,
- ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Introduced by commit
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-  3999df75bccb ("scsi: lpfc: Declare local functions static")
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-It use is guarded by IS_ENABLED(CONFIG_NVME_FC).
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---=20
-Cheers,
-Stephen Rothwell
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---Sig_/qG1lbi3eneWefH0rN68cbG3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
+Mark
 
------BEGIN PGP SIGNATURE-----
+From 45f7718ae713e52def029c071cdba19a8045ac52 Mon Sep 17 00:00:00 2001
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Date: Tue, 2 Apr 2019 21:01:30 -0700
+Subject: [PATCH] spi: gpio: Drop unused pdev field in struct spi_gpio
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlymypYACgkQAVBC80lX
-0Gw9Qwf+PcECZy9lorHevXKLfXYKO0tk7/o2Q3/5l6jBl+G5QmsK7MwZbjHvu1pf
-7bXNjYtE+HZnwMDQGFxiYQwa/X2cUmXRj92YcJT62AZjy+uRyxrjjvHxkSKNziYW
-7djP+G9pxzuMfXDhmVsac9K3kDx1p+12Ii1mSQgm0ZI5au+X+Ic7U5KEbOcS+KtH
-OzCW882RqKvVMpfurHq8NgI18IcNxMx8uY+sQdMjYYSIo8GZLf1Qx9k0uo3y6B5j
-RZDMZBGzUI1w4I6mtjmK7NT2zPrZvGGpWSQqfmBubFU+z3g1DEqT/dJBOhJ9cBFX
-BPfezKbTGo7k+sK62tmqP0OPA+hrjg==
-=w1Bb
------END PGP SIGNATURE-----
+There's no code using 'pdev' field in struct spi_gpio. Drop it.
 
---Sig_/qG1lbi3eneWefH0rN68cbG3--
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-gpio.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 4b2a80abf36e..5ac9ae192ddf 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -41,7 +41,6 @@
+ 
+ struct spi_gpio {
+ 	struct spi_bitbang		bitbang;
+-	struct platform_device		*pdev;
+ 	struct gpio_desc		*sck;
+ 	struct gpio_desc		*miso;
+ 	struct gpio_desc		*mosi;
+@@ -390,8 +389,6 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, spi_gpio);
+ 
+-	spi_gpio->pdev = pdev;
+-
+ 	status = spi_gpio_request(dev, spi_gpio);
+ 	if (status)
+ 		return status;
+-- 
+2.20.1
+
