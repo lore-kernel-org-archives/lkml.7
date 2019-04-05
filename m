@@ -2,89 +2,104 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DFEC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4C7C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF51C20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIjB1SR6"
+	by mail.kernel.org (Postfix) with ESMTP id AD23620700
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfDEGvm (ORCPT
+        id S1730204AbfDEGvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:51:42 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43701 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfDEGvm (ORCPT
+        Fri, 5 Apr 2019 02:51:50 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:57390 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfDEGvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:51:42 -0400
-Received: by mail-yw1-f65.google.com with SMTP id j66so1932060ywc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 23:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JLXKMFd7hLBxddsS98FVfEFrGR73aGgg+JOg4CGZs+0=;
-        b=MIjB1SR6MDd6UoIN3Pr4xkRlC7W3j6nb4pDl9X9a4q0NPBWa+ub5eLZTQIF9mDsnDo
-         gZ9QwXwB4R+bZaQMfn7HJHWyjDEzNpWZgsinSzgCzHn9xymXcqGAaPwqnHlDTPu1qGDo
-         ZcRsazTlWwGG6/WHCLYW76FnaTqcvRa0ze9lcCsUHZODpo7pUFHmx1SbAunbP5jGRMrE
-         C9WEIl85Sc44vj7gwk/b9kD6uY9ngyp7U7bcoxlL1wXkXdVL7hD5pb7SVSJcPe8hTihJ
-         wNwwFPQL4eFji8N7He2hiBiO66+Yh508l6tpKb6bEH6Nqr5Fo7Cul7wQcbT9fkPlD4M/
-         UCwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JLXKMFd7hLBxddsS98FVfEFrGR73aGgg+JOg4CGZs+0=;
-        b=p4M3D+ymp3vmE246YOQ0rrK0JLeWuRjH+2SCX4WXxM5cKep4xQhenRrTrGcVi8qEUf
-         sKytxWyuI+BrlIi5Ftt1Vim5/B4i+GxRIdgPKQmy5FfpBCfJ79SDB45poi0uMfR6DE7h
-         upJy4AoSHOhnBvfHMb831aH7iax3nTSmbsxzLkn/H8QZSx9xnPeSRFyeJKykKK1DmfyH
-         b3nADJLzxmJ2klrJskXvsCayJ0LGscE3d6opGkplVSeU1nlo7Ycnvbx3gZQcrS1jowkk
-         FaKYDhaNa7+jNepaxO5CHXAqnHdvFLbg0LEp5z+pBTcXGXidvNdpuptC9vcPyXK4XylZ
-         Cskw==
-X-Gm-Message-State: APjAAAWeuQf7J6y6ltZYOe1RwyliDcvRNmtQJEt68wvE+8lb66UsX4gz
-        T+U3hpS4AXyq8/taYKwOdGlFL2N2qDKf0Nf7EAM=
-X-Google-Smtp-Source: APXvYqy9NkWPBCnBpIusqqTZWHBijuQ9sgEgNa9uxubq9D1kRhZneVGFLRyXZXLUfvsjRljLepWWEYmr4tJnSz+uGw4=
-X-Received: by 2002:a0d:e895:: with SMTP id r143mr883978ywe.201.1554447101533;
- Thu, 04 Apr 2019 23:51:41 -0700 (PDT)
+        Fri, 5 Apr 2019 02:51:50 -0400
+X-AuditID: c0a8fbf4-519ff700000014c1-2c-5ca6fb04cd18
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 47.48.05313.40BF6AC5; Fri,  5 Apr 2019 08:51:48 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Fri, 5 Apr 2019 08:51:44 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>
+CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
+Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks
+ list
+Thread-Topic: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating
+ clocks list
+Thread-Index: AQHU6zDhsEv70ksLMUWTxM/SG851haYtACOA
+Date:   Fri, 5 Apr 2019 06:51:43 +0000
+Message-ID: <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
+References: <20190404215344.6330-1-sboyd@kernel.org>
+         <20190404215344.6330-2-sboyd@kernel.org>
+In-Reply-To: <20190404215344.6330-2-sboyd@kernel.org>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <754FC85CFB2A034C9293C1B78B81256A@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190405044602.2334-1-kraxel@redhat.com>
-In-Reply-To: <20190405044602.2334-1-kraxel@redhat.com>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 4 Apr 2019 23:51:30 -0700
-Message-ID: <CAMo8BfL3Y6BZwOR7i9FiUdoRBtdy31_VC0t4FWrUr8L9pKvxJw@mail.gmail.com>
-Subject: Re: [PATCH] drm/virtio: move drm_connector_update_edid_property() call
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUURznzcyu4zH1Wq+XltBSQkaWkTYftKwlWL+EYJ9iS0cdd8U9bHbX
+        1MyElPKoDDRxUwvzqjwXsggtXaXSgoiVLcMCj5I8OsywTbNmdvL49P7vd/x//8f7k7jstjSA
+        TNWbWE7PaOVSD6KnabFjN7HYoNp7w+5Bz4z14/TQuJr+XvJBQtsfVUlpW3k3oPsuPpbQrweP
+        0suODoJ22l5h0e5Ku+M1rvz6tsBNWdN8Vmm/chlTto/dkyitdwulyh/WoFi3E56RiYwpIy5V
+        rd9zMMFTM9RSKU3vh5nz5TZpHiiBRcCdRHA/elNwFRQBD1IGHQB1dv8hxMszgEovvMSKAElK
+        YSQqGnYTDD4wAdVf/4ELGhzOYujjbLOL8IZx6P3INC6KjqNfD6aBWO9D+ZMzmFATcDt6VtHn
+        wil4DPVOTblwGd+0z1Hv6uMOw1He/TqXBsCtqDDvi0uDQ39k/bQgEaeGqK7rFS7Wvujz+PJ/
+        XI66naOEMDMOd6K2R3tEazSaG2wnxHobKisedRNH2IQGKieIUuBnWZdgWXNb1rkt69yWde5b
+        QHIXIB2TqlUzJjYslGPNoZxBo+OPJIPOCsRvnn8I/tpibACSQO5FnRxvUMkkTIYxS2cDm0lM
+        7kvFVvDQhkRDcpaGMWriObOWNdoAInG5DxV0h+eoZCYrm+UMK1QgScj9qTONZSoZFJLTWDad
+        5VbYLSQpRxTzmzdu4lg1m5mSqjWt0RjpLjT3CPAxsvpklmPMJk28sC3xRn5dBMqLzz3nFHKN
+        6YyOR0XrINhF9tSOVuPkbO9kNS4j9AY9G+BPHRGSoCDVmPWrQVPAn3+vN1UosF785q/2meIj
+        MD6CNt8UIkzMGhWQB9C30aUBekiSs2AKPuDTOefp7KuKwiaSPA8/CSRa25oqAjf6KSJys08t
+        1OQMa1tQD/nwZ8yhOqfjRYQyeDZBZTV5b097N56x93TlluKq5zvCryH7+drGlIjJ+JElSf5T
+        xZ2vrSpF6+6U0lyFYl4TVa6eCcu8NL3QlUTVlx1RhMgJo4YJC8E5I/MPPB2zJLYDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 9:46 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> drm_connector_update_edid_property can sleep, we must not
-> call it while holding a spinlock.  Move the callsize.
->
-> Reported-by: Max Filippov <jcmvbkbc@gmail.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_vq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-This change fixes the warning for me, thanks!
-Tested-by: Max Filippov <jcmvbkbc@gmail.com>
-
--- 
-Thanks.
--- Max
+SGVsbG8gU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB0YWtpbmcgY2FyZSBvZiB0aGlzIQ0KDQpPbiBU
+aHUsIDIwMTktMDQtMDQgYXQgMTQ6NTMgLTA3MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gV2Ug
+cmVjZW50bHkgaW50cm9kdWNlZCBhIGNoYW5nZSB0byBzdXBwb3J0IGRldm0gY2xrIGxvb2t1cHMu
+IFRoYXQNCj4gY2hhbmdlDQo+IGludHJvZHVjZWQgYSBjb2RlLXBhdGggdGhhdCB1c2VkIGNsa19m
+aW5kKCkgd2l0aG91dCBob2xkaW5nIHRoZQ0KPiAnY2xvY2tzX211dGV4Jy4gVW5mb3J0dW5hdGVs
+eSwgY2xrX2ZpbmQoKSBpdGVyYXRlcyBvdmVyIHRoZSAnY2xvY2tzJw0KPiBsaXN0IGFuZCBzbyB3
+ZSBuZWVkIHRvIHByZXZlbnQgdGhlIGxpc3QgZnJvbSBiZWluZyBtb2RpZmllZCB3aGlsZQ0KPiBp
+dGVyYXRpbmcgb3ZlciBpdCBieSBob2xkaW5nIHRoZSBtdXRleC4gU2ltaWxhcmx5LCB3ZSBkb24n
+dCBuZWVkIHRvDQo+IGhvbGQNCj4gdGhlICdjbG9ja3NfbXV0ZXgnIGJlc2lkZXMgd2hlbiB3ZSdy
+ZSBkZXJlZmVyZW5jaW5nIHRoZSBjbGtfbG9va3VwDQo+IHBvaW50ZXINCg0KLy8vIFNuaXANCg0K
+PiAtb3V0Og0KPiArc3RhdGljIHN0cnVjdCBjbGtfbG9va3VwICpjbGtfZmluZChjb25zdCBjaGFy
+ICpkZXZfaWQsIGNvbnN0IGNoYXINCj4gKmNvbl9pZCkNCj4gK3sNCj4gKwlzdHJ1Y3QgY2xrX2xv
+b2t1cCAqY2w7DQo+ICsNCj4gKwltdXRleF9sb2NrKCZjbG9ja3NfbXV0ZXgpOw0KPiArCWNsID0g
+X19jbGtfZmluZChkZXZfaWQsIGNvbl9pZCk7DQo+ICAJbXV0ZXhfdW5sb2NrKCZjbG9ja3NfbXV0
+ZXgpOw0KPiAgDQo+IC0JcmV0dXJuIGNsID8gY2xrIDogRVJSX1BUUigtRU5PRU5UKTsNCj4gKwly
+ZXR1cm4gY2w7DQo+ICt9DQoNCkkgYW0gbm90IGFuIGV4cGVydCBvbiB0aGlzIGJ1dCByZWFkaW5n
+IGNvbW1pdCBtZXNzYWdlIGFib3dlIGFuZCBzZWVpbmcNCnRoZSBjb2RlIGZvciBjbGtfZmluZCgp
+IGxvb2tzIGEgYml0IHNjYXJ5LiBJZiBJIHVuZGVyc3RhbmQgaXQNCmNvcnJlY3RseSwgdGhlIGNs
+b2Nrc19tdXRleCBzaG91bGQgYmUgaGVsZCB3aGVuIGRlcmVmZXJlbmNpbmcgdGhlDQpjbGtfbG9v
+a3VwIHJldHVybmVkIGJ5IGNsa19maW5kLiBUaGUgY2xrX2ZpbmQgaW1wbGVtZW50YXRpb24gZHJv
+cHMgdGhlDQpsb2NrIGJlZm9yZSByZXR1cm5pbmcgLSB3aGljaCBtYWtlcyBtZSB0aGluayBJIG1p
+c3Mgc29tZXRoaW5nIGhlcmUuIEhvdw0KY2FuIHRoZSBjYWxsZXIgZXZlciBzYWZlbHkgZGVyZWZl
+cmVuY2UgcmV0dXJuZWQgY2xrX2xvb2t1cCBwb2ludGVyPw0KSnVzdCByZWFkaW5nIGFib3dlIG1h
+a2VzIG1lIHRoaW5rIHRoYXQgbG9jayBzaG91bGQgYmUgdGFrZW4gYnkgd2hvZXZlcg0KaXMgY2Fs
+bGluZyB0aGUgY2xrX2ZpbmQsIGFuZCBkcm9wcGVkIG9ubHkgYWZ0ZXIgY2FsbGVyIGhhcyB1c2Vk
+IHRoZQ0KZm91bmQgY2xrX2xvb2t1cCBmb3Igd2hhdGV2ZXIgY2FsbGVyIGludGVuZHMgdG8gdXNl
+IGl0LiBNYXliZSBJIGFtDQptaXNzaW5nIHNvbWV0aGluZz8NCg0KQnIsDQoJTWF0dGkgVmFpdHRp
+bmVuDQo=
