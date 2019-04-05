@@ -2,116 +2,172 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD51C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4077C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF84521738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:31:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TQ7u87Fo"
+	by mail.kernel.org (Postfix) with ESMTP id 6EDD121738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554481904;
+	bh=MIlRvXJSnmUqGpJtw3hxqL1JereU8yIRzZ6lrvGbOLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bZ10JAnKGD7tB46/avlmkXzOytiunlFM/292arsypPcPIzCATmQHsM0Nipru3wP+d
+	 Ufz4iv/QoyU/55T0ozQWGSvRCHU/u4Acn+9d4iJ0hLerRPRMidFYrTbGr8JzWkGwNq
+	 tSJzGOgfDZSYqNF/J1957VlfJJknz3BRUEdzO2NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbfDEQbj (ORCPT
+        id S1731602AbfDEQbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 5 Apr 2019 12:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730870AbfDEQbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Apr 2019 12:31:39 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36652 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726643AbfDEQbi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:31:38 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x35GV07N026580;
-        Fri, 5 Apr 2019 18:31:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=7H8RSoRc+Wd1HwbM/O2GBOA3uJJDbwsqU1yW/P2vHgo=;
- b=TQ7u87FolUWF44uvZKTSj2QkdxTAocTyS/WD0tLxtHpYBX5tfej7VU10OP156enHNyKn
- 6ktnMFC6nEckeMYUPXrWej6b1xOC/y86ayR8Sve3uoqHvbRj9IhYjPwaJ3YwEa7MT+Wh
- ySEUTZzgtNDGbW7Stql0umkKoSjGqG7+oXrH+YDWbukokF47NQuSKqrPb6+59g2J2k1k
- UCEyMdE2L+8hnsuCYFrR8Nd3BJG6BYfcVxez4/8NDO46QqojBUX44DD2O+8jhcsoYxVC
- NHOSUrb7OnR+cqdi/io7A3o9+F7bb23V+rpxGGoB5TmW0kqAB4HPq4OWeuFouA7eqIjo 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rmgmxjjy2-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 05 Apr 2019 18:31:27 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5358D31;
-        Fri,  5 Apr 2019 16:31:27 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 31B9E5011;
-        Fri,  5 Apr 2019 16:31:27 +0000 (GMT)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 5 Apr
- 2019 18:31:26 +0200
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1347.000; Fri, 5 Apr 2019 18:31:26 +0200
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Yannick FERTRE <yannick.fertre@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/stm: ltdc: reset controller to avoid partial refresh
-Thread-Topic: [PATCH] drm/stm: ltdc: reset controller to avoid partial refresh
-Thread-Index: AQHU6f8DbnBM9pdQZUaNhuooiEJOaaYtpIEA
-Date:   Fri, 5 Apr 2019 16:31:26 +0000
-Message-ID: <1487ab3d-60f6-4c85-d021-8dec7f1a99c2@st.com>
-References: <1554283453-2879-1-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1554283453-2879-1-git-send-email-yannick.fertre@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FB1759469E65DE4EBE12379B8F616608@st.com>
-Content-Transfer-Encoding: base64
+Received: from localhost (unknown [104.132.1.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 412392146F;
+        Fri,  5 Apr 2019 16:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554481898;
+        bh=MIlRvXJSnmUqGpJtw3hxqL1JereU8yIRzZ6lrvGbOLI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z1ZiGeFwImb0illlEzqo/aTzytGfLgWzw39XvYS+GM8WLF28J6n0Lq9j2UjSraeMP
+         ndtWelwuGoOVI2tu2/IVUzXOKeXCvp/BPXBArklzj2WpVXMbS8/Q8rUDaqizdCV/1O
+         CbaRUvJ0YKHl6c8QqlIhaOvxdCtTB/BAqfNkkM4o=
+Date:   Fri, 5 Apr 2019 09:31:37 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 1/5] f2fs: clean up codes with op_is_write()
+Message-ID: <20190405163137.GC51212@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190402105222.28374-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_12:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402105222.28374-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMy8xOSAxMToyNCBBTSwgWWFubmljayBGZXJ0csOpIHdyb3RlOg0KPiBEaXNwbGF5
-IGNvbnRyb2xsZXIgcmVzZXQgbXVzdCBiZSBkb25lIGFzIHNvb24gYXMgcG9zc2libGUgYWZ0ZXIg
-ZW5hYmxlDQo+IHRoZSBjbG9jayB0byBhdm9pZCBwYXJ0aWFsIHJlZnJlc2ggb24gc2NyZWVuLg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5j
-b20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jIHwgMTIgKysrKysrLS0t
-LS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9zdG0vbHRkYy5jDQo+IGluZGV4IDMyZmQ2YTMuLjdiYmU2MWMgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9z
-dG0vbHRkYy5jDQo+IEBAIC0xMTM0LDYgKzExMzQsMTIgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGRldikNCj4gICAJCXJldHVybiAtRU5PREVWOw0KPiAgIAl9DQo+ICAgDQo+
-ICsJaWYgKCFJU19FUlIocnN0YykpIHsNCj4gKwkJcmVzZXRfY29udHJvbF9hc3NlcnQocnN0Yyk7
-DQo+ICsJCXVzbGVlcF9yYW5nZSgxMCwgMjApOw0KPiArCQlyZXNldF9jb250cm9sX2RlYXNzZXJ0
-KHJzdGMpOw0KPiArCX0NCj4gKw0KPiAgIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRl
-diwgSU9SRVNPVVJDRV9NRU0sIDApOw0KPiAgIAlsZGV2LT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jl
-c291cmNlKGRldiwgcmVzKTsNCj4gICAJaWYgKElTX0VSUihsZGV2LT5yZWdzKSkgew0KPiBAQCAt
-MTE1NiwxMiArMTE2Miw2IEBAIGludCBsdGRjX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRkZXYp
-DQo+ICAgCQl9DQo+ICAgCX0NCj4gICANCj4gLQlpZiAoIUlTX0VSUihyc3RjKSkgew0KPiAtCQly
-ZXNldF9jb250cm9sX2Fzc2VydChyc3RjKTsNCj4gLQkJdXNsZWVwX3JhbmdlKDEwLCAyMCk7DQo+
-IC0JCXJlc2V0X2NvbnRyb2xfZGVhc3NlcnQocnN0Yyk7DQo+IC0JfQ0KPiAtDQoNCkRlYXIgWWFu
-bmljaywNClRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCwNCg0KQWNrZWQtYnk6IFBoaWxpcHBlIENv
-cm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQoNClBoaWxpcHBlIDopDQoNCj4gICAJLyogRGlz
-YWJsZSBpbnRlcnJ1cHRzICovDQo+ICAgCXJlZ19jbGVhcihsZGV2LT5yZWdzLCBMVERDX0lFUiwN
-Cj4gICAJCSAgSUVSX0xJRSB8IElFUl9SUklFIHwgSUVSX0ZVSUUgfCBJRVJfVEVSUklFKTsNCj4g
+On 04/02, Chao Yu wrote:
+> This patch uses generic function op_is_write() to instead private defined
+> macro is_read_io() for cleanup.
+
+I don't see huge reason to clean up this, but do expect huge backporting issue.
+
+Thanks,
+
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/data.c | 25 +++++++++++++------------
+>  fs/f2fs/f2fs.h |  3 +--
+>  2 files changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index d87dfa5aa112..22beda1a0c3c 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -287,7 +287,7 @@ static struct bio *__bio_alloc(struct f2fs_sb_info *sbi, block_t blk_addr,
+>  static inline void __submit_bio(struct f2fs_sb_info *sbi,
+>  				struct bio *bio, enum page_type type)
+>  {
+> -	if (!is_read_io(bio_op(bio))) {
+> +	if (op_is_write(bio_op(bio))) {
+>  		unsigned int start;
+>  
+>  		if (type != DATA && type != NODE)
+> @@ -324,10 +324,11 @@ static inline void __submit_bio(struct f2fs_sb_info *sbi,
+>  			set_sbi_flag(sbi, SBI_NEED_CP);
+>  	}
+>  submit_io:
+> -	if (is_read_io(bio_op(bio)))
+> -		trace_f2fs_submit_read_bio(sbi->sb, type, bio);
+> -	else
+> +	if (op_is_write(bio_op(bio)))
+>  		trace_f2fs_submit_write_bio(sbi->sb, type, bio);
+> +	else
+> +		trace_f2fs_submit_read_bio(sbi->sb, type, bio);
+> +
+>  	submit_bio(bio);
+>  }
+>  
+> @@ -340,10 +341,10 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
+>  
+>  	bio_set_op_attrs(io->bio, fio->op, fio->op_flags);
+>  
+> -	if (is_read_io(fio->op))
+> -		trace_f2fs_prepare_read_bio(io->sbi->sb, fio->type, io->bio);
+> -	else
+> +	if (op_is_write(fio->op))
+>  		trace_f2fs_prepare_write_bio(io->sbi->sb, fio->type, io->bio);
+> +	else
+> +		trace_f2fs_prepare_read_bio(io->sbi->sb, fio->type, io->bio);
+>  
+>  	__submit_bio(io->sbi, io->bio, fio->type);
+>  	io->bio = NULL;
+> @@ -464,20 +465,20 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
+>  
+>  	/* Allocate a new bio */
+>  	bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
+> -				1, is_read_io(fio->op), fio->type, fio->temp);
+> +				1, !op_is_write(fio->op), fio->type, fio->temp);
+>  
+>  	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
+>  		bio_put(bio);
+>  		return -EFAULT;
+>  	}
+>  
+> -	if (fio->io_wbc && !is_read_io(fio->op))
+> +	if (fio->io_wbc && op_is_write(fio->op))
+>  		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+>  
+>  	bio_set_op_attrs(bio, fio->op, fio->op_flags);
+>  
+> -	inc_page_count(fio->sbi, is_read_io(fio->op) ?
+> -			__read_io_type(page): WB_DATA_TYPE(fio->page));
+> +	inc_page_count(fio->sbi, op_is_write(fio->op) ?
+> +			WB_DATA_TYPE(fio->page) : __read_io_type(page));
+>  
+>  	__submit_bio(fio->sbi, bio, fio->type);
+>  	return 0;
+> @@ -490,7 +491,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>  	struct f2fs_bio_info *io = sbi->write_io[btype] + fio->temp;
+>  	struct page *bio_page;
+>  
+> -	f2fs_bug_on(sbi, is_read_io(fio->op));
+> +	f2fs_bug_on(sbi, !op_is_write(fio->op));
+>  
+>  	down_write(&io->io_rwsem);
+>  next:
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 5bc7b99fb9c1..24e7f0e6aab7 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -1048,7 +1048,6 @@ struct f2fs_io_info {
+>  	unsigned char version;		/* version of the node */
+>  };
+>  
+> -#define is_read_io(rw) ((rw) == READ)
+>  struct f2fs_bio_info {
+>  	struct f2fs_sb_info *sbi;	/* f2fs superblock */
+>  	struct bio *bio;		/* bios to merge */
+> @@ -2813,7 +2812,7 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+>  #define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
+>  
+>  #define __is_meta_io(fio) (PAGE_TYPE_OF_BIO((fio)->type) == META &&	\
+> -				(!is_read_io((fio)->op) || (fio)->is_meta))
+> +				(op_is_write((fio)->op) || (fio)->is_meta))
+>  
+>  bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+>  					block_t blkaddr, int type);
+> -- 
+> 2.18.0.rc1
