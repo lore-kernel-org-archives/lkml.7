@@ -2,119 +2,281 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9BDC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CE6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BFA2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554447639;
-	bh=Ie30lCRXiYZhrOWNXO5GOBb0ompZrFhf/1u8XKrTd2k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zPZ31/j/ZGcfefx5MUOv+N6+2Ya+lpt9UP8EyxlM1cURzUNiGWNdt3fJ8UxFjpX+S
-	 7R66FUzJg9uJKtXaty638du2l5hxgpaDESU2e2NEtNJRTf8m33g3AZY3X7xDaVaFY+
-	 wl+KsRUpYrTTLLoPLZaRi6mK0ynvtERhWJ20wdrM=
+	by mail.kernel.org (Postfix) with ESMTP id D536021850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 07:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfDEHAi (ORCPT
+        id S1729833AbfDEHFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 03:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfDEHAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 03:00:37 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 5 Apr 2019 03:05:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726594AbfDEHFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 03:05:44 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x356xK4P105414
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 03:05:42 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rp1qh1caw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 03:05:42 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
+        Fri, 5 Apr 2019 08:05:40 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 5 Apr 2019 08:05:37 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3575aYq38273066
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Apr 2019 07:05:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0B465204E;
+        Fri,  5 Apr 2019 07:05:35 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5003E52052;
+        Fri,  5 Apr 2019 07:05:35 +0000 (GMT)
+Received: from [9.81.192.72] (unknown [9.81.192.72])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E482186A;
-        Fri,  5 Apr 2019 07:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554447636;
-        bh=Ie30lCRXiYZhrOWNXO5GOBb0ompZrFhf/1u8XKrTd2k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=I3Yn4mkZhHcIEsfQ0wibIbyDVwZpDJHKD8WK1f3UBSh0tJ1iMG07+RhoxjvxrAr8G
-         O9uwEfmMO7Y/nL5uKhluJ5UDyICAlPEOhCzd0Xty8M2wrPZwqSxRso9YpPwJaDlwlw
-         6dv1fkEZfqXW7AfyHNdTYO+3p+LSXa70/Lh0VhRQ=
-Received: by mail-lf1-f42.google.com with SMTP id 5so3572565lft.12;
-        Fri, 05 Apr 2019 00:00:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAUW6jNUQ4Lw8qK2zf1qWUgPmbHbxQbVll90UImb5wcGqx0CNdQm
-        6PDso4Gs6GRIdrBoCUMVkBs3IsugQv2FoWMSWvs=
-X-Google-Smtp-Source: APXvYqy7Is9MCRmuZrBdZNrnxcuZ2fx1UJRgezzDdyo0cGs8iGhc1NFvRl/Xb+rdVJjHT7tKZ1x25WsVjeD4CJepCLQ=
-X-Received: by 2002:ac2:5110:: with SMTP id q16mr5934298lfb.44.1554447634382;
- Fri, 05 Apr 2019 00:00:34 -0700 (PDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 934BEA0195;
+        Fri,  5 Apr 2019 18:05:33 +1100 (AEDT)
+Subject: Re: [PATCH v4 1/4] ocxl: Rename struct link to ocxl_link
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Greg Kurz <groug@kaod.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+ <20190325053456.14599-1-alastair@au1.ibm.com>
+ <20190325053456.14599-2-alastair@au1.ibm.com>
+From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Date:   Fri, 5 Apr 2019 18:05:32 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <000000000000e02450058593df62@google.com> <000000000000db3c59058595f0ac@google.com>
-In-Reply-To: <000000000000db3c59058595f0ac@google.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 5 Apr 2019 09:00:23 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcrimyMrK7LBbZLaqHGhS5dSCcBC1X01_pRY5evCD7n5Q@mail.gmail.com>
-Message-ID: <CAJKOXPcrimyMrK7LBbZLaqHGhS5dSCcBC1X01_pRY5evCD7n5Q@mail.gmail.com>
-Subject: Re: BUG: using __this_cpu_read() in preemptible code in ip6_finish_output
-To:     syzbot <syzbot+51471b4aae195285a4a3@syzkaller.appspotmail.com>
-Cc:     alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, ecree@solarflare.com, fw@strlen.de,
-        idosch@mellanox.com, jiri@mellanox.com, kafai@fb.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        lirongqing@baidu.com, netdev@vger.kernel.org, petrm@mellanox.com,
-        sd@queasysnail.net, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190325053456.14599-2-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040507-4275-0000-0000-0000032486D1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040507-4276-0000-0000-00003833955E
+Message-Id: <327f4cc9-4c1b-a44c-3f61-d6363d73574d@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-05_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904050052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019 at 03:14, syzbot
-<syzbot+51471b4aae195285a4a3@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 97cdcf37b57e3f204be3000b9eab9686f38b4356
-> Author: Florian Westphal <fw@strlen.de>
-> Date:   Mon Apr 1 14:42:13 2019 +0000
->
->      net: place xmit recursion in softnet data
+On 25/3/19 4:34 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> The term 'link' is ambiguous (especially when the struct is used for a
+> list), so rename it for clarity.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
 
-I am seeing this as well on ARMv7 board booted from NFS root (exynos_defconfig):
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 
-[ 30.221238] BUG: using __this_cpu_read() in preemptible [00000000]
-code: systemd-network/236
-[ 30.228576] caller is ip6_output+0x68/0x3e8
-[ 30.232578] CPU: 1 PID: 236 Comm: systemd-network Not tainted
-5.1.0-rc3-next-20190405 #2
-[ 30.240657] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[ 30.246719] [<c011238c>] (unwind_backtrace) from [<c010df50>]
-(show_stack+0x10/0x14)
-[ 30.254447] [<c010df50>] (show_stack) from [<c0a87270>] (dump_stack+0x98/0xc4)
-[ 30.261638] [<c0a87270>] (dump_stack) from [<c0494a94>]
-(__this_cpu_preempt_check+0x124/0x128)
-[ 30.270238] [<c0494a94>] (__this_cpu_preempt_check) from [<c08e486c>]
-(ip6_output+0x68/0x3e8)
-[ 30.278730] [<c08e486c>] (ip6_output) from [<c08e52ac>]
-(ip6_send_skb+0x30/0x1d0)
-[ 30.286180] [<c08e52ac>] (ip6_send_skb) from [<c0912798>]
-(rawv6_sendmsg+0x824/0x9c0)
-[ 30.294005] [<c0912798>] (rawv6_sendmsg) from [<c07d8ff8>]
-(sock_sendmsg+0x14/0x24)
-[ 30.301628] [<c07d8ff8>] (sock_sendmsg) from [<c07d97cc>]
-(___sys_sendmsg+0x230/0x244)
-[ 30.309514] [<c07d97cc>] (___sys_sendmsg) from [<c07da9f8>]
-(__sys_sendmsg+0x50/0x8c)
-[ 30.317316] [<c07da9f8>] (__sys_sendmsg) from [<c01011ac>]
-(__sys_trace_return+0x0/0x14)
-[ 30.325376] Exception stack(0xe79f9fa8 to 0xe79f9ff0)
-[ 30.330377] 9fa0: 00000000 b6f3da58 0000000b beeb2a6c 00000000 00000000
-[ 30.338560] 9fc0: 00000000 b6f3da58 004015ce 00000128 004b10c8
-00000000 020d28f9 00000000
-[ 30.346708] 9fe0: 004aeee0 beeb2a40 0047cbdc b6d27684
+> ---
+>   drivers/misc/ocxl/file.c |  5 ++---
+>   drivers/misc/ocxl/link.c | 36 ++++++++++++++++++------------------
+>   2 files changed, 20 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
+> index e6a607488f8a..009e09b7ded5 100644
+> --- a/drivers/misc/ocxl/file.c
+> +++ b/drivers/misc/ocxl/file.c
+> @@ -151,10 +151,9 @@ static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
+>   		mutex_unlock(&ctx->status_mutex);
+>   
+>   		if (status == ATTACHED) {
+> -			int rc;
+> -			struct link *link = ctx->afu->fn->link;
+> +			int rc = ocxl_link_update_pe(ctx->afu->fn->link,
+> +				ctx->pasid, ctx->tidr);
+>   
+> -			rc = ocxl_link_update_pe(link, ctx->pasid, ctx->tidr);
+>   			if (rc)
+>   				return rc;
+>   		}
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index d50b861d7e57..8d2690a1a9de 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -76,7 +76,7 @@ struct spa {
+>    * limited number of opencapi slots on a system and lookup is only
+>    * done when the device is probed
+>    */
+> -struct link {
+> +struct ocxl_link {
+>   	struct list_head list;
+>   	struct kref ref;
+>   	int domain;
+> @@ -179,7 +179,7 @@ static void xsl_fault_handler_bh(struct work_struct *fault_work)
+>   
+>   static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   {
+> -	struct link *link = (struct link *) data;
+> +	struct ocxl_link *link = (struct ocxl_link *) data;
+>   	struct spa *spa = link->spa;
+>   	u64 dsisr, dar, pe_handle;
+>   	struct pe_data *pe_data;
+> @@ -256,7 +256,7 @@ static int map_irq_registers(struct pci_dev *dev, struct spa *spa)
+>   				&spa->reg_tfc, &spa->reg_pe_handle);
+>   }
+>   
+> -static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
+> +static int setup_xsl_irq(struct pci_dev *dev, struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   	int rc;
+> @@ -311,7 +311,7 @@ static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
+>   	return rc;
+>   }
+>   
+> -static void release_xsl_irq(struct link *link)
+> +static void release_xsl_irq(struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   
+> @@ -323,7 +323,7 @@ static void release_xsl_irq(struct link *link)
+>   	unmap_irq_registers(spa);
+>   }
+>   
+> -static int alloc_spa(struct pci_dev *dev, struct link *link)
+> +static int alloc_spa(struct pci_dev *dev, struct ocxl_link *link)
+>   {
+>   	struct spa *spa;
+>   
+> @@ -350,7 +350,7 @@ static int alloc_spa(struct pci_dev *dev, struct link *link)
+>   	return 0;
+>   }
+>   
+> -static void free_spa(struct link *link)
+> +static void free_spa(struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   
+> @@ -364,12 +364,12 @@ static void free_spa(struct link *link)
+>   	}
+>   }
+>   
+> -static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
+> +static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_link)
+>   {
+> -	struct link *link;
+> +	struct ocxl_link *link;
+>   	int rc;
+>   
+> -	link = kzalloc(sizeof(struct link), GFP_KERNEL);
+> +	link = kzalloc(sizeof(struct ocxl_link), GFP_KERNEL);
+>   	if (!link)
+>   		return -ENOMEM;
+>   
+> @@ -405,7 +405,7 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
+>   	return rc;
+>   }
+>   
+> -static void free_link(struct link *link)
+> +static void free_link(struct ocxl_link *link)
+>   {
+>   	release_xsl_irq(link);
+>   	free_spa(link);
+> @@ -415,7 +415,7 @@ static void free_link(struct link *link)
+>   int ocxl_link_setup(struct pci_dev *dev, int PE_mask, void **link_handle)
+>   {
+>   	int rc = 0;
+> -	struct link *link;
+> +	struct ocxl_link *link;
+>   
+>   	mutex_lock(&links_list_lock);
+>   	list_for_each_entry(link, &links_list, list) {
+> @@ -442,7 +442,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_setup);
+>   
+>   static void release_xsl(struct kref *ref)
+>   {
+> -	struct link *link = container_of(ref, struct link, ref);
+> +	struct ocxl_link *link = container_of(ref, struct ocxl_link, ref);
+>   
+>   	list_del(&link->list);
+>   	/* call platform code before releasing data */
+> @@ -452,7 +452,7 @@ static void release_xsl(struct kref *ref)
+>   
+>   void ocxl_link_release(struct pci_dev *dev, void *link_handle)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   
+>   	mutex_lock(&links_list_lock);
+>   	kref_put(&link->ref, release_xsl);
+> @@ -488,7 +488,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	int pe_handle, rc = 0;
+> @@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
+>   
+>   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	int pe_handle, rc;
+> @@ -594,7 +594,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+>   
+>   int ocxl_link_remove_pe(void *link_handle, int pasid)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	struct pe_data *pe_data;
+> @@ -666,7 +666,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_remove_pe);
+>   
+>   int ocxl_link_irq_alloc(void *link_handle, int *hw_irq, u64 *trigger_addr)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	int rc, irq;
+>   	u64 addr;
+>   
+> @@ -687,7 +687,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_irq_alloc);
+>   
+>   void ocxl_link_free_irq(void *link_handle, int hw_irq)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   
+>   	pnv_ocxl_free_xive_irq(hw_irq);
+>   	atomic_inc(&link->irq_available);
+> 
 
-Full log:
-https://krzk.eu/#/builders/22/builds/1055/steps/13/logs/serial0
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
 
-Best regards,
-Krzysztof Kozlowski
