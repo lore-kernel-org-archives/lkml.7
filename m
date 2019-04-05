@@ -2,105 +2,179 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA07C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68077C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC450206DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E28217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JV7Mn5/x"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G4gTunPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfDEGDy (ORCPT
+        id S1729769AbfDEGOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:03:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:50973 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729641AbfDEGDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:03:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44b8QG1kNCz9sPf;
-        Fri,  5 Apr 2019 17:03:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554444231;
-        bh=f2D7It/v5u6PAhjPO6XUeN8evHMXIol6lRXaqU+h4Vo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JV7Mn5/xeUz2XVMQQsUxNTCNP5fLNDGW3tg3P6M+miBXi/l8EQ248dDen4DAEbzCl
-         0MsNHwLkBioS/s6OzsgtESr6FMS48CGrGBpsx0ClK8x4NHLkuYqm2QKJa8Z2lXDar3
-         EvPAurwD18nf19ciQNU08+VQW3qjou7YOpQ04b/rJZG0omHCfWXBYeObSn8BYbdB+q
-         8mlut6l9ZkYEYcdbgNyx6gMS3f/MlpAhzQ5e2mGPo5jgzIWac+KTqmJoG/F7asqT0D
-         bgJhMa1obb7UnkutHTOTDq785hLHsq4PtU6cSBLby6I93Hnpjm5HKdta6yAQUrX0db
-         D0w5nOMWGxRYg==
-Date:   Fri, 5 Apr 2019 17:03:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     DRI <dri-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190405170349.687cd08c@canb.auug.org.au>
-In-Reply-To: <20190405155550.5648e84e@canb.auug.org.au>
-References: <20190405155550.5648e84e@canb.auug.org.au>
+        Fri, 5 Apr 2019 02:14:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44788 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbfDEGOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 02:14:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x356ES2T115697;
+        Fri, 5 Apr 2019 01:14:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554444868;
+        bh=LTj1LetO+c5ltGBCKoLceIiy8U7vi1ZyaaYq75+Q6bg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G4gTunPOk0Dk47B3adUXlQ0wNxriMaTO8uEnb8yKXFg1rN5WpLYSJ1xclfBR+08ZV
+         xAUkfVuxIGBdDL51wc7uL+RJWajWGgbPZA63baNoLQ9WtGhoqTbQM9ZWV9OcZkM5+W
+         Q2c0mpLx72qAyn9ORYg40YYUSdHmYJVtfeex4myY=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x356ES3E091615
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 5 Apr 2019 01:14:28 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
+ 2019 01:14:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 5 Apr 2019 01:14:28 -0500
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x356EOtc109639;
+        Fri, 5 Apr 2019 01:14:25 -0500
+Subject: Re: [LINUX PATCH v2 3/3] spi: spi-mem: Add support for Zynq QSPI
+ controller
+To:     Naga Sureshkumar Relli <nagasure@xilinx.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+References: <1554105553-20207-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+ <c8f73eab-99eb-ddbc-9776-ea6b3a3ecf0f@ti.com>
+ <MWHPR02MB2623EDDF4207C7CA8F97B5D4AF510@MWHPR02MB2623.namprd02.prod.outlook.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <1fd37417-eaa6-834e-8b0b-a2519cfc4979@ti.com>
+Date:   Fri, 5 Apr 2019 11:45:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/B_7E1h8ne1BDtkR9dSqkofC"; protocol="application/pgp-signature"
+In-Reply-To: <MWHPR02MB2623EDDF4207C7CA8F97B5D4AF510@MWHPR02MB2623.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/B_7E1h8ne1BDtkR9dSqkofC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Dave,
 
-On Fri, 5 Apr 2019 15:55:50 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> After merging the drm-misc tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
-> kernel/dma/contiguous.c:19:10: fatal error: asm/dma-contiguous.h: No such=
- file or directory
->  #include <asm/dma-contiguous.h>
->           ^~~~~~~~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   4f2a8f5898ec ("drm: Add ASPEED GFX driver")
->=20
-> I have disabled that driver for today (by making it depend on BROKEN).
+On 05/04/19 10:55 AM, Naga Sureshkumar Relli wrote:
+> Hi Vignesh,
+> 
+> Thanks for the review.
+> 
+>> -----Original Message-----
+>> From: Vignesh Raghavendra <vigneshr@ti.com>
+>> Sent: Friday, April 5, 2019 10:14 AM
+>> To: Naga Sureshkumar Relli <nagasure@xilinx.com>; broonie@kernel.org;
+>> bbrezillon@kernel.org
+>> Cc: linux-spi@vger.kernel.org; dwmw2@infradead.org; marek.vasut@gmail.com;
+>> richard@nod.at; linux-mtd@lists.infradead.org; linux-kernel@vger.kernel.org; Michal Simek
+>> <michals@xilinx.com>; nagasuresh12@gmail.com
+>> Subject: Re: [LINUX PATCH v2 3/3] spi: spi-mem: Add support for Zynq QSPI controller
+>>
+>>
+>>
+>> On 01/04/19 1:29 PM, Naga Sureshkumar Relli wrote:
+>>> +/**
+>>> + * zynq_qspi_config_op - Configure QSPI controller for specified transfer
+>>> + * @xqspi:	Pointer to the zynq_qspi structure
+>>> + * @qspi:	Pointer to the spi_device structure
+>>> + *
+>>> + * Sets the operational mode of QSPI controller for the next QSPI
+>>> +transfer and
+>>> + * sets the requested clock frequency.
+>>> + *
+>>> + * Return:	0 on success and -EINVAL on invalid input parameter
+>>> + *
+>>> + * Note: If the requested frequency is not an exact match with what
+>>> +can be
+>>> + * obtained using the prescalar value, the driver sets the clock
+>>> +frequency which
+>>> + * is lower than the requested frequency (maximum lower) for the
+>>> +transfer. If
+>>> + * the requested frequency is higher or lower than that is supported
+>>> +by the QSPI
+>>> + * controller the driver will set the highest or lowest frequency
+>>> +supported by
+>>> + * controller.
+>>> + */
+>>> +static int zynq_qspi_config_op(struct zynq_qspi *xqspi, struct
+>>> +spi_device *spi) {
+>>> +	u32 config_reg, baud_rate_val = 0;
+>>> +
+>>> +	/*
+>>> +	 * Set the clock frequency
+>>> +	 * The baud rate divisor is not a direct mapping to the value written
+>>> +	 * into the configuration register (config_reg[5:3])
+>>> +	 * i.e. 000 - divide by 2
+>>> +	 *      001 - divide by 4
+>>> +	 *      ----------------
+>>> +	 *      111 - divide by 256
+>>> +	 */
+>>> +	while ((baud_rate_val < ZYNQ_QSPI_BAUD_DIV_MAX)  &&
+>>> +	       (clk_get_rate(xqspi->refclk) / (2 << baud_rate_val)) >
+>>> +		spi->max_speed_hz)
+>>> +		baud_rate_val++;
+>>> +
+>>
+>> Instead use DIV_ROUND_UP, something like below should work(untested):
+>>
+>> 	unsigned long refclk_rate = clk_get_rate(xqspi->refclk);
+>> 	u32 baud_rate_val = DIV_ROUND_UP(refclk_rate, spi->max_speed_hz) - 1;
+>>
 
-I noticed that this is now in the drm tree.
+Oops, sorry, I had meant
 
---=20
-Cheers,
-Stephen Rothwell
+	u32 baud_rate_val = DIV_ROUND_UP(refclk_rate, 2 * spi->max_speed_hz) - 1;
 
---Sig_/B_7E1h8ne1BDtkR9dSqkofC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+But please ignore my comment, I see that div values goes by power of 2 and not multiple of 2
 
------BEGIN PGP SIGNATURE-----
+Regards
+Vignesh
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlym78UACgkQAVBC80lX
-0GwNTQgAnYfBPX73VFrHb2Z6GE/xGiXWT4e9EEWJmt8vk0UqXKDDh723AXzGaFwa
-crVoEsk0odWA1RHMt1GIYPs56CjTO066IDNAgp7QvJmtHJ58PpCHSJGzDRZdq9Mu
-TVyRQ591Ti4xCerOkGSvNyxiwyyK2vy6DI8VGJ4q1jeX+UykQpBWy6hwgAFCEuoh
-SolLEEuWKps1ZP21w3CgnU8ol0MEGUHXEbjj/Xb1Llf2Z0xXg/U7zpSOI349ODAq
-9KJIfTEO3F/MJmQLpdTQ7YyZ0hBHwEm9evWHNIY6i8D+wSteQ+Efx7ZNtgbam+fd
-Bu+7MsJkr/N4CPz4S+0ofhhPadDmDg==
-=dPAB
------END PGP SIGNATURE-----
+> This is not just direct calculation.
+> i.e. for example
+> refclk_rate = 200MHz and max_speed_hx = 100MHz.
+> then DIV_ROUND_UP gives a value of 2.
+> But writing a value of 2 to config registers means, divide by 8. But we should write divide by 2 (value of zero).
+> That’s why we implemented the above calculation.
+> 
+> 000: divide by 2.
+> 001: divide by 4
+> 010: divide by 8
+> 011: divide by 16
+> 100: divide by 32
+> 101: divide by 64
+> 110: divide by 128
+> 111: divide by 256
+> 
 
---Sig_/B_7E1h8ne1BDtkR9dSqkofC--
+
+
+-- 
+Regards
+Vignesh
