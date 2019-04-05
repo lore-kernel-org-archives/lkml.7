@@ -2,140 +2,125 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A050C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABB0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F9A218A6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554473061;
-	bh=tXofxIeRxSbVJICOj67+SiNUoai6W5vF0h3jC8BRAAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k0utafkCZIpLiDcHPsV6uOzIQplcqxKBpRX4GNnAe4XhqnFk+YXoAYpT6rDgK5daR
-	 eRRddDxWLPGEr7UjnTSdn+df2aTAT4xTMLpdSFilLp8HIRmO5saOVMmNx8hky5hCOg
-	 8Yn7hPfJuVUYECWcEzsD8ixGm9scrkayTMvtj8QI=
+	by mail.kernel.org (Postfix) with ESMTP id AA5C021872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJCYUFqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbfDEOEU (ORCPT
+        id S1731191AbfDEOFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:04:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfDEOET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:04:19 -0400
-Received: from earth.universe (host-091-097-083-087.ewe-ip-backbone.de [91.97.83.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25B8921850;
-        Fri,  5 Apr 2019 14:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554473058;
-        bh=tXofxIeRxSbVJICOj67+SiNUoai6W5vF0h3jC8BRAAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P+FobSaXOchwscsPNV7rKq/JZwOdLHT02xkh8BevXErAgV2hIthWv4HOpTVyKzCja
-         IaEea7rPCHLnV3zu3DxTaOp9HSiomNAHMWSsfBLfbKBMTa2hY0c+uCOSQ1Hg08lyMW
-         VUVDfAqKV/VfiynyflEjt3lojNeFjPqaSyoQMUIE=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 599373C08D5; Fri,  5 Apr 2019 16:04:16 +0200 (CEST)
-Date:   Fri, 5 Apr 2019 16:04:16 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ramakrishna Pallala <ramakrishna.pallala@intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: axp288_charger: Fix unchecked return value
-Message-ID: <20190405140416.5drwsaciiipaa626@earth.universe>
-References: <20190318161439.GA6245@embeddedor>
- <e42cdec8-911d-950a-8b06-3b1aefaba74c@redhat.com>
+        Fri, 5 Apr 2019 10:05:09 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37671 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfDEOFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:05:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w23so3097896ply.4;
+        Fri, 05 Apr 2019 07:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2ReBw8p6BvVMoS2amLFJIUrT29OseEsI3YUdhLf3s8M=;
+        b=jJCYUFqAt4jgMaYL5ZHCpfv3o/zH6SMTTKDQcPy77i/DhRxtZ9v37+MNZV3gGnGkii
+         WNcsOPq0zl/EIDXopjoaT143HpX946tuJ0FHsyt2YsddWw9KzjK8mEWxIgu9nt1gMLcc
+         js/MTnk9FGw9K3kAmF3PBwEsMNTjQzbXVZTn0aPQTG2u7KOCfHk1HAU5ng/8sRI1T+2b
+         km8o2CuICHnE+8jMpoNCRmjp78JPWFaZVSrxf0mMpnIPoykqJpndr8Iyyq2XHuKUS8Go
+         IRkOS+aOQPD3qeGTuk/yXAJiFD+rJnAwtIGKpVXPT8IV+wyHR24gjVh9qBB3hgNG37XR
+         oAKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2ReBw8p6BvVMoS2amLFJIUrT29OseEsI3YUdhLf3s8M=;
+        b=WDBH+V+TGkIap2mVJIBTwyj2Ey8VLm3LPi6OZswuAgjUw2dFvB2tGdZuoceiIZK4RV
+         dvDClgV+ZjsUserb4G9qmc/0V8akBs0E3BdSGy+Xnagd1yyW6+1TFPz2CQQr3CHXJ1E0
+         vPdTJfaGcMBwV5Y+o5Ylsukhgk3xGkwrgZV2dSa0NGz59S+slMgNOItQAL0wAVCZrok3
+         yNm2UDrcqi/tR9FC9pLgW75b1PLslMVdzhFZH8F9yhDE5q8ADkHts34GwSR0NlqyFbUI
+         sAHWJQE52Tm4mMhyvC6xQba2FKSHkxgACVzqXqJdL2bLqRpshXjyenVcObvcIK+C38i2
+         8AXg==
+X-Gm-Message-State: APjAAAW2AaBXRtYTx7fdAuJfbKaFwe2ovdPjSkIJdXPAsCCdMxcMigG/
+        NSSWe+WYJImJrty2+vQi+tss0T7JoejWcs4j4GQ=
+X-Google-Smtp-Source: APXvYqwJQUW529bS9mcQjuqyTzKVmEwQP+ZC9ptSvLYO4XaaX7jAsK8UzTgWc+7mkdoPIBSQ2Ipf5xDwmfADy6xeAs8=
+X-Received: by 2002:a17:902:e091:: with SMTP id cb17mr13412832plb.222.1554473108062;
+ Fri, 05 Apr 2019 07:05:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v4x564h5nq5jwjac"
-Content-Disposition: inline
-In-Reply-To: <e42cdec8-911d-950a-8b06-3b1aefaba74c@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <17631.1552389966@turing-police> <20190312224611.elsl2buuhkddecih@pali>
+In-Reply-To: <20190312224611.elsl2buuhkddecih@pali>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Apr 2019 17:04:56 +0300
+Message-ID: <CAHp75Vft=SfD0BEsM8hOUuHKVBa_-p_-mk4c6odrFjkbuYtO1A@mail.gmail.com>
+Subject: Re: [PATCH] drivers/platform/x86/dell-rbtn.c - add missing #include
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 13, 2019 at 12:46 AM Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+>
+> On Tuesday 12 March 2019 07:26:06 Valdis Kl=C4=93tnieks wrote:
+> > Building with W=3D1 complains:
+> >   CC [M]  drivers/platform/x86/dell-rbtn.o
+> > drivers/platform/x86/dell-rbtn.c:345:5: warning: no previous prototype =
+for 'dell_rbtn_notifier_register' [-Wmissing-prototypes]
+> >   345 | int dell_rbtn_notifier_register(struct notifier_block *nb)
+> >       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/platform/x86/dell-rbtn.c:371:5: warning: no previous prototype =
+for 'dell_rbtn_notifier_unregister' [-Wmissing-prototypes]
+> >   371 | int dell_rbtn_notifier_unregister(struct notifier_block *nb)
+> >       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Can you identify in which commit was introduced this problem? If yes,
+> then Fixes: keyword should be added into commit message.
+>
 
---v4x564h5nq5jwjac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pushed to my review and testing queue, thanks!
 
-Hi,
+P.S. I have added Fixes tag.
 
-On Mon, Mar 18, 2019 at 06:32:35PM +0100, Hans de Goede wrote:
-> Hi,
->=20
-> On 18-03-19 17:14, Gustavo A. R. Silva wrote:
-> > Currently there is no check on platform_get_irq() return value
-> > in case it fails, hence never actually reporting any errors and
-> > causing unexpected behavior when using such value as argument
-> > for function regmap_irq_get_virq().
-> >=20
-> > Fix this by adding a proper check, a message reporting any errors
-> > and returning *pirq*
-> >=20
-> > Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
-> > Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > ---
-> >   drivers/power/supply/axp288_charger.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >=20
-> > diff --git a/drivers/power/supply/axp288_charger.c b/drivers/power/supp=
-ly/axp288_charger.c
-> > index f8c6da9277b3..00b961890a38 100644
-> > --- a/drivers/power/supply/axp288_charger.c
-> > +++ b/drivers/power/supply/axp288_charger.c
-> > @@ -833,6 +833,10 @@ static int axp288_charger_probe(struct platform_de=
-vice *pdev)
-> >   	/* Register charger interrupts */
-> >   	for (i =3D 0; i < CHRG_INTR_END; i++) {
-> >   		pirq =3D platform_get_irq(info->pdev, i);
-> > +		if (pirq < 0) {
-> > +			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-> > +			return pirq;
-> > +		}
-> >   		info->irq[i] =3D regmap_irq_get_virq(info->regmap_irqc, pirq);
-> >   		if (info->irq[i] < 0) {
-> >   			dev_warn(&info->pdev->dev,
-> >=20
->=20
-> Patch looks good to me:
->=20
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > The real problem is a missing include. Add it to keep dell-rbtn.c and .=
+h in sync
+> >
+> > Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> >
+> > diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
+ll-rbtn.c
+> > index f3afe778001e..d50ca96d99f0 100644
+> > --- a/drivers/platform/x86/dell-rbtn.c
+> > +++ b/drivers/platform/x86/dell-rbtn.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/acpi.h>
+> >  #include <linux/rfkill.h>
+> >  #include <linux/input.h>
+> > +#include "dell-rbtn.h"
+> >
+> >  enum rbtn_type {
+> >       RBTN_UNKNOWN,
+> >
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
 
-Thanks, queued.
 
--- Sebastian
 
---v4x564h5nq5jwjac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynYGAACgkQ2O7X88g7
-+pq8vA//eN4OarDl2zaxXoMbmcPg6MH8MglCdNeKSv17IjTlOmB0gqHWPL70L7VQ
-0MQrw6xh6NAqpI7toux3uzNycRgddQBTV9WyDs6Ry8b7xrcV9QhweECuFOqypwJe
-RQmn+zkHgl84O4UC5DR3mVnHpxVTryZ1wpL7mVxJIQuQki1tDJDcsSepniyBb70Y
-1enxIVp/CXD5haKmXDHbVKn055RBye5aRa+iIgN/ng7ecJ0xBp4owqj1UU31i0MX
-6Y+9F3j6+i9bKrLVjWzl1MQwnK0s1AE+XXy1jD05Pke5c6ffE012+683R4CWlugv
-npaTgdfiEJvIYfFjW8zp+FJRSjxPgLxfPocv1c74ajIWjzmcHeKOhMvsSLtO5wfz
-6XAQdWOIQiKVlyvhk8zkC9rkHJ2jvVYs0Nte9U0HCoGCGJ5SjW3QHFA8mX5pX2NH
-SVyr3gOgVw2r1aIAW8+QZqawQ9TOcXuIKk9fjH/WwFR9yHy7Ozn42hgdJ/LnQtHP
-5OKnwqKp9LWqffTj2Yt3w+dkhJcgHlPadidSetpATUt2JumfEBSYgL3s65jlF1m9
-6taemwpXLHFoLvakJMM+iBjzhaPnrV/k6Rbx8c/uG8WFg0fQb0UZJVaU+2awrqmy
-YTtHYPuYguprytU/Wy0repRDfeTE3pYEJcBp+MwHRcKsMphu/j8=
-=QiiC
------END PGP SIGNATURE-----
-
---v4x564h5nq5jwjac--
+--=20
+With Best Regards,
+Andy Shevchenko
