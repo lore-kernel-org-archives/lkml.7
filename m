@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A920CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A2F217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF6B217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 03:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554434835;
-	bh=XZe46RCMNCJii9MtzwLLJL/vme2lRgttLGcnWFyjCo8=;
+	s=default; t=1554434845;
+	bh=m+fvsVHokxAgcqpBOA5GzLriQAsbc79JT7JFrHqtil4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YvSiTVSGnJGLHopHvMQ709IbZlmH1yKrXeAlRFkTspELFssB8QrLICnfT5iqq+OKX
-	 VSKIn1DBVWWtOjCYrazDz5t3mOLfkNRDx53b1ssd6xN6mcSwqkzSBTd8tJgRyX1I+w
-	 ms0Yhz9use4KqtCIF7TG1WkKoaHbYREoG2+zbHm8=
+	b=yihPo+siMBNeSGuPdUiAKq1po99/abZLbyLA0rCzJPang/jEg4F6g/dg2GRePPaMk
+	 loqvyTzyM5cgidSyu/sm4vXWy1peeXPt2FqAQbrc3+pwgWDJ/NWS7djLy+wTH4Iq/n
+	 JC8NcoHPxU9ymi+gbunWNkuHjR9gxNBezsTaSWDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbfDED1O (ORCPT
+        id S1729984AbfDED0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 23:27:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34334 "EHLO
+        Thu, 4 Apr 2019 23:26:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33572 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfDED1J (ORCPT
+        with ESMTP id S1729269AbfDED0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 23:27:09 -0400
+        Thu, 4 Apr 2019 23:26:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=xdSl9JUhngWotCtrT0gu8jVzPA3wB87/bI4tFDht9FY=; b=Lobcdkaf4HRQ
-        8GAOVQZdQ3+M/vAgegaorWA26LlgFHNsEjh32RuyBiaFeAwaeme3ox3OoOx6SsMZz1ptQ6yDjQHQl
-        P96CrKWt0TmL1XdkmLlLV9/1ZAM4uJgjp5rzWHiBZVNEbjZRgB9adpatIhDH6PLPF5Hu3pZqcP7Fl
-        gjFlI=;
+        List-Archive; bh=sVELXPNh52TBNLCa3BJmzQyPugW+zpOCA7awgB4QjNc=; b=eYk1hlokv3c9
+        e9TSNX8mfxuWzaTo0V1x38Fgdk4g48JdnPJ8BruI/Y3leuQ0KKuQuUzIwb0jR3Bh+GLjLlt9lFlAo
+        1eHeUpvRXb7I3X8RRZvFtDLRI/1x8yPUIER7viTyWhBxPbqPQApU/tLKWCgu4O1du0pl4sBfKFIfG
+        4Y0I4=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hCFVQ-0005gq-7f; Fri, 05 Apr 2019 03:27:04 +0000
+        id 1hCFV4-0005g6-DU; Fri, 05 Apr 2019 03:26:42 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 14731441D3C; Fri,  5 Apr 2019 10:27:01 +0700 (+07)
+        id 3C438441D3B; Fri,  5 Apr 2019 10:26:39 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com,
-        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: tegra114: de-assert CS before SPI mode change" to the spi tree
-In-Reply-To:  <1554423259-26056-3-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: Don't call spi_get_gpio_descs() before device name is set" to the spi tree
+In-Reply-To:  <20190403040133.1459-8-andrew.smirnov@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190405032701.14731441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri,  5 Apr 2019 10:27:01 +0700 (+07)
+Message-Id: <20190405032639.3C438441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri,  5 Apr 2019 10:26:39 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra114: de-assert CS before SPI mode change
+   spi: Don't call spi_get_gpio_descs() before device name is set
 
 has been applied to the spi tree at
 
@@ -91,79 +90,110 @@ to this mail.
 Thanks,
 Mark
 
-From f3e182c33e534f4caeb255a3ab927debc0d222aa Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Thu, 4 Apr 2019 17:14:02 -0700
-Subject: [PATCH] spi: tegra114: de-assert CS before SPI mode change
+From 0a919ae49223d32ac0e8be3494547fcd1e4aa0aa Mon Sep 17 00:00:00 2001
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Date: Tue, 2 Apr 2019 21:01:28 -0700
+Subject: [PATCH] spi: Don't call spi_get_gpio_descs() before device name is
+ set
 
-With SW CS, during the transfer completion CS is de-asserted by writing
-default command1 register value to SPI_COMMAND1 register. With this both
-mode and CS state are set at the same time and if current transfer mode
-is different to default SPI mode and if mode change happens prior to CS
-de-assert, clock polarity can change while CS is active before transfer
-finishes.
+Move code calling spi_get_gpio_descs() to happen after ctlr->dev's
+name is set in order to have proper GPIO consumer names.
 
-This causes Slave to see spurious clock edges resulting in data mismatch.
+Before:
 
-This patch fixes this by de-asserting CS before writing SPI_COMMAND1 to
-its default value so through out the transfer it will be in same SPI mode.
+cat /sys/kernel/debug/gpio
+gpiochip0: GPIOs 0-31, parent: platform/40049000.gpio, vf610-gpio:
+ gpio-6   (                    |regulator-usb0-vbus ) out lo
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+gpiochip1: GPIOs 32-63, parent: platform/4004a000.gpio, vf610-gpio:
+ gpio-36  (                    |scl                 ) in  hi
+ gpio-37  (                    |sda                 ) in  hi
+ gpio-40  (                    |(null) CS1          ) out lo
+ gpio-41  (                    |(null) CS0          ) out lo ACTIVE LOW
+ gpio-42  (                    |miso                ) in  hi
+ gpio-43  (                    |mosi                ) in  lo
+ gpio-44  (                    |sck                 ) out lo
+
+After:
+
+cat /sys/kernel/debug/gpio
+gpiochip0: GPIOs 0-31, parent: platform/40049000.gpio, vf610-gpio:
+ gpio-6   (                    |regulator-usb0-vbus ) out lo
+
+gpiochip1: GPIOs 32-63, parent: platform/4004a000.gpio, vf610-gpio:
+ gpio-36  (                    |scl                 ) in  hi
+ gpio-37  (                    |sda                 ) in  hi
+ gpio-40  (                    |spi0 CS1            ) out lo
+ gpio-41  (                    |spi0 CS0            ) out lo ACTIVE LOW
+ gpio-42  (                    |miso                ) in  hi
+ gpio-43  (                    |mosi                ) in  lo
+ gpio-44  (                    |sck                 ) out lo
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/spi/spi.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 09cfae3abce2..8de002fc6943 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -856,6 +856,19 @@ static void tegra_spi_transfer_delay(int delay)
- 	udelay(delay % 1000);
- }
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 2ad20c735b61..a83fcddf1dad 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2281,24 +2281,6 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	if (status)
+ 		return status;
  
-+static void tegra_spi_transfer_end(struct spi_device *spi)
-+{
-+	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
-+	int cs_val = (spi->mode & SPI_CS_HIGH) ? 0 : 1;
+-	if (!spi_controller_is_slave(ctlr)) {
+-		if (ctlr->use_gpio_descriptors) {
+-			status = spi_get_gpio_descs(ctlr);
+-			if (status)
+-				return status;
+-			/*
+-			 * A controller using GPIO descriptors always
+-			 * supports SPI_CS_HIGH if need be.
+-			 */
+-			ctlr->mode_bits |= SPI_CS_HIGH;
+-		} else {
+-			/* Legacy code path for GPIOs from DT */
+-			status = of_spi_register_master(ctlr);
+-			if (status)
+-				return status;
+-		}
+-	}
+-
+ 	/* even if it's just one always-selected device, there must
+ 	 * be at least one chipselect
+ 	 */
+@@ -2355,6 +2337,25 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * registration fails if the bus ID is in use.
+ 	 */
+ 	dev_set_name(&ctlr->dev, "spi%u", ctlr->bus_num);
 +
-+	if (cs_val)
-+		tspi->command1_reg |= SPI_CS_SW_VAL;
-+	else
-+		tspi->command1_reg &= ~SPI_CS_SW_VAL;
-+	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
-+}
++	if (!spi_controller_is_slave(ctlr)) {
++		if (ctlr->use_gpio_descriptors) {
++			status = spi_get_gpio_descs(ctlr);
++			if (status)
++				return status;
++			/*
++			 * A controller using GPIO descriptors always
++			 * supports SPI_CS_HIGH if need be.
++			 */
++			ctlr->mode_bits |= SPI_CS_HIGH;
++		} else {
++			/* Legacy code path for GPIOs from DT */
++			status = of_spi_register_master(ctlr);
++			if (status)
++				return status;
++		}
++	}
 +
- static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			struct spi_message *msg)
- {
-@@ -918,8 +931,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 
- complete_xfer:
- 		if (ret < 0 || skip) {
--			tegra_spi_writel(tspi, tspi->def_command1_reg,
--					SPI_COMMAND1);
-+			tegra_spi_transfer_end(spi);
- 			tegra_spi_transfer_delay(xfer->delay_usecs);
- 			goto exit;
- 		} else if (list_is_last(&xfer->transfer_list,
-@@ -927,13 +939,11 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			if (xfer->cs_change)
- 				tspi->cs_control = spi;
- 			else {
--				tegra_spi_writel(tspi, tspi->def_command1_reg,
--						SPI_COMMAND1);
-+				tegra_spi_transfer_end(spi);
- 				tegra_spi_transfer_delay(xfer->delay_usecs);
- 			}
- 		} else if (xfer->cs_change) {
--			tegra_spi_writel(tspi, tspi->def_command1_reg,
--					SPI_COMMAND1);
-+			tegra_spi_transfer_end(spi);
- 			tegra_spi_transfer_delay(xfer->delay_usecs);
- 		}
- 
+ 	status = device_add(&ctlr->dev);
+ 	if (status < 0) {
+ 		/* free bus id */
 -- 
 2.20.1
 
