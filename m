@@ -2,125 +2,80 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C417C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D89C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC17620663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H1V2vwd6"
+	by mail.kernel.org (Postfix) with ESMTP id 10E232171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 01:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfDEBe2 (ORCPT
+        id S1730679AbfDEBgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 21:34:28 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:51094 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfDEBe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 21:34:28 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x351PFVO134098;
-        Fri, 5 Apr 2019 01:33:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=AEIcjekLDVfO3Ojew6/jbgwYoGPLKt7EJhWhignEeX8=;
- b=H1V2vwd6obwRohWug4yqZmRJxXhuwstQVm+ydz93GA9dGIOSDTT3eQ+PWaLe9/+RSpq3
- zalcvPfONTQUWYfxNdiWY8hE8nt/ls89dETuF8DYTrfiptEMfJ3lIrKeMCQqY+sm7g0p
- SaaNJWsJ34VyvUde3R4z4tcU8hHhvtY4XfxDpHtIFjJSrXdhv3irHyF6/G2USuDULZyk
- wDH0gvqQd9jq+gMHA0dcnZ9wBY08/fkhGF16LpNn2o53Xf+rzZnSRLZXYAAvTYWY3nLE
- 8041l8Ozid4zCBwmPlOz8Kk9TxPrjeyLuufIKKptsmVqP84rqLQFk5SwtnReePXIagHA qQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2rhwydjewp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 01:33:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x351WUOW185554;
-        Fri, 5 Apr 2019 01:33:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2rm8f607rc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Apr 2019 01:33:54 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x351Xrqt026288;
-        Fri, 5 Apr 2019 01:33:53 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 18:33:52 -0700
-Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>
-References: <fcad329b-e421-624a-0d1a-a98466eaf2ed@oracle.com>
- <1553866527-18879-1-git-send-email-jdesfossez@digitalocean.com>
- <6e8e6fa0-8976-5e97-d90c-af0b4a6fc8b2@oracle.com>
- <cd11cde9-4aed-b02f-cae5-170bb6fa686b@oracle.com>
- <20190403201634.GA4192@sinkpad>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <4bc8cd35-5132-d717-d952-9ef90189345d@oracle.com>
-Date:   Thu, 4 Apr 2019 18:30:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 4 Apr 2019 21:36:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56540 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbfDEBgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 21:36:53 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8037B3084023;
+        Fri,  5 Apr 2019 01:36:53 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-39.pek2.redhat.com [10.72.12.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0755260A97;
+        Fri,  5 Apr 2019 01:36:49 +0000 (UTC)
+Date:   Fri, 5 Apr 2019 09:36:45 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190405013645.GA8865@dhcp-128-65.nay.redhat.com>
+References: <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
+ <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
+ <20190404122425.GC22539@zn.tnic>
+ <20190404141241.GB7789@dhcp-128-65.nay.redhat.com>
+ <20190404144115.GE22539@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190403201634.GA4192@sinkpad>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904050010
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904050009
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404144115.GE22539@zn.tnic>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 05 Apr 2019 01:36:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/04/19 at 04:41pm, Borislav Petkov wrote:
+> On Thu, Apr 04, 2019 at 10:12:41PM +0800, Dave Young wrote:
+> > The early code hang can make people confused, it is hard to
+> > say what happens and not easy to debug.   But if we return 0 then kernel
+> > just continue to boot, and fail later because of no acpi root pointer, at
+> > least we can have some kernel boot log.
+> 
+> Is it clear from that boot log where we failed?
 
-> We tried to comment those lines and it doesn’t seem to get rid of the
-> performance regression we are seeing.
-> Can you elaborate a bit more about the test you are performing, what kind of
-> resources it uses ?
-I am running 1 and 2 Oracle DB instances each running TPC-C workload. The
-clients driving the instances also run in same node. Each server client
-pair is put in each cpu group and tagged.
-> Can you also try to replicate our test and see if you see the same problem ?
->
-> cgcreate -g cpu,cpuset:set1
-> cat /sys/devices/system/cpu/cpu{0,2,4,6}/topology/thread_siblings_list
-> 0,36
-> 2,38
-> 4,40
-> 6,42
->
-> echo "0,2,4,6,36,38,40,42" | sudo tee /sys/fs/cgroup/cpuset/set1/cpuset.cpus
-> echo 0 | sudo tee /sys/fs/cgroup/cpuset/set1/cpuset.mems
->
-> echo 1 | sudo tee /sys/fs/cgroup/cpu,cpuacct/set1/cpu.tag
->
-> sysbench --test=fileio prepare
-> cgexec -g cpu,cpuset:set1 sysbench --threads=4 --test=fileio \
-> --file-test-mode=seqwr run
->
-> The reason we create a cpuset is to narrow down the investigation to just 4
-> cores on a highly powerful machine. It might not be needed if testing on a
-> smaller machine.
-With this sysbench test I am not seeing any improvement with removing the
-condition. Also with hackbench I found it makes no difference but that has
-much lower regression to begin with (18%)
->
-> Julien
+The early boot log in compress/*.c is not visible for kexec EFI boot so
+the log is useless unless serial is usable.
+
+the early putstr only works for legacy boot with some ioport outb()
+callbacks unless serial is available.  For EFI boot it does not work,
+and for kexec, it is even worse because 1st kernel booted with kms mode
+setting, it is not like the firmware initialized video mode any more
+when we run kexec reboot.
