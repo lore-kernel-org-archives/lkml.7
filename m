@@ -2,147 +2,113 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B32C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF49217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C309E217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+wqOj5H"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="heErWUCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbfDEIYv (ORCPT
+        id S1730385AbfDEIY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:24:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35683 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfDEIYv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:24:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w1so6933801wrp.2;
-        Fri, 05 Apr 2019 01:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vcAGVwffkChWM3GNFoyXAhcxCqnVacQuIbvdyotZLKw=;
-        b=D+wqOj5H9LMk8ePCJOpYioa0Rw7DTfNr134f0UMxZiN6itl3HfgnDONtTWOEVPFEDe
-         jjyehrvnr2abkKv6oB5lIplC8M81SQYjpOkJEcssFESGL14zFnS+2o3Y/XRi0MavlBen
-         lJY6/frQncqiu14cZ/AlB2xECf96arwccJGT/PQej7P5QoZzICWpkXOrgHTmIdXFRc1l
-         HWy6gcPMXfb6hulFuPwN8pwcXqquH71Fxso/mDNwGfEtsWv+Q7jcJ2EnGq60j2cPDucP
-         AJgoTU2EJDXZmOJ8lI0bKg5/3RForJDH7uylOTm2VnErGt4h+dQ6I8la8zQRyR2q/UlK
-         GMRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vcAGVwffkChWM3GNFoyXAhcxCqnVacQuIbvdyotZLKw=;
-        b=ICgGecQt1AahT/CSw/mK8N9mshCscziNxd49oBp7B/c2a82As7WrN9szdHjfRp3kI5
-         shfd4Vb3Kzs80wV8YqVC+A8Q1lQ+RKyCcvu1RoBbtnKVEVYbTGsSBdx/z405bmDQN7sM
-         6CdJR0TBp4DaqG4AbxAIHpKGf3SfyG7t+KEsVNUvEDI9ORY6xBeHFMWUYEWB2ofEOQvM
-         LdJf/ROUbk1svYEgeFA+DZ7V95H0jVSNpS0G3bj1vN7qpCQnNddJCmy0iY7V7wZV3taZ
-         qk/x1kDXCykqWoRFoAat/Of2c4cE46jXEkYZlsqP47M1cl+1haadOe+RG8jCaRZERbre
-         s7Ag==
-X-Gm-Message-State: APjAAAXYZKyKmG5hlXxariJ8TxIsCiO1ro8zbzXm4Qe1GJLkZOM8i6r8
-        tzxUEq6PBAbDPfTA6XatEWQ=
-X-Google-Smtp-Source: APXvYqzttcSB9L8/xHbgT9hliJXljIF7JaZ8SPAcN/UvUB9ScDaXc7l+aMjrsrFfsk/udvI4sja8cg==
-X-Received: by 2002:a5d:4683:: with SMTP id u3mr7535881wrq.200.1554452689218;
-        Fri, 05 Apr 2019 01:24:49 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id w14sm15943843wrr.16.2019.04.05.01.24.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 01:24:48 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 09:24:47 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 3/4] vsock/virtio: change the maximum packet size
- allowed
-Message-ID: <20190405082447.GD25152@stefanha-x1.localdomain>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
- <20190404105838.101559-4-sgarzare@redhat.com>
+        Fri, 5 Apr 2019 04:24:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37996 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfDEIY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 04:24:56 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4DF7E1EC0A6C;
+        Fri,  5 Apr 2019 10:24:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554452694;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=vxMltuRWQ2c/2Wp7yTv8Di56B8om9ePsax7Ud9l7tzA=;
+        b=heErWUCv2djwFtSBDYib03xVxX00bt1gIBFbUKIGOXSbeFvYFnswJagqrNonmu80kgkzWK
+        YPJyup7W6NuG34jO8tththTWtSKoB0Z2ny0AFAnWEzSSiQy8tFlfUdrPq74fg7aFXOBcvZ
+        5CyuG/8U/1/C1zKMQdCJl6YcqlIZzWw=
+Date:   Fri, 5 Apr 2019 10:24:47 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
+Message-ID: <20190405082447.GD23348@zn.tnic>
+References: <20190405045711.30339-1-bp@alien8.de>
+ <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
+ <20190405075251.GC23348@zn.tnic>
+ <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190404105838.101559-4-sgarzare@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 05, 2019 at 10:09:31AM +0200, Rasmus Villemoes wrote:
+> On 05/04/2019 09.52, Borislav Petkov wrote:
+> > On Fri, Apr 05, 2019 at 08:26:45AM +0200, Rasmus Villemoes wrote:
+> 
+> >> It computes a*b+c with overflow checking at each step. calc_size
+> >> is way too generic and doesn't say anything at all about how the
+> >> calc(ulation) is done.
+> > 
+> > Ok, whatever.
+> > 
+> > Then it would need at least a comment above it to state what it does. I
+> > don't want to go and parse the macros each time.
+> 
+> It's an internal helper, and struct_size is fully kernel-doc'ed. But
+> yeah, a comment wouldn't hurt, and let's rename the parameters so they
+> match the abc naming.
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 40b48e2133cb..6534a727cadb 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -278,11 +278,15 @@ static inline __must_check size_t
+> array3_size(size_t a, size_t b, size_t c)
+>         return bytes;
+>  }
+> 
+> -static inline __must_check size_t __ab_c_size(size_t n, size_t size,
+> size_t c)
+> +/*
+> + * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
+> + * struct_size() below.
+> + */
+> +static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+>  {
+>         size_t bytes;
+> 
+> -       if (check_mul_overflow(n, size, &bytes))
+> +       if (check_mul_overflow(a, b, &bytes))
+>                 return SIZE_MAX;
+>         if (check_add_overflow(bytes, c, &bytes))
+>                 return SIZE_MAX;
+> 
+>
 
---yudcn1FV7Hsu/q59
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reported-by: Borislav Petkov <bp@suse.de>
+Acked-by: Borislav Petkov <bp@suse.de>
 
-On Thu, Apr 04, 2019 at 12:58:37PM +0200, Stefano Garzarella wrote:
-> Since now we are able to split packets, we can avoid limiting
-> their sizes to VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE.
-> Instead, we can use VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max
-> packet size.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/virtio_transport_common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virt=
-io_transport_common.c
-> index f32301d823f5..822e5d07a4ec 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -167,8 +167,8 @@ static int virtio_transport_send_pkt_info(struct vsoc=
-k_sock *vsk,
->  	vvs =3D vsk->trans;
-> =20
->  	/* we can send less than pkt_len bytes */
-> -	if (pkt_len > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE)
-> -		pkt_len =3D VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
-> +	if (pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
-> +		pkt_len =3D VIRTIO_VSOCK_MAX_PKT_BUF_SIZE;
+Thx.
 
-The next line limits pkt_len based on available credits:
+-- 
+Regards/Gruss,
+    Boris.
 
-  /* virtio_transport_get_credit might return less than pkt_len credit */
-  pkt_len =3D virtio_transport_get_credit(vvs, pkt_len);
-
-I think drivers/vhost/vsock.c:vhost_transport_do_send_pkt() now works
-correctly even with pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE.
-
-The other ->send_pkt() callback is
-net/vmw_vsock/virtio_transport.c:virtio_transport_send_pkt_work() and it
-can already send any size packet.
-
-Do you remember why VIRTIO_VSOCK_MAX_PKT_BUF_SIZE still needs to be the
-limit?  I'm wondering if we can get rid of it now and just limit packets
-to the available credits.
-
-Stefan
-
---yudcn1FV7Hsu/q59
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBAgAGBQJcpxDPAAoJEJykq7OBq3PIkwEIAKUcFcpFXgBx1Gbs5mSd4ypd
-Yi7a6mc4wSbq/FLNhVo0xVjJA+7hSNxiUvsqbwr1ajpudAHbMoV9LEuVZqtRLBmM
-pj9GmjHssqWgFr83oW1zlti/BNcArOoYl0csKoqfWXMA8sBb4o0ENdjlXwPvy+rm
-aQE78BhRi0vHSpFlOs+Zc/KHaaeQuH0fufyjLSi4vFhWnOC4jpoXuPhCT2NAVCJA
-MEdGNJZ2ZxtPBD8cUJH/ZTziNOArXsnOc6a9YIW72JnUOywqokVvgvsBtimaKN95
-lbBsBCmPxd0rY4n3OTAssfnHbUVVNwYaVoysD39pWBwwd1ZL0J3kqpP2zPh/O7g=
-=xs/A
------END PGP SIGNATURE-----
-
---yudcn1FV7Hsu/q59--
+Good mailing practices for 400: avoid top-posting and trim the reply.
