@@ -2,108 +2,143 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFE2C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED1EC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF31B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B852921852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9FXdPU3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jurQ5SnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731839AbfDERsM (ORCPT
+        id S1731580AbfDERv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:48:12 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33640 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731665AbfDERri (ORCPT
+        Fri, 5 Apr 2019 13:51:27 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55577 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730870AbfDERv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:47:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i19so3681972pfd.0;
-        Fri, 05 Apr 2019 10:47:38 -0700 (PDT)
+        Fri, 5 Apr 2019 13:51:27 -0400
+Received: by mail-it1-f195.google.com with SMTP id y134so4227009itc.5;
+        Fri, 05 Apr 2019 10:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EXXdq7GrYAICjYexP9jF/A5d/mueQ96ws92MW4tT5O4=;
-        b=D9FXdPU3FrBxpfBcKxuAiUB8kd8j7EkUWOcqeDcN4SowzFad52D5gymbw8NlxnSwZq
-         msjE5171qmG3t4cyS9joJZIITqiOy0ruHX+6t6Rg8zjqMvY77HWbxmqDv0QfAC6LYE/z
-         LCHPY3Et4q+VRGf6L6XnBoe5cEqZW7IuuSVU3JQwfRHUYVD+j0Mg+BT84tQxqjmdMnEV
-         ECXp/EmFAKVB8awDaKJlfHgehczpONI+0HtRQTRgaxkSAXPoqKvmDEO/mcSUm2PD8Xmi
-         RHV/oRyYm7sH/4E6/d44/TSpY/wKIjQL9JWPXfsBfF/Edr9vGgfZTjr7oJsFSFM0NMcY
-         gL8A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pLt+v812zAQ1Eq0dfJtxELVupjTeMeNtDAgindcFhzc=;
+        b=jurQ5SnJbmEVWOv2+37JCGoOtnxLMy/DJCIfK5jEopHTA++9MGRr9GN+F+qho2FwFg
+         cFQ+OY/hBKKuXbjkHRGAmcjE3rlTdvAhsqu6ojhhH0SMylSvY+HWVFZSoVH4K25ZDxYG
+         9rKv5/MiSuKbNt4eM53XKhd0V2q0yaKyZnbIGriExRWzZbTMglTf39U2sQ13ZNbZPeLl
+         80CrA4qThtgRFwuoAh1o8P80H1X3IGj2GL/uc+lpGrK9AiF3dzQjZu/WS5tbWXhn5sGT
+         epbr017NfrOz01f2Hwe+/N/xLpl3g3/4tujT80SJca2/CH16uqdix0NzpbkeMs8/Lyqy
+         HzoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EXXdq7GrYAICjYexP9jF/A5d/mueQ96ws92MW4tT5O4=;
-        b=pT3TpkaMTJUvpU5lKSKEhyDrQnQeT6RtEDYxAkm7Xr7xzSdTVGU+GrECjV1rdxSf/y
-         Iw299NDy7OBITwwKHOvBVTTeWd1s/zo5NN1yercRvMuI/OJODWH9Jf1UhUdt872yVA5U
-         gdoZLMRo14uW0iu6D60G4WNYjXgJ1EPogyFTtSXq0an63SPGWIb9H4EUOW00kLzw1H6f
-         c7NkBxjY8Eb83OB76OBFmNnXQcKM7WfpTxH7n1YjAeuACTRV9qhdgapq3VyIfzbAqeLp
-         TkW3kQySPVb+ZxoXJgXw8UQykm37QEXRv90ZfgRXx9yKXBoKpyyzbfX6VoEHxT9K2Nsh
-         4mFA==
-X-Gm-Message-State: APjAAAUj+FELE98YUhaO/zcTxGlhYXmbXGSCSl9d1W05aP5mbU0tyuEf
-        eKzRoXbtgRP9DNPakcKt6Zs=
-X-Google-Smtp-Source: APXvYqzfSsCY8RIY+Fr5S0H2NV31nrUqV2DGVBWfQV2jYu1S8usujXhiWe9iz5Be888hKPrjMd3Alw==
-X-Received: by 2002:a63:c23:: with SMTP id b35mr13226675pgl.298.1554486458098;
-        Fri, 05 Apr 2019 10:47:38 -0700 (PDT)
-Received: from tower.thefacebook.com ([2620:10d:c090:200::1:ad20])
-        by smtp.gmail.com with ESMTPSA id m2sm33169135pgr.74.2019.04.05.10.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 10:47:36 -0700 (PDT)
-From:   Roman Gushchin <guroan@gmail.com>
-X-Google-Original-From: Roman Gushchin <guro@fb.com>
-To:     Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>
-Cc:     kernel-team@fb.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: [PATCH v10 5/9] kselftests: cgroup: don't fail on cg_kill_all() error in cg_destroy()
-Date:   Fri,  5 Apr 2019 10:47:04 -0700
-Message-Id: <20190405174708.1010-6-guro@fb.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190405174708.1010-1-guro@fb.com>
-References: <20190405174708.1010-1-guro@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pLt+v812zAQ1Eq0dfJtxELVupjTeMeNtDAgindcFhzc=;
+        b=Oufb020RmYFMsmtLTkqvmXZUXouel94g9Np3i1iSM55HrJqq7bQjDmLrObhDKRIxod
+         Sd/U7hjoN3wLtyFU9nNoaTnVJA8cnbb+iCB/Z83QBWBujaYj/RsmHroA2a7+TljwUge+
+         rm7fjmnWd8o1+GHN2hB4eucKdQ0J3JDEs5zGoQpusppkp9Vb+sFcYXm+OQ0v6BuwVw7B
+         MI/wYaWcPs5NV6tPZ/TAX9+vvLsLnSV/Wlgy3JtZI2bNT3j/A6VumItTMv7ajFjTRir3
+         OiBdoxxxnfApr+0xxZt4im6OT20QF9+5U6ajSoBXFwxrDUY4Tegk342x69ipcHZCEkse
+         7ABA==
+X-Gm-Message-State: APjAAAWT4bj2Hnyd4/PQR3SD69BIraYAMZooEz/dfuaqrW2EMUdCQdFU
+        INvpxQFk0z5Qu9oEfPFPHuKepBm++eplZyU25wY=
+X-Google-Smtp-Source: APXvYqzuClokSRDlQvHWXNGOxoF0fmneEp8CXPqFxWoeEg8k2sgiGIxz4hKIZzTezJYJXvU7tRDJ0W9fFJGgrJbpNtU=
+X-Received: by 2002:a24:9a86:: with SMTP id l128mr9967479ite.126.1554486686213;
+ Fri, 05 Apr 2019 10:51:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
+ <20190401041418.5999-2-andrew.smirnov@gmail.com> <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
+In-Reply-To: <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 5 Apr 2019 10:51:14 -0700
+Message-ID: <CAHQ1cqEDiqn3KJeG62zqLm0tLv=+dgVHxSafm9_TYoi=VOMNhA@mail.gmail.com>
+Subject: Re: [PATCH v3 01/13] thermal: qoriq: Remove unnecessary DT node is
+ NULL check
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the cgroup destruction races with an exit() of a belonging
-process(es), cg_kill_all() may fail. It's not a good reason to make
-cg_destroy() fail and leave the cgroup in place, potentially causing
-next test runs to fail.
+On Wed, Apr 3, 2019 at 8:21 PM Daniel Lezcano <daniel.lezcano@linaro.org> w=
+rote:
+>
+> On 01/04/2019 06:14, Andrey Smirnov wrote:
+> > This driver is meant to be used with Device Tree and there's no
+> > use-case where device's DT node is going to be NULL. Remove code
+> > protecting against that.
+>
+> May be elaborate why is never going to be NULL?
+>
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: kernel-team@fb.com
-Cc: linux-kselftest@vger.kernel.org
----
- tools/testing/selftests/cgroup/cgroup_util.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Hmm, I am not sure what can be elaborated further than what's already
+there. The driver is written to be instantiated via DT and there's no
+code that tries to do that via board code or anything like that. I am
+guessing you maybe read the description differently. Can you help me
+by giving an example of what you think needs clarifying?
 
-diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
-index 14c9fe284806..eba06f94433b 100644
---- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/cgroup_util.c
-@@ -227,9 +227,7 @@ int cg_destroy(const char *cgroup)
- retry:
- 	ret = rmdir(cgroup);
- 	if (ret && errno == EBUSY) {
--		ret = cg_killall(cgroup);
--		if (ret)
--			return ret;
-+		cg_killall(cgroup);
- 		usleep(100);
- 		goto retry;
- 	}
--- 
-2.20.1
+Thanks,
+Andrey Smirnov
 
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Eduardo Valentin <edubezval@gmail.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>
+> > ---
+> >  drivers/thermal/qoriq_thermal.c | 5 -----
+> >  1 file changed, 5 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_th=
+ermal.c
+> > index 3b5f5b3fb1bc..7b364933bfb1 100644
+> > --- a/drivers/thermal/qoriq_thermal.c
+> > +++ b/drivers/thermal/qoriq_thermal.c
+> > @@ -193,11 +193,6 @@ static int qoriq_tmu_probe(struct platform_device =
+*pdev)
+> >       struct qoriq_tmu_data *data;
+> >       struct device_node *np =3D pdev->dev.of_node;
+> >
+> > -     if (!np) {
+> > -             dev_err(&pdev->dev, "Device OF-Node is NULL");
+> > -             return -ENODEV;
+> > -     }
+> > -
+> >       data =3D devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
+> >                           GFP_KERNEL);
+> >       if (!data)
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
