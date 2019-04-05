@@ -2,117 +2,101 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2329C282DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F008C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E8221855
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554505488;
-	bh=B/VUhNvhr91k6lbYbAfhAz7J78aF270M2nTme/nZQfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kPqpc3hUMx+KefkkiZWA/OJ07uJBrIIEs9g9mq1Z9StsOZNvvdJZAaooKei6vXL88
-	 O5gvW/xzSeU+7tYKclrIbIZu7uI/6/5vvMrY84h45C3W9nx8R6LY19buPEpkhducDv
-	 wEifdFLbZLrY/tm48sR5VLquuUAYmrZ/cWzgKZPY=
+	by mail.kernel.org (Postfix) with ESMTP id 595872175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 23:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hhB0cFIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfDEXEr (ORCPT
+        id S1726456AbfDEXG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 19:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfDEXEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 19:04:47 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7192175B;
-        Fri,  5 Apr 2019 23:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554505486;
-        bh=B/VUhNvhr91k6lbYbAfhAz7J78aF270M2nTme/nZQfM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZqhWLj8uOAwlcKN+ANFOCpxxDXW6uV3ip2PtIdEPhd+9jbUAmRHBDUWFQ7+8EFsF/
-         z1bMZUy4i3R5ZSXWIs+DW2ABn8QiWdTU7bsUYyuYvgOrq9fhVsn9oGc8R2Z7oz2OMV
-         xpC6FMF518Jzk3qExZHI+tsWVvUZz3+STC/u1lT4=
-Date:   Fri, 5 Apr 2019 18:04:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Fri, 5 Apr 2019 19:06:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38577 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbfDEXGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 19:06:25 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g37so3787634plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 16:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uVEvPh3CJM8jI6uy1N0HYD/6nCQAa5wIkVtsUWNVwkA=;
+        b=hhB0cFIi7pUc/rpAXFoMMPK/zDACB3ZjkP7djfYhOU4Bm2g5xlzUEicYITvnjBNdsx
+         Q8Kzz0/mZ55Du+HdxnIYCgU17xxigrKKsJme1uwwbPteGVnueEx7pdoRJ9tePKLqIKVO
+         LAibxPnmsIhcnEP3clfH+0cI65MseNXJW4n8MgfHMUM1pxxrh/RjqDu5XiwWx/+wd7eD
+         qYT3tBkaXr/3HYurTe2QqQyFG3X8dGnuAx/skjEysPNb1la7psY9E2O4ZPQk8LdzJfQK
+         1T4atpZrKI/qj2m73HmtCU81upd7qOOGPJvFnFubMADdkSXsyS+DGaF9ExjMjsEKPJi0
+         3qiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uVEvPh3CJM8jI6uy1N0HYD/6nCQAa5wIkVtsUWNVwkA=;
+        b=JPezlOQywrY5z0Pi4buT6lYUM+vU+UXI7pgFRJwueWV3r3/8lm29qSUZvumHqD+O0/
+         YnifUa2eVuclxINcLHuw4Zs8MNlg/LfSPiPY+lWiYUcaDfssZprE2IKi8yDRwO+xS8G/
+         vkirn+IhNRMOOEf1CT+JZ6KxyrvrVbDWQi4IZ8qgpcRylogyGHvQMmdRaEgFL9Fl/J64
+         dXqstdeqkhWCW6+6eUcIXg8fL5vkWH3ewp7K7l7TKIHsvg8F7ZfLxiVkWaLmLCLlCfU8
+         G8bhbPFnnj41SLp44r3REG4mo+NdiDGmlFjMndejCudFZFpeb/QQOXVGDKIKEd6HrKbS
+         OqQg==
+X-Gm-Message-State: APjAAAVjoWbumISn4W+6sNrUyqt1bjzhg/0hfmOluPScEHe9sOI9P1BM
+        ZAA3omL0NFzPQua76INDGEw0SRbvm5vvLA==
+X-Google-Smtp-Source: APXvYqx5VSDqeMMl3CoyMudTcnJwltWcRx8CcGMa3S81BTjlzBQXHj00TJ1Be7K6h4bRSJcfNxRAcg==
+X-Received: by 2002:a17:902:b68e:: with SMTP id c14mr15356913pls.49.1554505584543;
+        Fri, 05 Apr 2019 16:06:24 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id y12sm63498276pgq.64.2019.04.05.16.06.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2019 16:06:22 -0700 (PDT)
+Subject: Re: [PATCH] xsysace: Fix error handling in ace_setup
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pci: rpadlpar: fix leaked device_node references in
- add/remove paths
-Message-ID: <20190405230443.GA200379@google.com>
-References: <20190322182722.8255-1-tyreld@linux.vnet.ibm.com>
+References: <1550594996-11453-1-git-send-email-linux@roeck-us.net>
+ <20190405224458.GA19556@roeck-us.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0c428aac-f488-525a-49d1-506ce92be418@kernel.dk>
+Date:   Fri, 5 Apr 2019 17:06:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322182722.8255-1-tyreld@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190405224458.GA19556@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 01:27:21PM -0500, Tyrel Datwyler wrote:
-> The find_dlpar_node() helper returns a device node with its reference
-> incremented. Both the add and remove paths use this helper for find the
-> appropriate node, but fail to release the reference when done.
+On 4/5/19 4:44 PM, Guenter Roeck wrote:
+> Hi,
 > 
-> Annotate the find_dlpar_node() helper with a comment about the incremented
-> reference count, and call of_node_put() on the obtained device_node in the
-> add and remove paths. Also, fixup a reference leak in the find_vio_slot()
-> helper where we fail to call of_node_put() on the vdevice node after we
-> iterate over its children.
+> On Tue, Feb 19, 2019 at 08:49:56AM -0800, Guenter Roeck wrote:
+>> If xace hardware reports a bad version number, the error handling code
+>> in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+>> the disk data structure has the queue pointer set, put_disk() also
+>> cleans and releases the queue. This results in blk_cleanup_queue()
+>> accessing an already released data structure, which in turn may result
+>> in a crash such as the following.
+>>
 > 
-> Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+> This crash is now quite persistent in mainline. The fix didn't make it.
+> Should I stop testing virtex-ml507 with qemu ?
 
-Both applied to pci/hotplug for v5.2, thanks!
+I've applied the fix now.
 
-> ---
->  drivers/pci/hotplug/rpadlpar_core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-> index e2356a9c7088..182f9e3443ee 100644
-> --- a/drivers/pci/hotplug/rpadlpar_core.c
-> +++ b/drivers/pci/hotplug/rpadlpar_core.c
-> @@ -51,6 +51,7 @@ static struct device_node *find_vio_slot_node(char *drc_name)
->  		if (rc == 0)
->  			break;
->  	}
-> +	of_node_put(parent);
->  
->  	return dn;
->  }
-> @@ -71,6 +72,7 @@ static struct device_node *find_php_slot_pci_node(char *drc_name,
->  	return np;
->  }
->  
-> +/* Returns a device_node with its reference count incremented */
->  static struct device_node *find_dlpar_node(char *drc_name, int *node_type)
->  {
->  	struct device_node *dn;
-> @@ -306,6 +308,7 @@ int dlpar_add_slot(char *drc_name)
->  			rc = dlpar_add_phb(drc_name, dn);
->  			break;
->  	}
-> +	of_node_put(dn);
->  
->  	printk(KERN_INFO "%s: slot %s added\n", DLPAR_MODULE_NAME, drc_name);
->  exit:
-> @@ -439,6 +442,7 @@ int dlpar_remove_slot(char *drc_name)
->  			rc = dlpar_remove_pci_slot(drc_name, dn);
->  			break;
->  	}
-> +	of_node_put(dn);
->  	vm_unmap_aliases();
->  
->  	printk(KERN_INFO "%s: slot %s removed\n", DLPAR_MODULE_NAME, drc_name);
-> -- 
-> 2.12.3
-> 
+But given Michal's comments, should we kill the driver for 5.2?
+
+-- 
+Jens Axboe
+
