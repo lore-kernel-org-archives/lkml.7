@@ -2,147 +2,357 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D106C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A6FC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF3C21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554457178;
-	bh=q8ppD7fONJTYH9tYsRYyZ9fO15YN0ixidcNDOhm5oJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TQshmfFoldrX2/1wLF7Drq5qJqJqNu/g/AbeVzkZ4Gcj4kylpz3GeyuJ8rPHXcdQh
-	 CDKdotkZKFu9AwQ/cSW7X3CD+j133on/KXiwn/9k12olV8eLzqOK9npWpth0EnX6h+
-	 TMgR21ko4WcT9VdFePjAsQudtyJXyNlZxW2S5gUo=
+	by mail.kernel.org (Postfix) with ESMTP id BB3C521850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 09:41:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ULSi0ax/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfDEJjg (ORCPT
+        id S1730537AbfDEJlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 05:39:36 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56295 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbfDEJjg (ORCPT
+        Fri, 5 Apr 2019 05:41:23 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:44814 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729833AbfDEJlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 05:39:36 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so5932507wmf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 02:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1LXiJ0QPA05IIiuQ2NKOQ/jZe2/w58stT3y1pV+JVeU=;
-        b=umh9E28K1k1LL02ooaoSQ2I3MuMoFUusX61n9b3AC3osShBlCvYdlMgEBa4a9HkVVH
-         SpVfiJOt5ydoJQrVe5aLsTGqnygOR5g6QMio+ztza1xZl0NhdyJZ0X44T0SoqQ+KHukm
-         38jsyh1gOKhMUsHSNISIrQ10JQQ6yke4uriNNusGdebAZCXhFqrh7f/iCWodLiU5cEIK
-         XKgqWuZPV9/WVdg3GX9dK7DCQGvV5ZwvqsogoFvyRfbMggXEdS/Qs9oJe6yOJukqhleN
-         2s6zyWkkQGKnjDQ23zHJQTyRb862/9QDX5r2QItzY1lxxInA2QdJh/uRm5qhKddVDQ+H
-         0FCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1LXiJ0QPA05IIiuQ2NKOQ/jZe2/w58stT3y1pV+JVeU=;
-        b=rH3RQHIxXvCq5NTXpFEFa4G999lzh1WScxvTInNjo7+b/bKYzKy+JuyPuxdptNIYJP
-         MWE1WrncwDrUBI1xb8hfyrCr9tZSB8VrwJGE9CxLCPNzEsJE9v/uSQJ1FnripqpHjPGZ
-         mg2XTJCudXSE4dV+mjl92VO8nwbSPLvUgu4yXersan5GPviL/O0ZbNTn7ua2jHAelyJe
-         X8a5qGDdKYw0YzKYX7+1nXmao5+gn/qgWDYKUtPHR0Q/76oWldyeEKmvx2V+G1AcJWSw
-         rG32VYxXt+PTdcnCTD/nNxeOALfCONpTH8DzchPc/O9F136hELvUrzyF25rCZAnaf7O0
-         MhqQ==
-X-Gm-Message-State: APjAAAUrPZRWnNo0S+44ps+pX7NSRAbm97pNdO2ODhmHdy/1+z50jI6/
-        kd3x/gDAdK7J5x7Z6Neh2nECfSZp
-X-Google-Smtp-Source: APXvYqzRYHGt3m3IY54Opvw2qmj8Y8K9M0KqfmTjf8wKO1gVpHWRVdwRv64NBl8VByPb/OTOBqurpw==
-X-Received: by 2002:a1c:495:: with SMTP id 143mr6728641wme.78.1554457174545;
-        Fri, 05 Apr 2019 02:39:34 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id p3sm29314252wrx.71.2019.04.05.02.39.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 02:39:33 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 11:39:31 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     paulmck@linux.ibm.com, hpa@zytor.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        jyknight@google.com, x86@kernel.org, mingo@redhat.com,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2] x86/asm: fix assembly constraints in bitops
-Message-ID: <20190405093931.GA28890@gmail.com>
-References: <20190402112813.193378-1-glider@google.com>
+        Fri, 5 Apr 2019 05:41:22 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 5DBF42E14F7;
+        Fri,  5 Apr 2019 12:41:17 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Mlp1kDB17y-fG3iUcZk;
+        Fri, 05 Apr 2019 12:41:17 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1554457277; bh=4JkRSSMRagE7EI9xDgYp7Ni6fHBNDtj9wUVk7uBeoJQ=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=ULSi0ax/dCeNU7EGjofynI+HlFPazH1JX3x6wfLdVXa5S4sn7D7VJnG9Ih0D4huGo
+         hLwvj4e9sp0nhJKkYj1SUpMaf6u1oXtj+sWe58dbyHEgZjhnjfysQfxo/vjEfzQ+ZC
+         C97mk9Nh2UhRcseRxuaP0WP6PgUrVZ/0snOp1ipg=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d4bb:795:9728:5f59])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id eiM1ZR1XFp-fGBe4E39;
+        Fri, 05 Apr 2019 12:41:16 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: shmem_recalc_inode: unable to handle kernel NULL pointer
+ dereference
+To:     Hugh Dickins <hughd@google.com>,
+        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     Vineeth Pillai <vpillai@digitalocean.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kelley Nielsen <kelleynnn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Rik van Riel <riel@surriel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <1553440122.7s759munpm.astroid@alex-desktop.none>
+ <CANaguZB8szw13MkaiT9kcN8Fux6hYZnuD-p6_OPve6n2fOTuoQ@mail.gmail.com>
+ <1554048843.jjmwlalntd.astroid@alex-desktop.none>
+ <alpine.LSU.2.11.1903311146040.2667@eggly.anvils>
+ <alpine.LSU.2.11.1904021701270.5045@eggly.anvils>
+ <alpine.LSU.2.11.1904041836030.25100@eggly.anvils>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <56deb587-8cd6-317a-520f-209207468c55@yandex-team.ru>
+Date:   Fri, 5 Apr 2019 12:41:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402112813.193378-1-glider@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.LSU.2.11.1904041836030.25100@eggly.anvils>
+Content-Type: multipart/mixed;
+ boundary="------------CB2AA163A547B315483B2E2F"
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------CB2AA163A547B315483B2E2F
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-* Alexander Potapenko <glider@google.com> wrote:
-
-> 1. Use memory clobber in bitops that touch arbitrary memory
+On 05.04.2019 5:12, Hugh Dickins wrote:
+> On Tue, 2 Apr 2019, Hugh Dickins wrote:
+>> On Sun, 31 Mar 2019, Hugh Dickins wrote:
+>>> On Sun, 31 Mar 2019, Alex Xu (Hello71) wrote:
+>>>> Excerpts from Vineeth Pillai's message of March 25, 2019 6:08 pm:
+>>>>> On Sun, Mar 24, 2019 at 11:30 AM Alex Xu (Hello71) <alex_y_xu@yahoo.ca> wrote:
+>>>>>>
+>>>>>> I get this BUG in 5.1-rc1 sometimes when powering off the machine. I
+>>>>>> suspect my setup erroneously executes two swapoff+cryptsetup close
+>>>>>> operations simultaneously, so a race condition is triggered.
+>>>>>>
+>>>>>> I am using a single swap on a plain dm-crypt device on a MBR partition
+>>>>>> on a SATA drive.
+>>>>>>
+>>>>>> I think the problem is probably related to
+>>>>>> b56a2d8af9147a4efe4011b60d93779c0461ca97, so CCing the related people.
+>>>>>>
+>>>>> Could you please provide more information on this - stack trace, dmesg etc?
+>>>>> Is it easily reproducible? If yes, please detail the steps so that I
+>>>>> can try it inhouse.
+>>>>>
+>>>>> Thanks,
+>>>>> Vineeth
+>>>>>
+>>>>
+>>>> Some info from the BUG entry (I didn't bother to type it all,
+>>>> low-quality image available upon request):
+>>>>
+>>>> BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+>>>> #PF error: [normal kernel read fault]
+>>>> PGD 0 P4D 0
+>>>> Oops: 0000 [#1] SMP
+>>>> CPU: 0 Comm: swapoff Not tainted 5.1.0-rc1+ #2
+>>>> RIP: 0010:shmem_recalc_inode+0x41/0x90
+>>>>
+>>>> Call Trace:
+>>>> ? shmem_undo_range
+>>>> ? rb_erase_cached
+>>>> ? set_next_entity
+>>>> ? __inode_wait_for_writeback
+>>>> ? shmem_truncate_range
+>>>> ? shmem_evict_inode
+>>>> ? evict
+>>>> ? shmem_unuse
+>>>> ? try_to_unuse
+>>>> ? swapcache_free_entries
+>>>> ? _cond_resched
+>>>> ? __se_sys_swapoff
+>>>> ? do_syscall_64
+>>>> ? entry_SYSCALL_64_after_hwframe
+>>>>
+>>>> As I said, it only occurs occasionally on shutdown. I think it is a safe
+>>>> guess that it can only occur when the swap is not empty, but possibly
+>>>> other conditions are necessary, so I will test further.
+>>>
+>>> Thanks for the update, Alex. I'm looking into a couple of bugs with the
+>>> 5.1-rc swapoff, but this one doesn't look like anything I know so far.
+>>> shmem_recalc_inode() is a surprising place to crash: it's as if the
+>>> igrab() in shmem_unuse() were not working.
+>>>
+>>> Yes, please do send Vineeth and me (or the lists) your low-quality image,
+>>> in case we can extract any more info from it; and also please the
+>>> disassembly of your kernel's shmem_recalc_inode(), so we can be sure of
+>>> exactly what it's crashing on (though I expect that will leave me as
+>>> puzzled as before).
+>>>
+>>> If you want to experiment with one of my fixes, not yet written up and
+>>> posted, just try changing SWAP_UNUSE_MAX_TRIES in mm/swapfile.c from
+>>> 3 to INT_MAX: I don't see how that issue could manifest as crashing in
+>>> shmem_recalc_inode(), but I may just be too stupid to see it.
+>>
+>> Thanks for the image and disassembly you sent: which showed that the
+>> ffffffff81117351:       48 83 3f 00             cmpq   $0x0,(%rdi)
+>> you are crashing on, is the "if (sbinfo->max_blocks)" in the inlined
+>> shmem_inode_unacct_blocks(): inode->i_sb->s_fs_info is NULL, which is
+>> something that shmem_put_super() does.
+>>
+>> Eight-year-old memories stirred: I knew when looking at Vineeth's patch,
+>> that I ought to look back through the history of mm/shmem.c, to check
+>> some points that Konstantin Khlebnikov had made years ago, that
+>> surprised me then and were in danger of surprising us again with this
+>> rework. But I failed to do so: thank you Alex, for reporting this bug
+>> and pointing us back there.
+>>
+>> igrab() protects from eviction but does not protect from unmounting.
+>> I bet that is what you are hitting, though I've not even read through
+>> 2.6.39's 778dd893ae785 ("tmpfs: fix race between umount and swapoff")
+>> again yet, and not begun to think of the fix for it this time around;
+>> but wanted to let you know that this bug is now (probably) identified.
 > 
-> Certain bit operations that read/write bits take a base pointer and an
-> arbitrarily large offset to address the bit relative to that base.
-> Inline assembly constraints aren't expressive enough to tell the
-> compiler that the assembly directive is going to touch a specific memory
-> location of unknown size, therefore we have to use the "memory" clobber
-> to indicate that the assembly is going to access memory locations other
-> than those listed in the inputs/outputs.
-> To indicate that BTR/BTS instructions don't necessarily touch the first
-> sizeof(long) bytes of the argument, we also move the address to assembly
-> inputs.
+> Hi Alex, could you please give the patch below a try? It fixes a
+> problem, but I'm not sure that it's your problem - please let us know.
 > 
-> This particular change leads to size increase of 124 kernel functions in
-> a defconfig build. For some of them the diff is in NOP operations, other
-> end up re-reading values from memory and may potentially slow down the
-> execution. But without these clobbers the compiler is free to cache
-> the contents of the bitmaps and use them as if they weren't changed by
-> the inline assembly.
+> I've not yet written up the commit description, and this should end up
+> as 4/4 in a series fixing several new swapoff issues: I'll wait to post
+> the finished series until heard back from you.
 > 
-> 2. Use byte-sized arguments for operations touching single bytes.
+> I did first try following the suggestion Konstantin had made back then,
+> for a similar shmem_writepage() case: atomic_inc_not_zero(&sb->s_active).
 > 
-> Passing a long value to ANDB/ORB/XORB instructions makes the compiler
-> treat sizeof(long) bytes as being clobbered, which isn't the case. This
-> may theoretically lead to worse code in the case of heavy optimization.
+> But it turned out to be difficult to get right in shmem_unuse(), because
+> of the way that relies on the inode as a cursor in the list - problem
+> when you've acquired an s_active reference, but fail to acquire inode
+> reference, and cannot safely release the s_active reference while still
+> holding the swaplist mutex.
 > 
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: James Y Knight <jyknight@google.com>
+> If VFS offered an isgrab(inode), like igrab() but acquiring s_active
+> reference while holding i_lock, that would drop very easily into the
+> current shmem_unuse() as a replacement there for igrab(). But the rest
+> of the world has managed without that for years, so I'm disinclined to
+> add it just for this. And the patch below seems good enough without it.
+> 
+> Thanks,
+> Hugh
+> 
 > ---
->  v2:
->   -- renamed the patch
->   -- addressed comment by Peter Zijlstra: don't use "+m" for functions
->   returning void
->   -- fixed input types for operations touching single bytes
-> ---
->  arch/x86/include/asm/bitops.h | 41 +++++++++++++++--------------------
->  1 file changed, 18 insertions(+), 23 deletions(-)
+> 
+>   include/linux/shmem_fs.h |    1 +
+>   mm/shmem.c               |   39 ++++++++++++++++++---------------------
+>   2 files changed, 19 insertions(+), 21 deletions(-)
+> 
+> --- 5.1-rc3/include/linux/shmem_fs.h	2019-03-17 16:18:15.181820820 -0700
+> +++ linux/include/linux/shmem_fs.h	2019-04-04 16:18:08.193512968 -0700
+> @@ -21,6 +21,7 @@ struct shmem_inode_info {
+>   	struct list_head	swaplist;	/* chain of maybes on swap */
+>   	struct shared_policy	policy;		/* NUMA memory alloc policy */
+>   	struct simple_xattrs	xattrs;		/* list of xattrs */
+> +	atomic_t		stop_eviction;	/* hold when working on inode */
+>   	struct inode		vfs_inode;
+>   };
+>   
+> --- 5.1-rc3/mm/shmem.c	2019-03-17 16:18:15.701823872 -0700
+> +++ linux/mm/shmem.c	2019-04-04 16:18:08.193512968 -0700
+> @@ -1081,9 +1081,15 @@ static void shmem_evict_inode(struct ino
+>   			}
+>   			spin_unlock(&sbinfo->shrinklist_lock);
+>   		}
+> -		if (!list_empty(&info->swaplist)) {
+> +		while (!list_empty(&info->swaplist)) {
+> +			/* Wait while shmem_unuse() is scanning this inode... */
+> +			wait_var_event(&info->stop_eviction,
+> +				       !atomic_read(&info->stop_eviction));
+>   			mutex_lock(&shmem_swaplist_mutex);
+>   			list_del_init(&info->swaplist);
+> +			/* ...but beware of the race if we peeked too early */
+> +			if (!atomic_read(&info->stop_eviction))
+> +				list_del_init(&info->swaplist);
+>   			mutex_unlock(&shmem_swaplist_mutex);
+>   		}
+>   	}
+> @@ -1227,36 +1233,27 @@ int shmem_unuse(unsigned int type, bool
+>   		unsigned long *fs_pages_to_unuse)
+>   {
+>   	struct shmem_inode_info *info, *next;
+> -	struct inode *inode;
+> -	struct inode *prev_inode = NULL;
+>   	int error = 0;
+>   
+>   	if (list_empty(&shmem_swaplist))
+>   		return 0;
+>   
+>   	mutex_lock(&shmem_swaplist_mutex);
+> -
+> -	/*
+> -	 * The extra refcount on the inode is necessary to safely dereference
+> -	 * p->next after re-acquiring the lock. New shmem inodes with swap
+> -	 * get added to the end of the list and we will scan them all.
+> -	 */
+>   	list_for_each_entry_safe(info, next, &shmem_swaplist, swaplist) {
+>   		if (!info->swapped) {
+>   			list_del_init(&info->swaplist);
+>   			continue;
+>   		}
+> -
+> -		inode = igrab(&info->vfs_inode);
+> -		if (!inode)
+> -			continue;
+> -
+> +		/*
+> +		 * Drop the swaplist mutex while searching the inode for swap;
+> +		 * but before doing so, make sure shmem_evict_inode() will not
+> +		 * remove placeholder inode from swaplist, nor let it be freed
+> +		 * (igrab() would protect from unlink, but not from unmount).
+> +		 */
+> +		atomic_inc(&info->stop_eviction);
+>   		mutex_unlock(&shmem_swaplist_mutex);
+> -		if (prev_inode)
+> -			iput(prev_inode);
+> -		prev_inode = inode;
+This seems too ad hoc solution.
 
-I'm wondering what the primary motivation for the patch is:
+Superblock could be protected with s_umount,
+in same way as writeback pins it in __writeback_inodes_wb()
 
- - Does it fix an actual miscompilation, or only a theoretical miscompilation?
+Please see (completely untested) patch in attachment.
 
- - If it fixes an existing miscompilation:
+>   
+> -		error = shmem_unuse_inode(inode, type, frontswap,
+> +		error = shmem_unuse_inode(&info->vfs_inode, type, frontswap,
+>   					  fs_pages_to_unuse);
+>   		cond_resched();
+>   
+> @@ -1264,14 +1261,13 @@ int shmem_unuse(unsigned int type, bool
+>   		next = list_next_entry(info, swaplist);
+>   		if (!info->swapped)
+>   			list_del_init(&info->swaplist);
+> +		if (atomic_dec_and_test(&info->stop_eviction))
+> +			wake_up_var(&info->stop_eviction);
+>   		if (error)
+>   			break;
+>   	}
+>   	mutex_unlock(&shmem_swaplist_mutex);
+>   
+> -	if (prev_inode)
+> -		iput(prev_inode);
+> -
+>   	return error;
+>   }
+>   
+> @@ -2238,6 +2234,7 @@ static struct inode *shmem_get_inode(str
+>   		info = SHMEM_I(inode);
+>   		memset(info, 0, (char *)inode - (char *)info);
+>   		spin_lock_init(&info->lock);
+> +		atomic_set(&info->stop_eviction, 0);
+>   		info->seals = F_SEAL_SEAL;
+>   		info->flags = flags & VM_NORESERVE;
+>   		INIT_LIST_HEAD(&info->shrinklist);
+> 
 
-   - Does it fix a miscompilation triggered by current/future versions of GCC?
-   - Does it fix a miscompilation triggered by current/future versions of Clang?
+--------------CB2AA163A547B315483B2E2F
+Content-Type: text/plain; charset=UTF-8;
+ name="shmem-fix-race-between-shmem_unuse-and-umount"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="shmem-fix-race-between-shmem_unuse-and-umount"
 
- - Also, is the miscompilation triggered by 'usual' kernel configs, or 
-   does it require exotics such as weird debug options or GCC plugins, 
-   etc?
-
-I.e. a bit more context would be useful.
-
-Thanks,
-
-	Ingo
+c2htZW06IGZpeCByYWNlIGJldHdlZW4gc2htZW1fdW51c2UgYW5kIHVtb3VudAoKRnJvbTog
+S29uc3RhbnRpbiBLaGxlYm5pa292IDxraGxlYm5pa292QHlhbmRleC10ZWFtLnJ1PgoKRnVu
+Y3Rpb24gc2htZW1fdW51c2UgY291bGQgcmFjZSB3aXRoIGdlbmVyaWNfc2h1dGRvd25fc3Vw
+ZXIuCklub2RlIHJlZmVyZW5jZSBpcyBub3QgZW5vdWdoIGZvciBwcmV2ZW50aW5nIHVtb3Vu
+dCBhbmQgZnJlZWluZyBzdXBlcmJsb2NrLgoKU2lnbmVkLW9mZi1ieTogS29uc3RhbnRpbiBL
+aGxlYm5pa292IDxraGxlYm5pa292QHlhbmRleC10ZWFtLnJ1PgotLS0KIG1tL3NobWVtLmMg
+fCAgIDI0ICsrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDIzIGlu
+c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9tbS9zaG1lbS5jIGIv
+bW0vc2htZW0uYwppbmRleCBiM2RiMzc3OWEzMGEuLjIwMThhOWE5NmJiNyAxMDA2NDQKLS0t
+IGEvbW0vc2htZW0uYworKysgYi9tbS9zaG1lbS5jCkBAIC0xMjE4LDYgKzEyMTgsMTAgQEAg
+c3RhdGljIGludCBzaG1lbV91bnVzZV9pbm9kZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCB1bnNp
+Z25lZCBpbnQgdHlwZSwKIAlyZXR1cm4gcmV0OwogfQogCitzdGF0aWMgdm9pZCBzaG1lbV9z
+eW5jaHJvbml6ZV91bW91bnQoc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgdm9pZCAqYXJnKQor
+eworfQorCiAvKgogICogUmVhZCBhbGwgdGhlIHNoYXJlZCBtZW1vcnkgZGF0YSB0aGF0IHJl
+c2lkZXMgaW4gdGhlIHN3YXAKICAqIGRldmljZSAndHlwZScgYmFjayBpbnRvIG1lbW9yeSwg
+c28gdGhlIHN3YXAgZGV2aWNlIGNhbiBiZQpAQCAtMTIyOSw2ICsxMjMzLDcgQEAgaW50IHNo
+bWVtX3VudXNlKHVuc2lnbmVkIGludCB0eXBlLCBib29sIGZyb250c3dhcCwKIAlzdHJ1Y3Qg
+c2htZW1faW5vZGVfaW5mbyAqaW5mbywgKm5leHQ7CiAJc3RydWN0IGlub2RlICppbm9kZTsK
+IAlzdHJ1Y3QgaW5vZGUgKnByZXZfaW5vZGUgPSBOVUxMOworCXN0cnVjdCBzdXBlcl9ibG9j
+ayAqc2I7CiAJaW50IGVycm9yID0gMDsKIAogCWlmIChsaXN0X2VtcHR5KCZzaG1lbV9zd2Fw
+bGlzdCkpCkBAIC0xMjQ3LDkgKzEyNTIsMjIgQEAgaW50IHNobWVtX3VudXNlKHVuc2lnbmVk
+IGludCB0eXBlLCBib29sIGZyb250c3dhcCwKIAkJCWNvbnRpbnVlOwogCQl9CiAKKwkJLyoK
+KwkJICogTG9jayBzdXBlcmJsb2NrIHRvIHByZXZlbnQgdW1vdW50IGFuZCBmcmVlaW5nIGl0
+IHVuZGVyIHVzLgorCQkgKiBJZiB1bW91bnQgaW4gcHJvZ3Jlc3MgaXQgd2lsbCBmcmVlIHN3
+YXAgZW50aWVzLgorCQkgKgorCQkgKiBNdXN0IGJlIGRvbmUgYmVmb3JlIGdyYWJiaW5nIGlu
+b2RlIHJlZmVyZW5jZSwgb3RoZXJ3aXNlCisJCSAqIGdlbmVyaWNfc2h1dGRvd25fc3VwZXIo
+KSB3aWxsIGNvbXBsYWluIGFib3V0IGJ1c3kgaW5vZGVzLgorCQkgKi8KKwkJc2IgPSBpbmZv
+LT52ZnNfaW5vZGUuaV9zYjsKKwkJaWYgKCF0cnlsb2NrX3N1cGVyKHNiKSkKKwkJCWNvbnRp
+bnVlOworCiAJCWlub2RlID0gaWdyYWIoJmluZm8tPnZmc19pbm9kZSk7Ci0JCWlmICghaW5v
+ZGUpCisJCWlmICghaW5vZGUpIHsKKwkJCXVwX3JlYWQoJnNiLT5zX3Vtb3VudCk7CiAJCQlj
+b250aW51ZTsKKwkJfQogCiAJCW11dGV4X3VubG9jaygmc2htZW1fc3dhcGxpc3RfbXV0ZXgp
+OwogCQlpZiAocHJldl9pbm9kZSkKQEAgLTEyNTgsNiArMTI3Niw3IEBAIGludCBzaG1lbV91
+bnVzZSh1bnNpZ25lZCBpbnQgdHlwZSwgYm9vbCBmcm9udHN3YXAsCiAKIAkJZXJyb3IgPSBz
+aG1lbV91bnVzZV9pbm9kZShpbm9kZSwgdHlwZSwgZnJvbnRzd2FwLAogCQkJCQkgIGZzX3Bh
+Z2VzX3RvX3VudXNlKTsKKwkJdXBfcmVhZCgmc2ItPnNfdW1vdW50KTsKIAkJY29uZF9yZXNj
+aGVkKCk7CiAKIAkJbXV0ZXhfbG9jaygmc2htZW1fc3dhcGxpc3RfbXV0ZXgpOwpAQCAtMTI3
+Miw2ICsxMjkxLDkgQEAgaW50IHNobWVtX3VudXNlKHVuc2lnbmVkIGludCB0eXBlLCBib29s
+IGZyb250c3dhcCwKIAlpZiAocHJldl9pbm9kZSkKIAkJaXB1dChwcmV2X2lub2RlKTsKIAor
+CS8qIFdhaXQgZm9yIHVtb3VudHMsIHRoaXMgZ3JhYnMgc191bW91bnQgZm9yIGVhY2ggc3Vw
+ZXJibG9jay4gKi8KKwlpdGVyYXRlX3N1cGVyc190eXBlKCZzaG1lbV9mc190eXBlLCBzaG1l
+bV9zeW5jaHJvbml6ZV91bW91bnQsIE5VTEwpOworCiAJcmV0dXJuIGVycm9yOwogfQogCg==
+--------------CB2AA163A547B315483B2E2F--
