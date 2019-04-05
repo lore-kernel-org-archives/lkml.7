@@ -2,122 +2,109 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E85C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA50C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476652175B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:09:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="dEZS2s+F"
+	by mail.kernel.org (Postfix) with ESMTP id DA0062175B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfDEIJf (ORCPT
+        id S1730271AbfDEIKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:09:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35947 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEIJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:09:35 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so4452629ljg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 01:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dx79+XInnPowGjjwsIRkiCrROvWr75BiD12MWbrfRbY=;
-        b=dEZS2s+FKVKFRCAvFGESrac2N9eEiwi18rLwBDBo1LnGFm/PwxRhQHXnddz3JJuhN5
-         Q9o9bOnytiJfhz5tCLWj5eARQMncSSsrfcfPPsL0Hr4SOkAe3kHz8FwYhkvtOt8MBc+M
-         4yunkZ85OiqYGvU03blJGuwpH3PPbOLfqU41c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dx79+XInnPowGjjwsIRkiCrROvWr75BiD12MWbrfRbY=;
-        b=G6OFB8a2jkIg6ooYcyb7gcacDGRShNvaqnduXOw6PgB0v/Ng9Gd8p7Dk6gxbp0o8pt
-         rXAuCP6aHnvYXBVdxdG90ZWNmnWusetCBNo3ohZuiJc31nSVaOCj4ZQG1BvSG94Byuf3
-         1TeSt1cxzLQIDv4jA82aBmT2ALjpA/h+k3ds1v+rgeMDFodx82fCKOC7YYTzWOtSDuTS
-         aQq18N6GozZfeGLQSpuirFV33CQhIAbqK8yraJpEphJ0kV3jiX7l9wvjTuLhM02XbPkD
-         eIapTX7pHMsGyK74hYZ7ry0PG2VxDSNt53muH1EvBNXgoXiJtlebBe4Bkoc1E4wSgvxl
-         mRbw==
-X-Gm-Message-State: APjAAAUk0alMRG1kDPMU3fpmFxr1NE5FQCK8pgXYLM7gvulVCHsy+Smp
-        ZUddYdX8E2LQU28yTGrtoznmtQ==
-X-Google-Smtp-Source: APXvYqyuaupIiCkA9J7T67QXbsXu24CaII2u7F1TcSH3XvWp1xSCXhY3czQjpUHnPXILJlTM1pgAag==
-X-Received: by 2002:a2e:390c:: with SMTP id g12mr6095352lja.174.1554451773005;
-        Fri, 05 Apr 2019 01:09:33 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id w19sm3712865lfe.23.2019.04.05.01.09.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 01:09:32 -0700 (PDT)
-Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
-To:     Borislav Petkov <bp@alien8.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190405045711.30339-1-bp@alien8.de>
- <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
- <20190405075251.GC23348@zn.tnic>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
-Date:   Fri, 5 Apr 2019 10:09:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 04:10:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5672 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfDEIKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 04:10:46 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DC704323CCF8F62B0DB1;
+        Fri,  5 Apr 2019 16:10:43 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 5 Apr 2019
+ 16:10:35 +0800
+Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
+ CPU MMIO regions
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
+ <1554393602-152448-4-git-send-email-john.garry@huawei.com>
+ <20190404164130.GA12203@roeck-us.net>
+ <24cc8006-0f0d-6b20-a466-e4a32a0bb656@huawei.com>
+ <20190404174336.GA10404@roeck-us.net> <20190404185815.GA26522@google.com>
+CC:     <wangkefeng.wang@huawei.com>, <lorenzo.pieralisi@arm.com>,
+        <arnd@arndb.de>, <rafael@kernel.org>, <linux-pci@vger.kernel.org>,
+        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <andy.shevchenko@gmail.com>,
+        <catalin.marinas@arm.com>, <bp@suse.de>,
+        <linux-arm-kernel@lists.infradead.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2d0f583a-cabe-df4e-ad89-c1800d9b4804@huawei.com>
+Date:   Fri, 5 Apr 2019 09:10:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190405075251.GC23348@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190404185815.GA26522@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/04/2019 09.52, Borislav Petkov wrote:
-> On Fri, Apr 05, 2019 at 08:26:45AM +0200, Rasmus Villemoes wrote:
+On 04/04/2019 19:58, Bjorn Helgaas wrote:
+> On Thu, Apr 04, 2019 at 10:43:36AM -0700, Guenter Roeck wrote:
+>> On Thu, Apr 04, 2019 at 05:52:35PM +0100, John Garry wrote:
+>>>>> Note that the f71805f driver does not call
+>>>>> request_{muxed_}region(), as it should.
+>>>
+>>>> ... which is the real problem, one that is not solved by this
+>>>> patch. This may result in parallel and descructive accesses if
+>>>> there is another device on the LPC bus, and another driver
+>>>> accessing that device. Personally I'd rather have
+>>>> request_muxed_region() added to the f71805f driver.
+>>>
+>>> Right, we should and will still fix f71805f. If you recall, I did
+>>> have the f71805f fix in the v1 series, but you committed that it
+>>> was orthogonal, so I decided to take it out of this work for now.
+>>>
+>>> And even if we fix up f71805f and other known drivers which don't
+>>> call request_muxed_region(), we still need to police against these
+>>> rogue accesses, which is what this patch attempts to do.
+>>>
+>> Do we ? I am personally not convinced that LPC accesses _have_ to
+>> occur through PCI on any given system.
+>
+> On current systems, I suspect ISA/LPC devices are typically connected
+> via a PCI-to-ISA/LPC bridge.  But AFAIK there's no actual requirement
+> for that bridge, and there certainly *were* systems with ISA devices
+> but no PCI at all.
+>
+> IMO, if you want to build ISA drivers on your arch, you need to make
+> sure the inb() probing done by those drivers works like it does on
+> x86.  If there's no device there, the inb() should return 0xff with no
+> fuss and no crash.
 
->> It computes a*b+c with overflow checking at each step. calc_size
->> is way too generic and doesn't say anything at all about how the
->> calc(ulation) is done.
-> 
-> Ok, whatever.
-> 
-> Then it would need at least a comment above it to state what it does. I
-> don't want to go and parse the macros each time.
+Right, and this is what I am attempting to do here.
 
-It's an internal helper, and struct_size is fully kernel-doc'ed. But
-yeah, a comment wouldn't hurt, and let's rename the parameters so they
-match the abc naming.
+So today a call to request_muxed_region() can still succeed even if no 
+IO space mapped.
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 40b48e2133cb..6534a727cadb 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -278,11 +278,15 @@ static inline __must_check size_t
-array3_size(size_t a, size_t b, size_t c)
-        return bytes;
- }
+As such, even well-behaved drivers like f71882fg can still crash the 
+system, as noted in RFC patch 1/4 ("resource: Request IO port regions 
+from children of ioport_resource").
 
--static inline __must_check size_t __ab_c_size(size_t n, size_t size,
-size_t c)
-+/*
-+ * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
-+ * struct_size() below.
-+ */
-+static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
- {
-        size_t bytes;
+Thanks,
+John
 
--       if (check_mul_overflow(n, size, &bytes))
-+       if (check_mul_overflow(a, b, &bytes))
-                return SIZE_MAX;
-        if (check_add_overflow(bytes, c, &bytes))
-                return SIZE_MAX;
+>
+> Bjorn
+>
+> .
+>
 
-
-Rasmus
 
