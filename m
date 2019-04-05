@@ -2,102 +2,86 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5535C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BF5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1BB218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E964A218D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 15:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554477300;
+	bh=XldWfUiTk8M1HflN2nFqkLxk0kmjDuE7eO2L7iVce3M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=dU0BM0p815ge+L7Zhrlt2pGuSVIP/Dq339IDkAeMOrTW6vZMis+aFZ29E4m/HUFu+
+	 yScxSenMpNggYq+KwFj+9jcOJm+BLXnNAFTuCP6MnadcEhxJvZXvdNlWyyPaZu+3JG
+	 m1njYEUIWsyPmid/5F4UV3hTni+R6PnC0wx/i4bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbfDEPNb (ORCPT
+        id S1731525AbfDEPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 11:13:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48835 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731445AbfDEPLI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 11:11:08 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hCQUj-0005qs-F8; Fri, 05 Apr 2019 17:11:05 +0200
-Message-Id: <20190405150928.596372581@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 05 Apr 2019 17:07:00 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V2 02/29] x86/dumpstack: Fix off-by-one errors in stack
- identification
-References: <20190405150658.237064784@linutronix.de>
+        Fri, 5 Apr 2019 11:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfDEPO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 11:14:58 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CD5D218A6;
+        Fri,  5 Apr 2019 15:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554477297;
+        bh=XldWfUiTk8M1HflN2nFqkLxk0kmjDuE7eO2L7iVce3M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FO/PqDG/eeEz2DbM/UL+y0nZERVcWmURvl3XisN34OIcV06rPrkpSUvEVX2NDyhIE
+         8l9LqjGsyB7g6wPtm+CGEoGda7Sp27pNilHD0eLsFRq7M0pBzQtoGnegKI2nCalNLh
+         Hxpn0a8l/PyLoFC53BW4Je5Jm/vK06cNwxm1k8TM=
+Subject: Re: [PATCH 4.19 000/187] 4.19.34-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190404084603.119654039@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e825ff93-feeb-949a-78db-33c71b31e7a7@kernel.org>
+Date:   Fri, 5 Apr 2019 09:14:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+On 4/4/19 2:45 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.34 release.
+> There are 187 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat Apr  6 08:44:30 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.34-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The get_stack_info() function is off-by-one when checking whether an
-address is on a IRQ stack or a IST stack.  This prevents a overflowed IRQ
-or IST stack from being dumped properly.
+Compiled and booted on my test system. No dmesg regressions.
 
-[ tglx: Do the same for 32-bit ]
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-
----
- arch/x86/kernel/dumpstack_32.c |    4 ++--
- arch/x86/kernel/dumpstack_64.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -41,7 +41,7 @@ static bool in_hardirq_stack(unsigned lo
- 	 * This is a software stack, so 'end' can be a valid stack pointer.
- 	 * It just means the stack is empty.
- 	 */
--	if (stack <= begin || stack > end)
-+	if (stack < begin || stack > end)
- 		return false;
- 
- 	info->type	= STACK_TYPE_IRQ;
-@@ -66,7 +66,7 @@ static bool in_softirq_stack(unsigned lo
- 	 * This is a software stack, so 'end' can be a valid stack pointer.
- 	 * It just means the stack is empty.
- 	 */
--	if (stack <= begin || stack > end)
-+	if (stack < begin || stack > end)
- 		return false;
- 
- 	info->type	= STACK_TYPE_SOFTIRQ;
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -65,7 +65,7 @@ static bool in_exception_stack(unsigned
- 		begin = end - (exception_stack_sizes[k] / sizeof(long));
- 		regs  = (struct pt_regs *)end - 1;
- 
--		if (stack <= begin || stack >= end)
-+		if (stack < begin || stack >= end)
- 			continue;
- 
- 		info->type	= STACK_TYPE_EXCEPTION + k;
-@@ -88,7 +88,7 @@ static bool in_irq_stack(unsigned long *
- 	 * This is a software stack, so 'end' can be a valid stack pointer.
- 	 * It just means the stack is empty.
- 	 */
--	if (stack <= begin || stack > end)
-+	if (stack < begin || stack >= end)
- 		return false;
- 
- 	info->type	= STACK_TYPE_IRQ;
-
-
+thanks,
+-- Shuah
