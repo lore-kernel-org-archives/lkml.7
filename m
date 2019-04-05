@@ -2,175 +2,99 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3553FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85CA21850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CC7217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 10:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=policy reason="signing key too small" (768-bit key) header.d=decentral.ch header.i=@decentral.ch header.b="fiBhreVW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxgvdGX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbfDEKVk (ORCPT
+        id S1730726AbfDEKXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 06:21:40 -0400
-Received: from rush.cubic.ch ([176.9.78.115]:58032 "EHLO rush.cubic.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730283AbfDEKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 06:21:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=decentral.ch; s=rsa1;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=zaDiEQCm8CHaqr+7KCCddmLAA2oXPiRZlkzSNBHR1o0=;
-        b=fiBhreVWrGlUtNluHyHHjKwd1GiyskijxDIRXNXZq6boXNgba9ygKWUlNt2R5cAsRDVjn9Ttd1fKoyZg8EB2yFxHXKyU+l0rChmU8IK+T8ups2VSMZ1TS30+EM8k8Nnn;
-Received: from 83.41.150.83.ftth.as8758.net ([83.150.41.83] helo=[192.168.123.169])
-        by rush.cubic.ch with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <stuff@decentral.ch>)
-        id 1hCLyX-0003zM-EW; Fri, 05 Apr 2019 12:21:33 +0200
-Subject: Re: [GIT] Networking
-To:     David Miller <davem@davemloft.net>, torvalds@linux-foundation.org
-Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190404.184718.1193600058567939028.davem@davemloft.net>
-From:   Tim Tassonis <stuff@decentral.ch>
-Message-ID: <5b573b34-661b-8881-5bc5-40115426042c@decentral.ch>
-Date:   Fri, 5 Apr 2019 12:21:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 06:23:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34179 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730292AbfDEKXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 06:23:54 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b3so3054186pfd.1;
+        Fri, 05 Apr 2019 03:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=c/J2FHNL2RG9r3+RRnc/Tl4gg3PBDI5fKZZjdoCOjyQ=;
+        b=SxgvdGX211/3mt8PUz104XBZuIHAqnfEEk2WkeR8XArvU5KJx69KG8yWUsKSlWeOFE
+         1K90Khz4iqN6Ou3Hw/p/EA6CDz2a6KAaezYkRLE6rPM8cTAE/BlYE7+KpC1U14b52IR1
+         vuuCET2wNZ68rcJW01+BX11zBD2FTM2wmk0FiR7dp4MJ2IDfAnG2zqYzndKl6pmznn8s
+         fOuG8g1kpR7z8MfdqybTEQs/tWvbaIMXmAVkqdvGQis8V3N+EUvr/mDVDv+kSMrK8Qkl
+         iL4SuG/mu+g1B6TN0bf7rwUon/3BACpcYQHfT1zUTbXuyT4dmiY7VyK0FssltIbSNWyC
+         wWzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=c/J2FHNL2RG9r3+RRnc/Tl4gg3PBDI5fKZZjdoCOjyQ=;
+        b=bxodFTdU/lEiqCFjIzpireCJckqfUlhTyVjsXroaoWTg4VST6Gl/vceCHt2AauXTfV
+         5pqqfaVNaA0089vDWW13iGPqaCq1tEdVXi3xspsk5t/TBSSd+UwOI1cGBhMlIoG5HXcT
+         kEIOOB5NuZYjo1/d7g7mm3wlfTi1LGyYw6HmO8YqxbMjE4GOh+8nvQU13g2TfD2g0N9Q
+         v9YbjnrOteSIr7d84ETt6d6MWtZDYtattnYAWLoHGmlSm8u73gxCz+7eu8zP+sW928b5
+         13a8+/4+SqOHsst43aYejKNjNLBOSDK/DyhrnW52EqVr33BukPTdArnGImF6V75eH6+o
+         3ReA==
+X-Gm-Message-State: APjAAAU7ta2X0JDHMLgGvWelOv25xeq03ePQB40vk5xHw4BJtOEBtsyU
+        VTdYwKM7N2Om6+pqqL2Oe68vQENIf8gHmAFVMAU=
+X-Google-Smtp-Source: APXvYqwpHnbM0eLZNcQx1Ztr33J4NRfJMpbY2jlIPOUlbZu4u1vqVi/reRM2YtChEpxyFXgVpBgv/bRNmnNuT0jLdbk=
+X-Received: by 2002:a63:1d26:: with SMTP id d38mr10358643pgd.357.1554459833250;
+ Fri, 05 Apr 2019 03:23:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190404.184718.1193600058567939028.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a17:90a:1781:0:0:0:0 with HTTP; Fri, 5 Apr 2019 03:23:52
+ -0700 (PDT)
+In-Reply-To: <20190404031455.cn4cc5wxbn6izvwe@localhost>
+References: <20190404000958.15236-1-siddarajudh@gmail.com> <20190404031455.cn4cc5wxbn6izvwe@localhost>
+From:   Siddaraju DH <siddarajudh@gmail.com>
+Date:   Fri, 5 Apr 2019 15:53:52 +0530
+Message-ID: <CAGtA63dqBVQNzUMphSKTy_jH98YYVaxVAKYpWDFu3eCXJ0-ykQ@mail.gmail.com>
+Subject: Re: [PATCH] ptp/ptp_clock.c: Correct input parameter range check
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     john.stultz@linaro.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/19 3:47 AM, David Miller wrote:
-> 
+Sorry if there are duplicate emails in your inbox. Trying to solve "We
+accept plain text only response but the message has HTML subpart"
+error from mail delivery subsystem.
 
-...
+Thank you for the response with example Richard.
+Agree, it works. So I take back the statement in my commit message
+"Since the tv_sec field will be ZERO in this range, the user will not
+be able to specify the signedness of adjustment through the tv_sec
+field".
 
-> 
-> David S. Miller (15):
->        Merge branch 'thunderx-fix-receive-buffer-page-recycling'
->        Merge tag 'batadv-net-for-davem-20190328' of git://git.open-mesh.org/linux-merge
->        Merge branch '40GbE' of git://git.kernel.org/.../jkirsher/net-queue
->        Merge branch 'nfp-fix-retcode-and-disable-netpoll-on-representors'
->        Revert "cxgb4: Update 1.23.3.0 as the latest firmware supported."
->        Merge tag 'mlx5-fixes-2019-03-29' of git://git.kernel.org/.../saeed/linux
->        Merge git://git.kernel.org/.../bpf/bpf
->        Merge branch 'net-stmmac-fix-handling-of-oversized-frames'
->        Merge branch 'tipc-a-batch-of-uninit-value-fixes-for-netlink_compat'
->        Merge branch 'net-sched-fix-stats-accounting-for-child-NOLOCK-qdiscs'
->        Merge branch 'nfp-flower-fix-matching-and-pushing-vlan-CFI-bit'
->        Merge branch '40GbE' of git://git.kernel.org/.../jkirsher/net-queue
->        Merge branch 'net-hns-bugfixes-for-HNS-Driver'
->        Merge branch 'sch_cake-fixes'
->        Merge git://git.kernel.org/.../bpf/bpf
-> 
-> 
-> Paolo Abeni (3):
->        net: datagram: fix unbounded loop in __skb_try_recv_datagram()
->        net: sched: introduce and use qstats read helpers
->        net: sched: introduce and use qdisc tree flush/purge helpers
-> 
+Specifying a -1 ns adjustment like
+    tv_sec = 0
+    tv_nsec = -1
+looks pretty straight forward than specifying it like
+    tv_sec = -1
+    tv_nsec = 999999999.
 
-Could it be that these changes, especially the ones from
+And the former way of specifying the adjustment is consistent with how
+we specify the values for positive adjustments.
 
-net: sched: fix stats accounting for child NOLOCK qdiscs
+So, the question is "why are we blocking -ve number in tv_nsec"? As
+you mentioned, end of the day it's sum of tv_sec & tv_nsec.
+If there is really an advantage, just to keep things clear, we could
+have made tv_nsec/usec as "unsigned long" instead of "long". Right?
+For me, it doesn't look good to expect/restrict a signed input to be unsigned.
 
-are fixing the long-standing issue of random ethernet card adapter 
-resets that were introduces somewhere between 4.14.xx and 4.19.xx?
-
-There are numerous reports of different nics failing (mine is a igb), 
-with no real solution found yet.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=199783
-
-has a few examples.
-
-I'm certainly no expert, but my kernel trace seems to point to that area:
-
-[88273.078248] ------------[ cut here ]------------
-[88273.083042] NETDEV WATCHDOG: enp2s0 (igb): transmit queue 2 timed out
-[88273.089827] WARNING: CPU: 2 PID: 0 at net/sched/sch_generic.c:461 
-dev_watchdog+0x1ee/0x200
-[88273.098253] Modules linked in: ctr ccm xt_limit nfsd nfs_acl lockd 
-grace sunrpc nf_log_ipv4 nf_log_common xt_LOG ipt_MASQUERADE 
-xt_conntrack iptable_nat nf_nat_ipv4 iptable_filter nf_nat_ftp nf_nat 
-nf_conntrack_ftp nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c 
-bridge stp ipv6 crc_ccitt arc4 amd64_edac_mod kvm_amd kvm irqbypass 
-crct10dif_pclmul crc32_pclmul ath10k_pci crc32c_intel ath10k_core 
-ghash_clmulni_intel sdhci_pci ath pcbc mac80211 cqhci aesni_intel 
-ehci_pci aes_x86_64 sdhci leds_apu xhci_pci crypto_simd ehci_hcd 
-mmc_core fam15h_power cryptd glue_helper igb xhci_hcd k10temp cfg80211 
-pcspkr rtc_cmos ptp hwmon dca usbcore usb_common ccp fuse
-[88273.157981] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 4.19.31 #1
-[88273.164223] Hardware name: PC Engines APU2/APU2, BIOS 4.0.7 02/28/2017
-[88273.170918] RIP: 0010:dev_watchdog+0x1ee/0x200
-[88273.175457] Code: 00 48 63 4d e0 eb 93 4c 89 e7 c6 05 f1 2a b1 00 01 
-e8 e6 14 fd ff 89 d9 48 89 c2 4c 89 e6 48 c7 c7 38 24 dd 81 e8 02 ef aa 
-ff <0f> 0b eb c0 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 48 c7 47 08
-[88273.194827] RSP: 0018:ffff88811ab03e88 EFLAGS: 00010286
-[88273.200160] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 
-0000000000000000
-[88273.207484] RDX: 0000000000040400 RSI: 00000000000000f6 RDI: 
-0000000000000300
-[88273.214941] RBP: ffff888117fd4480 R08: 0000000000000266 R09: 
-0000000000000007
-[88273.222315] R10: 0000000000000082 R11: ffffffff824d188d R12: 
-ffff888117fd4000
-[88273.229669] R13: 0000000000000002 R14: ffffffff82005100 R15: 
-0000000000000001
-[88273.236965] FS:  0000000000000000(0000) GS:ffff88811ab00000(0000) 
-knlGS:0000000000000000
-[88273.245318] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[88273.251170] CR2: 00007f68d06d8000 CR3: 000000011332e000 CR4: 
-00000000000406e0
-[88273.258571] Call Trace:
-[88273.261124]  <IRQ>
-[88273.263204]  ? qdisc_reset+0xe0/0xe0
-[88273.266841]  call_timer_fn+0x2b/0x130
-[88273.270620]  expire_timers+0x8e/0xe0
-[88273.274328]  run_timer_softirq+0xb9/0x160
-[88273.278480]  ? __hrtimer_run_queues+0x133/0x2b0
-[88273.283175]  ? ktime_get+0x39/0x90
-[88273.286655]  __do_softirq+0xd7/0x2f8
-[88273.290338]  irq_exit+0xb2/0xc0
-[88273.293559]  smp_apic_timer_interrupt+0x79/0x130
-[88273.298414]  apic_timer_interrupt+0xf/0x20
-[88273.302664]  </IRQ>
-[88273.304873] RIP: 0010:cpuidle_enter_state+0xab/0x310
-[88273.310016] Code: e8 ca c6 b5 ff 48 89 c3 8b 05 39 7a b9 00 85 c0 0f 
-8f 33 01 00 00 31 ff e8 92 cf b5 ff 45 84 f6 0f 85 f1 00 00 00 fb 4c 29 
-fb <48> ba cf f7 53 e3 a5 9b c4 20 48 89 d8 48 c1 fb 3f 48 f7 ea b8 ff
-[88273.329275] RSP: 0018:ffffc900006a3e90 EFLAGS: 00000216 ORIG_RAX: 
-ffffffffffffff13
-[88273.337073] RAX: ffff88811ab20bc0 RBX: 00000000032f0f7e RCX: 
-000000000000001f
-[88273.344368] RDX: 00005048ad789efb RSI: 00000000803d7d59 RDI: 
-0000000000000000
-[88273.351650] RBP: 0000000000000002 R08: 0000000000000002 R09: 
-0000000000020480
-[88273.359007] R10: ffffc900006a3e78 R11: 0000000000002e10 R12: 
-ffffffff8207d0f8
-[88273.366481] R13: ffff888119647400 R14: 0000000000000000 R15: 
-00005048aa498f7d
-[88273.373838]  do_idle+0x1d8/0x230
-[88273.377134]  cpu_startup_entry+0x6a/0x70
-[88273.381189]  start_secondary+0x183/0x1b0
-[88273.385202]  secondary_startup_64+0xa4/0xb0
-[88273.389521] ---[ end trace 267a09c97ff9e7fd ]---
-
-
-
-
-
-
-
-
+Thanks,
+Siddaraju DH
