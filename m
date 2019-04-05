@@ -2,71 +2,97 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94065C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDC12186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554480912;
-	bh=plUQlTQPYkaqkLeaXJBwftjiVOKWe9aVbiuiD5rdM4Y=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0QC1WULKzzxYyGqJE4uTvUuA3IC1+sM8uOT3lp5pdZW2FQl1gNo9G5sBP+NqteUNo
-	 +VDT2LP2p0Yt3KXtYE8KkkiEEUgr4ZP2oZKORFTleRndOsfNyU/+CjO0MoegI/yw50
-	 iOmBB3MWt0EhEwRfysLbnVt6bsyqJgXtqaFg3CtE=
+	by mail.kernel.org (Postfix) with ESMTP id 6993F21738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 16:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731502AbfDEQPL (ORCPT
+        id S1731541AbfDEQPQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 12:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfDEQPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 12:15:08 -0400
-Subject: Re: [GIT PULL] mm/compaction functional fixes for v5.1-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554480907;
-        bh=plUQlTQPYkaqkLeaXJBwftjiVOKWe9aVbiuiD5rdM4Y=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Xm4IYvShdWdMhzq0+R0HleCMvmyq+vnL9fsYFAIBE+8ywjzPQBfSAMJMJilt+8ShO
-         oIbko7FmwrreH66p9d3r68HBbjWsf2763H6N4LsBgjyAVDHHtJAz9U5IlQgl3GLUfl
-         +u9F4dJ7mULWS+Ij773H37UYyz5+RI/Wp64t5Ses=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190405135120.27532-1-mgorman@techsingularity.net>
-References: <20190405135120.27532-1-mgorman@techsingularity.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190405135120.27532-1-mgorman@techsingularity.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git
- tags/mm-compaction-5.1-rc4
-X-PR-Tracked-Commit-Id: 5b56d996dd50a9d2ca87c25ebb50c07b255b7e04
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7f46774c6480174eb869a3c15167eafac467a6af
-Message-Id: <155448090790.31003.17803897978234402483.pr-tracker-bot@kernel.org>
-Date:   Fri, 05 Apr 2019 16:15:07 +0000
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
+        Fri, 5 Apr 2019 12:15:16 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52239 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731454AbfDEQPK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 12:15:10 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-192-z6o3oXjaMHOKV3P61-wwvw-1; Fri, 05 Apr 2019 17:15:06 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 5 Apr 2019 17:16:14 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 5 Apr 2019 17:16:14 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Luis Ressel' <aranea@aixah.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] objtool: Don't use -Werror
+Thread-Topic: [PATCH] objtool: Don't use -Werror
+Thread-Index: AQHU68meTsW4XthB40qs85GeKW+DmKYtvJfg
+Date:   Fri, 5 Apr 2019 16:16:14 +0000
+Message-ID: <a9dfc08702044b3db89c0584c0f79229@AcuMS.aculab.com>
+References: <20190405110151.2461-1-aranea@aixah.de>
+ <20190405123909.tupbgueie4czg2dd@treble>
+ <20190405142443.rgpwbgyym76xizad@vega.skynet.aixah.de>
+ <20190405143926.wmrkjsazlheeg6qs@treble>
+ <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
+In-Reply-To: <20190405160550.62arkmvj67zm6oc2@vega.skynet.aixah.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: z6o3oXjaMHOKV3P61-wwvw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri,  5 Apr 2019 14:51:18 +0100:
+From: Luis Ressel
+> Sent: 05 April 2019 17:06
+> On Fri, Apr 05, 2019 at 09:39:26AM -0500, Josh Poimboeuf wrote:
+> 
+> > Hm, I would actually argue the reverse.  Warnings are generally bad and
+> > -Werror is useful for ensuring that we don't have any.  For warnings
+> > that don't provide value, we just disable those individual warnings.
+> 
+> Sure, during development it's an excellent idea to investigate compiler
+> warnings, and -Werror can be useful for that. But the Linux kernel is
+> built by countless users in wildly varying environments, and it's almost
+> a given that someone will use a compiler that'll complain about a valid
+> part of your code whose style it considers bad.
+> 
+> As an example, the warning that's breaking the build for me is -Wundef
+> complaining about several "#if UNDEFINED_IDENTIFIER" constructs in the
+> libelf headers. (I agree with gcc in considering this bad style, but
+> it's perfectly valid C, and there probably wasn't a warning about it
+> back when this header was written.)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git tags/mm-compaction-5.1-rc4
+In which case you should be looking at a way of removing -Wundef
+not removing -Werror.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7f46774c6480174eb869a3c15167eafac467a6af
+FWIW I had to update libelf.so from version 0.153 to 0.165 in
+order for the amd64 orc unwinder code in objtool to not generate
+corrupt output files.
+That is an Ubuntu 13.04 system - nothing like 10 years old.
 
-Thank you!
+	David
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
