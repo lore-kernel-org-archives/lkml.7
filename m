@@ -2,190 +2,134 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB252C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94F9C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8773A206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A7A206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 17:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfDERkO (ORCPT
+        id S1731604AbfDERlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 13:40:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730329AbfDERkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 13:40:14 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A61415B06BD25B8608BE;
-        Sat,  6 Apr 2019 01:40:05 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Sat, 6 Apr 2019
- 01:39:56 +0800
-Date:   Fri, 5 Apr 2019 18:39:45 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, <linuxarm@huawei.com>
-Subject: Re: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a
- device
-Message-ID: <20190405183945.0000155f@huawei.com>
-In-Reply-To: <CAPcyv4hxBFcJKbVVgNiE4UYXZS4XY9hfE8W9mN+VrcWS9AvJLw@mail.gmail.com>
-References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20190405121857.0000718a@huawei.com>
-        <CAPcyv4hpKkWm0x2jecvmtLNgmwUnAZn3jM_9sKyBAUFaRLj=cQ@mail.gmail.com>
-        <20190405172342.00006a56@huawei.com>
-        <CAPcyv4hxBFcJKbVVgNiE4UYXZS4XY9hfE8W9mN+VrcWS9AvJLw@mail.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 5 Apr 2019 13:41:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:53682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730329AbfDERlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 13:41:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA7CF168F;
+        Fri,  5 Apr 2019 10:41:04 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 920933F557;
+        Fri,  5 Apr 2019 10:41:03 -0700 (PDT)
+Subject: Re: [PATCH 03/21] dma-mapping: add a Kconfig symbol to indicated
+ arch_dma_prep_coherent presence
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190327080448.5500-1-hch@lst.de>
+ <20190327080448.5500-4-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7c464875-b23a-9da4-afe7-93d7879ca3b8@arm.com>
+Date:   Fri, 5 Apr 2019 18:41:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20190327080448.5500-4-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Apr 2019 09:56:22 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> On Fri, Apr 5, 2019 at 9:24 AM Jonathan Cameron
-> <jonathan.cameron@huawei.com> wrote:
-> >
-> > On Fri, 5 Apr 2019 08:43:03 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > On Fri, Apr 5, 2019 at 4:19 AM Jonathan Cameron
-> > > <jonathan.cameron@huawei.com> wrote:  
-> > > >
-> > > > On Thu, 4 Apr 2019 12:08:49 -0700
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >  
-> > > > > Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
-> > > > > properties described by the ACPI HMAT is expected to have an application
-> > > > > specific consumer.
-> > > > >
-> > > > > Those consumers may want 100% of the memory capacity to be reserved from
-> > > > > any usage by the kernel. By default, with this enabling, a platform
-> > > > > device is created to represent this differentiated resource.
-> > > > >
-> > > > > A follow on change arranges for device-dax to claim these devices by
-> > > > > default and provide an mmap interface for the target application.
-> > > > > However, if the administrator prefers that some or all of the special
-> > > > > purpose memory is made available to the core-mm the device-dax hotplug
-> > > > > facility can be used to online the memory with its own numa node.
-> > > > >
-> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > > Cc: Len Brown <lenb@kernel.org>
-> > > > > Cc: Keith Busch <keith.busch@intel.com>
-> > > > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > > >
-> > > > Hi Dan,
-> > > >
-> > > > Great to see you getting this discussion going so fast and in
-> > > > general the approach makes sense to me.
-> > > >
-> > > > I'm a little confused why HMAT has anything to do with this.
-> > > > SPM is defined either via the attribute in SRAT SPA entries,
-> > > > EF_MEMORY_SP or via the EFI memory map.
-> > > >
-> > > > Whether it is in HMAT or not isn't all that relevant.
-> > > > Back in the days of the reservation hint (so before yesterday :)
-> > > > it was relevant obviously but that's no longer true.
-> > > >
-> > > > So what am I missing?  
-> > >
-> > > It's a good question, and an assumption I should have explicitly
-> > > declared in the changelog. The problem with EFI_MEMORY_SP is the same
-> > > as the problem with the EfiPersistentMemory type, it isn't precise
-> > > enough on its own for the kernel to delineate 'type' or
-> > > device/replaceable-unit boundaries. For example, I expect one
-> > > EFI_MEMORY_SP range of a specific type may be contiguous with another
-> > > range of a different type. Similar to the NFIT there is no requirement
-> > > in the specification that platform firmware inject multiple range
-> > > entries. Instead that precision is left to the SRAT + HMAT, or the
-> > > NFIT in the case of PMEM.  
-> >
-> > Absolutely, as long as they are all SPM, they could be anywhere in
-> > the system.
-> >  
-> > >
-> > > Conversely, and thinking through this a bit more, if a memory range is
-> > > "special", but the platform fails to enumerate it in HMAT I think
-> > > Linux should scream loudly that the firmware is broken and leave the
-> > > range alone. The "scream loudly" piece is missing in the current set,
-> > > but the "leave the range alone" functionality is included.  
-> >
-> > I am certainly keen on screaming if the various entries are inconsistent
-> > but am not sure they necessarily are here.
-> >
-> > So there are a couple of ways we could get an SPM range defined.
-> > The key thing here is that firmware should be attempting to describe
-> > what it has to some degree somewhere.  If not it won't get a good
-> > result ;)  So if there is no SRAT then you are on your own. SCREAM!
-> >
-> > 1. Directly in the memory map.  If there is no other information then
-> >    tough luck the kernel can only sensibly handle it as one device.
-> >    Or not at all, which seems like a reasonable decision to me.
-> >    SCREAM
-> >
-> > 2. In memory map + a proximity domain entry in SRAT.  Given memory
-> >    with different characteristics should be in different proximity
-> >    domains anyway - this should be fairly precise. The slight snag
-> >    here is that the fine grained nature of SRAT is actually a side
-> >    effect of HMAT, so not sure well platforms have traditional
-> >    describe their more subtle differences.
-> >
-> > 3. In NFIT as NFIT SPA carries the memory attribute.  Not sure if
-> >    we should scream if this disagrees with the memory map.
-> >
-> > 4. In HMAT?  Now this changed in ACPI 6.3 to clean up the 'messy'
-> >    prior relationship between it and SRAT.  Now HMAT no longer has
-> >    memory address ranges as you observed.  That means, to describe
-> >    properties of memory, it has to use the proximity domains of
-> >    SRAT.  It provides lots of additional info about those domains
-> >    but it is SRAT that defines them.
-> >
-> > So I would argue that HMAT itself doesn't tell us anything useful.
-> > SRAT certainly does though so I think this should be coming from
-> > SRAT (or NFIT as that also defines the required precision)  
+On 27/03/2019 08:04, Christoph Hellwig wrote:
+> Add a Kconfig symbol that indicates an architecture provides a
+> arch_dma_prep_coherent implementation, and provide a stub otherwise.
 > 
-> I agree, yes, SRAT by itself is sufficient for this "precision"
-> concern. However, do we, core Linux developers, really want to
-> encourage platform vendors that they can ignore deploying HMAT data
-> and get Linux to honor that sub-case for EFI_MEMORY_SP? My personal
-> experience is that platform firmware will take advantage of almost any
-> opportunity to minimize the data it provides to the OS. The only hard
-> lever Linux has to encourage platform firmware to give complete data
-> is to decline to support configurations that have incomplete data.
+> This will allow the generic dma-iommu code to it while still allowing
+
+I think you accidentally a word there.
+
+> to be built for cache coherent architectures.
 > 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/arm64/Kconfig              | 1 +
+>   arch/csky/Kconfig               | 1 +
+>   include/linux/dma-noncoherent.h | 6 ++++++
+>   kernel/dma/Kconfig              | 3 +++
+>   4 files changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 7e34b9eba5de..adda078d6df7 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -13,6 +13,7 @@ config ARM64
+>   	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>   	select ARCH_HAS_DMA_COHERENT_TO_PFN
+>   	select ARCH_HAS_DMA_MMAP_PGPROT
+> +	select ARCH_HAS_DMA_PREP_COHERENT
+>   	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
+>   	select ARCH_HAS_ELF_RANDOMIZE
+>   	select ARCH_HAS_FAST_MULTIPLIER
+> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+> index 725a115759c9..2c3178848b7d 100644
+> --- a/arch/csky/Kconfig
+> +++ b/arch/csky/Kconfig
+> @@ -1,6 +1,7 @@
+>   config CSKY
+>   	def_bool y
+>   	select ARCH_32BIT_OFF_T
+> +	select ARCH_HAS_DMA_PREP_COHERENT
+>   	select ARCH_HAS_SYNC_DMA_FOR_CPU
+>   	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>   	select ARCH_USE_BUILTIN_BSWAP
+> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+> index 69b36ed31a99..9741767e400f 100644
+> --- a/include/linux/dma-noncoherent.h
+> +++ b/include/linux/dma-noncoherent.h
+> @@ -72,6 +72,12 @@ static inline void arch_sync_dma_for_cpu_all(struct device *dev)
+>   }
+>   #endif /* CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL */
+>   
+> +#ifdef CONFIG_ARCH_HAS_DMA_PREP_COHERENT
+>   void arch_dma_prep_coherent(struct page *page, size_t size);
+> +#else
+> +static inline void arch_dma_prep_coherent(struct page *page, size_t size)
+> +{
+> +}
+> +#endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
+>   
+>   #endif /* _LINUX_DMA_NONCOHERENT_H */
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index a06ba3013b3b..feff2d21d8ee 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -38,6 +38,9 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU
+>   config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
+>   	bool
+>   
+> +config ARCH_HAS_DMA_PREP_COHERENT
+> +	bool
+> +
 
-If we decide as a community that this is the way we want to go, I'm
-happy to politely point it out to our firmware people (who are a more
-proactive group on detailed system descriptions than many!)
+I guess the sorting in this whole Kconfig is already more or less 
+"randomly-perturbed semi-alphabetical" :(
 
-If we make this a clearly stated policy, perhaps via some comments
-in the code or Documentation/ that that would be even better
-and avoid people taking the 'but you could support my firmware'
-line in the future.
+Anyway,
 
-I'll see if I can reach out to other OS vendors as well so we
-can present a unified front on this (perhaps after a few days, just
-in case we have any dissenting voices here!)
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Thanks,
-
-Jonathan
-
+>   config ARCH_HAS_DMA_COHERENT_TO_PFN
+>   	bool
+>   
+> 
