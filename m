@@ -2,113 +2,147 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BB5C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB38521738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF49217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+wqOj5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfDEIQx (ORCPT
+        id S1730311AbfDEIYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:16:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45586 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEIQx (ORCPT
+        Fri, 5 Apr 2019 04:24:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35683 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEIYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:16:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s15so6822188wra.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 01:16:52 -0700 (PDT)
+        Fri, 5 Apr 2019 04:24:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w1so6933801wrp.2;
+        Fri, 05 Apr 2019 01:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vcAGVwffkChWM3GNFoyXAhcxCqnVacQuIbvdyotZLKw=;
+        b=D+wqOj5H9LMk8ePCJOpYioa0Rw7DTfNr134f0UMxZiN6itl3HfgnDONtTWOEVPFEDe
+         jjyehrvnr2abkKv6oB5lIplC8M81SQYjpOkJEcssFESGL14zFnS+2o3Y/XRi0MavlBen
+         lJY6/frQncqiu14cZ/AlB2xECf96arwccJGT/PQej7P5QoZzICWpkXOrgHTmIdXFRc1l
+         HWy6gcPMXfb6hulFuPwN8pwcXqquH71Fxso/mDNwGfEtsWv+Q7jcJ2EnGq60j2cPDucP
+         AJgoTU2EJDXZmOJ8lI0bKg5/3RForJDH7uylOTm2VnErGt4h+dQ6I8la8zQRyR2q/UlK
+         GMRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uww6dZz3lxCpRpT/ma2nFyPidH/CJqrtzpNQ35KEFAI=;
-        b=CydBjWdALs4C6pp2DFYbCWTYTBBGoOr175yzVAP+ATNCZr8y/zLZaWpcamfpDsdY/q
-         J/zXGFF+nooAHuaMSf6/8q1mc2QxOaRijHa772zrHnUs1Nw8OFkKzvcuuMjomPPFZCHl
-         bmKZab+6m5hEmwnss6valQRfPsjfnnjiREdl+CEp9nK5tnYIRn1eqd52NYdSt+KElN9w
-         8CH9OfELI0nyvMj2tTlaGBnDVyCj4GVeZlns5dtnDRg9S/C47JnjzXymRY7qIaEAxj70
-         dLqfZYPar+HPjNss8lrx7BILmVLFoxXdy83O+eE9fLNqNpO9LB/Csef9aKC9LJ7kGuBH
-         Z2VA==
-X-Gm-Message-State: APjAAAUvQVkUXfm5ygiW92t/VcMe5PVgz/Xf742QtiOQhc2vyFSLHA5S
-        tcOUBdmQ7ZUPQ6g2aC5FvkIYJw==
-X-Google-Smtp-Source: APXvYqyuZBKB/PW1tVCBvjF2nKCoZ5C0nZIjguoLcgoed+Cl7o9B1C0DZOJcTj5mJ5ILobNYGBpUnA==
-X-Received: by 2002:adf:ed90:: with SMTP id c16mr7805750wro.74.1554452211647;
-        Fri, 05 Apr 2019 01:16:51 -0700 (PDT)
-Received: from steredhat (host35-203-static.12-87-b.business.telecomitalia.it. [87.12.203.35])
-        by smtp.gmail.com with ESMTPSA id j11sm27420999wrw.85.2019.04.05.01.16.50
+        bh=vcAGVwffkChWM3GNFoyXAhcxCqnVacQuIbvdyotZLKw=;
+        b=ICgGecQt1AahT/CSw/mK8N9mshCscziNxd49oBp7B/c2a82As7WrN9szdHjfRp3kI5
+         shfd4Vb3Kzs80wV8YqVC+A8Q1lQ+RKyCcvu1RoBbtnKVEVYbTGsSBdx/z405bmDQN7sM
+         6CdJR0TBp4DaqG4AbxAIHpKGf3SfyG7t+KEsVNUvEDI9ORY6xBeHFMWUYEWB2ofEOQvM
+         LdJf/ROUbk1svYEgeFA+DZ7V95H0jVSNpS0G3bj1vN7qpCQnNddJCmy0iY7V7wZV3taZ
+         qk/x1kDXCykqWoRFoAat/Of2c4cE46jXEkYZlsqP47M1cl+1haadOe+RG8jCaRZERbre
+         s7Ag==
+X-Gm-Message-State: APjAAAXYZKyKmG5hlXxariJ8TxIsCiO1ro8zbzXm4Qe1GJLkZOM8i6r8
+        tzxUEq6PBAbDPfTA6XatEWQ=
+X-Google-Smtp-Source: APXvYqzttcSB9L8/xHbgT9hliJXljIF7JaZ8SPAcN/UvUB9ScDaXc7l+aMjrsrFfsk/udvI4sja8cg==
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr7535881wrq.200.1554452689218;
+        Fri, 05 Apr 2019 01:24:49 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id w14sm15943843wrr.16.2019.04.05.01.24.48
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 01:16:51 -0700 (PDT)
-Date:   Fri, 5 Apr 2019 10:16:48 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
+        Fri, 05 Apr 2019 01:24:48 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 09:24:47 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
 Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 1/4] vsock/virtio: reduce credit update messages
-Message-ID: <20190405081648.2zflr7gxknk4q3a2@steredhat>
+Subject: Re: [PATCH RFC 3/4] vsock/virtio: change the maximum packet size
+ allowed
+Message-ID: <20190405082447.GD25152@stefanha-x1.localdomain>
 References: <20190404105838.101559-1-sgarzare@redhat.com>
- <20190404105838.101559-2-sgarzare@redhat.com>
- <20190404191539.GB25152@stefanha-x1.localdomain>
+ <20190404105838.101559-4-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
 Content-Disposition: inline
-In-Reply-To: <20190404191539.GB25152@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190404105838.101559-4-sgarzare@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 08:15:39PM +0100, Stefan Hajnoczi wrote:
-> On Thu, Apr 04, 2019 at 12:58:35PM +0200, Stefano Garzarella wrote:
-> > @@ -256,6 +257,7 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> >  	struct virtio_vsock_sock *vvs = vsk->trans;
-> >  	struct virtio_vsock_pkt *pkt;
-> >  	size_t bytes, total = 0;
-> > +	s64 free_space;
-> 
-> Why s64?  buf_alloc, fwd_cnt, and last_fwd_cnt are all u32.  fwd_cnt -
-> last_fwd_cnt <= buf_alloc is always true.
-> 
 
-Right, I'll use a u32 for free_space!
-Is is a leftover because initially I implemented something like
-virtio_transport_has_space().
+--yudcn1FV7Hsu/q59
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >  	int err = -EFAULT;
-> >  
-> >  	spin_lock_bh(&vvs->rx_lock);
-> > @@ -288,9 +290,15 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> >  	}
-> >  	spin_unlock_bh(&vvs->rx_lock);
-> >  
-> > -	/* Send a credit pkt to peer */
-> > -	virtio_transport_send_credit_update(vsk, VIRTIO_VSOCK_TYPE_STREAM,
-> > -					    NULL);
-> > +	/* We send a credit update only when the space available seen
-> > +	 * by the transmitter is less than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE
-> > +	 */
-> > +	free_space = vvs->buf_alloc - (vvs->fwd_cnt - vvs->last_fwd_cnt);
-> 
-> Locking?  These fields should be accessed under tx_lock.
-> 
+On Thu, Apr 04, 2019 at 12:58:37PM +0200, Stefano Garzarella wrote:
+> Since now we are able to split packets, we can avoid limiting
+> their sizes to VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE.
+> Instead, we can use VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max
+> packet size.
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  net/vmw_vsock/virtio_transport_common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virt=
+io_transport_common.c
+> index f32301d823f5..822e5d07a4ec 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -167,8 +167,8 @@ static int virtio_transport_send_pkt_info(struct vsoc=
+k_sock *vsk,
+>  	vvs =3D vsk->trans;
+> =20
+>  	/* we can send less than pkt_len bytes */
+> -	if (pkt_len > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE)
+> -		pkt_len =3D VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+> +	if (pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
+> +		pkt_len =3D VIRTIO_VSOCK_MAX_PKT_BUF_SIZE;
 
-Yes, we need a lock, but looking in the code, vvs->fwd_cnd is written
-taking rx_lock (virtio_transport_dec_rx_pkt) and it is read with the
-tx_lock (virtio_transport_inc_tx_pkt).
+The next line limits pkt_len based on available credits:
 
-Maybe we should use another spin_lock shared between RX and TX for those
-fields or use atomic variables.
+  /* virtio_transport_get_credit might return less than pkt_len credit */
+  pkt_len =3D virtio_transport_get_credit(vvs, pkt_len);
 
-What do you suggest?
+I think drivers/vhost/vsock.c:vhost_transport_do_send_pkt() now works
+correctly even with pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE.
 
-Thanks,
-Stefano
+The other ->send_pkt() callback is
+net/vmw_vsock/virtio_transport.c:virtio_transport_send_pkt_work() and it
+can already send any size packet.
 
+Do you remember why VIRTIO_VSOCK_MAX_PKT_BUF_SIZE still needs to be the
+limit?  I'm wondering if we can get rid of it now and just limit packets
+to the available credits.
+
+Stefan
+
+--yudcn1FV7Hsu/q59
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBAgAGBQJcpxDPAAoJEJykq7OBq3PIkwEIAKUcFcpFXgBx1Gbs5mSd4ypd
+Yi7a6mc4wSbq/FLNhVo0xVjJA+7hSNxiUvsqbwr1ajpudAHbMoV9LEuVZqtRLBmM
+pj9GmjHssqWgFr83oW1zlti/BNcArOoYl0csKoqfWXMA8sBb4o0ENdjlXwPvy+rm
+aQE78BhRi0vHSpFlOs+Zc/KHaaeQuH0fufyjLSi4vFhWnOC4jpoXuPhCT2NAVCJA
+MEdGNJZ2ZxtPBD8cUJH/ZTziNOArXsnOc6a9YIW72JnUOywqokVvgvsBtimaKN95
+lbBsBCmPxd0rY4n3OTAssfnHbUVVNwYaVoysD39pWBwwd1ZL0J3kqpP2zPh/O7g=
+=xs/A
+-----END PGP SIGNATURE-----
+
+--yudcn1FV7Hsu/q59--
