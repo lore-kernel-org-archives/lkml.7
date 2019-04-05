@@ -2,123 +2,106 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B4CC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD61C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116B92186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ScOJu+Io"
+	by mail.kernel.org (Postfix) with ESMTP id 06F9821872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 11:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfDELsD (ORCPT
+        id S1730424AbfDELsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 07:48:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59222 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDELsD (ORCPT
+        Fri, 5 Apr 2019 07:48:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33321 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfDELsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 07:48:03 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x35BlxLR018470;
-        Fri, 5 Apr 2019 06:47:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554464879;
-        bh=h+lKNV/tyP7GgAYGMMmtMgrqmcB1TwERoQ2EC30aoAo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ScOJu+IodmOn0gqgdHSl706CSSi9CNNGTE7G9SwYqi2NQq7lrYT99w65oNx0RheiT
-         GSr8/IIOrMgNK9T+a3rnxPqdHBbf1jv3/rIb3m2uc0EkLcyYzVObe+qw5ZK3JPyHD5
-         yJlD9ysei+veXm6Mw2+vezTQ1oSvF0Slc27hGIHM=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x35BlxMq068211
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Apr 2019 06:47:59 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
- 2019 06:47:59 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Apr 2019 06:47:59 -0500
-Received: from [172.22.78.91] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x35Blwb4026676;
-        Fri, 5 Apr 2019 06:47:59 -0500
-Subject: Re: [PATCH v3 10/25] dt-bindings: lp8860: Add function and color
- properties
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        <linux-leds@vger.kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pavel@ucw.cz>, <robh@kernel.org>
-References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
- <20190331175501.23471-11-jacek.anaszewski@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ed50b431-eaec-0470-649b-4fc50801a075@ti.com>
-Date:   Fri, 5 Apr 2019 06:47:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Apr 2019 07:48:08 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x35BlifO2737414
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 5 Apr 2019 04:47:44 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x35BlixN2737411;
+        Fri, 5 Apr 2019 04:47:44 -0700
+Date:   Fri, 5 Apr 2019 04:47:44 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
+Message-ID: <tip-fea6b632235b9bedc58c72cd24f1865bb0c365db@git.kernel.org>
+Cc:     tglx@linutronix.de, acme@redhat.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        namhyung@kernel.org, tstoyanov@vmware.com, jolsa@redhat.com,
+        hpa@zytor.com, rostedt@goodmis.org
+Reply-To: namhyung@kernel.org, jolsa@redhat.com, tstoyanov@vmware.com,
+          hpa@zytor.com, rostedt@goodmis.org, acme@redhat.com,
+          tglx@linutronix.de, akpm@linux-foundation.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <20190401164344.121717482@goodmis.org>
+References: <20190326154328.28718-9-tstoyanov@vmware.com>
+        <20190401164344.121717482@goodmis.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] tools lib traceevent: Remove call to exit() from
+ tep_filter_add_filter_str()
+Git-Commit-ID: fea6b632235b9bedc58c72cd24f1865bb0c365db
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190331175501.23471-11-jacek.anaszewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Commit-ID:  fea6b632235b9bedc58c72cd24f1865bb0c365db
+Gitweb:     https://git.kernel.org/tip/fea6b632235b9bedc58c72cd24f1865bb0c365db
+Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+AuthorDate: Mon, 1 Apr 2019 12:43:15 -0400
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 1 Apr 2019 15:18:09 -0300
 
-On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
-> Refer to new "function" and "color" properties and mark "label"
-> as deprecated.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> index 5f0e892ad759..9863220db4ba 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> @@ -20,12 +20,16 @@ Required child properties:
->  	- reg : 0
->  
->  Optional child properties:
-> -	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +	- function : see Documentation/devicetree/bindings/leds/common.txt
-> +	- color : see Documentation/devicetree/bindings/leds/common.txt
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt (deprecated)
->  	- linux,default-trigger :
->  	   see Documentation/devicetree/bindings/leds/common.txt
->  
->  Example:
->  
-> +#include <dt-bindings/leds/common.h>
-> +
->  led-controller@2d {
->  	compatible = "ti,lp8860";
->  	#address-cells = <1>;
-> @@ -36,7 +40,8 @@ led-controller@2d {
->  
->  	led@0 {
->  		reg = <0>;
-> -		label = "white:backlight";
-> +		function = LED_FUNCTION_BACKLIGHT;
-> +		color = <LED_COLOR_ID_WHITE>;
->  		linux,default-trigger = "backlight";
->  	};
->  }
-> 
+tools lib traceevent: Remove call to exit() from tep_filter_add_filter_str()
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
--- 
-------------------
-Dan Murphy
+This patch removes call to exit() from tep_filter_add_filter_str(). A
+library function should not force the application to exit. In the
+current implementation tep_filter_add_filter_str() calls exit() when a
+special "test_filters" mode is set, used only for debugging purposes.
+When this mode is set and a filter is added - its string is printed to
+the console and exit() is called. This patch changes the logic - when in
+"test_filters" mode, the filter string is still printed, but the exit()
+is not called. It is up to the application to track when "test_filters"
+mode is set and to call exit, if needed.
+
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lkml.kernel.org/r/20190326154328.28718-9-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190401164344.121717482@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/lib/traceevent/parse-filter.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 4ffd8b25a852..3320c0a0e343 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1346,9 +1346,6 @@ enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
+ 
+ 	free_events(events);
+ 
+-	if (rtn >= 0 && pevent->test_filters)
+-		exit(0);
+-
+ 	return rtn;
+ }
+ 
