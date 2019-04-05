@@ -3,135 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB633C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8083EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C48217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510BD217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 08:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfDEIf6 (ORCPT
+        id S1730329AbfDEIjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 04:35:58 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:47324 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729792AbfDEIf5 (ORCPT
+        Fri, 5 Apr 2019 04:39:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:45045 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730081AbfDEIjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 04:35:57 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hCKKD-0006g9-6X; Fri, 05 Apr 2019 10:35:49 +0200
-Date:   Fri, 5 Apr 2019 10:35:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Chang S. Bae" <chang.seok.bae@intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [RESEND PATCH v6 08/12] x86/fsgsbase/64: Use the per-CPU base
- as GSBASE at the paranoid_entry
-In-Reply-To: <alpine.DEB.2.21.1903251003090.1798@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1904050007050.1802@nanos.tec.linutronix.de>
-References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com> <1552680405-5265-9-git-send-email-chang.seok.bae@intel.com> <alpine.DEB.2.21.1903251003090.1798@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Apr 2019 04:39:53 -0400
+Received: from [192.168.1.110] ([95.114.101.225]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MJmbB-1hVvho3Uj3-00K8oR; Fri, 05 Apr 2019 10:39:45 +0200
+Subject: Re: [PATCH] tty: Add NULL TTY driver
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org
+References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+ <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+Date:   Fri, 5 Apr 2019 10:39:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tJkoEXbqx7WW9kA3Pxz0gA437JyXrMyV6shrguo+19TwCUFnhup
+ TYOAQ1VQ9GX9XbgwhBMC0l4LDFBVs3xA3PG5nt51N/9IP6qUQSAU4p8gKk+OoEBHvpRf/kw
+ xCya0M628CKER7FbeEtpChF6LbXdLJ9eHXq/sZUBx4cBRtZHzj70o2eUUnMivuXDZXK6hez
+ 2NEFQbekGaB+yKmu2yuBQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iCgrYj7tmN4=:B8EyoMsUbtBE/jZ7n6SOla
+ fYpQoidS4K/d0xlwxyHniz4Je2hzmMX5+Hg0cKiX9EowOdBWyq3j5usKAaefp4t6cQyDXLF5Z
+ EQYYWrG2gYDrXRGddLlU3UDbxfwwQdolt7FZtqGoz8s0IVmmBSYHnHH1ODQMOGKh8NnxVy34r
+ hLygT/PS41R6DrhBfJJ9Z9zfpDDuoOkAoUTsZZfk94+1uImuda4fOZXc9UVBSo/H0l9QC95sJ
+ 02xuDOlJs/n165vXmD+67+F09JeuMVn2oLU1RzGSmQzFBpgu1gkhP6LBkonTa7x43OHtN3IWj
+ ih47yFH8s+QOSO4YhTkWGYaJfJtpDB0TGR9zarVyhZdy35G6ovtawqdx40ft1ht55XjXqZI9F
+ 8/xDA0tNakzX0giRBAMt13iyL7y9dXUbGwaIWq+6OormDMzUIUMWZ6K4sD+h5dHE5ALRbmKNb
+ j8/5r4e3pAqW9hjBQfN/dwV+AObnS9qTEPi0jjzFW1RNaSnkotFFUsc1fPSNar0nm1gvmrKl/
+ Bmr4MVo74YOBfyYCAxMZQ7v3f1lDFtLp2vqMiUW3ZkiYVeWMLfIVjnUEef0HoMavx9T2qhgQo
+ ivEQcTJEuRVsMUHwed/nvWSXvU3ZSNowmYlIN8wyaQC7HZx1xIl7Lq/FynNSyPBNFzwWcqX8f
+ 2QjZ6c6mlekfop3w6ylppgArSr+U7AsUWHtOFEQ6NQpRn0CckTsDNHIq5+7QTyS2OD6FP0gs5
+ kBkZmDIj30g7C1EEDxdSM+Jd8Z3jVNRCCwCNV7HcGHD8Bz9zvhhg2Lsymts=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019, Thomas Gleixner wrote:
-> On Fri, 15 Mar 2019, Chang S. Bae wrote:
-> >  ENTRY(paranoid_exit)
-> >  	UNWIND_HINT_REGS
-> >  	DISABLE_INTERRUPTS(CLBR_ANY)
-> >  	TRACE_IRQS_OFF_DEBUG
-> > +	ALTERNATIVE "jmp .Lparanoid_exit_no_fsgsbase",	"nop",\
-> > +		X86_FEATURE_FSGSBASE
-> > +	wrgsbase	%rbx
-> > +	jmp	.Lparanoid_exit_no_swapgs;
-> 
-> Again. A few newlines would make it more readable.
-> 
-> This modifies the semantics of paranoid_entry and paranoid_exit. Looking at
-> the usage sites there is the following code in the nmi maze:
-> 
-> 	/*
-> 	 * Use paranoid_entry to handle SWAPGS, but no need to use paranoid_exit
-> 	 * as we should not be calling schedule in NMI context.
-> 	 * Even with normal interrupts enabled. An NMI should not be
-> 	 * setting NEED_RESCHED or anything that normal interrupts and
-> 	 * exceptions might do.
-> 	 */
-> 	call	paranoid_entry
-> 	UNWIND_HINT_REGS
-> 
-> 	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
-> 	movq	%rsp, %rdi
-> 	movq	$-1, %rsi
-> 	call	do_nmi
-> 
-> 	/* Always restore stashed CR3 value (see paranoid_entry) */
-> 	RESTORE_CR3 scratch_reg=%r15 save_reg=%r14
-> 
-> 	testl	%ebx, %ebx			/* swapgs needed? */
-> 	jnz	nmi_restore
-> nmi_swapgs:
-> 	SWAPGS_UNSAFE_STACK
-> nmi_restore:
-> 	POP_REGS
-> 
-> I might be missing something, but how is that supposed to work when
-> paranoid_entry uses FSGSBASE? I think it's broken, but if it's not then
-> there is a big fat comment missing explaining why.
+On 03.04.19 16:11, Vincent Whitchurch wrote:
 
-So this _is_ broken.
+> Especially on embedded systems, it would be convenient to have a simple
+> way to disable the console (both for kernel and userspace) on a system
+> which normally uses it, to free up the UART for other things.
 
-   On entry:
+Just symlinking to /dev/null does not work ?
 
-      rbx = rdgsbase()
-      wrgsbase(KERNEL_GS)
-
-   On exit:
-
-      if (ebx == 0)
-      	 swapgs
-
-The resulting matrix:
-
-   |  ENTRY GS	| RBX		| EXIT		| GS on IRET	| RESULT
-   |		|		|		|		|
- 1 |  KERNEL_GS	| KERNEL_GS	| EBX == 0	| USER_GS	| FAIL
-   |		|		|		|		|
- 2 |  KERNEL_GS	| KERNEL_GS	| EBX != 0	| KERNEL_GS	| ok
-   |		|		|		|		|
- 3 |  USER_GS	| USER_GS	| EBX == 0	| USER_GS	| ok
-   |		|		|		|		|
- 4 |  USER_GS	| USER_GS	| EBX != 0	| KERNEL_GS	| FAIL
+OTOH, if you're introducing a dummy console, wouldn't a ringbuffer that,
+can be read out later, a better option ?
 
 
-#1 Just works by chance because it's unlikely that the lower 32bits of a
-   per CPU kernel GS are all 0.
+--mtx
 
-   But it's just a question of probability that this turns into a
-   non-debuggable once per year crash (think KASLR).
-
-#4 This can happen when the NMI hits the kernel in some other entry code
-   _BEFORE_ or _AFTER_ swapgs.
-
-   User space using GS addressing with GS[31:0] != 0 will crash and burn.
-
-   IIRC FSGSBASE is about fast user space GS switching with (almost) no
-   limits on the value ...
-
-Oh well.
-
-	tglx
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
