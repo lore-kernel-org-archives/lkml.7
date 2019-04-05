@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6220FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707EFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C22321850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C2421850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 14:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbfDEOAE (ORCPT
+        id S1731330AbfDEOAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 10:00:04 -0400
-Received: from foss.arm.com ([217.140.101.70]:49134 "EHLO foss.arm.com"
+        Fri, 5 Apr 2019 10:00:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:49178 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731264AbfDEOAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 10:00:01 -0400
+        id S1731264AbfDEOAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 10:00:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02EC419BF;
-        Fri,  5 Apr 2019 07:00:01 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 254AC16A3;
+        Fri,  5 Apr 2019 07:00:05 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E1B63F68F;
-        Fri,  5 Apr 2019 06:59:57 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 468553F68F;
+        Fri,  5 Apr 2019 07:00:01 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Akira Yokosawa <akiyks@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Nicholas Piggin <npiggin@gmail.com>
-Subject: [PATCH v2 04/21] mmiowb: Hook up mmiowb helpers to spinlocks and generic I/O accessors
-Date:   Fri,  5 Apr 2019 14:59:19 +0100
-Message-Id: <20190405135936.7266-5-will.deacon@arm.com>
+Subject: [PATCH v2 05/21] ARM/io: Remove useless definition of mmiowb()
+Date:   Fri,  5 Apr 2019 14:59:20 +0100
+Message-Id: <20190405135936.7266-6-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190405135936.7266-1-will.deacon@arm.com>
 References: <20190405135936.7266-1-will.deacon@arm.com>
@@ -59,116 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing explicit calls to mmiowb() from driver code means that we must
-now call into the generic mmiowb_spin_{lock,unlock}() functions from the
-core spinlock code. In order to elide barriers following critical
-sections without any I/O writes, we also hook into the asm-generic I/O
-routines.
+ARM includes asm-generic/io.h, which provides a dummy definition of
+mmiowb() if one isn't already provided by the architecture.
+
+Remove the useless definition.
 
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- include/asm-generic/io.h        |  3 ++-
- include/linux/spinlock.h        | 11 ++++++++++-
- kernel/locking/spinlock_debug.c |  6 +++++-
- 3 files changed, 17 insertions(+), 3 deletions(-)
+ arch/arm/include/asm/io.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index 303871651f8a..bc490a746602 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -19,6 +19,7 @@
- #include <asm-generic/iomap.h>
- #endif
+diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+index 6b51826ab3d1..7e22c81398c4 100644
+--- a/arch/arm/include/asm/io.h
++++ b/arch/arm/include/asm/io.h
+@@ -281,8 +281,6 @@ extern void _memcpy_fromio(void *, const volatile void __iomem *, size_t);
+ extern void _memcpy_toio(volatile void __iomem *, const void *, size_t);
+ extern void _memset_io(volatile void __iomem *, int, size_t);
  
-+#include <asm/mmiowb.h>
- #include <asm-generic/pci_iomap.h>
- 
- #ifndef mmiowb
-@@ -49,7 +50,7 @@
- 
- /* serialize device access against a spin_unlock, usually handled there. */
- #ifndef __io_aw
--#define __io_aw()      barrier()
-+#define __io_aw()      mmiowb_set_pending()
- #endif
- 
- #ifndef __io_pbw
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index e089157dcf97..ed7c4d6b8235 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -57,6 +57,7 @@
- #include <linux/stringify.h>
- #include <linux/bottom_half.h>
- #include <asm/barrier.h>
-+#include <asm/mmiowb.h>
- 
- 
+-#define mmiowb()
+-
  /*
-@@ -178,6 +179,7 @@ static inline void do_raw_spin_lock(raw_spinlock_t *lock) __acquires(lock)
- {
- 	__acquire(lock);
- 	arch_spin_lock(&lock->raw_lock);
-+	mmiowb_spin_lock();
- }
- 
- #ifndef arch_spin_lock_flags
-@@ -189,15 +191,22 @@ do_raw_spin_lock_flags(raw_spinlock_t *lock, unsigned long *flags) __acquires(lo
- {
- 	__acquire(lock);
- 	arch_spin_lock_flags(&lock->raw_lock, *flags);
-+	mmiowb_spin_lock();
- }
- 
- static inline int do_raw_spin_trylock(raw_spinlock_t *lock)
- {
--	return arch_spin_trylock(&(lock)->raw_lock);
-+	int ret = arch_spin_trylock(&(lock)->raw_lock);
-+
-+	if (ret)
-+		mmiowb_spin_lock();
-+
-+	return ret;
- }
- 
- static inline void do_raw_spin_unlock(raw_spinlock_t *lock) __releases(lock)
- {
-+	mmiowb_spin_unlock();
- 	arch_spin_unlock(&lock->raw_lock);
- 	__release(lock);
- }
-diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
-index 9aa0fccd5d43..399669f7eba8 100644
---- a/kernel/locking/spinlock_debug.c
-+++ b/kernel/locking/spinlock_debug.c
-@@ -111,6 +111,7 @@ void do_raw_spin_lock(raw_spinlock_t *lock)
- {
- 	debug_spin_lock_before(lock);
- 	arch_spin_lock(&lock->raw_lock);
-+	mmiowb_spin_lock();
- 	debug_spin_lock_after(lock);
- }
- 
-@@ -118,8 +119,10 @@ int do_raw_spin_trylock(raw_spinlock_t *lock)
- {
- 	int ret = arch_spin_trylock(&lock->raw_lock);
- 
--	if (ret)
-+	if (ret) {
-+		mmiowb_spin_lock();
- 		debug_spin_lock_after(lock);
-+	}
- #ifndef CONFIG_SMP
- 	/*
- 	 * Must not happen on UP:
-@@ -131,6 +134,7 @@ int do_raw_spin_trylock(raw_spinlock_t *lock)
- 
- void do_raw_spin_unlock(raw_spinlock_t *lock)
- {
-+	mmiowb_spin_unlock();
- 	debug_spin_unlock(lock);
- 	arch_spin_unlock(&lock->raw_lock);
- }
+  *  Memory access primitives
+  *  ------------------------
 -- 
 2.11.0
 
