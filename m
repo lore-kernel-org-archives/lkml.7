@@ -2,322 +2,176 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE8C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD05C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DB6217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554429642;
-	bh=u7ZTBkufNZtLgE/TrNQzaxTsn5y+qIrsoEiOGa0uDB0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ttGAsyFzkMUtGmO7ad9Cl4HRBhGsltzA9rFaHOgCZDjk+5Ys2sfThvMZe+LlbSw+
-	 cvHuNN2E76IVd7IIX/TH1QAaoKo6OHrSs9hu83G/37OVi4sVKxZvurP5WvcGLIRb6P
-	 UwRlnj7jTa4Vad+k4erxPV4pOleE0avlnX2xjpO4=
+	by mail.kernel.org (Postfix) with ESMTP id 220772171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 02:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="H+EapgdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbfDECAk (ORCPT
+        id S1729368AbfDECG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 22:00:40 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:44605 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727051AbfDECAk (ORCPT
+        Thu, 4 Apr 2019 22:06:27 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44930 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbfDECGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 22:00:40 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id AC5FA24DFA;
-        Thu,  4 Apr 2019 22:00:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 04 Apr 2019 22:00:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=pPlSnuTDPK/q7iv8Dh90ykKZli8DaFuP1PKNZYZ1kkE=; b=NrBcOGhf
-        xN1YamhrOb3QMM9MAN2OQcGbT+jbqtZHt2EYo3MnTO4k+ysWaCk5DTGlKK0/Qr78
-        FTQPbFyMsYiJdKr4UbbZchOzuJEuXBNbYunT8NY6Mr4/fVDv9xACxtTlyvYyuBZe
-        IV0OFDXlJ/Qi9jmqzm/NDe5Y5+s0jbXShxYrhPxgGdDoksUvuYl69dDsw+a7sUz2
-        Ytlv/cgIkJbdlx+zx7B4ewnnkT9F3TfybQOyIvYFQMNkXNmWJOGJ7rUOJl8U9IiM
-        30RZyKGL1MfpPAPv6dmblcM/wmKSE8bt0WfxiTCzIavrkj+PjmBInZ9ijFjAGKYa
-        nycNeWuD8Qns1A==
-X-ME-Sender: <xms:xramXJTfOQBEcytPb4rCruX_5oGYbRGoc8Gfq8tTK_Gt8YPFu6-ztQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeigdehtdculddtuddrgedutddrtddtmd
-    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttden
-    ucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrh
-    hnvghlrdhorhhgqeenucfkphepuddvgedrudegledruddugedrkeeinecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpeeh
-X-ME-Proxy: <xmx:xramXEzwj08s0C3Z7IgHLOhU9-vrVz_y0ojTvQ2maZ-hCOxXOavyxw>
-    <xmx:xramXHrvcWGOesWdTMmx9gsKObDyg1keiH3MOrMGuwSnGJSOn_DBZA>
-    <xmx:xramXI7_-yzGLC6flOz75-yj0l8KGIynXB6BB7zXQ9XMfCD_BL8CfA>
-    <xmx:xramXMC4p9HITNpnN4FkESlj_B1gWSlxmrE5QiACWcEGtsAFs0gZWw>
-Received: from eros.localdomain (124-149-114-86.dyn.iinet.net.au [124.149.114.86])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7DFCA10319;
-        Thu,  4 Apr 2019 22:00:32 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/6] lib: Add test module for strscpy_pad
-Date:   Fri,  5 Apr 2019 12:58:59 +1100
-Message-Id: <20190405015859.32755-7-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190405015859.32755-1-tobin@kernel.org>
-References: <20190405015859.32755-1-tobin@kernel.org>
+        Thu, 4 Apr 2019 22:06:25 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h16so3796162ljg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 19:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i0SVqH/6Kj1962AGBZkuoEdnZ7+ADTw/XymJ0q2hSFA=;
+        b=H+EapgdZSZCqlG3kN0Iq1MJhAeBXcbDqnFBx7q55rD4K3WrpLrFwBtIqI2q9Ubuwzu
+         ugZd4giYCA0dRsnriQYGjnpRPjMoMt1d0R0WwQ8XaY9kyGJarhl/iGSa3pvZMu5T6KS+
+         ROXknsNRefhDEelGjOhvriMhw3ttCiZghJp7yuGel2dAgyYzHFcORnGH8WfcCQ+sEqdi
+         Mwx0pYwGOUzv4ioYomUM+J4cSpmI+WVj96bS+kKJ2C/S9hUGCXbs9aSXYSv+G54zeuua
+         GpVwMZ1eisfTvvyHNiCVxhwJYC3w+v5Iv0iTun53uqUafP/U6Ea+jf12EgZN1MSkGZVG
+         hYkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i0SVqH/6Kj1962AGBZkuoEdnZ7+ADTw/XymJ0q2hSFA=;
+        b=GvG++DXeliRSAWGLkl8pgnA4jnzmN9eoHEYLJSYlJhcfQw9shsyZueEAlJeS34W4vx
+         W3aliOUNRgBEfOSrZTF/SoPC8gobeppO5rrZZfga2OMqRISk/hCEMNgFU+/kXwgVVaee
+         7Rh4OclfQbXFRAeCg29EasTN0UcV0Xv237kty+CbbJzeBfGhccH8RpT2l8k8i/MmUyfT
+         BNKdROKDZzg5nodO654ayANkoXdsoTPgqxqmpr4G66scr0wRCKMvZ5fBTU8CIkXqovo1
+         WRBbQduyEawkIpBn8N5CqwZQbUHoFVBiU26A1fkX798NLqjB6nCdXG6zLxA2rWossxOG
+         ZiUQ==
+X-Gm-Message-State: APjAAAW08BpiK0uzwyjw9wVeZ87FCs+SJbCAjpi/5IH66TORu7heSjVL
+        D+jMiGseS6+4YH3GNDpR0+pxbMN3LuNfPTBUzL4c
+X-Google-Smtp-Source: APXvYqz1tmQ6IcFe3o4dwAvOVFLhNmdAmOTtRiltlBZUAtr14Q4HJPLUStR7tkdUCsbPmWZ0EBI0cBxSj9FeWT3NB8g=
+X-Received: by 2002:a05:651c:114:: with SMTP id a20mr5199822ljb.53.1554429982109;
+ Thu, 04 Apr 2019 19:06:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1552665316.git.rgb@redhat.com> <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAHC9VhQpk6cFZckQH+LQmQmirVzLm_GH57ZD3-76y-59G=DocQ@mail.gmail.com>
+ <20190402113150.GA17593@hmswarspite.think-freely.org> <20190404214006.jcgmjb4u6iobu42s@madcap2.tricolour.ca>
+In-Reply-To: <20190404214006.jcgmjb4u6iobu42s@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 4 Apr 2019 22:06:10 -0400
+Message-ID: <CAHC9VhSf_7RH96dNhVhifs3uqEZf0Uq=Qi5TgqdVtUskiqYQ4Q@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Neil Horman <nhorman@tuxdriver.com>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a test module for the new strscpy_pad() function.  Tie it into the
-kselftest infrastructure for lib/ tests.
+On Thu, Apr 4, 2019 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-04-02 07:31, Neil Horman wrote:
+> > On Mon, Apr 01, 2019 at 10:50:03AM -0400, Paul Moore wrote:
+> > > On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > Audit events could happen in a network namespace outside of a task
+> > > > context due to packets received from the net that trigger an auditing
+> > > > rule prior to being associated with a running task.  The network
+> > > > namespace could be in use by multiple containers by association to the
+> > > > tasks in that network namespace.  We still want a way to attribute
+> > > > these events to any potential containers.  Keep a list per network
+> > > > namespace to track these audit container identifiiers.
+> > > >
+> > > > Add/increment the audit container identifier on:
+> > > > - initial setting of the audit container identifier via /proc
+> > > > - clone/fork call that inherits an audit container identifier
+> > > > - unshare call that inherits an audit container identifier
+> > > > - setns call that inherits an audit container identifier
+> > > > Delete/decrement the audit container identifier on:
+> > > > - an inherited audit container identifier dropped when child set
+> > > > - process exit
+> > > > - unshare call that drops a net namespace
+> > > > - setns call that drops a net namespace
+> > > >
+> > > > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > >  include/linux/audit.h | 19 ++++++++++++
+> > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > > >  kernel/nsproxy.c      |  4 +++
+> > > >  3 files changed, 106 insertions(+), 3 deletions(-)
 
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- lib/Kconfig.debug                      |   3 +
- lib/Makefile                           |   1 +
- lib/test_strscpy.c                     | 150 +++++++++++++++++++++++++
- tools/testing/selftests/lib/Makefile   |   2 +-
- tools/testing/selftests/lib/config     |   1 +
- tools/testing/selftests/lib/strscpy.sh |   3 +
- 6 files changed, 159 insertions(+), 1 deletion(-)
- create mode 100644 lib/test_strscpy.c
- create mode 100755 tools/testing/selftests/lib/strscpy.sh
+...
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 0d9e81779e37..4b644ad399dd 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1769,6 +1769,9 @@ config TEST_HEXDUMP
- config TEST_STRING_HELPERS
- 	tristate "Test functions located in the string_helpers module at runtime"
- 
-+config TEST_STRSCPY
-+	tristate "Test strscpy*() family of functions at runtime"
-+
- config TEST_KSTRTOX
- 	tristate "Test kstrto*() family of functions at runtime"
- 
-diff --git a/lib/Makefile b/lib/Makefile
-index 3b08673e8881..b4e08d6234ba 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_PRINTF) += test_printf.o
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
-+obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
- obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
- obj-$(CONFIG_TEST_UUID) += test_uuid.o
- obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
-diff --git a/lib/test_strscpy.c b/lib/test_strscpy.c
-new file mode 100644
-index 000000000000..a827f94601f5
---- /dev/null
-+++ b/lib/test_strscpy.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/string.h>
-+
-+#include "../tools/testing/selftests/kselftest_module.h"
-+
-+/*
-+ * Kernel module for testing 'strscpy' family of functions.
-+ */
-+
-+KSTM_MODULE_GLOBALS();
-+
-+/*
-+ * tc() - Run a specific test case.
-+ * @src: Source string, argument to strscpy_pad()
-+ * @count: Size of destination buffer, argument to strscpy_pad()
-+ * @expected: Expected return value from call to strscpy_pad()
-+ * @terminator: 1 if there should be a terminating null byte 0 otherwise.
-+ * @chars: Number of characters from the src string expected to be
-+ *         written to the dst buffer.
-+ * @pad: Number of pad characters expected (in the tail of dst buffer).
-+ *       (@pad does not include the null terminator byte.)
-+ *
-+ * Calls strscpy_pad() and verifies the return value and state of the
-+ * destination buffer after the call returns.
-+ */
-+static int __init tc(char *src, int count, int expected,
-+		     int chars, int terminator, int pad)
-+{
-+	int nr_bytes_poison;
-+	int max_expected;
-+	int max_count;
-+	int written;
-+	char buf[6];
-+	int index, i;
-+	const char POISON = 'z';
-+
-+	total_tests++;
-+
-+	if (!src) {
-+		pr_err("null source string not supported\n");
-+		return -1;
-+	}
-+
-+	memset(buf, POISON, sizeof(buf));
-+	/* Future proofing test suite, validate args */
-+	max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
-+	max_expected = count - 1;    /* Space for the null */
-+	if (count > max_count) {
-+		pr_err("count (%d) is too big (%d) ... aborting", count, max_count);
-+		return -1;
-+	}
-+	if (expected > max_expected) {
-+		pr_warn("expected (%d) is bigger than can possibly be returned (%d)",
-+			expected, max_expected);
-+	}
-+
-+	written = strscpy_pad(buf, src, count);
-+	if ((written) != (expected)) {
-+		pr_err("%d != %d (written, expected)\n", written, expected);
-+		goto fail;
-+	}
-+
-+	if (count && written == -E2BIG) {
-+		if (strncmp(buf, src, count - 1) != 0) {
-+			pr_err("buffer state invalid for -E2BIG\n");
-+			goto fail;
-+		}
-+		if (buf[count - 1] != '\0') {
-+			pr_err("too big string is not null terminated correctly\n");
-+			goto fail;
-+		}
-+	}
-+
-+	for (i = 0; i < chars; i++) {
-+		if (buf[i] != src[i]) {
-+			pr_err("buf[i]==%c != src[i]==%c\n", buf[i], src[i]);
-+			goto fail;
-+		}
-+	}
-+
-+	if (terminator) {
-+		if (buf[count - 1] != '\0') {
-+			pr_err("string is not null terminated correctly\n");
-+			goto fail;
-+		}
-+	}
-+
-+	for (i = 0; i < pad; i++) {
-+		index = chars + terminator + i;
-+		if (buf[index] != '\0') {
-+			pr_err("padding missing at index: %d\n", i);
-+			goto fail;
-+		}
-+	}
-+
-+	nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
-+	for (i = 0; i < nr_bytes_poison; i++) {
-+		index = sizeof(buf) - 1 - i; /* Check from the end back */
-+		if (buf[index] != POISON) {
-+			pr_err("poison value missing at index: %d\n", i);
-+			goto fail;
-+		}
-+	}
-+
-+	return 0;
-+fail:
-+	failed_tests++;
-+	return -1;
-+}
-+
-+static void __init selftest(void)
-+{
-+	/*
-+	 * tc() uses a destination buffer of size 6 and needs at
-+	 * least 2 characters spare (one for null and one to check for
-+	 * overflow).  This means we should only call tc() with
-+	 * strings up to a maximum of 4 characters long and 'count'
-+	 * should not exceed 4.  To test with longer strings increase
-+	 * the buffer size in tc().
-+	 */
-+
-+	/* tc(src, count, expected, chars, terminator, pad) */
-+	KSTM_CHECK_ZERO(tc("a", 0, -E2BIG, 0, 0, 0));
-+	KSTM_CHECK_ZERO(tc("", 0, -E2BIG, 0, 0, 0));
-+
-+	KSTM_CHECK_ZERO(tc("a", 1, -E2BIG, 0, 1, 0));
-+	KSTM_CHECK_ZERO(tc("", 1, 0, 0, 1, 0));
-+
-+	KSTM_CHECK_ZERO(tc("ab", 2, -E2BIG, 1, 1, 0));
-+	KSTM_CHECK_ZERO(tc("a", 2, 1, 1, 1, 0));
-+	KSTM_CHECK_ZERO(tc("", 2, 0, 0, 1, 1));
-+
-+	KSTM_CHECK_ZERO(tc("abc", 3, -E2BIG, 2, 1, 0));
-+	KSTM_CHECK_ZERO(tc("ab", 3, 2, 2, 1, 0));
-+	KSTM_CHECK_ZERO(tc("a", 3, 1, 1, 1, 1));
-+	KSTM_CHECK_ZERO(tc("", 3, 0, 0, 1, 2));
-+
-+	KSTM_CHECK_ZERO(tc("abcd", 4, -E2BIG, 3, 1, 0));
-+	KSTM_CHECK_ZERO(tc("abc", 4, 3, 3, 1, 0));
-+	KSTM_CHECK_ZERO(tc("ab", 4, 2, 2, 1, 1));
-+	KSTM_CHECK_ZERO(tc("a", 4, 1, 1, 1, 2));
-+	KSTM_CHECK_ZERO(tc("", 4, 0, 0, 1, 3));
-+}
-+
-+KSTM_MODULE_LOADERS(test_strscpy);
-+MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/tools/testing/selftests/lib/Makefile b/tools/testing/selftests/lib/Makefile
-index 70d5711e3ac8..9f26635f3e57 100644
---- a/tools/testing/selftests/lib/Makefile
-+++ b/tools/testing/selftests/lib/Makefile
-@@ -3,6 +3,6 @@
- # No binaries, but make sure arg-less "make" doesn't trigger "run_tests"
- all:
- 
--TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh
-+TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh strscpy.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index 126933bcc950..14a77ea4a8da 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,3 +1,4 @@
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_PRIME_NUMBERS=m
-+CONFIG_TEST_STRSCPY=m
-diff --git a/tools/testing/selftests/lib/strscpy.sh b/tools/testing/selftests/lib/strscpy.sh
-new file mode 100755
-index 000000000000..71f2be6afba6
---- /dev/null
-+++ b/tools/testing/selftests/lib/strscpy.sh
-@@ -0,0 +1,3 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+$(dirname $0)/../kselftest_module.sh "strscpy*" test_strscpy
+> > > > +               list_for_each_entry_rcu(cont, contid_list, list)
+> > > > +                       if (cont->id == contid) {
+> > > > +                               refcount_inc(&cont->refcount);
+> > > > +                               goto out;
+> > > > +                       }
+> > > > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> > >
+> > > If you had to guess, what do you think is going to be more common:
+> > > bumping the refcount of an existing entry in the list, or adding a new
+> > > entry?  I'm asking because I always get a little nervous when doing
+> > > allocations while holding a spinlock.  Yes, you are doing it with
+> > > GFP_ATOMIC, but it still seems like something to try and avoid if this
+> > > is going to approach 50%.  However, if the new entry is rare then the
+> > > extra work of always doing the allocation before taking the lock and
+> > > then freeing it afterwards might be a bad tradeoff.
+> > >
+> > I think this is another way of asking, will multiple processes exist in the same
+> > network namespace?  That is to say, will we expect a process to create a net
+> > namespace, and then have other processes enter that namespace (thereby
+> > triggering multiple calls to audit_netns_contid_add with the same net pointer
+> > and cont id).  Given that the kubernetes notion of a pod is almost by definition
+> > multiple containers sharing a network namespace, I think the answer is that we
+> > will be strongly biased towards the refcount_inc case, rather than the kmalloc
+> > case.  I could be wrong, but I think this is likely already in the optimized
+> > order.
+>
+> I had a stab at doing a GFP_KERNEL alloc before the spinlock and releasing it
+> after if it wasn't needed (in Patch#1 below).  I also went one step further and
+> converted it to kmem_cache (in Patch#2 below).
+>
+> > > My gut feeling says we might do about as many allocations as refcount
+> > > bumps, but I could be thinking about this wrong.
+> > >
+> > > Moving the allocation outside the spinlock might also open the door to
+> > > doing this as GFP_KERNEL, which is a good thing, but I haven't looked
+> > > at the callers to see if that is possible (it may not be).  That's an
+> > > exercise left to the patch author (if he hasn't done that already).
+>
+> Both appear to work, but after successfully running both the contid test and
+> audit_testsuite, once I start to push that test system a bit harder I end up
+> with a deadlock warning.
+>
+> I am having trouble understanding why since it happens both without and with
+> the kmem_cache options, so it must be another part of the code that is
+> triggering it.  The task_lock is being held at this point in
+> audit_set_contid().  I haven't tried changing this alloc over to a GFP_ATOMIC
+> to see if that prevents it, just as a debugging check...
+> At this point, I'm inclined to leave it as it was without these two patches
+> since it works and there doesn't seem to be an obvious best way given the
+> uncertainty of the potential workloads.
+
+I'm definitely not a mm expert, but I wonder if you might be able to
+get this working using GFP_NOFS, but I see just now that they
+recommend you *not* use GFP_NOFS; even if this did solve the problem,
+it's probably not the right approach.
+
+I'm okay with leaving it as-is with GFP_ATOMIC.  My original response
+to this was more of a question about optimizing for a given use case,
+having something that works is far more important.
+
 -- 
-2.21.0
-
+paul moore
+www.paul-moore.com
