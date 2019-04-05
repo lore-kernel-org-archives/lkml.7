@@ -2,179 +2,83 @@ Return-Path: <SRS0=EIds=SH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68077C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E7CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E28217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A3D217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Apr 2019 06:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G4gTunPO"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bAidTWOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfDEGOp (ORCPT
+        id S1726765AbfDEG0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 02:14:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44788 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbfDEGOp (ORCPT
+        Fri, 5 Apr 2019 02:26:50 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38263 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDEG0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 02:14:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x356ES2T115697;
-        Fri, 5 Apr 2019 01:14:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554444868;
-        bh=LTj1LetO+c5ltGBCKoLceIiy8U7vi1ZyaaYq75+Q6bg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=G4gTunPOk0Dk47B3adUXlQ0wNxriMaTO8uEnb8yKXFg1rN5WpLYSJ1xclfBR+08ZV
-         xAUkfVuxIGBdDL51wc7uL+RJWajWGgbPZA63baNoLQ9WtGhoqTbQM9ZWV9OcZkM5+W
-         Q2c0mpLx72qAyn9ORYg40YYUSdHmYJVtfeex4myY=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x356ES3E091615
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Apr 2019 01:14:28 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Apr
- 2019 01:14:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Apr 2019 01:14:28 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x356EOtc109639;
-        Fri, 5 Apr 2019 01:14:25 -0500
-Subject: Re: [LINUX PATCH v2 3/3] spi: spi-mem: Add support for Zynq QSPI
- controller
-To:     Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-References: <1554105553-20207-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <c8f73eab-99eb-ddbc-9776-ea6b3a3ecf0f@ti.com>
- <MWHPR02MB2623EDDF4207C7CA8F97B5D4AF510@MWHPR02MB2623.namprd02.prod.outlook.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <1fd37417-eaa6-834e-8b0b-a2519cfc4979@ti.com>
-Date:   Fri, 5 Apr 2019 11:45:23 +0530
+        Fri, 5 Apr 2019 02:26:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a6so3535786lfl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 23:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nfe0JTh9kNBguIowekFTXt4dsmvKbhvvJco4xZqxgzo=;
+        b=bAidTWOC7VgqKb6lpGRsTS7xB/gOr9H3fTDJgFZDy9a/rQDsOFu+CHZYk80xjQGIdb
+         JShrMQhDI/yxFkQkrw+KlHcqTPnr/Dfn1ruXldq5xavO5xFGr7cV/oWVJe2mLUrdaFKT
+         khabsSBcy+WbDKiOCMUT6na4ESAbNnFk93gZs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nfe0JTh9kNBguIowekFTXt4dsmvKbhvvJco4xZqxgzo=;
+        b=NOw3XBblkE12v9I+7xiUhSDvhFGrDPQq6uoQXX9RxAA0A50YfCQW3gjwauYy6X5677
+         T4WMe/aPXcDHOB5MiXP3AxuB891AWGJu6rQRQ1D+u1Sylet2hkxSjlsvDhcHa9SvDCLm
+         Uhml2Cc5Q19MWLaTa/tmu32nYLR+xOg2WN2FQnfkTwu/S9pbOhEistwsVT6J20r7kbaZ
+         RJSkwk1BvkaebSXKZIG2IVpVnhZ3o6zRMmcGQ+aYAqDxYC/7aFm7+zyNIfMH+mWCy5qy
+         8BWhTiqIAAzlhCa1n2dFz1W7dkFZw6PWg/yD8mt3maQOyJPV8T6kk9BFFsmoMlXKNodz
+         Wh8w==
+X-Gm-Message-State: APjAAAV3+BGMC4Vg4m72xYRhZVy+wae3XtyylHDAfF3eE+wPmLzH3k2e
+        aqj5r6iy+H2+12z58uLdZ3TFcA==
+X-Google-Smtp-Source: APXvYqzbhLHswUQGAKRuthmQH91tFBryV4Q52UX1PtW0CTADCYkfLmnECp26uiNNitBFSqejCE97Bg==
+X-Received: by 2002:a19:ae11:: with SMTP id f17mr5579385lfc.12.1554445607494;
+        Thu, 04 Apr 2019 23:26:47 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id d1sm4078386lfa.15.2019.04.04.23.26.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 23:26:46 -0700 (PDT)
+Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
+To:     Borislav Petkov <bp@alien8.de>, LKML <linux-kernel@vger.kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20190405045711.30339-1-bp@alien8.de>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
+Date:   Fri, 5 Apr 2019 08:26:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <MWHPR02MB2623EDDF4207C7CA8F97B5D4AF510@MWHPR02MB2623.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190405045711.30339-1-bp@alien8.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/04/19 10:55 AM, Naga Sureshkumar Relli wrote:
-> Hi Vignesh,
+On 05/04/2019 06.57, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
 > 
-> Thanks for the review.
-> 
->> -----Original Message-----
->> From: Vignesh Raghavendra <vigneshr@ti.com>
->> Sent: Friday, April 5, 2019 10:14 AM
->> To: Naga Sureshkumar Relli <nagasure@xilinx.com>; broonie@kernel.org;
->> bbrezillon@kernel.org
->> Cc: linux-spi@vger.kernel.org; dwmw2@infradead.org; marek.vasut@gmail.com;
->> richard@nod.at; linux-mtd@lists.infradead.org; linux-kernel@vger.kernel.org; Michal Simek
->> <michals@xilinx.com>; nagasuresh12@gmail.com
->> Subject: Re: [LINUX PATCH v2 3/3] spi: spi-mem: Add support for Zynq QSPI controller
->>
->>
->>
->> On 01/04/19 1:29 PM, Naga Sureshkumar Relli wrote:
->>> +/**
->>> + * zynq_qspi_config_op - Configure QSPI controller for specified transfer
->>> + * @xqspi:	Pointer to the zynq_qspi structure
->>> + * @qspi:	Pointer to the spi_device structure
->>> + *
->>> + * Sets the operational mode of QSPI controller for the next QSPI
->>> +transfer and
->>> + * sets the requested clock frequency.
->>> + *
->>> + * Return:	0 on success and -EINVAL on invalid input parameter
->>> + *
->>> + * Note: If the requested frequency is not an exact match with what
->>> +can be
->>> + * obtained using the prescalar value, the driver sets the clock
->>> +frequency which
->>> + * is lower than the requested frequency (maximum lower) for the
->>> +transfer. If
->>> + * the requested frequency is higher or lower than that is supported
->>> +by the QSPI
->>> + * controller the driver will set the highest or lowest frequency
->>> +supported by
->>> + * controller.
->>> + */
->>> +static int zynq_qspi_config_op(struct zynq_qspi *xqspi, struct
->>> +spi_device *spi) {
->>> +	u32 config_reg, baud_rate_val = 0;
->>> +
->>> +	/*
->>> +	 * Set the clock frequency
->>> +	 * The baud rate divisor is not a direct mapping to the value written
->>> +	 * into the configuration register (config_reg[5:3])
->>> +	 * i.e. 000 - divide by 2
->>> +	 *      001 - divide by 4
->>> +	 *      ----------------
->>> +	 *      111 - divide by 256
->>> +	 */
->>> +	while ((baud_rate_val < ZYNQ_QSPI_BAUD_DIV_MAX)  &&
->>> +	       (clk_get_rate(xqspi->refclk) / (2 << baud_rate_val)) >
->>> +		spi->max_speed_hz)
->>> +		baud_rate_val++;
->>> +
->>
->> Instead use DIV_ROUND_UP, something like below should work(untested):
->>
->> 	unsigned long refclk_rate = clk_get_rate(xqspi->refclk);
->> 	u32 baud_rate_val = DIV_ROUND_UP(refclk_rate, spi->max_speed_hz) - 1;
->>
+> ... to make its name readable to humans so that it can denote what that helper does.
 
-Oops, sorry, I had meant
+I like the current color. It computes a*b+c with overflow checking at each step. calc_size is
+way too generic and doesn't say anything at all about how the calc(ulation) is done.
 
-	u32 baud_rate_val = DIV_ROUND_UP(refclk_rate, 2 * spi->max_speed_hz) - 1;
-
-But please ignore my comment, I see that div values goes by power of 2 and not multiple of 2
-
-Regards
-Vignesh
-
-> This is not just direct calculation.
-> i.e. for example
-> refclk_rate = 200MHz and max_speed_hx = 100MHz.
-> then DIV_ROUND_UP gives a value of 2.
-> But writing a value of 2 to config registers means, divide by 8. But we should write divide by 2 (value of zero).
-> That’s why we implemented the above calculation.
-> 
-> 000: divide by 2.
-> 001: divide by 4
-> 010: divide by 8
-> 011: divide by 16
-> 100: divide by 32
-> 101: divide by 64
-> 110: divide by 128
-> 111: divide by 256
-> 
-
-
-
--- 
-Regards
-Vignesh
+Rasmus
