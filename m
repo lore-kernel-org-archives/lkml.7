@@ -2,124 +2,126 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704FDC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8014C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EC1218C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EDF218C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="TPTB/FlP"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XfWcDdH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfDFKNl (ORCPT
+        id S1726475AbfDFKQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 06:13:41 -0400
-Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:41570 "EHLO
-        smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbfDFKNl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 06:13:41 -0400
-Received: from smtp9.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
-        by smtp9.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id A0FD3201CC;
-        Sat,  6 Apr 2019 06:13:39 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1554545619;
-        bh=EetM75hJJVguFpq2OdY1G5n3ircwSgcZQZP/SRKFGeM=;
-        h=Subject:To:From:Date:From;
-        b=TPTB/FlP/z3QHXGIZq7VuI1Cm5orzEhIPmdT2hPRrXdYwfCqdC4/ktBy44xLT8z4z
-         BKs0JD4KKoPv/aq3o713lS3oMhkEKKK2Tf+0S6m1tCh2DjTGZLsN0w6Uk3e0/ABj8r
-         xgVTzTxYO61T9/L2d52L8H0Bmk/hJgh6nhJSpa44=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp9.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 7A89E201C4;
-        Sat,  6 Apr 2019 06:13:38 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [192.168.1.10] (redmecca.plus.com [80.229.15.156])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Sat, 06 Apr 2019 06:13:39 -0400
-Subject: Re: [PATCH -next] staging: comedi: dyna_pci10xx: remove set but not
- used variables 'chan' and range'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sanjana Sanikommu <sanjana99reddy99@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190406030749.56659-1-yuehaibing@huawei.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Message-ID: <d35e91a5-d427-96ba-d164-33adb4ca73e2@mev.co.uk>
-Date:   Sat, 6 Apr 2019 11:13:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 6 Apr 2019 06:16:42 -0400
+Received: from mout.gmx.net ([212.227.17.22]:44695 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfDFKQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 06:16:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1554545795;
+        bh=WMu1Dlw9XfRKfnYC3A9CbwmjJ2Zo3HlUC/L5YBzwWsw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=XfWcDdH1OABUk7FTkRW+/G5G1OatMjhHD50gkEkrYyEKxqnZ9lqs+vKIQ1BBTnq8s
+         v5cgc1DvNGmiFFNGZRDbLs5R8XkxscnCZ/kSn/8K0w152OLKjQeqeo/QRI7SoYShz9
+         AU+pYyoQyQQVjv33OJ+TIcA5fvBkpd8tnJ8zkv/A=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MeQ43-1hYLKm2Rrj-00QA8U; Sat, 06
+ Apr 2019 12:16:35 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Martin Kepplinger <martink@posteo.de>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Documentation: kernel-docs: Remove entry for vfs.txt
+Date:   Sat,  6 Apr 2019 12:15:27 +0200
+Message-Id: <20190406101528.23500-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190406030749.56659-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3Dx3kq8FU5yy6oG9yDrxJBsIcnADxAiQIgDO97ApXILEFvTIkBf
+ bk6X/b3WgXA3lDeZaA9L1XpOmz6JaOS3B+XmKagSHra6vwBEIJSONwsPFXBQ+vNiuyVp7AL
+ ocRFCeG8sDJesbVYRcQW2zd3cptGVayj9FNajlYPSA18l52zEoSLMyblETZeSpEBNqYNHiX
+ u3XrvxnAbSJCUHZIsqoTQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pn9NrLoPegk=:yCBz28wc5780slHnIk8cqZ
+ bsPF4B/J87WfR+NVyoY7YKSBmV2PwyKB6Chjdo4p3nWbz5JHz+rO6gHBIFHJIYOUivYdilFct
+ OSyVK9v0yOzA2l1u3R8aiguWGfiCpM+gD2ECyJrf9k1X7hc9tdGp56jWao2+8rWLmF5/iNfRZ
+ UByqRl+Udb2Ytp/hzXTZxGork/BT0+C5SR3MAsGys3w69kCrtjaEPUKjjr9uQfpmATVOhYpKS
+ 2B0MPNwE2/uJkSGRSa20Q30x0GpmZPoJNpzFEB7NQrLxEQ4X5NPQeuLpu/NfecZG9OmK+nr8u
+ g6CqwMMR2LcBsQCToqsl09Zy56H4mD3iUav+jBPuTQsCYJkKBNSn5v7mIVyRrcqeEDl+OxY31
+ hZKIkk//GQr4yvyUCWEpKGNMbQ1P/SfDxsikdbrlXt4t35UYQ2PwCrAeI8DrDSVaMpj8q8CbW
+ EQjK0H6GKSv8LwQEBRvRzQ9F6gwbUYtnf5VVyYXB4yNn/Xks7eP9vjE5fb5KDpq9GXQ0N1DKj
+ 4bmBIL5yA978b+mkS50u3urBk1082NcJZhjpz3ldGYTOLBC2zdsXjnMVEqELGFSIUGk8bPqdM
+ 8IbQNKx1iwbXiEv9ROnljNqa8r+M33Pa5GirFGYERPIVeGH1Qs2ESWqCJHCSqy+oylR8a8Ggl
+ 9NtMma7PEE4XZHZ7W72G430LwNn1RzckCFO9Nny7fk93T1kPsfOYPMOcC4kWllaMoygjYA2Jn
+ tJt9plH3L0E8BMWSN0hMLcIFcjOstCVt+nu7rXuZ70QVYUk55UuWFGojR8fbpW+OpkYSp5w97
+ xUQhrtzaVb5netIbyJR6eWhoXbsdJohbdwGlEqnYhDDtfKGUkuQ/bksMiRKndn0Hay8wr2TND
+ ZggOVVfGkK4+eDCnjAbPB9Lm7g94EjtzGZCEZvKtGSITzaPoArBGLm/obmITnQ9L+tqvTPxdL
+ LgK6mO7f8Ag==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 04:07, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/staging/comedi/drivers/dyna_pci10xx.c: In function 'dyna_pci10xx_insn_write_ao':
-> drivers/staging/comedi/drivers/dyna_pci10xx.c:109:21: warning:
->   variable 'range' set but not used [-Wunused-but-set-variable]
->    unsigned int chan, range;
-> 
-> drivers/staging/comedi/drivers/dyna_pci10xx.c:109:15: warning:
->   variable 'chan' set but not used [-Wunused-but-set-variable]
->    unsigned int chan, range;
-> 
-> They are never used since introduction in commit 16a7373a8e14 ("Staging:
-> comedi: add dyna_pci10xx driver")
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/staging/comedi/drivers/dyna_pci10xx.c | 4 ----
->   1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/staging/comedi/drivers/dyna_pci10xx.c b/drivers/staging/comedi/drivers/dyna_pci10xx.c
-> index 9bdd5bf2eb99..d38bfc6113e8 100644
-> --- a/drivers/staging/comedi/drivers/dyna_pci10xx.c
-> +++ b/drivers/staging/comedi/drivers/dyna_pci10xx.c
-> @@ -106,10 +106,6 @@ static int dyna_pci10xx_insn_write_ao(struct comedi_device *dev,
->   {
->   	struct dyna_pci10xx_private *devpriv = dev->private;
->   	int n;
-> -	unsigned int chan, range;
-> -
-> -	chan = CR_CHAN(insn->chanspec);
-> -	range = range_codes_pci1050_ai[CR_RANGE((insn->chanspec))];
->   
->   	mutex_lock(&devpriv->mutex);
->   	for (n = 0; n < insn->n; n++) {
+It's unnecessary to point to an external mirror of the Documentation
+directory.
 
-That seems fine, thanks.  The lines being removed appear to have been 
-copy and pasted from dyna_pci10xx_insn_read_ai().  The AO subdevice 
-supports a single range, so no 'range' code is needed.  I believe the 
-card has only one analog output channel[*], so the 'chan' is irrelevant. 
-  This means the 'n_chans' value in the AO subdevice configuration is 
-incorrect.  I'll send a follow-up patch to correct that after Greg KH 
-takes this one.
+Jonathan Corbet writes in favor of removing this entry, instead of
+moving it under "Docs at the Linux Kernel tree":
 
-[*] Very little information seems to be available about this card 
-online.  It is no longer listed on the manufacturer's web-site and I 
-couldn't find any archives on archive.org.  I found part of a scientific 
-paper
-<http://shodhganga.inflibnet.ac.in/bitstream/10603/150646/15/15_chapter%205.pdf>
-which describes the card as having a single channel D/A converter.
+> We don't want to turn kernel-docs.rst into yet another out-of-date
+> index for the rest of Documentation/, and the removal of the external
+> URL takes away the only bit of additional information that this entry
+> offers.
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+v2:
+- Follow Jonathan Corbet's suggestion of dropping this list entry
+  entirely
+- I didn't include Martin Kepplinger's R-b, because v2 is significantly
+  different from v1
+
+v1:
+https://lore.kernel.org/lkml/20190331221439.22892-1-j.neuschaefer@gmx.net/
+=2D--
+ Documentation/process/kernel-docs.rst | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/Documentation/process/kernel-docs.rst b/Documentation/process=
+/kernel-docs.rst
+index ab12dddc773e..7a45a8e36ea7 100644
+=2D-- a/Documentation/process/kernel-docs.rst
++++ b/Documentation/process/kernel-docs.rst
+@@ -95,18 +95,6 @@ On-line docs
+         [...]. This paper examines some common problems for
+         submitting larger changes and some strategies to avoid problems.
+
+-    * Title: **Overview of the Virtual File System**
+-
+-      :Author: Richard Gooch.
+-      :URL: http://www.mjmwired.net/kernel/Documentation/filesystems/vfs.=
+txt
+-      :Date: 2007
+-      :Keywords: VFS, File System, mounting filesystems, opening files,
+-        dentries, dcache.
+-      :Description: Brief introduction to the Linux Virtual File System.
+-        What is it, how it works, operations taken when opening a file or
+-        mounting a file system and description of important data
+-        structures explaining the purpose of each of their entries.
+-
+     * Title: **Linux Device Drivers, Third Edition**
+
+       :Author: Jonathan Corbet, Alessandro Rubini, Greg Kroah-Hartman
+=2D-
+2.20.1
+
