@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A1C282DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA6CC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2948921855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C082173C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDFHoq (ORCPT
+        id S1726568AbfDFHou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 03:44:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39194 "EHLO huawei.com"
+        Sat, 6 Apr 2019 03:44:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5683 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726264AbfDFHop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 03:44:45 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 48271FAEE99888B2F811;
-        Sat,  6 Apr 2019 15:44:41 +0800 (CST)
+        id S1726511AbfDFHos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 03:44:48 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5D8584350896CAEB6D4D;
+        Sat,  6 Apr 2019 15:44:46 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 6 Apr 2019 15:44:35 +0800
+ 14.3.408.0; Sat, 6 Apr 2019 15:44:39 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
         Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: set vport alive state to default while resetting
-Date:   Sat, 6 Apr 2019 15:43:25 +0800
-Message-ID: <1554536616-24977-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 10/12] net: hns3: add error handler for initializing command queue
+Date:   Sat, 6 Apr 2019 15:43:34 +0800
+Message-ID: <1554536616-24977-11-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554536616-24977-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554536616-24977-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,30 +46,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When resetting, the vport alive state should be set to default,
-otherwise the alive state of the vport whose driver not running
-is wrong before the timer to check it out.
+This patch adds error handler for the failure of command queue
+initialization both PF and VF.
 
-Fixes: a6d818e31d08 ("net: hns3: Add vport alive state checking support")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 11 ++++++++---
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 11 ++++++++---
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index f51e4c0..62e3436d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7732,7 +7732,7 @@ static void hclge_reset_vport_state(struct hclge_dev *hdev)
- 	int i;
- 
- 	for (i = 0; i < hdev->num_alloc_vport; i++) {
--		hclge_vport_start(vport);
-+		hclge_vport_stop(vport);
- 		vport++;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 722bb31..cf7ff4a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -373,21 +373,26 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if ((hclge_is_reset_pending(hdev))) {
+-		set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
  	}
+ 
+ 	ret = hclge_cmd_query_firmware_version(&hdev->hw, &version);
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"firmware version query failed %d\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
+ 
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+ 
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
  }
+ 
+ static void hclge_cmd_uninit_regs(struct hclge_hw *hw)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 930b175..054556e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -357,8 +357,8 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if (hclgevf_is_reset_pending(hdev)) {
+-		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err_cmd_init;
+ 	}
+ 
+ 	/* get firmware version */
+@@ -366,13 +366,18 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"failed(%d) to query firmware version\n", ret);
+-		return ret;
++		goto err_cmd_init;
+ 	}
+ 	hdev->fw_version = version;
+ 
+ 	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+ 
+ 	return 0;
++
++err_cmd_init:
++	set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
++
++	return ret;
+ }
+ 
+ static void hclgevf_cmd_uninit_regs(struct hclgevf_hw *hw)
 -- 
 2.7.4
 
