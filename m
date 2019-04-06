@@ -2,113 +2,132 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94295C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF968C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6465A213A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB2E2087F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fbRbu2iw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfDFLBp (ORCPT
+        id S1726475AbfDFLWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 07:01:45 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50076 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfDFLBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 07:01:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Apr 2019 04:01:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,316,1549958400"; 
-   d="scan'208";a="140481503"
-Received: from muelleca-mobl7.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.47.132])
-  by orsmga003.jf.intel.com with ESMTP; 06 Apr 2019 04:01:38 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id DB0DD21D09; Sat,  6 Apr 2019 14:01:35 +0300 (EEST)
-Date:   Sat, 6 Apr 2019 14:01:35 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Mickael GUENE <mickael.guene@st.com>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Petr Cvek <petrcvekcz@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Kao <ben.kao@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Rui Miguel Silva <rui.silva@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>
-Subject: Re: [PATCH v3 2/2] media:st-mipid02: MIPID02 CSI-2 to PARALLEL
- bridge driver
-Message-ID: <20190406110135.7l2m6hkmvwr33d7s@kekkonen.localdomain>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-3-git-send-email-mickael.guene@st.com>
- <20190326113308.mp5hqdw3ktbpcawu@paasikivi.fi.intel.com>
- <fb8bf371-6158-a9b8-0822-65bc5d6db536@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb8bf371-6158-a9b8-0822-65bc5d6db536@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sat, 6 Apr 2019 07:22:16 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:44622 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfDFLWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 07:22:16 -0400
+Received: by mail-yw1-f67.google.com with SMTP id c4so3254331ywa.11
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 04:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zK7fvSVQMj/07ORfWmLuBaritLRIGJovrhUIsFGapPk=;
+        b=fbRbu2iwKv+K20JLz22HqAZm14hdsYGYK7Lc5WVsAaxtynFF8PO7AqqBSfh2siPEOt
+         ZjdOuJbawPSSHXEQvK5ifO67gecMAcAVTipRaLyNAVkPikpJ6zEJSDhieOwyi3uZRQIa
+         AXcNE+jT+9RZzJnbRAYJT1gbXNVhyr0Ql82wFN2FshBZGHaUV8vplP2RY95x8I5eAGBr
+         9R1Cbuol1cKXrLrjsp2Izc1f0d/q2493hsv8/OvLZy0bTkLTjnpX3HDYY2orE/MXB5w8
+         VTX6X1sWA7eVHzjexjqjm5vrTvUb5QZ0w6sDRorOzkXWe0MwF6YR/Nqp2gVtIhnyLAuE
+         pYDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zK7fvSVQMj/07ORfWmLuBaritLRIGJovrhUIsFGapPk=;
+        b=gwdkv1/nB38S1Xc/J18O9i3rx1Ri9j3eC9DgbEqRG2aU6t8+oitSHE3/06KeLbwwhg
+         iThJP30p85XEkrMQdTyKjaD3KatxhjVjYXpXzMNhk4Yr8iHuP4bXZhMLaAJrXjVoVygx
+         KZlEsBRKvO9FUAv4C8TIGOuFFuDUjftb6tEFDYnxBotUsG3u1OjxLQvuFf2tbcS10Syi
+         XtUJg3rR/ofcDGSGj1NeT4EYVyj8iGNRTnZXtjw085LakOYhddS+q7QSd/uPghv6C3XW
+         P6+oBmO4ZgS0WncpDo6pk3iLDtarc4s2scXar2SrbliKro90P3433FQEqybxEZ0uskUt
+         s2xg==
+X-Gm-Message-State: APjAAAWqni8nBx/OMAB/89p4n2JZkofJ0jyv+YmjmmNDbR18J4KftrQP
+        fclyAWdCafrFoHtg4lc7qRu3OQ==
+X-Google-Smtp-Source: APXvYqxKmV6zZtWJrNWP0dJ872MM50J+UCx4TxD1Y+z48T758pZiEkxAPSPeteswZxPfuSo0OFEh2A==
+X-Received: by 2002:a81:3611:: with SMTP id d17mr14945559ywa.344.1554549735546;
+        Sat, 06 Apr 2019 04:22:15 -0700 (PDT)
+Received: from localhost.localdomain (li931-65.members.linode.com. [45.56.113.65])
+        by smtp.gmail.com with ESMTPSA id w22sm12729360yww.58.2019.04.06.04.22.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 04:22:14 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wanglai Shi <shiwanglai@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4 0/4] CoreSight: Support static funnel with DT binding consolidation
+Date:   Sat,  6 Apr 2019 19:21:41 +0800
+Message-Id: <20190406112145.15184-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 02:36:41PM +0000, Mickael GUENE wrote:
-> Sakari,
-> 
-> >> +static int bpp_from_code(__u32 code)
-> >> +{
-> >> +	switch (code) {
-> >> +	case MEDIA_BUS_FMT_SBGGR8_1X8:
-> >> +	case MEDIA_BUS_FMT_SGBRG8_1X8:
-> >> +	case MEDIA_BUS_FMT_SGRBG8_1X8:
-> >> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> >> +		return 8;
-> >> +	case MEDIA_BUS_FMT_SBGGR10_1X10:
-> >> +	case MEDIA_BUS_FMT_SGBRG10_1X10:
-> >> +	case MEDIA_BUS_FMT_SGRBG10_1X10:
-> >> +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> >> +		return 10;
-> >> +	case MEDIA_BUS_FMT_SBGGR12_1X12:
-> >> +	case MEDIA_BUS_FMT_SGBRG12_1X12:
-> >> +	case MEDIA_BUS_FMT_SGRBG12_1X12:
-> >> +	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> >> +		return 12;
-> >> +	case MEDIA_BUS_FMT_UYVY8_2X8:
-> > 
-> > This is good for the parallel bus, but on CSI-2 side you should have
-> > MEDIA_BUS_FMT_UYVY8_1X16 instead. This isn't technically correct for a
-> > serial bus, but the custom is to use the one sample / pixel formats on the
-> > serial busses.
-> > 
->  Should MEDIA_BUS_FMT_BGR888_1X24 be something like
-> MEDIA_BUS_FMT_BGR888_3X8 for parallel output bus ?
+Since before there have no platforms use static funnel in mainline
+kernel (though maybe some in-house SoC has used it but didn't upstream
+for mainline kernel yet so we don't be aware for it), when enable
+CoreSight DT binding for hikey960, we found the SoC uses the static
+funnel in the link path and but it's not supported in CoreSight funnel
+driver.
 
-Good point. Yes.
+When support static funnel it's found the DT binding compatible string
+doesn't follow the same fashion between replicator and funnel; so the
+first two patches are firstly to refine the replicator DT binding and
+correspondingly, change the replicator driver to support new DT binding
+compatible.
 
-Could you add that format to
-Documentation/media/uapi/v4l/subdev-formats.rst, please, in a separate
-patch?
+Patch 0003 is to update DT documentation to support static funnel (we
+call it as non-configurable funnel in documentation) and unify the
+compatible string with the same fashion for replicator and funnel.
+
+Patch 0004 is to support the static funnel in the CoreSight funnel
+driver.
+
+This patch set has been rebased on CoreSight next branch [1] with
+latest commit d5d246a56af0 ("coresight: Merge the static and dynamic
+replicator drivers") and tested on Hikey960/Hikey with perf commands:
+
+  Hikey960:
+
+  # perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
+  # perf report --tui
+
+  Hikey:
+  # perf record -e cs_etm/@f6404000.etr/ --per-thread uname
+  # perf report --tui
+
+P.s. in this version, Hikey960 CoreSight DT binding has not been
+included and will be sent out separately.
+
+[1] https://git.linaro.org/kernel/coresight.git/log/?h=next
+
+== Changes for v4 ==
+* Consolidate the DT binding compatible strings for replicator and
+  funnel (Mathieu).
+* Changed replicator driver to support new compatible string.
+
+
+Leo Yan (4):
+  dt-bindings: arm: coresight: Add new compatible for static replicator
+  coresight: replicator: Add new device id for static replicator
+  dt-bindings: arm: coresight: Unify funnel DT binding
+  coresight: funnel: Support static funnel
+
+ .../devicetree/bindings/arm/coresight.txt     |  60 +++++++++-
+ .../hwtracing/coresight/coresight-funnel.c    | 112 +++++++++++++-----
+ .../coresight/coresight-replicator.c          |   3 +-
+ 3 files changed, 141 insertions(+), 34 deletions(-)
 
 -- 
-Regards,
+2.17.1
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
