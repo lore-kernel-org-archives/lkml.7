@@ -2,71 +2,118 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A32C282DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6EAC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BFA20863
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C43020863
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbfDFPhs (ORCPT
+        id S1726579AbfDFPmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 11:37:48 -0400
-Received: from bout01.mta.xmission.com ([166.70.11.15]:52475 "EHLO
-        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfDFPhr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 11:37:47 -0400
-Received: from mx02.mta.xmission.com ([166.70.13.212])
-        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hCn64-0006DR-ED; Sat, 06 Apr 2019 09:19:08 -0600
-Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
-        by mx02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hCn63-0002ff-Ug; Sat, 06 Apr 2019 09:19:08 -0600
-Received: from hacktheplanet (c-68-50-23-202.hsd1.in.comcast.net [68.50.23.202])
-        by plesk14.xmission.com (Postfix) with ESMTPSA id 2DEA21BF17F;
-        Sat,  6 Apr 2019 15:19:07 +0000 (UTC)
-Date:   Sat, 6 Apr 2019 11:19:00 -0400
-From:   Scott Bauer <sbauer@plzdonthack.me>
-To:     David Kozub <zub@linux.fjfi.cvut.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Message-ID: <20190406151900.GC10294@hacktheplanet>
-References: <1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz>
- <1550103368-4605-5-git-send-email-zub@linux.fjfi.cvut.cz>
+        Sat, 6 Apr 2019 11:42:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48496 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbfDFPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 11:42:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Apr 2019 08:42:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,317,1549958400"; 
+   d="scan'208";a="162007689"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Apr 2019 08:42:00 -0700
+Subject: Re: [PATCH v13 2/3] x86,/proc/pid/status: Add AVX-512 usage elapsed
+ time
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        tim.c.chen@linux.intel.com, Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        aubrey.li@intel.com, kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190224044400.34975-1-aubrey.li@linux.intel.com>
+ <20190224044400.34975-2-aubrey.li@linux.intel.com>
+ <CAG48ez2hJvjRD-immEJ9uJAY1WRth3pMf0Qz8bApRke05kC+2Q@mail.gmail.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <d118f16e-0d8c-956f-9057-26e463ce3e60@linux.intel.com>
+Date:   Sat, 6 Apr 2019 23:41:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550103368-4605-5-git-send-email-zub@linux.fjfi.cvut.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-XM-SPF: eid=1hCn63-0002ff-Ug;;;mid=<20190406151900.GC10294@hacktheplanet>;;;hst=mx02.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
-X-SA-Exim-Connect-IP: 166.70.198.161
-X-SA-Exim-Mail-From: sbauer@plzdonthack.me
-Subject: Re: [PATCH 04/16] block: sed-opal: unify space check in add_token_*
-X-SA-Exim-Version: 4.2.1 (built Fri, 13 May 2016 17:07:30 -0600)
-X-SA-Exim-Scanned: Yes (on mx02.mta.xmission.com)
+In-Reply-To: <CAG48ez2hJvjRD-immEJ9uJAY1WRth3pMf0Qz8bApRke05kC+2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 01:15:56AM +0100, David Kozub wrote:
-> From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+On 2019/4/6 4:27, Jann Horn wrote:
+> On Fri, Apr 5, 2019 at 10:02 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>> AVX-512 components use could cause core turbo frequency drop. So
+>> it's useful to expose AVX-512 usage elapsed time as a heuristic hint
+>> for the user space job scheduler to cluster the AVX-512 using tasks
+>> together.
+>>
+>> Tensorflow example:
+>> $ while [ 1 ]; do cat /proc/pid/status | grep AVX; sleep 1; done
+>> AVX512_elapsed_ms:      4
+>> AVX512_elapsed_ms:      8
+>> AVX512_elapsed_ms:      4
+>>
+>> This means that 4 milliseconds have elapsed since the AVX512 usage
+>> of tensorflow task was detected when the task was scheduled out.
+>>
+>> Or:
+>> $ cat /proc/pid/status | grep AVX512_elapsed_ms
+>> AVX512_elapsed_ms:      -1
 > 
-> All add_token_* functions have a common set of conditions that have to
-> be checked. Use a common function for those checks in order to avoid
-> different behaviour as well as code duplication.
+> (Very nitpicky, feel free to ignore: If you change the /proc/pid to
+> /proc/tid in the commit message, it becomes clearer that this status
+> is really per-task/thread, not per-process/threadgroup.)
+
+Thanks, I'll refine.
+
 > 
-> Co-authored-by: David Kozub <zub@linux.fjfi.cvut.cz>
-> Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
-Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+> [...]
+>> +
+>> +/*
+>> + * Report the amount of time elapsed in millisecond since last AVX512
+>> + * use in the task.
+>> + */
+>> +static void avx512_status(struct seq_file *m, struct task_struct *task)
+>> +{
+>> +       unsigned long timestamp = task->thread.fpu.avx512_timestamp;
+> 
+> This is theoretically a data race, right? Should this have a READ_ONCE() on it?
+
+Thanks, I'll refine.
+
+> 
+> Is there something that zeroes out the avx512_timestamp on
+> fork()/clone(), or will every child inherit the avx512 timestamp? As
+> far as I can tell, the timestamp is inherited; I think it would be
+> nicer to zero it out at that point. Either way, It might be worth
+> documenting this decision.
+> 
+
+This timestamp is not inherited, see below:
+
+_do_fork()
+->copy_process()
+-->dup_task_struct()
+--->arch_dup_task_struct()
+---->fpu__copy()
+
+Thanks,
+-Aubrey
