@@ -2,98 +2,120 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1703C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E667C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A541920B1F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78AD20B1F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHSAFu/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDFP6r (ORCPT
+        id S1726528AbfDFQBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 11:58:47 -0400
-Received: from sauhun.de ([88.99.104.3]:47252 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfDFP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 11:58:47 -0400
-Received: from localhost (p5486CDB5.dip0.t-ipconnect.de [84.134.205.181])
-        by pokefinder.org (Postfix) with ESMTPSA id 164182C088A;
-        Sat,  6 Apr 2019 17:58:44 +0200 (CEST)
-Date:   Sat, 6 Apr 2019 17:58:43 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     laurentiu.tudor@nxp.com, mojha@codeaurora.org,
-        linux-i2c@vger.kernel.org, wsa+renesas@sang-engineering.com,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        leoyang.li@nxp.com
-Subject: Re: [PATCH v2] i2c: imx: don't leak the i2c adapter on error
-Message-ID: <20190406155843.GB5253@kunai>
-References: <20190401101437.9626-1-laurentiu.tudor@nxp.com>
- <20190403204756.mbc7zc5klfd5zydg@ninjato>
- <20190406154847.gknmrvjzebih3tu5@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
-Content-Disposition: inline
-In-Reply-To: <20190406154847.gknmrvjzebih3tu5@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 6 Apr 2019 12:01:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46727 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfDFQBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 12:01:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t17so11354668wrw.13;
+        Sat, 06 Apr 2019 09:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TWy7YAMuzaPSs58knLCiZ9Z/DyS8fzrxZF3xNjO2PHQ=;
+        b=jHSAFu/Sx3sNx21yayGsjh4oNvpejDrQpLtvSim7VkrlnTbPJS7vBL2k4VLpOHtm3T
+         tiw7oAJmwBYZzrDGSx7FrFXMzUxtpzLLdPEAFJG74HbAjA/6FEip/47dZ9qfDjhOREwD
+         FAtGQySYl0YCn/d3F6pg8dMk2oAdjQ7kpIBhpdemxfYNCNMTzJCl3kGhhtt71U06ToJ1
+         AyZxrxNgPyKYTP63Cy32KJTp0t7bwkpHR0i1i399xVTRUIHUhSJBXS+rl0tK2J1a5I9y
+         pl3vLvtEJD8XowNZu/upbb31wbNefrXe/5/+UQwke7/Mp5AI0Qs0FopyB1GwwwPglOpX
+         7uXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TWy7YAMuzaPSs58knLCiZ9Z/DyS8fzrxZF3xNjO2PHQ=;
+        b=HlAWEEsvSbMr33rb6+Za7T/Se28yKCCl3d6sZ3+gIHKQo5uPuq/VckXrSLyf5XysZK
+         xZ/8IoyP5cFhOvvIaGnEEr+2lzV7sSQVtsaB++0VTmUMk0/brh8lQl3jiy2egdEUVJgE
+         R7fD4RwcomJlQeHQPyAE9f20VYydvF6eqHtupQfflQ3hQNzNtc2cY25uE6Y2M/k4PAos
+         70I4kXfmNQ6JUUeCSwoG1l1TnjYjr6Lyn9ZU2HoNIr1RsNJZjpTHPeWbKH+u+U1n1V6B
+         5kP+4Jp3s3CuwN/Mv6RCQvTllf/ORWHhmHFZuIfb9ZgYHxtVK+bwzprZaDsfMnK7jP5P
+         O1ng==
+X-Gm-Message-State: APjAAAWAihTu5NLq2AOVetBwO/XqCgKQfTGfiNVpDlCgGfcenNJ0c/Aq
+        afiAxVjvK/ZmSHU5LD0BZfo=
+X-Google-Smtp-Source: APXvYqxllgkItiPOaeiRWRKEddGAEcjk7sUHoUI6OmzHs7L2ytR2dCB7gea8rOy3UKW8V+5ni/lkxw==
+X-Received: by 2002:a5d:4646:: with SMTP id j6mr4635017wrs.56.1554566479387;
+        Sat, 06 Apr 2019 09:01:19 -0700 (PDT)
+Received: from armhf-buildhost.asgard.net (ipbcc343bd.dynamic.kabel-deutschland.de. [188.195.67.189])
+        by smtp.gmail.com with ESMTPSA id z8sm24783828wrh.80.2019.04.06.09.01.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 06 Apr 2019 09:01:18 -0700 (PDT)
+From:   Markus Kueffner <kueffner.markus@gmail.com>
+Cc:     Markus Kueffner <kueffner.markus@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Date:   Sat,  6 Apr 2019 18:00:20 +0200
+Message-Id: <1554566420-1008-1-git-send-email-kueffner.markus@gmail.com>
+X-Mailer: git-send-email 2.1.4
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add Pincfgs to enable the i.MX6's OTG feature for UDOO
 
---bCsyhTFzCvuiizWE
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-On Sat, Apr 06, 2019 at 05:48:47PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hey Wolfram,
->=20
-> On Wed, Apr 03, 2019 at 10:47:56PM +0200, Wolfram Sang wrote:
-> > On Mon, Apr 01, 2019 at 01:14:37PM +0300, laurentiu.tudor@nxp.com wrote:
-> > > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> > >=20
-> > > Make sure to free the i2c adapter on the error exit path.
-> > >=20
-> > > Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> > > Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> > > Reviewed-by: Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-> > > Fixes: e1ab9a468e3b ("i2c: imx: improve the error handling in i2c_imx=
-_dma_request()")
-> >=20
-> > Applied to for-current, thanks!
->=20
-> Is your tree already stable? If not, would you mind correcting my name
-> in 9b0a9982d8b465e0394db10f15ba53f1a8d60e21?
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index 776bfc7..42954ee 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -221,6 +221,14 @@
+ 			>;
+ 		};
+ 
++		pinctrl_usbotg: usbotg {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++				MX6QDL_PAD_EIM_D22__USB_OTG_PWR 0x17059
++				MX6QDL_PAD_EIM_D21__USB_OTG_OC 0x17059
++			>;
++		};
++
+ 		pinctrl_ac97_running: ac97running {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
+@@ -294,6 +302,14 @@
+ 	status = "okay";
+ };
+ 
++&usbotg {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	fsl,power-line-polarity-active-high;
++	fsl,over-current-polarity-active-low;
++	status = "okay";
++};
++
+ &audmux {
+ 	status = "okay";
+ };
+-- 
+2.1.4
 
-It is stable, but I created an i2c/for-current-fixed branch just for you
-:)
-
-
---bCsyhTFzCvuiizWE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyozLMACgkQFA3kzBSg
-KbZpnBAAiyy4ergFBvA8t/lhwyYjpDrQnuf84gaCeWEbz3SIV1QSVr5ImsVLVWqe
-zDaC8cWMlKreGg8zUolF/JlePUMP1dxBdd8uiquWuoG5j9mwVByEnBDPTewP44zH
-dWGWAVPr+WmWBznPj0vHodnfnIaP6ozTb5/nfmW6z2l5t4y2CBdlRgElk4PRcryt
-Qy/uJJGlQau8cFgjdqRoay4zH9B8am5Okb5ns7TrUk9sUGaq7C2R3JDobfdtSnFY
-04v4hZ/qtjh3PMiHm/c6z0HG7rWwO99WUlKdaGXPbn+nDRsgGFsC5YCLxHQt9oo7
-PHMf31015j6UKDG7SghuHrEcQXUfHZCLUtJWPpkmNLxjBuzYGoX/fgZmv+XYguBh
-H7kRP9DRNmUaLyvsbRfw0tYaZCztsy5AVfLhGTcQ2LQJq5srMVkQ900XCFrTDRhY
-Yy/2Pb/xopfxTxqr2ttzu+C163N1ynSRX3aEq3x2yxXOIvH2/jVYUETWneX9epzM
-Wbo234OcCbFUaldcOssxhuI5DJ9zdMTljbI9xXJ065wrlCBiYoI187LjURzISlhO
-ozLIP0rnehCHZ5MesH47VSHBGuvuRfNP9Svz9D3rKS8fHlBPUZkPcaWxjt/MMLGh
-B8No23fFTKDsFmgn+tZYRuqWOltsWBg1OoR4NZAO7FR45JBxXGU=
-=AMMw
------END PGP SIGNATURE-----
-
---bCsyhTFzCvuiizWE--
