@@ -2,130 +2,101 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31197C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1CBC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F87218D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B92C218AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JcMGlmRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfDFJxp (ORCPT
+        id S1726436AbfDFKKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:53:45 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49758 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfDFJxp (ORCPT
+        Sat, 6 Apr 2019 06:10:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52560 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfDFKKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:53:45 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C5B1C805F7; Sat,  6 Apr 2019 11:53:34 +0200 (CEST)
-Date:   Sat, 6 Apr 2019 11:53:46 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-Message-ID: <20190406095346.GB7546@amd>
-References: <20190404200658.GD29984@amd>
- <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
- <20190404202042.GF29984@amd>
- <CAE_wzQ-8XwzptH7EqNrELxjBzY2+0oHJGB3Va=vZwwK3csu_aA@mail.gmail.com>
- <20190404204207.GH29984@amd>
- <CAE_wzQ8xe=x0uYcZkDRVKpUAQ_1vVdEPHU3XnEV1=_WN1-AMfw@mail.gmail.com>
- <20190404220509.GA14690@amd>
- <CABXOdTeQgjd2-T+eZCMdTDWBGLHEk6kvnYR0DjJYR7zuvVTMsQ@mail.gmail.com>
- <df9577fd-c526-77e9-c11c-5416387121db@collabora.com>
- <469dfb68-a7ab-668d-15cb-9e021c0d3f0c@gmail.com>
+        Sat, 6 Apr 2019 06:10:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x36AAhqt099260;
+        Sat, 6 Apr 2019 05:10:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554545443;
+        bh=KnCtIU5Fe5TY1GZ+TJUK9AeqVXHkEAtPFqF0r1QdvHs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JcMGlmROY7bi9kcS5/BY9fNeeDpWW2oUmTRt7p5wY2kq3LCk75xvhKA39yPXhUrga
+         G4cJHU334xMcfY72KjyhBLjsoA+QoTYJ5NDnKl7D4pxZOM/ayU7qTUXe+oPLVOHW20
+         zWN0ToiAs3enVBqTFJGyJNxvB/tNkHWpiYt6d/sE=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x36AAhGu020982
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 6 Apr 2019 05:10:43 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 6 Apr
+ 2019 05:10:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sat, 6 Apr 2019 05:10:43 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x36AAeVm126846;
+        Sat, 6 Apr 2019 05:10:41 -0500
+Subject: Re: [PATCH 2/2] ARM: dts: dra7: Separate AM57 dtsi files
+To:     Roger Quadros <rogerq@ti.com>, <tony@atomide.com>
+CC:     <robh+dt@kernel.org>, <s-anna@ti.com>, <nm@ti.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190405132806.20772-1-rogerq@ti.com>
+ <20190405132806.20772-3-rogerq@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <0e1de55a-7333-7940-6965-8080d9fb0b14@ti.com>
+Date:   Sat, 6 Apr 2019 15:40:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
-Content-Disposition: inline
-In-Reply-To: <469dfb68-a7ab-668d-15cb-9e021c0d3f0c@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190405132806.20772-3-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---hHWLQfXTYDoKhP50
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 05/04/19 6:58 PM, Roger Quadros wrote:
+> AM5 and DRA7 SoC families have different set of modules
+> in them so the SoC sepecific dtsi files need to be separated.
+> 
+> e.g. Some of the major differences between AM576 and DRA76
+> 
+> 		DRA76x	AM576x
+> 
+> USB3		x
+> USB4		x
+> ATL		x
+> VCP		x
+> MLB		x
+> ISS		x
+> PRU-ICSS1		x
+> PRU-ICSS2		x
+> 
+> This patch only deals with disabling USB3, USB4 and ATL for
+> AM57 variants.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-> The patch set introduces also a set of predefined LED_FUNCTION
-> names to be used in DT bindings. This along with the removal
-> of devicename section from LED naming pattern will help to keep
-> LED sysfs interface more uniform and not varying depending on
-> underlaying hardware driving the LEDs.
->=20
-> Regarding the problem discussed in this thread - I would not necessarily
-> go for "platform" in place of devicename LED name section in the
-> cros_kbd_led_backlight driver. If we change it (should we at all - it is
-> already in 5.0 AFAICS?), then I would opt for dropping the "chromeos:"
-> part. It believe it will be possible to retrieve this name with
-> get_led_device_info.sh script. It would be good exercise to check
-> it out.
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-I am not sure about existing driver. Important thing for me is that
-new drivers use consistent naming.
+Thanks and regards,
+Lokesh
 
-> In cases like above:
->=20
->     keyboardist::kbd_backlight
->     tclnumpad::kbd_backlight
->=20
-> we could do with the following:
->=20
->     :kbd-backlight
->     :numpad-backlight
->=20
-> I used hyphens instead of underscores since we will have this convention
-> in the LED_FUNCTION names, which is more common for Device Tree, and
-> some of existing LED triggers.
-
-Existing userspace already searches for *:kbd_backlight", AFAICT, so
-we probably want to keep the "_".
-
-I don't care much if we use "platform:" or no prefix at all for
-backlight of internal keyboard, as long as it is consistent across all
-devices.
-
-We certainly want to use some prefix (probably inputX:) for backlight
-on USB keyboards.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyodyoACgkQMOfwapXb+vL5oQCcCFra/9cmt+6pqBH7En0ogzC/
-8gcAoLamY/jmw88Z2vDKZI9Jtyw0MeaG
-=7wli
------END PGP SIGNATURE-----
-
---hHWLQfXTYDoKhP50--
