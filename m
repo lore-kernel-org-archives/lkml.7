@@ -3,84 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8107C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ECAC282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8D9218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6952521855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554530770;
-	bh=Z3c50IVXRHPm/rq2ixXEld/V8zBo9KAOAgzHHHBLqdg=;
-	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=ApnNKrb0yHsEPVesGd6qMMY6Lh5UC5RlR2I6CuP7+R3hiv4aBse9gApIzlcmQ9ZUc
-	 Mj8dMmZyOTkZSyAFwe8+xvUv5wXiUh3BVwqDQMzuq3OSm0xLiALqHGowxEGpPU/zx+
-	 OnjJTkB6Ty+Sh9X3k+rbdqQBIOlHpIeXWTpG29ok=
+	s=default; t=1554530783;
+	bh=1sW/JIuvaGwPRpfWIGXWFOuGkBGjXVYSa+DTwgwaXN0=;
+	h=Date:From:Subject:References:In-Reply-To:Cc:To:List-ID:From;
+	b=oMYV3xrQ/jDJMxwaQCq9fxX8UNmu21eKldyZrMDQRV0TcLn76bhEpRCtaJ172j6OF
+	 l/mBoZlX/oGgb82OV4V9jeqBhBVQf5bizmwlEM/vZHGFo1dBaqIrsBvsHXlNwunWOV
+	 4qe3k1V1IFUaIKmOCpQfXHK/CCdmmjAYOkpHotAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfDFGGJ (ORCPT
+        id S1726709AbfDFGGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 02:06:09 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46316 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbfDFGGI (ORCPT
+        Sat, 6 Apr 2019 02:06:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45109 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfDFGGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 02:06:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q1so4179430pgv.13;
-        Fri, 05 Apr 2019 23:06:07 -0700 (PDT)
+        Sat, 6 Apr 2019 02:06:21 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y3so4180430pgk.12;
+        Fri, 05 Apr 2019 23:06:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:subject:references
-         :in-reply-to:cc:cc:to;
-        bh=9w7EQ59djVMT/yra/zVaafD2a787JfvjnjqhLIF7aV4=;
-        b=WhStow4BtOvuE4Gt/n9+uWztmD7Ro1FQuCE7EICL/JBzdXBnqxSvN5onB/trlFpKlL
-         ZTQ1+i46fAIY/QH/sbNwq53PlyNASEFlfb9npJ15Ekz+/bqZlNX3UAJmfAWYn2uIsUCJ
-         kWNQvTLadlBSm/WsdKLjTwWeDvmP/9LWqGR8LBcraWp/SUvCPtnIsquCZC9u6OQRK30a
-         ppr7qfAmUX/ZPw2w15j239MSLt6dHbh3mPnoNq8/t8B9OZp0KOsLvsCJJMbSm5Fr9NaD
-         ZpeTxcYYBoh+qeaX9kIjSlNlWimXtBU56EkI1OGtfO2qKxUCTRqfmfd5Md+tyPe91y06
-         m2aw==
-X-Gm-Message-State: APjAAAXysXBvQEVky0y79P7Awp3Xn7ioksIi4b1hZ+I4SciF90y1foQe
-        +jTclLSa2OeaKjRRh3a1ag==
-X-Google-Smtp-Source: APXvYqx7bRQMsiuxKhAYYZopO8h/29m6921AqiMQE52ewGPkhRyb/xhTaS9itC1tktt9KbFu+PKsVQ==
-X-Received: by 2002:a63:f956:: with SMTP id q22mr5235243pgk.210.1554530767243;
-        Fri, 05 Apr 2019 23:06:07 -0700 (PDT)
+         :in-reply-to:cc:to;
+        bh=9YVOaT7zRZ+Oyis0vpGloPUiizlv+2usyvmC5EZwrlA=;
+        b=GgVC1eR9uK9xNL3uA1JoNqR0Oq9VrLN+U+DNlz44dWv2LqqDEpMqxeB9YUmMFiRJwD
+         bPI/eDaVmCg7oBWwppZyEqZCidwiZ8EP5pQSbL1utBmD/MObRQd3iHz13Ekfj68+Dmql
+         XX2bFmX8VVznlOe4CevWpOhfc1Ah8Limvi67WEpU5IiTBr3PRgGdvpIkv6G6xRGVPzEv
+         PJWZnnU/gpvRqLLs1AwHnvAdENqqv+LuOUx7UHpoIMmI8/GvH4/AgfXZ7QOCeydTOIpI
+         VsLikIeTGjjTT7U+FlQMU9ZeYUjPuiINCwjQAm218SP7X1phM+301BQRqACx5v79MutF
+         6pmQ==
+X-Gm-Message-State: APjAAAX0mgRjCTk2ycJvX3OEcn9meO7lhUnVhozQuAgW2FEgKFIryjAM
+        pZ77QcwBYCxYetkPkUwK1g==
+X-Google-Smtp-Source: APXvYqxBO2s0bITA6OG6AH3zySICfJe1C9JqVCrxGMZYitG5WUDwvDY61K0t3VoW18cim543C8iqSQ==
+X-Received: by 2002:aa7:8c84:: with SMTP id p4mr17244133pfd.164.1554530780595;
+        Fri, 05 Apr 2019 23:06:20 -0700 (PDT)
 Received: from localhost ([210.160.217.71])
-        by smtp.gmail.com with ESMTPSA id f1sm29751400pgl.35.2019.04.05.23.06.06
+        by smtp.gmail.com with ESMTPSA id r11sm51782237pga.87.2019.04.05.23.06.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Apr 2019 23:06:06 -0700 (PDT)
-Message-ID: <5ca841ce.1c69fb81.b2f88.e449@mx.google.com>
-Date:   Sat, 06 Apr 2019 01:06:04 -0500
+        Fri, 05 Apr 2019 23:06:19 -0700 (PDT)
+Message-ID: <5ca841db.1c69fb81.42eb2.891d@mx.google.com>
+Date:   Sat, 06 Apr 2019 01:06:15 -0500
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A  AO-CEC-B Compatible
-References: <20190401081959.16474-1-narmstrong@baylibre.com> <20190401081959.16474-2-narmstrong@baylibre.com>
-In-Reply-To: <20190401081959.16474-2-narmstrong@baylibre.com>
-Cc:     hverkuil@xs4all.nl, mchehab@kernel.org, devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: phy: Add documentation for mixel dphy
+References: <cover.1554113192.git.agx@sigxcpu.org> <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
+In-Reply-To: <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  1 Apr 2019 10:19:57 +0200, Neil Armstrong wrote:
-> The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
-> the other one is AO-CEC-A described by the current bindings.
+On Mon,  1 Apr 2019 12:13:35 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
+> Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
 > 
-> The register interface is very close but the internal architecture
-> is totally different.
-> 
-> The other difference is the clock source, the AO-CEC-B takes the
-> "oscin", the Always-On Oscillator clock, as input and embeds a
-> dual-divider clock divider to provide the precise 32768Hz base
-> clock for CEC communication.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../devicetree/bindings/media/meson-ao-cec.txt      | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+>  .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
