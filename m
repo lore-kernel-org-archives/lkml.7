@@ -2,126 +2,93 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9EDC282DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9204AC282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185A2213A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB35213A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 16:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JB/yXI+T"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Wt5OaIz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfDFQoJ (ORCPT
+        id S1726573AbfDFQsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 12:44:09 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:32896 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfDFQoH (ORCPT
+        Sat, 6 Apr 2019 12:48:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46057 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfDFQsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 12:44:07 -0400
-Received: by mail-vs1-f65.google.com with SMTP id a190so5275166vsd.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 09:44:06 -0700 (PDT)
+        Sat, 6 Apr 2019 12:48:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y3so4743052pgk.12
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 09:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1QPBWvNYRfn9RrwkGQNrcPHT2k49F8+w/Q08uBtT2w4=;
-        b=JB/yXI+TgDQVGBmtzY2ZRlJ0qSadgN2Vxb0yPlHggu5bo3idHxxGmeEo3Wuj/TwU2U
-         z0YCEy5FRbRoMrBBiPMRerZx88hdPKlC2yYrDiNB0mL1Pydz0See1IP7DuqIRMzxQdWC
-         hJSO/JN3BzpXArUnEm570QxEaOQt3LrcyWdmM=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LzWlk3uF4YZxeG30G1r/CDtXquaEZdEZ1op+LOgeWms=;
+        b=Wt5OaIz/6nkdSVyIIWXvht7qJsuQv/5aPAMo6ank9K37IRr2BxrfUWT8rTAlGa0LuG
+         3yud7tneOSzUGF30rmCcX/Kh3SnDQ9wy0xCgzNmKo4gT5FOjPWdEnMxxUzgpIiXOrilC
+         yTRuU4x0pdyqEQKixOVshf873uoJLtkElW7B6IkteMe0jj/yOVqQRjpcT+u6XC0RRl7y
+         pDOQwspvqSxE4qD+thdZe2ISVQn0IYkQX00siNZGGGN4Cpmx7z4WO6E8J3ZlsKhurOMd
+         AZbityahrUe9AseMemEwuZuXaB65rO0OmmMY7fg+hULhS6GbwohZhGr1GbqPjn3wMIal
+         29cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1QPBWvNYRfn9RrwkGQNrcPHT2k49F8+w/Q08uBtT2w4=;
-        b=HYZDkuzxUl9r1c/HKCPEBdij3n8KZH3mnLLt6pKAFDLsL2cZenxItnEB0CdN4lPLV+
-         xTkD0MVusb4r3vj2LtWJWLKtYdRn43GkQU/Faay4mBYmxmPXHNSSzwLNlI9NczjVqBRD
-         mj9Zij6hkEWBqKoPeoQzixHs8SgIKdk4wttWU9g81JD3hznMimjsymEdRc2BGAmkkoui
-         ieGKZy7WG1vmslVcIvEWE+85Z7/zAoYqjzcOO2QNNt2JqYvI7k5MSZiXNwqEgUsA/9t5
-         uvSaDHrOKN4wEN8Z8Mms3DMv6HXppU9c5wdnT8v/fyWtZTVQ5+nuCIyJjrs43+/3ndh7
-         aZtA==
-X-Gm-Message-State: APjAAAU6ilx5oOP6xA7MEYexfoiBopyuk5VxEJTT1lfFt7vAW70UiMYl
-        vk2qOfL7LA+o+WBurtYy+1GYv11RWPU=
-X-Google-Smtp-Source: APXvYqwaIBRLJ9k/Yi1Eg6H5Gavub//cLLa3PxtxZWcPc4fKFa3BXUFRtMOtGj/SOGsOKH8xJnV5eQ==
-X-Received: by 2002:a67:f04e:: with SMTP id q14mr12099363vsm.133.1554569045812;
-        Sat, 06 Apr 2019 09:44:05 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id m23sm36294298vsl.24.2019.04.06.09.44.02
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LzWlk3uF4YZxeG30G1r/CDtXquaEZdEZ1op+LOgeWms=;
+        b=fa2tvWRf60lmRmkv+fAJYIcYyKaboXaQHRzbVvqloV0jaERoSkniNPRUhamGDPxilw
+         QkZApPO1wwRBRxFMdMz1/Bp3ritQ/AtDZlvU1KD2wPOBSMbU/1E/RM5nfES7/dOiQRUb
+         3FeuswXpXecEETFJa3slo28OzSa3ING/92bVETDSgFJ/WbUlidLl6MjHghf3xnmHJri6
+         jFF7n+eDnCK8xvuCO3Bv1JOxRUe6JnCpQF2plvk6fsekrjGMxlVYRcKcC+tL+in+5TxK
+         jjfLVPFqvl6lphvKEKGfi1zfyLFh6DBHjE1cNOcQH9i/KRmnB5kRTv1cm8ttDHvxUGvG
+         nJQA==
+X-Gm-Message-State: APjAAAUnJBn+xobOl3fVA6aisTwKXn/kh3MtASyywva8tphuBA5URbSD
+        tnxIUIyq5Fsy37HN3g37VVufT6EJWgqRSw==
+X-Google-Smtp-Source: APXvYqzbk4wZ7+dWW7FDWWdaCxr2e/py5rbIzxDX/FLlVbI0wEWgHgSypA9jrNWFiMZYwPdK1FqQqQ==
+X-Received: by 2002:a62:5185:: with SMTP id f127mr19723314pfb.199.1554569300185;
+        Sat, 06 Apr 2019 09:48:20 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id 17sm34783116pgz.52.2019.04.06.09.48.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 09:44:03 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id s2so5269900vsi.5
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 09:44:02 -0700 (PDT)
-X-Received: by 2002:a67:1345:: with SMTP id 66mr11653813vst.30.1554569041739;
- Sat, 06 Apr 2019 09:44:01 -0700 (PDT)
+        Sat, 06 Apr 2019 09:48:19 -0700 (PDT)
+Subject: Re: [PATCH] block: remove CONFIG_LBDAF
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190405160859.5288-1-hch@lst.de>
+ <CAHk-=whUmB7ine4==Z1L4csYCYaQM8-catk8ytNsnyPTs5uwZw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <93406b28-dd53-8c81-e2e0-71be65b5c6fa@kernel.dk>
+Date:   Sat, 6 Apr 2019 10:48:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1554485409.git.rdna@fb.com>
-In-Reply-To: <cover.1554485409.git.rdna@fb.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Sat, 6 Apr 2019 09:43:50 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJGC1kB-0e3DimBSprcgEBnWRB=i287g-9T5a-RidFqBg@mail.gmail.com>
-Message-ID: <CAGXu5jJGC1kB-0e3DimBSprcgEBnWRB=i287g-9T5a-RidFqBg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 00/21] bpf: Sysctl hook
-To:     Andrey Ignatov <rdna@fb.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Roman Gushchin <guro@fb.com>, kernel-team <kernel-team@fb.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=whUmB7ine4==Z1L4csYCYaQM8-catk8ytNsnyPTs5uwZw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 12:36 PM Andrey Ignatov <rdna@fb.com> wrote:
->
-> v2->v3:
-> - simplify C based selftests by relying on variable offset stack access.
->
-> v1->v2:
-> - add fs/proc/proc_sysctl.c mainteners to Cc:.
->
-> The patch set introduces new BPF hook for sysctl.
->
-> It adds new program type BPF_PROG_TYPE_CGROUP_SYSCTL and attach type
-> BPF_CGROUP_SYSCTL.
->
-> BPF_CGROUP_SYSCTL hook is placed before calling to sysctl's proc_handler so
-> that accesses (read/write) to sysctl can be controlled for specific cgroup
-> and either allowed or denied, or traced.
->
-> The hook has access to sysctl name, current sysctl value and (on write
-> only) to new sysctl value via corresponding helpers. New sysctl value can
-> be overridden by program. Both name and values (current/new) are
-> represented as strings same way they're visible in /proc/sys/. It is up to
-> program to parse these strings.
->
-> To help with parsing the most common kind of sysctl value, vector of
-> integers, two new helpers are provided: bpf_strtol and bpf_strtoul with
-> semantic similar to user space strtol(3) and strtoul(3).
->
-> The hook also provides bpf_sysctl context with two fields:
-> * @write indicates whether sysctl is being read (= 0) or written (= 1);
-> * @file_pos is sysctl file position to read from or write to, can be
->   overridden.
->
-> The hook allows to make better isolation for containerized applications
-> that are run as root so that one container can't change a sysctl and affect
-> all other containers on a host, make changes to allowed sysctl in a safer
-> way and simplify sysctl tracing for cgroups.
+On 4/6/19 10:30 AM, Linus Torvalds wrote:
+> On Fri, Apr 5, 2019 at 6:09 AM Christoph Hellwig <hch@lst.de> wrote:
+>>
+>> Dropping this option removes a somewhat weird non-default config that
+>> has cause various bugs or compiler warnings when actually used.
+> 
+> I'm ok with this, but let's queue it for 5.2, ok? Jens?
 
-This sounds more like an LSM than BPF. So sysctls can get blocked when
-new BPF is added to a cgroup? Can the BPF be removed (or rather,
-what's the lifetime of such BPF?)
+Certainly, wasn't going to queue it up for 5.1 at this point. I'll
+stuff it into for-5.2/block
 
 -- 
-Kees Cook
+Jens Axboe
+
