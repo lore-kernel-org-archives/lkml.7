@@ -6,65 +6,64 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98923C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91541C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BEE21855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B8321855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HLwaGYpj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WXOImq0x"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mGf2V3MI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NnPui2XG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDFIT5 (ORCPT
+        id S1726511AbfDFIU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 04:19:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54056 "EHLO
+        Sat, 6 Apr 2019 04:20:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54234 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfDFIT5 (ORCPT
+        with ESMTP id S1726384AbfDFIU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 04:19:57 -0400
+        Sat, 6 Apr 2019 04:20:58 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 311DB609EF; Sat,  6 Apr 2019 08:19:56 +0000 (UTC)
+        id 57A5D609EF; Sat,  6 Apr 2019 08:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554538796;
-        bh=eLhcVhGedeKmracodupXv+xR1UNXc4RY3TdGgcMWW3k=;
+        s=default; t=1554538857;
+        bh=F61dPknUYEq10SfECyXYJPq1M9nkxft4tIEluXIi9DA=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HLwaGYpjtdlcWVjayzZBx5qovug0zN4BCApJ5Y2/QlMFww+k29+ISqJQvbYrOo469
-         NaY8l2NMmEYQUuFaZEMWiEYUKwhDY4EI+YXi+6s3bT+IQyeNiT32suK4mxW2s2OZ9i
-         EA6/eVFlwhHM3XH4jyi0GRwWwV6jfAc/oNSKUM3Q=
+        b=mGf2V3MI7VK/vIGGPh/b5l27YzVEcD4hGAeVZUXriSe5e2h8fas/fRZvNCrtVj81k
+         UXs4dBv/ngBnssd/pQY4d6PhOlJrg69LBgA4mjIaIoxpYCrJjkIQjBfCg9rr+7/UFV
+         miLzhjMHcMbJAB7a2jT5fPqg6jhhp7zMppUOIa+k=
 Received: from [10.79.167.84] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 306596083E;
-        Sat,  6 Apr 2019 08:19:47 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA7376083E;
+        Sat,  6 Apr 2019 08:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554538795;
-        bh=eLhcVhGedeKmracodupXv+xR1UNXc4RY3TdGgcMWW3k=;
+        s=default; t=1554538856;
+        bh=F61dPknUYEq10SfECyXYJPq1M9nkxft4tIEluXIi9DA=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WXOImq0xmBXPoEqKGD3VlgePfzI3ZdvkaRS9a5SFrATgUfr0kWxu/5zV9Jwbgi41y
-         Aobm/TQqKArOuVYMsGXAo7wgSGoIrPAHq6SlzwrelSGKElUDBo850LTQfx7vaV8YBy
-         7ZpGRCqBejdCb6/4vJEpMc4gQraRLvbkOzkjIQE8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 306596083E
+        b=NnPui2XGECtNa73Vi/udAZuyTOM67qtf+XSts6zXdy7ONrD6MVwPcYHbJQywlB7c7
+         XrM5ie9xyiJuWgiFDYxpy/cgmBNyQHJTx/8AH8GyN5xP9yZ2bVwJzMq4OHdO0W5Ktn
+         EQOwgRHkmnvoYlfCeskD7DsUatSUkqk6pvPW6fH0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA7376083E
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH -next] staging: rtlwifi: rtl8822be: Remove set but not
- used variable 'curtxbw_40mhz'
-To:     YueHaibing <yuehaibing@huawei.com>,
+Subject: Re: [PATCH -next] staging: comedi: dyna_pci10xx: remove set but not
+ used variables 'chan' and range'
+To:     YueHaibing <yuehaibing@huawei.com>, Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+        Sanjana Sanikommu <sanjana99reddy99@gmail.com>
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-References: <20190406031118.59321-1-yuehaibing@huawei.com>
+References: <20190406030749.56659-1-yuehaibing@huawei.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <44fa9b63-699f-0203-2447-c8217cfbb803@codeaurora.org>
-Date:   Sat, 6 Apr 2019 13:49:37 +0530
+Message-ID: <364f1d1b-c32f-3066-6e8e-686c7acc7ac9@codeaurora.org>
+Date:   Sat, 6 Apr 2019 13:50:50 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190406031118.59321-1-yuehaibing@huawei.com>
+In-Reply-To: <20190406030749.56659-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -74,14 +73,20 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/6/2019 8:41 AM, YueHaibing wrote:
+On 4/6/2019 8:37 AM, YueHaibing wrote:
 > Fixes gcc '-Wunused-but-set-variable' warning:
 >
-> drivers/staging/rtlwifi/rtl8822be/hw.c: In function 'rtl8822be_update_hal_rate_mask':
-> drivers/staging/rtlwifi/rtl8822be/hw.c:2144:5: warning:
->   variable 'curtxbw_40mhz' set but not used [-Wunused-but-set-variable]
+> drivers/staging/comedi/drivers/dyna_pci10xx.c: In function 'dyna_pci10xx_insn_write_ao':
+> drivers/staging/comedi/drivers/dyna_pci10xx.c:109:21: warning:
+>   variable 'range' set but not used [-Wunused-but-set-variable]
+>    unsigned int chan, range;
 >
-> It's never used and can be removed.
+> drivers/staging/comedi/drivers/dyna_pci10xx.c:109:15: warning:
+>   variable 'chan' set but not used [-Wunused-but-set-variable]
+>    unsigned int chan, range;
+>
+> They are never used since introduction in commit 16a7373a8e14 ("Staging:
+> comedi: add dyna_pci10xx driver")
 >
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
@@ -90,36 +95,24 @@ Cheers,
 -Mukesh
 
 > ---
->   drivers/staging/rtlwifi/rtl8822be/hw.c | 9 ++-------
->   1 file changed, 2 insertions(+), 7 deletions(-)
+>   drivers/staging/comedi/drivers/dyna_pci10xx.c | 4 ----
+>   1 file changed, 4 deletions(-)
 >
-> diff --git a/drivers/staging/rtlwifi/rtl8822be/hw.c b/drivers/staging/rtlwifi/rtl8822be/hw.c
-> index dac22c21f821..1de4e903a4de 100644
-> --- a/drivers/staging/rtlwifi/rtl8822be/hw.c
-> +++ b/drivers/staging/rtlwifi/rtl8822be/hw.c
-> @@ -2141,8 +2141,6 @@ static void rtl8822be_update_hal_rate_mask(struct ieee80211_hw *hw,
->   	u32 ratr_bitmap, ratr_bitmap_msb = 0;
->   	u8 ratr_index;
->   	enum wireless_mode wirelessmode = 0;
-> -	u8 curtxbw_40mhz =
-> -		(sta->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40) ? 1 : 0;
->   	bool b_shortgi = false;
->   	u8 rate_mask[7];
->   	u8 macid = 0;
-> @@ -2153,11 +2151,8 @@ static void rtl8822be_update_hal_rate_mask(struct ieee80211_hw *hw,
+> diff --git a/drivers/staging/comedi/drivers/dyna_pci10xx.c b/drivers/staging/comedi/drivers/dyna_pci10xx.c
+> index 9bdd5bf2eb99..d38bfc6113e8 100644
+> --- a/drivers/staging/comedi/drivers/dyna_pci10xx.c
+> +++ b/drivers/staging/comedi/drivers/dyna_pci10xx.c
+> @@ -106,10 +106,6 @@ static int dyna_pci10xx_insn_write_ao(struct comedi_device *dev,
+>   {
+>   	struct dyna_pci10xx_private *devpriv = dev->private;
+>   	int n;
+> -	unsigned int chan, range;
+> -
+> -	chan = CR_CHAN(insn->chanspec);
+> -	range = range_codes_pci1050_ai[CR_RANGE((insn->chanspec))];
 >   
->   	RT_TRACE(rtlpriv, COMP_RATR, DBG_LOUD, "wireless mode = 0x%x\n",
->   		 wirelessmode);
-> -	if (mac->opmode == NL80211_IFTYPE_STATION ||
-> -	    mac->opmode == NL80211_IFTYPE_MESH_POINT) {
-> -		curtxbw_40mhz = mac->bw_40;
-> -	} else if (mac->opmode == NL80211_IFTYPE_AP ||
-> -		   mac->opmode == NL80211_IFTYPE_ADHOC)
-> +	if (mac->opmode == NL80211_IFTYPE_AP ||
-> +	    mac->opmode == NL80211_IFTYPE_ADHOC)
->   		macid = sta->aid + 1;
->   	if (wirelessmode == WIRELESS_MODE_N_5G ||
->   	    wirelessmode == WIRELESS_MODE_AC_5G ||
+>   	mutex_lock(&devpriv->mutex);
+>   	for (n = 0; n < insn->n; n++) {
 >
 >
 >
