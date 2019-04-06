@@ -3,87 +3,312 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BCAC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0256BC282DC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3766120B1F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0975213A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfDFMzy (ORCPT
+        id S1726511AbfDFNDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 08:55:54 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41747 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfDFMzx (ORCPT
+        Sat, 6 Apr 2019 09:03:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46446 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726353AbfDFNDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 08:55:53 -0400
-X-Originating-IP: 86.202.231.219
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 63466240003;
-        Sat,  6 Apr 2019 12:55:50 +0000 (UTC)
-Date:   Sat, 6 Apr 2019 14:55:50 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Message-ID: <20190406125550.GA7480@piout.net>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
+        Sat, 6 Apr 2019 09:03:05 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x36CrqtW134222
+        for <linux-kernel@vger.kernel.org>; Sat, 6 Apr 2019 09:03:03 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rpr0ahfng-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 09:03:03 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sat, 6 Apr 2019 14:03:01 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 6 Apr 2019 14:02:55 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x36D2s7759900032
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 6 Apr 2019 13:02:54 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 823FAA405C;
+        Sat,  6 Apr 2019 13:02:54 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9411BA4054;
+        Sat,  6 Apr 2019 13:02:52 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.206.46])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  6 Apr 2019 13:02:52 +0000 (GMT)
+Date:   Sat, 6 Apr 2019 16:02:50 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        pavel.tatashin@microsoft.com, mhocko@suse.com,
+        dave.jiang@intel.com, linux-nvdimm@lists.01.org,
+        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mingo@kernel.org, yi.z.zhang@linux.intel.com,
+        khalid.aziz@oracle.com, rppt@linux.vnet.ibm.com, vbabka@suse.cz,
+        sparclinux@vger.kernel.org, dan.j.williams@intel.com,
+        ldufour@linux.vnet.ibm.com, mgorman@techsingularity.net,
+        davem@davemloft.net, kirill.shutemov@linux.intel.com
+Subject: Re: [mm PATCH v7 3/4] mm: Implement new zone specific memblock
+ iterator
+References: <20190405221043.12227.19679.stgit@localhost.localdomain>
+ <20190405221225.12227.22573.stgit@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190405221225.12227.22573.stgit@localhost.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19040613-4275-0000-0000-00000324EFAB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040613-4276-0000-0000-000038340213
+Message-Id: <20190406130249.GA5470@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-06_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904060079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 01:07:13-0500, Rob Herring wrote:
-> On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
-> > Some RTC devices have a battery-low automatic detection circuit.
-> > The battery-low event is usually reported with:
-> > 
-> > - a bit change in a RTC status register
-> > - a hw signaling (generally using an interrupt generation), changing
-> >   the hw level of a specific pin;
-> > 
-> > The new property "battery-low-hw-alarm" enable the RTC to generate the
-> > hw signaling in case of battery-low event.
-> > 
-> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > ---
-> >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > index a97fc6a..f93a44d 100644
-> > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > @@ -31,6 +31,9 @@ below.
-> >                              expressed in femto Farad (fF).
-> >                              The default value shall be listed (if optional),
-> >                              and likewise all valid values.
-> > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This function
-> > +                            is available on the following devices:
-> > +                            - pcf2127 - pin used for alarm: INTn
+On Fri, Apr 05, 2019 at 03:12:25PM -0700, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > 
-> Boolean? If there's cases where which pin is selectable, then we'd need 
-> this to take a value. Not sure how likely that is?
+> Introduce a new iterator for_each_free_mem_pfn_range_in_zone.
 > 
+> This iterator will take care of making sure a given memory range provided
+> is in fact contained within a zone. It takes are of all the bounds checking
+> we were doing in deferred_grow_zone, and deferred_init_memmap. In addition
+> it should help to speed up the search a bit by iterating until the end of a
+> range is greater than the start of the zone pfn range, and will exit
+> completely if the start is beyond the end of the zone.
+> 
+> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Indeed, there is at least the pcf85363 that has two possible pins for
-that interrupt. How would you select the pin then? a zero based index? a
-string?
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+> ---
+>  include/linux/memblock.h |   25 ++++++++++++++++++
+>  mm/memblock.c            |   64 ++++++++++++++++++++++++++++++++++++++++++++++
+>  mm/page_alloc.c          |   31 +++++++++-------------
+>  3 files changed, 101 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 294d5d80e150..f8b78892b977 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -240,6 +240,31 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
+>  	     i >= 0; __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid))
+>  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+> 
+> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> +void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+> +				  unsigned long *out_spfn,
+> +				  unsigned long *out_epfn);
+> +/**
+> + * for_each_free_mem_range_in_zone - iterate through zone specific free
+> + * memblock areas
+> + * @i: u64 used as loop variable
+> + * @zone: zone in which all of the memory blocks reside
+> + * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+> + * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+> + *
+> + * Walks over free (memory && !reserved) areas of memblock in a specific
+> + * zone. Available once memblock and an empty zone is initialized. The main
+> + * assumption is that the zone start, end, and pgdat have been associated.
+> + * This way we can use the zone to determine NUMA node, and if a given part
+> + * of the memblock is valid for the zone.
+> + */
+> +#define for_each_free_mem_pfn_range_in_zone(i, zone, p_start, p_end)	\
+> +	for (i = 0,							\
+> +	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end);	\
+> +	     i != U64_MAX;					\
+> +	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end))
+> +#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+> +
+>  /**
+>   * for_each_free_mem_range - iterate through free memblock areas
+>   * @i: u64 used as loop variable
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index e7665cf914b1..28fa8926d9f8 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1255,6 +1255,70 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
+>  	return 0;
+>  }
+>  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> +/**
+> + * __next_mem_pfn_range_in_zone - iterator for for_each_*_range_in_zone()
+> + *
+> + * @idx: pointer to u64 loop variable
+> + * @zone: zone in which all of the memory blocks reside
+> + * @out_spfn: ptr to ulong for start pfn of the range, can be %NULL
+> + * @out_epfn: ptr to ulong for end pfn of the range, can be %NULL
+> + *
+> + * This function is meant to be a zone/pfn specific wrapper for the
+> + * for_each_mem_range type iterators. Specifically they are used in the
+> + * deferred memory init routines and as such we were duplicating much of
+> + * this logic throughout the code. So instead of having it in multiple
+> + * locations it seemed like it would make more sense to centralize this to
+> + * one new iterator that does everything they need.
+> + */
+> +void __init_memblock
+> +__next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+> +			     unsigned long *out_spfn, unsigned long *out_epfn)
+> +{
+> +	int zone_nid = zone_to_nid(zone);
+> +	phys_addr_t spa, epa;
+> +	int nid;
+> +
+> +	__next_mem_range(idx, zone_nid, MEMBLOCK_NONE,
+> +			 &memblock.memory, &memblock.reserved,
+> +			 &spa, &epa, &nid);
+> +
+> +	while (*idx != U64_MAX) {
+> +		unsigned long epfn = PFN_DOWN(epa);
+> +		unsigned long spfn = PFN_UP(spa);
+> +
+> +		/*
+> +		 * Verify the end is at least past the start of the zone and
+> +		 * that we have at least one PFN to initialize.
+> +		 */
+> +		if (zone->zone_start_pfn < epfn && spfn < epfn) {
+> +			/* if we went too far just stop searching */
+> +			if (zone_end_pfn(zone) <= spfn) {
+> +				*idx = U64_MAX;
+> +				break;
+> +			}
+> +
+> +			if (out_spfn)
+> +				*out_spfn = max(zone->zone_start_pfn, spfn);
+> +			if (out_epfn)
+> +				*out_epfn = min(zone_end_pfn(zone), epfn);
+> +
+> +			return;
+> +		}
+> +
+> +		__next_mem_range(idx, zone_nid, MEMBLOCK_NONE,
+> +				 &memblock.memory, &memblock.reserved,
+> +				 &spa, &epa, &nid);
+> +	}
+> +
+> +	/* signal end of iteration */
+> +	if (out_spfn)
+> +		*out_spfn = ULONG_MAX;
+> +	if (out_epfn)
+> +		*out_epfn = 0;
+> +}
+> +
+> +#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+> 
+>  /**
+>   * memblock_alloc_range_nid - allocate boot memory block
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 2d2bca9803d2..61467e28c966 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1613,11 +1613,9 @@ static unsigned long  __init deferred_init_pages(struct zone *zone,
+>  static int __init deferred_init_memmap(void *data)
+>  {
+>  	pg_data_t *pgdat = data;
+> -	int nid = pgdat->node_id;
+>  	unsigned long start = jiffies;
+>  	unsigned long nr_pages = 0;
+>  	unsigned long spfn, epfn, first_init_pfn, flags;
+> -	phys_addr_t spa, epa;
+>  	int zid;
+>  	struct zone *zone;
+>  	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+> @@ -1654,14 +1652,12 @@ static int __init deferred_init_memmap(void *data)
+>  	 * freeing pages we can access pages that are ahead (computing buddy
+>  	 * page in __free_one_page()).
+>  	 */
+> -	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
+> -		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
+> -		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
+> +	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
+> +		spfn = max_t(unsigned long, first_init_pfn, spfn);
+>  		nr_pages += deferred_init_pages(zone, spfn, epfn);
+>  	}
+> -	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
+> -		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
+> -		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
+> +	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
+> +		spfn = max_t(unsigned long, first_init_pfn, spfn);
+>  		deferred_free_pages(spfn, epfn);
+>  	}
+>  	pgdat_resize_unlock(pgdat, &flags);
+> @@ -1669,8 +1665,8 @@ static int __init deferred_init_memmap(void *data)
+>  	/* Sanity check that the next zone really is unpopulated */
+>  	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+> 
+> -	pr_info("node %d initialised, %lu pages in %ums\n", nid, nr_pages,
+> -					jiffies_to_msecs(jiffies - start));
+> +	pr_info("node %d initialised, %lu pages in %ums\n",
+> +		pgdat->node_id,	nr_pages, jiffies_to_msecs(jiffies - start));
+> 
+>  	pgdat_init_report_one_done();
+>  	return 0;
+> @@ -1694,13 +1690,11 @@ static int __init deferred_init_memmap(void *data)
+>  static noinline bool __init
+>  deferred_grow_zone(struct zone *zone, unsigned int order)
+>  {
+> -	int nid = zone_to_nid(zone);
+> -	pg_data_t *pgdat = NODE_DATA(nid);
+>  	unsigned long nr_pages_needed = ALIGN(1 << order, PAGES_PER_SECTION);
+> +	pg_data_t *pgdat = zone->zone_pgdat;
+>  	unsigned long nr_pages = 0;
+>  	unsigned long first_init_pfn, spfn, epfn, t, flags;
+>  	unsigned long first_deferred_pfn = pgdat->first_deferred_pfn;
+> -	phys_addr_t spa, epa;
+>  	u64 i;
+> 
+>  	/* Only the last zone may have deferred pages */
+> @@ -1736,9 +1730,8 @@ static int __init deferred_init_memmap(void *data)
+>  		return false;
+>  	}
+> 
+> -	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
+> -		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
+> -		epfn = min_t(unsigned long, zone_end_pfn(zone), PFN_DOWN(epa));
+> +	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
+> +		spfn = max_t(unsigned long, first_init_pfn, spfn);
+> 
+>  		while (spfn < epfn && nr_pages < nr_pages_needed) {
+>  			t = ALIGN(spfn + PAGES_PER_SECTION, PAGES_PER_SECTION);
+> @@ -1752,9 +1745,9 @@ static int __init deferred_init_memmap(void *data)
+>  			break;
+>  	}
+> 
+> -	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &spa, &epa, NULL) {
+> -		spfn = max_t(unsigned long, first_init_pfn, PFN_UP(spa));
+> -		epfn = min_t(unsigned long, first_deferred_pfn, PFN_DOWN(epa));
+> +	for_each_free_mem_pfn_range_in_zone(i, zone, &spfn, &epfn) {
+> +		spfn = max_t(unsigned long, first_init_pfn, spfn);
+> +		epfn = min_t(unsigned long, first_deferred_pfn, epfn);
+>  		deferred_free_pages(spfn, epfn);
+> 
+>  		if (first_deferred_pfn == epfn)
+> 
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Sincerely yours,
+Mike.
+
