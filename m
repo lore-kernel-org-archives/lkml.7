@@ -2,118 +2,184 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E44CC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A492C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242B42173C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Xr6BIecC"
+	by mail.kernel.org (Postfix) with ESMTP id 139472186A
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDFG0C (ORCPT
+        id S1726424AbfDFGbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 02:26:02 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45475 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfDFG0C (ORCPT
+        Sat, 6 Apr 2019 02:31:53 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:8816 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbfDFGbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 02:26:02 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bf11so4183722plb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 23:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wVzU6PP5F+SzOzpO6WtaAUoxTTsPMC1Ul+BiXwcB+sU=;
-        b=Xr6BIecC0VTA+AkMq0Fd0wyp67AFq6aiZnX+pV0vheHuI7SaNlLv41VSgjo+/7Ex6f
-         bXp546GqjmgdrydUmtGlD+5ob+bJYiySitT/ZSIIbUwtZJDM27MvYK30bX2zoetaiC1n
-         ObqgWxB+S77xqYJnCiD/V0jMrIEl/6vzz1Nlrh0eCwfzbjwjlbz6X8GjcW44om7WeBnx
-         sZO1UpyOTZpnncTjz53iT1HUvG6GDyQAWsjhM9gm/BkqRVpybiLt15Cn9IvBcoqdf/mH
-         A7FjcyBgqn29Sv8vlTTB10W2S6YMeBPX9jFOUlTxjYuKDbxTQZyt15eUp87HzlAiTYcD
-         7ltg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wVzU6PP5F+SzOzpO6WtaAUoxTTsPMC1Ul+BiXwcB+sU=;
-        b=qb33TPOhZp86p88CStIZb9P5cV/4BAEjHnrBw+9lgKkpb3aMCyWLkmHZmg7/lblTXV
-         lf82jho9cZXq5n/GL026HxUxdWIXwt5hcjv1lDYVax5S6M/Si+kW23/5H1sAqvy4zNs0
-         X60HDv4PcwM4Om3ZVDV6XfADxUMhRNA7n9pk1JrAaKtCNtSOIC4VPxa/mLLENGcInqn2
-         nLPqHtfBmsTZlKoSHh8yxAEyHtjDgIsLQpWVsZWKJKIGjc1DXxXIgeBD/X7sK5bykEmM
-         cJmpF7tN0aUoPlOcq5Fr+OwyYj3AyulqrA/u8h4TPSTyVt9vWeGP/4E60YZr/7wufCxu
-         mUGQ==
-X-Gm-Message-State: APjAAAVQlPaKvMwQ6TAmf0GYY4WjuZazh4GeI2m8qQ0QYeN97abZglSV
-        nVQeMqB/xj95EniZBPlYP6hNzQ==
-X-Google-Smtp-Source: APXvYqzj1J3fVFoxLOwhCA8mwLoMA4GAwIIB5VbJL9RH13qVDNdi6Viz5k286fZv8sj/3+lqHFCGPg==
-X-Received: by 2002:a17:902:8c97:: with SMTP id t23mr17430492plo.110.1554531961340;
-        Fri, 05 Apr 2019 23:26:01 -0700 (PDT)
-Received: from viisi.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id t12sm54444623pfl.59.2019.04.05.23.26.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2019 23:26:00 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-To:     devicetree@vger.kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: arm: fix YAML whitespace in cpus.yaml
-Date:   Fri,  5 Apr 2019 23:25:39 -0700
-Message-Id: <20190406062538.31325-1-paul.walmsley@sifive.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 6 Apr 2019 02:31:53 -0400
+X-IronPort-AV: E=Sophos;i="5.60,315,1549926000"; 
+   d="scan'208";a="302005497"
+Received: from abo-75-106-68.mrs.modulonet.fr (HELO hadrien) ([85.68.106.75])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Apr 2019 08:31:49 +0200
+Date:   Sat, 6 Apr 2019 08:31:49 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Himanshu Jha <himanshujha199640@gmail.com>
+cc:     yamada.masahiro@socionext.com, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, linux-kernel@vger.kernel.org,
+        cocci@systeme.lip6.fr, bgolaszewski@baylibre.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] coccinelle: api: add devm_platform_ioremap_resource
+ script
+In-Reply-To: <20190406061112.31620-1-himanshujha199640@gmail.com>
+Message-ID: <alpine.DEB.2.21.1904060831120.4486@hadrien>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running 'make dt_binding_check' fails for
-Documentation/devicetree/bindings/arm/cpus.yaml.  This is due to tabs
-used for indentation:
 
-$ dt-doc-validate Documentation/devicetree/bindings/arm/cpus.yaml
-Documentation/devicetree/bindings/arm/cpus.yaml:  while scanning a plain scalar
-  in "<unicode string>", line 230, column 19
-found a tab character that violates indentation
-  in "<unicode string>", line 231, column 1
-$
 
-Fixes: fd73403a4862842e89d7d2063cfe9e25bbe9c991 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, 6 Apr 2019, Himanshu Jha wrote:
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index 365dcf384d73..82dd7582e945 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -228,7 +228,7 @@ patternProperties:
-                 - renesas,r9a06g032-smp
-                 - rockchip,rk3036-smp
-                 - rockchip,rk3066-smp
--		- socionext,milbeaut-m10v-smp
-+                - socionext,milbeaut-m10v-smp
-                 - ste,dbx500-smp
- 
-       cpu-release-addr:
--- 
-2.20.1
+> Use recently introduced devm_platform_ioremap_resource
+> helper which wraps platform_get_resource() and
+> devm_ioremap_resource() together. This helps produce much
+> cleaner code while removing local `struct resource` declaration.
+>
+> Signed-off-by: Himanshu Jha <himanshujha199640@gmail.com>
 
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+
+Thanks for taking up this issue.
+
+julia
+
+> ---
+>
+> Tree wide changes has been tested through 0-day test service
+> with build success.
+>
+> BUILD SUCCESS 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0
+> tree/branch: https://github.com/himanshujha199640/linux-next  20190401-devm_platform_ioremap_resource-final
+> branch HEAD: 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0  Coccinelle: api: Add devm_platform_ioremap_resource.cocci
+>
+> elapsed time: 385m
+> configs tested: 162
+>
+>
+> Stats:
+> 916 files changed, 1028 insertions(+), 2921 deletions(-)
+>
+> Note: cases where the `struct resource *res` variable is
+> used subsequently in the function have been ignored out because
+> those cases produce:
+>
+> eg., drivers/bus/da8xx-mstpri.c
+>
+> warning: 'res' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>
+> due to:
+> 	if (prio_descr->reg + sizeof(u32) > resource_size(res)) {
+>
+> which seems correct as `res` isn't initialized in the scope of
+> the function(da8xx_mstpri_probe) and instead initialized inside:
+>
+>    void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+>                                                 unsigned int index)
+>    {
+>            struct resource *res;
+>
+>            res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+>            return devm_ioremap_resource(&pdev->dev, res);
+>    }
+>    EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+>
+>
+>  .../api/devm_platform_ioremap_resource.cocci  | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+>
+> diff --git a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> new file mode 100644
+> index 000000000000..a28274af14df
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> @@ -0,0 +1,63 @@
+> +/// Use devm_platform_ioremap_resource helper which wraps
+> +/// platform_get_resource() and devm_ioremap_resource() together.
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2019 Himanshu Jha GPLv2.
+> +// Copyright: (C) 2019 Julia Lawall, Inria/LIP6. GPLv2.
+> +// Keywords: platform_get_resource, devm_ioremap_resource,
+> +// Keywords: devm_platform_ioremap_resource
+> +
+> +virtual patch
+> +virtual report
+> +
+> +@r depends on patch && !report@
+> +expression e1, e2, arg1, arg2, arg3, arg4;
+> +identifier id;
+> +@@
+> +
+> +(
+> +- id = platform_get_resource(arg1, arg2, arg3);
+> +|
+> +- struct resource *id = platform_get_resource(arg1, arg2, arg3);
+> +)
+> +  ... when != id
+> +- e1 = devm_ioremap_resource(arg4, id);
+> ++ e1 = devm_platform_ioremap_resource(arg1, arg3);
+> +  ... when != id
+> +? id = e2
+> +
+> +@r1 depends on patch && !report@
+> +identifier r.id;
+> +type T;
+> +@@
+> +
+> +- T *id;
+> +  ...when != id
+> +
+> +// ----------------------------------------------------------------------------
+> +
+> +@r2 depends on report && !patch@
+> +identifier id;
+> +expression e1, e2, arg1, arg2, arg3, arg4;
+> +position j0;
+> +@@
+> +
+> +(
+> +  id = platform_get_resource(arg1, arg2, arg3);
+> +|
+> +  struct resource *id = platform_get_resource(arg1, arg2, arg3);
+> +)
+> +  ... when != id
+> +  e1@j0 = devm_ioremap_resource(arg4, id);
+> +  ... when != id
+> +? id = e2
+> +
+> +// ----------------------------------------------------------------------------
+> +
+> +@script:python depends on report && !patch@
+> +e1 << r2.e1;
+> +j0 << r2.j0;
+> +@@
+> +
+> +msg = "WARNING: Use devm_platform_ioremap_resource for %s" % (e1)
+> +coccilib.report.print_report(j0[0], msg)
+> --
+> 2.17.1
+>
+>
