@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873D2C282DA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7675C10F06
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 18:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5086921019
+	by mail.kernel.org (Postfix) with ESMTP id 8178D21902
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 18:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPlXE6aP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvaSEBZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfDFSfY (ORCPT
+        id S1726677AbfDFSf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 14:35:24 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44730 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfDFSfX (ORCPT
+        Sat, 6 Apr 2019 14:35:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36418 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbfDFSfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 14:35:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h16so7859543ljg.11
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 11:35:22 -0700 (PDT)
+        Sat, 6 Apr 2019 14:35:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so7901346ljg.3
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 11:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cy3SM5r/wmKJF4gCdfrdBD/mCIoEWm9jyjb4iJPWDQY=;
-        b=RPlXE6aPcpZJlEWAL/EPm/scuOysXtYtIatbm0lcJBQwzQTgjYiBFaRYNjwfpnTwx8
-         iOZJtE6hC1xvZYBi6jTfvOIiKyPCvo4OnroZn5/SH4BBJuEm2sSHgVty9X/oQgTIIXHX
-         z2cZwqD7+4iSVTN2woRotummr5Rnyip5raPV3qVl7FNKy2h9zaRUJetO6lJIiutqN4Sm
-         a6cVtcfW3t/FLFHYMYHr6WYKyqwV104LQ0/kvWuZp57WqemiRkggCbeUbMikPBZpt6YQ
-         gQaY7yPaWizfBBAu5/QYHa0B9poa+Ck6nADEQtDU5g/c7P6VG63Ovm2YGS8W7jB+mZb8
-         V3gw==
+        bh=tubI+It4WaUhci6ijaS4JDLrAM+rOnnPle+bQPWXm+g=;
+        b=OvaSEBZpSzsCRma3SJ6iXPhpCSlVLCWxzki0MNr2ZNCPUWha4dzB2Vihnr0yhMc5X/
+         xP2sU3ApZgon5IL7p1wl7vsdrFD8Vdo0OfuGwE40IjflZvM3bWMOpKVdgN0MKqizMFj0
+         lqhSyp0PsVut4DnbZIAJsaFOAuw49s7yVlWUyO3GWV8UW8ucndciA63FQ4+2vpHqiHDJ
+         uZ4ggH3uEI1F2SH6x0Vv07bFzmYa2bKvNBXVK8gCX4lHVh6avu+Hf9Dajc+gY48EoA9h
+         wtfCQGKDEQFBreZinxvUA819Fez3end6W2oFHgB0llbEZM71CLBkID1dvQ3x4mggIm0Z
+         UbIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Cy3SM5r/wmKJF4gCdfrdBD/mCIoEWm9jyjb4iJPWDQY=;
-        b=ss58Gvin16AyADPH3XOjk1PweGD5Te/WSeY/N9Ojgeic4ahzDYBbL/hFeY7+UTS/j+
-         FZvR4PjibcUM1JZ8oV9fmyGBzI8ywvTkoyF8DWj9l04A9NJtVn4iP48ha6dsRMDrWR4U
-         7ZUqLUChWRHAfsMaQVE5/qwzpGBz1NsErxp2zfndvsypbh7Qsp4oRjlNwLU+ltTSisbH
-         u5voEXiAF6AUN6zL9elCWl2gOuRLUMRFoJsBH5KIKmGEeLI2lakGx5inNhqlESv8rqFl
-         RR8M0w+wCNNwsseEwhpd0DdKqOiNiqezX9FjNm8k04OnxviDHL/YR+f/6h1ok3UPOOkJ
-         5Upg==
-X-Gm-Message-State: APjAAAXU2WvqBQrACro9Hrxzcgoek/g0bsnpKGj/u8KzLFEVUsso0te/
-        BJyYb3ZgzY/dQDNHTAgpATw=
-X-Google-Smtp-Source: APXvYqyCsbyKnf+glMe+Mx4ifka7UVeEPa6eRgpmdkqP4YZ01QGsgi5iAR2i2E+iMNqAXoap9K1a/w==
-X-Received: by 2002:a2e:1245:: with SMTP id t66mr10862644lje.18.1554575721421;
-        Sat, 06 Apr 2019 11:35:21 -0700 (PDT)
+        bh=tubI+It4WaUhci6ijaS4JDLrAM+rOnnPle+bQPWXm+g=;
+        b=c0qi0vZ+H1tQMlQeMzjN1xKgUztVn1Z+Fv/9SMWpFjpiMSsUeR6zK6082ZbgPPe+QQ
+         0W6dD3wMYjPL+9dGiHYjfuhZQpUV94IIM3nIEH0LP4m1DSxdK0kjC7BEbS/09WPOmFz4
+         OiGaXWI79IHfvt3DxRdj4/kEQx4VLl8wqYd4f8Px4h4isiXocnMR9RYSzBE94U5GR7xK
+         yDvLJTG9TY6AzGwAAGa+aG0g03TFl1aW7ovWDbur7wb1Tv90vF60M9f8buVazBpUfpka
+         XRaVFQBVDzQSqjroJu3hzqKh1rRB5rvdVVNSm4ADYwO7iOut1UfzSUQyuRfNELPyWQhF
+         3niw==
+X-Gm-Message-State: APjAAAU+fHEEf9fp326L3EThNsKKVlqAldhUwzPtV3wwOpEJRJsAGVbS
+        syR4XeKLekaCEiu4XLZp24k=
+X-Google-Smtp-Source: APXvYqzmWzmTccbPOpN7RuQgilMd5laFLwYDjbbh84uEBNQPmVzC0S/Ghij4eXzcSQOBGG2zVdFafQ==
+X-Received: by 2002:a2e:b042:: with SMTP id d2mr8321872ljl.0.1554575722613;
+        Sat, 06 Apr 2019 11:35:22 -0700 (PDT)
 Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id m1sm5119622lfb.78.2019.04.06.11.35.19
+        by smtp.gmail.com with ESMTPSA id m1sm5119622lfb.78.2019.04.06.11.35.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 11:35:20 -0700 (PDT)
+        Sat, 06 Apr 2019 11:35:22 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <guro@fb.com>
@@ -68,9 +68,9 @@ Cc:     Michal Hocko <mhocko@suse.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
         "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: [PATCH v4 2/3] mm/vmap: add DEBUG_AUGMENT_PROPAGATE_CHECK macro
-Date:   Sat,  6 Apr 2019 20:35:07 +0200
-Message-Id: <20190406183508.25273-3-urezki@gmail.com>
+Subject: [PATCH v4 3/3] mm/vmap: add DEBUG_AUGMENT_LOWEST_MATCH_CHECK macro
+Date:   Sat,  6 Apr 2019 20:35:08 +0200
+Message-Id: <20190406183508.25273-4-urezki@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190406183508.25273-1-urezki@gmail.com>
 References: <20190406183508.25273-1-urezki@gmail.com>
@@ -79,9 +79,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro adds some debug code to check that the augment tree
-is maintained correctly, meaning that every node contains valid
-subtree_max_size value.
+This macro adds some debug code to check that vmap allocations
+are happened in ascending order.
 
 By default this option is set to 0 and not active. It requires
 recompilation of the kernel to activate it. Set to 1, compile
@@ -90,82 +89,77 @@ the kernel.
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Reviewed-by: Roman Gushchin <guro@fb.com>
 ---
- mm/vmalloc.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ mm/vmalloc.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index c6f9d0637464..a74e605e042f 100644
+index a74e605e042f..92b784d8088c 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
-@@ -324,6 +324,8 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
- 
+@@ -325,6 +325,7 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
  /*** Global kva allocator ***/
  
-+#define DEBUG_AUGMENT_PROPAGATE_CHECK 0
-+
+ #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
++#define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+ 
  #define VM_LAZY_FREE	0x02
  #define VM_VM_AREA	0x04
- 
-@@ -538,6 +540,48 @@ unlink_va(struct vmap_area *va, struct rb_root *root)
- 	}
+@@ -833,6 +834,44 @@ find_vmap_lowest_match(unsigned long size,
+ 	return NULL;
  }
  
-+#if DEBUG_AUGMENT_PROPAGATE_CHECK
-+static void
-+augment_tree_propagate_check(struct rb_node *n)
++#if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
++#include <linux/random.h>
++
++static struct vmap_area *
++find_vmap_lowest_linear_match(unsigned long size,
++	unsigned long align, unsigned long vstart)
 +{
 +	struct vmap_area *va;
-+	struct rb_node *node;
-+	unsigned long size;
-+	bool found = false;
 +
-+	if (n == NULL)
-+		return;
++	list_for_each_entry(va, &free_vmap_area_list, list) {
++		if (!is_within_this_va(va, size, align, vstart))
++			continue;
 +
-+	va = rb_entry(n, struct vmap_area, rb_node);
-+	size = va->subtree_max_size;
-+	node = n;
-+
-+	while (node) {
-+		va = rb_entry(node, struct vmap_area, rb_node);
-+
-+		if (get_subtree_max_size(node->rb_left) == size) {
-+			node = node->rb_left;
-+		} else {
-+			if (va_size(va) == size) {
-+				found = true;
-+				break;
-+			}
-+
-+			node = node->rb_right;
-+		}
++		return va;
 +	}
 +
-+	if (!found) {
-+		va = rb_entry(n, struct vmap_area, rb_node);
-+		pr_emerg("tree is corrupted: %lu, %lu\n",
-+			va_size(va), va->subtree_max_size);
-+	}
++	return NULL;
++}
 +
-+	augment_tree_propagate_check(n->rb_left);
-+	augment_tree_propagate_check(n->rb_right);
++static void
++find_vmap_lowest_match_check(unsigned long size)
++{
++	struct vmap_area *va_1, *va_2;
++	unsigned long vstart;
++	unsigned int rnd;
++
++	get_random_bytes(&rnd, sizeof(rnd));
++	vstart = VMALLOC_START + rnd;
++
++	va_1 = find_vmap_lowest_match(size, 1, vstart);
++	va_2 = find_vmap_lowest_linear_match(size, 1, vstart);
++
++	if (va_1 != va_2)
++		pr_emerg("not lowest: t: 0x%p, l: 0x%p, v: 0x%lx\n",
++			va_1, va_2, vstart);
 +}
 +#endif
 +
- /*
-  * This function populates subtree_max_size from bottom to upper
-  * levels starting from VA point. The propagation must be done
-@@ -587,6 +631,10 @@ augment_tree_propagate_from(struct vmap_area *va)
- 		va->subtree_max_size = new_va_sub_max_size;
- 		node = rb_parent(&va->rb_node);
- 	}
-+
-+#if DEBUG_AUGMENT_PROPAGATE_CHECK
-+	augment_tree_propagate_check(free_vmap_area_root.rb_node);
+ enum fit_type {
+ 	NOTHING_FIT = 0,
+ 	FL_FIT_TYPE = 1,	/* full fit */
+@@ -975,6 +1014,10 @@ __alloc_vmap_area(unsigned long size, unsigned long align,
+ 	if (ret)
+ 		return vend;
+ 
++#if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
++	find_vmap_lowest_match_check(size);
 +#endif
++
+ 	return nva_start_addr;
  }
  
- static void
 -- 
 2.11.0
 
