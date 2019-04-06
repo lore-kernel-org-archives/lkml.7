@@ -2,85 +2,220 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0CCC282DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9053FC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083EA2087F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D9720879
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDFMG4 (ORCPT
+        id S1726511AbfDFMPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 08:06:56 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48523 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfDFMG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 08:06:56 -0400
-X-Originating-IP: 86.202.231.219
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E413F1BF207;
-        Sat,  6 Apr 2019 12:06:53 +0000 (UTC)
-Date:   Sat, 6 Apr 2019 14:06:53 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC fixes for 5.1
-Message-ID: <20190406120653.GA10170@piout.net>
+        Sat, 6 Apr 2019 08:15:09 -0400
+Received: from monster.unsafe.ru ([5.9.28.80]:59476 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbfDFMPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 08:15:09 -0400
+Received: from localhost.localdomain (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 3BC43C61A84;
+        Sat,  6 Apr 2019 12:14:50 +0000 (UTC)
+Date:   Sat, 6 Apr 2019 14:14:47 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Subject: [PATCH v2] moduleparam: Save information about built-in modules in
+ separate file
+Message-ID: <20190406121447.GB4047@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Problem:
 
-Here are a few fixes for 5.1, please pull.
+When a kernel module is compiled as a separate module, some important
+information about the kernel module is available via .modinfo section of
+the module.  In contrast, when the kernel module is compiled into the
+kernel, that information is not available.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Information about built-in modules is necessary in the following cases:
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+1. When it is necessary to find out what additional parameters can be
+passed to the kernel at boot time.
 
-are available in the Git repository at:
+2. When you need to know which module names and their aliases are in
+the kernel. This is very useful for creating an initrd image.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.1-2
+Proposal:
 
-for you to fetch changes up to 882c5e552ffd06856de42261460f46e18319d259:
+The proposed patch does not remove .modinfo section with module
+information from the vmlinux at the build time and saves it into a
+separate file after kernel linking. So, the kernel does not increase in
+size and no additional information remains in it. Information is stored
+in the same format as in the separate modules (null-terminated string
+array). Because the .modinfo section is already exported with a separate
+modules, we are not creating a new API.
 
-  rtc: da9063: set uie_unsupported when relevant (2019-04-02 23:33:09 +0200)
+It can be easily read in the userspace:
 
-----------------------------------------------------------------
-RTC fixes for 5.1
+$ tr '\0' '\n' < kernel.builtin
+ext4.softdep=pre: crc32c
+ext4.license=GPL
+ext4.description=Fourth Extended Filesystem
+ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
+ext4.alias=fs-ext4
+ext4.alias=ext3
+ext4.alias=fs-ext3
+ext4.alias=ext2
+ext4.alias=fs-ext2
+md_mod.alias=block-major-9-*
+md_mod.alias=md
+md_mod.description=MD RAID framework
+md_mod.license=GPL
+md_mod.parmtype=create_on_open:bool
+md_mod.parmtype=start_dirty_degraded:int
+...
 
- - Various alarm fixes for da9063, cros-ec and sh
- - sd3078 manufacturer name fix as this was introduced this cycle
+v2:
+ * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
+ * Rename output file to kernel.builtin;
+ * Add MODULE_VERSION to modinfo that is saved to the kernel.builtin;
+ * Fix build warnings on powerpc.
 
-----------------------------------------------------------------
-Alexandre Belloni (2):
-      rtc: sd3078: fix manufacturer name
-      rtc: da9063: set uie_unsupported when relevant
+Co-Developed-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+---
+ .gitignore                        |  1 +
+ Makefile                          |  2 ++
+ include/asm-generic/vmlinux.lds.h |  1 +
+ include/linux/module.h            |  1 +
+ include/linux/moduleparam.h       | 12 +++++-------
+ scripts/link-vmlinux.sh           |  4 ++++
+ 6 files changed, 14 insertions(+), 7 deletions(-)
 
-Geert Uytterhoeven (1):
-      rtc: sh: Fix invalid alarm warning for non-enabled alarm
-
-Stephen Boyd (1):
-      rtc: cros-ec: Fail suspend/resume if wake IRQ can't be configured
-
- drivers/rtc/Kconfig       | 4 ++--
- drivers/rtc/rtc-cros-ec.c | 4 ++--
- drivers/rtc/rtc-da9063.c  | 7 +++++++
- drivers/rtc/rtc-sh.c      | 2 +-
- 4 files changed, 12 insertions(+), 5 deletions(-)
-
+diff --git a/.gitignore b/.gitignore
+index a20ac26aa2f5..432332fd745e 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -45,6 +45,7 @@
+ *.xz
+ Module.symvers
+ modules.builtin
++kernel.builtin
+ 
+ #
+ # Top-level generic files
+diff --git a/Makefile b/Makefile
+index d5713e7b1e50..d9dc6211fbc7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1288,6 +1288,7 @@ _modinst_:
+ 	fi
+ 	@cp -f $(objtree)/modules.order $(MODLIB)/
+ 	@cp -f $(objtree)/modules.builtin $(MODLIB)/
++	@cp -f $(objtree)/kernel.builtin $(MODLIB)/
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
+ 
+ # This depmod is only for convenience to give the initial
+@@ -1328,6 +1329,7 @@ endif # CONFIG_MODULES
+ 
+ # Directories & files removed with 'make clean'
+ CLEAN_DIRS  += $(MODVERDIR) include/ksym
++CLEAN_FILES += kernel.builtin
+ 
+ # Directories & files removed with 'make mrproper'
+ MRPROPER_DIRS  += include/config usr/include include/generated          \
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 3d7a6a9c2370..44c724bf7d3a 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -844,6 +844,7 @@
+ 	EXIT_CALL							\
+ 	*(.discard)							\
+ 	*(.discard.*)							\
++	*(.modinfo)							\
+ 	}
+ 
+ /**
+diff --git a/include/linux/module.h b/include/linux/module.h
+index f5bc4c046461..1cae28b1172a 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -237,6 +237,7 @@ extern typeof(name) __mod_##type##__##name##_device_table		\
+ #define MODULE_VERSION(_version) MODULE_INFO(version, _version)
+ #else
+ #define MODULE_VERSION(_version)					\
++	MODULE_INFO(version, _version);					\
+ 	static struct module_version_attribute ___modver_attr = {	\
+ 		.mattr	= {						\
+ 			.attr	= {					\
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index ba36506db4fb..5ba250d9172a 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -10,23 +10,21 @@
+    module name. */
+ #ifdef MODULE
+ #define MODULE_PARAM_PREFIX /* empty */
++#define __MODULE_INFO_PREFIX /* empty */
+ #else
+ #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
++/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
++#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
+ #endif
+ 
+ /* Chosen so that structs with an unsigned long line up. */
+ #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
+ 
+-#ifdef MODULE
+ #define __MODULE_INFO(tag, name, info)					  \
+ static const char __UNIQUE_ID(name)[]					  \
+   __used __attribute__((section(".modinfo"), unused, aligned(1)))	  \
+-  = __stringify(tag) "=" info
+-#else  /* !MODULE */
+-/* This struct is here for syntactic coherency, it is not used */
+-#define __MODULE_INFO(tag, name, info)					  \
+-  struct __UNIQUE_ID(name) {}
+-#endif
++  = __MODULE_INFO_PREFIX __stringify(tag) "=" info
++
+ #define __MODULE_PARM_TYPE(name, _type)					  \
+   __MODULE_INFO(parmtype, name##type, #name ":" _type)
+ 
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index c8cf45362bd6..b914e026ef28 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -226,6 +226,10 @@ modpost_link vmlinux.o
+ # modpost vmlinux.o to check for section mismatches
+ ${MAKE} -f "${srctree}/scripts/Makefile.modpost" vmlinux.o
+ 
++info MODINFO kernel.builtin
++"${OBJCOPY}" -j .modinfo -O binary vmlinux.o kernel.builtin
++chmod 444 kernel.builtin
++
+ kallsymso=""
+ kallsyms_vmlinux=""
+ if [ -n "${CONFIG_KALLSYMS}" ]; then
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
+
