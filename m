@@ -2,84 +2,68 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0541C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D42C282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4B82087F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A57420B1F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 15:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDFPPk (ORCPT
+        id S1726614AbfDFPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 11:15:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5690 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726452AbfDFPPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 11:15:39 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 75009377418EABF1BDD7;
-        Sat,  6 Apr 2019 23:15:34 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Sat, 6 Apr 2019
- 23:15:28 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-        <eric@anholt.net>, <stefan.wahren@i2se.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-spi@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] spi: bcm2835aux: Fix build error without CONFIG_DEBUG_FS
-Date:   Sat, 6 Apr 2019 23:14:57 +0800
-Message-ID: <20190406151457.32104-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 6 Apr 2019 11:20:41 -0400
+Received: from bout01.mta.xmission.com ([166.70.11.15]:51044 "EHLO
+        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfDFPUk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 11:20:40 -0400
+X-Greylist: delayed 315 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Apr 2019 11:20:40 EDT
+Received: from mx02.mta.xmission.com ([166.70.13.212])
+        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1hCn7X-0006MD-3D; Sat, 06 Apr 2019 09:20:39 -0600
+Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
+        by mx02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1hCn7M-0003Al-Rx; Sat, 06 Apr 2019 09:20:38 -0600
+Received: from hacktheplanet (c-68-50-23-202.hsd1.in.comcast.net [68.50.23.202])
+        by plesk14.xmission.com (Postfix) with ESMTPSA id 35F461BF247;
+        Sat,  6 Apr 2019 15:20:27 +0000 (UTC)
+Date:   Sat, 6 Apr 2019 11:20:21 -0400
+From:   Scott Bauer <sbauer@plzdonthack.me>
+To:     David Kozub <zub@linux.fjfi.cvut.cz>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Message-ID: <20190406152021.GE10294@hacktheplanet>
+References: <1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz>
+ <1550103368-4605-14-git-send-email-zub@linux.fjfi.cvut.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1550103368-4605-14-git-send-email-zub@linux.fjfi.cvut.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-XM-SPF: eid=1hCn7M-0003Al-Rx;;;mid=<20190406152021.GE10294@hacktheplanet>;;;hst=mx02.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
+X-SA-Exim-Connect-IP: 166.70.198.161
+X-SA-Exim-Mail-From: sbauer@plzdonthack.me
+Subject: Re: [PATCH 13/16] block: sed-opal: use named Opal tokens instead of
+ integer literals
+X-SA-Exim-Version: 4.2.1 (built Fri, 13 May 2016 17:07:30 -0600)
+X-SA-Exim-Scanned: Yes (on mx02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-
-When building CONFIG_DEBUG_FS is not set
-gcc warn this:
-
-drivers/spi/spi-bcm2835aux.c: In function bcm2835aux_spi_probe:
-drivers/spi/spi-bcm2835aux.c:591:2: error: too many arguments to function bcm2835aux_debugfs_create
-  bcm2835aux_debugfs_create(bs, dev_name(&pdev->dev));
-  ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/spi/spi-bcm2835aux.c:145:13: note: declared here
- static void bcm2835aux_debugfs_create(struct bcm2835aux_spi *bs)
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 8048d151eb4d ("spi: bcm2835aux: add driver stats to debugfs")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/spi/spi-bcm2835aux.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index fd8252d..bbf87ad 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -142,7 +142,8 @@ static void bcm2835aux_debugfs_remove(struct bcm2835aux_spi *bs)
- 	bs->debugfs_dir = NULL;
- }
- #else
--static void bcm2835aux_debugfs_create(struct bcm2835aux_spi *bs)
-+static void bcm2835aux_debugfs_create(struct bcm2835aux_spi *bs,
-+				      const char *dname)
- {
- }
- 
--- 
-2.7.4
-
-
+On Thu, Feb 14, 2019 at 01:16:05AM +0100, David Kozub wrote:
+> Replace integer literals by Opal tokens defined in opal_proto.h where
+> possible.
+> 
+> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
