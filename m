@@ -2,97 +2,130 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB1FC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31197C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D0E21855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:51:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="AuXBTMLW"
+	by mail.kernel.org (Postfix) with ESMTP id E7F87218D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfDFJv2 (ORCPT
+        id S1726467AbfDFJxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:51:28 -0400
-Received: from smtp113.ord1c.emailsrvr.com ([108.166.43.113]:34925 "EHLO
-        smtp113.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726036AbfDFJv2 (ORCPT
+        Sat, 6 Apr 2019 05:53:45 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49758 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfDFJxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:51:28 -0400
-Received: from smtp23.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
-        by smtp23.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id 41FAF401CE;
-        Sat,  6 Apr 2019 05:51:27 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1554544287;
-        bh=Qt4iiqKXHOn0XucQXVX+MNagqpQ8P6SfoyEixNo1K4c=;
-        h=Subject:To:From:Date:From;
-        b=AuXBTMLWTfbo1SBNgwlvnVCybMBAwnzCe4NU1HEmjbgb17Ata1ZR1kVwoYYBAzRS3
-         A3DSQrIi2dSVxJuXXE2xH0IGNURwmcWU6ecbe9Pa6VGSPaodug8brBVVhwTKBjhqD3
-         6fOh1uSSNipu9Vv8TUACGTPLORK5vgmp98uWOT0Y=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp23.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 669AB401CC;
-        Sat,  6 Apr 2019 05:51:26 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [192.168.1.10] (redmecca.plus.com [80.229.15.156])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Sat, 06 Apr 2019 05:51:27 -0400
-Subject: Re: [PATCH V2] staging: comedi: dt2811: Fix spelling mistake
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        hsweeten@visionengravers.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20190406082319.GA4231@hari-Inspiron-1545>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Message-ID: <8b6155c1-ac2e-6db7-8070-5cba5620b879@mev.co.uk>
-Date:   Sat, 6 Apr 2019 10:51:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 6 Apr 2019 05:53:45 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C5B1C805F7; Sat,  6 Apr 2019 11:53:34 +0200 (CEST)
+Date:   Sat, 6 Apr 2019 11:53:46 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@google.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Nick Crews <ncrews@chromium.org>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+Message-ID: <20190406095346.GB7546@amd>
+References: <20190404200658.GD29984@amd>
+ <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
+ <20190404202042.GF29984@amd>
+ <CAE_wzQ-8XwzptH7EqNrELxjBzY2+0oHJGB3Va=vZwwK3csu_aA@mail.gmail.com>
+ <20190404204207.GH29984@amd>
+ <CAE_wzQ8xe=x0uYcZkDRVKpUAQ_1vVdEPHU3XnEV1=_WN1-AMfw@mail.gmail.com>
+ <20190404220509.GA14690@amd>
+ <CABXOdTeQgjd2-T+eZCMdTDWBGLHEk6kvnYR0DjJYR7zuvVTMsQ@mail.gmail.com>
+ <df9577fd-c526-77e9-c11c-5416387121db@collabora.com>
+ <469dfb68-a7ab-668d-15cb-9e021c0d3f0c@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190406082319.GA4231@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Disposition: inline
+In-Reply-To: <469dfb68-a7ab-668d-15cb-9e021c0d3f0c@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 09:23, Hariprasad Kelam wrote:
-> changes interupts --> interrupts to fix warning reported by checkpatch
-> tool
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
-> Changes in v2:
->    - Make the Subject more clear by including changed file path.
-> ---
->   drivers/staging/comedi/drivers/dt2811.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/comedi/drivers/dt2811.c b/drivers/staging/comedi/drivers/dt2811.c
-> index 05207a5..8a1f9ef 100644
-> --- a/drivers/staging/comedi/drivers/dt2811.c
-> +++ b/drivers/staging/comedi/drivers/dt2811.c
-> @@ -52,7 +52,7 @@
->   #define DT2811_ADCSR_ADBUSY		BIT(5)	/* r      1=A/D busy */
->   #define DT2811_ADCSR_CLRERROR		BIT(4)
->   #define DT2811_ADCSR_DMAENB		BIT(3)	/* r/w    1=dma ena */
-> -#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interupts ena */
-> +#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interrupts ena */
->   #define DT2811_ADCSR_ADMODE(x)		(((x) & 0x3) << 0)
->   
->   #define DT2811_ADGCR_REG		0x01	/* r/w  A/D Gain/Channel */
-> 
 
-Looks good. Thanks!
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Hi!
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+> The patch set introduces also a set of predefined LED_FUNCTION
+> names to be used in DT bindings. This along with the removal
+> of devicename section from LED naming pattern will help to keep
+> LED sysfs interface more uniform and not varying depending on
+> underlaying hardware driving the LEDs.
+>=20
+> Regarding the problem discussed in this thread - I would not necessarily
+> go for "platform" in place of devicename LED name section in the
+> cros_kbd_led_backlight driver. If we change it (should we at all - it is
+> already in 5.0 AFAICS?), then I would opt for dropping the "chromeos:"
+> part. It believe it will be possible to retrieve this name with
+> get_led_device_info.sh script. It would be good exercise to check
+> it out.
+
+I am not sure about existing driver. Important thing for me is that
+new drivers use consistent naming.
+
+> In cases like above:
+>=20
+>     keyboardist::kbd_backlight
+>     tclnumpad::kbd_backlight
+>=20
+> we could do with the following:
+>=20
+>     :kbd-backlight
+>     :numpad-backlight
+>=20
+> I used hyphens instead of underscores since we will have this convention
+> in the LED_FUNCTION names, which is more common for Device Tree, and
+> some of existing LED triggers.
+
+Existing userspace already searches for *:kbd_backlight", AFAICT, so
+we probably want to keep the "_".
+
+I don't care much if we use "platform:" or no prefix at all for
+backlight of internal keyboard, as long as it is consistent across all
+devices.
+
+We certainly want to use some prefix (probably inputX:) for backlight
+on USB keyboards.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyodyoACgkQMOfwapXb+vL5oQCcCFra/9cmt+6pqBH7En0ogzC/
+8gcAoLamY/jmw88Z2vDKZI9Jtyw0MeaG
+=7wli
+-----END PGP SIGNATURE-----
+
+--hHWLQfXTYDoKhP50--
