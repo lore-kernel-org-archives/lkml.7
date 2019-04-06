@@ -2,97 +2,94 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D03EC282DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3106C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2882146F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B152146F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pvk6bCRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDFNGf (ORCPT
+        id S1726479AbfDFNKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 09:06:35 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50429 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfDFNGf (ORCPT
+        Sat, 6 Apr 2019 09:10:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38520 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfDFNKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 09:06:35 -0400
-X-Originating-IP: 86.202.231.219
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0591D20008;
-        Sat,  6 Apr 2019 13:06:30 +0000 (UTC)
-Date:   Sat, 6 Apr 2019 15:06:30 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Xuefeng Wang <wxf.wang@hisilicon.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tanxiaojun@huawei.com
-Subject: Re: [PATCH] drivers/rtc/rtc-lib.c: check whether tm->tm_year in
- int32 range
-Message-ID: <20190406130630.GB7480@piout.net>
-References: <1550200439-62533-1-git-send-email-wxf.wang@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550200439-62533-1-git-send-email-wxf.wang@hisilicon.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Sat, 6 Apr 2019 09:10:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f36so86909plb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 06:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PBt9ZS1f/XlWZPisju35mqGnn1r/LiMis6JE32KTnoQ=;
+        b=Pvk6bCRa6R24Qkb9Vu4MUwMpv2KGp8nT4A865UC/LHe6S06ReZ+M7tNVwhjp2F1/4H
+         yapOxZ5XaK1et9MwxZjgQgwnYgWFhLxbOLTZF2BZbIK/qGtqvrbWsYYA3zCCJF0aefBl
+         4h/H8xho6KBpeozp+7L8oHSKPZUzW0b3jPkVcpjLXNoI0N+cc7pSdr/1HVRP4woqmHM3
+         QCoSe65SC2GG8Umv++MSCZ8vhuLHdUjByACcSkkITNXjoWhOBHT4PNKXwXcqbtcEZ7QN
+         9gxKaZEsFgyn2dLQanTT7SDcgLCaOUxS2vOqu8NIm1Lfbf57RRmrD1oU4EIHL3K4S0GO
+         WSkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PBt9ZS1f/XlWZPisju35mqGnn1r/LiMis6JE32KTnoQ=;
+        b=i8EybAbVvb8bHcTBftvy6/BwZ1O/7TK7k2oBi8GTN2ymiBTfoYpj5pIv0C7LLqFJhB
+         3iM6Vi5WufJM3VZhRDVdJvxvKJ4cQNwBp+mGXZCF6X/X4Qo29r3bQF9ra/qv2RsNWGhC
+         Vgxj7u4NfSiAcMho34U3i/RJfxhrF3u4QrB/b/iLvIbvaD1TA6TW7bZI8SiiSoRJ22ID
+         I3czjMLw7FJQG9p03T1yoPCP5az4N+zVorwgz1hCx3MniIbHh+DVDZoTNmEXszbTl401
+         DBY5XbGpSR42B3660Psm38eJfIi+rdenprqgMN6VsU5S97VQuegSKumWOSpUHeb22z4Q
+         9deg==
+X-Gm-Message-State: APjAAAUoliNJipR6CAkvIxSR9ubs3533ZsgPv4lnA+n6UI1XQ1cVnUu0
+        2K+pY6mxeWrtJxwcF7kVJCX9IdgD
+X-Google-Smtp-Source: APXvYqxtwTEWwSNiDvQKbPPSK8ozxd8mZYjU7ZtiEE9kcvGbm1GTfpR2PavY1ktMSMxV4UNgoJrBOg==
+X-Received: by 2002:a17:902:8bc3:: with SMTP id r3mr19431456plo.53.1554556205651;
+        Sat, 06 Apr 2019 06:10:05 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.51.153])
+        by smtp.gmail.com with ESMTPSA id g4sm36355372pfo.38.2019.04.06.06.10.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 06 Apr 2019 06:10:04 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     linux@armlinux.org.uk, akpm@linux-foundation.org,
+        rppt@linux.ibm.com, anders.roxell@linaro.org, mhocko@suse.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH v2] arm: mm: Remove duplicate header
+Date:   Sat,  6 Apr 2019 18:43:26 +0530
+Message-Id: <1554556406-9290-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/02/2019 11:13:59+0800, Xuefeng Wang wrote:
-> When setting rtc alarm (RTC_WKALM_SET), the tm_year is not checked if it
-> is in suiteable range. Use INT_MAX - 1900 to check it.
-> 
-> UBSAN: Undefined behaviour in drivers/rtc/rtc-lib.c:119:30
-> signed integer overflow:
-> 2147483647 + 1900 cannot be represented in type 'int'
-> CPU: 1 PID: 20994 Comm: syz-executor0 Not tainted 4.19.18-514.55.6.9.x86_64
-> + #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
-> 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xca/0x13e lib/dump_stack.c:113
->  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
->  handle_overflow+0x193/0x1e2 lib/ubsan.c:190
->  rtc_tm_to_time64+0x267/0x280 drivers/rtc/rtc-lib.c:119
->  rtc_tm_to_ktime+0x16/0x70 drivers/rtc/rtc-lib.c:129
->  rtc_set_alarm+0x1a9/0x2d0 drivers/rtc/interface.c:466
->  rtc_dev_ioctl+0x6db/0x810 drivers/rtc/rtc-dev.c:380
->  vfs_ioctl fs/ioctl.c:46 [inline]
->  do_vfs_ioctl+0x1a5/0x10b0 fs/ioctl.c:690
->  ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
->  __do_sys_ioctl fs/ioctl.c:712 [inline]
->  __se_sys_ioctl fs/ioctl.c:710 [inline]
->  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
->  do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462589
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89
-> f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08
-> 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8
-> 64 89 01 48
-> RSP: 002b:00007f5348896c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 000000000072bf00 RCX: 0000000000462589
-> RDX: 0000000020000000 RSI: 000000004028700f RDI: 0000000000000003
-> RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f53488976bc
-> R13: 00000000004bf67e R14: 00000000006f96e0 R15: 00000000ffffffff
-> ==========================================================================
-> 
-> Signed-off-by: Xuefeng Wang <wxf.wang@hisilicon.com>
-> ---
->  drivers/rtc/rtc-lib.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-Applied, thanks.
+Remove duplicate header which is included twice.
 
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+v2: Added Acked-by tag.
+
+ arch/arm/mm/mmu.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index f3ce341..a64a3c5 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -23,7 +23,6 @@
+ #include <asm/sections.h>
+ #include <asm/cachetype.h>
+ #include <asm/fixmap.h>
+-#include <asm/sections.h>
+ #include <asm/setup.h>
+ #include <asm/smp_plat.h>
+ #include <asm/tlb.h>
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+1.9.1
+
