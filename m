@@ -2,154 +2,99 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE94C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 22:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02677C282DC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 22:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D74213A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 22:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40C421019
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 22:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBN8YRaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfDFWR4 (ORCPT
+        id S1726663AbfDFWR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 18:17:56 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37110 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfDFWRz (ORCPT
+        Sat, 6 Apr 2019 18:17:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38193 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfDFWR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 18:17:55 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id F415F80378; Sun,  7 Apr 2019 00:17:44 +0200 (CEST)
-Date:   Sun, 7 Apr 2019 00:17:56 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-Message-ID: <20190406221756.GA4472@amd>
-References: <20190404202042.GF29984@amd>
- <CAE_wzQ-8XwzptH7EqNrELxjBzY2+0oHJGB3Va=vZwwK3csu_aA@mail.gmail.com>
- <20190404204207.GH29984@amd>
- <CAE_wzQ8xe=x0uYcZkDRVKpUAQ_1vVdEPHU3XnEV1=_WN1-AMfw@mail.gmail.com>
- <20190404220509.GA14690@amd>
- <CABXOdTeQgjd2-T+eZCMdTDWBGLHEk6kvnYR0DjJYR7zuvVTMsQ@mail.gmail.com>
- <df9577fd-c526-77e9-c11c-5416387121db@collabora.com>
- <469dfb68-a7ab-668d-15cb-9e021c0d3f0c@gmail.com>
- <20190406095346.GB7546@amd>
- <1b45b4e8-18b6-62d5-7d42-0feed57c2c73@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Content-Disposition: inline
-In-Reply-To: <1b45b4e8-18b6-62d5-7d42-0feed57c2c73@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 6 Apr 2019 18:17:59 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d13so11432554qth.5
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 15:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PeFRlnr6HrZC1NxNfu7wjw3w0uGSbLIsFKks9lD+0RE=;
+        b=iBN8YRajNKfdIG8AKFePX37UCO+q4F2qN0tGjlaotu9EBphSoqnq/pKYd54UnBMs5k
+         5Cb5IuuYtq19D+WCEGegcwjSQQXi8gmUlSWEie//CoHyP8B8roPYHgOh4ja+BtZhpmpj
+         b0lz1Rz7vsmuE6lmJpEI3PFN8tthN/PD2xmdYwu6YRY/eaeiHPKZwuelVXk+rYfVUNb1
+         5WNcLaCeq/cUumVw3jB8Xz9Vk90R2/hH9KL//g8jEfili59xqfjYBCmmwhad/D2JqIAa
+         XSrsIzwG2iYwzqVKFMumD2iPcRke3eLOynrdr/lj4Y3pEMv1hu2/7kwzSv0dqAD4gQm3
+         b1xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PeFRlnr6HrZC1NxNfu7wjw3w0uGSbLIsFKks9lD+0RE=;
+        b=QPXwGuhK9D5KVOPfvQOkA4lAaocq6URslDs4jVG67DV4yPkTX9JiDkYz/WMEaMe+R3
+         +FFq2/Tl3tNS604GAon/MZZNhWTZ5BEAIsBDIRwuX6bGVjoeM0ZM/26FsWFdetCjQ/ho
+         J9eiXXNSseG5a/4yjsBTYNFvnNHxcP6oST4cHOGqmnQK8QcmXsXU/SRzUn9VChzOAn+P
+         9J9/6Yl56DrsSxTGZBRqRIktYfltU2UDiqHE/jA9tyPwlrhG59YPjg1TGHQMM2/zUKvv
+         29PLrl03YaBwHiLE7fKeZspjpWGhxlkRaXS74imWX8zOCbyWmqWjIE/x+XMF4SSlAxwR
+         TjFQ==
+X-Gm-Message-State: APjAAAVVPDE4ELFqM1xR8sar3/VvpjtwTwwZDSMU6xb4NoX7lkKoQk/U
+        jIEUZRJtfzayvIuUjvEGosk=
+X-Google-Smtp-Source: APXvYqwC11jQYOu1t1wqXVhBTMSLPmDTktE/Y+WzMFPUqqhvLKONW/sMgqp/UepoZY1C9xvUWtdl4A==
+X-Received: by 2002:a0c:bd81:: with SMTP id n1mr17063421qvg.65.1554589078105;
+        Sat, 06 Apr 2019 15:17:58 -0700 (PDT)
+Received: from localhost.localdomain ([177.194.125.83])
+        by smtp.gmail.com with ESMTPSA id x184sm4911663qke.35.2019.04.06.15.17.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 15:17:57 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH] Staging: hal: hal_com_phycfg: fixed a coding style issue
+Date:   Sat,  6 Apr 2019 19:17:44 -0300
+Message-Id: <20190406221744.27570-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Added a blank line after declarations.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hi!
+diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+index 12c1cd590056..c41cf14acea1 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
++++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+@@ -1749,6 +1749,7 @@ s8 phy_get_tx_pwr_lmt(struct adapter *adapter, u32 reg_pwr_tbl_sel,
+ 
+ 	if (band_type == BAND_ON_2_4G) {
+ 		s8 limits[10] = {0}; u8 i = 0;
++
+ 		for (i = 0; i < MAX_REGULATION_NUM; i++)
+ 			limits[i] = hal_data->TxPwrLimit_2_4G[i]
+ 							     [idx_bandwidth]
+@@ -1766,6 +1767,7 @@ s8 phy_get_tx_pwr_lmt(struct adapter *adapter, u32 reg_pwr_tbl_sel,
+ 
+ 	} else if (band_type == BAND_ON_5G) {
+ 		s8 limits[10] = {0}; u8 i = 0;
++
+ 		for (i = 0; i < MAX_REGULATION_NUM; ++i)
+ 			limits[i] = hal_data->TxPwrLimit_5G[i]
+ 							   [idx_bandwidth]
+-- 
+2.11.0
 
-> >I am not sure about existing driver. Important thing for me is that
-> >new drivers use consistent naming.
-> >
-> >>In cases like above:
-> >>
-> >>     keyboardist::kbd_backlight
-> >>     tclnumpad::kbd_backlight
-> >>
-> >>we could do with the following:
-> >>
-> >>     :kbd-backlight
-> >>     :numpad-backlight
-> >>
-> >>I used hyphens instead of underscores since we will have this convention
-> >>in the LED_FUNCTION names, which is more common for Device Tree, and
-> >>some of existing LED triggers.
-> >
-> >Existing userspace already searches for *:kbd_backlight", AFAICT, so
-> >we probably want to keep the "_".
->=20
-> OK, but it should be an exception but not a rule.
-> This "kbd-*" naming is used in input and tty subsystems which register
-> keyboard triggers with this style:
->=20
-> ~/kernel$ git grep  ".*[\":]kbd-" -- "*.c"
-> drivers/input/input-leds.c:     [LED_NUML]      =3D { "numlock",
-> VT_TRIGGER("kbd-numlock") },
-
-> "kbd_" naming is used only in case of backlight LEDs:
->=20
-> ~/kernel$ git grep  ".*[\":]kbd_" -- "*.c"
-> drivers/hid/hid-asus.c: drvdata->kbd_backlight->cdev.name =3D
-> "asus::kbd_backlight";
-
-Yes, but userland already knows about kbd_backlight, so we really can
-not change this.
-
-> With LEDs in platform drivers is that problem that we have the name
-> compiled into the kernel. Maybe to make it more flexible we could
-> use kernel config to choose between new "kbd-" and legacy "kbd_"
-> naming.
-
-No, I don't think that is suitable use for config option.
-
-> >I don't care much if we use "platform:" or no prefix at all for
-> >backlight of internal keyboard, as long as it is consistent across all
-> >devices.
-> >
-> >We certainly want to use some prefix (probably inputX:) for backlight
-> >on USB keyboards.
->=20
-> For LEDs exposed through the input-LED bridge my get_led_device_info.sh
-> script nicely reports:
->=20
-> associated input node: input1
->=20
-> It just does:
->=20
-> readlink input1\:\:numlock/device
->=20
-> which prints: "../../input1 "
-
-Yes, that will probably work for USB keyboards. (But not for internal
-keyboards on phones, etc).
-
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlypJZQACgkQMOfwapXb+vJtUACcDprz07bWGG7owVUANpYCh1Dn
-nncAn3OE1uj6KGpEPmzK7C18vf/0BB89
-=6fQc
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
