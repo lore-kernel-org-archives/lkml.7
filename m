@@ -2,146 +2,105 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F47C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 03:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CAFC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 03:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731EE21738
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 03:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F472173C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 03:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfDFDBT (ORCPT
+        id S1726475AbfDFDU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 23:01:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6258 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfDFDBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 23:01:18 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 77A913E2155A04185A86;
-        Sat,  6 Apr 2019 11:01:16 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 6 Apr 2019 11:01:08 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Sohil Ladhani <supertakumi86@gmail.com>,
-        Cristian Sicilia <sicilia.cristian@gmail.com>,
-        Luke Triantafyllidis <ltriant@cpan.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] staging: rtlwifi: base: Remove set but not used variables
-Date:   Sat, 6 Apr 2019 03:12:25 +0000
-Message-ID: <20190406031225.60088-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 5 Apr 2019 23:20:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56494 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725973AbfDFDU5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 23:20:57 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x363Kron121426
+        for <linux-kernel@vger.kernel.org>; Fri, 5 Apr 2019 23:20:55 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rpgntpab9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 23:20:54 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 6 Apr 2019 04:20:41 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 6 Apr 2019 04:20:40 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x363KdZK24903802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 6 Apr 2019 03:20:39 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5564EB2067;
+        Sat,  6 Apr 2019 03:20:39 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36904B2064;
+        Sat,  6 Apr 2019 03:20:39 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.237.61])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat,  6 Apr 2019 03:20:39 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1515516C1726; Fri,  5 Apr 2019 20:20:39 -0700 (PDT)
+Date:   Fri, 5 Apr 2019 20:20:39 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.04.04a 35/54] ERROR: "kfd_processes_srcu"
+ [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+Reply-To: paulmck@linux.ibm.com
+References: <201904061002.cshioAoe%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201904061002.cshioAoe%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040603-0064-0000-0000-000003C73247
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010876; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184970; UDB=6.00620494; IPR=6.00965714;
+ MB=3.00026315; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-06 03:20:41
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040603-0065-0000-0000-00003CF70657
+Message-Id: <20190406032039.GA14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-06_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=729 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904060022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Sat, Apr 06, 2019 at 10:17:05AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.04a
+> head:   6f1d86fa5cd6dc95118310607a6bc6f3c6e3092a
+> commit: 07366215c9b454bb6ee5648e18ee91a5c4fd0ea6 [35/54] drivers/gpu/drm/amd: Dynamically allocate kfd_processes_srcu
+> config: x86_64-rhel-7.6 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         git checkout 07366215c9b454bb6ee5648e18ee91a5c4fd0ea6
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "kfd_processes_srcu" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
 
-drivers/staging/rtlwifi/base.c: In function 'rtl_tx_agg_stop':
-drivers/staging/rtlwifi/base.c:1733:23: warning:
- variable 'tid_data' set but not used [-Wunused-but-set-variable]
+This commit has been obsoleted by 6b9ba895dd4f ("drivers/gpu/drm/amd:
+Dynamically allocate kfd_processes_srcu v2"), FYI!
 
-drivers/staging/rtlwifi/base.c: In function 'rtl_check_beacon_key':
-drivers/staging/rtlwifi/base.c:2474:5: warning:
- variable 'ds_param_len' set but not used [-Wunused-but-set-variable]
-
-drivers/staging/rtlwifi/base.c:2472:5: warning:
- variable 'ht_oper_len' set but not used [-Wunused-but-set-variable]
-
-drivers/staging/rtlwifi/base.c:2470:5: warning:
- variable 'ht_cap_len' set but not used [-Wunused-but-set-variable]
-
-They are never used and can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/rtlwifi/base.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/staging/rtlwifi/base.c b/drivers/staging/rtlwifi/base.c
-index b8358ebbf912..b8b89e4c54d4 100644
---- a/drivers/staging/rtlwifi/base.c
-+++ b/drivers/staging/rtlwifi/base.c
-@@ -1730,7 +1730,6 @@ int rtl_tx_agg_stop(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 		    struct ieee80211_sta *sta, u16 tid)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
--	struct rtl_tid_data *tid_data;
- 	struct rtl_sta_info *sta_entry = NULL;
- 
- 	if (!sta)
-@@ -1743,7 +1742,6 @@ int rtl_tx_agg_stop(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 		return -EINVAL;
- 
- 	sta_entry = (struct rtl_sta_info *)sta->drv_priv;
--	tid_data = &sta_entry->tids[tid];
- 	sta_entry->tids[tid].agg.agg_state = RTL_AGG_STOP;
- 
- 	ieee80211_stop_tx_ba_cb_irqsafe(vif, sta->addr, tid);
-@@ -2467,11 +2465,8 @@ bool rtl_check_beacon_key(struct ieee80211_hw *hw, void *data, unsigned int len)
- 	struct rtl_beacon_keys bcn_key = {};
- 	struct rtl_beacon_keys *cur_bcn_key;
- 	u8 *ht_cap;
--	u8 ht_cap_len;
- 	u8 *ht_oper;
--	u8 ht_oper_len;
- 	u8 *ds_param;
--	u8 ds_param_len;
- 
- 	if (mac->opmode != NL80211_IFTYPE_STATION)
- 		return false;
-@@ -2502,18 +2497,15 @@ bool rtl_check_beacon_key(struct ieee80211_hw *hw, void *data, unsigned int len)
- 	/***** Parsing DS Param IE ******/
- 	ds_param = rtl_find_ie(data, len - FCS_LEN, WLAN_EID_DS_PARAMS);
- 
--	if (ds_param && !(ds_param[1] < sizeof(*ds_param))) {
--		ds_param_len = ds_param[1];
-+	if (ds_param && !(ds_param[1] < sizeof(*ds_param)))
- 		bcn_key.bcn_channel = ds_param[2];
--	} else {
-+	else
- 		ds_param = NULL;
--	}
- 
- 	/***** Parsing HT Cap. IE ******/
- 	ht_cap = rtl_find_ie(data, len - FCS_LEN, WLAN_EID_HT_CAPABILITY);
- 
- 	if (ht_cap && !(ht_cap[1] < sizeof(*ht_cap))) {
--		ht_cap_len = ht_cap[1];
- 		ht_cap_ie = (struct ieee80211_ht_cap *)&ht_cap[2];
- 		bcn_key.ht_cap_info = ht_cap_ie->cap_info;
- 	} else  {
-@@ -2523,12 +2515,10 @@ bool rtl_check_beacon_key(struct ieee80211_hw *hw, void *data, unsigned int len)
- 	/***** Parsing HT Info. IE ******/
- 	ht_oper = rtl_find_ie(data, len - FCS_LEN, WLAN_EID_HT_OPERATION);
- 
--	if (ht_oper && !(ht_oper[1] < sizeof(*ht_oper))) {
--		ht_oper_len = ht_oper[1];
-+	if (ht_oper && !(ht_oper[1] < sizeof(*ht_oper)))
- 		ht_oper_ie = (struct ieee80211_ht_operation *)&ht_oper[2];
--	} else {
-+	else
- 		ht_oper = NULL;
--	}
- 
- 	/* update bcn_key */
- 
-
-
-
-
+							Thanx, Paul
 
