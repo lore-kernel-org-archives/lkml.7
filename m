@@ -2,104 +2,98 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C27C10F06
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D424EC282DD
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F7D218D4
+	by mail.kernel.org (Postfix) with ESMTP id A117F218D4
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEnmlIr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbfDFM3T (ORCPT
+        id S1726545AbfDFMav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 08:29:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34926 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfDFM3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 08:29:19 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so4546893pgf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 05:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ljzmLp/Rx5JDdQ7QJt3O5yVx/BQTjqg+OOYMyi0keYg=;
-        b=fEnmlIr3h70+VFRqNP9aGzq6oA0lKrThXiQwpVePWZc8qpjcKWQGdcGuQp7AlmdNaV
-         F1OaiDPLdSvR4RPfeRetnNbVGyvK9wBXFT2pXGmG0j8Bph7qoT2OZbgRWHGbAgGBKihj
-         fpU2lK/o3ds4MSsnahRL06aWsfRlATLq8zMVeXx4Aidu89S1hsxfNKEnq8CGD4EGTi/0
-         h/Sow9VxQnJAyhQXmTN6O7AAprKsH0O2K0hUCBsGtrI07WRlx8mkmWl5nLjEWTkXOJ45
-         IKqc3f03tyRUZhMm8hX+1NVv7r4LFN1LqjY4hdbn2ufIIiD/q5oDJqjbUwwd75wW+cbx
-         LWqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ljzmLp/Rx5JDdQ7QJt3O5yVx/BQTjqg+OOYMyi0keYg=;
-        b=RhYmVMxFzp/rrx1dnvu6qR0XjazjTDoTnGIe1AOIRg7xJ8ffMM/i01K+bOTXDRxmyj
-         xyWg45Q3CwfUT/HT57ogIuAg9oQfhPIXxi0gbPncG9d/K00pWZSpZvEwQUg+bz7z/5cq
-         beNWUm+mDaopu5ZevHR0PP9Ga/tjJIyqNWpAA8sV8BDbz5eWeyAkJ+03vHNFQYqUJXAX
-         5Hl9PX1ZNCjXBwnF9VTJjDnWk7IGUrOhP+Zy/XaKJpE6P2poJbaO7fDlpHucpsKAWdUL
-         jHgTc9MttKBxPZ+zNfYyhwCIYghoxtOn6XdaTltNd7NdD09d/uXIb58OhOgNd9PB4tw8
-         PF2Q==
-X-Gm-Message-State: APjAAAUrfmMgyk2FrF88hDX0zU05cYzb6dMzbRbEFDWWjVUx4mGBN2Iq
-        bLmtqA0ZxTI6BmhzILv7ktI=
-X-Google-Smtp-Source: APXvYqw9p2AA/ltbvwYWi/8jsyrP065X209+CvNUUi4Dt86kiURYSrIPz2Fqz5h5iz/8b3lchZTemw==
-X-Received: by 2002:a63:7152:: with SMTP id b18mr17486324pgn.186.1554553758151;
-        Sat, 06 Apr 2019 05:29:18 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id p26sm55201245pfa.49.2019.04.06.05.29.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 05:29:17 -0700 (PDT)
-Date:   Sat, 6 Apr 2019 17:59:12 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] xen: xen-pciback: fix warning Using plain integer as NULL
- pointer
-Message-ID: <20190406122912.GA403@hari-Inspiron-1545>
+        Sat, 6 Apr 2019 08:30:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59880 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfDFMav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 08:30:51 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 196BD9D0DA;
+        Sat,  6 Apr 2019 12:30:51 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 35ECD60CCC;
+        Sat,  6 Apr 2019 12:30:42 +0000 (UTC)
+Date:   Sat, 6 Apr 2019 20:30:37 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@osandov.com>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>
+Subject: Re: Possible bio merging breakage in mp bio rework
+Message-ID: <20190406123035.GA3018@ming.t460p>
+References: <59c19acf-999f-1911-b0b8-1a5cec8116c5@suse.com>
+ <20190406001653.GA4805@ming.t460p>
+ <9ac6f2eb-069a-a02c-7863-e33cb00ad312@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ac6f2eb-069a-a02c-7863-e33cb00ad312@suse.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Sat, 06 Apr 2019 12:30:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes passing function argument 0 to NULL to avoid below sparse
-warning
+On Sat, Apr 06, 2019 at 09:09:12AM +0300, Nikolay Borisov wrote:
+> 
+> 
+> On 6.04.19 г. 3:16 ч., Ming Lei wrote:
+> > Hi Nikolay,
+> > 
+> > On Fri, Apr 05, 2019 at 07:04:18PM +0300, Nikolay Borisov wrote:
+> >> Hello Ming, 
+> >>
+> >> Following the mp biovec rework what is the maximum 
+> >> data that a bio could contain? Should it be PAGE_SIZE * bio_vec 
+> > 
+> > There isn't any maximum data limit on the bio submitted from fs,
+> > and block layer will make the final bio sent to driver correct
+> > by applying all kinds of queue limit, such as max segment size,
+> > max segment number, max sectors, ...
+> > 
+> >> or something else? Currently I can see bios as large as 127 megs 
+> >> on sequential workloads, I got prompted to this since btrfs has a 
+> >> memory allocation that is dependent on the data in the bio and this 
+> >> particular memory allocation started failing with order 6 allocs. 
+> > 
+> > Could you share us the code? I don't see why order 6 allocs is a must.
+> 
+> When a bio is submitted btrfs has to calculate the checksum for it, this
+> happens in btrfs_csum_one_bio. Said checksums are stored in an
+> kmalloc'ed array, whose size is calculated as:
+> 
+> 32 + bio_size / btrfs' block size (usually 4k). So for a 127mb bio that
+> would be: 32 * ((134184960÷4096) * 4) = 127k. We'd make an order 3
+> allocation. Admittedly the code in btrfs should know better rather than
+> make unbounded allocations without a fallback, but bio suddenly becoming
+> rather unbounded in their size caught us offhand.
 
- CHECK   drivers/xen/xen-pciback/xenbus.c
-drivers/xen/xen-pciback/xenbus.c:700:51: warning: Using plain integer as
-NULL pointer
+OK, thanks for your explanation.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/xen/xen-pciback/xenbus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Given it is one btrfs specific feature, I'd suggest you set one max size for
+btrfs bio, for example, suppose the max checksum array is 4k, then the max
+bio size can be calculated as:
 
-diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
-index 23f7f6e..833b2d2 100644
---- a/drivers/xen/xen-pciback/xenbus.c
-+++ b/drivers/xen/xen-pciback/xenbus.c
-@@ -697,7 +697,7 @@ static int xen_pcibk_xenbus_probe(struct xenbus_device *dev,
- 	/* We need to force a call to our callback here in case
- 	 * xend already configured us!
- 	 */
--	xen_pcibk_be_watch(&pdev->be_watch, NULL, 0);
-+	xen_pcibk_be_watch(&pdev->be_watch, NULL, NULL);
- 
- out:
- 	return err;
--- 
-2.7.4
+	(4k - 32) * btrfs's block size
 
+which should be big enough.
+
+Thanks,
+Ming
