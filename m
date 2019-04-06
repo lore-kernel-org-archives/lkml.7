@@ -2,94 +2,103 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3106C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEDEC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B152146F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883DE2173C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 13:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pvk6bCRa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uYWtEfqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfDFNKG (ORCPT
+        id S1726524AbfDFNOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 09:10:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38520 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfDFNKG (ORCPT
+        Sat, 6 Apr 2019 09:14:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:47020 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfDFNOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 09:10:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f36so86909plb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 06:10:06 -0700 (PDT)
+        Sat, 6 Apr 2019 09:14:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 9so4829223pfj.13;
+        Sat, 06 Apr 2019 06:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=PBt9ZS1f/XlWZPisju35mqGnn1r/LiMis6JE32KTnoQ=;
-        b=Pvk6bCRa6R24Qkb9Vu4MUwMpv2KGp8nT4A865UC/LHe6S06ReZ+M7tNVwhjp2F1/4H
-         yapOxZ5XaK1et9MwxZjgQgwnYgWFhLxbOLTZF2BZbIK/qGtqvrbWsYYA3zCCJF0aefBl
-         4h/H8xho6KBpeozp+7L8oHSKPZUzW0b3jPkVcpjLXNoI0N+cc7pSdr/1HVRP4woqmHM3
-         QCoSe65SC2GG8Umv++MSCZ8vhuLHdUjByACcSkkITNXjoWhOBHT4PNKXwXcqbtcEZ7QN
-         9gxKaZEsFgyn2dLQanTT7SDcgLCaOUxS2vOqu8NIm1Lfbf57RRmrD1oU4EIHL3K4S0GO
-         WSkQ==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=hCAUtgWINKqs78bBNa2DDxceJ2zmLMJLMaYO2OB0oPo=;
+        b=uYWtEfqo2kWmDQXH9fH7Uvnt0M5c/Km8lh/UF8z94P3V59U+2shuUVK4zAJ5PEIxO1
+         It9NxNqf80uC7y4gtyrE4Y974rU0+RODBrlB3n1YcVGicVz0ZrrYvscma44CUF1JnkuA
+         FS5fSyY2qcSbkKZrG9lqWuVtLZO8pc8Zj6LTWOTJL4iPRC8ddlA1dG2b9JEKiYXNYH6j
+         f9gqZV9mhCXyoDgL4k9PjPNHh+t9SFyS3fm42AjVBBIaNB7wISyYwxwAklWoAUjfzMF8
+         9/AtvaLEKW5yMABZEDrF90YZG65yD4p7uGRXwnNyDUJx2cvJUKMFQ8y8X2v/sCtCZXW1
+         AfHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PBt9ZS1f/XlWZPisju35mqGnn1r/LiMis6JE32KTnoQ=;
-        b=i8EybAbVvb8bHcTBftvy6/BwZ1O/7TK7k2oBi8GTN2ymiBTfoYpj5pIv0C7LLqFJhB
-         3iM6Vi5WufJM3VZhRDVdJvxvKJ4cQNwBp+mGXZCF6X/X4Qo29r3bQF9ra/qv2RsNWGhC
-         Vgxj7u4NfSiAcMho34U3i/RJfxhrF3u4QrB/b/iLvIbvaD1TA6TW7bZI8SiiSoRJ22ID
-         I3czjMLw7FJQG9p03T1yoPCP5az4N+zVorwgz1hCx3MniIbHh+DVDZoTNmEXszbTl401
-         DBY5XbGpSR42B3660Psm38eJfIi+rdenprqgMN6VsU5S97VQuegSKumWOSpUHeb22z4Q
-         9deg==
-X-Gm-Message-State: APjAAAUoliNJipR6CAkvIxSR9ubs3533ZsgPv4lnA+n6UI1XQ1cVnUu0
-        2K+pY6mxeWrtJxwcF7kVJCX9IdgD
-X-Google-Smtp-Source: APXvYqxtwTEWwSNiDvQKbPPSK8ozxd8mZYjU7ZtiEE9kcvGbm1GTfpR2PavY1ktMSMxV4UNgoJrBOg==
-X-Received: by 2002:a17:902:8bc3:: with SMTP id r3mr19431456plo.53.1554556205651;
-        Sat, 06 Apr 2019 06:10:05 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.51.153])
-        by smtp.gmail.com with ESMTPSA id g4sm36355372pfo.38.2019.04.06.06.10.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 06 Apr 2019 06:10:04 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     linux@armlinux.org.uk, akpm@linux-foundation.org,
-        rppt@linux.ibm.com, anders.roxell@linaro.org, mhocko@suse.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH v2] arm: mm: Remove duplicate header
-Date:   Sat,  6 Apr 2019 18:43:26 +0530
-Message-Id: <1554556406-9290-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=hCAUtgWINKqs78bBNa2DDxceJ2zmLMJLMaYO2OB0oPo=;
+        b=XfkC6P8BlSyfC4yeZuk6i8XPSlKljSSjW0ovKMoItOTO20dg0KDda56mq84rQ/7l6Q
+         L0W92KRDSkjXaiXNX/+dYHog+NKpAN/OaHWIDdXgPasc4ug57nhkFYx9RNto6aQ1wgsS
+         1twn9U4+7N8y1N7nmyUPEek71HGR0tRNRlB1TFibyBlIk/dTIWFJR2DW1DLpa5ZHI1XM
+         d+PaqoJGRwEAl6K8W5lbU7VSv5Ig29U81RdDgl4tXQdW9jo7fcm5JvZduhREhceTS+YZ
+         N+GQWmvXKQAuPY7FK9RIck1jCFWEaz/WvJsSJeiw1Ixk/KhU2a6+lbWgoTpCT6xJqHg0
+         RiLw==
+X-Gm-Message-State: APjAAAVug//2JWT7CgAUO7Le1HevVGMVzqthYR47bFmgTM7TG4OPgdG8
+        JPkLIwsKj5T4n9plycqpffBVQzD3
+X-Google-Smtp-Source: APXvYqySlyWNDRO+FY/yxvS7TZDAitQimbUHxVFC1BnLjqjMTmfAFYIE7ojdFycF7O+lRQszUL21zg==
+X-Received: by 2002:a62:121c:: with SMTP id a28mr18563648pfj.58.1554556459933;
+        Sat, 06 Apr 2019 06:14:19 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.91.90])
+        by smtp.gmail.com with ESMTPSA id b14sm36416569pfi.92.2019.04.06.06.14.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 06:14:18 -0700 (PDT)
+Date:   Sat, 6 Apr 2019 18:44:15 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] watchdog: machzwd : fix warning Using plain integer as NULL
+ pointer
+Message-ID: <20190406131415.GA3844@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicate header which is included twice.
+Changes passing function argument 0 to NULL to avoid below sparse
+warning
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+ CHECK   drivers/watchdog//machzwd.c
+drivers/watchdog//machzwd.c:321:25: warning: Using plain integer as NULL
+pointer
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
-v2: Added Acked-by tag.
+ drivers/watchdog/machzwd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/mm/mmu.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index f3ce341..a64a3c5 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -23,7 +23,6 @@
- #include <asm/sections.h>
- #include <asm/cachetype.h>
- #include <asm/fixmap.h>
--#include <asm/sections.h>
- #include <asm/setup.h>
- #include <asm/smp_plat.h>
- #include <asm/tlb.h>
+diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
+index 88d823d..c3926d0 100644
+--- a/drivers/watchdog/machzwd.c
++++ b/drivers/watchdog/machzwd.c
+@@ -318,7 +318,7 @@ static long zf_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	case WDIOC_GETBOOTSTATUS:
+ 		return put_user(0, p);
+ 	case WDIOC_KEEPALIVE:
+-		zf_ping(0);
++		zf_ping(NULL);
+ 		break;
+ 	default:
+ 		return -ENOTTY;
 -- 
-1.9.1
+2.7.4
 
