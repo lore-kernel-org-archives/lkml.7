@@ -2,265 +2,122 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDD3C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D6EC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C63021855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6DF21855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnQG6UQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfDFJCc (ORCPT
+        id S1726452AbfDFJMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:02:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44144 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfDFJCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:02:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D518C057F40;
-        Sat,  6 Apr 2019 09:02:31 +0000 (UTC)
-Received: from [10.36.112.12] (unknown [10.36.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0B1D5D705;
-        Sat,  6 Apr 2019 09:02:24 +0000 (UTC)
-To:     qemu-devel <qemu-devel@nongnu.org>, KVM list <kvm@vger.kernel.org>,
-        "seabios@seabios.org" <seabios@seabios.org>,
-        libvir-list@redhat.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
-Reply-To: kvm-forum-2019-pc@redhat.com
-Cc:     kvm-forum-2019-pc@redhat.com
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Subject: CFP: KVM Forum 2019
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <a0b5ce3d-6f0f-2674-51a1-e3a6796d496f@redhat.com>
-Date:   Sat, 6 Apr 2019 11:02:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Sat, 6 Apr 2019 05:12:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44974 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfDFJMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 05:12:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y7so10552114wrn.11;
+        Sat, 06 Apr 2019 02:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aIrpe3jK9YRA4TrJjFmGutaVzAkGlsrgPpN+cpGwvlE=;
+        b=XnQG6UQjt52d51v+1l7h6xYxGYalll7p9C/ExTp9mWsbCAkourcHoOfvN4e4w+c+3A
+         OETyuonUKzlEkrfdCvzjyWI/YovTorW6hv7+XyMYE9A9b96TF0t8mPsZxTp9alyjrLSt
+         LNBg/9s6DSq9zpcPuMeOm9UhnVWkvR7z/EPBpwDm9AA3edApkhqPRQflQlm6rJMYuXCq
+         ZC34DtPkJVaXxpMHmL7ZZEKqDLUrEAr6GJCQekybV4a0WbbueHTn78G7t9HDCnRVwYkB
+         H29NuNrZnyHy9U25Wn8deu511nTdICcK5hoLltHBebjEkrJSqWySIYzNnC4pyD0hiF0f
+         ovfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aIrpe3jK9YRA4TrJjFmGutaVzAkGlsrgPpN+cpGwvlE=;
+        b=JpzabWb6ELRG5i7uLMO3jYpULLDJwdmUc6JYShAren/efbCztgehXWzW/lk7YVPgji
+         2Kvj+C2Rp93O+cP9wP6BGQUMSPECtC7AaS++2YKXpY/WaHchm9WmVrkOcaHV/9lIeX4Y
+         d9oQl2/XGjKeqaDDol93ZOY4Qz/hb5uAB7hb0rkYc+K285gs38P0Nr2jmsrtkPaTuktC
+         ECaMSH7PkhiVP0UQx/303DmRnPQ6Vo02m8XASnJOtfqfMk7mK7cQSBEJkPGUIL4Of/ih
+         TOzZ1vU9V/oAYZ7c7ZqPAPG8/ZE1SV2Qja2wFM02Q8sejl+h2V5wsos9sct9Bn139GPt
+         uidg==
+X-Gm-Message-State: APjAAAXmaqk/Bm3DzcSw2H+OKiaI8BQmnI2ZhkMVpVVgu5fHiuUrZYNv
+        OwDpOZ4aP+8p9VmEhJ2Z6ARM/fkiFtNxPAN/YA0=
+X-Google-Smtp-Source: APXvYqzrqBby/4QihDA4bR4mBRDMEwa1e6a9aGmRAeRoZ0SzSFPFc+gFsyDqX+5xrEFprPcz1oPx+yFvjsBMTUkkPr8=
+X-Received: by 2002:adf:828f:: with SMTP id 15mr11142565wrc.17.1554541926911;
+ Sat, 06 Apr 2019 02:12:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sat, 06 Apr 2019 09:02:31 +0000 (UTC)
+References: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Sat, 6 Apr 2019 20:11:55 +1100
+Message-ID: <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
+Subject: Re: [PATCH V2] staging: wilc1000: drop explicit conversion to bool
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-================================================================
-KVM Forum 2019: Call For Participation
-October 30-November 1, 2019 - Lyon Convention Center - Lyon, France
+Hi Nicholas,
 
-(All submissions must be received before June 15, 2019 at 23:59 PST)
-=================================================================
+On Sat, Apr 6, 2019 at 7:48 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
+>
+> As the expression evaluates to a boolean anyway (relational and logical
+> operators) conversion with the ternary operator is not needed here as
+> coccinelle notes (boolconv.cocci)
+>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+> ---
+>
+> V2: sent out the wrong version - the commit message was longer than 75
+>     chars - only change here is the commit message wrapping.
+>
+> scripts/coccinelle/misc/boolconv.cocci warned about:
+> drivers/staging/wilc1000/wilc_wlan.c:14:48-53: WARNING: conversion to bool not needed here
+>
+> Patch was compile tested with: x86_64_defconfig + Staging=y,
+> WILC1000_SDIO=m, WILC1000_SPI=m, WILC1000=m
+> (checkpatch, sparse and cocci clean otherwise)
+>
+> Patch is against 5.1-rc3 (localversion-next is -next-20190403)
+>
+>  drivers/staging/wilc1000/wilc_wlan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
+> index c238969..6c9fd3a 100644
+> --- a/drivers/staging/wilc1000/wilc_wlan.c
+> +++ b/drivers/staging/wilc1000/wilc_wlan.c
+> @@ -11,7 +11,7 @@
+>
+>  static inline bool is_wilc1000(u32 id)
+>  {
+> -       return ((id & 0xfffff000) == 0x100000 ? true : false);
+> +       return ((id & 0xfffff000) == 0x100000);
 
-KVM Forum is an annual event that presents a rare opportunity
-for developers and users to meet, discuss the state of Linux
-virtualization technology, and plan for the challenges ahead. 
-We invite you to lead part of the discussion by submitting a speaking
-proposal for KVM Forum 2019.
+Whilst you're here, you might as well remove the superfluous parentheses.
 
-At this highly technical conference, developers driving innovation
-in the KVM virtualization stack (Linux, KVM, QEMU, libvirt) can
-meet users who depend on KVM as part of their offerings, or to
-power their data centers and clouds.
+Other than that,
 
-KVM Forum will include sessions on the state of the KVM
-virtualization stack, planning for the future, and many
-opportunities for attendees to collaborate. As we celebrate ten years
-of KVM development in the Linux kernel, KVM continues to be a
-critical part of the FOSS cloud infrastructure.
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
 
-This year, KVM Forum is joining Open Source Summit in Lyon,
-France. Selected talks from KVM Forum will be presented on
-Wednesday October 30 to the full audience of the Open Source Summit.
-Also, attendees of KVM Forum will have access to all of the talks from
-Open Source Summit on Wednesday.
+Thanks,
 
-https://events.linuxfoundation.org/events/kvm-forum-2019/program/call-for-proposals/
+-- 
+Julian Calaby
 
-Suggested topics:
-* Scaling, latency optimizations, performance tuning, real-time guests
-* Hardening and security
-* New features
-* Testing
-
-KVM and the Linux kernel:
-* Nested virtualization
-* Resource management (CPU, I/O, memory) and scheduling
-* VFIO: IOMMU, SR-IOV, virtual GPU, etc.
-* Networking: Open vSwitch, XDP, etc.
-* virtio and vhost
-* Architecture ports and new processor features
-
-QEMU:
-* Management interfaces: QOM and QMP
-* New devices, new boards, new architectures
-* Graphics, desktop virtualization and virtual GPU
-* New storage features
-* High availability, live migration and fault tolerance
-* Emulation and TCG
-* Firmware: ACPI, UEFI, coreboot, U-Boot, etc.
-
-Management and infrastructure
-* Managing KVM: Libvirt, OpenStack, oVirt, etc.
-* Storage: Ceph, Gluster, SPDK, etc.r
-* Network Function Virtualization: DPDK, OPNFV, OVN, etc.
-* Provisioning
-
-
-========================
-SUBMITTING YOUR PROPOSAL
-========================
-
-Abstracts due: June 15, 2019
-
-Please submit a short abstract (~150 words) describing your presentation
-proposal. Slots vary in length up to 45 minutes.
-
-Submit your proposal here:
-https://events.linuxfoundation.org/events/kvm-forum-2019/program/call-for-proposals/
-Please only use the categories "presentation" and "panel discussion"
-
-You will receive a notification whether or not your presentation proposal
-was accepted by August 12, 2019.
-
-Speakers will receive a complimentary pass for the event. In case
-your submission has multiple presenters, only the primary speaker for a
-proposal will receive a complimentary event pass. For panel discussions, all
-panelists will receive a complimentary event pass.
-
-
-TECHNICAL TALKS
-
-A good technical talk should not just report on what has happened over
-the last year; it should present a concrete problem and how it impacts
-the user and/or developer community. Whenever applicable, focus on
-work that needs to be done, difficulties that haven't yet been solved,
-and on decisions that other developers should be aware of. Summarizing
-recent developments is okay but it should not be more than a small
-portion of the overall talk.
-
-
-END-USER TALKS
-
-One of the big challenges as developers is to know what, where and how
-people actually use our software. We will reserve a few slots for end
-users talking about their deployment challenges and achievements.
-
-If you are using KVM in production you are encouraged submit a speaking
-proposal. Simply mark it as an end-user talk. As an end user, this is a
-unique opportunity to get your input to developers.
-
-
-HANDS-ON / BOF SESSIONS
-
-We will reserve some time for people to get together and discuss
-strategic decisions as well as other topics that are best solved within
-smaller groups.
-
-These sessions will be announced during the event. If you are interested
-in organizing such a session, please add it to the list at
-
-  http://www.linux-kvm.org/page/KVM_Forum_2019_BOF
-
-Let people you think who might be interested know about your BOF, and
-encourage them to add their names to the wiki page as well. Please add
-your ideas to the list before KVM Forum starts.
-
-
-PANEL DISCUSSIONS
-
-If you are proposing a panel discussion, please make sure that you list
-all of your potential panelists in your the abstract. We will request full
-biographies if a panel is accepted.
-
-
-==============
-HOTEL / TRAVEL
-==============
-
-This year's event will take place at the Lyon Conference Center.
-For information on hotels close to the conference, please visit
-https://events.linuxfoundation.org/events/kvm-forum-2019/attend/venue-travel/.
-Information on conference hotel blocks will be available later in
-Spring 2019.
-
-
-=================
-DATES TO REMEMBER
-=================
-
-Submission deadline: Saturday, June 15 at 23:59 PST
-Notification: Monday, August 12
-Schedule announced: Friday, August 16
-Slides due date: Wednesday, October 23
-Event dates: Wednesday, October 30 - Friday, November 1
-
-Thank you for your interest in KVM. We're looking forward to your
-submissions and seeing you at the KVM Forum 2019 in October!
-
--your KVM Forum 2019 Program Committee
-
-Please contact us with any questions or comments at
-kvm-forum-2019-pc@redhat.com
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
