@@ -2,292 +2,265 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F244C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDD3C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5A7218C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 08:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C63021855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDFIq5 (ORCPT
+        id S1726468AbfDFJCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 04:46:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43033 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfDFIq5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 04:46:57 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x368kQb73123206
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 6 Apr 2019 01:46:26 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x368kPH73123202;
-        Sat, 6 Apr 2019 01:46:25 -0700
-Date:   Sat, 6 Apr 2019 01:46:25 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Alexander Potapenko <tipbot@zytor.com>
-Message-ID: <tip-5b77e95dd7790ff6c8fbf1cd8d0104ebed818a03@git.kernel.org>
-Cc:     mingo@kernel.org, jyknight@google.com, tglx@linutronix.de,
-        hpa@zytor.com, peterz@infradead.org, dvlasenk@redhat.com,
-        linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
-        stable@vger.kernel.org, bp@alien8.de,
-        torvalds@linux-foundation.org, dvyukov@google.com,
-        glider@google.com, brgerst@gmail.com, luto@kernel.org
-Reply-To: bp@alien8.de, paulmck@linux.ibm.com, stable@vger.kernel.org,
-          brgerst@gmail.com, luto@kernel.org,
-          torvalds@linux-foundation.org, dvyukov@google.com,
-          glider@google.com, peterz@infradead.org, jyknight@google.com,
-          mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          dvlasenk@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190402112813.193378-1-glider@google.com>
-References: <20190402112813.193378-1-glider@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/asm: Use stricter assembly constraints in
- bitops
-Git-Commit-ID: 5b77e95dd7790ff6c8fbf1cd8d0104ebed818a03
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 6 Apr 2019 05:02:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44144 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfDFJCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 05:02:31 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D518C057F40;
+        Sat,  6 Apr 2019 09:02:31 +0000 (UTC)
+Received: from [10.36.112.12] (unknown [10.36.112.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0B1D5D705;
+        Sat,  6 Apr 2019 09:02:24 +0000 (UTC)
+To:     qemu-devel <qemu-devel@nongnu.org>, KVM list <kvm@vger.kernel.org>,
+        "seabios@seabios.org" <seabios@seabios.org>,
+        libvir-list@redhat.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Reply-To: kvm-forum-2019-pc@redhat.com
+Cc:     kvm-forum-2019-pc@redhat.com
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Subject: CFP: KVM Forum 2019
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <a0b5ce3d-6f0f-2674-51a1-e3a6796d496f@redhat.com>
+Date:   Sat, 6 Apr 2019 11:02:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sat, 06 Apr 2019 09:02:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5b77e95dd7790ff6c8fbf1cd8d0104ebed818a03
-Gitweb:     https://git.kernel.org/tip/5b77e95dd7790ff6c8fbf1cd8d0104ebed818a03
-Author:     Alexander Potapenko <glider@google.com>
-AuthorDate: Tue, 2 Apr 2019 13:28:13 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Sat, 6 Apr 2019 09:52:02 +0200
+================================================================
+KVM Forum 2019: Call For Participation
+October 30-November 1, 2019 - Lyon Convention Center - Lyon, France
 
-x86/asm: Use stricter assembly constraints in bitops
+(All submissions must be received before June 15, 2019 at 23:59 PST)
+=================================================================
 
-There's a number of problems with how arch/x86/include/asm/bitops.h
-is currently using assembly constraints for the memory region
-bitops are modifying:
+KVM Forum is an annual event that presents a rare opportunity
+for developers and users to meet, discuss the state of Linux
+virtualization technology, and plan for the challenges ahead. 
+We invite you to lead part of the discussion by submitting a speaking
+proposal for KVM Forum 2019.
 
-1) Use memory clobber in bitops that touch arbitrary memory
+At this highly technical conference, developers driving innovation
+in the KVM virtualization stack (Linux, KVM, QEMU, libvirt) can
+meet users who depend on KVM as part of their offerings, or to
+power their data centers and clouds.
 
-Certain bit operations that read/write bits take a base pointer and an
-arbitrarily large offset to address the bit relative to that base.
-Inline assembly constraints aren't expressive enough to tell the
-compiler that the assembly directive is going to touch a specific memory
-location of unknown size, therefore we have to use the "memory" clobber
-to indicate that the assembly is going to access memory locations other
-than those listed in the inputs/outputs.
+KVM Forum will include sessions on the state of the KVM
+virtualization stack, planning for the future, and many
+opportunities for attendees to collaborate. As we celebrate ten years
+of KVM development in the Linux kernel, KVM continues to be a
+critical part of the FOSS cloud infrastructure.
 
-To indicate that BTR/BTS instructions don't necessarily touch the first
-sizeof(long) bytes of the argument, we also move the address to assembly
-inputs.
+This year, KVM Forum is joining Open Source Summit in Lyon,
+France. Selected talks from KVM Forum will be presented on
+Wednesday October 30 to the full audience of the Open Source Summit.
+Also, attendees of KVM Forum will have access to all of the talks from
+Open Source Summit on Wednesday.
 
-This particular change leads to size increase of 124 kernel functions in
-a defconfig build. For some of them the diff is in NOP operations, other
-end up re-reading values from memory and may potentially slow down the
-execution. But without these clobbers the compiler is free to cache
-the contents of the bitmaps and use them as if they weren't changed by
-the inline assembly.
+https://events.linuxfoundation.org/events/kvm-forum-2019/program/call-for-proposals/
 
-2) Use byte-sized arguments for operations touching single bytes.
+Suggested topics:
+* Scaling, latency optimizations, performance tuning, real-time guests
+* Hardening and security
+* New features
+* Testing
 
-Passing a long value to ANDB/ORB/XORB instructions makes the compiler
-treat sizeof(long) bytes as being clobbered, which isn't the case. This
-may theoretically lead to worse code in the case of heavy optimization.
+KVM and the Linux kernel:
+* Nested virtualization
+* Resource management (CPU, I/O, memory) and scheduling
+* VFIO: IOMMU, SR-IOV, virtual GPU, etc.
+* Networking: Open vSwitch, XDP, etc.
+* virtio and vhost
+* Architecture ports and new processor features
 
-Practical impact:
+QEMU:
+* Management interfaces: QOM and QMP
+* New devices, new boards, new architectures
+* Graphics, desktop virtualization and virtual GPU
+* New storage features
+* High availability, live migration and fault tolerance
+* Emulation and TCG
+* Firmware: ACPI, UEFI, coreboot, U-Boot, etc.
 
-I've built a defconfig kernel and looked through some of the functions
-generated by GCC 7.3.0 with and without this clobber, and didn't spot
-any miscompilations.
+Management and infrastructure
+* Managing KVM: Libvirt, OpenStack, oVirt, etc.
+* Storage: Ceph, Gluster, SPDK, etc.r
+* Network Function Virtualization: DPDK, OPNFV, OVN, etc.
+* Provisioning
 
-However there is a (trivial) theoretical case where this code leads to
-miscompilation:
 
-  https://lkml.org/lkml/2019/3/28/393
+========================
+SUBMITTING YOUR PROPOSAL
+========================
 
-using just GCC 8.3.0 with -O2.  It isn't hard to imagine someone writes
-such a function in the kernel someday.
+Abstracts due: June 15, 2019
 
-So the primary motivation is to fix an existing misuse of the asm
-directive, which happens to work in certain configurations now, but
-isn't guaranteed to work under different circumstances.
+Please submit a short abstract (~150 words) describing your presentation
+proposal. Slots vary in length up to 45 minutes.
 
-[ --mingo: Added -stable tag because defconfig only builds a fraction
-  of the kernel and the trivial testcase looks normal enough to
-  be used in existing or in-development code. ]
+Submit your proposal here:
+https://events.linuxfoundation.org/events/kvm-forum-2019/program/call-for-proposals/
+Please only use the categories "presentation" and "panel discussion"
 
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Cc: <stable@vger.kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: James Y Knight <jyknight@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190402112813.193378-1-glider@google.com
-[ Edited the changelog, tidied up one of the defines. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/bitops.h | 41 ++++++++++++++++++-----------------------
- 1 file changed, 18 insertions(+), 23 deletions(-)
+You will receive a notification whether or not your presentation proposal
+was accepted by August 12, 2019.
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index d153d570bb04..8e790ec219a5 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -36,16 +36,17 @@
-  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-  */
- 
--#define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
-+#define RLONG_ADDR(x)			 "m" (*(volatile long *) (x))
-+#define WBYTE_ADDR(x)			"+m" (*(volatile char *) (x))
- 
--#define ADDR				BITOP_ADDR(addr)
-+#define ADDR				RLONG_ADDR(addr)
- 
- /*
-  * We do the locked ops that don't return the old value as
-  * a mask operation on a byte.
-  */
- #define IS_IMMEDIATE(nr)		(__builtin_constant_p(nr))
--#define CONST_MASK_ADDR(nr, addr)	BITOP_ADDR((void *)(addr) + ((nr)>>3))
-+#define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
- #define CONST_MASK(nr)			(1 << ((nr) & 7))
- 
- /**
-@@ -73,7 +74,7 @@ set_bit(long nr, volatile unsigned long *addr)
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
--			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -88,7 +89,7 @@ set_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
-+	asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -110,8 +111,7 @@ clear_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)~CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -131,7 +131,7 @@ static __always_inline void clear_bit_unlock(long nr, volatile unsigned long *ad
- 
- static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
-@@ -139,7 +139,7 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
- 	bool negative;
- 	asm volatile(LOCK_PREFIX "andb %2,%1"
- 		CC_SET(s)
--		: CC_OUT(s) (negative), ADDR
-+		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
- 		: "ir" ((char) ~(1 << nr)) : "memory");
- 	return negative;
- }
-@@ -155,13 +155,9 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
-  * __clear_bit() is non-atomic and implies release semantics before the memory
-  * operation. It can be used for an unlock if no other CPUs can concurrently
-  * modify other bits in the word.
-- *
-- * No memory barrier is required here, because x86 cannot reorder stores past
-- * older loads. Same principle as spin_unlock.
-  */
- static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
- {
--	barrier();
- 	__clear_bit(nr, addr);
- }
- 
-@@ -176,7 +172,7 @@ static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *
-  */
- static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btc) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -196,8 +192,7 @@ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -242,8 +237,8 @@ static __always_inline bool __test_and_set_bit(long nr, volatile unsigned long *
- 
- 	asm(__ASM_SIZE(bts) " %2,%1"
- 	    CC_SET(c)
--	    : CC_OUT(c) (oldbit), ADDR
--	    : "Ir" (nr));
-+	    : CC_OUT(c) (oldbit)
-+	    : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -282,8 +277,8 @@ static __always_inline bool __test_and_clear_bit(long nr, volatile unsigned long
- 
- 	asm volatile(__ASM_SIZE(btr) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr));
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -294,8 +289,8 @@ static __always_inline bool __test_and_change_bit(long nr, volatile unsigned lon
- 
- 	asm volatile(__ASM_SIZE(btc) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr) : "memory");
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
-@@ -326,7 +321,7 @@ static __always_inline bool variable_test_bit(long nr, volatile const unsigned l
- 	asm volatile(__ASM_SIZE(bt) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
--		     : "m" (*(unsigned long *)addr), "Ir" (nr));
-+		     : "m" (*(unsigned long *)addr), "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
+Speakers will receive a complimentary pass for the event. In case
+your submission has multiple presenters, only the primary speaker for a
+proposal will receive a complimentary event pass. For panel discussions, all
+panelists will receive a complimentary event pass.
+
+
+TECHNICAL TALKS
+
+A good technical talk should not just report on what has happened over
+the last year; it should present a concrete problem and how it impacts
+the user and/or developer community. Whenever applicable, focus on
+work that needs to be done, difficulties that haven't yet been solved,
+and on decisions that other developers should be aware of. Summarizing
+recent developments is okay but it should not be more than a small
+portion of the overall talk.
+
+
+END-USER TALKS
+
+One of the big challenges as developers is to know what, where and how
+people actually use our software. We will reserve a few slots for end
+users talking about their deployment challenges and achievements.
+
+If you are using KVM in production you are encouraged submit a speaking
+proposal. Simply mark it as an end-user talk. As an end user, this is a
+unique opportunity to get your input to developers.
+
+
+HANDS-ON / BOF SESSIONS
+
+We will reserve some time for people to get together and discuss
+strategic decisions as well as other topics that are best solved within
+smaller groups.
+
+These sessions will be announced during the event. If you are interested
+in organizing such a session, please add it to the list at
+
+  http://www.linux-kvm.org/page/KVM_Forum_2019_BOF
+
+Let people you think who might be interested know about your BOF, and
+encourage them to add their names to the wiki page as well. Please add
+your ideas to the list before KVM Forum starts.
+
+
+PANEL DISCUSSIONS
+
+If you are proposing a panel discussion, please make sure that you list
+all of your potential panelists in your the abstract. We will request full
+biographies if a panel is accepted.
+
+
+==============
+HOTEL / TRAVEL
+==============
+
+This year's event will take place at the Lyon Conference Center.
+For information on hotels close to the conference, please visit
+https://events.linuxfoundation.org/events/kvm-forum-2019/attend/venue-travel/.
+Information on conference hotel blocks will be available later in
+Spring 2019.
+
+
+=================
+DATES TO REMEMBER
+=================
+
+Submission deadline: Saturday, June 15 at 23:59 PST
+Notification: Monday, August 12
+Schedule announced: Friday, August 16
+Slides due date: Wednesday, October 23
+Event dates: Wednesday, October 30 - Friday, November 1
+
+Thank you for your interest in KVM. We're looking forward to your
+submissions and seeing you at the KVM Forum 2019 in October!
+
+-your KVM Forum 2019 Program Committee
+
+Please contact us with any questions or comments at
+kvm-forum-2019-pc@redhat.com
