@@ -2,107 +2,100 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5201CC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CB6C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A0621855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498BE21855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDFJnV (ORCPT
+        id S1726464AbfDFJqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:43:21 -0400
-Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:60729 "EHLO
-        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfDFJnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:43:21 -0400
-X-Greylist: delayed 419 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Apr 2019 05:43:19 EDT
-Received: by mail.osadl.at (Postfix, from userid 1001)
-        id 384AB5C36D6; Sat,  6 Apr 2019 11:35:34 +0200 (CEST)
-Date:   Sat, 6 Apr 2019 11:35:34 +0200
-From:   Nicholas Mc Guire <der.herr@hofr.at>
-To:     Julian Calaby <julian.calaby@gmail.com>
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] staging: wilc1000: drop explicit conversion to bool
-Message-ID: <20190406093534.GA3972@osadl.at>
-References: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
- <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
+        Sat, 6 Apr 2019 05:46:32 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49232 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfDFJqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 05:46:31 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id A468480547; Sat,  6 Apr 2019 11:46:20 +0200 (CEST)
+Date:   Sat, 6 Apr 2019 11:46:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org
+Subject: Re: [PATCH v3 00/25] Add generic support for composing LED class
+ device name
+Message-ID: <20190406094632.GA7546@amd>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190404132157.GB6124@xo-6d-61-c0.localdomain>
+ <c1ebb90a-2474-d279-0600-0f6707a7b1a6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
 Content-Disposition: inline
-In-Reply-To: <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
+In-Reply-To: <c1ebb90a-2474-d279-0600-0f6707a7b1a6@gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 08:11:55PM +1100, Julian Calaby wrote:
-> Hi Nicholas,
-> 
-> On Sat, Apr 6, 2019 at 7:48 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
-> >
-> > As the expression evaluates to a boolean anyway (relational and logical
-> > operators) conversion with the ternary operator is not needed here as
-> > coccinelle notes (boolconv.cocci)
-> >
-> > Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-> > ---
-> >
-> > V2: sent out the wrong version - the commit message was longer than 75
-> >     chars - only change here is the commit message wrapping.
-> >
-> > scripts/coccinelle/misc/boolconv.cocci warned about:
-> > drivers/staging/wilc1000/wilc_wlan.c:14:48-53: WARNING: conversion to bool not needed here
-> >
-> > Patch was compile tested with: x86_64_defconfig + Staging=y,
-> > WILC1000_SDIO=m, WILC1000_SPI=m, WILC1000=m
-> > (checkpatch, sparse and cocci clean otherwise)
-> >
-> > Patch is against 5.1-rc3 (localversion-next is -next-20190403)
-> >
-> >  drivers/staging/wilc1000/wilc_wlan.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-> > index c238969..6c9fd3a 100644
-> > --- a/drivers/staging/wilc1000/wilc_wlan.c
-> > +++ b/drivers/staging/wilc1000/wilc_wlan.c
-> > @@ -11,7 +11,7 @@
-> >
-> >  static inline bool is_wilc1000(u32 id)
-> >  {
-> > -       return ((id & 0xfffff000) == 0x100000 ? true : false);
-> > +       return ((id & 0xfffff000) == 0x100000);
-> 
-> Whilst you're here, you might as well remove the superfluous parentheses.
->
 
-fine - there are a few other places though that this would need to be cleaned
-up to be consistent e.g. entries = ((reg >> 3) & 0x3f); wilc_wlan.c
- 
-> Other than that,
-> 
-> Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-> 
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-will resend with outer () dropped and Reviewed-by: added
+Hi!
 
-thx!
-hofrat
+> >I have not yet gone through the series in great detail.
+> >
+> >This will change the userland ABI, right? Now, I understand that old ABI=
+ is bad, but
+> >will it break someone's code?
+>=20
+> It will not break anyone since the generic support for composing
+> LED names is used only if struct init_data is provided. Otherwise
+> led_cdev->name property is taken as is for the LED class device name.
+>=20
+> Moreover, it is safe to switch many of existing DT (or fwnode in
+> general) based drivers to using generic mechanism.
+> If the DT provides label property it will be concatenated with the
+> led_hw_name provided by the driver. The problem would be only with
+> the drivers whose bindings erroneously require devicename section
+> in the label. They will need to be left intact.
 
-> Thanks,
-> 
-> -- 
-> Julian Calaby
-> 
-> Email: julian.calaby@gmail.com
-> Profile: http://www.google.com/profiles/julian.calaby/
+Ok. Plus it seems series causes some compile issues:
+
+ 924     kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:8: error:
+  925 N   kbuild tes [j.anaszewski-leds:led_naming_v3 17/37]
+ drivers/leds/led-core.o:undefined ref
+  926 N   kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:44: spars
+  927 N   kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:8: error:
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyodXgACgkQMOfwapXb+vLduACZAUC3jlCyOGd4yZnVufp2RXu7
+FZ0AniSe5nX+hTDEIQHu4oIEZUN6iCSu
+=26MZ
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
