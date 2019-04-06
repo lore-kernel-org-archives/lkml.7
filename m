@@ -2,101 +2,107 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07943C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5201CC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B6D218C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIJFiZqb"
+	by mail.kernel.org (Postfix) with ESMTP id 15A0621855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDFJhG (ORCPT
+        id S1726456AbfDFJnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:37:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34832 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfDFJhF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:37:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g8so4395642pgf.2;
-        Sat, 06 Apr 2019 02:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=JKzbLmOuB4i3/2ABSBaH37wRSZE0CAEFilVfjVxKb38=;
-        b=hIJFiZqbvevS6d1JoUU8VKl2CXE1a6ZLoide/pR2SMp8oLmtT9Q3kphs2Z0Sp+82Ug
-         7qgkQYIz3TqdvgCyN+REoWyLXyNZtyIQuaSqCq/B59jJ+tbCgJ+rGF67SwhH/HbjqvRi
-         xZnMPerCjWh+hhXOjR8+t2FSaqXf6Ew0MZfyB+DahHaIgDvOmZKwS7/doABtVNrwYThW
-         FLeDxXRe26MkSWp9mXhjydiOJwmRozEjeZBL07Meqtn4OT6kLojkKqHdUd0WQpklE2MU
-         qdnYZI1Phv5m7lJUYLu7I2o1xuqdPJayZoRVqeqNA6Ee7AYzkF4zzW3A14v5pwFxTD2a
-         WreQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=JKzbLmOuB4i3/2ABSBaH37wRSZE0CAEFilVfjVxKb38=;
-        b=dVVi61bERa9GrSJ9HRZXRgBuKQ4ROA+HsKg/Ib3ovLaTv7GUUyNYzNA7JBLDFk5EdJ
-         XfO67AOLxbZ/hZrtWIOudWSKQLjA6n1qlZzTQKBgRX9GEGgR6i/02YCHQP/le7pjtZH3
-         /+1K3nqmadK2zehHMy8RVqz1L6cQJhuqIyNTE1QLF1GEuqB5vugBv4E4kJuuZZUUBWz6
-         qG221ljliy3QA0aluZMGQI0uftN+mqmzFTV+1SZD8JbbQAc8SvNjKNZp+4FChdLKFBiw
-         N86IsTnhn8OpH5LQHBXgnzoY9fccYhb9nvxckhoWBaxQ7laGcONnp8hRf+c/vHTBagAT
-         SAEQ==
-X-Gm-Message-State: APjAAAVi8ikedLg/wWPdgg8p6Z7umT4whl0u50bPMm38xiNJ+xeSzx95
-        9o91elAd5/W4u40r2SiOWGo=
-X-Google-Smtp-Source: APXvYqwU9ymM34Ta6kvmmyTEqzqmoEP4+uCZlVg/X+/LgX9hnlsCLncMJZ4SBAlY6vxoOpfcq1U2yw==
-X-Received: by 2002:a62:6587:: with SMTP id z129mr17970133pfb.88.1554543424717;
-        Sat, 06 Apr 2019 02:37:04 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id f63sm33033054pfc.180.2019.04.06.02.37.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 02:37:04 -0700 (PDT)
-Date:   Sat, 6 Apr 2019 15:06:58 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: fix warning Using plain integer as NULL pointer
-Message-ID: <20190406093658.GA7438@hari-Inspiron-1545>
+        Sat, 6 Apr 2019 05:43:21 -0400
+Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:60729 "EHLO
+        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfDFJnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 05:43:21 -0400
+X-Greylist: delayed 419 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Apr 2019 05:43:19 EDT
+Received: by mail.osadl.at (Postfix, from userid 1001)
+        id 384AB5C36D6; Sat,  6 Apr 2019 11:35:34 +0200 (CEST)
+Date:   Sat, 6 Apr 2019 11:35:34 +0200
+From:   Nicholas Mc Guire <der.herr@hofr.at>
+To:     Julian Calaby <julian.calaby@gmail.com>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] staging: wilc1000: drop explicit conversion to bool
+Message-ID: <20190406093534.GA3972@osadl.at>
+References: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
+ <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changed passing argument as "0 to NULL" which resolves below sparse warning
+On Sat, Apr 06, 2019 at 08:11:55PM +1100, Julian Calaby wrote:
+> Hi Nicholas,
+> 
+> On Sat, Apr 6, 2019 at 7:48 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
+> >
+> > As the expression evaluates to a boolean anyway (relational and logical
+> > operators) conversion with the ternary operator is not needed here as
+> > coccinelle notes (boolconv.cocci)
+> >
+> > Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+> > ---
+> >
+> > V2: sent out the wrong version - the commit message was longer than 75
+> >     chars - only change here is the commit message wrapping.
+> >
+> > scripts/coccinelle/misc/boolconv.cocci warned about:
+> > drivers/staging/wilc1000/wilc_wlan.c:14:48-53: WARNING: conversion to bool not needed here
+> >
+> > Patch was compile tested with: x86_64_defconfig + Staging=y,
+> > WILC1000_SDIO=m, WILC1000_SPI=m, WILC1000=m
+> > (checkpatch, sparse and cocci clean otherwise)
+> >
+> > Patch is against 5.1-rc3 (localversion-next is -next-20190403)
+> >
+> >  drivers/staging/wilc1000/wilc_wlan.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
+> > index c238969..6c9fd3a 100644
+> > --- a/drivers/staging/wilc1000/wilc_wlan.c
+> > +++ b/drivers/staging/wilc1000/wilc_wlan.c
+> > @@ -11,7 +11,7 @@
+> >
+> >  static inline bool is_wilc1000(u32 id)
+> >  {
+> > -       return ((id & 0xfffff000) == 0x100000 ? true : false);
+> > +       return ((id & 0xfffff000) == 0x100000);
+> 
+> Whilst you're here, you might as well remove the superfluous parentheses.
+>
 
-arch/x86/kvm/x86.c:3096:61: warning: Using plain integer as NULL pointer
+fine - there are a few other places though that this would need to be cleaned
+up to be consistent e.g. entries = ((reg >> 3) & 0x3f); wilc_wlan.c
+ 
+> Other than that,
+> 
+> Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+> 
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+will resend with outer () dropped and Reviewed-by: added
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 099b851..39034ec 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3093,7 +3093,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		break;
- 	case KVM_CAP_NESTED_STATE:
- 		r = kvm_x86_ops->get_nested_state ?
--			kvm_x86_ops->get_nested_state(NULL, 0, 0) : 0;
-+			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
- 		break;
- 	default:
- 		break;
--- 
-2.7.4
+thx!
+hofrat
 
+> Thanks,
+> 
+> -- 
+> Julian Calaby
+> 
+> Email: julian.calaby@gmail.com
+> Profile: http://www.google.com/profiles/julian.calaby/
