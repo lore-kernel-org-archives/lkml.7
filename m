@@ -2,135 +2,659 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2713C282DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 23:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727FDC282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 23:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891CB2133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 23:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6EA2171F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 23:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N0n5AeeB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+58Oodd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDFXOf (ORCPT
+        id S1726515AbfDFXvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 19:14:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35257 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfDFXOf (ORCPT
+        Sat, 6 Apr 2019 19:51:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39453 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfDFXvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 19:14:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t21so3034870pfh.2
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 16:14:35 -0700 (PDT)
+        Sat, 6 Apr 2019 19:51:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so10830670wmk.4
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 16:51:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=frF4c8dwjqAtQm7fNwHrFIJU5kbbeArN1OCV7ETeQ+A=;
-        b=N0n5AeeBuyZPmfGfR4IqRd2JgNdFPd3TBiW8TqLcNt1h5vrST8rVGoeSgx9M4PGCYs
-         IOFifl0SCGXtoCemErLvpr08zc8LBcB1esrj0gzX497N8tn/lXlT/TP4QmCCce+3xynH
-         m7vaQ8maDu3Q3C+JsCzVNBW4zT7EMlStDEVqGp4ndd99Hg69Xl0hxC4qrwz2i/q+pSRN
-         k5kmy8hv7orsO+SQ3RPTlLE5cV+Wd0Rht96GMP0xCq7S2ur10ZzX0K0/p3KRTb6Pnce6
-         yLCAPp9+UyIOBzrPjk186+0V2nYL5wwvjB20/3Ac1cjFL/WxSucF0Rld+2Cpec2pEOwB
-         cKEg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SCmVXinxR+PbwPNubyr2falCAoJGsIKu8tO2VPN20Y8=;
+        b=g+58OoddCFf2HTqOJjCsAKt9A21d2Evl3U2BBOGlp+z+NtFGN4Q4oJjJAXS7CZog6R
+         coDUouxC7Ny0K7DfrBgKxb52lUguqxbA1IRP+NNbac2/CizDuxQpIct/LSWy03QC+gf5
+         TCYMkDYtvNAp0N2cBA26e5xbkR8fpYhsjeKTzOCMubJB+b2hHLzQ5La14dyUM+bb1wkd
+         zPlgpHp9U76fGXsHusqYpEf1WszWBaolkgoNxRxZW29TKk4r3PAUWzaQ1UvqEZz0XRNe
+         w9beGkTDzh4eYj2OskyDnbVCk7A56+ykG402wgzsSpuknFo6BkAUqVfxe7BYsS4HS4oF
+         jrcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=frF4c8dwjqAtQm7fNwHrFIJU5kbbeArN1OCV7ETeQ+A=;
-        b=Ul61AJVw3Uenc5z3A0tiLtJGRX4SwFO7UtXqb534rnjpRz6gEv/t7KZNAxNPgfNfeA
-         xjDD50j2S4JfIJl1KCBeCBvDop148jF+nARhBOgauxWA10C1iReGdr4amNwSi+weswYq
-         HBEumvtl1Y2XtP+rBnSquaMXz/ZjfVjVKL6zL6mZigZvVi6r4/bXA4USJMUzHcGavnO+
-         Lr6bU36qEjsxiKzhV+5duuE/LjDLmv1n7S93+fcWb+Exkb0gz8DXF6U5wlNmmu+ryE4s
-         im6SjTRnu+hekkoJ4wn22qw1x8cyppkjznI4ce/uirpnHXO7ExDZVFmtHuvaHG7m3RVN
-         Mgwg==
-X-Gm-Message-State: APjAAAXUiOrfyx7+DXwMBorrF+YuXAPZvUm9fwgRZvYccSeJ2Yr3Ef97
-        qoVHyW0BeUuFB/YBj/FtSMofhw==
-X-Google-Smtp-Source: APXvYqyNm0WS2gDAuj6dHckm1kMDjqculrY2nMq6qtaMTQyF9OctGiI8gci+qK98/wgivkodd8Ko4A==
-X-Received: by 2002:aa7:9ab7:: with SMTP id x23mr1272048pfi.27.1554592474693;
-        Sat, 06 Apr 2019 16:14:34 -0700 (PDT)
-Received: from localhost ([52.119.120.223])
-        by smtp.gmail.com with ESMTPSA id f15sm18564141pgf.18.2019.04.06.16.14.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 06 Apr 2019 16:14:33 -0700 (PDT)
-Date:   Sat, 6 Apr 2019 16:14:32 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Rob Herring <robh@kernel.org>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-        Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 7/7] riscv: dts: add initial board data for the SiFive
- HiFive Unleashed
-In-Reply-To: <20181220212618.GA27359@bogus>
-Message-ID: <alpine.DEB.2.21.9999.1904061612310.18279@viisi.sifive.com>
-References: <20181215052154.24347-1-paul.walmsley@sifive.com> <20181215052154.24347-8-paul.walmsley@sifive.com> <20181220212618.GA27359@bogus>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SCmVXinxR+PbwPNubyr2falCAoJGsIKu8tO2VPN20Y8=;
+        b=s45HmWhkLzF5Eq+F2l7D5nQpxqmD/PAj1I/QXHQbwfTvlutt5qtJEbZvPg2NG7iZar
+         f2fbJXII+1gkFiIiEJf8RNX8ja+hzrQo85hJzaesUGUqTkR1kPzBBmMSEnFCXcduytIj
+         nJS1yCe94QfeCGDeG/uVZUJgE8+c/173yNfYvcepLZku+NvoNLVcGGTpW/mR8qlbVcN/
+         MvGO7+QrJL77bOdFX0eZAjA8KVIZMqtSMFTe9SREu/lNK5+xn0rrGHTgKG1PS5LE+qXV
+         R1O45Tg3/OJyEJPdUFe25WIcSkxFSpO5mXCz6hFueYgYSay6yTHw54WY5yQA81wk90+J
+         UyOA==
+X-Gm-Message-State: APjAAAXITl5R3Y9JLQJcsU737PdN3paUsAoqX0f0gj2aKYlooy0GiBcN
+        /okweA6vxaHm9JO6iU/Llqkf3UHlBjlpxcK+M83A7Q==
+X-Google-Smtp-Source: APXvYqzEPVaXYr2pSDOI6aNnlOiPItLb3/TdbIvE5to68Tn7ViRXoPrsFwxakUYuHYnZvLQCnYGswUN62YrWOfX+AWo=
+X-Received: by 2002:a1c:c00b:: with SMTP id q11mr13108025wmf.38.1554594704642;
+ Sat, 06 Apr 2019 16:51:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190402104153.25404-1-patrick.bellasi@arm.com> <20190402104153.25404-2-patrick.bellasi@arm.com>
+In-Reply-To: <20190402104153.25404-2-patrick.bellasi@arm.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Sat, 6 Apr 2019 16:51:33 -0700
+Message-ID: <CAJuCfpFdDK+xYZDq+TDVjRUcF8BTqeXWvF2Wex8n7nB-O5qH1g@mail.gmail.com>
+Subject: Re: [PATCH v8 01/16] sched/core: uclamp: Add CPU's clamp buckets refcounting
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Dec 2018, Rob Herring wrote:
+On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+>
+> Utilization clamping allows to clamp the CPU's utilization within a
+> [util_min, util_max] range, depending on the set of RUNNABLE tasks on
+> that CPU. Each task references two "clamp buckets" defining its minimum
+> and maximum (util_{min,max}) utilization "clamp values". A CPU's clamp
+> bucket is active if there is at least one RUNNABLE tasks enqueued on
+> that CPU and refcounting that bucket.
+>
+> When a task is {en,de}queued {on,from} a rq, the set of active clamp
+> buckets on that CPU can change. If the set of active clamp buckets
+> changes for a CPU a new "aggregated" clamp value is computed for that
+> CPU. This is because each clamp bucket enforces a different utilization
+> clamp value.
+>
+> Clamp values are always MAX aggregated for both util_min and util_max.
+> This ensures that no task can affect the performance of other
+> co-scheduled tasks which are more boosted (i.e. with higher util_min
+> clamp) or less capped (i.e. with higher util_max clamp).
+>
+> A tasks has:
 
-> On Fri, Dec 14, 2018 at 09:21:54PM -0800, Paul Walmsley wrote:
-> > Add initial board data for the SiFive HiFive Unleashed A00.
-> > 
-> > Currently the data populated in this DT file describes the board
-> > DRAM configuration and the external clock sources that supply the
-> > PRCI.
+A task has | Tasks have
 
-...
+>    task_struct::uclamp[clamp_id]::bucket_id
+> to track the "bucket index" of the CPU's clamp bucket it refcounts while
+> enqueued, for each clamp index (clamp_id).
+>
+> A runqueue has:
+>    rq::uclamp[clamp_id]::bucket[bucket_id].tasks
+> to track how many RUNNABLE tasks on that CPU refcount each
+> clamp bucket (bucket_id) of a clamp index (clamp_id).
+> It also has a:
+>    rq::uclamp[clamp_id]::bucket[bucket_id].value
+> to track the clamp value of each clamp bucket (bucket_id) of a clamp
+> index (clamp_id).
+>
+> The rq::uclamp::bucket[clamp_id][] array is scanned every time it's
+> needed to find a new MAX aggregated clamp value for a clamp_id. This
+> operation is required only when it's dequeued the last task of a clamp
+> bucket tracking the current MAX aggregated clamp value. In this case,
+> the CPU is either entering IDLE or going to schedule a less boosted or
+> more clamped task.
+> The expected number of different clamp values configured at build time
+> is small enough to fit the full unordered array into a single cache
+> line, for configurations of up to 7 buckets.
+>
+> Add to struct rq the basic data structures required to refcount the
+> number of RUNNABLE tasks for each clamp bucket. Add also the max
+> aggregation required to update the rq's clamp value at each
+> enqueue/dequeue event.
+>
+> Use a simple linear mapping of clamp values into clamp buckets.
+> Pre-compute and cache bucket_id to avoid integer divisions at
+> enqueue/dequeue time.
+>
+> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+>
+> ---
+> Changes in v8:
+>  Message-ID: <20190314111849.gx6bl6myfjtaan7r@e110439-lin>
+>  - remove "bucket local boosting" code and move it into a dedicated
+>    patch
+>  Message-ID: <20190313161229.pkib2tmjass5chtb@e110439-lin>
+>  - refactored uclamp_rq_update() code to make code cleaner
+>  Message-ID: <20190314122256.7wb3ydswpkfmntvf@e110439-lin>
+>  - s/uclamp_rq_update/uclamp_rq_max_value/ and move update into caller
+>  Message-ID: <CAJuCfpEWCcWj=B2SPai2pQt+wcjsAhEfVV1O+H0A+_fqLCnb8Q@mail.gmail.com>
+>  - update changelog to clarify the configuration fitting in one cache line
+>  Message-ID: <20190314145456.5qpxchfltfauqaem@e110439-lin>
+>  - s/uclamp_bucket_value/uclamp_bucket_base_value/
+>  Message-ID: <20190313113757.aeaksz5akv6y5uep@e110439-lin>
+>  - update UCLAMP_BUCKET_DELTA to use DIV_ROUND_CLOSEST()
+> ---
+>  include/linux/log2.h           |  37 ++++++++
+>  include/linux/sched.h          |  39 ++++++++
+>  include/linux/sched/topology.h |   6 --
+>  init/Kconfig                   |  53 +++++++++++
+>  kernel/sched/core.c            | 160 +++++++++++++++++++++++++++++++++
+>  kernel/sched/sched.h           |  51 +++++++++++
+>  6 files changed, 340 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/log2.h b/include/linux/log2.h
+> index 2af7f77866d0..e2db25734532 100644
+> --- a/include/linux/log2.h
+> +++ b/include/linux/log2.h
+> @@ -224,4 +224,41 @@ int __order_base_2(unsigned long n)
+>                 ilog2((n) - 1) + 1) :           \
+>         __order_base_2(n)                       \
+>  )
+> +
+> +static inline __attribute__((const))
+> +int __bits_per(unsigned long n)
+> +{
+> +       if (n < 2)
+> +               return 1;
+> +       if (is_power_of_2(n))
+> +               return order_base_2(n) + 1;
+> +       return order_base_2(n);
+> +}
+> +
+> +/**
+> + * bits_per - calculate the number of bits required for the argument
+> + * @n: parameter
+> + *
+> + * This is constant-capable and can be used for compile time
+> + * initiaizations, e.g bitfields.
 
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> > new file mode 100644
-> > index 000000000000..0c6afabe69e3
-> > --- /dev/null
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> > @@ -0,0 +1,39 @@
-> > +// SPDX-License-Identifier: Apache-2.0
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> 
-> This should be a single line with: (Apache-2.0 OR GPL-2.0+)
+s/initiaizations/initializations
 
-Done.
+> + *
+> + * The first few values calculated by this routine:
+> + * bf(0) = 1
+> + * bf(1) = 1
+> + * bf(2) = 2
+> + * bf(3) = 2
+> + * bf(4) = 3
+> + * ... and so on.
+> + */
+> +#define bits_per(n)                            \
+> +(                                              \
+> +       __builtin_constant_p(n) ? (             \
+> +               ((n) == 0 || (n) == 1) ? 1 : (  \
+> +               ((n) & (n - 1)) == 0 ?          \
 
-> > +	model = "SiFive HiFive Unleashed A00 (FU540-C000)"
-> > +	compatible = "sifive,hifive-unleashed-a00-fu540",
-> > +		"sifive,hifive-unleashed-fu540";
-> 
-> SoC compatible should be here too.
+missing braces around 'n'
+-               ((n) & (n - 1)) == 0 ?          \
++               ((n) & ((n) - 1)) == 0 ?          \
 
-Done.
+> +                       ilog2((n) - 1) + 2 :    \
+> +                       ilog2((n) - 1) + 1      \
 
-> > +	soc {
-> > +		hfclk: hfclk {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <33333333>;
-> > +			clock-output-names = "hfclk";
-> > +		};
-> > +		rtcclk: rtcclk {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <1000000>;
-> > +			clock-output-names = "rtcclk";
-> > +		};
-> 
-> Are these the clock inputs to the SoC or dummy clocks until you write a 
-> proper clock driver? If the former, they should be at the top level. 
+Isn't this "((n) & ((n) - 1)) == 0 ?  ilog2((n) - 1) + 2 : ilog2((n) -
+1) + 1" expression equivalent to a simple "ilog2(n) + 1"?
 
-Done.
+> +               )                               \
+> +       ) :                                     \
+> +       __bits_per(n)                           \
+> +)
+>  #endif /* _LINUX_LOG2_H */
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 18696a194e06..0c0dd7aac8e9 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -281,6 +281,18 @@ struct vtime {
+>         u64                     gtime;
+>  };
+>
+> +/*
+> + * Utilization clamp constraints.
+> + * @UCLAMP_MIN:        Minimum utilization
+> + * @UCLAMP_MAX:        Maximum utilization
+> + * @UCLAMP_CNT:        Utilization clamp constraints count
+> + */
+> +enum uclamp_id {
+> +       UCLAMP_MIN = 0,
+> +       UCLAMP_MAX,
+> +       UCLAMP_CNT
+> +};
+> +
+>  struct sched_info {
+>  #ifdef CONFIG_SCHED_INFO
+>         /* Cumulative counters: */
+> @@ -312,6 +324,10 @@ struct sched_info {
+>  # define SCHED_FIXEDPOINT_SHIFT                10
+>  # define SCHED_FIXEDPOINT_SCALE                (1L << SCHED_FIXEDPOINT_SHIFT)
+>
+> +/* Increase resolution of cpu_capacity calculations */
+> +# define SCHED_CAPACITY_SHIFT          SCHED_FIXEDPOINT_SHIFT
+> +# define SCHED_CAPACITY_SCALE          (1L << SCHED_CAPACITY_SHIFT)
+> +
+>  struct load_weight {
+>         unsigned long                   weight;
+>         u32                             inv_weight;
+> @@ -560,6 +576,25 @@ struct sched_dl_entity {
+>         struct hrtimer inactive_timer;
+>  };
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +/* Number of utilization clamp buckets (shorter alias) */
+> +#define UCLAMP_BUCKETS CONFIG_UCLAMP_BUCKETS_COUNT
+> +
+> +/*
+> + * Utilization clamp for a scheduling entity
+> + * @value:             clamp value "assigned" to a se
+> + * @bucket_id:         bucket index corresponding to the "assigned" value
+> + *
+> + * The bucket_id is the index of the clamp bucket matching the clamp value
+> + * which is pre-computed and stored to avoid expensive integer divisions from
+> + * the fast path.
+> + */
+> +struct uclamp_se {
+> +       unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
+> +       unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
+> +};
+> +#endif /* CONFIG_UCLAMP_TASK */
+> +
+>  union rcu_special {
+>         struct {
+>                 u8                      blocked;
+> @@ -640,6 +675,10 @@ struct task_struct {
+>  #endif
+>         struct sched_dl_entity          dl;
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +       struct uclamp_se                uclamp[UCLAMP_CNT];
+> +#endif
+> +
+>  #ifdef CONFIG_PREEMPT_NOTIFIERS
+>         /* List of struct preempt_notifier: */
+>         struct hlist_head               preempt_notifiers;
+> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+> index 57c7ed3fe465..bb5d77d45b09 100644
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -6,12 +6,6 @@
+>
+>  #include <linux/sched/idle.h>
+>
+> -/*
+> - * Increase resolution of cpu_capacity calculations
+> - */
+> -#define SCHED_CAPACITY_SHIFT   SCHED_FIXEDPOINT_SHIFT
+> -#define SCHED_CAPACITY_SCALE   (1L << SCHED_CAPACITY_SHIFT)
+> -
+>  /*
+>   * sched-domains (multiprocessor balancing) declarations:
+>   */
+> diff --git a/init/Kconfig b/init/Kconfig
+> index c9386a365eea..7439cbf4d02e 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -651,6 +651,59 @@ config HAVE_UNSTABLE_SCHED_CLOCK
+>  config GENERIC_SCHED_CLOCK
+>         bool
+>
+> +menu "Scheduler features"
+> +
+> +config UCLAMP_TASK
+> +       bool "Enable utilization clamping for RT/FAIR tasks"
+> +       depends on CPU_FREQ_GOV_SCHEDUTIL
+> +       help
+> +         This feature enables the scheduler to track the clamped utilization
+> +         of each CPU based on RUNNABLE tasks scheduled on that CPU.
+> +
+> +         With this option, the user can specify the min and max CPU
+> +         utilization allowed for RUNNABLE tasks. The max utilization defines
+> +         the maximum frequency a task should use while the min utilization
+> +         defines the minimum frequency it should use.
+> +
+> +         Both min and max utilization clamp values are hints to the scheduler,
+> +         aiming at improving its frequency selection policy, but they do not
+> +         enforce or grant any specific bandwidth for tasks.
+> +
+> +         If in doubt, say N.
+> +
+> +config UCLAMP_BUCKETS_COUNT
+> +       int "Number of supported utilization clamp buckets"
+> +       range 5 20
+> +       default 5
+> +       depends on UCLAMP_TASK
+> +       help
+> +         Defines the number of clamp buckets to use. The range of each bucket
+> +         will be SCHED_CAPACITY_SCALE/UCLAMP_BUCKETS_COUNT. The higher the
+> +         number of clamp buckets the finer their granularity and the higher
+> +         the precision of clamping aggregation and tracking at run-time.
+> +
+> +         For example, with the minimum configuration value we will have 5
+> +         clamp buckets tracking 20% utilization each. A 25% boosted tasks will
+> +         be refcounted in the [20..39]% bucket and will set the bucket clamp
+> +         effective value to 25%.
+> +         If a second 30% boosted task should be co-scheduled on the same CPU,
+> +         that task will be refcounted in the same bucket of the first task and
+> +         it will boost the bucket clamp effective value to 30%.
+> +         The clamp effective value of a bucket is reset to its nominal value
+> +         (20% in the example above) when there are no more tasks refcounted in
+> +         that bucket.
+> +
+> +         An additional boost/capping margin can be added to some tasks. In the
+> +         example above the 25% task will be boosted to 30% until it exits the
+> +         CPU. If that should be considered not acceptable on certain systems,
+> +         it's always possible to reduce the margin by increasing the number of
+> +         clamp buckets to trade off used memory for run-time tracking
+> +         precision.
+> +
+> +         If in doubt, use the default value.
+> +
+> +endmenu
+> +
+>  #
+>  # For architectures that want to enable the support for NUMA-affine scheduler
+>  # balancing logic:
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 6b2c055564b5..032211b72110 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -732,6 +732,162 @@ static void set_load_weight(struct task_struct *p, bool update_load)
+>         }
+>  }
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +
+> +/* Integer rounded range for each bucket */
+> +#define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
+> +
+> +static inline unsigned int uclamp_bucket_id(unsigned int clamp_value)
+> +{
+> +       return clamp_value / UCLAMP_BUCKET_DELTA;
+> +}
+> +
+> +static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
 
+Where are you using uclamp_bucket_base_value()? I would expect its
+usage somewhere inside uclamp_rq_dec_id() when the last task in the
+bucket is dequeued but I don't see it...
 
-Thanks for your comments; Will send an updated patch set.
+> +{
+> +       return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
+> +}
+> +
+> +static inline unsigned int uclamp_none(int clamp_id)
+> +{
+> +       if (clamp_id == UCLAMP_MIN)
+> +               return 0;
+> +       return SCHED_CAPACITY_SCALE;
+> +}
+> +
+> +static inline
+> +unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
+> +{
+> +       struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> +       int bucket_id = UCLAMP_BUCKETS - 1;
+> +
+> +       /*
+> +        * Since both min and max clamps are max aggregated, find the
+> +        * top most bucket with tasks in.
+> +        */
+> +       for ( ; bucket_id >= 0; bucket_id--) {
+> +               if (!bucket[bucket_id].tasks)
+> +                       continue;
+> +               return bucket[bucket_id].value;
+> +       }
+> +
+> +       /* No tasks -- default clamp values */
+> +       return uclamp_none(clamp_id);
+> +}
+> +
+> +/*
+> + * When a task is enqueued on a rq, the clamp bucket currently defined by the
+> + * task's uclamp::bucket_id is refcounted on that rq. This also immediately
+> + * updates the rq's clamp value if required.
+> + */
+> +static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
+> +                                   unsigned int clamp_id)
+> +{
+> +       struct uclamp_rq *uc_rq = &rq->uclamp[clamp_id];
+> +       struct uclamp_se *uc_se = &p->uclamp[clamp_id];
+> +       struct uclamp_bucket *bucket;
+> +
+> +       bucket = &uc_rq->bucket[uc_se->bucket_id];
+> +       bucket->tasks++;
+> +
+> +       if (uc_se->value > READ_ONCE(uc_rq->value))
+> +               WRITE_ONCE(uc_rq->value, bucket->value);
+> +}
+> +
+> +/*
+> + * When a task is dequeued from a rq, the clamp bucket refcounted by the task
+> + * is released. If this is the last task reference counting the rq's max
+> + * active clamp value, then the rq's clamp value is updated.
+> + *
+> + * Both refcounted tasks and rq's cached clamp values are expected to be
+> + * always valid. If it's detected they are not, as defensive programming,
+> + * enforce the expected state and warn.
+> + */
+> +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
+> +                                   unsigned int clamp_id)
+> +{
+> +       struct uclamp_rq *uc_rq = &rq->uclamp[clamp_id];
+> +       struct uclamp_se *uc_se = &p->uclamp[clamp_id];
+> +       struct uclamp_bucket *bucket;
+> +       unsigned int rq_clamp;
+> +
+> +       bucket = &uc_rq->bucket[uc_se->bucket_id];
+> +       SCHED_WARN_ON(!bucket->tasks);
+> +       if (likely(bucket->tasks))
+> +               bucket->tasks--;
+> +
+> +       if (likely(bucket->tasks))
 
+Shouldn't you adjust bucket->value if the remaining tasks in the
+bucket have a lower clamp value than the task that was just removed?
 
-- Paul
+> +               return;
+> +
+> +       rq_clamp = READ_ONCE(uc_rq->value);
+> +       /*
+> +        * Defensive programming: this should never happen. If it happens,
+> +        * e.g. due to future modification, warn and fixup the expected value.
+> +        */
+> +       SCHED_WARN_ON(bucket->value > rq_clamp);
+> +       if (bucket->value >= rq_clamp)
+> +               WRITE_ONCE(uc_rq->value, uclamp_rq_max_value(rq, clamp_id));
+> +}
+> +
+> +static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> +{
+> +       unsigned int clamp_id;
+> +
+> +       if (unlikely(!p->sched_class->uclamp_enabled))
+> +               return;
+> +
+> +       for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id)
+> +               uclamp_rq_inc_id(p, rq, clamp_id);
+> +}
+> +
+> +static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+> +{
+> +       unsigned int clamp_id;
+> +
+> +       if (unlikely(!p->sched_class->uclamp_enabled))
+> +               return;
+> +
+> +       for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id)
+> +               uclamp_rq_dec_id(p, rq, clamp_id);
+> +}
+> +
+> +static void __init init_uclamp(void)
+> +{
+> +       unsigned int clamp_id;
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               struct uclamp_bucket *bucket;
+> +               struct uclamp_rq *uc_rq;
+> +               unsigned int bucket_id;
+> +
+> +               memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
+> +
+> +               for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
+> +                       uc_rq = &cpu_rq(cpu)->uclamp[clamp_id];
+> +
+> +                       bucket_id = 1;
+> +                       while (bucket_id < UCLAMP_BUCKETS) {
+> +                               bucket = &uc_rq->bucket[bucket_id];
+> +                               bucket->value = bucket_id * UCLAMP_BUCKET_DELTA;
+> +                               ++bucket_id;
+> +                       }
+> +               }
+> +       }
+> +
+> +       for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
+> +               struct uclamp_se *uc_se = &init_task.uclamp[clamp_id];
+> +
+> +               uc_se->value = uclamp_none(clamp_id);
+> +               uc_se->bucket_id = uclamp_bucket_id(uc_se->value);
+> +       }
+> +}
+> +
+> +#else /* CONFIG_UCLAMP_TASK */
+> +static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+> +static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+> +static inline void init_uclamp(void) { }
+> +#endif /* CONFIG_UCLAMP_TASK */
+> +
+>  static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+>  {
+>         if (!(flags & ENQUEUE_NOCLOCK))
+> @@ -742,6 +898,7 @@ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+>                 psi_enqueue(p, flags & ENQUEUE_WAKEUP);
+>         }
+>
+> +       uclamp_rq_inc(rq, p);
+>         p->sched_class->enqueue_task(rq, p, flags);
+>  }
+>
+> @@ -755,6 +912,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+>                 psi_dequeue(p, flags & DEQUEUE_SLEEP);
+>         }
+>
+> +       uclamp_rq_dec(rq, p);
+>         p->sched_class->dequeue_task(rq, p, flags);
+>  }
+>
+> @@ -6088,6 +6246,8 @@ void __init sched_init(void)
+>
+>         psi_init();
+>
+> +       init_uclamp();
+> +
+>         scheduler_running = 1;
+>  }
+>
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 71208b67e58a..c3d1ae1e7eec 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -797,6 +797,48 @@ extern void rto_push_irq_work_func(struct irq_work *work);
+>  #endif
+>  #endif /* CONFIG_SMP */
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +/*
+> + * struct uclamp_bucket - Utilization clamp bucket
+> + * @value: utilization clamp value for tasks on this clamp bucket
+> + * @tasks: number of RUNNABLE tasks on this clamp bucket
+> + *
+> + * Keep track of how many tasks are RUNNABLE for a given utilization
+> + * clamp value.
+> + */
+> +struct uclamp_bucket {
+> +       unsigned long value : bits_per(SCHED_CAPACITY_SCALE);
+> +       unsigned long tasks : BITS_PER_LONG - bits_per(SCHED_CAPACITY_SCALE);
+> +};
+> +
+> +/*
+> + * struct uclamp_rq - rq's utilization clamp
+> + * @value: currently active clamp values for a rq
+> + * @bucket: utilization clamp buckets affecting a rq
+> + *
+> + * Keep track of RUNNABLE tasks on a rq to aggregate their clamp values.
+> + * A clamp value is affecting a rq when there is at least one task RUNNABLE
+> + * (or actually running) with that value.
+> + *
+> + * There are up to UCLAMP_CNT possible different clamp values, currently there
+> + * are only two: minmum utilization and maximum utilization.
+
+s/minmum/minimum
+
+> + *
+> + * All utilization clamping values are MAX aggregated, since:
+> + * - for util_min: we want to run the CPU at least at the max of the minimum
+> + *   utilization required by its currently RUNNABLE tasks.
+> + * - for util_max: we want to allow the CPU to run up to the max of the
+> + *   maximum utilization allowed by its currently RUNNABLE tasks.
+> + *
+> + * Since on each system we expect only a limited number of different
+> + * utilization clamp values (UCLAMP_BUCKETS), use a simple array to track
+> + * the metrics required to compute all the per-rq utilization clamp values.
+> + */
+> +struct uclamp_rq {
+> +       unsigned int value;
+> +       struct uclamp_bucket bucket[UCLAMP_BUCKETS];
+> +};
+> +#endif /* CONFIG_UCLAMP_TASK */
+> +
+>  /*
+>   * This is the main, per-CPU runqueue data structure.
+>   *
+> @@ -835,6 +877,11 @@ struct rq {
+>         unsigned long           nr_load_updates;
+>         u64                     nr_switches;
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +       /* Utilization clamp values based on CPU's RUNNABLE tasks */
+> +       struct uclamp_rq        uclamp[UCLAMP_CNT] ____cacheline_aligned;
+> +#endif
+> +
+>         struct cfs_rq           cfs;
+>         struct rt_rq            rt;
+>         struct dl_rq            dl;
+> @@ -1649,6 +1696,10 @@ extern const u32         sched_prio_to_wmult[40];
+>  struct sched_class {
+>         const struct sched_class *next;
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +       int uclamp_enabled;
+> +#endif
+> +
+>         void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
+>         void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+>         void (*yield_task)   (struct rq *rq);
+> --
+> 2.20.1
+>
