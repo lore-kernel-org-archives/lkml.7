@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714B3C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B29EC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BFD2087F
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B6B2087F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKaTd1XN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWxaRb40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfDFLWe (ORCPT
+        id S1726633AbfDFLWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 07:22:34 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:35013 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfDFLWc (ORCPT
+        Sat, 6 Apr 2019 07:22:39 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44636 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfDFLWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 07:22:32 -0400
-Received: by mail-yw1-f66.google.com with SMTP id d132so3281883ywa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 04:22:32 -0700 (PDT)
+        Sat, 6 Apr 2019 07:22:39 -0400
+Received: by mail-yw1-f65.google.com with SMTP id c4so3254532ywa.11
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 04:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MF+LyKhdoU3hTyItL4k9rMey7QhjKplrEVwhrLx8K+k=;
-        b=GKaTd1XNwC+NCs4UdvfIhT9EeA1ihEtU8RMheZ4131dQvjG9XcTr94HaBLw1kKAWIR
-         8DrOBuT2lBXjMbhbqL4GT8MuwdecJ96PsJfyT11XdBptVnPpkheKYFFF1oojvVLQGj6Z
-         QA6O+6ZabG2zkzMX0BI8h7nY3F+QHGAScnQqXvYSnVQLs/5P50Jqz9Je0653ARtQt8TY
-         eW1T0mdvjWxv1u5s0qQMyIKMhMkEa2n4AHuZY6KJSeduX6K2H5XzXlNM2PTeISttqqt9
-         oGGJKEsodWjb2+eMsEeszLS/EB06mj8fG8s7ykRNnkZ02iuN+nPjulPd6njjFDnS6p8e
-         3MCg==
+        bh=4LpYRL6amcq1y1zo/McGCepepBd+6zq1F9/XI0pWbWY=;
+        b=wWxaRb40D0nkGfztICIU4j026UzE7ocN8AtAYEA8pCkUGYLCR4QoxCHjBG9GB0VvTA
+         DBBHq87i/otSdRUyHHVwSwirB3/P9d1J5QH+/Gv043QjbnFBUPK+mhBcCZRZ2efv2TSg
+         yP8Qb6clB2ZVZhz2ibessyTH7Jr7reva7D064QN4FO/ODDHkko7Ifd2+6T316j+e41ip
+         k/lf/MrIsivgH7lxyFjNc9W3WzVRubCqdxUCb/Nt68jjzVqn9QsgiAjCg4vJhtJdB126
+         7nqIf4Ovo6P9tbo23lqPggyafdKxkSUqtdUvwnTImIFKl8A6euWGpmoXisYo6cpYqL8/
+         6rlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MF+LyKhdoU3hTyItL4k9rMey7QhjKplrEVwhrLx8K+k=;
-        b=q4LCao1k36IcjxjcAiuWWReKzOsYoeb+/9HSUYMLA0XU8frqHlQr2Id035z7gRlxQO
-         EjDr8XLKRO948aRYR6cbCZagyEVF0LH6WgWU00lngVh0x9IHQJKS07Ys99mdOc7TfBEo
-         tHWBDDNh9B5AJr7/DmzN2bkM70jNtzIYqhXy4CdlH4UJAq8foHDX4ATKOYWofdiaRMCP
-         cyheWq1yZaoKDiWXknGf40YCfmA8Gwwc7TIGSEIn6Vsn2FnS+3Hrv2XjhSfn3X4idwPJ
-         twOtTGhRLKxvNx0KsKBztA9Y8/pNpmLTANJCDMYadXrWxvMtf+bko5OEACfjGbDuQegG
-         otQQ==
-X-Gm-Message-State: APjAAAVxMYyOjFxSKT2OTKnIfpHU2UVRU0eNCNS21C88d8qKxsmgFYuu
-        ZL2dG85dCd3iooqsNhi6t8F0TQ==
-X-Google-Smtp-Source: APXvYqyruaCUsy2DQlE5OPs7Vn5PK28AuHEcTi9eg3GAgkrzqijYXxsrWHq3XswqPJ3iCC+qzQS1Aw==
-X-Received: by 2002:a81:9982:: with SMTP id q124mr14774369ywg.390.1554549751987;
-        Sat, 06 Apr 2019 04:22:31 -0700 (PDT)
+        bh=4LpYRL6amcq1y1zo/McGCepepBd+6zq1F9/XI0pWbWY=;
+        b=Tq+6d4apSTVCKuukse6rmxigkPhv8ecpTiy3OOpO3u6PW3ePuIwxtiEnOAl8wd7HwF
+         BOy9Jt6rN2/UXeOgWTNK1pVlvpvAmC4yW8T56xR4ycimQK6TkkldbcHvjfqHucAHbTy7
+         dkbfQTb3Bg6AdGJF7Kho1RZsiyp4vEMBkIETxtu8kGIzC20nLhaPFmnY9++PRFMCJf1D
+         8A/4TY/qGWTgd15qNxbhorWK/JSx+Lm1nQJSGSuLhaMVqsBJFWblE+scSaGRrgyk5VC2
+         s+11AQjrq/10zULxFHcG7jM1bTllFU5iaPQbRJ7KpUjOzkdTbTzRNUX5aaZr0ziYFyMo
+         WEeA==
+X-Gm-Message-State: APjAAAVfo6EEkntSXSJyqmAePeqaa4TbhTGSixuC21RMljeFfhok2nKm
+        Fmh8PtoZltGAjTJ8e25lzId0qNPCCk+RxyrF
+X-Google-Smtp-Source: APXvYqyuc6KSGW/uvBF2LfpdGNjPJWpgqVA4v17WKWmjAFeO7cRqPCJOUurFKfhX0BYtkIZ0WepRvw==
+X-Received: by 2002:a81:a00e:: with SMTP id x14mr12492599ywg.281.1554549757934;
+        Sat, 06 Apr 2019 04:22:37 -0700 (PDT)
 Received: from localhost.localdomain (li931-65.members.linode.com. [45.56.113.65])
-        by smtp.gmail.com with ESMTPSA id w22sm12729360yww.58.2019.04.06.04.22.27
+        by smtp.gmail.com with ESMTPSA id w22sm12729360yww.58.2019.04.06.04.22.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 04:22:31 -0700 (PDT)
+        Sat, 06 Apr 2019 04:22:37 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -65,9 +65,9 @@ To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 3/4] dt-bindings: arm: coresight: Unify funnel DT binding
-Date:   Sat,  6 Apr 2019 19:21:44 +0800
-Message-Id: <20190406112145.15184-4-leo.yan@linaro.org>
+Subject: [PATCH v4 4/4] coresight: funnel: Support static funnel
+Date:   Sat,  6 Apr 2019 19:21:45 +0800
+Message-Id: <20190406112145.15184-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190406112145.15184-1-leo.yan@linaro.org>
 References: <20190406112145.15184-1-leo.yan@linaro.org>
@@ -76,131 +76,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the same fashion with replicator DT binding, this patch is to
-unify the DT binding for funnel to support static and dynamic modes;
-finally we get the funnel DT binding as below:
+Since CoreSight hardware topology can use a 'hidden' funnel in the
+trace data path, this kind funnel doesn't have register for accessing
+and is used by default from hardware design perspective.  Below is an
+example for related hardware topology:
 
-Before patch:
+  +------+  +------+
+  | cpu0 |->| ETM  |-\
+  +------+  +------+  \-> +--------+  +-----+
+   ......                 | Funnel |->| ETF |-\    Hidden funnel
+  +------+  +------+  /-> +--------+  +-----+  \        |
+  | cpu3 |->| ETM  |-/                          \       V
+  +------+  +------+                             \-> +--------+
+                                                     | Funnel |-> ...
+  +------+  +------+                             /-> +--------+
+  | cpu4 |->| ETM  |-\                          /
+  +------+  +------+  \-> +--------+  +-----+  /
+   ......                 | Funnel |->| ETF |-/
+  +------+  +------+  /-> +--------+  +-----+
+  | cpu7 |->| ETM  |-/
+  +------+  +------+
 
-  Static funnel, aka. non-configurable funnel:
-    Not supported;
+The CoreSight funnel driver only supports dynamic funnel with
+registration register resource, thus it cannot support for the static
+funnel case and it's impossible to create trace data path for this case.
 
-  Dynamic funnel, aka. configurable funnel:
-    "arm,coresight-funnel", "arm,primecell";
-
-After patch:
-
-  Static funnel:
-    "arm,coresight-static-funnel";
-
-  Dynamic funnel:
-    "arm,coresight-funnel", "arm,primecell"; (obsolete)
-    "arm,coresight-dynamic-funnel", "arm,primecell";
-
-At the end of this patch, it gives an example for static funnel DT
-binding, and updates the dynamic funnel example.
+This patch is to extend CoreSight funnel driver to support both for
+static funnel and dynamic funnel.  For the dynamic funnel it reuses the
+code existed in the driver, for static funnel the driver will support
+device probe if without providing register resource and the driver skips
+registers accessing when detect the register base is NULL.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc: Wanglai Shi <shiwanglai@hisilicon.com>
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- .../devicetree/bindings/arm/coresight.txt     | 52 +++++++++++++++++--
- 1 file changed, 48 insertions(+), 4 deletions(-)
+ .../hwtracing/coresight/coresight-funnel.c    | 112 +++++++++++++-----
+ 1 file changed, 85 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index f8f794869af2..f8ad11a17cd5 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
- sink. Each CoreSight component device should use these properties to describe
- its hardware characteristcs.
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index 927925151509..2030d2596d90 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -12,6 +12,7 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/slab.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/coresight.h>
+ #include <linux/amba/bus.h>
+@@ -43,7 +44,7 @@ struct funnel_drvdata {
+ 	unsigned long		priority;
+ };
  
--* Required properties for all components *except* non-configurable replicators:
-+* Required properties for all components *except* non-configurable replicators
-+  and non-configurable funnels:
+-static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
++static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+ {
+ 	u32 functl;
+ 	int rc = 0;
+@@ -71,17 +72,19 @@ static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+ static int funnel_enable(struct coresight_device *csdev, int inport,
+ 			 int outport)
+ {
+-	int rc;
++	int rc = 0;
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  
- 	* compatible: These have to be supplemented with "arm,primecell" as
- 	  drivers are using the AMBA bus interface.  Possible values include:
-@@ -24,8 +25,11 @@ its hardware characteristcs.
- 		  discovered at boot time when the device is probed.
- 			"arm,coresight-tmc", "arm,primecell";
+-	rc = funnel_enable_hw(drvdata, inport);
++	if (drvdata->base)
++		rc = dynamic_funnel_enable_hw(drvdata, inport);
  
--		- Trace Funnel:
-+		- Trace Programmable Funnel, the compatible string
-+		  "arm,coresight-funnel" is obsolete, keep it to support
-+		  the old DT bindings:
- 			"arm,coresight-funnel", "arm,primecell";
-+			"arm,coresight-dynamic-funnel", "arm,primecell";
+ 	if (!rc)
+ 		dev_dbg(drvdata->dev, "FUNNEL inport %d enabled\n", inport);
+ 	return rc;
+ }
  
- 		- Embedded Trace Macrocell (version 3.x) and
- 					Program Flow Trace Macrocell:
-@@ -65,7 +69,7 @@ its hardware characteristcs.
- 	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
+-static void funnel_disable_hw(struct funnel_drvdata *drvdata, int inport)
++static void dynamic_funnel_disable_hw(struct funnel_drvdata *drvdata,
++				      int inport)
+ {
+ 	u32 functl;
  
- * Required properties for devices that don't show up on the AMBA bus, such as
--  non-configurable replicators:
-+  non-configurable replicators and non-configurable funnels:
+@@ -103,7 +106,8 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
+ {
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  
- 	* compatible: Currently supported value is (note the absence of the
- 	  AMBA markee):
-@@ -75,6 +79,9 @@ its hardware characteristcs.
- 			"arm,coresight-replicator";
- 			"arm,coresight-static-replicator";
+-	funnel_disable_hw(drvdata, inport);
++	if (drvdata->base)
++		dynamic_funnel_disable_hw(drvdata, inport);
  
-+		- Coresight Non-configurable Funnel:
-+			"arm,coresight-static-funnel";
+ 	dev_dbg(drvdata->dev, "FUNNEL inport %d disabled\n", inport);
+ }
+@@ -177,54 +181,67 @@ static struct attribute *coresight_funnel_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(coresight_funnel);
+ 
+-static int funnel_probe(struct amba_device *adev, const struct amba_id *id)
++static int funnel_probe(struct device *dev, struct resource *res)
+ {
+ 	int ret;
+ 	void __iomem *base;
+-	struct device *dev = &adev->dev;
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct funnel_drvdata *drvdata;
+-	struct resource *res = &adev->res;
+ 	struct coresight_desc desc = { 0 };
+-	struct device_node *np = adev->dev.of_node;
++	struct device_node *np = dev->of_node;
+ 
+ 	if (np) {
+ 		pdata = of_get_coresight_platform_data(dev, np);
+ 		if (IS_ERR(pdata))
+ 			return PTR_ERR(pdata);
+-		adev->dev.platform_data = pdata;
++		dev->platform_data = pdata;
+ 	}
+ 
+ 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->dev = &adev->dev;
+-	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
++	drvdata->dev = dev;
++	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
+ 		if (ret)
+ 			return ret;
+ 	}
+-	dev_set_drvdata(dev, drvdata);
+ 
+-	/* Validity for the resource is already checked by the AMBA core */
+-	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	/*
++	 * Map the device base for dynamic-funnel, which has been
++	 * validated by AMBA core.
++	 */
++	if (res) {
++		base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(base)) {
++			ret = PTR_ERR(base);
++			goto out_disable_clk;
++		}
++		drvdata->base = base;
++		desc.groups = coresight_funnel_groups;
++	}
+ 
+-	drvdata->base = base;
+-	pm_runtime_put(&adev->dev);
++	dev_set_drvdata(dev, drvdata);
+ 
+ 	desc.type = CORESIGHT_DEV_TYPE_LINK;
+ 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_MERG;
+ 	desc.ops = &funnel_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
+-	desc.groups = coresight_funnel_groups;
+ 	drvdata->csdev = coresight_register(&desc);
++	if (IS_ERR(drvdata->csdev)) {
++		ret = PTR_ERR(drvdata->csdev);
++		goto out_disable_clk;
++	}
 +
- 	* port or ports: see "Graph bindings for Coresight" below.
++	pm_runtime_put(dev);
  
- * Optional properties for ETM/PTMs:
-@@ -204,8 +211,45 @@ Example:
- 		};
- 	};
+-	return PTR_ERR_OR_ZERO(drvdata->csdev);
++out_disable_clk:
++	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
++		clk_disable_unprepare(drvdata->atclk);
++	return ret;
+ }
  
-+	funnel {
-+		/*
-+		 * non-configurable funnel don't show up on the AMBA
-+		 * bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-static-funnel";
-+		clocks = <&crg_ctrl HI3660_PCLK>;
-+		clock-names = "apb_pclk";
-+
-+		out-ports {
-+			port {
-+				combo_funnel_out: endpoint {
-+					remote-endpoint = <&top_funnel_in>;
-+				};
-+			};
-+		};
-+
-+		in-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				combo_funnel_in0: endpoint {
-+					remote-endpoint = <&cluster0_etf_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				combo_funnel_in1: endpoint {
-+					remote-endpoint = <&cluster1_etf_out>;
-+				};
-+			};
-+		};
-+	};
-+
- 	funnel@20040000 {
--		compatible = "arm,coresight-funnel", "arm,primecell";
-+		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 		reg = <0 0x20040000 0 0x1000>;
+ #ifdef CONFIG_PM
+@@ -253,7 +270,48 @@ static const struct dev_pm_ops funnel_dev_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(funnel_runtime_suspend, funnel_runtime_resume, NULL)
+ };
  
- 		clocks = <&oscclk6a>;
+-static const struct amba_id funnel_ids[] = {
++static int static_funnel_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	pm_runtime_get_noresume(&pdev->dev);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
++	/* Static funnel do not have programming base */
++	ret = funnel_probe(&pdev->dev, NULL);
++
++	if (ret) {
++		pm_runtime_put_noidle(&pdev->dev);
++		pm_runtime_disable(&pdev->dev);
++	}
++
++	return ret;
++}
++
++static const struct of_device_id static_funnel_match[] = {
++	{.compatible = "arm,coresight-static-funnel"},
++	{}
++};
++
++static struct platform_driver static_funnel_driver = {
++	.probe          = static_funnel_probe,
++	.driver         = {
++		.name   = "coresight-static-funnel",
++		.of_match_table = static_funnel_match,
++		.pm	= &funnel_dev_pm_ops,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver(static_funnel_driver);
++
++static int dynamic_funnel_probe(struct amba_device *adev,
++				const struct amba_id *id)
++{
++	return funnel_probe(&adev->dev, &adev->res);
++}
++
++static const struct amba_id dynamic_funnel_ids[] = {
+ 	{
+ 		.id     = 0x000bb908,
+ 		.mask   = 0x000fffff,
+@@ -266,14 +324,14 @@ static const struct amba_id funnel_ids[] = {
+ 	{ 0, 0},
+ };
+ 
+-static struct amba_driver funnel_driver = {
++static struct amba_driver dynamic_funnel_driver = {
+ 	.drv = {
+-		.name	= "coresight-funnel",
++		.name	= "coresight-dynamic-funnel",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &funnel_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
+-	.probe		= funnel_probe,
+-	.id_table	= funnel_ids,
++	.probe		= dynamic_funnel_probe,
++	.id_table	= dynamic_funnel_ids,
+ };
+-builtin_amba_driver(funnel_driver);
++builtin_amba_driver(dynamic_funnel_driver);
 -- 
 2.17.1
 
