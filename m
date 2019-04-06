@@ -4,66 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A296C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6729C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5817213A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB50A213A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kzTyf4tu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mk1oPrJG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B5LNUENa";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d00eRd8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDFTDk (ORCPT
+        id S1726637AbfDFTGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 15:03:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36310 "EHLO
+        Sat, 6 Apr 2019 15:06:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37240 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfDFTDk (ORCPT
+        with ESMTP id S1726435AbfDFTGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 15:03:40 -0400
+        Sat, 6 Apr 2019 15:06:49 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 94EE3607EB; Sat,  6 Apr 2019 19:03:39 +0000 (UTC)
+        id 60CA36079C; Sat,  6 Apr 2019 19:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554577419;
-        bh=fh1H5KKwnjiRs9RsITbGDwGcMNJWE9tSssA6iIdHjOs=;
+        s=default; t=1554577608;
+        bh=mtVERRMRXHZTuyi1ugtO4a1Mz95n6PAZeQCvJIUgZKI=;
         h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=kzTyf4tungH+UAnF6O3lLTKuekX/Spvn5Ih8QiiO017ZprRErXjNFvriK3MuGvCVr
-         hrcBp64vFmUa53v7QEKPZJNzFbnqY6EMDa9rudoxK54oKFA6prK8QV74tiibbKudqR
-         DCZgyggiqw6V0f/EqZ0m6DqbmNzxLzPmC6v6yMtc=
+        b=B5LNUENaCwin5oK/HNpM4SX5gezXqacNTThUXzpvEr/jTQPahtwGZqN+b7X4cnV8f
+         M2D6TDNmQydX4xhBrWJPswD6lQYO7cDqXEd9yQBz9HXr6+b/6N3jKfU3ANqSWrt4e+
+         KA1pc66KN5/UWpZjI1Gj2a9BEF6alvUtqj2XxYg8=
 Received: from [10.79.171.6] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 829986053D;
-        Sat,  6 Apr 2019 19:03:31 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 599276049C;
+        Sat,  6 Apr 2019 19:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554577417;
-        bh=fh1H5KKwnjiRs9RsITbGDwGcMNJWE9tSssA6iIdHjOs=;
+        s=default; t=1554577607;
+        bh=mtVERRMRXHZTuyi1ugtO4a1Mz95n6PAZeQCvJIUgZKI=;
         h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=Mk1oPrJGzlKyRtUwlyOeLMebVCh/K1jVCRDopH0wTYycoylqx1eHsXD0C2oiGeXrN
-         jDRkIHaXV4JprkzHQCJ7KFor6pTQFVQuLa8UeAczQxygTgm0ywgMJ7G72MDmmINBg8
-         f3ob1wGf4z/0PhLsGJx8kqlLCZG3SP8HOE7m2hSM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 829986053D
+        b=d00eRd8qdwJoQ7FU90Q6yhZjr8OzlJHydgx0HLMoU3v19ykzHc3ATTOYQf5X9+/BO
+         CgVothd7rOxndjHR1huKWoxTaxpXrMF7F74zvGSB5OmVKAaN8wAfSYv6tvZY5PT56E
+         JcS0QOrOnUPDuP4M0b9T4uHbimbdYOv5cQSKeSqA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 599276049C
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] xen: xen-pciback: fix warning Using plain integer as NULL
+Subject: Re: [PATCH] f2fs: data: fix warning Using plain integer as NULL
  pointer
 To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20190406122912.GA403@hari-Inspiron-1545>
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20190406105936.GA30585@hari-Inspiron-1545>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <8d19e62d-11cd-91dc-6c54-d688d2d67d00@codeaurora.org>
-Date:   Sun, 7 Apr 2019 00:33:29 +0530
+Message-ID: <22201e87-47ed-d660-ca15-33567daab355@codeaurora.org>
+Date:   Sun, 7 Apr 2019 00:36:38 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190406122912.GA403@hari-Inspiron-1545>
+In-Reply-To: <20190406105936.GA30585@hari-Inspiron-1545>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -73,13 +71,11 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/6/2019 5:59 PM, Hariprasad Kelam wrote:
-> Changes passing function argument 0 to NULL to avoid below sparse
+On 4/6/2019 4:29 PM, Hariprasad Kelam wrote:
+> changed passing function argument "0 to NULL" to fix below sparse
 > warning
 >
->   CHECK   drivers/xen/xen-pciback/xenbus.c
-> drivers/xen/xen-pciback/xenbus.c:700:51: warning: Using plain integer as
-> NULL pointer
+> fs/f2fs/data.c:426:47: warning: Using plain integer as NULL pointer
 >
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
@@ -88,19 +84,19 @@ Cheers,
 -Mukesh
 
 > ---
->   drivers/xen/xen-pciback/xenbus.c | 2 +-
+>   fs/f2fs/data.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
-> index 23f7f6e..833b2d2 100644
-> --- a/drivers/xen/xen-pciback/xenbus.c
-> +++ b/drivers/xen/xen-pciback/xenbus.c
-> @@ -697,7 +697,7 @@ static int xen_pcibk_xenbus_probe(struct xenbus_device *dev,
->   	/* We need to force a call to our callback here in case
->   	 * xend already configured us!
->   	 */
-> -	xen_pcibk_be_watch(&pdev->be_watch, NULL, 0);
-> +	xen_pcibk_be_watch(&pdev->be_watch, NULL, NULL);
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 97279441..15a2381 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -423,7 +423,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
 >   
->   out:
->   	return err;
+>   void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type)
+>   {
+> -	__submit_merged_write_cond(sbi, NULL, 0, 0, type, true);
+> +	__submit_merged_write_cond(sbi, NULL, NULL, 0, type, true);
+>   }
+>   
+>   void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
