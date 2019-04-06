@@ -2,122 +2,81 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D6EC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECCAC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6DF21855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1410D218C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 09:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnQG6UQj"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PQAUGfW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfDFJMJ (ORCPT
+        id S1726535AbfDFJcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 05:12:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44974 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfDFJMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 05:12:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y7so10552114wrn.11;
-        Sat, 06 Apr 2019 02:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aIrpe3jK9YRA4TrJjFmGutaVzAkGlsrgPpN+cpGwvlE=;
-        b=XnQG6UQjt52d51v+1l7h6xYxGYalll7p9C/ExTp9mWsbCAkourcHoOfvN4e4w+c+3A
-         OETyuonUKzlEkrfdCvzjyWI/YovTorW6hv7+XyMYE9A9b96TF0t8mPsZxTp9alyjrLSt
-         LNBg/9s6DSq9zpcPuMeOm9UhnVWkvR7z/EPBpwDm9AA3edApkhqPRQflQlm6rJMYuXCq
-         ZC34DtPkJVaXxpMHmL7ZZEKqDLUrEAr6GJCQekybV4a0WbbueHTn78G7t9HDCnRVwYkB
-         H29NuNrZnyHy9U25Wn8deu511nTdICcK5hoLltHBebjEkrJSqWySIYzNnC4pyD0hiF0f
-         ovfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aIrpe3jK9YRA4TrJjFmGutaVzAkGlsrgPpN+cpGwvlE=;
-        b=JpzabWb6ELRG5i7uLMO3jYpULLDJwdmUc6JYShAren/efbCztgehXWzW/lk7YVPgji
-         2Kvj+C2Rp93O+cP9wP6BGQUMSPECtC7AaS++2YKXpY/WaHchm9WmVrkOcaHV/9lIeX4Y
-         d9oQl2/XGjKeqaDDol93ZOY4Qz/hb5uAB7hb0rkYc+K285gs38P0Nr2jmsrtkPaTuktC
-         ECaMSH7PkhiVP0UQx/303DmRnPQ6Vo02m8XASnJOtfqfMk7mK7cQSBEJkPGUIL4Of/ih
-         TOzZ1vU9V/oAYZ7c7ZqPAPG8/ZE1SV2Qja2wFM02Q8sejl+h2V5wsos9sct9Bn139GPt
-         uidg==
-X-Gm-Message-State: APjAAAXmaqk/Bm3DzcSw2H+OKiaI8BQmnI2ZhkMVpVVgu5fHiuUrZYNv
-        OwDpOZ4aP+8p9VmEhJ2Z6ARM/fkiFtNxPAN/YA0=
-X-Google-Smtp-Source: APXvYqzrqBby/4QihDA4bR4mBRDMEwa1e6a9aGmRAeRoZ0SzSFPFc+gFsyDqX+5xrEFprPcz1oPx+yFvjsBMTUkkPr8=
-X-Received: by 2002:adf:828f:: with SMTP id 15mr11142565wrc.17.1554541926911;
- Sat, 06 Apr 2019 02:12:06 -0700 (PDT)
+        Sat, 6 Apr 2019 05:32:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35264 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbfDFJcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 05:32:05 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 756C71EC0573;
+        Sat,  6 Apr 2019 11:32:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554543124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=nliKl2iyzaMHB1fj8CUzaj32ewAH5fY88MgKXCgGssY=;
+        b=PQAUGfW1Vm/sJIeho1TFST8W8KMBh6f/tOMKs8czejwpIc6t8O2fsXW19PWZBPOmOU4BLa
+        ipR03V3SkSkZZJNCKc1cvtiZ0KLkSldC2zUOoubhNaN3+vwizXDUFIPxqn4rQrWYfIRcGL
+        YZgKTQc5cHGv0iN3UGA5vEYfiS4FmSU=
+Date:   Sat, 6 Apr 2019 11:32:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
+Message-ID: <20190406093201.GB14245@zn.tnic>
+References: <20190405045711.30339-1-bp@alien8.de>
+ <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
+ <20190405075251.GC23348@zn.tnic>
+ <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
+ <20190405082447.GD23348@zn.tnic>
+ <CAGXu5jK6+ZcJQqchySsMicEy-Kd=TFRTE1M_JdhX4TaJDAPiaQ@mail.gmail.com>
+ <20190405162527.GP22763@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
-In-Reply-To: <1554540030-12740-1-git-send-email-hofrat@osadl.org>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Sat, 6 Apr 2019 20:11:55 +1100
-Message-ID: <CAGRGNgUy1Gva7AcwkjoGP0KmJrduDQAk1aMWP0XC89HXz48hKA@mail.gmail.com>
-Subject: Re: [PATCH V2] staging: wilc1000: drop explicit conversion to bool
-To:     Nicholas Mc Guire <hofrat@osadl.org>
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190405162527.GP22763@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicholas,
+On Fri, Apr 05, 2019 at 09:25:27AM -0700, Matthew Wilcox wrote:
+> I don't think that's a good idea; we should only document functions we
+> want other people to use.
 
-On Sat, Apr 6, 2019 at 7:48 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
->
-> As the expression evaluates to a boolean anyway (relational and logical
-> operators) conversion with the ternary operator is not needed here as
-> coccinelle notes (boolconv.cocci)
->
-> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-> ---
->
-> V2: sent out the wrong version - the commit message was longer than 75
->     chars - only change here is the commit message wrapping.
->
-> scripts/coccinelle/misc/boolconv.cocci warned about:
-> drivers/staging/wilc1000/wilc_wlan.c:14:48-53: WARNING: conversion to bool not needed here
->
-> Patch was compile tested with: x86_64_defconfig + Staging=y,
-> WILC1000_SDIO=m, WILC1000_SPI=m, WILC1000=m
-> (checkpatch, sparse and cocci clean otherwise)
->
-> Patch is against 5.1-rc3 (localversion-next is -next-20190403)
->
->  drivers/staging/wilc1000/wilc_wlan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-> index c238969..6c9fd3a 100644
-> --- a/drivers/staging/wilc1000/wilc_wlan.c
-> +++ b/drivers/staging/wilc1000/wilc_wlan.c
-> @@ -11,7 +11,7 @@
->
->  static inline bool is_wilc1000(u32 id)
->  {
-> -       return ((id & 0xfffff000) == 0x100000 ? true : false);
-> +       return ((id & 0xfffff000) == 0x100000);
+Yap.
 
-Whilst you're here, you might as well remove the superfluous parentheses.
+> I could also go for renaming this to __size_ab_plus_c.
 
-Other than that,
+Let's just leave it short as it is now - the comment should be good
+enough.
 
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Btw, is anyone picking this up or should I?
 
-Thanks,
+Thx.
 
 -- 
-Julian Calaby
+Regards/Gruss,
+    Boris.
 
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+Good mailing practices for 400: avoid top-posting and trim the reply.
