@@ -2,144 +2,104 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D87C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0792EC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720C9218C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="bh7mqx4D"
+	by mail.kernel.org (Postfix) with ESMTP id C954621855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfDFKYg (ORCPT
+        id S1726456AbfDFKgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 06:24:36 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41821 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfDFKYf (ORCPT
+        Sat, 6 Apr 2019 06:36:15 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:47428 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726036AbfDFKgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 06:24:35 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 10so6122666lfr.8
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 03:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0B2T93URAhgkJumCufvQgsIA73utiusJRcpc3egwJ3w=;
-        b=bh7mqx4Dk6f8JGmWpEyE1WEoykl+7YYcpjdshasbN5gUWF1DQkQ+saSf5pYKspd0ks
-         9lzneFQTxPofVNeIlAyPVH0i5m5wMYgkVes8wNDoFp7BoFm9U4f7HPH5etAGHhXCapgi
-         nQKVpD6sPyRH0mmUqHoEhwtN0sY2olKexpbyi8n2YKDOMzAf6Y9WxWz/nMy0iIHtP+x2
-         rEGTLwsLvUR3a8nNdAKClh8PJgZrUd1GpKk255faE0gAr03ez+oFKn1sPURrjP6jad5K
-         JqqMjFeVrSJxnPBjr06IwXzL5Cw5E050prXoXpMeAvcc1NkszCowLyg5Snut4t954yFZ
-         /dAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0B2T93URAhgkJumCufvQgsIA73utiusJRcpc3egwJ3w=;
-        b=eReYykdhHd9hxEiEZCxvt6i/mgssxF3aRJvx8eVRo9b1yj3ALB927v0AznYeoPcBWl
-         CWxlOuCYqndiAgOnFq5t6FE4Zb6WjFmRDIYJ5VrC6jIHEqDQKTTHor36tE9zB6n45bKQ
-         GKsj/2BLA29awwe/ybOXakMmwl9nImXxwtmJ0Wx9GMrEl9ZMJksoJkl8/hi34hK+HqoI
-         Cxk0j2u043WZh/XJ2m6hDcFK36va8jqMT8JuGme2ADfBbp2aVeu2vTCnerx07sYgAgMN
-         CmEW+3QvYM8Wyji2nEDYX7u/W5r7VYSwM/dO931G9HCgb4XHdH+yEu/PN1laNLd1oT75
-         IV6g==
-X-Gm-Message-State: APjAAAXHSgKczoERQ2M7rkVRRoQCg7RlHcZyO1eRy4dKRJAE3ugDw77f
-        QbfLpR213id72ZQaz/gxqxH7pw==
-X-Google-Smtp-Source: APXvYqxPg2maS6hIFXQrqgAZHG5hl6JCOOnw2lWbLYw42o3CcmK36QiKAT3Au6HlUb4wVR3vdqDlcQ==
-X-Received: by 2002:ac2:5082:: with SMTP id f2mr9991211lfm.71.1554546273571;
-        Sat, 06 Apr 2019 03:24:33 -0700 (PDT)
-Received: from [10.102.31.166] ([81.16.143.135])
-        by smtp.gmail.com with ESMTPSA id q5sm4914656lfm.16.2019.04.06.03.24.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 03:24:32 -0700 (PDT)
-Subject: Re: [PATCH 06/12] net: stmmac: sun8i: force select external PHY when
- no internal one
-To:     megous@megous.com, linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
+        Sat, 6 Apr 2019 06:36:14 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AB884634C7B;
+        Sat,  6 Apr 2019 13:35:24 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hCifV-0001tz-9f; Sat, 06 Apr 2019 13:35:25 +0300
+Date:   Sat, 6 Apr 2019 13:35:25 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Mickael Guene <mickael.guene@st.com>
+Cc:     linux-media@vger.kernel.org, hugues.fruchet@st.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-7-megous@megous.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <36e1e65b-5a8f-f8ae-6c33-07c30beada17@cogentembedded.com>
-Date:   Sat, 6 Apr 2019 13:24:26 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Document MIPID02 bindings
+Message-ID: <20190406103525.amfsljsz4twi3xq2@valkosipuli.retiisi.org.uk>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1553680545-73278-1-git-send-email-mickael.guene@st.com>
+ <1553680545-73278-2-git-send-email-mickael.guene@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20190405234514.6183-7-megous@megous.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553680545-73278-2-git-send-email-mickael.guene@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Mickael,
 
-On 06.04.2019 2:45, megous@megous.com wrote:
-
-> From: Icenowy Zheng <icenowy@aosc.io>
+On Wed, Mar 27, 2019 at 10:55:43AM +0100, Mickael Guene wrote:
+> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+> bridge.
 > 
-> The PHY selection bit also exists on SoCs without an internal PHY; if
-> it's set to 1 (internal PHY) then the MAC will not make use of any PHY.
-> 
-> This problem appears when adapting for H6, which has no real internal
-> PHY (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200
-> chip, via RMII interface at GPIO bank A), but the PHY selection bit is
-> set.
-> 
-> Force the PHY selection bit to 0 when no external PHY to select this
-> problem.
-
-    "Select this problem" sound weird...
-
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Mickael Guene <mickael.guene@st.com>
 > ---
->   drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
->   1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> index e3e3dc44b33b..bd340e77b2ea 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> @@ -908,6 +908,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
->   		 * address. No need to mask it again.
->   		 */
->   		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-> +	} else {
-> +		/* For SoCs without internal PHY the PHY selection bit should be
-> +		 * set to 0 (external PHY).
-> +		 */
-> +		reg &= ~(H3_EPHY_SELECT);
-    No () should be needed here, add () around the macro body if still needed.
+> Changes in v4:
+> - Fix and clarify endpoints properties documentation
+> 
+> Changes in v3: None
+> Changes in v2:
+> - Add precision about first CSI-2 port data rate
+> - Document endpoints supported properties
+> - Rename 'mipid02@14' into generic 'csi2rx@14' in example
+> 
+>  .../bindings/media/i2c/st,st-mipid02.txt           | 82 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> new file mode 100644
+> index 0000000..754a175
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> @@ -0,0 +1,82 @@
+> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> +
+> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
+> +time. Active port input stream will be de-serialized and its content outputted
+> +through PARALLEL output port.
+> +CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 second
+> +input port is a single lane 800Mbps. Both ports support clock and data lane
+> +polarity swap. First port also supports data lane swap.
+> +PARALLEL output port has a maximum width of 12 bits.
+> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
+> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> +
+> +Required Properties:
+> +- compatible: should be "st,st-mipid02"
 
-[...]
+s/should/shall/ overall; other values aren't really valid in any of the
+cases.
 
-MBR, Sergei
+-- 
+Sakari Ailus
