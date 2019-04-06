@@ -2,106 +2,69 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A84C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 01:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C46C282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 01:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE932175B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 01:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17B521871
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 01:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554514811;
+	bh=YXZ9FMEA2Est/x4K+nwdos5g0Bip3/NQVHQBzH/IG6w=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ewYir2tWOJWk6zVp3LuyKqRIVKsav5GqRTy0X9MzmAnr4DE2K/d7dgfsbkJeXUo3A
+	 hKXteqiCSD+yUaj/bBwFRTFkRiVwBKF8jXMbXcmIUtINcmM6qMZ+tqFIGE4bxKSbni
+	 WjbykYstv8xwK20m7+CeX1pyYXKjeEndJholwN1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfDFBkE (ORCPT
+        id S1726575AbfDFBkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Apr 2019 21:40:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42722 "EHLO mx1.redhat.com"
+        Fri, 5 Apr 2019 21:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfDFBkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Apr 2019 21:40:04 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB300307E04A;
-        Sat,  6 Apr 2019 01:40:03 +0000 (UTC)
-Received: from localhost (ovpn-12-33.pek2.redhat.com [10.72.12.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BE9B5D9D6;
-        Sat,  6 Apr 2019 01:40:00 +0000 (UTC)
-Date:   Sat, 6 Apr 2019 09:39:57 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        mingo@kernel.org, bp@alien8.de, hpa@zytor.com, dyoung@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v3 2/3] x86/kexec/64: Error out if try to jump to old
- 4-level kernel from 5-level kernel
-Message-ID: <20190406013957.GV7627@MiWiFi-R3L-srv>
-References: <20190312103051.18086-1-bhe@redhat.com>
- <20190312103051.18086-3-bhe@redhat.com>
- <alpine.DEB.2.21.1904052223120.1802@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904052223120.1802@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 06 Apr 2019 01:40:04 +0000 (UTC)
+        id S1726404AbfDFBkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Apr 2019 21:40:07 -0400
+Subject: Re: [GIT PULL] VFIO fixes for v5.1-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554514806;
+        bh=YXZ9FMEA2Est/x4K+nwdos5g0Bip3/NQVHQBzH/IG6w=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1jm6oLTS2hvUUYA4M9ENrOGsNtRabXvQjo5FqBs/9bEn7QgEJWGKcjVyK3v6s5DT/
+         B5MnOF6wmCyx74b0h2HLUaPc99Nggi0ZgOjU2OLam2gfVi+kMOtxujk4PHBdTYCSsY
+         juXKpNKDcsfJxrTF8SK3zc00neNpx6fW80XmomJw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190405084648.67936128@x1.home>
+References: <20190405084648.67936128@x1.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190405084648.67936128@x1.home>
+X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git
+ tags/vfio-v5.1-rc4
+X-PR-Tracked-Commit-Id: 492855939bdb59c6f947b0b5b44af9ad82b7e38c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3e28fb0fcb69dbedfe254939143198b46d83bfa1
+Message-Id: <155451480634.21678.8306720368455112191.pr-tracker-bot@kernel.org>
+Date:   Sat, 06 Apr 2019 01:40:06 +0000
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/19 at 10:38pm, Thomas Gleixner wrote:
-> On Tue, 12 Mar 2019, Baoquan He wrote:
-> 
-> > In relocate_kernel() CR4.LA57 flag is set before kexec jumping if
-> > the kernel has 5-level paging enabled. Then in boot/compressed/head_64.S,
-> > it will check if the booting kernel is in 4-level or 5-level paging
-> > mode, and handle accordingly. However, the old kernel which doesn't
-> > contain the 5-level codes doesn't know how to cope with it, then #GP
-> > triggered.
-> 
-> The above is more than confusing. I assume you want to say:
-> 
->   If the running kernel has 5-level paging activated, the 5-level paging
->   mode is preserved across kexec. If the kexec'ed kernel does not contain
->   support for handling active 5-level paging mode in the decompressor, the
->   decompressor will crash with #GP.
-> 
-> > Instead of triggering #GP during kexec kernel boot, error out during
-> > kexec loading if find out we are trying to jump to old 4-level kernel
-> > from 5-level kernel.
-> 
-> Prevent this situation at load time. If 5-level paging is active, check the
-> xloadflags whether the kexec kernel can handle 5-level paging at least in
-> the decompressor. If not, reject the load attempt.
+The pull request you sent on Fri, 5 Apr 2019 08:46:48 -0600:
 
-Yes, exactly. I will rewrite patch log with simpler sentences as you
-have demonstrated. Thanks.
->  
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/kexec-bzimage64.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> > index 1f3b77367948..4c9c079b5673 100644
-> > --- a/arch/x86/kernel/kexec-bzimage64.c
-> > +++ b/arch/x86/kernel/kexec-bzimage64.c
-> > @@ -321,6 +321,11 @@ static int bzImage64_probe(const char *buf, unsigned long len)
-> >  		return ret;
-> >  	}
-> >  
-> > +	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
-> > +		pr_err("Can not jump to old 4-level kernel from 5-level kernel.\n");
-> 
-> This is confusing at best.
-> 
->      	"bzImage cannot handle 5-level paging mode\n"
-> 
-> or something like this.
-> 
-> > +		return ret;
+> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.1-rc4
 
-Will change too as you suggested.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3e28fb0fcb69dbedfe254939143198b46d83bfa1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
