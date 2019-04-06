@@ -4,64 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE8BC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4F0C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B2921019
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1E321019
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 19:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HhKE9HBg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HhKE9HBg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o6XxdVfX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Oav5Gxr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfDFTNH (ORCPT
+        id S1726646AbfDFTRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 15:13:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39206 "EHLO
+        Sat, 6 Apr 2019 15:17:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40210 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfDFTNH (ORCPT
+        with ESMTP id S1726435AbfDFTRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 15:13:07 -0400
+        Sat, 6 Apr 2019 15:17:53 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9EEE360ADE; Sat,  6 Apr 2019 19:13:06 +0000 (UTC)
+        id 0C70F60D0C; Sat,  6 Apr 2019 19:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554577986;
-        bh=HpCdy244h/aIhd5jVZu04Iy8ZH8g0VAh+n7/UMhtaVQ=;
+        s=default; t=1554578273;
+        bh=5Qaauq7e6FfGQThLRgxCkta8VwuSwihOl+Fq9VzXhU0=;
         h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=HhKE9HBg3PmrNO2WKoOV8yB1yW3OAnUjwLG9qBDep8AyDcVi+2FpleSS2daU5gE1o
-         VYk+tP+dUNetaJ2NQTZwLk6Ze1+gx5XVGwMcgvZXT9FfPJC2ri1yqECXK8lfwNyueN
-         7N3PQOmkiZwSR5JD7LBiajrO0tL9Ru9+QdrNQ04s=
+        b=o6XxdVfXMX0njy88beJSNW1E1wvAWVrv9v+sK3PB+oCHdCFAtAZ/+LrtmqWN9dWAk
+         eQk5DomEz3MHnSIKAgXbLHttwWTNnCiJQ5A4nfWnWlv+LXg6eSaUD53C2Mh6XmzuZ0
+         2eXJq2RWjpuG67zjXxVnNZU3D97aTuFgRNzYsjP4=
 Received: from [10.79.171.6] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA29560A42;
-        Sat,  6 Apr 2019 19:12:59 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A05D60115;
+        Sat,  6 Apr 2019 19:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554577986;
-        bh=HpCdy244h/aIhd5jVZu04Iy8ZH8g0VAh+n7/UMhtaVQ=;
+        s=default; t=1554578272;
+        bh=5Qaauq7e6FfGQThLRgxCkta8VwuSwihOl+Fq9VzXhU0=;
         h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=HhKE9HBg3PmrNO2WKoOV8yB1yW3OAnUjwLG9qBDep8AyDcVi+2FpleSS2daU5gE1o
-         VYk+tP+dUNetaJ2NQTZwLk6Ze1+gx5XVGwMcgvZXT9FfPJC2ri1yqECXK8lfwNyueN
-         7N3PQOmkiZwSR5JD7LBiajrO0tL9Ru9+QdrNQ04s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA29560A42
+        b=Oav5Gxr/Fp8YAeMaowXLuwBmQ252wKpn9ttl8CJrMXSLqObtj1w7KmupmbxNrvJE1
+         KnwQ3TAuXUnspfuJ32UBQB/Gu7RGjLFCduxucAlquosuINNPyptrEjUqZzLa+WzWKe
+         dVyrqzVUl5IZcIy0L+ttSBjh1gD1YlPQAjrxMVms=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A05D60115
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] kernel: pid_namespace : fix warning Using plain integer
- as NULL pointer
+Subject: Re: [PATCH] KVM: x86: fix warning Using plain integer as NULL pointer
 To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <20190406104828.GA26135@hari-Inspiron-1545>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190406093658.GA7438@hari-Inspiron-1545>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <9af19729-cd8a-c3ec-6e89-1696f338c5c1@codeaurora.org>
-Date:   Sun, 7 Apr 2019 00:42:56 +0530
+Message-ID: <ea8cda8a-bda1-c227-6bd2-d8c3bb2f5681@codeaurora.org>
+Date:   Sun, 7 Apr 2019 00:47:40 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190406104828.GA26135@hari-Inspiron-1545>
+In-Reply-To: <20190406093658.GA7438@hari-Inspiron-1545>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -71,15 +73,10 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/6/2019 4:18 PM, Hariprasad Kelam wrote:
-> changed passing function argument "0 to NULL" to fix below sparse
-> warning
+On 4/6/2019 3:06 PM, Hariprasad Kelam wrote:
+> Changed passing argument as "0 to NULL" which resolves below sparse warning
 >
-> kernel/pid_namespace.c:55:76: warning: Using plain integer as NULL
-> pointer
->
-> did changes to avoid checkpatch error "prefer a maximum 75 chars per
-> line"
+> arch/x86/kvm/x86.c:3096:61: warning: Using plain integer as NULL pointer
 >
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
@@ -88,20 +85,19 @@ Cheers,
 -Mukesh
 
 > ---
->   kernel/pid_namespace.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   arch/x86/kvm/x86.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index aa6e72f..6e4afdc 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -52,7 +52,8 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
->   	mutex_lock(&pid_caches_mutex);
->   	/* Name collision forces to do allocation under mutex. */
->   	if (!*pkc)
-> -		*pkc = kmem_cache_create(name, len, 0, SLAB_HWCACHE_ALIGN, 0);
-> +		*pkc =
-> +		    kmem_cache_create(name, len, 0, SLAB_HWCACHE_ALIGN, NULL);
->   	mutex_unlock(&pid_caches_mutex);
->   	/* current can fail, but someone else can succeed. */
->   	return READ_ONCE(*pkc);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 099b851..39034ec 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3093,7 +3093,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>   		break;
+>   	case KVM_CAP_NESTED_STATE:
+>   		r = kvm_x86_ops->get_nested_state ?
+> -			kvm_x86_ops->get_nested_state(NULL, 0, 0) : 0;
+> +			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+>   		break;
+>   	default:
+>   		break;
