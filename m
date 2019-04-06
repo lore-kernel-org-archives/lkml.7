@@ -2,142 +2,93 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3595C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 05:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA275C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB1521855
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 05:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzdkRPNx"
+	by mail.kernel.org (Postfix) with ESMTP id 86D7D21855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 06:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554530748;
+	bh=635nTB3JGNyeTsNhAP/UwHGSpw+mQhgz3JjN7DOqrZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aOdVDm3B2/dwuTIdjLBRLcBLf7tPhENp3i2D+hl4RRF6nETrnCtzuWuxxO+6O4QwX
+	 7BHfrkwGEfVUG1W71ToP48NyjXzV2RtV/5d4WfOd3+4bIQqDu/nfJtNrPmQBRKshOY
+	 nzooiZ4sIIElJj6aMkX8zbzOxBmhi0EFIj5SHVa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfDFF7d (ORCPT
+        id S1726352AbfDFGFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 01:59:33 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35281 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfDFF7c (ORCPT
+        Sat, 6 Apr 2019 02:05:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38781 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfDFGFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 01:59:32 -0400
-Received: by mail-vs1-f66.google.com with SMTP id d8so4756280vsp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2019 22:59:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=uLtgzl+y47IAFLBMiAJzXtmdzwQQQv6bFkF049bGo8Q=;
-        b=XzdkRPNxN+E5x7cMA147ngi9PqZF1Uulpanlf8yImKQjWpEefMF/L3UhwvU79Zhyf3
-         Cu6yM8QemSeOF3qjWl+fctVrVwo1VHt/XtLMUUlJIdATsTQgmQhQDbye5HdROlrw41oj
-         pdw2W4+rvE4xd3uXdVhH1OAKh1XfEtTtrh6CDQQw4qJ7L7I4It+rrnKTrvXC/ZNH7m0J
-         UUlzRAo1/zEA7hKwMCEWN6t670kPKS6Wu12VTeLtSkaVUyUH4kCTzPVZuMXC9jie3uOD
-         JZnAVzT7KyNrCS6zUEN5BltudarfyIWHCZeEo8L34OzjJzZQbLtkexTW0oH56hS+nf29
-         A5WA==
+        Sat, 6 Apr 2019 02:05:47 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g37so4174133plb.5;
+        Fri, 05 Apr 2019 23:05:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=uLtgzl+y47IAFLBMiAJzXtmdzwQQQv6bFkF049bGo8Q=;
-        b=IWYmDSDp5n36ez4sbriEaO955X8+uOYx2aDjYjrZyi9shK2aPtVI3AiHf0fmscz+dL
-         RCOlQ65evnoqCMtgobKtt0g9COc/APZJDcGB7/QHH3hpRTugypX4wojr35wRjc4MdVYI
-         FdG1rPnDZRPpxOJu3jDJ5y+RyEdiakthJ9LdXGeKzuuyJGH+I8XYnIfv++Ab0qmnx0Sj
-         SUvaN2v65f6HDfwMU3/uAK4Wlqvd+vjNnK+H3FAhlO7RaPIlv7bC3KLe02kowFanX3pc
-         HwjFoPNMBmnO2fTZBWGo3V/j6FRr6Ctz2ILswqBKju+eJc+MHRV+IjVcm5lJZ/ymoBnL
-         ijZQ==
-X-Gm-Message-State: APjAAAUIqxNbp0V9Ac5aoXNfDzNE/ByAQXd8rLWl0EGf27KVFSZnvWW+
-        42SdsydflZY718bJAptWgqIg6LFiOgt6dq7qia7DRbtl+8U=
-X-Google-Smtp-Source: APXvYqy4UKsunqxI/fOpkTdAf8nulfxruUmZd2oXxfHy79RjFPK3mjgLdImOcFpEPP4V3Z1y7Dg04kwZfrCS0jpr630=
-X-Received: by 2002:a67:f582:: with SMTP id i2mr11133517vso.33.1554530371758;
- Fri, 05 Apr 2019 22:59:31 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lhcz0Kw5HmPfyuSB9aMh96hh2s+Rqxh9TAlPXiFmBrw=;
+        b=rOI2MA3Negx5mmOcBNx/lRWKE6ZqfC6PNxZqt+lGfqkk4qmbR1rP9X7+g6QV+HAgbe
+         wOFB3S34/GSr14/WWuBXpcn5wBr3cU2Q6Qx5IcE0ZA7u/P9hOBBjgu/LZ319lpfQBua1
+         BLrWKpIyFtTqnQFe/K42Llpcs8+9pmQ6qj7T/FTuAA5vhIxDTXl69y0HWIwEV+y762Tk
+         xkOwcB+CyXSc76WM9/VIZEhJUBoQMNuR0ffKR082lW7Nt5vcLilBytjyrwIcnJwJTBbd
+         fcvELhUY+ELhdTD+aruqQblyto/8lirwKUH9H/62Go+zPwt1/MPyTo3WH5gelX7ZW0A9
+         Mrrg==
+X-Gm-Message-State: APjAAAUBgbMTLq23znmqjBLDv6yQ1uQAbbOXH2Zy3Yt58LRznm3y1Slx
+        vK/Hm3ewGsYWpRBPricd+w==
+X-Google-Smtp-Source: APXvYqxm3HUgLnYeNzzDkQcMXvIUtGAgtNeOC7wFAhNKncXRtaaBWte8HT9Eq2yDsBpoRPv5w9CZKQ==
+X-Received: by 2002:a17:902:87:: with SMTP id a7mr17187252pla.295.1554530746137;
+        Fri, 05 Apr 2019 23:05:46 -0700 (PDT)
+Received: from localhost ([210.160.217.71])
+        by smtp.gmail.com with ESMTPSA id q77sm1761564pfi.45.2019.04.05.23.05.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Apr 2019 23:05:44 -0700 (PDT)
+Message-ID: <5ca841b8.1c69fb81.48fee.6697@mx.google.com>
+Date:   Sat, 06 Apr 2019 01:05:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Shih <pihsun@chromium.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
+References: <20190327051450.16222-1-pihsun@chromium.org>
+ <20190327051450.16222-6-pihsun@chromium.org>
 MIME-Version: 1.0
-From:   Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
-Date:   Sat, 6 Apr 2019 11:29:27 +0530
-Message-ID: <CACDBo57pEVRjOBf0yLMQ+KuGPeOuFcMufGVzjPJVnwfLFjzFSA@mail.gmail.com>
-Subject: vmscan.c: Reclaim unevictable pages.
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kernelnewbies@kernelnewbies.org, vbabka@suse.cz, mhocko@kernel.org,
-        minchan@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327051450.16222-6-pihsun@chromium.org>
+X-Mutt-References: <20190327051450.16222-6-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello ,
+On Wed, Mar 27, 2019 at 01:14:47PM +0800, Peter Shih wrote:
+> From: Pi-Hsun Shih <pihsun@chromium.org>
+> 
+> Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+> 
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> ---
+> Changes from v6:
+>  - No change.
+> 
+> Changes from v5:
+>  - New patch.
+> ---
+>  Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-shrink_page_list() returns , number of pages reclaimed, when pages is
-unevictable it returns VM_BUG_ON_PAGE(PageLRU(page) ||
-PageUnevicatble(page),page);
+Acked-by: Rob Herring <robh@kernel.org>
 
-We can add the unevictable pages in reclaim list in
-shrink_page_list(), return total number of reclaim pages including
-unevictable pages, let the caller handle unevictable pages.
-
-I think the problem is shrink_page_list is awkard. If page is
-unevictable it goto activate_locked->keep_locked->keep lables, keep
-lable list_add the unevictable pages and throw the VM_BUG instead of
-passing it to caller while it relies on caller for
-non-reclaimed-non-unevictable  page's putback.
-I think we can make it consistent so that shrink_page_list could
-return non-reclaimed pages via page_list and caller can handle it. As
-an advance, it could try to migrate mlocked pages without retrial.
-
-
-Below is the issue i observed of CMA_ALLOC of large size buffer :
-(Kernel version - 4.14.65 With Android Pie.
-
-[   24.718792] page dumped because: VM_BUG_ON_PAGE(PageLRU(page) ||
-PageUnevictable(page))
-[   24.726949] page->mem_cgroup:bd008c00
-[   24.730693] ------------[ cut here ]------------
-[   24.735304] kernel BUG at mm/vmscan.c:1350!
-[   24.739478] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
-
-
-Below is the patch which solved this issue :
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index be56e2e..12ac353 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct
-list_head *page_list,
-                sc->nr_scanned++;
-
-                if (unlikely(!page_evictable(page)))
--                       goto activate_locked;
-+                      goto cull_mlocked;
-
-                if (!sc->may_unmap && page_mapped(page))
-                        goto keep_locked;
-@@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct
-list_head *page_list,
-                } else
-                        list_add(&page->lru, &free_pages);
-                continue;
--
-+cull_mlocked:
-+                if (PageSwapCache(page))
-+                        try_to_free_swap(page);
-+                unlock_page(page);
-+                list_add(&page->lru, &ret_pages);
-+                continue;
- activate_locked:
-                /* Not a candidate for swapping, so reclaim swap space. */
-                if (PageSwapCache(page) && (mem_cgroup_swap_full(page) ||
-
-
-
-
-It fixes the below issue.
-
-1. Large size buffer allocation using cma_alloc successful with
-unevictable pages.
-
-cma_alloc of current kernel will fail due to unevictable page
-
-Please let me know if anything i am missing.
-
-Regards,
-Pankaj
