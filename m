@@ -2,87 +2,88 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F36C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4F9C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A132173C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B5421855
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 07:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554534657;
+	bh=9qwoacTAtsyJ+b7JiUmjs9QVehSPQ+iSJx6SaVwKoG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N2oy754Zsqxm0wDfWqTF+DXplvutem42zg8Ra2wLNPV/MYjaBKhJTId8fvnqTm5JU
+	 18lbLtEvtxsP75pKKEBDNkGL37q1/VusHz2CGtsrVwwqBP6AA1++8SJsDCKlVibCH+
+	 +iZBtAu7/HnJuMmiKNzWrbc7fp2LdarK011QxEPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfDFHJH (ORCPT
+        id S1726536AbfDFHK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 03:09:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35830 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfDFHJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 03:09:06 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 67E9DF9E5D7211D795D6;
-        Sat,  6 Apr 2019 15:09:03 +0800 (CST)
-Received: from RH5885H-V3.huawei.com (10.90.53.225) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 6 Apr 2019 15:08:55 +0800
-From:   ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-To:     <viro@zeniv.linux.org.uk>, <tytso@mit.edu>,
-        <adilger.kernel@dilger.ca>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
-        <zhangxiaoxu5@huawei.com>
-CC:     <yi.zhang@huawei.com>
-Subject: [PATCH] fs/buffer.c: Fix data corruption when buffer write with IO error
-Date:   Sat, 6 Apr 2019 15:13:13 +0800
-Message-ID: <1554534793-31444-1-git-send-email-zhangxiaoxu5@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 6 Apr 2019 03:10:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37650 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfDFHK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 03:10:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so4519642pfr.4;
+        Sat, 06 Apr 2019 00:10:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lhkIZobirKanXQ+SUHIUuVIcEecWac3+2Xe33plcmzg=;
+        b=qWDBsMmBIoP4KEfL8CLRdKk+oySGKs/2zeKEb0h8sayW4aPn0dA7HJ1MFXnWtXUKWr
+         mxuMdSmOak8Pa9l5A57c1PQ3erx/jtVrTSceX0MSHUCulvogym5ldOBDVfGlZMp/NqWF
+         cLVJTI9hmKzwMX5Fpyy6sIn57AUv44pluZD2oo7sdoYVjlElNq3bpXX/CPSqBi9JOiYk
+         FTOQeMYMKk+jNgM+wKLPAhx9z8jd7TWF6lSttyeszA3twiSBSTG4AtozsdXgj31L4QFb
+         FZtWvgS1XR6Jn7hw2F89sVRotT3qbFyf0nEyhhieIfrd2dlJl+pM8N1za0qu19WTlMkc
+         M1/w==
+X-Gm-Message-State: APjAAAVK3F6EYiTBuIfKzHsZDdDT81P+HFN7JcCGzkiA00K6+WTO824l
+        zNNeUath2qbAxiP3uHuNuJBgFJmTgw==
+X-Google-Smtp-Source: APXvYqz0r4Sh6ybhrAtRvBPgfgtqWNPWSuLgBbSaLYzsTwLTEhxP1VYYScj1uWUds/kXRgeQXysd/A==
+X-Received: by 2002:a63:cc0c:: with SMTP id x12mr16421839pgf.336.1554534655451;
+        Sat, 06 Apr 2019 00:10:55 -0700 (PDT)
+Received: from localhost ([210.160.217.71])
+        by smtp.gmail.com with ESMTPSA id b16sm33204586pfo.168.2019.04.06.00.10.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 06 Apr 2019 00:10:54 -0700 (PDT)
+Date:   Sat, 6 Apr 2019 02:10:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v5 1/5] dt-bindings: usb-connector: add Vbus regulator
+ for Type-A/B
+Message-ID: <20190406071052.GA5805@bogus>
+References: <20190405205736.55177-1-icenowy@aosc.io>
+ <20190405205736.55177-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405205736.55177-2-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the buffer write failed, 'end_buffer_write_sync' and
-'end_buffer_async_write' will clear the uptodate flag. But the
-data in the buffer maybe newer than disk. In some case, this
-will lead data corruption.
+On Sat,  6 Apr 2019 04:57:32 +0800, Icenowy Zheng wrote:
+> USB Type-A and Type-B connectors have a Vbus pin, which provides +5V
+> power to bus-powered devices.
+> 
+> Add a power supply regulator property for this pin.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> New patch in v5.
+> 
+>  Documentation/devicetree/bindings/connector/usb-connector.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-For example: ext4 flush metadata to disk failed, it will clear
-the uptodate flag. when a new coming call want the buffer, it will
-read it from the disk(because the buffer no uptodate flag). But
-the journal not checkpoint now, it will read old data from disk.
-If read successfully, ext4 will write the old data to the new
-journal, the data will corruption.
-
-So, don't clear the uptodate flag when write the buffer failed.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
----
- fs/buffer.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index ce35760..9fe1827 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -172,7 +172,6 @@ void end_buffer_write_sync(struct buffer_head *bh, int uptodate)
- 	} else {
- 		buffer_io_error(bh, ", lost sync page write");
- 		mark_buffer_write_io_error(bh);
--		clear_buffer_uptodate(bh);
- 	}
- 	unlock_buffer(bh);
- 	put_bh(bh);
-@@ -325,7 +324,6 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
- 	} else {
- 		buffer_io_error(bh, ", lost async page write");
- 		mark_buffer_write_io_error(bh);
--		clear_buffer_uptodate(bh);
- 		SetPageError(page);
- 	}
- 
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
