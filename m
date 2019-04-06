@@ -2,109 +2,89 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025E9C282DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 21:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265EDC282DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 21:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1E921019
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 21:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73BC21019
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 21:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oK61HNpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfDFVaq (ORCPT
+        id S1726415AbfDFVlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 17:30:46 -0400
-Received: from sauhun.de ([88.99.104.3]:49022 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfDFVap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 17:30:45 -0400
-Received: from localhost (p5486CDB5.dip0.t-ipconnect.de [84.134.205.181])
-        by pokefinder.org (Postfix) with ESMTPSA id 8981B2C088A;
-        Sat,  6 Apr 2019 23:30:43 +0200 (CEST)
-Date:   Sat, 6 Apr 2019 23:30:43 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.1
-Message-ID: <20190406213039.GA8502@kunai>
+        Sat, 6 Apr 2019 17:41:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36783 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfDFVls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 17:41:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y13so11965888wrd.3;
+        Sat, 06 Apr 2019 14:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5VAm0idPYqZs50bnW+v5cMp+ag/ntGJhAKZNEBfxbMc=;
+        b=oK61HNpF+gAaWbkrUyfNiZWnBz6bxzh+AMOPIm58PuW074nLVA5FfyZMRT0249bf6N
+         7YXLDJXOfdVC6wgSWsNHf3qBWh8k+MfasBHMSmT+026yjEn5K68jeILWMk7gvQGovyga
+         2sSxiwF7tsoBd6lR96KzY9ijWP1lqZ25leiS9k1AZ1pBIemxAReNyBOkWUOf78ePhVJK
+         wkcPJjH0MBo5fGN0FH1aiX8ZW/FGvi/9CbPUDs6cyZJuSW/TibVb+41Q4k8GI7ri8SG+
+         +n6qKSLZ3yKa7OmXEvsIXFnWHlF6LJrScQ36Fl2PhJTdTyUorsJ6kbl1MQxV+TeGIe11
+         5SLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5VAm0idPYqZs50bnW+v5cMp+ag/ntGJhAKZNEBfxbMc=;
+        b=Dlf/vzWetwb2Znv/rlp/j0/giqMEwjdjlGMtK0maPWEwCwlK/FNuXa7dYhagbhR056
+         ulS4j6CoH2nTumoNVoUieORjWEWPBeOusBTeYeKjtBVsZyiznuN/JnMrRYQNW2eiQsZt
+         WonxJWDO3qA5PXGtqbp+1ZRXlaoiv22ASJqiHTm1bF4biEe2KFFnzeEGb4ufBiPXoX7v
+         3mzLFnnv33QPNRxxwoFZHKq6JDP33qIB5XklDqY+94b0ppB4IC4GWGmdvCsMXCB9asfS
+         /78tRRYwLofBmdn3fniXb9LOo5bnQxEwjrkov5kTMOgOJ/IOpP75/u9mUHchwZbGvNIK
+         O84w==
+X-Gm-Message-State: APjAAAVXiN5YOBlR7E8T/6bcPI3EEPjVIgplOxxkOvUrfhu+M6oWEIzf
+        hsvPCz3SLsNl+v4LNdv7fg==
+X-Google-Smtp-Source: APXvYqyY+t0sfGzkDJ7jdL/yGl1Ee2alpjBf9BTUU9pflSluMmv3I+X47alCwwyCMnJ1+vOoU1qnaw==
+X-Received: by 2002:a5d:69c7:: with SMTP id s7mr12917856wrw.71.1554586906612;
+        Sat, 06 Apr 2019 14:41:46 -0700 (PDT)
+Received: from avx2 ([46.53.242.217])
+        by smtp.gmail.com with ESMTPSA id v16sm37807860wru.76.2019.04.06.14.41.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 14:41:45 -0700 (PDT)
+Date:   Sun, 7 Apr 2019 00:41:43 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Aubrey Li <aubrey.li@linux.intel.com>, mingo@redhat.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, ak@linux.intel.com,
+        tim.c.chen@linux.intel.com, dave.hansen@intel.com,
+        arjan@linux.intel.com, aubrey.li@intel.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v13 1/3] /proc/pid/status: Add support for architecture
+ specific output
+Message-ID: <20190406214143.GA21551@avx2>
+References: <20190224044400.34975-1-aubrey.li@linux.intel.com>
+ <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 05, 2019 at 09:32:35PM +0200, Thomas Gleixner wrote:
+> > +/* Add support for architecture specific output in /proc/pid/status */
+> > +extern void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
+     ^^^^^^
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Linus,
-
-I2C has a simple but wanted driver bugfix.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
-
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-curre=
-nt-fixed
-
-for you to fetch changes up to 3ace6891ce8bb9e1267358cb58f93b4fd8b72b69:
-
-  i2c: imx: don't leak the i2c adapter on error (2019-04-06 17:54:28 +0200)
-
-----------------------------------------------------------------
-Laurentiu Tudor (1):
-      i2c: imx: don't leak the i2c adapter on error
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Mukesh Ojha (1):
-      (Rev.) i2c: imx: don't leak the i2c adapter on error
-
-Uwe Kleine-K=C3=B6nig (1):
-      (Rev.) i2c: imx: don't leak the i2c adapter on error
-
- drivers/i2c/busses/i2c-imx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlypGnoACgkQFA3kzBSg
-KbbT1BAAjoGxYdEZE/C+ggKvU5vvWvN5wtQlj+h/GIGPbO2JYLAjmjShmwY5xLTc
-O+Q35yCUag2VP73KKPUg/fEHOt5b/kK1UzsJOTGWwQUg+Aj162mwLsLD+qC7RcpA
-z54rrca+ur0rVLWnAWMl0HOWx8uWHC54NdsqDBIDOyd++mX/XeevawrRMLt4PqSS
-D1L+75pGNv38H+MveA9pP32CpCM7F4fAWG+QjCEGsRBLcpfdxKKXLYyXaCEUR0cp
-RZg/2kcGgig+0dkomEuy9yyv4vfQirlC83Vmbbi+4KclVGCl9aVOWwCtpsCot85x
-gcoTeAh6Wp1CAjaJ4drZLoqRUtueGHDboIRmMGyfuLPk+xwXSalp7Jb5B634B4G9
-KZLKBkCNF3YcKnPF2uQmh4dzKb/M2TDNkrKj+QqLsjuPkk+mrmPfM326ubKEjHLw
-ZKj32+ozsmBHs+hUph2r0U+PeeaLeS/Zn4Sz0xSmiQcoBJpLvsIpUYY8nBxYB65u
-HLWZObLnuLKa1xOZGJLOy9V6C3XonT1dJ+ScFa+x7QV5zhObOVz1/5Mr1V+ef/s0
-y/9wvCzQH1JDaVpgR++emsg8l+4dKIRg8B9mZAJzDEG2uzekcMvpICCrDvx6BXpB
-7kwVX+uERfEkH38VTu473UU3ev/e3De1W/EO/Rh+wlg9PnEgEio=
-=RUS6
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+Unnecessary extern.
