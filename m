@@ -2,108 +2,88 @@ Return-Path: <SRS0=Ybdz=SI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A986C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5EBC10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D168520879
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 11:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="L/MtJ+ez"
+	by mail.kernel.org (Postfix) with ESMTP id A368F2087F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 12:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbfDFLci (ORCPT
+        id S1726493AbfDFMGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 07:32:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35716 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfDFLci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 07:32:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s39so7704771edb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 04:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4wofAvxBdno8u0MyRmCZ9O1rpYe4pkKpNfg/nhiNm3U=;
-        b=L/MtJ+ez5XPfpQjGtml4QmjJdqgmvPgeQH6WiTbQ6J9AUJFvpJgg8NPx0gwWjKq7hk
-         CdK5XOZGsF1Ft5YFMGtYQJ3vaOAOqWToxVbVimThgCKF475D4SQCUwqoApFI4N7Pe93e
-         PAOMjY66BE2gRMXNvkpPNx2c1vX7jSp1kApO4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4wofAvxBdno8u0MyRmCZ9O1rpYe4pkKpNfg/nhiNm3U=;
-        b=Q0+Vkd0hh85sNU/BV6mEN49TYuZPAkCcyfe1Rarx3+aKLNqgaO2OXnCU/nfXr3V07d
-         mb1MCfBT1inylC1mz8B5HM8pQS1J+az1BY9b9mxRdUOOqntVuS8IaTZ1vRAuu2Tqy4gX
-         4KINO6/oLeKxdDrqvFS0U2mVVVPckz8/VdOgF0LX5aG2t1fGyANtyz3T0tvuKu8oOgzC
-         x98WDQM1EFnNtXxQsdR+YF8C/xHVPxMMqzyHAYRyCEQd9xJVWO1QDqf6V/oczAV4eLF0
-         dwLY7AAYlw4mKtYUeYGht1DvXT0iVXopYwT6873eotpJ4s7m7Iz+biCKTXYaHJLgLauh
-         DK0w==
-X-Gm-Message-State: APjAAAWVBUBXhWwDikno+tLUjcEUpYI73F/KaaHUI4FVF1E7OAf6036J
-        Q1lQVPd0istDc4Ckjv5nwwQr8Y27JPcg0rxX
-X-Google-Smtp-Source: APXvYqyVue+CBBd0mQciYy0jTI6PWYqgXNlFgDCTYLqQLRyEAqbZGBcKQrTc1M5SR8cxatrup70J1A==
-X-Received: by 2002:a50:b1bc:: with SMTP id m57mr11854613edd.116.1554550356175;
-        Sat, 06 Apr 2019 04:32:36 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id i9sm856304edr.76.2019.04.06.04.32.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 04:32:35 -0700 (PDT)
-Subject: Re: [PATCH] overflow.h: Rename __ab_c_size() to __calc_size()
-To:     Borislav Petkov <bp@alien8.de>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190405045711.30339-1-bp@alien8.de>
- <d2e7ee85-50a7-7026-82f9-2169656bd4f9@rasmusvillemoes.dk>
- <20190405075251.GC23348@zn.tnic>
- <3fefb03d-3ea0-5a08-f00c-09a47b17f2a8@rasmusvillemoes.dk>
- <20190405082447.GD23348@zn.tnic>
- <CAGXu5jK6+ZcJQqchySsMicEy-Kd=TFRTE1M_JdhX4TaJDAPiaQ@mail.gmail.com>
- <20190405162527.GP22763@bombadil.infradead.org>
- <20190406093201.GB14245@zn.tnic>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ab412726-f63f-57cc-ed23-ae1a4944539f@rasmusvillemoes.dk>
-Date:   Sat, 6 Apr 2019 13:32:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190406093201.GB14245@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 6 Apr 2019 08:06:36 -0400
+Received: from www.osadl.org ([62.245.132.105]:60710 "EHLO www.osadl.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbfDFMGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 08:06:35 -0400
+Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x36C6Fvj014363;
+        Sat, 6 Apr 2019 14:06:15 +0200
+From:   Nicholas Mc Guire <hofrat@osadl.org>
+To:     Adham Abozaeid <adham.abozaeid@microchip.com>
+Cc:     Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
+Subject: [PATCH RFC] staging: wilc1000: give usleep_range a range
+Date:   Sat,  6 Apr 2019 14:01:07 +0200
+Message-Id: <1554552067-15421-1-git-send-email-hofrat@osadl.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 11.32, Borislav Petkov wrote:
-> On Fri, Apr 05, 2019 at 09:25:27AM -0700, Matthew Wilcox wrote:
->> I don't think that's a good idea; we should only document functions we
->> want other people to use.
-> 
-> Yap.
+usleep_range() is called in non-atomic context so there is little point
+in setting min==max the jitter of hrtimer is determined by interruptions
+anyway. usleep_range can only perform the intended coalescence if some
+room for placing the hrtimer is provided. Given the range of milliseconds
+the delay will be anything from 2 to a few anyway - so make it 2-5 ms.
 
-Exactly, not kernel-doc'ing was a deliberate choice.
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+---
 
->> I could also go for renaming this to __size_ab_plus_c.
-> 
-> Let's just leave it short as it is now - the comment should be good
-> enough.
-> 
-> Btw, is anyone picking this up or should I?
+Problem located with an experimental coccinelle script
+./drivers/staging/wilc1000/wilc_wlan.c:411:4-16: WARNING: inefficient usleep_range with range 0 (min==max)
+./drivers/staging/wilc1000/wilc_wlan.c:426:4-16: WARNING: inefficient usleep_range with range 0 (min==max)
 
-I'm fine with you picking it up. Here's a real changelog, feel free to edit.
+Someone that knows the motivation for setting the time to 2 millisecond
+might need to check if the 2 milliseconds where seen as tollerable max or
+min - I'm assuming it was the min so extending.
 
-overflow.h: add comment documenting __ab_c_size()
+Patch was compile tested with: x86_64_defconfig + Staging=y,
+WILC1000_SDIO=m, WILC1000_SPI=m, WILC1000=m
 
-__ab_c_size() is a somewhat opaque name. Document its purpose, and while
-at it, rename the parameters to actually match the abc naming.
+Patch is against 5.1-rc3 (localversion-next is -next-20190405)
 
+ drivers/staging/wilc1000/wilc_wlan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Rasmus
+diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
+index c238969..42da533 100644
+--- a/drivers/staging/wilc1000/wilc_wlan.c
++++ b/drivers/staging/wilc1000/wilc_wlan.c
+@@ -408,7 +408,7 @@ void chip_wakeup(struct wilc *wilc)
+ 			wilc->hif_func->hif_write_reg(wilc, 1, reg & ~BIT(1));
+ 
+ 			do {
+-				usleep_range(2 * 1000, 2 * 1000);
++				usleep_range(2 * 1000, 5 * 1000);
+ 				wilc_get_chipid(wilc, true);
+ 			} while (wilc_get_chipid(wilc, true) == 0);
+ 		} while (wilc_get_chipid(wilc, true) == 0);
+@@ -423,7 +423,7 @@ void chip_wakeup(struct wilc *wilc)
+ 						     &clk_status_reg);
+ 
+ 			while ((clk_status_reg & 0x1) == 0) {
+-				usleep_range(2 * 1000, 2 * 1000);
++				usleep_range(2 * 1000, 5 * 1000);
+ 
+ 				wilc->hif_func->hif_read_reg(wilc, 0xf1,
+ 							     &clk_status_reg);
+-- 
+2.1.4
+
