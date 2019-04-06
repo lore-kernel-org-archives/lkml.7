@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26554C10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB4C10F06
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CCB218AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6582F213A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Apr 2019 10:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG7k8lNB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zyw4LQVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfDFKse (ORCPT
+        id S1726458AbfDFK7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 06:48:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46805 "EHLO
+        Sat, 6 Apr 2019 06:59:43 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36403 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfDFKse (ORCPT
+        with ESMTP id S1726310AbfDFK7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 06:48:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id q1so4436356pgv.13
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 03:48:33 -0700 (PDT)
+        Sat, 6 Apr 2019 06:59:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 85so4465192pgc.3
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 03:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=L/kr42+eOjkysqUmccLNXJpDS4JFh9FfZXCnnHxwr6Y=;
-        b=CG7k8lNBGRNOa0yKycoo2KaAeQXZ+KSaS5vgpk6mtaufpbW1CM4aNibH0E/0g/nLjx
-         IBndOL6lNrlzB+k/8+sp4Tjvx0wjpWNu6JtbzGBKFNW34Z5J+NbWXFqISMHXYuRFBJf6
-         oyw8ZFWJTDXJtZhQ7bWG32vyeeIzb5jRr7ng7T4v9f4I1w5r00am4IKnOambMCTpcrQu
-         8ihQ5grsSDCnTmM42vghTNpXNZe0As9X2YDUBLxYnQ4HiTFPF9rX8ZlqRCLJzBUJUCqr
-         KNm4y9w4eXkvnGHqyocSRTNGEpbtfYLUlqutlrBP9UhKJ1zCRAbF/rYu/4e3jXlKyyNR
-         e3qg==
+        bh=SD8KfYmLbVLOdOYjbfQ2SZnfZ089F/DLA1H7/KP5DEI=;
+        b=Zyw4LQVaPbg+jDSwONfarn1K2amlEkRzDJo2Oi4Htg7/s2KcTkyQ5afix/dDrKTLjd
+         +LD1Fcp6A5HqDSqKd8fAxs3pDZ59el0WDD4aA4gRIraqlI9iirNPHAJqNW00qdeLZQa4
+         /ib00qMKIo0h/paylsWMIcKfNJIARe2I8SMfStzevF+tQKfMZyrE7WsYdLBb4diexA6P
+         5Flvt039pZ/qeh5yv9fMS714CBt7dvUMGKDfkcAsNUKA3/QcyVYMOJnhdqcs7G8cdfUE
+         uKvLvWHJW5ohezb0kW7DxcvQwaW+dB22NxyARb89HFpMgLeyDb6/XntTV2pmf208ea/H
+         2/gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=L/kr42+eOjkysqUmccLNXJpDS4JFh9FfZXCnnHxwr6Y=;
-        b=CsSmxZB/48mpOobVQzTjv1BoB4axi/w8sRUB4Vg51ZBJI8wmJnQq3YyZOp3mipNBgZ
-         84Lse4MgeW9R9IeBfnXBqQzVr4jHZWcLyMPyspAjB1l8p6MLzAPK8JVsFHUCI8MtRK5P
-         HH+p+QmQTW7HOwUYxqoUh/B24O5WjG8PZ04TxJCIgCtQ6nnEzZSgWCbbIwvxCEeTIPyf
-         i3UXZ/sTiUneruxpITbLtOxJXz1dSal40fb/X7ZUss30d6XNHnySzmzzGIE9Dl1pT2Oy
-         oTChVnRs9f0j1gRNxZ6tsTIgthMSEWW2wPtGiSKOoOjSijTDynl8act8ZQnYGXtQkunR
-         8moQ==
-X-Gm-Message-State: APjAAAXhCKxugD2HAUsFZ7PRhJVrX1hAQFZxYoutWSVqbO4J4fHIiVYj
-        ZXSCz6k/GYv3v3NdvOHET+s=
-X-Google-Smtp-Source: APXvYqxyHIwrk4zvUH1GdCf692OH3S3k+K/JIzrxAXrGIV/S84Qmma3LVi5bNahyTBk3pdQQpOJVvg==
-X-Received: by 2002:a62:e315:: with SMTP id g21mr18037484pfh.2.1554547713454;
-        Sat, 06 Apr 2019 03:48:33 -0700 (PDT)
+        bh=SD8KfYmLbVLOdOYjbfQ2SZnfZ089F/DLA1H7/KP5DEI=;
+        b=j6A5VQ1btEnNSmkVfVA28F6WGz/1KRO4FCNndC3GLK2Api4OjvT1BLOkwoLM5NiHv1
+         sd6QvCCFUVnQJjj3Rzbi6o4LNWOhg/eRfUDvq9YFvmfdr3uRGRpWZ9NLXKZbLkpd2Vnc
+         FIw9lPUXR2qajvNQgahnPR4oaKJwNO2/XAOU0BtkSIWCSgO71U0Z0ZJapz8rlj67BIwj
+         2dMuZvoHWg05DihuKSKvTI4rFl5ySkxNSI1BDiwR7n0VWQtlQCXFXtxQglB0YyUCwMHU
+         uRj/1aEcMnQM2fIZ1atQFP6LgMCmdcNdMAUXExLZRzygWwHC9ki/jyimd9fs58z9DY2W
+         JqgQ==
+X-Gm-Message-State: APjAAAWJZ+0HKI3EFWWAZ9jnIxmTvVyihU4OLx9E2zxT5teltJOdXCql
+        ha5f7OTqXPhz/2wce31659Y=
+X-Google-Smtp-Source: APXvYqwq12V3MpXtia11xsrdE8f91EUIHr4OpLzhNT0BOWJXL844Wvz1prqC7U1TZerUNytxnR+Slg==
+X-Received: by 2002:a63:e045:: with SMTP id n5mr17451271pgj.230.1554548381913;
+        Sat, 06 Apr 2019 03:59:41 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id x128sm12205090pfx.103.2019.04.06.03.48.31
+        by smtp.gmail.com with ESMTPSA id o5sm82684138pfa.135.2019.04.06.03.59.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 03:48:32 -0700 (PDT)
-Date:   Sat, 6 Apr 2019 16:18:28 +0530
+        Sat, 06 Apr 2019 03:59:41 -0700 (PDT)
+Date:   Sat, 6 Apr 2019 16:29:36 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel: pid_namespace : fix warning Using plain integer as
- NULL pointer
-Message-ID: <20190406104828.GA26135@hari-Inspiron-1545>
+Subject: [PATCH] f2fs: data: fix warning Using plain integer as NULL pointer
+Message-ID: <20190406105936.GA30585@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -76,31 +75,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 changed passing function argument "0 to NULL" to fix below sparse
 warning
 
-kernel/pid_namespace.c:55:76: warning: Using plain integer as NULL
-pointer
-
-did changes to avoid checkpatch error "prefer a maximum 75 chars per
-line"
+fs/f2fs/data.c:426:47: warning: Using plain integer as NULL pointer
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- kernel/pid_namespace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index aa6e72f..6e4afdc 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -52,7 +52,8 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
- 	mutex_lock(&pid_caches_mutex);
- 	/* Name collision forces to do allocation under mutex. */
- 	if (!*pkc)
--		*pkc = kmem_cache_create(name, len, 0, SLAB_HWCACHE_ALIGN, 0);
-+		*pkc =
-+		    kmem_cache_create(name, len, 0, SLAB_HWCACHE_ALIGN, NULL);
- 	mutex_unlock(&pid_caches_mutex);
- 	/* current can fail, but someone else can succeed. */
- 	return READ_ONCE(*pkc);
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 97279441..15a2381 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -423,7 +423,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
+ 
+ void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type)
+ {
+-	__submit_merged_write_cond(sbi, NULL, 0, 0, type, true);
++	__submit_merged_write_cond(sbi, NULL, NULL, 0, type, true);
+ }
+ 
+ void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
 -- 
 2.7.4
 
