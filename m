@@ -2,88 +2,124 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADF8C282DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 11:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5421C282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 11:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C388213F2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 11:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554636122;
-	bh=PmbEgHOJHcKx9paKWYN0o4KT3kaEbP5hS86abRz2DoI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WzVX3ZQQLLcvQ7HZxNRo7xgvADK1GenAbLRC075T0Z57D1gdvKfY+yH4mKYLHalMk
-	 P2WtM4r8KQb6kGPgQQBlTBHMk0pBesNH7W8Z5XoPIU4NZ9Yv6IMhbINzjhc1CvnceP
-	 9oJPOeEAY4N14mThdyQta4OPxendvyNP4RJnK8OE=
+	by mail.kernel.org (Postfix) with ESMTP id 9426C213F2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 11:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0TWfzwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbfDGLWB (ORCPT
+        id S1726545AbfDGLWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 07:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfDGLWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 07:22:01 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C05820879;
-        Sun,  7 Apr 2019 11:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554636120;
-        bh=PmbEgHOJHcKx9paKWYN0o4KT3kaEbP5hS86abRz2DoI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KX+CHbrr1X+nGiSY0dHO9WrJfycf25qsw7bUvbmtRIuVsyg6tHpKn4CZgnMtix2sQ
-         hwZy0wItTySyHcPyqT09btLphN651+p8L7fSo8KvrCYqVUXTwrYIy7ejn5s03dcQT2
-         HYh+A0ZAzjJy7gYEqIXF1ZzcD/rpCgd7yIu8tEoQ=
-Date:   Sun, 7 Apr 2019 12:21:54 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andreas Klinger <ak@it-klinger.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] avia-hx711.yaml: transform DT binding to YAML
-Message-ID: <20190407122154.043c2b18@archlinux>
-In-Reply-To: <CAL_JsqKxdP=Xthpzg-stxKBLmA6RQffCVJh3ot-NDkMdTxPEVQ@mail.gmail.com>
-References: <20190401173353.g4k5vb6flsfgtaaj@arbad>
-        <CAL_JsqKxdP=Xthpzg-stxKBLmA6RQffCVJh3ot-NDkMdTxPEVQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 7 Apr 2019 07:22:44 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35161 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfDGLWo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 07:22:44 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s39so9172443edb.2;
+        Sun, 07 Apr 2019 04:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p38y1Z8OAIHDpBI4bmmPeGfl/LANifrJcDre2IIMaIo=;
+        b=K0TWfzwAWnp5stOsw5iuSYR/OmivN800u+j2/7ddjRikl7q71SUEpwCdTjpSK/+1XJ
+         sm2GgcClZ2EBwHMrPMSDwpW3iTsy6w3E21VD/sM0+EOPK/RgcvuJprDif3nsBjcm7DfV
+         Y0WT11K+W0/qinsk4TrcWUGT5ow3VEWgPYD4PO+He0oHdWePT+VLbIggOu/mmG+Ad22W
+         K75znBZOfjiFxBkMJYvw8lvKUbjbpehCOtuuS5R/cXnIUriCn112I0rnyQeSlLpHr7yp
+         yc/7wAMOSqOj9x0E43V7hFCuFFTyANC21gxPorK8Pj2rT56khNJtCvWm3rYwtrB724m3
+         6cEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p38y1Z8OAIHDpBI4bmmPeGfl/LANifrJcDre2IIMaIo=;
+        b=od6fSwKO9FqpnDfZCBtPPFOyjF3v7DaKCI4sqoxEVAAknGW8hhOFtUVxOk0KXOBE6v
+         lv91Hq8I3FLTIuzeUjGKMMqV2LDKQGxTsGjun2BRIc8i6IIyZj6f/XSdDRjQ1RM0f/ER
+         j7mo0D9rmAmSyZNuI+fAW496ahCDWyR0bB24udZCpipLExLJvVq/d8SltfBI9V9nKMiI
+         EsjqDW/wBkGE37JkhyvS3miebQBw3VhzhSIj/ohgES/lEE26wLVP7l8YRldJt26YHvnp
+         AvrF4Z2ufXOCtOad127HXkxQlmNiq/BS7+OyNZUrais98vwM4V+1pzErb78k565GUEHJ
+         Q9eA==
+X-Gm-Message-State: APjAAAWOTA/biQE5ra+6JZYMX+bXqGYdZXtZ1zKLuCTD6AIZZFq4O7JM
+        2CynnN/FGFjgGI467TcyKaA=
+X-Google-Smtp-Source: APXvYqyG8RQ8O2Q2QYqWTONy4XeRtMrSAislCJr56xv/h9FCc6D8VVmecrYKkt5LGJ7emtvkyhvxtw==
+X-Received: by 2002:a17:906:8381:: with SMTP id p1mr13192459ejx.169.1554636161976;
+        Sun, 07 Apr 2019 04:22:41 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id j14sm4965167ejc.69.2019.04.07.04.22.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 07 Apr 2019 04:22:40 -0700 (PDT)
+Date:   Sun, 7 Apr 2019 04:22:38 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     gregkh@linuxfoundation.org, rjw@rjwysocki.net, lenb@kernel.org,
+        keith.busch@intel.com, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] acpi/hmat: fix an uninitialized memory_target
+Message-ID: <20190407112238.GA30750@archlinux-ryzen>
+References: <20190407011222.38963-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190407011222.38963-1-cai@lca.pw>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 20:47:19 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Mon, Apr 1, 2019 at 12:34 PM Andreas Klinger <ak@it-klinger.de> wrote:
-> >
-> > replace avia-hx711.txt by avia-hx711.yaml as yaml devicetree
-> > documentation for avia hx711 iio adc sensor
-> >
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Applied to the togreg branch of iio.git and pushed out as testing.
-
-Thanks,
-
-Jonathan
-
-> > ---
-> >  .../devicetree/bindings/iio/adc/avia-hx711.txt     | 24 --------
-> >  .../devicetree/bindings/iio/adc/avia-hx711.yaml    | 66 ++++++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 24 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml  
+On Sat, Apr 06, 2019 at 09:12:22PM -0400, Qian Cai wrote:
+> The commit 665ac7e92757 ("acpi/hmat: Register processor domain to its
+> memory") introduced an uninitialized "struct memory_target" that could
+> cause an incorrect branching.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> drivers/acpi/hmat/hmat.c:385:6: warning: variable 'target' is used
+> uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>         if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/acpi/hmat/hmat.c:392:6: note: uninitialized use occurs here
+>         if (target && p->flags & ACPI_HMAT_PROCESSOR_PD_VALID) {
+>             ^~~~~~
+> drivers/acpi/hmat/hmat.c:385:2: note: remove the 'if' if its condition
+> is always true
+>         if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/acpi/hmat/hmat.c:369:30: note: initialize the variable 'target'
+> to silence this warning
+>         struct memory_target *target;
+>                                     ^
+>                                      = NULL
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+>  drivers/acpi/hmat/hmat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+> index c9b8abcf012c..6653dba3b377 100644
+> --- a/drivers/acpi/hmat/hmat.c
+> +++ b/drivers/acpi/hmat/hmat.c
+> @@ -366,7 +366,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+>  					      const unsigned long end)
+>  {
+>  	struct acpi_hmat_proximity_domain *p = (void *)header;
+> -	struct memory_target *target;
+> +	struct memory_target *target = NULL;
+>  
+>  	if (p->header.length != sizeof(*p)) {
+>  		pr_notice("HMAT: Unexpected address range header length: %d\n",
+> -- 
+> 2.17.2 (Apple Git-113)
+> 
