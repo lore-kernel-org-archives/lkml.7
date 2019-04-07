@@ -2,46 +2,171 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6BBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EA0C282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B8A20880
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0357120880
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfDGTBs (ORCPT
+        id S1726512AbfDGTBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 15:01:48 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:55898 "EHLO
+        Sun, 7 Apr 2019 15:01:50 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:55900 "EHLO
         hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfDGTBs (ORCPT
+        with ESMTP id S1726397AbfDGTBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 15:01:48 -0400
-X-Greylist: delayed 322 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Apr 2019 15:01:48 EDT
+        Sun, 7 Apr 2019 15:01:49 -0400
 Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 657C17A02AA;
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id B9A1B7A05F0;
         Sun,  7 Apr 2019 20:56:24 +0200 (CEST)
 From:   Ondrej Zary <linux@zary.sk>
 To:     Rik Faith <faith@cs.unc.edu>
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/2] fdomain: Resurrect driver
-Date:   Sun,  7 Apr 2019 20:56:15 +0200
-Message-Id: <20190407185617.8467-1-linux@zary.sk>
+Subject: [RFC PATCH 2/2] fdomain: Fix compilation
+Date:   Sun,  7 Apr 2019 20:56:17 +0200
+Message-Id: <20190407185617.8467-3-linux@zary.sk>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190407185617.8467-1-linux@zary.sk>
+References: <20190407185617.8467-1-linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-the removal of fdomain driver caused regressions:
-https://alioth-lists.debian.net/pipermail/sane-devel/2019-January/036552.html
+Remove usage of scsi_module.c, .use_clustering and scsi_(un)register.
+This allows the driver to compile and also work (tested with PCI card).
 
-I've got a fdomain-based AHA-2920A card so I'll try to resurrect the driver
-and then clean it up.
+Signed-off-by: Ondrej Zary <linux@zary.sk>
+---
+ drivers/scsi/fdomain.c             | 48 ++++++++++++++++++++++++++++----------
+ drivers/scsi/pcmcia/fdomain_stub.c |  2 +-
+ 2 files changed, 37 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/scsi/fdomain.c b/drivers/scsi/fdomain.c
+index ebbe5a3e665d..fe9e373c27a8 100644
+--- a/drivers/scsi/fdomain.c
++++ b/drivers/scsi/fdomain.c
+@@ -415,6 +415,7 @@ static char * fdomain = NULL;
+ module_param(fdomain, charp, 0);
+ 
+ #ifndef PCMCIA
++static struct Scsi_Host	*fdomain_shost;
+ 
+ static unsigned long addresses[] = {
+    0xc8000,
+@@ -959,7 +960,7 @@ struct Scsi_Host *__fdomain_16x0_detect(struct scsi_host_template *tpnt )
+ /* Print out a banner here in case we can't
+    get resources.  */
+ 
+-   shpnt = scsi_register( tpnt, 0 );
++   shpnt = scsi_host_alloc( tpnt, 0 );
+    if(shpnt == NULL) {
+ 	release_region(port_base, 0x10);
+    	return NULL;
+@@ -1003,13 +1004,6 @@ struct Scsi_Host *__fdomain_16x0_detect(struct scsi_host_template *tpnt )
+    return NULL;
+ }
+ 
+-static int fdomain_16x0_detect(struct scsi_host_template *tpnt)
+-{
+-	if (fdomain)
+-		fdomain_setup(fdomain);
+-	return (__fdomain_16x0_detect(tpnt) != NULL);
+-}
+-
+ static const char *fdomain_16x0_info( struct Scsi_Host *ignore )
+ {
+    static char buffer[128];
+@@ -1739,6 +1733,7 @@ static int fdomain_16x0_biosparam(struct scsi_device *sdev,
+    return 0;
+ }
+ 
++#ifndef PCMCIA
+ static int fdomain_16x0_release(struct Scsi_Host *shpnt)
+ {
+ 	if (shpnt->irq)
+@@ -1749,22 +1744,21 @@ static int fdomain_16x0_release(struct Scsi_Host *shpnt)
+ 		pci_dev_put(PCI_dev);
+ 	return 0;
+ }
++#endif
+ 
+ struct scsi_host_template fdomain_driver_template = {
+ 	.module			= THIS_MODULE,
+ 	.name			= "fdomain",
+ 	.proc_name		= "fdomain",
+-	.detect			= fdomain_16x0_detect,
+ 	.info			= fdomain_16x0_info,
+ 	.queuecommand		= fdomain_16x0_queue,
+ 	.eh_abort_handler	= fdomain_16x0_abort,
+ 	.eh_host_reset_handler	= fdomain_16x0_host_reset,
+ 	.bios_param		= fdomain_16x0_biosparam,
+-	.release		= fdomain_16x0_release,
+ 	.can_queue		= 1,
+ 	.this_id		= 6,
+ 	.sg_tablesize		= 64,
+-	.use_clustering		= DISABLE_CLUSTERING,
++	.dma_boundary		= PAGE_SIZE - 1,
+ };
+ 
+ #ifndef PCMCIA
+@@ -1778,6 +1772,36 @@ static struct pci_device_id fdomain_pci_tbl[] = {
+ MODULE_DEVICE_TABLE(pci, fdomain_pci_tbl);
+ #endif
+ #define driver_template fdomain_driver_template
+-#include "scsi_module.c"
++
++static int __init fdomain_16x0_init(void)
++{
++	int ret;
++
++	if (fdomain)
++		fdomain_setup(fdomain);
++	fdomain_shost = __fdomain_16x0_detect(&driver_template);
++	if (!fdomain_shost)
++		return -ENODEV;
++
++	ret = scsi_add_host(fdomain_shost, NULL);
++	if (ret)
++		goto fail;
++	scsi_scan_host(fdomain_shost);
++
++	return 0;
++fail:
++	scsi_remove_host(fdomain_shost);
++	return ret;
++}
++
++static void __exit fdomain_16x0_exit(void)
++{
++	scsi_remove_host(fdomain_shost);
++	fdomain_16x0_release(fdomain_shost);
++	scsi_host_put(fdomain_shost);
++}
++
++module_init(fdomain_16x0_init);
++module_exit(fdomain_16x0_exit);
+ 
+ #endif
+diff --git a/drivers/scsi/pcmcia/fdomain_stub.c b/drivers/scsi/pcmcia/fdomain_stub.c
+index 953a792150ae..5febbb7d611b 100644
+--- a/drivers/scsi/pcmcia/fdomain_stub.c
++++ b/drivers/scsi/pcmcia/fdomain_stub.c
+@@ -166,7 +166,7 @@ static void fdomain_release(struct pcmcia_device *link)
+ 
+ 	scsi_remove_host(info->host);
+ 	pcmcia_disable_device(link);
+-	scsi_unregister(info->host);
++	scsi_host_put(info->host);
+ }
+ 
+ /*====================================================================*/
+-- 
+Ondrej Zary
 
