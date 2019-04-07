@@ -2,168 +2,350 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA16C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEBC20896
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:35:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzQ+ICw5"
+	by mail.kernel.org (Postfix) with ESMTP id 8204820896
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfDGNfD (ORCPT
+        id S1726501AbfDGNjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 09:35:03 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:32864 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfDGNfC (ORCPT
+        Sun, 7 Apr 2019 09:39:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbfDGNjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 09:35:02 -0400
-Received: by mail-yw1-f65.google.com with SMTP id l5so4019209ywa.0;
-        Sun, 07 Apr 2019 06:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XSRfVY3jJ7/9POOLIfWZTVO1rTmhqVVH5ZX3GBLlPDg=;
-        b=XzQ+ICw5RPvN6bpl9aupbO5qRSW33HB7EqxG91OQee4jWG6+5DvsMqKz4bq2bfg1CT
-         A+Uetx5GIjHHvUBOEumvTKgIjvAeaH20T3x3QRZ+QUV19xCHKde391uBtHgrSQNc91Bi
-         kjhxbqJfqwdwOooyIumh0lW3/BZ2TWwPKZ8fVG+E3PxXUW8QZeQyLvfpCTcKFP8rymZZ
-         pQTUaV1GmZCDqyrc42SmSGotHeQiEr2YPEvHO5qfIP2YuKWtsCayrABG4gtIJJEG/05U
-         adgTsLQTUVTS5NF+ieedt441nawoaGPnKXO/ouHeh/4C1sUg4Fo1PNaYD3XUc+pEAk7g
-         8JGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XSRfVY3jJ7/9POOLIfWZTVO1rTmhqVVH5ZX3GBLlPDg=;
-        b=aYzS9kgosVZNPUSrexc6SNzjSJ/hcleQ1isIpkyMJGvQxE8NNKOg2P5AAFz0OEepoq
-         d8Hnx8illq2higSNpveVMoeu6f0+SgDmCBvFSJAbUth4SxQVnYSHPZZ8mcGKtfcdkc1v
-         Vt8t7PPL2tBrhArN/liHW9EW1w5iRHXlJHZPExa1RPaoiX/F/tbQAeeCM/JTcuRQCuDl
-         iramX6tbkBPbQLTF6Sq3YVwh5XK0mX5/DTuCatQjudWnksjIeeH3YTCbPjqXSReObZCk
-         F9uf4ZXZ7OhPtzGd8SElrht8PTRPf7HLQTtRnYbv2Wyvx2F5pc4by27n6ajAiaxlLo57
-         nKTg==
-X-Gm-Message-State: APjAAAW4PfKDvacGoswSy54atyRwerhVLs445lLrymXppm56djP7Cy3f
-        kqEPCALiVRYgqnwhwlIwpWXRoyWWojrhYWIb1to=
-X-Google-Smtp-Source: APXvYqwU6SVRsVhqebJsACuJdIkWi/KWTr4feCDp9mPfvp1aUUp2OQMrDAp/pbqryVoEclz4piBrmWjIPGzmPnPANY8=
-X-Received: by 2002:a0d:d645:: with SMTP id y66mr19457081ywd.459.1554644101356;
- Sun, 07 Apr 2019 06:35:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190405234514.6183-1-megous@megous.com>
-In-Reply-To: <20190405234514.6183-1-megous@megous.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 7 Apr 2019 15:36:21 +0200
-Message-ID: <CAJiuCcew10Q3PUOk4VPoiyFc7ZhXwJzxXHQHNeVBUvVAQ3BkbQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 00/12] Add support for Orange Pi 3
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sun, 7 Apr 2019 09:39:51 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x37Dcc49019155
+        for <linux-kernel@vger.kernel.org>; Sun, 7 Apr 2019 09:39:49 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rq9j6ybeg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 09:39:49 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sun, 7 Apr 2019 14:39:48 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 7 Apr 2019 14:39:42 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x37Ddfq219464330
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 7 Apr 2019 13:39:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 156B6B2066;
+        Sun,  7 Apr 2019 13:39:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB71AB2068;
+        Sun,  7 Apr 2019 13:39:40 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.136.16])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun,  7 Apr 2019 13:39:40 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6FCA516C30F7; Sun,  7 Apr 2019 06:39:41 -0700 (PDT)
+Date:   Sun, 7 Apr 2019 06:39:41 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+Reply-To: paulmck@linux.ibm.com
+References: <20190402142816.GA13084@linux.ibm.com>
+ <886051277.1395.1554218080591.JavaMail.zimbra@efficios.com>
+ <20190402152334.GC4102@linux.ibm.com>
+ <161156422.1435.1554219247444.JavaMail.zimbra@efficios.com>
+ <20190403133243.GE4102@linux.ibm.com>
+ <1028306587.504.1554301662374.JavaMail.zimbra@efficios.com>
+ <20190403162039.GA14111@linux.ibm.com>
+ <20190405232835.GA24702@linux.ibm.com>
+ <20190406230613.GA187766@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190406230613.GA187766@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040713-0064-0000-0000-000003C79163
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010883; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01185654; UDB=6.00620905; IPR=6.00966399;
+ MB=3.00026330; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-07 13:39:47
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040713-0065-0000-0000-00003CFAA635
+Message-Id: <20190407133941.GC14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-07_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904070128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
+> On Fri, Apr 05, 2019 at 04:28:35PM -0700, Paul E. McKenney wrote:
+> > On Wed, Apr 03, 2019 at 09:20:39AM -0700, Paul E. McKenney wrote:
+> > > On Wed, Apr 03, 2019 at 10:27:42AM -0400, Mathieu Desnoyers wrote:
+> > > > ----- On Apr 3, 2019, at 9:32 AM, paulmck paulmck@linux.ibm.com wrote:
+> > > > 
+> > > > > On Tue, Apr 02, 2019 at 11:34:07AM -0400, Mathieu Desnoyers wrote:
+> > > > >> ----- On Apr 2, 2019, at 11:23 AM, paulmck paulmck@linux.ibm.com wrote:
+> > > > >> 
+> > > > >> > On Tue, Apr 02, 2019 at 11:14:40AM -0400, Mathieu Desnoyers wrote:
+> > > > >> >> ----- On Apr 2, 2019, at 10:28 AM, paulmck paulmck@linux.ibm.com wrote:
+> > > > >> >> 
+> > > > >> >> > Hello!
+> > > > >> >> > 
+> > > > >> >> > This series prohibits use of DEFINE_SRCU() and DEFINE_STATIC_SRCU()
+> > > > >> >> > by loadable modules.  The reason for this prohibition is the fact
+> > > > >> >> > that using these two macros within modules requires that the size of
+> > > > >> >> > the reserved region be increased, which is not something we want to
+> > > > >> >> > be doing all that often.  Instead, loadable modules should define an
+> > > > >> >> > srcu_struct and invoke init_srcu_struct() from their module_init function
+> > > > >> >> > and cleanup_srcu_struct() from their module_exit function.  Note that
+> > > > >> >> > modules using call_srcu() will also need to invoke srcu_barrier() from
+> > > > >> >> > their module_exit function.
+> > > > >> >> 
+> > > > >> >> This arbitrary API limitation seems weird.
+> > > > >> >> 
+> > > > >> >> Isn't there a way to allow modules to use DEFINE_SRCU and DEFINE_STATIC_SRCU
+> > > > >> >> while implementing them with dynamic allocation under the hood ?
+> > > > >> > 
+> > > > >> > Although call_srcu() already has initialization hooks, some would
+> > > > >> > also be required in srcu_read_lock(), and I am concerned about adding
+> > > > >> > memory allocation at that point, especially given the possibility
+> > > > >> > of memory-allocation failure.  And the possibility that the first
+> > > > >> > srcu_read_lock() happens in an interrupt handler or similar.
+> > > > >> > 
+> > > > >> > Or am I missing a trick here?
+> > > > >> 
+> > > > >> I was more thinking that under #ifdef MODULE, both DEFINE_SRCU and
+> > > > >> DEFINE_STATIC_SRCU could append data in a dedicated section. module.c
+> > > > >> would additionally lookup that section on module load, and deal with
+> > > > >> those statically defined SRCU entries as if they were dynamically
+> > > > >> allocated ones. It would of course cleanup those resources on module
+> > > > >> unload.
+> > > > >> 
+> > > > >> Am I missing some subtlety there ?
+> > > > > 
+> > > > > If I understand you correctly, that is actually what is already done.  The
+> > > > > size of this dedicated section is currently set by PERCPU_MODULE_RESERVE,
+> > > > > and the additions of DEFINE{_STATIC}_SRCU() in modules was requiring that
+> > > > > this to be increased frequently.  That led to a request that something
+> > > > > be done, in turn leading to this patch series.
+> > > > 
+> > > > I think we are not expressing quite the same idea.
+> > > > 
+> > > > AFAIU, yours is to have DEFINE*_SRCU directly define per-cpu data within modules,
+> > > > which ends up using percpu module reserved memory.
+> > > > 
+> > > > My idea is to make DEFINE*_SRCU have a different behavior under #ifdef MODULE.
+> > > > It could emit a _global variable_ (_not_ per-cpu) within a new section. That
+> > > > section would then be used by module init/exit code to figure out what "srcu
+> > > > descriptors" are present in the modules. It would therefore rely on dynamic
+> > > > allocation for those, therefore removing the need to involve the percpu module
+> > > > reserved pool at all.
+> > > > 
+> > > > > 
+> > > > > I don't see a way around this short of changing module loading to do
+> > > > > alloc_percpu() and then updating the relocation based on this result.
+> > > > > Which would admittedly be far more convenient.  I was assuming that
+> > > > > this would be difficult due to varying CPU offsets or the like.
+> > > > > 
+> > > > > But if it can be done reasonably, it would be quite a bit nicer than
+> > > > > forcing dynamic allocation in cases where it is not otherwise needed.
+> > > > 
+> > > > Hopefully my explanation above helps clear out what I have in mind.
+> > > > 
+> > > > You can find similar tricks performed by include/linux/tracepoint.h:
+> > > > 
+> > > > #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> > > > static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> > > > {
+> > > >         return offset_to_ptr(p);
+> > > > }
+> > > > 
+> > > > #define __TRACEPOINT_ENTRY(name)                                        \
+> > > >         asm("   .section \"__tracepoints_ptrs\", \"a\"          \n"     \
+> > > >             "   .balign 4                                       \n"     \
+> > > >             "   .long   __tracepoint_" #name " - .              \n"     \
+> > > >             "   .previous                                       \n")
+> > > > #else
+> > > > static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> > > > {
+> > > >         return *p;
+> > > > }
+> > > > 
+> > > > #define __TRACEPOINT_ENTRY(name)                                         \
+> > > >         static tracepoint_ptr_t __tracepoint_ptr_##name __used           \
+> > > >         __attribute__((section("__tracepoints_ptrs"))) =                 \
+> > > >                 &__tracepoint_##name
+> > > > #endif
+> > > > 
+> > > > [...]
+> > > > 
+> > > > #define DEFINE_TRACE_FN(name, reg, unreg)                                \
+> > > >         static const char __tpstrtab_##name[]                            \
+> > > >         __attribute__((section("__tracepoints_strings"))) = #name;       \
+> > > >         struct tracepoint __tracepoint_##name                            \
+> > > >         __attribute__((section("__tracepoints"), used)) =                \
+> > > >                 { __tpstrtab_##name, STATIC_KEY_INIT_FALSE, reg, unreg, NULL };\
+> > > >         __TRACEPOINT_ENTRY(name);
+> > > > 
+> > > > And kernel/module.c:
+> > > > 
+> > > > find_module_sections():
+> > > > 
+> > > > #ifdef CONFIG_TRACEPOINTS
+> > > >         mod->tracepoints_ptrs = section_objs(info, "__tracepoints_ptrs",
+> > > >                                              sizeof(*mod->tracepoints_ptrs),
+> > > >                                              &mod->num_tracepoints);
+> > > > #endif
+> > > > 
+> > > > And kernel/tracepoint.c:tracepoint_module_notify() for the module coming/going
+> > > > notifier.
+> > > > 
+> > > > Basically you would want to have your own structure within your own section of
+> > > > the module which describes the srcu domain, and have a module coming/going
+> > > > notifier responsible for dynamically allocating the srcu domain on "coming", and
+> > > > doing a srcu barrier and cleanup the domain on "going".
+> > > 
+> > > Ah, sounds like an excellent approach!  I will give it a shot, thank you!
+> > 
+> > Please see below for an untested shot.
+> > 
+> > The original commits posted in this series are still available within
+> > the -srcu tree at branch srcunomod.2019.04.05a.  Yes, I am a digital
+> > packrat.  Why do you ask?
+> > 
+> > Thoughts?  Or more accurately, given that this is the first time I
+> > have used linker sections, what did I mess up?
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit e24a0dab1414c563bb96bcb28d5963c9df18b1e8
+> > Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> > Date:   Fri Apr 5 16:15:00 2019 -0700
+> > 
+> >     srcu: Allocate per-CPU data for DEFINE_SRCU() in modules
+> >     
+> >     Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module requires
+> >     that the size of the reserved region be increased, which is not something
+> >     we want to be doing all that often.  One approach would be to require
+> >     that loadable modules define an srcu_struct and invoke init_srcu_struct()
+> >     from their module_init function and cleanup_srcu_struct() from their
+> >     module_exit function.  However, this is more than a bit user unfriendly.
+> >     
+> >     This commit therefore creates an ___srcu_struct_ptrs linker section,
+> >     and pointers to srcu_struct structures created by DEFINE_SRCU() and
+> >     DEFINE_STATIC_SRCU() within a module are placed into that module's
+> >     ___srcu_struct_ptrs section.  The required init_srcu_struct() and
+> >     cleanup_srcu_struct() functions are then automatically invoked as needed
+> >     when that module is loaded and unloaded, thus allowing modules to continue
+> >     to use DEFINE_SRCU() and DEFINE_STATIC_SRCU() while avoiding the need
+> >     to increase the size of the reserved region.
+> >     
+> >     Many of the algorithms and some of the code was cheerfully cherry-picked
+> >     from other code making use of linker sections, perhaps most notably from
+> >     tracepoints.  All bugs are nevertheless the sole property of the author.
+> >     
+> >     Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > 
+> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > index f8f6f04c4453..c2d919a1566e 100644
+> > --- a/include/asm-generic/vmlinux.lds.h
+> > +++ b/include/asm-generic/vmlinux.lds.h
+> > @@ -338,6 +338,10 @@
+> >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+> >  		__stop___tracepoints_ptrs = .;				\
+> >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+> > +		. = ALIGN(8);						\
+> > +		__start___srcu_struct = .;				\
+> > +		*(___srcu_struct_ptrs)					\
+> > +		__end___srcu_struct = .;				\
+> >  	}								\
+> 
+> This vmlinux linker modification is not needed. I tested without it and srcu
+> torture works fine with rcutorture built as a module. Putting further prints
+> in kernel/module.c verified that the kernel is able to find the srcu structs
+> just fine. You could squash the below patch into this one or apply it on top
+> of the dev branch.
 
-On Sat, 6 Apr 2019 at 01:45, megous via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> This series implements support for Xunlong Orange Pi 3 board.
+Good point, given that otherwise FORTRAN named common blocks would not
+work.
 
-OrangePi 3 Lite2 and One Plus boards support has already been merged.
-The support is not complete but you should rebase your patches on top
-of sunxi/for-next
+But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
+macro that it can be mapped read-only?  Or am I suffering from excessive
+optimism?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/tree/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi?h=sunxi/for-next
+								Thanx,Paul
 
-Regards,
-Clement
+> Thanks!
+> 
+> ---8<-----------------------
+> 
+> >From 369ad090f706ce8e1facdd18eb10828b5f7e2b72 Mon Sep 17 00:00:00 2001
+> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> Date: Sat, 6 Apr 2019 18:57:17 -0400
+> Subject: [PATCH] srcu: Remove unused vmlinux srcu linker entries
+> 
+> The SRCU for modules optimization introduced vmlinux linker entries
+> which is unused since it applies only to the built-in vmlinux. So remove
+> it to prevent any space usage due to the 8 byte alignment.
+> 
+> Tested with SRCU torture_type and rcutorture.
+> 
+> Cc: kernel-team@android.com
+> Cc: paulmck@linux.vnet.ibm.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  include/asm-generic/vmlinux.lds.h | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index c2d919a1566e..f8f6f04c4453 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -338,10 +338,6 @@
+>  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+>  		__stop___tracepoints_ptrs = .;				\
+>  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+> -		. = ALIGN(8);						\
+> -		__start___srcu_struct = .;				\
+> -		*(___srcu_struct_ptrs)					\
+> -		__end___srcu_struct = .;				\
+>  	}								\
+>  									\
+>  	.rodata1          : AT(ADDR(.rodata1) - LOAD_OFFSET) {		\
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
 
->
-> Unfortunately, this board needs some small driver patches, so I have
-> split the boards DT patch into chunks that require patches for drivers
-> in various subsystems:
->
-> - Basic DT for the board  (patch 1)
-> - HDMI support            (patches 2, 3, 4)
-> - Ethernet support        (patches 5, 6, 7)
-> - WiFi support            (patches 8, 9, 10, 11, 12)
->
-> This patch is also needed to not get segfault on boot:
->   https://lkml.org/lkml/2019/4/5/856
->
-> Please take a look.
->
-> regards,
->   Ondrej Jirman
->
-> Icenowy Zheng (2):
->   net: stmmac: sun8i: add support for Allwinner H6 EMAC
->   net: stmmac: sun8i: force select external PHY when no internal one
->
-> Ondrej Jirman (10):
->   arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
->   drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
->   dt-bindings: display: sun4i-drm: Add DDC power supply
->   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
->   arm64: dts: allwinner: orange-pi-3: Enable ethernet
->   arm64: dts: allwinner: h6: Add MMC1 pins
->   pinctrl: sunxi: Prepare for alternative bias voltage setting methods
->   pinctrl: sunxi: Support I/O bias voltage setting on H6
->   brcmfmac: Loading the correct firmware for brcm43456
->   arm64: dts: allwinner: orange-pi-3: Enable WiFi
->
->  .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 339 ++++++++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 ++
->  .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
->  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  50 ++-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   7 +-
->  12 files changed, 433 insertions(+), 21 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
->
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
