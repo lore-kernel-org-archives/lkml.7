@@ -2,60 +2,77 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98D8C282DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9626DC282DE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F12620870
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B4620896
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="l600cudr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfDGOHq (ORCPT
+        id S1726437AbfDGOVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 10:07:46 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:42663 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfDGOHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 10:07:45 -0400
-X-Originating-IP: 86.202.231.219
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 3D0491BF205;
-        Sun,  7 Apr 2019 14:07:42 +0000 (UTC)
-Date:   Sun, 7 Apr 2019 16:07:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Antonio Ospite <ao2@ao2.it>, Harald Welte <laforge@gnumonks.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-rtc@vger.kernel.org,
+        Sun, 7 Apr 2019 10:21:47 -0400
+Received: from m15-114.126.com ([220.181.15.114]:60797 "EHLO m15-114.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbfDGOVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 10:21:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=85PjgBN0MDpvlDO4QI
+        FYZgfZpywAJvb9WkD9ICJ41go=; b=l600cudrPaHWq58eiarOouAmY4Z1epJjJt
+        eGr4mgEW2YbTgEipondXomd2c3RLea+y7IsUSNbY0zT/WyxCVUlfgtawyVxdoEVr
+        d7dcbjNH6eeGPkCZsbdpRuul9ddHg63yxCIJtb4OaD+bkaLrmBsGp2wpw8vQ/AP3
+        SIZll8Sc0=
+Received: from localhost.localdomain.localdomain (unknown [58.100.210.24])
+        by smtp7 (Coremail) with SMTP id DsmowAD3a95rB6pca_ReDw--.10216S3;
+        Sun, 07 Apr 2019 22:21:31 +0800 (CST)
+From:   Tian Xianting <xianting_tian@126.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Removing pcap?
-Message-ID: <20190407140741.GE7480@piout.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Cc:     Tian Xianting <xianting_tian@126.com>
+Subject: [PATCH] block: convert kmalloc_node to kzalloc_node
+Date:   Sun,  7 Apr 2019 10:21:28 -0400
+Message-Id: <1554646888-28891-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DsmowAD3a95rB6pca_ReDw--.10216S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZrW7Cw13trWrKryfJw43Wrg_yoW3Xwb_Z3
+        48GFy0vr4kJr4rWFs8tFWUJwnIkw4fWF15KFnxCwsruF15J3WSyry7uFnxCrWDWFW7CFWS
+        kw1q9F47Kr1xGjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnT89JUUUUU==
+X-Originating-IP: [58.100.210.24]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi7QyPpFpD67VBcAAAs8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Antonio, Harald,
+Use kzalloc_node to zero allocated buffer, as deadline and cfq I/O
+scheduler initialization function (deadline_init_queue, cfq_init_queue)
+did.
 
-I've had a look at the PCAP RTC driver because I'm removing a few
-deprecated APIs. While doing so, I've discovered that the driver has
-never worked properly because PCAP_RTC_TOD_MASK and PCAP_RTC_DAY_MASK
-are both missing a bit so every day would roll over at 18:12:15 and the
-whole the date would roll over in 2014.
+Signed-off-by: Tian Xianting <xianting_tian@126.com>
+---
+ block/noop-iosched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I discussed with Arnd about 59ee93a528b9 ("ARM: pxa: remove irq_to_gpio
-from ezx-pcap driver") and it seems the whole EZX support has been
-broken for a while.
-
-Is it worth fixing the RTC driver or could I remove it?
-
+diff --git a/block/noop-iosched.c b/block/noop-iosched.c
+index 2d1b15d..739e8cd 100644
+--- a/block/noop-iosched.c
++++ b/block/noop-iosched.c
+@@ -68,7 +68,7 @@ static int noop_init_queue(struct request_queue *q, struct elevator_type *e)
+ 	if (!eq)
+ 		return -ENOMEM;
+ 
+-	nd = kmalloc_node(sizeof(*nd), GFP_KERNEL, q->node);
++	nd = kzalloc_node(sizeof(*nd), GFP_KERNEL, q->node);
+ 	if (!nd) {
+ 		kobject_put(&eq->kobj);
+ 		return -ENOMEM;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+1.8.3.1
+
