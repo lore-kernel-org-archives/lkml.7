@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B1C282DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F01C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC75F213F2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28370213F2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfDGMsY (ORCPT
+        id S1726606AbfDGMsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 08:48:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5696 "EHLO huawei.com"
+        Sun, 7 Apr 2019 08:48:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6700 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726628AbfDGMsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 08:48:19 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DE060E5EC6FB51FE3036;
-        Sun,  7 Apr 2019 20:48:15 +0800 (CST)
+        id S1726314AbfDGMsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 08:48:14 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F10F0DBC74379D487DB9;
+        Sun,  7 Apr 2019 20:48:10 +0800 (CST)
 Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.408.0; Sun, 7 Apr 2019 20:48:07 +0800
+ 14.3.408.0; Sun, 7 Apr 2019 20:48:03 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         John Garry <john.garry@huawei.com>,
@@ -53,9 +53,9 @@ To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>,
         Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v4 6/6] x86/iommu: use common boot option iommu.dma_mode
-Date:   Sun, 7 Apr 2019 20:41:47 +0800
-Message-ID: <20190407124147.13576-7-thunder.leizhen@huawei.com>
+Subject: [PATCH v4 3/6] iommu: add iommu_default_dma_mode_get() helper
+Date:   Sun, 7 Apr 2019 20:41:44 +0800
+Message-ID: <20190407124147.13576-4-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.19.2.windows.1
 In-Reply-To: <20190407124147.13576-1-thunder.leizhen@huawei.com>
 References: <20190407124147.13576-1-thunder.leizhen@huawei.com>
@@ -69,268 +69,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iommu=pt can be replaced with iommu.dma_mode=passthrough.
-iommu=nopt can be replaced with iommu.dma_mode=lazy.
-intel_iommu=strict can be replaced with iommu.dma_mode=strict.
-amd_iommu=fullflush can be replaced with iommu.dma_mode=strict.
+Add IOMMU_DMA_MODE_IS_LAZY() and IOMMU_DMA_MODE_IS_PASSTHROUGH() to make
+the code looks cleaner.
 
-Note: intel_iommu_strict is not deleted because it can also be assigned
-in quirk_calpella_no_shadow_gtt().
+There is no functional change, just prepare for the following patches.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/ia64/include/asm/iommu.h   |  2 --
- arch/ia64/kernel/pci-dma.c      |  2 --
- arch/x86/include/asm/iommu.h    |  1 -
- arch/x86/kernel/pci-dma.c       | 20 --------------------
- drivers/iommu/Kconfig           | 14 ++++++--------
- drivers/iommu/amd_iommu.c       | 12 ++++++------
- drivers/iommu/amd_iommu_init.c  |  4 ----
- drivers/iommu/amd_iommu_types.h |  6 ------
- drivers/iommu/intel-iommu.c     |  7 ++-----
- 9 files changed, 14 insertions(+), 54 deletions(-)
+ drivers/iommu/iommu.c | 12 ++++++++----
+ include/linux/iommu.h | 11 +++++++++++
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/arch/ia64/include/asm/iommu.h b/arch/ia64/include/asm/iommu.h
-index 7429a72f3f92199..92aceef63710861 100644
---- a/arch/ia64/include/asm/iommu.h
-+++ b/arch/ia64/include/asm/iommu.h
-@@ -8,10 +8,8 @@
- extern void no_iommu_init(void);
- #ifdef	CONFIG_INTEL_IOMMU
- extern int force_iommu, no_iommu;
--extern int iommu_pass_through;
- extern int iommu_detected;
- #else
--#define iommu_pass_through	(0)
- #define no_iommu		(1)
- #define iommu_detected		(0)
- #endif
-diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-index fe988c49f01ce6a..f5d49cd3fbb01a9 100644
---- a/arch/ia64/kernel/pci-dma.c
-+++ b/arch/ia64/kernel/pci-dma.c
-@@ -22,8 +22,6 @@
- int force_iommu __read_mostly;
- #endif
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index b75e23a2ea08da8..876c0966db2481a 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -168,6 +168,11 @@ static int __init iommu_dma_mode_setup(char *str)
+ }
+ early_param("iommu.dma_mode", iommu_dma_mode_setup);
  
--int iommu_pass_through;
--
- static int __init pci_iommu_init(void)
++int iommu_default_dma_mode_get(void)
++{
++	return iommu_default_dma_mode;
++}
++
+ static ssize_t iommu_group_attr_show(struct kobject *kobj,
+ 				     struct attribute *__attr, char *buf)
  {
- 	if (iommu_detected)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index baedab8ac5385f7..b91623d521d9f0f 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -4,7 +4,6 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
--extern int iommu_pass_through;
- 
- /* 10 seconds */
- #define DMAR_OPERATION_TIMEOUT ((cycles_t) tsc_khz*10*1000)
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index d460998ae828514..bd63d80597ae6d0 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -34,21 +34,6 @@
- /* Set this to 1 if there is a HW IOMMU in the system */
- int iommu_detected __read_mostly = 0;
- 
--/*
-- * This variable becomes 1 if iommu=pt is passed on the kernel command line.
-- * If this variable is 1, IOMMU implementations do no DMA translation for
-- * devices and allow every device to access to whole physical memory. This is
-- * useful if a user wants to use an IOMMU only for KVM device assignment to
-- * guests and not for driver dma translation.
-- * It is also possible to disable by default in kernel config, and enable with
-- * iommu=nopt at boot time.
-- */
--#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
--int iommu_pass_through __read_mostly = 1;
--#else
--int iommu_pass_through __read_mostly;
--#endif
--
- extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
- 
- /* Dummy device used for NULL arguments (normally ISA). */
-@@ -139,11 +124,6 @@ static __init int iommu_setup(char *p)
- 		if (!strncmp(p, "soft", 4))
- 			swiotlb = 1;
- #endif
--		if (!strncmp(p, "pt", 2))
--			iommu_pass_through = 1;
--		if (!strncmp(p, "nopt", 4))
--			iommu_pass_through = 0;
--
- 		gart_parse_options(p);
- 
- #ifdef CONFIG_CALGARY_IOMMU
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index b053eeaa82ebca8..ff8c5d0d435cf58 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -78,7 +78,7 @@ choice
- 	prompt "IOMMU dma mode"
- 	depends on IOMMU_API
- 	default IOMMU_DMA_MODE_PASSTHROUGH if (PPC_POWERNV && PCI)
--	default IOMMU_DMA_MODE_LAZY if S390_IOMMU
-+	default IOMMU_DMA_MODE_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
- 	default IOMMU_DMA_MODE_STRICT
- 	help
- 	  IOMMU dma mode, such as: passthrough, lazy, strict.
-@@ -87,9 +87,8 @@ config IOMMU_DMA_MODE_PASSTHROUGH
- 	bool "Configure DMA to bypass the IOMMU"
-         help
- 	  Enable passthrough by default, removing the need to pass in
--	  iommu.dma_mode=passthrough or iommu=pt through command line. If this
--	  is enabled, you can still disable with iommu.dma_mode={lazy|strict}
--	  or iommu=nopt depending on the architecture.
-+	  iommu.dma_mode=passthrough through command line. If this is enabled,
-+	  you can still disable with iommu.dma_mode={lazy|strict}.
- 
- config IOMMU_DMA_MODE_LAZY
- 	bool "IOMMU DMA use lazy mode to flush IOTLB and free IOVA"
-@@ -97,10 +96,9 @@ config IOMMU_DMA_MODE_LAZY
- 	  Support lazy mode, where for every IOMMU DMA unmap operation, the
- 	  flush operation of IOTLB and the free operation of IOVA are deferred.
- 	  They are only guaranteed to be done before the related IOVA will be
--	  reused. Removing the need to pass in kernel parameters through
--	  command line. For example, iommu.dma_mode=lazy on ARM64. If this is
--	  enabled, you can still disable with kernel parameters, such as
--	  iommu.dma_mode=strict depending on the architecture.
-+	  reused. Removing the need to pass in iommu.dma_mode=lazy through
-+	  command line. If this is enabled, you can still disable with
-+	  iommu.dma_mode=strict.
- 
- config IOMMU_DMA_MODE_STRICT
- 	bool "IOMMU DMA use strict mode to flush IOTLB and free IOVA"
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f7cdd2ab7f11f6c..361fa6d5561a0ff 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -94,7 +94,7 @@
- 
- /*
-  * Domain for untranslated devices - only allocated
-- * if iommu=pt passed on kernel cmd line.
-+ * if iommu.dma_mode=passthrough passed on kernel cmd line.
-  */
- const struct iommu_ops amd_iommu_ops;
- 
-@@ -448,7 +448,7 @@ static int iommu_init_device(struct device *dev)
- 	 * invalid address), we ignore the capability for the device so
- 	 * it'll be forced to go into translation mode.
+@@ -1109,9 +1114,8 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
  	 */
--	if ((iommu_pass_through || !amd_iommu_force_isolation) &&
-+	if ((IOMMU_DMA_MODE_IS_PASSTHROUGH() || !amd_iommu_force_isolation) &&
- 	    dev_is_pci(dev) && pci_iommuv2_capable(to_pci_dev(dev))) {
- 		struct amd_iommu *iommu;
+ 	if (!group->default_domain) {
+ 		struct iommu_domain *dom;
+-		int def_domain_type =
+-			(iommu_default_dma_mode == IOMMU_DMA_MODE_PASSTHROUGH)
+-			? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
++		int def_domain_type = IOMMU_DMA_MODE_IS_PASSTHROUGH() \
++				? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
  
-@@ -2274,7 +2274,7 @@ static int amd_iommu_add_device(struct device *dev)
+ 		dom = __iommu_domain_alloc(dev->bus, def_domain_type);
+ 		if (!dom && def_domain_type != IOMMU_DOMAIN_DMA) {
+@@ -1127,7 +1131,7 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
+ 		if (!group->domain)
+ 			group->domain = dom;
  
- 	BUG_ON(!dev_data);
+-		if (dom && (iommu_default_dma_mode == IOMMU_DMA_MODE_LAZY)) {
++		if (dom && IOMMU_DMA_MODE_IS_LAZY()) {
+ 			int attr = 1;
+ 			iommu_domain_set_attr(dom,
+ 					      DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index c3f4e3416176496..1b35ae3f6382e4a 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -46,6 +46,10 @@
+ #define IOMMU_DMA_MODE_STRICT		0x0
+ #define IOMMU_DMA_MODE_LAZY		0x1
+ #define IOMMU_DMA_MODE_PASSTHROUGH	0x2
++#define IOMMU_DMA_MODE_IS_LAZY() \
++		(iommu_default_dma_mode_get() == IOMMU_DMA_MODE_LAZY)
++#define IOMMU_DMA_MODE_IS_PASSTHROUGH() \
++		(iommu_default_dma_mode_get() == IOMMU_DMA_MODE_PASSTHROUGH)
  
--	if (iommu_pass_through || dev_data->iommu_v2)
-+	if (IOMMU_DMA_MODE_IS_PASSTHROUGH() || dev_data->iommu_v2)
- 		iommu_request_dm_for_dev(dev);
+ struct iommu_ops;
+ struct iommu_group;
+@@ -421,6 +425,8 @@ static inline void dev_iommu_fwspec_set(struct device *dev,
+ int iommu_probe_device(struct device *dev);
+ void iommu_release_device(struct device *dev);
  
- 	/* Domains are initialized for this device - have a look what we ended up with */
-@@ -2479,7 +2479,7 @@ static void __unmap_single(struct dma_ops_domain *dma_dom,
- 		start += PAGE_SIZE;
- 	}
++extern int iommu_default_dma_mode_get(void);
++
+ #else /* CONFIG_IOMMU_API */
  
--	if (amd_iommu_unmap_flush) {
-+	if (!IOMMU_DMA_MODE_IS_LAZY()) {
- 		domain_flush_tlb(&dma_dom->domain);
- 		domain_flush_complete(&dma_dom->domain);
- 		dma_ops_free_iova(dma_dom, dma_addr, pages);
-@@ -2853,10 +2853,10 @@ int __init amd_iommu_init_api(void)
+ struct iommu_ops {};
+@@ -705,6 +711,11 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ 	return NULL;
+ }
  
- int __init amd_iommu_init_dma_ops(void)
- {
--	swiotlb        = (iommu_pass_through || sme_me_mask) ? 1 : 0;
-+	swiotlb = (IOMMU_DMA_MODE_IS_PASSTHROUGH() || sme_me_mask) ? 1 : 0;
- 	iommu_detected = 1;
++static inline int iommu_default_dma_mode_get(void)
++{
++	return IOMMU_DMA_MODE_PASSTHROUGH;
++}
++
+ #endif /* CONFIG_IOMMU_API */
  
--	if (amd_iommu_unmap_flush)
-+	if (!IOMMU_DMA_MODE_IS_LAZY())
- 		pr_info("IO/TLB flush on unmap enabled\n");
- 	else
- 		pr_info("Lazy IO/TLB flushing enabled\n");
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 1b1378619fc9ec2..68ab83327997e7b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -166,8 +166,6 @@ struct ivmd_header {
- 					   to handle */
- LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
- 					   we find in ACPI */
--bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
--
- LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
- 					   system */
- 
-@@ -2856,8 +2854,6 @@ static int __init parse_amd_iommu_intr(char *str)
- static int __init parse_amd_iommu_options(char *str)
- {
- 	for (; *str; ++str) {
--		if (strncmp(str, "fullflush", 9) == 0)
--			amd_iommu_unmap_flush = true;
- 		if (strncmp(str, "off", 3) == 0)
- 			amd_iommu_disabled = true;
- 		if (strncmp(str, "force_isolation", 15) == 0)
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 87965e4d964771b..724182f158523a1 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -743,12 +743,6 @@ struct unity_map_entry {
- /* allocation bitmap for domain ids */
- extern unsigned long *amd_iommu_pd_alloc_bitmap;
- 
--/*
-- * If true, the addresses will be flushed on unmap time, not when
-- * they are reused
-- */
--extern bool amd_iommu_unmap_flush;
--
- /* Smallest max PASID supported by any IOMMU in the system */
- extern u32 amd_iommu_max_pasid;
- 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 28cb713d728ceef..500b3182d0a9280 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -451,9 +451,6 @@ static int __init intel_iommu_setup(char *str)
- 		} else if (!strncmp(str, "forcedac", 8)) {
- 			pr_info("Forcing DAC for PCI devices\n");
- 			dmar_forcedac = 1;
--		} else if (!strncmp(str, "strict", 6)) {
--			pr_info("Disable batched IOTLB flush\n");
--			intel_iommu_strict = 1;
- 		} else if (!strncmp(str, "sp_off", 6)) {
- 			pr_info("Disable supported super page\n");
- 			intel_iommu_superpage = 0;
-@@ -3408,7 +3405,7 @@ static int __init init_dmars(void)
- 		iommu->flush.flush_iotlb(iommu, 0, 0, 0, DMA_TLB_GLOBAL_FLUSH);
- 	}
- 
--	if (iommu_pass_through)
-+	if (IOMMU_DMA_MODE_IS_PASSTHROUGH())
- 		iommu_identity_mapping |= IDENTMAP_ALL;
- 
- #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
-@@ -3749,7 +3746,7 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 
- 	freelist = domain_unmap(domain, start_pfn, last_pfn);
- 
--	if (intel_iommu_strict) {
-+	if (!IOMMU_DMA_MODE_IS_LAZY() || intel_iommu_strict) {
- 		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
- 				      nrpages, !freelist, 0);
- 		/* free iova */
+ #ifdef CONFIG_IOMMU_DEBUGFS
 -- 
 1.8.3
 
