@@ -2,96 +2,74 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006AFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B853120880
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="E9q+sY+c"
+	by mail.kernel.org (Postfix) with ESMTP id DD90720880
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDGWkT (ORCPT
+        id S1726513AbfDGWoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 18:40:19 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37894 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfDGWkT (ORCPT
+        Sun, 7 Apr 2019 18:44:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51040 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfDGWoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 18:40:19 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u24so1115116lfg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 15:40:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X8EXZ5qThMOjV9sV+VwAPmZrIaIEEM/RLUZkQY7UG3Y=;
-        b=E9q+sY+ckQRg0z64ps4J4JwXm8OnD2dIoVw3BnumhU/vZYUjYJAMT0kZkHQuLenZj1
-         FEnp4s3qJ+wnbf7060Xb91cLB9hy0PXrYu94a8FWbh2eX7SrRVD63MTEwNrkXp0Nlh66
-         IoKtK5+5PHC6Tj5lctWhaJbB7w0j+sYlm9mIJLOXXl3IES3t1HEGDmAigdBDSzFm1YCd
-         gJTItPVgH6hMo5BM9VY7N91K0oSXuucT553YxvLoNYPC01bnTC8Ku3XQgcYAxQ2sY54f
-         7buQrFu7DQOQEGD3PB3MFGKPaW26I6FoG6aoMFwuqpJBnvLMXNVc3bJFV/JO9ecTtEPo
-         PpVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X8EXZ5qThMOjV9sV+VwAPmZrIaIEEM/RLUZkQY7UG3Y=;
-        b=VUtcWzTWeMS2gWBz8B4wqQnnZqIjz9S04/YkT/cBjeQlQSGSsx/JOcFH6x7om+62zt
-         fdZmmHGK8yfhQbm4ueWKOpYIvycy4Qkx1r9exbY4RsE76RJ1JdwOFuf3XXSKfOcIqtAt
-         8MUVbvpoKdzc5WOjPQchT/ZUTWbHt0gRORorIJceFx4uV6b6iDFq/jnAxkTO2KlDCRWk
-         pBBN4CKToZ7wQVfkGJaIGSAftGkGMyqWBDimQ1nWk0/7my/mL8hPvA7+ybtdeEE+zqau
-         rRQFw0jDk28i3NFxVD7NrjrEXuNCWLOVKCUq62NJceRZHl6I+EDvOl1PnBDkBbWSo8jA
-         yrjg==
-X-Gm-Message-State: APjAAAVhwOUzqxCE+FGg0NcFDzbmcU45e5R0K+mj6IiJEz+sqUlVZUx3
-        s9++FZL9EAaodS1sKx/EPkBeZA==
-X-Google-Smtp-Source: APXvYqyzH49NRv/VY0QqqnWo3vzDVqcQhmmZmwI+N4cjR6EgIhWUiwCsjk12AgGeOrzOW8cMK7ubUw==
-X-Received: by 2002:a19:740e:: with SMTP id v14mr14140188lfe.94.1554676817389;
-        Sun, 07 Apr 2019 15:40:17 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id k90sm6082482ljb.89.2019.04.07.15.40.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 07 Apr 2019 15:40:15 -0700 (PDT)
-Date:   Sun, 7 Apr 2019 15:30:13 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     arm@kernel.org, Sugaya Taichi <sugaya.taichi@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: milbeaut: fix build with !CONFIG_HOTPLUG_CPU
-Message-ID: <20190407223013.2h7ac44l24g2dike@localhost>
-References: <20190313211935.646291-1-arnd@arndb.de>
+        Sun, 7 Apr 2019 18:44:30 -0400
+Received: from p5492ee6e.dip0.t-ipconnect.de ([84.146.238.110] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hDGWW-0004bB-LY; Mon, 08 Apr 2019 00:44:24 +0200
+Date:   Mon, 8 Apr 2019 00:44:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard
+ pages
+In-Reply-To: <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
+References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de> <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313211935.646291-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 10:19:16PM +0100, Arnd Bergmann wrote:
-> When HOTPLUG_CPU is disabled, some fields in the smp operations
-> are not available or needed:
+On Sat, 6 Apr 2019, Andy Lutomirski wrote:
+> On Fri, Apr 5, 2019 at 8:11 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > From: Andy Lutomirski <luto@kernel.org>
+> >
+> > The IRQ stack lives in percpu space, so an IRQ handler that overflows it
+> > will overwrite other data structures.
+> >
+> > Use vmap() to remap the IRQ stack so that it will have the usual guard
+> > pages that vmap/vmalloc allocations have. With this the kernel will panic
+> > immediately on an IRQ stack overflow.
 > 
-> arch/arm/mach-milbeaut/platsmp.c:90:3: error: field designator 'cpu_die' does not refer to any field in type
->       'struct smp_operations'
->         .cpu_die                = m10v_cpu_die,
->          ^
-> arch/arm/mach-milbeaut/platsmp.c:91:3: error: field designator 'cpu_kill' does not refer to any field in type
->       'struct smp_operations'
->         .cpu_kill               = m10v_cpu_kill,
->          ^
+> The 0day bot noticed that this dies with DEBUG_PAGEALLOC on.  This is
+> because the store_stackinfo() function is utter garbage and this patch
+> correctly detects just how broken it is.  The attached patch "fixes"
+> it.  (It also contains a reliability improvement that should probably
+> get folded in, but is otherwise unrelated.)
 > 
-> Hide them in an #ifdef like the other platforms do.
-> 
-> Fixes: 9fb29c734f9e ("ARM: milbeaut: Add basic support for Milbeaut m10v SoC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> A real fix would remove the generic kstack_end() function entirely
+> along with __HAVE_ARCH_KSTACK_END and would optionally replace
+> store_stackinfo() with something useful.  Josh, do we have a generic
+> API to do a little stack walk like this?  Otherwise, I don't think it
+> would be the end of the world to just remove the offending code.
 
-Applied to fixes.
+Actually we have: save_stack_trace()
 
-
--Olof
