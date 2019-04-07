@@ -2,74 +2,117 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E153BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD90720880
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A844420880
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 22:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfDGWoa (ORCPT
+        id S1726487AbfDGWuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 18:44:30 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51040 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfDGWoa (ORCPT
+        Sun, 7 Apr 2019 18:50:15 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47685 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfDGWuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 18:44:30 -0400
-Received: from p5492ee6e.dip0.t-ipconnect.de ([84.146.238.110] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hDGWW-0004bB-LY; Mon, 08 Apr 2019 00:44:24 +0200
-Date:   Mon, 8 Apr 2019 00:44:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard
- pages
-In-Reply-To: <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
-References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de> <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 7 Apr 2019 18:50:14 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BE14980363; Mon,  8 Apr 2019 00:50:03 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 00:50:11 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh@kernel.org,
+        dmurphy@ti.com
+Cc:     lee.jones@linaro.org, tony@atomide.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL v2] LM3532 backlight support improvements and
+ relocation
+Message-ID: <20190407225011.GA9120@amd>
+References: <20190407190951.27288-1-jacek.anaszewski@gmail.com>
+ <20190407221740.GA6327@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
+In-Reply-To: <20190407221740.GA6327@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 6 Apr 2019, Andy Lutomirski wrote:
-> On Fri, Apr 5, 2019 at 8:11 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > From: Andy Lutomirski <luto@kernel.org>
-> >
-> > The IRQ stack lives in percpu space, so an IRQ handler that overflows it
-> > will overwrite other data structures.
-> >
-> > Use vmap() to remap the IRQ stack so that it will have the usual guard
-> > pages that vmap/vmalloc allocations have. With this the kernel will panic
-> > immediately on an IRQ stack overflow.
-> 
-> The 0day bot noticed that this dies with DEBUG_PAGEALLOC on.  This is
-> because the store_stackinfo() function is utter garbage and this patch
-> correctly detects just how broken it is.  The attached patch "fixes"
-> it.  (It also contains a reliability improvement that should probably
-> get folded in, but is otherwise unrelated.)
-> 
-> A real fix would remove the generic kstack_end() function entirely
-> along with __HAVE_ARCH_KSTACK_END and would optionally replace
-> store_stackinfo() with something useful.  Josh, do we have a generic
-> API to do a little stack walk like this?  Otherwise, I don't think it
-> would be the end of the world to just remove the offending code.
 
-Actually we have: save_stack_trace()
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> > Changes since v1:
+> >=20
+> > - synchronized DT label properties in DT bindings with what has been ag=
+reed
+> >   for the patch "ARM: dts: omap4-droid4: Update backlight dt properties"
+> >=20
+> > The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa=
+231b:
+> >=20
+> >   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> >=20
+> > are available in the git repository at:
+> >=20
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds=
+=2Egit tags/lm3532-driver-improvements
+> >=20
+> > for you to fetch changes up to bc1b8492c764fea940fc66206047e37a7f8d77e1:
+> >=20
+> >   leds: lm3532: Introduce the lm3532 LED driver (2019-04-07 20:45:49 +0=
+200)
+> >=20
+> > Thanks,
+> > Jacek Anaszewski
+> >=20
+> > ----------------------------------------------------------------
+> > LM3532 backlight driver improvements and relocation
+> > ----------------------------------------------------------------
+> > Dan Murphy (4):
+> >       dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+>=20
+> Sorry, this one will need more work.
+>=20
+> When did Rob acknowledge this? I do not remember that mail & quick
+> google does not find it.
+
+Aha, found it now:
+
+Date: Fri, 15 Mar 2019 18:35:01 -0500
+=46rom: Rob Herring <robh@kernel.org>
+To: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu=
+ doc
+
+ 									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyqfqMACgkQMOfwapXb+vIucwCgvmkz7+2wSeCXVuEtUykmBQRb
+ro4Anj8KJeLX59qod6qbSgC5rY2SpPwH
+=IlHS
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
