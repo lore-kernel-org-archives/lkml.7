@@ -3,71 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F4BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 09:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B14CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 09:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E72820B1F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 09:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A8E2084F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 09:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="bbNfokFi"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="YNkqkkPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfDGJ04 (ORCPT
+        id S1726417AbfDGJ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 05:26:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44253 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfDGJ04 (ORCPT
+        Sun, 7 Apr 2019 05:28:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38259 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfDGJ2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 05:26:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i2so5546239pgj.11
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 02:26:56 -0700 (PDT)
+        Sun, 7 Apr 2019 05:28:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so5566122pgl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 02:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amacapital-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=f7PuE3PU9IZAKRYkOlaFgDb8K/95QJK0u4dqN4qojd8=;
-        b=bbNfokFimd5HQORnbNhwUODAS598jejVD1m12V8aOtncSZySR/fuC68GhmvdZv8mHX
-         IDGCOsc9Sum7PTqZbkZMJinGVMDJq4Sn9drQIQeqSn1UiTV3U+gfGTXbcSSY1R9i+Ufg
-         4QxUmA29ITT+FZI4a5sudgZAKlbpNY8FW5N9ZPCNkTln+HxmNLJlwN5FJtqdtfNENOuT
-         Gh3Cv3B7j7xEb5YQq5rmYH6tQINkdti6qA+0SwNRzWZjNYgsPAAIfD2j3M1nRrwWdS3m
-         TKdqdqrTMhEdv6sQB91s+hcktNGv2UQlEuUavw54FAYpLcO7o0q9Zo9KDFr6kKuIQzN9
-         lGIQ==
+        bh=uFYLvSxEIBgYtMKaj/ypzTQtcpWXVCK+99ol/GIJUfk=;
+        b=YNkqkkPjeLuAMOyiu0WYBoAW3k98JJaQQYZjM2v8jBcU6JJocmRPYKnBBD70Xffl3M
+         xuhkUCz+5xF4hY6+9fovhGuH7cxWD0TN5W7UDhSlt/W7VTBHSFJKmOEGcGU5ZOYAmlsk
+         aHPYY8WaT3UJFxBlv/qE76FEh1N1naIq0cV7DMHxd/6VWsNlr9w8h/shsL0ggb1dtUrO
+         UKo5Js7ooj7CJbdAD+TJtBoerc4rT5ptvnefhvrD3bfst93Iqwj8Fgtr98xyQ3h+Yy1z
+         dzFIzxAGBjzDoxjrwoK5+xU4YN2Ets/Mue5eE2J+8uR4jWuNolGlmass8XeH/nGXAHJa
+         w33A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=f7PuE3PU9IZAKRYkOlaFgDb8K/95QJK0u4dqN4qojd8=;
-        b=YIpzxCRS114o09aAaEMEzaudtP1dVOZGUuLSLKYvzbIIFeW4m5mox2jUvi6Iy4kMLn
-         PPwtatNN8dLvNDyodbRsfPobYP3vuHvxfhB8fDXwsh5Pno6LsUyLPjAl1FjXkha2JrI+
-         jxSMvi1EYzj7qShJQmKoVOHnbHFQsjBqTci45nhHs8ZOAXfbdyyh47BaN4C80YRAqMei
-         uSwR3CBUeuqgnY23OKnnHssHAFVKMTMMW1tnAg7Tey6oghZTdkRuje207yrX1jHW+sEm
-         LQqX7+T9S2B1WLNqRHZBzx3kj+4Pg0dFox07ev5/WPbgkXgLs398XycUyls8EKvi7iae
-         Cwyw==
-X-Gm-Message-State: APjAAAV+7MelSp0e9ZURdyJqanF1z4ypUYZIjv9Q2s512f6p4C2nQvsv
-        VFFH3AgsH6i/ZSMRBwxbcj8MXA==
-X-Google-Smtp-Source: APXvYqwgo4bTgsxmi78CDfl635n91U8QaX0z12SPG7nm2Hj+GWiGO204fmPYgSQ9TyOccAM69j6ZWA==
-X-Received: by 2002:a63:460a:: with SMTP id t10mr21326844pga.354.1554629215717;
-        Sun, 07 Apr 2019 02:26:55 -0700 (PDT)
+        bh=uFYLvSxEIBgYtMKaj/ypzTQtcpWXVCK+99ol/GIJUfk=;
+        b=jAM8Fh2sYqwjVByA/CgFqt4XWojI7mHTx4O5Z1DctKOyZCWm0i+cqW8nINr8t+8yV0
+         9POk1J4ETDDEx7JIk9Own0BDb7IFlvGQ/edwW8hVsI/17zUJQYivvtLGJw/IHmb4/XUO
+         AGxzUrzNHFXawfwv/KY1/fuBDl+KmpdPHSaiQBM6j/q2GT2c+ZxK4nWWAsGPgWlJn3qL
+         4UcfW+nBmN2nvknh52c+9Li1SWGFzvm7O02RqvoP6EtruIH9fkDnUjJHMSDhwVNUCK/A
+         qhnGeaYtXuNYAzPTcYHtDKuNXSdPxMqTUl3xrBwg8pHkmx4ns8WzVtVFlRazSCQ2K+5E
+         nYJQ==
+X-Gm-Message-State: APjAAAUsG7G9dXIVK/rPP7WzQRFsDzIHb3sj0t3Z9vlFXQRquwXkBSXr
+        W8n8+LBnSShzJFpI35851GVzPA==
+X-Google-Smtp-Source: APXvYqzUZT1ogOoGldpnwogQesJoWnUHsgI+2x/qKnrfoKrFOkRare+uEOVqfKGNWWnhznWw1mgSbA==
+X-Received: by 2002:a62:14c3:: with SMTP id 186mr23469137pfu.21.1554629289007;
+        Sun, 07 Apr 2019 02:28:09 -0700 (PDT)
 Received: from ?IPv6:2601:646:c200:1ef2:8daf:800d:46cf:9ade? ([2601:646:c200:1ef2:8daf:800d:46cf:9ade])
-        by smtp.gmail.com with ESMTPSA id n17sm20446687pgk.81.2019.04.07.02.26.54
+        by smtp.gmail.com with ESMTPSA id o81sm6923606pfa.156.2019.04.07.02.28.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2019 02:26:54 -0700 (PDT)
+        Sun, 07 Apr 2019 02:28:08 -0700 (PDT)
 Content-Type: text/plain;
-        charset=us-ascii
+        charset=utf-8
 Mime-Version: 1.0 (1.0)
-Subject: Re: 8b275b3754 ("x86/irq/64: Remap the IRQ stack with guard pages"): BUG: unable to handle kernel paging request at ffffb659000a1000
+Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard pages
 From:   Andy Lutomirski <luto@amacapital.net>
 X-Mailer: iPhone Mail (16D57)
-In-Reply-To: <alpine.DEB.2.21.1904071121270.1840@nanos.tec.linutronix.de>
-Date:   Sun, 7 Apr 2019 02:26:54 -0700
+In-Reply-To: <alpine.DEB.2.21.1904070803200.1840@nanos.tec.linutronix.de>
+Date:   Sun, 7 Apr 2019 02:28:07 -0700
 Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <A03AEEC0-2398-42DE-80DF-7BE4D81EFEF5@amacapital.net>
-References: <5ca84952.hpEqUp6kap0tafzR%lkp@intel.com> <CALCETrX_ys9dJZOkN7QBjWz9Y1iukQDaJaASPAkGtWvwNkOESw@mail.gmail.com> <alpine.DEB.2.21.1904071121270.1840@nanos.tec.linutronix.de>
+Message-Id: <50F7A079-11F5-45EA-B378-7527B5920A7C@amacapital.net>
+References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de> <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com> <alpine.DEB.2.21.1904070803200.1840@nanos.tec.linutronix.de>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -75,33 +77,47 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Apr 7, 2019, at 2:23 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> On Apr 6, 2019, at 11:08 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
 >=20
 >> On Sat, 6 Apr 2019, Andy Lutomirski wrote:
->> I haven't spotted the actual bug yet, but the faulting instruction is:
+>>> On Fri, Apr 5, 2019 at 8:11 AM Thomas Gleixner <tglx@linutronix.de> wrot=
+e:
+>>>=20
+>>> From: Andy Lutomirski <luto@kernel.org>
+>>>=20
+>>> The IRQ stack lives in percpu space, so an IRQ handler that overflows it=
+
+>>> will overwrite other data structures.
+>>>=20
+>>> Use vmap() to remap the IRQ stack so that it will have the usual guard
+>>> pages that vmap/vmalloc allocations have. With this the kernel will pani=
+c
+>>> immediately on an IRQ stack overflow.
 >>=20
->>  2a:    65 8b 35 09 ca 75 63     mov    %gs:*0x6375ca09(%rip),%esi
->>    # 0x6375ca3a        <-- trapping instruction
+>> The 0day bot noticed that this dies with DEBUG_PAGEALLOC on.  This is
+>> because the store_stackinfo() function is utter garbage and this patch
+>> correctly detects just how broken it is.  The attached patch "fixes"
+>> it.  (It also contains a reliability improvement that should probably
+>> get folded in, but is otherwise unrelated.)
 >>=20
->> This seems to be faulting just above the top of the stack (the thing
->> in RSP), so I suspect that there is some path that is shoving the
->> remapped value into GSBASE, which is wrong.
->>=20
->> Also, FWIW, there was some reason that I initialized all the virtual
->> mappings for all possible CPUs early.  I don't remember what it was,
->> and it may not have been a good reason, but I put at least some
->> nonzero amount of thought into it :)
+>> A real fix would remove the generic kstack_end() function entirely
+>> along with __HAVE_ARCH_KSTACK_END and would optionally replace
+>> store_stackinfo() with something useful.  Josh, do we have a generic
+>> API to do a little stack walk like this?  Otherwise, I don't think it
+>> would be the end of the world to just remove the offending code.
 >=20
-> There is absolutely no reason to have irq stacks before init_IRQ(). 32bit
-> uses at runtime allocated irq stacks for years.
+> Yes, I found the same yesterday before heading out. It's already broken
+> with the percpu stack because there is no guarantee that the per cpu stack=
+
+> is thread size aligned. It's guaranteed to be page aligned not more.
 >=20
-> If the CPU takes a device interrupt before that, then there are way more
-> things which explode than just the irqstack pointer being NULL.
+> I'm all for removing that nonsense, but the real question is whether there=
+
+> is more code which assumes THREAD_SIZE aligned stacks aside of the thread
+> stack itself.
+>=20
 >=20
 
-Fair enough.  Although the patch I emailed in the other thread allows at lea=
-st the entry code to survive on 64-bit at the cost of just a couple lines of=
- code.
-
-But the kernel does indeed seem to work fine without the change. Feel free t=
-o disregard that part :)=
+Well, any code like this is already busted, since the stacks alignment doesn=
+=E2=80=99t really change with these patches applied.=
