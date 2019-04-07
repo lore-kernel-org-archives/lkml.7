@@ -2,896 +2,689 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B442C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF773C282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA17213F2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E68C218D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 12:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554640246;
+	bh=fAKiFYkcyM33De0VU5P1ma4uiyPQluZ4e89oCBZsX6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JYHuE0wMD2dW1/rAwqKl0XOzXyF+kGz+AJs3pUKdzcAwjTfCKoNO9n/ttOd01hVh0
+	 dQRz+eNjoHmzmioi2ez7x6WdfesGkJWySn3FQdbuiAd3EcpZCxQgY0uzy3V4PUKaJD
+	 jzgFdis7iMZ4cSlU+iXeApYy1FIOULkItDvjDNOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfDGMKW (ORCPT
+        id S1726475AbfDGMap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 08:10:22 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2398 "EHLO mga06.intel.com"
+        Sun, 7 Apr 2019 08:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfDGMKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 08:10:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 05:10:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,321,1549958400"; 
-   d="scan'208";a="335712621"
-Received: from rajeev-desktop.iind.intel.com ([10.223.84.39])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Apr 2019 05:10:18 -0700
-From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-To:     srinivas.pandruvada@linux.intel.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org
-Cc:     ncrews@chromium.org, jettrink@chromium.org, gwendal@google.com,
-        rushikesh.s.kadam@intel.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] platform: chrome: Add ChromeOS EC ISHTP driver
-Date:   Sun,  7 Apr 2019 17:40:14 +0530
-Message-Id: <1554639014-28363-1-git-send-email-rushikesh.s.kadam@intel.com>
-X-Mailer: git-send-email 1.9.1
+        id S1726263AbfDGMap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 08:30:45 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C0620880;
+        Sun,  7 Apr 2019 12:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554640243;
+        bh=fAKiFYkcyM33De0VU5P1ma4uiyPQluZ4e89oCBZsX6c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZdlD/1MR0+r1j0/A+9eHNEh5h6LLXEr1i7MhvWHoPG4QnKZDCPOQcUqGSKQoC4bMW
+         ilsJEcuK5jBDD/zgFEllRDwI4LH5616pml1Ilbtzm/6MFCXFxBZnckk5QeCUGlUN2n
+         J3tJq3wZvQWspZNLZAcDTuRoYYp1IYfQMZlCoTs0=
+Date:   Sun, 7 Apr 2019 13:30:37 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-input@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [RFC v2] iio: input-bridge: optionally bridge iio acceleometers
+ to create a /dev/input interface
+Message-ID: <20190407133037.0ad98897@archlinux>
+In-Reply-To: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com>
+References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver implements a slim layer to enable the ChromeOS
-EC kernel stack (cros_ec) to communicate with ChromeOS EC
-firmware running on the Intel Integrated Sensor Hub (ISH).
+On Sun, 31 Mar 2019 12:09:46 +0200
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-The driver registers a ChromeOS EC MFD device to connect
-with cros_ec kernel stack (upper layer), and it registers a
-client with the ISH Transport Protocol bus (lower layer) to
-talk with the ISH firwmare. See description of the ISHTP
-protocol at Documentation/hid/intel-ish-hid.txt
+Hi Nikolaus,
 
-Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
----
+I'm probably going to repeat a few things I sent for v1 as the audience has
+expanded somewhat!
 
-v3
- - Made several changes to improve code readability. Replaced
-   multiple cl_data_to_dev(client_data) with dev variable. Use
-   reverse Xmas tree for variable defintion where it made sense.
-   Dropped few debug prints. Add docstring for function
-   prepare_cros_ec_rx().
- - Fix code in function prepare_cros_ec_rx() under label
-   end_cros_ec_dev_init_error.
- - Recycle buffer in process_recv() on failing to obtain the
-   semaphore.
- - Increase ISHTP TX/RX ring buffer size to 8.
- - Alphabetically ordered CROS_EC_ISHTP entries in Makefile and
-   Kconfig.
- - Updated commit message.
+Good to see this moving forwards though as there has been at least some dem=
+and
+for it going way back to the early days of IIO.
 
-v2
- - Dropped unused "reset" parameter in function cros_ec_init()
- - Change driver name to cros_ec_ishtp to be consistent with other
-   references in the code.
- - Fixed a few typos. 
+> Some user spaces (e.g. some Android devices) use /dev/input/event* for ha=
+ndling
+> the 3D position of the device with respect to the center of gravity (eart=
+h).
+> This can be used for gaming input, auto-rotation of screens etc.
+>=20
+> This interface should be the standard for such use cases because it is an=
+ abstraction
+> of how orientation data is acquired from sensor chips. Sensor chips may b=
+e connected
+> through different interfaces and in different positions. They may also ha=
+ve different
+> parameters. And, if a chip is replaced by a different one, the values rep=
+orted by
+> the device position interface should remain the same, provided the device=
+ tree reflects
+> the changed chip.
+>=20
+> This did initially lead to input accelerometer drivers like drivers/input=
+/misc/bma150.c
+> or drivers/misc/lis3lv02d/
+>=20
+> But nowadays, new accelerometer chips mostly get iio drivers and rarely i=
+nput drivers.
+>=20
+> Therefore we need something like a protocol stack which bridges raw data =
+and input devices.
+> It can be seen as a similar layering like TCP/IP vs. bare Ethernet. Or ke=
+yboard
+> input events vs. raw gpio or raw USB access.
+>=20
+> This patch bridges the gap between raw iio data and the input device abst=
+raction
+> so that accelerometer measurements can additionally be presented as X/Y/Z=
+ accelerometer
+> channels (INPUT_PROP_ACCELEROMETER) through /dev/input/event*.
+>=20
+> There are no special requirements or changes needed for an iio driver.
+>=20
+> There is no need to define a mapping (e.g. in device tree).
+This worries me, as it inherently means we end up with this interface being
+registered in cases where it makes no sense.  A lot of generic distros get
+used across widely differing use cases.
 
-v1
- - Initial version
+I think we need some deliberate userspace interaction to instantiate
+one of these rather than 'always doing it'.
 
- drivers/platform/chrome/Kconfig         |  13 +
- drivers/platform/chrome/Makefile        |   1 +
- drivers/platform/chrome/cros_ec_ishtp.c | 765 ++++++++++++++++++++++++++++++++
- 3 files changed, 779 insertions(+)
- create mode 100644 drivers/platform/chrome/cros_ec_ishtp.c
+As I mentioned in V1, look at the possibility of a configfs based method
+to build the map.  It's easy for userspace to work out what makes sense to
+map in principle.  There may be some missing info that we also need to
+look to expose.
 
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 16b1615..5848179 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -62,6 +62,19 @@ config CROS_EC_I2C
- 	  a checksum. Failing accesses will be retried three times to
- 	  improve reliability.
- 
-+config CROS_EC_ISHTP
-+	tristate "ChromeOS Embedded Controller (ISHTP)"
-+	depends on MFD_CROS_EC
-+	depends on INTEL_ISH_HID
-+	help
-+	  If you say Y here, you get support for talking to the ChromeOS EC
-+	  firmware running on Intel Integrated Sensor Hub (ISH), using the
-+	  ISH Transport protocol (ISH-TP). This uses a simple byte-level
-+	  protocol with a checksum.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_ishtp.
-+
- config CROS_EC_SPI
- 	tristate "ChromeOS Embedded Controller (SPI)"
- 	depends on MFD_CROS_EC && SPI
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index cd591bf..4efe102 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -7,6 +7,7 @@ cros_ec_ctl-objs			:= cros_ec_sysfs.o cros_ec_lightbar.o \
- 					   cros_ec_vbc.o cros_ec_debugfs.o
- obj-$(CONFIG_CROS_EC_CTL)		+= cros_ec_ctl.o
- obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
-+obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
- obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
- cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_reg.o
- cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-new file mode 100644
-index 0000000..b1d19c4
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -0,0 +1,765 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ISHTP client driver for talking to the Chrome OS EC firmware running
-+ * on Intel Integrated Sensor Hub (ISH) using the ISH Transport protocol
-+ * (ISH-TP).
-+ *
-+ * Copyright (c) 2019, Intel Corporation.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/mfd/cros_ec_commands.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/intel-ish-client-if.h>
-+
-+/*
-+ * ISH TX/RX ring buffer pool size
-+ *
-+ * The AP->ISH messages and corresponding ISH->AP responses are
-+ * serialized. We need 1 TX and 1 RX buffer for these.
-+ *
-+ * The MKBP ISH->AP events are serialized. We need one additional RX
-+ * buffer for them.
-+ */
-+#define CROS_ISH_CL_TX_RING_SIZE		8
-+#define CROS_ISH_CL_RX_RING_SIZE		8
-+
-+/* ISH CrOS EC Host Commands */
-+enum cros_ec_ish_channel {
-+	CROS_EC_COMMAND = 1,			/* AP->ISH message */
-+	CROS_MKBP_EVENT = 2,			/* ISH->AP events */
-+};
-+
-+/*
-+ * ISH firmware timeout for 1 message send failure is 1Hz, and the
-+ * firmware will retry 2 times, so 3Hz is used for timeout.
-+ */
-+#define ISHTP_SEND_TIMEOUT			(3 * HZ)
-+
-+/* ISH Transport CrOS EC ISH client unique GUID */
-+static const guid_t cros_ish_guid =
-+	GUID_INIT(0x7b7154d0, 0x56f4, 0x4bdc,
-+		  0xb0, 0xd8, 0x9e, 0x7c, 0xda,	0xe0, 0xd6, 0xa0);
-+
-+struct header {
-+	u8 channel;
-+	u8 status;
-+	u8 reserved[2];
-+} __packed;
-+
-+struct cros_ish_out_msg {
-+	struct header hdr;
-+	struct ec_host_request ec_request;
-+} __packed;
-+
-+struct cros_ish_in_msg {
-+	struct header hdr;
-+	struct ec_host_response ec_response;
-+} __packed;
-+
-+#define IN_MSG_EC_RESPONSE_PREAMBLE					\
-+	offsetof(struct cros_ish_in_msg, ec_response)
-+
-+#define OUT_MSG_EC_REQUEST_PREAMBLE					\
-+	offsetof(struct cros_ish_out_msg, ec_request)
-+
-+#define cl_data_to_dev(client_data) ishtp_device((client_data)->cl_device)
-+
-+/*
-+ * The Read-Write Semaphore is used to prevent message TX or RX while
-+ * the ishtp client is being initialized or undergoing reset.
-+ *
-+ * The readers are the kernel function calls responsible for IA->ISH
-+ * and ISH->AP messaging.
-+ *
-+ * The writers are .reset() and .probe() function.
-+ */
-+DECLARE_RWSEM(init_lock);
-+
-+/**
-+ * struct response_info - Encapsulate firmware response related
-+ *			information for passing between function
-+ *			ish_send() and process_recv() callback.
-+ * @data:		Copy the data received from firmware here.
-+ * @max_size:		Max size allocated for the @data buffer. If the
-+ *			received data exceeds this value, we log an
-+ *			error.
-+ * @size:		Actual size of data received from firmware.
-+ * @error:		0 for success, negative error code for a
-+ *			failure in function process_recv().
-+ * @received:		Set to true on receiving a valid firmware
-+ *			response to host command
-+ * @wait_queue:		Wait queue for Host firmware loading where the
-+ *			client sends message to ISH firmware and waits
-+ *			for response
-+ */
-+struct response_info {
-+	void *data;
-+	size_t max_size;
-+	size_t size;
-+	int error;
-+	bool received;
-+	wait_queue_head_t wait_queue;
-+};
-+
-+/**
-+ * struct ishtp_cl_data - Encapsulate per ISH TP Client.
-+ * @cros_ish_cl:	ISHTP firmware client instance.
-+ * @cl_device:		ISHTP client device instance.
-+ * @response:		Firmware response information for passing
-+ *			between function ish_send() and process_recv()
-+ *			callback.
-+ * @work_ishtp_reset:	Work queue reset handling.
-+ * @work_ec_evt:	Work queue for EC events.
-+ * @ec_dev:		CrOS EC MFD device.
-+ *
-+ * This structure is used to store per client data.
-+ */
-+struct ishtp_cl_data {
-+	struct ishtp_cl *cros_ish_cl;
-+	struct ishtp_cl_device *cl_device;
-+
-+	/*
-+	 * Used for passing firmware response information between
-+	 * ish_send() and process_recv() callback.
-+	 */
-+	struct response_info response;
-+
-+	struct work_struct work_ishtp_reset;
-+	struct work_struct work_ec_evt;
-+	struct cros_ec_device *ec_dev;
-+};
-+
-+/**
-+ * ish_evt_handler - ISH to AP event handler
-+ * @work:		Work struct
-+ */
-+static void ish_evt_handler(struct work_struct *work)
-+{
-+	struct ishtp_cl_data *client_data =
-+		container_of(work, struct ishtp_cl_data, work_ec_evt);
-+	struct cros_ec_device *ec_dev = client_data->ec_dev;
-+
-+	if (cros_ec_get_next_event(ec_dev, NULL) > 0) {
-+		blocking_notifier_call_chain(&ec_dev->event_notifier,
-+					     0, ec_dev);
-+	}
-+}
-+
-+/**
-+ * ish_send() - Send message from host to firmware
-+ * @client_data:	Client data instance
-+ * @out_msg:		Message buffer to be sent to firmware
-+ * @out_size:		Size of out going message
-+ * @in_msg:		Message buffer where the incoming data copied.
-+ *			This buffer is allocated by calling
-+ * @in_size:		Max size of incoming message
-+ *
-+ * Return: Number of bytes copied in the in_msg on success, negative
-+ * error code on failure.
-+ */
-+static int ish_send(struct ishtp_cl_data *client_data,
-+		    u8 *out_msg, size_t out_size,
-+		    u8 *in_msg, size_t in_size)
-+{
-+	int rv;
-+	struct header *out_hdr = (struct header *)out_msg;
-+	struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
-+
-+	dev_dbg(cl_data_to_dev(client_data),
-+		"%s: channel=%02u status=%02u\n",
-+		__func__, out_hdr->channel, out_hdr->status);
-+
-+	/* Setup for incoming response */
-+	client_data->response.data = in_msg;
-+	client_data->response.max_size = in_size;
-+	client_data->response.error = 0;
-+	client_data->response.received = false;
-+
-+	rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
-+	if (rv) {
-+		dev_err(cl_data_to_dev(client_data),
-+			"ishtp_cl_send error %d\n", rv);
-+		return rv;
-+	}
-+
-+	wait_event_interruptible_timeout(client_data->response.wait_queue,
-+					 client_data->response.received,
-+					 ISHTP_SEND_TIMEOUT);
-+	if (!client_data->response.received) {
-+		dev_err(cl_data_to_dev(client_data),
-+			"Timed out for response to host message\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	if (client_data->response.error < 0)
-+		return client_data->response.error;
-+
-+	return client_data->response.size;
-+}
-+
-+/**
-+ * process_recv() -	Received and parse incoming packet
-+ * @cros_ish_cl:	Client instance to get stats
-+ * @rb_in_proc:		Host interface message buffer
-+ *
-+ * Parse the incoming packet. If it is a response packet then it will
-+ * update per instance flags and wake up the caller waiting to for the
-+ * response. If it is an event packet then it will schedule event work.
-+ */
-+static void process_recv(struct ishtp_cl *cros_ish_cl,
-+			 struct ishtp_cl_rb *rb_in_proc)
-+{
-+	size_t data_len = rb_in_proc->buf_idx;
-+	struct ishtp_cl_data *client_data =
-+		ishtp_get_client_data(cros_ish_cl);
-+	struct device *dev = cl_data_to_dev(client_data);
-+	struct cros_ish_in_msg *in_msg =
-+		(struct cros_ish_in_msg *)rb_in_proc->buffer.data;
-+
-+	/* Proceed only if reset or init is not in progress */
-+	if (!down_read_trylock(&init_lock)) {
-+		/* Free the buffer */
-+		ishtp_cl_io_rb_recycle(rb_in_proc);
-+		dev_warn(dev,
-+			 "Host is not ready to receive incoming messages\n");
-+		return;
-+	}
-+
-+	/*
-+	 * All firmware messages contain a header. Check the buffer size
-+	 * before accessing elements inside.
-+	 */
-+	if (!rb_in_proc->buffer.data) {
-+		dev_warn(dev, "rb_in_proc->buffer.data returned null");
-+		client_data->response.error = -EBADMSG;
-+		goto end_error;
-+	}
-+
-+	if (data_len < sizeof(struct header)) {
-+		dev_err(dev, "data size %zu is less than header %zu\n",
-+			data_len, sizeof(struct header));
-+		client_data->response.error = -EMSGSIZE;
-+		goto end_error;
-+	}
-+
-+	dev_dbg(dev, "channel=%02u status=%02u\n",
-+		in_msg->hdr.channel, in_msg->hdr.status);
-+
-+	switch (in_msg->hdr.channel) {
-+	case CROS_EC_COMMAND:
-+		/* Sanity check */
-+		if (!client_data->response.data) {
-+			dev_err(dev,
-+				"Receiving buffer is null. Should be allocated by calling function\n");
-+			client_data->response.error = -EINVAL;
-+			goto error_wake_up;
-+		}
-+
-+		if (client_data->response.received) {
-+			dev_err(dev,
-+				"Previous firmware message not yet processed\n");
-+			client_data->response.error = -EINVAL;
-+			goto error_wake_up;
-+		}
-+
-+		if (data_len > client_data->response.max_size) {
-+			dev_err(dev,
-+				"Received buffer size %zu is larger than allocated buffer %zu\n",
-+				data_len, client_data->response.max_size);
-+			client_data->response.error = -EMSGSIZE;
-+			goto error_wake_up;
-+		}
-+
-+		if (in_msg->hdr.status) {
-+			dev_err(dev, "firmware returned status %d\n",
-+				in_msg->hdr.status);
-+			client_data->response.error = -EIO;
-+			goto error_wake_up;
-+		}
-+
-+		/* Update the actual received buffer size */
-+		client_data->response.size = data_len;
-+
-+		/*
-+		 * Copy the buffer received in firmware response for the
-+		 * calling thread.
-+		 */
-+		memcpy(client_data->response.data,
-+		       rb_in_proc->buffer.data, data_len);
-+
-+		/* Set flag before waking up the caller */
-+		client_data->response.received = true;
-+error_wake_up:
-+		/* Wake the calling thread */
-+		wake_up_interruptible(&client_data->response.wait_queue);
-+
-+		break;
-+
-+	case CROS_MKBP_EVENT:
-+		/* The event system doesn't send any data in buffer */
-+		schedule_work(&client_data->work_ec_evt);
-+
-+		break;
-+
-+	default:
-+		dev_err(dev, "Invalid channel=%02d\n", in_msg->hdr.channel);
-+	}
-+
-+end_error:
-+	/* Free the buffer */
-+	ishtp_cl_io_rb_recycle(rb_in_proc);
-+
-+	up_read(&init_lock);
-+}
-+
-+/**
-+ * ish_event_cb() - bus driver callback for incoming message
-+ * @cl_device:		ISHTP client device for which this message is
-+ *			targeted.
-+ *
-+ * Remove the packet from the list and process the message by calling
-+ * process_recv.
-+ */
-+static void ish_event_cb(struct ishtp_cl_device *cl_device)
-+{
-+	struct ishtp_cl_rb *rb_in_proc;
-+	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-+
-+	while ((rb_in_proc = ishtp_cl_rx_get_rb(cros_ish_cl)) != NULL) {
-+		/* Decide what to do with received data */
-+		process_recv(cros_ish_cl, rb_in_proc);
-+	}
-+}
-+
-+/**
-+ * cros_ish_init() - Init function for ISHTP client
-+ * @cros_ish_cl:	ISHTP client instance
-+ *
-+ * This function complete the initializtion of the client.
-+ *
-+ * Return: 0 for success, negative error code for failure.
-+ */
-+static int cros_ish_init(struct ishtp_cl *cros_ish_cl)
-+{
-+	int rv;
-+	struct ishtp_device *dev;
-+	struct ishtp_fw_client *fw_client;
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+
-+	rv = ishtp_cl_link(cros_ish_cl);
-+	if (rv) {
-+		dev_err(cl_data_to_dev(client_data),
-+			"ishtp_cl_link failed\n");
-+		return rv;
-+	}
-+
-+	dev = ishtp_get_ishtp_device(cros_ish_cl);
-+
-+	/* Connect to firmware client */
-+	ishtp_set_tx_ring_size(cros_ish_cl, CROS_ISH_CL_TX_RING_SIZE);
-+	ishtp_set_rx_ring_size(cros_ish_cl, CROS_ISH_CL_RX_RING_SIZE);
-+
-+	fw_client = ishtp_fw_cl_get_client(dev, &cros_ish_guid);
-+	if (!fw_client) {
-+		dev_err(cl_data_to_dev(client_data),
-+			"ish client uuid not found\n");
-+		rv = -ENOENT;
-+		goto err_cl_unlink;
-+	}
-+
-+	ishtp_cl_set_fw_client_id(cros_ish_cl,
-+				  ishtp_get_fw_client_id(fw_client));
-+	ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_CONNECTING);
-+
-+	rv = ishtp_cl_connect(cros_ish_cl);
-+	if (rv) {
-+		dev_err(cl_data_to_dev(client_data),
-+			"client connect fail\n");
-+		goto err_cl_unlink;
-+	}
-+
-+	ishtp_register_event_cb(client_data->cl_device, ish_event_cb);
-+	return 0;
-+
-+err_cl_unlink:
-+	ishtp_cl_unlink(cros_ish_cl);
-+	return rv;
-+}
-+
-+/**
-+ * cros_ish_deinit() - Deinit function for ISHTP client
-+ * @cros_ish_cl:	ISHTP client instance
-+ *
-+ * Unlink and free cros_ec client
-+ */
-+static void cros_ish_deinit(struct ishtp_cl *cros_ish_cl)
-+{
-+	ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_DISCONNECTING);
-+	ishtp_cl_disconnect(cros_ish_cl);
-+	ishtp_cl_unlink(cros_ish_cl);
-+	ishtp_cl_flush_queues(cros_ish_cl);
-+
-+	/* Disband and free all Tx and Rx client-level rings */
-+	ishtp_cl_free(cros_ish_cl);
-+}
-+
-+/**
-+ * prepare_cros_ec_rx() - Check & prepare receive buffer
-+ * @in_msg:		Incoming message buffer
-+ * @cros_ec_command	cros_ec command used to send & receive data
-+ *
-+ * Check the received buffer. Convert to cros_ec_command format.
-+ */
-+static int prepare_cros_ec_rx(struct cros_ec_device *ec_dev,
-+			      const struct cros_ish_in_msg *in_msg,
-+			      struct cros_ec_command *msg)
-+{
-+	u8 sum = 0;
-+	int i, rv, offset;
-+
-+	/* Check response error code */
-+	msg->result = in_msg->ec_response.result;
-+	rv = cros_ec_check_result(ec_dev, msg);
-+	if (rv < 0)
-+		return rv;
-+
-+	if (in_msg->ec_response.data_len > msg->insize) {
-+		dev_err(ec_dev->dev, "Packet too long (%d bytes, expected %d)",
-+			in_msg->ec_response.data_len, msg->insize);
-+		return -ENOSPC;
-+	}
-+
-+	/* Copy response packet payload and compute checksum */
-+	for (i = 0; i < sizeof(struct ec_host_response); i++)
-+		sum += ((u8 *)in_msg)[IN_MSG_EC_RESPONSE_PREAMBLE + i];
-+
-+	offset = sizeof(struct cros_ish_in_msg);
-+	for (i = 0; i < in_msg->ec_response.data_len; i++)
-+		sum += msg->data[i] = ((u8 *)in_msg)[offset + i];
-+
-+	if (sum) {
-+		dev_dbg(ec_dev->dev, "Bad received packet checksum %d\n", sum);
-+		return -EBADMSG;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cros_ec_pkt_xfer_ish(struct cros_ec_device *ec_dev,
-+				struct cros_ec_command *msg)
-+{
-+	int rv;
-+	struct ishtp_cl *cros_ish_cl = ec_dev->priv;
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+	struct device *dev = cl_data_to_dev(client_data);
-+	struct cros_ish_in_msg *in_msg = (struct cros_ish_in_msg *)ec_dev->din;
-+	struct cros_ish_out_msg *out_msg =
-+		(struct cros_ish_out_msg *)ec_dev->dout;
-+	size_t in_size = sizeof(struct cros_ish_in_msg) + msg->insize;
-+	size_t out_size = sizeof(struct cros_ish_out_msg) + msg->outsize;
-+
-+	/* Proceed only if reset-init is not in progress */
-+	if (!down_read_trylock(&init_lock)) {
-+		dev_warn(dev,
-+			 "Host is not ready to send messages to ISH. Try again\n");
-+		return -EAGAIN;
-+	}
-+
-+	/* Sanity checks */
-+	if (in_size > ec_dev->din_size) {
-+		dev_err(dev,
-+			"Incoming payload size %zu is too large for ec_dev->din_size %d\n",
-+			in_size, ec_dev->din_size);
-+		return -EMSGSIZE;
-+	}
-+
-+	if (out_size > ec_dev->dout_size) {
-+		dev_err(dev,
-+			"Outgoing payload size %zu is too large for ec_dev->dout_size %d\n",
-+			out_size, ec_dev->dout_size);
-+		return -EMSGSIZE;
-+	}
-+
-+	/* Prepare the package to be sent over ISH TP */
-+	out_msg->hdr.channel = CROS_EC_COMMAND;
-+	out_msg->hdr.status = 0;
-+
-+	ec_dev->dout += OUT_MSG_EC_REQUEST_PREAMBLE;
-+	cros_ec_prepare_tx(ec_dev, msg);
-+	ec_dev->dout -= OUT_MSG_EC_REQUEST_PREAMBLE;
-+
-+	dev_dbg(dev,
-+		"out_msg: struct_ver=0x%x checksum=0x%x command=0x%x command_ver=0x%x data_len=0x%x\n",
-+		out_msg->ec_request.struct_version,
-+		out_msg->ec_request.checksum,
-+		out_msg->ec_request.command,
-+		out_msg->ec_request.command_version,
-+		out_msg->ec_request.data_len);
-+
-+	/* Send command to ISH EC firmware and read response */
-+	rv = ish_send(client_data,
-+		      (u8 *)out_msg, out_size,
-+		      (u8 *)in_msg, in_size);
-+	if (rv < 0)
-+		goto end_error;
-+
-+	rv = prepare_cros_ec_rx(ec_dev, in_msg, msg);
-+	if (rv)
-+		goto end_error;
-+
-+	rv = in_msg->ec_response.data_len;
-+
-+	dev_dbg(dev,
-+		"in_msg: struct_ver=0x%x checksum=0x%x result=0x%x data_len=0x%x\n",
-+		in_msg->ec_response.struct_version,
-+		in_msg->ec_response.checksum,
-+		in_msg->ec_response.result,
-+		in_msg->ec_response.data_len);
-+
-+end_error:
-+	if (msg->command == EC_CMD_REBOOT_EC)
-+		msleep(EC_REBOOT_DELAY_MS);
-+
-+	up_read(&init_lock);
-+
-+	return rv;
-+}
-+
-+static int cros_ec_dev_init(struct ishtp_cl_data *client_data)
-+{
-+	struct cros_ec_device *ec_dev;
-+	struct device *dev = cl_data_to_dev(client_data);
-+
-+	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
-+	if (!ec_dev)
-+		return -ENOMEM;
-+
-+	client_data->ec_dev = ec_dev;
-+	dev->driver_data = ec_dev;
-+
-+	ec_dev->dev = dev;
-+	ec_dev->priv = client_data->cros_ish_cl;
-+	ec_dev->cmd_xfer = NULL;
-+	ec_dev->pkt_xfer = cros_ec_pkt_xfer_ish;
-+	ec_dev->phys_name = dev_name(dev);
-+	ec_dev->din_size = sizeof(struct cros_ish_in_msg) +
-+			   sizeof(struct ec_response_get_protocol_info);
-+	ec_dev->dout_size = sizeof(struct cros_ish_out_msg);
-+
-+	return cros_ec_register(ec_dev);
-+}
-+
-+static void reset_handler(struct work_struct *work)
-+{
-+	int rv;
-+	struct device *dev;
-+	struct ishtp_cl *cros_ish_cl;
-+	struct ishtp_cl_device *cl_device;
-+	struct ishtp_cl_data *client_data =
-+		container_of(work, struct ishtp_cl_data, work_ishtp_reset);
-+
-+	/* Lock for reset to complete */
-+	down_write(&init_lock);
-+
-+	cros_ish_cl = client_data->cros_ish_cl;
-+	cl_device = client_data->cl_device;
-+
-+	/* Unlink, flush queues & start again */
-+	ishtp_cl_unlink(cros_ish_cl);
-+	ishtp_cl_flush_queues(cros_ish_cl);
-+	ishtp_cl_free(cros_ish_cl);
-+
-+	cros_ish_cl = ishtp_cl_allocate(cl_device);
-+	if (!cros_ish_cl) {
-+		up_write(&init_lock);
-+		return;
-+	}
-+
-+	ishtp_set_drvdata(cl_device, cros_ish_cl);
-+	ishtp_set_client_data(cros_ish_cl, client_data);
-+	client_data->cros_ish_cl = cros_ish_cl;
-+
-+	rv = cros_ish_init(cros_ish_cl);
-+	if (rv) {
-+		ishtp_cl_free(cros_ish_cl);
-+		dev_err(cl_data_to_dev(client_data), "Reset Failed\n");
-+		up_write(&init_lock);
-+		return;
-+	}
-+
-+	/* Refresh ec_dev device pointers */
-+	client_data->ec_dev->priv = client_data->cros_ish_cl;
-+	dev = cl_data_to_dev(client_data);
-+	dev->driver_data = client_data->ec_dev;
-+
-+	dev_info(cl_data_to_dev(client_data), "Chrome EC ISH reset done\n");
-+
-+	up_write(&init_lock);
-+}
-+
-+/**
-+ * cros_ec_ishtp_probe() - ISHTP client driver probe callback
-+ * @cl_device:		ISHTP client device instance
-+ *
-+ * Return: 0 for success, negative error code for failure.
-+ */
-+static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
-+{
-+	int rv;
-+	struct ishtp_cl *cros_ish_cl;
-+	struct ishtp_cl_data *client_data =
-+		devm_kzalloc(ishtp_device(cl_device),
-+			     sizeof(*client_data), GFP_KERNEL);
-+	if (!client_data)
-+		return -ENOMEM;
-+
-+	/* Lock for initialization to complete */
-+	down_write(&init_lock);
-+
-+	cros_ish_cl = ishtp_cl_allocate(cl_device);
-+	if (!cros_ish_cl) {
-+		rv = -ENOMEM;
-+		goto end_ishtp_cl_alloc_error;
-+	}
-+
-+	ishtp_set_drvdata(cl_device, cros_ish_cl);
-+	ishtp_set_client_data(cros_ish_cl, client_data);
-+	client_data->cros_ish_cl = cros_ish_cl;
-+	client_data->cl_device = cl_device;
-+
-+	init_waitqueue_head(&client_data->response.wait_queue);
-+
-+	INIT_WORK(&client_data->work_ishtp_reset,
-+		  reset_handler);
-+	INIT_WORK(&client_data->work_ec_evt,
-+		  ish_evt_handler);
-+
-+	rv = cros_ish_init(cros_ish_cl);
-+	if (rv)
-+		goto end_ishtp_cl_init_error;
-+
-+	ishtp_get_device(cl_device);
-+
-+	up_write(&init_lock);
-+
-+	/* Register croc_ec_dev mfd */
-+	rv = cros_ec_dev_init(client_data);
-+	if (rv)
-+		goto end_cros_ec_dev_init_error;
-+
-+	return 0;
-+
-+end_cros_ec_dev_init_error:
-+	ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_DISCONNECTING);
-+	ishtp_cl_disconnect(cros_ish_cl);
-+	ishtp_cl_unlink(cros_ish_cl);
-+	ishtp_cl_flush_queues(cros_ish_cl);
-+	ishtp_put_device(cl_device);
-+end_ishtp_cl_init_error:
-+	ishtp_cl_free(cros_ish_cl);
-+end_ishtp_cl_alloc_error:
-+	up_write(&init_lock);
-+	return rv;
-+}
-+
-+/**
-+ * cros_ec_ishtp_remove() - ISHTP client driver remove callback
-+ * @cl_device:		ISHTP client device instance
-+ *
-+ * Return: 0
-+ */
-+static int cros_ec_ishtp_remove(struct ishtp_cl_device *cl_device)
-+{
-+	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+
-+	cancel_work_sync(&client_data->work_ishtp_reset);
-+	cancel_work_sync(&client_data->work_ec_evt);
-+	cros_ish_deinit(cros_ish_cl);
-+	ishtp_put_device(cl_device);
-+
-+	return 0;
-+}
-+
-+/**
-+ * cros_ec_ishtp_reset() - ISHTP client driver reset callback
-+ * @cl_device:		ISHTP client device instance
-+ *
-+ * Return: 0
-+ */
-+static int cros_ec_ishtp_reset(struct ishtp_cl_device *cl_device)
-+{
-+	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+
-+	schedule_work(&client_data->work_ishtp_reset);
-+
-+	return 0;
-+}
-+
-+/**
-+ * cros_ec_ishtp_suspend() - ISHTP client driver suspend callback
-+ * @device:	device instance
-+ *
-+ * Return: 0 for success, negative error code for failure.
-+ */
-+static int __maybe_unused cros_ec_ishtp_suspend(struct device *device)
-+{
-+	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+
-+	return cros_ec_suspend(client_data->ec_dev);
-+}
-+
-+/**
-+ * cros_ec_ishtp_resume() - ISHTP client driver resume callback
-+ * @device:	device instance
-+ *
-+ * Return: 0 for success, negative error code for failure.
-+ */
-+static int __maybe_unused cros_ec_ishtp_resume(struct device *device)
-+{
-+	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
-+	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
-+
-+	return cros_ec_resume(client_data->ec_dev);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(cros_ec_ishtp_pm_ops, cros_ec_ishtp_suspend,
-+			 cros_ec_ishtp_resume);
-+
-+static struct ishtp_cl_driver	cros_ec_ishtp_driver = {
-+	.name = "cros_ec_ishtp",
-+	.guid = &cros_ish_guid,
-+	.probe = cros_ec_ishtp_probe,
-+	.remove = cros_ec_ishtp_remove,
-+	.reset = cros_ec_ishtp_reset,
-+	.driver = {
-+		.pm = &cros_ec_ishtp_pm_ops,
-+	},
-+};
-+
-+static int __init cros_ec_ishtp_mod_init(void)
-+{
-+	return ishtp_cl_driver_register(&cros_ec_ishtp_driver, THIS_MODULE);
-+}
-+
-+static void __exit cros_ec_ishtp_mod_exit(void)
-+{
-+	ishtp_cl_driver_unregister(&cros_ec_ishtp_driver);
-+}
-+
-+module_init(cros_ec_ishtp_mod_init);
-+module_exit(cros_ec_ishtp_mod_exit);
-+
-+MODULE_DESCRIPTION("ChromeOS EC ISHTP Client Driver");
-+MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("ishtp:*");
--- 
-1.9.1
+In general, userspace created channel maps would be very useful for
+other things such as maker type boards where they can plug all sorts
+of odd things into ADC channels for example.
+
+>=20
+> This driver simply collects the first 3 accelerometer channels as X, Y an=
+d Z.
+> If only 1 or 2 channels are available, they are used for X and Y only. Ad=
+ditional
+> channels are ignored.
+>=20
+> Scaling is done automatically so that 1g is represented by value 256 and
+> range is assumed to be -511 .. +511 which gives a reasonable precision as=
+ an
+> input device.
+
+Why do we do this, rather than letting input deal with it?  Input is used
+to widely differing scales IIRC
+
+>=20
+> If a mount-matrix is provided by the iio driver, it is also taken into ac=
+count
+> so that the input event automatically gets the correct orientation with r=
+espect
+> to the device.
+>=20
+> If this extension is not configured into the kernel it takes no resources=
+ (except
+> source code).
+>=20
+> If it is configured, but there is no accelerometer, there is only a tiny =
+penalty
+> for scanning for accelerometer channels once during probe of each iio dev=
+ice.
+>=20
+> If it runs, the driver polls the device(s) once every 100 ms. A mode wher=
+e the
+> iio device defines the update rate is not implemented and for further stu=
+dy.
+>=20
+> If there is no user-space client, polling is not running.
+>=20
+> The driver is capable to handle multiple iio accelerometers and they are
+> presented by unique /dev/input/event* files. The iio chip name is used to=
+ define
+> the input device name so that it can be identified (e.g. by udev rules or=
+ evtest).
+>=20
+> Here is some example what you can expect from the driver (device:
+> arch/arm/boot/dts/omap3-gta04a5.dts):
+>=20
+> root@letux:~# dmesg|fgrep iio
+> [ =C2=A0 =C2=A06.324584] input: iio-bridge: bmc150_accel as /devices/plat=
+form/68000000.ocp/48072000.i2c/i2c-1/1-0010/iio:device1/input/input5
+> [ =C2=A0 =C2=A06.516632] input: iio-bridge: bno055 as /devices/platform/6=
+8000000.ocp/48072000.i2c/i2c-1/1-0029/iio:device3/input/input7
+> root@letux:~# evtest /dev/input/event5 | head -19
+> Input driver version is 1.0.1
+> Input device ID: bus 0x0 vendor 0x0 product 0x0 version 0x0
+> Input device name: "iio-bridge: bmc150_accel"
+> Supported events:
+> =C2=A0 Event type 0 (EV_SYN)
+> =C2=A0 Event type 3 (EV_ABS)
+> =C2=A0 =C2=A0 Event code 0 (ABS_X)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 =C2=A0 =C2=A08
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> =C2=A0 =C2=A0 Event code 1 (ABS_Y)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 =C2=A0-44
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> =C2=A0 =C2=A0 Event code 2 (ABS_Z)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 -265
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> Properties:
+> root@letux:~# evtest /dev/input/event7 | head -19
+> Input driver version is 1.0.1
+> Input device ID: bus 0x0 vendor 0x0 product 0x0 version 0x0
+> Input device name: "iio-bridge: bno055"
+> Supported events:
+> =C2=A0 Event type 0 (EV_SYN)
+> =C2=A0 Event type 3 (EV_ABS)
+> =C2=A0 =C2=A0 Event code 0 (ABS_X)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 =C2=A0 -6
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> =C2=A0 =C2=A0 Event code 1 (ABS_Y)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 =C2=A0 17
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> =C2=A0 =C2=A0 Event code 2 (ABS_Z)
+> =C2=A0 =C2=A0 =C2=A0 Value =C2=A0 -250
+> =C2=A0 =C2=A0 =C2=A0 Min =C2=A0 =C2=A0 -511
+> =C2=A0 =C2=A0 =C2=A0 Max =C2=A0 =C2=A0 =C2=A0511
+> Properties:
+> root@letux:~#=C2=A0
+>=20
+> Although the sensor chips are mounted with different axis orientation,
+> the application of the mount matrix provides equivalent (despite noise
+> and precision) information on device orientation.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  drivers/iio/Kconfig                    |   7 +
+>  drivers/iio/Makefile                   |   1 +
+>  drivers/iio/industrialio-core.c        |  12 +
+>  drivers/iio/industrialio-inputbridge.c | 295 +++++++++++++++++++++++++
+>  drivers/iio/industrialio-inputbridge.h |  28 +++
+>  5 files changed, 343 insertions(+)
+>  create mode 100644 drivers/iio/industrialio-inputbridge.c
+>  create mode 100644 drivers/iio/industrialio-inputbridge.h
+>=20
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index d08aeb41cd07..d85afe002613 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -68,6 +68,13 @@ config IIO_TRIGGERED_EVENT
+>  	help
+>  	  Provides helper functions for setting up triggered events.
+> =20
+> +config IIO_INPUT_BRIDGE
+> +	bool "Enable accelerometer bridge to input driver"
+
+Dependency on input?
+
+> +	help
+> +	  Provides a /dev/input/event* device for accelerometers
+> +	  to use as a 3D input device, e.g. for gaming or auto-rotation
+> +	  of screen contents.
+> +
+>  source "drivers/iio/accel/Kconfig"
+>  source "drivers/iio/adc/Kconfig"
+>  source "drivers/iio/afe/Kconfig"
+> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+> index cb5993251381..d695e5a27da5 100644
+> --- a/drivers/iio/Makefile
+> +++ b/drivers/iio/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_IIO) +=3D industrialio.o
+>  industrialio-y :=3D industrialio-core.o industrialio-event.o inkern.o
+>  industrialio-$(CONFIG_IIO_BUFFER) +=3D industrialio-buffer.o
+>  industrialio-$(CONFIG_IIO_TRIGGER) +=3D industrialio-trigger.o
+> +industrialio-$(CONFIG_IIO_INPUT_BRIDGE) +=3D industrialio-inputbridge.o
+> =20
+>  obj-$(CONFIG_IIO_CONFIGFS) +=3D industrialio-configfs.o
+>  obj-$(CONFIG_IIO_SW_DEVICE) +=3D industrialio-sw-device.o
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-c=
+ore.c
+> index 4700fd5d8c90..81f412b41a78 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/iio/iio.h>
+>  #include "iio_core.h"
+>  #include "iio_core_trigger.h"
+> +#include "industrialio-inputbridge.h"
+>  #include <linux/iio/sysfs.h>
+>  #include <linux/iio/events.h>
+>  #include <linux/iio/buffer.h>
+> @@ -1723,6 +1724,15 @@ int __iio_device_register(struct iio_dev *indio_de=
+v, struct module *this_mod)
+>  	if (ret < 0)
+>  		goto error_unreg_eventset;
+> =20
+> +	ret =3D iio_device_register_inputbridge(indio_dev);
+> +	if (ret) {
+> +		dev_err(indio_dev->dev.parent,
+> +			"Failed to register as input driver\n");
+> +		device_del(&indio_dev->dev);
+> +
+This doesn't look like balanced error handling given the goto in the previo=
+us
+case.  If we are treating this as an error we need to unwind the whole
+of this function properly.
+
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+> =20
+>  error_unreg_eventset:
+> @@ -1745,6 +1755,8 @@ void iio_device_unregister(struct iio_dev *indio_de=
+v)
+>  {
+>  	mutex_lock(&indio_dev->info_exist_lock);
+> =20
+> +	iio_device_unregister_inputbridge(indio_dev);
+> +
+>  	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+> =20
+>  	iio_device_unregister_debugfs(indio_dev);
+> diff --git a/drivers/iio/industrialio-inputbridge.c b/drivers/iio/industr=
+ialio-inputbridge.c
+> new file mode 100644
+> index 000000000000..dd672e25bc70
+> --- /dev/null
+> +++ b/drivers/iio/industrialio-inputbridge.c
+> @@ -0,0 +1,295 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * The Industrial I/O core, bridge to input devices
+> + *
+> + * Copyright (c) 2016-2019 Golden Delicious Computers GmbH&Co. KG
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms of the GNU General Public License version 2 as publis=
+hed by
+> + * the Free Software Foundation.
+No need for the boiler plate if you have SPDX.  That is one of the
+advantages!
+
+> + */
+> +
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/types.h>
+> +#include <linux/input.h>
+> +#include <linux/input-polldev.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +
+> +#include "industrialio-inputbridge.h"
+> +
+> +/* currently, only polling is implemented */
+> +#define POLLING_MSEC	100
+> +
+> +struct iio_input_map {
+> +	struct input_polled_dev *poll_dev;	/* the input device */
+> +	struct iio_channel channels[3];		/* x, y, z channels */
+> +	struct matrix {
+> +		int mxx, myx, mzx;	/* fixed point mount-matrix */
+> +		int mxy, myy, mzy;
+> +		int mxz, myz, mzz;
+> +	} matrix;
+> +};
+> +
+> +static inline struct iio_input_map *to_iio_input_map(
+> +		struct iio_channel *channel)
+> +{
+> +	return (struct iio_input_map *) channel->data;
+> +}
+> +
+> +/* minimum and maximum range we want to report */
+> +#define ABSMAX_ACC_VAL		(512 - 1)
+> +#define ABSMIN_ACC_VAL		-(ABSMAX_ACC_VAL)
+> +
+> +/* scale processed iio values so that 1g maps to ABSMAX_ACC_VAL / 2 */
+> +#define SCALE			((100 * ABSMAX_ACC_VAL) / (2 * 981))
+> +
+> +/*
+> + * convert float string to scaled fixed point format, e.g.
+> + *   1		-> 1000		(value passed as unit)
+> + *   1.23	-> 1230
+> + *   0.1234	->  123
+> + *   -.01234	->  -12
+> + */
+> +
+> +static int32_t atofix(const char *str, uint32_t unit)
+> +{
+> +	int32_t mantissa =3D 0;
+> +	bool sign =3D false;
+> +	bool decimal =3D false;
+> +	int32_t divisor =3D 1;
+> +
+> +	if (*str =3D=3D '-')
+> +		sign =3D true, str++;
+> +	while (*str && divisor < unit) {
+> +		if (*str >=3D '0' && *str <=3D '9') {
+> +			mantissa =3D 10 * mantissa + (*str - '0');
+> +			if (decimal)
+> +				divisor *=3D 10;
+> +		} else if (*str =3D=3D '.')
+> +			decimal =3D true;
+> +		else
+> +			return 0;	/* error */
+> +		str++;
+> +	}
+> +
+> +	mantissa =3D (mantissa * unit) / divisor;
+> +	if (sign)
+> +		mantissa =3D -mantissa;
+> +
+> +	return mantissa;
+> +}
+> +
+> +static void iio_apply_matrix(struct matrix *m, int *in, int *out, uint32=
+_t unit)
+> +{
+> +	/* apply mount matrix */
+> +	out[0] =3D (m->mxx * in[0] + m->myx * in[1] + m->mzx * in[2]) / unit;
+> +	out[1] =3D (m->mxy * in[0] + m->myy * in[1] + m->mzy * in[2]) / unit;
+> +	out[2] =3D (m->mxz * in[0] + m->myz * in[1] + m->mzz * in[2]) / unit;
+> +}
+> +
+> +#define FIXED_POINT_UNIT	1000	/* seems reasonable for accelerometer inpu=
+t */
+> +
+> +static void iio_accel_poll(struct input_polled_dev *dev)
+> +{
+> +	struct iio_input_map *map =3D dev->private;
+> +	struct input_dev *input =3D dev->input;
+> +
+> +	int values[3];		/* values while processing */
+> +	int aligned_values[3];	/* mount matrix applied */
+> +
+> +	int cindex =3D 0;
+> +
+> +printk("%s: map=3D%px input=3D%px\n", __func__, map, input);
+Remember to tidy these debug statements up at some point.
+
+> +
+> +	while (cindex < ARRAY_SIZE(values)) {
+> +		struct iio_channel *channel =3D
+> +			&map->channels[cindex];
+> +		int val;
+> +		int ret;
+> +
+> +		if (!channel->indio_dev) {
+> +			values[cindex] =3D 0;
+> +			continue;
+> +		}
+> +
+> +		ret =3D iio_read_channel_raw(channel, &val);
+> +
+> +		if (ret < 0) {
+> +			pr_err("%s(): channel read error %d\n",
+> +				__func__, cindex);
+> +			return;
+> +		}
+> +
+> +		ret =3D iio_convert_raw_to_processed(channel, val,
+> +				 &values[cindex], SCALE);
+> +
+> +		if (ret < 0) {
+> +			pr_err("%s(): channel processing error\n",
+> +				__func__);
+> +			return;
+> +		}
+> +
+> +		cindex++;
+> +	}
+> +
+> +	iio_apply_matrix(&map->matrix, values, aligned_values, FIXED_POINT_UNIT=
+);
+> +
+> +	input_report_abs(input, ABS_X, aligned_values[0]);
+> +	input_report_abs(input, ABS_Y, aligned_values[1]);
+> +	input_report_abs(input, ABS_Z, aligned_values[2]);
+> +	input_sync(input);
+> +}
+> +
+> +static int dindex=3D0;	/* assign unique names to accel/input devices */
+Build something from the iio device IDA perhaps?  Those are unique
+as well.  Useful to know which one this is linked to.
+
+> +
+> +static int iio_input_register_accel_channel(struct iio_dev *indio_dev,
+> +		 const struct iio_chan_spec *chan)
+> +{ /* we found some accelerometer channel */
+> +	int ret;
+> +	int cindex;
+> +	struct iio_input_map *map =3D iio_device_get_drvdata(indio_dev);
+
+Don't do that.   That is in the domain of the device driver and so
+will sometimes already be in use.=20
+
+> +
+> +printk("%s: map=3D%px\n", __func__, map);
+> +
+> +	if (!map) {
+> +		struct input_polled_dev *poll_dev;
+> +		const struct iio_chan_spec_ext_info *ext_info;
+> +
+> +		map =3D devm_kzalloc(&indio_dev->dev, sizeof(struct iio_input_map), GF=
+P_KERNEL);
+> +		if (!map)
+> +			return -ENOMEM;
+> +
+> +		iio_device_set_drvdata(indio_dev, map);
+> +
+> +		poll_dev =3D devm_input_allocate_polled_device(&indio_dev->dev);
+> +		if (!poll_dev)
+> +			return -ENOMEM;
+> +
+> +		poll_dev->private =3D map;
+> +		poll_dev->poll =3D iio_accel_poll;
+> +		poll_dev->poll_interval =3D POLLING_MSEC;
+> +
+> +		poll_dev->input->name =3D kasprintf(GFP_KERNEL, "iio-bridge: %s",
+> +						    indio_dev->name);
+> +		poll_dev->input->phys =3D kasprintf(GFP_KERNEL, "accel/input%d",
+> +						    dindex++);
+> +
+> +// do we need something like this?
+> +//		poll_dev->input->id.bustype =3D BUS_IIO;
+> +//		poll_dev->input->id.vendor =3D 0x0001;
+> +//		poll_dev->input->id.product =3D 0x0001;
+> +//		poll_dev->input->id.version =3D 0x0001;
+> +
+> +		set_bit(INPUT_PROP_ACCELEROMETER, poll_dev->input->propbit);
+> +		poll_dev->input->evbit[0] =3D BIT_MASK(EV_ABS);
+> +		input_alloc_absinfo(poll_dev->input);
+> +		input_set_abs_params(poll_dev->input, ABS_X, ABSMIN_ACC_VAL,
+> +					ABSMAX_ACC_VAL, 0, 0);
+> +		input_set_abs_params(poll_dev->input, ABS_Y, ABSMIN_ACC_VAL,
+> +					ABSMAX_ACC_VAL, 0, 0);
+> +		input_set_abs_params(poll_dev->input, ABS_Z, ABSMIN_ACC_VAL,
+> +					ABSMAX_ACC_VAL, 0, 0);
+> +
+> +		map->poll_dev =3D poll_dev;
+> +
+> +		ret =3D input_register_polled_device(poll_dev);
+> +
+> +		if (ret < 0) {
+> +			kfree(poll_dev->input->name);
+> +			kfree(poll_dev->input->phys);
+> +			return ret;
+> +		}
+> +
+> +		/* assume all channels of a device share the same matrix */
+> +
+> +		ext_info =3D chan->ext_info;
+> +		for (; ext_info && ext_info->name; ext_info++) {
+> +			if (strcmp(ext_info->name, "mount_matrix") =3D=3D 0)
+> +				break;
+> +		}
+> +
+> +		if (ext_info && ext_info->name) {
+> +			/* matrix found */
+> +			uintptr_t priv =3D ext_info->private;
+> +			const struct iio_mount_matrix *mtx;
+> +
+> +			mtx =3D ((iio_get_mount_matrix_t *) priv)(indio_dev,
+> +								chan);
+> +
+> +			map->matrix.mxx =3D atofix(mtx->rotation[0], FIXED_POINT_UNIT);
+> +			map->matrix.myx =3D atofix(mtx->rotation[1], FIXED_POINT_UNIT);
+> +			map->matrix.mzx =3D atofix(mtx->rotation[2], FIXED_POINT_UNIT);
+> +			map->matrix.mxy =3D atofix(mtx->rotation[3], FIXED_POINT_UNIT);
+> +			map->matrix.myy =3D atofix(mtx->rotation[4], FIXED_POINT_UNIT);
+> +			map->matrix.mzy =3D atofix(mtx->rotation[5], FIXED_POINT_UNIT);
+> +			map->matrix.mxz =3D atofix(mtx->rotation[6], FIXED_POINT_UNIT);
+> +			map->matrix.myz =3D atofix(mtx->rotation[7], FIXED_POINT_UNIT);
+> +			map->matrix.mzz =3D atofix(mtx->rotation[8], FIXED_POINT_UNIT);
+> +		} else {
+> +			map->matrix.mxx =3D FIXED_POINT_UNIT;
+> +			map->matrix.myx =3D 0;
+> +			map->matrix.mzx =3D 0;
+> +			map->matrix.mxy =3D 0;
+> +			map->matrix.myy =3D FIXED_POINT_UNIT;
+> +			map->matrix.mzy =3D 0;
+> +			map->matrix.mxz =3D 0;
+> +			map->matrix.myz =3D 0;
+> +			map->matrix.mzz =3D FIXED_POINT_UNIT;
+> +		}
+> +	}
+> +
+> +// brauchen wir das noch? Oder nehmen wir einfach an dass es 3 Kan=C3=A4=
+le gibt?
+> +
+> +	/* find free channel within this device */
+> +
+> +	for (cindex =3D 0; cindex < ARRAY_SIZE(map->channels); cindex++) {
+> +		if (!map->channels[cindex].indio_dev)
+> +			break;
+> +	}
+> +
+> +	/* check if we already have collected enough channels */
+> +	if (cindex =3D=3D ARRAY_SIZE(map->channels))
+> +		return 0;	/* silently ignore */
+> +
+> +	map->channels[cindex].indio_dev =3D indio_dev;
+> +	map->channels[cindex].channel =3D chan;
+> +	map->channels[cindex].data =3D map;
+> +
+> +	return 0;
+> +}
+> +
+> +int iio_device_register_inputbridge(struct iio_dev *indio_dev)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < indio_dev->num_channels; i++) {
+> +		const struct iio_chan_spec *chan =3D
+> +				&indio_dev->channels[i];
+> +
+> +		if (chan->type =3D=3D IIO_ACCEL) {
+> +			int r =3D iio_input_register_accel_channel(indio_dev,
+> +								 chan);
+It would be cleaner (and safer) to go find all the necessary channels then
+set up the map in one go, rather that iterating and trying to build it
+in a sequential fashion.
+
+So move the search loop inside and have something like.
+
+iio_input_find_accel_channel(indio_dev, chan, &numchans);
+iio_input_register_device(indio_dev, chan, numchans);
+=20
+> +
+> +			if (r < 0)
+> +				return r;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void iio_device_unregister_inputbridge(struct iio_dev *indio_dev)
+> +{
+> +	struct iio_input_map *map =3D iio_device_get_drvdata(indio_dev);
+> +	struct input_dev *input =3D map->poll_dev->input;
+> +
+> +	kfree(input->name);
+> +	kfree(input->phys);
+> +	input_unregister_polled_device(map->poll_dev);
+> +}
+> +
+> +MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+> +MODULE_DESCRIPTION("Bridge to present Industrial I/O accelerometers as p=
+roperly oriented Input devices");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/industrialio-inputbridge.h b/drivers/iio/industr=
+ialio-inputbridge.h
+> new file mode 100644
+> index 000000000000..1363b10ab3f7
+> --- /dev/null
+> +++ b/drivers/iio/industrialio-inputbridge.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * The Industrial I/O core, bridge to input devices
+> + *
+> + * Copyright (c) 2016-2019 Golden Delicious Computers GmbH&Co. KG
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms of the GNU General Public License version 2 as publis=
+hed by
+> + * the Free Software Foundation.
+> + */
+> +
+> +#if defined(CONFIG_IIO_INPUT_BRIDGE)
+> +
+> +extern int iio_device_register_inputbridge(struct iio_dev *indio_dev);
+> +extern void iio_device_unregister_inputbridge(struct iio_dev *indio_dev);
+> +
+> +#else
+> +
+> +static inline int iio_device_register_inputbridge(struct iio_dev *indio_=
+dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void iio_device_unregister_inputbridge(struct iio_dev *ind=
+io_dev)
+> +{
+> +}
+> +
+> +#endif
 
