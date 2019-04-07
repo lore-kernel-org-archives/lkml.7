@@ -2,109 +2,207 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3902EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB64220B1F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED46B20B1F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 14:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="QjqC3P6l"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MRgrQogD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfDGOad (ORCPT
+        id S1726495AbfDGOcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 10:30:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37257 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfDGOad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 10:30:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so5779113pgc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 07:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/LXkBOuFHQD+I89OT5yXPIOT2onkPr4yHk1fRDooJXg=;
-        b=QjqC3P6la2hsCbhxmAZcxKkjPHENJ7nTKl8VMR1BzFAlnBqoQcfJevnIiAjQg9M28g
-         8jqO/PxYJ+sfEd2bdVaqPAV4eXHzArJ8MjSsMF/BipXKizKwG9XahY/ME/PGM0x3lN9H
-         rfXZguFD8eFT7QAdu/4wufZF9FotdqoYfiymI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/LXkBOuFHQD+I89OT5yXPIOT2onkPr4yHk1fRDooJXg=;
-        b=UyT+e+XskJI9Hk2wjtYQ/VasmH4CMJ5MgcznhxFKjkDvfiV1FJGIi7/SR261/KGHJ8
-         FvV0M/O6+PkMXnjw2ZHkSfXcAifabphuvnzZFFO0dZT1RYbkbV6OXY6+UVPI/rXfM2Ng
-         V/wkmBe23CnAjQ+C7BbMZwg+KaFzf1hE9FuFwD5Ih6M5gS47nXP3crTqLmqRcsXpKbky
-         36s2ENLiAJwRoNGDdTQHHdUteKWn8KQ0rPqsFlkkmVyrSEluqSdQ6PqjP4K5YLRwBp+R
-         mkrQT63ssRivJaLvla/yxP78cFkAbiOZsVrgtJnVro6O4OQGcGSPzFct+IqSdCv3UtFo
-         Du/A==
-X-Gm-Message-State: APjAAAXyGfbhKE3W+5QYPxIPRR1FN8ZZ6jXRyXIIMviVu60UjCian4Bj
-        EXopWZ/8agvhMI7lY7PbTEtFLw==
-X-Google-Smtp-Source: APXvYqyzbf99AGImJSZqCeVc2Q3qZ7zsODVgiapfc/d6Q1VOUMKz4xVJzdDOrOPsDacWpVSlDbe0uQ==
-X-Received: by 2002:aa7:92d5:: with SMTP id k21mr24292026pfa.223.1554647432539;
-        Sun, 07 Apr 2019 07:30:32 -0700 (PDT)
-Received: from ?IPv6:2601:647:4801:fccc:a013:4dfb:78ce:7a4a? ([2601:647:4801:fccc:a013:4dfb:78ce:7a4a])
-        by smtp.googlemail.com with ESMTPSA id w10sm14289584pfi.126.2019.04.07.07.30.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2019 07:30:31 -0700 (PDT)
-Subject: Re: [PATCH net v2] net: vrf: Fix ping failed when vrf mtu is set to 0
-To:     linmiaohe <linmiaohe@huawei.com>,
-        Shrijeet Mukherjee <shrijeet@gmail.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mingfangsen <mingfangsen@huawei.com>
-References: <c0ee938d-479d-5c92-93ce-e06c24057b62@huawei.com>
-From:   David Ahern <dsa@cumulusnetworks.com>
-Message-ID: <18b082d4-cef9-bb39-0680-8187f6951bbc@cumulusnetworks.com>
-Date:   Sun, 7 Apr 2019 07:30:29 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Sun, 7 Apr 2019 10:32:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45084 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfDGOcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 10:32:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1554647557; bh=CqAcBHJsBRr4BHEO8o/YFawdCkRmicl/XAT3sMJnxuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MRgrQogDmAfjKULbIs/m8+7mcK3QZIBRVrzmmgx1qM++N+DaX222W328w65fMZfSb
+         P47jtXYrG/kWNHTNAccijnjEPGTrbNtJ8KX5NYEPn0eOyt6NYScgfYphRXOqI5l5uE
+         GVw8ZCbSQXfd72KX0PqmI01uhDdZsE+5w9dS21Z8=
+Date:   Sun, 7 Apr 2019 16:32:37 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH 00/12] Add support for Orange Pi 3
+Message-ID: <20190407143237.2qyoef4r5e3qvbmh@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+References: <20190405234514.6183-1-megous@megous.com>
+ <CAJiuCcew10Q3PUOk4VPoiyFc7ZhXwJzxXHQHNeVBUvVAQ3BkbQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c0ee938d-479d-5c92-93ce-e06c24057b62@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcew10Q3PUOk4VPoiyFc7ZhXwJzxXHQHNeVBUvVAQ3BkbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/19 11:46 PM, linmiaohe wrote:
-> diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-> index 7c1430ed0244..4d35d37f225a 100644
-> --- a/drivers/net/vrf.c
-> +++ b/drivers/net/vrf.c
-> @@ -43,6 +43,12 @@
+On Sun, Apr 07, 2019 at 03:36:21PM +0200, Clément Péron wrote:
+> Hi,
 > 
->  #define FIB_RULE_PREF  1000       /* default preference for FIB rules */
+> On Sat, 6 Apr 2019 at 01:45, megous via linux-sunxi
+> <linux-sunxi@googlegroups.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > This series implements support for Xunlong Orange Pi 3 board.
 > 
-> +/* The MTU is really irrelevant for VRF except for odd cases, so limit it
-> + * to a reasonable range which both works for IPV4 and IPV6.
-> + */
-> +#define VRF_MIN_MTU	1280      /* same as IPV6_MIN_MTU */
-> +#define VRF_MAX_MTU	0xFFFFU   /* same as IP_MAX_MTU */
+> OrangePi 3 Lite2 and One Plus boards support has already been merged.
+> The support is not complete but you should rebase your patches on top
+> of sunxi/for-next
 
-Since VRF does not care about MTU, there is no reason for VRF specific
-macros.
+Hi,
 
-> +
->  static unsigned int vrf_net_id;
-> 
->  struct net_vrf {
-> @@ -1274,8 +1280,8 @@ static void vrf_setup(struct net_device *dev)
->  	/* default to no qdisc; user can add if desired */
->  	dev->priv_flags |= IFF_NO_QUEUE;
-> 
-> -	dev->min_mtu = 0;
-> -	dev->max_mtu = 0;
-> +	dev->min_mtu = VRF_MIN_MTU;
-> +	dev->max_mtu = VRF_MAX_MTU;
+OrangePi 3 is somewhat different from these two boards (mostly it has a differnt
+power tree). It doesn't use the AXP regulators that are defined in the
+sun50i-h6-orangepi.dtsi in the same way.
 
-Set these to IPV6_MIN_MTU and ETH_MAX_MTU and add a comment that VRF
-devices do not care about MTU, but if the MTU is set too low then the
-ipv4 and ipv6 protocols are disabled which breaks networking.
+For example:
+
+- bldo3 (is turned always on in sun50i-h6-orangepi.dtsi but unused for opi3)
+- cldo2 and cldo3 are unused on opi3 and have nothing to do with WiFi
+- aldo3 is not for dram
+- bldo1 on the other hand is for dram on opi3
+- some other regulators are used for different/more functions and thus
+  named differntly
+- USB id-det pin is differnt
+- ...
+
+OrangePi 3 is not a superset of what is defined in sun50i-h6-orangepi.dtsi.
+
+So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I'd have
+to first move some things out of the base dtsi to the OrangePi Lite2 and One
+Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only describe HW
+that is *really* shared by these 2 boards and Orange Pi 3.
+
+If I do that, I'd undefine all the axp805 regulator nodes and move the
+configurations to each of the 3 board files. That will probably end up being
+the least confusing and most maintainable. See axp81x.dtsi lines 86-144 for
+what I mean.
+
+What do you think? Is this acceptable to everyone?
+
+regards,
+  o.
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/tree/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi?h=sunxi/for-next
+> 
+> Regards,
+> Clement
+> 
+> >
+> > Unfortunately, this board needs some small driver patches, so I have
+> > split the boards DT patch into chunks that require patches for drivers
+> > in various subsystems:
+> >
+> > - Basic DT for the board  (patch 1)
+> > - HDMI support            (patches 2, 3, 4)
+> > - Ethernet support        (patches 5, 6, 7)
+> > - WiFi support            (patches 8, 9, 10, 11, 12)
+> >
+> > This patch is also needed to not get segfault on boot:
+> >   https://lkml.org/lkml/2019/4/5/856
+> >
+> > Please take a look.
+> >
+> > regards,
+> >   Ondrej Jirman
+> >
+> > Icenowy Zheng (2):
+> >   net: stmmac: sun8i: add support for Allwinner H6 EMAC
+> >   net: stmmac: sun8i: force select external PHY when no internal one
+> >
+> > Ondrej Jirman (10):
+> >   arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
+> >   drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
+> >   dt-bindings: display: sun4i-drm: Add DDC power supply
+> >   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+> >   arm64: dts: allwinner: orange-pi-3: Enable ethernet
+> >   arm64: dts: allwinner: h6: Add MMC1 pins
+> >   pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+> >   pinctrl: sunxi: Support I/O bias voltage setting on H6
+> >   brcmfmac: Loading the correct firmware for brcm43456
+> >   arm64: dts: allwinner: orange-pi-3: Enable WiFi
+> >
+> >  .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
+> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 339 ++++++++++++++++++
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
+> >  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 ++
+> >  .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
+> >  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
+> >  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
+> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  50 ++-
+> >  drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   7 +-
+> >  12 files changed, 433 insertions(+), 21 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> >
+> > --
+> > 2.21.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > For more options, visit https://groups.google.com/d/optout.
