@@ -2,249 +2,201 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34475C282DA
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 00:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9DC282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 00:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA812133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 00:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0567213A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 00:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QO6sQOTh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mN0D6qW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfDGAiO (ORCPT
+        id S1726495AbfDGAnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 20:38:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37062 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDGAiN (ORCPT
+        Sat, 6 Apr 2019 20:43:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52189 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDGAnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 20:38:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so12176963wrm.4;
-        Sat, 06 Apr 2019 17:38:11 -0700 (PDT)
+        Sat, 6 Apr 2019 20:43:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 4so10391180wmf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 17:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=QZX6uhu7+jP+x84UVrwqAXLJgWszIC7pDB2CNkalw1g=;
-        b=QO6sQOThgRlNR8C28L4s2Jjnt+MSsgYyYmpY/+zqppbjzpUDYlcWZPKlaWIZW/ziX5
-         3XgUbia1LrXwWn1Bcobwu7Th8ILA+Go1y0EFvtW03L9vyG/A0bZZwkh7U2lQjALU24T5
-         Rp7nfq0naXQz4P1ggzKen8SEIxh+AV8QmL3qQlnjK8F6SKM7K1hzflekdWwlhv+vlQnW
-         cn3pmuNk8rkXByf2RE8CIiHBRxnyjBQErhFe0I58yWuxxy2Rje0qvJJkKziMVmZAM2sv
-         H5kh7Mf5/9CO7IiMgynj7BADblTzyOSCEdvLe2r5kZb+Gvyy62PtfSp/yHtBFEZyDmjt
-         zLWQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bNsqfdQNBfHjyXIGV8C12WgnaMuuVXlb2SSFxsHHfG8=;
+        b=mN0D6qW7g35is4a2WGB+jmFlKNC88Q6qdutNQHtkLf+TX5BIJWXmt4AbJLRxYybMlS
+         EV+KP1TA2u8rlXQcwYk5K7ngg3HP3aVWgp0XY03oenL020WfomGRMzGV29YPol6cyUjR
+         zPdcU9ystDG8p07xEtyWPir26zzORUFjGIaIvSIoPoxL4Ec+ibUo9HSZdq+ko8MihD6D
+         Lx4PTDpDKmaq1gkJwtMkrgLqdBigGU450vfFKiI9KPLmzrKdEqzBL36EkLOeq0aG+l9g
+         SMqKY4wJpBGU9azGiDF/DRVkLjSAVccK2B/55DRxmDDDLMUgiShCzTY/8s8Ao6ny9My7
+         ScTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=QZX6uhu7+jP+x84UVrwqAXLJgWszIC7pDB2CNkalw1g=;
-        b=M6A4EIRRyBH2F/+JQDstZWxbBWD+K8WpMpQl1TCfORAUWuOrWQyNsnobE/RtR6bdnp
-         cclDRf/rLwI4N7+Ievz2RAoP8e0TpPOgb9+qgbJEaUv3rG0HQWPC9bL9yJXt8i8Y7I4j
-         18GhZTCDuejF7EGu+Uke69Ts3UpIZZHDISW4R4j2pNHi+/Yoy4ZK2ciLVphB/DC72vzj
-         bIweainePjfTagxhYO6kzzCwt6Z5+8CWzSGsGxuJXEUoro6uJxcN+jew9PJiv2ScL/hG
-         RcnPK25sGUD81JXuezyyaD3PSfM1lg7zPfmajkdLZDKnP+D5VNdGFbCdIi24ar0CSx9V
-         6e2A==
-X-Gm-Message-State: APjAAAW78PLaihGfgcQIfV7qlmEzlvRqq1KteuTTT4pC7kNJIoF3C34a
-        WgFq/brRRpX6n2GDNhdERVpHIb0/gy8=
-X-Google-Smtp-Source: APXvYqylrzSCcQ2MmplFeNtpZuj1VHcmNdZjnmgjCt37KQ7hNjUFaFqeGX1oPpU8bKwVb0XhozcwBA==
-X-Received: by 2002:adf:eb02:: with SMTP id s2mr14515635wrn.29.1554597490810;
-        Sat, 06 Apr 2019 17:38:10 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id f15sm30604012wru.21.2019.04.06.17.38.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 06 Apr 2019 17:38:09 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Emil Renner Berthing <kernel@esmil.dk>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Brown <broonie@kernel.org>
-Cc:     <linux-rockchip@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] Rockchip SPI: long burst writes produce unexpected result
-Date:   Sun, 07 Apr 2019 02:38:08 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bNsqfdQNBfHjyXIGV8C12WgnaMuuVXlb2SSFxsHHfG8=;
+        b=MCNt4yZCpQZJGhkSaImjal0rIGTrbTC2yfzD0UqN/XQp1W8fYdwhubLZU9zHFvY5TH
+         1uP325hOBNwcuNu61wS6oZ6FRsuytg9yJtflRbalwaRWlP5yNUrmmsD35gc6eQypCnLU
+         fZFubO19Bpv3mm36I5piaLzV9MVZoKnrNiPjzGb0rwO1aXfhaPO1kG89k9JA1Wf2I2MR
+         AOz9acsC0xy0WvdmA6ikP+o/9vm1F/LA4mFQtkSLnAfFCGErHTstxmNk6NVpjNvF//uf
+         vGIfbQsBOftwvsMDMbA5isRgZrn/cpfCIPut2ufYONesKhRITwoaxLqIuBykxAtGFYZR
+         ctVg==
+X-Gm-Message-State: APjAAAWnK5qckpgt1TqduHcZVTj/U1sBHjlvOlXMeawrlOH2yBJg5lEB
+        DdO2Sr3wJSNvDc2OSVHq9DFrsUtvL7qhg1FICu+emQ==
+X-Google-Smtp-Source: APXvYqzMsI5jkgYOJ2BTgSLY2XZsUO2QwusIqpjK6aiNgcfQl4UawI5zb8oF9r5SjZrgDQN7dMQ9qstaODnlqfQ+gK8=
+X-Received: by 2002:a05:600c:2118:: with SMTP id u24mr12728182wml.24.1554597817349;
+ Sat, 06 Apr 2019 17:43:37 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <746e632e-63e2-49af-8e8f-e37270beea73@gmail.com>
-In-Reply-To: <21d83ed2-a8db-49cf-ba8c-c7844157d7b0@gmail.com>
-References: <21d83ed2-a8db-49cf-ba8c-c7844157d7b0@gmail.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <1554343303-11880-1-git-send-email-huangzhaoyang@gmail.com>
+In-Reply-To: <1554343303-11880-1-git-send-email-huangzhaoyang@gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Sat, 6 Apr 2019 17:43:26 -0700
+Message-ID: <CAJuCfpEWG19-7HYjasmRXZV0Q+AnFNPB--qtAXSDCk97k7DRVg@mail.gmail.com>
+Subject: Re: [PATCH] mm:workingset use real time to judge activity of the file page
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-please, forget my previous mail about
-  eff0275e5253604429aedc42b008c5fcaa6cc597
-  spi: rockchip: simplify use_dma logic
-i messed up with commit IDs, sorry.
-
-The first offending commit is one later than that:
-commit 420b82f842941a32adf309ca1b193adfc77616b0
-Date:   Wed Oct 31 11:57:07 2018 +0100
-
-    spi: rockchip: set min/max speed
-   =20
-    The driver previously checked each transfer if the
-    requested speed was higher than possible with the
-    current spi clock rate and raised the clock rate
-    accordingly.
-   =20
-    However, there is no check to see if the spi clock
-    was actually set that high and no way to dynamically
-    lower the spi clock rate again.
-   =20
-    So it seems any potiential users of this functionality
-    are better off just setting the spi clock rate at init
-    using the assigned-clock-rates devicetree property.
-   =20
-    Removing this dynamic spi clock rate raising allows
-    us let the spi framework handle min/max speeds
-    for us.
-
-Regards,
-  Vicen=C3=A7.
-
-On Saturday, April 6, 2019 7:34:32 PM CEST, Vicente Bergas wrote:
-> Hi,
-> i have been experiencing issues writing to NOR-Flash SPI Memories
-> from two RK3399-based platforms: gru-kevin and sapphire board.
-> For kevin, this resulted in a bricked device because that memory
-> is the only boot device.
-> Fortunately an external programmer is available.
+On Wed, Apr 3, 2019 at 7:03 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
 >
-> In order to isolate where the issue can be, several tests have been
-> done, after which it makes me think the issue is related to the
-> Rockchip SPI driver.
+> From: Zhaoyang Huang <Zhaoyang Huang@unisoc.com>
 >
-> 4KB burst reads work fine.
-> The issue is only observed on the write burst length.
+> In previous implementation, the number of refault pages is used
+> for judging the refault period of each page, which is not precised.
+> We introduce the timestamp into the workingset's entry to measure
+> the file page's activity.
 >
-> Test user     user/kernel kernel    RK3399  Num  space   =20
-> interface   space       SoC   Status Notes=20
-> --------------------------------------------------------
-> 1    flashrom linux_mtd   MTD/RKspi RKspi   Fail
-> 2    flashrom linux_spi   RKspi     RKspi   Fail
-> 3    flashrom linux_spi   spi_gpio  GPIO    OK
-> 4    custom   linux_spi   spi_gpio  GPIO    OK   260-byte burst writes
-> 5    custom   linux_spi   RKspi     RKspi   Fail 260-byte burst writes
-> 6    custom   linux_spi   RKspi     RKspi   OK     1-byte burst writes
-> 7    custom   linux_spi   RKspi     RKspi   OK    47-byte burst writes
-> 8    custom   linux_spi   RKspi     RKspi   Fail  48-byte burst writes
+> The patch is tested on an Android system, which can be described as
+> comparing the launch time of an application between a huge memory
+> consumption. The result is launch time decrease 50% and the page fault
+> during the test decrease 80%.
 >
-> 3, 4) Unaccetably slow, device tree is
->  spi_gpio {
->    compatible =3D "spi-gpio";
->    #address-cells =3D <1>;
->    #size-cells =3D <0>;
->    cs-gpios   =3D <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
->    sck-gpios  =3D <&gpio1 RK_PB1 GPIO_ACTIVE_HIGH>;
->    mosi-gpios =3D <&gpio1 RK_PB0 GPIO_ACTIVE_HIGH>;
->    miso-gpios =3D <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
->    num-chipselects =3D <1>;
->    spidev@0 {
->      compatible =3D "spidev";
->      reg =3D <0>;
->      spi-max-frequency =3D <50000000>;
->    };
->  };
-> 2, 5, 6, 7, 8) device tree is
->  &spi1 {
->    status =3D "okay";
->    spidev@0 {
->      compatible =3D "spidev";
->      reg =3D <0>;
->      spi-max-frequency =3D <50000000>;
->    };
->  };
-> 5, 6, 7, 8) Burst writes are performed this way
->  enum { BURST =3D 48 };
->  struct spi_ioc_transfer msg[0x105];
->  unsigned i =3D 0;
->  for (unsigned j =3D 0; j < wcnt; j +=3D BURST) {
->    msg[i++] =3D { .tx_buf =3D warr, .len =3D BURST<wcnt-j ? BURST : wcnt-j =
-};
->    warr +=3D BURST;
+> Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
+> ---
+>  include/linux/mmzone.h |  2 ++
+>  mm/workingset.c        | 24 +++++++++++++++++-------
+>  2 files changed, 19 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 32699b2..c38ba0a 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -240,6 +240,8 @@ struct lruvec {
+>         atomic_long_t                   inactive_age;
+>         /* Refaults at the time of last reclaim cycle */
+>         unsigned long                   refaults;
+> +       atomic_long_t                   refaults_ratio;
+> +       atomic_long_t                   prev_fault;
+>  #ifdef CONFIG_MEMCG
+>         struct pglist_data *pgdat;
+>  #endif
+> diff --git a/mm/workingset.c b/mm/workingset.c
+> index 40ee02c..6361853 100644
+> --- a/mm/workingset.c
+> +++ b/mm/workingset.c
+> @@ -159,7 +159,7 @@
+>                          NODES_SHIFT +  \
+>                          MEM_CGROUP_ID_SHIFT)
+>  #define EVICTION_MASK  (~0UL >> EVICTION_SHIFT)
+> -
+> +#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
+>  /*
+>   * Eviction timestamps need to be able to cover the full range of
+>   * actionable refaults. However, bits are tight in the radix tree
+> @@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+>         eviction >>= bucket_order;
+>         eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+>         eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+> +       eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
+>         eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+>
+>         return (void *)(eviction | RADIX_TREE_EXCEPTIONAL_ENTRY);
 >  }
->  if (rcnt)
->    msg[i++] =3D { .rx_buf =3D rarr, .len =3D rcnt };
->  ioctl(fd, SPI_IOC_MESSAGE(i), msg);
-> 1, 2, 5, 8) I have no logic analyzer to see what is happenning on the
-> SPI bus, but when it fails at 48-byte bursts, the contents of the memory
-> are like this:
-> Addr Expected                                        Actual
-> 000  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 010  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 020  FF FF FF FF FF FF FF FF FF FF FF FF F1 F2 F3 F4  FF FF FF=20
-> FF FF FF FF FF FF F1 F2 F3 F4 FF FF FF
-> 030  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 040  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 050  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 060  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 070  FF FF FF FF FF FF FF FF FF FF FF FF E1 E2 E3 E4  FF FF FF=20
-> FF FF FF E1 E2 E3 E4 FF FF FF FF FF FF
-> 080  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 090  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0A0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0B0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0C0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0D0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0E0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 0F0  FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF  FF FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 780  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 790  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7A0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7B0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7C0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7D0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7E0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 7F0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 FF FF=20
-> FF FF FF FF FF FF FF FF FF FF FF FF FF
-> 800  01 02 03 04 00 00 00 00 00 00 00 00 00 00 00 00  01 02 03=20
-> 04 00 00 00 00 00 00 00 00 00 00 00 00
-> 810  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 820  00 00 00 00 00 00 00 00 00 00 00 00 05 06 07 08  00 00 00=20
-> 00 00 00 00 00 00 05 06 07 08 00 00 00
-> 830  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 840  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 850  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 860  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 870  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00=20
-> 00 00 00 00 00 00 00 00 00 00 00 00 00
 >
-> Regards,
->  Vicen=C3=A7.
+>  static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+> -                         unsigned long *evictionp)
+> +                         unsigned long *evictionp, unsigned long *prev_jiffp)
+>  {
+>         unsigned long entry = (unsigned long)shadow;
+>         int memcgid, nid;
+> +       unsigned long prev_jiff;
 >
+>         entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
+> +       entry >>= EVICTION_JIFFIES;
+> +       prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
+>         nid = entry & ((1UL << NODES_SHIFT) - 1);
+>         entry >>= NODES_SHIFT;
+>         memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
+> @@ -195,6 +199,7 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+>         *memcgidp = memcgid;
+>         *pgdat = NODE_DATA(nid);
+>         *evictionp = entry << bucket_order;
+> +       *prev_jiffp = prev_jiff;
+>  }
 >
+>  /**
+> @@ -242,8 +247,12 @@ bool workingset_refault(void *shadow)
+>         unsigned long refault;
+>         struct pglist_data *pgdat;
+>         int memcgid;
+> +       unsigned long refault_ratio;
+> +       unsigned long prev_jiff;
+> +       unsigned long avg_refault_time;
+> +       unsigned long refault_time;
 >
+> -       unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
+> +       unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_jiff);
+>
+>         rcu_read_lock();
+>         /*
+> @@ -288,10 +297,11 @@ bool workingset_refault(void *shadow)
+>          * list is not a problem.
+>          */
+>         refault_distance = (refault - eviction) & EVICTION_MASK;
+> -
+>         inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+> -
+> -       if (refault_distance <= active_file) {
+> +       lruvec->refaults_ratio = atomic_long_read(&lruvec->inactive_age) / jiffies;
 
+I also wonder how many times the division above yields a 0...
+
+> +       refault_time = jiffies - prev_jiff;
+> +       avg_refault_time = refault_distance / lruvec->refaults_ratio;
+
+and then used here as a denominator.
+
+> +       if (refault_time <= avg_refault_time) {
+>                 inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
+>                 rcu_read_unlock();
+>                 return true;
+> @@ -521,7 +531,7 @@ static int __init workingset_init(void)
+>          * some more pages at runtime, so keep working with up to
+>          * double the initial memory by using totalram_pages as-is.
+>          */
+> -       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
+> +       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT - EVICTION_JIFFIES;
+>         max_order = fls_long(totalram_pages - 1);
+>         if (max_order > timestamp_bits)
+>                 bucket_order = max_order - timestamp_bits;
+> --
+> 1.9.1
+>
