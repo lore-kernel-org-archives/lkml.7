@@ -2,160 +2,116 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB27C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 06:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD13C282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 06:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA9E213F2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 06:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bZPz666g";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="irf3fxEX"
+	by mail.kernel.org (Postfix) with ESMTP id 1488F21738
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 06:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfDGGeZ (ORCPT
+        id S1726282AbfDGGqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 02:34:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37812 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfDGGeY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 02:34:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7591960A60; Sun,  7 Apr 2019 06:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554618863;
-        bh=aNWT/8QGNC2pNgzdXj3Gg0XyzCXORJgelXSiZwb4B24=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bZPz666g0x5kO5sYzU8wFuXyqDl5InKMidJXp1/wWkY6AmNT4R4U6gCJgEj06rAqZ
-         XsLw2svPugEI3XxPAnlL1Tp3CtZidrL6IHMSD3Bv8cE0ZSNugrAgFWCSQYSds1eFfj
-         mLCi3d9IRC75GjMF9q9BBdZYzDnjTqEuDcuvDwyQ=
-Received: from [10.79.171.6] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA7CA60303;
-        Sun,  7 Apr 2019 06:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554618862;
-        bh=aNWT/8QGNC2pNgzdXj3Gg0XyzCXORJgelXSiZwb4B24=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=irf3fxEX9iuEExwZm2DzHDZ6gtPup4oiuP0mu9FK5uz2AF5jQcprR0+gt9svWbw5V
-         MrBV9UCmdRReE1k1aS8WVWFHiLcqUvp/4Aj2Usm8+L0+ZU6rVmY2kZC3o0aMGUuGZV
-         ViPVN4pEq/Uujp/6jU+qNT6/3H5mjqMQmqKFR+aE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA7CA60303
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] powerpc/pseries/iommu: fix set but not used values
-To:     Qian Cai <cai@lca.pw>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org
-Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190407024808.39821-1-cai@lca.pw>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <ed223f2f-378b-1147-c482-6911f0e9941d@codeaurora.org>
-Date:   Sun, 7 Apr 2019 12:04:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 7 Apr 2019 02:46:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6262 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbfDGGqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 02:46:45 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 83CDA5650AA3E257D21D;
+        Sun,  7 Apr 2019 14:46:33 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Sun, 7 Apr 2019
+ 14:46:26 +0800
+To:     David Ahern <dsa@cumulusnetworks.com>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+From:   linmiaohe <linmiaohe@huawei.com>
+Subject: [PATCH net v2] net: vrf: Fix ping failed when vrf mtu is set to 0
+Message-ID: <c0ee938d-479d-5c92-93ce-e06c24057b62@huawei.com>
+Date:   Sun, 7 Apr 2019 14:46:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190407024808.39821-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-On 4/7/2019 8:18 AM, Qian Cai wrote:
-> The commit b7d6bf4fdd47 ("powerpc/pseries/pci: Remove obsolete SW
-> invalidate") left 2 variables unused.
->
-> arch/powerpc/platforms/pseries/iommu.c: In function 'tce_build_pSeries':
-> arch/powerpc/platforms/pseries/iommu.c:108:17: warning: variable 'tces'
-> set but not used [-Wunused-but-set-variable]
->    __be64 *tcep, *tces;
->                   ^~~~
-> arch/powerpc/platforms/pseries/iommu.c: In function 'tce_free_pSeries':
-> arch/powerpc/platforms/pseries/iommu.c:132:17: warning: variable 'tces'
-> set but not used [-Wunused-but-set-variable]
->    __be64 *tcep, *tces;
->                   ^~~~
->
-> Also, the commit 68c0449ea16d ("powerpc/pseries/iommu: Use memory@ nodes
-> in max RAM address calculation") set "ranges" in
-> ddw_memory_hotplug_max() but never use it.
->
-> arch/powerpc/platforms/pseries/iommu.c: In function
-> 'ddw_memory_hotplug_max':
-> arch/powerpc/platforms/pseries/iommu.c:948:7: warning: variable 'ranges'
-> set but not used [-Wunused-but-set-variable]
->     int ranges, n_mem_addr_cells, n_mem_size_cells, len;
->         ^~~~~~
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+When the mtu of a vrf device is set to 0, it would cause ping
+failed. So I think we should limit vrf mtu in a reasonable range
+to solve this problem. I set dev->min_mtu to 1280, so it will
+works for both ipv4 and ipv6. And if dev->max_mtu still be 0
+can be confusing, so I set dev->max_mtu to 0xFFFFU.
 
-Cheers,
--Mukesh
+Here is the reproduce step:
 
-> ---
->   arch/powerpc/platforms/pseries/iommu.c | 13 +++++--------
->   1 file changed, 5 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 36eb1ddbac69..03bbb299320e 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -105,7 +105,7 @@ static int tce_build_pSeries(struct iommu_table *tbl, long index,
->   			      unsigned long attrs)
->   {
->   	u64 proto_tce;
-> -	__be64 *tcep, *tces;
-> +	__be64 *tcep;
->   	u64 rpn;
->   
->   	proto_tce = TCE_PCI_READ; // Read allowed
-> @@ -113,7 +113,7 @@ static int tce_build_pSeries(struct iommu_table *tbl, long index,
->   	if (direction != DMA_TO_DEVICE)
->   		proto_tce |= TCE_PCI_WRITE;
->   
-> -	tces = tcep = ((__be64 *)tbl->it_base) + index;
-> +	tcep = ((__be64 *)tbl->it_base) + index;
->   
->   	while (npages--) {
->   		/* can't move this out since we might cross MEMBLOCK boundary */
-> @@ -129,9 +129,9 @@ static int tce_build_pSeries(struct iommu_table *tbl, long index,
->   
->   static void tce_free_pSeries(struct iommu_table *tbl, long index, long npages)
->   {
-> -	__be64 *tcep, *tces;
-> +	__be64 *tcep;
->   
-> -	tces = tcep = ((__be64 *)tbl->it_base) + index;
-> +	tcep = ((__be64 *)tbl->it_base) + index;
->   
->   	while (npages--)
->   		*(tcep++) = 0;
-> @@ -945,7 +945,7 @@ static phys_addr_t ddw_memory_hotplug_max(void)
->   
->   	for_each_node_by_type(memory, "memory") {
->   		unsigned long start, size;
-> -		int ranges, n_mem_addr_cells, n_mem_size_cells, len;
-> +		int n_mem_addr_cells, n_mem_size_cells, len;
->   		const __be32 *memcell_buf;
->   
->   		memcell_buf = of_get_property(memory, "reg", &len);
-> @@ -955,9 +955,6 @@ static phys_addr_t ddw_memory_hotplug_max(void)
->   		n_mem_addr_cells = of_n_addr_cells(memory);
->   		n_mem_size_cells = of_n_size_cells(memory);
->   
-> -		/* ranges in cell */
-> -		ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
-> -
->   		start = of_read_number(memcell_buf, n_mem_addr_cells);
->   		memcell_buf += n_mem_addr_cells;
->   		size = of_read_number(memcell_buf, n_mem_size_cells);
+1.Config vrf interface and set mtu to 0:
+3: enp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel
+master vrf1 state UP mode DEFAULT group default qlen 1000
+    link/ether 52:54:00:9e:dd:c1 brd ff:ff:ff:ff:ff:ff
+
+2.Ping peer:
+3: enp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel
+master vrf1 state UP group default qlen 1000
+    link/ether 52:54:00:9e:dd:c1 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.0.1/16 scope global enp4s0
+       valid_lft forever preferred_lft forever
+connect: Network is unreachable
+
+3.Set mtu to default value, ping works:
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=1.88 ms
+
+Fixes: ad49bc6361ca2 ("net: vrf: remove MTU limits for vrf device")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+V1->V2:
+- fix patch commit message
+- adjust to work for ipv6
+
+ drivers/net/vrf.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index 7c1430ed0244..4d35d37f225a 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -43,6 +43,12 @@
+
+ #define FIB_RULE_PREF  1000       /* default preference for FIB rules */
+
++/* The MTU is really irrelevant for VRF except for odd cases, so limit it
++ * to a reasonable range which both works for IPV4 and IPV6.
++ */
++#define VRF_MIN_MTU	1280      /* same as IPV6_MIN_MTU */
++#define VRF_MAX_MTU	0xFFFFU   /* same as IP_MAX_MTU */
++
+ static unsigned int vrf_net_id;
+
+ struct net_vrf {
+@@ -1274,8 +1280,8 @@ static void vrf_setup(struct net_device *dev)
+ 	/* default to no qdisc; user can add if desired */
+ 	dev->priv_flags |= IFF_NO_QUEUE;
+
+-	dev->min_mtu = 0;
+-	dev->max_mtu = 0;
++	dev->min_mtu = VRF_MIN_MTU;
++	dev->max_mtu = VRF_MAX_MTU;
+ }
+
+ static int vrf_validate(struct nlattr *tb[], struct nlattr *data[],
+-- 
+2.19.1
+
+
