@@ -2,112 +2,109 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E804DC282DC
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B77EC282DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47792133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011FD2133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="f6HBt+BL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkXm7JF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDGBNR (ORCPT
+        id S1726576AbfDGBQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 21:13:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46278 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDGBNR (ORCPT
+        Sat, 6 Apr 2019 21:16:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36958 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDGBQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 21:13:17 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z17so11563840qts.13
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 18:13:16 -0700 (PDT)
+        Sat, 6 Apr 2019 21:16:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id o19so6928575lfl.4;
+        Sat, 06 Apr 2019 18:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ToAuCI2UZu0RpD1Nbid/Kfs3hirNsiqiUv3gwCu4cTE=;
-        b=f6HBt+BLBmT3vi50EWWf2NGusDfk/FoZDZ/0d4NGtyO2qfFX+h0DgB/bN+1zkYROCA
-         BLrOYy4P3ZJ4A+9KLblNjaLL6Sm/LJ/8/Vx96ywQqm5++EY7t/P93lQPtThZHi/s0WE1
-         GyyhnjKZOXnuMespn6qsADB/NxQ/HHxpRSOZZTB21G6//PIZVq6cvDhIPVJftmYQZlDZ
-         qT9kqX0eW1Yx8iiS8hb8lAHeXTCjDBFRlCf5UlKdTpRQ82NUUReTeUi+yKSbE1OC6aRb
-         ELXY2MQr+nWZYvZJJs658WMM4F3jz5NAhamWCHAT/kbWP54shkAXmQ8eEP/OuvQ23XKv
-         cyEg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4CVyE28DbPYrg6P/pLC+zTZvUmtNTAl3E76QQwtFjho=;
+        b=ZkXm7JF3K8U1sq0ZcAQq28zvBq6jsBN1oLnT7b0OKNrV+jzI6MA62pTc3+rXoaFPDv
+         Jx8rJ0l6vNQNq6m5dZteLQcgcXSGDg98ziF828cv8YIdb0hwb3Tj9VQhs2A40/bY4owl
+         YpinNfZtk2eWzvbpxKi3enpQVYvBaFjDF7yq2/JFlau5QvK4nzHdJUSjByYzaQotbrji
+         JA9rQAZazF2lRqT5m/kRjFG+ia8W3Jsakn8lBL9L1rPycVEJ1v858PfI5D0o29oxd9wy
+         AkntE0uqvdGbdYhmWX1FqWxjOCtmNbOucQGKgiSxM0MAtB580xAj0A7PCPb3dxFU9Z1j
+         ey0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ToAuCI2UZu0RpD1Nbid/Kfs3hirNsiqiUv3gwCu4cTE=;
-        b=mI7g8xdObXlFUiaxI7G3a/wE5XMu1kvx6atkeSFZOvO69EnFFMEOoaR1dEsPdnDCFN
-         M6rXxz0EKHBDPRK+bLTl6Ds4YuTGp6b8jRN+u4AsKYOvr/ELAK/eOWRxPhxcKTCirnJj
-         AjuMA4ZqoWjcM1DdlDQXv6HssJ8ZElThCwKqz2+bc8WowelIIzAMOHCRTh/qTF02YR4W
-         im9dJu9+R1bEI4nu2p4yexwv5IxZR9JQMXVZwGK0gbRRdJ1/6K/R1X3t5L379iIGiRsc
-         TlQ5bpOgmzivsld4R8yB1lybxDWhgxfW+6BZSjGbe/tkJ28tyRAYmXPQ9rqL26hT0w11
-         WrlA==
-X-Gm-Message-State: APjAAAWSXuE8NpRuM7F9tD1mQdTupG4JHS4Ple4BnCouy3kykCljOS8K
-        1pWyTi6grsImFfR9+plXVbWX2g==
-X-Google-Smtp-Source: APXvYqzj6V6+3hND60M5781OLAf+SiQOm7aIYwBKSQhobgp4jxkRezcIiT3+PeD91RpaY0tktbzylg==
-X-Received: by 2002:a0c:ecca:: with SMTP id o10mr17195305qvq.197.1554599596196;
-        Sat, 06 Apr 2019 18:13:16 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s43sm16875165qth.47.2019.04.06.18.13.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 18:13:15 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     gregkh@linuxfoundation.org
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, keith.busch@intel.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] acpi/hmat: fix an uninitialized memory_target
-Date:   Sat,  6 Apr 2019 21:12:22 -0400
-Message-Id: <20190407011222.38963-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4CVyE28DbPYrg6P/pLC+zTZvUmtNTAl3E76QQwtFjho=;
+        b=LqpdmEJw4PbPuroO588DRz5YIIzc8zCtuQ7syZZjxZxmiavXt2U2wY+CzPhM+sm9ps
+         7zuGRY+guzwpEYAh9QY2cR8xaMr6EvmvTsd6D77zLVUFtaaMSjEWud2g4/8bI7A0B4VK
+         sB4fyQP0QFeZPCyBiXv0JTPzMceumiek8Bx7qNU9dUoTVfLEJf2KK7fYIOIIQ3P2R4yc
+         BScjzgUGdCIgUlJk6oz87Ed9ycyQK7xk2WstoRySyGSHlOFOCkeKfToXf7cMbNb8lKPq
+         BOP6P04u7NzIhn0ZOjfjhnkxmEfuB9YFSNedoHSjkd6xflfheh2u9mFVMyfcyYVtmim5
+         0iTQ==
+X-Gm-Message-State: APjAAAWdFgwCp3m3bXj4VKiZ5hWeTEPQMVTBmc/BEqvYpKYF8f20n+IF
+        5CUoOIKoTIheTdBQOjXzQXoceoyGnMv7oi1jMA==
+X-Google-Smtp-Source: APXvYqzThYz7CkjDnvWvO0NEf7Cj0MIxsBKtB41ZOuaqqz5rfFST3N/MqoqEqVd3oA3wU/SQdo3yeBKxmu1+kPcEq+I=
+X-Received: by 2002:a19:7d84:: with SMTP id y126mr11363312lfc.124.1554599759085;
+ Sat, 06 Apr 2019 18:15:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-7-dianders@chromium.org>
+In-Reply-To: <20190401171724.215780-7-dianders@chromium.org>
+From:   Urja Rannikko <urjaman@gmail.com>
+Date:   Sun, 7 Apr 2019 01:15:51 +0000
+Message-ID: <CAPCnQJmWfnBwxj8gScNzmZTGV6eU5B1vk76sQ56A2FvpSiYRaw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's
+ display timings
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 665ac7e92757 ("acpi/hmat: Register processor domain to its
-memory") introduced an uninitialized "struct memory_target" that could
-cause an incorrect branching.
+Hi,
 
-drivers/acpi/hmat/hmat.c:385:6: warning: variable 'target' is used
-uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
-        if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/acpi/hmat/hmat.c:392:6: note: uninitialized use occurs here
-        if (target && p->flags & ACPI_HMAT_PROCESSOR_PD_VALID) {
-            ^~~~~~
-drivers/acpi/hmat/hmat.c:385:2: note: remove the 'if' if its condition
-is always true
-        if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/acpi/hmat/hmat.c:369:30: note: initialize the variable 'target'
-to silence this warning
-        struct memory_target *target;
-                                    ^
-                                     = NULL
+On Mon, Apr 1, 2019 at 5:18 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Let's document the display timings that most veyron chromebooks (like
+> jaq, jerry, mighty, speedy) have been using out in the field.  This
+> uses the standard blankings but a slightly slower clock rate, thus
+> getting a refresh rate 58.3 Hz.
+>
+> NOTE: this won't really do anything except cause DRM to properly
+> report the refresh rate since vop_crtc_mode_fixup() was rounding the
+> pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
+> exposed to userspace so it's important that the rate we're trying to
+> achieve is mostly right.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/acpi/hmat/hmat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I just thought it would be worth mentioning that I have picked &
+tested a close to 60Hz mode on two veyron speedys of mine, but thought
+it too much effort to try and upstream, especially as it was done as a
+change to the actual panel info:
+https://github.com/urjaman/linux/commit/23d46278911e18df138b7adde1bebc23f606baae
 
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index c9b8abcf012c..6653dba3b377 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -366,7 +366,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
- 					      const unsigned long end)
- {
- 	struct acpi_hmat_proximity_domain *p = (void *)header;
--	struct memory_target *target;
-+	struct memory_target *target = NULL;
- 
- 	if (p->header.length != sizeof(*p)) {
- 		pr_notice("HMAT: Unexpected address range header length: %d\n",
+The difference would be in this format just setting hfront-porch = 87
+and vback-porch = 14.
+Anyways the point is: I support moving this mode info into the dts,
+and I'd like to know how if at all should i go about getting a
+60Hz(ish) mode upstreamed?
+
 -- 
-2.17.2 (Apple Git-113)
-
+Urja Rannikko
