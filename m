@@ -2,144 +2,130 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D85C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE5AC282DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A86214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 19:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE3320896
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LapOJaf0"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Q0H4s6oE";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="h3pJ2Rhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfDGTzW (ORCPT
+        id S1726511AbfDGUTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 15:55:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36865 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfDGTzW (ORCPT
+        Sun, 7 Apr 2019 16:19:36 -0400
+Received: from mail177-10.suw61.mandrillapp.com ([198.2.177.10]:52363 "EHLO
+        mail177-10.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726456AbfDGUTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 15:55:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id x7so9231964ioh.4;
-        Sun, 07 Apr 2019 12:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2EWbvybACw2pSft+F1QNp/jKhIc9KZCDXtH4EJ6g6PI=;
-        b=LapOJaf0RNbdg3JVgScEJq9pCS0Le+0P958mg0oFP14h4/F3pWrmrL2pmQxZ44k7Mz
-         4Jh9Rlt9CeHevs7Ji3Uv58E5fTxTLJOR+zUvUI7lyoTa62IxW+2dfFFCpmxTanq84Ylm
-         1PSI8IcvLZ13rV6Tu46cacvm+EtSJgSvGSEIga5RB35J358D/4Z2FoIIKrIlN1c/A6bf
-         Kpqck6qDWWWDZJdSHnRLTSEhX0LkcOh/nIK3qzY9gCu1n2lZf8FMYo+t8uhl4u4FainX
-         H5YQopnB/9aFWbpwABmKfS3yrsMoFoNRHRSrXUYIq5Je79+gXHlbXQQnkV0CHOxpa2zt
-         HgmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2EWbvybACw2pSft+F1QNp/jKhIc9KZCDXtH4EJ6g6PI=;
-        b=Vb+4F+CkEDHJ/4J9prrjVZ4hxp5PHCpNnVr8RyiIFXym2VZIE+GlhP6C3PiFSac7bM
-         PbVwaBrgG/0TWMc5mlMXdQGQy3zqxxQxei+qqyYG65yNbwAXDbCGsxVsIfaOQDLbFlb9
-         W7QyaONqRLp4FvmGMaZhRDW1HTA7161ONSX1e6Q+OI9bzX+NIAx/6cJehqbl3S0maelM
-         nRGQUQHiq3+OOV2XwPHqqu2nv4jFPmdfU3cuscJvyVm2tr45359TTL8OJvtUMozgwJfv
-         qxjoLihyqdfiRG1eqEluY3BK6K4Ve1xbe1EUQA3Byv03Ons2kRLfDWQcvtPoWXqRxRzp
-         xwgQ==
-X-Gm-Message-State: APjAAAWCUspVyuVyTWtmAW5Qc7of0892GE6UXQt355sd3zgP+50DiNu5
-        X9Nm3FJKymMJNtb6aAPwNW+iG86llv2dBzlao0s=
-X-Google-Smtp-Source: APXvYqx0LbMcwaYEC11t/Y3Vniv00WToYUFSWOlFL+8L3oi45ov8pNkWZxG8I5pM/VSOKPTXEp2h4M7SHTy+WojY6+k=
-X-Received: by 2002:a6b:ca87:: with SMTP id a129mr16787818iog.187.1554666921482;
- Sun, 07 Apr 2019 12:55:21 -0700 (PDT)
+        Sun, 7 Apr 2019 16:19:36 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Apr 2019 16:19:34 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=c9odqYKh8VA83uRMWnYw5b/vnYIMu6ToiyLWwrLHG6Y=;
+ b=Q0H4s6oE5IAmakxLmN3iqlE93cEQXyq19cJh81SkcDIaIRZ6RL2Hmn2b9HPlwY6Pa6b6N6JaJKdX
+   5yk5AefaWsslGzww4OApLPhXYBFIs53f0jIEU551bbPLRQW8FDlk7AV/wmA7QUhJ0gaRMmtJRrMs
+   /5xZ1qWzFBWeHCGx14M=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-10.suw61.mandrillapp.com id hl9dlc22rtkb for <linux-kernel@vger.kernel.org>; Sun, 7 Apr 2019 20:04:32 +0000 (envelope-from <bounce-md_31050260.5caa57d0.v1-38462f32aecf452795a2e26032fb1488@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1554667472; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=c9odqYKh8VA83uRMWnYw5b/vnYIMu6ToiyLWwrLHG6Y=; 
+ b=h3pJ2RhgfyIDJA0PtsEZvBTye/1Uu6u62yvfidlX3bddvPuTLE/0XYBNyKOLhKiOrjNOIJ
+ 7yGY5LWhJBOmAkEhwW6dqc038aRrIJmY++B6qvVDzIrzJlQTKnRYdsKLGulNztoxsSrJzE20
+ SJ9iwz2BFIObGho+F9jRSgdWXMjBg=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH 1/3] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Received: from [87.98.221.171] by mandrillapp.com id 38462f32aecf452795a2e26032fb1488; Sun, 07 Apr 2019 20:04:32 +0000
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>
+Message-Id: <20190407200423.GA2829@deco.navytux.spb.ru>
+References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com> <CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com>
+In-Reply-To: <CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.38462f32aecf452795a2e26032fb1488
+X-Mandrill-User: md_31050260
+Date:   Sun, 07 Apr 2019 20:04:32 +0000
 MIME-Version: 1.0
-References: <21d83ed2-a8db-49cf-ba8c-c7844157d7b0@gmail.com>
-In-Reply-To: <21d83ed2-a8db-49cf-ba8c-c7844157d7b0@gmail.com>
-From:   Emil Renner Berthing <emil.renner.berthing@gmail.com>
-Date:   Sun, 7 Apr 2019 21:55:10 +0200
-Message-ID: <CANBLGcyeroURDCHrBPRQ8bbhNsy9u0LkCq0MQmWUyvPR=p4b8w@mail.gmail.com>
-Subject: Re: [BUG] Rockchip SPI: long burst writes produce unexpected result
-To:     Vicente Bergas <vicencb@gmail.com>
-Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vicente,
+On Sat, Apr 06, 2019 at 07:07:14AM -1000, Linus Torvalds wrote:
+> On Tue, Mar 26, 2019 at 12:20 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+> >
+> > Commit 9c225f2655 (vfs: atomic f_pos accesses as per POSIX) added locking for
+> > file.f_pos access and in particular made concurrent read and write not possible
+> > [...]
+> 
+> Ok, I have applied this patch - but this patch only - as a
+> well-researched preparatory patch.
+> 
+> The actual conversion patch looks fine to me too, and I see a few
+> acks, but I think I'd like to see it during a merge window just
+> because it's large and does significant changes, while this one is
+> purely preparatory.
+> 
+> Al, comments?
 
-On Sat, 6 Apr 2019 at 19:35, Vicente Bergas <vicencb@gmail.com> wrote:
->
-> Hi,
-> i have been experiencing issues writing to NOR-Flash SPI Memories
-> from two RK3399-based platforms: gru-kevin and sapphire board.
-> For kevin, this resulted in a bricked device because that memory
-> is the only boot device.
-> Fortunately an external programmer is available.
->
-> In order to isolate where the issue can be, several tests have been
-> done, after which it makes me think the issue is related to the
-> Rockchip SPI driver.
->
-> 4KB burst reads work fine.
-> The issue is only observed on the write burst length.
->
-> Test user     user/kernel kernel    RK3399
-> Num  space    interface   space       SoC   Status Notes
-> --------------------------------------------------------
-> 1    flashrom linux_mtd   MTD/RKspi RKspi   Fail
-> 2    flashrom linux_spi   RKspi     RKspi   Fail
-> 3    flashrom linux_spi   spi_gpio  GPIO    OK
-> 4    custom   linux_spi   spi_gpio  GPIO    OK   260-byte burst writes
-> 5    custom   linux_spi   RKspi     RKspi   Fail 260-byte burst writes
-> 6    custom   linux_spi   RKspi     RKspi   OK     1-byte burst writes
-> 7    custom   linux_spi   RKspi     RKspi   OK    47-byte burst writes
-> 8    custom   linux_spi   RKspi     RKspi   Fail  48-byte burst writes
->
-> 3, 4) Unaccetably slow, device tree is
->   spi_gpio {
->     compatible = "spi-gpio";
->     #address-cells = <1>;
->     #size-cells = <0>;
->     cs-gpios   = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
->     sck-gpios  = <&gpio1 RK_PB1 GPIO_ACTIVE_HIGH>;
->     mosi-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_HIGH>;
->     miso-gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
->     num-chipselects = <1>;
->     spidev@0 {
->       compatible = "spidev";
->       reg = <0>;
->       spi-max-frequency = <50000000>;
->     };
->   };
-> 2, 5, 6, 7, 8) device tree is
->   &spi1 {
+Linus, thanks a lot for feedback and for accepting the patch.
 
-Since you say reverting the "set min/max speed" patch fixes your issues
-could you try raising the spi clock like this and see if it works for you?
+I agree that it is better to merge the bulk-conversion at the time of
+next merge window. I hope Al will pick that patch up and send to you
+when the next merge window time comes.
 
-+       assigned-clocks = <&cru SCLK_SPI1>;
-+       assigned-clock-rates = <400000000>;
+Could we please clarify one thing: is the general complete plan to deal
+with this regression, as outlined in the merged patch, ok? I mean do we
+agree to further proceed with fs/fuse/ FOPEN_STREAM (patch 3/3) and
+backport it + stream_open to v3.14+ stable kernels? Unfortunately it
+requires a bit of cooperation from userspace, but this scheme to fix the
+regression is the best I could come up with.
 
-Of course the driver shouldn't let you configure the spi-controller in a way
-that makes it skip bytes, but if this works for you then I still think
-you're better off explicitly setting the spi clock speed rather than having
-the driver raise it for you. At least while it does it without
-checking for errors
-or having a way to lower it again as outlined in the commit message.
+If FUSE bits are ok, how should we go? Are we ok to merge that patch
+now, or should we wait for the next merge window? I understand that
+generally it should be merge window from one side, but since we are
+trying to fix regression here and if the plan for regression fix is
+accepted it should be merge now. If we merge now, what should be the way
+for that patch to get merged?
 
->     status = "okay";
->     spidev@0 {
->       compatible = "spidev";
->       reg = <0>;
->       spi-max-frequency = <50000000>;
->     };
->   };
-> ...
+Fixing regression on FUSE side is my reason to do this whole work -
+that's why I care about it the most and ask.
 
-/Emil
+> One small note: please don't use lkml.org references since they tend
+> to be slow and flaky - use lore.kernel.org instead. Also, fix your git
+> config to use 12-character git hashes (best done by just removing the
+> explicit hash size entirely, and letting modern git shorten hashes
+> appropriately automatically).
+
+Thanks for pointing to lore.kernel.org - I'm not very keen to kernel
+development and did not knew it exists. I was seeing lkml.org being
+referenced here and there and that's why I used it. I will use
+lore.kernel.org from now.
+
+Short hashes were not due to git config, but due to me trimming them to
+10 characters in vim manually. I will use longer hashes as you ask.
+
+Kirill
