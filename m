@@ -2,62 +2,112 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7980EC282DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E804DC282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531102171F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47792133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="f6HBt+BL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfDGBMe (ORCPT
+        id S1726568AbfDGBNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 21:12:34 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:39554 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDGBMe (ORCPT
+        Sat, 6 Apr 2019 21:13:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46278 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDGBNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 21:12:34 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4912214BBE65F;
-        Sat,  6 Apr 2019 18:12:33 -0700 (PDT)
-Date:   Sat, 06 Apr 2019 18:12:32 -0700 (PDT)
-Message-Id: <20190406.181232.473436529978209156.davem@davemloft.net>
-To:     linmiaohe@huawei.com
-Cc:     dsa@cumulusnetworks.com, shrijeet@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingfangsen@huawei.com
-Subject: Re: [PATCH net] net: vrf: Fix ping failed when vrf mtu is set to 0
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <0da12059-229f-e167-ad41-14b56993a029@huawei.com>
-References: <0da12059-229f-e167-ad41-14b56993a029@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 06 Apr 2019 18:12:33 -0700 (PDT)
+        Sat, 6 Apr 2019 21:13:17 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so11563840qts.13
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 18:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ToAuCI2UZu0RpD1Nbid/Kfs3hirNsiqiUv3gwCu4cTE=;
+        b=f6HBt+BLBmT3vi50EWWf2NGusDfk/FoZDZ/0d4NGtyO2qfFX+h0DgB/bN+1zkYROCA
+         BLrOYy4P3ZJ4A+9KLblNjaLL6Sm/LJ/8/Vx96ywQqm5++EY7t/P93lQPtThZHi/s0WE1
+         GyyhnjKZOXnuMespn6qsADB/NxQ/HHxpRSOZZTB21G6//PIZVq6cvDhIPVJftmYQZlDZ
+         qT9kqX0eW1Yx8iiS8hb8lAHeXTCjDBFRlCf5UlKdTpRQ82NUUReTeUi+yKSbE1OC6aRb
+         ELXY2MQr+nWZYvZJJs658WMM4F3jz5NAhamWCHAT/kbWP54shkAXmQ8eEP/OuvQ23XKv
+         cyEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ToAuCI2UZu0RpD1Nbid/Kfs3hirNsiqiUv3gwCu4cTE=;
+        b=mI7g8xdObXlFUiaxI7G3a/wE5XMu1kvx6atkeSFZOvO69EnFFMEOoaR1dEsPdnDCFN
+         M6rXxz0EKHBDPRK+bLTl6Ds4YuTGp6b8jRN+u4AsKYOvr/ELAK/eOWRxPhxcKTCirnJj
+         AjuMA4ZqoWjcM1DdlDQXv6HssJ8ZElThCwKqz2+bc8WowelIIzAMOHCRTh/qTF02YR4W
+         im9dJu9+R1bEI4nu2p4yexwv5IxZR9JQMXVZwGK0gbRRdJ1/6K/R1X3t5L379iIGiRsc
+         TlQ5bpOgmzivsld4R8yB1lybxDWhgxfW+6BZSjGbe/tkJ28tyRAYmXPQ9rqL26hT0w11
+         WrlA==
+X-Gm-Message-State: APjAAAWSXuE8NpRuM7F9tD1mQdTupG4JHS4Ple4BnCouy3kykCljOS8K
+        1pWyTi6grsImFfR9+plXVbWX2g==
+X-Google-Smtp-Source: APXvYqzj6V6+3hND60M5781OLAf+SiQOm7aIYwBKSQhobgp4jxkRezcIiT3+PeD91RpaY0tktbzylg==
+X-Received: by 2002:a0c:ecca:: with SMTP id o10mr17195305qvq.197.1554599596196;
+        Sat, 06 Apr 2019 18:13:16 -0700 (PDT)
+Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s43sm16875165qth.47.2019.04.06.18.13.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 18:13:15 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     gregkh@linuxfoundation.org
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, keith.busch@intel.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] acpi/hmat: fix an uninitialized memory_target
+Date:   Sat,  6 Apr 2019 21:12:22 -0400
+Message-Id: <20190407011222.38963-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: linmiaohe <linmiaohe@huawei.com>
-Date: Thu, 4 Apr 2019 20:01:13 +0800
+The commit 665ac7e92757 ("acpi/hmat: Register processor domain to its
+memory") introduced an uninitialized "struct memory_target" that could
+cause an incorrect branching.
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> When the mtu of a vrf device is set to 0, it would cause ping
-> failed.So I think we should limit dev->min_mtu to ETH_MIN_MTU
-> to solve this problem. And if dev->max_mtu still be 0 can be
-> confusing, so I limit dev->max_mtu to ETH_MAX_MTU.
-> 
-> Here is the reproduce step:
+drivers/acpi/hmat/hmat.c:385:6: warning: variable 'target' is used
+uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
+        if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/acpi/hmat/hmat.c:392:6: note: uninitialized use occurs here
+        if (target && p->flags & ACPI_HMAT_PROCESSOR_PD_VALID) {
+            ^~~~~~
+drivers/acpi/hmat/hmat.c:385:2: note: remove the 'if' if its condition
+is always true
+        if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/acpi/hmat/hmat.c:369:30: note: initialize the variable 'target'
+to silence this warning
+        struct memory_target *target;
+                                    ^
+                                     = NULL
 
-Just in case it isn't clear, David Ahern gave you feedback and
-asked you to adjust things so that the problem is solved for ipv6
-as well.  He also gave you an appropriate Fixes: tag to add to
-your commit message.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/acpi/hmat/hmat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+index c9b8abcf012c..6653dba3b377 100644
+--- a/drivers/acpi/hmat/hmat.c
++++ b/drivers/acpi/hmat/hmat.c
+@@ -366,7 +366,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+ 					      const unsigned long end)
+ {
+ 	struct acpi_hmat_proximity_domain *p = (void *)header;
+-	struct memory_target *target;
++	struct memory_target *target = NULL;
+ 
+ 	if (p->header.length != sizeof(*p)) {
+ 		pr_notice("HMAT: Unexpected address range header length: %d\n",
+-- 
+2.17.2 (Apple Git-113)
+
