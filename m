@@ -2,130 +2,123 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE5AC282DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE3320896
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDEF20896
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 20:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Q0H4s6oE";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="h3pJ2Rhg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/H0feId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfDGUTg (ORCPT
+        id S1726510AbfDGUU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 16:19:36 -0400
-Received: from mail177-10.suw61.mandrillapp.com ([198.2.177.10]:52363 "EHLO
-        mail177-10.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726456AbfDGUTg (ORCPT
+        Sun, 7 Apr 2019 16:20:59 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46222 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfDGUU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 16:19:36 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Apr 2019 16:19:34 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=c9odqYKh8VA83uRMWnYw5b/vnYIMu6ToiyLWwrLHG6Y=;
- b=Q0H4s6oE5IAmakxLmN3iqlE93cEQXyq19cJh81SkcDIaIRZ6RL2Hmn2b9HPlwY6Pa6b6N6JaJKdX
-   5yk5AefaWsslGzww4OApLPhXYBFIs53f0jIEU551bbPLRQW8FDlk7AV/wmA7QUhJ0gaRMmtJRrMs
-   /5xZ1qWzFBWeHCGx14M=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-10.suw61.mandrillapp.com id hl9dlc22rtkb for <linux-kernel@vger.kernel.org>; Sun, 7 Apr 2019 20:04:32 +0000 (envelope-from <bounce-md_31050260.5caa57d0.v1-38462f32aecf452795a2e26032fb1488@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1554667472; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=c9odqYKh8VA83uRMWnYw5b/vnYIMu6ToiyLWwrLHG6Y=; 
- b=h3pJ2RhgfyIDJA0PtsEZvBTye/1Uu6u62yvfidlX3bddvPuTLE/0XYBNyKOLhKiOrjNOIJ
- 7yGY5LWhJBOmAkEhwW6dqc038aRrIJmY++B6qvVDzIrzJlQTKnRYdsKLGulNztoxsSrJzE20
- SJ9iwz2BFIObGho+F9jRSgdWXMjBg=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH 1/3] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
-Received: from [87.98.221.171] by mandrillapp.com id 38462f32aecf452795a2e26032fb1488; Sun, 07 Apr 2019 20:04:32 +0000
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yongzhi Pan <panyongzhi@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Han-Wen Nienhuys <hanwen@google.com>
-Message-Id: <20190407200423.GA2829@deco.navytux.spb.ru>
-References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com> <CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.38462f32aecf452795a2e26032fb1488
-X-Mandrill-User: md_31050260
-Date:   Sun, 07 Apr 2019 20:04:32 +0000
+        Sun, 7 Apr 2019 16:20:59 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r25so7869004lfn.13
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 13:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2TGSbaHXR2pR397fNB4mOvKz5WSV1SP+1BggsWMPrTY=;
+        b=Y/H0feId3BT8iySmnsOxh25NXVS0pS3cquqWO6wLTC116fF+xXQqn1wh4iVHz+EDEC
+         TsoG6gI50s5mtklNdkN10F7w7uFLPOSfGTn9Jt8+yAk4eDRCIP/SzI7PalYBl9skBv/t
+         bkf3HOgb6Nq6hHfvSKIT5Bx08b02JJu+hhuQWoQoYKRMDu54Mk3znQVATj3/ain1FLF3
+         OXBZbh8jwJAcifQYUatwC0tx0R4Y0FoSvp/joh/y3dXwO86oB6UUloCRtiQvHhHmH4Id
+         UE7sOACCzezBBb510szzN5s8HtnENNVVQS0A8LcDBbLH2IrE512cFlteeBXcifzjMZco
+         wClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2TGSbaHXR2pR397fNB4mOvKz5WSV1SP+1BggsWMPrTY=;
+        b=sS1+FiL/ML2BzmMmDSy1JK6SqdjVCnEkTESLCu4H6cZ1LEyWUTUtEln1o/P8M5jUJ7
+         19lsSy79anXkxJ47i+hvMD/kyyCJxwNa6/+qT9FhyRYJNm1eU0dqH4snRhBfqNbmSuKJ
+         VxEAbyzGmQOZZ6KKAuGXS1mpcGIjuxI5bZ0e0k52UVTGHMIqZqcdpa0qG3ZvqDCYNOWT
+         nYt/Lq4rI8DrLwengNqjKTfH1OdeniqcTegujzhzNaMjH59YunwXtM/JajmGSby8dGLX
+         c1KhmfylxQ57pX1YKZu6qoDgEP+Zlpl8AVw5dCIVv/iLR2rur1d5VPha2C6YpQV93ZVK
+         0zEw==
+X-Gm-Message-State: APjAAAVxPCWKlSUPg7wVqAC1VT6A2oS96upJ3IvVc6zOl96fLSmudqAI
+        VCUFjJnxz+JNFhxyjzDrH00=
+X-Google-Smtp-Source: APXvYqxq6S64UgxjstzVlz5gUPRbRdPrEGGr9nF0BkKnAH4v3ZLnTJ9mTAgk2fLAR3Gn59O9OYiVcw==
+X-Received: by 2002:ac2:592f:: with SMTP id v15mr13142350lfi.133.1554668457068;
+        Sun, 07 Apr 2019 13:20:57 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id q26sm6133025lfd.27.2019.04.07.13.20.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Apr 2019 13:20:55 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 721644606EB; Sun,  7 Apr 2019 23:20:55 +0300 (MSK)
+Date:   Sun, 7 Apr 2019 23:20:55 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
+Message-ID: <20190407202055.GX1421@uranus.lan>
+References: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
+ <20190403191944.GH1421@uranus.lan>
+ <20190403203144.GI1421@uranus.lan>
+ <alpine.DEB.2.21.1904040922350.3758@macbook-air>
+ <20190404133327.GP1421@uranus.lan>
+ <alpine.DEB.2.21.1904041234340.5098@macbook-air>
+ <20190404164700.GR1421@uranus.lan>
+ <alpine.DEB.2.21.1904041454290.5597@macbook-air>
+ <20190404202038.GT1421@uranus.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404202038.GT1421@uranus.lan>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 07:07:14AM -1000, Linus Torvalds wrote:
-> On Tue, Mar 26, 2019 at 12:20 PM Kirill Smelkov <kirr@nexedi.com> wrote:
-> >
-> > Commit 9c225f2655 (vfs: atomic f_pos accesses as per POSIX) added locking for
-> > file.f_pos access and in particular made concurrent read and write not possible
-> > [...]
+On Thu, Apr 04, 2019 at 11:20:38PM +0300, Cyrill Gorcunov wrote:
+> > the machine still crashes after this, but not right away.
 > 
-> Ok, I have applied this patch - but this patch only - as a
-> well-researched preparatory patch.
-> 
-> The actual conversion patch looks fine to me too, and I see a few
-> acks, but I think I'd like to see it during a merge window just
-> because it's large and does significant changes, while this one is
-> purely preparatory.
-> 
-> Al, comments?
+> yes, exactly, if look into disasm code we will see that 0x158
+> offset points to hwc from event. Vince, gimme some time, probably
+> the weekend so I would dive into the perf code more deeply and
+> will try to make some debugging patch for more precise tracking
+> of events. The kernel you're running is the latest -tip?
 
-Linus, thanks a lot for feedback and for accepting the patch.
+Vince, could you please disable alias events and see if it change
+anything, once you have time? Note once we've aliases disabled the
+counter for cpu cycles get used for NMI watchdog so PERF_COUNT_HW_CPU_CYCLES
+won't be available in "perf" tool itself, but I guess perf_fuzzer uses
+direct kernel syscall.
+---
+ arch/x86/events/intel/p4.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-I agree that it is better to merge the bulk-conversion at the time of
-next merge window. I hope Al will pick that patch up and send to you
-when the next merge window time comes.
-
-Could we please clarify one thing: is the general complete plan to deal
-with this regression, as outlined in the merged patch, ok? I mean do we
-agree to further proceed with fs/fuse/ FOPEN_STREAM (patch 3/3) and
-backport it + stream_open to v3.14+ stable kernels? Unfortunately it
-requires a bit of cooperation from userspace, but this scheme to fix the
-regression is the best I could come up with.
-
-If FUSE bits are ok, how should we go? Are we ok to merge that patch
-now, or should we wait for the next merge window? I understand that
-generally it should be merge window from one side, but since we are
-trying to fix regression here and if the plan for regression fix is
-accepted it should be merge now. If we merge now, what should be the way
-for that patch to get merged?
-
-Fixing regression on FUSE side is my reason to do this whole work -
-that's why I care about it the most and ask.
-
-> One small note: please don't use lkml.org references since they tend
-> to be slow and flaky - use lore.kernel.org instead. Also, fix your git
-> config to use 12-character git hashes (best done by just removing the
-> explicit hash size entirely, and letting modern git shorten hashes
-> appropriately automatically).
-
-Thanks for pointing to lore.kernel.org - I'm not very keen to kernel
-development and did not knew it exists. I was seeing lkml.org being
-referenced here and there and that's why I used it. I will use
-lore.kernel.org from now.
-
-Short hashes were not due to git config, but due to me trimming them to
-10 characters in vim manually. I will use longer hashes as you ask.
-
-Kirill
+Index: linux-tip.git/arch/x86/events/intel/p4.c
+===================================================================
+--- linux-tip.git.orig/arch/x86/events/intel/p4.c
++++ linux-tip.git/arch/x86/events/intel/p4.c
+@@ -622,6 +622,8 @@ static u64 p4_get_alias_event(u64 config
+ 	u64 config_match;
+ 	int i;
+ 
++	return 0;
++
+ 	/*
+ 	 * Only event with special mark is allowed,
+ 	 * we're to be sure it didn't come as malformed
