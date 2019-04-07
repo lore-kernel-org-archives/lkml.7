@@ -2,58 +2,335 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA55C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBED9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830FD218D0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8826720870
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 13:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfDGN40 (ORCPT
+        id S1726468AbfDGN7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 09:56:26 -0400
-Received: from serv108.segi.ulg.ac.be ([139.165.32.111]:33261 "EHLO
-        serv108.segi.ulg.ac.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDGN40 (ORCPT
+        Sun, 7 Apr 2019 09:59:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726372AbfDGN7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 09:56:26 -0400
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Apr 2019 09:56:25 EDT
-Received: from mbx12-zne.ulg.ac.be (serv470.segi.ulg.ac.be [139.165.32.199])
-        by serv108.segi.ulg.ac.be (Postfix) with ESMTP id 9C493200DB85
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2019 15:49:10 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mbx12-zne.ulg.ac.be (Postfix) with ESMTP id 8FE3F129EA99
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2019 15:49:10 +0200 (CEST)
-Received: from mbx12-zne.ulg.ac.be ([127.0.0.1])
-        by localhost (mbx12-zne.ulg.ac.be [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id TT6UgZEE1weJ for <linux-kernel@vger.kernel.org>;
-        Sun,  7 Apr 2019 15:49:10 +0200 (CEST)
-Received: from mbx12-zne.ulg.ac.be (mbx12-zne.ulg.ac.be [139.165.32.199])
-        by mbx12-zne.ulg.ac.be (Postfix) with ESMTP id 7658A129E539
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2019 15:49:10 +0200 (CEST)
-Date:   Sun, 7 Apr 2019 15:49:10 +0200 (CEST)
-From:   Justin Iurman <justin.iurman@uliege.be>
-Reply-To: Justin Iurman <justin.iurman@uliege.be>
-To:     linux-kernel@vger.kernel.org
-Message-ID: <937711609.49388.1554644950383.JavaMail.zimbra@uliege.be>
-Subject: Multi-threaded packet parsing ?
+        Sun, 7 Apr 2019 09:59:45 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x37Ds8iF091047
+        for <linux-kernel@vger.kernel.org>; Sun, 7 Apr 2019 09:59:43 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rq9hm7suq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 09:59:43 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sun, 7 Apr 2019 14:59:42 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 7 Apr 2019 14:59:38 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x37DxbaA25428146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 7 Apr 2019 13:59:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A414B2064;
+        Sun,  7 Apr 2019 13:59:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC335B205F;
+        Sun,  7 Apr 2019 13:59:36 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.136.16])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun,  7 Apr 2019 13:59:36 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 760E716C0FB0; Sun,  7 Apr 2019 06:59:37 -0700 (PDT)
+Date:   Sun, 7 Apr 2019 06:59:37 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+Reply-To: paulmck@linux.ibm.com
+References: <20190402142816.GA13084@linux.ibm.com>
+ <886051277.1395.1554218080591.JavaMail.zimbra@efficios.com>
+ <20190402152334.GC4102@linux.ibm.com>
+ <161156422.1435.1554219247444.JavaMail.zimbra@efficios.com>
+ <20190403133243.GE4102@linux.ibm.com>
+ <1028306587.504.1554301662374.JavaMail.zimbra@efficios.com>
+ <20190403162039.GA14111@linux.ibm.com>
+ <20190405232835.GA24702@linux.ibm.com>
+ <20190406230613.GA187766@google.com>
+ <20190407133941.GC14111@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [87.64.170.237]
-X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - FF66 (Linux)/8.8.11_GA_3787)
-Thread-Index: gndnIChOVn4ZBg76CUG4k8XIhrnayA==
-Thread-Topic: Multi-threaded packet parsing ?
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190407133941.GC14111@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040713-0064-0000-0000-000003C79285
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010883; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01185660; UDB=6.00620910; IPR=6.00966406;
+ MB=3.00026330; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-07 13:59:42
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040713-0065-0000-0000-00003CFAAD13
+Message-Id: <20190407135937.GA30053@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-07_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904070131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
+> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
 
-Currently working inside IPv6 on EH and more specifically on hop-by-hop's. I was wondering if packet processing/parsing is multi-threaded or not ? Actually, I want to store per-packet EH information on net_device struct, which would be only valid for current packet processed/parsed by the dev. The goal is to take advantage of the existing parsing to store important info, which would avoid useless duplicate jobs right after the processing of EH. It should be fine if it's not multi-threaded, which is not ASAIK but just wanted to make sure. Can you confirm/infirm ?
+[ . . . ]
 
-Thanks,
-Justin
+> > > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > > index f8f6f04c4453..c2d919a1566e 100644
+> > > --- a/include/asm-generic/vmlinux.lds.h
+> > > +++ b/include/asm-generic/vmlinux.lds.h
+> > > @@ -338,6 +338,10 @@
+> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+> > >  		__stop___tracepoints_ptrs = .;				\
+> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+> > > +		. = ALIGN(8);						\
+> > > +		__start___srcu_struct = .;				\
+> > > +		*(___srcu_struct_ptrs)					\
+> > > +		__end___srcu_struct = .;				\
+> > >  	}								\
+> > 
+> > This vmlinux linker modification is not needed. I tested without it and srcu
+> > torture works fine with rcutorture built as a module. Putting further prints
+> > in kernel/module.c verified that the kernel is able to find the srcu structs
+> > just fine. You could squash the below patch into this one or apply it on top
+> > of the dev branch.
+> 
+> Good point, given that otherwise FORTRAN named common blocks would not
+> work.
+> 
+> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
+> macro that it can be mapped read-only?  Or am I suffering from excessive
+> optimism?
+
+And to answer the other question, in the case where I am suffering from
+excessive optimism, it should be a separate commit.  Please see below
+for the updated original commit thus far.
+
+And may I have your Tested-by?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit a365bb5f6eafb220a1448674054b05c250829313
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Fri Apr 5 16:15:00 2019 -0700
+
+    srcu: Allocate per-CPU data for DEFINE_SRCU() in modules
+    
+    Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module requires
+    that the size of the reserved region be increased, which is not something
+    we want to be doing all that often.  One approach would be to require
+    that loadable modules define an srcu_struct and invoke init_srcu_struct()
+    from their module_init function and cleanup_srcu_struct() from their
+    module_exit function.  However, this is more than a bit user unfriendly.
+    
+    This commit therefore creates an ___srcu_struct_ptrs linker section,
+    and pointers to srcu_struct structures created by DEFINE_SRCU() and
+    DEFINE_STATIC_SRCU() within a module are placed into that module's
+    ___srcu_struct_ptrs section.  The required init_srcu_struct() and
+    cleanup_srcu_struct() functions are then automatically invoked as needed
+    when that module is loaded and unloaded, thus allowing modules to continue
+    to use DEFINE_SRCU() and DEFINE_STATIC_SRCU() while avoiding the need
+    to increase the size of the reserved region.
+    
+    Many of the algorithms and some of the code was cheerfully cherry-picked
+    from other code making use of linker sections, perhaps most notably from
+    tracepoints.  All bugs are nevertheless the sole property of the author.
+    
+    Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    [ paulmck: Use __section() and use "default" in srcu_module_notify()'s
+      "switch" statement as suggested by Joel Fernandes. ]
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index f8f6f04c4453..c2d919a1566e 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -338,6 +338,10 @@
+ 		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+ 		__stop___tracepoints_ptrs = .;				\
+ 		*(__tracepoints_strings)/* Tracepoints: strings */	\
++		. = ALIGN(8);						\
++		__start___srcu_struct = .;				\
++		*(___srcu_struct_ptrs)					\
++		__end___srcu_struct = .;				\
+ 	}								\
+ 									\
+ 	.rodata1          : AT(ADDR(.rodata1) - LOAD_OFFSET) {		\
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 5bf5dcd91009..921443a026dd 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -21,6 +21,7 @@
+ #include <linux/rbtree_latch.h>
+ #include <linux/error-injection.h>
+ #include <linux/tracepoint-defs.h>
++#include <linux/srcu.h>
+ 
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+@@ -448,6 +449,10 @@ struct module {
+ 	unsigned int num_tracepoints;
+ 	tracepoint_ptr_t *tracepoints_ptrs;
+ #endif
++#ifdef CONFIG_TREE_SRCU
++	unsigned int num_srcu_structs;
++	struct srcu_struct **srcu_struct_ptrs;
++#endif
+ #ifdef CONFIG_BPF_EVENTS
+ 	unsigned int num_bpf_raw_events;
+ 	struct bpf_raw_event_map *bpf_raw_events;
+diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
+index 7f7c8c050f63..8af1824c46a8 100644
+--- a/include/linux/srcutree.h
++++ b/include/linux/srcutree.h
+@@ -120,9 +120,17 @@ struct srcu_struct {
+  *
+  * See include/linux/percpu-defs.h for the rules on per-CPU variables.
+  */
+-#define __DEFINE_SRCU(name, is_static)					\
+-	static DEFINE_PER_CPU(struct srcu_data, name##_srcu_data);\
+-	is_static struct srcu_struct name = __SRCU_STRUCT_INIT(name, name##_srcu_data)
++#ifdef MODULE
++# define __DEFINE_SRCU(name, is_static)					\
++	is_static struct srcu_struct name;				\
++	struct srcu_struct *__srcu_struct_##name			\
++		__section("___srcu_struct_ptrs") = &name
++#else
++# define __DEFINE_SRCU(name, is_static)					\
++	static DEFINE_PER_CPU(struct srcu_data, name##_srcu_data);	\
++	is_static struct srcu_struct name =				\
++		__SRCU_STRUCT_INIT(name, name##_srcu_data)
++#endif
+ #define DEFINE_SRCU(name)		__DEFINE_SRCU(name, /* not static */)
+ #define DEFINE_STATIC_SRCU(name)	__DEFINE_SRCU(name, static)
+ 
+diff --git a/kernel/module.c b/kernel/module.c
+index 0b9aa8ab89f0..524da609c884 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3093,6 +3093,11 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+ 					     sizeof(*mod->tracepoints_ptrs),
+ 					     &mod->num_tracepoints);
+ #endif
++#ifdef CONFIG_TREE_SRCU
++	mod->srcu_struct_ptrs = section_objs(info, "___srcu_struct_ptrs",
++					     sizeof(*mod->srcu_struct_ptrs),
++					     &mod->num_srcu_structs);
++#endif
+ #ifdef CONFIG_BPF_EVENTS
+ 	mod->bpf_raw_events = section_objs(info, "__bpf_raw_tp_map",
+ 					   sizeof(*mod->bpf_raw_events),
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index 9b761e546de8..2ded2614a2f4 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -1310,3 +1310,68 @@ void __init srcu_init(void)
+ 		queue_work(rcu_gp_wq, &ssp->work.work);
+ 	}
+ }
++
++#ifdef CONFIG_MODULES
++
++/* Initialize any global-scope srcu_struct structures used by this module. */
++static int srcu_module_coming(struct module *mod)
++{
++	int i;
++	struct srcu_struct **sspp = mod->srcu_struct_ptrs;
++	int ret;
++
++	for (i = 0; i < mod->num_srcu_structs; i++) {
++		ret = init_srcu_struct(*(sspp++));
++		if (WARN_ON_ONCE(ret))
++			return ret;
++	}
++	return 0;
++}
++
++/* Clean up any global-scope srcu_struct structures used by this module. */
++static void srcu_module_going(struct module *mod)
++{
++	int i;
++	struct srcu_struct **sspp = mod->srcu_struct_ptrs;
++
++	for (i = 0; i < mod->num_srcu_structs; i++)
++		cleanup_srcu_struct(*(sspp++));
++}
++
++/* Handle one module, either coming or going. */
++static int srcu_module_notify(struct notifier_block *self,
++			      unsigned long val, void *data)
++{
++	struct module *mod = data;
++	int ret = 0;
++
++	switch (val) {
++	case MODULE_STATE_COMING:
++		ret = srcu_module_coming(mod);
++		break;
++	case MODULE_STATE_GOING:
++		srcu_module_going(mod);
++		break;
++	default:
++		break;
++	}
++	return ret;
++}
++
++static struct notifier_block srcu_module_nb = {
++	.notifier_call = srcu_module_notify,
++	.priority = 0,
++};
++
++static __init int init_srcu_module_notifier(void)
++{
++	int ret;
++
++	ret = register_module_notifier(&srcu_module_nb);
++	if (ret)
++		pr_warn("Failed to register srcu module notifier\n");
++	return ret;
++}
++late_initcall(init_srcu_module_notifier);
++
++#endif /* #ifdef CONFIG_MODULES */
+
