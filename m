@@ -2,189 +2,105 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DACC282DA
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C48C282DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D144A20B1F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA4820B1F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 01:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="MKgtFSRY"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sBV/YYyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDGBqP (ORCPT
+        id S1726530AbfDGBzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 21:46:15 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:43878 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDGBqO (ORCPT
+        Sat, 6 Apr 2019 21:55:22 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40916 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfDGBzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 21:46:14 -0400
-Date:   Sat, 6 Apr 2019 18:46:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch DBF4B640194
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1554601573;
-        bh=9wof/FF2aLHD2jbpukM8qshm+KALttr6gkDgISFUo0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MKgtFSRYF5ZRQTIH1WTmgIFs+qbFFMWC8UKCbSO/EQWlbYM0n1Do5Bv2S8x+2LmoF
-         jl7Crj9gYMfJnfRjNO0YmmgoP5xggSDka5jg3Ct+lp7HIcTh4xmO5qAa7wvlze0Y4N
-         O0Ej6XaK2hMjJUyWeEJlYRVAlR+vn6ch150L6rTXJfeZmeG588f2H0W+dl9bYVG/Wz
-         rUi4Hc73/3PNskPDNgWmol0w7N96c6WfOkvKaz+cz0xdr5YzNJk6zinJ+QWA6gTRkj
-         4UPOSlTzBhlf0DG1ZoBBoVeEAL10skIspH85wZ1Upw7zKg9S3t2OWu6cZyS1faFgAW
-         1c+bDpAmvw+bg==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] driver core: add dev_print_hex_dump() logging
- function.
-Message-ID: <20190407014613.GA14812@innovation.ch>
-References: <20190327014807.7472-1-ronald@innovation.ch>
- <20190327014807.7472-4-ronald@innovation.ch>
- <20190327023757.GB20766@kroah.com>
- <20190328002817.GF24753@innovation.ch>
- <20190328052917.GB18668@kroah.com>
- <20190328102755.GA26446@innovation.ch>
- <20190328112952.GA2232@kroah.com>
- <20190402024714.GA14213@innovation.ch>
- <20190402063326.GB7218@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190402063326.GB7218@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 6 Apr 2019 21:55:22 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w20so6028452qka.7
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 18:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TmYQ7hFkjaBeCconcL7FY5cmVjdiG0ObsQxHd0Hzpm8=;
+        b=sBV/YYybBMJg+IbMv0Bn3eyugsTpwOASRjvjBmcgA92WeTbWT5ZlMEJh3TM2auXwGU
+         ear4C1AA2SPKcgpL7dA396DQkXirIUXS67wlmW89++4iu+6H4OBsiCTvWawNwD0FB7ZM
+         AxhPXHIaE1viUkIvlvaULhtzm059uOuhFu0JCK4zA8mHzpVtOb5LM1bu7S3xY3HdiU2h
+         sgLSQAqZU6pLTARXFoMtnLs3CmmLLSBakDy/DPiIFbjyy3AsMxd/1sxVCm47wRq6zQDu
+         VeSsZOlDt/JRbdmrLahXvsy2S11LMiP5w54kttZ3qFFjUlyiAANDbhKI4iaOFegGad/L
+         G6JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TmYQ7hFkjaBeCconcL7FY5cmVjdiG0ObsQxHd0Hzpm8=;
+        b=VlrJhvGN9P8nuhzLiv4G32p7OCrzB9kaDRIp7bwwfLWfHE8zJjt3JYdHwNbbbnH/hU
+         MvY8DpFlAklXEOk9QPxxN0RbNAui8ZK7Qk2EB2snhiXfxBPuuDsxLn2dd4kde4mMv7gi
+         wDUaOeAuXi6nfv2HNw5eMxOkchRNKS5HPSgxDH2hVR8g/gmCkyObUEjfGfGPkqmzvImy
+         ECHgfm1d94FhBEzGd8sRKSOMPWybdV9YM7JRl+fXYNRD5L4FiQkY0fqGz3kV9fGncQ0j
+         bZgQrAM2aSjyZ9rD9PsZ1Tx8SUf/KSdOaKfRpEZVT4D2wxuEZZjeRAOhDn0NDVruJd8/
+         l7Yw==
+X-Gm-Message-State: APjAAAURuDQq8FYyiqNdYV6CpR1KHmbA7BwIxLxi5Av6CdRI9qrmGTnX
+        5vCMcX5eqd70HHLjiI1JnOTReg==
+X-Google-Smtp-Source: APXvYqyeMwDlrefLZK6tvhMZ1SBBDwrIQ/U3yZLm87VAJniwapXmOCBm8dtIoJwMHKjnFME3z/o0XQ==
+X-Received: by 2002:a05:620a:1646:: with SMTP id c6mr17645924qko.69.1554602121104;
+        Sat, 06 Apr 2019 18:55:21 -0700 (PDT)
+Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 11sm18748299qtu.5.2019.04.06.18.55.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2019 18:55:20 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org
+Cc:     oohall@gmail.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] powerpc/pseries/pmem: fix a set but not used value
+Date:   Sat,  6 Apr 2019 21:54:47 -0400
+Message-Id: <20190407015447.39292-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 4c5d87db4978 ("powerpc/pseries: PAPR persistent memory
+support") set a local variable "count" in dlpar_hp_pmem() but never
+use it.
 
-> On Mon, Apr 01, 2019 at 07:47:14PM -0700, Life is hard, and then you die wrote:
-> > 
-> > On Thu, Mar 28, 2019 at 12:29:52PM +0100, Greg Kroah-Hartman wrote:
-> > > On Thu, Mar 28, 2019 at 03:27:55AM -0700, Life is hard, and then you die wrote:
-> > > > 
-> > > > On Thu, Mar 28, 2019 at 06:29:17AM +0100, Greg Kroah-Hartman wrote:
-> > > > > On Wed, Mar 27, 2019 at 05:28:17PM -0700, Life is hard, and then you die wrote:
-> > > > > > 
-> > > > > > On Wed, Mar 27, 2019 at 11:37:57AM +0900, Greg Kroah-Hartman wrote:
-> > > > > > > On Tue, Mar 26, 2019 at 06:48:06PM -0700, Ronald Tschalär wrote:
-> > > > > > > > This is the dev_xxx() analog to print_hex_dump(), using dev_printk()
-> > > > > > > > instead of straight printk() to match other dev_xxx() logging functions.
-> > > > > > > > ---
-> > > > > > > >  drivers/base/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
-> > > > > > > >  include/linux/device.h | 15 +++++++++++++++
-> > > > > > > >  2 files changed, 58 insertions(+)
-> > [snip]
-> > > > > > > Anyway, no, please do not do this.  Please do not dump large hex values
-> > > > > > > like this to the kernel log, it does not help anyone.
-> > > > > > > 
-> > > > > > > You can do this while debugging, sure, but not for "real" kernel code.
-> > > > > > 
-> > > > > > As used by this driver, it is definitely called for debugging only and
-> > > > > > must be explicitly enabled via a module param. But having the ability
-> > > > > > for folks to easily generate and print out debugging info has proven
-> > > > > > quite valuable.
-> > > > > 
-> > > > > We have dynamic debugging, no need for module parameters at all.  This
-> > > > > isn't the 1990's anymore :)
-> > > > 
-> > > > I am aware of dynamic debugging, but there are several issues with it
-> > > > from the perspective of the logging I'm doing here (I mentioned these
-> > > > in response to an earlier review already):
-> > > > 
-> > > >   1. Dynamic debugging can't be enabled at a function or line level on
-> > > >      the kernel command line, so this means that to debug issues
-> > > >      during boot you have to enable everything, which can be way too
-> > > >      verbose
-> > > 
-> > > You can, and should enable it at a function or line level by writing to
-> > > the proper kernel file in debugfs.
-> > > 
-> > > You have read Documentation/admin-guide/dynamic-debug-howto.rst, right?
-> > 
-> > Yes, and I've played with the parameters quite a bit.
-> > 
-> > > No need to do anything on the command line, that's so old-school :)
-> > 
-> > Sorry if I'm being unduly dense, but then how to enable debugging
-> > during early boot? The only other alternative I see is modifying the
-> > initrd, and asking folks to do that is noticeably more complicated
-> > than having them add something to the command line in grub. So from my
-> > perspective I find kernel params far from old-school :-)
-> 
-> You can do dynamic debugging from the kernel command line, if your code
-> is built into the kernel (but why would a tiny driver under testing like
-> this, not be built into the kernel?) what specifically did not work for you?
+arch/powerpc/platforms/pseries/pmem.c: In function 'dlpar_hp_pmem':
+arch/powerpc/platforms/pseries/pmem.c:109:6: warning: variable 'count'
+set but not used [-Wunused-but-set-variable]
 
-This may be part of our disconnect: there's almost no reason (and
-several downsides) to building it into the kernel instead of as a
-module:
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/powerpc/platforms/pseries/pmem.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-- When developing, being able to just reload the module instead of
-  rebooting is just so much faster and more convenient.
-
-- For other users, having them build the driver as a dkms managed
-  module is also by far the simplest and least error-prone approach -
-  explaning to users how to rebuild their kernel (something most of
-  them have never done) takes a bunch of time and effort on both
-  sides for essentially no gain.
-
-- Once the driver is part of the regular kernel, practically all
-  distro's will build it as a module (at least I'm fairly certain
-  about this).
-
-In the case where a problem happens during early boot, if I can
-reproduce myself then of course I can build the driver into the kernel
-and debug it; but if I need others to test/debug things, then this is
-a much harder sell.
-
-In my experience, every time you make something even a little harder
-for a user to do, the chance of them doing it and you getting useful
-feedback goes down exponentially and the amount of work you need to do
-to handhold them goes up significantly. So I think it's absolutely
-vital to try and keep things as simple as possible.
-
-> > > >   2. The expressions to enable the individual logging statements are
-> > > >      quite brittle (in particular the line-based ones) since they
-> > > >      (may) change any time the code is changed - having stable
-> > > >      commands to give to users and put in documentation (e.g.
-> > > >      "echo 0x200 > /sys/module/applespi/parameters/debug") is
-> > > >      quite valuable.
-> > > > 
-> > > >      One way to work around this would be to put every single logging
-> > > >      statement in a function of its own, thereby ensuring a stable
-> > > >      name is associated with each one.
-> > > 
-> > > Again, read the documentation, this works today as-is.
-> > 
-> > I have read it (we're talking about the dynamic debug docs here), but
-> > I just don't see how it addresses this in any way.
-> 
-> You can enable/disable logging per-function, which is what you want,
-> right?
-
-Yes'ish: the problem is that if they are just part of regular
-functions, A) the chances are higher that the function may get renamed
-and hence any existing debug instructions broken, and B) this doesn't
-work if there are multiple debug statements in a function. Hence my
-assertion that for this work well (and yes, it can work well) you
-basically need to create a separate function for each debug statement
-(which that contains just that debug statement) (a sort of stable
-labelling of each debug statement).
-
-
-  Cheers,
-
-  Ronald
+diff --git a/arch/powerpc/platforms/pseries/pmem.c b/arch/powerpc/platforms/pseries/pmem.c
+index 27f0a915c8a9..f860a897a9e0 100644
+--- a/arch/powerpc/platforms/pseries/pmem.c
++++ b/arch/powerpc/platforms/pseries/pmem.c
+@@ -106,7 +106,7 @@ static ssize_t pmem_drc_remove_node(u32 drc_index)
+ 
+ int dlpar_hp_pmem(struct pseries_hp_errorlog *hp_elog)
+ {
+-	u32 count, drc_index;
++	u32 drc_index;
+ 	int rc;
+ 
+ 	/* slim chance, but we might get a hotplug event while booting */
+@@ -123,7 +123,6 @@ int dlpar_hp_pmem(struct pseries_hp_errorlog *hp_elog)
+ 		return -EINVAL;
+ 	}
+ 
+-	count = hp_elog->_drc_u.drc_count;
+ 	drc_index = hp_elog->_drc_u.drc_index;
+ 
+ 	lock_device_hotplug();
+-- 
+2.17.2 (Apple Git-113)
 
