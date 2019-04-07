@@ -2,106 +2,77 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8E0C282DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 02:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E23C282DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 02:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3A4213A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 02:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="aJODF+9G"
+	by mail.kernel.org (Postfix) with ESMTP id BFF8F20B1F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 02:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfDGC0u (ORCPT
+        id S1726549AbfDGCa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 22:26:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33223 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfDGC0u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 22:26:50 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t16so5238590plo.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2019 19:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pbFiHEf1JRX3q/KJ7+SXhCuYiieeLaagT2MKIRh7feU=;
-        b=aJODF+9GDwNrJJA3vaeBNXIQnT08LEI7aw7UDRbuPPI79BaOZ4n+enGT8hf4x02OtZ
-         G1luMZfHQgAgy60D9Wr3P/aL2B1ZC338zJdc4itOVWJQd1JP1dLypwbunA0tDe9Cj/Go
-         fpvR1swPTanzB1/oOMEN9SIKfnN+HCtu7yOgS6wnp/wXF95x73FHoJWJE7f5zYEoqvkj
-         0cXUXYGoScwjZ8wnT1Kco1pZsDyxceVjlwOS1X7An01ljLPBKvJQGpDfSSN9n/BZod8r
-         bE8qcH1dJAgmul0kS3lWgZql8YbHBtYOiFpA9eMj7SEwXObYqVHmad9HkXKC9CSEJNF7
-         5UhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pbFiHEf1JRX3q/KJ7+SXhCuYiieeLaagT2MKIRh7feU=;
-        b=YqsQmwfXE1MaOnOPog+Xd59/oWHHCP74ZVZVZSlQzY9SiPup3A8sXp5sjhN4J4s2jY
-         w6jNq99B9Wd/EYkqPwwrZdxgRBbj96mCV1adlzJHEaSZrBjFyT3PtMP7LSk0jiDzA/zO
-         lR+EeXoK3+tiCCVdvbrQ2/NEIBAuCWu3HLkD9l0t4HexlEOCSCXxUODN284VljMdsiqW
-         u6qtcsMk7DbdJy1FwOgv1Sx5WP84YHAEH/iD2v9Flv8HXigk/63cBMdlatoPBp450z3n
-         9MMJy94gzj18VnYiX4ZkQsk2TsubLrhi0rtp3vV6QL5WllTFtiJFaK+0fA9e/GFIoZ/O
-         KZxg==
-X-Gm-Message-State: APjAAAV+Bt/LEu3BgSpy3PwkWxU6C/FAhmUdUfR7bjffB0cKdmpIOo7L
-        XYgt+f9/QhtSDDkfDl42Z5qoiQ==
-X-Google-Smtp-Source: APXvYqww3A2dZzWPiMEkVXe7aXSilFWyt/z2WhIC6F9MpgLMGlwOH7TMwxuEo72meWiWoLGu5TQXLQ==
-X-Received: by 2002:a17:902:ec0c:: with SMTP id cy12mr769plb.291.1554604009667;
-        Sat, 06 Apr 2019 19:26:49 -0700 (PDT)
-Received: from trong0.mtv.corp.google.com ([2620:0:1000:1601:c43f:8c1b:f6ef:3dce])
-        by smtp.gmail.com with ESMTPSA id f7sm50240345pga.56.2019.04.06.19.26.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Apr 2019 19:26:48 -0700 (PDT)
-From:   Tri Vo <trong@android.com>
-To:     oberpar@linux.ibm.com, akpm@linux-foundation.org, jeyu@kernel.org
-Cc:     ndesaulniers@google.com, ghackmann@android.com, linux-mm@kvack.org,
-        kbuild-all@01.org, rdunlap@infradead.org, lkp@intel.com,
-        linux-kernel@vger.kernel.org, pgynther@google.com,
-        willy@infradead.org, Tri Vo <trong@android.com>
-Subject: [PATCH] module: add stub for within_module
-Date:   Sat,  6 Apr 2019 19:25:58 -0700
-Message-Id: <20190407022558.65489-1-trong@android.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Sat, 6 Apr 2019 22:30:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6261 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726245AbfDGCa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 22:30:27 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9A2C416ABB87A248A66F;
+        Sun,  7 Apr 2019 10:30:24 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Sun, 7 Apr 2019
+ 10:30:14 +0800
+Subject: Re: [PATCH net] net: vrf: Fix ping failed when vrf mtu is set to 0
+To:     David Miller <davem@davemloft.net>, <dsa@cumulusnetworks.com>
+CC:     <shrijeet@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mingfangsen@huawei.com>
+References: <0da12059-229f-e167-ad41-14b56993a029@huawei.com>
+ <20190406.181232.473436529978209156.davem@davemloft.net>
+From:   linmiaohe <linmiaohe@huawei.com>
+Message-ID: <b8af36bf-a2c7-91f7-eed4-eb802523655e@huawei.com>
+Date:   Sun, 7 Apr 2019 10:29:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190406.181232.473436529978209156.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a stub for within_module() when CONFIG_MODULES is not set. This
-is needed to build CONFIG_GCOV_KERNEL.
 
-Fixes: 8c3d220cb6b5 ("gcov: clang support")
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-Signed-off-by: Tri Vo <trong@android.com>
----
- include/linux/module.h | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 5bf5dcd91009..47190ebb70bf 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -709,6 +709,11 @@ static inline bool is_module_text_address(unsigned long addr)
- 	return false;
- }
- 
-+static inline bool within_module(unsigned long addr, const struct module *mod)
-+{
-+	return false;
-+}
-+
- /* Get/put a kernel symbol (calls should be symmetric) */
- #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak)); &(x); })
- #define symbol_put(x) do { } while (0)
--- 
-2.21.0.392.gf8f6787159e-goog
+On 2019/4/7 9:12, David Miller wrote:
+> From: linmiaohe <linmiaohe@huawei.com>
+> Date: Thu, 4 Apr 2019 20:01:13 +0800
+> 
+>> From: Miaohe Lin <linmiaohe@huawei.com>
+>>
+>> When the mtu of a vrf device is set to 0, it would cause ping
+>> failed.So I think we should limit dev->min_mtu to ETH_MIN_MTU
+>> to solve this problem. And if dev->max_mtu still be 0 can be
+>> confusing, so I limit dev->max_mtu to ETH_MAX_MTU.
+>>
+>> Here is the reproduce step:
+> 
+> Just in case it isn't clear, David Ahern gave you feedback and
+> asked you to adjust things so that the problem is solved for ipv6
+> as well.  He also gave you an appropriate Fixes: tag to add to
+> your commit message.
+> 
+> .
+> 
+
+I'am sorry, I'am on my holiday, so I found these emalis just now.
+I will adjust things in v2 so that this patch will solve for ipv6 as well.
+And add an appropriate fixes to my commit message.
+Thank you very much.
 
