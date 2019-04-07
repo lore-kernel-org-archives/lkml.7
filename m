@@ -2,101 +2,105 @@ Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582EDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 17:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07922C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 18:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F73C20855
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 17:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554658489;
-	bh=AIjYXb/NBrC9QStzg8kKtbJOemVFRU9IcBa+zSpsXrE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gvCovjZ9h3Rn89jKAjLUD6/gvOOZSKQ8lAwOIsqOYKTlUAyqZ0SyyWnZkpI6rw0ir
-	 dxQn/7AY/lgQvsytLhMX3t5MOZGLf84YTjLa2KfQtBkY6ekTsVkJm+xSdDTC4B1B8P
-	 0dLf8nLf4DMd7HrpS0jOAbZUzijO1YUz9HZYbxDk=
+	by mail.kernel.org (Postfix) with ESMTP id BEE5D20880
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 18:25:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UA443xrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDGRer (ORCPT
+        id S1726461AbfDGSZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 13:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfDGRer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 13:34:47 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56EE9213F2
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2019 17:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554658486;
-        bh=AIjYXb/NBrC9QStzg8kKtbJOemVFRU9IcBa+zSpsXrE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l3x27s8E78AXNkFtYw1UsONXBwhzn7kbjUoRUJsYM1YDaeNL9jRVJokS4bnOUFlaZ
-         +6LPSvutVwdOvWb0OuCck3qApJIX8T8sR1FQ4NklPhy/H0bL2PrAAoWrqrjksL1snm
-         b3F+J6pob9EAijYL1iC7EcpESECPU7fschL7lby0=
-Received: by mail-wm1-f46.google.com with SMTP id h18so12184973wml.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 10:34:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAWFEN1QNGAcUW1ZmuSSUDJoGlbdZaobqJWtTmtdduTtyvXwdt6H
-        Nej1NJToUQOHkWxYYadvBP4H4JqNRQYZbvvHAy/NFA==
-X-Google-Smtp-Source: APXvYqztYBR0/QPkVgITTFzfLkZ0VuXwKOPaSAAdeFUqr3jIGOkPIq5pwdS1yRNYPQGDsa6IhLx4OTE9+gxHVq3xINc=
-X-Received: by 2002:a1c:4e19:: with SMTP id g25mr15409692wmh.9.1554658484952;
- Sun, 07 Apr 2019 10:34:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190224044400.34975-1-aubrey.li@linux.intel.com> <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 7 Apr 2019 10:34:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrVhpqZiBe6zvK+z6HmD9AhK_O_O=2H=PYzBHid4C=SMYQ@mail.gmail.com>
-Message-ID: <CALCETrVhpqZiBe6zvK+z6HmD9AhK_O_O=2H=PYzBHid4C=SMYQ@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Aubrey Li <aubrey.li@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        aubrey.li@intel.com, LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 7 Apr 2019 14:25:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39738 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfDGSZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 14:25:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l7so9234361ljg.6;
+        Sun, 07 Apr 2019 11:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wDIsYYOrvxhZ9kzb7SJ7T2luie5cJmB0gvybJw+O/2s=;
+        b=UA443xrwlCFkCfQF9mnsAhRlQr2OIEIaWyIzzPgYyyyPGsM2byLeoNqBEoC31o7ITL
+         LUd966UQ2C4UyHVJxTgeoU5JcXN5CiS07GsAC3HfIy77K9IMVhw5wJxjtflU1CxXjxDj
+         NtsSyz1yA4lQZJwkGW1nXJuu2PkJPk8vla7F7mzTPKYJ940RNfHNYUGekAzhnTAgfA6z
+         koGF5bkLgzi34fsC+9PBtKb6cqSaYAjDP/DOgp48bVnSMeC8MHwBeVBzWkKFlKYxdsSt
+         AIAfX8GX+vxJol15bWHdf08U6uikApfjsafLtkpwiEgAp0g6ik+tK//UYEUwlR33J0vE
+         6EKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wDIsYYOrvxhZ9kzb7SJ7T2luie5cJmB0gvybJw+O/2s=;
+        b=nwsC7bMoPUzv/+QcpiU1voVqOZJg3VbcOUobb/rYXQfxMpFpbUTJDM6txhKdrEUEy4
+         DAZyW6SN0EMi3M2zHT6/2A9ur63Z1KIKDWyNDC1UbGGv27rF1uhUYwi+0Cd/rpXnlkX3
+         MBAuXenBpC1rzDXF+o/GXEQqNROospWRBUGuLS30csBSiGlVYxBLXpUpvyuZtTlR8CaD
+         AuH6rJOauuh8SwSv1CohMtg+M00OhXIkjfLwOuKdMUn6AgjUjrYoD/T+imjMkie8hFti
+         02WRo6yzEvjFgzgZhc9/DFfoTQv5q9K5HqD6dRe03dusAx9ujQtqVceZhSppBGtgQV1P
+         SGAA==
+X-Gm-Message-State: APjAAAVEANXKpyoIR7UAXFGGC3KdRu7Oz7qLTR78sOrbF8fhbtoDPol1
+        7PS+8rknk7idrN6IJLV+Vnc=
+X-Google-Smtp-Source: APXvYqwkd1Lczdx6IeGVZ/AAGnAtoFYgTbb6AdPWltiR+7c8f8mYoBnjmgkjJQbLA7xxMLqIcF0O1Q==
+X-Received: by 2002:a2e:1245:: with SMTP id t66mr13494944lje.18.1554661520827;
+        Sun, 07 Apr 2019 11:25:20 -0700 (PDT)
+Received: from myhost.home (bkw193.neoplus.adsl.tpnet.pl. [83.28.190.193])
+        by smtp.gmail.com with ESMTPSA id x6sm5636706lfe.67.2019.04.07.11.25.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Apr 2019 11:25:20 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     lee.jones@linaro.org, tony@atomide.com
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jacek.anaszewski@gmail.com
+Subject: [GIT PULL] LM3532 backlight support improvements and relocation
+Date:   Sun,  7 Apr 2019 20:25:13 +0200
+Message-Id: <20190407182514.15427-1-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 12:32 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sun, 24 Feb 2019, Aubrey Li wrote:
->
-> > The architecture specific information of the running processes could
-> > be useful to the userland. Add support to examine process architecture
-> > specific information externally.
-> >
-> > Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> > Cc: Dave Hansen <dave.hansen@intel.com>
-> > Cc: Arjan van de Ven <arjan@linux.intel.com>
->
-> This really lacks
->
-> Cc: Linux API <linux-api@vger.kernel.org>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
->
-> Cc'ed now.
->
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-I certainly understand why you want to expose this info, but would it
-make more sense to instead add an arch_status file in /proc with
-architecture-specific info?  Or maybe an x86_status field for x86
-status, etc.
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/lm3532-driver-improvements
+
+for you to fetch changes up to b3e9d18dc4a5e4d329dea32b59bdde5e012ae64a:
+
+  leds: lm3532: Introduce the lm3532 LED driver (2019-04-06 21:06:07 +0200)
+
+Thanks,
+Jacek Anaszewski
+
+----------------------------------------------------------------
+LM3532 backlight driver improvements and relocation.
+----------------------------------------------------------------
+Dan Murphy (4):
+      dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+      ARM: dts: omap4-droid4: Update backlight dt properties
+      mfd: ti-lmu: Remove LM3532 backlight driver references
+      leds: lm3532: Introduce the lm3532 LED driver
+
+ .../devicetree/bindings/leds/leds-lm3532.txt       | 101 +++
+ Documentation/devicetree/bindings/mfd/ti-lmu.txt   |  20 -
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |  27 +-
+ drivers/leds/Kconfig                               |  10 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-lm3532.c                         | 683 +++++++++++++++++++++
+ drivers/mfd/ti-lmu.c                               |  11 -
+ include/linux/mfd/ti-lmu-register.h                |  44 --
+ include/linux/mfd/ti-lmu.h                         |   1 -
+ 9 files changed, 813 insertions(+), 85 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
+ create mode 100644 drivers/leds/leds-lm3532.c
