@@ -4,75 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C70C282DA
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 03:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD05C282DC
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 03:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE8220B1F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 03:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B09B20B1F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 03:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfDGDOe (ORCPT
+        id S1726471AbfDGDVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Apr 2019 23:14:34 -0400
-Received: from www.osadl.org ([62.245.132.105]:39303 "EHLO www.osadl.org"
+        Sat, 6 Apr 2019 23:21:08 -0400
+Received: from www.osadl.org ([62.245.132.105]:39362 "EHLO www.osadl.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfDGDOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Apr 2019 23:14:33 -0400
+        id S1725951AbfDGDVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Apr 2019 23:21:07 -0400
+X-Greylist: delayed 3874 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Apr 2019 23:21:06 EDT
 Received: from localhost.localdomain (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x373DS4n003372;
-        Sun, 7 Apr 2019 05:13:28 +0200
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x372GCs1021361;
+        Sun, 7 Apr 2019 04:16:17 +0200
 From:   Nicholas Mc Guire <hofrat@opentech.at>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Nicholas Mc Guire <hofrat@opentech.at>
-Subject: [PATCH RFC] clk: ux500: add range to usleep_range
-Date:   Sun,  7 Apr 2019 05:13:24 +0200
-Message-Id: <1554606804-29453-1-git-send-email-hofrat@opentech.at>
+Subject: [PATCH 2/3] media: smiapp: regs: add range to usleep_range
+Date:   Sun,  7 Apr 2019 04:16:03 +0200
+Message-Id: <1554603364-10500-2-git-send-email-hofrat@opentech.at>
 X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
+References: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Providing a range for usleep_range() allows the hrtimer subsystem to
-coalesce timers - the delay is runtime configurable so a factor 2
-is taken to provide the range.
+As this is a retry loop for a sender not responding there is no reason
+to mandate a high accuracy delay - extend the sleep range to 2-4ms
+so that the hrtimer subsystem can work efficiently.
 
 Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
 ---
 
-Problem located with an experimental coccinelle script                                       
-                                                                                             
-Q: Basically usleep_range() with min == max never makes much sense notably                      
-   in non-atomic context. If the factor of 2 is tolerable or a fixed
-   offset of e.g. 1000 would be more suitable is not clear to me - maybe
-   someone familiar with that driver can clarify this.
-                                                                                             
-Patch was compile tested with: u8500_defconfig (implies COMMON_CLK=y)
-(with some sparse warnings about not implemented system calls)                               
-                                                                                             
-Patch is against 5.1-rc3 (localversion-next is next=20190405)                                
+Problem located by an experimental coccinelle script
 
- drivers/clk/ux500/clk-sysctrl.c | 2 +-
+Patch was compile tested with: x86_64_defconfig + MEDIA_SUPPORT=m,
+MEDIA_CAMERA_SUPPORT=y, MEDIA_CONTROLLER=y, VIDEO_V4L2_SUBDEV_API=y,
+VIDEO_SMIAPP=m
+
+Patch is against 5.1-rc3 (localversion-next is next-20190405)
+
+ drivers/media/i2c/smiapp/smiapp-regs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ux500/clk-sysctrl.c b/drivers/clk/ux500/clk-sysctrl.c
-index 7c0403b..a1fa3fb 100644
---- a/drivers/clk/ux500/clk-sysctrl.c
-+++ b/drivers/clk/ux500/clk-sysctrl.c
-@@ -42,7 +42,7 @@ static int clk_sysctrl_prepare(struct clk_hw *hw)
- 				clk->reg_bits[0]);
+diff --git a/drivers/media/i2c/smiapp/smiapp-regs.c b/drivers/media/i2c/smiapp/smiapp-regs.c
+index 145653d..dfa4f99 100644
+--- a/drivers/media/i2c/smiapp/smiapp-regs.c
++++ b/drivers/media/i2c/smiapp/smiapp-regs.c
+@@ -276,7 +276,7 @@ int smiapp_write_no_quirk(struct smiapp_sensor *sensor, u32 reg, u32 val)
+ 			return 0;
+ 		}
  
- 	if (!ret && clk->enable_delay_us)
--		usleep_range(clk->enable_delay_us, clk->enable_delay_us);
-+		usleep_range(clk->enable_delay_us, clk->enable_delay_us*2);
+-		usleep_range(2000, 2000);
++		usleep_range(2000, 4000);
+ 	}
  
- 	return ret;
- }
+ 	dev_err(&client->dev,
 -- 
 2.1.4
 
