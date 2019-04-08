@@ -5,67 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DB1C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE42CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AC920863
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD56D20863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DII4ZdIN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMQO4d+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfDHTju (ORCPT
+        id S1728822AbfDHTjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:39:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41295 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfDHTjr (ORCPT
+        Mon, 8 Apr 2019 15:39:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36867 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbfDHTjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:39:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d1so7913600plj.8;
-        Mon, 08 Apr 2019 12:39:47 -0700 (PDT)
+        Mon, 8 Apr 2019 15:39:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w23so7918289ply.4;
+        Mon, 08 Apr 2019 12:39:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=n8M7yZS77yDr2htBbKlSnEeLAu95sbQ1FVJ5Vh9oVR4=;
-        b=DII4ZdINVbIl4RxxRaT/0s9IA86LqanNMtYrR4S7m/0fD3U9AD353pEGYuo0NVUpJN
-         O697luZEe1imkuofChHARthyNkS86/RV5CrKSeZxfcTrxqj6RSyJqw540ogOu63z1cmB
-         TR91T2qywPs6WT7eewbxa0q5yLq1ZywPllo+UdHdU+a5MymjWzTDUFTySx0E9yz7fjMc
-         6klTQHqvYiVbMVef8NQK4lQEHH/pYK8djWNDh7qrNltODLIlOvYshl0kn34/2/irXYnG
-         eR6Q7es4Qa0mjUVDoGWoYw+CU4UsmF8Uef6DNqIBzznanVi2jzcgFtScBs4+8l1d8PHC
-         Gv7w==
+        bh=IAzbxkJlpTQ2aw4GmH8bUwHqrx58SWUqD0TKIw07vIM=;
+        b=AMQO4d+l1S3uvkKrlHtSrlCMAbtDbeySQL1pX7CC5U0gWnuUDX6TQBbYVVn9I2gI82
+         9/+EulQerD50YUabYbmTcza7T3vebvxJly62KOBi5mP+E5CHSA/kDHZ5n8l3k5/VFEgp
+         WhyZu5vCkNN/4BLv6mqaj1/yXcr9SHgkRunOJ/kY21u3ncbCdrzjHXIFBGKRPMGCyvJ3
+         aufT35+4kQppms44VGOR3St8ah5ItogttPi//4GDYfuCKw48NDEFeKwteZAsfqEV4xJF
+         Z69Y0jYdDUtpbxo8KQCpRFt8nQzi3lxjYvvXMVF7DPc0YlSPUxJ+i+VRpLZeuuorBGS8
+         MTiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=n8M7yZS77yDr2htBbKlSnEeLAu95sbQ1FVJ5Vh9oVR4=;
-        b=Qeb7w0L0n886IjtG1dV3f/CAkA3Hf554sPC+IGNZFY32cAs2bR0jPL4+JI4mRTfCEe
-         uTthggiD2/KxWNjljjly0uLA1hc/Sdq57FwT7jXQZboe3/q44kIOLt6RLKhHMeprTpHj
-         5Kdth6wess7YYgNV51Wvu8+rX7JUNkAr2qesvTVdMjUYqn3/b2J9PvpA+B7JuHGnKQHw
-         Qdx4NrdlnLTLhIb5zsHcQ3x2r0Rc/jyVcrvc25yH7DzCHrQiTKfTkoLqKODk22l52EtI
-         KgfuQkuRqtlvOLkrLf7PHvqmSupsFLwWcgwUIjM4yREACZ4eZY2RC/0CBMWZxzPBoEYQ
-         VMmg==
-X-Gm-Message-State: APjAAAVlPTg3ewsWw/tl/+1aHpIHHOww76XNjkT7HXRAgeYImxrcHHhB
-        HWpi/iWQFkph4flGHUscLzI=
-X-Google-Smtp-Source: APXvYqzF1Qz+0o+N/KCYwo3uzL1Fuu8qWi75fCwj3Wadyb2+eRHk2ObZbn/0/MGICbDfwgldiolfIg==
-X-Received: by 2002:a17:902:5a2:: with SMTP id f31mr31037240plf.119.1554752387258;
-        Mon, 08 Apr 2019 12:39:47 -0700 (PDT)
+        bh=IAzbxkJlpTQ2aw4GmH8bUwHqrx58SWUqD0TKIw07vIM=;
+        b=Fzgo6v4zb7SgYtWG2zkBmLu7UGUWDlYFf+u29w5g+xH7qhA08cfO2Ym8hCoRcCwJCV
+         EW8jIDA6POLtBxJ37xA/fTWA9wf5WCaUT/1fA8348bv9ZRV1r7G4EaIaIZCTvrrJL228
+         FsXSR42IzpKY9eb2by+D6Omeec1xnqoC5Kmk618W4MctnnEpWG/nohBG8UzvzyfU7INP
+         K3nmQOt4v8zWgSaM1SrUf8vidpYYVdIeoB16Y0Puk2vIxGhkNLzXeusmppqn7ioxuwTr
+         QoWO7U4UDwAUdoT+Zxil87CISW0ecVxw5thRdOnTqXrkXh2cm01gUZLCTMTWhCBtcyD3
+         XeGQ==
+X-Gm-Message-State: APjAAAURIZihdg9E3RIFqmp/xm2338ajmYriVUZrL73soQvXIDT0Zl8i
+        NHUPRltxWw3b28X65ESnk+g=
+X-Google-Smtp-Source: APXvYqy7XEMnu428nXuTVmDPQPk8Y7+bsYzitSMxqPpNU3hvN5iT+Pz+BSWTwTd/Av/Q8Wgo0e2xIQ==
+X-Received: by 2002:a17:902:1124:: with SMTP id d33mr7821386pla.268.1554752391318;
+        Mon, 08 Apr 2019 12:39:51 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 19sm34964251pga.88.2019.04.08.12.39.46
+        by smtp.gmail.com with ESMTPSA id z20sm42163181pgf.70.2019.04.08.12.39.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 12:39:46 -0700 (PDT)
+        Mon, 08 Apr 2019 12:39:50 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 07/22] watchdog: bcm_kona_wdt: Convert to use device managed functions and other improvements
-Date:   Mon,  8 Apr 2019 12:38:31 -0700
-Message-Id: <1554752326-13319-8-git-send-email-linux@roeck-us.net>
+        Support Opensource <support.opensource@diasemi.com>
+Subject: [PATCH 10/22] watchdog: da9055_wdt: Use 'dev' instead of dereferencing it repeatedly
+Date:   Mon,  8 Apr 2019 12:38:34 -0700
+Message-Id: <1554752326-13319-11-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
 References: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
@@ -74,81 +71,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Introduce local variable 'struct device *dev' and use it instead of
+dereferencing it repeatedly.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
-- Use local variable 'struct device *dev' consistently
-- Use devm_watchdog_register_driver() to register watchdog device
-- Replace shutdown function with call to watchdog_stop_on_reboot()
-
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: Support Opensource <support.opensource@diasemi.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/bcm_kona_wdt.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/watchdog/da9055_wdt.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/watchdog/bcm_kona_wdt.c b/drivers/watchdog/bcm_kona_wdt.c
-index d52334ab0805..e2ad44816359 100644
---- a/drivers/watchdog/bcm_kona_wdt.c
-+++ b/drivers/watchdog/bcm_kona_wdt.c
-@@ -271,11 +271,6 @@ static struct watchdog_device bcm_kona_wdt_wdd = {
- 	.timeout =	SECWDOG_MAX_COUNT >> SECWDOG_DEFAULT_RESOLUTION,
- };
+diff --git a/drivers/watchdog/da9055_wdt.c b/drivers/watchdog/da9055_wdt.c
+index 26a5b2984094..389a4bdd208c 100644
+--- a/drivers/watchdog/da9055_wdt.c
++++ b/drivers/watchdog/da9055_wdt.c
+@@ -119,13 +119,13 @@ static const struct watchdog_ops da9055_wdt_ops = {
  
--static void bcm_kona_wdt_shutdown(struct platform_device *pdev)
--{
--	bcm_kona_wdt_stop(&bcm_kona_wdt_wdd);
--}
--
- static int bcm_kona_wdt_probe(struct platform_device *pdev)
+ static int da9055_wdt_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
-@@ -301,7 +296,7 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
+-	struct da9055 *da9055 = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	struct da9055 *da9055 = dev_get_drvdata(dev->parent);
+ 	struct da9055_wdt_data *driver_data;
+ 	struct watchdog_device *da9055_wdt;
+ 	int ret;
  
- 	platform_set_drvdata(pdev, wdt);
- 	watchdog_set_drvdata(&bcm_kona_wdt_wdd, wdt);
--	bcm_kona_wdt_wdd.parent = &pdev->dev;
-+	bcm_kona_wdt_wdd.parent = dev;
+-	driver_data = devm_kzalloc(&pdev->dev, sizeof(*driver_data),
+-				   GFP_KERNEL);
++	driver_data = devm_kzalloc(dev, sizeof(*driver_data), GFP_KERNEL);
+ 	if (!driver_data)
+ 		return -ENOMEM;
  
- 	ret = bcm_kona_wdt_set_timeout_reg(&bcm_kona_wdt_wdd, 0);
- 	if (ret) {
-@@ -309,7 +304,9 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
+@@ -136,17 +136,17 @@ static int da9055_wdt_probe(struct platform_device *pdev)
+ 	da9055_wdt->timeout = DA9055_DEF_TIMEOUT;
+ 	da9055_wdt->info = &da9055_wdt_info;
+ 	da9055_wdt->ops = &da9055_wdt_ops;
+-	da9055_wdt->parent = &pdev->dev;
++	da9055_wdt->parent = dev;
+ 	watchdog_set_nowayout(da9055_wdt, nowayout);
+ 	watchdog_set_drvdata(da9055_wdt, driver_data);
+ 
+ 	ret = da9055_wdt_stop(da9055_wdt);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to stop watchdog, %d\n", ret);
++		dev_err(dev, "Failed to stop watchdog, %d\n", ret);
  		return ret;
  	}
  
--	ret = watchdog_register_device(&bcm_kona_wdt_wdd);
-+	watchdog_stop_on_reboot(&bcm_kona_wdt_wdd);
-+	watchdog_stop_on_unregister(&bcm_kona_wdt_wdd);
-+	ret = devm_watchdog_register_device(dev, &bcm_kona_wdt_wdd);
- 	if (ret) {
- 		dev_err(dev, "Failed to register watchdog device");
- 		return ret;
-@@ -324,8 +321,6 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
- static int bcm_kona_wdt_remove(struct platform_device *pdev)
- {
- 	bcm_kona_wdt_debug_exit(pdev);
--	bcm_kona_wdt_shutdown(pdev);
--	watchdog_unregister_device(&bcm_kona_wdt_wdd);
- 	dev_dbg(&pdev->dev, "Watchdog driver disabled");
- 
- 	return 0;
-@@ -344,7 +339,6 @@ static struct platform_driver bcm_kona_wdt_driver = {
- 		  },
- 	.probe = bcm_kona_wdt_probe,
- 	.remove = bcm_kona_wdt_remove,
--	.shutdown = bcm_kona_wdt_shutdown,
- };
- 
- module_platform_driver(bcm_kona_wdt_driver);
+-	ret = devm_watchdog_register_device(&pdev->dev, &driver_data->wdt);
++	ret = devm_watchdog_register_device(dev, &driver_data->wdt);
+ 	if (ret != 0)
+ 		dev_err(da9055->dev, "watchdog_register_device() failed: %d\n",
+ 			ret);
 -- 
 2.7.4
 
