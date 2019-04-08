@@ -2,80 +2,256 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7619C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B59CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C181E2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194A82147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfDHPge (ORCPT
+        id S1726756AbfDHPix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:36:34 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50354 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbfDHPgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:36:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BA1715AB;
-        Mon,  8 Apr 2019 08:36:33 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D45633F557;
-        Mon,  8 Apr 2019 08:36:30 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 16:36:28 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
-Message-ID: <20190408153628.GL6139@lakrids.cambridge.arm.com>
-References: <20190208150826.44EBC68DD2@newverein.lst.de>
- <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
- <20190311114945.GA5625@lst.de>
+        Mon, 8 Apr 2019 11:38:53 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6711 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725983AbfDHPix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:38:53 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6796C636F9A6EFFFA345;
+        Mon,  8 Apr 2019 23:38:49 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
+ 23:38:42 +0800
+Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
+ regions
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
+ <20190403030546.23718-3-chenzhou10@huawei.com>
+ <20190403112929.GA7715@rapoport-lnx>
+ <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
+ <20190404144408.GA6433@rapoport-lnx>
+ <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
+ <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
+ <20190408065711.GA8403@rapoport-lnx>
+ <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
+CC:     <wangkefeng.wang@huawei.com>, <ard.biesheuvel@linaro.org>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <takahiro.akashi@linaro.org>, <akpm@linux-foundation.org>,
+        <kexec@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <2aadfb89-4ac0-a9a9-e157-a23d686cb374@huawei.com>
+Date:   Mon, 8 Apr 2019 23:38:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311114945.GA5625@lst.de>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:49:46PM +0100, Torsten Duwe wrote:
-> On Wed, Feb 13, 2019 at 11:11:04AM +0000, Julien Thierry wrote:
-> > Hi Torsten,
-> > 
-> > On 08/02/2019 15:08, Torsten Duwe wrote:
-> > > Patch series v8, as discussed.
-> > > The whole series applies cleanly on 5.0-rc5
+Hi Mike,
+
+On 2019/4/8 16:39, Chen Zhou wrote:
+
+>>>
+>>> Sorry, just ignore my previous reply, I got that wrong.
+>>>
+>>> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
+>>> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
+>>> directly and the extra remove operation may be complex.
+>>>
+>>> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
+>>> Besides, memblock_cap_memory_ranges() is also applicable for one region.
+>>>
+>>> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
+>>
+>> arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
+>> and I don't expect other architectures will use these interfaces.
+>> It seems that capping the memory for arm64 crash kernel the way I've
+>> suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
+>> need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
+>> grow we'll rethink the solution.
 > 
-> So what's the status now? Besides debatable minor style
-> issues there were no more objections to v8. Would this
-> go through the ARM repo or via the ftrace repo?
+> Ok, i will implement that in fdt_enforce_memory_region() in next version.
+> And we will support at most two crash kernel regions now.
+> 
+> Thanks,
+> Chen Zhou
+> 
 
-Sorry agains for the delay on this. I'm now back in the office and in
-front of a computer daily, so I can spend a bit more time on this.
+I implement that in fdt_enforce_memory_region() simply as below.
+You have a look at if it is the way you suggested.
 
-Regardless of anything else, I think that we should queue the first
-three patches now. I've poked the relevant maintainers for their acks so
-that those can be taken via the arm64 tree.
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f9fa5f8..52bd69db 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
 
-I'm happy to do the trivial cleanups on the last couple of patches (e.g.
-s/lr/x30), and I'm actively looking at the API rework I requested.
+ #ifdef CONFIG_KEXEC_CORE
+
++/* at most two crash kernel regions, low_region and high_region */
++#define CRASH_MAX_USABLE_RANGES        2
++#define LOW_REGION_IDX                 0
++#define HIGH_REGION_IDX                        1
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -296,8 +301,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+                const char *uname, int depth, void *data)
+ {
+        struct memblock_region *usablemem = data;
+-       const __be32 *reg;
+-       int len;
++       const __be32 *reg, *endp;
++       int len, nr = 0;
+
+        if (depth != 1 || strcmp(uname, "chosen") != 0)
+                return 0;
+@@ -306,22 +311,62 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+        if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+                return 1;
+
+-       usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-       usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++       endp = reg + (len / sizeof(__be32));
++       while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++               usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++               usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++               if (++nr >= CRASH_MAX_USABLE_RANGES)
++                       break;
++       }
+
+        return 1;
+ }
+
+ static void __init fdt_enforce_memory_region(void)
+ {
+-       struct memblock_region reg = {
+-               .size = 0,
+-       };
++       int i, cnt = 0;
++       struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
++
++       memset(regs, 0, sizeof(regs));
++       of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
++
++       for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
++               if (regs[i].size)
++                       cnt++;
++               else
++                       break;
++
++       if (cnt - 1 == LOW_REGION_IDX)
++               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
++                               regs[LOW_REGION_IDX].size);
++       else if (cnt - 1 == HIGH_REGION_IDX) {
++               /*
++                * Two crash kernel regions, cap the memory range
++                * [regs[LOW_REGION_IDX].base, regs[HIGH_REGION_IDX].end]
++                * and then remove the memory range in the middle.
++                */
++               int start_rgn, end_rgn, i, ret;
++               phys_addr_t mid_base, mid_size;
++
++               mid_base = regs[LOW_REGION_IDX].base + regs[LOW_REGION_IDX].size;
++               mid_size = regs[HIGH_REGION_IDX].base - mid_base;
++               ret = memblock_isolate_range(&memblock.memory, mid_base, mid_size,
++                               &start_rgn, &end_rgn);
+
+-       of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++               if (ret)
++                       return;
+
+-       if (reg.size)
+-               memblock_cap_memory_range(reg.base, reg.size);
++               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
++                               regs[HIGH_REGION_IDX].base - regs[LOW_REGION_IDX].base +
++                               regs[HIGH_REGION_IDX].size);
++               for (i = end_rgn - 1; i >= start_rgn; i--) {
++                       if (!memblock_is_nomap(&memblock.memory.regions[i]))
++                               memblock_remove_region(&memblock.memory, i);
++               }
++               memblock_remove_range(&memblock.reserved, mid_base,
++                               mid_base + mid_size);
++       }
+ }
+
+ void __init arm64_memblock_init(void)
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 294d5d8..787d252 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -110,9 +110,15 @@ void memblock_discard(void);
+
+ phys_addr_t memblock_find_in_range(phys_addr_t start, phys_addr_t end,
+                                   phys_addr_t size, phys_addr_t align);
++void memblock_remove_region(struct memblock_type *type, unsigned long r);
+ void memblock_allow_resize(void);
+ int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
+ int memblock_add(phys_addr_t base, phys_addr_t size);
++int memblock_isolate_range(struct memblock_type *type,
++                                       phys_addr_t base, phys_addr_t size,
++                                       int *start_rgn, int *end_rgn);
++int memblock_remove_range(struct memblock_type *type,
++                                       phys_addr_t base, phys_addr_t size);
+ int memblock_remove(phys_addr_t base, phys_addr_t size);
+ int memblock_free(phys_addr_t base, phys_addr_t size);
+ int memblock_reserve(phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e7665cf..7130c3a 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -357,7 +357,7 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+        return ret;
+ }
+
+-static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
++void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
+ {
+        type->total_size -= type->regions[r].size;
+        memmove(&type->regions[r], &type->regions[r + 1],
+@@ -724,7 +724,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+  * Return:
+  * 0 on success, -errno on failure.
+  */
+-static int __init_memblock memblock_isolate_range(struct memblock_type *type,
++int __init_memblock memblock_isolate_range(struct memblock_type *type,
+                                        phys_addr_t base, phys_addr_t size,
+                                        int *start_rgn, int *end_rgn)
+ {
+@@ -784,7 +784,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+        return 0;
+ }
+
+-static int __init_memblock memblock_remove_range(struct memblock_type *type,
++int __init_memblock memblock_remove_range(struct memblock_type *type,
+                                          phys_addr_t base, phys_addr_t size)
+ {
+        int start_rgn, end_rgn;
+
 
 Thanks,
-Mark.
+Chen Zhou
+
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> .
+> 
+
