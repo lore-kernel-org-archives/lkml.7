@@ -2,145 +2,254 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CF1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD1DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1873120879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C5820879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5+Uv9he"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfDHOmu (ORCPT
+        id S1727278AbfDHOpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:42:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726373AbfDHOmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:42:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E6A2BEBEA5D7269BF843;
-        Mon,  8 Apr 2019 22:42:46 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 22:42:44 +0800
-Subject: Re: [PATCH] fmc: Fix possible NULL pointer dereference
-To:     <gregkh@linuxfoundation.org>, <rubini@gnudd.com>,
-        <federico.vaga@cern.ch>, <riehecky@fnal.gov>
-References: <20190408143701.15372-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <28aafb84-4d15-0340-66fd-0d4d02c1ecce@huawei.com>
-Date:   Mon, 8 Apr 2019 22:42:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 8 Apr 2019 10:45:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53600 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfDHOpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:45:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so14699993wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=OvtsZvBIPegZVpWgT+mNI1vGXaLKwFMVf7AKwd2D1tI=;
+        b=i5+Uv9heeo+WPBLpLcCfkin0u8aVUhmbUoRzDCjw5rO7RZgz0LzmdTDx2qAE8cHNH2
+         gUxcM9cCQPcmNOVVJk7qm68RvsEkZ2jd5VbExiyFFuJa+P5Z483Z8Mt86Z1EhXqqFyJD
+         DUmB4hYDzXzvs8etsVaV609WG7+LtnSfdebb+WVo9n9X/QhrUUict4TnLQ1X8jCsMIYv
+         Mzv5gPICgibN+JUHIKq8gf26aRw7ZRVFvxiCG6Gy55+BQ/61w5ecGeeuoLBTY1J0RwkF
+         XKT0/S9ZmHafgYsgcvXTANEBmtAsrFZFZqtoGaKIXlnrMcurbUUXqBZvwhSDD+0OHoEN
+         k7OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=OvtsZvBIPegZVpWgT+mNI1vGXaLKwFMVf7AKwd2D1tI=;
+        b=FTZ0Pgb+02Y7BDGqaHCdYihQyVNqxK1yxM6jA6cUL6+I0qvU2rckFMkZdj1i2Arz1B
+         AFRHvB6mloOVU+PJxU8kGusraIbXGfaw/VNVPjG+hYDFUf75OmeTiiP2cHdjwU4fZogH
+         qmTI/iAiGw0Ipq6SGVgvJE3ii8xughnR3nVK+ZRqSLu/3LNANtJrGW8RMUuHVF+rXRhs
+         H8Y1ydQna6GXX5yvBR6cllF+7n1+ke/RZcPqQpbjKK74cOaoEEOiQUtAzL+U+woJzRSE
+         oBXw/Uy3oBWW5PEvyQ4XfH2vSrbtsDtV5HN3a8UbmaTYbQ8Npq0qDv+8b8cQPO6rC3Fo
+         91Lw==
+X-Gm-Message-State: APjAAAXwvayzHu/ZoNwDBtTbzriEpkCreXWW6UTq3D6oWiIpwCWra7U/
+        TlClwJ00qoKiYYyDg8gN0XY+/AXpPklYuMd52bzayiXw
+X-Google-Smtp-Source: APXvYqx/v6L4BzsEVBfTen7ydio3fjObvguaboMcaE5BRCRyfQYB7fXs71N0+9HOVaBHipkCJPjLX8SIrRYSMN++oFs=
+X-Received: by 2002:a1c:9991:: with SMTP id b139mr17016807wme.53.1554734698953;
+ Mon, 08 Apr 2019 07:44:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190408143701.15372-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
+ <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com> <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
+ <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com>
+ <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com> <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
+ <5c5c169d-3bad-9e34-8c56-bedca3e5ae08@redhat.com>
+In-Reply-To: <5c5c169d-3bad-9e34-8c56-bedca3e5ae08@redhat.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 8 Apr 2019 16:44:47 +0200
+Message-ID: <CA+icZUUk8jhGqsu65A8oHFcqzrqNRon+riPff9aJu2UFLXL7wQ@mail.gmail.com>
+Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
+ filename $module/.rodata.cst{16,32}
+To:     Denys Vlasenko <dvlasenk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc Alessandro Rubini <rubini@gnudd.com>
+On Mon, Apr 8, 2019 at 4:42 PM Denys Vlasenko <dvlasenk@redhat.com> wrote:
+>
+> On 4/8/19 4:34 PM, Sedat Dilek wrote:
+> > v2:
+> >
+> > sdi@iniza:~/src/linux-kernel/linux$ git --no-pager diff
+> > diff --git a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+> > b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+> > index a14af6eb09cb..712d6a7e8b8f 100644
+> > --- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+> > +++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+> > @@ -573,8 +573,12 @@
+> > ENDPROC(roundsm16_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
+> >          vmovdqu y7, 15 * 16(rio);
+> >
+> >
+> > -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
+> > -.section       .rodata.cst16, "aM", @progbits, 16
+> > +/*
+> > + * NB: section is mergeable, all elements must be aligned 16-byte blocks
+> > + * There is more than one object in this section, let's use module name
+> > + * instead of object name as unique suffix
+> > + */
+> > +.section        .rodata.cst16.camellia_aesni_avx_asm_64, "aM", @progbits, 16
+> >   .align 16
+> >
+> >   #define SHUFB_BYTES(idx) \
+> > diff --git a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+> > b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+> > index b66bbfa62f50..34f6b0c4196d 100644
+> > --- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+> > +++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+> > @@ -626,8 +626,12 @@
+> > ENDPROC(roundsm32_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
+> >          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
+> >          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
+> >
+> > -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
+> > -.section       .rodata.cst16, "aM", @progbits, 16
+> > +/*
+> > + * NB: section is mergeable, all elements must be aligned 16-byte blocks
+> > + * There is more than one object in this section, let's use module name
+> > + * instead of object name as unique suffix
+> > +*/
+> > +.section        .rodata.cst16.ccamellia_aesni_avx2_asm_64, "aM", @progbits, 16
+>
+> why "ccamellia", not "camellia"?
+>
 
-On 2019/4/8 22:37, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Syzkaller report this:
-> 
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 0 PID: 3692 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> RIP: 0010:ff_dev_create+0xf7/0x2e0 [fmc_fakedev]
-> Code: 00 e8 4d 2d a7 f6 ba c0 0c 00 00 48 c7 c7 00 20 15 c1 be e8 04 00 00 e8 e7 8e c7 f6 48 8d b8 a8 04 00 00 48 89 fa 48 c1 ea 03 <80> 3c 1a 00 0f 85 90 01 00 00 48 8d 78 50 4c 89 b0 a8 04 00 00 48
-> RSP: 0018:ffff8881ea7a78e8 EFLAGS: 00010206
-> RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff815c9540
-> RDX: 0000000000000095 RSI: ffffc900013ec000 RDI: 00000000000004a8
-> RBP: 0000000000000000 R08: ffffed103ee458b8 R09: ffffed103ee458b8
-> R10: 0000000000000001 R11: ffffed103ee458b7 R12: ffff8881e4865d80
-> R13: dffffc0000000000 R14: ffff8881e4865da0 R15: ffffffffc115b0b0
-> FS:  00007fb08a226700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f6bd5a37890 CR3: 00000001c5632006 CR4: 00000000007606f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  ff_init+0x10b/0x3a0 [fmc_fakedev]
->  do_one_initcall+0xbc/0x47d init/main.c:887
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fb08a225c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
-> RBP: 00007fb08a225c70 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb08a2266bc
-> R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-> Modules linked in: fmc_fakedev(+) fmc iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel ide_pci_generic piix aes_x86_64 crypto_simd cryptd ide_core psmouse glue_helper input_leds intel_agp serio_raw intel_gtt i2c_piix4 ata_generic agpgart pata_acpi rtc_cmos parport_pc floppy parport sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: lib80211]
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> ---[ end trace 297e0e50d0ab9883 ]---
-> 
-> If kmemdup failed, we should rollback all the alloced resources.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 6c62a895e572 ("FMC: add a software carrier driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/fmc/fmc-fakedev.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/fmc/fmc-fakedev.c b/drivers/fmc/fmc-fakedev.c
-> index 941d093..43d99fe 100644
-> --- a/drivers/fmc/fmc-fakedev.c
-> +++ b/drivers/fmc/fmc-fakedev.c
-> @@ -273,15 +273,18 @@ static struct ff_dev *ff_dev_create(void)
->  	ff->dev.release = ff_dev_release;
->  
->  	ret = device_register(&ff->dev);
-> -	if (ret < 0) {
-> -		put_device(&ff->dev);
-> -		return ERR_PTR(ret);
-> -	}
-> +	if (ret < 0)
-> +		goto failed_register;
->  
->  	/* Create fmc structures that refer to this new "hw" device */
->  	for (i = 0; i < ff_nr_dev; i++) {
->  		fmc = kmemdup(&ff_template_fmc, sizeof(ff_template_fmc),
->  			      GFP_KERNEL);
-> +		if (!fmc) {
-> +			ret = -ENOMEM
-> +			goto free_fmc;
-> +		}
-> +
->  		fmc->hwdev = &ff->dev;
->  		fmc->carrier_data = ff;
->  		fmc->nr_slots = ff_nr_dev;
-> @@ -294,6 +297,13 @@ static struct ff_dev *ff_dev_create(void)
->  		ff_template_fmc.device_id++;
->  	}
->  	return ff;
-> +
-> +free_fmc:
-> +	for (i--; i >= 0; i--)
-> +		kfree(ff->fmc[i]);
-> +failed_register:
-> +	put_device(&ff->dev);
-> +	return ERR_PTR(ret);
->  }
->  
->  /* init and exit */
-> 
+Grrr.
 
+> > I tried to check for the .rodata.cst32 case, how do I identify the *.S files?
+>
+> ?
+>
+> Looks like all .rodata.cst32 sections have suffixes, nothing to fix.
+
+$ for i in .rodata.cst32.pack_bswap .rodata.cst32.shufb_16x16b
+.rodata.cst32.CTR2BL .rodata.cst32.CTR4BL .rodata.cst32.CTRINC
+.rodata.cst32.ROT16 .rodata.cst32.ROT8 .rodata.cst32.CTR2BL
+.rodata.cst32.CTR4BL .rodata.cst32.CTR8BL
+.rodata.cst32.pshufb_shf_table .rodata.cst32.morus1280_const
+.rodata.cst32.morus1280_counter .rodata.cst32.ANMASK
+.rodata.cst32.ORMASK .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK
+.rodata.cst32._SHUF_00BA .rodata.cst32._SHUF_DC00
+.rodata.cst32.MASK_YMM_LO .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK ; do
+echo [ "$i" ] ; git grep $i arch/x86 ; echo [ "/$i" ] ; echo "" ; done
+[ .rodata.cst32.pack_bswap ]
+arch/x86/crypto/camellia-aesni-avx2-asm_64.S:.section
+.rodata.cst32.pack_bswap, "aM", @progbits, 32
+[ /.rodata.cst32.pack_bswap ]
+
+[ .rodata.cst32.shufb_16x16b ]
+arch/x86/crypto/camellia-aesni-avx2-asm_64.S:.section
+.rodata.cst32.shufb_16x16b, "aM", @progbits, 32
+[ /.rodata.cst32.shufb_16x16b ]
+
+[ .rodata.cst32.CTR2BL ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.CTR2BL,
+"aM", @progbits, 32
+arch/x86/crypto/chacha-avx512vl-x86_64.S:.section
+.rodata.cst32.CTR2BL, "aM", @progbits, 32
+[ /.rodata.cst32.CTR2BL ]
+
+[ .rodata.cst32.CTR4BL ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.CTR4BL,
+"aM", @progbits, 32
+arch/x86/crypto/chacha-avx512vl-x86_64.S:.section
+.rodata.cst32.CTR4BL, "aM", @progbits, 32
+[ /.rodata.cst32.CTR4BL ]
+
+[ .rodata.cst32.CTRINC ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.CTRINC,
+"aM", @progbits, 32
+[ /.rodata.cst32.CTRINC ]
+
+[ .rodata.cst32.ROT16 ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.ROT16,
+"aM", @progbits, 32
+[ /.rodata.cst32.ROT16 ]
+
+[ .rodata.cst32.ROT8 ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.ROT8,
+"aM", @progbits, 32
+[ /.rodata.cst32.ROT8 ]
+
+[ .rodata.cst32.CTR2BL ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.CTR2BL,
+"aM", @progbits, 32
+arch/x86/crypto/chacha-avx512vl-x86_64.S:.section
+.rodata.cst32.CTR2BL, "aM", @progbits, 32
+[ /.rodata.cst32.CTR2BL ]
+
+[ .rodata.cst32.CTR4BL ]
+arch/x86/crypto/chacha-avx2-x86_64.S:.section   .rodata.cst32.CTR4BL,
+"aM", @progbits, 32
+arch/x86/crypto/chacha-avx512vl-x86_64.S:.section
+.rodata.cst32.CTR4BL, "aM", @progbits, 32
+[ /.rodata.cst32.CTR4BL ]
+
+[ .rodata.cst32.CTR8BL ]
+arch/x86/crypto/chacha-avx512vl-x86_64.S:.section
+.rodata.cst32.CTR8BL, "aM", @progbits, 32
+[ /.rodata.cst32.CTR8BL ]
+
+[ .rodata.cst32.pshufb_shf_table ]
+arch/x86/crypto/crct10dif-pcl-asm_64.S:.section
+.rodata.cst32.pshufb_shf_table, "aM", @progbits, 32
+[ /.rodata.cst32.pshufb_shf_table ]
+
+[ .rodata.cst32.morus1280_const ]
+arch/x86/crypto/morus1280-avx2-asm.S:.section
+.rodata.cst32.morus1280_const, "aM", @progbits, 32
+[ /.rodata.cst32.morus1280_const ]
+
+[ .rodata.cst32.morus1280_counter ]
+arch/x86/crypto/morus1280-avx2-asm.S:.section
+.rodata.cst32.morus1280_counter, "aM", @progbits, 32
+[ /.rodata.cst32.morus1280_counter ]
+
+[ .rodata.cst32.ANMASK ]
+arch/x86/crypto/poly1305-avx2-x86_64.S:.section .rodata.cst32.ANMASK,
+"aM", @progbits, 32
+[ /.rodata.cst32.ANMASK ]
+
+[ .rodata.cst32.ORMASK ]
+arch/x86/crypto/poly1305-avx2-x86_64.S:.section .rodata.cst32.ORMASK,
+"aM", @progbits, 32
+[ /.rodata.cst32.ORMASK ]
+
+[ .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK ]
+arch/x86/crypto/sha256-avx2-asm.S:.section
+.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK, "aM", @progbits, 32
+arch/x86/crypto/sha512-avx2-asm.S:.section
+.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK, "aM", @progbits, 32
+[ /.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK ]
+
+[ .rodata.cst32._SHUF_00BA ]
+arch/x86/crypto/sha256-avx2-asm.S:.section
+.rodata.cst32._SHUF_00BA, "aM", @progbits, 32
+[ /.rodata.cst32._SHUF_00BA ]
+
+[ .rodata.cst32._SHUF_DC00 ]
+arch/x86/crypto/sha256-avx2-asm.S:.section
+.rodata.cst32._SHUF_DC00, "aM", @progbits, 32
+[ /.rodata.cst32._SHUF_DC00 ]
+
+[ .rodata.cst32.MASK_YMM_LO ]
+arch/x86/crypto/sha512-avx2-asm.S:.section
+.rodata.cst32.MASK_YMM_LO, "aM", @progbits, 32
+[ /.rodata.cst32.MASK_YMM_LO ]
+
+[ .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK ]
+arch/x86/crypto/sha256-avx2-asm.S:.section
+.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK, "aM", @progbits, 32
+arch/x86/crypto/sha512-avx2-asm.S:.section
+.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK, "aM", @progbits, 32
+[ /.rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK ]
+
+- Sedat -
