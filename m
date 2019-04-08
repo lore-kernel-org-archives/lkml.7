@@ -2,233 +2,107 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33273C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C565DC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE52F20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4563920880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4waNxVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfDHG51 (ORCPT
+        id S1726446AbfDHHAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:57:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46884 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725854AbfDHG51 (ORCPT
+        Mon, 8 Apr 2019 03:00:04 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:33904 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfDHHAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:57:27 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x386n87W101022
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 02:57:25 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rr0a53emt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:57:25 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 8 Apr 2019 07:57:23 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 07:57:17 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x386vGwj61669536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 06:57:16 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B39554C052;
-        Mon,  8 Apr 2019 06:57:16 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B0BD4C04E;
-        Mon,  8 Apr 2019 06:57:14 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.206.109])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Apr 2019 06:57:14 +0000 (GMT)
-Date:   Mon, 8 Apr 2019 09:57:12 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-mm@kvack.org, wangkefeng.wang@huawei.com
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
- <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
- <20190404144408.GA6433@rapoport-lnx>
- <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
- <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
+        Mon, 8 Apr 2019 03:00:03 -0400
+Received: by mail-it1-f194.google.com with SMTP id z17so16380294itc.1;
+        Mon, 08 Apr 2019 00:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/qT5pxTyuNs8w0lZPrSv8Oq5hASC4Y1C3aUkHEx/B2k=;
+        b=U4waNxVuW9vZ4uCBf8Yv7wz5us/Cpk7bBg2XXY+bJEAxKSKqmcT2kT2U7obksWvWTL
+         faByY8lVSWdDCgh1hTrwF15SJL2YRjAy0ZhDq5LYY3IVvBk4r3zpH+lArLNtk1ePLZMp
+         7xpnoceVxNIf585i0H2xVGYAMGK5lzgozO/ygMeUx0b4Fv7LVD5WaFpiLjaUppTTvpd7
+         WVTiRLIPmJ/Ym3S1kQg6loMsBcNwNxvsHcF263WA4WgNa96lHRDOmTPTdeVwBx6/TAzz
+         mTxKP1fw6pMqDQXnKLXbPWIRdHaofFXBbnUlfch0u4sM4SVUjlAnd/w8R5n/7g3QpPF4
+         tY0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/qT5pxTyuNs8w0lZPrSv8Oq5hASC4Y1C3aUkHEx/B2k=;
+        b=BIeYNPjnzQWcZcEosEwSGTecNuiheK+kobu3yg7TICYPWDNJDasI1Vky2+/3UvynW4
+         DHNgxg+2XVpqZPQzzwT7FWfy0M4Y98K2ijt1AMDCRMIcm7K5mRYaEGsZeRe0A5SlRmwp
+         4eph8eF7FkXfz/BE1S4+rAH0g5MUa6gyLNVrSxotMMLy/ipzQmU8muB4QcpUgAaI/vMr
+         qxymkzF5ec8Dya4z09V5ZwRX5jRgJpeg0QHczW0zb+soTVEEzJv9531xRr91+1/RVs/Y
+         g75I5ecO19YvS+f3hMoO0j+SPdHQek/TJKyytxIiKqgvj7oSIjSvg7KKY8GvF4XDQGRu
+         3Vlw==
+X-Gm-Message-State: APjAAAXyBpWkC7yswRGPQORcX7ldgF8ayXv+xxus6GEDBdX03h0llNpS
+        A9AvuG/sfuD80vvyvQrakPlGm2d+u2YSDbIRrUYNGfVH
+X-Google-Smtp-Source: APXvYqw5P3pf7ut3sGPHKFs34jg+Lu8rl4RCdnmtCJZjdDntOYEa/H86SWw1sCBLlz/3v8/DR4XCvTZjsTUkYDYc5+E=
+X-Received: by 2002:a02:4345:: with SMTP id s66mr8152130jab.46.1554706802731;
+ Mon, 08 Apr 2019 00:00:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19040806-0028-0000-0000-0000035E5F11
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040806-0029-0000-0000-0000241D77B5
-Message-Id: <20190408065711.GA8403@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080064
+References: <CADBGO7_WUoA53gM8EDFy6Q36SDEZPU9V=OUBA0QM20FOko51Rg@mail.gmail.com>
+ <CADBGO7-UkQMxSPdSX9bGVPxSRROj75FA16FuXeFrVmcKVQ_Qdg@mail.gmail.com>
+ <CADBGO7_XnbXiWHB=O1B_+b+CUA9g-bYJHN37VJ2SsxXMNHcPOQ@mail.gmail.com>
+ <20190321134140.GA4603@linux.intel.com> <31f75727-d2c3-1afa-ab14-1dbc62a6315b@ginzinger.com>
+In-Reply-To: <31f75727-d2c3-1afa-ab14-1dbc62a6315b@ginzinger.com>
+From:   Paul Zimmerman <pauldzim@gmail.com>
+Date:   Sun, 7 Apr 2019 23:59:36 -0700
+Message-ID: <CADBGO789BkFxwsuybwOvL3ydYP075U6KDccGnC7pfSJ_grfcng@mail.gmail.com>
+Subject: Re: Regression in suspend-to-ram (TPM related) with 5.1-rc1 (BISECTED)
+To:     Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Apr 05, 2019 at 11:47:27AM +0800, Chen Zhou wrote:
-> Hi Mike,
-> 
-> On 2019/4/5 10:17, Chen Zhou wrote:
-> > Hi Mike,
-> > 
-> > On 2019/4/4 22:44, Mike Rapoport wrote:
-> >> Hi,
+On Sun, Apr 7, 2019 at 10:53 PM Martin Kepplinger
+<martin.kepplinger@ginzinger.com> wrote:
+>
+> On 21.03.19 14:41, Jarkko Sakkinen wrote:
+> > On Tue, Mar 19, 2019 at 04:03:37PM -0700, Paul Zimmerman wrote:
+> >> So I bisected this down to:
 > >>
-> >> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
-> >>> Hi Mike,
-> >>>
-> >>> On 2019/4/3 19:29, Mike Rapoport wrote:
-> >>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
-> >>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
-> >>>>> there may be two crash kernel regions, one is below 4G, the other is
-> >>>>> above 4G.
-> >>>>>
-> >>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
-> >>>>> property under node /chosen,
-> >>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
-> >>>>>
-> >>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> >>>>> ---
-> >>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
-> >>>>>  include/linux/memblock.h |  1 +
-> >>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
-> >>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> >>>>> index ceb2a25..769c77a 100644
-> >>>>> --- a/arch/arm64/mm/init.c
-> >>>>> +++ b/arch/arm64/mm/init.c
-> >>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
-> >>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
-> >>>>>  
-> >>>>>  #ifdef CONFIG_KEXEC_CORE
-> >>>>> +# define CRASH_MAX_USABLE_RANGES        2
-> >>>>> +
-> >>>>>  static int __init reserve_crashkernel_low(void)
-> >>>>>  {
-> >>>>>  	unsigned long long base, low_base = 0, low_size = 0;
-> >>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-> >>>>>  		const char *uname, int depth, void *data)
-> >>>>>  {
-> >>>>>  	struct memblock_region *usablemem = data;
-> >>>>> -	const __be32 *reg;
-> >>>>> -	int len;
-> >>>>> +	const __be32 *reg, *endp;
-> >>>>> +	int len, nr = 0;
-> >>>>>  
-> >>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
-> >>>>>  		return 0;
-> >>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-> >>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> >>>>>  		return 1;
-> >>>>>  
-> >>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> >>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> >>>>> +	endp = reg + (len / sizeof(__be32));
-> >>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-> >>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> >>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> >>>>> +
-> >>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
-> >>>>> +			break;
-> >>>>> +	}
-> >>>>>  
-> >>>>>  	return 1;
-> >>>>>  }
-> >>>>>  
-> >>>>>  static void __init fdt_enforce_memory_region(void)
-> >>>>>  {
-> >>>>> -	struct memblock_region reg = {
-> >>>>> -		.size = 0,
-> >>>>> -	};
-> >>>>> -
-> >>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-> >>>>> -
-> >>>>> -	if (reg.size)
-> >>>>> -		memblock_cap_memory_range(reg.base, reg.size);
-> >>>>> +	int i, cnt = 0;
-> >>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
-> >>>>> +
-> >>>>> +	memset(regs, 0, sizeof(regs));
-> >>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
-> >>>>> +
-> >>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
-> >>>>> +		if (regs[i].size)
-> >>>>> +			cnt++;
-> >>>>> +		else
-> >>>>> +			break;
-> >>>>> +	if (cnt)
-> >>>>> +		memblock_cap_memory_ranges(regs, cnt);
-> >>>>
-> >>>> Why not simply call memblock_cap_memory_range() for each region?
-> >>>
-> >>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
-> >>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
-> >>> on kdump capture kernel.
+> >> # first bad commit: [a3fbfae82b4cb3ff9928e29f34c64d0507cad874] tpm:
+> >> take TPM chip power gating out of tpm_transmit()
 > >>
-> >> Thanks for the clarification.
-> >> I still think that memblock_cap_memory_ranges() is overly complex. 
-> >>
-> >> How about doing something like this:
-> >>
-> >> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
-> >> removing the range in the middle?
-> > 
-> > Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
-> > That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
-> > matter.
-> > 
-> > I agree with you, your idea is better.
-> > 
-> > Thanks,
-> > Chen Zhou
-> 
-> Sorry, just ignore my previous reply, I got that wrong.
-> 
-> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
-> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
-> directly and the extra remove operation may be complex.
-> 
-> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
-> Besides, memblock_cap_memory_ranges() is also applicable for one region.
-> 
-> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
+> >> but this doesn't revert cleanly on Linus' HEAD. Anyone have an idea what
+> >> could be wrong here?
+> >
+> > Sorry I've been in flu for the early week. I spotted the bug
+> > immediately.  When I did these patches I did not have TPM 1.x at my
+> > hand. I used fTPM 2.0 and dTPM 2.0. Stefan did TPM 1.x testing but I
+> > probably forgot to ask him to try out suspend.
+> >
+> > Anyway, the bug is obvious and I'll send you a patch to try out.
+> > Thanks a lot for bisecting this!
+> >
+> > /Jarkko
+>
+> Hi,
+>
+> Any news on this? It seems not to be fixed in -rc4. I'd happily test a
+> patch too.
+>
+Hi Martin,
+Patch is here: https://patchwork.kernel.org/patch/10865495/
+Don't know what the status of it is though.
 
-arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
-and I don't expect other architectures will use these interfaces.
-It seems that capping the memory for arm64 crash kernel the way I've
-suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
-need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
-grow we'll rethink the solution.
- 
-> Thanks,
-> Chen Zhou
-
--- 
-Sincerely yours,
-Mike.
-
+-- Paul
