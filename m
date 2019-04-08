@@ -2,103 +2,98 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69376C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128D5C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3899021473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akc9wpaO"
+	by mail.kernel.org (Postfix) with ESMTP id D4D2121473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDHMcr (ORCPT
+        id S1726735AbfDHMd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:32:47 -0400
-Received: from mail-io1-f45.google.com ([209.85.166.45]:38918 "EHLO
-        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfDHMcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:32:47 -0400
-Received: by mail-io1-f45.google.com with SMTP id e13so10825908ioq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XUyD7HgaLKvNpQbVoCvM1sZNHi87l9aU3qc5naKdNME=;
-        b=akc9wpaObjt/S9YkJvVVhBOw4ipfpjv2Dc76h8/2ou6T/bi5q4mVDMj3amXC+zPDXx
-         qN5xZ3mHANHFgYuIM+7RdCGLosbDZQe0wdC583LPpvX21xnHsrcGTanaz3V855nVthln
-         u0mZeyLSgJvVb2Hd2UbU92MIq6Ce2UBgnfdPXcQY0s5V2bgQCJOpOZLT43i0V3kKibsO
-         F0p5+V9ync89g9sIiNfnF9hnOZBMNyNd4su3kSi8s23nYAOhz3u2y8//J5H4JqQFMKQS
-         lTveURPSQt9COIVUszZ0nlNLBGT6DizBDEOrWZeg8xMBN8eedJS8qYMzwLRHX5TT8CfF
-         QWqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XUyD7HgaLKvNpQbVoCvM1sZNHi87l9aU3qc5naKdNME=;
-        b=NfVcWcRjxDZXDCsSfVZLBW7R478PKzVNafS6m+L3HSPwkvve5QH9xY/wO4FMS+ysmH
-         m91miNXhoYUuYvMFZ85SZZdOu3m0YACqtnCmcqueQQbRM2pbX6wIQQ9Vuc8W2/iKSjqq
-         3rmqyaLpGogaWRp7p/n9+TQFBD8wmRZdBCZqcnDrS5Dp/4GSBlLRX3CC3ko4JR0K8QU+
-         CiFd1h4G+W0Ds60kKgKd892pH7oLXDzgquklfll/0rWYlI4mkR8X4qZWthGJxXl262ms
-         78QTn91ke+McVaAITjM1Bu36qoHqJWSUEct7tdvaL+sGuI+DLWS1b6CtjkFaNdftrAto
-         Cxzg==
-X-Gm-Message-State: APjAAAXJcrQUtBaL4+akJznJ/O6xmWtiXskL6bNk5dZD9KAmXl8QJBS1
-        sJl6m99s2cixHRXveT7Lgh+bcjKigt0uCW4TmuIfyxJt
-X-Google-Smtp-Source: APXvYqzaKn2qZOnGlIkiHbs4w4oLyJ2Cv7OJtQH49VDLMpSQRdzO+5UgvljIoFcZm02jL/+pJx0NTuQb2vjgXV4oQU4=
-X-Received: by 2002:a6b:8d87:: with SMTP id p129mr10388114iod.10.1554726766481;
- Mon, 08 Apr 2019 05:32:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <9138d8e8-5390-0650-9bc3-050b869e978c@infradead.org>
-In-Reply-To: <9138d8e8-5390-0650-9bc3-050b869e978c@infradead.org>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Mon, 8 Apr 2019 20:32:35 +0800
-Message-ID: <CAKGbVbsiwTv8hV7W+unG_kuAApQm__=OxU4EnWzQNA7brZZMgA@mail.gmail.com>
-Subject: Re: [PATCH -next] MAINTAINERS: mark lima mailing list as moderated
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        lima@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Apr 2019 08:33:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44752 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfDHMd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:33:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 72B98307D964;
+        Mon,  8 Apr 2019 12:33:27 +0000 (UTC)
+Received: from localhost (ovpn-117-86.ams2.redhat.com [10.36.117.86])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 023115D719;
+        Mon,  8 Apr 2019 12:33:26 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] virtio: Honour 'may_reduce_num' in vring_create_virtqueue
+Date:   Mon,  8 Apr 2019 14:33:22 +0200
+Message-Id: <20190408123322.24086-1-cohuck@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 08 Apr 2019 12:33:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch has been applied to drm-misc-next branch.
+vring_create_virtqueue() allows the caller to specify via the
+may_reduce_num parameter whether the vring code is allowed to
+allocate a smaller ring than specified.
 
-Thanks,
-Qiang
+However, the split ring allocation code tries to allocate a
+smaller ring on allocation failure regardless of what the
+caller specified. This may cause trouble for e.g. virtio-pci
+in legacy mode, which does not support ring resizing. (The
+packed ring code does not resize in any case.)
 
-On Mon, Apr 8, 2019 at 3:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Note that the lima mailing list is moderated.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Qiang Yu <yuq825@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: lima@lists.freedesktop.org
-> ---
->  MAINTAINERS |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- mmotm-2019-0405-1828.orig/MAINTAINERS
-> +++ mmotm-2019-0405-1828/MAINTAINERS
-> @@ -5226,7 +5226,7 @@ F:        Documentation/devicetree/bindings/dis
->  DRM DRIVERS FOR LIMA
->  M:     Qiang Yu <yuq825@gmail.com>
->  L:     dri-devel@lists.freedesktop.org
-> -L:     lima@lists.freedesktop.org
-> +L:     lima@lists.freedesktop.org (moderated for non-subscribers)
->  S:     Maintained
->  F:     drivers/gpu/drm/lima/
->  F:     include/uapi/drm/lima_drm.h
->
->
+Let's fix this by bailing out immediately in the split ring code
+if the requested size cannot be allocated and may_reduce_num has
+not been specified.
+
+While at it, fix a typo in the usage instructions.
+
+Fixes: 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
+ drivers/virtio/virtio_ring.c | 2 ++
+ include/linux/virtio_ring.h  | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 18846afb39da..5df92c308286 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -882,6 +882,8 @@ static struct virtqueue *vring_create_virtqueue_split(
+ 					  GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+ 		if (queue)
+ 			break;
++		if (!may_reduce_num)
++			return NULL;
+ 	}
+ 
+ 	if (!num)
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index fab02133a919..3dc70adfe5f5 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -63,7 +63,7 @@ struct virtqueue;
+ /*
+  * Creates a virtqueue and allocates the descriptor ring.  If
+  * may_reduce_num is set, then this may allocate a smaller ring than
+- * expected.  The caller should query virtqueue_get_ring_size to learn
++ * expected.  The caller should query virtqueue_get_vring_size to learn
+  * the actual size of the ring.
+  */
+ struct virtqueue *vring_create_virtqueue(unsigned int index,
+-- 
+2.17.2
+
