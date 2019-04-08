@@ -2,168 +2,76 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981B9C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E48C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6794220879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cHSIJ/3b"
+	by mail.kernel.org (Postfix) with ESMTP id 9874F2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfDHOqn (ORCPT
+        id S1727300AbfDHOt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:46:43 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:40256 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDHOqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:46:42 -0400
-Received: by mail-ua1-f66.google.com with SMTP id b8so4373394uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=d/KxUcFMn5knOE76pb1A5Y9p+0/egdjAurc8BtENtIA=;
-        b=cHSIJ/3b3k3gOwHkL4uUL36Sku2FUsZo6kTSa0veZ6ePGUk2xT4wFQJvaZW+mx/PVb
-         TAt+PTtaPERRsmDSjdE5T+cydrNv9ghAhmsqew0344WYZU/vXVdRFzGByfpsqb6OLMYy
-         4rWEecZwhA4n0n21WHFNQ8yfU0Z8c6DnAasdI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=d/KxUcFMn5knOE76pb1A5Y9p+0/egdjAurc8BtENtIA=;
-        b=UdtYo7yvC0dbgbzlffcGF8AtYjyuT2+MLQwk0FyvgkEz4RCxEELW/gaAbDoWpqZ60b
-         FIOVgY5hojBhZ92NBJYJqJylUo1thLI+3Wf0FYclBUvD9x2IKViYj2sh5a6M+epKpSkj
-         YgyHtZSZRme4qlI6DfxkvL4xQl6Ijgv2sfu7SUxwZrBqkUNzOgw7C18SgN0N80sN/2Y2
-         bwSrLP8mqmCIQr6NG8TLQ/T8/Dvcly//O3zUJDeMrakfsyfYNNLVdGM3jx3lvqhmoYFq
-         kq93/n4OZPmRRtQ+uJsgpUCBvp59NgLEOjUtKof/ikGVIOSOO3zesGgtuo+WDcTMc4Ay
-         ktWg==
-X-Gm-Message-State: APjAAAVVi5UGEDTb527WFAmLZ5TOBTDJ1vo51SKUCLGSlo+SswOGpkQ6
-        XmMT8RMp4pGJit+S62bE6QluhAOL9fI=
-X-Google-Smtp-Source: APXvYqyn3krP09j6g68M/XNSBGEwOBrTl8R+CSqyZK46MtL7czlW7FQ0pigckFW4eV4vrjyzW/0jng==
-X-Received: by 2002:ab0:7817:: with SMTP id x23mr4708uaq.35.1554734801173;
-        Mon, 08 Apr 2019 07:46:41 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id t207sm8581940vkb.21.2019.04.08.07.46.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 07:46:41 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id n16so4360195uae.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:46:40 -0700 (PDT)
-X-Received: by 2002:ab0:474c:: with SMTP id i12mr16099364uac.9.1554734387205;
- Mon, 08 Apr 2019 07:39:47 -0700 (PDT)
+        Mon, 8 Apr 2019 10:49:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38920 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726005AbfDHOt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:49:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C07E4B00F;
+        Mon,  8 Apr 2019 14:49:25 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 16:49:25 +0200
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, broonie@kernel.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Angelo Ruocco <angeloruocco90@gmail.com>
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+Message-ID: <20190408144925.GA23021@linux-x5ow.site>
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
 MIME-Version: 1.0
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-2-dianders@chromium.org> <20190408103240.GF6644@ulmo>
-In-Reply-To: <20190408103240.GF6644@ulmo>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 8 Apr 2019 07:39:37 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
-Message-ID: <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to simple-panel
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Eric Anholt <eric@anholt.net>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190408143935.9062-2-paolo.valente@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thierry,
+On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+> From: Angelo Ruocco <angeloruocco90@gmail.com>
+> 
+> When bfq was merged into mainline, there were two I/O schedulers that
+> implemented the proportional-share policy: bfq for blk-mq and cfq for
+> legacy blk. bfq's interface files in the blkio/io controller have the
+> same names as cfq. But the cgroups interface doesn't allow two
+> entities to use the same name for their files, so for bfq we had to
+> prepend the "bfq" prefix to each of its files. However no legacy code
+> uses these modified file names. This naming also causes confusion, as,
+> e.g., in [1].
+> 
+> Now cfq has gone with legacy blk, so there is no need any longer for
+> these prefixes in (the never used) bfq names. In view of this fact, this
+> commit removes these prefixes, thereby enabling legacy code to truly
+> use the proportional share policy in blk-mq.
+> 
+> [1] https://github.com/systemd/systemd/issues/7057
 
-On Mon, Apr 8, 2019 at 3:32 AM Thierry Reding <thierry.reding@gmail.com> wr=
-ote:
->
-> On Mon, Apr 01, 2019 at 10:17:18AM -0700, Douglas Anderson wrote:
-> > From: Sean Paul <seanpaul@chromium.org>
-> >
-> > This patch adds a new subnode to simple-panel allowing us to override
-> > the typical timing expressed in the panel's display_timing.
-> >
-> > Changes in v2:
-> >  - Split out the binding into a new patch (Rob)
-> >  - display-timings is a new section (Rob)
-> >  - Use the full display-timings subnode instead of picking the timing
-> >    out (Rob/Thierry)
-> > Changes in v3:
-> >  - Go back to using the timing subnode directly, but rename to
-> >    panel-timing (Rob)
-> > Changes in v4:
-> >  - Simplify desc. for when override should be used (Thierry/Laurent)
-> >  - Removed Rob H review since it's been a year and wording changed
-> > Changes in v5:
-> >  - Removed bit about OS may ignore (Rob/Ezequiel)
-> >
-> > Cc: Doug Anderson <dianders@chromium.org>
-> > Cc: Eric Anholt <eric@anholt.net>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-rockchip@lists.infradead.org
-> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-pan=
-el.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > index b2b872c710f2..93882268c0b9 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > @@ -15,6 +15,16 @@ Optional properties:
-> >    (hot plug detect) signal, but the signal isn't hooked up so we shoul=
-d
-> >    hardcode the max delay from the panel spec when powering up the pane=
-l.
-> >
-> > +panel-timing subnode
->
-> Is there any reason why we need the panel- prefix? This is already part
-> of a panel definition, so it's completely redundant. Why not just name
-> the subnode "timing"?
+Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
+Do you know what's using it and what breaks due to this conversion?
 
-It was a really long time ago since this patch series was idle for a
-while, but you previous had similar feedback in v3 but ended up OK
-with it.  See:
-
-https://patchwork.kernel.org/patch/10207583/
-
-I believe the original node name came out of some back and forth
-between Rob and Sean.  As far as I can tell, the context is back in
-<https://patchwork.kernel.org/patch/10203483/>.  I think Rob wanted it
-to follow other similar node names.
-
-
-That all being said, if you feel strongly about it being called
-"timing" and Rob's OK w/ that too then I'll re-spin the series.
-
--Doug
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
