@@ -2,91 +2,93 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEE4C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FD6C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E446D20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4080B20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ecLqHUnz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpTQcaG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfDHTyO (ORCPT
+        id S1726686AbfDHTzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:54:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40262 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfDHTyO (ORCPT
+        Mon, 8 Apr 2019 15:55:38 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41080 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfDHTzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:54:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c207so8233382pfc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:54:13 -0700 (PDT)
+        Mon, 8 Apr 2019 15:55:37 -0400
+Received: by mail-qk1-f194.google.com with SMTP id o129so8783046qke.8;
+        Mon, 08 Apr 2019 12:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=1jo2iMrB0owQ9V5kkgcFERnG5vKtykcZHem1fyaBDFo=;
-        b=ecLqHUnzNU7+FbXXx978+5RbQ1KF8vvKyf67EIY6PXNk03FzmiRTrZrDLsmXWptuPL
-         /Rb82V3XEi9XGLiZ42bffTnISaWVr3H169b9bpmR2tFq/RhVtkWJOOu/QS9AMyAB8B5y
-         2KVZpADsQ1m7nZIrGh806AiIUjWePNUVr4OfPFKZR/9o96Kz6i/CdEVSnOAW/ZwzeiS7
-         XZOuLjnCVeaK2C8k3V2V2IkgbdipI+CABwpaebFQEKMN25A86sGs1a/YLs2eCP5+HKSK
-         Dkuu9VTxFelntySxMNW/MbT9ehFwaNnQFF+Pu++P/EitwO1spGJDnJa3EgOOKOyQTvkC
-         OBZw==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=81SpTuGU7Y/G7KomHE5ruoxz9+agrItlkUAxeDaXk4c=;
+        b=bpTQcaG5QS+DU7wAwIN5dmr7zyIAPAxXCEkOovsOu8HccuVHecdbpnchMFBRUNDSE9
+         q+Ch1PO43sUgwBuuDPzsE15NJq7Li3maPvsVarJGB1Sf9RLS6CWQlnBaqslirCeW6qfl
+         60WHG9Uk66tFwKvO2LlR7KnMQPFcBS0bOWNUklQLhVK8dT+fbkXV4+kAaqMJdvoVNqux
+         AITn8ouSOyR5AnnkP9cb1sRy17HxtpSork9kzbDE7CNT9dAfPrE4yIoNpp6nUs3SNu8H
+         8oS3nOLz0cewnseh9+at4aOWtlmsMsF5vPBv4wQKzOsF1Hl+SzH7cEKDyaAsAWpoERzw
+         g2lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=1jo2iMrB0owQ9V5kkgcFERnG5vKtykcZHem1fyaBDFo=;
-        b=KIhQzLxGUzZ3wI5lIdVwuBuwfvcSIGy0C6KPrOFhu/TgQS0CyHWcIuAjN1x07mdAVp
-         rsvfT/MwOrw2lS6qLyeBciCiGjSDv+hv/dy9JXoWfozM9JSAB2t1iocq/cPfN2MNGPqf
-         /EGEAlig0yVeMEKECrDeh5p8g+9QVLN3qJkqE0cqJC3tYrVKvm50OpenizPPvr19Fn3F
-         KDCN9z4Ay+iTVW9PzhrAkUuu9OLElf35Cng1ugsZBeDGbQQCIsBWYROli4c4jcqVi0wX
-         P9NwMIdSwGcJczAG28BGCNYqTNAHB+6GAiKnquMZdbqltl78QKy5Xnte/GCKSSOmaejb
-         mdCg==
-X-Gm-Message-State: APjAAAUaKnye/ZliKUuPJxgtnlOrCySm6LK4UhBMW+CpQkV2GXdXD+Ir
-        Uv0hZiVKAEeohPFSVNUUEba+z4y+Bc8=
-X-Google-Smtp-Source: APXvYqwsb14x+NmywHmVHCl4/zVaonURAC95IyZ53d/9ljhSgpaIiseVXYB3ULyOpRPZCxThenZqGA==
-X-Received: by 2002:a65:4185:: with SMTP id a5mr29606204pgq.82.1554753252418;
-        Mon, 08 Apr 2019 12:54:12 -0700 (PDT)
-Received: from [100.112.89.103] ([104.133.8.103])
-        by smtp.gmail.com with ESMTPSA id 6sm12828984pfp.143.2019.04.08.12.54.11
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Apr 2019 12:54:11 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:53:50 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Kelley Nielsen <kelleynnn@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 0/4] mm: swapoff: fixes for 5.1-rc
-Message-ID: <alpine.LSU.2.11.1904081249370.1523@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=81SpTuGU7Y/G7KomHE5ruoxz9+agrItlkUAxeDaXk4c=;
+        b=dbvaV+NL4EcN/+mMVnvrvcsg2vYJltmA7V73UnGRPO4ixNrMzCMjrD+IhhrZk42/7Q
+         AvjnZtVZwXQCYEAgWjR6o4Iz0ko5HEczmA4fJzMmHcBuhYeogkAMAJ8/tF4qW8tv81TZ
+         kwTt5/jU0PP/gQwzNB5AXtO+a/Vb2D/glkmmvMjJFCynrwLj4PAAbnHxu4YBvHZNlSSa
+         9yWl2p/SdHhlMP/YFiQXX2ekyHzT+UVrwB1bRMDtHmhBrN8kRhrqreY9z+cfULkaA7T0
+         YbswKH73dSZNcFATqJlSVtjxtEIUN2tWdM+mEsKXUunefHqG0vhNQGCQ+u4Ik65uuvyO
+         dZ0w==
+X-Gm-Message-State: APjAAAWt7LLN9pFQss6U9ObbnkHIH4bZVPCMbrhSKIaHr+QK5LdnsPWw
+        8qzDLVJ8TlfiFnBHXYBTRZU=
+X-Google-Smtp-Source: APXvYqxv6hajrPSCDTgGy/Lonmpd0lArxmz8v+rS0CM/LqXV2ZbZ72CC5MaQbLAIGsrgGmTscWWoSw==
+X-Received: by 2002:a37:68cc:: with SMTP id d195mr23253729qkc.131.1554753336690;
+        Mon, 08 Apr 2019 12:55:36 -0700 (PDT)
+Received: from urano.lrc.ic.unicamp.br (lrc-gw.ic.unicamp.br. [143.106.7.163])
+        by smtp.gmail.com with ESMTPSA id r20sm21982733qtc.48.2019.04.08.12.55.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 08 Apr 2019 12:55:36 -0700 (PDT)
+From:   Felipe Estrada-Solano <festradasolano@gmail.com>
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        mjpeg-users@lists.sourceforge.net, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: [PATCH] staging: zoran: "foo * bar" should be "foo *bar"
+Date:   Mon,  8 Apr 2019 16:55:26 -0300
+Message-Id: <1554753326-1811-1-git-send-email-festradasolano@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here are four fixes to the new "rid quadratic" swapoff in 5.1-rc:
+This patch fixes the checkpatch.pl error:
+ERROR: "foo * bar" should be "foo *bar"
 
-1/4 mm: swapoff: shmem_find_swap_entries() filter out other types
-2/4 mm: swapoff: remove too limiting SWAP_UNUSE_MAX_TRIES
-3/4 mm: swapoff: take notice of completion sooner
-4/4 mm: swapoff: shmem_unuse() stop eviction without igrab()
+Signed-off-by: Felipe Estrada-Solano <festradasolano@gmail.com>
+---
+ drivers/staging/media/zoran/zoran.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/linux/shmem_fs.h |    1 
- mm/shmem.c               |   57 +++++++++++++++++--------------------
- mm/swapfile.c            |   32 +++++++++++---------
- 3 files changed, 45 insertions(+), 45 deletions(-)
+diff --git a/drivers/staging/media/zoran/zoran.h b/drivers/staging/media/zoran/zoran.h
+index e84fb60..dc91e51 100644
+--- a/drivers/staging/media/zoran/zoran.h
++++ b/drivers/staging/media/zoran/zoran.h
+@@ -262,7 +262,7 @@ struct card_info {
+ 	/* avs6eyes mux setting */
+ 	u8 input_mux;
+ 
+-	void (*init) (struct zoran * zr);
++	void (*init)(struct zoran *zr);
+ };
+ 
+ struct zoran {
+-- 
+2.7.4
 
-Hugh
