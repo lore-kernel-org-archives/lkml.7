@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BCDC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3A0C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C4D208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA3F20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708728;
-	bh=FQVRIvwDpoTA7KWVKylzFAKinu6dUc3l5Tgnd6HRoqI=;
+	s=default; t=1554708736;
+	bh=N7eSKnf+W6K7na+3xMaYbGoytAoC27dsPIh4tUmxZiA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=yzKgnsHcFuZ9b0CJvAXqiGqBV78qcZyGEHjzmSNS80JMg6HvJK7b8H7hscGFyMBQb
-	 HCTP70sVoifSItc7nCc3n6kuCnfeMcKUUXb7x7+vsp51bb9Qcbo0r5eSEJUJxIgEhR
-	 86o3IE62F5uYCdzT3C99nB4AGxMedQGNCmR8oPbY=
+	b=KCYd5ryv7fjz/TPPuaelCzyckL/hquJd7jP4xAicuQB3M5q1nEBqLASJ7v391Ubca
+	 PieGqbZUc6pV+C3OcKCmwQJQwIqi6+x4kgTORqyrYbl3p1pX3TG6aMDPINeSULlHMN
+	 n0THvl4cVykyAN6K2LqUlLGGrI2Y3+oNUadi4mig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDHHcG (ORCPT
+        id S1726771AbfDHHcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:32:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43790 "EHLO
+        Mon, 8 Apr 2019 03:32:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44052 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHHcG (ORCPT
+        with ESMTP id S1726373AbfDHHcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:32:06 -0400
+        Mon, 8 Apr 2019 03:32:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=jX8MfHGCihgSwnrs9/cmOfM1mzV8eHAPE92hnX16Qrg=; b=GHnAXCsf+lLl
-        BTY4ngOZw0XiXaoPtkU0RxV7YpmGj9FHj7bQst7xFcADpK9pac26bocT93LXk5fs8Vxrik+60Vmao
-        df7374lTj7jKfl4He/XCczWH0naeiCeFNcWKZaW0r47MfF4/Y6EEkyeXujUgBBmO5MXm90SYPQr/d
-        manFA=;
+        List-Archive; bh=3V7COzg9VsqwdKmX61evL9k/DgvUjpk+t1Eg5v+5cAY=; b=e896xRSpC7ly
+        ONlshISX5+ZqRf4WPwLr4qsro0gQFKAuBM2WQxcnl2NQHJzsn3Y4/d1efCHwepCJ/QZSkam+TUaZY
+        n+l3Mxn+lyYpPE5s1MNqR47LUubeEHPbWbCnqctO7A/auqARHAlmVftg3V6u3gO5Pg5mcEeN/Zgqo
+        IL2Wk=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOl0-0003wt-RM; Mon, 08 Apr 2019 07:31:56 +0000
+        id 1hDOlD-0003xR-VE; Mon, 08 Apr 2019 07:32:09 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id B4C2C441D3B; Mon,  8 Apr 2019 14:31:39 +0700 (+07)
+        id 246DB441D3B; Mon,  8 Apr 2019 14:31:58 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi-summary: document set_cs_timing" to the spi tree
-In-Reply-To:  <1554423259-26056-16-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: tegra114: add 3 wire transfer mode support" to the spi tree
+In-Reply-To:  <1554423259-26056-9-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408073139.B4C2C441D3B@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:31:39 +0700 (+07)
+Message-Id: <20190408073158.246DB441D3B@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:31:58 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi-summary: document set_cs_timing
+   spi: tegra114: add 3 wire transfer mode support
 
 has been applied to the spi tree at
 
@@ -91,36 +91,49 @@ to this mail.
 Thanks,
 Mark
 
-From 24496da6927fa7399f7f60ab31b4cea27ec3ed00 Mon Sep 17 00:00:00 2001
+From 9d199231b000414e420a35912760f2d67e9c56d7 Mon Sep 17 00:00:00 2001
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Thu, 4 Apr 2019 17:14:15 -0700
-Subject: [PATCH] spi-summary: document set_cs_timing
+Date: Thu, 4 Apr 2019 17:14:08 -0700
+Subject: [PATCH] spi: tegra114: add 3 wire transfer mode support
 
-This patch documents set_cs_timing SPI master method.
+This patch adds 3 wire transfer support to SPI mode list along with
+its implementation.
+
+3 wire or Bi-directional mode uses only one serial data pin for the
+transfer. SPI in master mode uses MOSI data line only and MISO data
+line is not used.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/spi/spi-summary | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-tegra114.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/spi/spi-summary b/Documentation/spi/spi-summary
-index 1721c1b570c3..1a63194b74d7 100644
---- a/Documentation/spi/spi-summary
-+++ b/Documentation/spi/spi-summary
-@@ -572,6 +572,12 @@ SPI MASTER METHODS
- 	0: transfer is finished
- 	1: transfer is still in progress
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 1e749ce13029..751672b3bc16 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -754,6 +754,11 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
+ 		else
+ 			command1 &= ~SPI_LSBIT_FE;
  
-+    master->set_cs_timing(struct spi_device *spi, u8 setup_clk_cycles,
-+			      u8 hold_clk_cycles, u8 inactive_clk_cycles)
-+	This method allows SPI client drivers to request SPI master controller
-+	for configuring device specific CS setup, hold and inactive timing
-+	requirements.
++		if (spi->mode & SPI_3WIRE)
++			command1 |= SPI_BIDIROE;
++		else
++			command1 &= ~SPI_BIDIROE;
 +
-     DEPRECATED METHODS
+ 		if (tspi->cs_control) {
+ 			if (tspi->cs_control != spi)
+ 				tegra_spi_writel(tspi, command1, SPI_COMMAND1);
+@@ -1158,7 +1163,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
  
-     master->transfer(struct spi_device *spi, struct spi_message *message)
+ 	/* the spi->mode bits understood by this driver: */
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST |
+-			    SPI_TX_DUAL | SPI_RX_DUAL;
++			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_3WIRE;
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
+ 	master->setup = tegra_spi_setup;
+ 	master->transfer_one_message = tegra_spi_transfer_one_message;
 -- 
 2.20.1
 
