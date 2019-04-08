@@ -2,147 +2,69 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01353C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE4C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1FB20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CCE20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfDHHkw (ORCPT
+        id S1726591AbfDHHlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:40:52 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:50743 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDHHkw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:40:52 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id A5024100002;
-        Mon,  8 Apr 2019 07:40:42 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 09:40:42 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Message-ID: <20190408074042.74s5qckukcpore3e@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-8-megous@megous.com>
+        Mon, 8 Apr 2019 03:41:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39198 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfDHHlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:41:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 00:41:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,324,1549958400"; 
+   d="scan'208";a="159658647"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga004.fm.intel.com with SMTP; 08 Apr 2019 00:41:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 08 Apr 2019 10:41:06 +0300
+Date:   Mon, 8 Apr 2019 10:41:06 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     andriy.shevchenko@intel.com, heikki.krogerus@linux.intel.com,
+        drake@endlessm.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com
+Subject: Re: [PATCH] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
+Message-ID: <20190408074106.GC3622@lahna.fi.intel.com>
+References: <20190408042103.3804-1-chiu@endlessm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b4c2cydsu6ghev6c"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-8-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190408042103.3804-1-chiu@endlessm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 08, 2019 at 12:21:03PM +0800, Chris Chiu wrote:
+> +static void
+> +intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
+> +{
+> +	u32 curr = readl(hostown);
+> +	u32 updated = (curr & ~mask) | (value & mask);
 
---b4c2cydsu6ghev6c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think here we should first complain if the expected ownership is not
+correct. Warning or info level probably enough.
 
-On Sat, Apr 06, 2019 at 01:45:09AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-> According to the phy datasheet, both regulators need to be enabled
-> at the same time, but we can only specify a single phy-supply in
-> the DT.
->
-> This can be achieved by making one regulator depedning on the
-> other via vin-supply. While it's not a technically correct
-> description of the hardware, it achieves the purpose.
->
-> All values of RX/TX delay were tested exhaustively and a middle
-> one of the working values was chosen.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> index 644946749088..5270142527f5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -15,6 +15,7 @@
->
->  	aliases {
->  		serial0 = &uart0;
-> +		ethernet0 = &emac;
->  	};
->
->  	chosen {
-> @@ -64,6 +65,27 @@
->  		regulator-max-microvolt = <5000000>;
->  		regulator-always-on;
->  	};
 > +
-> +	/*
-> +	 * The board uses 2.5V RGMII signalling. Power sequence
-> +	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-> +	 * power rails at the same time and to wait 100ms.
-> +	 */
-> +	reg_gmac_2v5: gmac-2v5 {
-> +                compatible = "regulator-fixed";
-> +                regulator-name = "gmac-2v5";
-> +                regulator-min-microvolt = <2500000>;
-> +                regulator-max-microvolt = <2500000>;
-> +                startup-delay-us = <100000>;
-> +                enable-active-high;
-> +                gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+> +	return writel(updated, hostown);
 
-Is enable-active-high still needed? It's redundant with the
-GPIO_ACTIVE_HIGH flag.
+Also if the pin is not requested and not changed we should not touch the
+register.
 
-The indentation is wrong here as well.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---b4c2cydsu6ghev6c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKr6+gAKCRDj7w1vZxhR
-xWdjAQDqG1PAjXbsAJ8tdw7qyfdpedAk56EtuyF8rtMzGKwfkQD/QhgDvNH4Qmb3
-agLAWL6G4pdeJymsv+Aav+t7zcBKVQs=
-=oVDn
------END PGP SIGNATURE-----
-
---b4c2cydsu6ghev6c--
+Otherwise this looks good to me.
