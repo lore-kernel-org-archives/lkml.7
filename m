@@ -2,88 +2,118 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF93C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0BEC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B507620857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440D620857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="koswgkmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfDHV1C (ORCPT
+        id S1729223AbfDHV1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:27:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:59003 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfDHV1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:27:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MS3zP-1hJPdY1wV9-00TWvn; Mon, 08 Apr 2019 23:26:51 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] s390: remove -fno-strength-reduce flag
-Date:   Mon,  8 Apr 2019 23:26:14 +0200
-Message-Id: <20190408212648.2407234-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 8 Apr 2019 17:27:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46013 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbfDHV1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 17:27:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dNmc1nY8z9sPP;
+        Tue,  9 Apr 2019 07:27:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554758848;
+        bh=9iIcHRjOpp37vpajAdQaZJYTiJ77fn+t1UBpv4wVIt8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=koswgkmL+sPftnWxTx7Gr+vJRZqI73cfEEww1b9BYbXIxcJjkbOnXu68GauJnLfOB
+         CBH6yT3Y5rn1dUqYGKkWjcbh6N+/2rXe1UF9k+VhKWNRuL0bAglQyV2p7hIZVLRaEN
+         ry//TMp26/WaQ9MV4xUut2plhTpzvA2Nme+aFSNHZANRSeFcG9WXpETseRGW2qk0Ma
+         0DayHcPzgWF8zwTMvG2V0vyalkKqDLMQKmChcw6HQw82LGbdvSY7WbPHlbJZ303UA4
+         v+VXVpb0idLKBz/qOlXdmG/40oZ6yjkN8S0EX5hCFMEEDpzi1Xm0TVwxW+M5M0TZdo
+         3yG8Hdk9fo44g==
+Date:   Tue, 9 Apr 2019 07:27:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: linux-next: Fixes tags need some work in the sound-asoc tree
+Message-ID: <20190409072720.0f51ff2b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LqHHgpaYv00C4GNBFy+ulbCuWrypd5VbvhNBVd9z69CI+OkMOsg
- RwG7b0Zahao0Gqw/bG87G9VjwdXfjNGuEEsLSY5DbMxoItd57xr8HN0lLpSZgQiRLZt0Au1
- 8q/kqSiwHROLdYeWkvSOn6VKFen52IgyQZ1nhOFjvw9rUp7xZ9bV1pl4v3HD1IM9ljZoyQ4
- JAkOAZhTqjiSd5D6acnnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0H06SCbXAyM=:qvY6HriRt+kLxdCEgblnmp
- QMbPBW9p3VipyP7Pn6lJou1GNZBLKQ3FboMmLK7QXb2bH9q7V17eJmyTIfphspc7s74wQfTnB
- tFufQqPrPi3eHC7EE7OdvqW+yv0NyVQQl7AyX4ExV4hQQarVtDFOUZB9ThOKJHMXeJKLbuNak
- twyICw49eNT2QhnNWEvGBWzPtA8CxRAIYhEklcybUFcjc+lpEtJZQCZud2Gt5tImkZfJwSoFw
- JJA4UBl3J4nigKNUh7OYtfAcmbPFY6veWeneGieDvDYde4Zkt9H6XpJ2GLXP8HYsiNLzctOlc
- FfR/mYIINnDQxjbhtRw4cD1BDCg2mPj1hhnoPIrBlE1hm2oWLbiSzdMMp1Nzdd1iIVfCbF23b
- jUU+9aeSpnPQ8wIDibB8ONs/SFA6hlmuk+4Zm+kWKSpE2fVSgxe/7yEUZC4JGV9vAeElgr0pi
- WpmnKdqiTIp9rcCXCcWyQ2jzUHyQy3XiVCe8ZqQloaOq5evh5T35SXVi+Q/8eP58Qo+RBTW+S
- cwq+IJLcu4RiPl4GRMILQPbkWvZwC45xDJBqHqgXtuLHjtlh41me69sFObuvAKZP/pgkJcZ9a
- J2cRNUF/uBZRupf7K0sETL1YJm7lsyCyeWemtohmEJTFmephVsetjkbuGYFf7WfPW3h6NMUmX
- 69gEaBPitD0n11oTvdMXxRoB9+/jOa0pkx3BcG/aRKa1xRJsWclzUxMcRcpA7UT+X1N0TBvAf
- qSiQcfcVDwlFHtSKYAHAWl86rMSewsiby/5MSA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/pQyu_hxH_r8UsjTVlhUT5z/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was added as a workaround for really old compilers, and it prevents
-building with clang now. I can see no reason for keeping it, as it has
-already been removed for most architectures in the pre-git era, so
-let's remove it everywhere, rather than only for clang.
+--Sig_/pQyu_hxH_r8UsjTVlhUT5z/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/s390/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 86c76b149cc2..0087d11e3eaf 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -114,7 +114,7 @@ endif
- cfi := $(call as-instr,.cfi_startproc\n.cfi_val_offset 15$(comma)-160\n.cfi_endproc,-DCONFIG_AS_CFI_VAL_OFFSET=1)
- 
- KBUILD_CFLAGS	+= -mbackchain -msoft-float $(cflags-y)
--KBUILD_CFLAGS	+= -pipe -fno-strength-reduce -Wno-sign-compare
-+KBUILD_CFLAGS	+= -pipe -Wno-sign-compare
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables $(cfi)
- KBUILD_AFLAGS	+= $(aflags-y) $(cfi)
- export KBUILD_AFLAGS_DECOMPRESSOR
--- 
-2.20.0
+In commit
 
+  b4ed6b51f356 ("ASoC: core: conditionally increase module refcount on comp=
+onent open")
+
+Fixes tag
+
+  Fixes: b450b878('ASoC: core: don't increase component module refcount
+
+has these problem(s):
+
+  - missing space between the SHA1 and the subject
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not wrap FIxes tags over more than one line.
+
+
+In commit
+
+  17d3069ccf06 ("ASoC: stm32: fix sai driver name initialisation")
+
+Fixes tag
+
+  Fixes: 3e086ed ("ASoC: stm32: add SAI driver")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/pQyu_hxH_r8UsjTVlhUT5z/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyrvLgACgkQAVBC80lX
+0GyBJQf+JTDG0sHcZEmjh5Z2Sz3cfy7m2JX7WlH7U0/kSTZKGc/zUCWUfwV38DH3
+z4lLIZIwtlb0dyjbGbXAahq065eBV1oMl68i9ppLwtXpuY3oyUP10Blq0sXvou+p
+hoRmfjtZP0sK3GgeZILI2ydMrhsBcY1g74tZF8WwJ+wA6gfoG1xZAxb++79qKDfz
+B4I3ixjHI9Lo9ULVw/crOiL/hlHI1+KeT45GeK4MhoAtzBI4QR/8Wpxb2Zn4WLIJ
+z/sp9hbXQHrG6tHHcUPF3socU3X9vFN+9U1RZV/C3zzwwk7CQht9/SAaZehQOtmM
+cty7uTbedG1yPFyz+e+dyjQvEx2M0Q==
+=dR/G
+-----END PGP SIGNATURE-----
+
+--Sig_/pQyu_hxH_r8UsjTVlhUT5z/--
