@@ -2,45 +2,57 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CC1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A4CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975FC20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30C220879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDHDdh (ORCPT
+        id S1726588AbfDHDf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:33:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:10553 "EHLO mga07.intel.com"
+        Sun, 7 Apr 2019 23:35:57 -0400
+Received: from mx.socionext.com ([202.248.49.38]:47599 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbfDHDdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:33:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 20:33:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,323,1549958400"; 
-   d="scan'208";a="147375202"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Apr 2019 20:33:35 -0700
-Subject: Re: [RFC PATCH v2 3/3] arch/x86/acrn: add hypercall for acrn_guest
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1553576023-6434-1-git-send-email-yakui.zhao@intel.com>
- <1553576023-6434-4-git-send-email-yakui.zhao@intel.com>
- <alpine.DEB.2.21.1904052110370.1802@nanos.tec.linutronix.de>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <efe1ffd8-4ab9-9204-f411-5e9caa6e88a1@intel.com>
-Date:   Mon, 8 Apr 2019 11:31:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1726349AbfDHDf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 23:35:57 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 08 Apr 2019 12:35:54 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id C62211802E0;
+        Mon,  8 Apr 2019 12:35:54 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 8 Apr 2019 12:35:54 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 86F4440364;
+        Mon,  8 Apr 2019 12:35:54 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 788BA120499;
+        Mon,  8 Apr 2019 12:35:54 +0900 (JST)
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+ <20190401091050.cwph7xlpv3pmkwnq@flea>
+ <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+ <20190401113546.d6p2mg2y47abhumz@flea>
+ <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
+ <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+ <20190407221329.skbjjsjvqpnxwime@localhost>
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Message-ID: <2e4b09ae-968c-614b-4e20-b29d17db7a3e@socionext.com>
+Date:   Mon, 8 Apr 2019 12:35:54 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904052110370.1802@nanos.tec.linutronix.de>
+In-Reply-To: <20190407221329.skbjjsjvqpnxwime@localhost>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -51,98 +63,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019年04月06日 03:19, Thomas Gleixner wrote:
-> On Tue, 26 Mar 2019, Zhao Yakui wrote:
-> 
->> When acrn_hypervisor is detected, the hypercall is needed so that the
->> acrn guest can query/config some settings. For example: it can be used
->> to query the resources in hypervisor and manage the CPU/memory/device/
->> interrupt for Guest system.
+On 2019/04/08 7:13, Olof Johansson wrote:
+> On Tue, Apr 02, 2019 at 08:42:02PM +0900, Sugaya, Taichi wrote:
+>> Hi,
 >>
->> So the hypercall is added so that the kernel can communicate with the
->> low-level acrn-hypervisor. On x86 it is implemented by using vmacll when
-> 
-> is implemented with the VMCALL instruction
-> 
->> the acrn hypervisor is enabled.
+>> On 2019/04/01 22:02, Sugaya, Taichi wrote:
+>>> Hi,
+>>>
+>>> On 2019/04/01 20:35, Maxime Ripard wrote:
+>>>> Hi,
+>>>>
+>>>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
+>>>>> On 2019/04/01 18:10, Maxime Ripard wrote:
+>>>>>> Hi Sugaya, Arnd, Olof,
+>>>>>>
+>>>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+>>>>>>> +arm-soc
+>>>>>>>
+>>>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>>>>>>
+>>>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+>>>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
+>>>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
+>>>>>>>> in a failure when trying to use that schemas for validation.
+>>>>>>>>
+>>>>>>>> Use spaces instead of tabs to indent to fix this.
+>>>>>>>>
+>>>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+>>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>>>>>> ---
+>>>>>>>>     Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>>>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>>>>>
+>>>>>>> This should be applied to arm-soc tree having the commit.
+>>>>>>
+>>>>>> Could you pick up that patch?
+>>>>>
+>>>>> I got it.
+>>>>> My mission is to resubmit your fix-patch added my singned-off tag and
+>>>>> Rob's reviewed tag...right?
+>>>>
+>>>> If you are part of arm-soc and send your pull requests to Arnd and
+>>>> Olof, simply pick it up in the same branch than the initial patch was
+>>>> in. And when you apply that patch, you indeed need to add your
+>>>> Signed-off-by (note that most commands to commit have an option to do
+>>>> that automatically: -s and that includes git am) and the Rob's
+>>>> reviewed-by.
+>>>>
+>>>> Then, send a new pull request to arm-soc.
+>>>>
+>>>
+>>> Okay, thanks for your suggestion.
+>>> I try to make pull request!
+>>>
 >>
->> +++ b/arch/x86/include/asm/acrn_hypercall.h
->> @@ -0,0 +1,84 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * acrn_hypercall.h : acrn hypervisor call API
+>> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
+>>
+>> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 > 
-> No file names in headers please. They are pointless and get out of sync
-> when files are renamed.
+> Applied to arm/fixes now. Thanks!
+> 
+> 
+> -Olof
+> 
 
-Sure. It will be removed in next vesion.
+Thank you for appling!
 
-> 
->> + */
->> +
->> +#ifndef __ACRN_HYPERCALL_H__
->> +#define __ACRN_HYPERCALL_H__
-> 
-> asm headers start with
-> 
->      __ASM_X86_....
-> 
-This will be fixed.
-
->> +
->> +#include <linux/errno.h>
->> +
->> +#ifdef CONFIG_ACRN_GUEST
->> +
->> +/*
->> + * Hypercalls for ACRN Guest
->> + *
->> + * Hypercall number is passed in r8 register.
->> + * Return value will be placed in rax.
->> + * Up to 2 arguments are passed in rdi, rsi.
->> + */
->> +
->> +static inline long acrn_hypercall0(unsigned long hcall_id)
->> +{
->> +
-> 
-> Remove the empty new line please.
-> 
->> +	register long result asm("rax");
->> +	register unsigned long r8 asm("r8") = hcall_id;
-> 
-> Please order them the other way around, like a reverse christmas tree:
-> 
-> 	register unsigned long r8 asm("r8") = hcall_id;
-> 	register long result asm("rax");
-> 
-> That's way simpler to read.
-
-This will be fixed.
-
-> 
->> +	asm volatile(".byte 0x0F,0x01,0xC1\n"
->> +			: "=r"(result)
->> +			:  "r"(r8));
-> 
-> Please mention in the changelog why this is implemented with bytes and not
-> with the proper mnemonic. I assume it depends on binutils, so please
-> document which version of binutils supports the mnemonic.
-
-I check the binutils version mentioned in Document/changes.
-(binutils, 2.20)
-It seems that the "vmcall" is already supported.
-So the "vmcall" mnemonic will be used to make it readable.
-
-> 
-> And in the first function, i.e. hypercall0, add a comment above the asm
-> volatile() to that effect as well.
-
-Sure.
-
-
-> 
-> Thanks,
-> 
-> 	tglx
-> 
