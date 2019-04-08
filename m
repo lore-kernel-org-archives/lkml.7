@@ -2,144 +2,131 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FCCC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9989C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D26921473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5E22087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hs/L0DY/"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="o/rvHZTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfDHMRc (ORCPT
+        id S1726635AbfDHMSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:17:32 -0400
-Received: from vps.xff.cz ([195.181.215.36]:56788 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfDHMRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:17:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554725847; bh=9qCfRdQgJU20bNvwW0+4X2PjgfY2f043EtUF7T42qjM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hs/L0DY/Cu2BG5a3WS+/s3gwvPUyTQngfNIPvcvhLTM88VkdK00CAizos2nZUm4Ct
-         ZQDB1oQ4DviyJOV1VF+hxETrhuR8yGYN+vtwOXKaFHPkOb23MZZZ3FkJSmCMZ90/O3
-         9UGuOsbnvVDYYxa9qvu3Wz6VR5ni0VU/6p2i+VKM=
-Date:   Mon, 8 Apr 2019 14:17:27 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 02/12] drm: sun4i: Add support for
- enabling DDC I2C bus to dw_hdmi glue
-Message-ID: <20190408121727.4vdqdokr6w5thck6@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-3-megous@megous.com>
- <20190408072338.3urcotemju3qi2un@flea>
- <CAGb2v65W_H5HrnY9+DuW-noshXLHgErJhEpHHhzcG15n1u=8iw@mail.gmail.com>
- <20190408084714.b6xdi2pxbjvzwsnu@flea>
+        Mon, 8 Apr 2019 08:18:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55592 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfDHMSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:18:09 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o25so14071066wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8UpAj9YfdUW4CMDRxIiHz7xX8khEqdof0qRT0yl1Om0=;
+        b=o/rvHZTFAe0VdbSzgTiiC99n/h4CzCWZe0CTp2ayr1+YHssIea0MmB9jYzr5+9LWd9
+         0MO9ytqi0WMvFDguDixKX9s6xDFoDaZcSccQOeJvU+OX5PoNGreS4m1AwGJXXvtpICCZ
+         Z4iGah8tY3Bp3XvTIj5qlSYcAnnAVn92FXwsvM4sZM7WE2nIcN2M2LPxQXeNL43SD34I
+         sRoyIXDRK3k8hz/MKTYVr23UtPnn/4mxD+IsjvvqWLcYyYjOhf6CRlhfm+ZA3seLfOz8
+         8J5VkxEFMQl4GxN5P2GRwLjQPIgBIVWNW+X14qMWOE6o3StUViVfsU7Hf9vh4NEyn3vd
+         ulKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8UpAj9YfdUW4CMDRxIiHz7xX8khEqdof0qRT0yl1Om0=;
+        b=TdjbdY+tParTGUMAbzf6nB/KWVbCFvtMtCTX6pncAh3qJWSNVxyXDSVe4kvom8yC9J
+         6MSmid6fAmo6+qhdR/B2IwTaH/Nw1/xfJ+5OSiq7SsqGC8Mr3yfjTjjkE8FsWb7stQPz
+         TrfDVhL/GN86VcCjKcxfxtmrC6HhLqBcZTxWNz7ZtocJjznYVUnDoxp0eeVZQUoSzAzk
+         lkVNvconiKH8mC5p1UZMnfurkWQRYJ8E4mnfS8YB6AJm8usvhzQXZnlvvoo5rr2veBxL
+         GrCO2yLts2pDU7AbUEz53UIfcumFMqhtm/Vkbc/qmuZinz5L//P6CocsLxrakQ1f5DuE
+         34dw==
+X-Gm-Message-State: APjAAAWskr6IBtxIHNRAUNxZekqKQof021J5fh5WwxBT6ASehkbR44SQ
+        q0vuu0BKluI4a23FLwmBSocpdQ==
+X-Google-Smtp-Source: APXvYqzLuoC3RfA2e2x0g4Fs95byB5EytlhVbbhVCctSoT7tKo/dTwrmxUbR2pSfQyOoo8Fat4opfg==
+X-Received: by 2002:a1c:9e96:: with SMTP id h144mr17941211wme.33.1554725887208;
+        Mon, 08 Apr 2019 05:18:07 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e1sm52865103wrw.66.2019.04.08.05.18.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 08 Apr 2019 05:18:06 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     hverkuil@xs4all.nl, mchehab@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] media: platform: Add support for the Amlogic Meson G12A AO CEC Controller
+Date:   Mon,  8 Apr 2019 14:18:02 +0200
+Message-Id: <20190408121805.2870-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408084714.b6xdi2pxbjvzwsnu@flea>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:47:14AM +0200, Maxime Ripard wrote:
-> On Mon, Apr 08, 2019 at 03:28:24PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Apr 8, 2019 at 3:23 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Sat, Apr 06, 2019 at 01:45:04AM +0200, megous@megous.com wrote:
-> > > > From: Ondrej Jirman <megous@megous.com>
-> > > >
-> > > > Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-> > > > transistors, before it can be used. Model this as a power supply for DDC
-> > > > (via regulator framework).
-> > > >
-> > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > >
-> > > The DDC bus itself is usually attached to the HDMI connector, so it
-> > > would make sense to make the supply also a property of the connector.
-> >
-> > I believe these are separate things. What this patch covers is power for
-> > a voltage shifter between the SoC and HDMI DDC pins. The HDMI connector's
-> > 5V supply to power the remote DDC chip is something else. And on the
-> > Orange Pi 3 they are indeed separate supplies.
-> 
-> Then maybe the endpoint link between the two would be the best place
-> to put this?
+The Amlogic G12A SoC embeds a second CEC controller with a totally
+different design.
 
-Interestingly &hdmi node configures the DDC bus pins via pinctrl on the SoC
-side, so I put this there too, because it's related to those pins. I'm not sure
-if that changes anything in the discussion.
+The two controller can work in the same time since the CEC line can
+be set to two different pins on the two controllers.
 
-regards,
-   o.
+This second CEC controller is documented as "AO-CEC-B", thus the
+registers will be named "CECB_" to differentiate with the other
+AO-CEC driver.
 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Unlike the other AO-CEC controller, this one takes the Oscillator
+clock as input and embeds a dual-divider to provide a precise
+32768Hz clock for communication. This is handled by registering
+a clock in the driver.
 
+Unlike the other AO-CEC controller, this controller supports setting
+up to 15 logical addresses and supports the signal_free_time settings
+in the transmit function.
+
+Unfortunately, this controller does not support "monitor" mode.
+
+This patchset :
+- Update the bindings for this controller
+- Add the controller driver
+- Update the MAINTAINERS entry
+
+Changes since v3:
+- Use the cec_notifier_find_hdmi_dev() introduced in [1]
+
+Changes since v2:
+- Really fixed compatible used in driver
+- Collected bindings review tag
+
+Changes since v1:
+- Fixed typos in bindings
+- Fixed compatible used in driver, using the bindings defined one
+- Fix regmap return value handling
+- Fix irq error handling
+- Fixed wrong clk unprepare on oscin
+
+[1] https://patchwork.linuxtv.org/patch/55513/
+
+Neil Armstrong (3):
+  media: dt-bindings: media: meson-ao-cec: Add G12A AO-CEC-B Compatible
+  media: platform: meson: Add Amlogic Meson G12A AO CEC Controller
+    driver
+  MAINTAINERS: Update AO CEC with ao-cec-g12a driver
+
+ .../bindings/media/meson-ao-cec.txt           |  13 +-
+ MAINTAINERS                                   |   1 +
+ drivers/media/platform/Kconfig                |  13 +
+ drivers/media/platform/meson/Makefile         |   1 +
+ drivers/media/platform/meson/ao-cec-g12a.c    | 779 ++++++++++++++++++
+ 5 files changed, 804 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/media/platform/meson/ao-cec-g12a.c
+
+-- 
+2.21.0
 
