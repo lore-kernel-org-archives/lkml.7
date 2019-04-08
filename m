@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3D5C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4CC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7918E214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDEC2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfDHLzn (ORCPT
+        id S1726815AbfDHLzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:55:43 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:43027 "EHLO
+        Mon, 8 Apr 2019 07:55:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51319 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726642AbfDHLzf (ORCPT
+        with ESMTP id S1726744AbfDHLzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 07:55:35 -0400
-X-UUID: c06b5862437242cf8a7c543e85329334-20190408
-X-UUID: c06b5862437242cf8a7c543e85329334-20190408
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Mon, 8 Apr 2019 07:55:40 -0400
+X-UUID: 17453927a45c4b618da3a1b821f749f1-20190408
+X-UUID: 17453927a45c4b618da3a1b821f749f1-20190408
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1219555545; Mon, 08 Apr 2019 19:55:28 +0800
+        with ESMTP id 1324486373; Mon, 08 Apr 2019 19:55:34 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 8 Apr 2019 19:55:27 +0800
+ 15.0.1395.4; Mon, 8 Apr 2019 19:55:33 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 8 Apr 2019 19:55:27 +0800
+ Transport; Mon, 8 Apr 2019 19:55:33 +0800
 From:   Stu Hsieh <stu.hsieh@mediatek.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
@@ -40,9 +40,9 @@ CC:     Stu Hsieh <stu.hsieh@mediatek.com>, <linux-kernel@vger.kernel.org>,
         <linux-media@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH 08/14] [media] mtk-mipicsi: enable/disable cmos for mt2712
-Date:   Mon, 8 Apr 2019 19:54:59 +0800
-Message-ID: <1554724505-19882-9-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 14/14] [media] mtk-mipicsi: add debugfs for mipicsi driver
+Date:   Mon, 8 Apr 2019 19:55:05 +0800
+Message-ID: <1554724505-19882-15-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
@@ -54,86 +54,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enable/disable cmos setting for mt2712 when
-vb2 start/stop streaming.
+This patch add debugfs for mipicsi driver.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 99991f698edf..116fd2bfaaab 100644
+index 95d25db5e606..77aecadab6b7 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -98,9 +98,11 @@
+@@ -49,6 +49,7 @@
+ #include <soc/mediatek/smi.h>
+ #include <linux/regmap.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/debugfs.h>
+ 
+ #ifdef CONFIG_VB2_MEDIATEK_DMA_SG
+ #include "mtkbuf-dma-cache-sg.h"
+@@ -87,6 +88,7 @@
+ #define SENINF_NCSI2_INT_EN				0xB0
+ #define SENINF_NCSI2_INT_STATUS				0xB4
+ #define SENINF_NCSI2_DBG_SEL				0xB8
++#define SENINF_NCSI2_DBG_PORT				0xBC
+ #define SENINF_NCSI2_HSRX_DBG				0xD8
+ #define SENINF_NCSI2_DI					0xDC
+ #define SENINF_NCSI2_DI_CTRL				0xE4
+@@ -96,6 +98,7 @@
+ #define SENINF_TOP_MUX					0x08
+ 
+ #define SENINF_MUX_CTRL					0x00
++#define SENINF_MUX_DEBUG_2				0x14
+ 
  #define CAMSV_MODULE_EN					0x10
  #define CAMSV_FMT_SEL					0x14
- #define CAMSV_INT_EN					0x18
-+#define CAMSV_SW_CTL					0x20
- #define CAMSV_CLK_EN					0x30
+@@ -118,6 +121,7 @@
+ #define DMA_FRAME_HEADER_EN				0xE00
  
- #define CAMSV_TG_SEN_MODE				0x500
-+#define CAMSV_TG_VF_CON					0x504
- #define CAMSV_TG_SEN_GRAB_PXL				0x508
- #define CAMSV_TG_SEN_GRAB_LIN				0x50C
- #define CAMSV_TG_PATH_CFG				0x510
-@@ -537,9 +539,25 @@ static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
- 	struct soc_camera_device *icd = soc_camera_from_vb2q(vq);
- 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
- 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
-+	unsigned int index = 0;
-+	void __iomem *base = NULL;
+ #define SerDes_support 1
++#define CONFIG_DEBUG_FS 1
  
- 	icd->vdev->queue = vq;
+ static int mtk_mipicsi_dbg_level;
+ #define mtk_mipicsi_dbg(level, fmt, args...)				 \
+@@ -174,6 +178,9 @@ struct mtk_mipicsi_dev {
+ 	u32 width;
+ 	u32 height;
+ 	u32 bytesperline;
++#ifdef CONFIG_DEBUG_FS
++	struct dentry *mtk_mipicsi_debugfs;
++#endif
+ };
  
-+	for (index = 0U; index < MTK_CAMDMA_MAX_NUM; ++index)
-+		if (((mipicsi->link_reg_val >> index) & 0x01U) == 0x01U &&
-+			!mipicsi->is_enable_irq[index]) {
-+			enable_irq(mipicsi->irq[index]);
-+			mipicsi->is_enable_irq[index] = true;
+ static const struct soc_mbus_lookup mtk_mipicsi_formats[] = {
+@@ -229,6 +236,49 @@ static const struct soc_mbus_lookup mtk_mipicsi_formats[] = {
+ 		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
+ 		V4L2_MBUS_DATA_ACTIVE_HIGH)
+ 
++#ifdef CONFIG_DEBUG_FS
++static ssize_t mtk_mipicsi_debug_read(struct file *file, char __user *user_buf,
++			      size_t count, loff_t *ppos)
++{
++	struct device *dev = file->private_data;
++	struct soc_camera_host *soc_host = to_soc_camera_host(dev);
++	struct mtk_mipicsi_dev *mipicsi = soc_host->priv;
++	u32 int_val;
++	u32 dbg_port;
++	u32 cnt_val;
++	u32 hcnt;
++	u32 vcnt;
++	char buf[256];
++	char cnt_info[150];
++	int i;
 +
-+			/*enable cmos_en and vf_en*/
-+			base = mipicsi->camsv[index];
-+			writel(0x00000001U | readl(base + CAMSV_TG_SEN_MODE),
-+				base + CAMSV_TG_SEN_MODE);
-+			writel(0x00000001U | readl(base + CAMSV_TG_VF_CON),
-+				base + CAMSV_TG_VF_CON);
-+		}
++	int_val = readl(mipicsi->seninf + SENINF_NCSI2_INT_STATUS);
++	dbg_port = readl(mipicsi->seninf + SENINF_NCSI2_DBG_PORT);
++	memset(buf, 0, sizeof(buf));
++	snprintf(buf, sizeof(buf), "%s\nSENINF_NCSI2_INT_STATUS: 0x%X\n"
++		"SENINF_NCSI2_DBG_PORT: 0x%X\n",
++		dev_name(dev), int_val, dbg_port);
 +
- 	mipicsi->streamon = true;
- 	return 0;
- }
-@@ -549,7 +567,29 @@ static void mtk_mipicsi_vb2_stop_streaming(struct vb2_queue *vq)
- 	struct mtk_mipicsi_dev *mipicsi = vb2_get_drv_priv(vq);
- 	struct mtk_mipicsi_buf *buf = NULL;
- 	struct mtk_mipicsi_buf *tmp = NULL;
-+	unsigned int i = 0U;
- 	unsigned int index = 0;
-+	void __iomem *base = NULL;
++	for (i = 0; i < mipicsi->camsv_num; ++i) {
++		cnt_val = readl(mipicsi->seninf_mux[i] + SENINF_MUX_DEBUG_2);
++		hcnt = (cnt_val >> 16) & 0xFFFF;
++		vcnt = cnt_val & 0xFFFF;
++		memset(cnt_info, 0, sizeof(cnt_info));
++		snprintf(cnt_info, sizeof(cnt_info),
++			"HCNT[%d]: 0x%X\n"
++			"VCNT[%d]: 0x%X\n",
++			i, hcnt, i, vcnt);
++		strcat(buf, cnt_info);
++	}
 +
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			/*disable cmos_en and vf_en*/
-+			base = mipicsi->camsv[i];
-+			writel(readl(base + CAMSV_TG_SEN_MODE) & 0xFFFFFFFEU,
-+				base + CAMSV_TG_SEN_MODE);
-+			writel(readl(base + CAMSV_TG_VF_CON) & 0xFFFFFFFEU,
-+				base + CAMSV_TG_VF_CON);
-+			/*camsv reset*/
-+			base = mipicsi->camsv[i];
-+			writel(0x00000004U | readl(base + CAMSV_SW_CTL),
-+				base + CAMSV_SW_CTL);
-+			writel(readl(base + CAMSV_SW_CTL) & 0xFFFFFFFBU,
-+				base + CAMSV_SW_CTL);
-+			disable_irq(mipicsi->irq[i]);
-+			mipicsi->is_enable_irq[i] = false;
-+			mipicsi->frame_cnt[i] = 0UL;
-+			mipicsi->irq_status[i] = false;
-+		}
++	return simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
++}
++static const struct file_operations mtk_mipicsi_debug_fops = {
++	.open = simple_open,
++	.read = mtk_mipicsi_debug_read,
++};
++#endif /* CONFIG_DEBUG_FS */
++
+ static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
+ {
+ 	if (enable) {
+@@ -1588,6 +1638,16 @@ static int mtk_mipicsi_probe(struct platform_device *pdev)
+ 		goto clean;
+ 	}
  
- 	spin_lock(&mipicsi->queue_lock);
- 	while (list_empty(&(mipicsi->fb_list)) == 0) {
++#ifdef CONFIG_DEBUG_FS
++	mipicsi->mtk_mipicsi_debugfs =
++		debugfs_create_file(mipicsi->drv_name, 0444, NULL,
++			(void *)(&pdev->dev), &mtk_mipicsi_debug_fops);
++	if (mipicsi->mtk_mipicsi_debugfs == NULL) {
++		dev_err(&pdev->dev, "debugfs_create_file fail\n");
++		goto clean;
++	}
++#endif
++
+ 	dev_info(&pdev->dev, "probe done\n");
+ 	return ret;
+ clean:
+@@ -1600,6 +1660,11 @@ static int mtk_mipicsi_remove(struct platform_device *pdev)
+ {
+ 	struct soc_camera_host *soc_host = to_soc_camera_host(&pdev->dev);
+ 
++#ifdef CONFIG_DEBUG_FS
++	struct mtk_mipicsi_dev *mipicsi = soc_host->priv;
++
++	debugfs_remove(mipicsi->mtk_mipicsi_debugfs);
++#endif
+ 	soc_camera_host_unregister(soc_host);
+ 	pm_runtime_disable(&pdev->dev);
+ 
 -- 
 2.18.0
 
