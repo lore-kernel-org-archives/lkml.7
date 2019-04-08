@@ -2,31 +2,31 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FC1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B1BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB6D21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE33D21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfDHMUk (ORCPT
+        id S1727025AbfDHMUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:20:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48572 "EHLO mx1.redhat.com"
+        Mon, 8 Apr 2019 08:20:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53832 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbfDHMUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:20:39 -0400
+        id S1727006AbfDHMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:20:47 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7C29C05D3E4;
-        Mon,  8 Apr 2019 12:20:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 950AC8665A;
+        Mon,  8 Apr 2019 12:20:46 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-117-161.ams2.redhat.com [10.36.117.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D6B6D600C4;
-        Mon,  8 Apr 2019 12:20:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48A20600C4;
+        Mon,  8 Apr 2019 12:20:39 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -37,166 +37,120 @@ To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
 Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
         christoffer.dall@arm.com, peter.maydell@linaro.org,
         vincent.stehle@arm.com
-Subject: [PATCH v7 09/23] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
-Date:   Mon,  8 Apr 2019 14:18:57 +0200
-Message-Id: <20190408121911.24103-10-eric.auger@redhat.com>
+Subject: [PATCH v7 10/23] iommu/arm-smmu-v3: Link domains and devices
+Date:   Mon,  8 Apr 2019 14:18:58 +0200
+Message-Id: <20190408121911.24103-11-eric.auger@redhat.com>
 In-Reply-To: <20190408121911.24103-1-eric.auger@redhat.com>
 References: <20190408121911.24103-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 08 Apr 2019 12:20:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 08 Apr 2019 12:20:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
-to pass/withdraw the guest MSI binding to/from the host.
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+When removing a mapping from a domain, we need to send an invalidation to
+all devices that might have stored it in their Address Translation Cache
+(ATC). In addition with SVM, we'll need to invalidate context descriptors
+of all devices attached to a live domain.
 
+Maintain a list of devices in each domain, protected by a spinlock. It is
+updated every time we attach or detach devices to and from domains.
+
+It needs to be a spinlock because we'll invalidate ATC entries from
+within hardirq-safe contexts, but it may be possible to relax the read
+side with RCU later.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
-v6 -> v7:
-- removed the dev arg
+ drivers/iommu/arm-smmu-v3.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-v3 -> v4:
-- add UNBIND
-- unwind on BIND error
-
-v2 -> v3:
-- adapt to new proto of bind_guest_msi
-- directly use vfio_iommu_for_each_dev
-
-v1 -> v2:
-- s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
----
- drivers/vfio/vfio_iommu_type1.c | 64 +++++++++++++++++++++++++++++++++
- include/uapi/linux/vfio.h       | 29 +++++++++++++++
- 2 files changed, 93 insertions(+)
-
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 4a6b5a360a5e..6df72840fbd9 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1718,6 +1718,42 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
- 	return iommu_cache_invalidate(dc->domain, dev, &ustruct->info);
- }
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index d3880010c6cf..ff998c967a0a 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -594,6 +594,11 @@ struct arm_smmu_device {
+ struct arm_smmu_master_data {
+ 	struct arm_smmu_device		*smmu;
+ 	struct arm_smmu_strtab_ent	ste;
++
++	struct arm_smmu_domain		*domain;
++	struct list_head		list; /* domain->devices */
++
++	struct device			*dev;
+ };
  
-+static int
-+vfio_bind_msi(struct vfio_iommu *iommu,
-+	      dma_addr_t giova, phys_addr_t gpa, size_t size)
-+{
-+	struct vfio_domain *d;
-+	int ret = 0;
+ /* SMMU private data for an IOMMU domain */
+@@ -618,6 +623,9 @@ struct arm_smmu_domain {
+ 	};
+ 
+ 	struct iommu_domain		domain;
 +
-+	mutex_lock(&iommu->lock);
-+
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		ret = iommu_bind_guest_msi(d->domain, giova, gpa, size);
-+		if (ret)
-+			goto unwind;
-+	}
-+	goto unlock;
-+unwind:
-+	list_for_each_entry_continue_reverse(d, &iommu->domain_list, next) {
-+		iommu_unbind_guest_msi(d->domain, giova);
-+	}
-+unlock:
-+	mutex_unlock(&iommu->lock);
-+	return ret;
-+}
-+
-+static void
-+vfio_unbind_msi(struct vfio_iommu *iommu, dma_addr_t giova)
-+{
-+	struct vfio_domain *d;
-+
-+	mutex_lock(&iommu->lock);
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		iommu_unbind_guest_msi(d->domain, giova);
-+	}
-+	mutex_unlock(&iommu->lock);
-+}
-+
- static long vfio_iommu_type1_ioctl(void *iommu_data,
- 				   unsigned int cmd, unsigned long arg)
- {
-@@ -1822,6 +1858,34 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 					    &ustruct);
- 		mutex_unlock(&iommu->lock);
- 		return ret;
-+	} else if (cmd == VFIO_IOMMU_BIND_MSI) {
-+		struct vfio_iommu_type1_bind_msi ustruct;
-+
-+		minsz = offsetofend(struct vfio_iommu_type1_bind_msi,
-+				    size);
-+
-+		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (ustruct.argsz < minsz || ustruct.flags)
-+			return -EINVAL;
-+
-+		return vfio_bind_msi(iommu, ustruct.iova, ustruct.gpa,
-+				     ustruct.size);
-+	} else if (cmd == VFIO_IOMMU_UNBIND_MSI) {
-+		struct vfio_iommu_type1_unbind_msi ustruct;
-+
-+		minsz = offsetofend(struct vfio_iommu_type1_unbind_msi,
-+				    iova);
-+
-+		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (ustruct.argsz < minsz || ustruct.flags)
-+			return -EINVAL;
-+
-+		vfio_unbind_msi(iommu, ustruct.iova);
-+		return 0;
++	struct list_head		devices;
++	spinlock_t			devices_lock;
+ };
+ 
+ struct arm_smmu_option_prop {
+@@ -1493,6 +1501,9 @@ static struct iommu_domain *arm_smmu_domain_alloc(unsigned type)
  	}
  
- 	return -ENOTTY;
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index b5325552bae0..69775adda155 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -794,6 +794,35 @@ struct vfio_iommu_type1_cache_invalidate {
- };
- #define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
- 
-+/**
-+ * VFIO_IOMMU_BIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 25,
-+ *			struct vfio_iommu_type1_bind_msi)
-+ *
-+ * Pass a stage 1 MSI doorbell mapping to the host so that this
-+ * latter can build a nested stage2 mapping
-+ */
-+struct vfio_iommu_type1_bind_msi {
-+	__u32   argsz;
-+	__u32   flags;
-+	__u64	iova;
-+	__u64	gpa;
-+	__u64	size;
-+};
-+#define VFIO_IOMMU_BIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 25)
+ 	mutex_init(&smmu_domain->init_mutex);
++	INIT_LIST_HEAD(&smmu_domain->devices);
++	spin_lock_init(&smmu_domain->devices_lock);
 +
-+/**
-+ * VFIO_IOMMU_UNBIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 26,
-+ *			struct vfio_iommu_type1_unbind_msi)
-+ *
-+ * Unregister an MSI mapping
-+ */
-+struct vfio_iommu_type1_unbind_msi {
-+	__u32   argsz;
-+	__u32   flags;
-+	__u64	iova;
-+};
-+#define VFIO_IOMMU_UNBIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 26)
-+
- /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+ 	return &smmu_domain->domain;
+ }
  
- /*
+@@ -1713,6 +1724,16 @@ static void arm_smmu_detach_dev(struct device *dev)
+ {
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct arm_smmu_master_data *master = fwspec->iommu_priv;
++	unsigned long flags;
++	struct arm_smmu_domain *smmu_domain = master->domain;
++
++	if (smmu_domain) {
++		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
++		list_del(&master->list);
++		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
++
++		master->domain = NULL;
++	}
+ 
+ 	master->ste.assigned = false;
+ 	arm_smmu_install_ste_for_dev(fwspec);
+@@ -1722,6 +1743,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ {
+ 	int ret = 0;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++	unsigned long flags;
+ 	struct arm_smmu_device *smmu;
+ 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+ 	struct arm_smmu_master_data *master;
+@@ -1757,6 +1779,11 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 	}
+ 
+ 	ste->assigned = true;
++	master->domain = smmu_domain;
++
++	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
++	list_add(&master->list, &smmu_domain->devices);
++	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+ 
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_BYPASS) {
+ 		ste->s1_cfg = NULL;
+@@ -1883,6 +1910,7 @@ static int arm_smmu_add_device(struct device *dev)
+ 			return -ENOMEM;
+ 
+ 		master->smmu = smmu;
++		master->dev = dev;
+ 		fwspec->iommu_priv = master;
+ 	}
+ 
 -- 
 2.20.1
 
