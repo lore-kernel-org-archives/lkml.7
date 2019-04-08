@@ -2,123 +2,108 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07912C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F44C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E0A20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2268120880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms42WX1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfDHBfv (ORCPT
+        id S1726531AbfDHBhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 21:35:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46163 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbfDHBfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 21:35:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 18:35:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,323,1549958400"; 
-   d="scan'208";a="335810638"
-Received: from lyang61-mobl3.ccr.corp.intel.com ([10.255.30.213])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Apr 2019 18:35:48 -0700
-Message-ID: <1554687347.2178.1.camel@intel.com>
-Subject: Re: [PATCH 08/14] powercap/intel_rapl: Support multi-die/package
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
-Date:   Mon, 08 Apr 2019 09:35:47 +0800
-In-Reply-To: <alpine.DEB.2.21.1904052022310.1802@nanos.tec.linutronix.de>
-References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
-         <680e11fe0dcc65e4cfa5bfeaa0d1cdbe7896e3c0.1551160674.git.len.brown@intel.com>
-         <alpine.DEB.2.21.1904052022310.1802@nanos.tec.linutronix.de>
+        Sun, 7 Apr 2019 21:37:25 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39576 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfDHBhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 21:37:24 -0400
+Received: by mail-it1-f195.google.com with SMTP id 139so18357961ita.4
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 18:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m55FDieUwXSVk71d2fSE1OxsfIG20QdAAJNpsap2Ii0=;
+        b=ms42WX1SjOmoBQ26WJTGjnIJS6UkYNu7Ywh2HFi+Oenc1OL3+GzCt9lmCeZOB9N7kA
+         C33y6MYh1LRhBSHzuynUQIH6rbmxvnurlnDnJqJYO/MDTQ+IWc+c5eWKgZRiPxcVUWDQ
+         JtBr56e0/b2JUf2Ci4VeyxlqCp0kxmQkeydxzOJpVuWWgiXRvnQ6EFcUaHjfyUWFvZb+
+         +UPxKJPN6C967P/RSWpDgy2F1qsXjZBfyfuNeg2vY2juDKDVSvkHvnoayD5X/UFP9IUT
+         WTeGdjoIhhy/NrtBGgWL30vXcawMtcLUEqOiqqWK6pDMT0eQFnrECRrKVicMnD7YVuT1
+         iniQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m55FDieUwXSVk71d2fSE1OxsfIG20QdAAJNpsap2Ii0=;
+        b=nfeRB596yjOz0s7q6O+fA76cqRVBPafr5pqJRyznX5bL/NE0hH0OkIvfr9ESmbprj4
+         tDXQ3iy7S3LM00TDIyCZao/qRmrrs2uwZn8yihERa2mPrE3v9nQaLVoz/5Htugstfxil
+         K2AlHWdWnnneXiqyQ86NGWT9FhJU5V0z4ILsLisTxcD68HXbu1FZ4cCc4GalRmd/tIYz
+         r94fJeu34hcvIQRinlPYZEoxii0o0CqLdqAHKkx1q2KRmMGoTYCxq4lneBr2N3VeLl9g
+         iXJ2iOXnewtezYNEeKnAk3wdzUeDbicH8auIbhNNdOqP88ucrIu9xHj7W2nWWHKJaIAM
+         coKg==
+X-Gm-Message-State: APjAAAXe9Fv2aFG/mfumi8WZd00SKlP1+SfgA5/hBhcoNmaIIsZ4/5H0
+        tmScCVvnPHe5DLWCX+EJLF4YlRD1y9xAze0SghQ=
+X-Google-Smtp-Source: APXvYqwjSkpJFoN1ghizmvWB8xajraxMmkKwWcPgD9/0BAjtNxkmdv4XTGO6wlgHh521ZAHRpN5cRvVqEcDFzIyUaAk=
+X-Received: by 2002:a24:4d85:: with SMTP id l127mr17930524itb.53.1554687443950;
+ Sun, 07 Apr 2019 18:37:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <9138d8e8-5390-0650-9bc3-050b869e978c@infradead.org>
+In-Reply-To: <9138d8e8-5390-0650-9bc3-050b869e978c@infradead.org>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Mon, 8 Apr 2019 09:37:13 +0800
+Message-ID: <CAKGbVbugBGrxfHm3k7WB+FS_O-Bjj9PyKrSDteTy1sra=nd6cw@mail.gmail.com>
+Subject: Re: [PATCH -next] MAINTAINERS: mark lima mailing list as moderated
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        lima@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 五, 2019-04-05 at 20:27 +0200, Thomas Gleixner wrote:
-> On Tue, 26 Feb 2019, Len Brown wrote:
-> 
-> > 
-> > From: Zhang Rui <rui.zhang@intel.com>
-> > 
-> > On the new dual-die/package systems, the RAPL MSR becomes die-
-> > scope.
-> > Thus instead of one powercap device per physical package, now there
-> > should be one powercap device for each unique die on these systems.
-> > 
-> > This patch introduces intel_rapl driver support for new
-> > dual-die/package systems.
-> This patch .... See Documentation/processs/
-> 
-> and this sentence is not really helpful either.
-> 
-> > 
-> > On the hardwares that do not have multi-die,
-> > topology_logical_die_id()
-> > equals topology_physical_package_id(), thus there is no functional
-> > change.
-> Something like this:
-> 
-> To support this the RAPL package domain has to be identified by the
-> die id
-> instead of the package id. On single die CPUs the die id is the same
-> as the
-> physical package id.
-> 
-> Hmm?
+Looks good for me, patch is:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
-Yeah, sounds much better.
-Len, will you help me update the changelog or do you want me to send an
-updated version to you?
+Should I apply this patch to drm-misc in this case? Or this patch will be
+submitted in other kernel tree and back merged to drm-misc?
 
-thanks,
-rui
+Regards,
+Qiang
 
-> 
-> > 
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> > Signed-off-by: Len Brown <len.brown@intel.com>
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: linux-pm@vger.kernel.org
-> > ---
-> >  drivers/powercap/intel_rapl.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/powercap/intel_rapl.c
-> > b/drivers/powercap/intel_rapl.c
-> > index 6057d9695fed..8723e9ae7436 100644
-> > --- a/drivers/powercap/intel_rapl.c
-> > +++ b/drivers/powercap/intel_rapl.c
-> > @@ -266,7 +266,7 @@ static struct rapl_domain
-> > *platform_rapl_domain; /* Platform (PSys) domain */
-> >  /* caller to ensure CPU hotplug lock is held */
-> >  static struct rapl_package *rapl_find_package(int cpu)
-> >  {
-> > -	int id = topology_physical_package_id(cpu);
-> > +	int id = topology_logical_die_id(cpu);
-> >  	struct rapl_package *rp;
-> >  
-> >  	list_for_each_entry(rp, &rapl_packages, plist) {
-> > @@ -1457,7 +1457,7 @@ static void rapl_remove_package(struct
-> > rapl_package *rp)
-> >  /* called from CPU hotplug notifier, hotplug lock held */
-> >  static struct rapl_package *rapl_add_package(int cpu)
-> >  {
-> > -	int id = topology_physical_package_id(cpu);
-> > +	int id = topology_logical_die_id(cpu);
-> >  	struct rapl_package *rp;
-> >  	int ret;
-> >  
+On Mon, Apr 8, 2019 at 3:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Note that the lima mailing list is moderated.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Qiang Yu <yuq825@gmail.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: lima@lists.freedesktop.org
+> ---
+>  MAINTAINERS |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- mmotm-2019-0405-1828.orig/MAINTAINERS
+> +++ mmotm-2019-0405-1828/MAINTAINERS
+> @@ -5226,7 +5226,7 @@ F:        Documentation/devicetree/bindings/dis
+>  DRM DRIVERS FOR LIMA
+>  M:     Qiang Yu <yuq825@gmail.com>
+>  L:     dri-devel@lists.freedesktop.org
+> -L:     lima@lists.freedesktop.org
+> +L:     lima@lists.freedesktop.org (moderated for non-subscribers)
+>  S:     Maintained
+>  F:     drivers/gpu/drm/lima/
+>  F:     include/uapi/drm/lima_drm.h
+>
+>
