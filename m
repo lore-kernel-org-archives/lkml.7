@@ -2,104 +2,122 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98258C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDC6C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE3220818
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B069520818
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqXoDnxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfDHOem (ORCPT
+        id S1727153AbfDHOf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:34:42 -0400
-Received: from mail.delivery-51-eu-central-1.prod.hydra.sophos.com ([35.159.27.143]:57344
-        "EHLO mail.delivery-51-eu-central-1.prod.hydra.sophos.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbfDHOel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:34:41 -0400
-X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Apr 2019 10:34:40 EDT
-Received: from mail.delivery-9-eu-central-1.prod.hydra.sophos.com (ip-172-20-0-105.eu-central-1.compute.internal [172.20.0.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.delivery-51-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id 44dCSh5BkHz9B2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 14:28:04 +0000 (UTC)
-Received: from ip-172-20-1-157.eu-central-1.compute.internal (ip-172-20-1-157.eu-central-1.compute.internal [127.0.0.1])
-        by mail.delivery-9-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTP id 44dCSg3TTfzgY8G;
-        Mon,  8 Apr 2019 14:28:03 +0000 (UTC)
-X-Sophos-Email-ID: 4614bc7ac1fb47f180ed3d5c4586770a
-Received: from smtp.eckelmann.de (smtp.eckelmann.de [217.19.183.80])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by relay-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id
- 44dCSd4x19z5vM6; Mon,  8 Apr 2019 14:28:01 +0000 (UTC)
-Received: from ws067.eckelmann.group (2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9)
- by EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5) with
- Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1591.10; Mon, 8 Apr 2019 16:28:01 +0200
-Date:   Mon, 8 Apr 2019 16:27:55 +0200
-From:   Thorsten Scherer <thorsten.scherer@eckelmann.de>
-To:     Gavin Schenk <g.schenk@eckelmann.de>
-CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <u.kleine-koenig@pengutronix.de>, <t.scherer@eckelmann.de>,
-        <kernel@pengutronix.de>
-Subject: Re: [PATCH] MAINTAINERS / Documentation: Thorsten Scherer is the
- successor of Gavin Schenk
-Message-ID: <20190408142755.GA4719@ws067.eckelmann.group>
-References: <20190408123208.10965-1-g.schenk@eckelmann.de>
+        Mon, 8 Apr 2019 10:35:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39554 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfDHOf5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:35:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z9so1122201lfh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vJJdncPS/fbDD3g3BxkMZoOWsWQ0Y/n0jjwJo4sSka4=;
+        b=BqXoDnxMeqtJ4JEPGdLqFfB4KXY0b38QBQFBWbCHW3RTGT9NxY8FqJXk5YLiupZKBw
+         UUs+pf2wrCs8K43/q9J/tpJtXF/pZUlVuv6LkKiG4WY2+UZak5oHEHmnNImssOdCCx4o
+         GQPrg/08TAMUdcFqkbjUxHT/zUVDXmikQ57bcZuOax/vRVfqZhAw+48OacX8EiLnayPN
+         u9QrfZDRdY7rO/omd90f21n6nYJ1hOrvNqGu+N2ony/S6Fe28sntZ+0KHeFDuxwPbEKY
+         Yhhln56jrKnGqxD20WPFwTF2hmwxnAkByQlvgpFqb+MMio++Owon2BPJFKqyEx5a7mKX
+         hR6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vJJdncPS/fbDD3g3BxkMZoOWsWQ0Y/n0jjwJo4sSka4=;
+        b=ckCDEPRM7QdpCxwqLjyLF5TBn6AfsxMzolINKHmJCJCFyKy7H3b3/QmkY+vWxwZp8G
+         w/xvOvziADRN+gSHTYR9FxkscbRYgj6KGFxprCY/T4i2UX4xV1n7f3vEf9gzT583YcJN
+         TtLz4B2Uu4eQ0FAdfXd0ZAjA74B6GaV0eYueZ3RoLlq8PaY46i5fRh+jwjhOutm0/a/U
+         9Wxtwz9QubpQE/KsPbghPqB5gYIOBgGa4mjr+CmTedWOxmBvSTIbkktyfmv3WF55n70L
+         cRniCvBgX30bF9I7M0RYBTkLvTDkc6bicLF09JvGUoutUnaNDKuqMaE0lR7LH9vCw4Uq
+         dd9A==
+X-Gm-Message-State: APjAAAVOhEALTksTWrziwn7sJRYPqmewJHT115AMXfR36f9B8ECDJBkx
+        u45c15DyQdvebv8sy+alJ28ztrUrljw=
+X-Google-Smtp-Source: APXvYqxRK9FEMnNsxQnQkJE279IHQHK6uywmuZMynkoK0hOwqUSKAZMXbz6tqKrKz9fro3ZRRo/+5A==
+X-Received: by 2002:ac2:561c:: with SMTP id v28mr3872799lfd.125.1554734156131;
+        Mon, 08 Apr 2019 07:35:56 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id c17sm1389028lfj.58.2019.04.08.07.35.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 07:35:55 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id C066A46090D; Mon,  8 Apr 2019 17:35:54 +0300 (MSK)
+Date:   Mon, 8 Apr 2019 17:35:54 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Andrey Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linuxfoundation.org>
+Subject: [PATCH -next] prctl: Fix false positive in validate_prctl_map
+Message-ID: <20190408143554.GY1421@uranus.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408123208.10965-1-g.schenk@eckelmann.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Originating-IP: [2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9]
-X-ClientProxiedBy: EX-SRV1.eckelmann.group (2a00:1f08:4007:e035:172:18:35:4)
- To EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
-X-LASED-Pver: 0000002
-X-Sophos-Email: [eu-central-1] Antispam-Engine: 3.1.5,
- AntispamData: 2019.4.8.141516
-X-LASED-SpamProbabilty: 0.083173
-X-LASED-Hits: BODYTEXTP_SIZE_3000_LESS 0.000000,
- BODYTEXTP_SIZE_400_LESS 0.000000, BODY_SIZE_1000_LESS 0.000000,
- BODY_SIZE_2000_LESS 0.000000, BODY_SIZE_300_399 0.000000,
- BODY_SIZE_5000_LESS 0.000000, BODY_SIZE_7000_LESS 0.000000,
- FROM_SAME_AS_TO_DOMAIN 0.000000, HTML_00_01 0.050000, HTML_00_10 0.050000,
- IN_REP_TO 0.000000, LEGITIMATE_SIGNS 0.000000, MSG_THREAD 0.000000,
- MULTIPLE_RCPTS 0.100000, NO_URI_HTTPS 0.000000, REFERENCES 0.000000,
- WEBMAIL_SOURCE 0.000000, __ANY_URI 0.000000, __BOUNCE_CHALLENGE_SUBJ 0.000000,
- __BOUNCE_NDR_SUBJ_EXEMPT 0.000000, __CD 0.000000, __CT 0.000000,
- __CT_TEXT_PLAIN 0.000000, __DQ_NEG_HEUR 0.000000, __DQ_NEG_IP 0.000000,
- __FORWARDED_MSG 0.000000, __FROM_DOMAIN_IN_ANY_TO1 0.000000,
- __FROM_DOMAIN_IN_RCPT 0.000000, __HAS_CC_HDR 0.000000, __HAS_FROM 0.000000,
- __HAS_MSGID 0.000000, __HAS_XOIP 0.000000, __IN_REP_TO 0.000000,
- __MIME_TEXT_ONLY 0.000000, __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000,
- __MIME_VERSION 0.000000, __MULTIPLE_RCPTS_CC_X2 0.000000,
- __NO_HTML_TAG_RAW 0.000000, __REFERENCES 0.000000, __SANE_MSGID 0.000000,
- __SUBJ_ALPHA_END 0.000000, __SUBJ_ALPHA_NEGATE 0.000000, __SUBJ_REPLY 0.000000,
- __TO_MALFORMED_2 0.000000, __TO_NAME 0.000000,
- __TO_NAME_DIFF_FROM_ACC 0.000000, __TO_REAL_NAMES 0.000000,
- __URI_NO_WWW 0.000000, __USER_AGENT 0.000000
-X-LASED-Authed: 1
-X-LASED-Spam: NonSpam
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
+While validating new map we require the @start_data to be strictly less
+than @end_data, which is fine for regular applications (this is why this
+nit didn't trigger for that long). These members are set from executable
+loaders such as elf halders, still it is pretty valid to have a loadable
+data section with zero size in file, in such case the start_data is equal
+to end_data once kernel loader finishes.
 
-On Mon, Apr 08, 2019 at 02:32:08PM +0200, Gavin Schenk wrote:
-> Due to new challenges in my life I can no longer take care of SIOX.
-> Thorsten takes over my SIOX tasks.
-> 
-> Signed-off-by: Gavin Schenk <g.schenk@eckelmann.de>
+In result when we'are trying to restore such program the procedure fails
+and kernel returns -EINVAL. From the image dump of a program:
 
-Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
+ | "mm_start_code": "0x400000",
+ | "mm_end_code": "0x8f5fb4",
+ | "mm_start_data": "0xf1bfb0",
+ | "mm_end_data": "0xf1bfb0",
 
-I will take over Gavin's SIOX tasks.
+Thus we need to change validate_prctl_map from strictly less to less or
+equal operator use.
 
-Best regards
-Thorsten
+Fixes: f606b77f1a9e362451aca8f81d8f36a3a112139e
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+CC: Andrey Vagin <avagin@gmail.com>
+CC: Dmitry Safonov <0x7f454c46@gmail.com>
+CC: Pavel Emelyanov <xemul@virtuozzo.com>
+CC: Andrew Morton <akpm@linuxfoundation.org>
+---
+I don't consider this issue as a critical one, since it triggered first
+time for in more than 4 years period (and report came from a proprietary
+program).
+
+ kernel/sys.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-next.git/kernel/sys.c
+===================================================================
+--- linux-next.git.orig/kernel/sys.c
++++ linux-next.git/kernel/sys.c
+@@ -1924,7 +1924,7 @@ static int validate_prctl_map(struct prc
+ 	((unsigned long)prctl_map->__m1 __op				\
+ 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
+ 	error  = __prctl_check_order(start_code, <, end_code);
+-	error |= __prctl_check_order(start_data, <, end_data);
++	error |= __prctl_check_order(start_data,<=, end_data);
+ 	error |= __prctl_check_order(start_brk, <=, brk);
+ 	error |= __prctl_check_order(arg_start, <=, arg_end);
+ 	error |= __prctl_check_order(env_start, <=, env_end);
