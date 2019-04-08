@@ -2,91 +2,64 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F90C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CC1C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF6F20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB3520879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfDHP74 (ORCPT
+        id S1728046AbfDHQAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:59:56 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50960 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfDHP74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:59:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4A7315AB;
-        Mon,  8 Apr 2019 08:59:55 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13AE83F557;
-        Mon,  8 Apr 2019 08:59:53 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 16:59:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@arm.linux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH 3/7] arm64: Use arch_timer_read_counter instead of
- arch_counter_get_cntvct
-Message-ID: <20190408155951.GO6139@lakrids.cambridge.arm.com>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
- <20190408154907.223536-4-marc.zyngier@arm.com>
+        Mon, 8 Apr 2019 12:00:12 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:54448 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfDHQAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:00:12 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hDWgr-00086V-Nm; Mon, 08 Apr 2019 10:00:10 -0600
+To:     Wesley Sheng <wesley.sheng@microchip.com>,
+        kurt.schwemmer@microsemi.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     wesleyshenggit@sina.com, kelvin.cao@microchip.com
+References: <1554734088-5755-1-git-send-email-wesley.sheng@microchip.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8f1962b8-3e6b-0729-dc29-043bb13cebf9@deltatee.com>
+Date:   Mon, 8 Apr 2019 10:00:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408154907.223536-4-marc.zyngier@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1554734088-5755-1-git-send-email-wesley.sheng@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: kelvin.cao@microchip.com, wesleyshenggit@sina.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, wesley.sheng@microchip.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/2] Fix two bugs of switchtec module
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 04:49:03PM +0100, Marc Zyngier wrote:
-> Only arch_timer_read_counter will guarantee that workarounds are
-> applied. So let's use this one instead of arch_counter_get_cntvct.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Mark.
+On 2019-04-08 8:34 a.m., Wesley Sheng wrote:
+> Wesley Sheng (2):
+>   switchtec: Fix false maximum supported PCIe function number issue
+>   switchtec: Fix unintended mask of MRPC event
 
-> ---
->  arch/arm64/kernel/traps.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index 8ad119c3f665..6190a60388cf 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -493,7 +493,7 @@ static void cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
->  {
->  	int rt = ESR_ELx_SYS64_ISS_RT(esr);
->  
-> -	pt_regs_write_reg(regs, rt, arch_counter_get_cntvct());
-> +	pt_regs_write_reg(regs, rt, arch_timer_read_counter());
->  	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
->  }
->  
-> @@ -665,7 +665,7 @@ static void compat_cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
->  {
->  	int rt = (esr & ESR_ELx_CP15_64_ISS_RT_MASK) >> ESR_ELx_CP15_64_ISS_RT_SHIFT;
->  	int rt2 = (esr & ESR_ELx_CP15_64_ISS_RT2_MASK) >> ESR_ELx_CP15_64_ISS_RT2_SHIFT;
-> -	u64 val = arch_counter_get_cntvct();
-> +	u64 val = arch_timer_read_counter();
->  
->  	pt_regs_write_reg(regs, rt, lower_32_bits(val));
->  	pt_regs_write_reg(regs, rt2, upper_32_bits(val));
-> -- 
-> 2.20.1
-> 
+This series looks good to me:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks,
+
+Logan
