@@ -2,120 +2,114 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD29C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7178EC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2DE213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F075213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuC3WILA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lRuouKTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfDHKk6 (ORCPT
+        id S1726538AbfDHKlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:40:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40844 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfDHKk6 (ORCPT
+        Mon, 8 Apr 2019 06:41:11 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:44514 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfDHKlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:40:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so7097533plr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 03:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7RA93DYth6ZqPFk65ekRc5aoo+shtaEtme9cGdrMV3w=;
-        b=BuC3WILA75dhB2xy0FnlDu9pCluKApD+wt7/KF2ULd8vDGb2umgI//PiOAoPZkB/ee
-         bYWaUx6iL6wIFGcVKqVx9MXzMNFo5484Yh8sD3Ri81XVo9XJ6lRXJa6muLVTb8dQyKda
-         CC5kyhOJxiLYm6w5wvnU0iuHUM0oQFJyz00IJrnzrnDYzATcJSZ3cH6lG1R5dJ/5qhSS
-         PX+vl3h97iz6vtNiiFWHsKNed8Xyko7MW6nlFG9CQgL38B5siqcEMYfE3/FzV+mgzJRQ
-         IlCTekj8+cmfsvhbgrOtBDzq3qTG1DdIf9XIieqcfV4P+55jl8H+NIS0CyYhfoEu0J6W
-         5dEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7RA93DYth6ZqPFk65ekRc5aoo+shtaEtme9cGdrMV3w=;
-        b=Rgk0zAjVi8C7zeMkVxQmCS+G2/Lj5zG6FqCD7bWFYcKWFWKKxAGnXxT6X15xM4jHz+
-         HnxQeLgT0OMVOy1NZjgapUg1/47662r1g/o28T/vHUCS+8Vodx9wa9kMQTAKMSplHnyM
-         GCY6qHb6qqzgVfYRqtvu8zEnI3nUvUMgCL7Otj+fW9R3ASYlYyTFV7e4wbtLf4j2pvzQ
-         lsJoM6sUiZTPtpkfa8WhWxOIVeZtAqo2XAIgQl1v+Cgk5yv0HLhZuOd+lfJzm2J2fOC9
-         BZIQCOvZVVUXSYV0DlH65YpUqMahwfbMOrT9dPUZ/Ww3DbYYFG8qvDrFTPeLVkx3cbhG
-         Z+CA==
-X-Gm-Message-State: APjAAAUaeKxY05jd9BoYxcRzq13K0mvSdqGHaD3nFuBIs/jhhGn5hJDh
-        Klfjot+50YekReW3gj3w37o=
-X-Google-Smtp-Source: APXvYqwRy1eKS0fjXbjIE9tPcZauPqSJnB3BKy5yqefR/HvEBwr4yc36QGk/hOIlz1gDP8VwXsE3WA==
-X-Received: by 2002:a17:902:e684:: with SMTP id cn4mr28650216plb.71.1554720057256;
-        Mon, 08 Apr 2019 03:40:57 -0700 (PDT)
-Received: from momoga.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id 17sm40141650pgz.52.2019.04.08.03.40.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 03:40:56 -0700 (PDT)
-From:   You-Sheng Yang <vicamo@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Daniel Vacek <neelx@redhat.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Xiaoming Gao <gxm.linux.kernel@gmail.com>
-Cc:     You-Sheng Yang <vicamo.yang@canonical.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Chuanhua Lei <chuanhua.lei@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/tsc: mark tsc reliable on CoffeeLake
-Date:   Mon,  8 Apr 2019 18:40:10 +0800
-Message-Id: <20190408104012.26791-1-vicamo@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Apr 2019 06:41:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554720068; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2ASh0gWc+C/zYcVKvauG8xX2qxl8oRxAF1SgYc++Vdw=;
+        b=lRuouKTBgUtaXrSg4EwmYGZnlybEisfDR6wIqtE8vYa8bipPeM46cBXICViXHkXjyqSkM+
+        XmllXeh4Fx0xJzXPmLA99CChV0fQKjpGdqpiavDKSHv1mzT5fyCtg4tgv9a0s33swzw3TW
+        7Au4yJN2N1KHChZtSwT/eX1In/MIAyk=
+Date:   Mon, 08 Apr 2019 12:40:34 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/5] media: uapi: Add RGB bus formats for the GiantPlus
+ GPM940B0 panel
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Message-Id: <1554720034.1893.1@crapouillou.net>
+In-Reply-To: <20190403163259.GS5238@ulmo>
+References: <20190314122622.7597-1-paul@crapouillou.net>
+        <20190314122622.7597-3-paul@crapouillou.net> <20190403163259.GS5238@ulmo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+Hi Thierry,
 
-On Intel CoffeeLake it's observed tsc is always marked unstable
-unexpectedly after entering idle state Package C10(PC10), and then clock
-source is switched to hpet. This patch marks tsc as reliable when CPUID
-matches CoffeeLake.
+Le mer. 3 avril 2019 =E0 18:32, Thierry Reding=20
+<thierry.reding@gmail.com> a =E9crit :
+> On Thu, Mar 14, 2019 at 01:26:20PM +0100, Paul Cercueil wrote:
+>>  The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB=20
+>> components
+>>  are transferred sequentially on a 8-bit bus.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: New patch
+>>=20
+>>   include/uapi/linux/media-bus-format.h | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> Please make sure you Cc the media maintainers on this one when you=20
+> send
+> the next version. Adding them now.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203183
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
----
- arch/x86/kernel/tsc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Oops. Will do.
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index aab0c82e0a0d..2abbadc9cff0 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1161,6 +1161,16 @@ static void __init check_system_tsc_reliable(void)
- #endif
- 	if (boot_cpu_has(X86_FEATURE_TSC_RELIABLE))
- 		tsc_clocksource_reliable = 1;
-+
-+	/*
-+	 * On Intel CoffeeLake, tsc may be marked unstable unexpectedly after
-+	 * entering PC10.
-+	 */
-+	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL &&
-+	    (boot_cpu_data.x86_model == INTEL_FAM6_KABYLAKE_MOBILE ||
-+	     boot_cpu_data.x86_model == INTEL_FAM6_KABYLAKE_DESKTOP) &&
-+	    boot_cpu_data.x86_stepping >= 0x0a)
-+		tsc_clocksource_reliable = 1;
- }
- 
- /*
--- 
-2.20.1
+>>=20
+>>  diff --git a/include/uapi/linux/media-bus-format.h=20
+>> b/include/uapi/linux/media-bus-format.h
+>>  index d6a5a3bfe6c4..f31724d6cd40 100644
+>>  --- a/include/uapi/linux/media-bus-format.h
+>>  +++ b/include/uapi/linux/media-bus-format.h
+>>  @@ -34,7 +34,7 @@
+>>=20
+>>   #define MEDIA_BUS_FMT_FIXED			0x0001
+>>=20
+>>  -/* RGB - next is	0x101b */
+>>  +/* RGB - next is	0x101d */
+>>   #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+>>  @@ -54,6 +54,8 @@
+>>   #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+>>  +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
+>>  +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
+>=20
+> The list looks roughly sorted, but these are not. That said, there are
+> others that don't seem like they are sorted either.
+
+To me it looks like it's sorted alphabetically, that's why I
+put the two new macros there.
+
+> All the more important to get feedback from the media maintainers.
+>=20
+> Thierry
+
+=
 
