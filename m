@@ -2,117 +2,149 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C74CC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB49C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3848621473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EE42087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSfD8/5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfDHMy7 (ORCPT
+        id S1726564AbfDHM53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:54:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44500 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfDHMy6 (ORCPT
+        Mon, 8 Apr 2019 08:57:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:47101 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHM53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:54:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y7so653076wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:54:57 -0700 (PDT)
+        Mon, 8 Apr 2019 08:57:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so16224189wrw.13;
+        Mon, 08 Apr 2019 05:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RG4KSOrY/SdVG3PP97/1DBK8meGbkopeXRAfG50XFAE=;
+        b=mSfD8/5Lqcyz7zh1PO6YrEe8Mgmt5t7sZxCPcBqrfBULgXB0yCj0O6LUziicEkhEpp
+         yMCvcAUA4hHwxz/7yZ6/ANDuJyaAPJfKBI3UP61DlKWTNSFQV9qA7wInYG+ou725c2A0
+         qMsRpVX6qVxsu6xP2GvubqvNyJv1LoApr7CcuqjHqNrOhFhvZSj9buHZXLXquK1uzxlL
+         M5S5KC1j+v+byFlek3NutufMbAFmGg81gW9P/MCnmfLL/l/xCF20NoUYNHXfFv+inxsn
+         EEe+gYJffrBjEvwkhRxFPqUllW4BaTGNGpj8/kLfS02iXfP6qZXelDD9an264G3vp7S9
+         AJBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IcmElKgZzP/E+nnV4t5MPl9ZdFT0jiBnp8i8whHXBQg=;
-        b=Hco5upz5VB5d5fuWgB09GFYjEgrKIugLdEy/CpARcS61mO4FPuV7rKy+LI/UAvQ5Hd
-         iyyXgNMpgt4ZuaB5vh1kNM+7MKrOsLgaloykAEQaDFLxH40ie2D8PhtbmwsJLhJmhG8V
-         qwlYMk3oqHKsJO13w+UCE2a1jx0bD51Q/0TK7JSS7X5x8h0LtkG+7KZePINp39APzhvr
-         qdiNoadzy4+b8oaBbeVTcaJLLTF6210jawguGWPo6CFDVx4EKVLQ91cfUsE9g/z8FC7U
-         eEKvcNz3ZVcaf2QcuHTX5h213B+ojAKFdgRb/d2cgdnEUfbMzf14HDTrxLyq6OAKQCTy
-         cgjQ==
-X-Gm-Message-State: APjAAAX321eH5NiTIxdfqQ2AmveyzyyIG52VpmOtjZwP8ayhLB+cT2HC
-        YlmeKJVkEauquNDzGS8lR5At9Q==
-X-Google-Smtp-Source: APXvYqxeHw8Y6txWsC0t0ITJPKGOXu73YNW2pzOPwdD14BiofN5druKHGgcOPsmFLRYieLcd9oY05Q==
-X-Received: by 2002:a5d:4843:: with SMTP id n3mr13130446wrs.256.1554728096892;
-        Mon, 08 Apr 2019 05:54:56 -0700 (PDT)
-Received: from t460s.bristot.redhat.com ([193.205.81.200])
-        by smtp.gmail.com with ESMTPSA id 7sm102539928wrc.81.2019.04.08.05.54.55
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 05:54:56 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/7] Early task context tracking
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-        Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
-        paulmck@linux.vnet.ibm.com, Clark Williams <williams@redhat.com>,
-        x86@kernel.org
-References: <cover.1554234787.git.bristot@redhat.com>
- <20190404174037.GA183378@google.com>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <09416831-0c99-16ea-9ff0-128dd75f1b1f@redhat.com>
-Date:   Mon, 8 Apr 2019 14:54:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RG4KSOrY/SdVG3PP97/1DBK8meGbkopeXRAfG50XFAE=;
+        b=gZsNXV2XaqpmLDvZ9doKRp2SyLHrhtsdLZnLqE4UtqMxFj3HEqA7kGM4kddeozoOPa
+         oO+iTqqMHferLdDE2mdhxgLcBg8+OO6TDzh20GlfIAUddt6J5Bs7O37cQJQnOF22+2p6
+         nb3ORWrDhSwuZZlHMDhtrY7LHwj+3qz2VFeTY9Lrs/IQKoH1q4JzR8wJVujtJ5Jp9pl1
+         h+RvFTR0+HCD/Gl8b85uxlJj1cymmdqc2NWpQXRqo+24Pomtfx1hpqper3ZiX1s6aRhH
+         IjP8QE3MXuQ4uvdHOKM7Wy7YACzmRTeNOslZaLLOzHBmZJIfZ1oMxMsaAoTxO9R8T6UW
+         FVCQ==
+X-Gm-Message-State: APjAAAWyw8hY00WszQKosIoEgRbGhC1onr6Muicv1YxOrCX+0zFaCHoy
+        oQJjis4cicDCtuImJiObS4Y=
+X-Google-Smtp-Source: APXvYqzlLG3ffGSrg0AVD6B83+9GQD5wUlp2cc4BT3d4vSwUAWAyT3dOXGhEsNDVfsI3US/tbEBERQ==
+X-Received: by 2002:a05:6000:1111:: with SMTP id z17mr16540138wrw.103.1554728247112;
+        Mon, 08 Apr 2019 05:57:27 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id u17sm10523100wmj.1.2019.04.08.05.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 05:57:26 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 14:57:20 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rtc: tegra: set range
+Message-ID: <20190408125720.GG6644@ulmo>
+References: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
+ <20190408102249.GC6644@ulmo>
+ <20190408115406.GJ7480@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <20190404174037.GA183378@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
+Content-Disposition: inline
+In-Reply-To: <20190408115406.GJ7480@piout.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 7:40 PM, Joel Fernandes wrote:
->> Currently, recursion control uses the preempt_counter to
->> identify the current context. The NMI/HARD/SOFT IRQ counters
->> are set in the preempt_counter in the irq_enter/exit functions.
-> Just started looking.
-> 
-> Thinking out loud... can we not just update the preempt_count as early on
-> entry and as late on exit, as possible, and fix it that way? (Haven't fully
-> yet looked into what could break if we did that.)
-> 
-> I also feel the context tracking should be unified, right now we already have
-> two methods AFAIK - preempt_count and lockdep. Now this is yet another third.
-> Granted lockdep cannot be enabled in production, but still. It will be nice
-> to unify these tracking methods and if there is a single point of all such
-> context tracking that works well, and even better if we can just fix
-> preempt_count and use that for non-debugging usecases.
-> 
-> Also I feel in_interrupt() etc should be updated to rely on such tracking
-> methods if something other than preempt_count is used..
 
-Hi Joel,
+--64j1qyTOoGvYcHb1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree with you that it is important to have a single method to identify the
-context.
+On Mon, Apr 08, 2019 at 01:54:06PM +0200, Alexandre Belloni wrote:
+> On 08/04/2019 12:22:49+0200, Thierry Reding wrote:
+> > On Sun, Apr 07, 2019 at 11:16:44PM +0200, Alexandre Belloni wrote:
+> > > The Tegra 20 RTC is a 32bit seconds counter (with an unused milliseco=
+nd
+> > > counter).
+> > >=20
+> > > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > > ---
+> > >  drivers/rtc/rtc-tegra.c | 24 ++++++++++++++----------
+> > >  1 file changed, 14 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+> > > index c6b0a99aa3a9..3f93a1f7abb5 100644
+> > > --- a/drivers/rtc/rtc-tegra.c
+> > > +++ b/drivers/rtc/rtc-tegra.c
+> > > @@ -306,6 +306,13 @@ static int __init tegra_rtc_probe(struct platfor=
+m_device *pdev)
+> > > =20
+> > >  	info->tegra_rtc_irq =3D ret;
+> > > =20
+> > > +	info->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
+> > > +	if (IS_ERR(info->rtc_dev))
+> > > +		return PTR_ERR(info->rtc_dev);
+> > > +
+> > > +	info->rtc_dev->ops =3D &tegra_rtc_ops;
+> > > +	info->rtc_dev->range_max =3D U32_MAX;
+> >=20
+> > The placement of this new block seems somewhat arbitrary, but either
+> > way:
+> >=20
+>=20
+> Well, I needed it to be before the clk_prepare_enable call so it can
+> just return and I thought it would be better to leave devm_clk_get close
+> to that clk_prepare_enable call. I don't mind, I can respin with it
+> placed somewhere else.
 
-I did the RFC using a specific percpu variable to make things simpler. Also
-because I tried to move set/unset of the preempt_counter and my dev VM stopped
-booting. So it looked, somehow, risky to move the preempt_counter.
+Don't bother. It's really just a cosmetic change and I couldn't tell you
+a much better place without moving some other pieces around either. If
+somebody really cares a lot, this can be done in a separate follow-up.
 
-Still, if people believe it is better to use the preempt_counter... I am not
-against...
+Thierry
 
--- Daniel
+--64j1qyTOoGvYcHb1
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> thanks,
-> 
->  - Joel
-> 
-> 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyrRSwACgkQ3SOs138+
+s6HzEQ/9ExhdNimQvOmx53R3w1xJ1Wk536aT0GLQDRqlWjzLPyUbvlZyzRfJ541s
+uFOPMRmTyKrK8ovCzZBYJwXuUxOnErCdhU6zfRln6D6LWkf8Cufv89WcJzYMzOHn
+EBJIm5+mhzOgZJKfk/fzYeZ+837PS9m+ngEWEG2suv6O3VE4//5gfM0ti4+31TyL
+WcD1LOFMPW2YueYfQ1gsdnl+OOcOjahks3H+tSgfHyrJtHN/DlaKVT4NWvtMLWQ/
+AcwaxECeb6REOeAgDMynYJgsX1blx+1ei7m1F0oRL5UIu4buDMVk4Pnimr+Iva41
++mprBE+AKrDKYwFU18lajbaj682asJSpraUxqC71rV9pf5Wx6Svg5UojvqxktE9G
+dgQ+GDnsDX9TDwneRTwCK0CGQixlyPOEddiouO6NuLtLCO99jLnPTdQag9qk4T15
+Ol3i0rQT8vJlW+VhOTsvzO9n5qgnOPxz0cP3fYrvM3cv1XFT4nax1/f1n1DJ4PbG
+E7rfBQz+eAD4JE5bbh73zaCgmGQb7Y+kG0NSfwubId80wxO2bT4EMUlbQ2YQsLi3
+CAw2P4QlSj5aO+sOlRFis8e9EE35x3Y+rRQk/xyFVM1+vRGUQmd15cYkBioueSZB
+SQivmru56TP/JghItz6/pfCJNAGc/4j1GeTIJI3x7lMktDkL/HQ=
+=sXSP
+-----END PGP SIGNATURE-----
 
+--64j1qyTOoGvYcHb1--
