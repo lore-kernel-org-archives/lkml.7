@@ -2,139 +2,200 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C58AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7812C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A4620879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D6A20879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="vEETgM2q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J+oHpI9r"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="rFzdt0F1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g2F9eTyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDHB7z (ORCPT
+        id S1726527AbfDHCDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 21:59:55 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:49809 "EHLO
+        Sun, 7 Apr 2019 22:03:19 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:41389 "EHLO
         out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726349AbfDHB7z (ORCPT
+        by vger.kernel.org with ESMTP id S1726349AbfDHCDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 21:59:55 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 980632201F;
-        Sun,  7 Apr 2019 21:59:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sun, 07 Apr 2019 21:59:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=DLP3NAwsImXCyFEGzPGaWnfGENp
-        Kl0W4NenoS/NwlKo=; b=vEETgM2qKwAeqZTyu5/6N8i6o+pHju7yaWcyXNbTvO/
-        O3WwO5BSK27gbI86VJd/+r+0QwfY3mCoeh3ZfT7I0D7bD5qJBatarpthEK5nxys8
-        7IyhhL7L/UlFf2D0tZxO/r1WAL7ietshkugAcI9nyfqYZq9FdLeiQ3I5ACrCwXpV
-        PCfgqZTFl367PEIeolnqmwDvaM6DJx24JiDDNctHIE3uzOyfMVMw6mi4KLQepTib
-        9iEsO5xLpNRt0lev7K7KvmQKXco54H9sOX1CN+RCmb7UBKgGNxDOmc62z7AfgMpW
-        6wYUQ6fHkubTjveBMeYVi/i6hwLu/CvKONdI4aN7d8A==
+        Sun, 7 Apr 2019 22:03:19 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1A5C5222AF;
+        Sun,  7 Apr 2019 22:03:18 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 07 Apr 2019 22:03:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=20J4UCiYCecX6hcevBH2xZ9e31I9HCT
+        G+lXEJ8WmvoE=; b=rFzdt0F1IiyALbMh4AEUx5RBX3Vm3nV1MRpS9CgkWSRZCZZ
+        V69d8IijJlE7CSSwmS57RsA4XMgcPOwolr+Ox9h2mjt7X5SGpuJ0IAg8E1bNmFv5
+        dmTUIyOK8aNifwGFv2x1N7ycl/8JBg1VJ9W9be+/UcEw3KKsqvEgc4ZgmjwlLJwo
+        Vl+KxDftZtyJqGX+agNJW0Ys2mb9mTX1BrZGlbq6wlG1M1Oheqxz3NvgP7pzflOm
+        GOfHGQ8cptcQHoJO7QvS9B2Ep+eLz1o1ARbRwEVDMTAuKQg+bC6a8etfrP00hDZq
+        QXTOe/7Rl+/9ByeU9sFVFYF2xVKyJMVyFh/QTyg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DLP3NA
-        wsImXCyFEGzPGaWnfGENpKl0W4NenoS/NwlKo=; b=J+oHpI9r4y1nh7M9QBmbDv
-        xM4qwyjPjQwvkoLL3tjVued5Q1vsShVOurokrbqNedL7xt4iOaAnENG7Q+LDmGN+
-        bf30Cx2+6/Ij39sGqIGF9VbTFqjPepzUxIWowGWg3Ydgdw4/CgcM0ktbgxd3C8Qr
-        WAy8R9N7YIRuMel+FZjSY2NgOYPD/NMtYi5HS8RNd8mHl7nY0q8nCp26NlVEd0Xi
-        tPpAIbLtqInrxJX4UGTEMs3AXyj2QAGrE+2pESH8ZXeojPV8cb7KH9R/HIcArnvT
-        TIMdE6Dvf8loYpVbMnifwn4340pgzvtYK4L0Nllmpqb9Ryga3FFyx/QNLmgC6LeQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=20J4UC
+        iYCecX6hcevBH2xZ9e31I9HCTG+lXEJ8WmvoE=; b=g2F9eTySkjUrmxZ8odohH7
+        veR7Q4uxnPXtcsG46ZR895Sbo1UuC3py49gyoVQHcaLGqxdRbfg6QW4rPfeVnGo9
+        ijLombyqjoM/+gKHv2kYrkkDcM7fH5YUHb6HL8rVzu/Domnoz0uFmx7zMWRMyXqP
+        eAmpWKh6sS8U43j+ZbyRHOYAMTecDdiQRRa7iCNwwdREtBNhla0gJXKzY3xwkljp
+        A25M+k86wweF/DNMAhxhCt2a2a9l4pbUJfyMFrC3dZLdOofZqyXnmIcKpCTwynPi
+        VPdHl1oQecxfVm6meaMjYeqLpVnSiqJZwJwMXVA6h1kL1404JIEUbWBIRVR0gslQ
         ==
-X-ME-Sender: <xms:FKuqXGMTKFyfJw4O66k-KwPOzMP3lYeWqM8e7QvlqEgN90EnTvs0QQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvgdehfeculddtuddrgedutddrtddtmd
+X-ME-Sender: <xms:5KuqXMlDcOzJVNl_bq8tHTNGbkjaCvqMIOOhO4DeLnuZ9S8BkjfARQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvgdehheculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
-    eftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdforedvnecuhfhrohhm
-    pedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosghinhdrtggtqeenuc
-    fkphepuddvgedrudeiledrudehvddrvddvleenucfrrghrrghmpehmrghilhhfrhhomhep
-    mhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:FKuqXAXKRxDbPvXwiWVW7xV-CBCyDj6RtRq76UJewYN51rV0J0rJKA>
-    <xmx:FKuqXLIGw1jIzCq_TAkHlTaWpLsw9U-qlwpIE52XTGxxrMUmERRgiQ>
-    <xmx:FKuqXB1PQjLZTZTK2UixZ6vCPIHVFYNN0PWpY5GmNNkGOFBArPGgnw>
-    <xmx:FquqXCLLSKwsdJS02kQVBWJKFGLJCbWEPIQe1aKyvpM6QeCeXLexyA>
-Received: from localhost (124-169-152-229.dyn.iinet.net.au [124.169.152.229])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DEA87E4619;
-        Sun,  7 Apr 2019 21:59:47 -0400 (EDT)
-Date:   Mon, 8 Apr 2019 11:59:17 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, tj@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] slab: fix a crash by reading /proc/slab_allocators
-Message-ID: <20190408015917.GA633@eros.localdomain>
-References: <20190406225901.35465-1-cai@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190406225901.35465-1-cai@lca.pw>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredt
+    necuhfhrohhmpedftehnughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrd
+    hiugdrrghuqeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgu
+    rdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:5KuqXAFoJPVjqDP07QTWsImNdqhoc7bdB09nadHA_Qi-t43j9gQVvQ>
+    <xmx:5KuqXFobiJYmmwz8p-H6DC2mt7Xxpi1K3NWEJBeSX48Hv3WhYDp6NA>
+    <xmx:5KuqXM6KfbKfe0CHEf1Qi4TRJH9tpG9e-ZyznTCY394Dst6R9mEvgQ>
+    <xmx:5quqXHsXEWIHG_towIMRE2UHTrNKHnPbhuOm26GPUecOF0tmCz-pvw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BDD457C413; Sun,  7 Apr 2019 22:03:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-329-gf4aae99-fmstable-20190329v1
+Mime-Version: 1.0
+X-Me-Personality: 52947553
+Message-Id: <8c412bc4-6528-4496-a912-f098604e707b@www.fastmail.com>
+In-Reply-To: <20190404152544.214988-1-venture@google.com>
+References: <20190404152544.214988-1-venture@google.com>
+Date:   Sun, 07 Apr 2019 22:03:16 -0400
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Patrick Venture" <venture@google.com>,
+        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Rob Herring" <robh@kernel.org>
+Subject: Re: [PATCH v9 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 06:59:01PM -0400, Qian Cai wrote:
-> The commit 510ded33e075 ("slab: implement slab_root_caches list")
-> changes the name of the list node within "struct kmem_cache" from
-> "list" to "root_caches_node"
-
-Are you sure? It looks to me like it adds a member to the memcg_cache_array
-
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index a0cc7a77cda2..af1a5bef80f4 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -556,6 +556,8 @@ struct memcg_cache_array {
-  *             used to index child cachces during allocation and cleared
-  *             early during shutdown.
-  * 
-+ * @root_caches_node: List node for slab_root_caches list.
-+ * 
-  * @children:  List of all child caches.  While the child caches are also
-  *             reachable through @memcg_caches, a child cache remains on
-  *             this list until it is actually destroyed.
-@@ -573,6 +575,7 @@ struct memcg_cache_params {
-        union { 
-                struct {
-                        struct memcg_cache_array __rcu *memcg_caches;
-+                       struct list_head __root_caches_node;
-                        struct list_head children;
-                };
-
-And then defines 'root_caches_node' to be 'memcg_params.__root_caches_node'
-if we have CONFIG_MEMCG otherwise defines 'root_caches_node' to be 'list'
 
 
-> but leaks_show() still use the "list"
+On Fri, 5 Apr 2019, at 01:55, Patrick Venture wrote:
+> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> 
+> Signed-off-by: Patrick Venture <venture@google.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes for v9:
+>  - Added missing details about syscon parent
+> Changes for v8:
+> - None
+> Changes for v7:
+> - Moved node under the syscon node it requires
+> Changes for v6:
+> - None
+> Changes for v5:
+> - None
+> Changes for v4:
+> - None
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Added comment about syscon required parameter.
+> ---
+>  .../bindings/misc/aspeed-p2a-ctrl.txt         | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt 
+> b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> new file mode 100644
+> index 0000000000000..05ed654848b60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> @@ -0,0 +1,56 @@
+> +======================================================================
+> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge 
+> Control Driver
+> +======================================================================
+> +
+> +The bridge is available on platforms with the VGA enabled on the 
+> Aspeed device.
+> +In this case, the host has access to a 64KiB window into all of the 
+> BMC's
+> +memory.  The BMC can disable this bridge.  If the bridge is enabled, 
+> the host
+> +has read access to all the regions of memory, however the host only 
+> has read
+> +and write access depending on a register controlled by the BMC.
+> +
+> +Required properties:
+> +===================
+> +
+> + - compatible: must be one of:
+> +	- "aspeed,ast2400-p2a-ctrl"
+> +	- "aspeed,ast2500-p2a-ctrl"
+> +
+> +Optional properties:
+> +===================
+> +
+> +- memory-region: A phandle to a reserved_memory region to be used for 
+> the PCI
+> +		to AHB mapping
+> +
+> +The p2a-control node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+> +
+> +The aspeed-p2a-ctrl node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
 
-I believe it should since 'list' is used to add to slab_caches list.
+Agh, now the info's here twice!
 
-> which causes a crash when reading /proc/slab_allocators.
+Next time, surely :D
 
-I was unable to reproduce this crash, I built with
+Unless Greg or Rob want to chop one out as they apply it? It looks good to
+me otherwise.
 
-# CONFIG_MEMCG is not set
-CONFIG_SLAB=y
-CONFIG_SLAB_MERGE_DEFAULT=y
-CONFIG_SLAB_FREELIST_RANDOM=y
-CONFIG_DEBUG_SLAB=y
-CONFIG_DEBUG_SLAB_LEAK=y
+Andrew
 
-I then booted in Qemu and successfully ran 
-$ cat slab_allocators
-
-Perhaps you could post your config?
-
-Hope this helps,
-Tobin.
+> +
+> +Example
+> +===================
+> +
+> +g4 Example
+> +----------
+> +
+> +syscon: scu@1e6e2000 {
+> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +
+> +	p2a: p2a-control {
+> +		compatible = "aspeed,ast2400-p2a-ctrl";
+> +		memory-region = <&reserved_memory>;
+> +	};
+> +};
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
+>
