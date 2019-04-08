@@ -2,126 +2,172 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5BAC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1455AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257C920863
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0JiN23W"
+	by mail.kernel.org (Postfix) with ESMTP id D54D62190A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfDHX6c (ORCPT
+        id S1728849AbfDHX6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 19:58:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33908 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfDHX6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 19:58:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so13937763otf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 16:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JE1WYVGVNZvhKVkDzi+IvgK1LGy4Jum42vFJlF26XjM=;
-        b=H0JiN23WqMaS6Bz6v4EQer4AcYbtrYtN9qAENkloOrBeH9NEw/mU4pOG6k2k0CB/Oe
-         K6R+iR81aDfaCgwyVC6Oc1cj3LSztvEu0c1vBG+RYWQgFcPp4wk9a7UVKFG+ZZqYDWFv
-         COOpFloRlQahqhC9hH9ZaEICJQ/8M32g8R/L8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JE1WYVGVNZvhKVkDzi+IvgK1LGy4Jum42vFJlF26XjM=;
-        b=sSfPPhsQcYv4JekxlD7FxI70IlX95sUlFtoV2jhErSViMXwkdATE6uRn1ESlQdQc8c
-         GfaZY/rA0mS8AuuQGz1I4J0VjbOAdSjLb1Bl8Iq0Lqbm5P9pMolmnH8CossnwvcqyP6/
-         Gocm+ds1/YaXkH8nGx0DrM3SToeQVc9Dd32p2PRF64w/Q6ha2kk/5TpryEm8mKAQydwj
-         WwNLUopQPzC16UOZWSFEut5TcDcIffD7tyHRBciEA9Jw/+ECrOBO9GOWRQ1m+HgPbni+
-         O2LcSh6KjpzRj1uRETtIxjJ7xvy2BboOXpsBS9I+DzYbq/Ncdo/p4FB0ehQZakA8pnbx
-         9Q2A==
-X-Gm-Message-State: APjAAAWP/cD8ynOBobnLjsp8Aa0qFUcRZI9pGviquW12u3uXPmDc0lQf
-        CNd1LoB4MUVNfHGT6Tfj0JKGlpLYvn4=
-X-Google-Smtp-Source: APXvYqwQpCySa+vWMuRUhyueTIYUVn+c766KzlouxQ0D6kX8ab8dvXSNm5PW7L8fS5GtPRs2rfFLRg==
-X-Received: by 2002:a05:6830:14d8:: with SMTP id t24mr22211990otq.303.1554767910093;
-        Mon, 08 Apr 2019 16:58:30 -0700 (PDT)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com. [209.85.167.169])
-        by smtp.gmail.com with ESMTPSA id i81sm6596294oia.4.2019.04.08.16.58.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 16:58:28 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id w139so11998568oie.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 16:58:28 -0700 (PDT)
-X-Received: by 2002:aca:3905:: with SMTP id g5mr18501995oia.49.1554767908118;
- Mon, 08 Apr 2019 16:58:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190404171007.160878-1-ncrews@chromium.org> <20190404171007.160878-3-ncrews@chromium.org>
-In-Reply-To: <20190404171007.160878-3-ncrews@chromium.org>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 8 Apr 2019 17:58:16 -0600
-X-Gmail-Original-Message-ID: <CAHX4x87XiNMnjr+-2A2yHgKbZLaDBXO-U1Uij2sCq=gH9Vv4jw@mail.gmail.com>
-Message-ID: <CAHX4x87XiNMnjr+-2A2yHgKbZLaDBXO-U1Uij2sCq=gH9Vv4jw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Apr 2019 19:58:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63285 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfDHX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 19:57:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
+   d="scan'208";a="149169938"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 16:57:07 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 03/18] ioasid: Convert ioasid_idr to XArray
+Date:   Mon,  8 Apr 2019 16:59:18 -0700
+Message-Id: <1554767973-30125-4-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've just found a few [embarrassing :)] bugs in this version,
-so after we figure out the naming, please wait for me to send
-out another patch that fixes these.
+IDR is to be replaced by XArray, keep up with the changes.
+XArray has internal locking for normal APIs used here, also removed
+radix tree related preload.
 
-Thanks, Nick
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+---
+ drivers/base/ioasid.c | 35 ++++++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
-On Thu, Apr 4, 2019 at 11:10 AM Nick Crews <ncrews@chromium.org> wrote:
->
-> We want all backlights for the system keyboard to
-> use a common name, so the name "platform::kbd_backlight"
-> would be better than the current "chromeos::kbd_backlight"
-> name. Normally this wouldn't be worth changing, but the new
-> Wilco keyboard backlight driver uses the "platform" name.
-> We want to make it so all Chrome OS devices are consistent,
-> so we'll change the name here too.
->
-> The Power Manager daemon only looks for LEDs that match the
-> pattern "*:kbd_backlight", so this change won't affect that.
->
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
-> ---
->  drivers/platform/chrome/cros_kbd_led_backlight.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/chrome/cros_kbd_led_backlight.c b/drivers/platform/chrome/cros_kbd_led_backlight.c
-> index aa409f0201fb..c56c8405f39c 100644
-> --- a/drivers/platform/chrome/cros_kbd_led_backlight.c
-> +++ b/drivers/platform/chrome/cros_kbd_led_backlight.c
-> @@ -77,7 +77,7 @@ static int keyboard_led_probe(struct platform_device *pdev)
->         if (!cdev)
->                 return -ENOMEM;
->
-> -       cdev->name = "chromeos::kbd_backlight";
-> +       cdev->name = "platform::kbd_backlight";
->         cdev->max_brightness = ACPI_KEYBOARD_BACKLIGHT_MAX;
->         cdev->flags |= LED_CORE_SUSPENDRESUME;
->         cdev->brightness_set = keyboard_led_set_brightness;
-> --
-> 2.20.1
->
+diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
+index 294e856..35bdc680 100644
+--- a/drivers/base/ioasid.c
++++ b/drivers/base/ioasid.c
+@@ -4,7 +4,7 @@
+  * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+  * free IOASIDs with ioasid_alloc and ioasid_free.
+  */
+-#include <linux/idr.h>
++#include <linux/xarray.h>
+ #include <linux/ioasid.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -16,7 +16,7 @@ struct ioasid_data {
+ 	struct rcu_head rcu;
+ };
+ 
+-static DEFINE_IDR(ioasid_idr);
++static DEFINE_XARRAY_ALLOC(ioasid_xa);
+ static DEFINE_MUTEX(ioasid_allocator_lock);
+ static const struct ioasid_allocator *ioasid_allocator;
+ 
+@@ -24,9 +24,9 @@ static const struct ioasid_allocator *ioasid_allocator;
+ /**
+  * ioasid_set_allocator - register a custom allocator
+  *
+- * Custom allocator take precedence over the default IDR based allocator.
++ * Custom allocator take precedence over the default xarray based allocator.
+  * Private data associated with the ASID are managed by ASID common code
+- * similar to IDR data.
++ * similar to data stored in xa.
+  */
+ int ioasid_set_allocator(struct ioasid_allocator *allocator)
+ {
+@@ -72,13 +72,12 @@ int ioasid_set_data(ioasid_t ioasid, void *data)
+ 	struct ioasid_data *ioasid_data;
+ 	int ret = 0;
+ 
+-	idr_lock(&ioasid_idr);
+-	ioasid_data = idr_find(&ioasid_idr, ioasid);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
+ 	if (ioasid_data)
+ 		ioasid_data->private = data;
+ 	else
+ 		ret = -ENOENT;
+-	idr_unlock(&ioasid_idr);
++
+ 	/* getter may use the private data */
+ 	synchronize_rcu();
+ 
+@@ -110,7 +109,7 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 	data->set = set;
+ 	data->private = private;
+ 
+-	/* Use custom allocator if available, otherwise default to IDR */
++	/* Use custom allocator if available, otherwise default to xarray */
+ 	if (ioasid_allocator) {
+ 		mutex_lock(&ioasid_allocator_lock);
+ 		id = ioasid_allocator->alloc(min, max, ioasid_allocator->pdata);
+@@ -120,17 +119,18 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 			goto exit_free;
+ 		}
+ 		/*
+-		 * Use IDR to manage private data also sanitiy check custom
++		 * Use XA to manage private data also sanitiy check custom
+ 		 * allocator for duplicates.
+ 		 */
+ 		min = id;
+ 		max = id + 1;
+ 	}
+-	idr_preload(GFP_KERNEL);
+-	idr_lock(&ioasid_idr);
+-	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
+-	idr_unlock(&ioasid_idr);
+-	idr_preload_end();
++
++	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
++		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
++		goto exit_free;
++	}
++	data->id = id;
+ 
+ exit_free:
+ 	if (id < 0 || id == INVALID_IOASID) {
+@@ -160,10 +160,7 @@ int ioasid_free(ioasid_t ioasid)
+ 		return ret;
+ 	}
+ 
+-	idr_lock(&ioasid_idr);
+-	ioasid_data = idr_remove(&ioasid_idr, ioasid);
+-	idr_unlock(&ioasid_idr);
+-
++	ioasid_data = xa_erase(&ioasid_xa, ioasid);
+ 	if (ioasid_data)
+ 		kfree_rcu(ioasid_data, rcu);
+ 
+@@ -192,7 +189,7 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 	struct ioasid_data *ioasid_data;
+ 
+ 	rcu_read_lock();
+-	ioasid_data = idr_find(&ioasid_idr, ioasid);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
+ 	if (!ioasid_data) {
+ 		priv = ERR_PTR(-ENOENT);
+ 		goto unlock;
+-- 
+2.7.4
+
