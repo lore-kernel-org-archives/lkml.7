@@ -2,156 +2,85 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9374AC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468E4C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3A5218D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F07F20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfDHION (ORCPT
+        id S1726672AbfDHIOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:14:13 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12779 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfDHIOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:14:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 01:14:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,324,1549958400"; 
-   d="scan'208";a="147424274"
-Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2019 01:14:08 -0700
-From:   Zhao Yakui <yakui.zhao@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, tglx@linutronix.de,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: [RFC PATCH v3 4/4] x86: Add hypercall for acrn_guest
-Date:   Mon,  8 Apr 2019 16:12:11 +0800
-Message-Id: <1554711131-21514-5-git-send-email-yakui.zhao@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
+        Mon, 8 Apr 2019 04:14:18 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43607 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfDHIOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 04:14:08 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0064F2001C;
+        Mon,  8 Apr 2019 08:14:05 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 10:14:04 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Message-ID: <20190408081404.554zdbcotnidljsl@flea>
+References: <20190301185212.26837-1-andreas@kemnade.info>
+ <20190407222321.11ec297d@kemnade.info>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w7mdkyzl5owisrss"
+Content-Disposition: inline
+In-Reply-To: <20190407222321.11ec297d@kemnade.info>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When acrn_hypervisor is detected, the hypercall is needed so that the
-acrn guest can query/config some settings. For example: it can be used
-to query the resources in hypervisor and manage the CPU/memory/device/
-interrupt for Guest system.
 
-So the hypercall is added so that the kernel can communicate with the
-low-level acrn-hypervisor. On x86 it is implemented by using vmacll when
-the acrn hypervisor is enabled.
+--w7mdkyzl5owisrss
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
----
-V1->V2: Refine the comments for the function of acrn_hypercall0/1/2
-v2->v3: Use the "vmcall" mnemonic to replace hard-code byte definition
----
- arch/x86/include/asm/acrn_hypercall.h | 82 +++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 arch/x86/include/asm/acrn_hypercall.h
+On Sun, Apr 07, 2019 at 10:23:21PM +0200, Andreas Kemnade wrote:
+> ping
+>
+> On Fri,  1 Mar 2019 19:52:12 +0100
+> Andreas Kemnade <andreas@kemnade.info> wrote:
+>
+> > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+> > with broadcom internals attached to UART1 and some gpios.
+> > This addition is in line with similar boards
+> >
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-diff --git a/arch/x86/include/asm/acrn_hypercall.h b/arch/x86/include/asm/acrn_hypercall.h
-new file mode 100644
-index 0000000..82c1577
---- /dev/null
-+++ b/arch/x86/include/asm/acrn_hypercall.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _ASM_X86_ACRNHYPERCALL_H
-+#define _ASM_X86_ACRNHYPERCALL_H
-+
-+#include <linux/errno.h>
-+
-+#ifdef CONFIG_ACRN_GUEST
-+
-+/*
-+ * Hypercalls for ACRN Guest
-+ *
-+ * Hypercall number is passed in r8 register.
-+ * Return value will be placed in rax.
-+ * Up to 2 arguments are passed in rdi, rsi.
-+ */
-+
-+static inline long acrn_hypercall0(unsigned long hcall_id)
-+{
-+	register unsigned long r8 asm("r8") = hcall_id;
-+	register long result asm("rax");
-+
-+	/* vmcall is used to implment the hypercall.
-+	 * asm volatile is used to avoid that it is dropped because of
-+	 * compiler optimization.
-+	 */
-+	asm volatile("vmcall"
-+			: "=r"(result)
-+			: "r"(r8));
-+
-+	return result;
-+}
-+
-+static inline long acrn_hypercall1(unsigned long hcall_id,
-+				   unsigned long param1)
-+{
-+	register unsigned long r8 asm("r8") = hcall_id;
-+	register long result asm("rax");
-+
-+	asm volatile("vmcall"
-+			: "=r"(result)
-+			: "D"(param1), "r"(r8));
-+
-+	return result;
-+}
-+
-+static inline long acrn_hypercall2(unsigned long hcall_id,
-+				   unsigned long param1,
-+				   unsigned long param2)
-+{
-+	register unsigned long r8 asm("r8") = hcall_id;
-+	register long result asm("rax");
-+
-+	asm volatile("vmcall"
-+			: "=r"(result)
-+			: "D"(param1), "S"(param2), "r"(r8));
-+
-+	return result;
-+}
-+
-+#else
-+
-+static inline long acrn_hypercall0(unsigned long hcall_id)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline long acrn_hypercall1(unsigned long hcall_id,
-+				   unsigned long param1)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline long acrn_hypercall2(unsigned long hcall_id,
-+				   unsigned long param1,
-+				   unsigned long param2)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif
-+
-+#endif /* _ASM_X86_ACRNHYPERCALL_H */
--- 
-2.7.4
+I never received that patch, who did you send it to?
 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--w7mdkyzl5owisrss
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsCzAAKCRDj7w1vZxhR
+xUUqAP9y4Ujz0rOjboyTKXGQVmOGtRC3JvXkVjDOBiNEHkR2iQEAx9/ZjYxtwpIh
+wW4JoKzyToTZwZ3Yrym2wuMKKRNQ2Qw=
+=1pBw
+-----END PGP SIGNATURE-----
+
+--w7mdkyzl5owisrss--
