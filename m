@@ -2,221 +2,284 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF90C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F70C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AACF2070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="d3LDgVcm"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2F520855
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbfDHSJC (ORCPT
+        id S1728543AbfDHSKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:09:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37505 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfDHSJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:09:01 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e6so7762993pgc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ut52tSopTGbIMzSwLGcLJn20UHypI1Xs+LCYLMFEEOA=;
-        b=d3LDgVcmJDDU8U1vlNv2RKrkTMUyiHHNQz1AtPzI0JpSXS3Y5rRQr2S7ohNB1HhAY/
-         fi2WDMbVJnfpTmKWMGneixGZkSfjdDYfHw0aCfHBt7MsZMGrtrjQDRheqOMM3DjPCaxH
-         Pbq0YQq1c7pur+NytOt1oWPu/1KA9PO+SfDPA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ut52tSopTGbIMzSwLGcLJn20UHypI1Xs+LCYLMFEEOA=;
-        b=n/lI4ffry4EoFDR/4lNsAn5OaR/cFU7J6I7XLcNcCyRnwK4O65of3JQWCmGHAauU+X
-         ahLYN16EkyrIPMZ5Hc28gTNFrXN9g8eJ60BAqNk6qxg0/J5xBMifh+FBfSWOThQGXzkj
-         ja7AalTefJ+ncjYGP3F4ZQm6F6tRCdFltmcf+JoTzA91Zfdqqrg6beGux0RLw9SI35ma
-         WDueCMQgs0jXUtEF0RTXYG0ekA1Y0rCEXKVDnGlMb0BeaX9ba4lb5RlBx8mF9p+PKcYt
-         rsW4OaQo8SxYCUoOZcL7f6mJqFPWwkM7rvC7MApHpEhTX04qJ978EZOADX9NLRlxJVO/
-         Ig0w==
-X-Gm-Message-State: APjAAAWRYrWlhRN9XBu+SOw7m4gtVanN2LPKMeDzX2YtTxlXfEmY40Ax
-        jQj6qNwmlutsuo+UOIZwVnAI9g==
-X-Google-Smtp-Source: APXvYqwugNB2cz04Srr1qkZMi+IWhXzRheu/3O3w4f4wxfSoNpwOyiWjNqe8uzo4HXO7J+nVhq/2ng==
-X-Received: by 2002:a63:744b:: with SMTP id e11mr29535494pgn.327.1554746940943;
-        Mon, 08 Apr 2019 11:09:00 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x66sm18170366pfb.78.2019.04.08.11.08.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 11:09:00 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 14:08:59 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com, jannh@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] doc/rcuref: Document real world examples in kernel
-Message-ID: <20190408180859.GA133872@google.com>
-References: <20190329140555.118463-1-joel@joelfernandes.org>
- <20190404201039.GL14111@linux.ibm.com>
- <20190406021705.GA6615@localhost>
- <20190408175213.GT14111@linux.ibm.com>
+        Mon, 8 Apr 2019 14:10:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47328 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbfDHSKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:10:22 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3815C308213A;
+        Mon,  8 Apr 2019 18:10:18 +0000 (UTC)
+Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1770510840F6;
+        Mon,  8 Apr 2019 18:10:00 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <01d5f4e8-742b-33f5-6d91-0c7c396d1cfc@redhat.com>
+Organization: Red Hat Inc,
+Message-ID: <6f097f31-abc7-f56c-199c-dc167331f6b9@redhat.com>
+Date:   Mon, 8 Apr 2019 14:09:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408175213.GT14111@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <01d5f4e8-742b-33f5-6d91-0c7c396d1cfc@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="mdbx8CNhwKb8an8U4XHwDkrH1z8tLY3OM"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 08 Apr 2019 18:10:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:52:13AM -0700, Paul E. McKenney wrote:
-> On Sat, Apr 06, 2019 at 02:17:05AM +0000, Joel Fernandes wrote:
-> > On Thu, Apr 04, 2019 at 01:10:39PM -0700, Paul E. McKenney wrote:
-> > > On Fri, Mar 29, 2019 at 10:05:55AM -0400, Joel Fernandes (Google) wrote:
-> > > > Document similar real world examples in the kernel corresponding to the
-> > > > second and third code snippets. Also correct an issue in
-> > > > release_referenced() in the code snippet example.
-> > > > 
-> > > > Cc: oleg@redhat.com
-> > > > Cc: jannh@google.com
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > 
-> > > Good catch, thank you!
-> > > 
-> > > As usual, I could not resist doing a bit of wordsmithing.  Please let me
-> > > know if I messed anything up in the version shown below.
-> > > 
-> > > 								Thanx, Paul
-> > > 
-> > > ------------------------------------------------------------------------
-> > > 
-> > > commit adcd92c0ab303b57b28a3cd097bd9ece824c14f6
-> > > Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > Date:   Fri Mar 29 10:05:55 2019 -0400
-> > > 
-> > >     doc/rcuref: Document real world examples in kernel
-> > >     
-> > >     Document similar real world examples in the kernel corresponding to the
-> > >     second and third code snippets. Also correct an issue in
-> > >     release_referenced() in the code snippet example.
-> > >     
-> > >     Cc: oleg@redhat.com
-> > >     Cc: jannh@google.com
-> > >     Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > >     [ paulmck: Do a bit of wordsmithing. ]
-> > >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > > 
-> > > diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
-> > > index 613033ff2b9b..c0bab7fb57e7 100644
-> > > --- a/Documentation/RCU/rcuref.txt
-> > > +++ b/Documentation/RCU/rcuref.txt
-> > > @@ -12,6 +12,7 @@ please read on.
-> > >  Reference counting on elements of lists which are protected by traditional
-> > >  reader/writer spinlocks or semaphores are straightforward:
-> > >  
-> > > +CODE LISTING A:
-> > >  1.				2.
-> > >  add()				search_and_reference()
-> > >  {				{
-> > > @@ -28,7 +29,8 @@ add()				search_and_reference()
-> > >  release_referenced()			delete()
-> > >  {					{
-> > >      ...					    write_lock(&list_lock);
-> > > -    atomic_dec(&el->rc, relfunc)	    ...
-> > > +    if(atomic_dec_and_test(&el->rc))	    ...
-> > > +	kfree(el);
-> > >      ...					    remove_element
-> > >  }					    write_unlock(&list_lock);
-> > >   					    ...
-> > > @@ -44,6 +46,7 @@ search_and_reference() could potentially hold reference to an element which
-> > >  has already been deleted from the list/array.  Use atomic_inc_not_zero()
-> > >  in this scenario as follows:
-> > >  
-> > > +CODE LISTING B:
-> > >  1.					2.
-> > >  add()					search_and_reference()
-> > >  {					{
-> > > @@ -79,6 +82,7 @@ search_and_reference() code path.  In such cases, the
-> > >  atomic_dec_and_test() may be moved from delete() to el_free()
-> > >  as follows:
-> > >  
-> > > +CODE LISTING C:
-> > >  1.					2.
-> > >  add()					search_and_reference()
-> > >  {					{
-> > > @@ -114,6 +118,16 @@ element can therefore safely be freed.  This in turn guarantees that if
-> > >  any reader finds the element, that reader may safely acquire a reference
-> > >  without checking the value of the reference counter.
-> > >  
-> > > +A clear advantage of the RCU-based pattern in listing C over the one
-> > > +in listing B is that any call to search_and_reference() that locates
-> > > +a given object will succeed in obtaining a reference to that object,
-> > > +even given a concurrent invocation of delete() for that same object.
-> > 
-> > This part sounds good to me.
-> > 
-> > > +Similarly, a call to delete() is not delayed even if there are an
-> > > +arbitrarily large number of calls to search_and_reference() searching
-> > > +for the same object that delete() was invoked on.  Instead, all that is
-> > > +delayed is the eventual invocation of kfree(), which is usually not a
-> > > +problem on modern computer systems, even the small ones.
-> > > +
-> > 
-> > small nit:
-> > This part is common to both listing B and C right? The delete() is never
-> > delayed due to the search_and_reference in either case, and the kfree is what
-> > is delayed.  My patch was highlighting the difference between the 2
-> > listings, but this text says what is common between both listings.
-> > 
-> > As such I am Ok with the changes you made, and thanks for this document in
-> > the first place.
-> 
-> Good point!  How about the following patch to be merged into the current
-> patch?
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
-> index c0bab7fb57e7..5e6429d66c24 100644
-> --- a/Documentation/RCU/rcuref.txt
-> +++ b/Documentation/RCU/rcuref.txt
-> @@ -122,11 +122,12 @@ A clear advantage of the RCU-based pattern in listing C over the one
->  in listing B is that any call to search_and_reference() that locates
->  a given object will succeed in obtaining a reference to that object,
->  even given a concurrent invocation of delete() for that same object.
-> -Similarly, a call to delete() is not delayed even if there are an
-> -arbitrarily large number of calls to search_and_reference() searching
-> -for the same object that delete() was invoked on.  Instead, all that is
-> -delayed is the eventual invocation of kfree(), which is usually not a
-> -problem on modern computer systems, even the small ones.
-> +Similarly, a clear advantage of both listings B and C over listing A is
-> +that a call to delete() is not delayed even if there are an arbitrarily
-> +large number of calls to search_and_reference() searching for the same
-> +object that delete() was invoked on.  Instead, all that is delayed is
-> +the eventual invocation of kfree(), which is usually not a problem on
-> +modern computer systems, even the small ones.
->  
->  In cases where delete() can sleep, synchronize_rcu() can be called from
->  delete(), so that el_free() can be subsumed into delete as follows:
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--mdbx8CNhwKb8an8U4XHwDkrH1z8tLY3OM
+Content-Type: multipart/mixed; boundary="5fZC5GMXaj0k5NirwiN5RdVTqRMeAlFbe";
+ protected-headers="v1"
+From: Nitesh Narayan Lal <nitesh@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: kvm list <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-mm <linux-mm@kvack.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ lcapitulino@redhat.com, pagupta@redhat.com, wei.w.wang@intel.com,
+ Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
+ dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+ Alexander Duyck <alexander.duyck@gmail.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>
+Message-ID: <6f097f31-abc7-f56c-199c-dc167331f6b9@redhat.com>
+Subject: Re: Thoughts on simple scanner approach for free page hinting
 
-This one looks better to me, thanks a lot!
+--5fZC5GMXaj0k5NirwiN5RdVTqRMeAlFbe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On 4/8/19 12:36 PM, David Hildenbrand wrote:
+> On 06.04.19 02:09, Alexander Duyck wrote:
+>> So I am starting this thread as a spot to collect my thoughts on the
+>> current guest free page hinting design as well as point out a few
+>> possible things we could do to improve upon it.
+>>
+>> 1. The current design isn't likely going to scale well to multiple
+>> VCPUs. The issue specifically is that the zone lock must be held to
+>> pull pages off of the free list and to place them back there once they=
 
-thanks,
+>> have been hinted upon. As a result it would likely make sense to try
+>> to limit ourselves to only having one thread performing the actual
+>> hinting so that we can avoid running into issues with lock contention
+>> between threads.
+> Makes sense.
+>
+>> 2. There are currently concerns about the hinting triggering false OOM=
 
-- Joel
+>> situations if too much memory is isolated while it is being hinted. My=
 
+>> thought on this is to simply avoid the issue by only hint on a limited=
+
+>> amount of memory at a time. Something like 64MB should be a workable
+>> limit without introducing much in the way of regressions. However as a=
+
+>> result of this we can easily be overrun while waiting on the host to
+>> process the hinting request. As such we will probably need a way to
+>> walk the free list and free pages after they have been freed instead
+>> of trying to do it as they are freed.
+> We will need such a way in case we care about dropped hinting requests,=
+ yes.
+>
+>> 3. Even with the current buffering which is still on the larger side
+>> it is possible to overrun the hinting limits if something causes the
+>> host to stall and a large swath of memory is released. As such we are
+>> still going to need some sort of scanning mechanism or will have to
+>> live with not providing accurate hints.
+> Yes, usually if there is a lot of guest activity, you could however
+> assume that free pages might get reused either way soon. Of course,
+> special cases are "freeing XGB and being idle afterwards".
+>
+>> 4. In my opinion, the code overall is likely more complex then it
+>> needs to be. We currently have 2 allocations that have to occur every
+>> time we provide a hint all the way to the host, ideally we should not
+>> need to allocate more memory to provide hints. We should be able to
+>> hold the memory use for a memory hint device constant and simply map
+>> the page address and size to the descriptors of the virtio-ring.
+> I don't think the two allocations are that complex. The only thing I
+> consider complex is isolation a lot of pages from different zones etc.
+> Two allocations, nobody really cares about that. Of course, the fact
+> that we have to allocate memory from the VCPUs where we currently freed=
+
+> a page is not optimal. I consider that rather a problem/complex.
+>
+> Especially you have a point regarding scalability and multiple VCPUs.
+>
+>> With that said I have a few ideas that may help to address the 4
+>> issues called out above. The basic idea is simple. We use a high water=
+
+>> mark based on zone->free_area[order].nr_free to determine when to wake=
+
+>> up a thread to start hinting memory out of a given free area. From
+>> there we allocate non-"Offline" pages from the free area and assign
+>> them to the hinting queue up to 64MB at a time. Once the hinting is
+>> completed we mark them "Offline" and add them to the tail of the
+>> free_area. Doing this we should cycle the non-"Offline" pages slowly
+>> out of the free_area. In addition the search cost should be minimal
+>> since all of the "Offline" pages should be aggregated to the tail of
+>> the free_area so all pages allocated off of the free_area will be the
+>> non-"Offline" pages until we shift over to them all being "Offline".
+>> This should be effective for MAX_ORDER - 1 and MAX_ORDER - 2 pages
+>> since the only real consumer of add_to_free_area_tail is
+>> __free_one_page which uses it to place a page with an order less than
+>> MAX_ORDER - 2 on the tail of a free_area assuming that it should be
+>> freeing the buddy of that page shortly. The only other issue with
+>> adding to tail would be the memory shuffling which was recently added,=
+
+>> but I don't see that as being something that will be enabled in most
+>> cases so we could probably just make the features mutually exclusive,
+>> at least for now.
+>>
+>> So if I am not mistaken this would essentially require a couple
+>> changes to the mm infrastructure in order for this to work.
+>>
+>> First we would need to split nr_free into two counters, something like=
+
+>> nr_freed and nr_bound. You could use nr_freed - nr_bound to get the
+>> value currently used for nr_free. When we pulled the pages for hinting=
+
+>> we would reduce the nr_freed value and then add back to it when the
+>> pages are returned. When pages are allocated they would increment the
+>> nr_bound value. The idea behind this is that we can record nr_free
+>> when we collect the pages and save it to some local value. This value
+>> could then tell us how many new pages have been added that have not
+>> been hinted upon.
+> I can imagine that quite some people will have problems with such
+> "virtualization specific changes" splattered around core memory
+> management. Would there be a way to manage this data at a different
+> place, out of core-mm and somehow work on it via callbacks?
+>
+>> In addition we will need some way to identify which pages have been
+>> hinted on and which have not. The way I believe easiest to do this
+>> would be to overload the PageType value so that we could essentially
+>> have two values for "Buddy" pages. We would have our standard "Buddy"
+>> pages, and "Buddy" pages that also have the "Offline" value set in the=
+
+>> PageType field. Tracking the Online vs Offline pages this way would
+>> actually allow us to do this with almost no overhead as the mapcount
+>> value is already being reset to clear the "Buddy" flag so adding a
+>> "Offline" flag to this clearing should come at no additional cost.
+> Just nothing here that this will require modifications to kdump
+> (makedumpfile to be precise and the vmcore information exposed from the=
+
+> kernel), as kdump only checks for the the actual mapcount value to
+> detect buddy and offline pages (to exclude them from dumps), they are
+> not treated as flags.
+>
+> For now, any mapcount values are really only separate values, meaning
+> not the separate bits are of interest, like flags would be. Reusing
+> other flags would make our life a lot easier. E.g. PG_young or so. But
+> clearing of these is then the problematic part.
+>
+> Of course we could use in the kernel two values, Buddy and BuddyOffline=
+=2E
+> But then we have to check for two different values whenever we want to
+> identify a buddy page in the kernel.
+>
+>> Lastly we would need to create a specialized function for allocating
+>> the non-"Offline" pages, and to tweak __free_one_page to tail enqueue
+>> "Offline" pages. I'm thinking the alloc function it would look
+>> something like __rmqueue_smallest but without the "expand" and needing=
+
+>> to modify the !page check to also include a check to verify the page
+>> is not "Offline". As far as the changes to __free_one_page it would be=
+
+>> a 2 line change to test for the PageType being offline, and if it is
+>> to call add_to_free_area_tail instead of add_to_free_area.
+> As already mentioned, there might be scenarios where the additional
+> hinting thread might consume too much CPU cycles, especially if there i=
+s
+> little guest activity any you mostly spend time scanning a handful of
+> free pages and reporting them. I wonder if we can somehow limit the
+> amount of wakeups/scans for a given period to mitigate this issue.
+>
+> One main issue I see with your approach is that we need quite a lot of
+> core memory management changes. This is a problem. I wonder if we can
+> factor out most parts into callbacks.
+>
+> E.g. in order to detect where to queue a certain page (front/tail), cal=
+l
+> a callback if one is registered, mark/check pages in a core-mm unknown
+> way as offline etc.
+>
+> I still wonder if there could be an easier way to combine recording of
+> hints and one hinting thread, essentially avoiding scanning and some of=
+
+> the required core-mm changes.
+In order to resolve the scalability issues associated with my
+patch-series without compromising with free memory hints, I may explore
+the idea described below:
+- Use xbitmap (if possible - earlier suggested by Rik and Wei)
+corresponding to each zone on a granularity of MAX_ORDER - 2, to track
+the freed PFN's.
+- Define and use counters corresponding to each zone to monitor the
+amount of memory freed.
+- As soon as the 64MB free memory threshold is hit wake up the kernel
+thread which will scan this xbitmap and try to isolate the pages and
+clear the corresponding bits. (We still have to acquire zone lock to
+protect the respective xbitmap)
+- Report the isolated pages back to the host in a synchronous manner.
+I still have to work on several details of this idea including xbitmap,
+but first would like to hear any suggestions/thoughts.
+>
+--=20
+Regards
+Nitesh
+
+
+--5fZC5GMXaj0k5NirwiN5RdVTqRMeAlFbe--
+
+--mdbx8CNhwKb8an8U4XHwDkrH1z8tLY3OM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyrjncACgkQo4ZA3AYy
+ozm5UA/+NUc8mik8by3AmBCIpzqQaCvpKhtWYGgq8hQZdFnOsOMJY1VUo40rbkdy
+ewGT8/0MbWu3BXmO0EOh8y8QlLw/Q3gtQgf0GTeNh3MBZ+CO+dZQ2YgLw9N59Jq9
+MiSEbvtM3drQpYUwhuZ1lMiTHt3YiCLcM1rn4C18hPCteS6nrwsua33jglZVpmUO
+Ms2y1/fKsEf8JZUX87I49mguam2He+/asXYbxNJojf/PAysEpuQ7ri7pW0Et98Wp
+akSYngefyFBcPUXcq4jaNh2R+MrTC///y4Dikhsg9pK/2mLlGoHaauTPPLMouiYA
+svDxcpdD9JPxAyCUjLBXY4L6JN5g8Isb/VTXs9gf88hGAzMrNpgNAljffQxjuZGV
+/vd1Cfs1KWlzHj0HsxcG0TSAcB8RCq8jCgUfmtCmfduMnIavCaDgS+JxDSmDCzcx
+0xvJzAgf9mR5ntLjp+DxvQAY3hTig0tOl6EIbTs/qrzw30v/ekQsO/SKgoSiUA5v
+sq3I2HL/5nX+52BN2g/l0mOkqsXFR4ahG6v2TEGqrBA+/BCtyPHzGpQfZTrwP4Vm
+FKNctoJjDZFT+ODmPo7pppfTVuDL1d5pZ+au/KjxnukNpZmJ8rMZMadJP/Dh8X1Q
+ZPeguhED4fo2T5JfDXgwiL/MjIbq4zpFzG6M1s0Pyk/NdAVdGok=
+=dq43
+-----END PGP SIGNATURE-----
+
+--mdbx8CNhwKb8an8U4XHwDkrH1z8tLY3OM--
