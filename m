@@ -2,44 +2,42 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47C5C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13D9C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7259A20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2053213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDHXoz (ORCPT
+        id S1726723AbfDHXxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 19:44:55 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.9]:40221 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbfDHXoy (ORCPT
+        Mon, 8 Apr 2019 19:53:19 -0400
+Received: from gateway30.websitewelcome.com ([50.116.125.1]:11700 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726068AbfDHXxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 19:44:54 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 114CDDC0AD
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 18:44:53 -0500 (CDT)
+        Mon, 8 Apr 2019 19:53:19 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id A3F9A30E8
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 18:53:17 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id Ddwbhj3li4FKpDdwbhDqHK; Mon, 08 Apr 2019 18:44:53 -0500
+        id De4jhXzUE2PzODe4jh85qD; Mon, 08 Apr 2019 18:53:17 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=59752 helo=[192.168.1.76])
+Received: from [189.250.139.70] (port=60044 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hDdwW-003f8D-0K; Mon, 08 Apr 2019 18:44:52 -0500
-Subject: Re: [PATCH] scsi/NCR5380: Avoid compiler warning when
- -Wimplicit-fallthrough is enabled
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Michael Schmitz <schmitzmic@gmail.com>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <4e853f171366e040818346def7fb043347670662.1551995342.git.fthain@telegraphics.com.au>
+        id 1hDe4j-003jd0-B4; Mon, 08 Apr 2019 18:53:17 -0500
+Subject: Re: linux-next: manual merge of the kspp-gustavo tree with Linus'
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+References: <20190408071731.6bd422f3@canb.auug.org.au>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
@@ -85,13 +83,13 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <fd71e91a-92e4-9e96-7d5a-4d9a58f7128f@embeddedor.com>
-Date:   Mon, 8 Apr 2019 18:44:47 -0500
+Message-ID: <558944e8-5912-dc7c-637c-61dc892bae75@embeddedor.com>
+Date:   Mon, 8 Apr 2019 18:53:16 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <4e853f171366e040818346def7fb043347670662.1551995342.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190408071731.6bd422f3@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -102,13 +100,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.139.70
 X-Source-L: No
-X-Exim-ID: 1hDdwW-003f8D-0K
+X-Exim-ID: 1hDe4j-003jd0-B4
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:59752
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:60044
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
+X-Email-Count: 10
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -116,44 +114,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-Friendly ping:
 
-Who can take this?
-
-Thanks
-
-On 3/7/19 3:49 PM, Finn Thain wrote:
-> Adjust comments accordingly.
+On 4/7/19 4:17 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Cc: Michael Schmitz <schmitzmic@gmail.com>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> ---
->  drivers/scsi/NCR5380.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Today's linux-next merge of the kspp-gustavo tree got a conflict in:
 > 
-> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index 7fed9bb72784..fe0535affc14 100644
-> --- a/drivers/scsi/NCR5380.c
-> +++ b/drivers/scsi/NCR5380.c
-> @@ -1932,13 +1932,13 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->  					if (!hostdata->connected)
->  						return;
->  
-> -					/* Fall through to reject message */
-> -
-> +					/* Reject message */
-> +					/* Fall through */
-> +				default:
->  					/*
->  					 * If we get something weird that we aren't expecting,
-> -					 * reject it.
-> +					 * log it.
->  					 */
-> -				default:
->  					if (tmp == EXTENDED_MESSAGE)
->  						scmd_printk(KERN_INFO, cmd,
->  						            "rejecting unknown extended message code %02x, length %d\n",
+>   arch/x86/include/asm/syscall.h
 > 
+> between commits:
+> 
+>   b35f549df1d7 ("syscalls: Remove start and number from syscall_get_arguments() args")
+>   32d92586629a ("syscalls: Remove start and number from syscall_set_arguments() args")
+> 
+> from Linus' tree and commit:
+> 
+>   1f7ae812f87e ("x86/syscalls: Mark expected switch fall-throughs")
+> 
+
+I just removed the above commit from my tree.
+
+Thanks for the report, Stephen.
+--
+Gustavo
