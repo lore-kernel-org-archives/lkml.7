@@ -2,200 +2,123 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1968C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD04C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C870421841
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F5420863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GZLdhslm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSmq5pBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfDHRvw (ORCPT
+        id S1729417AbfDHRwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:51:52 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44610 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfDHRvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:51:51 -0400
-Received: from zn.tnic (p200300EC2F07270000CFE9C28C8FA671.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:2700:cf:e9c2:8c8f:a671])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8105E1EC082D;
-        Mon,  8 Apr 2019 19:51:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554745909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GBTty3sKkWiOiGKI1Pwh07W4vTuREULqwVTX/qLAFNs=;
-        b=GZLdhslmG/EwfVXWSByznKpmj79wjB4Ge/p2lMEBm2OaGQUpGOMgYF5xMuo4RKWD85Cp4B
-        6Fh5fI4ux7m4IvGqm0DwUhBvEaV0hV72h3ArLqwUJUkDE+zovhQPaHAq9t6ika/RdLyu1i
-        FCAcYoaBeTr73OBnFPR7KoXIVCNAiAE=
-Date:   Mon, 8 Apr 2019 19:51:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
-Message-ID: <20190408175142.GK15689@zn.tnic>
-References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
- <20190408141205.12376-3-Yazen.Ghannam@amd.com>
+        Mon, 8 Apr 2019 13:52:01 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39822 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfDHRwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:52:01 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a96so3072535pla.6;
+        Mon, 08 Apr 2019 10:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QNnZho9Ta1Rw1KleEbxa56brUSc+zl1ruj9gmFWgbsc=;
+        b=sSmq5pBs17JU0g+09r6+HInrESTm0G7OYF3tt1Csdufe08QQWPqRXCZ0mvx3xaufBo
+         yGKnDlYcGb+psgwFEmIB9lrREMgphbT1GcWto/JpHqs9AGnOhIuD0KT4Xu0GtywiBe5Y
+         zKPHnK4Ez18fvQl53DBYTPPEJQUDwvqLp9sGOQGnS5UWpCWvp88jevHMCofWrGiUIFpl
+         b3tvhkRIHWjFZeLVbseSvEQwI91RdTrld6Ab8i3tAERgJfgR8yA/aBGGfb9DbMlMfsb7
+         ERcsnjLeQwfPKBSh9tEVT1mrNCQYiER34H4sA584cQHMdhcGc9bpsXooFJkGmwk2YayW
+         R6wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QNnZho9Ta1Rw1KleEbxa56brUSc+zl1ruj9gmFWgbsc=;
+        b=o/yD8h8XoeGt9MHZgvTrvtF/y7ZpblWrb4BEsH34Uqo+a60aqQjBu3KY/DWm3x5fDR
+         ykJUOirpeGS3VASjhApUcdTXb7Twu//fHPZ2ZdSj/cDsjisZj87VkzswUv6VTXSC786c
+         ckIys8ZKj7k/tXwWI8lcAu+xCXlF2BhaSBo3hzH3RDs77goLqmw4IG5ZF7YLQtgpzGCt
+         iUCuIkLe8xuoejgSjzNhFFEkrgtXbO6dbZ540T+iFDyazqLHwfF0L4mHRNdgaK4ZbjEx
+         AOkVWWhb9zd1xBkaChmwLq2wISa98bKETYMBvkhTwnuNVa/7KYO59geUX4aViQFKh8Z4
+         znxg==
+X-Gm-Message-State: APjAAAVh/vyu7PsOxqAAA3LHo35HX5FKFRP4X/dBrlB7J8vzbN0rEEdF
+        GO94tfDPFKCsoOZ5eU5Tw3I=
+X-Google-Smtp-Source: APXvYqxZe5KlDJucvOl0aeLUiz+VQclOOyFnsg4wgvzynRSGhY4MhcDjN7hxflQ/EJtdD7ZWDdAfRw==
+X-Received: by 2002:a17:902:ea0d:: with SMTP id cu13mr31303737plb.92.1554745920525;
+        Mon, 08 Apr 2019 10:52:00 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s12sm49698287pgc.28.2019.04.08.10.51.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 10:51:59 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 10:51:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     broonie@kernel.org, bbrezillon@kernel.org, vigneshr@ti.com,
+        linux-spi@vger.kernel.org, dwmw2@infradead.org,
+        marek.vasut@gmail.com, richard@nod.at,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, nagasuresh12@gmail.com
+Subject: Re: [LINUX PATCH v2 3/3] spi: spi-mem: Add support for Zynq QSPI
+ controller
+Message-ID: <20190408175157.GA11988@roeck-us.net>
+References: <1554105553-20207-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190408141205.12376-3-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554105553-20207-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 02:12:16PM +0000, Ghannam, Yazen wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
+On Mon, Apr 01, 2019 at 01:29:13PM +0530, Naga Sureshkumar Relli wrote:
+> Add support for QSPI controller driver used by Xilinx Zynq SOC.
 > 
-> Current AMD systems have unique MCA banks per logical CPU even though
-> the type of the banks may all align to the same bank number. Each CPU
-> will have control of a set of MCA banks in the hardware and these are
-> not shared with other CPUs.
-> 
-> For example, bank 0 may be the Load-Store Unit on every logical CPU, but
-> each bank 0 is a unique structure in the hardware. In other words, there
-> isn't a *single* Load-Store Unit at MCA bank 0 that all logical CPUs
-> share.
-> 
-> This idea extends even to non-core MCA banks. For example, CPU0 and CPU4
-> may see a Unified Memory Controller at bank 15, but each CPU is actually
-> seeing a unique hardware structure that is not shared with other CPUs.
-> 
-> Because the MCA banks are all unique hardware structures, it would be
-> good to control them in a more granular way. For example, if there is a
-> known issue with the Floating Point Unit on CPU5 and a user wishes to
-> disable an error type on the Floating Point Unit, then it would be good
-> to do this only for CPU5 rather than all CPUs.
-> 
-> Also, future AMD systems may have heterogeneous MCA banks. Meaning the
-> bank numbers may not necessarily represent the same types between CPUs.
-> For example, bank 20 visible to CPU0 may be a Unified Memory Controller
-> and bank 20 visible to CPU4 may be a Coherent Slave. So granular control
-> will be even more necessary should the user wish to control specific MCA
-> banks.
-> 
-> Split the device attributes from struct mce_bank leaving only the MCA
-> bank control fields.
-> 
-> Make struct mce_banks[] per_cpu in order to have more granular control
-> over individual MCA banks in the hardware.
-> 
-> Allocate the device attributes statically based on the maximum number of
-> MCA banks supported. The sysfs interface will use as many as needed per
-> CPU. Currently, this is set to mca_cfg.banks, but will be changed to a
-> per_cpu bank count in a future patch.
-> 
-> Allocate the MCA control bits dynamically. Use the maximum number of MCA
-> banks supported for now. This will be changed to a per_cpu bank count in
-> a future patch.
-> 
-> Redo the sysfs store/show functions to handle the per_cpu mce_banks[].
-> 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
 > ---
->  arch/x86/kernel/cpu/mce/core.c | 77 ++++++++++++++++++++++------------
->  1 file changed, 51 insertions(+), 26 deletions(-)
+> Changes in v2
+>  - Updated the driver to call spi_mem_default_supports_op() from
+>    ctrl->supports_op()
+> Changes in v1
+>  - Added COMPILE_TEST macro
+>  - converted MASKs to GENMASK() and BIT() macros
+>  - Renamed MODEBITS to ZYNQ_QSPI_MODEBITS
+>  - Removed checking buswidth() code, as it is already handled by framework
+>  - Updated in comments regarding baud rate calculation
+> ---
+>  drivers/spi/Kconfig         |  10 +-
+>  drivers/spi/Makefile        |   1 +
+>  drivers/spi/spi-zynq-qspi.c | 761 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 771 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/spi/spi-zynq-qspi.c
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 8d0d1e8425db..14583c5c6e12 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -64,16 +64,21 @@ static DEFINE_MUTEX(mce_sysfs_mutex);
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 9f89cb1..7bf7d38 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -816,9 +816,17 @@ config SPI_XTENSA_XTFPGA
+>  	  16 bit words in SPI mode 0, automatically asserting CS on transfer
+>  	  start and deasserting on end.
 >  
->  DEFINE_PER_CPU(unsigned, mce_exception_count);
->  
-> +struct mce_bank {
-> +	u64	ctl;	/* subevents to enable */
-> +	bool	init;	/* initialise bank? */
+> +config SPI_ZYNQ_QSPI
+> +	tristate "Xilinx Zynq QSPI controller"
+> +	depends on ARCH_ZYNQ || COMPILE_TEST
 
-Keep that vertical alignment as of that of the members if mce_bank_dev
-below.
+This results in
 
-> +};
-> +static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank*, mce_banks);
+drivers/spi/spi-zynq-qspi.c: In function 'zynq_qspi_write_op':
+drivers/spi/spi-zynq-qspi.c:410:3: error: implicit declaration of function 'writesl'; did you mean 'writel'?
 
-Space between mce_bank and *.
+drivers/spi/spi-zynq-qspi.c: In function 'zynq_qspi_read_op':
+drivers/spi/spi-zynq-qspi.c:436:3: error: implicit declaration of function 'readsl'; did you mean 'readl'?
 
-> +
->  #define ATTR_LEN               16
->  /* One object for each MCE bank, shared by all CPUs */
-> -struct mce_bank {
-> -	u64			ctl;			/* subevents to enable */
-> -	bool			init;			/* initialise bank? */
-> +struct mce_bank_dev {
->  	struct device_attribute	attr;			/* device attribute */
->  	char			attrname[ATTR_LEN];	/* attribute name */
-> +	u8			bank;			/* bank number */
->  };
-> +static struct mce_bank_dev mce_bank_devs[MAX_NR_BANKS];
+when building allmodconfig/allyesconfig on architectures not supporting
+writesl/readsl (such as alpha or parisc).
 
-What bothers me here is the connection between the mce_bank and the
-mce_bank_dev: it is simply not there.
-
-Why isn't there a
-
-	struct mce_bank_dev *dev;
-
-in struct mce_bank?
-
-Because - and correct me if I'm wrong here - but I think if we do
-per-CPU banks, then we need to selectively point from each mce_bank to
-its corresponding mce_bank_dev descriptor so that you have the proper
-names.
-
-For example, if bank3 on CPU5 is not present/disabled/N/A/whatever, then
-you need to not initialize the that sysfs file there and have:
-
-/sys/devices/system/machinecheck/machinecheck5/
-├── bank0
-├── bank1
-├── bank10
-├── bank11
-├── bank12
-├── bank13
-├── bank14
-├── bank15
-├── bank16
-├── bank17
-├── bank18
-├── bank19
-├── bank2
-├── bank20
-├── bank21
-├── bank22
-		<--- bank 3 is not there because unsupported.
-├── bank4
-├── bank5
-├── bank6
-├── bank7
-├── bank8
-├── bank9
-
-
-Which means that mce_device_create() should learn to be able to create
-non-contiguous per-CPU bank sysfs files so that you'll have to iterate
-over the per-CPU struct mce_banks array and use only those mce_bank_dev
-* pointers which represent present banks on this CPU only.
-
-Yes, no, am I way off?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Guenter
