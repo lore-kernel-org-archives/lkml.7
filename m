@@ -2,155 +2,208 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD21C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7A620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F3B21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HjyIXlM9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+97eb5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbfDHRBc (ORCPT
+        id S1729140AbfDHRCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:01:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40512 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729038AbfDHRBa (ORCPT
+        Mon, 8 Apr 2019 13:02:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35055 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbfDHRCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:01:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h4so17280403wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 10:01:29 -0700 (PDT)
+        Mon, 8 Apr 2019 13:02:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g8so7675320pgf.2;
+        Mon, 08 Apr 2019 10:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iqf43cq8RemTopCE0ufXfp+TKKTu8jJvXQ5PxPdROIg=;
-        b=HjyIXlM9NVEpWRMBzLiUCUaHmiTdQNUC1LlZDaO1rJUZ/tc/4vFmRZuF5iD4KRzbw3
-         NqLt/XWzwexoTi/mRyEaJlSjMz7tfZSZSiQW6gwZuDcKsMocDhaPg49g3qyYGtV5L+vr
-         30cUUKqYXqOqb7V0imdhatthehWPWwxrD1/G1mYL3uKkQ2Iqd8YglOzcorT5FEEbRwAM
-         3cGwADzx1jMH3V9Jn8ZQ8KWi2Oy/yrjZM28UjMvlWOpxCr5D9N2woP1IDACfw18yF+hc
-         AQWBEFoK0BBAuDK8XfM4xYNLCXfCOlrMRA1Ex50JJQmSH/tno6gWlTUE0oJ/ew0wfqoi
-         uXBQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cNVymU67Q9OWVolqOTZRo9qx2gflcB8P7kTX1YrlXIc=;
+        b=Z+97eb5N9+y6fJNSsO1y/+cGaGWOtwwcbVnyp1urn0wkVRAODHpbhyYVqr8l/J8IZg
+         nsoRIWZ0X5IT8pUV7da4prdjn7YERZnPekRgNQiBOGyvcdTHXCVjtWLoz95pXrbCcXOH
+         aHP2bzFW+B/k+xoeyXyQz7ofmFnhcvjxoKS2zEVVfsgHEf+LM1S8BlsOyrywayetPSrw
+         hpO32RJdtOBnNnz2p6exnv0s4OemnefCytTW66PlWegGaSLbB83pkIa2WKawC5MpP9lX
+         SZpQyud0/qyHkCA1ao3BQa8HtR6XN0Xmoh1UMloFCrOQuqw9xQBOLbzb3mw4SHPbGHiT
+         M2+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iqf43cq8RemTopCE0ufXfp+TKKTu8jJvXQ5PxPdROIg=;
-        b=b6GYwTSFmwwR57v1pqVSli+eZ1vV8Hz9h00N2YM6cG/NziG85kSBfUtOOLnDB5ZAmG
-         gUdVEoAsAHU3cmEUKJ6WWIoJNvqzc2GTPia5kXMUxL00UX/ECWRSsNjzXCxyurps9SFl
-         IR/JivIb4jalH/hs7O+c4A24PZCYca8SAS1k78IWwGpnQwcvXLjIgr/0b8lYgNx7h2O0
-         sYint9c3GAOSYOnvi5tO90mw8DNhr9WkdVgu7Nkcst+0M/HfYR2ttVei4JvPT+Sml8dx
-         12R3VhspynNeqCyLdPVm7jHIlSWvnjUepouqG42ma9egYHoKQwElqmRaaJYu15HYziZC
-         5taw==
-X-Gm-Message-State: APjAAAUkXuoOOZl4UapuaKgpl48h3KvHMCLvaFujMQ9gdn7hk+WHQ2de
-        U84rKNJssr5OfJQq8eNNDQQGkw==
-X-Google-Smtp-Source: APXvYqwWdxX2q/Ds/K8IgAvLrxajOXIANeP6HE60KBuItPfhifSpFiyOpGhcA+XdxVSEuVYAh4fvbw==
-X-Received: by 2002:adf:ee91:: with SMTP id b17mr18169609wro.234.1554742883959;
-        Mon, 08 Apr 2019 10:01:23 -0700 (PDT)
-Received: from [192.168.43.112] ([37.161.65.57])
-        by smtp.gmail.com with ESMTPSA id u8sm30288100wrt.69.2019.04.08.10.01.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 10:01:23 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <ef1481e8-c664-5f17-4a19-bb90daabc0b7@kernel.dk>
-Date:   Mon, 8 Apr 2019 19:01:18 +0200
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Paolo Valente' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        lennart@poettering.net, mkoutny@suse.cz
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <377E06A7-14D7-4AC6-AD07-AEB691E00DEA@linaro.org>
-References: <20190408143935.9062-1-paolo.valente@linaro.org>
- <20190408143935.9062-2-paolo.valente@linaro.org>
- <20190408144925.GA23021@linux-x5ow.site>
- <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
- <20190408150430.GB23021@linux-x5ow.site>
- <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
- <20190408150828.GC23021@linux-x5ow.site>
- <5283A08F-FD6F-4A9C-841D-B49CE9B4CF1F@linaro.org>
- <ef1481e8-c664-5f17-4a19-bb90daabc0b7@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cNVymU67Q9OWVolqOTZRo9qx2gflcB8P7kTX1YrlXIc=;
+        b=DJ08fM4gC6Py5kBoJSmQ2gMEp2PbpdLHgeDp0rSPK6YePNNbOZK5fGb4J8lTwm/51+
+         Gf2CGMZ+C9VX8LIW1xHBSZFFQJRGgn4sP5Zut2jPzdrRu11eRVCBN7I7d2/RnKOMQNZd
+         C4VJJqu/cgRpaKYZcaeEaOELM/ucYMih0823tCBFPj9w4oPyTKqdC4KzzdvJsJBwkJmm
+         pryILkG58YheBCY8Ov95d37CM3ZRN97G/6mtvRw73Qvq869GDAv4rhlCYMnPCCqSVRS9
+         bnrGAVNImvb/G6GqsVIwtqBFaSSPwrZWBONw2Y26f4kJPkNSaqUA+0aK6Sl7jzGcsS1a
+         N/Dg==
+X-Gm-Message-State: APjAAAXJgUydD7pypYZX77uncSGTBCuuVrrzvV99lsPyD5UDoFYoLb6Q
+        pAjNw5volrRtlDY1buGJgGWteqNNgXIlSgMMMqt8G49qZ/8=
+X-Google-Smtp-Source: APXvYqxHOQYkTnnVLtqGykzU2rfeFYV7KZo5yrANFqUw6gHCjx/1e7LbhE5UXEMnmsUH3j7qqwo1sYFh7TsRI9bh0lI=
+X-Received: by 2002:a65:4302:: with SMTP id j2mr28110422pgq.291.1554742956028;
+ Mon, 08 Apr 2019 10:02:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
+ <20190405203558.19160-2-rajatja@google.com>
+In-Reply-To: <20190405203558.19160-2-rajatja@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Apr 2019 20:02:25 +0300
+Message-ID: <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        furquan@google.com, evgreen@google.com,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
+>
+> Add a module parameter which when enabled, will check on resume, if the
+> last S0ix attempt was successful. If not, the driver would warn and provide
+> helpful debug information (which gets latched during the failed suspend
+> attempt) to debug the S0ix failure.
+>
+> This information is very useful to debug S0ix failures. Specially since
+> the latched debug information will be lost (over-written) if the system
+> attempts to go into runtime (or imminent) S0ix again after that failed
+> suspend attempt.
 
+> +#ifdef CONFIG_PM_SLEEP
+> +
+> +static bool warn_on_s0ix_failures;
+> +module_param(warn_on_s0ix_failures, bool, 0644);
+> +MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
+> +
+> +static int pmc_core_suspend(struct device *dev)
+> +{
+> +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +
+> +       /* Save PC10 and S0ix residency for checking later */
 
-> Il giorno 8 apr 2019, alle ore 17:17, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 4/8/19 9:14 AM, Paolo Valente wrote:
->>=20
->>=20
->>> Il giorno 8 apr 2019, alle ore 17:08, Johannes Thumshirn =
-<jthumshirn@suse.de> ha scritto:
->>>=20
->>> On Mon, Apr 08, 2019 at 09:05:19AM -0600, Jens Axboe wrote:
->>>> I did consider that, and that would be doable. But honestly, I'm =
-having a
->>>> hard time seeing what issue we are attempting to fix by doing this.
->>>=20
->>> Yeah, I guess the real fix would be to update the documentation and =
-the
->>> expectations user-space has. Including eventual re-write of some =
-udev rules or
->>> whatever is facing these files. But to me that sounds more like a =
-systemd or
->>> even distro thing than a kernel thing.
->>>=20
->>=20
->> Unfortunately the user-space people I have interacted with find crazy
->> to have to change their software to call bfq.weight the weight of a
->> group.  And are not willing to do it [1].
->=20
-> Then you need to educate them.
+> +       if (warn_on_s0ix_failures && !pm_suspend_via_firmware() &&
+> +           !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
+> +           !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
+> +               pmcdev->check_counters = true;
 
-I'm not sure that educate is the right verb (I don't like the current
-messy solution either).  But I'll do my best to inform people when
-I'll have the opportunity to do it.
+Perhaps something like
 
-> Some of the issues were called out years
-> ago, at the time when we could have potentially renamed.
+pmcdev->check_counters = false;
+/* User doesn't want to be warned */
+if (!warn_on...)
+ return 0;
+/* We do suspend via firmware */
+if (...)
+ return 0;
+...
 
-Yeah, a good window was 5.0, and at that time we tried with a more
-general solution.  But we failed.
+?
 
+> +       else
+> +               pmcdev->check_counters = false;
+> +
+> +       return 0;
+> +}
+> +
+> +static inline bool pc10_failed(struct pmc_dev *pmcdev)
 
-> A rename now
-> will solve nothing.
->=20
+To be or not to be? :-)
+Perhaps names of the functions should be
 
-I see your point, but I don't agree this rename would solve nothing.
-The real bad thing is not having done this before.  Changing names
-that nobody uses, to names that everybody already uses, but wrongly,
-would instantaneously improve the situation a lot.  And it is what
-userspace already asked explicitly for [1].  Without this simple
-change, it will take a lot for all the inconsistent documentation
-spread around the world to be synced.  And for all legacy software to
-be changed, assuming it will all be changed.
+pmc_code_is_pc10_failed()
 
-Paolo
+and so on
 
-[1] https://github.com/systemd/systemd/issues/7057
+> +{
+> +       u64 pc10_counter;
+> +
+> +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
+> +           pc10_counter == pmcdev->pc10_counter)
+> +               return true;
 
-> --=20
-> Jens Axboe
+> +       else
 
+Redundant.
+
+> +               return false;
+> +}
+> +
+> +static inline bool s0ix_failed(struct pmc_dev *pmcdev)
+> +{
+> +       u64 s0ix_counter;
+> +
+> +       if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
+> +           s0ix_counter == pmcdev->s0ix_counter)
+> +               return true;
+
+> +       else
+
+Ditto.
+
+> +               return false;
+> +}
+> +
+> +static int pmc_core_resume(struct device *dev)
+> +{
+> +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +
+> +       if (!pmcdev->check_counters)
+> +               return 0;
+> +
+> +       if (pc10_failed(pmcdev)) {
+> +               dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
+> +                        pmcdev->pc10_counter);
+> +       } else if (s0ix_failed(pmcdev)) {
+> +
+> +               const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
+> +               const struct pmc_bit_map *map;
+> +               int offset = pmcdev->map->slps0_dbg_offset;
+> +               u32 data;
+> +
+> +               dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
+> +                        pmcdev->s0ix_counter);
+> +               while (*maps) {
+> +                       map = *maps;
+> +                       data = pmc_core_reg_read(pmcdev, offset);
+> +                       offset += 4;
+> +                       while (map->name) {
+> +                               dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
+> +                                        map->name,
+> +                                        data & map->bit_mask ? "Yes" : "No");
+> +                               ++map;
+> +                       }
+> +                       ++maps;
+> +               }
+
+Can't we utilize existing print helpers?
+
+> +       }
+> +       return 0;
+> +}
+> +
+> +#endif
+
+-- 
+With Best Regards,
+Andy Shevchenko
