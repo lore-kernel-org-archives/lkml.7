@@ -2,115 +2,92 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A111AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16552C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D10F20855
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554688352;
-	bh=8JcEESCt91FR8p/UTzu+4A1jlGb4lcIX4Ekzn9pO5Pg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wfEUzmSzPV1rzkl9/0doLpFoGHX+9iJdOxfy4VTygrKjmc7E4Cf2GspxcbSHNROl6
-	 3VHdbKoztvX4RMjPoxWukt9d+AQF6PD3m46p0dHzRA9wnuw2qAx0ixdhHpjS5cL+N5
-	 RfjZvlN4iT9VXBwQJ5Bf3rtWFW7Pl99gb9A/JFPM=
+	by mail.kernel.org (Postfix) with ESMTP id D7FA120879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfDHBwb (ORCPT
+        id S1726532AbfDHB7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 21:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbfDHBwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 21:52:31 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3142A208E3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 01:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554688350;
-        bh=8JcEESCt91FR8p/UTzu+4A1jlGb4lcIX4Ekzn9pO5Pg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RVuaPe96ANIFhWusZIlua/Sn3VUCsZwV5ccssh/U5u53Aczul69XttolMSrhHJPVR
-         FOz2/8wCl5mJ0PaGJRl1BqG3pifysk+uoN21zlcnKKlKICrmRdaPy+6bEHXc1Vet0Z
-         OLGMfuCsmi/LNkxKnAGkHxsYCe1Mak1jsdfww3is=
-Received: by mail-wm1-f46.google.com with SMTP id h18so12875036wml.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 18:52:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAU+1e05SamPhV396Mli0Xz6APljXAtYz5NH71SzVgs4POutnsxz
-        UrqsBXQJkqd4dSa+FvqjYDoagSiUyKcYdaxdk0krkA==
-X-Google-Smtp-Source: APXvYqx3Gln/Lq4phSmt672XYZ0VW06Mt4GwmLTSZ2dZCKs3Fau19WL7ZF5cit7RdwWLn3BKfDHtxNQvPWTZ8CV8048=
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr15774289wme.4.1554688348784;
- Sun, 07 Apr 2019 18:52:28 -0700 (PDT)
+        Sun, 7 Apr 2019 21:59:24 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6702 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726349AbfDHB7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 21:59:23 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2E6C88DD9DAC0FDAC442;
+        Mon,  8 Apr 2019 09:59:21 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
+ 09:59:00 +0800
+Subject: Re: [PATCH net v2] net: vrf: Fix ping failed when vrf mtu is set to 0
+To:     David Ahern <dsa@cumulusnetworks.com>
+CC:     Shrijeet Mukherjee <shrijeet@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>
+References: <c0ee938d-479d-5c92-93ce-e06c24057b62@huawei.com>
+ <18b082d4-cef9-bb39-0680-8187f6951bbc@cumulusnetworks.com>
+From:   linmiaohe <linmiaohe@huawei.com>
+Message-ID: <e5440a50-e3b1-ec6c-d120-3680ca48f2b8@huawei.com>
+Date:   Mon, 8 Apr 2019 09:58:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190224044400.34975-1-aubrey.li@linux.intel.com>
- <alpine.DEB.2.21.1904052129371.1802@nanos.tec.linutronix.de>
- <CALCETrVhpqZiBe6zvK+z6HmD9AhK_O_O=2H=PYzBHid4C=SMYQ@mail.gmail.com> <c9662fea-faaf-beb3-246a-c60dad6d7420@linux.intel.com>
-In-Reply-To: <c9662fea-faaf-beb3-246a-c60dad6d7420@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 7 Apr 2019 18:52:17 -0700
-X-Gmail-Original-Message-ID: <CALCETrVxkcn=R+T-9P3CNkEiRwUGmttem52vykBcYhVSYWwh8A@mail.gmail.com>
-Message-ID: <CALCETrVxkcn=R+T-9P3CNkEiRwUGmttem52vykBcYhVSYWwh8A@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        aubrey.li@intel.com, LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <18b082d4-cef9-bb39-0680-8187f6951bbc@cumulusnetworks.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 7, 2019 at 5:38 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->
-> On 2019/4/8 1:34, Andy Lutomirski wrote:
-> > On Fri, Apr 5, 2019 at 12:32 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> On Sun, 24 Feb 2019, Aubrey Li wrote:
-> >>
-> >>> The architecture specific information of the running processes could
-> >>> be useful to the userland. Add support to examine process architecture
-> >>> specific information externally.
-> >>>
-> >>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-> >>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>> Cc: Andi Kleen <ak@linux.intel.com>
-> >>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> >>> Cc: Dave Hansen <dave.hansen@intel.com>
-> >>> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> >>
-> >> This really lacks
-> >>
-> >> Cc: Linux API <linux-api@vger.kernel.org>
-> >> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >>
-> >> Cc'ed now.
-> >>
-> >
-> > I certainly understand why you want to expose this info, but would it
-> > make more sense to instead add an arch_status file in /proc with
-> > architecture-specific info?  Or maybe an x86_status field for x86
-> > status, etc.
-> >
->
-> I tried this, but no other architecture showed interest in arch_status
-> under /proc.
->
 
-Why is that a problem?  It could exist on x86 and not exist on other
-arches until needed.
+
+On 2019/4/7 22:30, David Ahern wrote:
+> On 4/6/19 11:46 PM, linmiaohe wrote:
+>> diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+>> index 7c1430ed0244..4d35d37f225a 100644
+>> --- a/drivers/net/vrf.c
+>> +++ b/drivers/net/vrf.c
+>> @@ -43,6 +43,12 @@
+>>
+>>  #define FIB_RULE_PREF  1000       /* default preference for FIB rules */
+>>
+>> +/* The MTU is really irrelevant for VRF except for odd cases, so limit it
+>> + * to a reasonable range which both works for IPV4 and IPV6.
+>> + */
+>> +#define VRF_MIN_MTU	1280      /* same as IPV6_MIN_MTU */
+>> +#define VRF_MAX_MTU	0xFFFFU   /* same as IP_MAX_MTU */
+> 
+> Since VRF does not care about MTU, there is no reason for VRF specific
+> macros.
+> 
+>> +
+>>  static unsigned int vrf_net_id;
+>>
+>>  struct net_vrf {
+>> @@ -1274,8 +1280,8 @@ static void vrf_setup(struct net_device *dev)
+>>  	/* default to no qdisc; user can add if desired */
+>>  	dev->priv_flags |= IFF_NO_QUEUE;
+>>
+>> -	dev->min_mtu = 0;
+>> -	dev->max_mtu = 0;
+>> +	dev->min_mtu = VRF_MIN_MTU;
+>> +	dev->max_mtu = VRF_MAX_MTU;
+> 
+> Set these to IPV6_MIN_MTU and ETH_MAX_MTU and add a comment that VRF
+> devices do not care about MTU, but if the MTU is set too low then the
+> ipv4 and ipv6 protocols are disabled which breaks networking.
+> 
+> 
+
+Thanks a lot for your advice. I will send v3 latter.
+
