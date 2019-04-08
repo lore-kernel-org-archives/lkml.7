@@ -2,99 +2,150 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56127C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945F4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2749C20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:38:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="AU1KUwf+"
+	by mail.kernel.org (Postfix) with ESMTP id 6C4EE20863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfDHCiV (ORCPT
+        id S1726605AbfDHCtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 22:38:21 -0400
-Received: from owa.iluvatar.ai ([103.91.158.24]:5257 "EHLO smg.iluvatar.ai"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726582AbfDHCiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 22:38:19 -0400
-X-AuditID: 0a650161-773ff700000078a3-e7-5caab4179207
-Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
-        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id A8.E3.30883.714BAAC5; Mon,  8 Apr 2019 10:38:15 +0800 (HKT)
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
-        c=relaxed/relaxed; t=1554691095; h=from:subject:to:date:message-id;
-        bh=+Ok9chkdp27Y5YtmQeTDw961jkYIka3EJirxsNMqBYg=;
-        b=AU1KUwf+Zui5EhUQvq/QC5qbPp2q+T2lBS/6sJVrspxov87D9kSQiQTtkeRNZDwrFsdHElnMip0
-        msK+EKc5CzFQ1Os1AWLZC2dgi84GzzQes1HRpchaESdHRPLMBD06hu85Y43J1ph1MmMa4YAnVaQea
-        8w9znxLNchlW8ECK9DM=
-Received: from hsj-Precision-5520.iluvatar.local (10.101.199.253) by
- S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Mon, 8 Apr 2019 10:38:14 +0800
-From:   Huang Shijie <sjhuang@iluvatar.ai>
-To:     <akpm@linux-foundation.org>
-CC:     <william.kucharski@oracle.com>, <ira.weiny@intel.com>,
-        <palmer@sifive.com>, <axboe@kernel.dk>, <keescook@chromium.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Huang Shijie <sjhuang@iluvatar.ai>
-Subject: [PATCH 2/2] lib/scatterlist.c: add more commit for sg_alloc_table_from_pages
-Date:   Mon, 8 Apr 2019 10:37:46 +0800
-Message-ID: <20190408023746.16916-2-sjhuang@iluvatar.ai>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190408023746.16916-1-sjhuang@iluvatar.ai>
-References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
+        Sun, 7 Apr 2019 22:49:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:27599 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbfDHCtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 22:49:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 19:49:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,323,1549958400"; 
+   d="scan'208";a="129433562"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga007.jf.intel.com with ESMTP; 07 Apr 2019 19:49:16 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
+ iommu_get_resv_regions
+To:     James Sewart <jamessewart@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+ <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
+ <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
+ <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
+ <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
+ <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
+ <6C211BF1-B5A0-4821-AB42-092B573DE667@arista.com>
+ <8B1FC0C7-9BAC-498D-B1F0-0138EACF75C2@arista.com>
+ <ddcaa472-7bff-ddd3-0518-f2ba694b3279@linux.intel.com>
+ <9AECB54A-2DA7-4ABD-A9B5-0549E108D1AF@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ea8b4315-4db2-00c9-66f7-fee6a4cd1a8c@linux.intel.com>
+Date:   Mon, 8 Apr 2019 10:43:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Originating-IP: [10.101.199.253]
-X-ClientProxiedBy: S-10-101-1-105.iluvatar.local (10.101.1.105) To
- S-10-101-1-102.iluvatar.local (10.101.1.102)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsXClcqYpiu+ZVWMwal/bBZz1q9hs1h9t5/N
-        Yv/T5ywWZ7pzLS7vmsNmcW/Nf1aLzRMWAInFXUwOHB6zGy6yeCze85LJ4/LZUo9Nnyaxe5yY
-        8ZvF4+PTWywel5qvs3t83iQXwBHFZZOSmpNZllqkb5fAlbH3ymrmgv1sFae7WtkaGHtZuxg5
-        OCQETCRevzTuYuTiEBI4wShx4s80xi5GTg5mAQmJgy9eMIMkWATeMkk0n77MBlHVyiRxbusk
-        dpAqNgENibkn7jKD2CIC8hJNXx6xgxQxC9xilNgx4QkLSEJYIFRi68IWNhCbRUBFovfMRbAG
-        XgELiemT21lBbAmg5tUbDjCDnMQpYCkxfTrYFUJAJa0Nk9khygUlTs4EGckBFFeQeLFSC6JT
-        SWLJ3llMEHahxIyJKxgnMArNQvLDLCTdCxiZVjHyF+em62XmlJYlliQW6SVmbmKEREXiDsYb
-        nS/1DjEKcDAq8fDeyF4VI8SaWFZcmXuIUYKDWUmEd+dUoBBvSmJlVWpRfnxRaU5q8SFGaQ4W
-        JXHesokmMUIC6YklqdmpqQWpRTBZJg5OqQYmMyeFFTPbMndc+FGjLTqdYfrC2WlefY1/3ft7
-        12Q0HT2zenHP354/fBq6U/5teXVvP0uVwc5tMw/d/h1VdCG8uTykRkfz5/r5RT94tV5Wa5cX
-        vA8Tn2z9m6l0w7579ldfNjyac311R4+FU9lX+9DynSqzhKU26OcuKK/+wyoY0vZMLPT7EY+w
-        HEflldcXvtnP9jv5YP0mzTsMO5J2a0dcOx3bv//dJM9W7uadu94wZDlXzK5gOvG6ouSNRqF4
-        gpbcyftRtZefvubq2L2SfbZj9sTnxaEuu/tmztZ8/6vvmFJoDpfTghwXd418u5h7IXunptU/
-        Tt1sevXh4tOVn55N/s/xMGWd6eGnEz5eNhJzUmIpzkg01GIuKk4EAOJRwDIHAwAA
+In-Reply-To: <9AECB54A-2DA7-4ABD-A9B5-0549E108D1AF@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The get_user_pages_fast() may mess up the page order in @pages array,
-We will get the wrong DMA results in this case.
+Hi,
 
-Add more commit to clarify it.
+On 4/6/19 2:02 AM, James Sewart wrote:
+> Hey Lu,
+> 
+> My bad, did some debugging on my end. The issue was swapping out
+> find_domain for iommu_get_domain_for_dev. It seems in some situations the
+> domain is not attached to the group but the device is expected to have the
+> domain still stored in its archdata.
+> 
+> I’ve attached the final patch with find_domain unremoved which seems to
+> work in my testing.
 
-Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
----
- lib/scatterlist.c | 3 +++
- 1 file changed, 3 insertions(+)
+This version works for me now.
 
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index 739dc9fe2c55..c170afb1a25e 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -450,6 +450,9 @@ EXPORT_SYMBOL(__sg_alloc_table_from_pages);
-  *    specified by the page array. The returned sg table is released by
-  *    sg_free_table.
-  *
-+ * Note: Do not use get_user_pages_fast() to pin the pages for @pages array,
-+ *       it may mess up the page order, and we will get the wrong DMA results.
-+
-  * Returns:
-  *   0 on success, negative error on failure
-  */
--- 
-2.17.1
+> 
+> Cheers,
+> James.
 
+Best regards,
+Lu Baolu
+
+> 
+> 
+> 
+> 
+> 
+>> On 4 Apr 2019, at 07:49, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> Hi James,
+>>
+>> I did a sanity test from my end. The test machine fails to boot. I
+>> haven't seen any valuable kernel log. It results in a purple screen.
+>>
+>> Best regards,
+>> Lu Baolu
+>>
+>> On 3/29/19 11:26 PM, James Sewart wrote:
+>>> Hey Lu,
+>>> I’ve attached a preliminary v3, if you could take a look and run some tests
+>>> that would be great.
+>>> Since v2 i’ve added your default domain type patches, the new device_group
+>>> handler, and incorporated Jacob’s feedback.
+>>>> On 28 Mar 2019, at 18:37, James Sewart <jamessewart@arista.com> wrote:
+>>>>
+>>>> Hey Lu,
+>>>>
+>>>>> On 26 Mar 2019, at 01:24, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>>>
+>>>>> Hi James,
+>>>>>
+>>>>> On 3/25/19 8:57 PM, James Sewart wrote:
+>>>>>>>> Theres an issue that if we choose to alloc a new resv_region with type
+>>>>>>>> IOMMU_RESV_DIRECT, we will need to refactor intel_iommu_put_resv_regions
+>>>>>>>> to free this entry type which means refactoring the rmrr regions in
+>>>>>>>> get_resv_regions. Should this work be in this patchset?
+>>>>>>> Do you mean the rmrr regions are not allocated in get_resv_regions, but
+>>>>>>> are freed in put_resv_regions? I think we should fix this in this patch
+>>>>>>> set since this might impact the device passthrough if we don't do it.
+>>>>>> They’re not allocated and not freed currently, only type IOMMU_RESV_MSI is
+>>>>>> freed in put_resv_regions. If we allocate a new resv_region with type
+>>>>>> IOMMU_RESV_DIRECT for the isa region, then it won’t be freed. If we modify
+>>>>>> put_resv_regions to free type IOMMU_RESV_DIRECT, then we will try to free
+>>>>>> the static RMRR regions.
+>>>>>> Either the ISA region is static and not freed as with my implementation,
+>>>>>> or the RMRR regions are converted to be allocated on each call to
+>>>>>> get_resv_regions and freed in put_resv_regions.
+>>>>>
+>>>>> By the way, there's another way in my mind. Let's add a new region type
+>>>>> for LPC devices, e.x. IOMMU_RESV_LPC, and then handle it in the same way
+>>>>> as those MSI regions. Just FYI.
+>>>>
+>>>> This solution would require adding some extra code to
+>>>> iommu_group_create_direct_mappings as currently only type
+>>>> IOMMU_RESV_DIRECT is identity mapped, other types are only reserved.
+>>>>
+>>>>
+>>>>>
+>>>>> Best regards,
+>>>>> Lu Baolu
+>>>>
+>>>> Cheers,
+>>>> James.
+>>> Cheers,
+>>> James.
+> 
