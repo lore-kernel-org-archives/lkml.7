@@ -2,68 +2,77 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DEDC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75436C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C1E2063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBE420883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfDHKoC (ORCPT
+        id S1726706AbfDHKoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:44:02 -0400
-Received: from 176.12.98.74.MAXnet.ru ([176.12.98.74]:40096 "EHLO
-        shell.ipa.basealt.ru" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbfDHKn7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:43:59 -0400
-X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Apr 2019 06:43:58 EDT
-Received: by shell.ipa.basealt.ru (Postfix, from userid 709000081)
-        id 19C9327C6C; Mon,  8 Apr 2019 13:38:01 +0300 (MSK)
-From:   Nikolai Kostrigin <nickel@altlinux.org>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jroedel@suse.de, Nikolai Kostrigin <nickel@altlinux.org>
-Subject: [PATCH RESEND 1/1] PCI: Add ATS-disable quirk for AMD Radeon R7 GPUs
-Date:   Mon,  8 Apr 2019 13:37:25 +0300
-Message-Id: <20190408103725.30426-2-nickel@altlinux.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190408103725.30426-1-nickel@altlinux.org>
-References: <20190408103725.30426-1-nickel@altlinux.org>
+        Mon, 8 Apr 2019 06:44:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46198 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726606AbfDHKoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:44:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86D2C15AD;
+        Mon,  8 Apr 2019 03:44:36 -0700 (PDT)
+Received: from [10.37.12.66] (unknown [10.37.12.66])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 742903F718;
+        Mon,  8 Apr 2019 03:44:34 -0700 (PDT)
+Subject: Re: [PATCH v4 2/4] coresight: replicator: Add new device id for
+ static replicator
+To:     leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190406112145.15184-1-leo.yan@linaro.org>
+ <20190406112145.15184-3-leo.yan@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <6b862aa8-1b50-61bf-6894-978ecd1a964b@arm.com>
+Date:   Mon, 8 Apr 2019 11:46:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190406112145.15184-3-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ATS is broken on this hardware (at least for Stoney Ridge
-based laptop) and causes IOMMU stalls and
-system failure. Disable ATS on these devices to make them
-usable again with IOMMU enabled
-Thanks to Joerg Roedel <jroedel@suse.de> for help.
+On 04/06/2019 12:21 PM, Leo Yan wrote:
+> This patch adds a device id for the new static replicator compatible
+> string; it changes the driver name from "coresight-replicator" to
+> "coresight-static-replicator" as well.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-replicator.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 4e0da85efd2d..e6a03642bbdb 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -285,13 +285,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
+>   
+>   static const struct of_device_id static_replicator_match[] = {
+>   	{.compatible = "arm,coresight-replicator"},
+> +	{.compatible = "arm,coresight-static-replicator"},
+>   	{}
 
-https://bugzilla.kernel.org/show_bug.cgi?id=194521
+As mentioned in the previous patch, please could you add a warning if
+you encounter the old binding, mentioning that it is OBSOLETE.
+pr_warn_once() is sufficient.
 
-Signed-off-by: Nikolai Kostrigin <nickel@altlinux.org>
----
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+Otherwise, looks good.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4700d24e5d55..abb2532e16bf 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4876,6 +4876,7 @@ static void quirk_no_ats(struct pci_dev *pdev)
- 
- /* AMD Stoney platform GPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
- #endif /* CONFIG_PCI_ATS */
- 
- /* Freescale PCIe doesn't support MSI in RC mode */
--- 
-2.21.0
-
+Suzuki
