@@ -2,113 +2,132 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C770BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38692084C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039DF2084C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gQB6U321"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfDHSO3 (ORCPT
+        id S1728865AbfDHSOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:14:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:33108 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfDHSO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:14:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 11:14:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,326,1549958400"; 
-   d="scan'208";a="221639078"
-Received: from ray.jf.intel.com (HELO [10.7.201.133]) ([10.7.201.133])
-  by orsmga001.jf.intel.com with ESMTP; 08 Apr 2019 11:14:28 -0700
-Subject: Re: [PATCH 19/27] x86/fpu: Update xstate's PKRU value on write_pkru()
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20190403164156.19645-1-bigeasy@linutronix.de>
- <20190403164156.19645-20-bigeasy@linutronix.de>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <a824d713-a9b1-fa84-4826-be8d980d71e4@intel.com>
-Date:   Mon, 8 Apr 2019 11:14:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 14:14:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46486 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfDHSOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:14:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id p23so11257250iol.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yAux5Ku0F8TRvhryUL3sJjmWLG4xBlH/cwp7PMlXDQ4=;
+        b=gQB6U321p5l/j1bhWHg7deKeKkPzJq3JDVM1H/jgmbf5pBBh0E4d6ZZ8Nu6vPs8yyJ
+         Thc2griKgGO8Bh/PKRIxYl0aiZDySne4Ur20bcxor2I7eFhUiaWxuzfFcJplwTz23qFr
+         UgT6OPKw0vGt1HGM21aY+9Mu0sCOkYEBIvcdA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yAux5Ku0F8TRvhryUL3sJjmWLG4xBlH/cwp7PMlXDQ4=;
+        b=p9aT36dOYe75AlZp910NoadMHh70pnKkh56fGbUoOCtsHMnaO9Rfgf9Jtp5dgXqDgc
+         YGgp4kO0m7Iz6UikBsIJdKEhwJ/IAiaSNo67E4KN56DjCXp2nk9ci031lK78Q/qXtw0t
+         WuDAzaHSrb1UtRuDzVM7T5Ld7DCsMvx5+pSUUVnmvP11l3V7rApLQsxFXAmWmL5Ow5R6
+         r1hqBrzFfg/91CrH+SheVLEQLtRmwRynkyqO86b6AA/Lqd/0zlMhXvzzImPRYTR0xsLd
+         Kn+tw2rA2LJzr0hBPnZa8pA/OfkYv7oUV60fAqfZX62FkBUjZCkNhFRB/0nQLSNTM4gc
+         XrFw==
+X-Gm-Message-State: APjAAAXXif2k6tXOeKkmYT0C7Ii+hma7ljzHC5xGYkq5WwUoWdfoqY25
+        5rZZQDOBD1m5SrGNaXW/6k8jA+YY9jo=
+X-Google-Smtp-Source: APXvYqxaTClI+Lp7TGeGXpG9ea784pwPDWyGQSn9YyfY14bPWjO+70PLTDNNWb2eyPEIaeygX60xYw==
+X-Received: by 2002:a6b:b797:: with SMTP id h145mr12658227iof.190.1554747271383;
+        Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
+Received: from mail-it1-f178.google.com (mail-it1-f178.google.com. [209.85.166.178])
+        by smtp.gmail.com with ESMTPSA id y24sm11412111iol.8.2019.04.08.11.14.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
+Received: by mail-it1-f178.google.com with SMTP id q14so662683itk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
+X-Received: by 2002:a24:298b:: with SMTP id p133mr22379438itp.81.1554746949463;
+ Mon, 08 Apr 2019 11:09:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190403164156.19645-20-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190131192533.34130-1-thgarnie@chromium.org> <20190131192533.34130-15-thgarnie@chromium.org>
+ <01000168a5b35a86-b79bfe67-191e-43bc-a5c7-0e74eac06195-000000@email.amazonses.com>
+ <CAJcbSZGKR7dKVqNEDEO7Qzf7tnNqmL=p1uVKvsUefS=Hs-=iNA@mail.gmail.com>
+ <01000168a6e5ab88-0deea73f-387f-4941-bd11-d1c161aac88a-000000@email.amazonses.com>
+ <CAJcbSZFvafvNX1pS96jaTBGNJad+NszLwSgKnRQgyT70gUGWqQ@mail.gmail.com>
+ <CAJcbSZETNhr=Pv+0daEWUsD2=qnZxT9rbmFaE+y7ag-xKOs89w@mail.gmail.com> <01000169fe18026e-a0951268-516c-4604-a4c3-140f3cbb6f7a-000000@email.amazonses.com>
+In-Reply-To: <01000169fe18026e-a0951268-516c-4604-a4c3-140f3cbb6f7a-000000@email.amazonses.com>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Mon, 8 Apr 2019 11:08:58 -0700
+X-Gmail-Original-Message-ID: <CAJcbSZFVnJ6qYNsGipf6foa8dtsX_RDykRWK-edP85ySQacsVg@mail.gmail.com>
+Message-ID: <CAJcbSZFVnJ6qYNsGipf6foa8dtsX_RDykRWK-edP85ySQacsVg@mail.gmail.com>
+Subject: Re: [PATCH v6 14/27] x86/percpu: Adapt percpu for PIE support
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 9:41 AM, Sebastian Andrzej Siewior wrote:
-> During the context switch the xstate is loaded which also includes the
-> PKRU value.
-> If xstate is restored on return to userland it is required that the
-> PKRU value in xstate is the same as the one in the CPU.
+On Mon, Apr 8, 2019 at 10:56 AM Christopher Lameter <cl@linux.com> wrote:
+>
+> On Mon, 8 Apr 2019, Thomas Garnier wrote:
+>
+> > > It didn't work originally but I will revisit to see if I missed something.
+> >
+> > I revisited and couldn't find a way to prevent relocations to the
+> > percpu section. Without PIE, you can reference absolute address which
+> > was convenient for percpu.
+>
+> Can you switch PIE off for the percpu section? If not maybe the linker
+> needs to have an additional option?
 
-All of the protection keys bits in here look ok to me.  Thanks for the
-sustained work to get all those into shape.  I know it's a special
-snowflake.
+I don't think so or I didn't find any option to do that. Changing the
+linker might be a bit too much if we have a software solution which
+doesn't impact performance.
 
-Although I paid much closer attention to the PK bits, feel free to add:
+>
+> Cannot imagine that this is not possible. You neeed to be able to
+> reference registers that are in fixed memory locations.
+>
+>
+> > Christopher: Did you have something specific in mind?
+>
+> I thought that we just leave it as is.
 
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-
-for the series.
+I would like to as well. I will try couple things at the assembly
+level instead of the linker and come back to this thread.
