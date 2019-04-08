@@ -2,104 +2,112 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA25EC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AA2C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B183021473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A292321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfDHPtl (ORCPT
+        id S1729026AbfDHPub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:49:41 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50584 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHPtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:49:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1C3C15BE;
-        Mon,  8 Apr 2019 08:49:38 -0700 (PDT)
-Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.196.92])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FEEF3F557;
-        Mon,  8 Apr 2019 08:49:36 -0700 (PDT)
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Russell King <linux@arm.linux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 1/7] ARM: vdso: Remove dependency with the arch_timer driver internals
-Date:   Mon,  8 Apr 2019 16:49:01 +0100
-Message-Id: <20190408154907.223536-2-marc.zyngier@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190408154907.223536-1-marc.zyngier@arm.com>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
+        Mon, 8 Apr 2019 11:50:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46128 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfDHPub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:50:31 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id BB0162817F8
+Subject: Re: [PATCH v2] mfd: cros_ec: check for NULL transfer function
+To:     =?UTF-8?Q?Jett_=e2=9c=88_Rink?= <jettrink@google.com>,
+        egranata@chromium.org
+Cc:     Guenter Roeck <groeck@google.com>,
+        Benson Leung <bleung@chromium.org>, gwendal@chromium.org,
+        amstan@chromium.org, linux-kernel <linux-kernel@vger.kernel.org>
+References: <CABXOdTeE5=iF24+2JxwjvGtVtFmneYJWC4yXgX1Ah4y+=+ecEg@mail.gmail.com>
+ <20190403224036.203632-1-egranata@chromium.org>
+ <CAK+PMK7cGVy-o_GX_p4asEMSsB9KoNK+x5WdNo2b+pXUFzJZGw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <ffc12c5b-2481-ac02-5093-2f14d362ff26@collabora.com>
+Date:   Mon, 8 Apr 2019 17:50:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <CAK+PMK7cGVy-o_GX_p4asEMSsB9KoNK+x5WdNo2b+pXUFzJZGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-THe VDSO code uses the kernel helper that was originally designed
-to abstract the access between 32 and 64bit systems. It worked so
-far because this function is declared as 'inline'.
+Hi Enrico,
 
-As we're about to revamp that part of the code, the VDSO would
-break. Let's fix it by doing what should have been done from
-the start, a proper system register access.
+Many thanks to send this upstream.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/arm/include/asm/cp15.h   | 2 ++
- arch/arm/vdso/vgettimeofday.c | 5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+On 4/4/19 18:00, Jett ✈ Rink wrote:
+> Reviewed-by: Jett Rink <jettrink@chromium.org>
+> 
+> On Wed, Apr 3, 2019 at 4:40 PM <egranata@chromium.org> wrote:
+>>
+>> From: Enrico Granata <egranata@chromium.org>
+>>
+>> As new transfer mechanisms are added to the EC codebase, they may
+>> not support v2 of the EC protocol.
+>>
+>> If the v3 initial handshake transfer fails, the kernel will try
+>> and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
+>> will be NULL, and the code will end up causing a kernel panic.
+>>
+>> Add a check for NULL before calling the transfer function, along
+>> with a helpful comment explaining how one might end up in this
+>> situation.
+>>
+>> Signed-off-by: Enrico Granata <egranata@chromium.org>
+>> ---
+>>  drivers/platform/chrome/cros_ec_proto.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+>> index 97a068dff192d..55691656a3c27 100644
+>> --- a/drivers/platform/chrome/cros_ec_proto.c
+>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+>> @@ -56,6 +56,16 @@ static int send_command(struct cros_ec_device *ec_dev,
+>>         else
+>>                 xfer_fxn = ec_dev->cmd_xfer;
+>>
+>> +       if (xfer_fxn == NULL) {
+>> +               /* This error can happen if a communication error happened and
 
-diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
-index 07e27f212dc7..d2453e2d3f1f 100644
---- a/arch/arm/include/asm/cp15.h
-+++ b/arch/arm/include/asm/cp15.h
-@@ -68,6 +68,8 @@
- #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
- #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
- 
-+#define CNTVCT				__ACCESS_CP15_64(1, c14)
-+
- extern unsigned long cr_alignment;	/* defined in entry-armv.S */
- 
- static inline unsigned long get_cr(void)
-diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
-index a9dd619c6c29..7bdbf5d5c47d 100644
---- a/arch/arm/vdso/vgettimeofday.c
-+++ b/arch/arm/vdso/vgettimeofday.c
-@@ -18,9 +18,9 @@
- #include <linux/compiler.h>
- #include <linux/hrtimer.h>
- #include <linux/time.h>
--#include <asm/arch_timer.h>
- #include <asm/barrier.h>
- #include <asm/bug.h>
-+#include <asm/cp15.h>
- #include <asm/page.h>
- #include <asm/unistd.h>
- #include <asm/vdso_datapage.h>
-@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
- 	u64 cycle_now;
- 	u64 nsec;
- 
--	cycle_now = arch_counter_get_cntvct();
-+	isb();
-+	cycle_now = read_sysreg(CNTVCT);
- 
- 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
- 
--- 
-2.20.1
+Like Guenter I personally don't like the networking-style multi-line comments.
+We try to use the default kernel-style so if you don't mind I'll change this.
+
+
+>> +                * the EC is trying to use protocol v2, on an underlying
+>> +                * communication mechanism that does not support v2.
+>> +                */
+>> +               dev_err_once(ec_dev->dev,
+>> +                       "missing EC transfer API, cannot send command\n");
+>> +               return -EIO;
+>> +       }
+>> +
+>>         ret = (*xfer_fxn)(ec_dev, msg);
+>>         if (msg->result == EC_RES_IN_PROGRESS) {
+>>                 int i;
+>> --
+>> 2.21.0.392.gf8f6787159e-goog
+>>
+
+I'll add the patch to the for-next branch in chrome-platform repository for
+auto-builders to play with. If all goes well I'll queue the patch for
+chrome-platform-5.2.
+
+Thanks,
+ Enric
 
