@@ -2,130 +2,87 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56778C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA78C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B3321473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lxyLNdP9"
+	by mail.kernel.org (Postfix) with ESMTP id 85E6F214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554729168;
+	bh=nJBbtsN/cpKD2DenPGFLGd3fGM8ebukyh0M/xQp7K6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZGFA/EqitD6k6o7wEUJR8d+MR6sXNHVl/3h4zsCtrbTTJGEmVOwSttq8ytwZZHhzL
+	 glKhkSicUycUdh6weslKuGmbZrqCars2vlbWlUaLRLf2Ag5Jhf0+egj2+OwP7Ob7Mf
+	 G90bCIDsvNbfNuC1Dp20Rqng4kYmv3C5oR1+Cdus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfDHNIZ (ORCPT
+        id S1726573AbfDHNMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:08:25 -0400
-Received: from vps.xff.cz ([195.181.215.36]:57442 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfDHNIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:08:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554728902; bh=ow5VGNA0hGlAG1tdR4FhzUwe8VNbcPhQ0YtZab7jyLM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lxyLNdP927qRf21aqA+3j9GkShsdbT9zAWAA6adx1wa3K0yDumu/eztMj9MeBEBW2
-         +BIBa3XyOHOFOnmJw7OoervxpsB9gca3lRwR3kIVRJ98OL3OjlZ0d5D99MCZICZjoR
-         tFQg/1vAvUSPqZ+yB7ujy4p8CQr+A8OH5hE9IMaw=
-Date:   Mon, 8 Apr 2019 15:08:21 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 09/12] pinctrl: sunxi: Prepare for alternative bias
- voltage setting methods
-Message-ID: <20190408130821.minpds2ygqdv6yir@core.my.home>
-Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-10-megous@megous.com>
- <CACRpkdY=G0rpxVZL8TKJOQcf+Na8o5_FwG0EyBfb-ZCYXi=_oA@mail.gmail.com>
+        Mon, 8 Apr 2019 09:12:47 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33978 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHNMr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:12:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j89so11226706ljb.1;
+        Mon, 08 Apr 2019 06:12:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Am71RulpTFJZ5pi1WTVijVtGKSEt335ICjoqGLB21Qg=;
+        b=oW6deHz73qpvD9QYjvxXdweVRzmZ+L8ii0to+HLaxkVxyxO9ENH6AGLYvNq6U63mdC
+         e0cEYWxiyDygqJLMc4SVJNRHM4335Ph0cVlv3OVLJYpMLjeWB1/02EtwT30a+DCHtw9t
+         JuQi5Tub2k31IAJhgPmlh9yrjtJGCwUP3YHhBTIWKuucFa5LeQTsjTqvgnf6qzodtzND
+         4PdAEOevC9PajmScHQ3l6XZK62wJNRPrvBNeO9UfaL+hMKq5v9e05Qus1MZ4xpdJ5qfc
+         pRCKG/J69f92C9dIeTxsEqrTTbFOruYFMWAp/sZ444edqppj4e0+u/7/OQUGqDswrur5
+         kX9A==
+X-Gm-Message-State: APjAAAUb5qOiUnXAMB0Ufn26bh+4y/RWpmSqf9XZfG+1PkV6hPYoUWUr
+        VU9rx9VM6+GGPMC2SJBKUNw=
+X-Google-Smtp-Source: APXvYqwbWuahmKd5oNZKpZ6QPXJ3qoJvzs8Ho69vZliTOoAJU1zvrsOs80x7mRYxTRBXhsEvNrn8dA==
+X-Received: by 2002:a2e:420c:: with SMTP id p12mr16070936lja.1.1554729164911;
+        Mon, 08 Apr 2019 06:12:44 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id d3sm6281038ljc.15.2019.04.08.06.12.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 06:12:43 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hDU4r-0002if-CX; Mon, 08 Apr 2019 15:12:45 +0200
+Date:   Mon, 8 Apr 2019 15:12:45 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Ramachandran Srinivasan (BRT-SG)" <srinivasan.r@brtchip.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Deferred URB submission for timesharing the DMA channels
+ of DWC_OTG host controller in Raspberry PI
+Message-ID: <20190408131245.GC24108@localhost>
+References: <1554724399-2972-1-git-send-email-srinivasan.r@brtchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY=G0rpxVZL8TKJOQcf+Na8o5_FwG0EyBfb-ZCYXi=_oA@mail.gmail.com>
+In-Reply-To: <1554724399-2972-1-git-send-email-srinivasan.r@brtchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Apr 08, 2019 at 11:54:00AM +0000, Ramachandran Srinivasan (BRT-SG) wrote:
 
-On Mon, Apr 08, 2019 at 02:53:58PM +0200, Linus Walleij wrote:
-> On Sat, Apr 6, 2019 at 1:45 AM <megous@megous.com> wrote:
-> 
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > H6 has a different I/O voltage bias setting method than A80. Prepare
-> > existing code for using alternative bias voltage setting methods.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
-> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 38 ++++++++++++-----------
-> >  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  4 ++-
-> 
-> I need Maxime's ACK on these patches to merge.
-> 
-> Can the pinctrl parts be applied independently of the rest
-> of the changes when Maxime is happy with the patches?
+Make sure to always provide a proper commit message.
 
-Yes, the two pinctrl patches are independent of the rest of the series.
+> Signed-off-by: Srinivasan R <srinivasan.r@brtchip.com>
+> ---
+>  drivers/usb/serial/ftdi_sio.c | 153 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 152 insertions(+), 1 deletion(-)
 
-thank you,
-	Ondrej
+Your patch has been been (whitespace) corrupted and is barely readable.
+I have no idea you're trying to here.
 
-> Yours,
-> Linus Walleij
+Johan
