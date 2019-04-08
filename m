@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BDAC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352CFC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C67921874
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890B02190B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554742721;
-	bh=cJKEBdKmuVjuK4pvukiKgmEReBcIEGewkFl/fVneuEg=;
+	s=default; t=1554742723;
+	bh=Afb+egQB0fY+WDZdZL+eINQIfPf2PjFPEY5cIz6KtOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJcDvfnIuR0jAVwMm86BdWwBKILwUch36rLyKU0C7aisjIxtMCrExJl3nXWGmIzJ1
-	 Jkg9rq+71+Fl3P4AHGZNhHG3A7cuDBNwudOJA5BQBxDgPJGrDZdVCb1JBOE4cAG/TU
-	 rb2tVo+s1+Fvi/saXiryk8Fa9WJ6AnNieza3UE60=
+	b=WjlD/eamyNUj4EaJBi8+Z9oiTWeUZ7W6ibPb4AI3snPS4YagiKBHXbev8EdRJq9g1
+	 ntCH5QizCRupvuOFeTIOWJ4PZt9/OYVakKGU23WnnjHhxuHT32rzhy/O3zyBG4Y76z
+	 GGeeaBvNM88waEvPbZDAM5/3eE9zgi+SqCFZW1k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfDHQ6k (ORCPT
+        id S1729319AbfDHQ6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:58:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58664 "EHLO
+        Mon, 8 Apr 2019 12:58:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58884 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729217AbfDHQ6h (ORCPT
+        with ESMTP id S1729246AbfDHQ6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:58:37 -0400
+        Mon, 8 Apr 2019 12:58:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uywpcar2BSwInr6Fjm6rS6TmPWkw/AvOUrwCmcbTPHw=; b=bVla8PP8aUhQJ63MiLT4wqcPiu
-        M74LO/6F6c/aJLR4OOdoEhy8VzBLNY53CuvDHe2Ar6xAmV1Hb4B2xnWhb6wdIKOtPrXOZx0cwH4Ls
-        5V1LWRHhldZf8S2wHC+ZD4i6UkEU0yq9sWh79aMMM3C6eJGcwUQeVLdmKlHF8nS6iaKpTK+//yyRr
-        AN0RWp8JkPQemj/KIYIUWfk4KdHleuzhW1TW22k/2p5oXeTfVdZ4qHzNenV6mKgc2NXplqwabnbq0
-        WbSpW8UP+e4x59m+rWVcqnycpl2bSS96Rdpl+Ft/pwjeyTy8sAbg7XMolxz+e7KjI2O98UUNp6to/
-        UFItSH+A==;
+        bh=JQRLWWcMEQJXypVVBBvqaCntW+eTge+6j4ZK2gI2/Vg=; b=p5x1Gcyze7YxC3uPHdYN7R6LfR
+        gkYXIS/b6k7PoyIHg/uDDmJiJXWUrvz52NAtMaqmvmPVBI0YgH8W96Lt0JQJfWtk6XNGqeT/BxFVp
+        TMPjDJ/lovXzYB3fG6Nf0NpBxGNCJfD1Ae3wBW57oQr8zU6Y7TkHc69avvDIGUi75DtRVJaiphBf/
+        1ic+IIGDhIaKCe8E14pPXpYYmEJj/IBROVZnK5fxizDwmMq0st9j8WQH3xg9Ot+x0FE9Z6zvFq1TF
+        AWCCAtZxdvzEdjJsLBuCZSeXuNLw1CkL6bIAc8lWrshHBusbZSKCZC0YzKcQ9rAj6sCWyjuyq/SQE
+        6q39KSbQ==;
 Received: from [179.95.33.162] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hDXbO-0005Sm-5u; Mon, 08 Apr 2019 16:58:34 +0000
+        id 1hDXbO-0005Sn-9i; Mon, 08 Apr 2019 16:58:35 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hDXbI-0005nL-9x; Mon, 08 Apr 2019 13:58:28 -0300
+        id 1hDXbI-0005nc-EA; Mon, 08 Apr 2019 13:58:28 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 06/10] docs: video-output.txt: convert it to ReST format
-Date:   Mon,  8 Apr 2019 13:58:22 -0300
-Message-Id: <0a11af54345d0d8bc4e0664ab5b27ef0dddd267e.1554742526.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 10/10] docs: add plain text files to ReST output from  subdirs
+Date:   Mon,  8 Apr 2019 13:58:26 -0300
+Message-Id: <71a7e9740a9cd42403e720060df7b253edf5a49d.1554742526.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1554742526.git.mchehab+samsung@kernel.org>
 References: <cover.1554742526.git.mchehab+samsung@kernel.org>
@@ -63,79 +63,6458 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file doesn't follow the documentation style we use
-within the Kernel. Fix it.
+Those files are still in text mode. Still, let's add to the
+ReST output documents as literal ones. They can be later moved
+to ReST format.
+
+Please notice that ABI and bindings are different beasts. So,
+for now, keep them out of the documentation.
+
+This patch was generated by the following bash script:
+
+DIRS=$(dirname $(find Documentation/ -maxdepth 2 -name *.txt)|sort|uniq|grep -v output|grep -v ABI|grep -v bindings|grep -v devicetree)
+
+for d in $DIRS; do
+        if [ "$d" == "Documentation" ]; then
+                continue
+        fi
+        echo "Processing dir $d" >&2
+        if [ ! -e $d/index.rst ]; then
+                for i in $(find $d -name *.txt); do
+                        b=$(echo $i|sed s,$d/,,)
+                        j=$(basename $i)
+                        j=${j/.txt/};
+                        j=${j//-/ };
+                        j=${j//_/ }
+                        echo -e "$j"
+                        for k in $(seq 1 $(echo -n $j|wc -c)); do
+                                echo -n "-"
+                        done
+                        echo -e "\n\n .. include:: $b\n    :literal:\n"
+                done > $d/text_files.rst
+
+                b=$(basename $d)
+                (for k in $(seq 1 $(echo -n $b|wc -c)); do
+                        echo -n "="
+                done
+                echo -e "\n$b"
+                for k in $(seq 1 $(echo -n $b|wc -c)); do
+                        echo -n "="
+                done
+                echo -e "\n\n.. toctree::\n    :maxdepth: 1\n\n    text_files.rst"
+                for i in $(find $d -name *.rst|grep -v index.rst|grep -v text_files.rst); do
+                        n=$(echo $i|sed s,Documentation/$b/,,)
+                        echo "    $n"
+                done
+
+                echo -e "\n.. only::  subproject and html\n\n   Indices\n   =======\n\n   * :ref:\`genindex\`"
+                ) > $d/index.rst
+
+                echo "   $d/index" |sed s,Documentation/,, >> to_add
+        fi
+done
+
+Please notice that some adjustment was needed in order to
+handle Documentation/features.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/video-output.txt | 52 +++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ Documentation/EDID/index.rst                 |  15 ++
+ Documentation/EDID/text_files.rst            |   6 +
+ Documentation/PCI/index.rst                  |  15 ++
+ Documentation/PCI/text_files.rst             |  72 ++++++
+ Documentation/RCU/index.rst                  |  15 ++
+ Documentation/RCU/text_files.rst             |  96 +++++++
+ Documentation/accounting/index.rst           |  15 ++
+ Documentation/accounting/text_files.rst      |  30 +++
+ Documentation/acpi/index.rst                 |  15 ++
+ Documentation/acpi/text_files.rst            | 138 ++++++++++
+ Documentation/aoe/index.rst                  |  15 ++
+ Documentation/aoe/text_files.rst             |  18 ++
+ Documentation/arm/index.rst                  |  21 ++
+ Documentation/arm/text_files.rst             | 198 +++++++++++++++
+ Documentation/arm64/index.rst                |  15 ++
+ Documentation/arm64/text_files.rst           |  72 ++++++
+ Documentation/auxdisplay/index.rst           |  15 ++
+ Documentation/auxdisplay/text_files.rst      |   6 +
+ Documentation/backlight/index.rst            |  15 ++
+ Documentation/backlight/text_files.rst       |   6 +
+ Documentation/block/index.rst                |  15 ++
+ Documentation/block/text_files.rst           |  96 +++++++
+ Documentation/blockdev/index.rst             |  15 ++
+ Documentation/blockdev/text_files.rst        |  42 ++++
+ Documentation/bus-devices/index.rst          |  15 ++
+ Documentation/bus-devices/text_files.rst     |   6 +
+ Documentation/cdrom/index.rst                |  15 ++
+ Documentation/cdrom/text_files.rst           |   6 +
+ Documentation/cgroup-v1/index.rst            |  15 ++
+ Documentation/cgroup-v1/text_files.rst       |  78 ++++++
+ Documentation/cma/index.rst                  |  15 ++
+ Documentation/cma/text_files.rst             |   6 +
+ Documentation/connector/index.rst            |  15 ++
+ Documentation/connector/text_files.rst       |   6 +
+ Documentation/console/index.rst              |  15 ++
+ Documentation/console/text_files.rst         |   6 +
+ Documentation/cpu-freq/index.rst             |  15 ++
+ Documentation/cpu-freq/text_files.rst        |  42 ++++
+ Documentation/device-mapper/index.rst        |  15 ++
+ Documentation/device-mapper/text_files.rst   | 168 +++++++++++++
+ Documentation/driver-model/index.rst         |  15 ++
+ Documentation/driver-model/text_files.rst    |  60 +++++
+ Documentation/early-userspace/index.rst      |  15 ++
+ Documentation/early-userspace/text_files.rst |   6 +
+ Documentation/extcon/index.rst               |  15 ++
+ Documentation/extcon/text_files.rst          |   6 +
+ Documentation/fault-injection/index.rst      |  15 ++
+ Documentation/fault-injection/text_files.rst |  24 ++
+ Documentation/fb/index.rst                   |  15 ++
+ Documentation/fb/text_files.rst              | 204 +++++++++++++++
+ Documentation/features/index.rst             |  15 ++
+ Documentation/features/text_files.rst        | 252 +++++++++++++++++++
+ Documentation/fmc/index.rst                  |  15 ++
+ Documentation/fmc/text_files.rst             |  60 +++++
+ Documentation/fpga/index.rst                 |  15 ++
+ Documentation/fpga/text_files.rst            |   6 +
+ Documentation/gpio/index.rst                 |  15 ++
+ Documentation/gpio/text_files.rst            |   6 +
+ Documentation/hid/index.rst                  |  15 ++
+ Documentation/hid/text_files.rst             |  42 ++++
+ Documentation/hwmon/index.rst                |  15 ++
+ Documentation/hwmon/text_files.rst           |   6 +
+ Documentation/ia64/index.rst                 |  15 ++
+ Documentation/ia64/text_files.rst            |  48 ++++
+ Documentation/ide/index.rst                  |  15 ++
+ Documentation/ide/text_files.rst             |  18 ++
+ Documentation/iio/index.rst                  |  15 ++
+ Documentation/iio/text_files.rst             |  12 +
+ Documentation/index.rst                      |  81 ++++++
+ Documentation/infiniband/index.rst           |  15 ++
+ Documentation/infiniband/text_files.rst      |  42 ++++
+ Documentation/ioctl/index.rst                |  15 ++
+ Documentation/ioctl/text_files.rst           |  30 +++
+ Documentation/kbuild/index.rst               |  15 ++
+ Documentation/kbuild/text_files.rst          |  42 ++++
+ Documentation/kdump/index.rst                |  15 ++
+ Documentation/kdump/text_files.rst           |  18 ++
+ Documentation/laptops/index.rst              |  16 ++
+ Documentation/laptops/text_files.rst         |  42 ++++
+ Documentation/leds/index.rst                 |  15 ++
+ Documentation/leds/text_files.rst            |  84 +++++++
+ Documentation/lightnvm/index.rst             |  15 ++
+ Documentation/lightnvm/text_files.rst        |   6 +
+ Documentation/livepatch/index.rst            |  15 ++
+ Documentation/livepatch/text_files.rst       |  30 +++
+ Documentation/locking/index.rst              |  15 ++
+ Documentation/locking/text_files.rst         |  48 ++++
+ Documentation/m68k/index.rst                 |  15 ++
+ Documentation/m68k/text_files.rst            |   6 +
+ Documentation/md/index.rst                   |  15 ++
+ Documentation/md/text_files.rst              |  18 ++
+ Documentation/memory-devices/index.rst       |  15 ++
+ Documentation/memory-devices/text_files.rst  |   6 +
+ Documentation/mic/index.rst                  |  15 ++
+ Documentation/mic/text_files.rst             |  12 +
+ Documentation/mmc/index.rst                  |  15 ++
+ Documentation/mmc/text_files.rst             |  24 ++
+ Documentation/mtd/index.rst                  |  15 ++
+ Documentation/mtd/text_files.rst             |  18 ++
+ Documentation/namespaces/index.rst           |  15 ++
+ Documentation/namespaces/text_files.rst      |  12 +
+ Documentation/netlabel/index.rst             |  15 ++
+ Documentation/netlabel/text_files.rst        |  24 ++
+ Documentation/nfc/index.rst                  |  15 ++
+ Documentation/nfc/text_files.rst             |  12 +
+ Documentation/nvdimm/index.rst               |  15 ++
+ Documentation/nvdimm/text_files.rst          |  18 ++
+ Documentation/nvmem/index.rst                |  15 ++
+ Documentation/nvmem/text_files.rst           |   6 +
+ Documentation/pcmcia/index.rst               |  15 ++
+ Documentation/pcmcia/text_files.rst          |  24 ++
+ Documentation/perf/index.rst                 |  15 ++
+ Documentation/perf/text_files.rst            |  42 ++++
+ Documentation/phy/index.rst                  |  15 ++
+ Documentation/phy/text_files.rst             |   6 +
+ Documentation/platform/index.rst             |  15 ++
+ Documentation/platform/text_files.rst        |   6 +
+ Documentation/power/index.rst                |  15 ++
+ Documentation/power/text_files.rst           | 162 ++++++++++++
+ Documentation/powerpc/index.rst              |  16 ++
+ Documentation/powerpc/text_files.rst         | 102 ++++++++
+ Documentation/pps/index.rst                  |  15 ++
+ Documentation/pps/text_files.rst             |   6 +
+ Documentation/pti/index.rst                  |  15 ++
+ Documentation/pti/text_files.rst             |   6 +
+ Documentation/ptp/index.rst                  |  15 ++
+ Documentation/ptp/text_files.rst             |   6 +
+ Documentation/rapidio/index.rst              |  15 ++
+ Documentation/rapidio/text_files.rst         |  30 +++
+ Documentation/riscv/index.rst                |  15 ++
+ Documentation/riscv/text_files.rst           |   6 +
+ Documentation/s390/index.rst                 |  15 ++
+ Documentation/s390/text_files.rst            |  60 +++++
+ Documentation/scheduler/index.rst            |  15 ++
+ Documentation/scheduler/text_files.rst       |  60 +++++
+ Documentation/scsi/index.rst                 |  15 ++
+ Documentation/scsi/text_files.rst            | 246 ++++++++++++++++++
+ Documentation/serial/index.rst               |  15 ++
+ Documentation/serial/text_files.rst          |  30 +++
+ Documentation/sparc/index.rst                |  15 ++
+ Documentation/sparc/text_files.rst           |  24 ++
+ Documentation/sphinx/index.rst               |  15 ++
+ Documentation/sphinx/text_files.rst          |   6 +
+ Documentation/sysctl/index.rst               |  15 ++
+ Documentation/sysctl/text_files.rst          |  42 ++++
+ Documentation/target/index.rst               |  15 ++
+ Documentation/target/text_files.rst          |  12 +
+ Documentation/thermal/index.rst              |  15 ++
+ Documentation/thermal/text_files.rst         |  24 ++
+ Documentation/timers/index.rst               |  15 ++
+ Documentation/timers/text_files.rst          |  36 +++
+ Documentation/usb/index.rst                  |  15 ++
+ Documentation/usb/text_files.rst             | 138 ++++++++++
+ Documentation/virtual/index.rst              |  17 ++
+ Documentation/virtual/text_files.rst         | 150 +++++++++++
+ Documentation/watchdog/index.rst             |  15 ++
+ Documentation/watchdog/text_files.rst        |  54 ++++
+ Documentation/x86/index.rst                  |  15 ++
+ Documentation/x86/text_files.rst             | 132 ++++++++++
+ Documentation/xilinx/index.rst               |  15 ++
+ Documentation/xilinx/text_files.rst          |   6 +
+ Documentation/xtensa/index.rst               |  15 ++
+ Documentation/xtensa/text_files.rst          |  18 ++
+ 163 files changed, 5086 insertions(+)
+ create mode 100644 Documentation/EDID/index.rst
+ create mode 100644 Documentation/EDID/text_files.rst
+ create mode 100644 Documentation/PCI/index.rst
+ create mode 100644 Documentation/PCI/text_files.rst
+ create mode 100644 Documentation/RCU/index.rst
+ create mode 100644 Documentation/RCU/text_files.rst
+ create mode 100644 Documentation/accounting/index.rst
+ create mode 100644 Documentation/accounting/text_files.rst
+ create mode 100644 Documentation/acpi/index.rst
+ create mode 100644 Documentation/acpi/text_files.rst
+ create mode 100644 Documentation/aoe/index.rst
+ create mode 100644 Documentation/aoe/text_files.rst
+ create mode 100644 Documentation/arm/index.rst
+ create mode 100644 Documentation/arm/text_files.rst
+ create mode 100644 Documentation/arm64/index.rst
+ create mode 100644 Documentation/arm64/text_files.rst
+ create mode 100644 Documentation/auxdisplay/index.rst
+ create mode 100644 Documentation/auxdisplay/text_files.rst
+ create mode 100644 Documentation/backlight/index.rst
+ create mode 100644 Documentation/backlight/text_files.rst
+ create mode 100644 Documentation/block/index.rst
+ create mode 100644 Documentation/block/text_files.rst
+ create mode 100644 Documentation/blockdev/index.rst
+ create mode 100644 Documentation/blockdev/text_files.rst
+ create mode 100644 Documentation/bus-devices/index.rst
+ create mode 100644 Documentation/bus-devices/text_files.rst
+ create mode 100644 Documentation/cdrom/index.rst
+ create mode 100644 Documentation/cdrom/text_files.rst
+ create mode 100644 Documentation/cgroup-v1/index.rst
+ create mode 100644 Documentation/cgroup-v1/text_files.rst
+ create mode 100644 Documentation/cma/index.rst
+ create mode 100644 Documentation/cma/text_files.rst
+ create mode 100644 Documentation/connector/index.rst
+ create mode 100644 Documentation/connector/text_files.rst
+ create mode 100644 Documentation/console/index.rst
+ create mode 100644 Documentation/console/text_files.rst
+ create mode 100644 Documentation/cpu-freq/index.rst
+ create mode 100644 Documentation/cpu-freq/text_files.rst
+ create mode 100644 Documentation/device-mapper/index.rst
+ create mode 100644 Documentation/device-mapper/text_files.rst
+ create mode 100644 Documentation/driver-model/index.rst
+ create mode 100644 Documentation/driver-model/text_files.rst
+ create mode 100644 Documentation/early-userspace/index.rst
+ create mode 100644 Documentation/early-userspace/text_files.rst
+ create mode 100644 Documentation/extcon/index.rst
+ create mode 100644 Documentation/extcon/text_files.rst
+ create mode 100644 Documentation/fault-injection/index.rst
+ create mode 100644 Documentation/fault-injection/text_files.rst
+ create mode 100644 Documentation/fb/index.rst
+ create mode 100644 Documentation/fb/text_files.rst
+ create mode 100644 Documentation/features/index.rst
+ create mode 100644 Documentation/features/text_files.rst
+ create mode 100644 Documentation/fmc/index.rst
+ create mode 100644 Documentation/fmc/text_files.rst
+ create mode 100644 Documentation/fpga/index.rst
+ create mode 100644 Documentation/fpga/text_files.rst
+ create mode 100644 Documentation/gpio/index.rst
+ create mode 100644 Documentation/gpio/text_files.rst
+ create mode 100644 Documentation/hid/index.rst
+ create mode 100644 Documentation/hid/text_files.rst
+ create mode 100644 Documentation/hwmon/index.rst
+ create mode 100644 Documentation/hwmon/text_files.rst
+ create mode 100644 Documentation/ia64/index.rst
+ create mode 100644 Documentation/ia64/text_files.rst
+ create mode 100644 Documentation/ide/index.rst
+ create mode 100644 Documentation/ide/text_files.rst
+ create mode 100644 Documentation/iio/index.rst
+ create mode 100644 Documentation/iio/text_files.rst
+ create mode 100644 Documentation/infiniband/index.rst
+ create mode 100644 Documentation/infiniband/text_files.rst
+ create mode 100644 Documentation/ioctl/index.rst
+ create mode 100644 Documentation/ioctl/text_files.rst
+ create mode 100644 Documentation/kbuild/index.rst
+ create mode 100644 Documentation/kbuild/text_files.rst
+ create mode 100644 Documentation/kdump/index.rst
+ create mode 100644 Documentation/kdump/text_files.rst
+ create mode 100644 Documentation/laptops/index.rst
+ create mode 100644 Documentation/laptops/text_files.rst
+ create mode 100644 Documentation/leds/index.rst
+ create mode 100644 Documentation/leds/text_files.rst
+ create mode 100644 Documentation/lightnvm/index.rst
+ create mode 100644 Documentation/lightnvm/text_files.rst
+ create mode 100644 Documentation/livepatch/index.rst
+ create mode 100644 Documentation/livepatch/text_files.rst
+ create mode 100644 Documentation/locking/index.rst
+ create mode 100644 Documentation/locking/text_files.rst
+ create mode 100644 Documentation/m68k/index.rst
+ create mode 100644 Documentation/m68k/text_files.rst
+ create mode 100644 Documentation/md/index.rst
+ create mode 100644 Documentation/md/text_files.rst
+ create mode 100644 Documentation/memory-devices/index.rst
+ create mode 100644 Documentation/memory-devices/text_files.rst
+ create mode 100644 Documentation/mic/index.rst
+ create mode 100644 Documentation/mic/text_files.rst
+ create mode 100644 Documentation/mmc/index.rst
+ create mode 100644 Documentation/mmc/text_files.rst
+ create mode 100644 Documentation/mtd/index.rst
+ create mode 100644 Documentation/mtd/text_files.rst
+ create mode 100644 Documentation/namespaces/index.rst
+ create mode 100644 Documentation/namespaces/text_files.rst
+ create mode 100644 Documentation/netlabel/index.rst
+ create mode 100644 Documentation/netlabel/text_files.rst
+ create mode 100644 Documentation/nfc/index.rst
+ create mode 100644 Documentation/nfc/text_files.rst
+ create mode 100644 Documentation/nvdimm/index.rst
+ create mode 100644 Documentation/nvdimm/text_files.rst
+ create mode 100644 Documentation/nvmem/index.rst
+ create mode 100644 Documentation/nvmem/text_files.rst
+ create mode 100644 Documentation/pcmcia/index.rst
+ create mode 100644 Documentation/pcmcia/text_files.rst
+ create mode 100644 Documentation/perf/index.rst
+ create mode 100644 Documentation/perf/text_files.rst
+ create mode 100644 Documentation/phy/index.rst
+ create mode 100644 Documentation/phy/text_files.rst
+ create mode 100644 Documentation/platform/index.rst
+ create mode 100644 Documentation/platform/text_files.rst
+ create mode 100644 Documentation/power/index.rst
+ create mode 100644 Documentation/power/text_files.rst
+ create mode 100644 Documentation/powerpc/index.rst
+ create mode 100644 Documentation/powerpc/text_files.rst
+ create mode 100644 Documentation/pps/index.rst
+ create mode 100644 Documentation/pps/text_files.rst
+ create mode 100644 Documentation/pti/index.rst
+ create mode 100644 Documentation/pti/text_files.rst
+ create mode 100644 Documentation/ptp/index.rst
+ create mode 100644 Documentation/ptp/text_files.rst
+ create mode 100644 Documentation/rapidio/index.rst
+ create mode 100644 Documentation/rapidio/text_files.rst
+ create mode 100644 Documentation/riscv/index.rst
+ create mode 100644 Documentation/riscv/text_files.rst
+ create mode 100644 Documentation/s390/index.rst
+ create mode 100644 Documentation/s390/text_files.rst
+ create mode 100644 Documentation/scheduler/index.rst
+ create mode 100644 Documentation/scheduler/text_files.rst
+ create mode 100644 Documentation/scsi/index.rst
+ create mode 100644 Documentation/scsi/text_files.rst
+ create mode 100644 Documentation/serial/index.rst
+ create mode 100644 Documentation/serial/text_files.rst
+ create mode 100644 Documentation/sparc/index.rst
+ create mode 100644 Documentation/sparc/text_files.rst
+ create mode 100644 Documentation/sphinx/index.rst
+ create mode 100644 Documentation/sphinx/text_files.rst
+ create mode 100644 Documentation/sysctl/index.rst
+ create mode 100644 Documentation/sysctl/text_files.rst
+ create mode 100644 Documentation/target/index.rst
+ create mode 100644 Documentation/target/text_files.rst
+ create mode 100644 Documentation/thermal/index.rst
+ create mode 100644 Documentation/thermal/text_files.rst
+ create mode 100644 Documentation/timers/index.rst
+ create mode 100644 Documentation/timers/text_files.rst
+ create mode 100644 Documentation/usb/index.rst
+ create mode 100644 Documentation/usb/text_files.rst
+ create mode 100644 Documentation/virtual/index.rst
+ create mode 100644 Documentation/virtual/text_files.rst
+ create mode 100644 Documentation/watchdog/index.rst
+ create mode 100644 Documentation/watchdog/text_files.rst
+ create mode 100644 Documentation/x86/index.rst
+ create mode 100644 Documentation/x86/text_files.rst
+ create mode 100644 Documentation/xilinx/index.rst
+ create mode 100644 Documentation/xilinx/text_files.rst
+ create mode 100644 Documentation/xtensa/index.rst
+ create mode 100644 Documentation/xtensa/text_files.rst
 
-diff --git a/Documentation/video-output.txt b/Documentation/video-output.txt
-index e517011be4f9..56d6fa2e2368 100644
---- a/Documentation/video-output.txt
-+++ b/Documentation/video-output.txt
-@@ -1,34 +1,34 @@
-+Video Output Switcher Control
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/Documentation/EDID/index.rst b/Documentation/EDID/index.rst
+new file mode 100644
+index 000000000000..f1c4e0f806ca
+--- /dev/null
++++ b/Documentation/EDID/index.rst
+@@ -0,0 +1,15 @@
++====
++EDID
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/EDID/text_files.rst b/Documentation/EDID/text_files.rst
+new file mode 100644
+index 000000000000..b05085389fb4
+--- /dev/null
++++ b/Documentation/EDID/text_files.rst
+@@ -0,0 +1,6 @@
++HOWTO
++-----
++
++ .. include:: HOWTO.txt
++    :literal:
++
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+new file mode 100644
+index 000000000000..52769a4009c4
+--- /dev/null
++++ b/Documentation/PCI/index.rst
+@@ -0,0 +1,15 @@
++===
++PCI
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/PCI/text_files.rst b/Documentation/PCI/text_files.rst
+new file mode 100644
+index 000000000000..f59502191f59
+--- /dev/null
++++ b/Documentation/PCI/text_files.rst
+@@ -0,0 +1,72 @@
++acpi info
++---------
++
++ .. include:: acpi-info.txt
++    :literal:
++
++pci
++---
++
++ .. include:: pci.txt
++    :literal:
++
++PCIEBUS HOWTO
++-------------
++
++ .. include:: PCIEBUS-HOWTO.txt
++    :literal:
++
++MSI HOWTO
++---------
++
++ .. include:: MSI-HOWTO.txt
++    :literal:
++
++pcieaer howto
++-------------
++
++ .. include:: pcieaer-howto.txt
++    :literal:
++
++pci test
++--------
++
++ .. include:: endpoint/function/binding/pci-test.txt
++    :literal:
++
++pci test function
++-----------------
++
++ .. include:: endpoint/pci-test-function.txt
++    :literal:
++
++pci test howto
++--------------
++
++ .. include:: endpoint/pci-test-howto.txt
++    :literal:
++
++pci endpoint
++------------
++
++ .. include:: endpoint/pci-endpoint.txt
++    :literal:
++
++pci endpoint cfs
++----------------
++
++ .. include:: endpoint/pci-endpoint-cfs.txt
++    :literal:
++
++pci error recovery
++------------------
++
++ .. include:: pci-error-recovery.txt
++    :literal:
++
++pci iov howto
++-------------
++
++ .. include:: pci-iov-howto.txt
++    :literal:
++
+diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+new file mode 100644
+index 000000000000..b52c9223494c
+--- /dev/null
++++ b/Documentation/RCU/index.rst
+@@ -0,0 +1,15 @@
++===
++RCU
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/RCU/text_files.rst b/Documentation/RCU/text_files.rst
+new file mode 100644
+index 000000000000..6884e903d370
+--- /dev/null
++++ b/Documentation/RCU/text_files.rst
+@@ -0,0 +1,96 @@
++arrayRCU
++--------
++
++ .. include:: arrayRCU.txt
++    :literal:
++
++rcu
++---
++
++ .. include:: rcu.txt
++    :literal:
++
++rcu dereference
++---------------
++
++ .. include:: rcu_dereference.txt
++    :literal:
++
++RTFP
++----
++
++ .. include:: RTFP.txt
++    :literal:
++
++lockdep splat
++-------------
++
++ .. include:: lockdep-splat.txt
++    :literal:
++
++whatisRCU
++---------
++
++ .. include:: whatisRCU.txt
++    :literal:
++
++rcubarrier
++----------
++
++ .. include:: rcubarrier.txt
++    :literal:
++
++UP
++--
++
++ .. include:: UP.txt
++    :literal:
++
++torture
++-------
++
++ .. include:: torture.txt
++    :literal:
++
++listRCU
++-------
++
++ .. include:: listRCU.txt
++    :literal:
++
++lockdep
++-------
++
++ .. include:: lockdep.txt
++    :literal:
++
++rculist nulls
++-------------
++
++ .. include:: rculist_nulls.txt
++    :literal:
++
++rcuref
++------
++
++ .. include:: rcuref.txt
++    :literal:
++
++stallwarn
++---------
++
++ .. include:: stallwarn.txt
++    :literal:
++
++checklist
++---------
++
++ .. include:: checklist.txt
++    :literal:
++
++NMI RCU
++-------
++
++ .. include:: NMI-RCU.txt
++    :literal:
++
+diff --git a/Documentation/accounting/index.rst b/Documentation/accounting/index.rst
+new file mode 100644
+index 000000000000..8c4463425a55
+--- /dev/null
++++ b/Documentation/accounting/index.rst
+@@ -0,0 +1,15 @@
++==========
++accounting
++==========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/accounting/text_files.rst b/Documentation/accounting/text_files.rst
+new file mode 100644
+index 000000000000..54b3b5417d07
+--- /dev/null
++++ b/Documentation/accounting/text_files.rst
+@@ -0,0 +1,30 @@
++cgroupstats
++-----------
++
++ .. include:: cgroupstats.txt
++    :literal:
++
++delay accounting
++----------------
++
++ .. include:: delay-accounting.txt
++    :literal:
++
++taskstats struct
++----------------
++
++ .. include:: taskstats-struct.txt
++    :literal:
++
++taskstats
++---------
++
++ .. include:: taskstats.txt
++    :literal:
++
++psi
++---
++
++ .. include:: psi.txt
++    :literal:
++
+diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
+new file mode 100644
+index 000000000000..9cd1512c9e57
+--- /dev/null
++++ b/Documentation/acpi/index.rst
+@@ -0,0 +1,15 @@
++====
++acpi
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/acpi/text_files.rst b/Documentation/acpi/text_files.rst
+new file mode 100644
+index 000000000000..a59a9b4b055e
+--- /dev/null
++++ b/Documentation/acpi/text_files.rst
+@@ -0,0 +1,138 @@
++cppc sysfs
++----------
++
++ .. include:: cppc_sysfs.txt
++    :literal:
++
++graph
++-----
++
++ .. include:: dsd/graph.txt
++    :literal:
++
++data node references
++--------------------
++
++ .. include:: dsd/data-node-references.txt
++    :literal:
++
++method tracing
++--------------
++
++ .. include:: method-tracing.txt
++    :literal:
++
++method customizing
++------------------
++
++ .. include:: method-customizing.txt
++    :literal:
++
++ssdt overlays
++-------------
++
++ .. include:: ssdt-overlays.txt
++    :literal:
++
++gpio properties
++---------------
++
++ .. include:: gpio-properties.txt
++    :literal:
++
++namespace
++---------
++
++ .. include:: namespace.txt
++    :literal:
++
++initrd table override
++---------------------
++
++ .. include:: initrd_table_override.txt
++    :literal:
++
++video extension
++---------------
++
++ .. include:: video_extension.txt
++    :literal:
++
++aml debugger
++------------
++
++ .. include:: aml-debugger.txt
++    :literal:
++
++scan handlers
++-------------
++
++ .. include:: scan_handlers.txt
++    :literal:
++
++linuxized acpica
++----------------
++
++ .. include:: linuxized-acpica.txt
++    :literal:
++
++lpit
++----
++
++ .. include:: lpit.txt
++    :literal:
++
++enumeration
++-----------
++
++ .. include:: enumeration.txt
++    :literal:
++
++DSD properties rules
++--------------------
++
++ .. include:: DSD-properties-rules.txt
++    :literal:
++
++output format
++-------------
++
++ .. include:: apei/output_format.txt
++    :literal:
++
++einj
++----
++
++ .. include:: apei/einj.txt
++    :literal:
++
++acpi lid
++--------
++
++ .. include:: acpi-lid.txt
++    :literal:
++
++dsdt override
++-------------
++
++ .. include:: dsdt-override.txt
++    :literal:
++
++i2c muxes
++---------
++
++ .. include:: i2c-muxes.txt
++    :literal:
++
++osi
++---
++
++ .. include:: osi.txt
++    :literal:
++
++debug
++-----
++
++ .. include:: debug.txt
++    :literal:
++
+diff --git a/Documentation/aoe/index.rst b/Documentation/aoe/index.rst
+new file mode 100644
+index 000000000000..78050a63702b
+--- /dev/null
++++ b/Documentation/aoe/index.rst
+@@ -0,0 +1,15 @@
++===
++aoe
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/aoe/text_files.rst b/Documentation/aoe/text_files.rst
+new file mode 100644
+index 000000000000..cb25a9871779
+--- /dev/null
++++ b/Documentation/aoe/text_files.rst
+@@ -0,0 +1,18 @@
++udev
++----
++
++ .. include:: udev.txt
++    :literal:
++
++aoe
++---
++
++ .. include:: aoe.txt
++    :literal:
++
++todo
++----
++
++ .. include:: todo.txt
++    :literal:
++
+diff --git a/Documentation/arm/index.rst b/Documentation/arm/index.rst
+new file mode 100644
+index 000000000000..ef6fae3506e6
+--- /dev/null
++++ b/Documentation/arm/index.rst
+@@ -0,0 +1,21 @@
++===
++arm
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++    stm32/stm32f746-overview.rst
++    stm32/overview.rst
++    stm32/stm32h743-overview.rst
++    stm32/stm32f769-overview.rst
++    stm32/stm32f429-overview.rst
++    stm32/stm32mp157-overview.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/arm/text_files.rst b/Documentation/arm/text_files.rst
+new file mode 100644
+index 000000000000..afb02862fccd
+--- /dev/null
++++ b/Documentation/arm/text_files.rst
+@@ -0,0 +1,198 @@
++tcm
++---
++
++ .. include:: tcm.txt
++    :literal:
++
++kernel user helpers
++-------------------
++
++ .. include:: kernel_user_helpers.txt
++    :literal:
++
++cluster pm race avoidance
++-------------------------
++
++ .. include:: cluster-pm-race-avoidance.txt
++    :literal:
++
++firmware
++--------
++
++ .. include:: firmware.txt
++    :literal:
++
++release notes
++-------------
++
++ .. include:: VFP/release-notes.txt
++    :literal:
++
++uefi
++----
++
++ .. include:: uefi.txt
++    :literal:
++
++Suspend
++-------
++
++ .. include:: Samsung-S3C24XX/Suspend.txt
++    :literal:
++
++H1940
++-----
++
++ .. include:: Samsung-S3C24XX/H1940.txt
++    :literal:
++
++CPUfreq
++-------
++
++ .. include:: Samsung-S3C24XX/CPUfreq.txt
++    :literal:
++
++Overview
++--------
++
++ .. include:: Samsung-S3C24XX/Overview.txt
++    :literal:
++
++NAND
++----
++
++ .. include:: Samsung-S3C24XX/NAND.txt
++    :literal:
++
++GPIO
++----
++
++ .. include:: Samsung-S3C24XX/GPIO.txt
++    :literal:
++
++S3C2412
++-------
++
++ .. include:: Samsung-S3C24XX/S3C2412.txt
++    :literal:
++
++EB2410ITX
++---------
++
++ .. include:: Samsung-S3C24XX/EB2410ITX.txt
++    :literal:
++
++USB Host
++--------
++
++ .. include:: Samsung-S3C24XX/USB-Host.txt
++    :literal:
++
++SMDK2440
++--------
++
++ .. include:: Samsung-S3C24XX/SMDK2440.txt
++    :literal:
++
++S3C2413
++-------
++
++ .. include:: Samsung-S3C24XX/S3C2413.txt
++    :literal:
++
++clocks
++------
++
++ .. include:: sunxi/clocks.txt
++    :literal:
++
++memory
++------
++
++ .. include:: memory.txt
++    :literal:
++
++overview
++--------
++
++ .. include:: SPEAr/overview.txt
++    :literal:
++
++vlocks
++------
++
++ .. include:: vlocks.txt
++    :literal:
++
++Overview
++--------
++
++ .. include:: keystone/Overview.txt
++    :literal:
++
++knav qmss
++---------
++
++ .. include:: keystone/knav-qmss.txt
++    :literal:
++
++mfp
++---
++
++ .. include:: pxa/mfp.txt
++    :literal:
++
++Overview
++--------
++
++ .. include:: Samsung/Overview.txt
++    :literal:
++
++GPIO
++----
++
++ .. include:: Samsung/GPIO.txt
++    :literal:
++
++Bootloader interface
++--------------------
++
++ .. include:: Samsung/Bootloader-interface.txt
++    :literal:
++
++kernel mode neon
++----------------
++
++ .. include:: kernel_mode_neon.txt
++    :literal:
++
++stih418 overview
++----------------
++
++ .. include:: sti/stih418-overview.txt
++    :literal:
++
++stih416 overview
++----------------
++
++ .. include:: sti/stih416-overview.txt
++    :literal:
++
++overview
++--------
++
++ .. include:: sti/overview.txt
++    :literal:
++
++stih407 overview
++----------------
++
++ .. include:: sti/stih407-overview.txt
++    :literal:
++
++stih415 overview
++----------------
++
++ .. include:: sti/stih415-overview.txt
++    :literal:
++
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+new file mode 100644
+index 000000000000..0a6dac4bf859
+--- /dev/null
++++ b/Documentation/arm64/index.rst
+@@ -0,0 +1,15 @@
++=====
++arm64
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/arm64/text_files.rst b/Documentation/arm64/text_files.rst
+new file mode 100644
+index 000000000000..398011cd944d
+--- /dev/null
++++ b/Documentation/arm64/text_files.rst
+@@ -0,0 +1,72 @@
++sve
++---
++
++ .. include:: sve.txt
++    :literal:
++
++acpi object usage
++-----------------
++
++ .. include:: acpi_object_usage.txt
++    :literal:
++
++tagged pointers
++---------------
++
++ .. include:: tagged-pointers.txt
++    :literal:
++
++booting
++-------
++
++ .. include:: booting.txt
++    :literal:
++
++memory
++------
++
++ .. include:: memory.txt
++    :literal:
++
++arm acpi
++--------
++
++ .. include:: arm-acpi.txt
++    :literal:
++
++legacy instructions
++-------------------
++
++ .. include:: legacy_instructions.txt
++    :literal:
++
++silicon errata
++--------------
++
++ .. include:: silicon-errata.txt
++    :literal:
++
++cpu feature registers
++---------------------
++
++ .. include:: cpu-feature-registers.txt
++    :literal:
++
++hugetlbpage
++-----------
++
++ .. include:: hugetlbpage.txt
++    :literal:
++
++pointer authentication
++----------------------
++
++ .. include:: pointer-authentication.txt
++    :literal:
++
++elf hwcaps
++----------
++
++ .. include:: elf_hwcaps.txt
++    :literal:
++
+diff --git a/Documentation/auxdisplay/index.rst b/Documentation/auxdisplay/index.rst
+new file mode 100644
+index 000000000000..35e70695cab0
+--- /dev/null
++++ b/Documentation/auxdisplay/index.rst
+@@ -0,0 +1,15 @@
++==========
++auxdisplay
++==========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/auxdisplay/text_files.rst b/Documentation/auxdisplay/text_files.rst
+new file mode 100644
+index 000000000000..204db9460ec5
+--- /dev/null
++++ b/Documentation/auxdisplay/text_files.rst
+@@ -0,0 +1,6 @@
++lcd panel cgram
++---------------
++
++ .. include:: lcd-panel-cgram.txt
++    :literal:
++
+diff --git a/Documentation/backlight/index.rst b/Documentation/backlight/index.rst
+new file mode 100644
+index 000000000000..7f24f0c11dab
+--- /dev/null
++++ b/Documentation/backlight/index.rst
+@@ -0,0 +1,15 @@
++=========
++backlight
++=========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/backlight/text_files.rst b/Documentation/backlight/text_files.rst
+new file mode 100644
+index 000000000000..2c6d750ee3be
+--- /dev/null
++++ b/Documentation/backlight/text_files.rst
+@@ -0,0 +1,6 @@
++lp855x driver
++-------------
++
++ .. include:: lp855x-driver.txt
++    :literal:
++
+diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
+new file mode 100644
+index 000000000000..f7193d23a254
+--- /dev/null
++++ b/Documentation/block/index.rst
+@@ -0,0 +1,15 @@
++=====
++block
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/block/text_files.rst b/Documentation/block/text_files.rst
+new file mode 100644
+index 000000000000..9c07df138250
+--- /dev/null
++++ b/Documentation/block/text_files.rst
+@@ -0,0 +1,96 @@
++cmdline partition
++-----------------
++
++ .. include:: cmdline-partition.txt
++    :literal:
++
++biovecs
++-------
++
++ .. include:: biovecs.txt
++    :literal:
++
++writeback cache control
++-----------------------
++
++ .. include:: writeback_cache_control.txt
++    :literal:
++
++queue sysfs
++-----------
++
++ .. include:: queue-sysfs.txt
++    :literal:
++
++capability
++----------
++
++ .. include:: capability.txt
++    :literal:
++
++deadline iosched
++----------------
++
++ .. include:: deadline-iosched.txt
++    :literal:
++
++switching sched
++---------------
++
++ .. include:: switching-sched.txt
++    :literal:
++
++stat
++----
++
++ .. include:: stat.txt
++    :literal:
++
++biodoc
++------
++
++ .. include:: biodoc.txt
++    :literal:
++
++pr
++--
++
++ .. include:: pr.txt
++    :literal:
++
++kyber iosched
++-------------
++
++ .. include:: kyber-iosched.txt
++    :literal:
++
++data integrity
++--------------
++
++ .. include:: data-integrity.txt
++    :literal:
++
++bfq iosched
++-----------
++
++ .. include:: bfq-iosched.txt
++    :literal:
++
++request
++-------
++
++ .. include:: request.txt
++    :literal:
++
++null blk
++--------
++
++ .. include:: null_blk.txt
++    :literal:
++
++ioprio
++------
++
++ .. include:: ioprio.txt
++    :literal:
++
+diff --git a/Documentation/blockdev/index.rst b/Documentation/blockdev/index.rst
+new file mode 100644
+index 000000000000..23fd7b3be569
+--- /dev/null
++++ b/Documentation/blockdev/index.rst
+@@ -0,0 +1,15 @@
++========
++blockdev
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/blockdev/text_files.rst b/Documentation/blockdev/text_files.rst
+new file mode 100644
+index 000000000000..beada1e885b7
+--- /dev/null
++++ b/Documentation/blockdev/text_files.rst
+@@ -0,0 +1,42 @@
++nbd
++---
++
++ .. include:: nbd.txt
++    :literal:
++
++floppy
++------
++
++ .. include:: floppy.txt
++    :literal:
++
++paride
++------
++
++ .. include:: paride.txt
++    :literal:
++
++data structure v9
++-----------------
++
++ .. include:: drbd/data-structure-v9.txt
++    :literal:
++
++README
++------
++
++ .. include:: drbd/README.txt
++    :literal:
++
++zram
++----
++
++ .. include:: zram.txt
++    :literal:
++
++ramdisk
++-------
++
++ .. include:: ramdisk.txt
++    :literal:
++
+diff --git a/Documentation/bus-devices/index.rst b/Documentation/bus-devices/index.rst
+new file mode 100644
+index 000000000000..54c123411adf
+--- /dev/null
++++ b/Documentation/bus-devices/index.rst
+@@ -0,0 +1,15 @@
++===========
++bus-devices
++===========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/bus-devices/text_files.rst b/Documentation/bus-devices/text_files.rst
+new file mode 100644
+index 000000000000..d2b7d46934a0
+--- /dev/null
++++ b/Documentation/bus-devices/text_files.rst
+@@ -0,0 +1,6 @@
++ti gpmc
++-------
++
++ .. include:: ti-gpmc.txt
++    :literal:
++
+diff --git a/Documentation/cdrom/index.rst b/Documentation/cdrom/index.rst
+new file mode 100644
+index 000000000000..700d405d23c2
+--- /dev/null
++++ b/Documentation/cdrom/index.rst
+@@ -0,0 +1,15 @@
++=====
++cdrom
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/cdrom/text_files.rst b/Documentation/cdrom/text_files.rst
+new file mode 100644
+index 000000000000..da0302b144ba
+--- /dev/null
++++ b/Documentation/cdrom/text_files.rst
+@@ -0,0 +1,6 @@
++packet writing
++--------------
++
++ .. include:: packet-writing.txt
++    :literal:
++
+diff --git a/Documentation/cgroup-v1/index.rst b/Documentation/cgroup-v1/index.rst
+new file mode 100644
+index 000000000000..a7036617328c
+--- /dev/null
++++ b/Documentation/cgroup-v1/index.rst
+@@ -0,0 +1,15 @@
++=========
++cgroup-v1
++=========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/cgroup-v1/text_files.rst b/Documentation/cgroup-v1/text_files.rst
+new file mode 100644
+index 000000000000..0dd5ac6e1710
+--- /dev/null
++++ b/Documentation/cgroup-v1/text_files.rst
+@@ -0,0 +1,78 @@
++devices
++-------
++
++ .. include:: devices.txt
++    :literal:
++
++cpusets
++-------
++
++ .. include:: cpusets.txt
++    :literal:
++
++net cls
++-------
++
++ .. include:: net_cls.txt
++    :literal:
++
++freezer subsystem
++-----------------
++
++ .. include:: freezer-subsystem.txt
++    :literal:
++
++memory
++------
++
++ .. include:: memory.txt
++    :literal:
++
++memcg test
++----------
++
++ .. include:: memcg_test.txt
++    :literal:
++
++net prio
++--------
++
++ .. include:: net_prio.txt
++    :literal:
++
++hugetlb
++-------
++
++ .. include:: hugetlb.txt
++    :literal:
++
++cgroups
++-------
++
++ .. include:: cgroups.txt
++    :literal:
++
++rdma
++----
++
++ .. include:: rdma.txt
++    :literal:
++
++cpuacct
++-------
++
++ .. include:: cpuacct.txt
++    :literal:
++
++pids
++----
++
++ .. include:: pids.txt
++    :literal:
++
++blkio controller
++----------------
++
++ .. include:: blkio-controller.txt
++    :literal:
++
+diff --git a/Documentation/cma/index.rst b/Documentation/cma/index.rst
+new file mode 100644
+index 000000000000..d4c0e3eaefe7
+--- /dev/null
++++ b/Documentation/cma/index.rst
+@@ -0,0 +1,15 @@
++===
++cma
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/cma/text_files.rst b/Documentation/cma/text_files.rst
+new file mode 100644
+index 000000000000..f40a4d7ef511
+--- /dev/null
++++ b/Documentation/cma/text_files.rst
+@@ -0,0 +1,6 @@
++debugfs
++-------
++
++ .. include:: debugfs.txt
++    :literal:
++
+diff --git a/Documentation/connector/index.rst b/Documentation/connector/index.rst
+new file mode 100644
+index 000000000000..103749a7fb9f
+--- /dev/null
++++ b/Documentation/connector/index.rst
+@@ -0,0 +1,15 @@
++=========
++connector
++=========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/connector/text_files.rst b/Documentation/connector/text_files.rst
+new file mode 100644
+index 000000000000..4ec047a82f53
+--- /dev/null
++++ b/Documentation/connector/text_files.rst
+@@ -0,0 +1,6 @@
++connector
++---------
++
++ .. include:: connector.txt
++    :literal:
++
+diff --git a/Documentation/console/index.rst b/Documentation/console/index.rst
+new file mode 100644
+index 000000000000..8849d1c15379
+--- /dev/null
++++ b/Documentation/console/index.rst
+@@ -0,0 +1,15 @@
++=======
++console
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/console/text_files.rst b/Documentation/console/text_files.rst
+new file mode 100644
+index 000000000000..a9383e21e7c8
+--- /dev/null
++++ b/Documentation/console/text_files.rst
+@@ -0,0 +1,6 @@
++console
++-------
++
++ .. include:: console.txt
++    :literal:
++
+diff --git a/Documentation/cpu-freq/index.rst b/Documentation/cpu-freq/index.rst
+new file mode 100644
+index 000000000000..d1a7bae5a093
+--- /dev/null
++++ b/Documentation/cpu-freq/index.rst
+@@ -0,0 +1,15 @@
++========
++cpu-freq
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/cpu-freq/text_files.rst b/Documentation/cpu-freq/text_files.rst
+new file mode 100644
+index 000000000000..017904e28e08
+--- /dev/null
++++ b/Documentation/cpu-freq/text_files.rst
+@@ -0,0 +1,42 @@
++pcc cpufreq
++-----------
++
++ .. include:: pcc-cpufreq.txt
++    :literal:
++
++amd powernow
++------------
++
++ .. include:: amd-powernow.txt
++    :literal:
++
++index
++-----
++
++ .. include:: index.txt
++    :literal:
++
++cpufreq nforce2
++---------------
++
++ .. include:: cpufreq-nforce2.txt
++    :literal:
++
++cpu drivers
++-----------
++
++ .. include:: cpu-drivers.txt
++    :literal:
++
++core
++----
++
++ .. include:: core.txt
++    :literal:
++
++cpufreq stats
++-------------
++
++ .. include:: cpufreq-stats.txt
++    :literal:
++
+diff --git a/Documentation/device-mapper/index.rst b/Documentation/device-mapper/index.rst
+new file mode 100644
+index 000000000000..4b4e81794ce4
+--- /dev/null
++++ b/Documentation/device-mapper/index.rst
+@@ -0,0 +1,15 @@
++=============
++device-mapper
++=============
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/device-mapper/text_files.rst b/Documentation/device-mapper/text_files.rst
+new file mode 100644
+index 000000000000..e9d439c48b75
+--- /dev/null
++++ b/Documentation/device-mapper/text_files.rst
+@@ -0,0 +1,168 @@
++dm raid
++-------
++
++ .. include:: dm-raid.txt
++    :literal:
++
++era
++---
++
++ .. include:: era.txt
++    :literal:
++
++writecache
++----------
++
++ .. include:: writecache.txt
++    :literal:
++
++verity
++------
++
++ .. include:: verity.txt
++    :literal:
++
++thin provisioning
++-----------------
++
++ .. include:: thin-provisioning.txt
++    :literal:
++
++linear
++------
++
++ .. include:: linear.txt
++    :literal:
++
++dm io
++-----
++
++ .. include:: dm-io.txt
++    :literal:
++
++dm init
++-------
++
++ .. include:: dm-init.txt
++    :literal:
++
++kcopyd
++------
++
++ .. include:: kcopyd.txt
++    :literal:
++
++zero
++----
++
++ .. include:: zero.txt
++    :literal:
++
++cache
++-----
++
++ .. include:: cache.txt
++    :literal:
++
++unstriped
++---------
++
++ .. include:: unstriped.txt
++    :literal:
++
++log writes
++----------
++
++ .. include:: log-writes.txt
++    :literal:
++
++switch
++------
++
++ .. include:: switch.txt
++    :literal:
++
++dm zoned
++--------
++
++ .. include:: dm-zoned.txt
++    :literal:
++
++persistent data
++---------------
++
++ .. include:: persistent-data.txt
++    :literal:
++
++delay
++-----
++
++ .. include:: delay.txt
++    :literal:
++
++dm integrity
++------------
++
++ .. include:: dm-integrity.txt
++    :literal:
++
++dm queue length
++---------------
++
++ .. include:: dm-queue-length.txt
++    :literal:
++
++snapshot
++--------
++
++ .. include:: snapshot.txt
++    :literal:
++
++statistics
++----------
++
++ .. include:: statistics.txt
++    :literal:
++
++striped
++-------
++
++ .. include:: striped.txt
++    :literal:
++
++dm service time
++---------------
++
++ .. include:: dm-service-time.txt
++    :literal:
++
++dm flakey
++---------
++
++ .. include:: dm-flakey.txt
++    :literal:
++
++dm uevent
++---------
++
++ .. include:: dm-uevent.txt
++    :literal:
++
++dm crypt
++--------
++
++ .. include:: dm-crypt.txt
++    :literal:
++
++dm log
++------
++
++ .. include:: dm-log.txt
++    :literal:
++
++cache policies
++--------------
++
++ .. include:: cache-policies.txt
++    :literal:
++
+diff --git a/Documentation/driver-model/index.rst b/Documentation/driver-model/index.rst
+new file mode 100644
+index 000000000000..b5cbeb754995
+--- /dev/null
++++ b/Documentation/driver-model/index.rst
+@@ -0,0 +1,15 @@
++============
++driver-model
++============
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/driver-model/text_files.rst b/Documentation/driver-model/text_files.rst
+new file mode 100644
+index 000000000000..1b160cfdbb5e
+--- /dev/null
++++ b/Documentation/driver-model/text_files.rst
+@@ -0,0 +1,60 @@
++class
++-----
++
++ .. include:: class.txt
++    :literal:
++
++platform
++--------
++
++ .. include:: platform.txt
++    :literal:
++
++overview
++--------
++
++ .. include:: overview.txt
++    :literal:
++
++device
++------
++
++ .. include:: device.txt
++    :literal:
++
++driver
++------
++
++ .. include:: driver.txt
++    :literal:
++
++design patterns
++---------------
++
++ .. include:: design-patterns.txt
++    :literal:
++
++porting
++-------
++
++ .. include:: porting.txt
++    :literal:
++
++bus
++---
++
++ .. include:: bus.txt
++    :literal:
++
++binding
++-------
++
++ .. include:: binding.txt
++    :literal:
++
++devres
++------
++
++ .. include:: devres.txt
++    :literal:
++
+diff --git a/Documentation/early-userspace/index.rst b/Documentation/early-userspace/index.rst
+new file mode 100644
+index 000000000000..a2d4a659af75
+--- /dev/null
++++ b/Documentation/early-userspace/index.rst
+@@ -0,0 +1,15 @@
++===============
++early-userspace
++===============
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/early-userspace/text_files.rst b/Documentation/early-userspace/text_files.rst
+new file mode 100644
+index 000000000000..c902ea1b6b42
+--- /dev/null
++++ b/Documentation/early-userspace/text_files.rst
+@@ -0,0 +1,6 @@
++buffer format
++-------------
++
++ .. include:: buffer-format.txt
++    :literal:
++
+diff --git a/Documentation/extcon/index.rst b/Documentation/extcon/index.rst
+new file mode 100644
+index 000000000000..c27a59575f72
+--- /dev/null
++++ b/Documentation/extcon/index.rst
+@@ -0,0 +1,15 @@
++======
++extcon
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/extcon/text_files.rst b/Documentation/extcon/text_files.rst
+new file mode 100644
+index 000000000000..0d0e7196ef11
+--- /dev/null
++++ b/Documentation/extcon/text_files.rst
+@@ -0,0 +1,6 @@
++intel int3496
++-------------
++
++ .. include:: intel-int3496.txt
++    :literal:
++
+diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
+new file mode 100644
+index 000000000000..8ed02c999173
+--- /dev/null
++++ b/Documentation/fault-injection/index.rst
+@@ -0,0 +1,15 @@
++===============
++fault-injection
++===============
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/fault-injection/text_files.rst b/Documentation/fault-injection/text_files.rst
+new file mode 100644
+index 000000000000..5020a0d7e242
+--- /dev/null
++++ b/Documentation/fault-injection/text_files.rst
+@@ -0,0 +1,24 @@
++provoke crashes
++---------------
++
++ .. include:: provoke-crashes.txt
++    :literal:
++
++nvme fault injection
++--------------------
++
++ .. include:: nvme-fault-injection.txt
++    :literal:
++
++notifier error inject
++---------------------
++
++ .. include:: notifier-error-inject.txt
++    :literal:
++
++fault injection
++---------------
++
++ .. include:: fault-injection.txt
++    :literal:
++
+diff --git a/Documentation/fb/index.rst b/Documentation/fb/index.rst
+new file mode 100644
+index 000000000000..41df9e298e43
+--- /dev/null
++++ b/Documentation/fb/index.rst
+@@ -0,0 +1,15 @@
++==
++fb
++==
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/fb/text_files.rst b/Documentation/fb/text_files.rst
+new file mode 100644
+index 000000000000..4b6683ffe2d3
+--- /dev/null
++++ b/Documentation/fb/text_files.rst
+@@ -0,0 +1,204 @@
++tridentfb
++---------
++
++ .. include:: tridentfb.txt
++    :literal:
++
++udlfb
++-----
++
++ .. include:: udlfb.txt
++    :literal:
++
++pxafb
++-----
++
++ .. include:: pxafb.txt
++    :literal:
++
++matroxfb
++--------
++
++ .. include:: matroxfb.txt
++    :literal:
++
++vt8623fb
++--------
++
++ .. include:: vt8623fb.txt
++    :literal:
++
++intel810
++--------
++
++ .. include:: intel810.txt
++    :literal:
++
++sstfb
++-----
++
++ .. include:: sstfb.txt
++    :literal:
++
++sm501
++-----
++
++ .. include:: sm501.txt
++    :literal:
++
++fbcon
++-----
++
++ .. include:: fbcon.txt
++    :literal:
++
++modedb
++------
++
++ .. include:: modedb.txt
++    :literal:
++
++metronomefb
++-----------
++
++ .. include:: metronomefb.txt
++    :literal:
++
++ep93xx fb
++---------
++
++ .. include:: ep93xx-fb.txt
++    :literal:
++
++s3fb
++----
++
++ .. include:: s3fb.txt
++    :literal:
++
++api
++---
++
++ .. include:: api.txt
++    :literal:
++
++aty128fb
++--------
++
++ .. include:: aty128fb.txt
++    :literal:
++
++lxfb
++----
++
++ .. include:: lxfb.txt
++    :literal:
++
++sm712fb
++-------
++
++ .. include:: sm712fb.txt
++    :literal:
++
++framebuffer
++-----------
++
++ .. include:: framebuffer.txt
++    :literal:
++
++viafb
++-----
++
++ .. include:: viafb.txt
++    :literal:
++
++gxfb
++----
++
++ .. include:: gxfb.txt
++    :literal:
++
++uvesafb
++-------
++
++ .. include:: uvesafb.txt
++    :literal:
++
++pvr2fb
++------
++
++ .. include:: pvr2fb.txt
++    :literal:
++
++internals
++---------
++
++ .. include:: internals.txt
++    :literal:
++
++sa1100fb
++--------
++
++ .. include:: sa1100fb.txt
++    :literal:
++
++intelfb
++-------
++
++ .. include:: intelfb.txt
++    :literal:
++
++cmap xfbdev
++-----------
++
++ .. include:: cmap_xfbdev.txt
++    :literal:
++
++deferred io
++-----------
++
++ .. include:: deferred_io.txt
++    :literal:
++
++efifb
++-----
++
++ .. include:: efifb.txt
++    :literal:
++
++arkfb
++-----
++
++ .. include:: arkfb.txt
++    :literal:
++
++sh7760fb
++--------
++
++ .. include:: sh7760fb.txt
++    :literal:
++
++cirrusfb
++--------
++
++ .. include:: cirrusfb.txt
++    :literal:
++
++vesafb
++------
++
++ .. include:: vesafb.txt
++    :literal:
++
++tgafb
++-----
++
++ .. include:: tgafb.txt
++    :literal:
++
++sisfb
++-----
++
++ .. include:: sisfb.txt
++    :literal:
++
+diff --git a/Documentation/features/index.rst b/Documentation/features/index.rst
+new file mode 100644
+index 000000000000..549d3a16f947
+--- /dev/null
++++ b/Documentation/features/index.rst
+@@ -0,0 +1,15 @@
++========
++features
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/features/text_files.rst b/Documentation/features/text_files.rst
+new file mode 100644
+index 000000000000..6dee5e688fc4
+--- /dev/null
++++ b/Documentation/features/text_files.rst
+@@ -0,0 +1,252 @@
++arch support
++------------
++
++ .. include:: arch-support.txt
++    :literal:
++
++debug KASAN arch support
++------------------------
++
++ .. include:: debug/KASAN/arch-support.txt
++    :literal:
++
++debug gcov profile all arch support
++-----------------------------------
++
++ .. include:: debug/gcov-profile-all/arch-support.txt
++    :literal:
++
++debug user ret profiler arch support
++------------------------------------
++
++ .. include:: debug/user-ret-profiler/arch-support.txt
++    :literal:
++
++debug optprobes arch support
++----------------------------
++
++ .. include:: debug/optprobes/arch-support.txt
++    :literal:
++
++debug kretprobes arch support
++-----------------------------
++
++ .. include:: debug/kretprobes/arch-support.txt
++    :literal:
++
++debug kgdb arch support
++-----------------------
++
++ .. include:: debug/kgdb/arch-support.txt
++    :literal:
++
++debug stackprotector arch support
++---------------------------------
++
++ .. include:: debug/stackprotector/arch-support.txt
++    :literal:
++
++debug uprobes arch support
++--------------------------
++
++ .. include:: debug/uprobes/arch-support.txt
++    :literal:
++
++debug kprobes arch support
++--------------------------
++
++ .. include:: debug/kprobes/arch-support.txt
++    :literal:
++
++debug kprobes on ftrace arch support
++------------------------------------
++
++ .. include:: debug/kprobes-on-ftrace/arch-support.txt
++    :literal:
++
++perf kprobes event arch support
++-------------------------------
++
++ .. include:: perf/kprobes-event/arch-support.txt
++    :literal:
++
++perf perf regs arch support
++---------------------------
++
++ .. include:: perf/perf-regs/arch-support.txt
++    :literal:
++
++perf perf stackdump arch support
++--------------------------------
++
++ .. include:: perf/perf-stackdump/arch-support.txt
++    :literal:
++
++io dma contiguous arch support
++------------------------------
++
++ .. include:: io/dma-contiguous/arch-support.txt
++    :literal:
++
++seccomp seccomp filter arch support
++-----------------------------------
++
++ .. include:: seccomp/seccomp-filter/arch-support.txt
++    :literal:
++
++vm huge vmap arch support
++-------------------------
++
++ .. include:: vm/huge-vmap/arch-support.txt
++    :literal:
++
++vm pte special arch support
++---------------------------
++
++ .. include:: vm/pte_special/arch-support.txt
++    :literal:
++
++vm ioremap prot arch support
++----------------------------
++
++ .. include:: vm/ioremap_prot/arch-support.txt
++    :literal:
++
++vm TLB arch support
++-------------------
++
++ .. include:: vm/TLB/arch-support.txt
++    :literal:
++
++vm numa memblock arch support
++-----------------------------
++
++ .. include:: vm/numa-memblock/arch-support.txt
++    :literal:
++
++vm THP arch support
++-------------------
++
++ .. include:: vm/THP/arch-support.txt
++    :literal:
++
++vm PG uncached arch support
++---------------------------
++
++ .. include:: vm/PG_uncached/arch-support.txt
++    :literal:
++
++vm ELF ASLR arch support
++------------------------
++
++ .. include:: vm/ELF-ASLR/arch-support.txt
++    :literal:
++
++sched numa balancing arch support
++---------------------------------
++
++ .. include:: sched/numa-balancing/arch-support.txt
++    :literal:
++
++sched membarrier sync core arch support
++---------------------------------------
++
++ .. include:: sched/membarrier-sync-core/arch-support.txt
++    :literal:
++
++locking rwsem optimized arch support
++------------------------------------
++
++ .. include:: locking/rwsem-optimized/arch-support.txt
++    :literal:
++
++locking queued spinlocks arch support
++-------------------------------------
++
++ .. include:: locking/queued-spinlocks/arch-support.txt
++    :literal:
++
++locking cmpxchg local arch support
++----------------------------------
++
++ .. include:: locking/cmpxchg-local/arch-support.txt
++    :literal:
++
++locking lockdep arch support
++----------------------------
++
++ .. include:: locking/lockdep/arch-support.txt
++    :literal:
++
++locking queued rwlocks arch support
++-----------------------------------
++
++ .. include:: locking/queued-rwlocks/arch-support.txt
++    :literal:
++
++core tracehook arch support
++---------------------------
++
++ .. include:: core/tracehook/arch-support.txt
++    :literal:
++
++core eBPF JIT arch support
++--------------------------
++
++ .. include:: core/eBPF-JIT/arch-support.txt
++    :literal:
++
++core cBPF JIT arch support
++--------------------------
++
++ .. include:: core/cBPF-JIT/arch-support.txt
++    :literal:
++
++core generic idle thread arch support
++-------------------------------------
++
++ .. include:: core/generic-idle-thread/arch-support.txt
++    :literal:
++
++core jump labels arch support
++-----------------------------
++
++ .. include:: core/jump-labels/arch-support.txt
++    :literal:
++
++time virt cpuacct arch support
++------------------------------
++
++ .. include:: time/virt-cpuacct/arch-support.txt
++    :literal:
++
++time irq time acct arch support
++-------------------------------
++
++ .. include:: time/irq-time-acct/arch-support.txt
++    :literal:
++
++time arch tick broadcast arch support
++-------------------------------------
++
++ .. include:: time/arch-tick-broadcast/arch-support.txt
++    :literal:
++
++time context tracking arch support
++----------------------------------
++
++ .. include:: time/context-tracking/arch-support.txt
++    :literal:
++
++time clockevents arch support
++-----------------------------
++
++ .. include:: time/clockevents/arch-support.txt
++    :literal:
++
++time modern timekeeping arch support
++------------------------------------
++
++ .. include:: time/modern-timekeeping/arch-support.txt
++    :literal:
++
+diff --git a/Documentation/fmc/index.rst b/Documentation/fmc/index.rst
+new file mode 100644
+index 000000000000..9fb27ae724a2
+--- /dev/null
++++ b/Documentation/fmc/index.rst
+@@ -0,0 +1,15 @@
++===
++fmc
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/fmc/text_files.rst b/Documentation/fmc/text_files.rst
+new file mode 100644
+index 000000000000..12756cb7e6f0
+--- /dev/null
++++ b/Documentation/fmc/text_files.rst
+@@ -0,0 +1,60 @@
++API
++---
++
++ .. include:: API.txt
++    :literal:
++
++identifiers
++-----------
++
++ .. include:: identifiers.txt
++    :literal:
++
++fmc write eeprom
++----------------
++
++ .. include:: fmc-write-eeprom.txt
++    :literal:
++
++fmc fakedev
++-----------
++
++ .. include:: fmc-fakedev.txt
++    :literal:
++
++mezzanine
++---------
++
++ .. include:: mezzanine.txt
++    :literal:
++
++fmc chardev
++-----------
++
++ .. include:: fmc-chardev.txt
++    :literal:
++
++parameters
++----------
++
++ .. include:: parameters.txt
++    :literal:
++
++fmc trivial
++-----------
++
++ .. include:: fmc-trivial.txt
++    :literal:
++
++FMC and SDB
++-----------
++
++ .. include:: FMC-and-SDB.txt
++    :literal:
++
++carrier
++-------
++
++ .. include:: carrier.txt
++    :literal:
++
+diff --git a/Documentation/fpga/index.rst b/Documentation/fpga/index.rst
+new file mode 100644
+index 000000000000..511d60d603ce
+--- /dev/null
++++ b/Documentation/fpga/index.rst
+@@ -0,0 +1,15 @@
++====
++fpga
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/fpga/text_files.rst b/Documentation/fpga/text_files.rst
+new file mode 100644
+index 000000000000..06dc2683a9fb
+--- /dev/null
++++ b/Documentation/fpga/text_files.rst
+@@ -0,0 +1,6 @@
++dfl
++---
++
++ .. include:: dfl.txt
++    :literal:
++
+diff --git a/Documentation/gpio/index.rst b/Documentation/gpio/index.rst
+new file mode 100644
+index 000000000000..f2729e924d5a
+--- /dev/null
++++ b/Documentation/gpio/index.rst
+@@ -0,0 +1,15 @@
++====
++gpio
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/gpio/text_files.rst b/Documentation/gpio/text_files.rst
+new file mode 100644
+index 000000000000..325ae8b1567e
+--- /dev/null
++++ b/Documentation/gpio/text_files.rst
+@@ -0,0 +1,6 @@
++sysfs
++-----
++
++ .. include:: sysfs.txt
++    :literal:
++
+diff --git a/Documentation/hid/index.rst b/Documentation/hid/index.rst
+new file mode 100644
+index 000000000000..83572ebc5aaa
+--- /dev/null
++++ b/Documentation/hid/index.rst
+@@ -0,0 +1,15 @@
++===
++hid
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/hid/text_files.rst b/Documentation/hid/text_files.rst
+new file mode 100644
+index 000000000000..bdd342d8d47b
+--- /dev/null
++++ b/Documentation/hid/text_files.rst
+@@ -0,0 +1,42 @@
++hiddev
++------
++
++ .. include:: hiddev.txt
++    :literal:
++
++hid transport
++-------------
++
++ .. include:: hid-transport.txt
++    :literal:
++
++hid sensor
++----------
++
++ .. include:: hid-sensor.txt
++    :literal:
++
++hidraw
++------
++
++ .. include:: hidraw.txt
++    :literal:
++
++uhid
++----
++
++ .. include:: uhid.txt
++    :literal:
++
++intel ish hid
++-------------
++
++ .. include:: intel-ish-hid.txt
++    :literal:
++
++hid alps
++--------
++
++ .. include:: hid-alps.txt
++    :literal:
++
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+new file mode 100644
+index 000000000000..cf77b7405107
+--- /dev/null
++++ b/Documentation/hwmon/index.rst
+@@ -0,0 +1,15 @@
++=====
++hwmon
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/hwmon/text_files.rst b/Documentation/hwmon/text_files.rst
+new file mode 100644
+index 000000000000..b0915e67aeb2
+--- /dev/null
++++ b/Documentation/hwmon/text_files.rst
+@@ -0,0 +1,6 @@
++hwmon kernel api
++----------------
++
++ .. include:: hwmon-kernel-api.txt
++    :literal:
++
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
+new file mode 100644
+index 000000000000..f35dc5c37bf8
+--- /dev/null
++++ b/Documentation/ia64/index.rst
+@@ -0,0 +1,15 @@
++====
++ia64
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/ia64/text_files.rst b/Documentation/ia64/text_files.rst
+new file mode 100644
+index 000000000000..493f7bcd6912
+--- /dev/null
++++ b/Documentation/ia64/text_files.rst
+@@ -0,0 +1,48 @@
++IRQ redir
++---------
++
++ .. include:: IRQ-redir.txt
++    :literal:
++
++aliasing
++--------
++
++ .. include:: aliasing.txt
++    :literal:
++
++serial
++------
++
++ .. include:: serial.txt
++    :literal:
++
++efirtc
++------
++
++ .. include:: efirtc.txt
++    :literal:
++
++mca
++---
++
++ .. include:: mca.txt
++    :literal:
++
++xen
++---
++
++ .. include:: xen.txt
++    :literal:
++
++err inject
++----------
++
++ .. include:: err_inject.txt
++    :literal:
++
++fsys
++----
++
++ .. include:: fsys.txt
++    :literal:
++
+diff --git a/Documentation/ide/index.rst b/Documentation/ide/index.rst
+new file mode 100644
+index 000000000000..56cf4c539ada
+--- /dev/null
++++ b/Documentation/ide/index.rst
+@@ -0,0 +1,15 @@
++===
++ide
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/ide/text_files.rst b/Documentation/ide/text_files.rst
+new file mode 100644
+index 000000000000..ed1505d82354
+--- /dev/null
++++ b/Documentation/ide/text_files.rst
+@@ -0,0 +1,18 @@
++warm plug howto
++---------------
++
++ .. include:: warm-plug-howto.txt
++    :literal:
++
++ide
++---
++
++ .. include:: ide.txt
++    :literal:
++
++ide tape
++--------
++
++ .. include:: ide-tape.txt
++    :literal:
++
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+new file mode 100644
+index 000000000000..c3961e2fa27b
+--- /dev/null
++++ b/Documentation/iio/index.rst
+@@ -0,0 +1,15 @@
++===
++iio
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/iio/text_files.rst b/Documentation/iio/text_files.rst
+new file mode 100644
+index 000000000000..e8b2eacc5bc8
+--- /dev/null
++++ b/Documentation/iio/text_files.rst
+@@ -0,0 +1,12 @@
++iio configfs
++------------
++
++ .. include:: iio_configfs.txt
++    :literal:
++
++ep93xx adc
++----------
++
++ .. include:: ep93xx_adc.txt
++    :literal:
++
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index 02195dff3344..70cfc34047fd 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -128,6 +128,87 @@ Other random documents
+ .. toctree::
+    :maxdepth: 2
  
--		Video Output Switcher Control
--		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--		2006 luming.yu@intel.com
-+2006 luming.yu@intel.com
++   usb/index
++   accounting/index
++   acpi/index
++   aoe/index
++   arm/index
++   arm64/index
++   auxdisplay/index
++   backlight/index
++   block/index
++   blockdev/index
++   bus-devices/index
++   cdrom/index
++   cgroup-v1/index
++   cma/index
++   connector/index
++   console/index
++   cpu-freq/index
++   device-mapper/index
++   driver-model/index
++   early-userspace/index
++   EDID/index
++   extcon/index
++   fault-injection/index
++   fb/index
++   features/index
++   fmc/index
++   fpga/index
++   gpio/index
++   hid/index
++   hwmon/index
++   ia64/index
++   ide/index
++   iio/index
++   infiniband/index
++   ioctl/index
++   kbuild/index
++   kdump/index
++   laptops/index
++   leds/index
++   lightnvm/index
++   livepatch/index
++   locking/index
++   m68k/index
++   md/index
++   memory-devices/index
++   mic/index
++   mmc/index
++   mtd/index
++   namespaces/index
++   netlabel/index
++   nfc/index
++   nvdimm/index
++   nvmem/index
++   PCI/index
++   pcmcia/index
++   perf/index
++   phy/index
++   platform/index
++   power/index
++   powerpc/index
++   pps/index
++   pti/index
++   ptp/index
++   rapidio/index
++   RCU/index
++   riscv/index
++   s390/index
++   scheduler/index
++   scsi/index
++   serial/index
++   sparc/index
++   sphinx/index
++   sysctl/index
++   target/index
++   thermal/index
++   timers/index
++   virtual/index
++   watchdog/index
++   x86/index
++   xilinx/index
++   xtensa/index
+    other/index
  
- The output sysfs class driver provides an abstract video output layer that
- can be used to hook platform specific methods to enable/disable video output
- device through common sysfs interface. For example, on my IBM ThinkPad T42
- laptop, The ACPI video driver registered its output devices and read/write
--method for 'state' with output sysfs class. The user interface under sysfs is:
-+method for 'state' with output sysfs class. The user interface under sysfs is::
  
--linux:/sys/class/video_output # tree .
--.
--|-- CRT0
--|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
--|   |-- state
--|   |-- subsystem -> ../../../class/video_output
--|   `-- uevent
--|-- DVI0
--|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
--|   |-- state
--|   |-- subsystem -> ../../../class/video_output
--|   `-- uevent
--|-- LCD0
--|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
--|   |-- state
--|   |-- subsystem -> ../../../class/video_output
--|   `-- uevent
--`-- TV0
--   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
--   |-- state
--   |-- subsystem -> ../../../class/video_output
--   `-- uevent
-+  linux:/sys/class/video_output # tree .
-+  .
-+  |-- CRT0
-+  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
-+  |   |-- state
-+  |   |-- subsystem -> ../../../class/video_output
-+  |   `-- uevent
-+  |-- DVI0
-+  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
-+  |   |-- state
-+  |   |-- subsystem -> ../../../class/video_output
-+  |   `-- uevent
-+  |-- LCD0
-+  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
-+  |   |-- state
-+  |   |-- subsystem -> ../../../class/video_output
-+  |   `-- uevent
-+  `-- TV0
-+     |-- device -> ../../../devices/pci0000:00/0000:00:01.0
-+     |-- state
-+     |-- subsystem -> ../../../class/video_output
-+     `-- uevent
- 
+diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
+new file mode 100644
+index 000000000000..229187d928a0
+--- /dev/null
++++ b/Documentation/infiniband/index.rst
+@@ -0,0 +1,15 @@
++==========
++infiniband
++==========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/infiniband/text_files.rst b/Documentation/infiniband/text_files.rst
+new file mode 100644
+index 000000000000..f5ce4e85e435
+--- /dev/null
++++ b/Documentation/infiniband/text_files.rst
+@@ -0,0 +1,42 @@
++ipoib
++-----
++
++ .. include:: ipoib.txt
++    :literal:
++
++tag matching
++------------
++
++ .. include:: tag_matching.txt
++    :literal:
++
++opa vnic
++--------
++
++ .. include:: opa_vnic.txt
++    :literal:
++
++sysfs
++-----
++
++ .. include:: sysfs.txt
++    :literal:
++
++user verbs
++----------
++
++ .. include:: user_verbs.txt
++    :literal:
++
++user mad
++--------
++
++ .. include:: user_mad.txt
++    :literal:
++
++core locking
++------------
++
++ .. include:: core_locking.txt
++    :literal:
++
+diff --git a/Documentation/ioctl/index.rst b/Documentation/ioctl/index.rst
+new file mode 100644
+index 000000000000..01706d1561a1
+--- /dev/null
++++ b/Documentation/ioctl/index.rst
+@@ -0,0 +1,15 @@
++=====
++ioctl
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/ioctl/text_files.rst b/Documentation/ioctl/text_files.rst
+new file mode 100644
+index 000000000000..dac15d6ee78f
+--- /dev/null
++++ b/Documentation/ioctl/text_files.rst
+@@ -0,0 +1,30 @@
++cdrom
++-----
++
++ .. include:: cdrom.txt
++    :literal:
++
++ioctl number
++------------
++
++ .. include:: ioctl-number.txt
++    :literal:
++
++botching up ioctls
++------------------
++
++ .. include:: botching-up-ioctls.txt
++    :literal:
++
++hdio
++----
++
++ .. include:: hdio.txt
++    :literal:
++
++ioctl decoding
++--------------
++
++ .. include:: ioctl-decoding.txt
++    :literal:
++
+diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+new file mode 100644
+index 000000000000..9b55f11ab83a
+--- /dev/null
++++ b/Documentation/kbuild/index.rst
+@@ -0,0 +1,15 @@
++======
++kbuild
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/kbuild/text_files.rst b/Documentation/kbuild/text_files.rst
+new file mode 100644
+index 000000000000..f819ec3c2b9f
+--- /dev/null
++++ b/Documentation/kbuild/text_files.rst
+@@ -0,0 +1,42 @@
++kconfig language
++----------------
++
++ .. include:: kconfig-language.txt
++    :literal:
++
++modules
++-------
++
++ .. include:: modules.txt
++    :literal:
++
++kconfig macro language
++----------------------
++
++ .. include:: kconfig-macro-language.txt
++    :literal:
++
++headers install
++---------------
++
++ .. include:: headers_install.txt
++    :literal:
++
++makefiles
++---------
++
++ .. include:: makefiles.txt
++    :literal:
++
++kbuild
++------
++
++ .. include:: kbuild.txt
++    :literal:
++
++kconfig
++-------
++
++ .. include:: kconfig.txt
++    :literal:
++
+diff --git a/Documentation/kdump/index.rst b/Documentation/kdump/index.rst
+new file mode 100644
+index 000000000000..fd6acbd82c6a
+--- /dev/null
++++ b/Documentation/kdump/index.rst
+@@ -0,0 +1,15 @@
++=====
++kdump
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/kdump/text_files.rst b/Documentation/kdump/text_files.rst
+new file mode 100644
+index 000000000000..5811f022a6f6
+--- /dev/null
++++ b/Documentation/kdump/text_files.rst
+@@ -0,0 +1,18 @@
++vmcoreinfo
++----------
++
++ .. include:: vmcoreinfo.txt
++    :literal:
++
++kdump
++-----
++
++ .. include:: kdump.txt
++    :literal:
++
++gdbmacros
++---------
++
++ .. include:: gdbmacros.txt
++    :literal:
++
+diff --git a/Documentation/laptops/index.rst b/Documentation/laptops/index.rst
+new file mode 100644
+index 000000000000..871ea13d2945
+--- /dev/null
++++ b/Documentation/laptops/index.rst
+@@ -0,0 +1,16 @@
++=======
++laptops
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++    lg-laptop.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/laptops/text_files.rst b/Documentation/laptops/text_files.rst
+new file mode 100644
+index 000000000000..8350542e746a
+--- /dev/null
++++ b/Documentation/laptops/text_files.rst
+@@ -0,0 +1,42 @@
++sony laptop
++-----------
++
++ .. include:: sony-laptop.txt
++    :literal:
++
++asus laptop
++-----------
++
++ .. include:: asus-laptop.txt
++    :literal:
++
++disk shock protection
++---------------------
++
++ .. include:: disk-shock-protection.txt
++    :literal:
++
++sonypi
++------
++
++ .. include:: sonypi.txt
++    :literal:
++
++toshiba haps
++------------
++
++ .. include:: toshiba_haps.txt
++    :literal:
++
++thinkpad acpi
++-------------
++
++ .. include:: thinkpad-acpi.txt
++    :literal:
++
++laptop mode
++-----------
++
++ .. include:: laptop-mode.txt
++    :literal:
++
+diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
+new file mode 100644
+index 000000000000..4d39a519742d
+--- /dev/null
++++ b/Documentation/leds/index.rst
+@@ -0,0 +1,15 @@
++====
++leds
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/leds/text_files.rst b/Documentation/leds/text_files.rst
+new file mode 100644
+index 000000000000..f57dc4293584
+--- /dev/null
++++ b/Documentation/leds/text_files.rst
+@@ -0,0 +1,84 @@
++leds lp3944
++-----------
++
++ .. include:: leds-lp3944.txt
++    :literal:
++
++leds mlxcpld
++------------
++
++ .. include:: leds-mlxcpld.txt
++    :literal:
++
++leds lp55xx
++-----------
++
++ .. include:: leds-lp55xx.txt
++    :literal:
++
++ledtrig oneshot
++---------------
++
++ .. include:: ledtrig-oneshot.txt
++    :literal:
++
++leds lp5521
++-----------
++
++ .. include:: leds-lp5521.txt
++    :literal:
++
++leds class
++----------
++
++ .. include:: leds-class.txt
++    :literal:
++
++ledtrig usbport
++---------------
++
++ .. include:: ledtrig-usbport.txt
++    :literal:
++
++leds lp5523
++-----------
++
++ .. include:: leds-lp5523.txt
++    :literal:
++
++leds lm3556
++-----------
++
++ .. include:: leds-lm3556.txt
++    :literal:
++
++leds blinkm
++-----------
++
++ .. include:: leds-blinkm.txt
++    :literal:
++
++uleds
++-----
++
++ .. include:: uleds.txt
++    :literal:
++
++leds lp5562
++-----------
++
++ .. include:: leds-lp5562.txt
++    :literal:
++
++ledtrig transient
++-----------------
++
++ .. include:: ledtrig-transient.txt
++    :literal:
++
++leds class flash
++----------------
++
++ .. include:: leds-class-flash.txt
++    :literal:
++
+diff --git a/Documentation/lightnvm/index.rst b/Documentation/lightnvm/index.rst
+new file mode 100644
+index 000000000000..9805c8a2a721
+--- /dev/null
++++ b/Documentation/lightnvm/index.rst
+@@ -0,0 +1,15 @@
++========
++lightnvm
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/lightnvm/text_files.rst b/Documentation/lightnvm/text_files.rst
+new file mode 100644
+index 000000000000..5c42f292a3e9
+--- /dev/null
++++ b/Documentation/lightnvm/text_files.rst
+@@ -0,0 +1,6 @@
++pblk
++----
++
++ .. include:: pblk.txt
++    :literal:
++
+diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
+new file mode 100644
+index 000000000000..0f754c496efc
+--- /dev/null
++++ b/Documentation/livepatch/index.rst
+@@ -0,0 +1,15 @@
++=========
++livepatch
++=========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/livepatch/text_files.rst b/Documentation/livepatch/text_files.rst
+new file mode 100644
+index 000000000000..1a640566e082
+--- /dev/null
++++ b/Documentation/livepatch/text_files.rst
+@@ -0,0 +1,30 @@
++shadow vars
++-----------
++
++ .. include:: shadow-vars.txt
++    :literal:
++
++cumulative patches
++------------------
++
++ .. include:: cumulative-patches.txt
++    :literal:
++
++livepatch
++---------
++
++ .. include:: livepatch.txt
++    :literal:
++
++module elf format
++-----------------
++
++ .. include:: module-elf-format.txt
++    :literal:
++
++callbacks
++---------
++
++ .. include:: callbacks.txt
++    :literal:
++
+diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
+new file mode 100644
+index 000000000000..39848db64db3
+--- /dev/null
++++ b/Documentation/locking/index.rst
+@@ -0,0 +1,15 @@
++=======
++locking
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/locking/text_files.rst b/Documentation/locking/text_files.rst
+new file mode 100644
+index 000000000000..f99e524a3fcf
+--- /dev/null
++++ b/Documentation/locking/text_files.rst
+@@ -0,0 +1,48 @@
++lockstat
++--------
++
++ .. include:: lockstat.txt
++    :literal:
++
++mutex design
++------------
++
++ .. include:: mutex-design.txt
++    :literal:
++
++lockdep design
++--------------
++
++ .. include:: lockdep-design.txt
++    :literal:
++
++ww mutex design
++---------------
++
++ .. include:: ww-mutex-design.txt
++    :literal:
++
++rt mutex
++--------
++
++ .. include:: rt-mutex.txt
++    :literal:
++
++locktorture
++-----------
++
++ .. include:: locktorture.txt
++    :literal:
++
++rt mutex design
++---------------
++
++ .. include:: rt-mutex-design.txt
++    :literal:
++
++spinlocks
++---------
++
++ .. include:: spinlocks.txt
++    :literal:
++
+diff --git a/Documentation/m68k/index.rst b/Documentation/m68k/index.rst
+new file mode 100644
+index 000000000000..3812f6ade56d
+--- /dev/null
++++ b/Documentation/m68k/index.rst
+@@ -0,0 +1,15 @@
++====
++m68k
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/m68k/text_files.rst b/Documentation/m68k/text_files.rst
+new file mode 100644
+index 000000000000..c2bbf62b87fc
+--- /dev/null
++++ b/Documentation/m68k/text_files.rst
+@@ -0,0 +1,6 @@
++kernel options
++--------------
++
++ .. include:: kernel-options.txt
++    :literal:
++
+diff --git a/Documentation/md/index.rst b/Documentation/md/index.rst
+new file mode 100644
+index 000000000000..55b3585647d6
+--- /dev/null
++++ b/Documentation/md/index.rst
+@@ -0,0 +1,15 @@
++==
++md
++==
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/md/text_files.rst b/Documentation/md/text_files.rst
+new file mode 100644
+index 000000000000..9240f85c3a8a
+--- /dev/null
++++ b/Documentation/md/text_files.rst
+@@ -0,0 +1,18 @@
++md cluster
++----------
++
++ .. include:: md-cluster.txt
++    :literal:
++
++raid5 ppl
++---------
++
++ .. include:: raid5-ppl.txt
++    :literal:
++
++raid5 cache
++-----------
++
++ .. include:: raid5-cache.txt
++    :literal:
++
+diff --git a/Documentation/memory-devices/index.rst b/Documentation/memory-devices/index.rst
+new file mode 100644
+index 000000000000..3123b41d55ca
+--- /dev/null
++++ b/Documentation/memory-devices/index.rst
+@@ -0,0 +1,15 @@
++==============
++memory-devices
++==============
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/memory-devices/text_files.rst b/Documentation/memory-devices/text_files.rst
+new file mode 100644
+index 000000000000..601c3673e2d3
+--- /dev/null
++++ b/Documentation/memory-devices/text_files.rst
+@@ -0,0 +1,6 @@
++ti emif
++-------
++
++ .. include:: ti-emif.txt
++    :literal:
++
+diff --git a/Documentation/mic/index.rst b/Documentation/mic/index.rst
+new file mode 100644
+index 000000000000..21bbc740db93
+--- /dev/null
++++ b/Documentation/mic/index.rst
+@@ -0,0 +1,15 @@
++===
++mic
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/mic/text_files.rst b/Documentation/mic/text_files.rst
+new file mode 100644
+index 000000000000..ef4e000ecb32
+--- /dev/null
++++ b/Documentation/mic/text_files.rst
+@@ -0,0 +1,12 @@
++scif overview
++-------------
++
++ .. include:: scif_overview.txt
++    :literal:
++
++mic overview
++------------
++
++ .. include:: mic_overview.txt
++    :literal:
++
+diff --git a/Documentation/mmc/index.rst b/Documentation/mmc/index.rst
+new file mode 100644
+index 000000000000..d9a25445aa29
+--- /dev/null
++++ b/Documentation/mmc/index.rst
+@@ -0,0 +1,15 @@
++===
++mmc
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/mmc/text_files.rst b/Documentation/mmc/text_files.rst
+new file mode 100644
+index 000000000000..c398f3add6a6
+--- /dev/null
++++ b/Documentation/mmc/text_files.rst
+@@ -0,0 +1,24 @@
++mmc tools
++---------
++
++ .. include:: mmc-tools.txt
++    :literal:
++
++mmc async req
++-------------
++
++ .. include:: mmc-async-req.txt
++    :literal:
++
++mmc dev attrs
++-------------
++
++ .. include:: mmc-dev-attrs.txt
++    :literal:
++
++mmc dev parts
++-------------
++
++ .. include:: mmc-dev-parts.txt
++    :literal:
++
+diff --git a/Documentation/mtd/index.rst b/Documentation/mtd/index.rst
+new file mode 100644
+index 000000000000..fcd638f74473
+--- /dev/null
++++ b/Documentation/mtd/index.rst
+@@ -0,0 +1,15 @@
++===
++mtd
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/mtd/text_files.rst b/Documentation/mtd/text_files.rst
+new file mode 100644
+index 000000000000..d94d611bacd8
+--- /dev/null
++++ b/Documentation/mtd/text_files.rst
+@@ -0,0 +1,18 @@
++nand ecc
++--------
++
++ .. include:: nand_ecc.txt
++    :literal:
++
++spi nor
++-------
++
++ .. include:: spi-nor.txt
++    :literal:
++
++intel spi
++---------
++
++ .. include:: intel-spi.txt
++    :literal:
++
+diff --git a/Documentation/namespaces/index.rst b/Documentation/namespaces/index.rst
+new file mode 100644
+index 000000000000..cf4adc0385e1
+--- /dev/null
++++ b/Documentation/namespaces/index.rst
+@@ -0,0 +1,15 @@
++==========
++namespaces
++==========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/namespaces/text_files.rst b/Documentation/namespaces/text_files.rst
+new file mode 100644
+index 000000000000..e7cce7c8f6da
+--- /dev/null
++++ b/Documentation/namespaces/text_files.rst
+@@ -0,0 +1,12 @@
++compatibility list
++------------------
++
++ .. include:: compatibility-list.txt
++    :literal:
++
++resource control
++----------------
++
++ .. include:: resource-control.txt
++    :literal:
++
+diff --git a/Documentation/netlabel/index.rst b/Documentation/netlabel/index.rst
+new file mode 100644
+index 000000000000..4bb664a6fb37
+--- /dev/null
++++ b/Documentation/netlabel/index.rst
+@@ -0,0 +1,15 @@
++========
++netlabel
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/netlabel/text_files.rst b/Documentation/netlabel/text_files.rst
+new file mode 100644
+index 000000000000..5f73428efa0d
+--- /dev/null
++++ b/Documentation/netlabel/text_files.rst
+@@ -0,0 +1,24 @@
++introduction
++------------
++
++ .. include:: introduction.txt
++    :literal:
++
++draft ietf cipso ipsecurity 01
++------------------------------
++
++ .. include:: draft-ietf-cipso-ipsecurity-01.txt
++    :literal:
++
++lsm interface
++-------------
++
++ .. include:: lsm_interface.txt
++    :literal:
++
++cipso ipv4
++----------
++
++ .. include:: cipso_ipv4.txt
++    :literal:
++
+diff --git a/Documentation/nfc/index.rst b/Documentation/nfc/index.rst
+new file mode 100644
+index 000000000000..8f9a567569bf
+--- /dev/null
++++ b/Documentation/nfc/index.rst
+@@ -0,0 +1,15 @@
++===
++nfc
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/nfc/text_files.rst b/Documentation/nfc/text_files.rst
+new file mode 100644
+index 000000000000..73bc4c231e75
+--- /dev/null
++++ b/Documentation/nfc/text_files.rst
+@@ -0,0 +1,12 @@
++nfc pn544
++---------
++
++ .. include:: nfc-pn544.txt
++    :literal:
++
++nfc hci
++-------
++
++ .. include:: nfc-hci.txt
++    :literal:
++
+diff --git a/Documentation/nvdimm/index.rst b/Documentation/nvdimm/index.rst
+new file mode 100644
+index 000000000000..760f4ba35cd3
+--- /dev/null
++++ b/Documentation/nvdimm/index.rst
+@@ -0,0 +1,15 @@
++======
++nvdimm
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/nvdimm/text_files.rst b/Documentation/nvdimm/text_files.rst
+new file mode 100644
+index 000000000000..a19cc00b162f
+--- /dev/null
++++ b/Documentation/nvdimm/text_files.rst
+@@ -0,0 +1,18 @@
++nvdimm
++------
++
++ .. include:: nvdimm.txt
++    :literal:
++
++btt
++---
++
++ .. include:: btt.txt
++    :literal:
++
++security
++--------
++
++ .. include:: security.txt
++    :literal:
++
+diff --git a/Documentation/nvmem/index.rst b/Documentation/nvmem/index.rst
+new file mode 100644
+index 000000000000..a2ef7675b97f
+--- /dev/null
++++ b/Documentation/nvmem/index.rst
+@@ -0,0 +1,15 @@
++=====
++nvmem
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/nvmem/text_files.rst b/Documentation/nvmem/text_files.rst
+new file mode 100644
+index 000000000000..d7bcce8b8f1c
+--- /dev/null
++++ b/Documentation/nvmem/text_files.rst
+@@ -0,0 +1,6 @@
++nvmem
++-----
++
++ .. include:: nvmem.txt
++    :literal:
++
+diff --git a/Documentation/pcmcia/index.rst b/Documentation/pcmcia/index.rst
+new file mode 100644
+index 000000000000..4a3417cfd4f4
+--- /dev/null
++++ b/Documentation/pcmcia/index.rst
+@@ -0,0 +1,15 @@
++======
++pcmcia
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/pcmcia/text_files.rst b/Documentation/pcmcia/text_files.rst
+new file mode 100644
+index 000000000000..77072070203f
+--- /dev/null
++++ b/Documentation/pcmcia/text_files.rst
+@@ -0,0 +1,24 @@
++driver
++------
++
++ .. include:: driver.txt
++    :literal:
++
++devicetable
++-----------
++
++ .. include:: devicetable.txt
++    :literal:
++
++driver changes
++--------------
++
++ .. include:: driver-changes.txt
++    :literal:
++
++locking
++-------
++
++ .. include:: locking.txt
++    :literal:
++
+diff --git a/Documentation/perf/index.rst b/Documentation/perf/index.rst
+new file mode 100644
+index 000000000000..119c58d4d43c
+--- /dev/null
++++ b/Documentation/perf/index.rst
+@@ -0,0 +1,15 @@
++====
++perf
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/perf/text_files.rst b/Documentation/perf/text_files.rst
+new file mode 100644
+index 000000000000..f46f56b53fe1
+--- /dev/null
++++ b/Documentation/perf/text_files.rst
+@@ -0,0 +1,42 @@
++arm dsu pmu
++-----------
++
++ .. include:: arm_dsu_pmu.txt
++    :literal:
++
++arm ccn
++-------
++
++ .. include:: arm-ccn.txt
++    :literal:
++
++thunderx2 pmu
++-------------
++
++ .. include:: thunderx2-pmu.txt
++    :literal:
++
++hisi pmu
++--------
++
++ .. include:: hisi-pmu.txt
++    :literal:
++
++qcom l3 pmu
++-----------
++
++ .. include:: qcom_l3_pmu.txt
++    :literal:
++
++xgene pmu
++---------
++
++ .. include:: xgene-pmu.txt
++    :literal:
++
++qcom l2 pmu
++-----------
++
++ .. include:: qcom_l2_pmu.txt
++    :literal:
++
+diff --git a/Documentation/phy/index.rst b/Documentation/phy/index.rst
+new file mode 100644
+index 000000000000..b18b16a9080d
+--- /dev/null
++++ b/Documentation/phy/index.rst
+@@ -0,0 +1,15 @@
++===
++phy
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/phy/text_files.rst b/Documentation/phy/text_files.rst
+new file mode 100644
+index 000000000000..42f04fec9968
+--- /dev/null
++++ b/Documentation/phy/text_files.rst
+@@ -0,0 +1,6 @@
++samsung usb2
++------------
++
++ .. include:: samsung-usb2.txt
++    :literal:
++
+diff --git a/Documentation/platform/index.rst b/Documentation/platform/index.rst
+new file mode 100644
+index 000000000000..f1dd91d8af05
+--- /dev/null
++++ b/Documentation/platform/index.rst
+@@ -0,0 +1,15 @@
++========
++platform
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/platform/text_files.rst b/Documentation/platform/text_files.rst
+new file mode 100644
+index 000000000000..9ce75cc46502
+--- /dev/null
++++ b/Documentation/platform/text_files.rst
+@@ -0,0 +1,6 @@
++x86 laptop drivers
++------------------
++
++ .. include:: x86-laptop-drivers.txt
++    :literal:
++
+diff --git a/Documentation/power/index.rst b/Documentation/power/index.rst
+new file mode 100644
+index 000000000000..463fcf6918c5
+--- /dev/null
++++ b/Documentation/power/index.rst
+@@ -0,0 +1,15 @@
++=====
++power
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/power/text_files.rst b/Documentation/power/text_files.rst
+new file mode 100644
+index 000000000000..444639321e70
+--- /dev/null
++++ b/Documentation/power/text_files.rst
+@@ -0,0 +1,162 @@
++power supply class
++------------------
++
++ .. include:: power_supply_class.txt
++    :literal:
++
++tricks
++------
++
++ .. include:: tricks.txt
++    :literal:
++
++video
++-----
++
++ .. include:: video.txt
++    :literal:
++
++interface
++---------
++
++ .. include:: interface.txt
++    :literal:
++
++apm acpi
++--------
++
++ .. include:: apm-acpi.txt
++    :literal:
++
++freezing of tasks
++-----------------
++
++ .. include:: freezing-of-tasks.txt
++    :literal:
++
++suspend and interrupts
++----------------------
++
++ .. include:: suspend-and-interrupts.txt
++    :literal:
++
++runtime pm
++----------
++
++ .. include:: runtime_pm.txt
++    :literal:
++
++drivers testing
++---------------
++
++ .. include:: drivers-testing.txt
++    :literal:
++
++pci
++---
++
++ .. include:: pci.txt
++    :literal:
++
++pm qos interface
++----------------
++
++ .. include:: pm_qos_interface.txt
++    :literal:
++
++charger manager
++---------------
++
++ .. include:: charger-manager.txt
++    :literal:
++
++suspend and cpuhotplug
++----------------------
++
++ .. include:: suspend-and-cpuhotplug.txt
++    :literal:
++
++basic pm debugging
++------------------
++
++ .. include:: basic-pm-debugging.txt
++    :literal:
++
++opp
++---
++
++ .. include:: opp.txt
++    :literal:
++
++swsusp
++------
++
++ .. include:: swsusp.txt
++    :literal:
++
++powercap
++--------
++
++ .. include:: powercap/powercap.txt
++    :literal:
++
++s2ram
++-----
++
++ .. include:: s2ram.txt
++    :literal:
++
++regulator
++---------
++
++ .. include:: regulator/regulator.txt
++    :literal:
++
++design
++------
++
++ .. include:: regulator/design.txt
++    :literal:
++
++overview
++--------
++
++ .. include:: regulator/overview.txt
++    :literal:
++
++machine
++-------
++
++ .. include:: regulator/machine.txt
++    :literal:
++
++consumer
++--------
++
++ .. include:: regulator/consumer.txt
++    :literal:
++
++swsusp and swap files
++---------------------
++
++ .. include:: swsusp-and-swap-files.txt
++    :literal:
++
++userland swsusp
++---------------
++
++ .. include:: userland-swsusp.txt
++    :literal:
++
++energy model
++------------
++
++ .. include:: energy-model.txt
++    :literal:
++
++swsusp dmcrypt
++--------------
++
++ .. include:: swsusp-dmcrypt.txt
++    :literal:
++
+diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+new file mode 100644
+index 000000000000..2377406d5494
+--- /dev/null
++++ b/Documentation/powerpc/index.rst
+@@ -0,0 +1,16 @@
++=======
++powerpc
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++    isa-versions.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/powerpc/text_files.rst b/Documentation/powerpc/text_files.rst
+new file mode 100644
+index 000000000000..0fd81e5f2a05
+--- /dev/null
++++ b/Documentation/powerpc/text_files.rst
+@@ -0,0 +1,102 @@
++pmu ebb
++-------
++
++ .. include:: pmu-ebb.txt
++    :literal:
++
++cpu features
++------------
++
++ .. include:: cpu_features.txt
++    :literal:
++
++hvcs
++----
++
++ .. include:: hvcs.txt
++    :literal:
++
++mpc52xx
++-------
++
++ .. include:: mpc52xx.txt
++    :literal:
++
++eeh pci error recovery
++----------------------
++
++ .. include:: eeh-pci-error-recovery.txt
++    :literal:
++
++cxl
++---
++
++ .. include:: cxl.txt
++    :literal:
++
++cxlflash
++--------
++
++ .. include:: cxlflash.txt
++    :literal:
++
++transactional memory
++--------------------
++
++ .. include:: transactional_memory.txt
++    :literal:
++
++ptrace
++------
++
++ .. include:: ptrace.txt
++    :literal:
++
++syscall64 abi
++-------------
++
++ .. include:: syscall64-abi.txt
++    :literal:
++
++DAWR POWER9
++-----------
++
++ .. include:: DAWR-POWER9.txt
++    :literal:
++
++dscr
++----
++
++ .. include:: dscr.txt
++    :literal:
++
++bootwrapper
++-----------
++
++ .. include:: bootwrapper.txt
++    :literal:
++
++qe firmware
++-----------
++
++ .. include:: qe_firmware.txt
++    :literal:
++
++cpu families
++------------
++
++ .. include:: cpu_families.txt
++    :literal:
++
++firmware assisted dump
++----------------------
++
++ .. include:: firmware-assisted-dump.txt
++    :literal:
++
++pci iov resource on powernv
++---------------------------
++
++ .. include:: pci_iov_resource_on_powernv.txt
++    :literal:
++
+diff --git a/Documentation/pps/index.rst b/Documentation/pps/index.rst
+new file mode 100644
+index 000000000000..1e45db400812
+--- /dev/null
++++ b/Documentation/pps/index.rst
+@@ -0,0 +1,15 @@
++===
++pps
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/pps/text_files.rst b/Documentation/pps/text_files.rst
+new file mode 100644
+index 000000000000..9bfff567aee3
+--- /dev/null
++++ b/Documentation/pps/text_files.rst
+@@ -0,0 +1,6 @@
++pps
++---
++
++ .. include:: pps.txt
++    :literal:
++
+diff --git a/Documentation/pti/index.rst b/Documentation/pti/index.rst
+new file mode 100644
+index 000000000000..f49ea7d55a2c
+--- /dev/null
++++ b/Documentation/pti/index.rst
+@@ -0,0 +1,15 @@
++===
++pti
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/pti/text_files.rst b/Documentation/pti/text_files.rst
+new file mode 100644
+index 000000000000..11ff10ffde48
+--- /dev/null
++++ b/Documentation/pti/text_files.rst
+@@ -0,0 +1,6 @@
++pti intel mid
++-------------
++
++ .. include:: pti_intel_mid.txt
++    :literal:
++
+diff --git a/Documentation/ptp/index.rst b/Documentation/ptp/index.rst
+new file mode 100644
+index 000000000000..e818e57ba2fa
+--- /dev/null
++++ b/Documentation/ptp/index.rst
+@@ -0,0 +1,15 @@
++===
++ptp
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/ptp/text_files.rst b/Documentation/ptp/text_files.rst
+new file mode 100644
+index 000000000000..6e99bfa956f6
+--- /dev/null
++++ b/Documentation/ptp/text_files.rst
+@@ -0,0 +1,6 @@
++ptp
++---
++
++ .. include:: ptp.txt
++    :literal:
++
+diff --git a/Documentation/rapidio/index.rst b/Documentation/rapidio/index.rst
+new file mode 100644
+index 000000000000..fb84ec7e0670
+--- /dev/null
++++ b/Documentation/rapidio/index.rst
+@@ -0,0 +1,15 @@
++=======
++rapidio
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/rapidio/text_files.rst b/Documentation/rapidio/text_files.rst
+new file mode 100644
+index 000000000000..954660d67fb7
+--- /dev/null
++++ b/Documentation/rapidio/text_files.rst
+@@ -0,0 +1,30 @@
++rio cm
++------
++
++ .. include:: rio_cm.txt
++    :literal:
++
++tsi721
++------
++
++ .. include:: tsi721.txt
++    :literal:
++
++rapidio
++-------
++
++ .. include:: rapidio.txt
++    :literal:
++
++sysfs
++-----
++
++ .. include:: sysfs.txt
++    :literal:
++
++mport cdev
++----------
++
++ .. include:: mport_cdev.txt
++    :literal:
++
+diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
+new file mode 100644
+index 000000000000..82566ff8f91d
+--- /dev/null
++++ b/Documentation/riscv/index.rst
+@@ -0,0 +1,15 @@
++=====
++riscv
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/riscv/text_files.rst b/Documentation/riscv/text_files.rst
+new file mode 100644
+index 000000000000..b802ee76dc3a
+--- /dev/null
++++ b/Documentation/riscv/text_files.rst
+@@ -0,0 +1,6 @@
++pmu
++---
++
++ .. include:: pmu.txt
++    :literal:
++
+diff --git a/Documentation/s390/index.rst b/Documentation/s390/index.rst
+new file mode 100644
+index 000000000000..67729adbeb34
+--- /dev/null
++++ b/Documentation/s390/index.rst
+@@ -0,0 +1,15 @@
++====
++s390
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/s390/text_files.rst b/Documentation/s390/text_files.rst
+new file mode 100644
+index 000000000000..34ef06610849
+--- /dev/null
++++ b/Documentation/s390/text_files.rst
+@@ -0,0 +1,60 @@
++qeth
++----
++
++ .. include:: qeth.txt
++    :literal:
++
++zfcpdump
++--------
++
++ .. include:: zfcpdump.txt
++    :literal:
++
++driver model
++------------
++
++ .. include:: driver-model.txt
++    :literal:
++
++3270
++----
++
++ .. include:: 3270.txt
++    :literal:
++
++s390dbf
++-------
++
++ .. include:: s390dbf.txt
++    :literal:
++
++Debugging390
++------------
++
++ .. include:: Debugging390.txt
++    :literal:
++
++monreader
++---------
++
++ .. include:: monreader.txt
++    :literal:
++
++vfio ap
++-------
++
++ .. include:: vfio-ap.txt
++    :literal:
++
++cds
++---
++
++ .. include:: cds.txt
++    :literal:
++
++vfio ccw
++--------
++
++ .. include:: vfio-ccw.txt
++    :literal:
++
+diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
+new file mode 100644
+index 000000000000..de2223df0417
+--- /dev/null
++++ b/Documentation/scheduler/index.rst
+@@ -0,0 +1,15 @@
++=========
++scheduler
++=========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/scheduler/text_files.rst b/Documentation/scheduler/text_files.rst
+new file mode 100644
+index 000000000000..021ffdbe46c2
+--- /dev/null
++++ b/Documentation/scheduler/text_files.rst
+@@ -0,0 +1,60 @@
++completion
++----------
++
++ .. include:: completion.txt
++    :literal:
++
++sched bwc
++---------
++
++ .. include:: sched-bwc.txt
++    :literal:
++
++sched nice design
++-----------------
++
++ .. include:: sched-nice-design.txt
++    :literal:
++
++sched stats
++-----------
++
++ .. include:: sched-stats.txt
++    :literal:
++
++sched deadline
++--------------
++
++ .. include:: sched-deadline.txt
++    :literal:
++
++sched design CFS
++----------------
++
++ .. include:: sched-design-CFS.txt
++    :literal:
++
++sched energy
++------------
++
++ .. include:: sched-energy.txt
++    :literal:
++
++sched arch
++----------
++
++ .. include:: sched-arch.txt
++    :literal:
++
++sched rt group
++--------------
++
++ .. include:: sched-rt-group.txt
++    :literal:
++
++sched domains
++-------------
++
++ .. include:: sched-domains.txt
++    :literal:
++
+diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
+new file mode 100644
+index 000000000000..7ff787394bd2
+--- /dev/null
++++ b/Documentation/scsi/index.rst
+@@ -0,0 +1,15 @@
++====
++scsi
++====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/scsi/text_files.rst b/Documentation/scsi/text_files.rst
+new file mode 100644
+index 000000000000..dfc5311a9390
+--- /dev/null
++++ b/Documentation/scsi/text_files.rst
+@@ -0,0 +1,246 @@
++FlashPoint
++----------
++
++ .. include:: FlashPoint.txt
++    :literal:
++
++st
++--
++
++ .. include:: st.txt
++    :literal:
++
++libsas
++------
++
++ .. include:: libsas.txt
++    :literal:
++
++ppa
++---
++
++ .. include:: ppa.txt
++    :literal:
++
++osst
++----
++
++ .. include:: osst.txt
++    :literal:
++
++aacraid
++-------
++
++ .. include:: aacraid.txt
++    :literal:
++
++megaraid
++--------
++
++ .. include:: megaraid.txt
++    :literal:
++
++sd parameters
++-------------
++
++ .. include:: sd-parameters.txt
++    :literal:
++
++aha152x
++-------
++
++ .. include:: aha152x.txt
++    :literal:
++
++hptiop
++------
++
++ .. include:: hptiop.txt
++    :literal:
++
++smartpqi
++--------
++
++ .. include:: smartpqi.txt
++    :literal:
++
++g NCR5380
++---------
++
++ .. include:: g_NCR5380.txt
++    :literal:
++
++qlogicfas
++---------
++
++ .. include:: qlogicfas.txt
++    :literal:
++
++sym53c8xx 2
++-----------
++
++ .. include:: sym53c8xx_2.txt
++    :literal:
++
++scsi mid low api
++----------------
++
++ .. include:: scsi_mid_low_api.txt
++    :literal:
++
++hpsa
++----
++
++ .. include:: hpsa.txt
++    :literal:
++
++scsi changer
++------------
++
++ .. include:: scsi-changer.txt
++    :literal:
++
++scsi fc transport
++-----------------
++
++ .. include:: scsi_fc_transport.txt
++    :literal:
++
++tcm qla2xxx
++-----------
++
++ .. include:: tcm_qla2xxx.txt
++    :literal:
++
++scsi generic
++------------
++
++ .. include:: scsi-generic.txt
++    :literal:
++
++ufs
++---
++
++ .. include:: ufs.txt
++    :literal:
++
++arcmsr spec
++-----------
++
++ .. include:: arcmsr_spec.txt
++    :literal:
++
++scsi
++----
++
++ .. include:: scsi.txt
++    :literal:
++
++cxgb3i
++------
++
++ .. include:: cxgb3i.txt
++    :literal:
++
++dc395x
++------
++
++ .. include:: dc395x.txt
++    :literal:
++
++wd719x
++------
++
++ .. include:: wd719x.txt
++    :literal:
++
++aic7xxx
++-------
++
++ .. include:: aic7xxx.txt
++    :literal:
++
++aic79xx
++-------
++
++ .. include:: aic79xx.txt
++    :literal:
++
++NinjaSCSI
++---------
++
++ .. include:: NinjaSCSI.txt
++    :literal:
++
++scsi parameters
++---------------
++
++ .. include:: scsi-parameters.txt
++    :literal:
++
++bfa
++---
++
++ .. include:: bfa.txt
++    :literal:
++
++lpfc
++----
++
++ .. include:: lpfc.txt
++    :literal:
++
++dpti
++----
++
++ .. include:: dpti.txt
++    :literal:
++
++link power management policy
++----------------------------
++
++ .. include:: link_power_management_policy.txt
++    :literal:
++
++BusLogic
++--------
++
++ .. include:: BusLogic.txt
++    :literal:
++
++ncr53c8xx
++---------
++
++ .. include:: ncr53c8xx.txt
++    :literal:
++
++bnx2fc
++------
++
++ .. include:: bnx2fc.txt
++    :literal:
++
++sym53c500 cs
++------------
++
++ .. include:: sym53c500_cs.txt
++    :literal:
++
++53c700
++------
++
++ .. include:: 53c700.txt
++    :literal:
++
++advansys
++--------
++
++ .. include:: advansys.txt
++    :literal:
++
++scsi eh
++-------
++
++ .. include:: scsi_eh.txt
++    :literal:
++
+diff --git a/Documentation/serial/index.rst b/Documentation/serial/index.rst
+new file mode 100644
+index 000000000000..efb5e664cb50
+--- /dev/null
++++ b/Documentation/serial/index.rst
+@@ -0,0 +1,15 @@
++======
++serial
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/serial/text_files.rst b/Documentation/serial/text_files.rst
+new file mode 100644
+index 000000000000..b816ca0f69e9
+--- /dev/null
++++ b/Documentation/serial/text_files.rst
+@@ -0,0 +1,30 @@
++serial iso7816
++--------------
++
++ .. include:: serial-iso7816.txt
++    :literal:
++
++tty
++---
++
++ .. include:: tty.txt
++    :literal:
++
++rocket
++------
++
++ .. include:: rocket.txt
++    :literal:
++
++serial rs485
++------------
++
++ .. include:: serial-rs485.txt
++    :literal:
++
++n gsm
++-----
++
++ .. include:: n_gsm.txt
++    :literal:
++
+diff --git a/Documentation/sparc/index.rst b/Documentation/sparc/index.rst
+new file mode 100644
+index 000000000000..d2e71a139fd6
+--- /dev/null
++++ b/Documentation/sparc/index.rst
+@@ -0,0 +1,15 @@
++=====
++sparc
++=====
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/sparc/text_files.rst b/Documentation/sparc/text_files.rst
+new file mode 100644
+index 000000000000..461369cbaa82
+--- /dev/null
++++ b/Documentation/sparc/text_files.rst
+@@ -0,0 +1,24 @@
++oracle dax
++----------
++
++ .. include:: oradax/oracle-dax.txt
++    :literal:
++
++dax hv api
++----------
++
++ .. include:: oradax/dax-hv-api.txt
++    :literal:
++
++adi
++---
++
++ .. include:: adi.txt
++    :literal:
++
++console
++-------
++
++ .. include:: console.txt
++    :literal:
++
+diff --git a/Documentation/sphinx/index.rst b/Documentation/sphinx/index.rst
+new file mode 100644
+index 000000000000..6cf7d66129ea
+--- /dev/null
++++ b/Documentation/sphinx/index.rst
+@@ -0,0 +1,15 @@
++======
++sphinx
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/sphinx/text_files.rst b/Documentation/sphinx/text_files.rst
+new file mode 100644
+index 000000000000..c63b74ae99d5
+--- /dev/null
++++ b/Documentation/sphinx/text_files.rst
+@@ -0,0 +1,6 @@
++requirements
++------------
++
++ .. include:: requirements.txt
++    :literal:
++
+diff --git a/Documentation/sysctl/index.rst b/Documentation/sysctl/index.rst
+new file mode 100644
+index 000000000000..1c087d67d789
+--- /dev/null
++++ b/Documentation/sysctl/index.rst
+@@ -0,0 +1,15 @@
++======
++sysctl
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/sysctl/text_files.rst b/Documentation/sysctl/text_files.rst
+new file mode 100644
+index 000000000000..15684500f4de
+--- /dev/null
++++ b/Documentation/sysctl/text_files.rst
+@@ -0,0 +1,42 @@
++abi
++---
++
++ .. include:: abi.txt
++    :literal:
++
++kernel
++------
++
++ .. include:: kernel.txt
++    :literal:
++
++vm
++--
++
++ .. include:: vm.txt
++    :literal:
++
++net
++---
++
++ .. include:: net.txt
++    :literal:
++
++sunrpc
++------
++
++ .. include:: sunrpc.txt
++    :literal:
++
++fs
++--
++
++ .. include:: fs.txt
++    :literal:
++
++user
++----
++
++ .. include:: user.txt
++    :literal:
++
+diff --git a/Documentation/target/index.rst b/Documentation/target/index.rst
+new file mode 100644
+index 000000000000..8f147d94974c
+--- /dev/null
++++ b/Documentation/target/index.rst
+@@ -0,0 +1,15 @@
++======
++target
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/target/text_files.rst b/Documentation/target/text_files.rst
+new file mode 100644
+index 000000000000..6604a6637d3d
+--- /dev/null
++++ b/Documentation/target/text_files.rst
+@@ -0,0 +1,12 @@
++tcmu design
++-----------
++
++ .. include:: tcmu-design.txt
++    :literal:
++
++tcm mod builder
++---------------
++
++ .. include:: tcm_mod_builder.txt
++    :literal:
++
+diff --git a/Documentation/thermal/index.rst b/Documentation/thermal/index.rst
+new file mode 100644
+index 000000000000..5d25cb046bee
+--- /dev/null
++++ b/Documentation/thermal/index.rst
+@@ -0,0 +1,15 @@
++=======
++thermal
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/thermal/text_files.rst b/Documentation/thermal/text_files.rst
+new file mode 100644
+index 000000000000..1a41df47bce6
+--- /dev/null
++++ b/Documentation/thermal/text_files.rst
+@@ -0,0 +1,24 @@
++cpu cooling api
++---------------
++
++ .. include:: cpu-cooling-api.txt
++    :literal:
++
++sysfs api
++---------
++
++ .. include:: sysfs-api.txt
++    :literal:
++
++intel powerclamp
++----------------
++
++ .. include:: intel_powerclamp.txt
++    :literal:
++
++power allocator
++---------------
++
++ .. include:: power_allocator.txt
++    :literal:
++
+diff --git a/Documentation/timers/index.rst b/Documentation/timers/index.rst
+new file mode 100644
+index 000000000000..eaf4b4259083
+--- /dev/null
++++ b/Documentation/timers/index.rst
+@@ -0,0 +1,15 @@
++======
++timers
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/timers/text_files.rst b/Documentation/timers/text_files.rst
+new file mode 100644
+index 000000000000..a985c0b36952
+--- /dev/null
++++ b/Documentation/timers/text_files.rst
+@@ -0,0 +1,36 @@
++highres
++-------
++
++ .. include:: highres.txt
++    :literal:
++
++timekeeping
++-----------
++
++ .. include:: timekeeping.txt
++    :literal:
++
++NO HZ
++-----
++
++ .. include:: NO_HZ.txt
++    :literal:
++
++hrtimers
++--------
++
++ .. include:: hrtimers.txt
++    :literal:
++
++hpet
++----
++
++ .. include:: hpet.txt
++    :literal:
++
++timers howto
++------------
++
++ .. include:: timers-howto.txt
++    :literal:
++
+diff --git a/Documentation/usb/index.rst b/Documentation/usb/index.rst
+new file mode 100644
+index 000000000000..8f8aa24153c3
+--- /dev/null
++++ b/Documentation/usb/index.rst
+@@ -0,0 +1,15 @@
++===
++usb
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/usb/text_files.rst b/Documentation/usb/text_files.rst
+new file mode 100644
+index 000000000000..d252ded9733b
+--- /dev/null
++++ b/Documentation/usb/text_files.rst
+@@ -0,0 +1,138 @@
++usb serial
++----------
++
++ .. include:: usb-serial.txt
++    :literal:
++
++acm
++---
++
++ .. include:: acm.txt
++    :literal:
++
++authorization
++-------------
++
++ .. include:: authorization.txt
++    :literal:
++
++gadget testing
++--------------
++
++ .. include:: gadget-testing.txt
++    :literal:
++
++gadget hid
++----------
++
++ .. include:: gadget_hid.txt
++    :literal:
++
++ohci
++----
++
++ .. include:: ohci.txt
++    :literal:
++
++rio
++---
++
++ .. include:: rio.txt
++    :literal:
++
++mtouchusb
++---------
++
++ .. include:: mtouchusb.txt
++    :literal:
++
++usbmon
++------
++
++ .. include:: usbmon.txt
++    :literal:
++
++mass storage
++------------
++
++ .. include:: mass-storage.txt
++    :literal:
++
++chipidea
++--------
++
++ .. include:: chipidea.txt
++    :literal:
++
++iuu phoenix
++-----------
++
++ .. include:: iuu_phoenix.txt
++    :literal:
++
++misc usbsevseg
++--------------
++
++ .. include:: misc_usbsevseg.txt
++    :literal:
++
++gadget configfs
++---------------
++
++ .. include:: gadget_configfs.txt
++    :literal:
++
++gadget multi
++------------
++
++ .. include:: gadget_multi.txt
++    :literal:
++
++functionfs
++----------
++
++ .. include:: functionfs.txt
++    :literal:
++
++gadget serial
++-------------
++
++ .. include:: gadget_serial.txt
++    :literal:
++
++gadget printer
++--------------
++
++ .. include:: gadget_printer.txt
++    :literal:
++
++usbip protocol
++--------------
++
++ .. include:: usbip_protocol.txt
++    :literal:
++
++WUSB Design overview
++--------------------
++
++ .. include:: WUSB-Design-overview.txt
++    :literal:
++
++ehci
++----
++
++ .. include:: ehci.txt
++    :literal:
++
++dwc3
++----
++
++ .. include:: dwc3.txt
++    :literal:
++
++usb help
++--------
++
++ .. include:: usb-help.txt
++    :literal:
++
+diff --git a/Documentation/virtual/index.rst b/Documentation/virtual/index.rst
+new file mode 100644
+index 000000000000..5926192c8372
+--- /dev/null
++++ b/Documentation/virtual/index.rst
+@@ -0,0 +1,17 @@
++=======
++virtual
++=======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++    kvm/amd-memory-encryption.rst
++    kvm/vcpu-requests.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/virtual/text_files.rst b/Documentation/virtual/text_files.rst
+new file mode 100644
+index 000000000000..3fe1087fd7bb
+--- /dev/null
++++ b/Documentation/virtual/text_files.rst
+@@ -0,0 +1,150 @@
++UserModeLinux HOWTO
++-------------------
++
++ .. include:: uml/UserModeLinux-HOWTO.txt
++    :literal:
++
++paravirt ops
++------------
++
++ .. include:: paravirt_ops.txt
++    :literal:
++
++msr
++---
++
++ .. include:: kvm/msr.txt
++    :literal:
++
++mpic
++----
++
++ .. include:: kvm/devices/mpic.txt
++    :literal:
++
++vcpu
++----
++
++ .. include:: kvm/devices/vcpu.txt
++    :literal:
++
++vfio
++----
++
++ .. include:: kvm/devices/vfio.txt
++    :literal:
++
++arm vgic
++--------
++
++ .. include:: kvm/devices/arm-vgic.txt
++    :literal:
++
++vm
++--
++
++ .. include:: kvm/devices/vm.txt
++    :literal:
++
++s390 flic
++---------
++
++ .. include:: kvm/devices/s390_flic.txt
++    :literal:
++
++xics
++----
++
++ .. include:: kvm/devices/xics.txt
++    :literal:
++
++arm vgic v3
++-----------
++
++ .. include:: kvm/devices/arm-vgic-v3.txt
++    :literal:
++
++arm vgic its
++------------
++
++ .. include:: kvm/devices/arm-vgic-its.txt
++    :literal:
++
++timekeeping
++-----------
++
++ .. include:: kvm/timekeeping.txt
++    :literal:
++
++api
++---
++
++ .. include:: kvm/api.txt
++    :literal:
++
++s390 diag
++---------
++
++ .. include:: kvm/s390-diag.txt
++    :literal:
++
++halt polling
++------------
++
++ .. include:: kvm/halt-polling.txt
++    :literal:
++
++nested vmx
++----------
++
++ .. include:: kvm/nested-vmx.txt
++    :literal:
++
++hypercalls
++----------
++
++ .. include:: kvm/hypercalls.txt
++    :literal:
++
++cpuid
++-----
++
++ .. include:: kvm/cpuid.txt
++    :literal:
++
++psci
++----
++
++ .. include:: kvm/arm/psci.txt
++    :literal:
++
++hyp abi
++-------
++
++ .. include:: kvm/arm/hyp-abi.txt
++    :literal:
++
++review checklist
++----------------
++
++ .. include:: kvm/review-checklist.txt
++    :literal:
++
++locking
++-------
++
++ .. include:: kvm/locking.txt
++    :literal:
++
++mmu
++---
++
++ .. include:: kvm/mmu.txt
++    :literal:
++
++ppc pv
++------
++
++ .. include:: kvm/ppc-pv.txt
++    :literal:
++
+diff --git a/Documentation/watchdog/index.rst b/Documentation/watchdog/index.rst
+new file mode 100644
+index 000000000000..620f9d9175e1
+--- /dev/null
++++ b/Documentation/watchdog/index.rst
+@@ -0,0 +1,15 @@
++========
++watchdog
++========
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/watchdog/text_files.rst b/Documentation/watchdog/text_files.rst
+new file mode 100644
+index 000000000000..0061a48c8a8f
+--- /dev/null
++++ b/Documentation/watchdog/text_files.rst
+@@ -0,0 +1,54 @@
++wdt
++---
++
++ .. include:: wdt.txt
++    :literal:
++
++pcwd watchdog
++-------------
++
++ .. include:: pcwd-watchdog.txt
++    :literal:
++
++convert drivers to kernel api
++-----------------------------
++
++ .. include:: convert_drivers_to_kernel_api.txt
++    :literal:
++
++watchdog api
++------------
++
++ .. include:: watchdog-api.txt
++    :literal:
++
++mlx wdt
++-------
++
++ .. include:: mlx-wdt.txt
++    :literal:
++
++watchdog kernel api
++-------------------
++
++ .. include:: watchdog-kernel-api.txt
++    :literal:
++
++hpwdt
++-----
++
++ .. include:: hpwdt.txt
++    :literal:
++
++watchdog parameters
++-------------------
++
++ .. include:: watchdog-parameters.txt
++    :literal:
++
++watchdog pm
++-----------
++
++ .. include:: watchdog-pm.txt
++    :literal:
++
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+new file mode 100644
+index 000000000000..86dbc8a60159
+--- /dev/null
++++ b/Documentation/x86/index.rst
+@@ -0,0 +1,15 @@
++===
++x86
++===
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/x86/text_files.rst b/Documentation/x86/text_files.rst
+new file mode 100644
+index 000000000000..4bb7caad5cb6
+--- /dev/null
++++ b/Documentation/x86/text_files.rst
+@@ -0,0 +1,132 @@
++exception tables
++----------------
++
++ .. include:: exception-tables.txt
++    :literal:
++
++usb legacy support
++------------------
++
++ .. include:: usb-legacy-support.txt
++    :literal:
++
++tlb
++---
++
++ .. include:: tlb.txt
++    :literal:
++
++IO APIC
++-------
++
++ .. include:: i386/IO-APIC.txt
++    :literal:
++
++mtrr
++----
++
++ .. include:: mtrr.txt
++    :literal:
++
++earlyprintk
++-----------
++
++ .. include:: earlyprintk.txt
++    :literal:
++
++zero page
++---------
++
++ .. include:: zero-page.txt
++    :literal:
++
++orc unwinder
++------------
++
++ .. include:: orc-unwinder.txt
++    :literal:
++
++5level paging
++-------------
++
++ .. include:: x86_64/5level-paging.txt
++    :literal:
++
++mm
++--
++
++ .. include:: x86_64/mm.txt
++    :literal:
++
++uefi
++----
++
++ .. include:: x86_64/uefi.txt
++    :literal:
++
++boot options
++------------
++
++ .. include:: x86_64/boot-options.txt
++    :literal:
++
++topology
++--------
++
++ .. include:: topology.txt
++    :literal:
++
++intel mpx
++---------
++
++ .. include:: intel_mpx.txt
++    :literal:
++
++microcode
++---------
++
++ .. include:: microcode.txt
++    :literal:
++
++pti
++---
++
++ .. include:: pti.txt
++    :literal:
++
++boot
++----
++
++ .. include:: boot.txt
++    :literal:
++
++entry 64
++--------
++
++ .. include:: entry_64.txt
++    :literal:
++
++amd memory encryption
++---------------------
++
++ .. include:: amd-memory-encryption.txt
++    :literal:
++
++protection keys
++---------------
++
++ .. include:: protection-keys.txt
++    :literal:
++
++pat
++---
++
++ .. include:: pat.txt
++    :literal:
++
++resctrl ui
++----------
++
++ .. include:: resctrl_ui.txt
++    :literal:
++
+diff --git a/Documentation/xilinx/index.rst b/Documentation/xilinx/index.rst
+new file mode 100644
+index 000000000000..4dc76c07ce9e
+--- /dev/null
++++ b/Documentation/xilinx/index.rst
+@@ -0,0 +1,15 @@
++======
++xilinx
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/xilinx/text_files.rst b/Documentation/xilinx/text_files.rst
+new file mode 100644
+index 000000000000..6c9623381591
+--- /dev/null
++++ b/Documentation/xilinx/text_files.rst
+@@ -0,0 +1,6 @@
++eemi
++----
++
++ .. include:: eemi.txt
++    :literal:
++
+diff --git a/Documentation/xtensa/index.rst b/Documentation/xtensa/index.rst
+new file mode 100644
+index 000000000000..a3e823504e0e
+--- /dev/null
++++ b/Documentation/xtensa/index.rst
+@@ -0,0 +1,15 @@
++======
++xtensa
++======
++
++.. toctree::
++    :maxdepth: 1
++
++    text_files.rst
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/xtensa/text_files.rst b/Documentation/xtensa/text_files.rst
+new file mode 100644
+index 000000000000..83af5b20b10c
+--- /dev/null
++++ b/Documentation/xtensa/text_files.rst
+@@ -0,0 +1,18 @@
++booting
++-------
++
++ .. include:: booting.txt
++    :literal:
++
++atomctl
++-------
++
++ .. include:: atomctl.txt
++    :literal:
++
++mmu
++---
++
++ .. include:: mmu.txt
++    :literal:
++
 -- 
 2.20.1
 
