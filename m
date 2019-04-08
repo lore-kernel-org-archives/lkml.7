@@ -2,255 +2,127 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6E7C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A1C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DFE2084C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE0220870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPMSC8JU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HRZYZDKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfDHSIN (ORCPT
+        id S1729244AbfDHSI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:08:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38347 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfDHSIM (ORCPT
+        Mon, 8 Apr 2019 14:08:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42284 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfDHSI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:08:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so17545180wro.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:08:11 -0700 (PDT)
+        Mon, 8 Apr 2019 14:08:28 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cv12so7770981plb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gc69Gdkq4uh6zRPv6o3sKCYKDf1xCH0ieyU9USOf4rw=;
-        b=GPMSC8JUoCFaSjw9LhxglyJZswbwypcTtUNOSUNFTjIHTnn5esBUFHRD8EHfW/MovI
-         /6rarLc+c8NAcrXHarEtRWjs+FBfYKuj0V7vUCrWwRpY6hVIn3F51qJCJzQ8JNB4XsOq
-         GnMPYm4PFujsyms8VQc86FcA+Yvb86XLRTX0NU/cI7so06mLcXWyp5DJxCf8Napy5vsq
-         NlGKw43P/bcW7wwa8oq9zJUhN4V18gwn6ucXAP3CSeVnSpQujzTJKFGpA2nQbQj4DaQv
-         +tSpcUWMNXwaW9z+2X+odqGW8F5zIe8rKagiDSPEQqpBpxBJkxnFqFIVz07C+70fxMQX
-         bY/A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6rooXMDx733C5jOZV0HDJGU0vPGbQdWxeSk9HuXBbx4=;
+        b=HRZYZDKDfXK5tUiWAX/wWOVIZxw1yj3uaOhsMKPNlAYpnNEsZF0Ig+kBhxnHzgSOW8
+         vrsb8nkhq7HOd9Af/7DgR0F6e+Hlvq/qpLyNpLoG5PRnCLMpJyvG8SOHMrGzO8ozTSfz
+         sbVSsk6WaoDPdf8Svi0kFukrWICk6bTEfKGjAvmlol//D3EuYmJ8UjSOakz2WDpHtsDw
+         avxV0aAbT6s+9VvWICs3H4S7QEf9Xv36+d8Paa0Eo3rCOZ9pzZw6bbUQvuhloAFIs+uc
+         ippaOtK9gz33mFuyz+xayvv91ZFzY5B+ct3UjuOXERl7LgCVp8SM75PAL174g08XGn0w
+         Kn+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gc69Gdkq4uh6zRPv6o3sKCYKDf1xCH0ieyU9USOf4rw=;
-        b=EG6FPoxCrik0Sw5NB2+p47NrmkoR+dRZZRTejK/DPtPdFw/NyISWH+VXIX0VcBVT1p
-         CL9c2uhYZoxrxCj/WrazEjdPT3x3uGktcmWkNpIx2vIdlfZg7u6PED2wJiKIrRcip71o
-         sXmpevGtooYK24muYf3kcbGep1FxXdSufCkcVTAgPNuTXlKqUuG0nMyR3y6pgTJs57ob
-         0vE+LziITT3fivQMEdWZlOrb9W5ccJHzoaLAVAFzNMYEavJULEVKdxjlsDzSsI0OahnG
-         iwAl3eluVuBkjO96NpHArhA2k6yyoWx0UVksJruohv6aUK3+f32KiZ/QPeqYQFa8O0BY
-         Nfrw==
-X-Gm-Message-State: APjAAAWA2XD4gLtCkgrWhjOvvdZ2P3JOxOQ87q0QeIolqO6u5WfvE4Uj
-        6R/IjPZE7O9AW0o7v4AV8Ak=
-X-Google-Smtp-Source: APXvYqxcb6uVGlaxLVfInfRL1bKf4AmJ8RrS4DvpELIPrUIB9wPnQl7xnIQILolD8T5FxrJpKnl2lg==
-X-Received: by 2002:adf:d081:: with SMTP id y1mr20355190wrh.283.1554746890902;
-        Mon, 08 Apr 2019 11:08:10 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id x14sm13776872wmj.3.2019.04.08.11.08.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 11:08:10 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 20:08:09 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: This program cannot be run in DOS mode.$
-Message-ID: <20190408180809.myjp5zaviuibj5uf@pali>
-References: <20190401102434.9805-1-pali.rohar@gmail.com>
- <20190408180422.GA5103@amd>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6rooXMDx733C5jOZV0HDJGU0vPGbQdWxeSk9HuXBbx4=;
+        b=b37uewHM7rnr/9/Xe+J3BBpkWJNO6s+ic6LabcGjE0CzPLF7GZwlyw71/QGIiy6YE+
+         bf5VHRsj+fOOVBuDdMbtCWWKkaAreGXEPeEDAU37xwQ4JCnK0bOFZMp80dAYlzLxCzpT
+         pLCOcRS7npxOwF8Qrr+k7EOOFKH5mngxDkXfSVcCmyg53vrGpuCFuGZ2G28MHUCxbwUz
+         G3KofnX+fMDN+4BMsPCUT9tfiBYI87mqy4CcLafdTwq3UFZ+DnY/G3Yn34aE0HlQPbzn
+         olMCrqNGXUbPYCcva5cbAjArkNbHKPgKjs/mz75DeiuzjxRPkMLmuQeH1L6/Nl4FiKBA
+         GB6Q==
+X-Gm-Message-State: APjAAAWc/1ulUHOrYgHboHJvx+JADWEJDfKWtN963chlF/hCUEUfxPsN
+        evfcgjf9215Uk3may2bNXjP32bbpf198/WJjcx5cbA==
+X-Google-Smtp-Source: APXvYqzH9ZLofJ/eiR/IarF6xRJ0GP/OSTVeaGgW0jclwehLUjzUharpyVUQYnQwNuod71QbuTS1RXQZ8cpWoLj0s+c=
+X-Received: by 2002:a17:902:7044:: with SMTP id h4mr31818040plt.274.1554746907239;
+ Mon, 08 Apr 2019 11:08:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="so27llpdtyfbe25c"
-Content-Disposition: inline
-In-Reply-To: <20190408180422.GA5103@amd>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190407022558.65489-1-trong@android.com>
+In-Reply-To: <20190407022558.65489-1-trong@android.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 8 Apr 2019 11:08:16 -0700
+Message-ID: <CAKwvOdmBa-Ckk4wnp4OEPNdxeYSxEhzddykuWWGG1Wi6JEGDwA@mail.gmail.com>
+Subject: Re: [PATCH] module: add stub for within_module
+To:     Tri Vo <trong@android.com>, Jessica Yu <jeyu@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Hackmann <ghackmann@android.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petri Gynther <pgynther@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 6, 2019 at 7:26 PM Tri Vo <trong@android.com> wrote:
+>
+> Provide a stub for within_module() when CONFIG_MODULES is not set. This
+> is needed to build CONFIG_GCOV_KERNEL.
+>
+> Fixes: 8c3d220cb6b5 ("gcov: clang support")
 
---so27llpdtyfbe25c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The above commit got backed out of the -mm tree, due to the issue this
+patch addresses, so not sure it provides the correct context for the
+patch.  Maybe that line in the commit message should be dropped?
 
-On Monday 08 April 2019 20:04:22 Pavel Machek wrote:
-> On Mon 2019-04-01 12:24:34, Pali Roh=C3=A1r wrote:
-> > Every EFI binary is in PE format. And we know that PE format needs to h=
-ave
-> > MZ MS-DOS header as there is written offset to PE header.
-> >=20
-> > Therefore generated bzImage binary with CONFIG_EFI_STUB option is MS-DOS
-> > executable binary.
-> >=20
-> > We already know the "requirement" that Windows PE executable started in
-> > MS-DOS must print legendary and famous message to computer screen:
-> > "This program cannot be run in DOS mode."
-> >=20
-> > But trying to run that bzImage of Linux kernel with MZ header just cause
-> > freezing whole MS-DOS instead of writing "the correct message" to user.
-> > This is not the compliant behavior of PE executables!
-> >=20
-> > This patch fixes this problem. When Linux kernel compiled with
-> > CONFIG_EFI_STUB is started in MS-DOS then it prints message:
-> >=20
-> >   This program cannot be run in DOS mode.
-> >   To load Linux kernel from DOS mode use LOADLIN.EXE.
-> >=20
-> > So it also helps MS-DOS users how to "correctly" start this bzImage bin=
-ary
-> > by mentioning LOADLIN.EXE. Note that MS-DOS strings are not null-termin=
-ated
-> > but rather dollar-terminated.
-> >=20
-> > To have error message unified bugger_off_msg for BIOS boot block code w=
-as
-> > changed to:
-> >=20
-> >   This program cannot be run in BIOS mode.
-> >=20
-> > So if you copy generated bzImage directly to boot sector and try to boo=
-t it
-> > by BIOS you get this new updated message.
-> >=20
-> > Due to fixed offset of setup header (0x1f1), PE header was moved after
-> > entrytext section. bstext and bsdata sections where is full MZ header a=
-nd
-> > MS-DOS code is now bigger.
->=20
-> Hehe, I guess the patch may have been dropped due to april's fools?
+> Suggested-by: Matthew Wilcox <willy@infradead.org>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+> Signed-off-by: Tri Vo <trong@android.com>
+> ---
+>  include/linux/module.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 5bf5dcd91009..47190ebb70bf 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -709,6 +709,11 @@ static inline bool is_module_text_address(unsigned long addr)
+>         return false;
+>  }
+>
+> +static inline bool within_module(unsigned long addr, const struct module *mod)
+> +{
+> +       return false;
+> +}
+> +
 
-Yea, it was mean as first April patch :-) I tested it with MS-DOS 7.0
-and DOSBox and it worked.
+Do folks think that similar stubs for within_module_core and
+within_module_init should be added, while we're here?
 
-> You may want to retransmit?
+It looks like kernel/trace/ftrace.c uses them, but has proper
+CONFIG_MODULE guards.
 
-Do you really think it can be useful? :-)
+>  /* Get/put a kernel symbol (calls should be symmetric) */
+>  #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak)); &(x); })
+>  #define symbol_put(x) do { } while (0)
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
 
-> 								Pavel
->=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > ---
-> >  arch/x86/boot/header.S | 55 ++++++++++++++++++++++++++++++++++++++++++=
-+-------
-> >  arch/x86/boot/setup.ld |  1 +
-> >  2 files changed, 49 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-> > index 850b8762e889..58fcab7d00c8 100644
-> > --- a/arch/x86/boot/header.S
-> > +++ b/arch/x86/boot/header.S
-> > @@ -45,6 +45,46 @@ bootsect_start:
-> >  	# "MZ", MS-DOS header
-> >  	.byte 0x4d
-> >  	.byte 0x5a
-> > +
-> > +	# Explicitly enter this as bytes, or the assembler
-> > +	# tries to generate a 3-byte jump here, which causes
-> > +	# everything else to push off to the wrong offset.
-> > +	.byte	0xeb    # short (2-byte) jump
-> > +	.byte	bios_start-1f
-> > +1:
-> > +
-> > +	.org	0x04
-> > +	.short	3       # e_cp - Pages in file
-> > +	.short	0       # e_crlc - Relocations
-> > +	.short	4       # e_cparhdr - Size of header in paragraphs
-> > +	.short	0       # e_minalloc - Minimum extra paragraphs needed
-> > +	.short	0xffff  # e_maxalloc - Maximum extra paragraphs needed
-> > +	.short	0       # e_ss - Initial (relative) SS value
-> > +	.short	0       # e_sp - Initial SP value
-> > +	.short	0       # e_csum - Checksum
-> > +	.short	0       # e_ip - Initial IP value
-> > +	.short	-4      # e_cs - Initial (relative) CS value
-> > +	.short	0x40    # e_lfarlc - File address of relocation table
-> > +
-> > +	.org	0x3c
-> > +	.long	pe_header  # Offset to the PE header
-> > +
-> > +	#
-> > +	# MS-DOS start code
-> > +	#
-> > +	push	%cs
-> > +	pop	%ds
-> > +
-> > +	# Write msdos_msg string
-> > +	mov	$msdos_msg, %dx
-> > +	mov	$0x09, %ah
-> > +	int	$0x21
-> > +
-> > +	# Terminate program
-> > +	mov	$0x4c01, %ax
-> > +	int	$0x21
-> > +
-> > +bios_start:
-> >  #endif
-> > =20
-> >  	# Normalize the start address
-> > @@ -80,22 +120,23 @@ bs_die:
-> >  	# invoke the BIOS reset code...
-> >  	ljmp	$0xf000,$0xfff0
-> > =20
-> > +	.section ".bsdata", "a"
-> >  #ifdef CONFIG_EFI_STUB
-> > -	.org	0x3c
-> > -	#
-> > -	# Offset to the PE header.
-> > -	#
-> > -	.long	pe_header
-> > +msdos_msg:
-> > +	.ascii	"This program cannot be run in DOS mode.\r\n"
-> > +	.ascii	"To load Linux kernel from DOS mode use LOADLIN.EXE.\r\r\n"
-> > +	.ascii	"$"
-> >  #endif /* CONFIG_EFI_STUB */
-> > =20
-> > -	.section ".bsdata", "a"
-> >  bugger_off_msg:
-> > -	.ascii	"Use a boot loader.\r\n"
-> > +	.ascii	"This program cannot be run in BIOS mode.\r\n"
-> > +	.ascii	"To load Linux kernel from BIOS mode use a boot loader.\r\n"
-> >  	.ascii	"\n"
-> >  	.ascii	"Remove disk and press any key to reboot...\r\n"
-> >  	.byte	0
-> > =20
-> >  #ifdef CONFIG_EFI_STUB
-> > +	.section ".pedata", "a"
-> >  pe_header:
-> >  	.ascii	"PE"
-> >  	.word 	0
-> > diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
-> > index 0149e41d42c2..c0ec2fe09d2d 100644
-> > --- a/arch/x86/boot/setup.ld
-> > +++ b/arch/x86/boot/setup.ld
-> > @@ -16,6 +16,7 @@ SECTIONS
-> >  	. =3D 495;
-> >  	.header		: { *(.header) }
-> >  	.entrytext	: { *(.entrytext) }
-> > +	.pedata		: { *(.pedata) }
-> >  	.inittext	: { *(.inittext) }
-> >  	.initdata	: { *(.initdata) }
-> >  	__end_init =3D .;
->=20
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---so27llpdtyfbe25c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXKuOBwAKCRCL8Mk9A+RD
-UhZjAKC6GaB94mn/OuVS8I5KQg3qab01DQCfXA3BbHekchMyPZAkOd8WIRGuIIE=
-=MMwD
------END PGP SIGNATURE-----
-
---so27llpdtyfbe25c--
+-- 
+Thanks,
+~Nick Desaulniers
