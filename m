@@ -2,88 +2,125 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B44CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C427CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59D420833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8868620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfDHHtj (ORCPT
+        id S1726437AbfDHHyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:49:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36862 "EHLO mx1.redhat.com"
+        Mon, 8 Apr 2019 03:54:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60904 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfDHHtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:49:39 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1725881AbfDHHyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:54:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 70B5381233;
-        Mon,  8 Apr 2019 07:49:39 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-33.ams2.redhat.com [10.36.116.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F24DB6013C;
-        Mon,  8 Apr 2019 07:49:37 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH] sched/core: expand sched_getaffinity(2) to return number of CPUs
-References: <20190403200809.GA13876@avx2>
-        <20190404084249.GS4038@hirez.programming.kicks-ass.net>
-        <87wok83gfs.fsf@oldenburg2.str.redhat.com>
-        <20190406194825.GA5106@avx2>
-Date:   Mon, 08 Apr 2019 09:49:35 +0200
-In-Reply-To: <20190406194825.GA5106@avx2> (Alexey Dobriyan's message of "Sat,
-        6 Apr 2019 22:48:25 +0300")
-Message-ID: <878swlszqo.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        by mx1.redhat.com (Postfix) with ESMTPS id F1FE53168907;
+        Mon,  8 Apr 2019 07:54:17 +0000 (UTC)
+Received: from localhost (ovpn-12-121.pek2.redhat.com [10.72.12.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 468E460CCC;
+        Mon,  8 Apr 2019 07:54:17 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 15:54:14 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, kirill@shutemov.name,
+        keescook@chromium.org, yamada.masahiro@socionext.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        thgarnie@google.com, mike.travis@hpe.com, frank.ramsay@hpe.com
+Subject: Re: [PATCH 1/2] x86/mm/KASLR: Fix the wrong calculation of memory
+ region initial size
+Message-ID: <20190408075414.GA3856@localhost.localdomain>
+References: <20190404020314.8162-1-bhe@redhat.com>
+ <20190404020314.8162-2-bhe@redhat.com>
+ <20190405165856.GJ23348@zn.tnic>
+ <20190406015119.GY7627@MiWiFi-R3L-srv>
+ <20190406044348.GA14245@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 08 Apr 2019 07:49:39 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190406044348.GA14245@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 08 Apr 2019 07:54:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Alexey Dobriyan:
+On 04/06/19 at 06:43am, Borislav Petkov wrote:
+> On Sat, Apr 06, 2019 at 09:51:19AM +0800, Baoquan He wrote:
+> > It's KASLR happened in kernel_randomize_memory() of arch/x86/mm/kaslr.c .
+> 
+> What is "KASLR happened in"? This doesn't make any sense. When you look
+> at that function, there's a comment above it:
+> 
+> /* Initialize base and padding for each memory region randomized with KASLR */
+> 
+> Do you mean, that, per chance?
+> 
+> > In fact, I don't know how to call it. Previously, I wrote it as mm
+> > KASLR, to distinguish from KASLR during kernel decompression. Ingo
+> > blamed the name,
+> 
+> Of course he did, because it didn't make any sense to him either.
+> 
+> > so I changed it to memory region KASLR. Seems Thomas
+> > Garnier called it KASLR for kernel memory regions in his original KASLR
+> > adding patch. May I call it 'KASLR for kernel memory regions', or 'KASLR
+> > for memory regions'?
+> 
+> So you're fixing kaslr_regions[0].size_tb. It's base gets initialized to
+> page_offset_base.
+> 
+> Now, if you look at
+> 
+> Documentation/x86/x86_64/mm.txt
+> 
+> it says there:
+> 
+>  ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)
+> 
+> so that is the direct mapping memory region of all physical memory.
+> 
+> Now, you're apparently fixing its size.
+> 
+> Am I making sense and are you catching my drift?
 
->> >> Patch overloads sched_getaffinity(len=0) to simply return "nr_cpu_ids".
->> >> This will make gettting CPU mask require at most 2 system calls
->> >> and will eliminate unnecessary code.
->> >> 
->> >> len=0 is chosen so that
->> >> * passing zeroes is the simplest thing
->> >> 
->> >> 	syscall(__NR_sched_getaffinity, 0, 0, NULL)
->> >> 
->> >>   will simply do the right thing,
->> >> 
->> >> * old kernels returned -EINVAL unconditionally.
->> >> 
->> >> Note: glibc segfaults upon exiting from system call because it tries to
->> >> clear the rest of the buffer if return value is positive, so
->> >> applications will have to use syscall(3).
->> >> Good news is that it proves noone uses sched_getaffinity(pid, 0, NULL).
->> 
->> Given that old kernels fail with EINVAL, that evidence is fairly
->> restricted.
->> 
->> I'm not sure if it's a good idea to overload this interface.  I expect
->> that users will want to call sched_getaffinity (the system call wrapper)
->> with cpusetsize == 0 to query the value, so there will be pressure on
->> glibc to remove the memset.  At that point we have an API that obscurely
->> fails with old glibc versions, but suceeds with newer ones, which isn't
->> great.
->
-> I can do "if (len == 536870912)" so that bit count overflows on old
-> kernels into EINVAL and is unlikely to be used ever.
+Yes, makes sense. I will make it more specific, and use
+kernel_randomize_memory() instead to indicate the place where code issue
+is found out. Thanks.
 
-I don't see how this solves this particular issue.  It will still result
-in a mysterious crash if programs use an updated system call wrapper.
-
-Thanks,
-Florian
+> 
+> You need to explain what you change in your commit messages in
+> *understandable* english so that reviewer/committer or even a person
+> who's not deeply involved in KASLR inner workings, can at least get an
+> idea about what the commit message is talking about.
+> 
+> If you come up with strange constructs like "memory region KASLR" or
+> "KASLR happened in" or "mm KASLR" which only make sense in your head,
+> you're not doing anyone any favour.
+> 
+> Commit messages need to be very understandable when someone is looking
+> at them months or even years from now. And you need to restrain yourself
+> when you write them. You will appreciate that the first time you have to
+> do git archeology, dig out an ancient commit and wonder why we did it
+> this way.
+> 
+> Because we didn't document as good in previous years and our commits
+> from the past suck big time.
+> 
+> Thanks!
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
