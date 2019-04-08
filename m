@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD34C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C05C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B1B20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C0020880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfDHJl4 (ORCPT
+        id S1726738AbfDHJmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:41:56 -0400
+        Mon, 8 Apr 2019 05:42:01 -0400
 Received: from bhuna.collabora.co.uk ([46.235.227.227]:44778 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbfDHJlw (ORCPT
+        with ESMTP id S1726656AbfDHJlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:41:52 -0400
+        Mon, 8 Apr 2019 05:41:53 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 684B327F023
+        with ESMTPSA id 0593028286A
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     lee.jones@linaro.org
 Cc:     gwendal@chromium.org, bleung@chromium.org,
         linux-kernel@vger.kernel.org, groeck@chromium.org,
         kernel@collabora.com, dtor@chromium.org,
-        rushikesh.s.kadam@intel.com,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v3 2/4] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-Date:   Mon,  8 Apr 2019 11:41:39 +0200
-Message-Id: <20190408094141.27858-3-enric.balletbo@collabora.com>
+        rushikesh.s.kadam@intel.com, Wei-Ning Huang <wnhuang@google.com>
+Subject: [PATCH v3 4/4] mfd: cros_ec: instantiate properly CrOS Touchpad MCU device
+Date:   Mon,  8 Apr 2019 11:41:41 +0200
+Message-Id: <20190408094141.27858-5-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190408094141.27858-1-enric.balletbo@collabora.com>
 References: <20190408094141.27858-1-enric.balletbo@collabora.com>
@@ -43,65 +42,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+Support Touchpad MCU as a special of CrOS EC devices. The current
+Touchpad MCU is used on Eve Chromebook and used the same protocol as
+other CrOS EC devices.
 
-Integrated Sensor Hub (ISH) is also a MCU running EC
-having feature bit EC_FEATURE_ISH. Instantiate it as
-a special CrOS EC device with device name 'cros_ish'.
+When a MCU has touchpad support (aka EC_FEATURE_TOUCHPAD), it is
+instantiated as a special CrOS EC device with device name 'cros_tp'. So
+regardless of the probing order between the actual cros_ec and cros_tp,
+the userspace and other kernel drivers should not confuse them.
 
-Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Wei-Ning Huang <wnhuang@google.com>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
-Changes in v3:
-- Fix Andy Shevchenko email.
+Changes in v3: None
+Changes in v2: None
 
-Changes in v2:
-- Add a patch to instantiate the CrOS ISH device to the series.
-
- drivers/mfd/cros_ec_dev.c   | 13 +++++++++++++
- include/linux/mfd/cros_ec.h |  5 +++--
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/mfd/cros_ec_dev.c   | 10 ++++++++++
+ include/linux/mfd/cros_ec.h |  1 +
+ 2 files changed, 11 insertions(+)
 
 diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 99cfdb5b71ef..1daccd4e05a3 100644
+index 79746e817cdb..be827910e9d0 100644
 --- a/drivers/mfd/cros_ec_dev.c
 +++ b/drivers/mfd/cros_ec_dev.c
-@@ -636,6 +636,19 @@ static int ec_device_probe(struct platform_device *pdev)
- 	device_initialize(&ec->class_dev);
- 	cdev_init(&ec->cdev, &fops);
+@@ -659,6 +659,16 @@ static int ec_device_probe(struct platform_device *pdev)
+ 		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
+ 	}
  
-+	/*
-+	 * Check whether this is actually an Integrated Sensor Hub (ISH)
-+	 * rather than an EC.
-+	 */
-+	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
-+		dev_info(dev, "CrOS ISH MCU detected.\n");
++	/* Check whether this is actually a Touchpad MCU rather than an EC */
++	if (cros_ec_check_features(ec, EC_FEATURE_TOUCHPAD)) {
++		dev_info(dev, "CrOS Touchpad MCU detected.\n");
 +		/*
-+		 * Help userspace differentiating ECs from ISH MCU,
++		 * Help userspace differentiating ECs from TP MCU,
 +		 * regardless of the probing order.
 +		 */
-+		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
++		ec_platform->ec_name = CROS_EC_DEV_TP_NAME;
 +	}
 +
  	/*
  	 * Add the class device
  	 * Link to the character device for creating the /dev entry
 diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index b6442201f77f..ce50628aa5e7 100644
+index b393bd4e4b73..981381fbb3fd 100644
 --- a/include/linux/mfd/cros_ec.h
 +++ b/include/linux/mfd/cros_ec.h
-@@ -22,8 +22,9 @@
- #include <linux/mfd/cros_ec_commands.h>
- #include <linux/mutex.h>
- 
--#define CROS_EC_DEV_NAME "cros_ec"
--#define CROS_EC_DEV_PD_NAME "cros_pd"
-+#define CROS_EC_DEV_NAME	"cros_ec"
-+#define CROS_EC_DEV_ISH_NAME	"cros_ish"
-+#define CROS_EC_DEV_PD_NAME	"cros_pd"
+@@ -26,6 +26,7 @@
+ #define CROS_EC_DEV_FP_NAME	"cros_fp"
+ #define CROS_EC_DEV_ISH_NAME	"cros_ish"
+ #define CROS_EC_DEV_PD_NAME	"cros_pd"
++#define CROS_EC_DEV_TP_NAME	"cros_tp"
  
  /*
   * The EC is unresponsive for a time after a reboot command.  Add a
