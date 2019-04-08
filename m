@@ -2,344 +2,84 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3733C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F12BC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F8B20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OrJ/9QCE"
+	by mail.kernel.org (Postfix) with ESMTP id 3B7D020870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDHJnK (ORCPT
+        id S1726701AbfDHJoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:43:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60324 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfDHJnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:43:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x389h4Js007495;
-        Mon, 8 Apr 2019 04:43:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554716584;
-        bh=tw5hR2ap6PUr+igOMW5c8YXhIJs+nCkMZNKruxBsiYw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OrJ/9QCE1Jul8Hl9PNkO0Co3533INO7Co/1OgO7ZMqxQZ5OwHydUm9kEWIo8ArGCd
-         oA/VoAsnQBsN56BpD5sedMIMqMwiu3s4GrdbfZvLPgHt+U2o7bRNj7i85yec7N/S3i
-         5k+uKIj+pFrVEiAt8Y5Wk66rGmr2UOvr3yK6CRkc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x389h4kX004336
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Apr 2019 04:43:04 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Apr
- 2019 04:43:02 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Apr 2019 04:43:02 -0500
-Received: from lta0400828d.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x389gxsm130311;
-        Mon, 8 Apr 2019 04:43:00 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <tony@atomide.com>
-CC:     <robh+dt@kernel.org>, <s-anna@ti.com>, <nm@ti.com>,
-        <lokeshvutla@ti.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 1/1] ARM: dts: dra7: Separate AM57 dtsi files
-Date:   Mon, 8 Apr 2019 12:42:49 +0300
-Message-ID: <20190408094249.29894-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190405132806.20772-1-rogerq@ti.com>
-References: <20190405132806.20772-1-rogerq@ti.com>
+        Mon, 8 Apr 2019 05:44:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53356 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfDHJoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 05:44:19 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C79AE5944C;
+        Mon,  8 Apr 2019 09:44:19 +0000 (UTC)
+Received: from localhost (ovpn-116-217.ams2.redhat.com [10.36.116.217])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EF1DE1A7E9;
+        Mon,  8 Apr 2019 09:44:16 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 10:44:16 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
+ throughput
+Message-ID: <20190408094416.GQ15001@stefanha-x1.localdomain>
+References: <20190404105838.101559-1-sgarzare@redhat.com>
+ <a98d194d-e257-41ff-82e7-de2d16d2f4d4@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sBcizk6cgRZY6rnJ"
+Content-Disposition: inline
+In-Reply-To: <a98d194d-e257-41ff-82e7-de2d16d2f4d4@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 08 Apr 2019 09:44:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AM5 and DRA7 SoC families have different set of modules
-in them so the SoC sepecific dtsi files need to be separated.
 
-e.g. Some of the major differences between AM576 and DRA76
+--sBcizk6cgRZY6rnJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-		DRA76x	AM576x
+On Mon, Apr 08, 2019 at 02:43:28PM +0800, Jason Wang wrote:
+> Another thing that may help is to implement sendpage(), which will greatly
+> improve the performance.
 
-USB3		x
-USB4		x
-ATL		x
-VCP		x
-MLB		x
-ISS		x
-PRU-ICSS1		x
-PRU-ICSS2		x
+I can't find documentation for ->sendpage().  Is the idea that you get a
+struct page for the payload and can do zero-copy tx?  (And can userspace
+still write to the page, invalidating checksums in the header?)
 
-This patch only deals with disabling USB3, USB4 and ATL for
-AM57 variants.
+Stefan
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
----
+--sBcizk6cgRZY6rnJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changelog:
+-----BEGIN PGP SIGNATURE-----
 
-v2:
-- fix am57xx-beagle-x15-common.dtsi
+iQEcBAEBAgAGBQJcqxfvAAoJEJykq7OBq3PIpPEIAIPydRh9MmTxWJHiLCIdcVZB
+YTFjrwJFHuWU1MSyz9onJyJxcranVbekSDh+RaESeGRrg1xSyNZBqqwNUfzm23XP
+jQv1xTzq9qCC6ZB81lHgFclJjT5h1/KFVKzG3Wv2dMffDW+7/Y54wOdvPsYGIQdh
+ZaeT3vH1BIoIz9xA7Ajt1H3p4XjqCQyOc8LPXzHi11zpg+UgEV6AIbSNq2hjEOuK
+1n4tJ/tRaGVsrhfHcg65GzY3mA/z4X6xfpw+dgZ5ZlWRKqfqNbFr4q8Sxpwla3DF
+aGElG+Dsc/4SkbOLzD4WfN+JmM/pvsk1pH6RMb/OHlaD9K6fMDlL9cliH2ovmY8=
+=y3qN
+-----END PGP SIGNATURE-----
 
- arch/arm/boot/dts/am5718.dtsi                 | 32 ++++++++++++++++++
- arch/arm/boot/dts/am571x-idk.dts              |  2 +-
- arch/arm/boot/dts/am5728.dtsi                 | 33 +++++++++++++++++++
- arch/arm/boot/dts/am572x-idk.dts              |  5 ++-
- arch/arm/boot/dts/am5748.dtsi                 | 33 +++++++++++++++++++
- arch/arm/boot/dts/am574x-idk.dts              |  4 +--
- .../boot/dts/am57xx-beagle-x15-common.dtsi    |  2 +-
- arch/arm/boot/dts/am57xx-cl-som-am57x.dts     |  2 +-
- arch/arm/boot/dts/dra7-l4.dtsi                |  6 ++--
- 9 files changed, 108 insertions(+), 11 deletions(-)
- create mode 100644 arch/arm/boot/dts/am5718.dtsi
- create mode 100644 arch/arm/boot/dts/am5728.dtsi
- create mode 100644 arch/arm/boot/dts/am5748.dtsi
-
-diff --git a/arch/arm/boot/dts/am5718.dtsi b/arch/arm/boot/dts/am5718.dtsi
-new file mode 100644
-index 000000000000..d51007c3e8c4
---- /dev/null
-+++ b/arch/arm/boot/dts/am5718.dtsi
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra72x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5718", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5718
-+ *
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 6432309b39e3..66116ad3f9f4 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -7,7 +7,7 @@
-  */
- /dts-v1/;
- 
--#include "dra72x.dtsi"
-+#include "am5718.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include "dra7-mmc-iodelay.dtsi"
-diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
-new file mode 100644
-index 000000000000..82e5427ef6a9
---- /dev/null
-+++ b/arch/arm/boot/dts/am5728.dtsi
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra74x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5728", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5728
-+ *
-+ * EVE1, EVE2
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index b2fb6e097be7..4f835222c266 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -8,15 +8,14 @@
- 
- /dts-v1/;
- 
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- #include "dra7-mmc-iodelay.dtsi"
- #include "dra74x-mmc-iodelay.dtsi"
- #include "am572x-idk-common.dtsi"
- 
- / {
- 	model = "TI AM5728 IDK";
--	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra742", "ti,dra74",
--		     "ti,dra7";
-+	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra7";
- };
- 
- &mmc1 {
-diff --git a/arch/arm/boot/dts/am5748.dtsi b/arch/arm/boot/dts/am5748.dtsi
-new file mode 100644
-index 000000000000..5e129759d04a
---- /dev/null
-+++ b/arch/arm/boot/dts/am5748.dtsi
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra76x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5748", "ti,dra762", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5748
-+ *
-+ * EVE1, EVE2
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index 378dfa780ac1..dc5141c35610 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -6,14 +6,14 @@
- 
- /dts-v1/;
- 
--#include "dra76x.dtsi"
-+#include "am5748.dtsi"
- #include "dra7-mmc-iodelay.dtsi"
- #include "dra76x-mmc-iodelay.dtsi"
- #include "am572x-idk-common.dtsi"
- 
- / {
- 	model = "TI AM5748 IDK";
--	compatible = "ti,am5728-idk", "ti,dra762", "ti,dra7";
-+	compatible = "ti,am5748-idk", "ti,am5748", "ti,dra762", "ti,dra7";
- };
- 
- &qspi {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 1e6620f139dd..2341a56ebab9 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -7,7 +7,7 @@
-  */
- /dts-v1/;
- 
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- #include "am57xx-commercial-grade.dtsi"
- #include "dra74x-mmc-iodelay.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-index 4748ce8747ad..0460de0da2bf 100644
---- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-@@ -13,7 +13,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- 
- / {
- 	model = "CompuLab CL-SOM-AM57x";
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 414f1cd68733..fe9f0bc29fec 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -2499,7 +2499,7 @@
- 			ranges = <0x0 0x3a000 0x1000>;
- 		};
- 
--		target-module@3c000 {			/* 0x4843c000, ap 23 08.0 */
-+		atl_tm: target-module@3c000 {		/* 0x4843c000, ap 23 08.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			reg = <0x3c000 0x4>;
- 			reg-names = "rev";
-@@ -4099,7 +4099,7 @@
- 			};
- 		};
- 
--		target-module@100000 {			/* 0x48900000, ap 85 04.0 */
-+		usb3_tm: target-module@100000 {		/* 0x48900000, ap 85 04.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "usb_otg_ss3";
- 			reg = <0x100000 0x4>,
-@@ -4148,7 +4148,7 @@
- 			};
- 		};
- 
--		target-module@140000 {			/* 0x48940000, ap 75 3c.0 */
-+		usb4_tm: target-module@140000 {		/* 0x48940000, ap 75 3c.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "usb_otg_ss4";
- 			reg = <0x140000 0x4>,
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+--sBcizk6cgRZY6rnJ--
