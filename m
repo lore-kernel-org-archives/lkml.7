@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153A3C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09449C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D2520880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF5C20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+F8vW7s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U45ifiFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfDHTkB (ORCPT
+        id S1729251AbfDHTkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:40:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35064 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfDHTj4 (ORCPT
+        Mon, 8 Apr 2019 15:40:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33620 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728973AbfDHTkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:39:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t21so5899982pfh.2;
-        Mon, 08 Apr 2019 12:39:55 -0700 (PDT)
+        Mon, 8 Apr 2019 15:40:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k19so7896648pgh.0;
+        Mon, 08 Apr 2019 12:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pw3HtNip1IHtP8y+sCxbjAno2YKsFoKwmHCwnLCGi7I=;
-        b=C+F8vW7sqTWrE02DXh+S4hq4pT+Ec/222R8DUTuIyEO31DZgRWsAZqRldj9e1OfK0K
-         Vmwan4KIvDy0tRGLW0L0mk17nv0VoF5v+x/k2Q89fP7YnpFiv8nH+qsqGhJn85hnWkSr
-         32QXR/xXfiZHtgcgOsoYHJchiazQfQ0JIl4hazWWkKFuYCyHxvMhSbVJD/bT2M710bBs
-         q83kiy3P0tf3LsCx84IqC5374Z/HiGBljpFGiSJ82hUwsgbL+k7H0pZ6GYhKYIKUryaY
-         CrozDomweZYBhdMd5i9z84OCvtOLnBG5NgwvZCEyeiuxvJ+m94XBenOWpYvegNqsckTG
-         dO1w==
+        bh=IPmXWb96ab6qvHWkVTNbeUB9IFTYvMvkFCL+VTS1Hvg=;
+        b=U45ifiFbSifUd79X6Op6LKecZqFgNu18jChNk76xxt+LqYys3OkwUtdwWQiIckcA8b
+         QPy3+67aqM5Mza3iPFXHqRgPxEnowWPmyK2CBKGBvNYZQWMl8343J1x701h/tTf32Ptx
+         x1NgLbWyIjExOzENHyYk0YINIuk2i2uh65aktXPXBWSgFE0CRqRxGkbq7RaOth0hXh3b
+         qMZQFDDBEv3a0pNsmIeHmN704/OEtcd28wc/ag1errGOuc1Hj1nIe0grU4mFkjCmkANo
+         kRPbbAm96x93hLTzoNhY4c5iACRxLYN4Pmmx5ul3Th9v+kKzv6HN2iY7/r/PMnUoL9Tg
+         WR0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=pw3HtNip1IHtP8y+sCxbjAno2YKsFoKwmHCwnLCGi7I=;
-        b=PeP2kAiHrJJ4JIejnDFy1xXXukK9lmN3BtkYfy9pnHP/fwUQBBzQWdyMuYaq8cIAD2
-         ybx5qZH9YOXejAhfa9r4/80fzVllNIu/Lv3RKLh3x5kz4tIKvuoRtjq4ygT6aPYHmX7c
-         LPg5zMv+8wLURGMSthZcFjk2quVcZ4J/RX4NH53vOzQhR+dCsmshp/C20UlJVRxeEJxA
-         VgrI5Gj6g2M57UxbuDs+tmBasfq5M3xGQZtJxkwOnqITIlZb2jnQqYiIxBXloOuo2rsX
-         QXJ4dtXGbna75oDZ3Ncwul81rFUdeDAIlmEtG91qeB838iviE8MxGJ3A6kmDUe4J17gP
-         FUXg==
-X-Gm-Message-State: APjAAAUGzVfEa58bWAH8dM9xnLPleNQZEGG5AH+CQ6voHTOE0xS3vopV
-        cxB9ETQMLrRw1hn2vRMhJys=
-X-Google-Smtp-Source: APXvYqxjtF8jnrnSnuBJi/TnsZseD4NxSwoPwmGlQKxBuhtw5SPJJBOnqJDwSYwYZzvSTLQdGBfiAQ==
-X-Received: by 2002:aa7:90ca:: with SMTP id k10mr31884363pfk.144.1554752395493;
-        Mon, 08 Apr 2019 12:39:55 -0700 (PDT)
+        bh=IPmXWb96ab6qvHWkVTNbeUB9IFTYvMvkFCL+VTS1Hvg=;
+        b=aWa4k08AK2X8RDgEA+ke8EwIKL/BWMjop7UNoKAc2sjUi+avzmZwFCmkhf4cvMoS5T
+         hm40JUJe1JMmMzjk2cw5yQxSU1n1oChOV0XmU+GHdl70EhvwWSCEomyzi5yzcm8QZtZF
+         gGZO6uNkDX579DpweQ0ioNFlCPCY9EWebv/M+aSCF7KOymoyxEX51OnGfBCS0BIJmnCR
+         QJaWHzZr71oUgYIdHzw9PTIbGEL4on9D+oIjpjMhhXUy8Z9v+NcZqvwaRcn1wh0CC3Ii
+         qn12gg6xWpM8l8PkX0kH81mh5u5jBckYpPIFnAezcPgia9ClgIx4pl2pYfKZ+2hK84Yu
+         HpmQ==
+X-Gm-Message-State: APjAAAVmLqwP5W8Y03fcZSe2cctqSdGGwtTpAz2F4T7Y7LlSAMidZGP1
+        GClYobEWzshlif/wM7664f4=
+X-Google-Smtp-Source: APXvYqyPBQI+qf55rCe5VGj8miavjJ6JUhNGY1HJlsVe5sZ4K7+UcwtckLX8oEtZKdxZ/NWwnYse5g==
+X-Received: by 2002:aa7:9095:: with SMTP id i21mr31640467pfa.134.1554752401061;
+        Mon, 08 Apr 2019 12:40:01 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j9sm25315182pfc.43.2019.04.08.12.39.54
+        by smtp.gmail.com with ESMTPSA id g64sm70975351pfg.13.2019.04.08.12.40.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 12:39:55 -0700 (PDT)
+        Mon, 08 Apr 2019 12:40:00 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 13/22] watchdog: davinci_wdt: Convert to use device managed functions and other improvements
-Date:   Mon,  8 Apr 2019 12:38:37 -0700
-Message-Id: <1554752326-13319-14-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 17/22] watchdog: iTCO_wdt: Various improvements
+Date:   Mon,  8 Apr 2019 12:38:41 -0700
+Message-Id: <1554752326-13319-18-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
 References: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
@@ -70,120 +70,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Various coccinelle driven transformations as detailed below.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
+- Use watchdog_stop_on_unregister to stop the watchdog on remove
 - Drop assignments to otherwise unused variables
-- Drop unnecessary braces around conditional return statements
 - Drop empty remove function
-- Use devm_add_action_or_reset() for calls to clk_disable_unprepare
-- Use local variable 'struct device *dev' consistently
-- Use devm_watchdog_register_driver() to register watchdog device
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/davinci_wdt.c | 41 ++++++++++++++++-------------------------
- 1 file changed, 16 insertions(+), 25 deletions(-)
+ drivers/watchdog/iTCO_wdt.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index 7daa15df74a5..7b2ee35b5ffd 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -191,6 +191,11 @@ static const struct watchdog_ops davinci_wdt_ops = {
- 	.restart	= davinci_wdt_restart,
- };
- 
-+static void davinci_clk_disable_unprepare(void *data)
-+{
-+	clk_disable_unprepare(data);
-+}
-+
- static int davinci_wdt_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
-@@ -206,15 +211,19 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 
- 	if (IS_ERR(davinci_wdt->clk)) {
- 		if (PTR_ERR(davinci_wdt->clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get clock node\n");
-+			dev_err(dev, "failed to get clock node\n");
- 		return PTR_ERR(davinci_wdt->clk);
+diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+index 0a5318b7865e..89cea6ce9a08 100644
+--- a/drivers/watchdog/iTCO_wdt.c
++++ b/drivers/watchdog/iTCO_wdt.c
+@@ -545,6 +545,7 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
  	}
  
- 	ret = clk_prepare_enable(davinci_wdt->clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to prepare clock\n");
-+		dev_err(dev, "failed to prepare clock\n");
- 		return ret;
- 	}
-+	ret = devm_add_action_or_reset(dev, davinci_clk_disable_unprepare,
-+				       davinci_wdt->clk);
-+	if (ret)
-+		return ret;
- 
- 	platform_set_drvdata(pdev, davinci_wdt);
- 
-@@ -224,7 +233,7 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 	wdd->min_timeout	= 1;
- 	wdd->max_timeout	= MAX_HEARTBEAT;
- 	wdd->timeout		= DEFAULT_HEARTBEAT;
--	wdd->parent		= &pdev->dev;
-+	wdd->parent		= dev;
- 
- 	watchdog_init_timeout(wdd, heartbeat, dev);
- 
-@@ -235,33 +244,16 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 	watchdog_set_restart_priority(wdd, 128);
- 
- 	davinci_wdt->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(davinci_wdt->base)) {
--		ret = PTR_ERR(davinci_wdt->base);
--		goto err_clk_disable;
--	}
-+	if (IS_ERR(davinci_wdt->base))
-+		return PTR_ERR(davinci_wdt->base);
- 
--	ret = watchdog_register_device(wdd);
-+	ret = devm_watchdog_register_device(dev, wdd);
- 	if (ret) {
- 		dev_err(dev, "cannot register watchdog device\n");
--		goto err_clk_disable;
-+		return ret;
- 	}
- 
+ 	watchdog_stop_on_reboot(&p->wddev);
++	watchdog_stop_on_unregister(&p->wddev);
+ 	ret = devm_watchdog_register_device(dev, &p->wddev);
+ 	if (ret != 0) {
+ 		pr_err("cannot register watchdog device (err=%d)\n", ret);
+@@ -557,17 +558,6 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
  	return 0;
--
--err_clk_disable:
--	clk_disable_unprepare(davinci_wdt->clk);
--
--	return ret;
--}
--
--static int davinci_wdt_remove(struct platform_device *pdev)
--{
--	struct davinci_wdt_device *davinci_wdt = platform_get_drvdata(pdev);
--
--	watchdog_unregister_device(&davinci_wdt->wdd);
--	clk_disable_unprepare(davinci_wdt->clk);
--
--	return 0;
  }
  
- static const struct of_device_id davinci_wdt_of_match[] = {
-@@ -276,7 +268,6 @@ static struct platform_driver platform_wdt_driver = {
- 		.of_match_table = davinci_wdt_of_match,
- 	},
- 	.probe = davinci_wdt_probe,
--	.remove = davinci_wdt_remove,
- };
+-static int iTCO_wdt_remove(struct platform_device *pdev)
+-{
+-	struct iTCO_wdt_private *p = platform_get_drvdata(pdev);
+-
+-	/* Stop the timer before we leave */
+-	if (!nowayout)
+-		iTCO_wdt_stop(&p->wddev);
+-
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ /*
+  * Suspend-to-idle requires this, because it stops the ticks and timekeeping, so
+@@ -620,7 +610,6 @@ static const struct dev_pm_ops iTCO_wdt_pm = {
  
- module_platform_driver(platform_wdt_driver);
+ static struct platform_driver iTCO_wdt_driver = {
+ 	.probe          = iTCO_wdt_probe,
+-	.remove         = iTCO_wdt_remove,
+ 	.driver         = {
+ 		.name   = DRV_NAME,
+ 		.pm     = ITCO_WDT_PM_OPS,
 -- 
 2.7.4
 
