@@ -3,101 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73009C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B89C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BDC20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C3420870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfDHKel (ORCPT
+        id S1726513AbfDHKel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 8 Apr 2019 06:34:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25882 "EHLO mga07.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:19720 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbfDHKel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726025AbfDHKel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 06:34:41 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 03:34:40 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 03:34:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
-   d="scan'208";a="140963273"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Apr 2019 03:34:38 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hDRbp-0006pb-5I; Mon, 08 Apr 2019 13:34:37 +0300
-Date:   Mon, 8 Apr 2019 13:34:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org
-Subject: Re: linux-next: manual merge of the staging tree with the
- staging.current tree
-Message-ID: <20190408103437.GK9224@smile.fi.intel.com>
-References: <20190408130212.0a41f2a8@canb.auug.org.au>
- <20190408091458.00004e48@huawei.com>
- <20190408100121.GH9224@smile.fi.intel.com>
- <20190408111439.000049bc@huawei.com>
+   d="scan'208";a="314038453"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by orsmga005.jf.intel.com with SMTP; 08 Apr 2019 03:34:37 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 08 Apr 2019 13:34:36 +0300
+Date:   Mon, 8 Apr 2019 13:34:36 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v3 19/36] thunderbolt: Extend tunnel creation to more
+ than 2 adjacent switches
+Message-ID: <20190408103436.GO3622@lahna.fi.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+ <20190328123633.42882-20-mika.westerberg@linux.intel.com>
+ <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
+ <20190408073517.GA3622@lahna.fi.intel.com>
+ <20190408085337.slcnajkgxjq4twkh@wunner.de>
+ <20190408090744.GK3622@lahna.fi.intel.com>
+ <20190408094904.o3fo2anhogyxpaja@wunner.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408111439.000049bc@huawei.com>
+In-Reply-To: <20190408094904.o3fo2anhogyxpaja@wunner.de>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:14:39AM +0100, Jonathan Cameron wrote:
-> On Mon, 8 Apr 2019 13:01:21 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Apr 08, 2019 at 09:14:58AM +0100, Jonathan Cameron wrote:
-> > > On Mon, 8 Apr 2019 13:02:12 +1000
-> > > Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-
-> > > > Today's linux-next merge of the staging tree got a conflict in:
-> > > > 
-> > > >   drivers/iio/industrialio-buffer.c
-> > > > 
-> > > > between commit:
-> > > > 
-> > > >   20ea39ef9f2f ("iio: Fix scan mask selection")
-> > > > 
-> > > > from the staging.current tree and commit:
-> > > > 
-> > > >   3862828a903d ("iio: buffer: Switch to bitmap_zalloc()")
-> > > > 
-> > > > from the staging tree.
-> > > > 
-> > > > I fixed it up (I just used the staging tree version) and can carry the
-> > > > fix as necessary. This is now fixed as far as linux-next is concerned,
-> > > > but any non trivial conflicts should be mentioned to your upstream
-> > > > maintainer when your tree is submitted for merging.  You may also want
-> > > > to consider cooperating with the maintainer of the conflicting tree to
-> > > > minimise any particularly complex conflicts.
-> > > >   
-> > > Thanks Stephen,
-> > > 
-> > > That is the correct resolution.  
+On Mon, Apr 08, 2019 at 11:49:04AM +0200, Lukas Wunner wrote:
+> On Mon, Apr 08, 2019 at 12:07:44PM +0300, Mika Westerberg wrote:
+> > On Mon, Apr 08, 2019 at 10:53:37AM +0200, Lukas Wunner wrote:
+> > > Hm, what other cases are there, i.e. what is the meaning of a tb_regs_hop's
+> > > "next_hop" field if "out_port" doesn't have a remote?  (And why does it
+> > > need to be tracked on the out_port?  In case a remote is added later?)
 > > 
-> > I think it still misses the following fix:
+> > We also need to program HopIDs for adapter ports (PCIe, DP, NHI) in
+> > order to enable a path. The "next_hop" from NULL port to an adapter port
+> > tells the HopID a packet gets when it is routed to the adapter port and
+> > the adapter port registers then are used to specify which HopID means
+> > what (for PCIe there is only 8 but for DP there is 8 and 9, for NHI it
+> > can be anything the service driver has negotiated).
+> 
+> Okay, so in_hopids are the entries allocated in this port's hop config
+> space, whereas out_hopids only really bears significance for adapter
+> ports.  For null ports (in-between two adapter ports on a path),
+> out_hopids is identical to the in_hopids of the next hop (IIUC).
+> 
+> That probably merits mentioning in struct tb_port's kerneldoc.
 
-> Is that actually a problem given it's copied over from buffer->scan_mask just after allocation?
-> The two masks are the same length so I don't think we have a problem with this one.
-> Am I missing something?
-
-Hmm... I didn't get why the commit 20ea39ef9f2f fixes anything.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sure, will do.
