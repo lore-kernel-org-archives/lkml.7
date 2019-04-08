@@ -2,93 +2,64 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0EEC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCE4C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5284A20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWxgzT1L"
+	by mail.kernel.org (Postfix) with ESMTP id 238C720863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbfDHLNA (ORCPT
+        id S1726556AbfDHLNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:13:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44150 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfDHLM6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 07:12:58 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h16so10795202ljg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 04:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sQmitJpwGXJM6LK3DUwBosXECOiXpahSLnM+Vn9iYCY=;
-        b=bWxgzT1LAPgp2nND5rd0UH998ksax5/Y/7FCSqnMsiskhhr8VT7+6yirpIinKPhaSp
-         hUXp6d6NYJAdSBsFUrZSN9D3/HDflDkCt6wp6ne0GThiIqIUTwnBuB55kBvVY4upjQR4
-         ZsEAz7NzZhN50CnlOUm5r8W8fQvOlc1rUTWi7EEbg1C3NEbQza7SVc0+sSgIZX1y2k3c
-         zr7qUcNXidORyS8uhYr4WWS/epr3WbH4WOAgK7oaRSoKj8qZOR+HI8YWfjmCoCBGr8nI
-         RZ2evti94bImHgmHGrYGjusrWL9k9FR5b1xAYRCIOP07PhFHefpzKzFq6AMeaxYSKVaK
-         dWUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sQmitJpwGXJM6LK3DUwBosXECOiXpahSLnM+Vn9iYCY=;
-        b=N9KaSJtUxlrkjLU5qy/MfmbTg46fLDzhoabXwWxHoOl/otx1xNf3qLQjHS2Ur3pNiH
-         KSWEb/22VorQSavinHVy3gEbhNA+FQiEuiJaIBajG+wG/2p1pRJ2QzPY5LiMtOWTkskR
-         CRuyD5Y1EH4fcFx61qG2OrjR9FrG+e1NuvJRUmnmHhqceA4pwXIfxv+feEoDpeeWj9KG
-         7pIyCP/n7zfvoY6HvAxAP+8ze4HKIinNnqKZZo9byiECPZUY38vddhoej60PFpGDXn1y
-         szUqsRWNh2nYTuseVgkHglHrWBOqIZQvItWmuVcffhLIszcVW13Ez1Z/pzuBLbR+XnQI
-         5CEw==
-X-Gm-Message-State: APjAAAWYP1/YM+dzpis2/qjfrIFnVr3Z9ZnM63TzdDRQqqsKkfr/C9An
-        JT1LlheHXSIyT8FtYXeYU7ify+HU+JU6FhDsxl5lgA==
-X-Google-Smtp-Source: APXvYqyXo5vnZjnKSBFrjUkuT5b4CfcAurwarq2lT5HbwYRSwj2NlOsnwJDMr1pP2T+eHhG8jmz6vKWuVGhtvNXSR2c=
-X-Received: by 2002:a2e:3512:: with SMTP id z18mr15071506ljz.25.1554721976233;
- Mon, 08 Apr 2019 04:12:56 -0700 (PDT)
+        Mon, 8 Apr 2019 07:13:46 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbfDHLNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 07:13:46 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id ED0A2D5609EF16DF3179;
+        Mon,  8 Apr 2019 19:13:43 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 8 Apr 2019 19:13:43 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 8 Apr 2019 19:13:43 +0800
+Subject: Re: [PATCH 1/5] f2fs: clean up codes with op_is_write()
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190402105222.28374-1-yuchao0@huawei.com>
+ <20190405163137.GC51212@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d43af776-dc5e-24d0-dd48-3e74aca43943@huawei.com>
+Date:   Mon, 8 Apr 2019 19:13:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190403144656.8257-1-geert+renesas@glider.be>
-In-Reply-To: <20190403144656.8257-1-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Apr 2019 13:12:44 +0200
-Message-ID: <CACRpkdaY=0hhNL0c+Gr7JnE-9UFVAqXUXGUWA3+KYm2sAwc=MA@mail.gmail.com>
-Subject: Re: [PATCH] spi: Add missing error handling for CS GPIOs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190405163137.GC51212@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 4:46 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On 2019/4/6 0:31, Jaegeuk Kim wrote:
+> On 04/02, Chao Yu wrote:
+>> This patch uses generic function op_is_write() to instead private defined
+>> macro is_read_io() for cleanup.
+> 
+> I don't see huge reason to clean up this, but do expect huge backporting issue.
 
-> While devm_gpiod_get_index_optional() returns NULL if the GPIO is not
-> present (i.e. -ENOENT), it may still return other error codes, like
-> -EPROBE_DEFER.  Currently these are not handled, leading to
-> unrecoverable failures later in case of probe deferral:
->
->     gpiod_set_consumer_name: invalid GPIO (errorpointer)
->     gpiod_direction_output: invalid GPIO (errorpointer)
->     gpiod_set_value_cansleep: invalid GPIO (errorpointer)
->     gpiod_set_value_cansleep: invalid GPIO (errorpointer)
->     gpiod_set_value_cansleep: invalid GPIO (errorpointer)
->
-> Detect and propagate errors to fix this.
->
-> Fixes: f3186dd876697e69 ("spi: Optionally use GPIO descriptors for CS GPIOs")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Got it.
 
-Good catch! Sorry for my bugs...
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Thanks,
