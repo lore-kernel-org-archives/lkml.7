@@ -2,107 +2,106 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2B1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FD021473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:03:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PgSR3bmD"
+	by mail.kernel.org (Postfix) with ESMTP id 35D3D21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfDHPDG (ORCPT
+        id S1727664AbfDHPEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:03:06 -0400
-Received: from mail-ua1-f47.google.com ([209.85.222.47]:44013 "EHLO
-        mail-ua1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbfDHPDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:03:06 -0400
-Received: by mail-ua1-f47.google.com with SMTP id n16so4382582uae.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GG5EnYnMlbn7HpOwBGU4nQCGdfn3UOPmyGhAFDOMTgc=;
-        b=PgSR3bmDXWWuwH3xQHgwQ+UYts1iRpMTckoeVAu0LnkhorNY0kunm0SllpO2mwT0Wf
-         qt9/DpfE/vR6Xh+SyS2mlHqbnumjNBp+V7bvUYpKrWLoKUBr5guavjXf51mF5Ku1zObX
-         +CraGH8VuQVcZ+c/mlCORZGN/kW+ImY7EzXCE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GG5EnYnMlbn7HpOwBGU4nQCGdfn3UOPmyGhAFDOMTgc=;
-        b=Sq5QqApVzO/g4l6P9ESSkSl7hJUnmY+hU4EKAO2gIXCUpGN41c4Z2x3PswKYrc+hUP
-         co8Iy5D/+HLXtUJGMQW8STmJtW6sH4D0UH84DqhZvL5Jlh8GB7Bb0Zv5w+EHxOuBYkK+
-         yiaocz9shrJqYRwtJ8R6gM031zV9duhx+hrm1eCslk28sAC0LvkfYOT2/f6qIFV9jKVQ
-         KVGjDvwHLCCERsbJc2A6wCZ0tRFCFLtl8+Oeq5bDXu27lD+WsK0/NlsbnUunuIZfunWy
-         boeCk+uY8EYZRCiFRLIcvP3UG4m40v7U5W0vw3dxgZ5OmFJcXby3rVrDsYxiOrwzH3Tv
-         GM5Q==
-X-Gm-Message-State: APjAAAU2r7Tiq29V3viNX7kvLqHBENtEf0VVR6WBaKr0cPRaRubWUIPG
-        F/qMtN1O96H1sYuWaHqueKsKrsU6ObI=
-X-Google-Smtp-Source: APXvYqwCAkLoIlJC+d8sDxwmHqlzYgkfvKV2vM1dME8r0YZtVJ717TLtBtLark9G8n6QI71oY3Wk5g==
-X-Received: by 2002:ab0:7042:: with SMTP id v2mr15287116ual.101.1554735784719;
-        Mon, 08 Apr 2019 08:03:04 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id d6sm2164240uad.10.2019.04.08.08.03.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:03:04 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id c6so4410780uan.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:03:03 -0700 (PDT)
-X-Received: by 2002:ab0:a97:: with SMTP id d23mr14537862uak.99.1554735783323;
- Mon, 08 Apr 2019 08:03:03 -0700 (PDT)
+        Mon, 8 Apr 2019 11:04:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41432 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727013AbfDHPEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:04:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 42928ACEE;
+        Mon,  8 Apr 2019 15:04:31 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 17:04:30 +0200
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+Message-ID: <20190408150430.GB23021@linux-x5ow.site>
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
 MIME-Version: 1.0
-References: <CADyDSO6k8vYb1eryT4g6+EHrLCvb68GAbHVWuULkYjcZcYNhhw@mail.gmail.com>
-In-Reply-To: <CADyDSO6k8vYb1eryT4g6+EHrLCvb68GAbHVWuULkYjcZcYNhhw@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 8 Apr 2019 08:02:51 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL8ijV8AXLeeakvP7iXeYGSgyVWOUw+Mp_M0oxL7jf0ZA@mail.gmail.com>
-Message-ID: <CAGXu5jL8ijV8AXLeeakvP7iXeYGSgyVWOUw+Mp_M0oxL7jf0ZA@mail.gmail.com>
-Subject: Re: [REGRESSION] AppArmor module parameter layout changed with c5459b829b716
-To:     David Rheinsberg <david.rheinsberg@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 12:21 AM David Rheinsberg
-<david.rheinsberg@gmail.com> wrote:
->
-> Hi
->
-> A recent commit changed how `/sys/module/apparmor/parameters/enabled`
-> looks. It was "Y"/"N" before, now it is an integer. I *think* the
-> commit that changed this was:
+[+Cc Michal ]
+On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
+> 
+> 
+> > Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
+> > 
+> > On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+> >> From: Angelo Ruocco <angeloruocco90@gmail.com>
+> >> 
+> >> When bfq was merged into mainline, there were two I/O schedulers that
+> >> implemented the proportional-share policy: bfq for blk-mq and cfq for
+> >> legacy blk. bfq's interface files in the blkio/io controller have the
+> >> same names as cfq. But the cgroups interface doesn't allow two
+> >> entities to use the same name for their files, so for bfq we had to
+> >> prepend the "bfq" prefix to each of its files. However no legacy code
+> >> uses these modified file names. This naming also causes confusion, as,
+> >> e.g., in [1].
+> >> 
+> >> Now cfq has gone with legacy blk, so there is no need any longer for
+> >> these prefixes in (the never used) bfq names. In view of this fact, this
+> >> commit removes these prefixes, thereby enabling legacy code to truly
+> >> use the proportional share policy in blk-mq.
+> >> 
+> >> [1] https://github.com/systemd/systemd/issues/7057
+> > 
+> > Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
+> > Do you know what's using it and what breaks due to this conversion?
+> > 
+> 
+> Yep, but AFAIK, the problem is exactly the opposite: nobody uses these
+> names for the proportional-share policy, or wants to use these names.  I'm
+> CCing Lennart too, in case he has some improbable news on this.
+> 
+> So the idea is to align names to what people expect, possibly before
+> more confusion arises.
 
-Oooh... the _output_ appears differently based on the type. Argh. Let
-me work something up...
+OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
+symlinks?
 
-> commit c5459b829b716dafd226ad270f25c9a3050f7586
-> Author: Kees Cook <keescook@chromium.org>
-> Date:   Thu Sep 13 22:28:48 2018 -0700
->
->     LSM: Plumb visibility into optional "enabled" state
->
-> I haven't recompiled with a revert, but changing the module-parameter
-> type looks like the obvious culprit. I don't see how this change can
-> be safe?
->
-> This breaks the AppArmor detection of `dbus-broker`. Can the commit be reverted?
+This way we can a) keep the old files and b) have them point to the new (a.k.a
+cfq style) files.
 
-Thanks for catching this!
-
+Byte,
+	Johannes
 -- 
-Kees Cook
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
