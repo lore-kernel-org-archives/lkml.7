@@ -2,191 +2,104 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4221C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98258C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EF720818
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk12MZVq"
+	by mail.kernel.org (Postfix) with ESMTP id 6EE3220818
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfDHOea (ORCPT
+        id S1727133AbfDHOem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:34:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44764 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfDHOea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:34:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y7so1086947wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=+t48Q8KkFENFm+kHlN+Brhw2DxX9JJkzfGw4eDrv4nU=;
-        b=Bk12MZVqXgLoP8yrnqX1IgcCMRNPkZPIf3S9WZfcnv6P/zOGI/NYcJF2dzj/7PuSWt
-         LRtKkpBC73qtQPZPx4Jvec89IHR1fSg1tOg+eG8NQGzhdcv6OsrOqZH1CBZev5k1rPpM
-         q5AP+1aOMuGsDEPRhzY2oeugQRUOsXa4/+BE39k4rxjBcsmXT1v02nkvV5+ND5xdm3kO
-         ixYCgdj3AORpLjAfpXMMxI+/O+dtrRuavsQoY69cdgrp0Yqix93pi/KGpH5Z4d8dWrU9
-         +IGGUfKNVELER3AzO36uyx3l0OUlmOS613QRxqpTvVCJ3BipUgwRhoxL+3kXpKkhd+28
-         6R2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=+t48Q8KkFENFm+kHlN+Brhw2DxX9JJkzfGw4eDrv4nU=;
-        b=dAeLdDpuefIijskMhzYBacwB4/F4AAmaPIp1yRP215lp2GGmXzc05bUr6gpSP+usPx
-         EPsRUmGil9MZtRrFFWdKgANoy+BmjPpl1D+Gp/xpBoGuWGBw+CFnJAeVq3zQ3aU/3xrf
-         2CcLPV/s71UsztoIEYYwfXIchOdjzbgOKLgJaKi3XbAuDrPPbhIyqcvRlXo6BOpjGnyZ
-         TXemWnh2p7xEss1Qfea5RxKTDCpXxiwb0M+/4+wuICb/Ds5Wju9Bk5XlNfLLOmvGgqkI
-         mWdwbc+oDcnjWtzv+iBX9jy7rHCx9YgbEHBJzVgBrQ99K7UXZ9In8aSfqaZqBCkGiB6c
-         6JFQ==
-X-Gm-Message-State: APjAAAWmOdbMivsHwwt2E3/675ePqzZmiYfhRc4h756OdGzYLGcFGhZL
-        TJhuMIG9uNkvMAO+n72g7FUN52djv2mqO+ktFpk=
-X-Google-Smtp-Source: APXvYqxaVF0SGE//JjI6CN2hkMckkBtZovemDywnco+huYTpnft4NI3m2YEXopqLjpWTOAhwiiJBlqyxbZ/puTiiVrw=
-X-Received: by 2002:adf:c002:: with SMTP id z2mr18762171wre.177.1554734067583;
- Mon, 08 Apr 2019 07:34:27 -0700 (PDT)
+        Mon, 8 Apr 2019 10:34:42 -0400
+Received: from mail.delivery-51-eu-central-1.prod.hydra.sophos.com ([35.159.27.143]:57344
+        "EHLO mail.delivery-51-eu-central-1.prod.hydra.sophos.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbfDHOel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:34:41 -0400
+X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Apr 2019 10:34:40 EDT
+Received: from mail.delivery-9-eu-central-1.prod.hydra.sophos.com (ip-172-20-0-105.eu-central-1.compute.internal [172.20.0.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.delivery-51-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id 44dCSh5BkHz9B2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 14:28:04 +0000 (UTC)
+Received: from ip-172-20-1-157.eu-central-1.compute.internal (ip-172-20-1-157.eu-central-1.compute.internal [127.0.0.1])
+        by mail.delivery-9-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTP id 44dCSg3TTfzgY8G;
+        Mon,  8 Apr 2019 14:28:03 +0000 (UTC)
+X-Sophos-Email-ID: 4614bc7ac1fb47f180ed3d5c4586770a
+Received: from smtp.eckelmann.de (smtp.eckelmann.de [217.19.183.80])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by relay-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id
+ 44dCSd4x19z5vM6; Mon,  8 Apr 2019 14:28:01 +0000 (UTC)
+Received: from ws067.eckelmann.group (2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9)
+ by EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5) with
+ Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1591.10; Mon, 8 Apr 2019 16:28:01 +0200
+Date:   Mon, 8 Apr 2019 16:27:55 +0200
+From:   Thorsten Scherer <thorsten.scherer@eckelmann.de>
+To:     Gavin Schenk <g.schenk@eckelmann.de>
+CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <u.kleine-koenig@pengutronix.de>, <t.scherer@eckelmann.de>,
+        <kernel@pengutronix.de>
+Subject: Re: [PATCH] MAINTAINERS / Documentation: Thorsten Scherer is the
+ successor of Gavin Schenk
+Message-ID: <20190408142755.GA4719@ws067.eckelmann.group>
+References: <20190408123208.10965-1-g.schenk@eckelmann.de>
 MIME-Version: 1.0
-References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
- <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com> <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
- <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com> <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com>
-In-Reply-To: <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 8 Apr 2019 16:34:16 +0200
-Message-ID: <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
-Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
- filename $module/.rodata.cst{16,32}
-To:     Denys Vlasenko <dvlasenk@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190408123208.10965-1-g.schenk@eckelmann.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9]
+X-ClientProxiedBy: EX-SRV1.eckelmann.group (2a00:1f08:4007:e035:172:18:35:4)
+ To EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
+X-LASED-Pver: 0000002
+X-Sophos-Email: [eu-central-1] Antispam-Engine: 3.1.5,
+ AntispamData: 2019.4.8.141516
+X-LASED-SpamProbabilty: 0.083173
+X-LASED-Hits: BODYTEXTP_SIZE_3000_LESS 0.000000,
+ BODYTEXTP_SIZE_400_LESS 0.000000, BODY_SIZE_1000_LESS 0.000000,
+ BODY_SIZE_2000_LESS 0.000000, BODY_SIZE_300_399 0.000000,
+ BODY_SIZE_5000_LESS 0.000000, BODY_SIZE_7000_LESS 0.000000,
+ FROM_SAME_AS_TO_DOMAIN 0.000000, HTML_00_01 0.050000, HTML_00_10 0.050000,
+ IN_REP_TO 0.000000, LEGITIMATE_SIGNS 0.000000, MSG_THREAD 0.000000,
+ MULTIPLE_RCPTS 0.100000, NO_URI_HTTPS 0.000000, REFERENCES 0.000000,
+ WEBMAIL_SOURCE 0.000000, __ANY_URI 0.000000, __BOUNCE_CHALLENGE_SUBJ 0.000000,
+ __BOUNCE_NDR_SUBJ_EXEMPT 0.000000, __CD 0.000000, __CT 0.000000,
+ __CT_TEXT_PLAIN 0.000000, __DQ_NEG_HEUR 0.000000, __DQ_NEG_IP 0.000000,
+ __FORWARDED_MSG 0.000000, __FROM_DOMAIN_IN_ANY_TO1 0.000000,
+ __FROM_DOMAIN_IN_RCPT 0.000000, __HAS_CC_HDR 0.000000, __HAS_FROM 0.000000,
+ __HAS_MSGID 0.000000, __HAS_XOIP 0.000000, __IN_REP_TO 0.000000,
+ __MIME_TEXT_ONLY 0.000000, __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000,
+ __MIME_VERSION 0.000000, __MULTIPLE_RCPTS_CC_X2 0.000000,
+ __NO_HTML_TAG_RAW 0.000000, __REFERENCES 0.000000, __SANE_MSGID 0.000000,
+ __SUBJ_ALPHA_END 0.000000, __SUBJ_ALPHA_NEGATE 0.000000, __SUBJ_REPLY 0.000000,
+ __TO_MALFORMED_2 0.000000, __TO_NAME 0.000000,
+ __TO_NAME_DIFF_FROM_ACC 0.000000, __TO_REAL_NAMES 0.000000,
+ __URI_NO_WWW 0.000000, __USER_AGENT 0.000000
+X-LASED-Authed: 1
+X-LASED-Spam: NonSpam
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 4:29 PM Denys Vlasenko <dvlasenk@redhat.com> wrote:
->
-> On 4/8/19 4:23 PM, Sedat Dilek wrote:
-> > For the .rodata.cst16 part you mean sth. like this?
->
-> yes, see below
->
-> > --- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> > +++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> > @@ -573,8 +573,12 @@
-> > ENDPROC(roundsm16_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
-> >          vmovdqu y7, 15 * 16(rio);
-> >
-> >
-> > -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-> > -.section       .rodata.cst16, "aM", @progbits, 16
-> > +/*
-> > + * NB: section is mergeable, all elements must be aligned 16-byte blocks
-> > + * There is more than one object in this section, let's use module name
-> > + * instead of object name as unique suffix
-> > + */
-> > +.section        .rodata.cst16.camellia-aesni-avx-asm_64, "aM", @progbits, 16
->
-> dashes in the name may cause problems, replace with '_'.
->
-> >   .align 16
-> >
-> >   #define SHUFB_BYTES(idx) \
-> > diff --git a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> > b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> > index b66bbfa62f50..d6ce36e82a93 100644
-> > --- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> > +++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> > @@ -626,8 +626,12 @@
-> > ENDPROC(roundsm32_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
-> >          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
-> >          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
-> >
-> > -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-> > -.section       .rodata.cst16, "aM", @progbits, 16
-> > +/*
-> > + * NB: section is mergeable, all elements must be aligned 16-byte blocks
-> > + * There is more than one object in this section, let's use module name
-> > + * instead of object name as unique suffix
-> > +*/
-> > +.section        .rodata.cst16.ccamellia-aesni-avx2-asm_64, "aM", @progbits, 16
->
-> dashes in the name may cause problems, replace with '_'.
+Hello everyone,
 
-Oops.
+On Mon, Apr 08, 2019 at 02:32:08PM +0200, Gavin Schenk wrote:
+> Due to new challenges in my life I can no longer take care of SIOX.
+> Thorsten takes over my SIOX tasks.
+> 
+> Signed-off-by: Gavin Schenk <g.schenk@eckelmann.de>
 
-v2:
+Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
 
-sdi@iniza:~/src/linux-kernel/linux$ git --no-pager diff
-diff --git a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-index a14af6eb09cb..712d6a7e8b8f 100644
---- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-+++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-@@ -573,8 +573,12 @@
-ENDPROC(roundsm16_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
-        vmovdqu y7, 15 * 16(rio);
+I will take over Gavin's SIOX tasks.
 
-
--/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
--.section       .rodata.cst16, "aM", @progbits, 16
-+/*
-+ * NB: section is mergeable, all elements must be aligned 16-byte blocks
-+ * There is more than one object in this section, let's use module name
-+ * instead of object name as unique suffix
-+ */
-+.section        .rodata.cst16.camellia_aesni_avx_asm_64, "aM", @progbits, 16
- .align 16
-
- #define SHUFB_BYTES(idx) \
-diff --git a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-index b66bbfa62f50..34f6b0c4196d 100644
---- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-+++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-@@ -626,8 +626,12 @@
-ENDPROC(roundsm32_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
-        .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
-        .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
-
--/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
--.section       .rodata.cst16, "aM", @progbits, 16
-+/*
-+ * NB: section is mergeable, all elements must be aligned 16-byte blocks
-+ * There is more than one object in this section, let's use module name
-+ * instead of object name as unique suffix
-+*/
-+.section        .rodata.cst16.ccamellia_aesni_avx2_asm_64, "aM", @progbits, 16
- .align 16
-
- /* For CTR-mode IV byteswap */
-diff --git a/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
-b/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
-index 7f30b6f0d72c..fcd5732aba4d 100644
---- a/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
-+++ b/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
-@@ -225,7 +225,12 @@
-        vpshufb rmask,          x2, x2;       \
-        vpshufb rmask,          x3, x3;
-
--.section       .rodata.cst16, "aM", @progbits, 16
-+/*
-+ * NB: section is mergeable, all elements must be aligned 16-byte blocks
-+ * There is more than one object in this section, let's use module name
-+ * instead of object name as unique suffix
-+ */
-+.section        .rodata.cst16.cast6_avx_x86_64_asm_64, "aM", @progbits, 16
- .align 16
- .Lxts_gf128mul_and_shl1_mask:
-        .byte 0x87, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0
-
-I tried to check for the .rodata.cst32 case, how do I identify the *.S files?
-
-- Sedat -
+Best regards
+Thorsten
