@@ -2,149 +2,213 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB49C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F64C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EE42087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSfD8/5L"
+	by mail.kernel.org (Postfix) with ESMTP id 8BE07213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfDHM53 (ORCPT
+        id S1726532AbfDHNBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:57:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:47101 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfDHM53 (ORCPT
+        Mon, 8 Apr 2019 09:01:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45574 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHNBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:57:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t17so16224189wrw.13;
-        Mon, 08 Apr 2019 05:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RG4KSOrY/SdVG3PP97/1DBK8meGbkopeXRAfG50XFAE=;
-        b=mSfD8/5Lqcyz7zh1PO6YrEe8Mgmt5t7sZxCPcBqrfBULgXB0yCj0O6LUziicEkhEpp
-         yMCvcAUA4hHwxz/7yZ6/ANDuJyaAPJfKBI3UP61DlKWTNSFQV9qA7wInYG+ou725c2A0
-         qMsRpVX6qVxsu6xP2GvubqvNyJv1LoApr7CcuqjHqNrOhFhvZSj9buHZXLXquK1uzxlL
-         M5S5KC1j+v+byFlek3NutufMbAFmGg81gW9P/MCnmfLL/l/xCF20NoUYNHXfFv+inxsn
-         EEe+gYJffrBjEvwkhRxFPqUllW4BaTGNGpj8/kLfS02iXfP6qZXelDD9an264G3vp7S9
-         AJBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RG4KSOrY/SdVG3PP97/1DBK8meGbkopeXRAfG50XFAE=;
-        b=gZsNXV2XaqpmLDvZ9doKRp2SyLHrhtsdLZnLqE4UtqMxFj3HEqA7kGM4kddeozoOPa
-         oO+iTqqMHferLdDE2mdhxgLcBg8+OO6TDzh20GlfIAUddt6J5Bs7O37cQJQnOF22+2p6
-         nb3ORWrDhSwuZZlHMDhtrY7LHwj+3qz2VFeTY9Lrs/IQKoH1q4JzR8wJVujtJ5Jp9pl1
-         h+RvFTR0+HCD/Gl8b85uxlJj1cymmdqc2NWpQXRqo+24Pomtfx1hpqper3ZiX1s6aRhH
-         IjP8QE3MXuQ4uvdHOKM7Wy7YACzmRTeNOslZaLLOzHBmZJIfZ1oMxMsaAoTxO9R8T6UW
-         FVCQ==
-X-Gm-Message-State: APjAAAWyw8hY00WszQKosIoEgRbGhC1onr6Muicv1YxOrCX+0zFaCHoy
-        oQJjis4cicDCtuImJiObS4Y=
-X-Google-Smtp-Source: APXvYqzlLG3ffGSrg0AVD6B83+9GQD5wUlp2cc4BT3d4vSwUAWAyT3dOXGhEsNDVfsI3US/tbEBERQ==
-X-Received: by 2002:a05:6000:1111:: with SMTP id z17mr16540138wrw.103.1554728247112;
-        Mon, 08 Apr 2019 05:57:27 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id u17sm10523100wmj.1.2019.04.08.05.57.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 05:57:26 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 14:57:20 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rtc: tegra: set range
-Message-ID: <20190408125720.GG6644@ulmo>
-References: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
- <20190408102249.GC6644@ulmo>
- <20190408115406.GJ7480@piout.net>
+        Mon, 8 Apr 2019 09:01:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C42112682D0
+Subject: Re: [PATCH v3] platform/chrome: mfd/cros_ec_debugfs: Add debugfs
+ entry to retrieve EC uptime.
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org,
+        Guenter Roeck <groeck@google.com>
+References: <20190327182040.112651-1-twawrzynczak@chromium.org>
+ <147049bd-d661-bb6d-9631-fc15c5b4c9bb@collabora.com>
+Message-ID: <28d1d39e-ef60-6c5d-675a-7c86f2ec874d@collabora.com>
+Date:   Mon, 8 Apr 2019 15:01:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
-Content-Disposition: inline
-In-Reply-To: <20190408115406.GJ7480@piout.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <147049bd-d661-bb6d-9631-fc15c5b4c9bb@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---64j1qyTOoGvYcHb1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 08, 2019 at 01:54:06PM +0200, Alexandre Belloni wrote:
-> On 08/04/2019 12:22:49+0200, Thierry Reding wrote:
-> > On Sun, Apr 07, 2019 at 11:16:44PM +0200, Alexandre Belloni wrote:
-> > > The Tegra 20 RTC is a 32bit seconds counter (with an unused milliseco=
-nd
-> > > counter).
-> > >=20
-> > > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > ---
-> > >  drivers/rtc/rtc-tegra.c | 24 ++++++++++++++----------
-> > >  1 file changed, 14 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-> > > index c6b0a99aa3a9..3f93a1f7abb5 100644
-> > > --- a/drivers/rtc/rtc-tegra.c
-> > > +++ b/drivers/rtc/rtc-tegra.c
-> > > @@ -306,6 +306,13 @@ static int __init tegra_rtc_probe(struct platfor=
-m_device *pdev)
-> > > =20
-> > >  	info->tegra_rtc_irq =3D ret;
-> > > =20
-> > > +	info->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
-> > > +	if (IS_ERR(info->rtc_dev))
-> > > +		return PTR_ERR(info->rtc_dev);
-> > > +
-> > > +	info->rtc_dev->ops =3D &tegra_rtc_ops;
-> > > +	info->rtc_dev->range_max =3D U32_MAX;
-> >=20
-> > The placement of this new block seems somewhat arbitrary, but either
-> > way:
-> >=20
->=20
-> Well, I needed it to be before the clk_prepare_enable call so it can
-> just return and I thought it would be better to leave devm_clk_get close
-> to that clk_prepare_enable call. I don't mind, I can respin with it
-> placed somewhere else.
+On 8/4/19 13:29, Enric Balletbo i Serra wrote:
+> Hi Tim,
+> 
+> Many thanks for sending this patch upstream, some comments below
+> 
+> On 27/3/19 19:20, Tim Wawrzynczak wrote:
+>> The new debugfs entry 'uptime' is being made available to userspace so that
+>> a userspace daemon can synchronize EC logs with host time.
+>>
+>> Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
+>> ---
+>> Changelist:
+>>  - Moved uptime file from sysfs to debugfs (/sys/kernel/debug/cros_ec/uptime)
+>>  - Fixed ordering of local variables in cros_ec_uptime_read.
+>> Tested against ChromeOS kernel v4.14
+>> ---
+>>  Documentation/ABI/testing/debugfs-cros-ec | 10 +++++
+>>  drivers/platform/chrome/cros_ec_debugfs.c | 54 +++++++++++++++++++++++
+>>  2 files changed, 64 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
+>>
+>> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+>> new file mode 100644
+>> index 000000000000..24b781c67a4c
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/debugfs-cros-ec
+> 
+> Thanks to introduce the documentation!
+> 
+>> @@ -0,0 +1,10 @@
+>> +What:		/sys/kernel/debug/cros_ec/uptime
+> 
+> Is that propriety only supported for the standard cros-ec?
+> 
+> If the answer is yes, is fine, but if this could be supported for other variants
+> like cros_pd, cros_tp, cros_fp, cros_ish, etc. then I'd name it
+> 
+> /sys/kernel/debug/<ec-device-name>/uptime
+> 
+> 
+>> +Date:		March 2019
+>> +KernelVersion:	5.1
+>> +Description:
+>> +		Read-only.
+>> +		Reads the EC's current uptime information
+>> +		(using EC_CMD_GET_UPTIME_INFO) and prints
+>> +		time_since_ec_boot_ms into the file.
+>> +		This is used for synchronizing AP host time
+>> +		with the cros_ec log.
+>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+>> index 71308766e891..3ea42008a59e 100644
+>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+>> @@ -201,6 +201,40 @@ static int cros_ec_console_log_release(struct inode *inode, struct file *file)
+>>  	return 0;
+>>  }
+>>  
+>> +static ssize_t cros_ec_uptime_read(struct file *file,
+>> +				   char __user *user_buf,
+>> +				   size_t count,
+>> +				   loff_t *ppos)
+>> +{
+>> +	struct cros_ec_debugfs *debug_info = file->private_data;
+>> +	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+>> +	struct {
+>> +		struct cros_ec_command msg;
+>> +		struct ec_response_uptime_info resp;
+>> +	} __packed ec_buf;
+>> +	struct ec_response_uptime_info *resp;
+>> +	struct cros_ec_command *msg;
+>> +	char read_buf[32];
+>> +	int ret;
+>> +
+>> +	msg = &ec_buf.msg;
+>> +	resp = (struct ec_response_uptime_info *)msg->data;
+>> +
+>> +	msg->command = EC_CMD_GET_UPTIME_INFO;
+>> +	msg->version = 0;
+>> +	msg->insize = sizeof(*resp);
+>> +	msg->outsize = 0;
+>> +
+>> +	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = scnprintf(read_buf, sizeof(read_buf), "%u\n",
+>> +			resp->time_since_ec_boot_ms);
+>> +
+>> +	return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
+>> +}
+>> +
+>>  static ssize_t cros_ec_pdinfo_read(struct file *file,
+>>  				   char __user *user_buf,
+>>  				   size_t count,
+>> @@ -269,6 +303,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
+>>  	.llseek = default_llseek,
+>>  };
+>>  
+>> +const struct file_operations cros_ec_uptime_fops = {
+>> +	.owner = THIS_MODULE,
+>> +	.open = simple_open,
+>> +	.read = cros_ec_uptime_read,
+>> +	.llseek = default_llseek,
+> 
+> Should this file be seekable?
+> 
+>> +};
+>> +
+>>  static int ec_read_version_supported(struct cros_ec_dev *ec)
+>>  {
+>>  	struct ec_params_get_cmd_versions_v1 *params;
+>> @@ -413,6 +454,15 @@ static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
+>>  	return 0;
+>>  }
+>>  
+>> +static int cros_ec_create_uptime(struct cros_ec_debugfs *debug_info)
+>> +{
+>> +	if (!debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+>> +				&cros_ec_uptime_fops))
+>> +		return -ENOMEM;
+> 
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this. This has been discussed recently on
+> the LKML.
+> 
+> I know that this is currently wrong for the other entries in this file but let's
+> try to do well and remove this function and just call debugfs_create_file in probe.
+> 
 
-Don't bother. It's really just a cosmetic change and I couldn't tell you
-a much better place without moving some other pieces around either. If
-somebody really cares a lot, this can be done in a separate follow-up.
+Sorry, actually I changed my opinion on this. So you should check if the command
+is supported and only expose that file if that is the case here. See this commit.
 
-Thierry
+https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/commit/?h=for-next&id=ae8378b081fa970a65001de909d8d6d8deea79b7
 
---64j1qyTOoGvYcHb1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyrRSwACgkQ3SOs138+
-s6HzEQ/9ExhdNimQvOmx53R3w1xJ1Wk536aT0GLQDRqlWjzLPyUbvlZyzRfJ541s
-uFOPMRmTyKrK8ovCzZBYJwXuUxOnErCdhU6zfRln6D6LWkf8Cufv89WcJzYMzOHn
-EBJIm5+mhzOgZJKfk/fzYeZ+837PS9m+ngEWEG2suv6O3VE4//5gfM0ti4+31TyL
-WcD1LOFMPW2YueYfQ1gsdnl+OOcOjahks3H+tSgfHyrJtHN/DlaKVT4NWvtMLWQ/
-AcwaxECeb6REOeAgDMynYJgsX1blx+1ei7m1F0oRL5UIu4buDMVk4Pnimr+Iva41
-+mprBE+AKrDKYwFU18lajbaj682asJSpraUxqC71rV9pf5Wx6Svg5UojvqxktE9G
-dgQ+GDnsDX9TDwneRTwCK0CGQixlyPOEddiouO6NuLtLCO99jLnPTdQag9qk4T15
-Ol3i0rQT8vJlW+VhOTsvzO9n5qgnOPxz0cP3fYrvM3cv1XFT4nax1/f1n1DJ4PbG
-E7rfBQz+eAD4JE5bbh73zaCgmGQb7Y+kG0NSfwubId80wxO2bT4EMUlbQ2YQsLi3
-CAw2P4QlSj5aO+sOlRFis8e9EE35x3Y+rRQk/xyFVM1+vRGUQmd15cYkBioueSZB
-SQivmru56TP/JghItz6/pfCJNAGc/4j1GeTIJI3x7lMktDkL/HQ=
-=sXSP
------END PGP SIGNATURE-----
-
---64j1qyTOoGvYcHb1--
+> I plan to send patches to fix current status.
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int cros_ec_debugfs_probe(struct platform_device *pd)
+>>  {
+>>  	struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
+>> @@ -442,6 +492,10 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>>  	if (ret)
+>>  		goto remove_log;
+>>  
+>> +	ret = cros_ec_create_uptime(debug_info);
+>> +	if (ret)
+>> +		goto remove_log;
+>> +
+> 
+>        debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+>                            &cros_ec_uptime_fops);
+> 
+>>  	ec->debug_info = debug_info;
+>>  
+>>  	dev_set_drvdata(&pd->dev, ec);
+>>
+> 
+> Thanks,
+>  Enric
+> 
