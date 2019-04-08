@@ -6,127 +6,117 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E07C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D685C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7864D20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C0D20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDHDiV (ORCPT
+        id S1726562AbfDHDma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:38:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46469 "EHLO mga18.intel.com"
+        Sun, 7 Apr 2019 23:42:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:40674 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfDHDiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:38:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 20:38:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,323,1549958400"; 
-   d="scan'208";a="147375917"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Apr 2019 20:38:19 -0700
-Subject: Re: [RFC PATCH v2 1/3] arch/x86: add the support of ACRN guest
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1553576023-6434-1-git-send-email-yakui.zhao@intel.com>
- <1553576023-6434-2-git-send-email-yakui.zhao@intel.com>
- <alpine.DEB.2.21.1904052051330.1802@nanos.tec.linutronix.de>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <2b46c1d6-b578-d105-2e61-8b7ec88232ed@intel.com>
-Date:   Mon, 8 Apr 2019 11:36:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1726349AbfDHDma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 23:42:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709BC15AD;
+        Sun,  7 Apr 2019 20:42:29 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B373B3F718;
+        Sun,  7 Apr 2019 20:42:26 -0700 (PDT)
+Subject: Re: [PATCH v8 3/9] KVM: arm64: Move hyp_symbol_addr to fix dependency
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+ <1554172037-4516-4-git-send-email-amit.kachhap@arm.com>
+ <20190405110219.GQ3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <3010dfe9-f423-1e28-d89f-0731ae52a08b@arm.com>
+Date:   Mon, 8 Apr 2019 09:12:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904052051330.1802@nanos.tec.linutronix.de>
+In-Reply-To: <20190405110219.GQ3567@e103592.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 2019年04月06日 03:01, Thomas Gleixner wrote:
-> Zhao,
-> 
-> On Tue, 26 Mar 2019, Zhao Yakui wrote:
-> 
-> Vs. the Subject line: arch/x86: add the support of ACRN guest
-> 
-> The proper prefix for x86 is surprisingly 'x86:' not 'arch/x86:'. Also
-> please start the first word after the colon with an upper case letter.
-> 
->> ACRN is one open-source hypervisour, which is maintained by Linux
-> 
-> s/one/an/
-> 
->> foundation.
-> 
-> by the Linuxfoundation.
-> 
->> This is to add the para-virtualization support so that
->> it allows the Linux guest to run on acrn-hypervisor.
+On 4/5/19 4:32 PM, Dave Martin wrote:
+> On Tue, Apr 02, 2019 at 07:57:11AM +0530, Amit Daniel Kachhap wrote:
+>> Currently hyp_symbol_addr is placed in kvm_mmu.h which is mostly
+>> used by __hyp_this_cpu_ptr in kvm_asm.h but it cannot include
+>> kvm_mmu.h directly as kvm_mmu.h uses kvm_ksym_ref which is
+>> defined inside kvm_asm.h. Hence, hyp_symbol_addr is moved inside
+>> kvm_asm.h to fix this dependency on each other.
 >>
->> This adds x86_hyper_acrn into supported hypervisors array, which enables
->> Linux ACRN guest running on ACRN hypervisor. It is restricted to X86_64.
-> 
-> Please do not use 'This is to add' or 'This adds'. Just say:
-> 
-> Add ....
->   
->> v1->v2: Change the CONFIG_ACRN to CONFIG_ACRN_GUEST, which makes it easy to
->> understand.
->>          Remove the export of x86_hyper_acrn.
-> 
-> Thanks for having the version changes documented, but please put them after
-> the '---' line below and add another '---' before the diffstat. These
-> changes are not part of the final change log and if they are below then I
-> don't have to strip them manually.
-> 
-
-Sure.
-It will be updated.
-
->> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
->> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
->> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+>> Also, hyp_symbol_addr corresponding counterpart, kvm_ksym_ref,
+>> is already in kvm_asm.h, making it more sensible to move
+>> kvm_symbol_addr to the same file.
+>>
+>> Suggested by: James Morse <james.morse@arm.com>
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
 >> ---
->>   arch/x86/Kconfig                  |  8 ++++++++
->>   arch/x86/include/asm/hypervisor.h |  1 +
->>   arch/x86/kernel/cpu/Makefile      |  1 +
->>   arch/x86/kernel/cpu/acrn.c        | 35 +++++++++++++++++++++++++++++++++++
->>   arch/x86/kernel/cpu/hypervisor.c  |  4 ++++
->>   5 files changed, 49 insertions(+)
->>   create mode 100644 arch/x86/kernel/cpu/acrn.c
 >>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index c1f9b3c..d73225e 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -842,6 +842,14 @@ config JAILHOUSE_GUEST
->>   	  cell. You can leave this option disabled if you only want to start
->>   	  Jailhouse and run Linux afterwards in the root cell.
+>> Changes since v7:
+>> * Slight change in commit message [Julien Thierry].
+>>
+>>   arch/arm64/include/asm/kvm_asm.h | 20 ++++++++++++++++++++
+>>   arch/arm64/include/asm/kvm_mmu.h | 20 --------------------
+>>   2 files changed, 20 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+>> index f5b79e9..57a07e8 100644
+>> --- a/arch/arm64/include/asm/kvm_asm.h
+>> +++ b/arch/arm64/include/asm/kvm_asm.h
+>> @@ -80,6 +80,26 @@ extern void __vgic_v3_init_lrs(void);
 >>   
->> +config ACRN_GUEST
->> +	bool "ACRN Guest support"
->> +	depends on X86_64 && PARAVIRT
+>>   extern u32 __kvm_get_mdcr_el2(void);
+>>   
+>> +/*
+>> + * Obtain the PC-relative address of a kernel symbol
+>> + * s: symbol
+>> + *
+>> + * The goal of this macro is to return a symbol's address based on a
+>> + * PC-relative computation, as opposed to a loading the VA from a
+>> + * constant pool or something similar. This works well for HYP, as an
+>> + * absolute VA is guaranteed to be wrong. Only use this if trying to
+>> + * obtain the address of a symbol (i.e. not something you obtained by
+>> + * following a pointer).
+>> + */
+>> +#define hyp_symbol_addr(s)						\
+>> +	({								\
+>> +		typeof(s) *addr;					\
+>> +		asm("adrp	%0, %1\n"				\
+>> +		    "add	%0, %0, :lo12:%1\n"			\
+>> +		    : "=r" (addr) : "S" (&s));				\
+>> +		addr;							\
+>> +	})
+>> +
 > 
-> Why does this select PARAVIRT? The current patches are not implementing
-> anything of the paravirt functionality. Which part of paravirtualization
-> are you going to provide?
-
-Thanks for your nice and careful review.
-Yes. The CONFIG_PARAVIRT is not required.
-It will be removed.
-
+> Do we need to include <asm/kvm_asm.h> in vgic-v2-cpuif-proxy.c now?
+Yes asm/kvm_asm.h should be included now.
 > 
-> Thanks,
+> Otherwise,
 > 
-> 	tglx
+> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+Thanks,
+Amit D
 > 
