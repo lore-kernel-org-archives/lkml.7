@@ -2,107 +2,88 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC78C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CA1C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B815120857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hOKH9wVP"
+	by mail.kernel.org (Postfix) with ESMTP id 74BAC21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbfDHV31 (ORCPT
+        id S1728917AbfDHV3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:29:27 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38178 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729446AbfDHV30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:29:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so8028596pgl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 14:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GbB6gMbRWZnd3XGR++ZafZznSxQYOIqaHAc9TBmuW38=;
-        b=hOKH9wVPW2ru+rMr8WZWSAkF5qWzyQgoxLfn37q1FmSeZZCibD4miqJyNwZWkRma0C
-         S9Xnk3hC7IxfbKcyTJzjfp3aQAi0TG/3ULOggHzmW4YfG/0ZQuHNfeBs2aQJ7zhX7YPD
-         naIJpr1XfiW+haJ5Pa3tSvR69YSsJmyZVM9YQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GbB6gMbRWZnd3XGR++ZafZznSxQYOIqaHAc9TBmuW38=;
-        b=VyQJh0MUJcVB6/STcgfM2ohpvMzBpQNr7DVjjsYATLJ5nc2fQ17yWUzmSDMM/mhjDg
-         AvWluKoUSiuVsUP08lrYDZ6svFrQzMSQHVs7szNCFsmwOLaUtJnPvePyYgHS9iaXug/G
-         S2Y3ywJ8vKFMLMrb3KG+/VF/Kx1Kj+5rJy+DOwhKhgBvDrSD5PgbKbM7bmD7axy4D929
-         K1X0GEgln1XBAjbJf8l9fuDXSr4DradpdhE1Qd42TvU6RKuHb3vL0cZHCxIUytM7zsPE
-         f/KwlMff4wm+qTgDg8VVNXI1fpYvv56bhV57dFor0kjDOAPQwloaVltugbe2bu7eZ3+N
-         I4Dg==
-X-Gm-Message-State: APjAAAUAch6+SYM9BWstmE9yFLS84jFT/Vho3Jn3tRbentiBsO0doZlm
-        NrE98fWYausL0LxQFgjXtfeXHTqfsYE=
-X-Google-Smtp-Source: APXvYqxCmxc7H/Y722GyFHvR0Y9Elc+ji0teoq3wduyN/AGQG9MEgBL7m5NJx1/Dh2hvpWv+xYb3rA==
-X-Received: by 2002:a63:b811:: with SMTP id p17mr30735868pge.219.1554758964939;
-        Mon, 08 Apr 2019 14:29:24 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t12sm68073407pfl.59.2019.04.08.14.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 14:29:24 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, qais.yousef@arm.com, rdunlap@infradead.org,
-        rostedt@goodmis.org, Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Subject: [PATCH v6 2/2] init/config: Do not select BUILD_BIN2C for IKCONFIG
-Date:   Mon,  8 Apr 2019 17:28:55 -0400
-Message-Id: <20190408212855.233198-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190408212855.233198-1-joel@joelfernandes.org>
-References: <20190408212855.233198-1-joel@joelfernandes.org>
+        Mon, 8 Apr 2019 17:29:42 -0400
+Received: from mail.us.es ([193.147.175.20]:44586 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727478AbfDHV3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 17:29:41 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 10D26303D1D
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 23:29:40 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 027E8DA701
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 23:29:40 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id DCEAEDA70B; Mon,  8 Apr 2019 23:29:39 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id D963FDA701;
+        Mon,  8 Apr 2019 23:29:37 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Mon, 08 Apr 2019 23:29:37 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id B70884265A31;
+        Mon,  8 Apr 2019 23:29:37 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 23:29:37 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Li RongQing <lirongqing@baidu.com>,
+        netfilter-devel@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH][v2] time: Introduce jiffies64_to_msecs()
+Message-ID: <20190408212937.dvausk2kq3rfgeie@salvia>
+References: <1551330806-12502-1-git-send-email-lirongqing@baidu.com>
+ <20190308155543.si2nqqm6j2otq27r@salvia>
+ <CALAqxLVZUOM=KXRADi8kQ6XB+AgsdVfYVg_LfzxAcgmAP6hjgg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLVZUOM=KXRADi8kQ6XB+AgsdVfYVg_LfzxAcgmAP6hjgg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 13610aa908dc ("kernel/configs: use .incbin directive to
-embed config_data.gz"), IKCONFIG no longer uses BUILD_BIN2C so prevent
-it from being selected in Kconfig.
+On Fri, Mar 08, 2019 at 08:52:10AM -0800, John Stultz wrote:
+> On Fri, Mar 8, 2019 at 7:55 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> >
+> > On Thu, Feb 28, 2019 at 01:13:26PM +0800, Li RongQing wrote:
+> > > there is a similar helper in net/netfilter/nf_tables_api.c,
+> > > this maybe become a common request someday, so move it to
+> > > time.c
+> > >
+> > > Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> >
+> > Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
+> >
+> > This is touching kernel/time.c bits, which is far from my realm.
+> >
+> > What should I do with this? I can just place it in nf-next.git if I
+> > get an ACK to do so. Otherwise, please just take this if this looks
+> > good to you.
+> 
+> Acked-by: John Stultz <john.stultz@linaro.org>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- init/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/init/Kconfig b/init/Kconfig
-index ea75bfbf7dfa..ffcb2f90543f 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -562,7 +562,6 @@ config BUILD_BIN2C
- 
- config IKCONFIG
- 	tristate "Kernel .config support"
--	select BUILD_BIN2C
- 	---help---
- 	  This option enables the complete Linux kernel ".config" file
- 	  contents to be saved in the kernel. It provides documentation
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Thanks. Now applied.
