@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAD8C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE20C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B3D21841
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C17218FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750865;
-	bh=sFZj5PWbQwM9lYkGkYzvILhlUtNY/iGXZe7nNm+nm1U=;
+	s=default; t=1554750868;
+	bh=RO8g8Bkeg0OX5k3pLgVOkyGX79APyegOKZFWbogP8zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=wB18+7jsgNqLaOawXkzNZ4N569mOTu/0Wv80YH9DvGFY9bJ4g2bRi952X3HHYmYL9
-	 dOG5s1dmrmjLzHQboSLlrTAKZZVvFksS4//Hk/QRt6yNwcFKWN0XETCz2wC3jbOzZJ
-	 pv446EXIf2IXQALhCpq/xe7K0TosPr7iNg1xHOXA=
+	b=WuivJk0ynJvD56IVuNcqFyNxQg5lJb/jpbbXTmD0WvkkXj2ycoU/WPVZhg8r5Soyw
+	 wuaAvN5CZXkBVSHBgXj/VsgFbkG7/MJtyDN7mJROpiI5qQ5AKJJKJBsK01YdxFOp/v
+	 9VCs/y2rWoq+Nv4xtUGgxAhbDCrAuvJeyG8W85DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfDHTOY (ORCPT
+        id S1727260AbfDHTO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45068 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfDHTOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:21 -0400
+        id S1726898AbfDHTOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:24 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2EC22087F;
-        Mon,  8 Apr 2019 19:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06F8D20880;
+        Mon,  8 Apr 2019 19:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750860;
-        bh=sFZj5PWbQwM9lYkGkYzvILhlUtNY/iGXZe7nNm+nm1U=;
+        s=default; t=1554750863;
+        bh=RO8g8Bkeg0OX5k3pLgVOkyGX79APyegOKZFWbogP8zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=2JQUBS2+Pe/BuDdgU4qAz8OgTYK1dVpCztDsx7ItLq/3CFFsrlD2bEWSG7AEUJoYa
-         UIAh+8cERUFbQZ7uWSCmk8e8ZhOyZ5Dk92Cnc06jDQgkh3TT1XpZp36TbFimC6iVuE
-         an7zWqh7Cko94KsyQ4FdAbwzIpKdzcHguLYD1PSY=
+        b=t7VtfGXOdT19BX8oMFyk/CuT4pBP+Q7nkrmZkDH83vi4eOs9BKRH3nE6oT+qRSulx
+         sebh5Gm7c0Fd0h54XpD9OlS9z4nVAh20jETVrnrlw6L51fne3yP5/bOJ5QwsosmorM
+         6OI3lVT730TV2f9iXH2pZYgVRu+BIhLdA1ojSD1M=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
 Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
         jkacur@redhat.com, bigeasy@linutronix.de,
         daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
-Subject: [PATCH 01/13] arm64: fpsimd: use preemp_disable in addition to local_bh_disable()
-Date:   Mon,  8 Apr 2019 14:14:03 -0500
-Message-Id: <b639e14b57a08f3a8931e44ed26101867414b4be.1554737688.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 03/13] sched/fair: Make the hrtimers non-hard again
+Date:   Mon,  8 Apr 2019 14:14:05 -0500
+Message-Id: <5916f8123c2cac32790a91414b17e1b9d6dbf7bf.1554737688.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
@@ -66,109 +66,34 @@ If anyone has any objections, please let me know.
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 3afdfe419c33c1655d0763e070350aad44416594 ]
+[ Upstream commit 73d5c2697339118cd33dc1ff1ffcb21d59cafe1a ]
 
-In v4.16-RT I noticed a number of warnings from task_fpsimd_load(). The
-code disables BH and expects that it is not preemptible. On -RT the
-task remains preemptible but remains the same CPU. This may corrupt the
-content of the SIMD registers if the task is preempted during
-saving/restoring those registers.
-
-Add preempt_disable()/enable() to enfore the required semantic on -RT.
+Since commit "sched/fair: Robustify CFS-bandwidth timer locking" both
+hrtimer can run in softirq context because now interrupts are disabled
+as part of the locking procedure.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-[tom.zanussi@linux.intel.com: ignored sve-related changes]
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
- Conflicts:
-	arch/arm64/kernel/fpsimd.c
 ---
- arch/arm64/kernel/fpsimd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 5d547deb6996..049641a458f3 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -172,6 +172,7 @@ void fpsimd_flush_thread(void)
- 	if (!system_supports_fpsimd())
- 		return;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 46403e462404..7d2a8fa9a6ed 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4704,9 +4704,9 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+ 	cfs_b->period = ns_to_ktime(default_cfs_period());
  
-+	preempt_disable();
- 	local_bh_disable();
- 
- 	memset(&current->thread.fpsimd_state, 0, sizeof(struct fpsimd_state));
-@@ -179,6 +180,7 @@ void fpsimd_flush_thread(void)
- 	set_thread_flag(TIF_FOREIGN_FPSTATE);
- 
- 	local_bh_enable();
-+	preempt_enable();
+ 	INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
+-	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
++	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+ 	cfs_b->period_timer.function = sched_cfs_period_timer;
+-	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
++	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
+ 	cfs_b->distribute_running = 0;
  }
- 
- /*
-@@ -190,12 +192,14 @@ void fpsimd_preserve_current_state(void)
- 	if (!system_supports_fpsimd())
- 		return;
- 
-+	preempt_disable();
- 	local_bh_disable();
- 
- 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE))
- 		fpsimd_save_state(&current->thread.fpsimd_state);
- 
- 	local_bh_enable();
-+	preempt_enable();
- }
- 
- /*
-@@ -208,6 +212,7 @@ void fpsimd_restore_current_state(void)
- 	if (!system_supports_fpsimd())
- 		return;
- 
-+	preempt_disable();
- 	local_bh_disable();
- 
- 	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
-@@ -219,6 +224,7 @@ void fpsimd_restore_current_state(void)
- 	}
- 
- 	local_bh_enable();
-+	preempt_enable();
- }
- 
- /*
-@@ -231,6 +237,7 @@ void fpsimd_update_current_state(struct fpsimd_state *state)
- 	if (!system_supports_fpsimd())
- 		return;
- 
-+	preempt_disable();
- 	local_bh_disable();
- 
- 	fpsimd_load_state(state);
-@@ -242,6 +249,7 @@ void fpsimd_update_current_state(struct fpsimd_state *state)
- 	}
- 
- 	local_bh_enable();
-+	preempt_enable();
- }
- 
- /*
-@@ -281,6 +289,7 @@ void kernel_neon_begin(void)
- 
- 	BUG_ON(!may_use_simd());
- 
-+	preempt_disable();
- 	local_bh_disable();
- 
- 	__this_cpu_write(kernel_neon_busy, true);
-@@ -295,6 +304,7 @@ void kernel_neon_begin(void)
- 	preempt_disable();
- 
- 	local_bh_enable();
-+	preempt_enable();
- }
- EXPORT_SYMBOL(kernel_neon_begin);
- 
 -- 
 2.14.1
 
