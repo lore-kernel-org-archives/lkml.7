@@ -2,128 +2,233 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC681C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33273C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85ACA20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE52F20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfDHGzm (ORCPT
+        id S1726372AbfDHG51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:55:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42438 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfDHGzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:55:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 106BA307EAA7;
-        Mon,  8 Apr 2019 06:55:41 +0000 (UTC)
-Received: from [10.40.204.71] (ovpn-204-71.brq.redhat.com [10.40.204.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 209B8D1C6;
-        Mon,  8 Apr 2019 06:55:36 +0000 (UTC)
-Subject: Re: [PATCH] hwrng: core - don't block in add_early_randomness()
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Matt Mackall <mpm@selenic.com>
-References: <20190329163011.7370-1-lvivier@redhat.com>
- <20190408063154.7bnt6puawoqtwlgo@gondor.apana.org.au>
-From:   Laurent Vivier <lvivier@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=lvivier@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <de8d439c-6df1-160a-6d24-2e1998812056@redhat.com>
-Date:   Mon, 8 Apr 2019 08:55:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 02:57:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46884 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725854AbfDHG51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 02:57:27 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x386n87W101022
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 02:57:25 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rr0a53emt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:57:25 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 8 Apr 2019 07:57:23 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Apr 2019 07:57:17 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x386vGwj61669536
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Apr 2019 06:57:16 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B39554C052;
+        Mon,  8 Apr 2019 06:57:16 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B0BD4C04E;
+        Mon,  8 Apr 2019 06:57:14 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.206.109])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  8 Apr 2019 06:57:14 +0000 (GMT)
+Date:   Mon, 8 Apr 2019 09:57:12 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
+        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-mm@kvack.org, wangkefeng.wang@huawei.com
+Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
+ regions
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
+ <20190403030546.23718-3-chenzhou10@huawei.com>
+ <20190403112929.GA7715@rapoport-lnx>
+ <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
+ <20190404144408.GA6433@rapoport-lnx>
+ <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
+ <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408063154.7bnt6puawoqtwlgo@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 08 Apr 2019 06:55:41 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19040806-0028-0000-0000-0000035E5F11
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040806-0029-0000-0000-0000241D77B5
+Message-Id: <20190408065711.GA8403@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904080064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 08:31, Herbert Xu wrote:
-> On Fri, Mar 29, 2019 at 05:30:11PM +0100, Laurent Vivier wrote:
->> If the device is not ready to provide data the kernel will
->> be stuck indefinitely in the init function.
->>
->> This is not a problem if the device is driven using a module,
->> but if the driver is linked directly into the kernel then the
->> kernel boot sequence hangs.
->>
->> This can happen with virtio-rng device with rng-egd backend
->> with no data provider, for instance with QEMU command line parameters:
->>
->> ...
->>     -chardev socket,id=charrng0,host=localhost,port=2345,server,nowait \
->>     -object rng-egd,id=objrng0,chardev=charrng0 \
->>     -device virtio-rng-pci,rng=objrng0,id=rng0
->>
->> To avoid that, we can call rng_get_data() in non blocking mode because
->> the function already manages the case where byte_read is
->> 0 (if the device is not already initialized).
->>
->> See also commit d3cc7996473a
->> ("hwrng: fetch randomness only after device init")
->>
->> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Hi,
+
+On Fri, Apr 05, 2019 at 11:47:27AM +0800, Chen Zhou wrote:
+> Hi Mike,
 > 
-> I think this is either not a bug (make sure that the user supplies
-> a RNG source) or it should be addressed in virtio-rng.
+> On 2019/4/5 10:17, Chen Zhou wrote:
+> > Hi Mike,
+> > 
+> > On 2019/4/4 22:44, Mike Rapoport wrote:
+> >> Hi,
+> >>
+> >> On Wed, Apr 03, 2019 at 09:51:27PM +0800, Chen Zhou wrote:
+> >>> Hi Mike,
+> >>>
+> >>> On 2019/4/3 19:29, Mike Rapoport wrote:
+> >>>> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
+> >>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+> >>>>> there may be two crash kernel regions, one is below 4G, the other is
+> >>>>> above 4G.
+> >>>>>
+> >>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
+> >>>>> property under node /chosen,
+> >>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+> >>>>>
+> >>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> >>>>> ---
+> >>>>>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
+> >>>>>  include/linux/memblock.h |  1 +
+> >>>>>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
+> >>>>>  3 files changed, 66 insertions(+), 12 deletions(-)
+> >>>>>
+> >>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> >>>>> index ceb2a25..769c77a 100644
+> >>>>> --- a/arch/arm64/mm/init.c
+> >>>>> +++ b/arch/arm64/mm/init.c
+> >>>>> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
+> >>>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+> >>>>>  
+> >>>>>  #ifdef CONFIG_KEXEC_CORE
+> >>>>> +# define CRASH_MAX_USABLE_RANGES        2
+> >>>>> +
+> >>>>>  static int __init reserve_crashkernel_low(void)
+> >>>>>  {
+> >>>>>  	unsigned long long base, low_base = 0, low_size = 0;
+> >>>>> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+> >>>>>  		const char *uname, int depth, void *data)
+> >>>>>  {
+> >>>>>  	struct memblock_region *usablemem = data;
+> >>>>> -	const __be32 *reg;
+> >>>>> -	int len;
+> >>>>> +	const __be32 *reg, *endp;
+> >>>>> +	int len, nr = 0;
+> >>>>>  
+> >>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> >>>>>  		return 0;
+> >>>>> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+> >>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> >>>>>  		return 1;
+> >>>>>  
+> >>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> >>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> >>>>> +	endp = reg + (len / sizeof(__be32));
+> >>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+> >>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> >>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> >>>>> +
+> >>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+> >>>>> +			break;
+> >>>>> +	}
+> >>>>>  
+> >>>>>  	return 1;
+> >>>>>  }
+> >>>>>  
+> >>>>>  static void __init fdt_enforce_memory_region(void)
+> >>>>>  {
+> >>>>> -	struct memblock_region reg = {
+> >>>>> -		.size = 0,
+> >>>>> -	};
+> >>>>> -
+> >>>>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> >>>>> -
+> >>>>> -	if (reg.size)
+> >>>>> -		memblock_cap_memory_range(reg.base, reg.size);
+> >>>>> +	int i, cnt = 0;
+> >>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+> >>>>> +
+> >>>>> +	memset(regs, 0, sizeof(regs));
+> >>>>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
+> >>>>> +
+> >>>>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
+> >>>>> +		if (regs[i].size)
+> >>>>> +			cnt++;
+> >>>>> +		else
+> >>>>> +			break;
+> >>>>> +	if (cnt)
+> >>>>> +		memblock_cap_memory_ranges(regs, cnt);
+> >>>>
+> >>>> Why not simply call memblock_cap_memory_range() for each region?
+> >>>
+> >>> Function memblock_cap_memory_range() removes all memory type ranges except specified range.
+> >>> So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
+> >>> on kdump capture kernel.
+> >>
+> >> Thanks for the clarification.
+> >> I still think that memblock_cap_memory_ranges() is overly complex. 
+> >>
+> >> How about doing something like this:
+> >>
+> >> Cap the memory range for [min(regs[*].start, max(regs[*].end)] and then
+> >> removing the range in the middle?
+> > 
+> > Yes, that would be ok. But that would do one more memblock_cap_memory_range operation.
+> > That is, if there are n regions, we need to do (n + 1) operations, which doesn't seem to
+> > matter.
+> > 
+> > I agree with you, your idea is better.
+> > 
+> > Thanks,
+> > Chen Zhou
+> 
+> Sorry, just ignore my previous reply, I got that wrong.
+> 
+> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
+> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
+> directly and the extra remove operation may be complex.
+> 
+> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
+> Besides, memblock_cap_memory_ranges() is also applicable for one region.
+> 
+> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
 
-Yes, I did more investigation and I agree.
+arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
+and I don't expect other architectures will use these interfaces.
+It seems that capping the memory for arm64 crash kernel the way I've
+suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
+need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
+grow we'll rethink the solution.
+ 
+> Thanks,
+> Chen Zhou
 
-Thanks,
-Laurent
+-- 
+Sincerely yours,
+Mike.
 
