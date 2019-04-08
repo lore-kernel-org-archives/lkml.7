@@ -2,105 +2,93 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EBAC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D67C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E05A20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554752288;
-	bh=oCZj0I6q+HNknBYs8/M9pFSRm3fQO+nY7ODd0WPZWu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vxx1I5YY5pgivrupMqyYjBJCHq8lvD7FdaDDaxD9u6AKKBpsS1PrGYG/sYCMYZLSF
-	 Jlf9JxoeyVxcIlWd4VqwXMvSPCK5wR1g8xB2w8Ov9zltXfE5HnbvK/f6MCqWzgzaUQ
-	 /5ULps+Eb/sDb36i3ZbEkWTjTtGE8TxjFznkllPQ=
+	by mail.kernel.org (Postfix) with ESMTP id 62DAC20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGodJ5Dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfDHTiH (ORCPT
+        id S1727664AbfDHTji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:38:07 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:37512 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfDHTiG (ORCPT
+        Mon, 8 Apr 2019 15:39:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32961 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfDHTji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:38:06 -0400
-Received: by mail-yb1-f194.google.com with SMTP id p134so4936675ybc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:38:06 -0700 (PDT)
+        Mon, 8 Apr 2019 15:39:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h5so3600718pfo.0;
+        Mon, 08 Apr 2019 12:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PlrrD0hKadd0rsLNpkqwRfBpObSey3Ho11gqeYD66us=;
-        b=UvMo9ulVi7Ou9z2aXoNhHXGdSRajUFhxUfauEEwu3UvmKVBBDowJiRCphNCv4fB8Jt
-         p9brI90+Fzs23xfXmAblZPUo97WMXOV2RKCaYM4hZpIyBp9a19D2BL48JhT3YqNZKxOe
-         BoETtYLEWglixWPPe1Wd9+9p4OssmecWSZ8kmEmwZ7aiM8qDpl9gAKY818q5neLj/Joz
-         sKwBwOUlFKdP4SyHjoxj66644aiJiE02nYv76lrEa90N5LL/ekUZH7DLA/Is7gDKajSc
-         ojGJNjDceGRHFxFxvGEnUpVQNk3SXK9wH6M/GvM+eU3kZ1lPs7S77siW/P+IFEoVBBL1
-         B7LQ==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=NvIQQiGUUqMq2n4rD+U/QDSFSbC0cU9WmZgqSLRuhSU=;
+        b=QGodJ5DpLvDXR+YRurVP3T5OVo/DZox3K83UfNn9ugcYTvYVnsqlErSnU/6bC05mCB
+         aOZJEzfjk1DWy72KHY3b2OwSKvxVqYsAWKJPIhP7riHqCTo38bTycFnXPBgsjXkzTT8O
+         sn9YVwZFwbqbNiD/FbHPIBu9+0srzqa/PJMb8Gba2DO1eGU2OSzA96DFe8DAgQRbOLYo
+         vJB/UuODg1wqmYskqGTsW6VmcXHKpeLTU72kzsK4Rk44EEGKZer8zB6u0uP5qYO/bDvq
+         Nkw12H12CEaKa1R2pGrHSepd5qC5nHw7ZKtRHkvfjp+TIewgalwShBnAZTmrop3BVwLb
+         au7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PlrrD0hKadd0rsLNpkqwRfBpObSey3Ho11gqeYD66us=;
-        b=DmRcmTII810aosa27O7Jbb6fPngtVUM9vb3CO0eR5hcBE49+hk81yYrMh/rz/q8rbf
-         zDf1ohYe5w55M3J+AnhUkTSGE9b9AqedDY64J8ObI+GPDmv6JSpFhHpoS5l9KTLe/MXC
-         Dq0TB4AxXETyoxRLeBbwDXah16hLvR2fQ9Nhk6Wv7akcIdBWvY9Q7++80w1qPBT/T/xY
-         Y4Vw6KBZhntmMxzDD/GIkmuDdt3vrwtG9VKKbSXTjTxr1Q0yzGpH6Fm2bpE7TUCP4xI5
-         CEF3Ptua9Nq2u/RiUOJ2IJFnPUxwi0zvOE7cABdhYoZKPlsc0JOFeOwRNtOWf+ai1J0q
-         dsvw==
-X-Gm-Message-State: APjAAAUf+gdDncIS1o7RaaMEKruw4YFKYrJCkFkNZbXkQdJZ238GiF0Q
-        H7eilcwaZ2E1yvVDvUUplFQ=
-X-Google-Smtp-Source: APXvYqzM4v9PrEeh76yvS2p1w93RgXeOHXSsjlRkpkFsc+XGuXmhdCLBS0T4kJ1CJDevI1wFp1DJwg==
-X-Received: by 2002:a5b:50f:: with SMTP id o15mr23315004ybp.54.1554752285369;
-        Mon, 08 Apr 2019 12:38:05 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::3:135c])
-        by smtp.gmail.com with ESMTPSA id v123sm10915515ywv.89.2019.04.08.12.38.04
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=NvIQQiGUUqMq2n4rD+U/QDSFSbC0cU9WmZgqSLRuhSU=;
+        b=kfo1MVg2/VyhJ6phop7vJxBw11xiDRGTQ/JxANTsETe6LLqrnX6kiH1wR9ES8xv1A7
+         yDk/vtpZfoWDYsEppPgIZaV68kMh6FIFpGrvDguP1WbT3ngSSBRlHig6eL/VRUnY0hYX
+         OLKCsZU4T0H369XA25bRxq/I9q9Llc7VaMJy3zoJtyT5iXjdXduK/jYMu5I5hjYFc10S
+         Vp99PcG+7YRhmnfunLcYE0ENXrlczZkCN9qU1U9tsw8RiAE1gIiBg1EoT4tFudYxzDXv
+         OHDSolYsztfMxtSEEMFAnLF7AUMsb/V4rqwuqbkjkeUbXaGBc2MS0SZ8Sw5/O0lmDkHd
+         K6Jg==
+X-Gm-Message-State: APjAAAUiPWzzi6Gj2pMhjpxxE5cHOPxhHFL6Uo01jg7NOVi5C3QSyowU
+        82CP2qRDYB/E56OZeCQvxxzhClMx
+X-Google-Smtp-Source: APXvYqzvtOH5OtOSw54J4KmmjizX0AXH/HadPoLS6SfOBjxBau1ydp4yUV6mOY41IXMys/BYBHK/SA==
+X-Received: by 2002:a65:51c5:: with SMTP id i5mr29429658pgq.189.1554752377332;
+        Mon, 08 Apr 2019 12:39:37 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p2sm29184342pfb.80.2019.04.08.12.39.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 12:38:04 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:38:02 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/2] workqueue: Use normal rcu
-Message-ID: <20190408193802.GJ1975820@devbig004.ftw2.facebook.com>
-References: <20190313165548.19713-1-bigeasy@linutronix.de>
- <20190313165548.19713-2-bigeasy@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313165548.19713-2-bigeasy@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 08 Apr 2019 12:39:36 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 00/22] watchdog: Convert to use device managed functions and other improvements
+Date:   Mon,  8 Apr 2019 12:38:24 -0700
+Message-Id: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 05:55:47PM +0100, Sebastian Andrzej Siewior wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> There is no need for sched_rcu. The undocumented reason why sched_rcu
-> is used is to avoid a few explicit rcu_read_lock()/unlock() pairs by
-> the fact that sched_rcu reader side critical sections are also protected
-> by preempt or irq disabled regions.
-> 
-> Replace rcu_read_lock_sched with rcu_read_lock and acquire the RCU lock
-> where it is not yet explicit acquired. Replace local_irq_disable() with
-> rcu_read_lock(). Update asserts.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> [bigeasy: mangle changelog a little]
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Use device managed functions and other changes to simplify error handling,
+reduce source code size, improve readability, and reduce the likelyhood
+of bugs.
 
-Applied to wq/for-5.2.
+The changes made in this series can be summarized to
 
-Thanks.
+- Use devm_add_action_or_reset() for calls to clk_disable_unprepare
+- Use devm_watchdog_register_driver() to register watchdog device
+- Replace 'of_clk_get(np, 0)' with 'devm_clk_get(dev, NULL)'
+- Drop assignments to otherwise unused variables
+- Drop unnecessary braces around conditional return statements
+- Drop empty remove function
+- Replace shutdown function with call to watchdog_stop_on_reboot()
+- Replace 'goto l; ... l: return e;' with 'return e;'
+- Replace 'ret = e; return ret;' with 'return e;'.
+- Use local variable 'struct device *dev' consistently
+- Introduce local variable 'struct device *dev' and use it instead of
+  dereferencing it repeatedly
+- Drop unnecessary calls to platform_set_drvdata()
 
--- 
-tejun
+Conversions were performed automatically with coccinelle using a number
+of semantic patches. The semantic patches and the scripts used to generate
+commit logs are available at https://github.com/groeck/coccinelle-patches.
+
+This is the first of (at least) three series of similar patches for watchdog
+drivers.
