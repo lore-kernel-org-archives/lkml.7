@@ -2,187 +2,102 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74989C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73009C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F48220870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BDC20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfDHKdQ (ORCPT
+        id S1726436AbfDHKel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:33:16 -0400
-Received: from foss.arm.com ([217.140.101.70]:45934 "EHLO foss.arm.com"
+        Mon, 8 Apr 2019 06:34:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25882 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726212AbfDHKdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:33:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 055AC15AD;
-        Mon,  8 Apr 2019 03:33:15 -0700 (PDT)
-Received: from [192.168.0.21] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025113F718;
-        Mon,  8 Apr 2019 03:33:12 -0700 (PDT)
-Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
- backed by THP
-To:     yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org
-Cc:     kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
-        marc.zyngier@arm.com, christoffer.dall@arm.com,
-        zhengxiang9@huawei.com, andrew.murray@arm.com,
-        wanghaibin.wang@huawei.com
-References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
- <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <a9c084fb-0c84-e632-a192-b361773a0bc8@arm.com>
-Date:   Mon, 8 Apr 2019 11:35:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1725984AbfDHKel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:34:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 03:34:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
+   d="scan'208";a="140963273"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Apr 2019 03:34:38 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hDRbp-0006pb-5I; Mon, 08 Apr 2019 13:34:37 +0300
+Date:   Mon, 8 Apr 2019 13:34:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org
+Subject: Re: linux-next: manual merge of the staging tree with the
+ staging.current tree
+Message-ID: <20190408103437.GK9224@smile.fi.intel.com>
+References: <20190408130212.0a41f2a8@canb.auug.org.au>
+ <20190408091458.00004e48@huawei.com>
+ <20190408100121.GH9224@smile.fi.intel.com>
+ <20190408111439.000049bc@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408111439.000049bc@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2019 04:50 AM, Zenghui Yu wrote:
-> 
-> 
-> On 2019/4/2 19:06, Suzuki K Poulose wrote:
->> With commit a80868f398554842b14, we no longer ensure that the
->> THP page is properly aligned in the guest IPA. Skip the stage2
->> huge mapping for unaligned IPA backed by transparent hugepages.
->>
->> Fixes: a80868f398554842b14 ("KVM: arm/arm64: Enforce PTE mappings at 
->> stage2 when needed")
->> Reported-by: Eric Auger <eric.auger@redhat.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Chirstoffer Dall <christoffer.dall@arm.com>
->> Cc: Zenghui Yu <yuzenghui@huawei.com>
->> Cc: Zheng Xiang <zhengxiang9@huawei.com>
->> Tested-by: Eric Auger <eric.auger@arm.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> Hi Suzuki,
-> 
-> Why not making use of fault_supports_stage2_huge_mapping()?  Let it do
-> some checks for us.
-> 
-> fault_supports_stage2_huge_mapping() was intended to do a *two-step*
-> check to tell us that can we create stage2 huge block mappings, and this
-> check is both for hugetlbfs and THP.  With commit a80868f398554842b14,
-> we pass PAGE_SIZE as "map_size" for normal size pages (which turned out
-> to be almost meaningless), and unfortunately the THP check no longer
-> works.
+On Mon, Apr 08, 2019 at 11:14:39AM +0100, Jonathan Cameron wrote:
+> On Mon, 8 Apr 2019 13:01:21 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Apr 08, 2019 at 09:14:58AM +0100, Jonathan Cameron wrote:
+> > > On Mon, 8 Apr 2019 13:02:12 +1000
+> > > Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Thats correct.
+> > > > Today's linux-next merge of the staging tree got a conflict in:
+> > > > 
+> > > >   drivers/iio/industrialio-buffer.c
+> > > > 
+> > > > between commit:
+> > > > 
+> > > >   20ea39ef9f2f ("iio: Fix scan mask selection")
+> > > > 
+> > > > from the staging.current tree and commit:
+> > > > 
+> > > >   3862828a903d ("iio: buffer: Switch to bitmap_zalloc()")
+> > > > 
+> > > > from the staging tree.
+> > > > 
+> > > > I fixed it up (I just used the staging tree version) and can carry the
+> > > > fix as necessary. This is now fixed as far as linux-next is concerned,
+> > > > but any non trivial conflicts should be mentioned to your upstream
+> > > > maintainer when your tree is submitted for merging.  You may also want
+> > > > to consider cooperating with the maintainer of the conflicting tree to
+> > > > minimise any particularly complex conflicts.
+> > > >   
+> > > Thanks Stephen,
+> > > 
+> > > That is the correct resolution.  
+> > 
+> > I think it still misses the following fix:
 
-> 
-> So we want to rework *THP* check process.  Your patch fixes the first
-> checking-step, but the second is still missed, am I wrong?
+> Is that actually a problem given it's copied over from buffer->scan_mask just after allocation?
+> The two masks are the same length so I don't think we have a problem with this one.
+> Am I missing something?
 
-It fixes the step explicitly for the THP by making sure that the GPA and
-the HVA are aligned to the map size.
+Hmm... I didn't get why the commit 20ea39ef9f2f fixes anything.
 
-> 
-> Can you please give a look at the below diff?
-> 
-> 
-> thanks,
-> 
-> zenghui
-> 
->> ---
->>   virt/kvm/arm/mmu.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->> index 27c9583..4a22f5b 100644
->> --- a/virt/kvm/arm/mmu.c
->> +++ b/virt/kvm/arm/mmu.c
->> @@ -1412,7 +1412,9 @@ static bool 
->> transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
->>            * page accordingly.
->>            */
->>           mask = PTRS_PER_PMD - 1;
->> -        VM_BUG_ON((gfn & mask) != (pfn & mask));
-> Somehow, I'd prefer keeping the VM_BUG_ON() here, let it report some
-> potential issues in the future (of course I hope none:) )
-
-I don't think this calls for a VM_BUG_ON(). It is simply a case where
-the GPA is not aligned to HVA, but for normal VMA that could be made THP.
-
-We had this VM_BUG_ON(), which would have never hit because we would
-have set force_pte if they were not aligned.
-
->> +        /* Skip memslots with unaligned IPA and user address */
->> +        if ((gfn & mask) != (pfn & mask))
->> +            return false;
->>           if (pfn & mask) {
->>               *ipap &= PMD_MASK;
->>               kvm_release_pfn_clean(pfn);
->>
-> 
-> ---8>---
-> 
-> Rework fault_supports_stage2_huge_mapping(), let it check THP again.
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->   virt/kvm/arm/mmu.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 27c9583..5e1b258 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1632,6 +1632,15 @@ static bool 
-> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->       uaddr_end = uaddr_start + size;
-> 
->       /*
-> +     * If the memslot is _not_ backed by hugetlbfs, then check if it
-> +     * can be backed by transparent hugepages.
-> +     *
-> +     * Currently only PMD_SIZE THPs are supported, revisit it later.
-> +     */
-> +    if (map_size == PAGE_SIZE)
-> +        map_size = PMD_SIZE;
-> +
-
-This looks hackish. What is we support PUD_SIZE huge page in the future
-?
-
-> +    /*
->        * Pages belonging to memslots that don't have the same alignment
->        * within a PMD/PUD for userspace and IPA cannot be mapped with 
-> stage-2
->        * PMD/PUD entries, because we'll end up mapping the wrong pages.
-> @@ -1643,7 +1652,7 @@ static bool 
-> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->        *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
->        *    +-----+--------------------+--------------------+---+
->        *
-> -     *    memslot->base_gfn << PAGE_SIZE:
-> +     *    memslot->base_gfn << PAGE_SHIFT:
-
-That could be fixed.
-
->        *      +---+--------------------+--------------------+-----+
->        *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
->        *      +---+--------------------+--------------------+-----+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-But personally I don't think this is the right way to fix it. And as
-mentioned, the VM_BUG_ON() is unnecessary and could easily be triggered
-by the user by using unaligned GPA/HVA. All we need to do is, use page
-mapping in such cases, which we do with my patch.
-
-
-Cheers
-Suzuki
