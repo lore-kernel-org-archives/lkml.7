@@ -2,125 +2,139 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989ACC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF06C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F82820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB96220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="n14GEp2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfDHHne (ORCPT
+        id S1726412AbfDHHoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:43:34 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33911 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDHHnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:43:33 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 904151C0008;
-        Mon,  8 Apr 2019 07:43:27 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 09:43:27 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
-Message-ID: <20190408074327.vvubj2sbkvfkwscv@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-9-megous@megous.com>
+        Mon, 8 Apr 2019 03:44:25 -0400
+Received: from mail-eopbgr80087.outbound.protection.outlook.com ([40.107.8.87]:21661
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725877AbfDHHoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:44:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c/2nGpesZJOni/Dr50h1SKPU8Svx/PET4tgCvt+/w9U=;
+ b=n14GEp2j+UyVcx/xny2wnMcUlOV3V4gcWafjh1Z1euxp2sRCuxaqY7CgLPvenwFHlTLfu5C8q7twRSbegg+jW8/hQftygcKEc9rF5/0gxvqw1k4Rjwn9JLvLRDPZNQg3qjSIETg+WPtymOf+AguJHvvYTAarkZGJ7JCrBKSlt14=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3851.eurprd04.prod.outlook.com (52.134.73.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.19; Mon, 8 Apr 2019 07:44:21 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1771.016; Mon, 8 Apr 2019
+ 07:44:21 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] ARM: dts: imx6dl-sabreauto: update opp table for auto part
+Thread-Topic: [PATCH] ARM: dts: imx6dl-sabreauto: update opp table for auto
+ part
+Thread-Index: AQHU7d7haKynv6Ajb0CSZ7OdzGGN1A==
+Date:   Mon, 8 Apr 2019 07:44:21 +0000
+Message-ID: <1554709166-21952-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0P153CA0023.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:18::35) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dd0a1b18-9235-42a7-e104-08d6bbf60358
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3851;
+x-ms-traffictypediagnostic: DB3PR0402MB3851:
+x-microsoft-antispam-prvs: <DB3PR0402MB385136A376B523693A057C43F52C0@DB3PR0402MB3851.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(136003)(39860400002)(199004)(189003)(66066001)(26005)(186003)(52116002)(386003)(6506007)(102836004)(4326008)(6512007)(14454004)(53936002)(2616005)(476003)(486006)(478600001)(256004)(110136005)(14444005)(316002)(36756003)(6436002)(6486002)(68736007)(2906002)(50226002)(8676002)(15650500001)(71190400001)(2201001)(99286004)(305945005)(5660300002)(7736002)(81166006)(97736004)(8936002)(81156014)(106356001)(105586002)(25786009)(6116002)(3846002)(86362001)(2501003)(71200400001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3851;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: obNgJ0xcZ8rM9cu7cVBzE/WxfdSYPtZxMg8lWuBhtOsHuG2u3SQ3IQ01LQPYDRTAdKMKCXo8c0e0Z+jsCinTajj9XxrF7v/FEojFlFxnU3h53whRPabDV11zRSGVX8qXljgRU+AIzDF7u3y16OJikp1B9rg3wU4o23XUJaJzKJam+cZ4213eKN+XUIAu5k6vY+WNz8g0NJzkGEsmU/XJhcp4lzi4tVGIUUa5Bb+8cNt9lvx5UPWKuMPYO1n33Ey1/xfzaA+0RUZaCpk7FqbEIlOosmen+tgJM/1cgmTfjZF2VY5S9rbeM6DEJOpygmnBFvw0RZszih4L9P0Z/WtFiViaE7ibh8/yTW3WeM8vwb5rAWdlIWUuai5BIdCo+VO4Ao7xFnDYHpimrhbA/X2zZtrS3CRx8PXJKpKJmzC40J4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uu57uts7ricxgi6i"
-Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-9-megous@megous.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd0a1b18-9235-42a7-e104-08d6bbf60358
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 07:44:21.8073
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3851
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Update i.MX6DL automotive part's opp table according to i.MX6DL
+automotive datasheet Rev.9, 11/2018, it adds 996MHz set-point
+support as below:
 
---uu57uts7ricxgi6i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+LDO enabled(min value):
+996MHz: VDDARM: 1.275V, VDDSOC: 1.175V;
+792MHz: VDDARM: 1.150V, VDDSOC: 1.150V;
+396MHz: VDDARM: 1.125V, VDDSOC: 1.150V;
 
-On Sat, Apr 06, 2019 at 01:45:10AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index 91fecab58836..dccad79da90c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -238,6 +238,15 @@
->  				bias-pull-up;
->  			};
->
-> +
+Adding 25mV to cover board IR drop, for LDO enabled mode of 996MHz,
+as the max value of LDO output can NOT exceed 1.3V, so 25mV is NOT
+added for VDDARM.
 
-Extra line
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6dl-sabreauto.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> +			mmc1_pins: mmc1-pins {
-> +				pins = "PG0", "PG1", "PG2", "PG3",
-> +				       "PG4", "PG5";
-> +				function = "mmc1";
-> +				drive-strength = <30>;
-> +				bias-pull-up;
-> +			};
-> +
+diff --git a/arch/arm/boot/dts/imx6dl-sabreauto.dts b/arch/arm/boot/dts/imx=
+6dl-sabreauto.dts
+index 660d52a..ff3283c8 100644
+--- a/arch/arm/boot/dts/imx6dl-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6dl-sabreauto.dts
+@@ -11,3 +11,18 @@
+ 	model =3D "Freescale i.MX6 DualLite/Solo SABRE Automotive Board";
+ 	compatible =3D "fsl,imx6dl-sabreauto", "fsl,imx6dl";
+ };
++
++&cpu0 {
++	operating-points =3D <
++		/* kHz    uV */
++		996000  1275000
++		792000  1175000
++		396000  1150000
++	>;
++	fsl,soc-operating-points =3D <
++		/* ARM kHz  SOC-PU uV */
++		996000	1200000
++		792000	1175000
++		396000	1175000
++	>;
++};
+--=20
+2.7.4
 
-Is that the only muxing option?
-
-If so, then it should be assigned by default to mmc1
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---uu57uts7ricxgi6i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKr7nwAKCRDj7w1vZxhR
-xaCTAP40wF5BuAv/KQoefes5N0e4XEbG+/RosHq7h/s1hnl/gwD/c/lOEPMEspbT
-p+gNsyXohxVvUOIM+rndNYRmYYmbjAM=
-=4w6k
------END PGP SIGNATURE-----
-
---uu57uts7ricxgi6i--
