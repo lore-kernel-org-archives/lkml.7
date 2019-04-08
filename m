@@ -2,99 +2,173 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642B8C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B47C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD9420880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:45:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/bBTkcV"
+	by mail.kernel.org (Postfix) with ESMTP id 2B66E20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfDHUpO (ORCPT
+        id S1728915AbfDHUrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 16:45:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40316 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfDHUpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 16:45:12 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q66so12522253ljq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 13:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cW18gb8JokVDQ7+KXr9n9rPMx9uHcP2wB83oXVmU9QY=;
-        b=L/bBTkcVtk15xOyveNlUvlynUmAXMVa6bchdC/nGlHmKCgheVL8IAA8YA2qJDIpTXr
-         +2UOs+gqzvbLzPvjSLKwg17Ams0hvIF061SuJxZp6JOYBNMx1dJiOz+IN0tm7VPtGSD9
-         ab4ThCixOOTFDW+NPcKCZhgbTlpz1X9bWrxBDzPDnGflexxzcsr1jFn4+EPKe1+Lijnb
-         hY9PFe0KCABLxSW2Ibf2hblmvuo2eP0I4xpkoSA2ttjwgsmoZ+cmggmU+a4VtukaTCbl
-         +Z3Nn6ouYLLbeUcCVbCVCYST9UmZhCOKDFMrM36NS2OKa7ftRhboEWVv/Qfr0/vCkuPx
-         RoXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cW18gb8JokVDQ7+KXr9n9rPMx9uHcP2wB83oXVmU9QY=;
-        b=o181CB7yiQUAdZ9kNTGiv67B/TyR81jCq6OtQiHi/0sVY3qUMG/krSEuZLtR5LVkEO
-         RtL2DSeb567RgeXhdBO1wt9K14FtbUOhRX8pwu/12sUE2PUSEBI4MKbLtJBluUfzF3Uk
-         UQap6X7uWgJqI5+1pZZir7orre9GPNvGUSNTElg5isB8NgFPRVudhVE6ZU9EiXrj2Un7
-         7qz2Y/+IbhTBlpFKCb4TL1CRIzaPHJTCr5qgNgD6xqKTqG+b0tcv2sq7uNWzChUaTrbt
-         YwGaNDxmVxqeKFKAhtoqyI/R22CJFCyiN60ft5AvnjRcwQnNM07LStmFuT7dk9uKF+Kd
-         YzCw==
-X-Gm-Message-State: APjAAAXsJr4JPy7WYq4S8dMN6Q+XU3B3fomyIRS0TWwVdnDXT9wNneP8
-        HxOgy++PZ0oTFU/3wVYlXCrawJi/0VQGRF/UZdCiZw==
-X-Google-Smtp-Source: APXvYqykzjSK0A7nElMNFElazNkND86ZDIvpxzQ/em44P4JYuXvKWjoXtS+HZP0pK6EVN5Y479IuAUq6wZiqESVd+Eg=
-X-Received: by 2002:a2e:808e:: with SMTP id i14mr18032369ljg.103.1554756310830;
- Mon, 08 Apr 2019 13:45:10 -0700 (PDT)
+        Mon, 8 Apr 2019 16:47:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39144 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728873AbfDHUrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 16:47:21 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A84D0308213E;
+        Mon,  8 Apr 2019 20:47:20 +0000 (UTC)
+Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC86E5D719;
+        Mon,  8 Apr 2019 20:47:10 +0000 (UTC)
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <01d5f4e8-742b-33f5-6d91-0c7c396d1cfc@redhat.com>
+ <CAKgT0UfbVS2iupbf4Dfp91PAdgHNHwZ-RNyL=mcPsS_68Ly_9Q@mail.gmail.com>
+ <ef4c219f-6686-f5f6-fd22-d1da0b1720f3@redhat.com>
+ <CAKgT0Ucp1nt4roC1xdZEMcD17TvJovsDKBdkRK6vA_4bUM8bdw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
+ 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
+ xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
+ jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
+ s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
+ m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
+ MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
+ z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
+ dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
+ UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
+ 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
+ uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
+ 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
+ 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
+ xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
+ 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
+ hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
+ u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
+ gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
+ rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
+ BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
+ KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
+ NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
+ YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
+ lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
+ qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
+ C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
+ W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
+ TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
+ +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <b86e69f8-88b9-d579-f318-097203a73673@redhat.com>
+Date:   Mon, 8 Apr 2019 22:47:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-16-fparent@baylibre.com>
-In-Reply-To: <20190323211612.860-16-fparent@baylibre.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Apr 2019 22:44:59 +0200
-Message-ID: <CACRpkdZZ6-+MVdK4bOP4SHxQ8uQ8zENcir7DSteHy4g+B5uySQ@mail.gmail.com>
-Subject: Re: [PATCH 15/24] dt-bindings: pinctrl: pinctrl-mt65xx: add support
- for MT8516
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Yong Mao <yong.mao@mediatek.com>, jjian.zhou@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-i2c@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        stephane.leprovost@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKgT0Ucp1nt4roC1xdZEMcD17TvJovsDKBdkRK6vA_4bUM8bdw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 08 Apr 2019 20:47:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 10:17 PM Fabien Parent <fparent@baylibre.com> wrote:
+On 08.04.19 22:10, Alexander Duyck wrote:
+> On Mon, Apr 8, 2019 at 11:40 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>>>>>
+>>>>> In addition we will need some way to identify which pages have been
+>>>>> hinted on and which have not. The way I believe easiest to do this
+>>>>> would be to overload the PageType value so that we could essentially
+>>>>> have two values for "Buddy" pages. We would have our standard "Buddy"
+>>>>> pages, and "Buddy" pages that also have the "Offline" value set in the
+>>>>> PageType field. Tracking the Online vs Offline pages this way would
+>>>>> actually allow us to do this with almost no overhead as the mapcount
+>>>>> value is already being reset to clear the "Buddy" flag so adding a
+>>>>> "Offline" flag to this clearing should come at no additional cost.
+>>>>
+>>>> Just nothing here that this will require modifications to kdump
+>>>> (makedumpfile to be precise and the vmcore information exposed from the
+>>>> kernel), as kdump only checks for the the actual mapcount value to
+>>>> detect buddy and offline pages (to exclude them from dumps), they are
+>>>> not treated as flags.
+>>>>
+>>>> For now, any mapcount values are really only separate values, meaning
+>>>> not the separate bits are of interest, like flags would be. Reusing
+>>>> other flags would make our life a lot easier. E.g. PG_young or so. But
+>>>> clearing of these is then the problematic part.
+>>>>
+>>>> Of course we could use in the kernel two values, Buddy and BuddyOffline.
+>>>> But then we have to check for two different values whenever we want to
+>>>> identify a buddy page in the kernel.
+>>>
+>>> Actually this may not be working the way you think it is working.
+>>
+>> Trust me, I know how it works. That's why I was giving you the notice.
+>>
+>> Read the first paragraph again and ignore the others. I am only
+>> concerned about makedumpfile that has to be changed.
+>>
+>> PAGE_OFFLINE_MAPCOUNT_VALUE
+>> PAGE_BUDDY_MAPCOUNT_VALUE
+>>
+>> Once you find out how these values are used, you should understand what
+>> has to be changed and where.
+> 
+> Ugh. Is there an official repo I am supposed to refer to for makedumpfile?
+> 
+> As far as the changes needed I don't think this would necessitate
+> additional exports. We could probably just get away with having
+> makedumpfile generate a new value by simply doing an "&" of the two
+> values to determine what an offline buddy would be. If need be I can
+> submit a patch for that. I find it kind of annoying that the kernel is
+> handling identifying these bits one way, and makedumpfile is doing it
+> another way. It should have been setup to handle this all the same
+> way.
 
-> Add binding documentation of pinctrl-mt65xx for MT8516 SoC.
->
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+Here you go:
 
-Patch applied with Rob's ACK.
+https://sourceforge.net/p/makedumpfile/code/ci/master/tree/
 
-Yours,
-Linus Walleij
+for now we only had one type at a time, so it wasn't an issue. E.g.
+Buddy or Offline were never used in combination with other types. They
+had distinct mapcount values.
+
+-- 
+
+Thanks,
+
+David / dhildenb
