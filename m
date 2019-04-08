@@ -4,146 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCC2C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0625C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1C3214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B8C2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auZPw0pr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rcl/2T1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfDHQ0R (ORCPT
+        id S1728766AbfDHQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:26:17 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34196 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfDHQ0O (ORCPT
+        Mon, 8 Apr 2019 12:26:25 -0400
+Received: from mail-ua1-f51.google.com ([209.85.222.51]:41157 "EHLO
+        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfDHQ0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:26:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j89so11871321ljb.1;
-        Mon, 08 Apr 2019 09:26:12 -0700 (PDT)
+        Mon, 8 Apr 2019 12:26:24 -0400
+Received: by mail-ua1-f51.google.com with SMTP id l22so4499058uao.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:26:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y71r9AUja0CoGWFgRrYLcEiJm9kTC3t8g/dOsaY1BqQ=;
-        b=auZPw0prVgUXtR0TBdNozs5wKbJkRR73+UpM3K++tXv69cdCCkXqXcM5YC8+m5XpmE
-         Wrn8qLDxJTX4xuatZBeG/A4USV5p/dn+rEWggDDuPupfbXqW57jvW4gEQhR6F+adUQNC
-         ZWpdx8HwJKY8XzGw0W1tvxZhJUhYbtZQmWkb9DjftYZCl+RG2vXKzASVDQWHs2XtoLtl
-         MH5LCF9KsXc0fTCpsGSsefIuls0JAe7umdtFZWMy1v2YxJthpEJqDuUC6cUPbDXosCeB
-         gjPoPmvkMkjDaQYGmGyNznn41kpAqKMF4JnG22jZ9y2M82uUkIk0D6T8EcJ4jOj2a0ie
-         8yhg==
+        bh=QNY9yXwINS0GCYfY4ljZK8M4WklQnQa/v1KKWj/elWo=;
+        b=Rcl/2T1ZBTSgjCuWIkxytaCYa3Eg/N8WE7vujyL3W1nel4H6bGBeXWtQT4HMA1ma7T
+         Wkr4jvLEBQtEPAQjjSSqCMYAs+L+ofsw94aShTv7rYnObC1Ic4WkstECd8cbrLoB4E2v
+         PmryNJg9t2IOJ6vEMw/0W33XO0mwcc5+rTSs1j38AbpZDleTNJn4CuTR1uXDRjDo3gSA
+         0k0Tyz6k2YS3ZLirnbCxlryg0AgwId3Rq76JQ43vv8oO/zxsCQ4x2ao7ABY4N9/Rfe6X
+         hmup/dIMSbdmOdbSjfA8iMAxQKGQdvbCrzzD8H2f0gurJ8GFodZMG4fPdTfCCdHTR5t4
+         IhDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y71r9AUja0CoGWFgRrYLcEiJm9kTC3t8g/dOsaY1BqQ=;
-        b=EZoxIzp2javu2mjzsVNMMdXu3j7X15vQtag7eNrEq4EcSZ7KBWXlTZ9PufCHsF3iyE
-         j+TmT1t5ts/Fxw9/PtHRekBSCfBPp0sOinVTdvwEwzLUUrCdkDeZ2JErGJaYQQ35K2rm
-         JFpFpc/ho2XnPDbFCbDNj50fantN3mc0HHI04RnBUydyL3skEoPvilXbXdeSP4TG5k28
-         8WKnxqirEplX5AjANNhdQNq7aTRpoSC4C2nD7qHE0qc369TUs9AakWsmUL56d1NKZunI
-         lF4fhDzviIIRkbmXcvYvywkmLd6InLCUOehM2tiSBGQuc2ix+OC1jBdnDwm3eHaMJ8Ov
-         Hs2Q==
-X-Gm-Message-State: APjAAAWZSfniBuDrpru4uITPkBrz3otydQsdxm44/4HQeSGtTuBgsrhD
-        xXPmXGO2hug+sL6VvT84kgUJ86To3geFQFb0ltScSDaJlw==
-X-Google-Smtp-Source: APXvYqzaEkao6wkp8WTylJoJwPAdL0wtRO66fI12td6n9X7fdVz1rjDJdxipjQCty0kYrP+riiNZisvRlBwoPpTSxHY=
-X-Received: by 2002:a2e:5c7:: with SMTP id 190mr16285330ljf.108.1554740771741;
- Mon, 08 Apr 2019 09:26:11 -0700 (PDT)
+        bh=QNY9yXwINS0GCYfY4ljZK8M4WklQnQa/v1KKWj/elWo=;
+        b=AdP+xdKpd5abo/T6Mwrbz2dLhDXEqAgOLx/gepNdSY0xE+CgUOJLkxw/cF+E3eo00u
+         SZcaAI+v4FgdWy+BhEek5QrFrOWY9L2DBVZrsy5y4GTrPn0Xlzb3Hpw/WZjb5eGnmLCk
+         em4LMWebrQMxkyxEXHDL1byFrgX/ARjqEDb05MYFbDtD11SfqnFKfBj0vTg3uj+kBYfn
+         hLEcYQJW2jwP+tl5kwyUrCVVq0J0MtGVXde7J13TmndaI8z+4JSoS3HxHx1WnNeHAdi7
+         Uw1v4ErNw3n4CnFq3XNBqxmja6rwREQTReJgQppL46Mdzy17GtBCBvyzZVx8j3IChg6B
+         EF/w==
+X-Gm-Message-State: APjAAAUTvOjH5omSH3TwUcBBHzvEcDkoepr3z6elve14E84zFBNPGzp2
+        iVu8MJToiGu1WXZo78g2fFRbwhKI87WabTHHU6k=
+X-Google-Smtp-Source: APXvYqyvtN+eXKL9hugbTEuqErqkptfO42prTjg/TE03+znZc14xHdIzIb9pHNe2B4bSCxa0VjTw3hqpL7J9BlFoOkI=
+X-Received: by 2002:ab0:7316:: with SMTP id v22mr15479203uao.90.1554740783484;
+ Mon, 08 Apr 2019 09:26:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-7-dianders@chromium.org> <CAPCnQJmWfnBwxj8gScNzmZTGV6eU5B1vk76sQ56A2FvpSiYRaw@mail.gmail.com>
- <CAD=FV=VK3ow3PgA9nXiE8+0UdgsGiFbAiZd-QAmCsLHK0Yi2Cg@mail.gmail.com>
-In-Reply-To: <CAD=FV=VK3ow3PgA9nXiE8+0UdgsGiFbAiZd-QAmCsLHK0Yi2Cg@mail.gmail.com>
-From:   Urja Rannikko <urjaman@gmail.com>
-Date:   Mon, 8 Apr 2019 16:26:04 +0000
-Message-ID: <CAPCnQJkDDGrFLpFHr=xD02Gz_TzMwHK7B4-E4cw7A=QhWFFF4w@mail.gmail.com>
-Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's
- display timings
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
+ <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
+ <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com>
+ <20190401153810.GC6884@fuggles.cambridge.arm.com> <CAOVJa8EcjQO2GuojwBxfFG25+T-z6BR6ytZBdcV2W2XusyW08g@mail.gmail.com>
+ <20190403172429.GE17500@fuggles.cambridge.arm.com>
+In-Reply-To: <20190403172429.GE17500@fuggles.cambridge.arm.com>
+From:   pierre kuo <vichy.kuo@gmail.com>
+Date:   Tue, 9 Apr 2019 00:26:11 +0800
+Message-ID: <CAOVJa8HuGFa7wwWW2W5pYaNxri9XP131DXjwox8cWMq_prXEcg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
+ mapping range check
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Apr 8, 2019 at 3:21 PM Doug Anderson <dianders@chromium.org> wrote:
+hi Will:
 >
-> Hi,
->
-> On Sat, Apr 6, 2019 at 6:16 PM Urja Rannikko <urjaman@gmail.com> wrote:
-> >
-> > Hi,
-<snip>
-> >
-> > The difference would be in this format just setting hfront-porch = 87
-> > and vback-porch = 14.
-> > Anyways the point is: I support moving this mode info into the dts,
-> > and I'd like to know how if at all should i go about getting a
-> > 60Hz(ish) mode upstreamed?
->
-> I'm a bit torn here.  I like the idea of actually getting 60 Hz and
-> you also increase the vblank time by a little bit (which means that if
-> anyone ever gets DDRFreq upstream it will work better).  ...but I'm
-> also slightly nervous changing something like this without a really
-> good motivation.  As you said in your commit message the pixels clocks
-> claimed by the spec don't actually all work and thus, to some extent,
-> we can only rely on trial-and-error here.  While your new mode works
-> well on your device (and you wisely gave it a bit of margin), it is
-> _possible_ that there could be devices out there where it doesn't work
-> (especially across various temperature extremes).  All devices were
-> tested in the factory with the old timings and presumably have been
-> running fine for years like that...
-Re: the trial and error: it might be the case that the panels actually
-work at 1506 vtotal if you also adjust the sync length and/or back
-porch "accordingly", whatever that accordingly would be for this panel
-since the datasheet doesnt tell. I missed this point when i was doing
-my testing and just adjusted the variables with the most
-"adjustability" (bigger starting value) to them.
+> Maybe, but I don't think we've seen a patch which accomplishes that. I think
+> I'll go ahead and commit the basic one-liner, then we can always improve it
+> afterwards if somebody sends a patch. It's not like this is a fastpath.
 
-> I will certainly admit that it's unlikely devices would be affected,
-> but at the same time I'd want to know how much of a difference going
-> from 58.3 Hz to 60 Hz made for you.  Could you actually notice any
-> visible difference, or was it just nice to be at 60 Hz?
-Honestly I was just doing this because i really liked the idea of
-actually making it 60Hz and my eyes arent that good at noticing
-high-fps things - i think the one case where it might be visible to a
-keen eye is 720p60 playback where you'd need to skip "about 2" (1.7..)
-frames a second if running at 58.3 Hz. But currently the C201 isnt
-doing a lot of that given i dont think i/we have a good software setup
-for it. That could be changing in the future with panfrost and the VPU
-hardware decoder support, etc.
+Sorry for not showing the patches I try to explain to sir.
+I will attach v3 patches for ur reference.
 
-Anyways I'm thinking it would be prudent to first get this framework
-of device-tree modes in and then maybe adjust the mode later.
-
-Testing the 60Hz mode is simple enough:
-xrandr --newmode 1366x768p60 74.25 1366 1453 1483 1543 768 776 790 802
--HSync -VSync
-xrandr --addmode eDP-1 1366x768p60
-xrandr --output eDP-1 --mode 1366x768p60
-
-(The mode name can be anything...)
-So meanwhile I would appreciate it if we could get some test reports
-of the mode with other veyron chromebooks that have this panel :)
-
--- 
-Urja Rannikko
+Thanks for ur kind help,
