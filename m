@@ -2,152 +2,155 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012FDC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C51BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC2C2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC752087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BHQbkeBr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ei5RSYQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfDHQav (ORCPT
+        id S1727350AbfDHQdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:30:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41375 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfDHQav (ORCPT
+        Mon, 8 Apr 2019 12:33:38 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37916 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfDHQdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:30:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r4so17160683wrq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:30:50 -0700 (PDT)
+        Mon, 8 Apr 2019 12:33:37 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 10so7936358pfo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yEKXcITmtldfqCzJc6t+ZKTv2phF27b4OjLELxjjuik=;
-        b=BHQbkeBrc1olUJ/fEOrk5kJJhvIDLerla24Kkxgg2O5EEf9C972QWOl1txaCLdk1/X
-         6o+A8pICGlFX5JJ87rLZRcHNVHOM4fqI9Y7xqkI21He9lKRNDj31fqBcf+zQ/XZhBLOI
-         +pdK4Lt+wJ1QuAQtsFAusVU4KrGmnP/fjynvU+6lK9tzyy3pLxYXX39y1KZse5VQpVgL
-         1sqEXiVEatxVOn469FyTcGLSnwaByvX2+ezhBSZmpRpYo0uGt2JEiNvgW0bBUXIh5naC
-         2cSLieOkWiHs4ivhg6TD05X10OuUXxxVzNxwsF6xezDXlVUborYVPxrE98n3uvpCUPat
-         cffg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=adM7GO+50iuUmAcUxnBbVrKSbGKte77qypSkx5gSfhY=;
+        b=Ei5RSYQFkvcE01miYVzVojPZwxiN2U9LXOt1q9JVINBVwt5R8GaU1JFRkrhb4RBnSP
+         nqUEBJyAVk+Z6bVI1gmnTVL3qXSJedH44vnn4Qt+nMNfaRWpXCzaazPt9xdYO44fmzCq
+         PtP2llahNxeiZPDqI48SUV7FCmTIqs809723EWpkg0tGvRz8RcXsRBTGbCuf0zDktVPD
+         j18PFWJWxH6mCipz5CLiR6kcPQv620qrDK1hJcMkR40ZrryDCjCLB3rCU81/Aq38xzZN
+         /zEZ00Wu7Mm6GHv8vEyXSVGUnsgxKA4hXYxCXPwtsHzssk1+7+vdjuF2ehZKiAckSwTR
+         nsDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yEKXcITmtldfqCzJc6t+ZKTv2phF27b4OjLELxjjuik=;
-        b=olxfqcQrnEEW4f6DTJUV9s77LtWKKKZQdRhD+iJkFWyA21r6JtArJm2zeTZf/O6SH6
-         sbtCpPqcQI1jdKp2CTbhCFCvYS5PTl7TYI/PkymOzaSz2r/F4cIl/XmlrQljFC7BbHkQ
-         8DlReN0eeCi96Y4NXh7k/RnRyCe1hFI3WKpNCOBQlC+Je9/B3H7pjlkhXWHt51fPzy2m
-         ZUnddhnWG4C+3RhzkYqnAs0zPKaDP5UP0MB7ho4A6xBTsnCTV7k87LLCJM4XsSn7yPks
-         fWsMgCIFzG+obSj68wainde+8jruLe8dkdDKKixOmZFuvthic0+twPAhBvfcuzmWvN04
-         Z/pg==
-X-Gm-Message-State: APjAAAWd6bcTGJBemcfv3w40phdknfQspu7tKkZ+ApXEeHjYRaSYB6mN
-        zyhGSwKbJp51OCVKm+FB9jpvUYCCHjQ=
-X-Google-Smtp-Source: APXvYqy/MtIXl8O0YXmpwgUO1kZXuh3zD2Wwb7p4RpSlRImi1S6tHCOWPEU9esefiDCU+60VF878gA==
-X-Received: by 2002:adf:dc83:: with SMTP id r3mr18954288wrj.179.1554741048937;
-        Mon, 08 Apr 2019 09:30:48 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id b134sm23819931wmd.26.2019.04.08.09.30.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=adM7GO+50iuUmAcUxnBbVrKSbGKte77qypSkx5gSfhY=;
+        b=qtsTR+IqXow055Pi8rk672yICG1Fhz4NiJZntCyGD10oSlXriWlc21NoJxAnbKvO+e
+         iFq/Wi0JvmwlAfrOnKNpfm3lZXAtRUTPy4wDDk3wzsK0p8pIdZ+cZZc1WemdjGjOSKmb
+         MCYJUnXwQLflMD/VfFCdt29PO045fUIrLf939UHLpw4jnitIPUC66B8PliRRJp5A4YjE
+         6nvruDBqJR/xYGoONAIu7e6GqvVYCwfZ6zn4nRdZT4FJR20fGb7NKs+5OYBE2iZA2jZ2
+         ekxCTpzgIXpa4m82w8e7al0nQcZVNokPnxn75Kv8mjGw4sDTRGc8xISlG5kNTyAtByRR
+         bNZQ==
+X-Gm-Message-State: APjAAAUzUj5b2Uws+qO1JBuYIIqnbvztv6uzlfaFTeTeYKOMdSB1Gng4
+        7KDvkvhkOoER80cy0585o+EaLF/0zZo=
+X-Google-Smtp-Source: APXvYqxho0IpZwRA9Y5E/1foJWx2ZKY2a26+T3ucHduOhyin2w+5vx2twZyiFxTBcpUZXzuwLTbD+Q==
+X-Received: by 2002:aa7:8c84:: with SMTP id p4mr31269768pfd.164.1554741217261;
+        Mon, 08 Apr 2019 09:33:37 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e3a7-6c70-b197-cec7-ec88-495a.emome-ip6.hinet.net. [2001:b400:e3a7:6c70:b197:cec7:ec88:495a])
+        by smtp.gmail.com with ESMTPSA id 143sm62117103pge.50.2019.04.08.09.33.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 09:30:48 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: at91sam9261ek: remove unused chosen nodes
-To:     Rob Herring <rob.herring@linaro.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190408151155.20279-1-alexandre.belloni@bootlin.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <2f831f1b-c87d-48bd-cf02-2ebb334b964c@linaro.org>
-Date:   Mon, 8 Apr 2019 18:30:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190408151155.20279-1-alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 08 Apr 2019 09:33:36 -0700 (PDT)
+From:   pierre Kuo <vichy.kuo@gmail.com>
+To:     will.deacon@arm.com
+Cc:     catalin.marinas@arm.com, steven.price@arm.com,
+        f.fainelli@gmail.com, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        vichy.kuo@gmail.com
+Subject: [PATCH v3 1/2] kaslr: shift linear region randomization ahead of memory_limit
+Date:   Tue,  9 Apr 2019 00:33:18 +0800
+Message-Id: <20190408163319.10382-1-vichy.kuo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following is schematic diagram of the program before and after the
+modification.
 
-Hi Rob,
+Before:
+if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
+if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
 
-the following patch has been pushed in 2016 by commit 51f0aeb2d21f1.
+After:
+if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
+if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
 
-Being able to specify which timer should act as a clocksource or a
-clockevent is often requested. Doing this from the driver itself forces
-to do some assumption in the timer definition ordering in the DT.
+After grouping modification of memstart_address by moving linear region
+randomization ahead of memory_init, driver can safely using macro,
+__phys_to_virt, in (b) or (c), if necessary.
 
-That impacts badly the resulting code and its self-encapsulation.
+Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+---
+Changes in v2:
+- add Fixes tag
 
- - There is one node and the driver hardcodes the value and initializes
-a clocksource and a clockevent
+Changes in v3:
+- adding patch of shifting linear region randomization ahead of
+ memory_limit
 
- - There are several nodes, one for the clocksource and one for the
-clockevent, and the driver assumes the order of the node in the DT
+ arch/arm64/mm/init.c | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
- - There are several nodes and multiple channels and those are used for
-PWM. It is impossible to know which one are used for PWM or for the
-clocksource or for the clockevent
-
-For example with STM32, we should be able to specify which timer to use.
-There are 16 timers IIRC, they can be used for PWM, clocksource or
-clockevent. Half is 16 bits, other half is 32 bits, depending on the
-destination of the platform we can be interested to use one or another
-without recompiling a kernel but just the DT.
-
-We need a way to specify which timer to be used from the DT. The patch
-below sounded like a good way to characterize the nodes as they belong
-to the 'chosen' node and we stay to a 'linux' thing.
-
-What do you think ?
-
-
-On 08/04/2019 17:11, Alexandre Belloni wrote:
-> The chosen clocksource and clockevent bindings have never been accepted and
-> parsed, remove them.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  arch/arm/boot/dts/at91sam9261ek.dts | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-> index a57f2d435dca..11ed55d8a87d 100644
-> --- a/arch/arm/boot/dts/at91sam9261ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
-> @@ -15,14 +15,6 @@
->  	chosen {
->  		bootargs = "rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs rw";
->  		stdout-path = "serial0:115200n8";
-> -
-> -		clocksource {
-> -			timer = <&timer0>;
-> -		};
-> -
-> -		clockevent {
-> -			timer = <&timer1>;
-> -		};
->  	};
->  
->  	memory {
-> 
-
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 7205a9085b4d..5142020fc146 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -389,6 +389,23 @@ void __init arm64_memblock_init(void)
+ 		memblock_remove(0, memstart_addr);
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
++		extern u16 memstart_offset_seed;
++		u64 range = linear_region_size -
++			    (memblock_end_of_DRAM() - memblock_start_of_DRAM());
++
++		/*
++		 * If the size of the linear region exceeds, by a sufficient
++		 * margin, the size of the region that the available physical
++		 * memory spans, randomize the linear region as well.
++		 */
++		if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
++			range /= ARM64_MEMSTART_ALIGN;
++			memstart_addr -= ARM64_MEMSTART_ALIGN *
++					 ((range * memstart_offset_seed) >> 16);
++		}
++	}
++
+ 	/*
+ 	 * Apply the memory limit if it was set. Since the kernel may be loaded
+ 	 * high up in memory, add back the kernel region that must be accessible
+@@ -428,22 +445,6 @@ void __init arm64_memblock_init(void)
+ 		}
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+-		extern u16 memstart_offset_seed;
+-		u64 range = linear_region_size -
+-			    (memblock_end_of_DRAM() - memblock_start_of_DRAM());
+-
+-		/*
+-		 * If the size of the linear region exceeds, by a sufficient
+-		 * margin, the size of the region that the available physical
+-		 * memory spans, randomize the linear region as well.
+-		 */
+-		if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+-			range /= ARM64_MEMSTART_ALIGN;
+-			memstart_addr -= ARM64_MEMSTART_ALIGN *
+-					 ((range * memstart_offset_seed) >> 16);
+-		}
+-	}
+ 
+ 	/*
+ 	 * Register the kernel text, kernel data, initrd, and initial
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
 
