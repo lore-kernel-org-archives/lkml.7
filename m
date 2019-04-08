@@ -2,135 +2,165 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA33CC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B974C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3893217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090BE21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:06:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0909WOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfDHPFt (ORCPT
+        id S1728483AbfDHPGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:05:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45962 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfDHPFq (ORCPT
+        Mon, 8 Apr 2019 11:06:54 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55071 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDHPGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:05:46 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AB3BF282078
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gwendal@chromium.org, twawrzynczak@chromium.org,
-        bleung@chromium.org, groeck@chromium.org, kernel@collabora.com,
-        dtor@chromium.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] platform/chrome: cros_ec_debugfs: no need to check return value of debugfs_create functions
-Date:   Mon,  8 Apr 2019 17:05:38 +0200
-Message-Id: <20190408150538.8115-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Apr 2019 11:06:54 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c1so14768152wml.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=eAkVGL8LuYrWK2HSKnJoGKtfb768PfHiEnLOTq+qGeM=;
+        b=g0909WOpVaY8LRC/Xa+v/jGqL0gEvjsPdUfTvNJr2wRjddJLW2HrkE1CR9QmPUDB90
+         jbI4iqkFXuf2E2tjUSxfUdM2KJTLnFJLFwjqSlVdd4sfnpRQaQgytRq3miL1HERLR//F
+         K63Yi+ZwNB1AWpSOTI85KRMjjDyX8/4rmvp1vnWVYsGVU3CFhOBftd9yJe/a6RUym7Tk
+         gwDXlHkwUuUD3o/3Q9lfCnRFiHdVpU2IzFC8VoSEgTkl9WhcXocTIOKX/W4R/F0iMLM8
+         cufzA4I9sn7r1a4ePUDLsefsQXtXRnS9gwh+fVCxlC9j2uvxQ/GjHFzm5SCCel2uI792
+         6gZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=eAkVGL8LuYrWK2HSKnJoGKtfb768PfHiEnLOTq+qGeM=;
+        b=nHoPmQZ1VGdhCYFFjvqSJqGNolfbqx6JjiisnuWonP4fSjec0XVLj2dRIWJky7AwNf
+         AtEnhGxCQFd2FeCeFD/MKduxdE6M3mg4BXn+S2IS8+6OkPzCndvSZ3U1d7op/BL5TaUx
+         4oobHyC1ByPDz36tmxnVpUFBsWAavptFqEOAcja7jaBUbaJlpMUZVFdrBb24Mg3z8+zR
+         QCPqhMdDVPK66c0PsuLYYC451XjTPm9PQnsE9QjrFx82DDByXudKaDMLEjTDPGcxyrPR
+         PhiUkGNPsmHtb2dByY4auaze8CNfDZ3tMVJw3v07OQhrZYbXicT9dLPEgDHAinZUC8hc
+         lUww==
+X-Gm-Message-State: APjAAAXAzvF98qEjVlCz9gxF6+mW0Cap7g0TpEpppzftc63mT8n0KeRf
+        AWCWxPN4jaouAJABISfx2lThTw==
+X-Google-Smtp-Source: APXvYqz5wk5CVsf1SCEbEItZbOWgJ84MZIEvEU5bOD5aGKQpNdCZoc4Jl+IWFrE71mTc2NCb+W3zsg==
+X-Received: by 2002:a7b:c301:: with SMTP id k1mr18719569wmj.37.1554736012178;
+        Mon, 08 Apr 2019 08:06:52 -0700 (PDT)
+Received: from [192.168.0.100] ([88.147.51.116])
+        by smtp.gmail.com with ESMTPSA id g10sm21900262wrq.2.2019.04.08.08.06.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 08:06:51 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+Date:   Mon, 8 Apr 2019 17:06:47 +0200
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <938957C8-3A0F-4664-8D1F-A822F6D6D4E7@linaro.org>
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+ <20190408150430.GB23021@linux-x5ow.site>
+ <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
 
- drivers/platform/chrome/cros_ec_debugfs.c | 35 ++++-------------------
- 1 file changed, 6 insertions(+), 29 deletions(-)
+> Il giorno 8 apr 2019, alle ore 17:05, Jens Axboe <axboe@kernel.dk> ha =
+scritto:
+>=20
+> On 4/8/19 9:04 AM, Johannes Thumshirn wrote:
+>> [+Cc Michal ]
+>> On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
+>>>=20
+>>>=20
+>>>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn =
+<jthumshirn@suse.de> ha scritto:
+>>>>=20
+>>>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+>>>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
+>>>>>=20
+>>>>> When bfq was merged into mainline, there were two I/O schedulers =
+that
+>>>>> implemented the proportional-share policy: bfq for blk-mq and cfq =
+for
+>>>>> legacy blk. bfq's interface files in the blkio/io controller have =
+the
+>>>>> same names as cfq. But the cgroups interface doesn't allow two
+>>>>> entities to use the same name for their files, so for bfq we had =
+to
+>>>>> prepend the "bfq" prefix to each of its files. However no legacy =
+code
+>>>>> uses these modified file names. This naming also causes confusion, =
+as,
+>>>>> e.g., in [1].
+>>>>>=20
+>>>>> Now cfq has gone with legacy blk, so there is no need any longer =
+for
+>>>>> these prefixes in (the never used) bfq names. In view of this =
+fact, this
+>>>>> commit removes these prefixes, thereby enabling legacy code to =
+truly
+>>>>> use the proportional share policy in blk-mq.
+>>>>>=20
+>>>>> [1] https://github.com/systemd/systemd/issues/7057
+>>>>=20
+>>>> Hmm, but isn't this a user-space facing interface and thus some =
+sort of ABI?
+>>>> Do you know what's using it and what breaks due to this conversion?
+>>>>=20
+>>>=20
+>>> Yep, but AFAIK, the problem is exactly the opposite: nobody uses =
+these
+>>> names for the proportional-share policy, or wants to use these =
+names.  I'm
+>>> CCing Lennart too, in case he has some improbable news on this.
+>>>=20
+>>> So the idea is to align names to what people expect, possibly before
+>>> more confusion arises.
+>>=20
+>> OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
+>> symlinks?
+>>=20
+>> This way we can a) keep the old files and b) have them point to the =
+new (a.k.a
+>> cfq style) files.
+>=20
+> I did consider that, and that would be doable. But honestly, I'm =
+having a
+> hard time seeing what issue we are attempting to fix by doing this.
+>=20
 
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index f0de1991b688..a712508e4646 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -337,12 +337,8 @@ static int cros_ec_create_console_log(struct cros_ec_debugfs *debug_info)
- 	mutex_init(&debug_info->log_mutex);
- 	init_waitqueue_head(&debug_info->log_wq);
- 
--	if (!debugfs_create_file("console_log",
--				 S_IFREG | 0444,
--				 debug_info->dir,
--				 debug_info,
--				 &cros_ec_console_log_fops))
--		return -ENOMEM;
-+	debugfs_create_file("console_log", S_IFREG | 0444, debug_info->dir,
-+			    debug_info, &cros_ec_console_log_fops);
- 
- 	INIT_DELAYED_WORK(&debug_info->log_poll_work,
- 			  cros_ec_console_log_work);
-@@ -390,13 +386,8 @@ static int cros_ec_create_panicinfo(struct cros_ec_debugfs *debug_info)
- 	debug_info->panicinfo_blob.data = msg->data;
- 	debug_info->panicinfo_blob.size = ret;
- 
--	if (!debugfs_create_blob("panicinfo",
--				 S_IFREG | 0444,
--				 debug_info->dir,
--				 &debug_info->panicinfo_blob)) {
--		ret = -ENOMEM;
--		goto free;
--	}
-+	debugfs_create_blob("panicinfo", S_IFREG | 0444, debug_info->dir,
-+			    &debug_info->panicinfo_blob);
- 
- 	return 0;
- 
-@@ -405,15 +396,6 @@ static int cros_ec_create_panicinfo(struct cros_ec_debugfs *debug_info)
- 	return ret;
- }
- 
--static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
--{
--	if (!debugfs_create_file("pdinfo", 0444, debug_info->dir, debug_info,
--				 &cros_ec_pdinfo_fops))
--		return -ENOMEM;
--
--	return 0;
--}
--
- static int cros_ec_debugfs_probe(struct platform_device *pd)
- {
- 	struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
-@@ -428,8 +410,6 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 
- 	debug_info->ec = ec;
- 	debug_info->dir = debugfs_create_dir(name, NULL);
--	if (!debug_info->dir)
--		return -ENOMEM;
- 
- 	ret = cros_ec_create_panicinfo(debug_info);
- 	if (ret)
-@@ -439,9 +419,8 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 	if (ret)
- 		goto remove_debugfs;
- 
--	ret = cros_ec_create_pdinfo(debug_info);
--	if (ret)
--		goto remove_log;
-+	debugfs_create_file("pdinfo", 0444, debug_info->dir, debug_info,
-+			    &cros_ec_pdinfo_fops);
- 
- 	ec->debug_info = debug_info;
- 
-@@ -449,8 +428,6 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 
- 	return 0;
- 
--remove_log:
--	cros_ec_cleanup_console_log(debug_info);
- remove_debugfs:
- 	debugfs_remove_recursive(debug_info->dir);
- 	return ret;
--- 
-2.20.1
+The problem is ~100% of people and software believing to set weights and =
+not doing it.
+
+Paolo
+
+> --=20
+> Jens Axboe
 
