@@ -2,146 +2,184 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3324AC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86321C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0375120870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B5020883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfDHGnl (ORCPT
+        id S1726471AbfDHGoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:43:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:64785 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfDHGnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:43:41 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D69AA88AB0;
-        Mon,  8 Apr 2019 06:43:40 +0000 (UTC)
-Received: from [10.72.12.140] (ovpn-12-140.pek2.redhat.com [10.72.12.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 121165D71F;
-        Mon,  8 Apr 2019 06:43:29 +0000 (UTC)
-Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
- throughput
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a98d194d-e257-41ff-82e7-de2d16d2f4d4@redhat.com>
-Date:   Mon, 8 Apr 2019 14:43:28 +0800
+        Mon, 8 Apr 2019 02:44:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33096 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725871AbfDHGoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 02:44:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7A456AFF4;
+        Mon,  8 Apr 2019 06:44:05 +0000 (UTC)
+Subject: Re: [PATCH RFC 00/39] x86/KVM: Xen HVM guest support
+To:     Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20190220201609.28290-1-joao.m.martins@oracle.com>
+ <35051310-c497-8ad5-4434-1b8426a317d2@redhat.com>
+ <8b1f4912-4f92-69ae-ae01-d899d5640572@oracle.com>
+ <3ee91f33-2973-c2db-386f-afbf138081b4@redhat.com>
+ <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ mQENBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAG0H0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT6JATkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPuQENBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAGJAR8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHf4kBrQQY
+ AQgAIBYhBIUSZ3Lo9gSUpdCX97DendYovxMvBQJa3fDQAhsCAIEJELDendYovxMvdiAEGRYI
+ AB0WIQRTLbB6QfY48x44uB6AXGG7T9hjvgUCWt3w0AAKCRCAXGG7T9hjvk2LAP99B/9FenK/
+ 1lfifxQmsoOrjbZtzCS6OKxPqOLHaY47BgEAqKKn36YAPpbk09d2GTVetoQJwiylx/Z9/mQI
+ CUbQMg1pNQf9EjA1bNcMbnzJCgt0P9Q9wWCLwZa01SnQWFz8Z4HEaKldie+5bHBL5CzVBrLv
+ 81tqX+/j95llpazzCXZW2sdNL3r8gXqrajSox7LR2rYDGdltAhQuISd2BHrbkQVEWD4hs7iV
+ 1KQHe2uwXbKlguKPhk5ubZxqwsg/uIHw0qZDk+d0vxjTtO2JD5Jv/CeDgaBX4Emgp0NYs8IC
+ UIyKXBtnzwiNv4cX9qKlz2Gyq9b+GdcLYZqMlIBjdCz0yJvgeb3WPNsCOanvbjelDhskx9gd
+ 6YUUFFqgsLtrKpCNyy203a58g2WosU9k9H+LcheS37Ph2vMVTISMszW9W8gyORSgmw==
+Message-ID: <ac0fb2d0-59bf-1330-24ab-331c1a69b13f@suse.com>
+Date:   Mon, 8 Apr 2019 08:44:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190404105838.101559-1-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 08 Apr 2019 06:43:40 +0000 (UTC)
+In-Reply-To: <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/03/2019 18:14, Joao Martins wrote:
+> On 2/22/19 4:59 PM, Paolo Bonzini wrote:
+>> On 21/02/19 12:45, Joao Martins wrote:
+>>> On 2/20/19 9:09 PM, Paolo Bonzini wrote:
+>>>> On 20/02/19 21:15, Joao Martins wrote:
+>>>>>  2. PV Driver support (patches 17 - 39)
+>>>>>
+>>>>>  We start by redirecting hypercalls from the backend to routines
+>>>>>  which emulate the behaviour that PV backends expect i.e. grant
+>>>>>  table and interdomain events. Next, we add support for late
+>>>>>  initialization of xenbus, followed by implementing
+>>>>>  frontend/backend communication mechanisms (i.e. grant tables and
+>>>>>  interdomain event channels). Finally, introduce xen-shim.ko,
+>>>>>  which will setup a limited Xen environment. This uses the added
+>>>>>  functionality of Xen specific shared memory (grant tables) and
+>>>>>  notifications (event channels).
+>>>>
+>>>> I am a bit worried by the last patches, they seem really brittle and
+>>>> prone to breakage.  I don't know Xen well enough to understand if the
+>>>> lack of support for GNTMAP_host_map is fixable, but if not, you have to
+>>>> define a completely different hypercall.
+>>>>
+>>> I guess Ankur already answered this; so just to stack this on top of his comment.
+>>>
+>>> The xen_shim_domain() is only meant to handle the case where the backend
+>>> has/can-have full access to guest memory [i.e. netback and blkback would work
+>>> with similar assumptions as vhost?]. For the normal case, where a backend *in a
+>>> guest* maps and unmaps other guest memory, this is not applicable and these
+>>> changes don't affect that case.
+>>>
+>>> IOW, the PV backend here sits on the hypervisor, and the hypercalls aren't
+>>> actual hypercalls but rather invoking shim_hypercall(). The call chain would go
+>>> more or less like:
+>>>
+>>> <netback|blkback|scsiback>
+>>>  gnttab_map_refs(map_ops, pages)
+>>>    HYPERVISOR_grant_table_op(GNTTABOP_map_grant_ref,...)
+>>>      shim_hypercall()
+>>>        shim_hcall_gntmap()
+>>>
+>>> Our reasoning was that given we are already in KVM, why mapping a page if the
+>>> user (i.e. the kernel PV backend) is himself? The lack of GNTMAP_host_map is how
+>>> the shim determines its user doesn't want to map the page. Also, there's another
+>>> issue where PV backends always need a struct page to reference the device
+>>> inflight data as Ankur pointed out.
+>>
+>> Ultimately it's up to the Xen people.  It does make their API uglier,
+>> especially the in/out change for the parameter.  If you can at least
+>> avoid that, it would alleviate my concerns quite a bit.
+> 
+> In my view, we have two options overall:
+> 
+> 1) Make it explicit, the changes the PV drivers we have to make in
+> order to support xen_shim_domain(). This could mean e.g. a) add a callback
+> argument to gnttab_map_refs() that is invoked for every page that gets looked up
+> successfully, and inside this callback the PV driver may update it's tracking
+> page. Here we no longer have this in/out parameter in gnttab_map_refs, and all
+> shim_domain specific bits would be a little more abstracted from Xen PV
+> backends. See netback example below the scissors mark. Or b) have sort of a
+> translate_gref() and put_gref() API that Xen PV drivers use which make it even
+> more explicit that there's no grant ops involved. The latter is more invasive.
+> 
+> 2) The second option is to support guest grant mapping/unmapping [*] to allow
+> hosting PV backends inside the guest. This would remove the Xen changes in this
+> series completely. But it would require another guest being used
+> as netback/blkback/xenstored, and less performance than 1) (though, in theory,
+> it would be equivalent to what does Xen with grants/events). The only changes in
+> Linux Xen code is adding xenstored domain support, but that is useful on its own
+> outside the scope of this work.
+> 
+> I think there's value on both; 1) is probably more familiar for KVM users
+> perhaps (as it is similar to what vhost does?) while  2) equates to implementing
+> Xen disagregation capabilities in KVM.
+> 
+> Thoughts? Xen maintainers what's your take on this?
 
-On 2019/4/4 下午6:58, Stefano Garzarella wrote:
-> This series tries to increase the throughput of virtio-vsock with slight
-> changes:
->   - patch 1/4: reduces the number of credit update messages sent to the
->                transmitter
->   - patch 2/4: allows the host to split packets on multiple buffers,
->                in this way, we can remove the packet size limit to
->                VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE
->   - patch 3/4: uses VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size
->                allowed
->   - patch 4/4: increases RX buffer size to 64 KiB (affects only host->guest)
->
-> RFC:
->   - maybe patch 4 can be replaced with multiple queues with different
->     buffer sizes or using EWMA to adapt the buffer size to the traffic
+What I'd like best would be a new handle (e.g. xenhost_t *) used as an
+abstraction layer for this kind of stuff. It should be passed to the
+backends and those would pass it on to low-level Xen drivers (xenbus,
+event channels, grant table, ...).
+
+I was planning to do that (the xenhost_t * stuff) soon in order to add
+support for nested Xen using PV devices (you need two Xenstores for that
+as the nested dom0 is acting as Xen backend server, while using PV
+frontends for accessing the "real" world outside).
+
+The xenhost_t should be used for:
+
+- accessing Xenstore
+- issuing and receiving events
+- doing hypercalls
+- grant table operations
+
+So exactly the kind of stuff you want to do, too.
 
 
-Or EWMA + mergeable rx buffer, but if we decide to unify the datapath 
-with virtio-net, we can reuse their codes.
-
-
->
->   - as Jason suggested in a previous thread [1] I'll evaluate to use
->     virtio-net as transport, but I need to understand better how to
->     interface with it, maybe introducing sk_buff in virtio-vsock.
->
-> Any suggestions?
-
-
-My understanding is this is not a must, but if it makes things easier, 
-we can do this.
-
-Another thing that may help is to implement sendpage(), which will 
-greatly improve the performance.
-
-Thanks
-
-
->
-> Here some benchmarks step by step. I used iperf3 [2] modified with VSOCK
-> support:
->
->                          host -> guest [Gbps]
-> pkt_size    before opt.   patch 1   patches 2+3   patch 4
->    64            0.060       0.102       0.102       0.096
->    256           0.22        0.40        0.40        0.36
->    512           0.42        0.82        0.85        0.74
->    1K            0.7         1.6         1.6         1.5
->    2K            1.5         3.0         3.1         2.9
->    4K            2.5         5.2         5.3         5.3
->    8K            3.9         8.4         8.6         8.8
->    16K           6.6        11.1        11.3        12.8
->    32K           9.9        15.8        15.8        18.1
->    64K          13.5        17.4        17.7        21.4
->    128K         17.9        19.0        19.0        23.6
->    256K         18.0        19.4        19.8        24.4
->    512K         18.4        19.6        20.1        25.3
->
->                          guest -> host [Gbps]
-> pkt_size    before opt.   patch 1   patches 2+3
->    64            0.088       0.100       0.101
->    256           0.35        0.36        0.41
->    512           0.70        0.74        0.73
->    1K            1.1         1.3         1.3
->    2K            2.4         2.4         2.6
->    4K            4.3         4.3         4.5
->    8K            7.3         7.4         7.6
->    16K           9.2         9.6        11.1
->    32K           8.3         8.9        18.1
->    64K           8.3         8.9        25.4
->    128K          7.2         8.7        26.7
->    256K          7.7         8.4        24.9
->    512K          7.7         8.5        25.0
->
-> Thanks,
-> Stefano
->
-> [1] https://www.spinics.net/lists/netdev/msg531783.html
-> [2] https://github.com/stefano-garzarella/iperf/
->
-> Stefano Garzarella (4):
->    vsock/virtio: reduce credit update messages
->    vhost/vsock: split packets to send using multiple buffers
->    vsock/virtio: change the maximum packet size allowed
->    vsock/virtio: increase RX buffer size to 64 KiB
->
->   drivers/vhost/vsock.c                   | 35 ++++++++++++++++++++-----
->   include/linux/virtio_vsock.h            |  3 ++-
->   net/vmw_vsock/virtio_transport_common.c | 18 +++++++++----
->   3 files changed, 44 insertions(+), 12 deletions(-)
->
+Juergen
