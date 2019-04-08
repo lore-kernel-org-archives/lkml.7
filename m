@@ -2,135 +2,184 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A5C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00618C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5774F213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3305213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxOwvrKI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I6F3c3yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfDHWfk (ORCPT
+        id S1728173AbfDHWiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:35:40 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44871 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfDHWfj (ORCPT
+        Mon, 8 Apr 2019 18:38:23 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37016 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfDHWiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:35:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y7so2677373wrn.11;
-        Mon, 08 Apr 2019 15:35:38 -0700 (PDT)
+        Mon, 8 Apr 2019 18:38:22 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w23so8158416ply.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 15:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=V4R+3dQh95hwJSsO8hhhpWrQd2X7Bmm0cjMWwjqnvJ8=;
-        b=sxOwvrKIS900T1u1lm3jZY276LdWVTUY1BPwZffMexJmer4DItZPL1rNrboROzzazh
-         8nHWp7BPxSrjVU6UArVxNu2Qna5wV1RWR6gZ6XwzW3h8J1MRcLexE14h2Np3WWn1nm/G
-         StDqZIeMeN89X69QFdblaX/zzlEdlkrQrVjB3qbZgajE0TCTDrYMRWjoH3Wb+NnxCNqx
-         P28XJfzyHZtgAFpZbeV7vhErONBPQXPFAtSb2/4zk7QMSimjxyOCRPmxtBoMjKb+c143
-         RpWQuM1P//ITCA8ICdo8prWJ2ElNRG6+O3raqcNtPP0RwRyEDuYJlywhtT01VAv+EViP
-         8zIQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FfXCNxGjgip9tM/24J4x9HgXgQeH+eXUxsfXR19pBSo=;
+        b=I6F3c3ytswQ2No1wfT9BwkH3vkabdrpJcUJ0D+X/pKLNaOCVbJuebSFNRj7cJ/a6KY
+         zEPKjzFf/TqyZzQyubdQ0PpkKz1RsmL0kVycfyzx+1ovcvSeam8Eug0aMyu5uvd2e+n/
+         APe1+RzO76LnBoWHcTiglOc9BK7fasU8ALOk+Bnl24dS3KL94DMngoJZdQ+SPRz93Eh9
+         worpOkyLZcfpmHHToStEVo2EsCQG6K2wj8oJZNUGgHry/8C0vBHizi5KuKg5vqs7BRhh
+         leDeM7XlwMbXAh/Sd0elxDag1PLKxXezjtU4ohTfCQ7Jdt6bBRQdnvCwXKyPaJ0x2Yd8
+         g7Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=V4R+3dQh95hwJSsO8hhhpWrQd2X7Bmm0cjMWwjqnvJ8=;
-        b=nGa1YRmo+C75zIk7PV7+Uoq5UgEq5OHW9+4z9aRpWn6y0BjldDjHq03W3TIWbkQN3/
-         AS0H+xc0R1Z9sHP0WwLhu5f213Cq4ZfzoEQy8ol6xrbilBf/uq70ZMGXERLSyvOr+ORx
-         HRj+R0bEB8NFrkQ3D2IU4YXm4dKSoXt5s79b8oOM6EcmDp+Etq91DoAspFKqIW5VgTN+
-         V9RmcUpT9H03WmgVfvIh8wWEh3GsnvIg+9oUQEszvELjjtBGlN4TMLeTmhd353BWwAW3
-         8eazaUE3F4/rX9hDBf+n0LTR3nuVHORy4wz57Xfs8bIdugw1Nrik2MGQ4vHppUI8ibA0
-         QtWw==
-X-Gm-Message-State: APjAAAXLtqZ2Z8U9NGwBCGvy7q7yXZ8UYa4Toy6sCCeaLFCOF4NCsI3H
-        KfPV+bFzFP5Xac6uzwj4m4iyea1b5lyh/Q==
-X-Google-Smtp-Source: APXvYqx48H3nHFDjXUlECAojoV7TEwgQPBGUMSZadi2gqr9yK3r64aVbWV2/Dkl7UXpNgo8KgpIaFw==
-X-Received: by 2002:adf:dc8e:: with SMTP id r14mr12111570wrj.118.1554762937378;
-        Mon, 08 Apr 2019 15:35:37 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id a23sm9700880wmm.46.2019.04.08.15.35.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Apr 2019 15:35:36 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Emil Renner Berthing <kernel@esmil.dk>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: rockchip: Revert "set min/max speed"
-Date:   Tue, 09 Apr 2019 00:35:34 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FfXCNxGjgip9tM/24J4x9HgXgQeH+eXUxsfXR19pBSo=;
+        b=irJc1/Yh4vJchm9THumNFmdwd6Q1y5oTWdDBnnh8/5BlSQQ18/Ms70HQXrg1uc9xVO
+         i20nsXlT1ORzX3VZDuvPUtFUfMI31cpS5AmkW6Yz3dKxOE7XMKN6SKraauGDX67WwZEP
+         T5aQheTCX0/Ut7ZDN3j/UyFW4VCwsBz8CKVkGecEewWZNF0dUh7Mpbj0q9f8E0qAubLa
+         h9LI8nQef75viAUaAUkPLdsq5k0bYCIXefCTscmAHBU2xln9IadL3FBgOGfz5abuPFty
+         V3CQ8RzKZ8LUY96RFctGocn4PXuWrDTwwkiFAPLHO4MhLKyOps6FLPWPlC17PKGW/9oh
+         WAMA==
+X-Gm-Message-State: APjAAAWvv95F70Zy7zy9s5UY3n1BvJSwhM9gISg/xhSDD0xrLxtt1D+P
+        VXebOb87WiFjRZQIDWmoSxLTAA==
+X-Google-Smtp-Source: APXvYqyB09EAnp/9MaAYN3lufSGL1bahGfdNMb6d9BPZ6LXfhvrFMOl2X8idIwXTbK4AEPQrCaabnQ==
+X-Received: by 2002:a17:902:7441:: with SMTP id e1mr32220266plt.13.1554763101258;
+        Mon, 08 Apr 2019 15:38:21 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v12sm41115361pfe.148.2019.04.08.15.38.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 15:38:20 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 15:38:17 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, vkoul@kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Message-ID: <20190408223817.GS1843@tuxbook-pro>
+References: <20190405035446.31886-1-georgi.djakov@linaro.org>
+ <20190405035446.31886-2-georgi.djakov@linaro.org>
+ <20190405143254.GM1843@tuxbook-pro>
+ <9ee2c9b2-f201-abfb-be60-180befa9dc6d@linaro.org>
 MIME-Version: 1.0
-Message-ID: <e9f5512c-238e-4da2-9caf-63c6be9b92be@gmail.com>
-In-Reply-To: <20190407005759.2425-1-vicencb@gmail.com>
-References: <21d83ed2-a8db-49cf-ba8c-c7844157d7b0@gmail.com>
- <20190407005759.2425-1-vicencb@gmail.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ee2c9b2-f201-abfb-be60-180befa9dc6d@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, April 7, 2019 2:57:59 AM CEST, Vicente Bergas wrote:
-> This reverts
-> commit 420b82f84294 ("spi: rockchip: set min/max speed")
-> commit 74b7efa82b11 ("spi: rockchip: precompute rx sample delay")
-> The former breaks bursts of writes of 48 bytes or more.
-> Both patches touch the same part of the file and it is not trivial to
-> only revert the first. Reverting both just results in an easy to fix
-> conflict.
->
-> Tested-by: Vicente Bergas <vicencb@gmail.com>
-> Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-> ---
->  drivers/spi/spi-rockchip.c | 80 ++++++++++++++++++++++----------------
->  1 file changed, 46 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-> index 3912526ead66..682f3567a8c8 100644
-> --- a/drivers/spi/spi-rockchip.c
-> +++ b/drivers/spi/spi-rockchip.c
-> ...
+On Fri 05 Apr 08:46 PDT 2019, Georgi Djakov wrote:
 
-Hi Mark,
-please, disregard this patch. It is the result of bisecting a bug which
-may not be deterministically reproducible, so, the bisection point is
-random.
-Emil is helping me in the debug process, which is still ongoing.
+> Hi Bjorn,
+> 
+> On 4/5/19 21:32, Bjorn Andersson wrote:
+> > On Fri 05 Apr 10:54 +07 2019, Georgi Djakov wrote:
+> > 
+> >> The Qualcomm QCS404 platform has several buses that could be controlled
+> >> and tuned according to the bandwidth demand.
+> >>
+> >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> >> ---
+> >>  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
+> >>  1 file changed, 45 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >> new file mode 100644
+> >> index 000000000000..2ea63ea827d7
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >> @@ -0,0 +1,45 @@
+> >> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> >> +-----------------------------------------------------------
+> >> +
+> >> +Required properties :
+> >> +- compatible : shall contain only one of the following:
+> >> +			"qcom,qcs404-bimc"
+> > 
+> > As this is a hardware block available in mmio register space I think you
+> > better represent this on the mmio (soc) bus - and then represent the
+> > link to rpm as a child node of the rpm.
+> 
+> The mmio register space is not used for expressing bandwidth needs, but
+> contains mostly QoS related stuff. We do not support QoS for now and
+> that's why i haven't included it. When we decide to support QoS, we can
+> add the nodes for the QoS registers and then reference them with some DT
+> property like qcom,qos = <&bimc_qos>;
+> 
 
-Hi Emil,
-yes, the platform is RK3399. Doing tests on the Sapphire board, but it is
-also reproducible on gru-kevin. I prefer not testing on the chromebook
-because when it fails it becomes unbootable (a brick) and need to take it
-apart to connect an external programmer.
+The fact that QoS support is not implemented today is an implementation
+detail, it does not relate to how we're describing the hardware in
+DeviceTree. Adding three new nodes under soc{} and referencing these
+(and potentially duplicating the clocks properties in the two sets of
+nodes?) in the future, rather than just describing the hardware
+appropriately today seems odd to me.
 
-Now testing your suggestion:
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -720,5 +720,4 @@ static int rockchip_spi_probe(struct platform_device *)
-        if (master->dma_tx && master->dma_rx) {
-                rs->dma_addr_tx =3D mem->start + ROCKCHIP_SPI_TXDR;
-                rs->dma_addr_rx =3D mem->start + ROCKCHIP_SPI_RXDR;
--               master->can_dma =3D rockchip_spi_can_dma;
-        }
-so far so good, but let me some time to make sure the results are
-deterministic.
-Now it works without dma and without the assigned-clock* props in the dts.
-
-If that proves to fix the issue, which would be the next debugging step?
-
-Regarding the spidev: if the spi1 dts is
-&spi1 { status =3D "okay"; /* and nothing else */ };
-then the /sys/bus/spi/devices directory is empty, so, it cant be bound.
-What i am doing wrong?
+Further more, as I shared a while back the aggregation code related to
+the RPM would better be shared between 404, 410, 820 and 835. So to me
+it makes sense to even on the implementation side split this is NoC part
+and RPM part, from the beginning.
 
 Regards,
-  Vicen=C3=A7.
+Bjorn
 
+> Thanks,
+> Georgi
+> 
+> > 
+> > Apart from that this looks good.
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> >> +			"qcom,qcs404-pcnoc"
+> >> +			"qcom,qcs404-snoc"
+> >> +- #interconnect-cells : should contain 1
+> >> +
+> >> +Optional properties :
+> >> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> >> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+> >> +
+> >> +Example:
+> >> +
+> >> +rpm-glink {
+> >> +	...
+> >> +	rpm_requests: glink-channel {
+> >> +		...
+> >> +		bimc: interconnect@0 {
+> >> +			compatible = "qcom,qcs404-bimc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> >> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> >> +		};
+> >> +
+> >> +		pnoc: interconnect@1 {
+> >> +			compatible = "qcom,qcs404-pcnoc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> >> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> >> +		};
+> >> +
+> >> +		snoc: interconnect@2 {
+> >> +			compatible = "qcom,qcs404-snoc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> >> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> >> +		};
+> >> +	};
+> >> +};
