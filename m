@@ -2,80 +2,232 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F670C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B209C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3470320870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9D220870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:50:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RJCOvqdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfDHJtG (ORCPT
+        id S1726387AbfDHJuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:49:06 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:46007 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfDHJtG (ORCPT
+        Mon, 8 Apr 2019 05:50:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38630 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfDHJuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:49:06 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 58AD530000CE3;
-        Mon,  8 Apr 2019 11:49:04 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 203F656B89; Mon,  8 Apr 2019 11:49:04 +0200 (CEST)
-Date:   Mon, 8 Apr 2019 11:49:04 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v3 19/36] thunderbolt: Extend tunnel creation to more
- than 2 adjacent switches
-Message-ID: <20190408094904.o3fo2anhogyxpaja@wunner.de>
-References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
- <20190328123633.42882-20-mika.westerberg@linux.intel.com>
- <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
- <20190408073517.GA3622@lahna.fi.intel.com>
- <20190408085337.slcnajkgxjq4twkh@wunner.de>
- <20190408090744.GK3622@lahna.fi.intel.com>
+        Mon, 8 Apr 2019 05:50:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xA0uRlY8+0ivxQ7d8acBARQxTceUUPntxYvO3AIO3OA=; b=RJCOvqdI9hlxFTnVdZTl3q6x4
+        75acKsXLmf+g+IzVkuO6T3Yzz3TeXAeax5ub2i2l3IXJkH0u6txylCkYQ9D7cwJFlJUHOpv6LKflo
+        h+/cAHtXxJl//OkzeM09fllntRU7XoeYSP1QP7RRP19P3moSd4RqiecR2pgRjBtm/N4TFSEhqMd1P
+        XQ8GNPj59RjDezig0XybGqlCU2fxFwOSvvMnaAtjyINmr0ysNhWPH1kJMN1+khOrC5K+i27BwzQKG
+        n1LecuU0LKWVduUVCuYEMNw7SLyXUKHF+r6CMWFu30b9OyAcCOansK8dc3p9xJ1p7NZAVdNSAuRrB
+        8LcsNVatw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDQvB-0002Tr-Jk; Mon, 08 Apr 2019 09:50:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 57C842030C77A; Mon,  8 Apr 2019 11:50:31 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 11:50:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        mark.rutland@arm.com, jolsa@redhat.com
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Message-ID: <20190408095031.GG14281@hirez.programming.kicks-ass.net>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+ <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+ <adcbac67-82b5-98a4-efb4-61c9ed870c15@linux.ibm.com>
+ <20190408082229.GI4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408090744.GK3622@lahna.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190408082229.GI4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 12:07:44PM +0300, Mika Westerberg wrote:
-> On Mon, Apr 08, 2019 at 10:53:37AM +0200, Lukas Wunner wrote:
-> > Hm, what other cases are there, i.e. what is the meaning of a tb_regs_hop's
-> > "next_hop" field if "out_port" doesn't have a remote?  (And why does it
-> > need to be tracked on the out_port?  In case a remote is added later?)
+On Mon, Apr 08, 2019 at 10:22:29AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 08, 2019 at 09:12:28AM +0200, Thomas-Mich Richter wrote:
+
+> > very good news, your fix ran over the weekend without any hit!!!
+> > 
+> > Thanks very much for your help. Do you submit this patch to the kernel mailing list?
 > 
-> We also need to program HopIDs for adapter ports (PCIe, DP, NHI) in
-> order to enable a path. The "next_hop" from NULL port to an adapter port
-> tells the HopID a packet gets when it is routed to the adapter port and
-> the adapter port registers then are used to specify which HopID means
-> what (for PCIe there is only 8 but for DP there is 8 and 9, for NHI it
-> can be anything the service driver has negotiated).
+> Most excellent, let me go write a Changelog.
 
-Okay, so in_hopids are the entries allocated in this port's hop config
-space, whereas out_hopids only really bears significance for adapter
-ports.  For null ports (in-between two adapter ports on a path),
-out_hopids is identical to the in_hopids of the next hop (IIUC).
+Hi Thomas, find below.
 
-That probably merits mentioning in struct tb_port's kerneldoc.
+Sadly, while writing the Changelog I ended up with a 'completely'
+differet patch again, could I bother you to test this one too?
 
-Thanks,
+---
+Subject: perf: Fix perf_event_disable_inatomic()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Thu, 4 Apr 2019 15:03:00 +0200
 
-Lukas
+Thomas-Mich Richter reported he triggered a WARN from event_function_local()
+on his s390. The problem boils down to:
+
+  CPU-A				CPU-B
+
+  perf_event_overflow()
+    perf_event_disable_inatomic()
+      @pending_disable = 1
+      irq_work_queue();
+
+  sched-out
+    event_sched_out()
+      @pending_disable = 0
+
+				sched-in
+				perf_event_overflow()
+				  perf_event_disable_inatomic()
+				    @pending_disable = 1;
+				    irq_work_queue(); // FAILS
+
+  irq_work_run()
+    perf_pending_event()
+      if (@pending_disable)
+        perf_event_disable_local(); // WHOOPS
+
+The problem exists in generic, but s390 is particularly sensitive
+because it doesn't implement arch_irq_work_raise(), nor does it call
+irq_work_run() from it's PMU interrupt handler (nor would that be
+sufficient in this case, because s390 also generates
+perf_event_overflow() from pmu::stop). Add to that the fact that s390
+is a virtual architecture and (virtual) CPU-A can stall long enough
+for the above race to happen, even if it would self-IPI.
+
+Adding an irq_work_syn() to event_sched_in() would work for all hardare
+PMUs that properly use irq_work_run() but fails for software PMUs.
+
+Instead encode the CPU number in @pending_disable, such that we can
+tell which CPU requested the disable. This then allows us to detect
+the above scenario and even redirect the IPI to make up for the failed
+queue.
+
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: acme@redhat.com
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Reported-by: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |   52 ++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 9 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2009,8 +2009,8 @@ event_sched_out(struct perf_event *event
+ 	event->pmu->del(event, 0);
+ 	event->oncpu = -1;
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
++	if (READ_ONCE(event->pending_disable) >= 0) {
++		WRITE_ONCE(event->pending_disable, -1);
+ 		state = PERF_EVENT_STATE_OFF;
+ 	}
+ 	perf_event_set_state(event, state);
+@@ -2198,7 +2198,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ 
+ void perf_event_disable_inatomic(struct perf_event *event)
+ {
+-	event->pending_disable = 1;
++	WRITE_ONCE(event->pending_disable, smp_processor_id());
++	/* can fail, see perf_pending_event_disable() */
+ 	irq_work_queue(&event->pending);
+ }
+ 
+@@ -5810,10 +5811,45 @@ void perf_event_wakeup(struct perf_event
+ 	}
+ }
+ 
++static void perf_pending_event_disable(struct perf_event *event)
++{
++	int cpu = READ_ONCE(event->pending_disable);
++
++	if (cpu < 0)
++		return;
++
++	if (cpu == smp_processor_id()) {
++		WRITE_ONCE(event->pending_disable, -1);
++		perf_event_disable_local(event);
++		return;
++	}
++
++	/*
++	 *  CPU-A			CPU-B
++	 *
++	 *  perf_event_disable_inatomic()
++	 *    @pending_disable = CPU-A;
++	 *    irq_work_queue();
++	 *
++	 *  sched-out
++	 *    @pending_disable = -1;
++	 *
++	 *				sched-in
++	 *				perf_event_disable_inatomic()
++	 *				  @pending_disable = CPU-B;
++	 *				  irq_work_queue(); // FAILS
++	 *
++	 *  irq_work_run()
++	 *    perf_pending_event()
++	 *
++	 * But the event runs on CPU-B and wants disabling there.
++	 */
++	irq_work_queue_on(&event->pending, cpu);
++}
++
+ static void perf_pending_event(struct irq_work *entry)
+ {
+-	struct perf_event *event = container_of(entry,
+-			struct perf_event, pending);
++	struct perf_event *event = container_of(entry, struct perf_event, pending);
+ 	int rctx;
+ 
+ 	rctx = perf_swevent_get_recursion_context();
+@@ -5822,10 +5858,7 @@ static void perf_pending_event(struct ir
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
+-		perf_event_disable_local(event);
+-	}
++	perf_pending_event_disable(event);
+ 
+ 	if (event->pending_wakeup) {
+ 		event->pending_wakeup = 0;
+@@ -10236,6 +10269,7 @@ perf_event_alloc(struct perf_event_attr
+ 
+ 
+ 	init_waitqueue_head(&event->waitq);
++	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
+ 
+ 	mutex_init(&event->mmap_mutex);
