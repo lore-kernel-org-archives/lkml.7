@@ -2,107 +2,152 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6D6C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB70C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5563E20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2CD20879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YUh7F2Ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfDHOmT (ORCPT
+        id S1727346AbfDHOm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:42:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54342 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfDHOmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:42:18 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A1A281243;
-        Mon,  8 Apr 2019 14:42:18 +0000 (UTC)
-Received: from [10.43.17.46] (unknown [10.43.17.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75B735C642;
-        Mon,  8 Apr 2019 14:42:17 +0000 (UTC)
-Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
- filename $module/.rodata.cst{16,32}
-To:     sedat.dilek@gmail.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
- <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com>
- <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
- <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com>
- <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com>
- <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
-From:   Denys Vlasenko <dvlasenk@redhat.com>
-Message-ID: <5c5c169d-3bad-9e34-8c56-bedca3e5ae08@redhat.com>
-Date:   Mon, 8 Apr 2019 16:42:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 08 Apr 2019 14:42:18 +0000 (UTC)
+        Mon, 8 Apr 2019 10:42:26 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:33809 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfDHOmZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:42:25 -0400
+Received: by mail-qt1-f201.google.com with SMTP id x58so12903073qtc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=b5YLUBhVLY7mkfopkFQjIkzP3Gwv/ZY13l4EfD4a/cA=;
+        b=YUh7F2WwUojHZWZhi2LqD0Ket0y9zsQII1TAC8SrJXeJ80x5k54IoXJIKfmWCcrC2j
+         isKlloJdyyFi/HQUlZ1hAd61zifYgV2moItCWqQ25ckbjXDI69lMyVDrZYk5gvn+VH+W
+         +67Vxa5J7AwqtNZ1Dapfl7qQiRmBY3kU+78w6F9t9s0S9iLOUKf37N5kHTOb3V1w+WEf
+         Of1kzmvpSFg7EF22k22BcV0VuCRqN2IUzN4RrAKIcAAkvBIZzz6EGa4lY5ZFxcxOx3un
+         2uz+Q5nrz6cSGfEfsEaojXCynAesG4Wvrt1l4HC6PBhhpfTkPDI10dYyppTWGBnEK5mj
+         E4yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=b5YLUBhVLY7mkfopkFQjIkzP3Gwv/ZY13l4EfD4a/cA=;
+        b=kcZMww+Md35rcv7o+qhcDvJg9ykDs6Yq9LOFp3kGn+PbRz10+6ScGwMaf0KEsTWbGm
+         xAflqYbTYbPJVk0GL1tP3VYwg5CJz98qSbv5ZaYwzfIzfk/BtCf2YhUUSF5OLZ2TNkYj
+         PMf8x+2f264oPKLV6GvXuVaa0AiAk5imppwmj04KioELdv8IwguMGa07cwNYlefbmCKE
+         fOcp295V79ibIytAa+yqXhxPENJJZylIIFg3ZykzQByzZNUUqzLov9e9hpnqFE7lM5L+
+         KwX5lu9xstC3DJcO9pzg9sHVhV6OQe9oAJTv30dzs4ynfQ+EHBrsZQukLsb0lF+uxLEK
+         g04Q==
+X-Gm-Message-State: APjAAAWYfN2vs9GNwXFwoNCzJMnBNKOa76kAbDYoDt9/rEMYXwMKVxxj
+        bXlZMKVkb9GNTo6DFDnMflR6LqHQH0tA
+X-Google-Smtp-Source: APXvYqx8DIwao7Qeicx77irHcsITaRHETyMc24ZgVrUbqrPzxKZF5aW+yMwNH21N6DXctR0ATjDV0ngcwmzI
+X-Received: by 2002:ac8:93d:: with SMTP id t58mr3643003qth.41.1554734544323;
+ Mon, 08 Apr 2019 07:42:24 -0700 (PDT)
+Date:   Mon,  8 Apr 2019 07:42:16 -0700
+Message-Id: <20190408144216.160082-1-venture@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v10 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 4:34 PM, Sedat Dilek wrote:
-> v2:
-> 
-> sdi@iniza:~/src/linux-kernel/linux$ git --no-pager diff
-> diff --git a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> index a14af6eb09cb..712d6a7e8b8f 100644
-> --- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> +++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-> @@ -573,8 +573,12 @@
-> ENDPROC(roundsm16_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
->          vmovdqu y7, 15 * 16(rio);
-> 
-> 
-> -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-> -.section       .rodata.cst16, "aM", @progbits, 16
-> +/*
-> + * NB: section is mergeable, all elements must be aligned 16-byte blocks
-> + * There is more than one object in this section, let's use module name
-> + * instead of object name as unique suffix
-> + */
-> +.section        .rodata.cst16.camellia_aesni_avx_asm_64, "aM", @progbits, 16
->   .align 16
-> 
->   #define SHUFB_BYTES(idx) \
-> diff --git a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> index b66bbfa62f50..34f6b0c4196d 100644
-> --- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> +++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-> @@ -626,8 +626,12 @@
-> ENDPROC(roundsm32_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
->          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
->          .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
-> 
-> -/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-> -.section       .rodata.cst16, "aM", @progbits, 16
-> +/*
-> + * NB: section is mergeable, all elements must be aligned 16-byte blocks
-> + * There is more than one object in this section, let's use module name
-> + * instead of object name as unique suffix
-> +*/
-> +.section        .rodata.cst16.ccamellia_aesni_avx2_asm_64, "aM", @progbits, 16
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-why "ccamellia", not "camellia"?
+Signed-off-by: Patrick Venture <venture@google.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v10:
+ - Chopped out nearly identical information.
+Changes for v9:
+ - Added missing details about syscon parent
+Changes for v8:
+- None
+Changes for v7:
+- Moved node under the syscon node it requires
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 0000000000000..854bd67ffec68
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,47 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++The p2a-control node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++Example
++===================
++
++g4 Example
++----------
++
++syscon: scu@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++
++	p2a: p2a-control {
++		compatible = "aspeed,ast2400-p2a-ctrl";
++		memory-region = <&reserved_memory>;
++	};
++};
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-> I tried to check for the .rodata.cst32 case, how do I identify the *.S files?
-
-?
-
-Looks like all .rodata.cst32 sections have suffixes, nothing to fix.
