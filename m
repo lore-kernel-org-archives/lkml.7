@@ -2,262 +2,660 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB3BC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F54EC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8938218DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4886120883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="emuf1gB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbfDHInh (ORCPT
+        id S1726579AbfDHInh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 8 Apr 2019 04:43:37 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:38009 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726189AbfDHInh (ORCPT
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34203 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfDHIng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:43:37 -0400
-Received: from [IPv6:2001:983:e9a7:1:1170:5c87:411e:5806] ([IPv6:2001:983:e9a7:1:1170:5c87:411e:5806])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id DPsJhSFBeNG8zDPsKhkZPE; Mon, 08 Apr 2019 10:43:33 +0200
-Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
- encoder interface
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-References: <20190124100419.26492-1-tfiga@chromium.org>
- <20190124100419.26492-3-tfiga@chromium.org>
- <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
- <CAAFQd5AqRzGehW6fN4P=_oVdPdH+bJQqKhxgP6zsu80p-74bXA@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fded491f-8a25-3283-76c4-dee3dd56045e@xs4all.nl>
-Date:   Mon, 8 Apr 2019 10:43:31 +0200
+        Mon, 8 Apr 2019 04:43:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so15317568wrq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 01:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YuRl+8z4mNS4DJjF21h9CNPOVAVzeBgDgSWvICmPEjs=;
+        b=emuf1gB3YqO2b2cIZspzbcKSm5tUAQT2Djw0VQxdAcUxOO8lSj9YX6eGflS3KjQZZ8
+         BKb7oHyfp6AAp2D3l0pyxuCvrJkdpQDLWOuUVXgg1k2GVsNl6qDnPJTSvcp6joz+G5AL
+         syqDNWRUCYAJ7VncouHcWWU/siM9BMuvCW3mWwncUMwEZIseqxqjmS3Edh0nIK6FN8gc
+         lD+do3VDlHvrR+GoM0nRLkBjtK3VqjswoAXT7t0JYLDmyGXZBZoBoyRdQZho84zSJsgb
+         U3F2eyFosmuEJy6IUJBEy7zbtA0Y8opN/QPmg7eIyzzvKU5npSkJ6BceO1zo/IZc6+/S
+         eRmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YuRl+8z4mNS4DJjF21h9CNPOVAVzeBgDgSWvICmPEjs=;
+        b=U4tSCNHID+xpTpG9FjxozPpdfJcmQ3EMM6MFs/XJ1gb4WDp9K849mVrzysSjCBtDFe
+         2QzJ9m0ScF1o0e+DS4GTMvBB7f6WwZaMm+xaTvnb82/9rdn5IAigoI6fjceto4w/wKBy
+         F371AZ7haeFHmBfU0toNCO0+pvse2ZhQq6fjoElYMmnDuuDmjQdRrKnm/nht+k7vo7BW
+         Z/IGrIrq43cxFlwA9Ete3dWSHkVTpS7tyrCSeEFVU2a44gOQitAC2/f70Afm0gCUlrPp
+         TUhGVfmKkCmt1PAlMR5yB5wNsGvZEM1s37KQe7pXvoBVLVVwFvHPaoG+yQ3lIH9AfpVq
+         F5bQ==
+X-Gm-Message-State: APjAAAVIncTfoDIgQ0WbjMZ9iq7nRGT+3XpyOvuBtdvKPYebvHE8Nfg7
+        xd+HxJke8VkfdUBne9hrXPIHR3jmPZs=
+X-Google-Smtp-Source: APXvYqzTQz8Djv0hOsYneTNfwddHXaOP/fwaSwxgeP/x04dJwUsIW8dnG27QR3sKhtAqbNr5kSY60Q==
+X-Received: by 2002:a5d:4843:: with SMTP id n3mr12185775wrs.256.1554713014224;
+        Mon, 08 Apr 2019 01:43:34 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id 7sm101043083wrc.81.2019.04.08.01.43.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 01:43:33 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
+ Microchip PIT64B support
+To:     Claudiu.Beznea@microchip.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
+ <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
+Message-ID: <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
+Date:   Mon, 8 Apr 2019 10:43:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5AqRzGehW6fN4P=_oVdPdH+bJQqKhxgP6zsu80p-74bXA@mail.gmail.com>
+In-Reply-To: <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNRBrdw7zVEozAw99eTyCGSc68BVSprJfOsDB4aYzKg2aunQKOHCjPD2FsNN5WljF8lORGTHnvqzVAS5T/szMWpiYvB2vBCYu1dmyXpjgV1+HfgDi6YH
- ZW6D1NzLViU1NWiMplgqD6wtps/iFitVauHlNabMWwqlf157OBetTjeYhJ4+EjY0F73E1NJQkiC2Z/qo+k44eRjh2Ef9TJEh0JPvxeM2mbQvrSZ2PXu/6U5N
- sVOQW0CBagSGLSox0gDnZeQmdQ8iP/baqyn8mKYkX6LewsuvB1UFuoCEo7Trsyntejxec9vtCxAU3cGQq145uMfyz/TSOR/RAe4Pz/K0rD4xqfgGb2BGw6qC
- N+BhDC+h/FDmxU9BFfG8sIFDzhdUloYpC42ozfq2nOH+xX4lrfYVGPsLZbm6xCwH1l73/mTdCA2U6+f/kliEvsnlYNzIdKFG+TE3rBIgdmqPQGqF7r6qiWFY
- XnZA2vAPL5DXX4e0jb4tS4ChAf9FAn9AL6BKSB852dU30FI4nkpva/UZ+Hq93PS7pgPSAw0kdCmnB0DU5u2/JXCRPJuA9PVhVIVEyoO1LRv39gFFqg49sMfq
- M9u/2fM2l3uWtRil4/IQ9S8RLW6Kd0scWqvB3zhV6CGkbRd2qjc2c9cpz6quw8JNJh7HSreIolfazH/nOQi6rvRTRgKPP3mXs11HPu22tqnUIBbs4biiPJhv
- /fj/012hF/Ge7qFFXkAQoDrT18eWXmuLQtbMq282MeCXzv2XrbfkwKIuukQJ7lgnRL6RAJn/5yKW2MnfOHu4EPkg31sU4X3g7u5SkjWOXdKaxqrO3DFpp+jx
- M0xPshrVDZUt1P0y493crqJZ3JgxiEOp/2wJUfvOPg6I2rpYxQWtmrT4wRhynwwA+5/X05P1FWYnu3+V38mgWD8kBFfqFDlfrXmyzH8xiUFHEsK3SOxGxUWt
- BVfHTJhLGKPbJzouwVak3AccKa55Z+y4NH2Jk1r4NvxbyvQU
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 10:36 AM, Tomasz Figa wrote:
-> On Mon, Mar 25, 2019 at 10:12 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> Another comment found while creating compliance tests:
->>
->> On 1/24/19 11:04 AM, Tomasz Figa wrote:
->>> +Drain
->>> +=====
->>> +
->>> +To ensure that all the queued ``OUTPUT`` buffers have been processed and the
->>> +related ``CAPTURE`` buffers are given to the client, the client must follow the
->>> +drain sequence described below. After the drain sequence ends, the client has
->>> +received all encoded frames for all ``OUTPUT`` buffers queued before the
->>> +sequence was started.
->>> +
->>> +1. Begin the drain sequence by issuing :c:func:`VIDIOC_ENCODER_CMD`.
->>> +
->>> +   * **Required fields:**
->>> +
->>> +     ``cmd``
->>> +         set to ``V4L2_ENC_CMD_STOP``
->>> +
->>> +     ``flags``
->>> +         set to 0
->>> +
->>> +     ``pts``
->>> +         set to 0
->>> +
->>> +   .. warning::
->>> +
->>> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTURE``
->>> +      queues are streaming. For compatibility reasons, the call to
->>> +      :c:func:`VIDIOC_ENCODER_CMD` will not fail even if any of the queues is
->>> +      not streaming, but at the same time it will not initiate the `Drain`
->>> +      sequence and so the steps described below would not be applicable.
->>> +
->>> +2. Any ``OUTPUT`` buffers queued by the client before the
->>> +   :c:func:`VIDIOC_ENCODER_CMD` was issued will be processed and encoded as
->>> +   normal. The client must continue to handle both queues independently,
->>> +   similarly to normal encode operation. This includes:
->>> +
->>> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked with the
->>> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
->>> +
->>> +     .. warning::
->>> +
->>> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
->>> +        ``bytesused`` = 0) and in that case it must be ignored by the client,
->>> +        as it does not contain an encoded frame.
->>> +
->>> +     .. note::
->>> +
->>> +        Any attempt to dequeue more buffers beyond the buffer marked with
->>> +        ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
->>> +        :c:func:`VIDIOC_DQBUF`.
->>> +
->>> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queued
->>> +     before the ``V4L2_ENC_CMD_STOP`` command are dequeued,
->>> +
->>> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribes to it.
->>> +
->>> +   .. note::
->>> +
->>> +      For backwards compatibility, the encoder will signal a ``V4L2_EVENT_EOS``
->>> +      event when the last frame has been decoded and all frames are ready to be
->>> +      dequeued. It is deprecated behavior and the client must not rely on it.
->>> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
->>> +
->>> +3. Once all ``OUTPUT`` buffers queued before the ``V4L2_ENC_CMD_STOP`` call are
->>> +   dequeued and the last ``CAPTURE`` buffer is dequeued, the encoder is stopped
->>> +   and it will accept, but not process any newly queued ``OUTPUT`` buffers
->>> +   until the client issues any of the following operations:
->>> +
->>> +   * ``V4L2_ENC_CMD_START`` - the encoder will not be reset and will resume
->>> +     operation normally, with all the state from before the drain,
->>
->> I assume that calling CMD_START when *not* draining will succeed but does nothing.
->>
->> In other words: while draining is in progress START will return EBUSY. When draining
->> was finished, then START will resume the encoder. In all other cases it just returns
->> 0 since the encoder is really already started.
->>
-> 
-> Yes, that was the intention and seems to be the closest to the
-> behavior described in the existing documentation.
-> 
->>> +
->>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->>> +     ``CAPTURE`` queue - the encoder will be reset (see the `Reset` sequence)
->>> +     and then resume encoding,
->>> +
->>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->>> +     ``OUTPUT`` queue - the encoder will resume operation normally, however any
->>> +     source frames queued to the ``OUTPUT`` queue between ``V4L2_ENC_CMD_STOP``
->>> +     and :c:func:`VIDIOC_STREAMOFF` will be discarded.
->>> +
->>> +.. note::
->>> +
->>> +   Once the drain sequence is initiated, the client needs to drive it to
->>> +   completion, as described by the steps above, unless it aborts the process by
->>> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
->>> +   queues.  The client is not allowed to issue ``V4L2_ENC_CMD_START`` or
->>> +   ``V4L2_ENC_CMD_STOP`` again while the drain sequence is in progress and they
->>> +   will fail with -EBUSY error code if attempted.
->>
->> I assume calling STOP again once the drain sequence completed just returns 0 and
->> doesn't do anything else (since we're already stopped).
->>
-> 
-> Right.
-> 
->>> +
->>> +   Although mandatory, the availability of encoder commands may be queried
->>> +   using :c:func:`VIDIOC_TRY_ENCODER_CMD`.
->>
->> Some corner cases:
->>
->> 1) No buffers are queued on either vb2_queue, but STREAMON is called for both queues.
->>    Now ENC_CMD_STOP is issued. What should happen?
->>
->>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->>    at once as an empty buffer with FLAG_LAST set.
->>
-> 
-> SGTM. It's actually similar to a relatively common case where all
-> CAPTURE buffers have been dequeued and the application has to refill
-> the CAPTURE queue, but in the meantime a drain request needs to be
-> issued.
-> 
->> 2) Both queues are streaming and buffers have been encoded, but currently no buffers
->>    are queued on either vb2_queue. Now ENC_CMD_STOP is issued. What should happen?
->>
->>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->>    at once as an empty buffer with FLAG_LAST set. This is consistent with the
->>    previous corner case.
-> 
-> Agreed.
-> 
->>
->> 3) The CAPTURE queue contains buffers, the OUTPUT queue does not. Now ENC_CMD_STOP
->>    is issued. What should happen?
->>
->>    Proposal: the oldest CAPTURE buffer in the ready queue is returned as an empty
->>    buffer with FLAG_LAST set.
-> 
-> Generally agreed, but not sure if there is a reason to specifically
-> refer to the oldest buffer. (I'm personally for keeping the queues
-> ordered, though...)
+Hi Claudiu,
 
-Feel free to rephrase. Perhaps: "an empty CAPTURE buffer with FLAG_LAST set should be
-queued up for userspace to signal that the encoder has stopped." Or something along
-those lines.
+On 14/03/2019 17:26, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Add driver for Microchip PIT64B timer. Timer could be used in continuous
+> mode or oneshot mode. The hardware has 2x32 bit registers for period
+> emulating a 64 bit timer. The LSB_PR and MSB_PR registers are used to set
+> the period value (compare value). TLSB and TMSB keeps the current value
+> of the counter. After a compare the TLSB and TMSB register resets. Apart
+> from this the hardware has SMOD bit in mode register that allow to
+> reconfigure the timer without reset and start commands (start command
+> while timer is active is ignored).
+> The driver uses PIT64B timer as clocksource or clockevent. First requested
+> timer would be registered as clockevent, second one would be registered as
+> clocksource.
 
-Regards,
+Even if that was done this way before, assuming the DT describes the
+clockevent at the first place and then the clocksource, it is a fragile
+approach.
 
-	Hans
+What about using one of these approach?
 
+eg.
+
+arch/arm/boot/dts/at91sam9261ek.dts
+
+chosen {
+	bootargs = "rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs rw";
+                stdout-path = "serial0:115200n8";
+
+	clocksource {
+		timer = <&timer0>;
+	};
+
+        clockevent {
+		timer = <&timer1>;
+        };
+};
+
+or
+
+arch/arm/boot/dts/integratorap.dts
+
+aliases {
+	arm,timer-primary = &timer2;
+	arm,timer-secondary = &timer1;
+};
+
+So we can have control of what is the clocksource or the clockevent.
+That is particulary handy in case of multiple channels.
+
+Not sure if we can replace the 'arm,timer_primary' to 'clocksource'.
+
+Rob? What is your opinion?
+
+> Individual PIT64B hardware resources were used for clocksource
+> and clockevent to be able to support high resolution timers with this
+> hardware implementation.
 > 
->>
->> 4) Both queues have queued buffers. ENC_CMD_STOP is issued to start the drain process.
->>    Before the drain process completes STREAMOFF is called for either CAPTURE or
->>    OUTPUT queue. What should happen?
->>
->>    Proposal for STREAMOFF(CAPTURE): aborts the drain process and all CAPTURE buffers are
->>    returned to userspace. If encoding is restarted, then any remaining OUTPUT buffers
->>    will be used as input to the encoder.
->>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/clocksource/Kconfig                  |   6 +
+>  drivers/clocksource/Makefile                 |   1 +
+>  drivers/clocksource/timer-microchip-pit64b.c | 464 +++++++++++++++++++++++++++
+>  3 files changed, 471 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
 > 
-> Agreed.
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 5d93e580e5dc..2ad6f881a0bb 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -448,6 +448,12 @@ config OXNAS_RPS_TIMER
+>  config SYS_SUPPORTS_SH_CMT
+>          bool
+>  
+> +config MICROCHIP_PIT64B
+> +	bool "Microchip PIT64B support"
+> +	depends on OF || COMPILE_TEST
+> +	help
+> +	  This option enables Microchip PIT64B timer.
+> +
+>  config MTK_TIMER
+>  	bool "Mediatek timer driver" if COMPILE_TEST
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index c4a8e9ef932a..c53fa12b9b94 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_U300_TIMER)	+= timer-u300.o
+>  obj-$(CONFIG_SUN4I_TIMER)	+= timer-sun4i.o
+>  obj-$(CONFIG_SUN5I_HSTIMER)	+= timer-sun5i.o
+>  obj-$(CONFIG_MESON6_TIMER)	+= timer-meson6.o
+> +obj-$(CONFIG_MICROCHIP_PIT64B)	+= timer-microchip-pit64b.o
+>  obj-$(CONFIG_TEGRA_TIMER)	+= timer-tegra20.o
+>  obj-$(CONFIG_VT8500_TIMER)	+= timer-vt8500.o
+>  obj-$(CONFIG_NSPIRE_TIMER)	+= timer-zevio.o
+> diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
+> new file mode 100644
+> index 000000000000..6787aa98ef01
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-microchip-pit64b.c
+> @@ -0,0 +1,464 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2019 Microchip Technology Inc.
+> +// Copyright (C) 2019 Claudiu Beznea (claudiu.beznea@microchip.com)
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/slab.h>
+> +
+> +#define MCHP_PIT64B_CR		0x00	/* Control Register */
+> +#define MCHP_PIT64B_CR_START	BIT(0)
+> +#define MCHP_PIT64B_CR_SWRST	BIT(8)
+> +
+> +#define MCHP_PIT64B_MR		0x04	/* Mode Register */
+> +#define MCHP_PIT64B_MR_CONT	BIT(0)
+> +#define MCHP_PIT64B_MR_SGCLK	BIT(3)
+> +#define MCHP_PIT64B_MR_SMOD	BIT(4)
+> +#define MCHP_PIT64B_MR_PRES	GENMASK(11, 8)
+> +
+> +#define MCHP_PIT64B_LSB_PR	0x08	/* LSB Period Register */
+> +
+> +#define MCHP_PIT64B_MSB_PR	0x0C	/* MSB Period Register */
+> +
+> +#define MCHP_PIT64B_IER		0x10	/* Interrupt Enable Register */
+> +#define MCHP_PIT64B_IER_PERIOD	BIT(0)
+> +
+> +#define MCHP_PIT64B_ISR		0x1C	/* Interrupt Status Register */
+> +#define MCHP_PIT64B_ISR_PERIOD	BIT(0)
+> +
+> +#define MCHP_PIT64B_TLSBR	0x20	/* Timer LSB Register */
+> +
+> +#define MCHP_PIT64B_TMSBR	0x24	/* Timer MSB Register */
+> +
+> +#define MCHP_PIT64B_PRES_MAX	0x10
+> +#define MCHP_PIT64B_DEF_FREQ	2500000UL	/* 2.5 MHz */
+> +#define MCHP_PIT64B_LSBMASK	GENMASK_ULL(31, 0)
+> +#define MCHP_PIT64B_PRESCALER(p)	(MCHP_PIT64B_MR_PRES & ((p) << 8))
+> +
+> +#define MCHP_PIT64B_NAME	"pit64b"
+> +
+> +struct mchp_pit64b_common_data {
+> +	void __iomem *base;
+> +	struct clk *pclk;
+> +	struct clk *gclk;
+> +	u64 cycles;
+> +	u8 pres;
+> +};
+> +
+> +struct mchp_pit64b_clksrc_data {
+> +	struct clocksource *clksrc;
+> +	struct mchp_pit64b_common_data *cd;
+> +};
+> +
+> +struct mchp_pit64b_clkevt_data {
+> +	struct clock_event_device *clkevt;
+> +	struct mchp_pit64b_common_data *cd;
+> +};
+> +
+> +static struct mchp_pit64b_data {
+> +	struct mchp_pit64b_clksrc_data *csd;
+> +	struct mchp_pit64b_clkevt_data *ced;
+> +} data;
+> +
+> +static inline u32 mchp_pit64b_read(void __iomem *base, u32 offset)
+> +{
+> +	return readl_relaxed(base + offset);
+> +}
+> +
+> +static inline void mchp_pit64b_write(void __iomem *base, u32 offset, u32 val)
+> +{
+> +	writel_relaxed(val, base + offset);
+> +}
+> +
+> +static inline u64 mchp_pit64b_get_period(void __iomem *base)
+> +{
+> +	u32 lsb, msb;
+> +
+> +	/* LSB must be read first to guarantee an atomic read of the 64 bit
+> +	 * timer.
+> +	 */
+> +	lsb = mchp_pit64b_read(base, MCHP_PIT64B_TLSBR);
+> +	msb = mchp_pit64b_read(base, MCHP_PIT64B_TMSBR);
+> +
+> +	return (((u64)msb << 32) | lsb);
+> +}
+> +
+> +static inline void mchp_pit64b_set_period(void __iomem *base, u64 cycles)
+> +{
+> +	u32 lsb, msb;
+> +
+> +	lsb = cycles & MCHP_PIT64B_LSBMASK;
+> +	msb = cycles >> 32;
+> +
+> +	/* LSB must be write last to guarantee an atomic update of the timer
+> +	 * even when SMOD=1.
+> +	 */
+> +	mchp_pit64b_write(base, MCHP_PIT64B_MSB_PR, msb);
+> +	mchp_pit64b_write(base, MCHP_PIT64B_LSB_PR, lsb);
+> +}
+> +
+> +static inline void mchp_pit64b_reset(struct mchp_pit64b_common_data *data,
+> +				     u32 mode, bool irq_ena)
+> +{
+> +	mode |= MCHP_PIT64B_PRESCALER(data->pres);
+> +	if (data->gclk)
+> +		mode |= MCHP_PIT64B_MR_SGCLK;
+> +
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_CR, MCHP_PIT64B_CR_SWRST);
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_MR, mode);
+> +	mchp_pit64b_set_period(data->base, data->cycles);
+> +	if (irq_ena)
+> +		mchp_pit64b_write(data->base, MCHP_PIT64B_IER,
+> +				  MCHP_PIT64B_IER_PERIOD);
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_CR, MCHP_PIT64B_CR_START);
+> +}
+> +
+> +static u64 mchp_pit64b_read_clk(struct clocksource *cs)
+> +{
+> +	return mchp_pit64b_get_period(data.csd->cd->base);
+> +}
+> +
+> +static u64 mchp_sched_read_clk(void)
+> +{
+> +	return mchp_pit64b_get_period(data.csd->cd->base);
+> +}
+> +
+> +static struct clocksource mchp_pit64b_clksrc = {
+> +	.name = MCHP_PIT64B_NAME,
+> +	.mask = CLOCKSOURCE_MASK(64),
+> +	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.rating = 210,
+> +	.read = mchp_pit64b_read_clk,
+> +};
+> +
+> +static int mchp_pit64b_clkevt_shutdown(struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_write(data.ced->cd->base, MCHP_PIT64B_CR,
+> +			  MCHP_PIT64B_CR_SWRST);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mchp_pit64b_clkevt_set_periodic(struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_reset(data.ced->cd, MCHP_PIT64B_MR_CONT, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mchp_pit64b_clkevt_set_oneshot(struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_reset(data.ced->cd, MCHP_PIT64B_MR_SMOD, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mchp_pit64b_clkevt_set_next_event(unsigned long evt,
+> +					     struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_set_period(data.ced->cd->base, evt);
+> +	mchp_pit64b_write(data.ced->cd->base, MCHP_PIT64B_CR,
+> +			  MCHP_PIT64B_CR_START);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mchp_pit64b_clkevt_suspend(struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_write(data.ced->cd->base, MCHP_PIT64B_CR,
+> +			  MCHP_PIT64B_CR_SWRST);
+> +	if (data.ced->cd->gclk)
+> +		clk_disable_unprepare(data.ced->cd->gclk);
+> +	clk_disable_unprepare(data.ced->cd->pclk);
+> +}
+> +
+> +static void mchp_pit64b_clkevt_resume(struct clock_event_device *cedev)
+> +{
+> +	u32 mode = MCHP_PIT64B_MR_SMOD;
+> +
+> +	clk_prepare_enable(data.ced->cd->pclk);
+> +	if (data.ced->cd->gclk)
+> +		clk_prepare_enable(data.ced->cd->gclk);
+> +
+> +	if (clockevent_state_periodic(data.ced->clkevt))
+> +		mode = MCHP_PIT64B_MR_CONT;
+> +
+> +	mchp_pit64b_reset(data.ced->cd, mode, true);
+> +}
+> +
+> +static struct clock_event_device mchp_pit64b_clkevt = {
+> +	.name = MCHP_PIT64B_NAME,
+> +	.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC,
+> +	.rating = 150,
+> +	.set_state_shutdown = mchp_pit64b_clkevt_shutdown,
+> +	.set_state_periodic = mchp_pit64b_clkevt_set_periodic,
+> +	.set_state_oneshot = mchp_pit64b_clkevt_set_oneshot,
+> +	.set_next_event = mchp_pit64b_clkevt_set_next_event,
+> +	.suspend = mchp_pit64b_clkevt_suspend,
+> +	.resume = mchp_pit64b_clkevt_resume,
+> +};
+> +
+> +static irqreturn_t mchp_pit64b_interrupt(int irq, void *dev_id)
+> +{
+> +	struct mchp_pit64b_clkevt_data *irq_data = dev_id;
+> +
+> +	if (data.ced != irq_data)
+> +		return IRQ_NONE;
+> +
+> +	if (mchp_pit64b_read(irq_data->cd->base, MCHP_PIT64B_ISR) &
+> +	    MCHP_PIT64B_ISR_PERIOD) {
+> +		irq_data->clkevt->event_handler(irq_data->clkevt);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	return IRQ_NONE;
+> +}
+> +
+> +static int __init mchp_pit64b_pres_compute(u32 *pres, u32 clk_rate,
+> +					   u32 max_rate)
+> +{
+> +	u32 tmp;
+> +
+> +	for (*pres = 0; *pres < MCHP_PIT64B_PRES_MAX; (*pres)++) {
+> +		tmp = clk_rate / (*pres + 1);
+> +		if (tmp <= max_rate)
+> +			break;
+> +	}
+> +
+> +	if (*pres == MCHP_PIT64B_PRES_MAX)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init mchp_pit64b_pres_prepare(struct mchp_pit64b_common_data *cd,
+> +					   unsigned long max_rate)
+> +{
+> +	unsigned long pclk_rate, diff = 0, best_diff = ULONG_MAX;
+> +	long gclk_round = 0;
+> +	u32 pres, best_pres;
+> +	int ret = 0;
+> +
+> +	pclk_rate = clk_get_rate(cd->pclk);
+> +	if (!pclk_rate)
+> +		return -EINVAL;
+> +
+> +	if (cd->gclk) {
+> +		gclk_round = clk_round_rate(cd->gclk, max_rate);
+> +		if (gclk_round < 0)
+> +			goto pclk;
+> +
+> +		if (pclk_rate / gclk_round < 3)
+> +			goto pclk;
+> +
+> +		ret = mchp_pit64b_pres_compute(&pres, gclk_round, max_rate);
+> +		if (ret)
+> +			best_diff = abs(gclk_round - max_rate);
+> +		else
+> +			best_diff = abs(gclk_round / (pres + 1) - max_rate);
+> +		best_pres = pres;
+> +	}
+> +
+> +pclk:
+> +	/* Check if requested rate could be obtained using PCLK. */
+> +	ret = mchp_pit64b_pres_compute(&pres, pclk_rate, max_rate);
+> +	if (ret)
+> +		diff = abs(pclk_rate - max_rate);
+> +	else
+> +		diff = abs(pclk_rate / (pres + 1) - max_rate);
+> +
+> +	if (best_diff > diff) {
+> +		/* Use PCLK. */
+> +		cd->gclk = NULL;
+> +		best_pres = pres;
+> +	} else {
+> +		clk_set_rate(cd->gclk, gclk_round);
+> +	}
+> +
+> +	cd->pres = best_pres;
+> +
+> +	pr_info("PIT64B: using clk=%s with prescaler %u, freq=%lu [Hz]\n",
+> +		cd->gclk ? "gclk" : "pclk", cd->pres,
+> +		cd->gclk ? gclk_round / (cd->pres + 1)
+> +			 : pclk_rate / (cd->pres + 1));
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init mchp_pit64b_dt_init_clksrc(struct mchp_pit64b_common_data *cd)
+> +{
+> +	struct mchp_pit64b_clksrc_data *csd;
+> +	unsigned long clk_rate;
+> +	int ret;
+> +
+> +	csd = kzalloc(sizeof(*csd), GFP_KERNEL);
+> +	if (!csd)
+> +		return -ENOMEM;
+> +
+> +	csd->cd = cd;
+> +
+> +	if (csd->cd->gclk)
+> +		clk_rate = clk_get_rate(csd->cd->gclk);
+> +	else
+> +		clk_rate = clk_get_rate(csd->cd->pclk);
+> +
+> +	clk_rate = clk_rate / (cd->pres + 1);
+> +	csd->cd->cycles = ULLONG_MAX;
+> +	mchp_pit64b_reset(csd->cd, MCHP_PIT64B_MR_CONT, false);
+> +
+> +	data.csd = csd;
+> +
+> +	csd->clksrc = &mchp_pit64b_clksrc;
+> +
+> +	ret = clocksource_register_hz(csd->clksrc, clk_rate);
+> +	if (ret) {
+> +		pr_debug("clksrc: Failed to register PIT64B clocksource!\n");
+> +		goto free;
+> +	}
+> +
+> +	sched_clock_register(mchp_sched_read_clk, 64, clk_rate);
+> +
+> +	return 0;
+> +
+> +free:
+> +	kfree(csd);
+> +	data.csd = NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +static int __init mchp_pit64b_dt_init_clkevt(struct mchp_pit64b_common_data *cd,
+> +					     u32 irq)
+> +{
+> +	struct mchp_pit64b_clkevt_data *ced;
+> +	unsigned long clk_rate;
+> +	int ret;
+> +
+> +	ced = kzalloc(sizeof(*ced), GFP_KERNEL);
+> +	if (!ced)
+> +		return -ENOMEM;
+> +
+> +	ced->cd = cd;
+> +
+> +	if (ced->cd->gclk)
+> +		clk_rate = clk_get_rate(ced->cd->gclk);
+> +	else
+> +		clk_rate = clk_get_rate(ced->cd->pclk);
+> +
+> +	clk_rate = clk_rate / (ced->cd->pres + 1);
+> +	ced->cd->cycles = DIV_ROUND_CLOSEST(clk_rate, HZ);
+> +
+> +	ret = request_irq(irq, mchp_pit64b_interrupt, IRQF_TIMER, "pit64b_tick",
+> +			  ced);
+> +	if (ret) {
+> +		pr_debug("clkevt: Failed to setup PIT64B IRQ\n");
+> +		goto free;
+> +	}
+> +
+> +	data.ced = ced;
+> +
+> +	/* Set up and register clockevents. */
+> +	ced->clkevt = &mchp_pit64b_clkevt;
+> +	ced->clkevt->cpumask = cpumask_of(0);
+> +	ced->clkevt->irq = irq;
+> +	clockevents_config_and_register(ced->clkevt, clk_rate, 1, ULONG_MAX);
+> +
+> +	return 0;
+> +
+> +free:
+> +	kfree(ced);
+> +	data.ced = NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +static int __init mchp_pit64b_dt_init(struct device_node *node)
+> +{
+> +	struct mchp_pit64b_common_data *cd;
+> +	u32 irq, freq = MCHP_PIT64B_DEF_FREQ;
+> +	int ret;
+> +
+> +	if (data.csd && data.ced)
+> +		return -EBUSY;
+> +
+> +	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
+> +	if (!cd)
+> +		return -ENOMEM;
+> +
+> +	cd->pclk = of_clk_get_by_name(node, "pclk");
+> +	if (IS_ERR(cd->pclk)) {
+> +		ret = PTR_ERR(cd->pclk);
+> +		goto free;
+> +	}
+> +
+> +	cd->gclk = of_clk_get_by_name(node, "gclk");
+> +	if (IS_ERR(cd->gclk))
+> +		cd->gclk = NULL;
+> +
+> +	ret = of_property_read_u32(node, "clock-frequency", &freq);
+> +	if (ret)
+> +		pr_debug("PIT64B: failed to read clock frequency. Using default!\n");
+> +
+> +	ret = mchp_pit64b_pres_prepare(cd, freq);
+> +	if (ret)
+> +		goto free;
+> +
+> +	cd->base = of_iomap(node, 0);
+> +	if (!cd->base) {
+> +		pr_debug("%s: Could not map PIT64B address!\n",
+> +			 MCHP_PIT64B_NAME);
+> +		ret = -ENXIO;
+> +		goto free;
+> +	}
+> +
+> +	ret = clk_prepare_enable(cd->pclk);
+> +	if (ret)
+> +		goto unmap;
+> +
+> +	if (cd->gclk) {
+> +		ret = clk_prepare_enable(cd->gclk);
+> +		if (ret)
+> +			goto pclk_unprepare;
+> +	}
+> +
+> +	if (!data.ced) {
+> +		irq = irq_of_parse_and_map(node, 0);
+> +		if (!irq) {
+> +			pr_debug("%s: Failed to get PIT64B clockevent IRQ!\n",
+> +				 MCHP_PIT64B_NAME);
+> +			ret = -ENODEV;
+> +			goto gclk_unprepare;
+> +		}
+> +		ret = mchp_pit64b_dt_init_clkevt(cd, irq);
+> +		if (ret)
+> +			goto irq_unmap;
+> +	} else {
+> +		ret = mchp_pit64b_dt_init_clksrc(cd);
+> +		if (ret)
+> +			goto gclk_unprepare;
+> +	}
+> +
+> +	return 0;
+> +
+> +irq_unmap:
+> +	irq_dispose_mapping(irq);
+> +gclk_unprepare:
+> +	if (cd->gclk)
+> +		clk_disable_unprepare(cd->gclk);
+> +pclk_unprepare:
+> +	clk_disable_unprepare(cd->pclk);
+> +unmap:
+> +	iounmap(cd->base);
+> +free:
+> +	kfree(cd);
+> +
+> +	return ret;
+> +}
+> +
+> +TIMER_OF_DECLARE(mchp_pit64b_clksrc, "microchip,sam9x60-pit64b",
+> +		 mchp_pit64b_dt_init);
 > 
->>    Proposal for STREAMOFF(OUTPUT): the next capture buffer will be empty and have
->>    FLAG_LAST set.
-> 
-> Agreed.
-> 
->>
->> Some of this might have to be documented, but these corner cases should certainly be
->> tested by v4l2-compliance. Before I write those tests I'd like to know if you agree
->> with this.
-> 
-> Agreed with just one minor comment. Thanks for checking with me!
-> 
-> Best regards,
-> Tomasz
-> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
