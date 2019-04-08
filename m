@@ -2,36 +2,37 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC75C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9077C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7C32063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6992063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfDHL4E (ORCPT
+        id S1726878AbfDHL4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:56:04 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:20405 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726708AbfDHLzh (ORCPT
+        Mon, 8 Apr 2019 07:56:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39326 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726678AbfDHLzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 07:55:37 -0400
-X-UUID: 0584eef3127847eea5fb13e0e6a3ee58-20190408
-X-UUID: 0584eef3127847eea5fb13e0e6a3ee58-20190408
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+X-UUID: f7ce6149d30e44f28ce5ddc27a55c6c4-20190408
+X-UUID: f7ce6149d30e44f28ce5ddc27a55c6c4-20190408
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1042091161; Mon, 08 Apr 2019 19:55:32 +0800
+        with ESMTP id 1323180490; Mon, 08 Apr 2019 19:55:31 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 8 Apr 2019 19:55:30 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 8 Apr 2019 19:55:25 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 8 Apr 2019 19:55:31 +0800
+ Transport; Mon, 8 Apr 2019 19:55:25 +0800
 From:   Stu Hsieh <stu.hsieh@mediatek.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
@@ -39,177 +40,242 @@ CC:     Stu Hsieh <stu.hsieh@mediatek.com>, <linux-kernel@vger.kernel.org>,
         <linux-media@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH 13/14] [media] mtk-mipicsi: add debug message for mipicsi driver
-Date:   Mon, 8 Apr 2019 19:55:04 +0800
-Message-ID: <1554724505-19882-14-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 06/14] [media] mtk-mipicsi: add mipicsi reg setting for mt2712
+Date:   Mon, 8 Apr 2019 19:54:57 +0800
+Message-ID: <1554724505-19882-7-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: A634257497D25F324E6F2FAC43FBA1C8C31E6314247CDC55D3E0561011F9BDEE2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add debug message for mipicsi driver.
+This patch add mipicsi register setting to HW for mt2712
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 54 ++++++++++++++++++-
- 1 file changed, 52 insertions(+), 2 deletions(-)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 189 ++++++++++++++++++
+ 1 file changed, 189 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index faf9a94d5157..95d25db5e606 100644
+index 899cf17df480..c2f75d9b64b8 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -28,6 +28,7 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/moduleparam.h>
-+#include <linux/time64.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
-@@ -118,6 +119,15 @@
+@@ -65,6 +65,51 @@
+ #define MAX_BUFFER_NUM			32U
+ #define VID_LIMIT_BYTES			(100U * 1024U * 1024U)
  
++#define MIPI_RX_ANA00_CSI				0x00
++#define MIPI_RX_ANA04_CSI				0x04
++#define MIPI_RX_ANA08_CSI				0x08
++#define MIPI_RX_ANA0C_CSI				0x0c
++#define MIPI_RX_ANA10_CSI				0x10
++#define MIPI_RX_ANA20_CSI				0x20
++#define MIPI_RX_ANA24_CSI				0x24
++#define MIPI_RX_ANA4C_CSI				0x4c
++#define MIPI_RX_ANA50_CSI				0x50
++
++#define SENINF_CTRL					0x00
++
++#define SENINF_NCSI2_CAL_24				0x24
++#define SENINF_NCSI2_CAL_38				0x38
++#define SENINF_NCSI2_CAL_3C				0x3C
++#define SENINF_NCSI2_CTL				0xA0
++#define SENINF_NCSI2_LNRD_TIMING			0xA8
++#define SENINF_NCSI2_INT_EN				0xB0
++#define SENINF_NCSI2_INT_STATUS				0xB4
++#define SENINF_NCSI2_DBG_SEL				0xB8
++#define SENINF_NCSI2_HSRX_DBG				0xD8
++#define SENINF_NCSI2_DI					0xDC
++#define SENINF_NCSI2_DI_CTRL				0xE4
++
++#define SENINF_TOP_CTRL					0x00
++#define SENINF_TOP_CMODEL_PAR				0x04
++#define SENINF_TOP_MUX					0x08
++
++#define SENINF_MUX_CTRL					0x00
++
++#define CAMSV_MODULE_EN					0x10
++#define CAMSV_FMT_SEL					0x14
++#define CAMSV_INT_EN					0x18
++#define CAMSV_CLK_EN					0x30
++
++#define CAMSV_TG_SEN_MODE				0x500
++#define CAMSV_TG_SEN_GRAB_PXL				0x508
++#define CAMSV_TG_SEN_GRAB_LIN				0x50C
++#define CAMSV_TG_PATH_CFG				0x510
++
++#define IMGO_XSIZE					0x230
++#define IMGO_YSIZE					0x234
++#define IMGO_STRIDE					0x238
++#define DMA_FRAME_HEADER_EN				0xE00
++
  #define SerDes_support 1
  
-+static int mtk_mipicsi_dbg_level;
-+#define mtk_mipicsi_dbg(level, fmt, args...)				 \
-+	do {								 \
-+		if (mtk_mipicsi_dbg_level >= level)			\
-+			pr_info("[MTK_MIPICSI%d] L%d %s %d: " fmt "\n", \
-+				mipicsi->id, level,  __func__, __LINE__, \
-+				##args);	\
-+	} while (0)
-+
  /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -155,6 +165,8 @@ struct mtk_mipicsi_dev {
- 	unsigned long enqueue_cnt;
- 	unsigned long dequeue_cnt;
- 	struct v4l2_ctrl_handler ctrl_hdl;
-+	struct timespec64 fps_time_cur;
-+	struct timespec64 fps_time_pre;
- 	char drv_name[16];
- 	u32 id;
- 	int clk_num;
-@@ -430,6 +442,8 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 
- 	mipicsi->width = width;
- 	mipicsi->height = height;
-+	mtk_mipicsi_dbg(1, "sub device width/height/bytesperline %d/%d/%d",
-+		width, height, mipicsi->bytesperline);
- 
- 	/*
- 	 * If power domain was closed before, it will be open.
-@@ -571,6 +585,9 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
- 	if (pix->pixelformat == V4L2_PIX_FMT_YUYV)
- 		pix->sizeimage = pix->width * pix->height * 2U;
- 
-+	mtk_mipicsi_dbg(0, "width/height/sizeimage %u/%u/%u",
-+		pix->width, pix->height, pix->sizeimage);
-+
- 	if (mf->code != xlate->code)
- 		return -EINVAL;
- 
-@@ -696,6 +713,9 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 			vb2_dma_contig_plane_dma_addr(vb, 0);
- #endif
- 		va = vb2_plane_vaddr(vb, 0);
-+		mtk_mipicsi_dbg(1, "va=%p vb_dma_addr_phy=%lx size=%d",
-+			va, (unsigned long)buf->vb_dma_addr_phy,
-+			vb->planes[0].bytesused);
- 		buf->vb = vb;
- 	}
- 
-@@ -741,6 +761,8 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 		}
- 
- 	++(mipicsi->enqueue_cnt);
-+	mtk_mipicsi_dbg(2, "enqueue NO.%d buffer(%p). Total %lu buffer",
-+		vb->index, vb, mipicsi->enqueue_cnt);
- }
- 
- static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
-@@ -1125,8 +1147,10 @@ static int mtk_mipicsi_pm_resume(struct device *dev)
- 
- 	if (mipicsi->larb_pdev != NULL) {
- 		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
--		if (ret != 0)
-+		if (ret != 0) {
-+			mtk_mipicsi_dbg(0, "failed to get larb, err %d", ret);
- 			return ret;
-+		}
- 	}
- 
- 	mtk_mipicsi_ana_clk_enable(mipicsi->ana, true);
-@@ -1176,6 +1200,7 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	unsigned int next = 0U;
- 	u64 offset = 0ULL;
- 	u8 link_index = 0U;
-+	long time_interval;
- 	void __iomem *base = NULL;
- 	dma_addr_t pa;
- 
-@@ -1185,8 +1210,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	i = 0;
- 
- 	/* only one buffer left */
--	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list)) {
-+		mtk_mipicsi_dbg(1, "only 1 buffer left, drop frame");
- 		return;
-+	}
- 
- 	/*for each fb_lst 2 times to get the top 2 buffer.*/
- 	list_for_each_entry_safe(new_cam_buf, tmp,
-@@ -1219,6 +1246,27 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	++(mipicsi->dequeue_cnt);
- 
- 	list_del_init(&(mipicsi->cam_buf[index].queue));
-+
-+	if (mtk_mipicsi_dbg_level >= 2) {
-+		ktime_get_real_ts64(&(mipicsi->fps_time_cur));
-+		if (mipicsi->dequeue_cnt == 1) {
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		} else {
-+			time_interval = (mipicsi->fps_time_cur.tv_sec
-+				- mipicsi->fps_time_pre.tv_sec) * 1000000000
-+				+ (mipicsi->fps_time_cur.tv_nsec
-+				- mipicsi->fps_time_pre.tv_nsec);
-+			mtk_mipicsi_dbg(0, "time interval is %ld\n",
-+				time_interval);
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		}
-+	}
- }
- 
- static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-@@ -1233,6 +1281,7 @@ static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
- 
- 	isr_ch = get_irq_channel(mipicsi);
- 	if (isr_ch < 0) {
-+		mtk_mipicsi_dbg(0, "no interrupt occur");
- 		spin_unlock_irqrestore(&mipicsi->lock, flags);
- 		return IRQ_HANDLED;
- 	}
-@@ -1573,5 +1622,6 @@ static struct platform_driver mtk_mipicsi_driver = {
+@@ -593,6 +638,149 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
+ 	.set_bus_param		= mtk_mipicsi_set_bus_param,
  };
  
- module_platform_driver(mtk_mipicsi_driver);
-+module_param(mtk_mipicsi_dbg_level, int, 0644);
- MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
- MODULE_LICENSE("GPL v2");
++static void mtk_mipicsi_ana_init(void __iomem *base)
++{
++	writel(0xFEFBEFBEU & readl(base + MIPI_RX_ANA4C_CSI),
++		base + MIPI_RX_ANA4C_CSI);
++	writel(0xFEFBEFBEU & readl(base + MIPI_RX_ANA50_CSI),
++		base + MIPI_RX_ANA50_CSI);
++
++	/* clock lane and lane0-lane3 input select */
++	writel(8UL | readl(base + MIPI_RX_ANA00_CSI),
++		base + MIPI_RX_ANA00_CSI);
++	writel(8UL | readl(base + MIPI_RX_ANA04_CSI),
++		base + MIPI_RX_ANA04_CSI);
++	writel(8UL | readl(base + MIPI_RX_ANA08_CSI),
++		base + MIPI_RX_ANA08_CSI);
++	writel(8UL | readl(base + MIPI_RX_ANA0C_CSI),
++		base + MIPI_RX_ANA0C_CSI);
++	writel(8UL | readl(base + MIPI_RX_ANA10_CSI),
++		base + MIPI_RX_ANA10_CSI);
++
++	/* BG chopper clock and CSI BG enable */
++	writel(11UL | readl(base + MIPI_RX_ANA24_CSI),
++		base + MIPI_RX_ANA24_CSI);
++	mdelay(1);
++
++	/* LDO core bias enable */
++	writel(0xFF030003U | readl(base + MIPI_RX_ANA20_CSI),
++		base + MIPI_RX_ANA20_CSI);
++	mdelay(1);
++}
++
++static void mtk_mipicsi_seninf_ctrl_init(void __iomem *base)
++{
++	/*seninf enable. select NCSI2 as seninif input source */
++	writel(0x8001U, base + SENINF_CTRL);
++}
++
++static void mtk_mipicsi_seninf_init(void __iomem *base)
++{
++	writel(1U, base + SENINF_NCSI2_CAL_38);
++	writel(0x00051545U, base + SENINF_NCSI2_CAL_3C);
++	writel(5U, base + SENINF_NCSI2_CAL_38);
++	mdelay(1);
++	writel(4U, base + SENINF_NCSI2_CAL_38);
++	writel(0U, base + SENINF_NCSI2_CAL_3C);
++	writel(0x11U, base + SENINF_NCSI2_DBG_SEL);
++	writel(0x189617FU, base + SENINF_NCSI2_CTL);
++	writel(~(1UL << 27) & readl(base + SENINF_NCSI2_CTL),
++		base + SENINF_NCSI2_CTL);
++	writel((1UL << 27) | readl(base + SENINF_NCSI2_CTL),
++		base + SENINF_NCSI2_CTL);
++	writel(0x2800U, base + SENINF_NCSI2_LNRD_TIMING);
++	writel(0x7FFFU, base + SENINF_NCSI2_INT_STATUS);
++	writel(0x7FCFFFFEU, base + SENINF_NCSI2_INT_EN);
++	writel(0xE4000000U, base + SENINF_NCSI2_CAL_24);
++	writel(0xFFFFFF00U & readl(base + SENINF_NCSI2_DBG_SEL),
++		base + SENINF_NCSI2_DBG_SEL);
++	writel(0xFFFFFF45U | readl(base + SENINF_NCSI2_DBG_SEL),
++		base + SENINF_NCSI2_DBG_SEL);
++	writel(0xFFFFFFEFU & readl(base + SENINF_NCSI2_HSRX_DBG),
++		base + SENINF_NCSI2_HSRX_DBG);
++	writel(0x01010101U, base + SENINF_NCSI2_DI_CTRL);
++	writel(0x03020100U, base + SENINF_NCSI2_DI);
++	writel(0x10, base + SENINF_NCSI2_DBG_SEL);
++}
++
++static void mtk_mipicsi_seninf_top_init(struct regmap *regmap)
++{
++	(void)regmap_write(regmap, SENINF_TOP_CTRL, 0x00010C00U);
++	(void)regmap_write(regmap, SENINF_TOP_CMODEL_PAR, 0x00079871);
++	(void)regmap_write(regmap, SENINF_TOP_MUX, 0x11110000);
++}
++
++static void mtk_mipicsi_seninf_mux_init(void __iomem *base, unsigned int ch)
++{
++	unsigned int mux_ctrl_val = (((0x9EFF8U + ch) << 12U) | 0x180U);
++
++	/* select seninf_mux1-4 as input for NCSI2 VC0-3*/
++	writel(mux_ctrl_val, base + SENINF_MUX_CTRL);
++}
++
++static void mtk_mipicsi_camsv_csr_init(void __iomem *base)
++{
++	/* double buffer enable. IMGO enable. PAK sel. TG enable */
++	writel(0x40000019U, base + CAMSV_MODULE_EN);
++	/* IMGO DP, PAK DP and TG clk enable */
++	writel(0x00008005U, base + CAMSV_CLK_EN);
++	/* 0: raw8, 1:raw10, 2:raw12, 3:YUV422, 4:raw14, 7:JPEG */
++	writel(0x00000003U, base + CAMSV_FMT_SEL);
++	/* write clear enable. pass1 down interrupt enable */
++	writel(0x80000400U, base + CAMSV_INT_EN);
++}
++
++static void mtk_mipicsi_camsv_tg_init(void __iomem *base, u32 b, u32 h)
++{
++	/* bit[30:16] grab end pixel clock number.
++	 * bit[14:0] grab start pixel clock number
++	 */
++	writel(b << 16U, base + CAMSV_TG_SEN_GRAB_PXL);
++	/* bit[29:16] end line number. bit[13:0] start line number */
++	writel(h << 16U, base + CAMSV_TG_SEN_GRAB_LIN);
++	/* YUV sensor unsigned to signed enable */
++	writel(0x1000U, base + CAMSV_TG_PATH_CFG);
++	/* cmos enable YUV422 mode */
++	writel(3U, base + CAMSV_TG_SEN_MODE);
++}
++
++static void mtk_mipicsi_camsv_dma_init(void __iomem *base, u32 b, u32 h)
++{
++	/* enable SW format setting. YUV format. 16bit */
++	writel(0x01810000U | b, base + IMGO_STRIDE);
++	/* b -1 bytes per line to write */
++	writel(b - 1U, base + IMGO_XSIZE);
++	/* w - 1 lines to write */
++	writel(h - 1U, base + IMGO_YSIZE);
++	/* disable frame header function */
++	writel(0U, base + DMA_FRAME_HEADER_EN);
++}
++
++static void mtk_mipicsi_camsv_init(void __iomem *base, u32 b, u32 h)
++{
++	mtk_mipicsi_camsv_csr_init(base);
++	mtk_mipicsi_camsv_tg_init(base, b, h);
++	mtk_mipicsi_camsv_dma_init(base, b, h);
++}
++
++static void mtk_mipicsi_reg_init(struct mtk_mipicsi_dev *mipicsi)
++{
++	unsigned int i;
++
++	mtk_mipicsi_ana_init(mipicsi->ana);
++	mtk_mipicsi_seninf_ctrl_init(mipicsi->seninf_ctrl);
++	mtk_mipicsi_seninf_init(mipicsi->seninf);
++	mtk_mipicsi_seninf_top_init(mipicsi->seninf_top);
++
++	for (i = 0U; i < mipicsi->camsv_num; ++i) {
++		u32 b = mipicsi->bytesperline;
++		u32 h = mipicsi->height;
++
++		mtk_mipicsi_seninf_mux_init(mipicsi->seninf_mux[i], i);
++		mtk_mipicsi_camsv_init(mipicsi->camsv[i], b, h);
++	}
++}
++
+ static int mtk_mipicsi_pm_suspend(struct device *dev)
+ {
+ 	struct soc_camera_host *ici = to_soc_camera_host(dev);
+@@ -655,6 +843,7 @@ static int mtk_mipicsi_pm_resume(struct device *dev)
+ 	for (i = 0; i < mipicsi->clk_num; ++i)
+ 		(void)clk_prepare_enable(mipicsi->clk[i]);
+ 
++	mtk_mipicsi_reg_init(mipicsi);
+ 	return ret;
+ }
+ 
 -- 
 2.18.0
 
