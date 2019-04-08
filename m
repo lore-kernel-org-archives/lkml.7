@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9A5C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2201020863
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFE82148E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfDHX5J (ORCPT
+        id S1727164AbfDHX5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 19:57:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9984 "EHLO mga04.intel.com"
+        Mon, 8 Apr 2019 19:57:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9986 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726547AbfDHX5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 19:57:07 -0400
+        id S1726849AbfDHX5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 19:57:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:06 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
-   d="scan'208";a="149169931"
+   d="scan'208";a="149169995"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 16:57:06 -0700
+  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 16:57:08 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -40,10 +40,12 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         "Christoph Hellwig" <hch@infradead.org>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 01/18] drivers core: Add I/O ASID allocator
-Date:   Mon,  8 Apr 2019 16:59:16 -0700
-Message-Id: <1554767973-30125-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>, Liu@vger.kernel.org,
+        Yi L <yi.l.liu@linux.intel.com>
+Subject: [PATCH 18/18] iommu/vt-d: Add svm/sva invalidate function
+Date:   Mon,  8 Apr 2019 16:59:33 -0700
+Message-Id: <1554767973-30125-19-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -52,225 +54,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+When Shared Virtual Address (SVA) is enabled for a guest OS via
+vIOMMU, we need to provide invalidation support at IOMMU API and driver
+level. This patch adds Intel VT-d specific function to implement
+iommu passdown invalidate API for shared virtual address.
 
-Some devices might support multiple DMA address spaces, in particular
-those that have the PCI PASID feature. PASID (Process Address Space ID)
-allows to share process address spaces with devices (SVA), partition a
-device into VM-assignable entities (VFIO mdev) or simply provide
-multiple DMA address space to kernel drivers. Add a global PASID
-allocator usable by different drivers at the same time. Name it I/O ASID
-to avoid confusion with ASIDs allocated by arch code, which are usually
-a separate ID space.
+The use case is for supporting caching structure invalidation
+of assigned SVM capable devices. Emulated IOMMU exposes queue
+invalidation capability and passes down all descriptors from the guest
+to the physical IOMMU.
 
-The IOASID space is global. Each device can have its own PASID space,
-but by convention the IOMMU ended up having a global PASID space, so
-that with SVA, each mm_struct is associated to a single PASID.
+The assumption is that guest to host device ID mapping should be
+resolved prior to calling IOMMU driver. Based on the device handle,
+host IOMMU driver can replace certain fields before submit to the
+invalidation queue.
 
-The allocator doesn't really belong in drivers/iommu because some
-drivers would like to allocate PASIDs for devices that aren't managed by
-an IOMMU, using the same ID space as IOMMU. It doesn't really belong in
-drivers/pci either since platform device also support PASID. Add the
-allocator in drivers/base.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
 ---
- drivers/base/Kconfig   |   7 ++++
- drivers/base/Makefile  |   1 +
- drivers/base/ioasid.c  | 106 +++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/ioasid.h |  40 +++++++++++++++++++
- 4 files changed, 154 insertions(+)
- create mode 100644 drivers/base/ioasid.c
- create mode 100644 include/linux/ioasid.h
+ drivers/iommu/intel-iommu.c | 159 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 159 insertions(+)
 
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 059700e..e05288d 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -182,6 +182,13 @@ config DMA_SHARED_BUFFER
- 	  APIs extension; the file's descriptor can then be passed on to other
- 	  driver.
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index d43b87d..d7f39a6 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5179,6 +5179,164 @@ static void intel_iommu_detach_device(struct iommu_domain *domain,
+ 	dmar_remove_one_dev_info(dev);
+ }
  
-+config IOASID
-+	bool
-+	default n
-+	help
-+	  Enable the I/O Address Space ID allocator. A single ID space shared
-+	  between different users.
-+
- config DMA_FENCE_TRACE
- 	bool "Enable verbose DMA_FENCE_TRACE messages"
- 	depends on DMA_SHARED_BUFFER
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index 1574520..aafa2ac 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL) += pinctrl.o
- obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
- obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
- obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
-+obj-$(CONFIG_IOASID) += ioasid.o
- 
- obj-y			+= test/
- 
-diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
-new file mode 100644
-index 0000000..cf122b2
---- /dev/null
-+++ b/drivers/base/ioasid.c
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * I/O Address Space ID allocator. There is one global IOASID space, split into
-+ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
-+ * free IOASIDs with ioasid_alloc and ioasid_free.
++ * 2D array for converting and sanitizing IOMMU generic TLB granularity to
++ * VT-d granularity. Invalidation is typically included in the unmap operation
++ * as a result of DMA or VFIO unmap. However, for assigned device where guest
++ * could own the first level page tables without being shadowed by QEMU. In
++ * this case there is no pass down unmap to the host IOMMU as a result of unmap
++ * in the guest. Only invalidations are trapped and passed down.
++ * In all cases, only first level TLB invalidation (request with PASID) can be
++ * passed down, therefore we do not include IOTLB granularity for request
++ * without PASID (second level).
++ *
++ * For an example, to find the VT-d granularity encoding for IOTLB
++ * type and page selective granularity within PASID:
++ * X: indexed by iommu cache type
++ * Y: indexed by enum iommu_inv_granularity
++ * [IOMMU_INV_TYPE_TLB][IOMMU_INV_GRANU_PAGE_PASID]
++ *
++ * Granu_map array indicates validity of the table. 1: valid, 0: invalid
++ *
 + */
-+#include <linux/idr.h>
-+#include <linux/ioasid.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+struct ioasid_data {
-+	ioasid_t id;
-+	struct ioasid_set *set;
-+	void *private;
-+	struct rcu_head rcu;
++const static int inv_type_granu_map[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
++	/* PASID based IOTLB, support PASID selective and page selective */
++	{0, 1, 1},
++	/* PASID based dev TLBs, only support all PASIDs or single PASID */
++	{1, 1, 0},
++	/* PASID cache */
++	{1, 1, 0}
 +};
 +
-+static DEFINE_IDR(ioasid_idr);
-+
-+/**
-+ * ioasid_alloc - Allocate an IOASID
-+ * @set: the IOASID set
-+ * @min: the minimum ID (inclusive)
-+ * @max: the maximum ID (exclusive)
-+ * @private: data private to the caller
-+ *
-+ * Allocate an ID between @min and @max (or %0 and %INT_MAX). Return the
-+ * allocated ID on success, or INVALID_IOASID on failure. The @private pointer
-+ * is stored internally and can be retrieved with ioasid_find().
-+ */
-+ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-+		      void *private)
-+{
-+	int id = -1;
-+	struct ioasid_data *data;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return INVALID_IOASID;
-+
-+	data->set = set;
-+	data->private = private;
-+
-+	idr_preload(GFP_KERNEL);
-+	idr_lock(&ioasid_idr);
-+	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
-+	idr_unlock(&ioasid_idr);
-+	idr_preload_end();
-+
-+	if (id < 0) {
-+		kfree(data);
-+		return INVALID_IOASID;
-+	}
-+	return id;
-+}
-+EXPORT_SYMBOL_GPL(ioasid_alloc);
-+
-+/**
-+ * ioasid_free - Free an IOASID
-+ * @ioasid: the ID to remove
-+ */
-+void ioasid_free(ioasid_t ioasid)
-+{
-+	struct ioasid_data *ioasid_data;
-+
-+	idr_lock(&ioasid_idr);
-+	ioasid_data = idr_remove(&ioasid_idr, ioasid);
-+	idr_unlock(&ioasid_idr);
-+
-+	if (ioasid_data)
-+		kfree_rcu(ioasid_data, rcu);
-+}
-+EXPORT_SYMBOL_GPL(ioasid_free);
-+
-+/**
-+ * ioasid_find - Find IOASID data
-+ * @set: the IOASID set
-+ * @ioasid: the IOASID to find
-+ * @getter: function to call on the found object
-+ *
-+ * The optional getter function allows to take a reference to the found object
-+ * under the rcu lock. The function can also check if the object is still valid:
-+ * if @getter returns false, then the object is invalid and NULL is returned.
-+ *
-+ * If the IOASID has been allocated for this set, return the private pointer
-+ * passed to ioasid_alloc. Otherwise return NULL.
-+ */
-+void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+		  bool (*getter)(void *))
-+{
-+	void *priv = NULL;
-+	struct ioasid_data *ioasid_data;
-+
-+	rcu_read_lock();
-+	ioasid_data = idr_find(&ioasid_idr, ioasid);
-+	if (ioasid_data && ioasid_data->set == set) {
-+		priv = ioasid_data->private;
-+		if (getter && !getter(priv))
-+			priv = NULL;
-+	}
-+	rcu_read_unlock();
-+
-+	return priv;
-+}
-+EXPORT_SYMBOL_GPL(ioasid_find);
-diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-new file mode 100644
-index 0000000..6f3655a
---- /dev/null
-+++ b/include/linux/ioasid.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_IOASID_H
-+#define __LINUX_IOASID_H
-+
-+#define INVALID_IOASID ((ioasid_t)-1)
-+typedef unsigned int ioasid_t;
-+typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
-+
-+struct ioasid_set {
-+	int dummy;
++const static u64 inv_type_granu_table[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
++	/* PASID based IOTLB */
++	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
++	/* PASID based dev TLBs */
++	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
++	/* PASID cache */
++	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
 +};
 +
-+#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-+
-+#ifdef CONFIG_IOASID
-+ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-+		      void *private);
-+void ioasid_free(ioasid_t ioasid);
-+
-+void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+		  bool (*getter)(void *));
-+
-+#else /* !CONFIG_IOASID */
-+static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-+				    ioasid_t max, void *private)
++static inline int to_vtd_granularity(int type, int granu, u64 *vtd_granu)
 +{
-+	return INVALID_IOASID;
++	if (type >= NR_IOMMU_CACHE_TYPE || granu >= NR_IOMMU_CACHE_INVAL_GRANU ||
++		!inv_type_granu_map[type][granu])
++		return -EINVAL;
++
++	*vtd_granu = inv_type_granu_table[type][granu];
++
++	return 0;
 +}
 +
-+static inline void ioasid_free(ioasid_t ioasid)
++static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
 +{
++	u64 nr_pages;
++	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
++	 * IOMMU cache invalidate API passes granu_size in bytes, and number of
++	 * granu size in contiguous memory.
++	 */
++
++	nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
++	return order_base_2(nr_pages);
 +}
 +
-+static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+				bool (*getter)(void *))
++static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
++		struct device *dev, struct iommu_cache_invalidate_info *inv_info)
 +{
-+	return NULL;
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++	struct device_domain_info *info;
++	struct intel_iommu *iommu;
++	unsigned long flags;
++	int cache_type;
++	u8 bus, devfn;
++	u16 did, sid;
++	int ret = 0;
++	u64 granu;
++	u64 size;
++
++	if (!inv_info || !dmar_domain ||
++		inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
++		return -EINVAL;
++
++	iommu = device_to_iommu(dev, &bus, &devfn);
++	if (!iommu)
++		return -ENODEV;
++
++	if (!dev || !dev_is_pci(dev))
++		return -ENODEV;
++
++	spin_lock(&iommu->lock);
++	spin_lock_irqsave(&device_domain_lock, flags);
++	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
++	if (!info) {
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++	did = dmar_domain->iommu_did[iommu->seq_id];
++	sid = PCI_DEVID(bus, devfn);
++	size = to_vtd_size(inv_info->addr_info.granule_size, inv_info->addr_info.nb_granules);
++
++	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache, NR_IOMMU_CACHE_TYPE) {
++
++		ret = to_vtd_granularity(cache_type, inv_info->granularity, &granu);
++		if (ret) {
++			pr_err("Invalid range type %d, granu %d\n", cache_type,
++				inv_info->granularity);
++			break;
++		}
++
++		switch (1 << cache_type) {
++		case IOMMU_CACHE_INV_TYPE_IOTLB:
++			if (size && (inv_info->addr_info.addr & ((1 << (VTD_PAGE_SHIFT + size)) - 1))) {
++				pr_err("Address out of range, 0x%llx, size order %llu\n",
++					inv_info->addr_info.addr, size);
++				ret = -ERANGE;
++				goto out_unlock;
++			}
++
++			qi_flush_piotlb(iommu, did, mm_to_dma_pfn(inv_info->addr_info.addr),
++					inv_info->addr_info.pasid,
++					size, granu);
++
++			/*
++			 * Always flush device IOTLB if ATS is enabled since guest
++			 * vIOMMU exposes CM = 1, no device IOTLB flush will be passed
++			 * down. REVISIT: cannot assume Linux guest
++			 */
++			if (info->ats_enabled) {
++				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
++						inv_info->addr_info.pasid, info->ats_qdep,
++						inv_info->addr_info.addr, size,
++						granu);
++			}
++			break;
++		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
++			if (info->ats_enabled) {
++				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
++						inv_info->addr_info.pasid, info->ats_qdep,
++						inv_info->addr_info.addr, size,
++						granu);
++			} else
++				pr_warn("Passdown device IOTLB flush w/o ATS!\n");
++
++			break;
++		case IOMMU_CACHE_INV_TYPE_PASID:
++			qi_flush_pasid_cache(iommu, did, granu, inv_info->pasid);
++
++			break;
++		default:
++			dev_err(dev, "Unsupported IOMMU invalidation type %d\n",
++				cache_type);
++			ret = -EINVAL;
++		}
++	}
++out_unlock:
++	spin_unlock(&iommu->lock);
++	spin_unlock_irqrestore(&device_domain_lock, flags);
++
++	return ret;
 +}
-+#endif /* CONFIG_IOASID */
-+#endif /* __LINUX_IOASID_H */
++
+ static int intel_iommu_map(struct iommu_domain *domain,
+ 			   unsigned long iova, phys_addr_t hpa,
+ 			   size_t size, int iommu_prot)
+@@ -5447,6 +5605,7 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.device_group		= pci_device_group,
+ 	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+ #ifdef CONFIG_INTEL_IOMMU_SVM
++	.cache_invalidate	= intel_iommu_sva_invalidate,
+ 	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+ 	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+ #endif
 -- 
 2.7.4
 
