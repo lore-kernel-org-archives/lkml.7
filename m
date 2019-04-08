@@ -2,94 +2,119 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892DCC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBCBC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E492148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6C42148E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:18:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nHJOVw75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfDHPRk (ORCPT
+        id S1728842AbfDHPSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:17:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51370 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfDHPRk (ORCPT
+        Mon, 8 Apr 2019 11:18:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41877 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfDHPSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:17:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 4so14821864wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:17:39 -0700 (PDT)
+        Mon, 8 Apr 2019 11:18:02 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d1so7519158plj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H6a4N7dedqDZzac8Nq1PhU4CMbtru19ONF+Mr9DUaPI=;
+        b=nHJOVw75dbKJ0xiJ5p9svJaU9HLtCXQgEK7japbWYoUSGlTR3ztMmAA659keV2LPTk
+         VRyv8603m8lbcNqIsY+bxmRJWz4MxETKDiTuhjLygQRPV/dagDpTHr297Nj1tZFLY3yR
+         BzC6y4TENt/8Fu6HixUEcAOXxK2OvoXI/EIRoFtAohxtbZZqXXK7zC4SI4EePdz/5SC8
+         vxka8hk3op3c8XUyJp4vMaCVGaa2of7bF6TfsnDbFVvEdUqA/QMxYRceQ6iPIFtP2L7z
+         /5xjaWfQZ0kMpX/PlUenl4W9xaaBWjIGKVNVXITHZroRE92QpZ5sbBfQZ+UgUuCI5wsD
+         waQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w6z7MBI8+5GoJnaZnj0gEJa1yCqr80vB4dEYmuxnu7Q=;
-        b=OxlVIKOM2MUV9yD/8+W6y4VePrwiIWiL95dW3NA18To8SwhaoAgqBCQy7H9JZSRwIi
-         lxTANgDFp6uo1DCMGHV5arMglp9napFt5tjuCZrg9JqRtLiArN1+opkA37IqRrYMM2DV
-         Z9pFcLqkF5ZWff032Rj8SlkSQngGGE3Y9sE79Dlke4Y7I4t5FBAykCeT5g/G5iFKoO/m
-         24J9/zcgBwLwwSXfPnhVtDA1BYVwUoFGHeRI1Mjup6z5SWeKeQm7Wt62LncDS62IN8jp
-         /ovQjYz3/0vQRcNcROdA3+zxULxULpcVFk16Ad/qafH1VtnAQU/6drMSMxLLVQBO41Bu
-         JM5g==
-X-Gm-Message-State: APjAAAXtQ1TO0/2R/P+Jycr4+OSLn97TL6gUElg6/OHCJfR6AzevKtaq
-        FOYRnnhfsKsCjg5m2oB/roCdSrvMx+Y=
-X-Google-Smtp-Source: APXvYqwltm8QBf/OmuBj4P6eatTDa6YrSxIwOSgoMgA7Ad/sLTugH590ZkpwmFcQ0sZ69EWlsXWUgQ==
-X-Received: by 2002:a1c:2109:: with SMTP id h9mr19008264wmh.68.1554736658631;
-        Mon, 08 Apr 2019 08:17:38 -0700 (PDT)
-Received: from steredhat (host35-203-static.12-87-b.business.telecomitalia.it. [87.12.203.35])
-        by smtp.gmail.com with ESMTPSA id f1sm8880617wml.28.2019.04.08.08.17.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 08:17:37 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 17:17:35 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefan Hajnoczi <stefanha@gmail.com>, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 3/4] vsock/virtio: change the maximum packet size
- allowed
-Message-ID: <20190408151735.itsfswajk5ww3ejv@steredhat>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
- <20190404105838.101559-4-sgarzare@redhat.com>
- <20190405082447.GD25152@stefanha-x1.localdomain>
- <20190405100747.dbwi3sjaudp3d2wa@steredhat>
- <20190408093723.GP15001@stefanha-x1.localdomain>
- <20190408145531.yreyawkn5vjqj7sl@steredhat>
- <20190408105619-mutt-send-email-mst@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H6a4N7dedqDZzac8Nq1PhU4CMbtru19ONF+Mr9DUaPI=;
+        b=Snuimf1NO2up+75Ie2QThC3nfI0O2oBz10WYlG35pb/2CMSactupj594DeiHK1/Woq
+         2ax0T1sbi8hjpcjH7wU/defPwU89J+0AkMsITKHUONFsb0VuuRBlLeMmOTyi1L32ll+K
+         ZIK83JAl761zjXmWyRHHA+7UxCCivbnsakj71TEXcmehZIDa8hPjYt+/qOaqbUQbk1z2
+         rm7BR64665njyMa8u9zCwTlaOX8h0+wr5u58lwdmK5266SLW+2F/EtdSbhivYmexg/Zw
+         bmdE01almshTDqFyGfwwULD27R5eNtAr+7hLDPeoGXFY09PFPaz5yKWIK+NwX8+uub6K
+         UqGA==
+X-Gm-Message-State: APjAAAWjYcvNSSOM7NV3lcMUNXs4YiSsbSzp9G4kyJE95yVDneabtOIR
+        ATZfpU0vE61YO+FxmiyjAcIosA==
+X-Google-Smtp-Source: APXvYqwaj7bx+0uRxZubEuONmxUgY97RL1E9o/sFuGluF2DCMyAe/vEMy/buiNGOg/0yWgxuPte9hQ==
+X-Received: by 2002:a17:902:31a4:: with SMTP id x33mr31121908plb.24.1554736681853;
+        Mon, 08 Apr 2019 08:18:01 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id o81sm19517689pfa.156.2019.04.08.08.17.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 08:18:00 -0700 (PDT)
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+ <20190408150430.GB23021@linux-x5ow.site>
+ <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+ <20190408150828.GC23021@linux-x5ow.site>
+ <5283A08F-FD6F-4A9C-841D-B49CE9B4CF1F@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ef1481e8-c664-5f17-4a19-bb90daabc0b7@kernel.dk>
+Date:   Mon, 8 Apr 2019 09:17:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408105619-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <5283A08F-FD6F-4A9C-841D-B49CE9B4CF1F@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:57:44AM -0400, Michael S. Tsirkin wrote:
-> On Mon, Apr 08, 2019 at 04:55:31PM +0200, Stefano Garzarella wrote:
-> > > Anyway, any change to this behavior requires compatibility so new guest
-> > > drivers work with old vhost_vsock.ko.  Therefore we should probably just
-> > > leave the limit for now.
-> > 
-> > I understood your point of view and I completely agree with you.
-> > But, until we don't have a way to expose features/versions between guest
-> > and host,
+On 4/8/19 9:14 AM, Paolo Valente wrote:
 > 
-> Why not use the standard virtio feature negotiation mechanism for this?
 > 
+>> Il giorno 8 apr 2019, alle ore 17:08, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
+>>
+>> On Mon, Apr 08, 2019 at 09:05:19AM -0600, Jens Axboe wrote:
+>>> I did consider that, and that would be doable. But honestly, I'm having a
+>>> hard time seeing what issue we are attempting to fix by doing this.
+>>
+>> Yeah, I guess the real fix would be to update the documentation and the
+>> expectations user-space has. Including eventual re-write of some udev rules or
+>> whatever is facing these files. But to me that sounds more like a systemd or
+>> even distro thing than a kernel thing.
+>>
+> 
+> Unfortunately the user-space people I have interacted with find crazy
+> to have to change their software to call bfq.weight the weight of a
+> group.  And are not willing to do it [1].
 
-Yes, I have this in my mind :), but I want to understand better if we can
-use virtio-net also for this mechanism.
-For now, I don't think limiting the packets to 64 KiB is a big issue.
+Then you need to educate them. Some of the issues were called out years
+ago, at the time when we could have potentially renamed. A rename now
+will solve nothing.
 
-What do you think if I postpone this when I have more clear if we can
-use virtio-net or not? (in order to avoid duplicated work)
+-- 
+Jens Axboe
 
-Thanks,
-Stefano
