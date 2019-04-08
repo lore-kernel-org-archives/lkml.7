@@ -2,128 +2,175 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB3FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4366AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3FF20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B312087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k6GTCo5u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkLIWjLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfDHPTK (ORCPT
+        id S1728880AbfDHPT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:19:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33909 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728644AbfDHPTJ (ORCPT
+        Mon, 8 Apr 2019 11:19:26 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:39328 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbfDHPT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:19:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so16926811wrq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:19:08 -0700 (PDT)
+        Mon, 8 Apr 2019 11:19:26 -0400
+Received: by mail-yw1-f65.google.com with SMTP id z9so5057548ywd.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/leuO0ReNKxJFhgJ0Qj7KukamA50Bn4keQX7qI/nENE=;
-        b=k6GTCo5umK7gLWSz437KDn9LSP6GlCxNEy4GI7Rh0gEDZvFxEpAL4TbtSYFlVLJ4Ge
-         fGm70b/C4itq7DAv3r5wbbDoGubjcGfZRYW5W5qdmMHX+Pk82yCxd8bJxSF7sSn4L++/
-         SHJNvARO3Pn0vszp+AJNvT89eAG3kOQIYQu3ZgqLUSDsyOy4fHCPN1zEN7pJl40IIR0q
-         R7JKRK3+IxbcOpyTiDofd8AoewvBhF2GA1Jnpog/fF4tYgsiUE+hoXfu4ViwBjtTck9R
-         X2DhhVhmZOjtb2Ts9U/eFU9ApsHhSUkP/MtdBg7TWBWK+IFI/M1OswuUaH5f3tEimal/
-         qquw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=seLIeujnJ/97W6aKuEt/5fGzufr2q1aYL8/2sgWfl4s=;
+        b=qkLIWjLNxIxeuArJU220WQ8rBC1HFeYyPGukVk7UmKIcdEQPzgu93DQnw07qzE2+M3
+         No5cBWwlUXU4eFt6MuI2mGsxhSZYKo8O1V/kgFf8LlEvprgOMTsKsASm9vMv6CBM33gY
+         uMBq7HLhlpUPapssTXIh3Y6c/WVZqrWK5Wo2X9CqqeqUr4GtacoKx3bsyYgZgkJySg2G
+         KaBdeJsV6T0OCBkQ6J7p+B7hHv8Fdj+I1160qIlSE458awNwrioFu5MArgRGXiuY+/zL
+         tiX0bjl6RBFt94xitEQKjxn6TsZgDBHmpt67B74GogrsYtjZd8RzYVicZ797mmd1GjHn
+         5qbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/leuO0ReNKxJFhgJ0Qj7KukamA50Bn4keQX7qI/nENE=;
-        b=JLJ6OzHK1K1WeKF1DQukM9ifUwmR8+pL/lN6ES22OERR4cONxkWv48SJ56YKrdVyca
-         A5e6BSsiCTwW7Pj9K53kVG5+cNHiff/PlW4KNGG7MR2w6mwr6tMdQ/fc3uboCWyIr624
-         8t4XzsBPcM3I2nlV1N5pD5UABFzbGyuN2Xssd1a2mTC0ZyPdZ8+t2nvyV1OY+u4qj6JO
-         nh8Rhzpc9+zDke3IoHFMOBa+ddJAqMq1ttskJSG4CIMWuHPoH8d/Xu7pFGAKv8NzTy3F
-         /gdVos2Jbscv7A4PlgUkCt23PqkHKjRrsLLEc0K8mybJFth8Zplo2GaSzgyZeNRWxPpn
-         Xj4g==
-X-Gm-Message-State: APjAAAVKJ+QMtsdk8HMeixDgwR/ENfV/X/t+slZbo+/13lOspBuD9B4/
-        CuF1tr+BffirCtI8rzgsbqWlOA==
-X-Google-Smtp-Source: APXvYqwIL3aSbbSE3AHMHC3+MPX0zhIl82ebt9C8NHdoa3rLCksIfRwVXXfEDjnPoiIE342asVOFSQ==
-X-Received: by 2002:a5d:448b:: with SMTP id j11mr18416274wrq.218.1554736747973;
-        Mon, 08 Apr 2019 08:19:07 -0700 (PDT)
-Received: from [192.168.0.100] ([88.147.51.116])
-        by smtp.gmail.com with ESMTPSA id t15sm28228687wrx.22.2019.04.08.08.19.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:19:07 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <d5c1fb9c-16ec-420c-4067-53d6bccb4ebd@kernel.dk>
-Date:   Mon, 8 Apr 2019 17:19:06 +0200
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Paolo Valente' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        lennart@poettering.net, mkoutny@suse.cz
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0266AF07-C2CE-49DC-BC54-519F2C71E1EE@linaro.org>
-References: <20190408143935.9062-1-paolo.valente@linaro.org>
- <20190408143935.9062-2-paolo.valente@linaro.org>
- <20190408144925.GA23021@linux-x5ow.site>
- <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
- <20190408150430.GB23021@linux-x5ow.site>
- <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
- <20190408150828.GC23021@linux-x5ow.site>
- <d5c1fb9c-16ec-420c-4067-53d6bccb4ebd@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=seLIeujnJ/97W6aKuEt/5fGzufr2q1aYL8/2sgWfl4s=;
+        b=RVH/8pAAD8Jbb3GiEg1y7dK4UogiFLMyYwyCiPTskC7dehbg/XbLtMYEVY37Kqwopj
+         jwU3j6UC9pqLGq9kHnEz0dhEPA4g9tfZHA3SIXelfMH4Y2iZELRXutY0CRWkFVNKqrnF
+         gcKHu9puGMvgAtnuS6bOaiveMefkqxaa10Ls5VhINhMl2KhURCrkhpI/txJ7LZWov3cZ
+         QTR2AoHT4Ma4vlwi0IMPubZjrwNr9dYKP+8yU/b8y2cdH3a8NUCLEHMal/i7uPlv2uV1
+         8Y82bVoNY9gh+EwYB4QROOhI8we4P6l+hCM/RY9LoQ4U71zMphxk8jWi33GCrdMNfcOP
+         auGQ==
+X-Gm-Message-State: APjAAAWxYCVB3x0ALmSkww/7L2keTUo6jEmRhqgss7cD6qZ4fnLCSZWM
+        7wJiZ8o49EhqR6F3xWGRLxkyo1OL5BnM3P+QSt/GCQ==
+X-Google-Smtp-Source: APXvYqx9TqqqUhagp0wym2mapptAadf0l8uwN8A2Jv2Pju5M4RuCxwa8np0YaBapP1559sZXzCE3+5s7+bECX7wNYOk=
+X-Received: by 2002:a0d:e403:: with SMTP id n3mr24801131ywe.408.1554736764989;
+ Mon, 08 Apr 2019 08:19:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190408150538.8115-1-enric.balletbo@collabora.com>
+In-Reply-To: <20190408150538.8115-1-enric.balletbo@collabora.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 8 Apr 2019 08:18:42 -0700
+Message-ID: <CABXOdTc8+6azVQ_MR91hrYoN_nKnY-o66hB8vpiz28P8_D3Vuw@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_debugfs: no need to check return
+ value of debugfs_create functions
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        twawrzynczak@chromium.org, Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, kernel@collabora.com,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 8, 2019 at 8:05 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> Il giorno 8 apr 2019, alle ore 17:13, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 4/8/19 9:08 AM, Johannes Thumshirn wrote:
->> On Mon, Apr 08, 2019 at 09:05:19AM -0600, Jens Axboe wrote:
->>> I did consider that, and that would be doable. But honestly, I'm =
-having a
->>> hard time seeing what issue we are attempting to fix by doing this.
->>=20
->> Yeah, I guess the real fix would be to update the documentation and =
-the
->> expectations user-space has. Including eventual re-write of some udev =
-rules or
->> whatever is facing these files. But to me that sounds more like a =
-systemd or
->> even distro thing than a kernel thing.
->=20
-> I agree. Trying to force someones hand by renaming isn't going to fix
-> anything, but it will potentially cause issues.
->=20
-
-Potential issues against concrete, big issues already with us.  The
-proportional share interface doesn't match the idea people have of it.
-
-I don't want to push for this solution, but we cannot pretend we don't
-have a big problem already.  Any solution that could really work is ok
-for me, including symlinks.
-
-Thanks,
-Paolo
-
-> --=20
-> Jens Axboe
->=20
-
+> ---
+>
+>  drivers/platform/chrome/cros_ec_debugfs.c | 35 ++++-------------------
+>  1 file changed, 6 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+> index f0de1991b688..a712508e4646 100644
+> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+> @@ -337,12 +337,8 @@ static int cros_ec_create_console_log(struct cros_ec_debugfs *debug_info)
+>         mutex_init(&debug_info->log_mutex);
+>         init_waitqueue_head(&debug_info->log_wq);
+>
+> -       if (!debugfs_create_file("console_log",
+> -                                S_IFREG | 0444,
+> -                                debug_info->dir,
+> -                                debug_info,
+> -                                &cros_ec_console_log_fops))
+> -               return -ENOMEM;
+> +       debugfs_create_file("console_log", S_IFREG | 0444, debug_info->dir,
+> +                           debug_info, &cros_ec_console_log_fops);
+>
+>         INIT_DELAYED_WORK(&debug_info->log_poll_work,
+>                           cros_ec_console_log_work);
+> @@ -390,13 +386,8 @@ static int cros_ec_create_panicinfo(struct cros_ec_debugfs *debug_info)
+>         debug_info->panicinfo_blob.data = msg->data;
+>         debug_info->panicinfo_blob.size = ret;
+>
+> -       if (!debugfs_create_blob("panicinfo",
+> -                                S_IFREG | 0444,
+> -                                debug_info->dir,
+> -                                &debug_info->panicinfo_blob)) {
+> -               ret = -ENOMEM;
+> -               goto free;
+> -       }
+> +       debugfs_create_blob("panicinfo", S_IFREG | 0444, debug_info->dir,
+> +                           &debug_info->panicinfo_blob);
+>
+>         return 0;
+>
+> @@ -405,15 +396,6 @@ static int cros_ec_create_panicinfo(struct cros_ec_debugfs *debug_info)
+>         return ret;
+>  }
+>
+> -static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
+> -{
+> -       if (!debugfs_create_file("pdinfo", 0444, debug_info->dir, debug_info,
+> -                                &cros_ec_pdinfo_fops))
+> -               return -ENOMEM;
+> -
+> -       return 0;
+> -}
+> -
+>  static int cros_ec_debugfs_probe(struct platform_device *pd)
+>  {
+>         struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
+> @@ -428,8 +410,6 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>
+>         debug_info->ec = ec;
+>         debug_info->dir = debugfs_create_dir(name, NULL);
+> -       if (!debug_info->dir)
+> -               return -ENOMEM;
+>
+>         ret = cros_ec_create_panicinfo(debug_info);
+>         if (ret)
+> @@ -439,9 +419,8 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>         if (ret)
+>                 goto remove_debugfs;
+>
+> -       ret = cros_ec_create_pdinfo(debug_info);
+> -       if (ret)
+> -               goto remove_log;
+> +       debugfs_create_file("pdinfo", 0444, debug_info->dir, debug_info,
+> +                           &cros_ec_pdinfo_fops);
+>
+>         ec->debug_info = debug_info;
+>
+> @@ -449,8 +428,6 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>
+>         return 0;
+>
+> -remove_log:
+> -       cros_ec_cleanup_console_log(debug_info);
+>  remove_debugfs:
+>         debugfs_remove_recursive(debug_info->dir);
+>         return ret;
+> --
+> 2.20.1
+>
