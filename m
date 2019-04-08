@@ -2,98 +2,228 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28FAC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A65C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4FE20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkpeecAw"
+	by mail.kernel.org (Postfix) with ESMTP id E44E720857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfDHQBR (ORCPT
+        id S1728660AbfDHQC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:01:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37141 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbfDHQBQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:01:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so17085934wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=fnQ9ep8ZjHl0Gts8g7ewutoemUGbpOF05W1ijO3/8Z8=;
-        b=bkpeecAwsGok80iu3HUgTnB1jhHdaDexQndgVxu4wzqM/9hK1edrxcR9X0Ee1y+zVq
-         fGpfG0Sn5GG8ibA68dV5O45F+YCLixHJ/lqZ/gPSG9W/PTuYqNrB7vy+Gg0LjYRnNDZw
-         3Ctv6N2LMaxoxZkZ9leNd9dUbM0XY6AqHJyuLK1bdqYQArYJNHWEOTgHPPiicslOiHE8
-         ssGVYktZ9uuv9ccmIOOM1dvONrG5Aeu8IpfM9BAIDT+tC3DUipfdlCYFXAhmKRIlJAZ1
-         jU+XlENhI4Enfl8gkciZzo+MMgEbqrz7rNhAe/7y9gNkrjE17tzclZJ9N3YAhlY1dmwb
-         EOjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fnQ9ep8ZjHl0Gts8g7ewutoemUGbpOF05W1ijO3/8Z8=;
-        b=AAUd7/bT0pU8w2oUqY6rmpSELOtakqup80N2pAXzfWPWn0iFBYhfM4RasmR2cL2eZZ
-         lgC/QqMKSTtZd4VtGEI1asrD04k/7Qgz/40VDxnzonF3l8YZHo/7hMPts52utYdrCQ9m
-         YnrUzLmguplah3lGMYo82II6Rcx38OAudDzbMrP/aA1Dggszut+rdu9+7sPl0czsdq+K
-         a/P0lNlz1u9xWKoGl+Q9bnRQty5jfLSfKrCKsntzDmdH3HrwORkxof8xFFJSTTXCsqz/
-         gbHkCMdznLv+YEyWUgXDyXh7tk8shRbME5rHxSdJXr1hSYIAzHHnHP1AUftbsiSSeJAX
-         e+rw==
-X-Gm-Message-State: APjAAAW443MoNYf9v4tf5O1k9Ru1F7Byb4NDVLDrGPwRWiSqdxF6Q+J9
-        cUSuadvmPMUMyjfQy5LUToVptxUvBN0=
-X-Google-Smtp-Source: APXvYqz4U8yyCyEPPJ98ztZ1/DW/dzRyrNsiFxJMB9UsNNIGXbjlOQ9nw1M/V92MX1NEeWr1Ui0QPA==
-X-Received: by 2002:adf:f110:: with SMTP id r16mr18533806wro.153.1554739272798;
-        Mon, 08 Apr 2019 09:01:12 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id 7sm103571165wrc.81.2019.04.08.09.01.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 09:01:12 -0700 (PDT)
-Subject: Re: [PATCH v2] Add COMPILE_TEST to CONFIG_ARM_TIMER_SP804
-To:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-References: <20190408080745.22012-1-david.abdurachmanov@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c2d5551a-e593-4a26-6c3d-f4cbf6c45dcd@linaro.org>
-Date:   Mon, 8 Apr 2019 18:01:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 12:02:56 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51082 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbfDHQC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:02:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE35A15AB;
+        Mon,  8 Apr 2019 09:02:55 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D3603F557;
+        Mon,  8 Apr 2019 09:02:53 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 17:02:51 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Russell King <linux@arm.linux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH 4/7] clocksource/arm_arch_timer: Direcly assign
+ set_next_event workaround
+Message-ID: <20190408160251.GP6139@lakrids.cambridge.arm.com>
+References: <20190408154907.223536-1-marc.zyngier@arm.com>
+ <20190408154907.223536-5-marc.zyngier@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408080745.22012-1-david.abdurachmanov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408154907.223536-5-marc.zyngier@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 10:07, David Abdurachmanov wrote:
-> This is only used on arm and arm64 platforms. Add COMPILE_TEST option.
+On Mon, Apr 08, 2019 at 04:49:04PM +0100, Marc Zyngier wrote:
+> When a given timer is affected by an erratum and requires an
+> alternative implementation of set_next_event, we do a rather
+> complicated dance to detect and call the workaround on each
+> set_next_event call.
 > 
-> Tested with 5.1-rc3+ on Fedora/RISCV. CONFIG_ARM_TIMER_SP804 no more shows
-> up in riscv config.
+> This is clearly idiotic, as we can perfectly detect whether
+> this CPU requires a workaround while setting up the clock event
+> device.
 > 
-> Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+> This only requires the CPU-specific detection to be done a bit
+> earlier, and we can then safely override the set_next_event pointer
+> if we have a workaround associated to that CPU.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Applied for 5.2
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Thanks
+Mark.
 
-  -- Daniel
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+> ---
+>  arch/arm/include/asm/arch_timer.h    |  4 +++
+>  arch/arm64/include/asm/arch_timer.h  | 16 ++++++++++
+>  drivers/clocksource/arm_arch_timer.c | 46 +++++-----------------------
+>  3 files changed, 28 insertions(+), 38 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
+> index 0a8d7bba2cb0..3f0a0191f763 100644
+> --- a/arch/arm/include/asm/arch_timer.h
+> +++ b/arch/arm/include/asm/arch_timer.h
+> @@ -11,6 +11,10 @@
+>  #include <clocksource/arm_arch_timer.h>
+>  
+>  #ifdef CONFIG_ARM_ARCH_TIMER
+> +/* 32bit ARM doesn't know anything about timer errata... */
+> +#define has_erratum_handler(h)		(false)
+> +#define erratum_handler(h)		(arch_timer_##h)
+> +
+>  int arch_timer_arch_init(void);
+>  
+>  /*
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index f2a234d6516c..c3762ffcc933 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -31,10 +31,26 @@
+>  #include <clocksource/arm_arch_timer.h>
+>  
+>  #if IS_ENABLED(CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND)
+> +#define has_erratum_handler(h)						\
+> +	({								\
+> +		const struct arch_timer_erratum_workaround *__wa;	\
+> +		__wa = __this_cpu_read(timer_unstable_counter_workaround); \
+> +		(__wa && __wa->h);					\
+> +	})
+> +
+> +#define erratum_handler(h)						\
+> +	({								\
+> +		const struct arch_timer_erratum_workaround *__wa;	\
+> +		__wa = __this_cpu_read(timer_unstable_counter_workaround); \
+> +		(__wa && __wa->h) ? __wa->h : arch_timer_##h;		\
+> +	})
+> +
+>  extern struct static_key_false arch_timer_read_ool_enabled;
+>  #define needs_unstable_timer_counter_workaround() \
+>  	static_branch_unlikely(&arch_timer_read_ool_enabled)
+>  #else
+> +#define has_erratum_handler(h)			   false
+> +#define erratum_handler(h)			   (arch_timer_##h)
+>  #define needs_unstable_timer_counter_workaround()  false
+>  #endif
+>  
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index aa4ec53281ce..c7f5b66d893c 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -613,36 +613,12 @@ static void arch_timer_check_ool_workaround(enum arch_timer_erratum_match_type t
+>  		local ? "local" : "global", wa->desc);
+>  }
+>  
+> -#define erratum_handler(fn, r, ...)					\
+> -({									\
+> -	bool __val;							\
+> -	if (needs_unstable_timer_counter_workaround()) {		\
+> -		const struct arch_timer_erratum_workaround *__wa;	\
+> -		__wa = __this_cpu_read(timer_unstable_counter_workaround); \
+> -		if (__wa && __wa->fn) {					\
+> -			r = __wa->fn(__VA_ARGS__);			\
+> -			__val = true;					\
+> -		} else {						\
+> -			__val = false;					\
+> -		}							\
+> -	} else {							\
+> -		__val = false;						\
+> -	}								\
+> -	__val;								\
+> -})
+> -
+>  static bool arch_timer_this_cpu_has_cntvct_wa(void)
+>  {
+> -	const struct arch_timer_erratum_workaround *wa;
+> -
+> -	wa = __this_cpu_read(timer_unstable_counter_workaround);
+> -	return wa && wa->read_cntvct_el0;
+> +	return has_erratum_handler(read_cntvct_el0);
+>  }
+>  #else
+>  #define arch_timer_check_ool_workaround(t,a)		do { } while(0)
+> -#define erratum_set_next_event_tval_virt(...)		({BUG(); 0;})
+> -#define erratum_set_next_event_tval_phys(...)		({BUG(); 0;})
+> -#define erratum_handler(fn, r, ...)			({false;})
+>  #define arch_timer_this_cpu_has_cntvct_wa()		({false;})
+>  #endif /* CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND */
+>  
+> @@ -736,11 +712,6 @@ static __always_inline void set_next_event(const int access, unsigned long evt,
+>  static int arch_timer_set_next_event_virt(unsigned long evt,
+>  					  struct clock_event_device *clk)
+>  {
+> -	int ret;
+> -
+> -	if (erratum_handler(set_next_event_virt, ret, evt, clk))
+> -		return ret;
+> -
+>  	set_next_event(ARCH_TIMER_VIRT_ACCESS, evt, clk);
+>  	return 0;
+>  }
+> @@ -748,11 +719,6 @@ static int arch_timer_set_next_event_virt(unsigned long evt,
+>  static int arch_timer_set_next_event_phys(unsigned long evt,
+>  					  struct clock_event_device *clk)
+>  {
+> -	int ret;
+> -
+> -	if (erratum_handler(set_next_event_phys, ret, evt, clk))
+> -		return ret;
+> -
+>  	set_next_event(ARCH_TIMER_PHYS_ACCESS, evt, clk);
+>  	return 0;
+>  }
+> @@ -777,6 +743,10 @@ static void __arch_timer_setup(unsigned type,
+>  	clk->features = CLOCK_EVT_FEAT_ONESHOT;
+>  
+>  	if (type == ARCH_TIMER_TYPE_CP15) {
+> +		typeof(clk->set_next_event) sne;
+> +
+> +		arch_timer_check_ool_workaround(ate_match_local_cap_id, NULL);
+> +
+>  		if (arch_timer_c3stop)
+>  			clk->features |= CLOCK_EVT_FEAT_C3STOP;
+>  		clk->name = "arch_sys_timer";
+> @@ -787,20 +757,20 @@ static void __arch_timer_setup(unsigned type,
+>  		case ARCH_TIMER_VIRT_PPI:
+>  			clk->set_state_shutdown = arch_timer_shutdown_virt;
+>  			clk->set_state_oneshot_stopped = arch_timer_shutdown_virt;
+> -			clk->set_next_event = arch_timer_set_next_event_virt;
+> +			sne = erratum_handler(set_next_event_virt);
+>  			break;
+>  		case ARCH_TIMER_PHYS_SECURE_PPI:
+>  		case ARCH_TIMER_PHYS_NONSECURE_PPI:
+>  		case ARCH_TIMER_HYP_PPI:
+>  			clk->set_state_shutdown = arch_timer_shutdown_phys;
+>  			clk->set_state_oneshot_stopped = arch_timer_shutdown_phys;
+> -			clk->set_next_event = arch_timer_set_next_event_phys;
+> +			sne = erratum_handler(set_next_event_phys);
+>  			break;
+>  		default:
+>  			BUG();
+>  		}
+>  
+> -		arch_timer_check_ool_workaround(ate_match_local_cap_id, NULL);
+> +		clk->set_next_event = sne;
+>  	} else {
+>  		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
+>  		clk->name = "arch_mem_timer";
+> -- 
+> 2.20.1
+> 
