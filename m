@@ -2,248 +2,91 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9163C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F6FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB8620883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="EzSOjBqP"
+	by mail.kernel.org (Postfix) with ESMTP id 0887520883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDHIwn (ORCPT
+        id S1726628AbfDHIxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:52:43 -0400
-Received: from mail-eopbgr150079.outbound.protection.outlook.com ([40.107.15.79]:60910
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbfDHIwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:52:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IrFOUv8gIxNZogmXnnSBAib6ng5Zf8yfqkRqI1wMsLg=;
- b=EzSOjBqPx1ZEvZhvjja8QUh1sZdUYgTUCBI+0mN03QrPKk8NW9B+boh7RIf1JX2LrV/EyOosDnsgVNJjpdebObS6EjNyP84QZtG1FkOzoZVMbLESKJxCwrony5H0J+Gq1DabqnU7RvE8bIuatmR8qYwRwO5yLzhDhfcuSxUQdb8=
-Received: from DB7PR06MB5563.eurprd06.prod.outlook.com (20.178.104.212) by
- DB7PR06MB5765.eurprd06.prod.outlook.com (20.177.192.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.19; Mon, 8 Apr 2019 08:52:39 +0000
-Received: from DB7PR06MB5563.eurprd06.prod.outlook.com
- ([fe80::edef:902c:11a7:478]) by DB7PR06MB5563.eurprd06.prod.outlook.com
- ([fe80::edef:902c:11a7:478%6]) with mapi id 15.20.1771.016; Mon, 8 Apr 2019
- 08:52:39 +0000
-From:   Han Nandor <nandor.han@vaisala.com>
-To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Han Nandor <nandor.han@vaisala.com>
-Subject: [PATCH v2 1/1] rtc: ds3232: get SRAM access using NVMEM Framework
-Thread-Topic: [PATCH v2 1/1] rtc: ds3232: get SRAM access using NVMEM
- Framework
-Thread-Index: AQHU7ehrOoyWKU0ZoEy/KheJ21Jy6w==
-Date:   Mon, 8 Apr 2019 08:52:39 +0000
-Message-ID: <20190408085141.21284-1-nandor.han@vaisala.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR07CA0008.eurprd07.prod.outlook.com
- (2603:10a6:7:67::18) To DB7PR06MB5563.eurprd06.prod.outlook.com
- (2603:10a6:10:83::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nandor.han@vaisala.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.2
-x-originating-ip: [193.143.230.131]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 95fc2d0e-ed9f-44a5-e2f9-08d6bbff8ded
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:DB7PR06MB5765;
-x-ms-traffictypediagnostic: DB7PR06MB5765:
-x-tenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-x-microsoft-antispam-prvs: <DB7PR06MB57652285181AA3FE44CDAD33852C0@DB7PR06MB5765.eurprd06.prod.outlook.com>
-x-forefront-prvs: 0001227049
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39850400004)(376002)(396003)(136003)(189003)(199004)(81166006)(99286004)(14444005)(256004)(7736002)(53936002)(5660300002)(2616005)(316002)(186003)(105586002)(4326008)(102836004)(50226002)(97736004)(68736007)(81156014)(26005)(486006)(305945005)(107886003)(6506007)(386003)(106356001)(476003)(8936002)(8676002)(2501003)(1076003)(6512007)(6436002)(36756003)(2201001)(6116002)(86362001)(2906002)(66066001)(25786009)(3846002)(478600001)(6486002)(71200400001)(71190400001)(14454004)(110136005)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR06MB5765;H:DB7PR06MB5563.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vaisala.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PUUgDQCu+T540wEawOwRaalMv9owhjGf0w0nCIsSgrLY/aGKgIvOL+IW1FpJR90ES8nCIW08iUijRXbeN3E95yS6atMQTFodLzCqh/CY19jPCkPlw0Bmlm0bWV2BKlFBsGDblgyFDUpaFRy2NjSKvCPc68R6DcauFJc3JXGHssYU+1JCFOO4YH3XV2pdbYloTuW2WB3HNDnxXZ7TnEoXB7RGP9IAiwCMHhHGImvEdqA9LrB6ofTsDIq8cxVEh8tzhzcHmI2+wKY5UiuuHY1SF9W8gawJGwNDlo4EFQiN6m47/dDnSJ6ZYNkAFMZkhyoRdyAGUdUmTDQo1CW7qCYyyo5QT04yAGCIfHkDUBERN83Ycr+ky/i2nthKgsIzsUsChGR4X11jWNZYWc+1ggqhBjWTyDLq2JFDoc99J9Be7eo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Apr 2019 04:53:41 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:59405 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfDHIxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 04:53:40 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 3849F30000D31;
+        Mon,  8 Apr 2019 10:53:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id EB9263F2B3; Mon,  8 Apr 2019 10:53:37 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 10:53:37 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v3 19/36] thunderbolt: Extend tunnel creation to more
+ than 2 adjacent switches
+Message-ID: <20190408085337.slcnajkgxjq4twkh@wunner.de>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+ <20190328123633.42882-20-mika.westerberg@linux.intel.com>
+ <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
+ <20190408073517.GA3622@lahna.fi.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95fc2d0e-ed9f-44a5-e2f9-08d6bbff8ded
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 08:52:39.5708
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR06MB5765
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408073517.GA3622@lahna.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DS3232 RTC has 236 bytes of persistent memory.
+On Mon, Apr 08, 2019 at 10:35:17AM +0300, Mika Westerberg wrote:
+> On Sun, Apr 07, 2019 at 06:54:25PM +0200, Lukas Wunner wrote:
+> > According to the code comment in struct tb_regs_hop (in tb_regs.h),
+> > the out_hopid ("next_hop" in struct tb_regs_hop) denotes the
+> > "hop to take after sending the packet through out_port (on the
+> > incoming port of the next switch)".
+> > 
+> > So intuitively, the hop config space is like a routing table and
+> > the entry in in_port's hop config space specifies through which
+> > out_port the packets shall be routed, and which entry to look up
+> > on the remote port reachable through out_port.
+> > 
+> > This means that the out_hopid must always be identical to the in_hopid
+> > of out_port->remote.  Otherwise the routing wouldn't work.
+> > 
+> > And yet, you've introduced *two* struct ida for each port in
+> > patch 16.  This doesn't seem to make sense:  The out_hopids ida
+> > of a port always has to be identical to the in_hopids ida of that
+> > port's remote.  But if it's identical, why does it have to exist
+> > twice?
+> 
+> The reason for two HopID allocators (struct idas) is to make it possible
+> to track HopIDs to each direction. The same port can be output for one
+> path and input for another. I'm not sure how that can be done without
+> having two struct idas per port.
+> 
+> You are right, in case of out port HopID connecter to remote in port,
+> they should use the same HopID.
 
-Add RTC SRAM read and write access using
-the NVMEM Framework.
+Hm, what other cases are there, i.e. what is the meaning of a tb_regs_hop's
+"next_hop" field if "out_port" doesn't have a remote?  (And why does it
+need to be tracked on the out_port?  In case a remote is added later?)
 
-Signed-off-by: Nandor Han <nandor.han@vaisala.com>
----
+Thanks,
 
-Description
------------
-Provides DS3232 RTC SRAM access using NVMEM framework.
-
-Testing
--------
-The test was done on a custom board which contains a
-DS3232 RTC device.
-Kernel Version: 4.14.60 (Just for clarity, the patch is against master)
-
-1. Verify that SRAM is accessible using NVMEM interface: PASS
-`
-# hexdump /sys/bus/nvmem/devices/ds3232_sram0/nvmem
-0000000 0000 0000 0000 0000 0000 0000 0000 0000
-*
-00000e0
-`
-2. Modify the content.
-`
-# echo testing > /sys/bus/nvmem/devices/ds3232_sram0/nvmem
-#
-`
-3. Power cycle the board and verify that contents are preserved: PASS
-`
-# hexdump -n 10 -C /sys/bus/nvmem/devices/ds3232_sram0/nvmem
-00000000  74 65 73 74 69 6e 67 0a  00 00                    |testing...|
-0000000a
-`
-
-Testing on Kernel v5.1.0-rc3
-
-1. Update `arch/arm/configs/imx_v6_v7_defconfig` to contain
-`CONFIG_RTC_DRV_DS3232=3Dy`
-2. Verify that building the kernel is successful: PASS
-`
-make ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnu- imx_v6_v7_defconfig zImage
-...
-CC      drivers/rtc/rtc-ds3232.o
-...
-Kernel: arch/arm/boot/zImage is ready
-`
-
-Changes since v1
-----------------
- - remove the unnecessary header "rtc-core.h"
- - use nvmem_config from the stack
- - configure the nvmem type
- - remove the `of_node` configuration
-
-
- drivers/rtc/rtc-ds3232.c | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/rtc/rtc-ds3232.c b/drivers/rtc/rtc-ds3232.c
-index 7184e5145f12..77908c9e5e09 100644
---- a/drivers/rtc/rtc-ds3232.c
-+++ b/drivers/rtc/rtc-ds3232.c
-@@ -48,6 +48,10 @@
- #       define DS3232_REG_SR_A1F     0x01
-=20
- #define DS3232_REG_TEMPERATURE	0x11
-+#define DS3232_REG_SRAM_START   0x14
-+#define DS3232_REG_SRAM_END     0xFF
-+
-+#define DS3232_REG_SRAM_SIZE    236
-=20
- struct ds3232 {
- 	struct device *dev;
-@@ -461,11 +465,30 @@ static const struct rtc_class_ops ds3232_rtc_ops =3D =
-{
- 	.alarm_irq_enable =3D ds3232_alarm_irq_enable,
- };
-=20
-+static int ds3232_nvmem_read(void *priv, unsigned int offset, void *val,
-+			     size_t bytes)
-+{
-+	struct ds3232 *ds3232 =3D (struct ds3232 *)priv;
-+
-+	return regmap_bulk_read(ds3232->regmap, DS3232_REG_SRAM_START + offset,
-+				val, bytes);
-+}
-+
-+static int ds3232_nvmem_write(void *priv, unsigned int offset, void *val,
-+			      size_t bytes)
-+{
-+	struct ds3232 *ds3232 =3D (struct ds3232 *)priv;
-+
-+	return regmap_bulk_write(ds3232->regmap, DS3232_REG_SRAM_START + offset,
-+				 val, bytes);
-+}
-+
- static int ds3232_probe(struct device *dev, struct regmap *regmap, int irq=
-,
- 			const char *name)
- {
- 	struct ds3232 *ds3232;
- 	int ret;
-+	struct nvmem_config nvmem_cfg;
-=20
- 	ds3232 =3D devm_kzalloc(dev, sizeof(*ds3232), GFP_KERNEL);
- 	if (!ds3232)
-@@ -476,6 +499,15 @@ static int ds3232_probe(struct device *dev, struct reg=
-map *regmap, int irq,
- 	ds3232->dev =3D dev;
- 	dev_set_drvdata(dev, ds3232);
-=20
-+	nvmem_cfg.name =3D "ds3232_sram";
-+	nvmem_cfg.stride =3D 1;
-+	nvmem_cfg.size =3D DS3232_REG_SRAM_SIZE;
-+	nvmem_cfg.word_size =3D 1;
-+	nvmem_cfg.reg_read =3D ds3232_nvmem_read;
-+	nvmem_cfg.reg_write =3D ds3232_nvmem_write;
-+	nvmem_cfg.priv =3D ds3232;
-+	nvmem_cfg.type =3D NVMEM_TYPE_BATTERY_BACKED;
-+
- 	ret =3D ds3232_check_rtc_status(dev);
- 	if (ret)
- 		return ret;
-@@ -490,6 +522,10 @@ static int ds3232_probe(struct device *dev, struct reg=
-map *regmap, int irq,
- 	if (IS_ERR(ds3232->rtc))
- 		return PTR_ERR(ds3232->rtc);
-=20
-+	ret =3D rtc_nvmem_register(ds3232->rtc, &nvmem_cfg);
-+	if(ret)
-+		return ret;
-+
- 	if (ds3232->irq > 0) {
- 		ret =3D devm_request_threaded_irq(dev, ds3232->irq, NULL,
- 						ds3232_irq,
-@@ -542,7 +578,7 @@ static int ds3232_i2c_probe(struct i2c_client *client,
- 	static const struct regmap_config config =3D {
- 		.reg_bits =3D 8,
- 		.val_bits =3D 8,
--		.max_register =3D 0x13,
-+		.max_register =3D DS3232_REG_SRAM_END,
- 	};
-=20
- 	regmap =3D devm_regmap_init_i2c(client, &config);
-@@ -609,7 +645,7 @@ static int ds3234_probe(struct spi_device *spi)
- 	static const struct regmap_config config =3D {
- 		.reg_bits =3D 8,
- 		.val_bits =3D 8,
--		.max_register =3D 0x13,
-+		.max_register =3D DS3232_REG_SRAM_END,
- 		.write_flag_mask =3D 0x80,
- 	};
- 	struct regmap *regmap;
---=20
-2.17.2
-
+Lukas
