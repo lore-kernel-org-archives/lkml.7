@@ -2,156 +2,141 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853A5C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA2BC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534D720879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sazS80Cw"
+	by mail.kernel.org (Postfix) with ESMTP id 77F6121473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfDHS6q (ORCPT
+        id S1727414AbfDHS6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:58:46 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36319 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfDHS6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:58:45 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so517571ljg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qEyLIYd+jzHclGjIT9PLtyASZ28Kzy/vNGmvo5if7H8=;
-        b=sazS80CwX+rRoUG4ucFCFrCBFbO29OQhRRC+xtU7jvILfGvm0Dah8Z3xdJQR5yHqeu
-         CvSZxt7Anf/EmTuJTM4AhsSx0QhFf4NkfMSLWmOXRG4Ww+7pB3FTDqeeB6d0SaVPWN6v
-         FP6j9Xm3iBkTbjg3nicjRcJlACc15MuoCEr87LtzWeufSm69U0ij6iEf07dQou4msDS/
-         1m3yQTyB1/lADCHPmJZD2+MRpVM5eKxP8M0B8Vc3BTSNDMM8yvElHDOxVlKWqjeX974+
-         7IAwiU6CaNRlpvt3ePlkecZ9VE354ap5fYf5ElreTzA5hKohXCsYt7WVv9QAoxtOB6lp
-         GOYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qEyLIYd+jzHclGjIT9PLtyASZ28Kzy/vNGmvo5if7H8=;
-        b=ZdAfOrLqwYxa59tih4usmlJp1jDJvkWyKBq0TliWFr+V65hMeHppfuu0l7MOIK1Wjj
-         S25fPHhAfN96Ux54/8peoKCJaU4lFlkTXU28UQkevoXAnIX7k7ae/KpC6aHkiofyBl4y
-         uK71k9s8faXdgGdKi4ya+p6PJLumRz+NV3lykeOzlLHZSofwS4RR/HSlBUXlguoEp+xM
-         mYhqr2UMDV0BSNIjR081r/HJUKSQU8WsfzolSybBMggnTdaR5isPoffaYJpOxHmGfVRd
-         xvkchKYiwTEZA4j8WuEsOSfYETfxu7fZo97l3sDbspgZdt2NwfAweeTMqGJ0467SFEGt
-         +WzA==
-X-Gm-Message-State: APjAAAU2fj8gJF6+WubHT3eNqi6vNw/ELOPDceyXTskHklLaXkXOBT3U
-        y1Kxf9n6rTjAA1C5Qhy54J+MMtSNVYk4E5oI/Q7Mjw==
-X-Google-Smtp-Source: APXvYqyCqRHXdZDh/dQ+gkRNLZiIwHz/RUTYU2qlss6iT8/Z49mAiigMPMO2Z6Td/jpX6t8TBa9kQfk06e5Pz8A4OWk=
-X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr16851279lji.130.1554749922721;
- Mon, 08 Apr 2019 11:58:42 -0700 (PDT)
+        Mon, 8 Apr 2019 14:58:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39478 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726544AbfDHS6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:58:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D064A307D988;
+        Mon,  8 Apr 2019 18:58:49 +0000 (UTC)
+Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 25DE15D719;
+        Mon,  8 Apr 2019 18:58:31 +0000 (UTC)
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <01d5f4e8-742b-33f5-6d91-0c7c396d1cfc@redhat.com>
+ <6f097f31-abc7-f56c-199c-dc167331f6b9@redhat.com>
+ <20190408141145-mutt-send-email-mst@kernel.org>
+ <CAKgT0UekrBHW0LAwGpvJqLFfiw51e=_52858FCr9EW6nirW-QA@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <8032d00d-60f3-6d51-7c08-9f0f4b3e9636@redhat.com>
+Date:   Mon, 8 Apr 2019 20:58:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
- <20190405203558.19160-2-rajatja@google.com> <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
- <CACK8Z6FGFiS_jN_5ctWmjKbrcUyjGkV0MsVs7_2TsaS7UAoydA@mail.gmail.com> <CAHp75Ve9zq2MWbiHhNV6RSV8xgmWQdqaMi=UdE7RFiZ9QgmH5Q@mail.gmail.com>
-In-Reply-To: <CAHp75Ve9zq2MWbiHhNV6RSV8xgmWQdqaMi=UdE7RFiZ9QgmH5Q@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 8 Apr 2019 11:58:06 -0700
-Message-ID: <CACK8Z6Fb603NV-CreX6mxgj=JF0VmfP0kORHZg5T8L5vOeTsQA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Wysocki <Wysocki@google.com>,
-        Rafael J <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKgT0UekrBHW0LAwGpvJqLFfiw51e=_52858FCr9EW6nirW-QA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 08 Apr 2019 18:58:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 11:41 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Apr 8, 2019 at 9:36 PM Rajat Jain <rajatja@google.com> wrote:
-> > On Mon, Apr 8, 2019 at 10:02 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
->
-> > > Perhaps something like
-> > >
-> > > pmcdev->check_counters = false;
-> > > /* User doesn't want to be warned */
-> > > if (!warn_on...)
-> > >  return 0;
-> > > /* We do suspend via firmware */
-> > > if (...)
-> > >  return 0;
-> > > ...
-> > >
-> > > ?
-> >
-> > I guess what you mean is one conditional per line. Sure, I will do that.
->
-> Yes
->
-> > > > +static inline bool pc10_failed(struct pmc_dev *pmcdev)
-> > >
-> > > To be or not to be? :-)
-> > > Perhaps names of the functions should be
-> > >
-> > > pmc_code_is_pc10_failed()
-> > >
-> > > and so on
-> >
-> > I think the suggestion is to use pmc_core_* as the function names. OK,
-> > I will rename the functions to:
-> >
-> > pmc_core_pc10_failed()
-> > and
-> > pmc_core_s0ix_failed()
->
-> And verb "to be". See above.
->
-> > > Can't we utilize existing print helpers?
-> >
-> > I didn't quite see any existing print helpers in this file. I took
-> > this code from pmc_core_slps0_dbg_show(), and I think although I can
-> > abstract out this code into a static function, the calling code need
-> > to use seq_printf(s,...) and dev_warn(dev,...) respectively. - so
-> > might be overkill (did not feel that the benefits were worth it).
-> > Please let me know if you have any suggestions and will be happy to
-> > use them.
->
-> Instead of adding module parameter and doing these prints, perhaps
-> introduce another debugfs node.
+>>> - Define and use counters corresponding to each zone to monitor the
+>>> amount of memory freed.
+>>> - As soon as the 64MB free memory threshold is hit wake up the kernel
+>>> thread which will scan this xbitmap and try to isolate the pages and
+>>> clear the corresponding bits. (We still have to acquire zone lock to
+>>> protect the respective xbitmap)
+>>
+>> So that's 32 pages then? I'd say just keep them in an array,
+>> list, tree or hash, bitmap is for when you have nots of pages.
+> 
+> The xbitmap I think is for the free page tracking. The problem is this
+> could build up to tons of pages while we are waiting on hints to
+> complete if we have a thread that is dumping a large amount of free
+> pages.
+> 
+>>> - Report the isolated pages back to the host in a synchronous manner.
+>>> I still have to work on several details of this idea including xbitmap,
+>>> but first would like to hear any suggestions/thoughts.
+> 
+> I'm still not a fan of trying to keep track of the free page metadata
+> in real-time. It is going to be far more expensive to have every free
+> and alloc have to update the extra piece of data than to just come
+> through after the fact and scan the new pages that have been added.
 
-Uh, I actually did wanted to print them at the resume time in kernel
-logs, because I think this is something kernel developers would be
-responsible for debugging and thus would be great to have this
-included within the kernel logs. User space tools may differ on
-different distros and may or may not be looking for S0ix failures, and
-particularly may not dump this new debugfs attribute.
+Tracking metadata separately is a very good starting point. While
+integration into core mm in some form e.g. like you describe would be
+desirable long term, not messing too much with core-mm is the lower
+hanging fruit.
 
-The other thing is that seemingly this could also help in situations
-where debugfs is not configured?
+-- 
 
 Thanks,
 
-Rajat
-
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+David / dhildenb
