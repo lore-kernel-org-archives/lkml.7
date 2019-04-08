@@ -2,141 +2,140 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB2DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C5720818
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:36:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Q+7dFksf"
+	by mail.kernel.org (Postfix) with ESMTP id 6631420818
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfDHOgl (ORCPT
+        id S1727199AbfDHOhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:36:41 -0400
-Received: from mail-eopbgr730081.outbound.protection.outlook.com ([40.107.73.81]:64688
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        Mon, 8 Apr 2019 10:37:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37760 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726564AbfDHOgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:36:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kOeQK7Y7TTOPaGVrtyMWVGg/mDyyvUNP1UOMIdN01yU=;
- b=Q+7dFksf2FUaKwxeNN9H7e+WQwZzkQglQaceHfZDlMPXou8egrUiUwz3YxUFgm67P5Zf0zYSRWpgCZR3K9sq+6KDY2QRbqZJ4We+Z76ez9SArGGAxDU1z3bCiykNuVcePXNqoPDwqDrQHWi44MFs6C8ngePQJWdWoWMzJ/JkHhM=
-Received: from CY4PR02CA0026.namprd02.prod.outlook.com (2603:10b6:903:117::12)
- by SN1PR02MB2015.namprd02.prod.outlook.com (2a01:111:e400:7be7::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.16; Mon, 8 Apr
- 2019 14:36:35 +0000
-Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by CY4PR02CA0026.outlook.office365.com
- (2603:10b6:903:117::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16 via Frontend
- Transport; Mon, 8 Apr 2019 14:36:35 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1771.16
- via Frontend Transport; Mon, 8 Apr 2019 14:36:35 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hDVNy-0006Nm-U9; Mon, 08 Apr 2019 07:36:34 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hDVNt-0006En-QF; Mon, 08 Apr 2019 07:36:29 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x38EaJ18021891;
-        Mon, 8 Apr 2019 07:36:19 -0700
-Received: from [172.30.17.111]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hDVNi-0006D0-Oz; Mon, 08 Apr 2019 07:36:18 -0700
-Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-To:     Alan Tull <atull@kernel.org>, Nava kishore Manne <navam@xilinx.com>
-CC:     Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kishore m <chinnikishore369@gmail.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
- <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <d425bd61-238b-f085-f450-d052349878a8@xilinx.com>
-Date:   Mon, 8 Apr 2019 16:36:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726806AbfDHOhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:37:31 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A9C373A24A1CB72BAFA4;
+        Mon,  8 Apr 2019 22:37:28 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
+ 22:37:20 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rubini@gnudd.co>,
+        <federico.vaga@cern.ch>, <riehecky@fnal.gov>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] fmc: Fix possible NULL pointer dereference
+Date:   Mon, 8 Apr 2019 22:37:01 +0800
+Message-ID: <20190408143701.15372-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(346002)(2980300002)(199004)(189003)(2616005)(229853002)(6246003)(11346002)(305945005)(110136005)(54906003)(6636002)(126002)(47776003)(50466002)(31696002)(64126003)(446003)(356004)(426003)(6666004)(106002)(476003)(65826007)(336012)(36756003)(36386004)(186003)(81156014)(2870700001)(478600001)(76176011)(4326008)(9786002)(8676002)(81166006)(8936002)(2906002)(77096007)(93886005)(26005)(65956001)(486006)(65806001)(58126008)(316002)(4744005)(5660300002)(23676004)(31686004)(2486003)(106466001)(53546011)(63266004)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR02MB2015;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 009283da-d1a3-4e3c-f53c-08d6bc2f9a3b
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4709054)(2017052603328);SRVR:SN1PR02MB2015;
-X-MS-TrafficTypeDiagnostic: SN1PR02MB2015:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <SN1PR02MB20153CCA4CECE95BC616773FC62C0@SN1PR02MB2015.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 0001227049
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: TN0yURDSr2wc5/AXHD4O5SFWJWdhj9/hzdWe6x3ec0YkiowMY+Gl+onywCWN6aYqN46Jp7ZCHMNFDTi80QZWWqWwCEASxoBfP3a9o1/pJRqvpHzAuItxLREZPEQaspyfnWJCxCFnt8QvO6vwU4ACwWgF7rQ21Rud/vSMJA/d3+g0TmW/UORnNO6q5TqRtABhvbEvCNoWPSJlcn+naa5cS9ouAM5IOAEEGi5E3/xMwo4B8+YZyXszlfszQXdE2u7RRSbkM4lWiuWWlrASVE5K8tB0TLNnf9+Y3JkT2VG08V27abbtzkDp0C0riXzyT77z9R4ubOqDM1K/Va5hU7KFG8nJX8lAOYtmkeS/c/P+x1Fxky8uItUHGO7QrgozArc6dkyjtdnBbSMmROT2grcObDKV7DrKKAEN+yRPilN0oMI=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2019 14:36:35.3356
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 009283da-d1a3-4e3c-f53c-08d6bc2f9a3b
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR02MB2015
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08. 04. 19 16:17, Alan Tull wrote:
-> On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> wrote:
->>
->> Hi Alan,
->>
->> Thanks for look into it and providing the ACK.
->> I got one minor comments from Moritz Fischer do you want me fix that issue now or I can fix it later as it’s a minor comment?
-> 
-> Please fix for Moritz comment.
-> 
->> In which kernel version i can expect this driver changes??
-> 
-> Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
-> thing, it's drivers/firmware.
+From: YueHaibing <yuehaibing@huawei.com>
 
-I can take it via arm-soc guys if you are ok with that.
-Just need to have your ack in commits.
-We have done it like this several times, IIRC reset, nvmem.
+Syzkaller report this:
 
-Thanks,
-Michal
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 0 PID: 3692 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:ff_dev_create+0xf7/0x2e0 [fmc_fakedev]
+Code: 00 e8 4d 2d a7 f6 ba c0 0c 00 00 48 c7 c7 00 20 15 c1 be e8 04 00 00 e8 e7 8e c7 f6 48 8d b8 a8 04 00 00 48 89 fa 48 c1 ea 03 <80> 3c 1a 00 0f 85 90 01 00 00 48 8d 78 50 4c 89 b0 a8 04 00 00 48
+RSP: 0018:ffff8881ea7a78e8 EFLAGS: 00010206
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff815c9540
+RDX: 0000000000000095 RSI: ffffc900013ec000 RDI: 00000000000004a8
+RBP: 0000000000000000 R08: ffffed103ee458b8 R09: ffffed103ee458b8
+R10: 0000000000000001 R11: ffffed103ee458b7 R12: ffff8881e4865d80
+R13: dffffc0000000000 R14: ffff8881e4865da0 R15: ffffffffc115b0b0
+FS:  00007fb08a226700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6bd5a37890 CR3: 00000001c5632006 CR4: 00000000007606f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ ff_init+0x10b/0x3a0 [fmc_fakedev]
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb08a225c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00007fb08a225c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb08a2266bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+Modules linked in: fmc_fakedev(+) fmc iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel ide_pci_generic piix aes_x86_64 crypto_simd cryptd ide_core psmouse glue_helper input_leds intel_agp serio_raw intel_gtt i2c_piix4 ata_generic agpgart pata_acpi rtc_cmos parport_pc floppy parport sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: lib80211]
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+---[ end trace 297e0e50d0ab9883 ]---
+
+If kmemdup failed, we should rollback all the alloced resources.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 6c62a895e572 ("FMC: add a software carrier driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/fmc/fmc-fakedev.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/fmc/fmc-fakedev.c b/drivers/fmc/fmc-fakedev.c
+index 941d093..43d99fe 100644
+--- a/drivers/fmc/fmc-fakedev.c
++++ b/drivers/fmc/fmc-fakedev.c
+@@ -273,15 +273,18 @@ static struct ff_dev *ff_dev_create(void)
+ 	ff->dev.release = ff_dev_release;
+ 
+ 	ret = device_register(&ff->dev);
+-	if (ret < 0) {
+-		put_device(&ff->dev);
+-		return ERR_PTR(ret);
+-	}
++	if (ret < 0)
++		goto failed_register;
+ 
+ 	/* Create fmc structures that refer to this new "hw" device */
+ 	for (i = 0; i < ff_nr_dev; i++) {
+ 		fmc = kmemdup(&ff_template_fmc, sizeof(ff_template_fmc),
+ 			      GFP_KERNEL);
++		if (!fmc) {
++			ret = -ENOMEM
++			goto free_fmc;
++		}
++
+ 		fmc->hwdev = &ff->dev;
+ 		fmc->carrier_data = ff;
+ 		fmc->nr_slots = ff_nr_dev;
+@@ -294,6 +297,13 @@ static struct ff_dev *ff_dev_create(void)
+ 		ff_template_fmc.device_id++;
+ 	}
+ 	return ff;
++
++free_fmc:
++	for (i--; i >= 0; i--)
++		kfree(ff->fmc[i]);
++failed_register:
++	put_device(&ff->dev);
++	return ERR_PTR(ret);
+ }
+ 
+ /* init and exit */
+-- 
+2.7.4
+
+
