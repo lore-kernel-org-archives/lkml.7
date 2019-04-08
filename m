@@ -2,67 +2,89 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE239C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B3420870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547C020880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="oYMK8rZT"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="VbtIk6D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfDHGAm (ORCPT
+        id S1726646AbfDHGBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:00:42 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38813 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfDHGAl (ORCPT
+        Mon, 8 Apr 2019 02:01:35 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39146 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfDHGBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:00:41 -0400
-Received: by mail-vs1-f68.google.com with SMTP id s2so6882905vsi.5
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 23:00:41 -0700 (PDT)
+        Mon, 8 Apr 2019 02:01:34 -0400
+Received: by mail-it1-f193.google.com with SMTP id 139so19031175ita.4
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 23:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ceow9Kpb34qDt2aDmbMOWfiag3sBsLRqN1Tc1/CJTcQ=;
-        b=oYMK8rZTl+tyGBbB4LvAhRJNhT+gCel7rYEOqeKkBvE/WNMP1e5t4F6ggTJYZ9WORa
-         /lWF6/+bJyT3KLQBWATAgsc9+Kmk00jmxtEIOl2zKvbwx+MeiBf4buFW2hIJU+TNbpVr
-         VcvZswTd9hXzAPE714dzhZIEBysb0jUqoWn2xUxpY1KqkkaYMk+9h8cxHvW/lV3nkJ+h
-         hxleMGagV81qJGLsBRoMKdvssXXssD3pErPrvEEO1Qi+aiXNUZFDqlYMYTSAT9oQuYY/
-         WQIxgtqOH/GWQySOaX/IZqNQfgS6J4YriPGAYQf37v8L/PuyQI8VelYZJ4IOmknI/thL
-         +v5Q==
+         :content-transfer-encoding;
+        bh=4T36vFbzXz9I4WYORZ+tCw1SAFVgCJwxQq7ShjEX1i0=;
+        b=VbtIk6D/mX5+ufb9Vmk6hkvP2DPi3SRez32l7eae/k9phducOd/lsHYT4byjSKl/Ff
+         Zj0tkGY4ndnRGG3TGzdVndelgoz0Ns3M8eK+/T9Om+mCL+crmTI0j7/XrDEAHoK5lTH/
+         06XNjddytFqzXXpsgpZ2DC0M15MRNFQQi5+7k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ceow9Kpb34qDt2aDmbMOWfiag3sBsLRqN1Tc1/CJTcQ=;
-        b=kQMzhwvO8jTgTz2JWMXA6U0rOvNwBm7nHSZViEPtEXy3cyxNAmJsA/lOnGdceSd6G6
-         cM7S6hJNRGJM1EPbI8SMg4NueqkoPEPdJq6ZY5iUwYG7XL3STde8TkND2cZUwjgl4gS7
-         egotKZVku2LAKuWwG1NBmNZcXal4sLpain6SqUNIECZkdOhOZNFyLh6evRV0bqPL4kuG
-         89XfxQYuM4RgV97tE9tbwlyF3xeotKKsnnU2i+CVGJBhZgXkoKe09IxPaW/mKXQRW35Q
-         VX43xrcsWzd670hOtCwZrGCMSzIw2WdvzvLaRRvtRY4AaESx3zE7k1ctz3XKy6VWzWxa
-         ZkOg==
-X-Gm-Message-State: APjAAAWJF9V/THhbF3uz5Gd6UasSJH59oF8xECsvP/H4EyHkjRfszVIe
-        IkLbFboRUSfLazVfERHEI17/pQ5Vpxo98llCk5dtpA==
-X-Google-Smtp-Source: APXvYqwqMEJWCjpgFE5jd5DeyJxwrinEp42wrEz81VRVwJNWVaoU5mjm25yjpLpWARVNLHdUUcSOlLLnIu+gpe2DDuI=
-X-Received: by 2002:a67:f402:: with SMTP id p2mr15491656vsn.130.1554703240519;
- Sun, 07 Apr 2019 23:00:40 -0700 (PDT)
+         :message-id:subject:to:content-transfer-encoding;
+        bh=4T36vFbzXz9I4WYORZ+tCw1SAFVgCJwxQq7ShjEX1i0=;
+        b=F1F5+Gyniluiq7f9MlmTCx8CcDGjfWBjhkoynYBxxJsIn5TvR54yzGR9vQsmPojYva
+         heGpxptPlwksTnUmhbd8gPHp7xUQVQeHPPWIGqvty0cPouR+fOaQE/PWaqirjIY//8qZ
+         FTE8OqXmCHkhu0yTktCayOiRwX1cUBf5Is5VDeIc1G923VDbM+t192mHsY5ZRUQm2JO5
+         Qa+g/9iiFqehM0qKp1QZ5/3fUmVrCOWOOt/zQOoZ6lJe4qCEINJS46gOnofAUC95LPS7
+         EuCpxEMlWuFiO3N6XjVBVLnvePtTCSgMMMvdl6G3AsUTzn9n1KgnsQT4onxGUpiy39Te
+         mVSQ==
+X-Gm-Message-State: APjAAAX7cXluR8VK7Vpu4DfMFVMQaZVAy9j+FCtZNVZkIOOxROrMH4WR
+        ueWpZOYZcXt7BZQvsnpOzTjHugzWNhSAM4CtQst2qQ==
+X-Google-Smtp-Source: APXvYqxuHX5chO2bTnqc2xiKpfYIYN9eWQBWiafvz1uph6MM3vnXKa3S0XyS+iakXfq5webXTSCWnIL6VOKjkgPF0ns=
+X-Received: by 2002:a24:cd01:: with SMTP id l1mr8827379itg.150.1554703293850;
+ Sun, 07 Apr 2019 23:01:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401073514.2785-1-jian-hong@endlessm.com> <alpine.DEB.2.21.1904052311370.1802@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904052311370.1802@nanos.tec.linutronix.de>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 8 Apr 2019 14:02:14 +0800
-Message-ID: <CAPpJ_edx2J6RyH2MuysXhE4hM61mWn+Th83HNeQtsFLF1K_mzA@mail.gmail.com>
-Subject: Re: [PATCH] x86/reboot: Use efi reboot for Acer TravelMate X514-51T
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>
+References: <20190405234514.6183-1-megous@megous.com> <CAJiuCcew10Q3PUOk4VPoiyFc7ZhXwJzxXHQHNeVBUvVAQ3BkbQ@mail.gmail.com>
+ <20190407143237.2qyoef4r5e3qvbmh@core.my.home>
+In-Reply-To: <20190407143237.2qyoef4r5e3qvbmh@core.my.home>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 8 Apr 2019 11:31:22 +0530
+Message-ID: <CAMty3ZDpppM5zBvxCBx3NjdVsRm4S93yz5kqi5Z5a0rhC-+zPg@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 00/12] Add support for Orange Pi 3
+To:     megous@megous.com,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,37 +92,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> =E6=96=BC 2019=E5=B9=B44=E6=9C=886=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=885:14=E5=AF=AB=E9=81=93=EF=BC=9A
+On Sun, Apr 7, 2019 at 8:02 PM 'Ond=C5=99ej Jirman' via linux-sunxi
+<linux-sunxi@googlegroups.com> wrote:
 >
-> On Mon, 1 Apr 2019, Jian-Hong Pan wrote:
-> > +/*
-> > + * Some machines require the "reboot=3De" commandline options
-> > + */
-> > +static int __init set_efi_reboot(const struct dmi_system_id *d)
-> > +{
-> > +     if (reboot_type !=3D BOOT_EFI) {
-> > +             reboot_type =3D BOOT_EFI;
+> On Sun, Apr 07, 2019 at 03:36:21PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
+> >
+> > On Sat, 6 Apr 2019 at 01:45, megous via linux-sunxi
+> > <linux-sunxi@googlegroups.com> wrote:
+> > >
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > This series implements support for Xunlong Orange Pi 3 board.
+> >
+> > OrangePi 3 Lite2 and One Plus boards support has already been merged.
+> > The support is not complete but you should rebase your patches on top
+> > of sunxi/for-next
 >
-> So if EFI is disabled in the kernel this will fall through to BOOT_BIOS. =
-Is
-> that intended behaviour?
-
-If not choose EFI as the reboot type, system will use APCI reboot type
-on Acer TravelMate X514-51T.
-If the reboot type is set as BIOS by appending "reboot=3Db", system
-cannot reboot and hangs up when shutdown.
-
-> > +             pr_info("%s series board detected. Selecting %s-method fo=
-r reboot.\n",
-> > +                     d->ident, "EFI");
+> Hi,
 >
-> Is thee a reason not to write "EFI" in the string itself?
+> OrangePi 3 is somewhat different from these two boards (mostly it has a d=
+iffernt
+> power tree). It doesn't use the AXP regulators that are defined in the
+> sun50i-h6-orangepi.dtsi in the same way.
+>
+> For example:
+>
+> - bldo3 (is turned always on in sun50i-h6-orangepi.dtsi but unused for op=
+i3)
+> - cldo2 and cldo3 are unused on opi3 and have nothing to do with WiFi
+> - aldo3 is not for dram
+> - bldo1 on the other hand is for dram on opi3
+> - some other regulators are used for different/more functions and thus
+>   named differntly
+> - USB id-det pin is differnt
+> - ...
 
-Just simply follow the format like functions: set_acpi_reboot, set_bios_reb=
-oot
-https://elixir.bootlin.com/linux/v5.1-rc4/source/arch/x86/kernel/reboot.c#L=
-60
-
-BR,
-Jian-Hong Pan
+Based on my communication with OrangePI, OPI-3 has PCIE, 4 USB-3.0
+ports and AV are the key differences and rest seems to be similar. but
+if we have a diff or unused regulators may be we can't enable them in
+dtsi (I never looked that close as of now)
