@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14949C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F00C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D627B20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195F720833
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554700785;
-	bh=ppZVzSxUnZ/lt5us2STnJNKfyB+oTXSY8r7SyVV/+Uw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bFdL2O+tG5S9Kj45ZqYPTsAR2RG+v7NNpGG33Irtkg4pvrBiFGz65tTNNFXMw3MF6
-	 PgjVZk4rpaiIgDPX9W1n4auMvIOP6PNlkeLgnHUr6jAetPezf0lFgGSoIHsXNdvSeV
-	 /oETdf9hz1f1fjtRdTTPUajqlDb6xbcU5Lc+7TUg=
+	s=default; t=1554700814;
+	bh=j6KenvNaaKfLy4DmoL4CCShplQcOAxZcX8KqAsmeeOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZZS2Ddvd2Tc3LPy1tGJ8C5d0z+6KzHwVXyDWRDSXk2PUgSFffgDjtktA60KlFbI0T
+	 O91XNZ7A09ZjlcwTjhQTYeW2ccJBQNEQ0JKTkPYy6ikpUId1thnkkAYDg/KG/tsoX6
+	 FzmdwLH9JCl+hCixwhWRrYs3xnY+5lzA9TrgS9k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbfDHFTm (ORCPT
+        id S1726545AbfDHFTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 01:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 01:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfDHFTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 01:19:42 -0400
+        id S1725877AbfDHFTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 01:19:45 -0400
 Received: from kozik-book.CAR-A-WANv3.local (unknown [83.137.6.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B0F20833;
-        Mon,  8 Apr 2019 05:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A354208E4;
+        Mon,  8 Apr 2019 05:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554700781;
-        bh=ppZVzSxUnZ/lt5us2STnJNKfyB+oTXSY8r7SyVV/+Uw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QMq+gTat+UfT5DT8/LgHSMvqREXpBQVNPwebUl58QkNsbuJMwYKQypAa2CVGMBoOr
-         i7aZSvR8aaM54IqRdbtT1hRjZ18wTqgNv6gPuW0cu+SUv78MQf4JaZRjjk28OkY3gj
-         y5+XeOsr+cR91B2l7BHpUWpmWANBmzEynyTrbyho=
+        s=default; t=1554700784;
+        bh=j6KenvNaaKfLy4DmoL4CCShplQcOAxZcX8KqAsmeeOo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y1NehTUr1VOjE4n1L/xotv6e7JP5TD2vXDLDK63B3wptcldTkVaMp/Ry4H7UqxAiN
+         sX4yvtdBUxHb8EEsF6ILnoSQIEsbIRXhVJqJBc5sF0LEAjsGJCZD2BIl6VqtL9617G
+         ifF/BehV1pw2o0d76UuIe0AcTuhLcDGnghcjQzFM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -46,92 +46,117 @@ To:     Kukjin Kim <kgene@kernel.org>,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     notify@kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 1/2] ARM: dts: exynos: Use stdout-path property instead of console in bootargs
-Date:   Mon,  8 Apr 2019 07:19:25 +0200
-Message-Id: <20190408051926.462-1-krzk@kernel.org>
+Subject: [PATCH 2/2] ARM: dts: exynos: Remove console argument from bootargs
+Date:   Mon,  8 Apr 2019 07:19:26 +0200
+Message-Id: <20190408051926.462-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190408051926.462-1-krzk@kernel.org>
+References: <20190408051926.462-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replacing bootargs with stdout-path property in chosen node allows using
-early console by adding just 'earlycon' parameter to the kernel command
-line.
+Remove the "console=ttySAC..." argument from DTSes having a proper
+stdout-path property.  To make the code functionally equivalent, add the
+serial port baud rate and parity.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4412-trats2.dts    | 3 ++-
- arch/arm/boot/dts/exynos5250-smdk5250.dts  | 3 ++-
- arch/arm/boot/dts/exynos5260-xyref5260.dts | 2 +-
- arch/arm/boot/dts/exynos5410-smdk5410.dts  | 2 +-
- arch/arm/boot/dts/exynos5420-smdk5420.dts  | 3 ++-
- 5 files changed, 8 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/exynos4210-origen.dts         | 4 ++--
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       | 4 ++--
+ arch/arm/boot/dts/exynos4210-trats.dts          | 4 ++--
+ arch/arm/boot/dts/exynos4210-universal_c210.dts | 4 ++--
+ arch/arm/boot/dts/exynos4412-origen.dts         | 3 +--
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       | 4 ++--
+ 6 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 327ee980d3a5..aac533933c61 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -22,6 +22,7 @@
+diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+index dd9ec05eb0f7..36b1edea254a 100644
+--- a/arch/arm/boot/dts/exynos4210-origen.dts
++++ b/arch/arm/boot/dts/exynos4210-origen.dts
+@@ -30,8 +30,8 @@
  	};
  
  	chosen {
--		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
-+		bootargs = "root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
-+		stdout-path = "serial2:115200n8";
- 	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index d5e66189ed2a..6dc96948a9cc 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -24,7 +24,8 @@
- 	};
- 
- 	chosen {
--		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc";
+-		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc";
+-		stdout-path = &serial_2;
 +		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
 +		stdout-path = "serial2:115200n8";
  	};
  
- 	vdd: fixed-regulator-vdd {
-diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-index fa19c59b2fb6..36a2b77eeb9d 100644
---- a/arch/arm/boot/dts/exynos5260-xyref5260.dts
-+++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-@@ -19,7 +19,7 @@
+ 	mmc_reg: voltage-regulator {
+diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+index 7a3e621edede..77fc11e593ad 100644
+--- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
++++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+@@ -26,8 +26,8 @@
  	};
  
  	chosen {
--		bootargs = "console=ttySAC2,115200";
-+		stdout-path = "serial2:115200n8";
+-		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
+-		stdout-path = &serial_1;
++		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
++		stdout-path = "serial1:115200n8";
  	};
  
- 	fin_pll: xxti {
-diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-index 8fc8c841d34b..dffa5e3ed90c 100644
---- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
-+++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-@@ -19,7 +19,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySAC2,115200";
-+		stdout-path = "serial2:115200n8";
- 	};
- 
- 	fin_pll: xxti {
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 3cf905047893..8240e5186972 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -21,7 +21,8 @@
+ 	fixed-rate-clocks {
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 8dbc47d627a5..6882480dbaf7 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -26,8 +26,8 @@
  	};
  
  	chosen {
--		bootargs = "console=ttySAC2,115200 init=/linuxrc";
-+		bootargs = "init=/linuxrc";
+-		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
+-		stdout-path = &serial_2;
++		bootargs = "root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
 +		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	regulators {
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 5c3d98654f13..07d64a8f82e3 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -24,8 +24,8 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
+-		stdout-path = &serial_2;
++		bootargs = "root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index 346f71932457..698de4345d16 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -25,8 +25,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs ="console=ttySAC2,115200";
+-		stdout-path = &serial_2;
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	firmware@203f000 {
+diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+index 5c5c2887c14f..e70fb6e601f0 100644
+--- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
++++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+@@ -23,8 +23,8 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
+-		stdout-path = &serial_1;
++		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
++		stdout-path = "serial1:115200n8";
  	};
  
  	fixed-rate-clocks {
