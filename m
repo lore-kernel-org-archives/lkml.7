@@ -6,107 +6,89 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E40C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FE8C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17B420857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D48420857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfDHV2n (ORCPT
+        id S1728867AbfDHV3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:28:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:54375 "EHLO
+        Mon, 8 Apr 2019 17:29:19 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:44705 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfDHV2n (ORCPT
+        with ESMTP id S1726509AbfDHV3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:28:43 -0400
+        Mon, 8 Apr 2019 17:29:18 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mn2Fb-1gViE70viR-00k6NX; Mon, 08 Apr 2019 23:28:36 +0200
+ 1MhlbM-1gienQ0MDI-00dleu; Mon, 08 Apr 2019 23:29:12 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>
+        Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/12] s390: syscall_wrapper: avoid clang warning
-Date:   Mon,  8 Apr 2019 23:26:21 +0200
-Message-Id: <20190408212648.2407234-8-arnd@arndb.de>
+        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/12] s390: make chkbss work with clang
+Date:   Mon,  8 Apr 2019 23:26:24 +0200
+Message-Id: <20190408212648.2407234-11-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190408212648.2407234-1-arnd@arndb.de>
 References: <20190408212648.2407234-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:a7z6K92Aqxd+6jYl8kxTzV0/4l7UDWHqxrRdCWm4WIz1hRaB51E
- JCrx4Cn3T9QAALoQ1tdC5DCiQvUN4GM4cwmos2Nsk5Ji3yi4TknMztqTJFJimP0/pWcv7Nd
- l0OwAiPftnJ7oNUu2azun8bJ+WRIFer3ER/Pwdv6ycmqP0dI6AXp9TU6msH8KOoI0c85bcZ
- wI8q/jtMMSfpDWJsDVE1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xiKi11OGdTE=:XRlwXMab1lwX6qPWoGlUS4
- 8PUxGXiRdSCedrtjZ0Fo33+KPKB9jshAx1gI2WuBFwdysBHulFDP14eOie3uM2n8HcRQrM+SE
- g5OyKVWNAETGbMk4EZBtm7n+LodH5/1ErIo2/s/pP+oOCZE6A+bDFE09utB0JK4mJa8khpfap
- jw9H2b36eEjYLTbAFcXRLmbnu35hdxq4t4Iex7ckBDPz7K4XJxXzNMEVae3LXtF6vY2f4/Z9K
- +E0cb9iMNlPNxJk+g+BGS8AS6YiVjhWHpB9VZKlhj0gZXmcOg1TNKT9k1z2NRBy6s2fYa5Q7q
- CZoiRZahqliFFfhWkOH/LK9+VhkFE0w5GVlzT2i07LERaHyTV1j2GfGLE/o4qa31HuEqb/Be1
- 7veeHn6Tz/B3MaOnfVZ68H9/WYTw0eVkwF+anp+qM8w2u/JPbM58bjnKoICyx95MZEnq3ggU4
- LiEuPjtxPEZE4Fd0xx604XyPVKimGdIdgHT96ZhIH0kAscz7ZzYi8EYg9e70eTFMIw/0zr6qz
- 6uG57r98TDP0G4hTmf7s7OKEgLYzKsx+UEkQ+v0nHh7PWtuT+7cY3qpZYKK/TUY8whFanCbk0
- J3/D3h2k5Uc4HkZ7eUjhSmjfSFJQQsdGRuY/qtGSdA2/D/XVxxvVJt17gB3SUbPmd+fhvJrSj
- QL1bFrktKha6I+I7hp4qNYxLoi5AAOR5czIfLLw3jZ073qpstw8pqpKH8BSgar4dU1Tp+LVqv
- 9XDxyKakz51C/FAzyZ0/xAvisAghsY7ZNvfEoQ==
+X-Provags-ID: V03:K1:JevfzJx4fIfYNJndOqX74ucOpNeZfT8bjeYo5HS8OguBpS5HM4Q
+ lyBN26av2aV+Y032TVD73BQWRbk9hnvQwMa4Jf2ZpVPNupY/TXvU6rI1v2dRr0sYkGGZCru
+ 3es5GqfvB7EHqLkummqS/jeGE56n3erGUb8uixlCZtZpZ9o+l9HB1GvnjJVAI2DYgiD1e8u
+ ii45TNq1A0gnoXuZV6ODw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NHnlcFH3UL0=:jq37TD68eL5xTfi7Mz4t5m
+ 4deZJoNaTPB49+2OT7RV0L9dldCu7loL0KZG9WCOfyMbSflQMbzV85tgozSbLa9GMQgHC7wB0
+ GUq/429HeqT5fuudkGhccso7HNLWoU5wgIjU4GuHdpS4ktcVmw0hCxNo1IxKVG8mTm/vKwYVj
+ XfzqaUEYY69ESM9QopLdi9ylljX+lqzFainXrsoG29gft6jL5EEBxugr5t40kdf2tCzD9RXI5
+ YHbqr/VhZbgQIC1zn8bjt8TGm0RaS3kHhcGi9k3sfsFJxxaSWWcFat9RJM7AovQILSjG0E8pC
+ n65s9WSZifQKdwhedcq8k5yHDyj79l5YYsGMSKgVjpzUutOhhQArc8SEgU/D+HyRjgyxJcGzK
+ Uaqp8lOHotvZjFtdyxOAMbqdfXURuhqLSZNpwb6/vV7E+itIE3+FOC6I5QEXMI+ue9RU3JLNi
+ xx4oFCF3+60ZvR0tG8c3Kyre5+8D3TbI2RQnQ1nb9Oa0aj8VvbiqlvaXvN+5FiB6w7lZ5RPMY
+ 9QG2ajlz3iht5CJDhdF/4oVSmYVaA6kFiMkyW9eMbpbVoZDsBvj1XlgrYvwv2wFiWxYvXecZ5
+ V/I7NOY2bYqazhMGstyXhrDbXMbTTDqHtYQ1MK3SJ+DuO4l/3VGtn75+qrVhRWEdwkGcgMRI6
+ 0RQw2hU8Qc0rjk/7Y3rtR0eZV3noFBfPLzlNa+qqlz1IOvKSbdKoR3fkMEKWSE/vujgNzK3ui
+ lc+zJr4AWX7m7pmLwaQi+ZKSGG6boo/mHmBvHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building system calls with clang results in a warning
-about an alias from a global function to a static one:
+llvm skips an empty .bss section entirely, which makes
+the check fail with an unexpected error:
 
-../fs/namei.c:3847:1: warning: unused function '__se_sys_mkdirat' [-Wunused-function]
-SYSCALL_DEFINE3(mkdirat, int, dfd, const char __user *, pathname, umode_t, mode)
-^
-../include/linux/syscalls.h:219:36: note: expanded from macro 'SYSCALL_DEFINE3'
- #define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
-                                   ^
-../include/linux/syscalls.h:228:2: note: expanded from macro 'SYSCALL_DEFINEx'
-        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
-        ^
-../arch/s390/include/asm/syscall_wrapper.h:126:18: note: expanded from macro '__SYSCALL_DEFINEx'
-        asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))          \
-                        ^
-<scratch space>:31:1: note: expanded from here
-__se_sys_mkdirat
-^
+/tmp/binutils-multi-test/bin/s390x-linux-gnu-objdump: section '.bss' mentioned in a -j option, but not found in any input file
+error: arch/s390/boot/compressed/decompressor.o .bss section is not empty
+../arch/s390/scripts/Makefile.chkbss:20: recipe for target 'arch/s390/boot/compressed/decompressor.o.chkbss' failed
 
-The only reference to the static __se_sys_mkdirat() here is the alias, but
-this only gets evaluated later. Making this function global as well avoids
-the warning.
+Change the check so we first see if a .bss section exists
+before trying to read its size.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-I considered opening a bug report for llvm here, but I suspect the
-behavior is intentional, so I'm just fixing it here. Let me know if
-you disagree.
----
- arch/s390/include/asm/syscall_wrapper.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/scripts/Makefile.chkbss | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/syscall_wrapper.h b/arch/s390/include/asm/syscall_wrapper.h
-index 5596c5c625d2..3c3d6fe8e2f0 100644
---- a/arch/s390/include/asm/syscall_wrapper.h
-+++ b/arch/s390/include/asm/syscall_wrapper.h
-@@ -119,8 +119,8 @@
- 		      "Type aliasing is used to sanitize syscall arguments");\
- 	asmlinkage long __s390x_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))	\
- 		__attribute__((alias(__stringify(__se_sys##name))));		\
--	ALLOW_ERROR_INJECTION(__s390x_sys##name, ERRNO);				\
--	static long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));		\
-+	ALLOW_ERROR_INJECTION(__s390x_sys##name, ERRNO);			\
-+	long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));			\
- 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
- 	__S390_SYS_STUBx(x, name, __VA_ARGS__)					\
- 	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))		\
+diff --git a/arch/s390/scripts/Makefile.chkbss b/arch/s390/scripts/Makefile.chkbss
+index cd7e8f4419f5..884a9caff5fb 100644
+--- a/arch/s390/scripts/Makefile.chkbss
++++ b/arch/s390/scripts/Makefile.chkbss
+@@ -11,7 +11,8 @@ chkbss: $(addprefix $(obj)/, $(chkbss-files))
+ 
+ quiet_cmd_chkbss = CHKBSS  $<
+       cmd_chkbss = \
+-	if ! $(OBJDUMP) -j .bss -w -h $< | awk 'END { if ($$3) exit 1 }'; then \
++	if $(OBJDUMP) -h $< | grep -q "\.bss" && \
++	   ! $(OBJDUMP) -j .bss -w -h $< | awk 'END { if ($$3) exit 1 }'; then \
+ 		echo "error: $< .bss section is not empty" >&2; exit 1; \
+ 	fi; \
+ 	touch $@;
 -- 
 2.20.0
 
