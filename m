@@ -2,142 +2,91 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9FEC282DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63246C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336A320880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfDHJlP (ORCPT
+        id S1726612AbfDHJlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:41:15 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59577 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbfDHJlO (ORCPT
+        Mon, 8 Apr 2019 05:41:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44760 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbfDHJlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:41:14 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2F56C80477; Mon,  8 Apr 2019 11:41:02 +0200 (CEST)
-Date:   Mon, 8 Apr 2019 11:41:13 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Nick Crews <ncrews@chromium.org>, enric.balletbo@collabora.com,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, alexandre.belloni@bootlin.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        dlaurie@chromium.org, sjg@google.com,
-        Guenter Roeck <groeck@google.com>
-Subject: Keyboard backlight LED naming was Re: [PATCH v5 2/3]
- platform/chrome: Add Wilco EC keyboard backlight LEDs support
-Message-ID: <20190408094113.GB30958@amd>
-References: <20190404171007.160878-1-ncrews@chromium.org>
- <20190404171007.160878-2-ncrews@chromium.org>
- <20190405201534.GA4426@roeck-us.net>
- <20190406084157.GA27043@amd>
- <CAE_wzQ9WG1+K1ZzVoii8ukDe_g+4Ha0bh6YvsRhceinwPjC+Kw@mail.gmail.com>
- <20190407221846.GB6327@amd>
- <CAE_wzQ_5Ha6hNt28_+j-pF3mAdXXifv9CuotDCeXff8KC1DNmA@mail.gmail.com>
+        Mon, 8 Apr 2019 05:41:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id DD8FE263963
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     lee.jones@linaro.org
+Cc:     gwendal@chromium.org, bleung@chromium.org,
+        linux-kernel@vger.kernel.org, groeck@chromium.org,
+        kernel@collabora.com, dtor@chromium.org,
+        rushikesh.s.kadam@intel.com
+Subject: [PATCH v3 0/4] mfd: cros_ec: Instantiate CrOS FP, TP and ISH devices
+Date:   Mon,  8 Apr 2019 11:41:37 +0200
+Message-Id: <20190408094141.27858-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
-Content-Disposition: inline
-In-Reply-To: <CAE_wzQ_5Ha6hNt28_+j-pF3mAdXXifv9CuotDCeXff8KC1DNmA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lee,
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The reason I'm sending this patch series is to clarify the build
+dependencies of the following patches:
 
-Hi!
+[PATCH 1/2] mfd: cros_ec: instantiate properly CrOS FP MCU device
+[PATCH 2/2] mfd: cros_ec: instantiate properly CrOS Touchpad MCU device
 
-> > > > > This document also states "The naming scheme above leaves scope
-> > > > > for further attributes should they be needed". It does not permit,
-> > > > > however, to redefine one of the fields to mean "location", much l=
-ess
-> > > > > the declaration that a devicename of "platform" shall refer to an
-> > > > > "internal" backlight, or that there shall be no more than one
-> > > > > "internal" backlight in a given system.
-> > > >
-> > > > "platform" is as good devicename as "wilco" or "chromeos".
-> > >
-> > > No, because "platform" is not a device, it is something that you are
-> > > trying to assign a magic meaning to.
-> >
-> > "chromeos" is not a device, either.
->=20
-> I agree, it is not a device name. We do not assign any specific
-> meaning to it though. We could change it to "cros_ec" if so desired
-> and nothing should break.
+and I also included this patch in the series:
 
-Yes. And you can also change it to "platform" and nothing will break
-:-). Can we end the discussion here?
+[v3] mfd: cros_ec: instantiate properly CrOS ISH MCU device
 
-If not, lets take a look at existing names:
+The first version depends on:
 
-=2E/drivers/platform/x86/asus-laptop.c:		cdev->name =3D "asus::kbd_backligh=
-t";
-=2E/drivers/platform/x86/samsung-laptop.c:		samsung->kbd_led.name =3D "sams=
-ung::kbd_backlight";
-=2E/drivers/platform/x86/thinkpad_acpi.c:		.name		=3D "tpacpi::kbd_backligh=
-t",
-=2E/drivers/platform/x86/toshiba_acpi.c:		dev->kbd_led.name =3D "toshiba::k=
-bd_backlight";
-=2E/drivers/platform/x86/asus-wmi.c:		asus->kbd_led.name =3D "asus::kbd_bac=
-klight";
-=2E/drivers/platform/x86/dell-laptop.c:	.name           =3D "dell::kbd_back=
-light",
-=2E/drivers/platform/chrome/cros_kbd_led_backlight.c:	cdev->name =3D "chrom=
-eos::kbd_backlight";
-=2E/drivers/hwmon/applesmc.c:	.name			=3D "smc::kbd_backlight",
-=2E/drivers/hid/hid-asus.c:	drvdata->kbd_backlight->cdev.name =3D "asus::kb=
-d_backlight";
-=2E/drivers/hid/hid-google-hammer.c:	kbd_backlight->cdev.name =3D "hammer::=
-kbd_backlight";
-=2E/drivers/input/misc/ims-pcu.c:		 "pcu%d::kbd_backlight", pcu->device_no);
+- mfd: cros: Update EC protocol to match current EC code
+  - https://lore.kernel.org/patchwork/patch/1046363
 
-asus, samsung, toshiba, asus, dell, chromeos... Those are really not
-device names, either. But in these cases, LED is probably controlled
-by EC, or by ACPI BIOS talking to the EC. People usually call such
-devices "platform devices".
+But there were some concerns on how to update this file properly, so
+meanwhile we figure out the proper way, let's introduce only the required
+fields for this series.
 
-(Linux Platform Device Driver - CodeProject
-=EF=BF=BChttps://www.codeproject.com/tips/1080177/linux-platform-device-dri=
-ver
-A platform device is one which is hardwired on the board and hence not
-hot-pluggable. )
+The series adds support to instantiate three special CrOS EC devices, a
+fingerprint, a touchpad and an integrated sensor hub.
 
-You can take a look at discussion around micmute LED.
+Best regards,
+ Enric
 
-Thus "platform" is quite suitable name in your case, and incidentaly,
-it will be more useful for userspace than "cros_ec".
+Changes in v3:
+- Fix Andy Shevchenko email.
 
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Changes in v2:
+- Add a patch to introduce the required enums to build.
+- Add a patch to instantiate the CrOS ISH device to the series.
 
---NDin8bjvE/0mNLFQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Enric Balletbo i Serra (3):
+  mfd: cros_ec: Update the EC feature codes
+  mfd: cros_ec: instantiate properly CrOS FP MCU device
+  mfd: cros_ec: instantiate properly CrOS Touchpad MCU device
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Rushikesh S Kadam (1):
+  mfd: cros_ec: instantiate properly CrOS ISH MCU device
 
-iEYEARECAAYFAlyrFzkACgkQMOfwapXb+vJlgwCguCID6XvkjcM8i9lF5T/C4qOa
-CNQAn1xrrUlWgNG+JX2gh9qDIDpJ0ckJ
-=oyOJ
------END PGP SIGNATURE-----
+ drivers/mfd/cros_ec_dev.c            | 33 +++++++++++++++++++++++++++
+ include/linux/mfd/cros_ec.h          |  7 ++++--
+ include/linux/mfd/cros_ec_commands.h | 34 +++++++++++++++++++++++++++-
+ 3 files changed, 71 insertions(+), 3 deletions(-)
 
---NDin8bjvE/0mNLFQ--
+-- 
+2.20.1
+
