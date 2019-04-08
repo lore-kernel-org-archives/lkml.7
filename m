@@ -2,103 +2,153 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B98BC282DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66A1C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6825D208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ao2.it header.i=@ao2.it header.b="imluKER+"
+	by mail.kernel.org (Postfix) with ESMTP id 80A4C20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfDHHeR (ORCPT
+        id S1726527AbfDHHfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:34:17 -0400
-Received: from mail.ao2.it ([92.243.12.208]:40435 "EHLO ao2.it"
+        Mon, 8 Apr 2019 03:35:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50600 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbfDHHeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:34:17 -0400
-X-Greylist: delayed 2161 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Apr 2019 03:34:16 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ao2.it; s=20180927;
-        h=Content-Transfer-Encoding:Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:From:Date; bh=bzYxMZfT5myZia6YYJj+MUEvZL+GXpdcny61CWF1K9w=;
-        b=imluKER+OK5IMNSMfxS+DKfugaCRw1sOMVtTqNrshM9BqmW/KKJM/+X/V6jYoBvrBkXO9KXKuHkTpVcGcHNfwZkUaDXMUKYAxVgcsHVg3fSNEqN0LlgxuSTVJZaoAl82QExLFoYKTUlsXToW/Rip6gQsBhtG37Jt0lklBwVRFAwAICP4tztnuCo4cCqvfP+uMnO9NFWnfdxjZkkRAKzIYwNSARp4txcNSkpy8zvlAAhbN08FhJN9mRQw7WdMThHR29QXAnJ56znxdvjrT4TDqEddX/9keJ2N35G0Ow+XBdeQbY7RsKp4+ovxeL+ES0wvgJTK7eUJAd9rrcCCXeT7ug==;
-Received: from localhost ([::1] helo=jcn.localdomain)
-        by ao2.it with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.84_2)
-        (envelope-from <ao2@ao2.it>)
-        id 1hDOEG-0007DH-26; Mon, 08 Apr 2019 08:58:04 +0200
-Date:   Mon, 8 Apr 2019 08:58:12 +0200
-From:   Antonio Ospite <ao2@ao2.it>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Harald Welte <laforge@gnumonks.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: Removing pcap? (EZX support in mainline linux)
-Message-Id: <20190408085812.db187b4a6f8ffc76d3d5ebdc@ao2.it>
-In-Reply-To: <20190407140741.GE7480@piout.net>
-References: <20190407140741.GE7480@piout.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-X-Face: z*RaLf`X<@C75u6Ig9}{oW$H;1_\2t5)({*|jhM<pyWR#k60!#=#>/Vb;]yA5<GWI5`6u&+
- ;6b'@y|8w"wB;4/e!7wYYrcqdJFY,~%Gk_4]cq$Ei/7<j&N3ah(m`ku?pX.&+~:_/wC~dwn^)MizBG !pE^+iDQQ1yC6^,)YDKkxDd!T>\I~93>J<_`<4)A{':UrE
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726133AbfDHHfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:35:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 00:35:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,324,1549958400"; 
+   d="scan'208";a="159158465"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga002.fm.intel.com with SMTP; 08 Apr 2019 00:35:17 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 08 Apr 2019 10:35:17 +0300
+Date:   Mon, 8 Apr 2019 10:35:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v3 19/36] thunderbolt: Extend tunnel creation to more
+ than 2 adjacent switches
+Message-ID: <20190408073517.GA3622@lahna.fi.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+ <20190328123633.42882-20-mika.westerberg@linux.intel.com>
+ <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Apr 2019 16:07:41 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-
-> Hello Antonio, Harald,
->
-
-Hi everyone,
-
-adding Robert to CC as he is listed as the current maintainer of
-ARM/EZX SMARTPHONES in the MAINTAINERS file.
-
-> I've had a look at the PCAP RTC driver because I'm removing a few
-> deprecated APIs. While doing so, I've discovered that the driver has
-> never worked properly because PCAP_RTC_TOD_MASK and PCAP_RTC_DAY_MASK
-> are both missing a bit so every day would roll over at 18:12:15 and the
-> whole the date would roll over in 2014.
+On Sun, Apr 07, 2019 at 06:54:25PM +0200, Lukas Wunner wrote:
+> On Thu, Mar 28, 2019 at 03:36:16PM +0300, Mika Westerberg wrote:
+> > +struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
+> > +			      struct tb_port *dst, int dst_hopid, int link_nr,
+> > +			      const char *name)
+> >  {
+> [...]
+> > +	in_hopid = src_hopid;
+> > +	out_port = NULL;
+> > +
+> > +	for (i = 0; i < num_hops; i++) {
+> > +		in_port = tb_next_port_on_path(src, dst, out_port);
+> > +		if (!in_port)
+> > +			goto err;
+> > +
+> > +		if (in_port->dual_link_port && in_port->link_nr != link_nr)
+> > +			in_port = in_port->dual_link_port;
+> > +
+> > +		ret = tb_port_alloc_in_hopid(in_port, in_hopid, -1);
+> > +		if (ret < 0)
+> > +			goto err;
+> > +		in_hopid = ret;
+> > +
+> > +		out_port = tb_next_port_on_path(src, dst, in_port);
+> > +		if (!out_port)
+> > +			goto err;
+> > +
+> > +		if (out_port->dual_link_port && out_port->link_nr != link_nr)
+> > +			out_port = out_port->dual_link_port;
+> > +
+> > +		if (i == num_hops - 1)
+> > +			ret = tb_port_alloc_out_hopid(out_port, dst_hopid,
+> > +						      dst_hopid);
+> > +		else
+> > +			ret = tb_port_alloc_out_hopid(out_port, -1, -1);
+> > +
+> > +		if (ret < 0)
+> > +			goto err;
+> > +		out_hopid = ret;
+> > +
+> > +		path->hops[i].in_hop_index = in_hopid;
+> > +		path->hops[i].in_port = in_port;
+> > +		path->hops[i].in_counter_index = -1;
+> > +		path->hops[i].out_port = out_port;
+> > +		path->hops[i].next_hop_index = out_hopid;
+> > +
+> > +		in_hopid = out_hopid;
+> > +	}
 > 
-> I discussed with Arnd about 59ee93a528b9 ("ARM: pxa: remove irq_to_gpio
-> from ezx-pcap driver") and it seems the whole EZX support has been
-> broken for a while.
->
-
-As Harald said in another message I tried taking over OpenEZX for a
-while, but eventually lost interest.
-
-JFTR some parts of the project has been backed up here:
-https://gitlab.com/openezx
-
-I should also have a git backup of the wiki somewhere.
-
-> Is it worth fixing the RTC driver or could I remove it?
+> According to the code comment in struct tb_regs_hop (in tb_regs.h),
+> the out_hopid ("next_hop" in struct tb_regs_hop) denotes the
+> "hop to take after sending the packet through out_port (on the
+> incoming port of the next switch)".
 > 
+> So intuitively, the hop config space is like a routing table and
+> the entry in in_port's hop config space specifies through which
+> out_port the packets shall be routed, and which entry to look up
+> on the remote port reachable through out_port.
+> 
+> This means that the out_hopid must always be identical to the in_hopid
+> of out_port->remote.  Otherwise the routing wouldn't work.
+> 
+> And yet, you've introduced *two* struct ida for each port in
+> patch 16.  This doesn't seem to make sense:  The out_hopids ida
+> of a port always has to be identical to the in_hopids ida of that
+> port's remote.  But if it's identical, why does it have to exist
+> twice?
 
-I am not aware of any active user but I'd leave the final word to
-Robert, IIRC he received some EZX hardware "recently".
+The reason for two HopID allocators (struct idas) is to make it possible
+to track HopIDs to each direction. The same port can be output for one
+path and input for another. I'm not sure how that can be done without
+having two struct idas per port.
 
-FWIW I think EZX code can be removed if it is a maintenance burden for
-anyone.
+You are right, in case of out port HopID connecter to remote in port,
+they should use the same HopID.
 
-Thank you,
-   Antonio
+> Also, the above algorithm fails to ensure that the two struct ida
+> are always identical:  It uses the out_hopid on the previous switch
+> as *minimum* for the in_hopid on the current switch.  If that hopid
+> is already taken by an existing tunnel, tb_port_alloc_in_hopid()
+> will allocate a *different* hopid and thereby break the routing.
+> 
+> So either the code comment in struct tb_regs_hop is wrong, or this
+> algorithm and the duplicate struct ida in patch 16 are wrong, or I'm
+> missing something.
 
--- 
-Antonio Ospite
-https://ao2.it
-https://twitter.com/ao2it
+No you are right. I think the above code should look like:
 
-A: Because it messes up the order in which people normally read text.
-   See http://en.wikipedia.org/wiki/Posting_style
-Q: Why is top-posting such a bad thing?
+	ret = tb_port_alloc_in_hopid(in_port, in_hopid, in_hopid);
+
+instead of
+
+	ret = tb_port_alloc_in_hopid(in_port, in_hopid, -1);
+
+to make sure out port and in port of a remote use the same HopID. Will
+fix.
