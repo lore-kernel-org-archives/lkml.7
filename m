@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723A1C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07D5C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39675208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D00920B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qmTAywpN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="E4FwahmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfDHH7m (ORCPT
+        id S1726575AbfDHH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:59:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41646 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfDHH7i (ORCPT
+        Mon, 8 Apr 2019 03:59:48 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38607 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfDHH7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:59:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so15097835wrq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 00:59:37 -0700 (PDT)
+        Mon, 8 Apr 2019 03:59:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w15so13582145wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 00:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=i+5maHFIx27CE8rGKrmmIRAieWP01QawvbHD18Ck7dU=;
-        b=qmTAywpNoXFUsi9pVWZhA5s9hqBcL7ScvGthx3IfJRmYMgbfxpkKr64Zj4s7i6gfLj
-         vdvTSCwsLMJupChuhDV8hgKM/RdLStILwgG/vE4ApPZ4h0AxyzzCIrCUk7CxCGgjJFrp
-         nMLq+glHQj/j26Y/8jAbrSOYGDb+JSugztweakyo110tAgNgfNkmaFyR6qhujuDA+99y
-         coWAmhOPe/t0Hat7XC6xYAPh0GqKXrjSx0KJTIBn1aNhI68wpkAWWaXnspTZIjmq1OTt
-         tN4W1kmeARnj9NC8H/StK2n/gVFH7BHjZ59Vfmj7vA7vRzYHJY54iJ5MLoVq6wQ/fnaL
-         I6oA==
+        bh=yRrlCr9wFt5+t8SsfrW8nzdrvKLJ7bDsystP/rm2nsE=;
+        b=E4FwahmUqHYEjwgtG/wBlxdN0Jdqpfz8iZLGJX2w76Vyy81mYFx5hwhxfLBLbBqjS7
+         QWo2X/1g74bbKD+heXO1vnzHpAryvFLjrNp5K/0EWgL+yTt/9UtEj8wl9NORQGtv0ow0
+         OxsYUJREQu8p1mQ7w8h0r1f4bb+1GefEidhswoJDR2glQbzorLwIVzzlKkZCYrUiyy31
+         YX4hiwB8Ls3AX5hVZWVd7tJhJZPRE63J8F1L4DRLPfKGpuOCvgYQvMGKGvTdZey8u1oe
+         3RLgo5nRWkJPoMIEDbgZ9RQZwymXAXbvtRVdOC/YFWdWpKt+hGuecbYAm1XqUj7ole1A
+         AUgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=i+5maHFIx27CE8rGKrmmIRAieWP01QawvbHD18Ck7dU=;
-        b=WQKO2udiB4P2AmadgNa+epKZiWIMeLPWujTDG/SaqnnScqtqYnhS9A8sFQVn5fRT8+
-         h5O7kyxVm0+ae1ROzFL8h+90yWsXQ+2ZHFuT0UMZD+t2Fhk2qVpgg7TVwSofYyWZQtZl
-         fLJU6lAo0uH3sTBpFdDJ65P8hzveSLWR2KWVcQFxEwB/es45zumzqDPSLbiOBMUokL3q
-         3L/hYikI/U7LedS+hlNWYWR2i69qdRFUYN9aJ+kThJEWJwBsZoBiD5DBrOiVAMHAYb+w
-         CMy85jhnrRUl57/6GEpJF5kTuOnoEfHo+LJ+EK8VhJL7mVK6/ILsOiEgiseR9a3WYgBn
-         pyWg==
-X-Gm-Message-State: APjAAAU27KFCMIOTy92siYEjMBQZG1xIuYd3X90ttfvR5H+SAwnTlLRR
-        ho+TVmMfKr+NOb9FRXFdqq1CM2QgYZs=
-X-Google-Smtp-Source: APXvYqy5I/WPTY1nUrMfK2mebQw+wNXRauUYZ+QA2nE3saG9AMp1cBnx1rhw0KMVj2kGvy1N87qBXw==
-X-Received: by 2002:a5d:5190:: with SMTP id k16mr17950326wrv.10.1554710376253;
-        Mon, 08 Apr 2019 00:59:36 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-12-194.w90-86.abo.wanadoo.fr. [90.86.215.194])
-        by smtp.gmail.com with ESMTPSA id o17sm31658711wrw.73.2019.04.08.00.59.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=yRrlCr9wFt5+t8SsfrW8nzdrvKLJ7bDsystP/rm2nsE=;
+        b=i9lCwykqgdSWf+AeGY9sfeeK38N9icRqjhcz0kwpLlvijZvDQmp8L3fkmiVCAle3yo
+         ASNurxmvcZjc/jnslGqBMT8LTD7sakmVnvGtC/el07eN9n59B4/P7uXdiaCho34O0c7O
+         3YFDcbaq86FYawkU6yZ1bGlBAur01PWVDEHaZ33AJZZ0lsdTULIre82qjyws0IAsYwsB
+         L14iJNZy8PS1nkkfiFeU9z221y8YTXbfSte0xjmPjrYg6DkauGZfJ6HcahnCQioPxqwA
+         tFGkg+CW8hyLmlENFzzm9hOC+OLqo2lc48qavF86Vfdd4wQEVXYz3SZW0gztp/XNR/hW
+         o9Vg==
+X-Gm-Message-State: APjAAAVlLoJN+ZrrYiMTdHPNmbzuR1ZfCVxyHI3KwLI2/wetr+RE8/Py
+        XaQh15NCTRsSouZLwsvJ3XoHNPDen5w=
+X-Google-Smtp-Source: APXvYqzoAa6q8RLCqB7ziPahScxeeEflKSjnM2SWqWiSzeWoA13dAOdnTi0vUAtnxl8kGkgdSxXr0w==
+X-Received: by 2002:a7b:cd9a:: with SMTP id y26mr16543228wmj.31.1554710375107;
         Mon, 08 Apr 2019 00:59:35 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-12-194.w90-86.abo.wanadoo.fr. [90.86.215.194])
+        by smtp.gmail.com with ESMTPSA id o17sm31658711wrw.73.2019.04.08.00.59.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 00:59:34 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,9 +65,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 3/3] ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-Date:   Mon,  8 Apr 2019 09:59:24 +0200
-Message-Id: <20190408075924.2284-4-brgl@bgdev.pl>
+Subject: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
+Date:   Mon,  8 Apr 2019 09:59:23 +0200
+Message-Id: <20190408075924.2284-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190408075924.2284-1-brgl@bgdev.pl>
 References: <20190408075924.2284-1-brgl@bgdev.pl>
@@ -78,29 +78,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This sets CONFIG_CPUFREQ_DT=m in davinci_all_defconfig. This is used for
-frequency scaling on device tree boards.
+Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
+tps6507 pmic with configurable output voltage, so all operating points
+can be enabled.
 
-Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 207962a656a2..c3502236132e 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -45,6 +45,7 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_PERFORMANCE=m
- CONFIG_CPU_FREQ_GOV_POWERSAVE=m
- CONFIG_CPU_FREQ_GOV_ONDEMAND=m
-+CONFIG_CPUFREQ_DT=m
- CONFIG_CPU_IDLE=y
- CONFIG_NET=y
- CONFIG_PACKET=y
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index f04bc3e15332..f94bb38fdad9 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -191,6 +191,19 @@
+ 	};
+ };
+ 
++&cpu {
++	cpu-supply = <&vdcdc3_reg>;
++};
++
++/*
++ * The standard da850-evm kits and SOM's are 375MHz so enable this operating
++ * point by default. Higher frequencies must be enabled for custom boards with
++ * other variants of the SoC.
++ */
++&opp_375 {
++	status = "okay";
++};
++
+ &sata {
+ 	status = "okay";
+ };
 -- 
 2.21.0
 
