@@ -2,132 +2,103 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B208C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC322148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60650214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554742257;
+	bh=pHC/AwkjOPNisFX3IuXHq91c+27lrqDTnL/1cap6HOM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OMNvv7qBYZZmvB9eqxOnVjE4aM8PCLbAlHWKw/j8Xui3/07et+7+r3Ts1OIhKKdqC
+	 1VfWWflVx9t1LLeTVxMzhuIDjZ6hPN9o3u97eMhqhRgLIbUjlWagHot0t5ksjUow5d
+	 zmxz6Dx+B83XlnhUNx/+CgCtpxPKfDcrRUMayZ9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfDHQuH (ORCPT
+        id S1729030AbfDHQu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:50:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:51882 "EHLO foss.arm.com"
+        Mon, 8 Apr 2019 12:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfDHQuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:50:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB59315AB;
-        Mon,  8 Apr 2019 09:50:06 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5ABF93F718;
-        Mon,  8 Apr 2019 09:50:04 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 17:50:01 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Hardware Monitoring <linux-hwmon@vger.kernel.org>,
-        wangkefeng.wang@huawei.com, lorenzo.pieralisi@arm.com,
-        arnd@arndb.de, rafael@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        andy.shevchenko@gmail.com, catalin.marinas@arm.com, bp@suse.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-Message-ID: <20190408165001.GD7872@fuggles.cambridge.arm.com>
-References: <20190404164130.GA12203@roeck-us.net>
- <24cc8006-0f0d-6b20-a466-e4a32a0bb656@huawei.com>
- <20190404174336.GA10404@roeck-us.net>
- <20190404185815.GA26522@google.com>
- <2d0f583a-cabe-df4e-ad89-c1800d9b4804@huawei.com>
- <20190405180615.GB109021@google.com>
- <20190405182923.GA11563@roeck-us.net>
- <ec054678-ce9e-bd5c-5225-a025214f1075@huawei.com>
- <9be8d131-d1d5-cc97-26fe-e32fe30c0544@roeck-us.net>
- <efff6e58-b48d-f168-ed92-1714f5a08292@huawei.com>
+        id S1727023AbfDHQu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:50:56 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8948920880;
+        Mon,  8 Apr 2019 16:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554742255;
+        bh=pHC/AwkjOPNisFX3IuXHq91c+27lrqDTnL/1cap6HOM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u6EglcSfxklpNii9D2siCrz7B03R9a17JmwVO8588RS+J5z8n3sD7lfv5YaY8OJI5
+         uYlcBNXiSQAs7ctD3DyJ/SxrtqFPiONqOYwGNKyVOILXUi4zNc5AgfG3KdHQyFI2Ab
+         rkSsjxxkdNpPj+fDbQig15bUNzMG9zeApmcpQUos=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-mtd@lists.infradead.org
+Cc:     dinguyen@kernel.org, marex@denx.de, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        Tien-Fong Chee <tien.fong.chee@intel.com>
+Subject: [PATCH] mtd: spi-nor: cadence-quadspi: add reset control
+Date:   Mon,  8 Apr 2019 11:50:46 -0500
+Message-Id: <20190408165046.24310-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <efff6e58-b48d-f168-ed92-1714f5a08292@huawei.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 05:35:51PM +0100, John Garry wrote:
-> On 08/04/2019 14:47, Guenter Roeck wrote:
-> > > > > > FC patch 1/4 ("resource: Request IO port regions from children
-> > > > > > of ioport_resource").
-> > > > > 
-> > > > > Maybe I'm missing something, but on x86, drivers like f71882fg do not
-> > > > > crash the system because inb() *never* causes a crash.
-> > > > > 
-> > > > > If you want to build that driver for ARM, I think you need to make
-> > > > > sure that inb() on ARM also *never* causes a crash.  I don't think
-> > > > > changing f71882fg and all the similar drivers is the right answer.
-> > > > > 
-> > > > 
-> > > > Agreed. As I had mentioned earlier, the driver changes are orthogonal:
-> > > > the drivers should request the IO region before accessing it, primarily
-> > > > to avoid conflicting accesses by multiple drivers in parallel. For
-> > > > example, the f71882fg driver supports chips which implement hardware
-> > > > monitoring as well as watchdog functionality, and both the hwmon
-> > > > and the watchdog driver may try to access the io space.
-> > > > 
-> > > > If and how the system ensures that the IO region exists and/or that
-> > > > inb() always succeeds is a different question. I would prefer a less
-> > > > complex solution than the one suggested here, but that is my personal
-> > > > opionion.
-> > > 
-> > > Hi Guenter,
-> > > 
-> > > I have a question about these super-IO accesses:
-> > > 
-> > > To me, it's not good that these hwmon, watchdog, gpio, etc drivers
-> > > make unconstrained accesses to 0x2e and 0x4e ports (ignoring the
-> > > request_muxed_region() call).
-> > > 
-> > > The issue I see is that on an arm, IO space for some other device may
-> > > be mapped in this region, so it would not be right for these drivers
-> > > to access those same regions.
-> > > 
-> > Yes, but then there _could_ be some arm or arm64 device supporting one
-> > of those chips,
-> > so we can not just add something like "depends on !(ARM || ARM64)".
-> 
-> This looks like what has been added for PPC in commmit 746cdfbf01c0.
-> 
-> However, agreed, it's not a good approach.
-> 
-> > 
-> > > Is there any other platform check which can be made to ensure that
-> > > accesses these super-IO ports is appropriate?
-> > > 
-> > 
-> > Not that I know of. It would make some sense to provide API functions
-> > for Super-IO accesses, but that would be a lot of work, and I guess
-> > it isn't really valuable enough for anyone to pick up and do.
-> > 
-> > Normally, if you have such a system, the respective drivers should not be
-> > built. After all, this isn't the only instance where drivers
-> > unconditionally
-> > access some io region, no matter if the underlying hardware exists or not.
-> > The only real defense against that is to not build those drivers into
-> > a given kernel.
-> 
-> If we're going to support a multi-plaform kernel for a given arch, then we
-> can't always avoid it.
-> 
-> It seems that the only solution on the table now is to discard these IO port
-> accesses on arm64 when the IO port are not mapped.
+Get the reset control for the QSPI controller and bring it out of reset.
 
-Hmm, how are you going to achieve that? I'm not sure we can guarantee a
-synchronous abort, so I'd be nervous about anything that tries to handle
-the exception after making the unmapped access.
+Suggested-by: Tien-Fong Chee <tien.fong.chee@intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/mtd/spi-nor/cadence-quadspi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Will
+diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+index 792628750eec..710a853f9d13 100644
+--- a/drivers/mtd/spi-nor/cadence-quadspi.c
++++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+@@ -34,6 +34,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/reset.h>
+ #include <linux/sched.h>
+ #include <linux/spi/spi.h>
+ #include <linux/timer.h>
+@@ -1336,6 +1337,7 @@ static int cqspi_probe(struct platform_device *pdev)
+ 	struct cqspi_st *cqspi;
+ 	struct resource *res;
+ 	struct resource *res_ahb;
++	struct reset_control *rstc;
+ 	const struct cqspi_driver_platdata *ddata;
+ 	int ret;
+ 	int irq;
+@@ -1362,6 +1364,14 @@ static int cqspi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cqspi->clk);
+ 	}
+ 
++	/* Obtain QSPI reset control */
++	rstc = devm_reset_control_get_exclusive(dev, NULL);
++	if (!IS_ERR(rstc)) {
++		reset_control_assert(rstc);
++		udelay(1);
++		reset_control_deassert(rstc);
++	}
++
+ 	/* Obtain and remap controller address. */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	cqspi->iobase = devm_ioremap_resource(dev, res);
+-- 
+2.20.0
+
