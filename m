@@ -2,256 +2,322 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B59CC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C885BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194A82147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765C02147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CC0ooN4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfDHPix (ORCPT
+        id S1727472AbfDHPlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:38:53 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6711 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725983AbfDHPix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:38:53 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6796C636F9A6EFFFA345;
-        Mon,  8 Apr 2019 23:38:49 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 23:38:42 +0800
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
- <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
- <20190404144408.GA6433@rapoport-lnx>
- <783b8712-ddb1-a52b-81ee-0c6a216e5b7d@huawei.com>
- <4b188535-c12d-e05b-9154-2c2d580f903b@huawei.com>
- <20190408065711.GA8403@rapoport-lnx>
- <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
-CC:     <wangkefeng.wang@huawei.com>, <ard.biesheuvel@linaro.org>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <takahiro.akashi@linaro.org>, <akpm@linux-foundation.org>,
-        <kexec@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <2aadfb89-4ac0-a9a9-e157-a23d686cb374@huawei.com>
-Date:   Mon, 8 Apr 2019 23:38:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 8 Apr 2019 11:41:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59400 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfDHPlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:41:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H4ketvLYjms5ZdN0tDZEHTZVdWn0Y5vlV4EuQwM2xbk=; b=CC0ooN4O5YrEySzWmnirS60Na
+        KEE2ihMOdH6dLYTZInrI4UmjJZFcHQMxiqcvszpZSoOhsif40hAsRj0cqXkkompIatGb73neRsM5A
+        LJX+A62tSycOPw7qOVSxyuoacUtsAAWTwe0dLKk4yLSLLBV856snkDKI2apzjfzYmWONkQt+9c+qM
+        ZgCCuMaJL5HbVYl9870iGAjFjsxiPIQXNJuW9w6Er8g2zuukvOuo+IEZWgNfHC4QYOJUol3d5Mkpe
+        Y+J3ql/NBIztTFtFQcaGQlUGa05F3vQDpoXXaBP3Ak66U2tH+qMOEF1b400SVfw6TF7opky5cZDwU
+        XEjCAVPGg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDWOX-0007wc-P7; Mon, 08 Apr 2019 15:41:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 392E52030C791; Mon,  8 Apr 2019 17:41:12 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 17:41:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V5 00/12] perf: Add Icelake support (kernel only, except
+ Topdown)
+Message-ID: <20190408154112.GW12232@hirez.programming.kicks-ass.net>
+References: <20190402194509.2832-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <3fc772a2-292b-9c2a-465f-eabe86961dfd@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402194509.2832-1-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
 
-On 2019/4/8 16:39, Chen Zhou wrote:
+I currently have something like the below on top, is that correct?
 
->>>
->>> Sorry, just ignore my previous reply, I got that wrong.
->>>
->>> I think it carefully, we can cap the memory range for [min(regs[*].start, max(regs[*].end)]
->>> firstly. But how to remove the middle ranges, we still can't use memblock_cap_memory_range()
->>> directly and the extra remove operation may be complex.
->>>
->>> For more than one regions, i think add a new memblock_cap_memory_ranges() may be better.
->>> Besides, memblock_cap_memory_ranges() is also applicable for one region.
->>>
->>> How about replace memblock_cap_memory_range() with memblock_cap_memory_ranges()?
->>
->> arm64 is the only user of both MEMBLOCK_NOMAP and memblock_cap_memory_range()
->> and I don't expect other architectures will use these interfaces.
->> It seems that capping the memory for arm64 crash kernel the way I've
->> suggested can be implemented in fdt_enforce_memory_region(). If we'd ever
->> need such functionality elsewhere or CRASH_MAX_USABLE_RANGES will need to
->> grow we'll rethink the solution.
-> 
-> Ok, i will implement that in fdt_enforce_memory_region() in next version.
-> And we will support at most two crash kernel regions now.
-> 
-> Thanks,
-> Chen Zhou
-> 
+If so, I'll fold it back in.
 
-I implement that in fdt_enforce_memory_region() simply as below.
-You have a look at if it is the way you suggested.
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f9fa5f8..52bd69db 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
-
- #ifdef CONFIG_KEXEC_CORE
-
-+/* at most two crash kernel regions, low_region and high_region */
-+#define CRASH_MAX_USABLE_RANGES        2
-+#define LOW_REGION_IDX                 0
-+#define HIGH_REGION_IDX                        1
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -563,16 +563,17 @@ int x86_pmu_hw_config(struct perf_event
+ 	/* sample_regs_user never support XMM registers */
+ 	if (unlikely(event->attr.sample_regs_user & PEBS_XMM_REGS))
+ 		return -EINVAL;
 +
+ 	/*
+ 	 * Besides the general purpose registers, XMM registers may
+ 	 * be collected in PEBS on some platforms, e.g. Icelake
+ 	 */
+ 	if (unlikely(event->attr.sample_regs_intr & PEBS_XMM_REGS)) {
+-		if (!is_sampling_event(event) ||
+-		    !event->attr.precise_ip ||
+-		    x86_pmu.pebs_no_xmm_regs)
++		if (x86_pmu.pebs_no_xmm_regs)
+ 			return -EINVAL;
+ 
++		if (!event->attr.precise_ip)
++			return -EINVAL;
+ 	}
+ 
+ 	return x86_setup_perfctr(event);
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3428,7 +3428,7 @@ icl_get_event_constraints(struct cpu_hw_
+ 	 * Force instruction:ppp in Fixed counter 0
+ 	 */
+ 	if ((event->attr.precise_ip == 3) &&
+-	    ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
++	    (event->hw.config == X86_CONFIG(.event=0xc0)))
+ 		return &fixed_counter0_constraint;
+ 
+ 	return hsw_get_event_constraints(cpuc, idx, event);
+@@ -4810,7 +4810,7 @@ __init int intel_pmu_init(void)
+ 			hsw_format_attr : nhm_format_attr;
+ 		extra_attr = merge_attr(extra_attr, skl_format_attr);
+ 		x86_pmu.cpu_events = get_icl_events_attrs();
+-		x86_pmu.force_gpr_event = 0x2ca;
++		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
+ 		x86_pmu.lbr_pt_coexist = true;
+ 		intel_pmu_pebs_data_source_skl(false);
+ 		pr_cont("Icelake events, ");
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -853,13 +853,13 @@ struct event_constraint intel_icl_pebs_e
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
+ 
+-	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),		/* MEM_TRANS_RETIRED.LOAD_LATENCY */
+-	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),  /* MEM_INST_RETIRED.LOAD */
+-	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),  /* MEM_INST_RETIRED.STORE */
++	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),	/* MEM_INST_RETIRED.STORE */
+ 
+ 	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf), /* MEM_LOAD_*_RETIRED.* */
+ 
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf), 	     /* MEM_INST_RETIRED.* */
++	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf),		/* MEM_INST_RETIRED.* */
+ 
+ 	/*
+ 	 * Everything else is handled by PMU_FL_PEBS_ALL, because we
+@@ -963,40 +963,42 @@ static u64 pebs_update_adaptive_cfg(stru
+ 	u64 pebs_data_cfg = 0;
+ 	bool gprs, tsx_weight;
+ 
+-	if ((sample_type & ~(PERF_SAMPLE_IP|PERF_SAMPLE_TIME)) ||
+-	    attr->precise_ip < 2) {
++	if (!(sample_type & ~(PERF_SAMPLE_IP|PERF_SAMPLE_TIME)) &&
++	    attr->precise_ip > 1)
++		return pebs_data_cfs;
+ 
+-		if (sample_type & PERF_PEBS_MEMINFO_TYPE)
+-			pebs_data_cfg |= PEBS_DATACFG_MEMINFO;
++	if (sample_type & PERF_PEBS_MEMINFO_TYPE)
++		pebs_data_cfg |= PEBS_DATACFG_MEMINFO;
+ 
++	/*
++	 * We need GPRs when:
++	 * + user requested them
++	 * + precise_ip < 2 for the non event IP
++	 * + For RTM TSX weight we need GPRs for the abort code.
++	 */
++	gprs = (sample_type & PERF_SAMPLE_REGS_INTR) &&
++	       (attr->sample_regs_intr & PEBS_GPRS_REGS);
++
++	tsx_weight = (sample_type & PERF_SAMPLE_WEIGHT) &&
++		     ((attr->config & INTEL_ARCH_EVENT_MASK) ==
++		      x86_pmu.rtm_abort_event);
++
++	if (gprs || (attr->precise_ip < 2) || tsx_weight)
++		pebs_data_cfg |= PEBS_DATACFG_GPRS;
++
++	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
++	    (attr->sample_regs_intr & PERF_XMM_REGS))
++		pebs_data_cfg |= PEBS_DATACFG_XMMS;
++
++	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+ 		/*
+-		 * Cases we need the registers:
+-		 * + user requested registers
+-		 * + precise_ip < 2 for the non event IP
+-		 * + For RTM TSX weight we need GPRs too for the abort
+-		 * code. But we don't want to force GPRs for all other
+-		 * weights.  So add it only collectfor the RTM abort event.
++		 * For now always log all LBRs. Could configure this
++		 * later.
+ 		 */
+-		gprs = (sample_type & PERF_SAMPLE_REGS_INTR) &&
+-			      (attr->sample_regs_intr & 0xffffffff);
+-		tsx_weight = (sample_type & PERF_SAMPLE_WEIGHT) &&
+-			     ((attr->config & 0xffff) == x86_pmu.force_gpr_event);
+-		if (gprs || (attr->precise_ip < 2) || tsx_weight)
+-			pebs_data_cfg |= PEBS_DATACFG_GPRS;
+-
+-		if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+-		    (attr->sample_regs_intr >> 32))
+-			pebs_data_cfg |= PEBS_DATACFG_XMMS;
+-
+-		if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+-			/*
+-			 * For now always log all LBRs. Could configure this
+-			 * later.
+-			 */
+-			pebs_data_cfg |= PEBS_DATACFG_LBRS |
+-				((x86_pmu.lbr_nr-1) << PEBS_DATACFG_LBR_SHIFT);
+-		}
++		pebs_data_cfg |= PEBS_DATACFG_LBRS |
++			((x86_pmu.lbr_nr-1) << PEBS_DATACFG_LBR_SHIFT);
+ 	}
++
+ 	return pebs_data_cfg;
+ }
+ 
+@@ -1022,13 +1024,8 @@ pebs_update_state(bool needed_cb, struct
+ 	}
+ 
+ 	/*
+-	 * The PEBS record doesn't shrink on the del. Because to get
+-	 * an accurate config needs to go through all the existing pebs events.
+-	 * It's not necessary.
+-	 * There is no harmful for a bigger PEBS record, except little
+-	 * performance impacts.
+-	 * Also, for most cases, the same pebs config is applied for all
+-	 * pebs events.
++	 * The PEBS record doesn't shrink on pmu::del(). Doing so would require
++	 * iterating all remaining PEBS events to reconstruct the config.
+ 	 */
+ 	if (x86_pmu.intel_cap.pebs_baseline && add) {
+ 		u64 pebs_data_cfg;
+@@ -1076,8 +1073,7 @@ void intel_pmu_pebs_enable(struct perf_e
+ 
+ 	cpuc->pebs_enabled |= 1ULL << hwc->idx;
+ 
+-	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
+-	    (x86_pmu.version < 5))
++	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
+ 		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
+ 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
+ 		cpuc->pebs_enabled |= 1ULL << 63;
+@@ -1766,8 +1762,7 @@ static void intel_pmu_drain_pebs_core(st
+ 			       setup_pebs_fixed_sample_data);
+ }
+ 
+-static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc,
+-						 int size)
++static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int size)
+ {
+ 	struct perf_event *event;
+ 	int bit;
+@@ -1826,8 +1821,7 @@ static void intel_pmu_drain_pebs_nhm(str
+ 
+ 		/* PEBS v3 has more accurate status bits */
+ 		if (x86_pmu.intel_cap.pebs_format >= 3) {
+-			for_each_set_bit(bit, (unsigned long *)&pebs_status,
+-					 size)
++			for_each_set_bit(bit, (unsigned long *)&pebs_status, size)
+ 				counts[bit]++;
+ 
+ 			continue;
+@@ -1866,8 +1860,7 @@ static void intel_pmu_drain_pebs_nhm(str
+ 		 * If collision happened, the record will be dropped.
+ 		 */
+ 		if (p->status != (1ULL << bit)) {
+-			for_each_set_bit(i, (unsigned long *)&pebs_status,
+-					 x86_pmu.max_pebs_events)
++			for_each_set_bit(i, (unsigned long *)&pebs_status, size)
+ 				error[i]++;
+ 			continue;
+ 		}
+@@ -1875,7 +1868,7 @@ static void intel_pmu_drain_pebs_nhm(str
+ 		counts[bit]++;
+ 	}
+ 
+-	for (bit = 0; bit < size; bit++) {
++	for_each_set_bit(bit, (unsigned long *)&mask, size) {
+ 		if ((counts[bit] == 0) && (error[bit] == 0))
+ 			continue;
+ 
+@@ -1939,7 +1932,7 @@ static void intel_pmu_drain_pebs_icl(str
+ 			counts[bit]++;
+ 	}
+ 
+-	for (bit = 0; bit < size; bit++) {
++	for_each_set_bit(bit, (unsigned long *)mask, size) {
+ 		if (counts[bit] == 0)
+ 			continue;
+ 
+@@ -1980,6 +1973,9 @@ void __init intel_ds_init(void)
+ 		char *pebs_qual = "";
+ 		int format = x86_pmu.intel_cap.pebs_format;
+ 
++		if (format < 4)
++			x86_pmu.intel_cap.pebs_baseline = 0;
++
+ 		switch (format) {
+ 		case 0:
+ 			pr_cont("PEBS fmt0%c, ", pebs_type);
+@@ -2042,8 +2038,6 @@ void __init intel_ds_init(void)
+ 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
+ 			x86_pmu.pebs = 0;
+ 		}
+-		if (format != 4)
+-			x86_pmu.intel_cap.pebs_baseline = 0;
+ 	}
+ }
+ 
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -303,8 +303,8 @@ struct cpu_hw_events {
+ 	__EVENT_CONSTRAINT(c, n, m, HWEIGHT(n), 0, 0)
+ 
  /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -296,8 +301,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-                const char *uname, int depth, void *data)
- {
-        struct memblock_region *usablemem = data;
--       const __be32 *reg;
--       int len;
-+       const __be32 *reg, *endp;
-+       int len, nr = 0;
-
-        if (depth != 1 || strcmp(uname, "chosen") != 0)
-                return 0;
-@@ -306,22 +311,62 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
-        if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-                return 1;
-
--       usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--       usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+       endp = reg + (len / sizeof(__be32));
-+       while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+               usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+               usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+               if (++nr >= CRASH_MAX_USABLE_RANGES)
-+                       break;
-+       }
-
-        return 1;
- }
-
- static void __init fdt_enforce_memory_region(void)
- {
--       struct memblock_region reg = {
--               .size = 0,
--       };
-+       int i, cnt = 0;
-+       struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
-+
-+       memset(regs, 0, sizeof(regs));
-+       of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
-+
-+       for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
-+               if (regs[i].size)
-+                       cnt++;
-+               else
-+                       break;
-+
-+       if (cnt - 1 == LOW_REGION_IDX)
-+               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+                               regs[LOW_REGION_IDX].size);
-+       else if (cnt - 1 == HIGH_REGION_IDX) {
-+               /*
-+                * Two crash kernel regions, cap the memory range
-+                * [regs[LOW_REGION_IDX].base, regs[HIGH_REGION_IDX].end]
-+                * and then remove the memory range in the middle.
-+                */
-+               int start_rgn, end_rgn, i, ret;
-+               phys_addr_t mid_base, mid_size;
-+
-+               mid_base = regs[LOW_REGION_IDX].base + regs[LOW_REGION_IDX].size;
-+               mid_size = regs[HIGH_REGION_IDX].base - mid_base;
-+               ret = memblock_isolate_range(&memblock.memory, mid_base, mid_size,
-+                               &start_rgn, &end_rgn);
-
--       of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+               if (ret)
-+                       return;
-
--       if (reg.size)
--               memblock_cap_memory_range(reg.base, reg.size);
-+               memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+                               regs[HIGH_REGION_IDX].base - regs[LOW_REGION_IDX].base +
-+                               regs[HIGH_REGION_IDX].size);
-+               for (i = end_rgn - 1; i >= start_rgn; i--) {
-+                       if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+                               memblock_remove_region(&memblock.memory, i);
-+               }
-+               memblock_remove_range(&memblock.reserved, mid_base,
-+                               mid_base + mid_size);
-+       }
- }
-
- void __init arm64_memblock_init(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 294d5d8..787d252 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -110,9 +110,15 @@ void memblock_discard(void);
-
- phys_addr_t memblock_find_in_range(phys_addr_t start, phys_addr_t end,
-                                   phys_addr_t size, phys_addr_t align);
-+void memblock_remove_region(struct memblock_type *type, unsigned long r);
- void memblock_allow_resize(void);
- int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
- int memblock_add(phys_addr_t base, phys_addr_t size);
-+int memblock_isolate_range(struct memblock_type *type,
-+                                       phys_addr_t base, phys_addr_t size,
-+                                       int *start_rgn, int *end_rgn);
-+int memblock_remove_range(struct memblock_type *type,
-+                                       phys_addr_t base, phys_addr_t size);
- int memblock_remove(phys_addr_t base, phys_addr_t size);
- int memblock_free(phys_addr_t base, phys_addr_t size);
- int memblock_reserve(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index e7665cf..7130c3a 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -357,7 +357,7 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
-        return ret;
- }
-
--static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
-+void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
- {
-        type->total_size -= type->regions[r].size;
-        memmove(&type->regions[r], &type->regions[r + 1],
-@@ -724,7 +724,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
-  * Return:
-  * 0 on success, -errno on failure.
+- * Only works for Intel events, which has 'small' event codes.
+- * Need to fix the rang compare for 'big' event codes, e.g AMD64_EVENTSEL_EVENT
++ * The constraint_match() function only works for 'simple' event codes
++ * and not for extended (AMD64_EVENTSEL_EVENT) events codes.
   */
--static int __init_memblock memblock_isolate_range(struct memblock_type *type,
-+int __init_memblock memblock_isolate_range(struct memblock_type *type,
-                                        phys_addr_t base, phys_addr_t size,
-                                        int *start_rgn, int *end_rgn)
- {
-@@ -784,7 +784,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
-        return 0;
- }
-
--static int __init_memblock memblock_remove_range(struct memblock_type *type,
-+int __init_memblock memblock_remove_range(struct memblock_type *type,
-                                          phys_addr_t base, phys_addr_t size)
- {
-        int start_rgn, end_rgn;
-
-
-Thanks,
-Chen Zhou
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
-
+ #define EVENT_CONSTRAINT_RANGE(c, e, n, m) \
+ 	__EVENT_CONSTRAINT_RANGE(c, e, n, m, HWEIGHT(n), 0, 0)
+@@ -672,12 +672,12 @@ struct x86_pmu {
+ 			pebs_no_xmm_regs	:1;
+ 	int		pebs_record_size;
+ 	int		pebs_buffer_size;
++	int		max_pebs_events;
+ 	void		(*drain_pebs)(struct pt_regs *regs);
+ 	struct event_constraint *pebs_constraints;
+ 	void		(*pebs_aliases)(struct perf_event *event);
+-	int 		max_pebs_events;
+ 	unsigned long	large_pebs_flags;
+-	u64		force_gpr_event;
++	u64		rtm_abort_event;
+ 
+ 	/*
+ 	 * Intel LBR
