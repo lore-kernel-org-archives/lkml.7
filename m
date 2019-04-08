@@ -2,141 +2,110 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086A6C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3B0C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65E020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B073720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1vFD2Xt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7KEP9QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfDHSBP (ORCPT
+        id S1728865AbfDHSCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:01:15 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39279 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfDHSBP (ORCPT
+        Mon, 8 Apr 2019 14:02:13 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:45608 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHSCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:01:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n9so3648808edt.6;
-        Mon, 08 Apr 2019 11:01:14 -0700 (PDT)
+        Mon, 8 Apr 2019 14:02:13 -0400
+Received: by mail-lj1-f172.google.com with SMTP id y6so12091684ljd.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:02:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JzhYpQwzM8UmI2HqYGyqYI08FOU/Qjd+eHIpOz9l9Kc=;
-        b=G1vFD2XtE9C62egRs0KG2mAI4iw4Mut0vYFiqR3sGLB1tCyzGFkgqZpME5KjyYjjXM
-         HSW56Jn4NJFvFklZK117lqifSCw9nBn0+RmGMBDssof4OD7no5NRFn4xsuYJ33Jf/R3b
-         a9qQW8WjCTI4HlcExhzyE057pKT9ifhs49xH8SSVvpvGGZE8XOiRB82MeV+kwXY8hwnp
-         ijlT/9bNULzToEYXvyxHG/hNtYK3s6HVORsYLzkXQk8+WwcdqIBJoWj36yam126CZSvo
-         4XybsgBWnEaJXY41rI3MFvytOOu/kZRiprdryvPNQ9Saz/zlHB/u2j/X5w/ZPqDX1mjX
-         Hu/Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=6bbuR8C3x8MUlfeHcaWD28nd2nJbIahx7Rl+ufwOamU=;
+        b=F7KEP9QKv7v1o44kC959NumzGP76m5rMCwBwsTlbvmKgQ+G8tgTWR+bd83Xyjm/fPD
+         HKdVxunhdQqhdz28Z/HRhZueEihudwtfukSePZk1/H3S9SenwqwG6SJDW6/g8Jm14qX3
+         FqX/y6ArZjLAR3sbaL0Eat/haEpKRMp3CKV8l8CfW1+5RAzrRs8dTv3vk3SrnqvlOnQR
+         v3FUP6HR36YiU9GAqrfpQC6ZNV+QLuyOwI+5BHats59VHhZjx0Yvx2jMOWJrbF2g39qJ
+         GQvnInFDY4ffKlukVUvUqiyhOzc2C5Oc1E5wnU/cpkzR5ELcpgLaIumXYrp7OgYgTL5K
+         b3GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JzhYpQwzM8UmI2HqYGyqYI08FOU/Qjd+eHIpOz9l9Kc=;
-        b=rhiqOKLgikaELr/WsB06ZnxqSosAAedWeDQvgeOS3L2F+aylednY9co2o5+HtXNjn8
-         x6MnTKj1WxpztmaChy7P9CO5dAFcYG2NiUXMtqCx3QTTTPeYeWs8n8s/yFHYMZLDKffW
-         y7hzfQPs7M82/J1uPHUQrPy0/o4+3iSo2zRqQpy/Hj3RwcSRlqTO9ZlLGq2BjWOU1OT6
-         swdLh/EfCjbeoDQqi1C+PXTVMMtSF3ciYE/aR0S2tMrAzK/nacKKLCXE25YalWj2rFMD
-         vmG8itccNJK5gmFiwBgB9PzkOet++QbJ0pdraw8Jq9wRc/NYGI9ZefAvXaUTH7SMxia7
-         K5iw==
-X-Gm-Message-State: APjAAAVqurt6KzMpNrfUkEUlsqXqd2VMFIupV6H+Obv6SeAHqYV+TZ+U
-        m4A/iIWPl8vMlASmjMyePUc=
-X-Google-Smtp-Source: APXvYqxU/cfCR+VAcF1LmJNvOmWNwqUBbgxTUwHXm1ykWHE0+cwnCdW6gLCU+GjZgQkj3y1eBFWw4g==
-X-Received: by 2002:a17:906:4c95:: with SMTP id q21mr9581194eju.14.1554746473259;
-        Mon, 08 Apr 2019 11:01:13 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id m12sm1064764edi.3.2019.04.08.11.01.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Apr 2019 11:01:12 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 11:01:10 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     jesper.nilsson@axis.com, lars.persson@axis.com,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@axis.com
-Subject: Re: [PATCH -next] pinctrl: artpec6: Make two functions static
-Message-ID: <20190408180110.GA15199@archlinux-ryzen>
-References: <20190321150909.3576-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321150909.3576-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6bbuR8C3x8MUlfeHcaWD28nd2nJbIahx7Rl+ufwOamU=;
+        b=K03sLItFUEfWZGks9oUf9j03qqhWHNRDaYtkAPL1YFemvKZUz7Sr0cTv9SVHiMWyQQ
+         IpsRCaltWZybAPazuYPIdCXqeAC+16VNlJ5xr/1meR1IZfdQNcQ4mxgGkdB+RNCb2juh
+         vDbt6K5NReS+zKFMSs9KZ2LZUvR4a6n8ak5jsPoh912y/ibxKrsS0+W5Uvu6ongj1Tww
+         0DLSnnUhtiP6M2d0lmqHq26T8IqHBGC8q0fvq1H53nqhFZI9gIJFARCEtnIZJQYSjItk
+         dzPRyxlaEBlceXkN7U7klKfl3+6voffb2va5l9GLj5SoL49e+mW/8+NWwhEEouE1S8cD
+         Yplg==
+X-Gm-Message-State: APjAAAWCuTyM6vWaNUecw2UwbRBxeu7vuGnIWr5M6S66u1IU8RjA3DTo
+        mvOaRaD39zovLresgcPHBrwbTXC8
+X-Google-Smtp-Source: APXvYqyaQcu0ZnzMYCoTh9XeDoSqz1ouYa5Q3uOzQrcsxesbJN0ZVicUW9RSJw9eTCwWmKPE5qiZFQ==
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr16437684lje.22.1554746530923;
+        Mon, 08 Apr 2019 11:02:10 -0700 (PDT)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id n2sm6130051lfe.71.2019.04.08.11.02.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 11:02:08 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/4] xtensa fixes for v5.1-rc5
+Date:   Mon,  8 Apr 2019 11:01:46 -0700
+Message-Id: <20190408180146.20202-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:09:09PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warnings:
-> 
-> drivers/pinctrl/pinctrl-artpec6.c:691:5: warning:
->  symbol 'artpec6_pmx_enable' was not declared. Should it be static?
-> drivers/pinctrl/pinctrl-artpec6.c:705:6: warning:
->  symbol 'artpec6_pmx_disable' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pinctrl/pinctrl-artpec6.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
-> index d89dc43..e836850 100644
-> --- a/drivers/pinctrl/pinctrl-artpec6.c
-> +++ b/drivers/pinctrl/pinctrl-artpec6.c
-> @@ -688,8 +688,9 @@ static void artpec6_pmx_select_func(struct pinctrl_dev *pctldev,
->  	}
->  }
->  
-> -int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
-> -		       unsigned int group)
-> +static int artpec6_pmx_enable(struct pinctrl_dev *pctldev,
-> +			      unsigned int function,
-> +			      unsigned int group)
->  {
->  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
->  
-> @@ -702,8 +703,9 @@ int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
->  	return 0;
->  }
->  
-> -void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
-> -			 unsigned int group)
-> +static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
-> +				unsigned int function,
-> +				unsigned int group)
+Hi Linus,
 
-On arm32 allyesconfig:
+please pull the following batch of fixes for the xtensa architecture:
 
-drivers/pinctrl/pinctrl-artpec6.c:706:13: error: unused function
-'artpec6_pmx_disable' [-Werror,-Wunused-function]
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-This is the second time you've introduced an unused function warning by
-making a function static[1], could you please be a little more vigilant
-in your clean ups in the future?
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
-[1]: https://lore.kernel.org/lkml/20190327050126.12064-1-natechancellor@gmail.com/
+are available in the git repository at:
 
-Linus/Jesper/Lars, should this function just be deleted? I'd be happy to
-send a patch doing so if that's the right course of action.
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190408
 
-Thanks,
-Nathan
+for you to fetch changes up to ecae26fae15abb7d433557afbd15467ce1c444f5:
 
->  {
->  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
->  
-> -- 
-> 2.7.0
-> 
-> 
+  xtensa: fix format string warning in init_pmd (2019-04-04 18:45:55 -0700)
+
+----------------------------------------------------------------
+xtensa fixes for v5.1-rc5
+
+- fix syscall number passed to trace_sys_exit;
+- fix syscall number initialization in start_thread;
+- fix level interpretation in the return_address;
+- fix format string warning in init_pmd.
+
+----------------------------------------------------------------
+Max Filippov (4):
+      xtensa: use actual syscall number in do_syscall_trace_leave
+      xtensa: fix initialization of pt_regs::syscall in start_thread
+      xtensa: fix return_address
+      xtensa: fix format string warning in init_pmd
+
+ arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+ arch/xtensa/kernel/entry.S          |  6 ++++++
+ arch/xtensa/kernel/stacktrace.c     |  6 +++++-
+ arch/xtensa/mm/mmu.c                |  2 +-
+ 4 files changed, 24 insertions(+), 11 deletions(-)
+
+-- 
+Thanks.
+-- Max
