@@ -2,95 +2,93 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB41C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F675C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0421473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C62C20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KuAH1DSk"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="UQt9/PLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfDHMJF (ORCPT
+        id S1726685AbfDHMJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:09:05 -0400
-Received: from vps.xff.cz ([195.181.215.36]:56708 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfDHMJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:09:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554725342; bh=c7beZ3m7FZv9rSYonZbpUdXGje6sPNnMKBOAAW2Bwl8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KuAH1DSktdQZjlijmwd1mhIzBe9a0K0rzrtEmLamzhlWA1XLhv8w8R55emG9k+X0b
-         KWW87RPyZA09PCY4Pdja/2n5HwKvLUGi/1wx2UU/7Uka9mEAybtriVbM87buF0DXlv
-         Xys7LhecpN2MN9WkJmkay1fABMCTAQQmnlg1nocQ=
-Date:   Mon, 8 Apr 2019 14:09:01 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ziping Chen <techping.chan@gmail.com>,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com, wens@csie.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RESEND v4 3/4] ARM: dts: sunxi: Add R_LRADC support for
- A83T
-Message-ID: <20190408120901.v46rdhqvobr5vuks@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
-        mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ziping Chen <techping.chan@gmail.com>, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, wens@csie.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190327023339.25975-1-megous@megous.com>
- <20190327023339.25975-4-megous@megous.com>
- <20190408080056.lfzjxfkvs65oabuu@flea>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408080056.lfzjxfkvs65oabuu@flea>
+        Mon, 8 Apr 2019 08:09:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33585 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfDHMJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:09:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k19so7244465pgh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Hf/kpgwZ2qM6jXGMP2EvodaY2K1UQLCGs+stRQgYXmQ=;
+        b=UQt9/PLaJk0iXiPpSAPSt4vtiNKvM1BgfdUlA0HPkAazDvuOttZlGJ6Twzfqpj++Bw
+         FI2cd8wPV6H47jc8VpTSCON1L5G81ffzSuh3Rw8C/17GdHDFsqVLHIlw252Ul0ICaMC3
+         vfu+IyXXZQ/LkFQbuuHdKQR1yoUurZ/htMn9c+stkQTpQo4o5U6MBUcc4FrckTjO0x6V
+         bqTCRJKkDJCncu5jPvp+TdaCye9sD1iLytDQRvybdyMNXYCDXWs3KIzrzrMsCNchcS2W
+         xEBMsf2JGXlXxfZ2V+IZCbMt5XmdTF7abKTZbphSK/SD4skUiIhbLliF9GHuYVjmAd4j
+         oa3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Hf/kpgwZ2qM6jXGMP2EvodaY2K1UQLCGs+stRQgYXmQ=;
+        b=ezTjVT0I2YdZuZKHWv4vY0I74wtxTwDn7yH6+awPwatAFVZGC8izimVkTSd77teTDm
+         4tcONMYKPHYMyq//DtPwiD0OSNKQpkyb85cOhdi8LAhjf3u5LrFfJlwE2wEoXwSigMDv
+         YSghkv09+CM0ggLs5yRcDQeDtClyzdnwyw7xGEmaJ6MYHXE0F04NdGSweJY8wChjXD+t
+         l1UcjnGdpqXdg71OZS9zhrM67mJZ3igfgAmdA/2UFt/SJPJ5MmVCd1nqvn3jE2MIPeJy
+         rF4eseYFiYStaN/bsd1CS+Y/klVFEhU2llJHDjrkRu9Ey+ggvQHbEN4VgRedrpd68TS8
+         gceA==
+X-Gm-Message-State: APjAAAWy9G+hsyoNbIz8hYwsQ8kc3n4oCDfKB0u5HK9bpt+vdCLiC3wK
+        fJsvWT7TIvlreT1RiW36TXWWZA==
+X-Google-Smtp-Source: APXvYqyUc10mIUDtg6UMRtGdToeKyQbENT94NOiDP25oMoySOB8VeAxCuYWJXhVfWj1bfDjasdWe2w==
+X-Received: by 2002:a62:ac02:: with SMTP id v2mr29850801pfe.163.1554725386530;
+        Mon, 08 Apr 2019 05:09:46 -0700 (PDT)
+Received: from localhost.localdomain (36-239-234-159.dynamic-ip.hinet.net. [36.239.234.159])
+        by smtp.gmail.com with ESMTPSA id a17sm50006562pfj.123.2019.04.08.05.09.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 05:09:45 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Chen Feng <puck.chen@hisilicon.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/2] regulator: hi655x: Constify regulators array
+Date:   Mon,  8 Apr 2019 20:09:32 +0800
+Message-Id: <20190408120933.29945-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Maxime,
+The regulators array should never need to be modified, make it const so
+compiler can put it to .rodata.
 
-On Mon, Apr 08, 2019 at 10:00:56AM +0200, Maxime Ripard wrote:
-> On Wed, Mar 27, 2019 at 03:33:38AM +0100, megous@megous.com wrote:
-> > From: Ziping Chen <techping.chan@gmail.com>
-> >
-> > Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC.
-> > Now the driver has been modified to support it.
-> >
-> > Add support for it.
-> >
-> > Signed-off-by: Ziping Chen <techping.chan@gmail.com>
-> 
-> It's missing your SoB.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/hi655x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-
-Please add it when aplying he patch.
-
-regards,
-  Ondrej
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
+index bba24a6fdb1e..460ae70d8b04 100644
+--- a/drivers/regulator/hi655x-regulator.c
++++ b/drivers/regulator/hi655x-regulator.c
+@@ -158,7 +158,7 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	.ctrl_mask = cmask,                                      \
+ }
+ 
+-static struct hi655x_regulator regulators[] = {
++static const struct hi655x_regulator regulators[] = {
+ 	HI655X_LDO_LINEAR(LDO2, 0x72, 0x07, 0x29, 0x2a, 0x2b, 0x01,
+ 			  2500000, 8, 100000),
+ 	HI655X_LDO(LDO7, 0x78, 0x07, 0x29, 0x2a, 0x2b, 0x06, ldo7_voltages),
+-- 
+2.17.1
 
