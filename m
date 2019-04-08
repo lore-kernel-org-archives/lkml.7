@@ -2,134 +2,134 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F45C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10D9C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A7D20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750435;
-	bh=notVvlJTG7arM70zO1IahXn3Vh6K7XI155hcDHLwU1k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n0aFqlPcMdbNbQHcjQfSkcImyioVNHRlEt9MuwnrUTFYiVK2BRGbshPpMoBbTE3cX
-	 C+E1w4fX83xCwRL32D4pxPvnWJIABzBYeuSDwgoIumPTmNV0ud4DSGZet1BwDJlmhc
-	 A2LIlUXYa77nbiZH7fvBLy55tdKKuXD6doopl0KE=
+	by mail.kernel.org (Postfix) with ESMTP id 8730E20855
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lv1s5aR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfDHTHO (ORCPT
+        id S1727705AbfDHTIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41260 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:08:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55350 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHTHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:07:13 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726349AbfDHTIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:08:10 -0400
+Received: from zn.tnic (p200300EC2F07270090E7A6A2A5AE3819.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:2700:90e7:a6a2:a5ae:3819])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D51621841;
-        Mon,  8 Apr 2019 19:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750432;
-        bh=notVvlJTG7arM70zO1IahXn3Vh6K7XI155hcDHLwU1k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hZjNz2R8Q2SafNy2pkoLYE2nWy0m4FbIASaKghfokIfsFaKwWm135b33WGuSnldEW
-         7CYXzmmkAo3KSgcWkIDJo2IhJkQfUKLilHVSZKJP0qI+Q4D4L4p5G3UDWavyp0Y8j7
-         0vRWohpWd/gkv3Iqi8r+Q1GKNlKWqbaGziJ77slc=
-Received: by mail-qt1-f172.google.com with SMTP id v32so16773856qtc.10;
-        Mon, 08 Apr 2019 12:07:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAXx28VxuOg/zFVoZ5zYA6dfCRdfE8g8bf4vuyZvhmhbKEyV+5n2
-        kiwnmTKYINenORSRJBPEL1uPfiMW+P31A54Q0A==
-X-Google-Smtp-Source: APXvYqxIuKEm6QsCuMyxKSYf9DqboCj2GF7kP4seEw0UvfqWpMMSM799AJ/qdwAB1r67wOrLq/VikJCRDnYIQud5B88=
-X-Received: by 2002:a0c:b656:: with SMTP id q22mr25672380qvf.205.1554750431765;
- Mon, 08 Apr 2019 12:07:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190401080949.14550-1-narmstrong@baylibre.com>
- <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com> <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
- <5CA9CE1A.6060109@baylibre.com>
-In-Reply-To: <5CA9CE1A.6060109@baylibre.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 8 Apr 2019 14:07:00 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJj4pae6AuK=HGU5GuZogFKyAbU_y7Ls_CyTcV6qXH_rg@mail.gmail.com>
-Message-ID: <CAL_JsqJj4pae6AuK=HGU5GuZogFKyAbU_y7Ls_CyTcV6qXH_rg@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali
- Bifrost GPU
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7BDFD1EC0B07;
+        Mon,  8 Apr 2019 21:08:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554750488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=SHqHYc/eOKCh+KxMIryEeLE4qmh9wDo/A0zT51iwnoI=;
+        b=lv1s5aR876KqvYn4Ga4ZSDebDnn4i4apj0A1eBbtPF7yM1D9dNscehmBoukD7vJBwujRoC
+        PURhdEPpeWDZADzChkO0kGxYLGIcZiqtlIb/hj5fu73GrsfZ/KiYfG7o2uU4oFn6rhPiwx
+        6xSDzupmXwUMiJ1nwFoMjlnNj2TgcBc=
+Date:   Mon, 8 Apr 2019 21:08:00 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Gary R Hook <ghook@amd.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Hook, Gary" <Gary.Hook@amd.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amlogic@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] x86/mm/mem_encrypt: Disable all instrumentation for SME
+ early boot code
+Message-ID: <20190408190800.GL15689@zn.tnic>
+References: <155440965936.6194.3202659723198724589.stgit@sosrh7.amd.com>
+ <alpine.DEB.2.21.1904042237020.1802@nanos.tec.linutronix.de>
+ <5dfcb133-0a0e-9e07-3774-313e30814e79@amd.com>
+ <20190408165835.GJ15689@zn.tnic>
+ <8a14050e-2516-5c0f-195d-611c6959b94b@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8a14050e-2516-5c0f-195d-611c6959b94b@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 7, 2019 at 5:17 AM Neil Armstrong <narmstrong@baylibre.com> wro=
-te:
->
-> Hi Rob,
->
-> Le 01/04/2019 13:24, Neil Armstrong a =C3=A9crit :
-> > On 01/04/2019 12:00, Steven Price wrote:
-> >> On 01/04/2019 09:09, Neil Armstrong wrote:
-> >>> Add the bindings for the Bifrost family of ARM Mali GPUs.
-> >>>
-> >>> The Bifrost GPU architecture is similar to the Midgard family,
-> >>> but with a different Shader Core & Execution Engine structures.
-> >>>
-> >>> Bindings are based on the Midgard family bindings, but the inner
-> >>> architectural changes makes it a separate family needing separate
-> >>> bindings.
-> >>>
-> >>> The Bifrost GPUs are present in a number of recent SoCs, like the
-> >>> Amlogic G12A Family, and many other vendors.
-> >>> The Amlogic vendor specific compatible is added to handle the
-> >>> specific IP integration differences and dependencies.
-> >>>
-> >>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>> ---
-> >>>  .../bindings/gpu/arm,mali-bifrost.txt         | 92 +++++++++++++++++=
-++
-> >>>  1 file changed, 92 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bi=
-frost.txt
-> >>>
-> >>> Changes since v3:
-> >>> - Added note about discoverable model/revision
-> >>> - Enforced fixed defined irq order
-> >>> - Fixed typo in accommodate
-> >>>
-> >>> Changes since v2:
-> >>> - moved to a single compatible since HW is fully discoverable
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.t=
-xt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> >>> new file mode 100644
-> >>> index 000000000000..711c9ead17a2
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> >>> @@ -0,0 +1,92 @@
-> >>> +ARM Mali Bifrost GPU
-> >>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> +- compatible :
-> >>> +  * Since Mali Bifrost GPU model/revision if fully discoverable by r=
-eading
-> >>                                              ^^
-> >> s/if/is/
->
-> Should I still send a v5 to fixing this typo ? I can fix it while applyin=
-g it.
+On Mon, Apr 08, 2019 at 06:41:30PM +0000, Gary R Hook wrote:
+> Again, not arguing. I completely understand. However, to be fair, this 
+> isn't about SME having trouble with those facilities, this is about 
+> using certain features (e.g. command line option processing) early in 
+> the boot. Any complex feature could have had that requirement, don't you 
+> think?
 
-No need to resend. I planned to apply it, but if you are going to:
+Sure, but then why do we need that patch at all then? Why do we need to
+disable instrumentation for SME early code and not for other early code?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I mean, if you grep around the tree you can see a bunch of
+KASAN_SANITIZE but in lib/ we only have
+
+lib/Makefile:210:KASAN_SANITIZE_stackdepot.o := n
+
+which is special. But the rest of the generic code in lib/ or
+arch/x86/lib/ isn't.
+
+Now, there's this:
+
+arch/x86/boot/Makefile:12:KASAN_SANITIZE                        := n
+arch/x86/boot/compressed/Makefile:20:KASAN_SANITIZE                     := n
+
+which disables KASAN for all boot code.
+
+And this is what you mean - all early boot code should not be sanitized.
+
+Which also gives the right solution, IMO:
+
+cmdline.o should not be sanitized only when used in the boot code. But
+that is already the case.
+
+So why do you need to disable KASAN for arch/x86/lib/cmdline.c?
+
+Because for those two:
+
+arch/x86/boot/cmdline.c
+arch/x86/boot/compressed/cmdline.c
+
+that should already be the case due to the Makefile defines above.
+
+> Right. My goal was to get a conversation started, because folks are
+> running into this problem when KASAN is enabled.
+
+You say KASAN. Why is there KCOV_INSTRUMENT_cmdline.o too?
+
+> N.B. Here's another facet of this problem: cmdline.c doesn't (today) 
+> contain anything that would trigger the stack protector. However, it's 
+> possible to enable the stack protector globally when building, right? In 
+> which case, a boot would fail, so we have the same issue: early boot 
+> code has special requirements / restrictions.
+
+How so?
+
+This .config boots here in a vm just fine.
+
+$ grep STACKPROT .config
+CONFIG_CC_HAS_SANE_STACKPROTECTOR=y
+CONFIG_HAVE_STACKPROTECTOR=y
+CONFIG_CC_HAS_STACKPROTECTOR_NONE=y
+CONFIG_STACKPROTECTOR=y
+CONFIG_STACKPROTECTOR_STRONG=y
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
