@@ -2,84 +2,119 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F12BC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AFBC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7D020870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D2220870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfDHJoU (ORCPT
+        id S1726629AbfDHJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:44:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53356 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfDHJoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:44:19 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C79AE5944C;
-        Mon,  8 Apr 2019 09:44:19 +0000 (UTC)
-Received: from localhost (ovpn-116-217.ams2.redhat.com [10.36.116.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF1DE1A7E9;
-        Mon,  8 Apr 2019 09:44:16 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 10:44:16 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
- throughput
-Message-ID: <20190408094416.GQ15001@stefanha-x1.localdomain>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
- <a98d194d-e257-41ff-82e7-de2d16d2f4d4@redhat.com>
+        Mon, 8 Apr 2019 05:48:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39127 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfDHJsy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 05:48:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n25so13954357wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:48:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UWzgzqojHlzhBQpoBT8JJBX9Ik93dbuiaaHMtSwyoKE=;
+        b=Jd8bs0+jQgVitIZYkTCgMlAlK+gU+Jh2pzkU6GS3fQoanaYIjKDq9IqxwA9D5/yjMT
+         HyZo9eDtlQUazSEgVbbYEiA0arQ/NKTYgEDZiMl0x3vqCnv39VTPB7F75iOiLfmHGbnQ
+         8NmvFKayBwM9xhkF1jEbFg8IUfBklFigFsYwzRVzHnPcyUtsJc7Co1KUtRRAQncArcWJ
+         +pl/CnTMt9VXSAo9raGxukevmtX4eVWINqukZuJWMuIDyy7Ow4in1cZCbIwgLmZCAiER
+         151pSys02Kt/N2QuMVhkDwwjsSuNoqBFHFWDGfF4fX7vUiHWw7wwwGF16VPQSHxE6dQT
+         GdJA==
+X-Gm-Message-State: APjAAAVT97rUA3j6K72+ydQQJPjGrKCzPzCE9nLBFUsiaosZfuIYLDGy
+        MRZRQj9dGctIMSHhJR4ZE7Q+fw==
+X-Google-Smtp-Source: APXvYqzkUKQ9tZlOiETSg7fL/ldhK7fqi71auJkohhvpjCpZCYSpG5wxq8MX5H3OKy313mGJwVkq1g==
+X-Received: by 2002:a1c:6588:: with SMTP id z130mr17333713wmb.39.1554716932354;
+        Mon, 08 Apr 2019 02:48:52 -0700 (PDT)
+Received: from t460s.bristot.redhat.com ([193.205.81.200])
+        by smtp.gmail.com with ESMTPSA id 204sm19868344wmc.1.2019.04.08.02.48.50
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 02:48:51 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] trace,x86: Add external_interrupts to the
+ irq_vectors class
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+References: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
+ <alpine.DEB.2.21.1904052314410.1802@nanos.tec.linutronix.de>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <7912cfa4-cd20-c764-2a36-32d3853066be@redhat.com>
+Date:   Mon, 8 Apr 2019 11:48:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sBcizk6cgRZY6rnJ"
-Content-Disposition: inline
-In-Reply-To: <a98d194d-e257-41ff-82e7-de2d16d2f4d4@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 08 Apr 2019 09:44:19 +0000 (UTC)
+In-Reply-To: <alpine.DEB.2.21.1904052314410.1802@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/5/19 11:15 PM, Thomas Gleixner wrote:
+> On Mon, 1 Apr 2019, Daniel Bristot de Oliveira wrote:
+> 
+>> Currently, the irq_vectors is showing the entry and exit events for
+>> the interrupts of the architecture, but not for external interrupts.
+> 
+> Those are covered by the irq tracepoints. Is there a really good reason why
+> we need both?
 
---sBcizk6cgRZY6rnJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The irq_handler_* tracepoints might give the "imprecise" idea that more than one
+interrupts were raised when we have shared handlers. For instance:
 
-On Mon, Apr 08, 2019 at 02:43:28PM +0800, Jason Wang wrote:
-> Another thing that may help is to implement sendpage(), which will greatly
-> improve the performance.
+------------ %< ----------------
+f-892   [000] d.h.   790.617251: external_interrupt_entry: vector=37
+f-892   [000] d.h.   790.617257: irq_handler_entry: irq=11 name=uhci_hcd:usb3
+f-892   [000] d.h.   790.617343: irq_handler_exit: irq=11 ret=handled
+f-892   [000] d.h.   790.617343: irq_handler_entry: irq=11 name=uhci_hcd:usb4
+f-892   [000] d.h.   790.617349: irq_handler_exit: irq=11 ret=unhandled
+f-892   [000] d.h.   790.617350: irq_handler_entry: irq=11 name=qxl
+f-892   [000] d.h.   790.617360: irq_handler_exit: irq=11 ret=handled
+f-892   [000] d.h.   790.617387: external_interrupt_exit: vector=37
+------------ >% ----------------
 
-I can't find documentation for ->sendpage().  Is the idea that you get a
-struct page for the payload and can do zero-copy tx?  (And can userspace
-still write to the page, invalidating checksums in the header?)
+In this case, a single interrupt occurrence (vector 37) caused two handlers to
+handle their interrupt.
 
-Stefan
+From a latency analysis perspective, the external_interrupt_* tracepoints turn
+clearer that a single interrupt interfered in the thread execution happened, not
+two separated executions of the same vector.
 
---sBcizk6cgRZY6rnJ
-Content-Type: application/pgp-signature; name="signature.asc"
+The outer-most tracepoints also help to have a more precise accounting of the
+interference:
 
------BEGIN PGP SIGNATURE-----
+Using the sum of the irq_handler_* tracepoints we have:
+(790.617343−790.617257)+(790.617349−790.617343)+(790.617360−790.617350) = 102 us
 
-iQEcBAEBAgAGBQJcqxfvAAoJEJykq7OBq3PIpPEIAIPydRh9MmTxWJHiLCIdcVZB
-YTFjrwJFHuWU1MSyz9onJyJxcranVbekSDh+RaESeGRrg1xSyNZBqqwNUfzm23XP
-jQv1xTzq9qCC6ZB81lHgFclJjT5h1/KFVKzG3Wv2dMffDW+7/Y54wOdvPsYGIQdh
-ZaeT3vH1BIoIz9xA7Ajt1H3p4XjqCQyOc8LPXzHi11zpg+UgEV6AIbSNq2hjEOuK
-1n4tJ/tRaGVsrhfHcg65GzY3mA/z4X6xfpw+dgZ5ZlWRKqfqNbFr4q8Sxpwla3DF
-aGElG+Dsc/4SkbOLzD4WfN+JmM/pvsk1pH6RMb/OHlaD9K6fMDlL9cliH2ovmY8=
-=y3qN
------END PGP SIGNATURE-----
+While using the irq_vector based one:
+ 790.617387-790.617251 = 136 us
 
---sBcizk6cgRZY6rnJ--
+So, the proposed tracepoints help clarify the logical sequence of the interrupt
+handling, while increasing the precision of the measurements.
+
+Thoughts?
+
+-- Daniel
+> Thanks,
+> 
+> 	tglx
+> 
+
