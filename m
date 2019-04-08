@@ -2,216 +2,97 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D3C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729DDC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921C220880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kYBqsms4"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB6120880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbfDHQyH (ORCPT
+        id S1729074AbfDHQzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:54:07 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37990 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728995AbfDHQyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:54:07 -0400
-Received: by mail-it1-f196.google.com with SMTP id f22so194161ita.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iTUAGD6lWza4tKmi+pA/GqOUIGhro2T5N3WoQ+3jgyE=;
-        b=kYBqsms4GyP2kEAhIkWfhkPdLjMOxT9glTqJSYGlAbP7WcJXOaCvc6t9QIZ6wcM/h+
-         Qu+uCoLvLKjC/sCtJxRMpHTrTYUFOrukcPgGjkY+8VfYBMIY2TgAB3otfGn4aC3yZ+oL
-         MNXXtIGNuFb6z3lEeErFuntZ/f301f5F0+xqNx0L/Sen9u9uVMNnZrs24Ievi7yZpNGb
-         Ny5RZ2sm06AkR2RhI4yg2Jp5aqBMKq0l7wNiLpFsVssB417UzE0xLdjZ9tc6TtUYsBfU
-         SLTh9Khpk6nmhGl8/y24ZvS0H2gyN3BA8/3EgJCJ/Ey8E4AhSS3LLQUbE/yEfHnn9Q2p
-         rTjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iTUAGD6lWza4tKmi+pA/GqOUIGhro2T5N3WoQ+3jgyE=;
-        b=r/3iLtZhxfgJs3bvCBWwDpdTlmDKOps8aOVSYd/OBcLSaVLiJSIB+zBsvyL9kxOyGn
-         4dOohIVz5KrqLv1zkz6E2Nz2bndboj73oUUPJjm3CGOrzXj8SfT98B8/ULAkxXZbhFsm
-         UV09MscXgOgVQrHoWPu2PMPoDcZPqJ2IL2SoamiEklgFKhxgnVWGZSbzWftXpL/7pTJw
-         ws80SnCJo5jRtk/FcA5VxeEqrgAgF4jdmr5h3Rl6cqq97YbXt92a0W5f9TnGqirQG1U6
-         5giBbGA6vYMF1UNyX/27gI4e8EXM97PCGv7i2S2fd8MUSJ51VIW/i0PnlBpHX7AS8/Hc
-         jfeQ==
-X-Gm-Message-State: APjAAAX969QVMcMBRTUVILnV2ypQXuSli8RQ3OFJ0p2KLmX1A/Q5e1O2
-        aHP5HTq8wUWsG5ZzOXUCGuqW5tDz0T36g9nFswPk9w==
-X-Google-Smtp-Source: APXvYqwhR7r2iesmJKfaZ5pzDBLjiuEOFOIWt+OZN+p6wrtIl5MqoLcyYSMvgkRg01f0pg4JSLSopohg+83+pWqDW2U=
-X-Received: by 2002:a24:7c9:: with SMTP id f192mr2921343itf.97.1554742446016;
- Mon, 08 Apr 2019 09:54:06 -0700 (PDT)
+        Mon, 8 Apr 2019 12:55:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54764 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbfDHQzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:55:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 09:55:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
+   d="scan'208";a="162465007"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2019 09:55:52 -0700
+Date:   Mon, 8 Apr 2019 09:55:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: fix warning Using plain integer as NULL pointer
+Message-ID: <20190408165551.GD25880@linux.intel.com>
+References: <20190406093658.GA7438@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com> <CAKOZuetS6Bg0ubxQgCBKVKeWOzuwH_C=nCRn-OPmHYJvs6sybQ@mail.gmail.com>
-In-Reply-To: <CAKOZuetS6Bg0ubxQgCBKVKeWOzuwH_C=nCRn-OPmHYJvs6sybQ@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 8 Apr 2019 09:53:54 -0700
-Message-ID: <CAOesGMi++NMi-60smmd9f+P4C1d9oQiz-hS6QWa6ViqzqJrfBA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190406093658.GA7438@hari-Inspiron-1545>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 9:37 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Mon, Apr 8, 2019 at 9:29 AM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Mar 20, 2019 at 9:31 AM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > Introduce in-kernel headers and other artifacts which are made available
-> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > > it possible to build kernel modules, run eBPF programs, and other
-> > > tracing programs that need to extend the kernel for tracing purposes
-> > > without any dependency on the file system having headers and build
-> > > artifacts.
-> > >
-> > > On Android and embedded systems, it is common to switch kernels but not
-> > > have kernel headers available on the file system. Further once a
-> > > different kernel is booted, any headers stored on the file system will
-> > > no longer be useful. By storing the headers as a compressed archive
-> > > within the kernel, we can avoid these issues that have been a hindrance
-> > > for a long time.
-> > >
-> > > The best way to use this feature is by building it in. Several users
-> > > have a need for this, when they switch debug kernels, they donot want to
-> > > update the filesystem or worry about it where to store the headers on
-> > > it. However, the feature is also buildable as a module in case the user
-> > > desires it not being part of the kernel image. This makes it possible to
-> > > load and unload the headers from memory on demand. A tracing program, or
-> > > a kernel module builder can load the module, do its operations, and then
-> > > unload the module to save kernel memory. The total memory needed is 3.8MB.
-> > >
-> > > By having the archive available at a fixed location independent of
-> > > filesystem dependencies and conventions, all debugging tools can
-> > > directly refer to the fixed location for the archive, without concerning
-> > > with where the headers on a typical filesystem which significantly
-> > > simplifies tooling that needs kernel headers.
-> > >
-> > > The code to read the headers is based on /proc/config.gz code and uses
-> > > the same technique to embed the headers.
-> > >
-> > > To build a module, the below steps have been tested on an x86 machine:
-> > > modprobe kheaders
-> > > rm -rf $HOME/headers
-> > > mkdir -p $HOME/headers
-> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > cd my-kernel-module
-> > > make -C $HOME/headers M=$(pwd) modules
-> > > rmmod kheaders
-> > >
-> > > Additional notes:
-> > > (1) external modules must be built on the same arch as the host that
-> > > built vmlinux. This can be done either in a qemu emulated chroot on the
-> > > target, or natively. This is due to host arch dependency of kernel
-> > > scripts.
-> > >
-> > > (2)
-> > > If module building is used, since Module.symvers is not available in the
-> > > archive due to a cyclic dependency with building of the archive into the
-> > > kernel or module binaries, the modules built using the archive will not
-> > > contain symbol versioning (modversion). This is usually not an issue
-> > > since the idea of this patch is to build a kernel module on the fly and
-> > > load it into the same kernel. An appropriate warning is already printed
-> > > by the kernel to alert the user of modules not having modversions when
-> > > built using the archive. For building with modversions, the user can use
-> > > traditional header packages. For our tracing usecases, we build modules
-> > > on the fly with this so it is not a concern.
-> > >
-> > > (3) I have left IKHD_ST and IKHD_ED markers as is to facilitate
-> > > future patches that would extract the headers from a kernel or module
-> > > image.
-> > >
-> > > (v4 was Tested-by the following folks,
-> > >  v5 only has minor changes and has passed my testing).
-> > > Tested-by: qais.yousef@arm.com
-> > > Tested-by: dietmar.eggemann@arm.com
-> > > Tested-by: linux@manojrajarao.com
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >
-> > Sorry to be late at the party with this kind of feedback, but I find
-> > the whole ".tar.gz in procfs" to be an awkward solution, especially if
-> > there's expected to be userspace tooling that depends on this
-> > long-term.
-> > [snip]
->
-> The approaches you proposed were explored in detail on this thread and
-> other related threads.
+Nit: For future reference, wrapping the warning text with quotes in the
+     shortlog would be helpful.  I initially read it as "fix a warning by
+     using a plain integer as a NULL pointer".  E.g.:
 
-Not on this thread, but maybe on others. Since they weren't linked and
-referenced, I didn't find them. Having them summarized in the patch
-description would be a great idea.
+     KVM: x86: fix warning "Using plain integer as NULL pointer"
 
-> The tarball in proc approach is a simple,
-> pragmatic approach that allows makes a lot of scenarios Just Work
-> where they didn't before.
+On Sat, Apr 06, 2019 at 03:06:58PM +0530, Hariprasad Kelam wrote:
+> Changed passing argument as "0 to NULL" which resolves below sparse warning
 
-"My pragmatic solution, your messy hack".
+Nit: Use imperative mood to state what the patch does, as opposed to
+     talking about the change in the past tense.  That allows using past
+     tense to describe things that actually did happen in the past.  E.g.:
 
-It's an awkward solution that will now be permanently locked in due to
-the /proc interface being an ABI.
+     Pass "NULL" instead of "0" for a pointer argument when querying
+     KVM_CAP_NESTED_STATE to resolve the below sparse warning:
 
-> Approaches like a new filesystem, a
-> mountable block device, a custom debuginfo format, and so on add
-> complexity without providing concrete gains in functionality.
+> 
+> arch/x86/kvm/x86.c:3096:61: warning: Using plain integer as NULL pointer
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-It definitely provides concrete gains in functionality, in particular
-it provides a significantly less fragile way of providing the data
-such that having it out of sync with the running kernel is a lot less
-accident-prone.
+Thanks for the fix!
 
-> We'd
-> like to get this work into the tree sooner rather than later.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-That has _never_ been a good argument for picking up something that
-will need to be supported as an ABI forever.
-
-We've solved these kind of things in the past without exporting
-tarballs from the kernel. We can do it again.
-
-
-I literally didn't hear a single valid reason for why this patch
-should go in from you.
-
-
--Olof
+> ---
+>  arch/x86/kvm/x86.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 099b851..39034ec 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3093,7 +3093,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  		break;
+>  	case KVM_CAP_NESTED_STATE:
+>  		r = kvm_x86_ops->get_nested_state ?
+> -			kvm_x86_ops->get_nested_state(NULL, 0, 0) : 0;
+> +			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+>  		break;
+>  	default:
+>  		break;
+> -- 
+> 2.7.4
+> 
