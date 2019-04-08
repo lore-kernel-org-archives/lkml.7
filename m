@@ -3,72 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED7BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A1C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48ED521473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A781821473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfDHNcC (ORCPT
+        id S1726808AbfDHNcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:32:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47035 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfDHNcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:32:00 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hDUNS-0006xP-7y; Mon, 08 Apr 2019 15:31:58 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hDUNR-0006OS-NT; Mon, 08 Apr 2019 15:31:57 +0200
-Date:   Mon, 8 Apr 2019 15:31:57 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Gavin Schenk <g.schenk@eckelmann.de>, linux-kernel@vger.kernel.org,
-        t.scherer@eckelmann.de, kernel@pengutronix.de
-Subject: Re: [PATCH] MAINTAINERS / Documentation: Thorsten Scherer is the
- successor of Gavin Schenk
-Message-ID: <20190408133157.ykuprwtve7bmavbq@pengutronix.de>
-References: <20190408123208.10965-1-g.schenk@eckelmann.de>
+        Mon, 8 Apr 2019 09:32:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:26972 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfDHNcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:32:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6BB29301D680;
+        Mon,  8 Apr 2019 13:32:42 +0000 (UTC)
+Received: from localhost (dhcp-192-206.str.redhat.com [10.33.192.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F20D61001DC7;
+        Mon,  8 Apr 2019 13:32:39 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 15:32:38 +0200
+From:   Jens Freimann <jfreimann@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCH] virtio: Honour 'may_reduce_num' in vring_create_virtqueue
+Message-ID: <20190408133238.2ahk6u3k7mv7nd5g@jenstp.localdomain>
+References: <20190408123322.24086-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190408123208.10965-1-g.schenk@eckelmann.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190408123322.24086-1-cohuck@redhat.com>
+User-Agent: NeoMutt/20180716-1376-5d6ed1
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 08 Apr 2019 13:32:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+On Mon, Apr 08, 2019 at 02:33:22PM +0200, Cornelia Huck wrote:
+>vring_create_virtqueue() allows the caller to specify via the
+>may_reduce_num parameter whether the vring code is allowed to
+>allocate a smaller ring than specified.
+>
+>However, the split ring allocation code tries to allocate a
+>smaller ring on allocation failure regardless of what the
+>caller specified. This may cause trouble for e.g. virtio-pci
+>in legacy mode, which does not support ring resizing. (The
+>packed ring code does not resize in any case.)
+>
+>Let's fix this by bailing out immediately in the split ring code
+>if the requested size cannot be allocated and may_reduce_num has
+>not been specified.
+>
+>While at it, fix a typo in the usage instructions.
+>
+>Fixes: 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+>Cc: stable@vger.kernel.org # v4.6+
+>Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+>---
+> drivers/virtio/virtio_ring.c | 2 ++
+> include/linux/virtio_ring.h  | 2 +-
+> 2 files changed, 3 insertions(+), 1 deletion(-)
+>
 
-On Mon, Apr 08, 2019 at 02:32:08PM +0200, Gavin Schenk wrote:
-> Due to new challenges in my life I can no longer take care of SIOX.
-> Thorsten takes over my SIOX tasks.
-> 
-> Signed-off-by: Gavin Schenk <g.schenk@eckelmann.de>
+Reviewed-by: Jens Freimann <jfreimann@redhat.com>
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I assume it will be you who picks up this patch? I suggest waiting a bit
-for Thorsten to give his ack, then this can go in from my side.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
