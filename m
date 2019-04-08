@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF24C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11760C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCF5214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54CB214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZDdPA19"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1ITXJau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfDHPYw (ORCPT
+        id S1729076AbfDHPZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:24:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46141 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728659AbfDHPYl (ORCPT
+        Mon, 8 Apr 2019 11:25:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51280 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728782AbfDHPYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:24:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t17so16867026wrw.13;
-        Mon, 08 Apr 2019 08:24:40 -0700 (PDT)
+        Mon, 8 Apr 2019 11:24:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 4so14848848wmf.1;
+        Mon, 08 Apr 2019 08:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o/l3LkI3W5rGWEVlxH7QSopgh6fyIfDuQSQVjTcAbuE=;
-        b=GZDdPA19naT8wo9Zy7eu7rU1xIPMv/fFicXFoYhmjsMZsIzzTW6d5jtBzrXeiNqDGk
-         6EioZ+REXNSNiqEE7KbkLJAo4fVhicJxFW4uvS/AnCtiOuDrKyczToLDrI/jYaRBgweJ
-         2ZbkBOg8beqognOrj4tYVXAu89/tMbCyVzHJ+qxBGBEZsd7gb9oWz+ASsAmw+yWI0u+Q
-         /AzRdMugPDE6AMbWjQjXRP0OX4138svAcHaa2nyzLHLVj18xjHJWfaHGgWOa+Rg4pWNi
-         Ubg3gy1iAoo4cFBCdbiDC7xdQcqgmkfgSfRKfbDKLMgxKEFp9KwTkDSLaCyDPkoNsXId
-         R58Q==
+        bh=o7d9VRpeoInofCh/f8L4CRjAOhJNkNjfCgVSpQrToTc=;
+        b=p1ITXJaucJjZwfa1H+EFoV+96DZqUUfwEwR/Kb3fUJKjSXwAC9sqEGU5/h8052km+e
+         up6eGK5nix/v3RdGK507Z+UNn7z2809ELFImhmj8Vfret6GBQ3KFOAsbVXd5rJe+K9oM
+         Xq50StAPpobvdNLn7HkMm12idlK0DI5JpM6ehno7pd90suOxZCBlAK34GBW0ezlsS/Yj
+         BH9yt+AxN2KZTkUhm9C44eoFwnqErLEzheyQuA0qNKCguBxZkAvph8dLg+pOTVBxojaC
+         /YQ2GtQR9llH5xCNCKSzQ7s1t3gG2XDciaXmaVq1m03Ad97saLJp6aLLt2pJADGKpyj1
+         OORQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o/l3LkI3W5rGWEVlxH7QSopgh6fyIfDuQSQVjTcAbuE=;
-        b=gt6fIEZmMdnnpW4uBGJbo/B6YlxqeVNQpMi1bfPJig45osimVG09Y+WVK4/sVuwYsE
-         HaWHBG6SP3WI7QI9ujowhxfOTvFFPzSPCQT0cQEtXhweVuYh43UYt2n5GoPohDiwV223
-         HKMz6K7WtNbKXAZVIL2wP6dcbpGM4gJSoB2ygtg+RA+InFkFVngP56Jx3EO8Imy5GPuz
-         zGDSiPM7ijM1Ebb2twwXEdKxhPEzRQYywULz5wtrtD3T2MUPfH0pKpbV5XYF8B/4udho
-         k4Z9NKvs6HxARzAQw7qxBEDV/GPP1DZP9ZP+Ylup1OMVk5tEEU3ucrBiel/2XbW3GAD+
-         OWYg==
-X-Gm-Message-State: APjAAAXNlgJEmkgNQJrxrLquypiis2bLZnMPxf1MAR6LbUemWGr2Ky+A
-        pWh73N8Pl0pbMUi7JcgKUBs=
-X-Google-Smtp-Source: APXvYqwuUmoILY6JDjMSWG9rkBcKh8NUKy0ZDzTlqVeQ47XzFY0bkcgTnAuaXXKLfSsXsxu3u9J/nQ==
-X-Received: by 2002:adf:dc83:: with SMTP id r3mr18724495wrj.179.1554737079393;
-        Mon, 08 Apr 2019 08:24:39 -0700 (PDT)
+        bh=o7d9VRpeoInofCh/f8L4CRjAOhJNkNjfCgVSpQrToTc=;
+        b=lDM9zbTBN942MIgDfpMQnrGujfJkVwjJRm3s2BlCTVgLuQNabR7+ZzlG5zUSYuV525
+         4DayjosGBj0r759zZJQZAbNlWvbVy2D3DOY64bsP4LkQG8RJ42MbnCMJYfU6Ibr6Di90
+         IuGPcnumqHjE4dN6OoGQWjZ9w3JvdOAQZgZY5EaczTGLzG/rU6/dPYeKTiU9jhNKuy55
+         AQAPF8aZ2bQlV+R/yPVojga8u0wmqjTOzreSIjLAqNFIK+OurSiRRf941x82mrTGx2Ob
+         vMVRTxl3X/gL8Xvpmf++5pkt0YU6TALICIXSDrimM8DmiaarP83fDT2Ga3pRGHwYBVaW
+         SP3w==
+X-Gm-Message-State: APjAAAWzKujfjrPdyX4+0JGNntNAcY6OosMcvbWbXOlhcTHRNtbufKxB
+        zYzyEFUTCKa/zb2qDUa5VE0=
+X-Google-Smtp-Source: APXvYqwQ4eKNbibPinxF8T4/K1je9la+1o+ZqsPMEYWmnS5XtDvUF14Qd/X7GEAYgkEmtayn+QxC3w==
+X-Received: by 2002:a7b:c14c:: with SMTP id z12mr17445153wmi.138.1554737074593;
+        Mon, 08 Apr 2019 08:24:34 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id o12sm32137298wrx.92.2019.04.08.08.24.38
+        by smtp.gmail.com with ESMTPSA id o12sm32137298wrx.92.2019.04.08.08.24.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:24:38 -0700 (PDT)
+        Mon, 08 Apr 2019 08:24:33 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -64,9 +64,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 6/6] arm64: dts: allwinner: h6: pine64: Add PIO regulators
-Date:   Mon,  8 Apr 2019 17:27:55 +0200
-Message-Id: <20190408152755.17405-7-peron.clem@gmail.com>
+Subject: [PATCH v4 2/6] dt-bindings: vendor-prefixes: add AZW
+Date:   Mon,  8 Apr 2019 17:27:51 +0200
+Message-Id: <20190408152755.17405-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190408152755.17405-1-peron.clem@gmail.com>
 References: <20190408152755.17405-1-peron.clem@gmail.com>
@@ -78,48 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PIO regulators for Pine64 board.
+Shenzhen AZW Technology Co. Ltd. is a manufacturer specialized in Android
+smart TV boxes, Intel mini PCs and home cloud TV boxes with NAS.
+
+Add the vendor prefix for AZW.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts   | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..6f2d9adf4f10 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -127,6 +127,12 @@
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pc-supply = <&reg_bldo2>;
-+	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_bldo2>;
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
-@@ -247,6 +253,17 @@
- 	};
- };
- 
-+&r_pio {
-+	/*
-+	 * PL0 and PL1 are used for PMIC I2C
-+	 * don't enable the pl-supply else
-+	 * it will fail at boot
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo1>;
-+	 */
-+	vcc-pm-supply = <&reg_bldo2>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 208889476a38..4933403c4b57 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -54,6 +54,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
+ avnet	Avnet, Inc.
+ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
++azw     Shenzhen AZW Technology Co., Ltd.
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
+ bitmain	Bitmain Technologies
 -- 
 2.17.1
 
