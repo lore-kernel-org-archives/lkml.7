@@ -2,110 +2,164 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A687DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C882147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DB72147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tGMBSHPM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pqk/oe+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfDHNRi (ORCPT
+        id S1726579AbfDHNTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:17:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39524 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfDHNRi (ORCPT
+        Mon, 8 Apr 2019 09:19:30 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35095 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfDHNT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:17:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t28so15280495qte.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 06:17:37 -0700 (PDT)
+        Mon, 8 Apr 2019 09:19:29 -0400
+Received: by mail-it1-f196.google.com with SMTP id w15so20890026itc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 06:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dQ1SL9x4bZEYJy4r8vMymO8S+vKZHanfiXAqd5yNVlg=;
-        b=tGMBSHPMKldELijf7ebfUlxeeTeLrmGlAS+GT3x9k22hlFNOefudwLsOJx77cQ2zsU
-         XC11xSxJvWxx/g+DvPTqp/8G4WASzymHnVaKllfPqqBmWkVewDkjRg7EUAwQ4BwMEnek
-         C1qXrzW/ZIiP6VHcqJYgvhz1eim3v/0aGSLlNPyaN70cNdNdVJVZNAJnvr4nF06KISIM
-         ScDscYVVw3QXzS7iMbLH7H38VkMo9hrotMWyQ0B16321feot7yXACtuM/YU6ounkokuP
-         g5OGfx0I6eoOMS4dx9aOxSKDB1VWlkwNFdd3gzGRv3+7OkgRtm4tC1OHjeNCcPWX/Iql
-         rfqQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q59Z/HXo+KS0BoALFM5gu0DWchqCS112R+ex2Vjmfcs=;
+        b=Pqk/oe+lSy8kBIXfVarUwTmD2Vo/YxDl5w8LnKR2G56RGvFaGMpT1S7GyxFOCIrXvt
+         ZQt+TYh3Hh19mu2ztUz1kcKhA0ONWYEu2bIU06G/Op12U+zUJ5ckkVTlowyB6FliQPgu
+         IpWsoxFhtjE8YWgJ2RHtTNbsk2yb1551+bR3L4GOagThHVhDkjvA8jab6uP9nT0DlXes
+         4NG76mJXKKnlm0+uMTAEughQRFGbHA6wbMrPkhxnznN3yO2mcfibyAbKXS/ynphVRTH0
+         tL3NWeymIvRf23bzsJe30AZ9psj4JdsqJrmHlj+Ly5HXCTZ7EA0MioMKaYMNBFG6xxSo
+         TUMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dQ1SL9x4bZEYJy4r8vMymO8S+vKZHanfiXAqd5yNVlg=;
-        b=kJb9wmpoMuwaCsC7FWBCJuPLH7egLWdZMtsX3yw3kH5p/PNqJOy7rUS7v+Jtz5I3Ai
-         hsY5MHOYgbvKzltCDMVpWHEqMY11LZ0Hi7K20fOXsz2o10ssWgcJMpVaQs7G7siZTSxv
-         /bSSt3CEvISMQLU492fXfNBsnwNKa9uBc+gHcSbN1iuoe/txnSm5KJaMfnOS66mkdFyu
-         l7XdNelD4XFZFHqphNiMwnWAJFuNj8b6yqLck0TGk21ihDutxqwbU9XGWq3V+ro5vAFP
-         s0sjUupn+g/owBhVdxL+PXCNJwuYpa52yGgc83ssVQOoGuEZzluGEmUvRWrGG4SRbRxq
-         ZitA==
-X-Gm-Message-State: APjAAAXwrXy6WJZtzpeqV4QCnBxVO6O814T26iWTcs08oBhWcTiGNy5m
-        w2BUb9a4VudTpxyChgVrfwQjWw==
-X-Google-Smtp-Source: APXvYqzU6+z7q49B2XOUsT4HgLpoMZS9GA5y3qCYOAPVfjWmMVH1tX1HnUyjNK8X3E6L7g4zrk5qEw==
-X-Received: by 2002:a0c:b78f:: with SMTP id l15mr23189216qve.160.1554729457052;
-        Mon, 08 Apr 2019 06:17:37 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n70sm19984226qkn.5.2019.04.08.06.17.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 06:17:36 -0700 (PDT)
-Message-ID: <1554729454.26196.44.camel@lca.pw>
-Subject: Re: [PATCH] slab: fix a crash by reading /proc/slab_allocators
-From:   Qian Cai <cai@lca.pw>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, penberg@kernel.org,
-        David Rientjes <rientjes@google.com>, iamjoonsoo.kim@lge.com,
-        Tejun Heo <tj@kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Date:   Mon, 08 Apr 2019 09:17:34 -0400
-In-Reply-To: <CAHk-=wgr5ZYM3b4Sn9AwnJkiDNeHcW6qLY1Aha3VGT3pPih+WQ@mail.gmail.com>
-References: <20190406225901.35465-1-cai@lca.pw>
-         <CAHk-=wgr5ZYM3b4Sn9AwnJkiDNeHcW6qLY1Aha3VGT3pPih+WQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q59Z/HXo+KS0BoALFM5gu0DWchqCS112R+ex2Vjmfcs=;
+        b=or1uFdiCd5M3Swbu4RxiARPPPXWsUqwWFKDXecKjoBXFW64j35eqj6dxA3XFWF7XpV
+         4uy1lVuEPvqJ//UJRgKxEzswcQ3saSwLEKLPNelSk+PtP78unB06Xzsz5JaGPacVTB5U
+         n+IktJ7mnTVrNNsaBFgjG//v/fiW8FPKg85nc5/ywzgBgBEQ4JTlcruv4DEvQnNkD+C+
+         ig57uinQHkT10mHGp73pW55S24szMLnqnSTyN2k1Vpfne41SW5GAy/8i1jEj0On3dGqK
+         VaG46UCqZQKaJcZtrKOGv/2EgEi3vZn4K+hS9jIYuzRrfL1XZhkAP2WI3gie5acFprNp
+         MDYw==
+X-Gm-Message-State: APjAAAUCRo7l27MzjtYW5qDWJUBNHXTjUtH5fGoJ1pEH5XPB7OoCMFLA
+        atoZe8Nk7OgYTOB1EpICpYrU4//YGb/D1YFItTM=
+X-Google-Smtp-Source: APXvYqzyFBD7Wa3NYiu8c8j74waBeCYWIsMy4/6AZgg3haDpwVWNJkNOfeydrTqnEjjFbD5jOxIvBbJpe/Hb7YPIH8U=
+X-Received: by 2002:a24:78c8:: with SMTP id p191mr17636187itc.58.1554729569078;
+ Mon, 08 Apr 2019 06:19:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <9138d8e8-5390-0650-9bc3-050b869e978c@infradead.org>
+ <CAKGbVbugBGrxfHm3k7WB+FS_O-Bjj9PyKrSDteTy1sra=nd6cw@mail.gmail.com>
+ <054b9d43-cf4e-057d-132d-7c1758956595@baylibre.com> <CAKGbVbtok8RUzDqw=WShAHoiLqWLaKA8coKhcW5EPrsHCO89pA@mail.gmail.com>
+ <CAKGbVbtpNKxUDRM9nE05gBuS5jwO68wHh0Uq2NsdYX6pdFtxYw@mail.gmail.com>
+In-Reply-To: <CAKGbVbtpNKxUDRM9nE05gBuS5jwO68wHh0Uq2NsdYX6pdFtxYw@mail.gmail.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Mon, 8 Apr 2019 21:19:17 +0800
+Message-ID: <CAKGbVbuT84tS=H9BeOC7OQ8usopqcYjBy5hoMDTzJbCy7KJStw@mail.gmail.com>
+Subject: Re: [Lima] [PATCH -next] MAINTAINERS: mark lima mailing list as moderated
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lima@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-04-07 at 19:35 -1000, Linus Torvalds wrote:
-> On Sat, Apr 6, 2019 at 12:59 PM Qian Cai <cai@lca.pw> wrote:
-> > 
-> > The commit 510ded33e075 ("slab: implement slab_root_caches list")
-> > changes the name of the list node within "struct kmem_cache" from
-> > "list" to "root_caches_node", but leaks_show() still use the "list"
-> > which causes a crash when reading /proc/slab_allocators.
-> 
-> The patch does seem to be correct, and I have applied it.
-> 
-> However, it does strike me that apparently this wasn't caught for two
-> years. Which makes me wonder whether we should (once again) discuss
-> just removing SLAB entirely, or at least removing the
-> /proc/slab_allocators file. Apparently it has never been used in the
-> last two years. At some point a "this can't have worked if  anybody
-> ever tried to use it" situation means that the code should likely be
-> excised.
-> 
-> Qian, how did you end up noticing and debugging this?
+Oh, I'm really sorry if I did something wrong to use:
+dim push-branch drm-misc-next
+(Should the committer just use "git push" not the "dim push-branch
+drm-misc-next"?)
 
-There are some nice texts for CONFIG_SLAB Kconfig written in 2007,
+Because I found the drm-tip repo has been updated also with
+a few commits that I can't find similar ones in the history.
 
-"The regular slab allocator that is established and known to work well in all
-environments."
+Could any maintainer help with this?
 
-"tricked" me into enabling it in a debug kernel for running testing where LTP
-proc01 test case (read all files in procfs) would usually trigger the crash
-(Sometimes, "cat /proc/slab_allocators" would just end up printing nothing).
+Thanks,
+Qiang
 
-Normally, all those debug kernels would use CONFIG_KASAN which would set
-CONFIG_DEBUG_SLAB=n. However, there is no KASAN for powerpc yet, so it selects
-CONFIG_DEBUG_SLAB=y there, and then the testing found the issue.
+On Mon, Apr 8, 2019 at 8:40 PM Qiang Yu <yuq825@gmail.com> wrote:
+>
+> Here's a question first time I use command:
+> dim push-branch drm-misc-next
+>
+> I see it updates both drm-misc-next and for-linux-next branch, is this
+> expected? What's the difference between drm-misc-next/drm-misc-next-fixes
+> and for-linux-next/for-linux-next-fixes?
+>
+> Thanks,
+> Qiang
+>
+> On Mon, Apr 8, 2019 at 8:26 PM Qiang Yu <yuq825@gmail.com> wrote:
+> >
+> > On Mon, Apr 8, 2019 at 8:00 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> > >
+> > > On 08/04/2019 03:37, Qiang Yu wrote:
+> > > > Looks good for me, patch is:
+> > > > Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> > >
+> > > Also:
+> > > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> > >
+> > > >
+> > > > Should I apply this patch to drm-misc in this case? Or this patch will be
+> > > > submitted in other kernel tree and back merged to drm-misc?
+> > >
+> > > You can push it yourself on the drm-misc-next branch now.
+> > >
+> > > (Then you can reply to the original patch when you applied it)
+> >
+> > Thanks for the guidance. I'll push it soon.
+> >
+> > Regards,
+> > Qiang
+> >
+> > >
+> > > Neil
+> > >
+> > > >
+> > > > Regards,
+> > > > Qiang
+> > > >
+> > > > On Mon, Apr 8, 2019 at 3:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > > >>
+> > > >> From: Randy Dunlap <rdunlap@infradead.org>
+> > > >>
+> > > >> Note that the lima mailing list is moderated.
+> > > >>
+> > > >> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > > >> Cc: Qiang Yu <yuq825@gmail.com>
+> > > >> Cc: dri-devel@lists.freedesktop.org
+> > > >> Cc: lima@lists.freedesktop.org
+> > > >> ---
+> > > >>  MAINTAINERS |    2 +-
+> > > >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >>
+> > > >> --- mmotm-2019-0405-1828.orig/MAINTAINERS
+> > > >> +++ mmotm-2019-0405-1828/MAINTAINERS
+> > > >> @@ -5226,7 +5226,7 @@ F:        Documentation/devicetree/bindings/dis
+> > > >>  DRM DRIVERS FOR LIMA
+> > > >>  M:     Qiang Yu <yuq825@gmail.com>
+> > > >>  L:     dri-devel@lists.freedesktop.org
+> > > >> -L:     lima@lists.freedesktop.org
+> > > >> +L:     lima@lists.freedesktop.org (moderated for non-subscribers)
+> > > >>  S:     Maintained
+> > > >>  F:     drivers/gpu/drm/lima/
+> > > >>  F:     include/uapi/drm/lima_drm.h
+> > > >>
+> > > >>
+> > > > _______________________________________________
+> > > > lima mailing list
+> > > > lima@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/lima
+> > > >
+> > >
