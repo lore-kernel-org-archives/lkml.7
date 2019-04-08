@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC90C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F9EC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0846D20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F9720870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708617;
-	bh=T0tLjmo6PBqAU2JPUd2VK1QVa+C9wN0Y+f9LBPKeER4=;
+	s=default; t=1554708646;
+	bh=4M5EGwCPrt7E9EtK6NeVtmMxlNoR7PxH2gEq2cp9Jg0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2mMQOVboINN+3JTuk2JJPeaUWEUsTPvmmWH4VvPfl+koaipjiwIxuiJHOPE+aQ8aZ
-	 QoIAa5XJyuNExmMwJmM1fGsrb4x1F1WLa6He/1Y9d/sobv6IcwCpyfv3cisj7uTsui
-	 yXeVmT5qh8A4lGu7EEG1p0Qo+mwE/c03QHimWuuc=
+	b=wLLrnL4iKbaTT33jnYCTNgAcMnzEhAUaRRyYuG8AMVXmO1pGRwR46gNUjgwAZ6o8/
+	 9aEVmayRHyIoE2RrASNCkA6dd9rBRUDQpyqEYPSYWQoRH8payRLwsTyk67oKM5mn9d
+	 k53uxZ1cY/8W2LKKYeGb21uI7YbQwySnoobPlfw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfDHHaP (ORCPT
+        id S1726535AbfDHHao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:30:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40598 "EHLO
+        Mon, 8 Apr 2019 03:30:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41438 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfDHHaP (ORCPT
+        with ESMTP id S1725871AbfDHHao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:30:15 -0400
+        Mon, 8 Apr 2019 03:30:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VQsj8TlyqpPEUdjLgicK+e4dY7Alb6XE3coJsvJL+zU=; b=ePIDvHENjp/j
-        q+j//6YPcNNQRALot/yMMasIrZBUVjPHFqMPOKmYxAalAT/FCKVt8+8zZiRst/jV8yczJq6uTx5zV
-        9dBSe7e9emPQm+dNElyHRrpxKtfb+k2CIVZ5LaIorQ75JQ1qCILW/v7A0vFi3Djh7cTMOJLpcwdQN
-        UrrJ4=;
+        List-Archive; bh=aV/7tX/DmZrazI7qKGVZyvFjmHbgVorKqbmO4OzxlSc=; b=nMC8quD/mXY1
+        GvBDHVXsmg4cEJVd3eiPyu9peo/DS2UfR3E1hTA39k+us4P0UFYKqogL/3OEWMUy7LEloX3HPk8EK
+        jDCYHml9JHOzYV93GEYRDI9g3KyVVvmJXI2p3TL0EscoiVAOXVxTftVrqEnJuHhlGIaFwz5DfaALk
+        hvgdU=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOj9-0003uC-85; Mon, 08 Apr 2019 07:30:00 +0000
+        id 1hDOjO-0003ug-M4; Mon, 08 Apr 2019 07:30:15 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0B2BA441D3B; Mon,  8 Apr 2019 14:29:49 +0700 (+07)
+        id F0485441D3C; Mon,  8 Apr 2019 14:29:59 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, timur@kernel.org,
-        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Mark Brown <broonie@kernel.org>, Liam@sirena.org.uk,
+        Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi@sirena.org.uk, Iwai <tiwai@suse.com>,
+        arnaud.pouliquen@st.com, Olivier Moysan <olivier.moysan@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        daniel.baluta@nxp.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: imx-pcm: Switch to SPDX identifier" to the asoc tree
-In-Reply-To:  <20190405115010.28838-2-andradanciu1997@gmail.com>
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: fix sai driver name initialisation" to the asoc tree
+In-Reply-To:  <1554455951-2755-1-git-send-email-arnaud.pouliquen@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408072949.0B2BA441D3B@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:29:48 +0700 (+07)
+Message-Id: <20190408072959.F0485441D3C@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:29:59 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: imx-pcm: Switch to SPDX identifier
+   ASoC: stm32: fix sai driver name initialisation
 
 has been applied to the asoc tree at
 
@@ -92,39 +92,42 @@ to this mail.
 Thanks,
 Mark
 
-From 1c05c1ed6f4dd267a2ca30bacd63870cd5ecc860 Mon Sep 17 00:00:00 2001
-From: Andra Danciu <andradanciu1997@gmail.com>
-Date: Fri, 5 Apr 2019 14:49:51 +0300
-Subject: [PATCH] ASoC: imx-pcm: Switch to SPDX identifier
+From 17d3069ccf06970e2db3f7cbf4335f207524279e Mon Sep 17 00:00:00 2001
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Date: Fri, 5 Apr 2019 11:19:11 +0200
+Subject: [PATCH] ASoC: stm32: fix sai driver name initialisation
 
-Adopt the SPDX license identifier headers to ease license compliance
-management.
+This patch fixes the sai driver structure overwriting which results in
+a cpu dai name equal NULL.
 
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+Fixes: 3e086ed ("ASoC: stm32: add SAI driver")
+
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/imx-pcm.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ sound/soc/stm/stm32_sai_sub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
-index 133c4470acad..5dd406774d3e 100644
---- a/sound/soc/fsl/imx-pcm.h
-+++ b/sound/soc/fsl/imx-pcm.h
-@@ -1,13 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
-  *
-  * This code is based on code copyrighted by Freescale,
-  * Liam Girdwood, Javier Martin and probably others.
-- *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-  */
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 55d802f51c15..83d8a7ac56f4 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1419,7 +1419,6 @@ static int stm32_sai_sub_dais_init(struct platform_device *pdev,
+ 	if (!sai->cpu_dai_drv)
+ 		return -ENOMEM;
  
- #ifndef _IMX_PCM_H
+-	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
+ 	if (STM_SAI_IS_PLAYBACK(sai)) {
+ 		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
+ 		       sizeof(stm32_sai_playback_dai));
+@@ -1429,6 +1428,7 @@ static int stm32_sai_sub_dais_init(struct platform_device *pdev,
+ 		       sizeof(stm32_sai_capture_dai));
+ 		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
+ 	}
++	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
