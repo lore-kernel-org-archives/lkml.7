@@ -2,124 +2,132 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8C1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB5DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0E6214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD4920663
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfDHKw3 (ORCPT
+        id S1726501AbfDHKyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:52:29 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46368 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfDHKw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:52:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B121168F;
-        Mon,  8 Apr 2019 03:52:28 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A9E13F718;
-        Mon,  8 Apr 2019 03:52:25 -0700 (PDT)
-Subject: Re: [PATCH] stm class: Fix out of bound access from bitmap allocation
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mulu He <muluhe@codeaurora.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
- <fe3a301b03b84761a08d5b15962b8110@AcuMS.aculab.com>
- <dd266f56-b4ea-dc6b-eab1-50e13c820166@codeaurora.org>
- <850ba66b-0e4a-2027-5640-0ee339a7868c@arm.com>
- <2d5e435bf7b344fb835fc58ac36e1c19@AcuMS.aculab.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f3a699e5-a6c4-83f4-fff3-20515e8caa06@arm.com>
-Date:   Mon, 8 Apr 2019 11:52:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <2d5e435bf7b344fb835fc58ac36e1c19@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Apr 2019 06:54:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:31118 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfDHKyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:54:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 03:54:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
+   d="scan'208";a="147454405"
+Received: from wubinbin-desk.sh.intel.com ([10.239.143.112])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2019 03:54:11 -0700
+From:   Binbin Wu <binbin.wu@intel.com>
+To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     binbin.wu@intel.com
+Subject: [PATCH] pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
+Date:   Mon,  8 Apr 2019 18:49:26 +0800
+Message-Id: <1554720566-29103-1-git-send-email-binbin.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 11:33, David Laight wrote:
-> From: Robin Murphy
->> Sent: 08 April 2019 11:24
->> On 07/04/2019 05:31, Sai Prakash Ranjan wrote:
->>> On 4/5/2019 6:44 PM, David Laight wrote:
->>>> From: Sai Prakash Ranjan
->>>>>
->>>>> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
->>>>> index 93ce3aa740a9..21a5838f6e67 100644
->>>>> --- a/drivers/hwtracing/stm/core.c
->>>>> +++ b/drivers/hwtracing/stm/core.c
->>>>> @@ -168,7 +168,7 @@ static int stp_master_alloc(struct stm_device
->>>>> *stm, unsigned int idx)
->>>>>        struct stp_master *master;
->>>>>        size_t size;
->>>>>
->>>>> -    size = ALIGN(stm->data->sw_nchannels, 8) / 8;
->>>>> +    size = ALIGN(stm->data->sw_nchannels, STM_MASTER_SZ) /
->>>>> STM_MASTER_SZ;
->>>>
->>>> I'm not sure that using STP_MASTER_SZ improves readability at all.
->>>>
->>>
->>> I thought it was better to have a macro than directly specifying
->>> sizeof(unsigned long), anyways I can change it.
->>>
->>>> Is there something that gives the size of a bitmap for 'n' items?
->>>>
->>>
->>> Not sure if there is something.
->>
->> If you were to ask the question "how does the bitmap code itself know
->> what the total size of a bitmap is?", that would quickly lead you
->> towards BITS_TO_LONGS() ;)
->>
->> And given that stp_master::chan_map is already an appropriate type, that
->> suggests simplifying the entire calculation down to something neat and
->> tidy like:
->>
->> size = offsetof(struct stp_master, chan_map[BITS_TO_LONGS(stm->data->sw_nchannels)]);
-> 
-> Except that is invalid.
-> You can't use offsetof() with something that isn't a compile time constant.
+In current driver, SET_LATE_SYSTEM_SLEEP_PM_OPS is used to install the
+callbacks for suspend/resume.
+GPIO pin may be used as the interrupt pin by some device. However, using
+SET_LATE_SYSTEM_SLEEP_PM_OPS() to install the callbacks, the resume
+callback is called after resume_device_irqs(). Unintended interrupts may
+arrive due to resuming device irqs first, but the GPIO controller is not
+properly restored.
 
-Oh, I see the standard does actually say that, although there seem to be 
-enough non-constant uses in the kernel to suggest that it still works in 
-practice.
+Normally, for a SMP system, there are multiple cores, so even when there are
+unintended interrupts, BSP gets the chance to init the gpio chip soon.
+But when there is only 1 core is active (other cores are offlined or
+single core) during resume, it is more easily to observe the unintended
+interrupts.
 
-However, while writing the above I was still trying to remember the 
-other thing I'd seen for handling precisely this variable-sized-struct 
-situation, which I've now found again, namely struct_size(). I guess now 
-I understand why that isn't implemented in terms of offsetof(), thanks 
-for the nudge :)
+This patch renames the suspend/resume function by adding suffix "_noirq",
+and installs the callbacks using SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
 
-Robin.
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c |  8 ++++----
+ drivers/pinctrl/intel/pinctrl-intel.h | 11 ++++++-----
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 3b18181..70638b7 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1466,7 +1466,7 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
+ 	return false;
+ }
+ 
+-int intel_pinctrl_suspend(struct device *dev)
++int intel_pinctrl_suspend_noirq(struct device *dev)
+ {
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	struct intel_community_context *communities;
+@@ -1505,7 +1505,7 @@ int intel_pinctrl_suspend(struct device *dev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(intel_pinctrl_suspend);
++EXPORT_SYMBOL_GPL(intel_pinctrl_suspend_noirq);
+ 
+ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+ {
+@@ -1527,7 +1527,7 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+ 	}
+ }
+ 
+-int intel_pinctrl_resume(struct device *dev)
++int intel_pinctrl_resume_noirq(struct device *dev)
+ {
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	const struct intel_community_context *communities;
+@@ -1589,7 +1589,7 @@ int intel_pinctrl_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(intel_pinctrl_resume);
++EXPORT_SYMBOL_GPL(intel_pinctrl_resume_noirq);
+ #endif
+ 
+ MODULE_AUTHOR("Mathias Nyman <mathias.nyman@linux.intel.com>");
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
+index b8a07d37..a8e958f 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.h
++++ b/drivers/pinctrl/intel/pinctrl-intel.h
+@@ -177,13 +177,14 @@ int intel_pinctrl_probe_by_hid(struct platform_device *pdev);
+ int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
+ 
+ #ifdef CONFIG_PM_SLEEP
+-int intel_pinctrl_suspend(struct device *dev);
+-int intel_pinctrl_resume(struct device *dev);
++int intel_pinctrl_suspend_noirq(struct device *dev);
++int intel_pinctrl_resume_noirq(struct device *dev);
+ #endif
+ 
+-#define INTEL_PINCTRL_PM_OPS(_name)						  \
+-const struct dev_pm_ops _name = {						  \
+-	SET_LATE_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend, intel_pinctrl_resume) \
++#define INTEL_PINCTRL_PM_OPS(_name)					\
++const struct dev_pm_ops _name = {					\
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq,	\
++				      intel_pinctrl_resume_noirq)	\
+ }
+ 
+ #endif /* PINCTRL_INTEL_H */
+-- 
+2.7.4
+
