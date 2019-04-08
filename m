@@ -2,134 +2,116 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73873C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2FCC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F61120833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB72421473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwabJv1n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PqoQvzDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfDHKWx (ORCPT
+        id S1726620AbfDHKXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:22:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46006 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfDHKWx (ORCPT
+        Mon, 8 Apr 2019 06:23:11 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:55990 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHKXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:22:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s15so15626987wra.12;
-        Mon, 08 Apr 2019 03:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=II/MsfRha9YtyfnMSzYYK9zpAFxrnUzG9JARyw86CmI=;
-        b=IwabJv1nlo3EPBlsdD2yZz2EpyR1VgN2pCCcP5H91JdqKf1n18fPJYJE/5b/DLAnyO
-         YTiIvSer9ALLsBPfwFX+rK/v8G7/4kl8ftETXyoFCXB/wtYM++sb8BigDYvQbLM8hQrD
-         aKAFGGK5J4mqIsJ8H1SHBhjfyuRuwtjmSqbCzJMv/zjmCVfmrRktl/QgUxrhbs61x+96
-         VxDrt5mo2gv55SVHk49XAM386LFwVc/nrBxlMqum+tJ3QD31i2xNzkL8KO5S3zigbhI5
-         eEDIujw9kyUr7uu3n47/o8L9lJ2Jr4YPqkeoYapQjLq11Sh8m82zBbQ2NMcKzH8yDMFi
-         RVUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=II/MsfRha9YtyfnMSzYYK9zpAFxrnUzG9JARyw86CmI=;
-        b=JKdzbybQQFSi827TFIHeMapgiA4lnBHuoFtbhLMTFOZotfhHYj45y9DroDPEg0Vy3Z
-         OMf64VcplpXL0QZG+k7PeZLaR3oQbYAFT6kD8i+Je03KU3f118DVuVPPjzFLwmy5tANq
-         p+3xHff3QU0+8yawaWu+Ou319Js0E93j3SxLpDb4WAdpagq7M7Nl1VfGIkohNJnGJNyG
-         8DUuVeyA//sCahD23u3T/j4tmvhXVvfpidTtvRSvZ2u/M4ZhhNLnsK3bYtm6bGRiyycz
-         MqxQPkAEg8SqmN3kaoD4bfTpirvw+Kz+FkWfAUeZzAOW9yqlqisE5Kenc0z7JLeoHagk
-         vYqw==
-X-Gm-Message-State: APjAAAUG8gZQJPoYfRBjZboogk3u1LkhKZuBAmzqxx69q34ss2poo7+J
-        tWY0RnKieIVMAsR0oqUFmP4=
-X-Google-Smtp-Source: APXvYqy1UcIjuf3hRWFQ9gqCAlvchUSWpy7XLFYx4YwlTwblvZTKZUllw665l8mEALi7vRSTRLhmpA==
-X-Received: by 2002:adf:e407:: with SMTP id g7mr10526495wrm.47.1554718970979;
-        Mon, 08 Apr 2019 03:22:50 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id o1sm11403927wmh.47.2019.04.08.03.22.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 03:22:50 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:22:49 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rtc: tegra: set range
-Message-ID: <20190408102249.GC6644@ulmo>
-References: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
+        Mon, 8 Apr 2019 06:23:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554718989; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YG2rCSEWGmHwSf0TVaqngGYKpa7LURt8tfGQ+HtEtuE=;
+        b=PqoQvzDTSpHGrXTOBPg1fiebnKVNFMbLopVljXEjjz5fDkXbYRggSrJC0k1iYFCyiuy4oZ
+        32D00htHkAH1EMMH9DVbJoMnOy7tV04CW9YmVNlcBIIANltjH5bb1ZID5DSfpoo37NL62o
+        Xv6/dv6o/UDTEHQdiNGdMIvy4bTv09g=
+Date:   Mon, 08 Apr 2019 12:23:03 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery driver.
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1554718983.1893.0@crapouillou.net>
+In-Reply-To: <20190408093824.yzpd7mve6df7lpka@earth.universe>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
+        <20190323172809.14407-4-contact@artur-rojek.eu>
+        <20190324153137.04857cdf@archlinux>
+        <20190407165234.is66vmnjfc35jnho@earth.universe>
+        <1554664077.4322.0@crapouillou.net>
+        <20190408093824.yzpd7mve6df7lpka@earth.universe>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
-Content-Disposition: inline
-In-Reply-To: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 07, 2019 at 11:16:44PM +0200, Alexandre Belloni wrote:
-> The Tegra 20 RTC is a 32bit seconds counter (with an unused millisecond
-> counter).
+Le lun. 8 avril 2019 =E0 11:38, Sebastian Reichel <sre@kernel.org> a=20
+=E9crit :
+> Hi Paul,
 >=20
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-tegra.c | 24 ++++++++++++++----------
->  1 file changed, 14 insertions(+), 10 deletions(-)
+> On Sun, Apr 07, 2019 at 09:07:57PM +0200, Paul Cercueil wrote:
+>>  Hi Sebastian,
+>>=20
+>>  Le dim. 7 avril 2019 =E0 18:52, Sebastian Reichel <sre@kernel.org> a=20
+>> =E9crit :
+>>  > Hi,
+>>  >
+>>  > On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
+>>  > >  On Sat, 23 Mar 2019 18:28:09 +0100
+>>  > >  Artur Rojek <contact@artur-rojek.eu> wrote:
+>>  > >
+>>  > >  > Add a driver for battery present on Ingenic JZ47xx SoCs.
+>>  > >  >
+>>  > >  > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+>>  > >  The IIO parts look fine to me.
+>>  > >  Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>  > >
+>>  > >  Sebastian, assuming you are happy with this version,
+>>  >
+>>  > The driver itself looks ok. I'm a bit unhappy, that we already=20
+>> have
+>>  > jz4740-battery. This driver is much cleaner, but does not yet seem
+>>  > to be ready to replace it. Artur Rojek what are your plans=20
+>> regarding
+>>  > to the existing driver? Is there currently work going on migrating
+>>  > JZ47xx to DT?
+>>=20
+>>  Why do you think it's not ready? Feature-wise, it has everything we
+>>  need to replace jz4740-battery, which will be trashed as soon as the
+>>  LB60 board code is updated to use the new driver.
 >=20
-> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-> index c6b0a99aa3a9..3f93a1f7abb5 100644
-> --- a/drivers/rtc/rtc-tegra.c
-> +++ b/drivers/rtc/rtc-tegra.c
-> @@ -306,6 +306,13 @@ static int __init tegra_rtc_probe(struct platform_de=
-vice *pdev)
-> =20
->  	info->tegra_rtc_irq =3D ret;
-> =20
-> +	info->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(info->rtc_dev))
-> +		return PTR_ERR(info->rtc_dev);
-> +
-> +	info->rtc_dev->ops =3D &tegra_rtc_ops;
-> +	info->rtc_dev->range_max =3D U32_MAX;
+> jz4740-battery has a few features not provided by your driver.
+> For example the gpio providing the charging status.
 
-The placement of this new block seems somewhat arbitrary, but either
-way:
+Artur sumitted a separate patchset for this functionality:
+https://lkml.org/lkml/2019/2/26/501
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> Assuming you plan to trash the old driver soon:
+>=20
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>=20
+>>  We are working on porting the JZ47xx code to devicetree, yes. The
+>>  ultimate goal is to completely get rid of
+>>  arch/mips/jz4740/board-qi_lb60.c and arch/mips/jz4740/platform.c.
+>=20
+> Ok, sounds good.
+>=20
+> -- Sebastian
 
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
+=
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyrIPUACgkQ3SOs138+
-s6EFHA//bcDrlv65Vh810bQ+bQqBQKmZg2VMLx1IKXABdzXeKleGTHMjVs+zvkeC
-zL+p1/6J+z8Oaq2uhCFuwdZG42ZFqGb59afSg3nLp0Sn6Dl5yNrYKmW5ZOO2FmW2
-oSw72M0WUR0B8E3yL7d8eFBYnLwEPk18hwdBjke9T71DiP6UB3q1XrD53vrqZHB/
-iJhThMJoiwnhkKa/XOEidPyr1qkP8dsVttND6iEuQBK0s+y/KK+X6AcMHDK1Ng5E
-tnby4q1fXHNb4avEHp0JIk7cCdHAM7NKnxbBza7gKe0UcytRWYChvigAuP6qStgR
-/QvNPaDkQy0QNq1j0+8yvFkq+gkmIjr5CUI08ev+3Q8AOZJDq1RM4/NKPpvwKIy9
-/J8rvlATzd7YTqXc4gM1T6r/rwGdbjjvTgvR6qWq/3NfDeK5rL0MXKsrGQkcgHsE
-JJhK+vE051ltQ4OZ7VjBFfyvFsQZ4Tc3AR/9Zl7z5m5+5IwukcZnn1P83RS7uOFL
-goZfATBFgtq2hUzRrIdlXLga0CQa1KZDx0jCribeEy4H1DdW6nFG4uJPFzKrcZHf
-+gq875Wbp7of4h4pGeKs95aPwIXEyDNg05TX9EjFDc0oZUs4OXnQl4qK2WhLhNG3
-sd8uVIYu6IcEcW4ZmIGw/M5OZJEOjLcPi1ADA9DOz+3VYLXgSLU=
-=Pr/2
------END PGP SIGNATURE-----
-
---oJ71EGRlYNjSvfq7--
