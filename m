@@ -2,80 +2,125 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A766C282DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989ACC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F129E20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aoLDGG2W"
+	by mail.kernel.org (Postfix) with ESMTP id 6F82820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfDHHn0 (ORCPT
+        id S1726653AbfDHHne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:43:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39498 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfDHHnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:43:23 -0400
-Received: from zn.tnic (p200300EC2F072700703BC679E0FEC46B.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:2700:703b:c679:e0fe:c46b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C9D231EC023E;
-        Mon,  8 Apr 2019 09:43:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554709401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uMwepDwUTnY7KDF8TeqJpB3EXShixzEKqh862hFqPus=;
-        b=aoLDGG2WwZIGl+5KeyxBXy8mKkrKcvOhkPASlIxt4CAbP3nOJ2VCqL9nrylVwTg+hEYGvR
-        EAvVyObN/PZQJb6mfCybuuSthLCDOnSIO/HknNiPofPDHzWsKVhOopEXlN/8a9NekfH2Io
-        vy9HnQ3oMDW/vwydFORJZ5+nbxIGycw=
-Date:   Mon, 8 Apr 2019 09:43:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 0/5] Handle MCA banks in a per_cpu way
-Message-ID: <20190408074318.GB15689@zn.tnic>
-References: <20190407231331.52362-1-Yazen.Ghannam@amd.com>
+        Mon, 8 Apr 2019 03:43:34 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33911 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfDHHnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:43:33 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 904151C0008;
+        Mon,  8 Apr 2019 07:43:27 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 09:43:27 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
+Message-ID: <20190408074327.vvubj2sbkvfkwscv@flea>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-9-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uu57uts7ricxgi6i"
 Content-Disposition: inline
-In-Reply-To: <20190407231331.52362-1-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190405234514.6183-9-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 07, 2019 at 11:13:47PM +0000, Ghannam, Yazen wrote:
-> Yazen Ghannam (5):
->   x86/MCE: Make struct mce_banks[] static
->   x86/MCE: Handle MCA controls in a per_cpu way
->   x86/MCE/AMD: Don't cache block addresses on SMCA systems
->   x86/MCE: Make number of MCA banks per_cpu
->   x86/MCE: Save MCA control bits that get set in hardware
-> 
->  arch/x86/kernel/cpu/mce/amd.c      |  87 +++++++++---------
->  arch/x86/kernel/cpu/mce/core.c     | 138 +++++++++++++++++++----------
->  arch/x86/kernel/cpu/mce/inject.c   |   7 +-
->  arch/x86/kernel/cpu/mce/internal.h |  12 +--
->  4 files changed, 137 insertions(+), 107 deletions(-)
 
-This patchset doesn't apply cleanly. Please redo it against current
-tip/master.
+--uu57uts7ricxgi6i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thx.
+On Sat, Apr 06, 2019 at 01:45:10AM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index 91fecab58836..dccad79da90c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -238,6 +238,15 @@
+>  				bias-pull-up;
+>  			};
+>
+> +
 
--- 
-Regards/Gruss,
-    Boris.
+Extra line
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> +			mmc1_pins: mmc1-pins {
+> +				pins = "PG0", "PG1", "PG2", "PG3",
+> +				       "PG4", "PG5";
+> +				function = "mmc1";
+> +				drive-strength = <30>;
+> +				bias-pull-up;
+> +			};
+> +
+
+Is that the only muxing option?
+
+If so, then it should be assigned by default to mmc1
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--uu57uts7ricxgi6i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKr7nwAKCRDj7w1vZxhR
+xaCTAP40wF5BuAv/KQoefes5N0e4XEbG+/RosHq7h/s1hnl/gwD/c/lOEPMEspbT
+p+gNsyXohxVvUOIM+rndNYRmYYmbjAM=
+=4w6k
+-----END PGP SIGNATURE-----
+
+--uu57uts7ricxgi6i--
