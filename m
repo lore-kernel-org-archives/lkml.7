@@ -2,149 +2,86 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DFDC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFEEC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F1C20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734AC20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:06:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pURn1er1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfDHQFc (ORCPT
+        id S1729042AbfDHQGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:05:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51202 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfDHQF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:05:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E37E315AB;
-        Mon,  8 Apr 2019 09:05:28 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 236493F557;
-        Mon,  8 Apr 2019 09:05:27 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 17:05:24 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@arm.linux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH 6/7] clocksource/arm_arch_timer: Remove use of workaround
- static key
-Message-ID: <20190408160524.GR6139@lakrids.cambridge.arm.com>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
- <20190408154907.223536-7-marc.zyngier@arm.com>
+        Mon, 8 Apr 2019 12:06:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41548 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfDHQGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:06:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 188so7882765pfd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UE9ujoGUXVccfCMNHPjF9tRbGyt6CXPSmg5+WMYpY/8=;
+        b=pURn1er1A1ytab8pKzfnomujh7tKxcthslwOo+mxMKJ9WqmTtBGOT1bP4v6YO6lcGx
+         keo8qVsztm8V1HcjIX11NHQk1H5+afH8WWsTAPS2gAsEjAAFJNzOx6WIyb9jTZPzrWN2
+         /IT5JS3LemkeLSNuHMjbdbmIuXuYgLSxOrAJAu7m9o+JbkiJ/SeECSCL4oQBnJsAmqMn
+         AgRThliPMy/LSwZu9VfJ1Ho2EEAbeC0bXay9S3Dcg5Sha91bTeEVJCUlpv6m1yFQXUnW
+         HoAFQ5asarlJfmd5+396QfqQxjCPxJym7Gq1gQvl7FiPWjL+p06yREShJTJZ1JZjsAwY
+         LltQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UE9ujoGUXVccfCMNHPjF9tRbGyt6CXPSmg5+WMYpY/8=;
+        b=b+AnIfEzSDcqZtgdidmn4GMGIvjmrS4+Zi7p9T/+0GlCgCagkrIAnHGpxa6x/0kSVu
+         GlW9PdmfJ5Wuc6YKcYT4S0b0RZQPx9J7xLtFJU+bHOCtyF2jAdEtmt9ow1Df5TAEsnqk
+         Oh3ShGDFkBllr5NEeM3U8mLz1IYjAHiIPbfHNx4NVHYgtP2NYuVHx76U4X8cW2v5NNQY
+         E/H5hY9flA+84ami6q8zn1z8inRf4RkktIA0wE2xV8zPOse1U2hee7/bxwcb67PCZoSM
+         gTkKkRccK7kG4m997gFIhsAOXIj0VQS6+FxVkniEiHXtNOUsTeKTXUOg2L2ivS4oJx3t
+         FRRw==
+X-Gm-Message-State: APjAAAUbBNZnmHo8HCxZ1RGKEq3C7FS81l2vrLMdhMK4vlMPoG5S2feu
+        wpqkO2YOjrQ/OpMgA6xaHoSRkw==
+X-Google-Smtp-Source: APXvYqyXzF6yAdAmV/g+4XodIzAQunxyVQKnj6JFIq84NA0oLnqaO5XUwknSP/ltjar+g3cIDUy/Yw==
+X-Received: by 2002:a63:5b4d:: with SMTP id l13mr27912821pgm.160.1554739578313;
+        Mon, 08 Apr 2019 09:06:18 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id l184sm73646861pfc.98.2019.04.08.09.06.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 09:06:17 -0700 (PDT)
+Subject: Re: [PATCH] block, bfq: fix some typos in comments
+To:     Angelo Ruocco <angelo.ruocco.90@gmail.com>,
+        linux-block@vger.kernel.org
+Cc:     paolo.valente@linaro.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+References: <20190408153534.6312-1-angeloruocco90@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0d1ee9c5-e585-a1b9-d14a-7af1498fd14f@kernel.dk>
+Date:   Mon, 8 Apr 2019 10:06:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408154907.223536-7-marc.zyngier@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190408153534.6312-1-angeloruocco90@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 04:49:06PM +0100, Marc Zyngier wrote:
-> The use of a static key in a hotplug path has proved to be a real
-> nightmare, and makes it impossible to have scream-free lockdep
-> kernel.
-> 
-> Let's remove the static key altogether, and focus on something saner.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+On 4/8/19 9:35 AM, Angelo Ruocco wrote:
+> Some of the comments in the bfq files had typos. This patch fixes them.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Applied for 5.2, thanks.
 
-Mark.
+-- 
+Jens Axboe
 
-> ---
->  arch/arm64/include/asm/arch_timer.h  |  4 ----
->  drivers/clocksource/arm_arch_timer.c | 25 +++++++------------------
->  2 files changed, 7 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-> index 4a06d46def7e..5502ea049b63 100644
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -45,13 +45,9 @@
->  		(__wa && __wa->h) ? __wa->h : arch_timer_##h;		\
->  	})
->  
-> -extern struct static_key_false arch_timer_read_ool_enabled;
-> -#define needs_unstable_timer_counter_workaround() \
-> -	static_branch_unlikely(&arch_timer_read_ool_enabled)
->  #else
->  #define has_erratum_handler(h)			   false
->  #define erratum_handler(h)			   (arch_timer_##h)
-> -#define needs_unstable_timer_counter_workaround()  false
->  #endif
->  
->  enum arch_timer_erratum_match_type {
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index c7f5b66d893c..da487fbfada3 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -372,8 +372,6 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
->  DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
->  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
->  
-> -DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
-> -EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
->  
->  static void erratum_set_next_event_tval_generic(const int access, unsigned long evt,
->  						struct clock_event_device *clk)
-> @@ -552,12 +550,6 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
->  			per_cpu(timer_unstable_counter_workaround, i) = wa;
->  	}
->  
-> -	/*
-> -	 * Use the locked version, as we're called from the CPU
-> -	 * hotplug framework. Otherwise, we end-up in deadlock-land.
-> -	 */
-> -	static_branch_enable_cpuslocked(&arch_timer_read_ool_enabled);
-> -
->  	/*
->  	 * Don't use the vdso fastpath if errata require using the
->  	 * out-of-line counter accessor. We may change our mind pretty
-> @@ -573,7 +565,7 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
->  static void arch_timer_check_ool_workaround(enum arch_timer_erratum_match_type type,
->  					    void *arg)
->  {
-> -	const struct arch_timer_erratum_workaround *wa;
-> +	const struct arch_timer_erratum_workaround *wa, *__wa;
->  	ate_match_fn_t match_fn = NULL;
->  	bool local = false;
->  
-> @@ -597,16 +589,13 @@ static void arch_timer_check_ool_workaround(enum arch_timer_erratum_match_type t
->  	if (!wa)
->  		return;
->  
-> -	if (needs_unstable_timer_counter_workaround()) {
-> -		const struct arch_timer_erratum_workaround *__wa;
-> -		__wa = __this_cpu_read(timer_unstable_counter_workaround);
-> -		if (__wa && wa != __wa)
-> -			pr_warn("Can't enable workaround for %s (clashes with %s\n)",
-> -				wa->desc, __wa->desc);
-> +	__wa = __this_cpu_read(timer_unstable_counter_workaround);
-> +	if (__wa && wa != __wa)
-> +		pr_warn("Can't enable workaround for %s (clashes with %s\n)",
-> +			wa->desc, __wa->desc);
->  
-> -		if (__wa)
-> -			return;
-> -	}
-> +	if (__wa)
-> +		return;
->  
->  	arch_timer_enable_workaround(wa, local);
->  	pr_info("Enabling %s workaround for %s\n",
-> -- 
-> 2.20.1
-> 
