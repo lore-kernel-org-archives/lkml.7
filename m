@@ -2,182 +2,120 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48F5C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31F7C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E592148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6403A2148E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6yRtFfS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/6pMuKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfDHPP1 (ORCPT
+        id S1728799AbfDHPRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:15:27 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55056 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfDHPP1 (ORCPT
+        Mon, 8 Apr 2019 11:17:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35280 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfDHPRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:15:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so14802944wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:15:26 -0700 (PDT)
+        Mon, 8 Apr 2019 11:17:00 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y197so15189100wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=e2/ADuFbDuc+qrHFSgLHEd6L5BY2SrcoWE9e+J1+2eM=;
-        b=r6yRtFfSAF0vtzhQILmSVQskLUgjEqWqi58U1m2nJvUYA4BJY3l3awGVMlgWOKs/f/
-         0U3DTdY63n8Hs+nZur+HWqiMM4L+/V5ErXxd7cR35vxNdy/imzyc+Zi3gq0qG/RFXJVN
-         nesxjSG+Rd9rNhbQmDDTowO0oD/A5VjfkQ5bq96tRHlx+rde3C60D9D6mkPi0ZgrUBFT
-         JDCnw7DF7q1jn9b0SPJwePez074u17wcWQbbdjcUVhpP/70UQ449AK8M8vv4T8w5JX87
-         3LWVJmKJC6AOr0dXuXBd+6gQXnf4T/24MhYiLwUl7jeqW7uHpkaNffdhmdbia63KpfLz
-         h0Ag==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=IfnOO1+SEUKyKQDFwMTXRvfcI+8sw2PMhyHbHUfe+b0=;
+        b=Y/6pMuKaiR+nYqJhjTD76wlvEZXaeGwkUVT93Kq5w2xkc+4/iRgSlwCPb/LhFapqsZ
+         tH/TEA1OpdxIfS10SFCRByJ/21WH+jJufX6Plxz+y9Z4lEKPtlZvreRoTRzesvJWqVUI
+         UxtxxYLg6Wcg1RI24tzFRT8Jd0LaPY0kV62aWGNaitTfaB/XJL2oUYOQviDIO+pjTaoJ
+         PTJwkqdfMRLxufDWGVdVIaJ0FN1t6QAXERHgH3c+guWQCpXK9/1jOlEiSP6sNaI1F/GU
+         5GrXZqIayEOD4xJf/ajpjYxjBttRBnQx6BL+94HxlRn62gREHMcaYKvSYw3jlOLSnb0S
+         wrPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=e2/ADuFbDuc+qrHFSgLHEd6L5BY2SrcoWE9e+J1+2eM=;
-        b=ZlW1tlSXryb9xCoVSDgZw8uqmCcN36raOiW+zUZOsM6Q4GnJVVoULMQ3zV00H3oR9y
-         7j2RSXNU4w87c1WKhnTCDPlO9MO96LSVzts7DUNX+JsLdzJMBe19+IjuFg1dQixIA2ja
-         H1crme/ETLXCpVu3REhM73ast2vz9n9fXPc0VLiShq8eTv90QVozBXtkLFhJMvO3zlcH
-         hZs6fqva5/NDXEK076a1izuDI63KckW7cA+rQ15i19KwjGqVzVjlC/FUDlVM9mDmcRqT
-         UPKs9Vi5QjPcWj447llV4lYKws5OKqZVrrEkgm9slE44nHEzzpYzk2ccvYvuXS9/Vv8T
-         L+PA==
-X-Gm-Message-State: APjAAAU5R3g55sqYTecxtBokOttTY+ZFCzYnjSomSNdh6V5GHguej9Yi
-        FtDI/R3FTXPuoldouceTgy5REQ==
-X-Google-Smtp-Source: APXvYqz/+SNgmBpEQ8KdupTM9fAw5KRx8tx/qZ9Z/FiRngQq5AdPJp7BOKj9tflCkRxOnQjlbnVr4A==
-X-Received: by 2002:a1c:e0c6:: with SMTP id x189mr13729917wmg.4.1554736525520;
-        Mon, 08 Apr 2019 08:15:25 -0700 (PDT)
-Received: from [192.168.0.100] ([88.147.51.116])
-        by smtp.gmail.com with ESMTPSA id z1sm25372163wrs.52.2019.04.08.08.15.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:15:25 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <85f1978b-bb31-c6bc-e824-c0682bbd2922@kernel.dk>
-Date:   Mon, 8 Apr 2019 17:15:23 +0200
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Paolo Valente' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        lennart@poettering.net, mkoutny@suse.cz
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4796D9F5-C30F-442D-B3A2-AF80F6874C2C@linaro.org>
-References: <20190408143935.9062-1-paolo.valente@linaro.org>
- <20190408143935.9062-2-paolo.valente@linaro.org>
- <20190408144925.GA23021@linux-x5ow.site>
- <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
- <20190408150430.GB23021@linux-x5ow.site>
- <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
- <938957C8-3A0F-4664-8D1F-A822F6D6D4E7@linaro.org>
- <85f1978b-bb31-c6bc-e824-c0682bbd2922@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=IfnOO1+SEUKyKQDFwMTXRvfcI+8sw2PMhyHbHUfe+b0=;
+        b=Uk6S6ZD+QOiqO+ZAGr3mSV76aYyfWuP0fF/TTbF3AvfMuoil2N+XmriOfEGhiMalpv
+         HlU4U+nqhQDvOtN4TQYWGUK6c6jmFK/vHMcmhNvlR5uCuvIOOoqrsqFTuApmnkPS8DPJ
+         74vNVu97CcAJT8gfE1bWZXzh1LxKyXFwdVEqfWXtjJpNgEZNmRy8SuJL/pMw9psNX+4g
+         yeCRuYU2BMGLrpI9SZUYC1xVTmJaaIi6Wu03N7SGBbV32diKtCwyLjQDyFvo15KXZuUq
+         z4W0RLxaMdhNU7CdLfNmFMLN6x/X6RhiD8LfRw6nDVJDk9uD8kZzBC2h2aNXv8cQFYRR
+         gSJw==
+X-Gm-Message-State: APjAAAWlyK/FYXOT/uC+FJ6lUBO6FV/2/KP+74K8c3RMkw4qTNW8TOqS
+        Y76Lq+Cgc7rouzmrkK0fiqNOGgi79CLMB8L8N2E=
+X-Google-Smtp-Source: APXvYqz6VLXDFz7lDG/shhTU3YSU5u4Xat8dp1+0nYrzV5cW/niIYw67GPgQkpHnvTM1eZdq+ZuMoyUbY0SVOVJutWk=
+X-Received: by 2002:a1c:7211:: with SMTP id n17mr17295842wmc.32.1554736619094;
+ Mon, 08 Apr 2019 08:16:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
+ <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com> <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
+ <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com>
+ <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com> <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
+ <5c5c169d-3bad-9e34-8c56-bedca3e5ae08@redhat.com> <CA+icZUUk8jhGqsu65A8oHFcqzrqNRon+riPff9aJu2UFLXL7wQ@mail.gmail.com>
+ <CA+icZUVy0-F7==ES2ar+0LumE3LTv8jye8LAz=DHAoDZKiyC5A@mail.gmail.com> <ceec77ac-28e5-5d2f-3ea9-ef132a35acc5@redhat.com>
+In-Reply-To: <ceec77ac-28e5-5d2f-3ea9-ef132a35acc5@redhat.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 8 Apr 2019 17:16:47 +0200
+Message-ID: <CA+icZUXHx8WXQeZkoCf9cwgdXXZE8AqrFLOvtZMaf8nzGLTMaw@mail.gmail.com>
+Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
+ filename $module/.rodata.cst{16,32}
+To:     Denys Vlasenko <dvlasenk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 8, 2019 at 5:04 PM Denys Vlasenko <dvlasenk@redhat.com> wrote:
+>
+> On 4/8/19 4:57 PM, Sedat Dilek wrote:
+> > We have arch/x86/crypto/chacha-avx2-x86_64.S and
+> > arch/x86/crypto/chacha-avx512vl-x86_64.S:
+> >
+> > .rodata.cst32.CTR2BL
+> > .rodata.cst32.CTR4BL
+> > .rodata.cst32.CTR2BL
+> > .rodata.cst32.CTR4BL
+> >
+> > ...and in arch/x86/crypto/sha256-avx2-asm.S and
+> > arch/x86/crypto/sha512-avx2-asm.S:
+> >
+> > .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK
+> >
+> > Correct?
+>
+> You mean, we have duplicate section names.
+>
+> Well, this brings me to my initial response -
+> "Not sure how exactly this causes the error".
+>
+> Duplicate section names are allowed by the linker.
+> There is nothing wrong with that.
+>
+> The warnings you see come from some other tooling,
+> which does not handle correctly object files with more
+> than one section with the same name.
+>
+> (Having unique names is still preferable,
+> it helps humans to more easily find where sections come from,
+> and for potential future --gc-sections optimization).
 
+LLD offers these options:
 
-> Il giorno 8 apr 2019, alle ore 17:11, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 4/8/19 9:06 AM, Paolo Valente wrote:
->>=20
->>=20
->>> Il giorno 8 apr 2019, alle ore 17:05, Jens Axboe <axboe@kernel.dk> =
-ha scritto:
->>>=20
->>> On 4/8/19 9:04 AM, Johannes Thumshirn wrote:
->>>> [+Cc Michal ]
->>>> On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
->>>>>=20
->>>>>=20
->>>>>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn =
-<jthumshirn@suse.de> ha scritto:
->>>>>>=20
->>>>>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
->>>>>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
->>>>>>>=20
->>>>>>> When bfq was merged into mainline, there were two I/O schedulers =
-that
->>>>>>> implemented the proportional-share policy: bfq for blk-mq and =
-cfq for
->>>>>>> legacy blk. bfq's interface files in the blkio/io controller =
-have the
->>>>>>> same names as cfq. But the cgroups interface doesn't allow two
->>>>>>> entities to use the same name for their files, so for bfq we had =
-to
->>>>>>> prepend the "bfq" prefix to each of its files. However no legacy =
-code
->>>>>>> uses these modified file names. This naming also causes =
-confusion, as,
->>>>>>> e.g., in [1].
->>>>>>>=20
->>>>>>> Now cfq has gone with legacy blk, so there is no need any longer =
-for
->>>>>>> these prefixes in (the never used) bfq names. In view of this =
-fact, this
->>>>>>> commit removes these prefixes, thereby enabling legacy code to =
-truly
->>>>>>> use the proportional share policy in blk-mq.
->>>>>>>=20
->>>>>>> [1] https://github.com/systemd/systemd/issues/7057
->>>>>>=20
->>>>>> Hmm, but isn't this a user-space facing interface and thus some =
-sort of ABI?
->>>>>> Do you know what's using it and what breaks due to this =
-conversion?
->>>>>>=20
->>>>>=20
->>>>> Yep, but AFAIK, the problem is exactly the opposite: nobody uses =
-these
->>>>> names for the proportional-share policy, or wants to use these =
-names. I'm
->>>>> CCing Lennart too, in case he has some improbable news on this.
->>>>>=20
->>>>> So the idea is to align names to what people expect, possibly =
-before
->>>>> more confusion arises.
->>>>=20
->>>> OK, crazy idea, not sure if Jens and Tejun will beat me for this, =
-but
->>>> symlinks?
->>>>=20
->>>> This way we can a) keep the old files and b) have them point to the =
-new (a.k.a
->>>> cfq style) files.
->>>=20
->>> I did consider that, and that would be doable. But honestly, I'm =
-having a
->>> hard time seeing what issue we are attempting to fix by doing this.
->>>=20
->>=20
->> The problem is ~100% of people and software believing to set weights =
-and not doing it.
->=20
-> I'm sorry, but I don't know what that means?
->=20
+  --check-sections        Check section addresses for overlaps (default)
 
-It means that people and code set weights, not bfq.weights.
+  --ignore-data-address-equality
+                          lld can break the address equality of data
 
-Thanks,
-Paolo
+  --ignore-function-address-equality
+                          lld can break the address equality of functions
 
-> --=20
-> Jens Axboe
-
+- Sedat -
