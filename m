@@ -2,136 +2,123 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C392C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07912C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392F820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oJH54g7f"
+	by mail.kernel.org (Postfix) with ESMTP id C9E0A20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfDHBbi (ORCPT
+        id S1726513AbfDHBfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 21:31:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:34341 "EHLO ozlabs.org"
+        Sun, 7 Apr 2019 21:35:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46163 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfDHBbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 21:31:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44ctDh26v9z9sQy;
-        Mon,  8 Apr 2019 11:31:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554687093;
-        bh=kDemFqGAM78mj83b/vdhlp3WyRmlQcXYrytykVZiYYI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oJH54g7f4FEIahH8au+8LBWWvDrrFlyLfjn7SFM/s6X5RiGCVxihOKhFEuhztHBJC
-         /wy/2ZRYkhra+aGiflSDgiGN12s0zRyJKiYjOW1cjiFBU/PWwXVAQr5Zh34Sa4eQHh
-         iJC6drqnauVYRhqXPah0QqWYGvVC6lCpv+ma+U/3UiDQUIHXhlWr0QTUqOmH8cZcwt
-         DuMdoiSTrY/3NM/XRcTE6TasO8Zrxcn3xnhusL9l3jpJv9qG7MegrRAkbXq/KuNwMs
-         MiaTGGnXqaBKg18WjvWHmorhORlg7c6aBZ/gUahdsSeNuZFUiynONJnNBzo4y1Wu1z
-         YJRgUQqh6fVew==
-Date:   Mon, 8 Apr 2019 11:31:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: linux-next: manual merge of the audit tree with Linus' tree
-Message-ID: <20190408113131.222f480a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/YA13TXinWxi=57RCNhi.iwP"; protocol="application/pgp-signature"
+        id S1726456AbfDHBfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 21:35:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Apr 2019 18:35:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,323,1549958400"; 
+   d="scan'208";a="335810638"
+Received: from lyang61-mobl3.ccr.corp.intel.com ([10.255.30.213])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Apr 2019 18:35:48 -0700
+Message-ID: <1554687347.2178.1.camel@intel.com>
+Subject: Re: [PATCH 08/14] powercap/intel_rapl: Support multi-die/package
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Date:   Mon, 08 Apr 2019 09:35:47 +0800
+In-Reply-To: <alpine.DEB.2.21.1904052022310.1802@nanos.tec.linutronix.de>
+References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
+         <680e11fe0dcc65e4cfa5bfeaa0d1cdbe7896e3c0.1551160674.git.len.brown@intel.com>
+         <alpine.DEB.2.21.1904052022310.1802@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YA13TXinWxi=57RCNhi.iwP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 五, 2019-04-05 at 20:27 +0200, Thomas Gleixner wrote:
+> On Tue, 26 Feb 2019, Len Brown wrote:
+> 
+> > 
+> > From: Zhang Rui <rui.zhang@intel.com>
+> > 
+> > On the new dual-die/package systems, the RAPL MSR becomes die-
+> > scope.
+> > Thus instead of one powercap device per physical package, now there
+> > should be one powercap device for each unique die on these systems.
+> > 
+> > This patch introduces intel_rapl driver support for new
+> > dual-die/package systems.
+> This patch .... See Documentation/processs/
+> 
+> and this sentence is not really helpful either.
+> 
+> > 
+> > On the hardwares that do not have multi-die,
+> > topology_logical_die_id()
+> > equals topology_physical_package_id(), thus there is no functional
+> > change.
+> Something like this:
+> 
+> To support this the RAPL package domain has to be identified by the
+> die id
+> instead of the package id. On single die CPUs the die id is the same
+> as the
+> physical package id.
+> 
+> Hmm?
 
-Hi all,
+Yeah, sounds much better.
+Len, will you help me update the changelog or do you want me to send an
+updated version to you?
 
-Today's linux-next merge of the audit tree got conflicts in:
+thanks,
+rui
 
-  arch/mips/kernel/ptrace.c
-  kernel/seccomp.c
-
-between commit:
-
-  b35f549df1d7 ("syscalls: Remove start and number from syscall_get_argumen=
-ts() args")
-
-from Linus' tree and commit:
-
-  16add411645c ("syscall_get_arch: add "struct task_struct *" argument")
-
-from the audit tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/mips/kernel/ptrace.c
-index 3a62f80958e1,2ead6ff919b7..000000000000
---- a/arch/mips/kernel/ptrace.c
-+++ b/arch/mips/kernel/ptrace.c
-@@@ -1418,8 -1418,8 +1418,8 @@@ asmlinkage long syscall_trace_enter(str
-  		unsigned long args[6];
- =20
-  		sd.nr =3D syscall;
-- 		sd.arch =3D syscall_get_arch();
-+ 		sd.arch =3D syscall_get_arch(current);
- -		syscall_get_arguments(current, regs, 0, 6, args);
- +		syscall_get_arguments(current, regs, args);
-  		for (i =3D 0; i < 6; i++)
-  			sd.args[i] =3D args[i];
-  		sd.instruction_pointer =3D KSTK_EIP(current);
-diff --cc kernel/seccomp.c
-index df27e499956a,36f36ab00f48..000000000000
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@@ -148,8 -148,8 +148,8 @@@ static void populate_seccomp_data(struc
-  	unsigned long args[6];
- =20
-  	sd->nr =3D syscall_get_nr(task, regs);
-- 	sd->arch =3D syscall_get_arch();
-+ 	sd->arch =3D syscall_get_arch(task);
- -	syscall_get_arguments(task, regs, 0, 6, args);
- +	syscall_get_arguments(task, regs, args);
-  	sd->args[0] =3D args[0];
-  	sd->args[1] =3D args[1];
-  	sd->args[2] =3D args[2];
-
---Sig_/YA13TXinWxi=57RCNhi.iwP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyqpHMACgkQAVBC80lX
-0Gy01Af/XeCzjLJfHa4aJdS9laNaWzt/uoB0ern40eoTLG/FY61TbgI/Vw2hDAzG
-rvz2fo/Mt373SQf/LTHLzktDAgrGZaketo1KMPJvQQ6fR2A0UyfNQU/aNl9Q+L+O
-QNP0YVraJj7mm7gJ8juTtOEWKkCCrMPuhMr8wojhCW661Q3xCSAm2I5aL/dAZJFv
-OhEuLvLNRJh3U1SlX9W/6cmJCm0S/6eMvk2SBshm6EwuZN5eDeTv8bPiDfUpp8Sp
-TSlx9ymcC6G2uS06VbRujHia5Xjh8u+loIg0nkCi5de94Fx/EecZusp0s2Bv8r3n
-9C42uc5fp8gBRRH8oA6tvi+1cAOoWg==
-=GhgX
------END PGP SIGNATURE-----
-
---Sig_/YA13TXinWxi=57RCNhi.iwP--
+> 
+> > 
+> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> > Signed-off-by: Len Brown <len.brown@intel.com>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Cc: linux-pm@vger.kernel.org
+> > ---
+> >  drivers/powercap/intel_rapl.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/powercap/intel_rapl.c
+> > b/drivers/powercap/intel_rapl.c
+> > index 6057d9695fed..8723e9ae7436 100644
+> > --- a/drivers/powercap/intel_rapl.c
+> > +++ b/drivers/powercap/intel_rapl.c
+> > @@ -266,7 +266,7 @@ static struct rapl_domain
+> > *platform_rapl_domain; /* Platform (PSys) domain */
+> >  /* caller to ensure CPU hotplug lock is held */
+> >  static struct rapl_package *rapl_find_package(int cpu)
+> >  {
+> > -	int id = topology_physical_package_id(cpu);
+> > +	int id = topology_logical_die_id(cpu);
+> >  	struct rapl_package *rp;
+> >  
+> >  	list_for_each_entry(rp, &rapl_packages, plist) {
+> > @@ -1457,7 +1457,7 @@ static void rapl_remove_package(struct
+> > rapl_package *rp)
+> >  /* called from CPU hotplug notifier, hotplug lock held */
+> >  static struct rapl_package *rapl_add_package(int cpu)
+> >  {
+> > -	int id = topology_physical_package_id(cpu);
+> > +	int id = topology_logical_die_id(cpu);
+> >  	struct rapl_package *rp;
+> >  	int ret;
+> >  
