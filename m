@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6372C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3224CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B592220883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0315E208E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G5Vow9Ie"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rkrGhECw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfDHJMR (ORCPT
+        id S1726538AbfDHJM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:12:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33764 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfDHJMQ (ORCPT
+        Mon, 8 Apr 2019 05:12:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37277 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfDHJM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:12:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f23so10553008ljc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:12:15 -0700 (PDT)
+        Mon, 8 Apr 2019 05:12:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v13so10501588ljk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uIlIGuoA0STjCfoA4Z48qJ4QoJOmXZ7Yk5B9XxZzCHc=;
-        b=G5Vow9IedW9AhqhwvB+nznyBfT9427V/u/jHwJHI9Wm8FeAYxE9wLApzoPzgSBIf8E
-         xFQwK7g3zWy7JwnwgrwcEOe72/V/cbttdYkRPZBJFvzhZV0QfVkL8cOGmpz37RFLeMPb
-         V+rwr9ZbL8oG1dP1BoeqJQyFM1oJx46G9CgfI55BH35aPFd7K9kuPiGUsrZcSz1YqfY9
-         KMSJelCAZnjKiruljCd/lLNikhQDBz4QODWlFpi0kchtHQv7SsFGiWRg5wJcyU6/j1V4
-         70BqCpy38hqvRuc5Iu7RuV2kLjuwZSptVkJPfsgiy4iLGoxa2z3DxuL9OZdiALSGWjie
-         yHFw==
+        bh=us0veiu/JWuAAkfBTHSdN6UAxnqplvpdFgPUJM13Sh8=;
+        b=rkrGhECwcgUoLPTrtaj96lexHtVkRBUBYF7DW9l9KfAxVa3598ND3Z77XLGDYm0oPj
+         wLYfd9ROUl4t4oztkIXHhusGsVSOERmwKpn+A/N5twjSl6QqVOSPQwWPVeGjH04DjxiL
+         9KHV1RsXWjm7KnqOzgI4QvmXWeWlGBUAminPDDRGVTl+ObKJIZtWzD6Xsg+wGK3vKjDx
+         zDofMzTtpsMZOog7J0qhLl3UoDj0Q4c0X9ULzMq6omVOE7Q5Ev8BpxIgHtfHodVwTmU8
+         Zt/iOMYYB+qCtDrFleqO1Obo8SUjeweN4G1GndUGuXpwuYwh230Kz7S64GGyXFCOH/qN
+         Czjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uIlIGuoA0STjCfoA4Z48qJ4QoJOmXZ7Yk5B9XxZzCHc=;
-        b=gMwrOeMfCs3gwBe9OkPd7B1G+/Y5KJGnPz/uMgxRbB+NntZ16ylLYOeV8BQtd2/ixQ
-         3GRyYgJ6QBB6og9zQja2bTd3yvq2eZwCv6C5RaXg3PkvkcvvXH2912IAmirnND0wvd7d
-         Fo+42LCeEGeI5y66d78WYRPIxB8TUDA/8Qse8Z3/1r9J4ZhNoERIBTi4lAy/pbbmC26O
-         U+89Kna+I1n5wdBDDyfMf6FDWx/mNpeaETfQ9dxrBRrrsoVUTdWHZWCIXJHFkKxbAdxW
-         XesBbeS55vVMaFLfEz3NvGdTznsGUPYMnD4qVuTBCdsP3pOASxSi7RGZHlUjOzo27PQV
-         54TQ==
-X-Gm-Message-State: APjAAAXdxr2IibWlKWEtdjuP7p1/mSy18MkCJ/VBWeWHRGTtI7iFzGAg
-        HZkLd8ADFceDlYhC6kurNh1RyeEinBhExih3/BjlZOph
-X-Google-Smtp-Source: APXvYqylc+otPelJjJ8WSDz8BK5pcLRycr4hKTOGTNri9iNNPvIWJUPBhEAk5TAGmf5sb9pVonBK0x92KsWAyDdkG7E=
-X-Received: by 2002:a2e:5d56:: with SMTP id r83mr15263523ljb.74.1554714734906;
- Mon, 08 Apr 2019 02:12:14 -0700 (PDT)
+        bh=us0veiu/JWuAAkfBTHSdN6UAxnqplvpdFgPUJM13Sh8=;
+        b=dPbXS4XDuDjQY3aZkN7P+Qv11GZ7huVYGrUohfKQEGxKmaQc3pQbgDxH/8NUnfqBwz
+         1RkAwyZXh7b2w0CYPGI/lOd1eAELPfLOpwQAnaXTFeGEKIUwQdMMKfaDY/+3v96EbuFq
+         xH27xb9lhqZteXLG7hsh4tilBx0z92cUe/wCXaOIuIQ28f8O3eNgy+M+FKh3sjJmHCA9
+         +8YB7sbRNUP0/Z+6FJ8JXgGrbczfCpCZJxE5MFuCO8QDwuYUImAogEKsPe8z8ZmNeQPM
+         DpFse2FA4kEyw+RIDSCDTWpqKRUj0kAcrQXTObChazd+RT4H3Ho1mg4qgMT8JfQ+U2QC
+         t7Tg==
+X-Gm-Message-State: APjAAAU5i6NiyFqLEQyv+8I3Dhcr/yjU9C7XbIqb3mWV2nXbSUwZfj7T
+        6S7bxJVZPi0N9Wi20nem0f/LlmF5RASQQAsOoe+WiQ==
+X-Google-Smtp-Source: APXvYqyx7hbE8vdMXL4NMwV2jDmnpzDsiPco9Yvs4nGssoY4yPWN5A3k7+T6eO6u29z9DeVXRex7/Gno3Th96vuRtHI=
+X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr14908186lja.49.1554714775105;
+ Mon, 08 Apr 2019 02:12:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190407211027.14012-1-alexandre.belloni@bootlin.com> <20190407211027.14012-3-alexandre.belloni@bootlin.com>
-In-Reply-To: <20190407211027.14012-3-alexandre.belloni@bootlin.com>
+References: <20190407211027.14012-1-alexandre.belloni@bootlin.com> <20190407211027.14012-4-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190407211027.14012-4-alexandre.belloni@bootlin.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Apr 2019 11:12:03 +0200
-Message-ID: <CACRpkda-SC6HX+FC5ZNGDDOhYjH2OxSN52EQRbETT-miEKFbMA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] rtc: coh901331: use .set_time
+Date:   Mon, 8 Apr 2019 11:12:43 +0200
+Message-ID: <CACRpkdbWkpMBnqsXfu07Kb3_S3+RF+swwBnSr-LVnxop7Ht-RA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] rtc: coh901331: convert to SPDX identifier
 To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
@@ -71,11 +71,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Sun, Apr 7, 2019 at 11:10 PM Alexandre Belloni
 <alexandre.belloni@bootlin.com> wrote:
 
-> Use .set_time instead of the deprecated .set_mmss.
+> Use SPDX-License-Identifier instead of the custom license line.
 >
 > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
