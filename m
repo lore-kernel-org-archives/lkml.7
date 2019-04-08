@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D9CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7251AC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069C8208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40832208E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JRc9RRhX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="glJp3/n0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfDHJbr (ORCPT
+        id S1726709AbfDHJcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:31:47 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37309 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfDHJbp (ORCPT
+        Mon, 8 Apr 2019 05:32:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55010 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfDHJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:31:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so13895288wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:31:44 -0700 (PDT)
+        Mon, 8 Apr 2019 05:31:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so13473681wml.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 02:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=C90Y7HygE0mkNukG/zDtJRz6NFRvz69KyUip09FFMs0=;
-        b=JRc9RRhXAFeK6/yMJOEoo+ScnEDx9ifHzUyRxv7dljS2OoA1xHrAqOPWoAGty9tKhg
-         bch9NbCy7zjwWdfZLjXLx7QGzGXkJs2yGI+3qezzVFCNcH//DdzRZ16nIwZYQl/U9Ia5
-         te1IHjdP3Sq1WqYVTQFBWJ0LvMHyT319tx4XAcb5ON/rmcdOQiMFPno+5fcadbnX2bz6
-         BBHVoBr+EVHsmojhrgTktOVXGk85A4RRS7xLOPfVDDMX3SQX5xtHn66vwYOfH3tDMowC
-         ochqLgtlYecoWpI2QbHWYsBYvHUxnt4hcgBa0R6lZkfvJHuWK1VuefNRlR3Rq3G3U3Z5
-         7tMg==
+        bh=yaU7NIMcW3tdSdPQAkkny9SZP4+9jAbAzKLhaKmgEX0=;
+        b=glJp3/n0ZKJJSx+E6CpcZmnF1wEOmEF/AfSiaJJX/UJL3jDuCqbasudOEZ/kwMD5xh
+         5n5wGNQ5UYmBrDrigDXiiRPba4S/mFfZMy5spi+B1gcamB/o/VPHeQ9ha0jVJbjyNPdR
+         VA8XpiQBoO0UWZiuWoM3SxUm5l25sB3gg5U+q0ZaVJ94eg5+p1Hue3iHuIlGw4yHHUyL
+         06Ln/7xW6n46cst2CyV/aiGSNAdHOyGQGNPUAgPi6j0E7qwWFoAuBt3dxTFQBoF4lmP5
+         Wn6LlSuR32lawNNEv63XJOkShQLLmrpPRIOLYCytV6QjSxhggUKEKpZmfYFBBLu4K7lT
+         DTzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=C90Y7HygE0mkNukG/zDtJRz6NFRvz69KyUip09FFMs0=;
-        b=Vxm/P/AmH/eBgZj3W5joskY6eSbvRA0zMxE+hzXzkDFNpJOfm+8djH/svzYrQgsALb
-         nV1cSG6VgfysOhymDcKoE+OpWNcxkYJFLpXzJAEVpGf8EXJlwplpX1VJECJ4x7UTHRlw
-         av2GSpz/VjDxp+HINihBz7pK46wjuhUz5jPAxtoiUOv4Lb9HsKNfMKIsraZz94hV5Rs9
-         iXTfzaKHN3kr1Spl+o0oDZcSh8xmf6PIZUBzJjtFjrhfIlFjsRrLAIzfbO5Ry5lkwsk2
-         DIKaXKfRynFVQWbu/r+CTSjpJTkt9On6LmQIkwk0hIrKdPiFuLwN7+33DosljK4vzs04
-         7I1g==
-X-Gm-Message-State: APjAAAXMrIcgbFZSn57jdaN/3UBXel3fh7pc7ZHSGC5yFZptswfQVPww
-        TTYeRIWJ8DTOS21FCp0SbVxi+d52Ek0c7Q==
-X-Google-Smtp-Source: APXvYqzGJm0dfH6FBRfvfvtnlLB9Y1VEibjdkqVJe52rHJ1ryuwPncpH1hHkmVUKV7XvyZS5S5fpXw==
-X-Received: by 2002:a1c:4187:: with SMTP id o129mr16514545wma.57.1554715903558;
-        Mon, 08 Apr 2019 02:31:43 -0700 (PDT)
+        bh=yaU7NIMcW3tdSdPQAkkny9SZP4+9jAbAzKLhaKmgEX0=;
+        b=AsVO+Vylc2wTHZa+s7WMefcdw78Pg3WvYzPdxjq71mZnabh2v+4W8oyw13KCQiWvag
+         Om+jSNgvht1oQbBkvEDj+CqmEqHdqsq0mT6nG6//jDVA90lWcdz/KjUBvcoXlarY8xZr
+         B7JJ9pJQBaregSXc21b7dQ2ehhvYVzXJMCOCGXN7D+BYYmxcicomoIS43ktiiajU9HUK
+         5Dj0w9EKj70m67HAgSAdOjGfc0qp14YvU06bPbI7KpqlAVI3FQfELFZ3pkkOaE9JeDPq
+         1pEv6eFW9DkgDi88JgKx3IRoAxrfGc4U4ExjOJjN+GJOkGgp2BNo+5ZPbX94rJeXbWRi
+         dxww==
+X-Gm-Message-State: APjAAAUZzhdropmtpwxsFVLAIvI2EYnE7GNfqYU3yv/zBJqyIq8aKyaV
+        ryK8CKawXxOTjr4/CO8Au3ikfw==
+X-Google-Smtp-Source: APXvYqwfSOl9DE6nbVm0MkaxAsI771gH+QmlwapHjt0w1hAxbt8Pvd6trrP6zooM95Hdrymq+oy0PA==
+X-Received: by 2002:a7b:c5ce:: with SMTP id n14mr17542154wmk.18.1554715905695;
+        Mon, 08 Apr 2019 02:31:45 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c10sm36777427wru.83.2019.04.08.02.31.42
+        by smtp.gmail.com with ESMTPSA id c10sm36777427wru.83.2019.04.08.02.31.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Apr 2019 02:31:43 -0700 (PDT)
+        Mon, 08 Apr 2019 02:31:44 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] arm64: dts: meson-g12a-x96-max: Add support for Video Display
-Date:   Mon,  8 Apr 2019 11:31:37 +0200
-Message-Id: <20190408093139.27161-4-narmstrong@baylibre.com>
+Subject: [PATCH v2 5/5] arm64: dts: meson-g12a-u200: Add support for Video Display
+Date:   Mon,  8 Apr 2019 11:31:39 +0200
+Message-Id: <20190408093139.27161-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190408093139.27161-1-narmstrong@baylibre.com>
 References: <20190408093139.27161-1-narmstrong@baylibre.com>
@@ -75,20 +75,20 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This patch adds the HDMI, CVBS and CEC attributes and nodes to support
-full display on the X96 Max STB.
+full display on the U200 Reference Design.
 
 AO-CEC-B is used by default and AO-CEC-A is disabled.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 54 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      | 54 +++++++++++++++++++
  1 file changed, 54 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index b5b88262c06a..b3d913f28f12 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -24,6 +24,27 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+index 2240e365af27..0e8045b8a915 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+@@ -24,6 +24,16 @@
  		reg = <0x0 0x0 0x0 0x40000000>;
  	};
  
@@ -102,6 +102,13 @@ index b5b88262c06a..b3d913f28f12 100644
 +		};
 +	};
 +
+ 	flash_1v8: regulator-flash_1v8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "FLASH_1V8";
+@@ -33,6 +43,17 @@
+ 		regulator-always-on;
+ 	};
+ 
 +	hdmi-connector {
 +		compatible = "hdmi-connector";
 +		type = "a";
@@ -113,11 +120,11 @@ index b5b88262c06a..b3d913f28f12 100644
 +		};
 +	};
 +
- 	flash_1v8: regulator-flash_1v8 {
+ 	main_12v: regulator-main_12v {
  		compatible = "regulator-fixed";
- 		regulator-name = "FLASH_1V8";
-@@ -90,6 +111,39 @@
- 	};
+ 		regulator-name = "12V";
+@@ -102,6 +123,39 @@
+ 
  };
  
 +&cec_AO {
@@ -153,9 +160,9 @@ index b5b88262c06a..b3d913f28f12 100644
 +	};
 +};
 +
- &uart_A {
+ &uart_AO {
  	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.21.0
 
