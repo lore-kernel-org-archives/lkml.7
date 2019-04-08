@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08F6C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB56C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8C221473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B931120879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfDHRmU (ORCPT
+        id S1729286AbfDHRmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:42:20 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:33298 "EHLO
+        Mon, 8 Apr 2019 13:42:35 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:33466 "EHLO
         vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHRmT (ORCPT
+        with ESMTP id S1726373AbfDHRmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:42:19 -0400
+        Mon, 8 Apr 2019 13:42:35 -0400
 Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 4614872CCAC;
-        Mon,  8 Apr 2019 20:42:16 +0300 (MSK)
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 578DD72CCAC;
+        Mon,  8 Apr 2019 20:42:28 +0300 (MSK)
 Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 374737CCE4F; Mon,  8 Apr 2019 20:42:16 +0300 (MSK)
-Date:   Mon, 8 Apr 2019 20:42:16 +0300
+        id 4D4157CCE4F; Mon,  8 Apr 2019 20:42:28 +0300 (MSK)
+Date:   Mon, 8 Apr 2019 20:42:28 +0300
 From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
+To:     linux-kernel@vger.kernel.org
 Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Elvira Khabirova <lineprinter@altlinux.org>,
         Eugene Syromyatnikov <esyr@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
         Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH linux-next v9 5/7] powerpc: define syscall_get_error()
-Message-ID: <20190408174216.GF11889@altlinux.org>
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-api@vger.kernel.org,
+        strace-devel@lists.strace.io
+Subject: [PATCH linux-next v9 6/7] ptrace: add PTRACE_GET_SYSCALL_INFO request
+Message-ID: <20190408174227.GG11889@altlinux.org>
 References: <20190408174036.GA11889@altlinux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -48,64 +47,349 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syscall_get_error() is required to be implemented on this
-architecture in addition to already implemented syscall_get_nr(),
-syscall_get_arguments(), syscall_get_return_value(), and
-syscall_get_arch() functions in order to extend the generic
-ptrace API with PTRACE_GET_SYSCALL_INFO request.
+From: Elvira Khabirova <lineprinter@altlinux.org>
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: Eugene Syromyatnikov <esyr@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
+PTRACE_GET_SYSCALL_INFO is a generic ptrace API that lets ptracer obtain
+details of the syscall the tracee is blocked in.
+
+There are two reasons for a special syscall-related ptrace request.
+
+Firstly, with the current ptrace API there are cases when ptracer cannot
+retrieve necessary information about syscalls.  Some examples include:
+* The notorious int-0x80-from-64-bit-task issue.  See [1] for details.
+In short, if a 64-bit task performs a syscall through int 0x80, its tracer
+has no reliable means to find out that the syscall was, in fact,
+a compat syscall, and misidentifies it.
+* Syscall-enter-stop and syscall-exit-stop look the same for the tracer.
+Common practice is to keep track of the sequence of ptrace-stops in order
+not to mix the two syscall-stops up.  But it is not as simple as it looks;
+for example, strace had a (just recently fixed) long-standing bug where
+attaching strace to a tracee that is performing the execve system call
+led to the tracer identifying the following syscall-exit-stop as
+syscall-enter-stop, which messed up all the state tracking.
+* Since the introduction of commit 84d77d3f06e7e8dea057d10e8ec77ad71f721be3
+("ptrace: Don't allow accessing an undumpable mm"), both PTRACE_PEEKDATA
+and process_vm_readv become unavailable when the process dumpable flag
+is cleared.  On such architectures as ia64 this results in all syscall
+arguments being unavailable for the tracer.
+
+Secondly, ptracers also have to support a lot of arch-specific code for
+obtaining information about the tracee.  For some architectures, this
+requires a ptrace(PTRACE_PEEKUSER, ...) invocation for every syscall
+argument and return value.
+
+ptrace(2) man page:
+
+long ptrace(enum __ptrace_request request, pid_t pid,
+            void *addr, void *data);
+...
+PTRACE_GET_SYSCALL_INFO
+       Retrieve information about the syscall that caused the stop.
+       The information is placed into the buffer pointed by "data"
+       argument, which should be a pointer to a buffer of type
+       "struct ptrace_syscall_info".
+       The "addr" argument contains the size of the buffer pointed to
+       by "data" argument (i.e., sizeof(struct ptrace_syscall_info)).
+       The return value contains the number of bytes available
+       to be written by the kernel.
+       If the size of data to be written by the kernel exceeds the size
+       specified by "addr" argument, the output is truncated.
+
+Co-authored-by: Dmitry V. Levin <ldv@altlinux.org>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Eugene Syromyatnikov <esyr@redhat.com>
+Cc: linux-api@vger.kernel.org
+Cc: strace-devel@lists.strace.io
+Signed-off-by: Elvira Khabirova <lineprinter@altlinux.org>
 Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 ---
 
-Michael, this patch is waiting for ACK since early December.
-
 Notes:
-    v9: unchanged
-    v8: unchanged
+    v9:
+    * Rebased to linux-next again due to syscall_get_arguments() signature change.
+    
+    v8:
+    * Rebased to linux-next.
+    * Moved ptrace_get_syscall_info code under #ifdef CONFIG_HAVE_ARCH_TRACEHOOK,
+      narrowing down the set of architectures supported by this implementation
+      back to those 19 that enable CONFIG_HAVE_ARCH_TRACEHOOK because
+      I failed to get all syscall_get_*(), instruction_pointer(),
+      and user_stack_pointer() functions implemented on some niche
+      architectures.  This leaves the following architectures out:
+      alpha, h8300, m68k, microblaze, and unicore32.
+    
     v7: unchanged
-    v6: unchanged
-    v5: initial revision
     
-    This change has been tested with
-    tools/testing/selftests/ptrace/get_syscall_info.c and strace,
-    so it's correct from PTRACE_GET_SYSCALL_INFO point of view.
+    v6:
+    * Change PTRACE_GET_SYSCALL_INFO return code: do not take trailing paddings
+      into account, use the end of the last field of the structure being written.
+    * Change struct ptrace_syscall_info:
+      * remove .frame_pointer field, is is not needed and not portable;
+      * make .arch field explicitly aligned, remove no longer needed
+        padding before .arch field;
+      * remove trailing pads, they are no longer needed.
     
-    This cast doubts on commit v4.3-rc1~86^2~81 that changed
-    syscall_set_return_value() in a way that doesn't quite match
-    syscall_get_error(), but syscall_set_return_value() is out
-    of scope of this series, so I'll just let you know my concerns.
+    v5:
+    * Change PTRACE_EVENTMSG_SYSCALL_{ENTRY,EXIT} values as requested by Oleg.
+    * Change struct ptrace_syscall_info: generalize instruction_pointer,
+      stack_pointer, and frame_pointer fields by moving them from
+      ptrace_syscall_info.{entry,seccomp} substructures to ptrace_syscall_info
+      and initializing them for all stops.
+    * Add PTRACE_SYSCALL_INFO_NONE, set it when not in a syscall stop,
+      so e.g. "strace -i" could use PTRACE_SYSCALL_INFO_SECCOMP to obtain
+      instruction_pointer when the tracee is in a signal stop.
+    * Make available for all architectures: do not conditionalize on
+      CONFIG_HAVE_ARCH_TRACEHOOK since all syscall_get_* functions
+      are implemented on all architectures.
+    
+    v4:
+    * Do not introduce task_struct.ptrace_event,
+      use child->last_siginfo->si_code instead.
+    * Implement PTRACE_SYSCALL_INFO_SECCOMP and ptrace_syscall_info.seccomp
+      support along with PTRACE_SYSCALL_INFO_{ENTRY,EXIT} and
+      ptrace_syscall_info.{entry,exit}.
+    
+    v3:
+    * Change struct ptrace_syscall_info.
+    * Support PTRACE_EVENT_SECCOMP by adding ptrace_event to task_struct.
+    * Add proper defines for ptrace_syscall_info.op values.
+    * Rename PT_SYSCALL_IS_ENTERING and PT_SYSCALL_IS_EXITING to
+      PTRACE_EVENTMSG_SYSCALL_ENTRY and PTRACE_EVENTMSG_SYSCALL_EXIT
+    * and move them to uapi.
+    
+    v2:
+    * Do not use task->ptrace.
+    * Replace entry_info.is_compat with entry_info.arch, use syscall_get_arch().
+    * Use addr argument of sys_ptrace to get expected size of the struct;
+      return full size of the struct.
 
- arch/powerpc/include/asm/syscall.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/tracehook.h   |   9 ++--
+ include/uapi/linux/ptrace.h |  35 ++++++++++++
+ kernel/ptrace.c             | 103 +++++++++++++++++++++++++++++++++++-
+ 3 files changed, 143 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
-index a048fed0722f..bd9663137d57 100644
---- a/arch/powerpc/include/asm/syscall.h
-+++ b/arch/powerpc/include/asm/syscall.h
-@@ -38,6 +38,16 @@ static inline void syscall_rollback(struct task_struct *task,
- 	regs->gpr[3] = regs->orig_gpr3;
+diff --git a/include/linux/tracehook.h b/include/linux/tracehook.h
+index df20f8bdbfa3..6bc7a3d58e2f 100644
+--- a/include/linux/tracehook.h
++++ b/include/linux/tracehook.h
+@@ -57,13 +57,15 @@ struct linux_binprm;
+ /*
+  * ptrace report for syscall entry and exit looks identical.
+  */
+-static inline int ptrace_report_syscall(struct pt_regs *regs)
++static inline int ptrace_report_syscall(struct pt_regs *regs,
++					unsigned long message)
+ {
+ 	int ptrace = current->ptrace;
+ 
+ 	if (!(ptrace & PT_PTRACED))
+ 		return 0;
+ 
++	current->ptrace_message = message;
+ 	ptrace_notify(SIGTRAP | ((ptrace & PT_TRACESYSGOOD) ? 0x80 : 0));
+ 
+ 	/*
+@@ -76,6 +78,7 @@ static inline int ptrace_report_syscall(struct pt_regs *regs)
+ 		current->exit_code = 0;
+ 	}
+ 
++	current->ptrace_message = 0;
+ 	return fatal_signal_pending(current);
  }
  
-+static inline long syscall_get_error(struct task_struct *task,
-+				     struct pt_regs *regs)
+@@ -101,7 +104,7 @@ static inline int ptrace_report_syscall(struct pt_regs *regs)
+ static inline __must_check int tracehook_report_syscall_entry(
+ 	struct pt_regs *regs)
+ {
+-	return ptrace_report_syscall(regs);
++	return ptrace_report_syscall(regs, PTRACE_EVENTMSG_SYSCALL_ENTRY);
+ }
+ 
+ /**
+@@ -126,7 +129,7 @@ static inline void tracehook_report_syscall_exit(struct pt_regs *regs, int step)
+ 	if (step)
+ 		user_single_step_report(regs);
+ 	else
+-		ptrace_report_syscall(regs);
++		ptrace_report_syscall(regs, PTRACE_EVENTMSG_SYSCALL_EXIT);
+ }
+ 
+ /**
+diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
+index d5a1b8a492b9..a71b6e3b03eb 100644
+--- a/include/uapi/linux/ptrace.h
++++ b/include/uapi/linux/ptrace.h
+@@ -73,6 +73,41 @@ struct seccomp_metadata {
+ 	__u64 flags;		/* Output: filter's flags */
+ };
+ 
++#define PTRACE_GET_SYSCALL_INFO		0x420e
++#define PTRACE_SYSCALL_INFO_NONE	0
++#define PTRACE_SYSCALL_INFO_ENTRY	1
++#define PTRACE_SYSCALL_INFO_EXIT	2
++#define PTRACE_SYSCALL_INFO_SECCOMP	3
++
++struct ptrace_syscall_info {
++	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
++	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
++	__u64 instruction_pointer;
++	__u64 stack_pointer;
++	union {
++		struct {
++			__u64 nr;
++			__u64 args[6];
++		} entry;
++		struct {
++			__s64 rval;
++			__u8 is_error;
++		} exit;
++		struct {
++			__u64 nr;
++			__u64 args[6];
++			__u32 ret_data;
++		} seccomp;
++	};
++};
++
++/*
++ * These values are stored in task->ptrace_message
++ * by tracehook_report_syscall_* to describe the current syscall-stop.
++ */
++#define PTRACE_EVENTMSG_SYSCALL_ENTRY	1
++#define PTRACE_EVENTMSG_SYSCALL_EXIT	2
++
+ /* Read signals from a shared (process wide) queue */
+ #define PTRACE_PEEKSIGINFO_SHARED	(1 << 0)
+ 
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 6f357f4fc859..f68c0d44461e 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -31,6 +31,10 @@
+ #include <linux/compat.h>
+ #include <linux/sched/signal.h>
+ 
++#ifdef CONFIG_HAVE_ARCH_TRACEHOOK
++#include <asm/syscall.h>	/* For syscall_get_* */
++#endif
++
+ /*
+  * Access another process' address space via ptrace.
+  * Source/target buffer must be kernel space,
+@@ -879,7 +883,100 @@ static int ptrace_regset(struct task_struct *task, int req, unsigned int type,
+  * to ensure no machine forgets it.
+  */
+ EXPORT_SYMBOL_GPL(task_user_regset_view);
+-#endif
++
++static unsigned long
++ptrace_get_syscall_info_entry(struct task_struct *child, struct pt_regs *regs,
++			      struct ptrace_syscall_info *info)
 +{
-+	/*
-+	 * If the system call failed,
-+	 * regs->gpr[3] contains a positive ERRORCODE.
-+	 */
-+	return (regs->ccr & 0x10000000UL) ? -regs->gpr[3] : 0;
++	unsigned long args[ARRAY_SIZE(info->entry.args)];
++	int i;
++
++	info->op = PTRACE_SYSCALL_INFO_ENTRY;
++	info->entry.nr = syscall_get_nr(child, regs);
++	syscall_get_arguments(child, regs, args);
++	for (i = 0; i < ARRAY_SIZE(args); i++)
++		info->entry.args[i] = args[i];
++
++	/* args is the last field in struct ptrace_syscall_info.entry */
++	return offsetofend(struct ptrace_syscall_info, entry.args);
 +}
 +
- static inline long syscall_get_return_value(struct task_struct *task,
- 					    struct pt_regs *regs)
- {
++static unsigned long
++ptrace_get_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
++				struct ptrace_syscall_info *info)
++{
++	/*
++	 * As struct ptrace_syscall_info.entry is currently a subset
++	 * of struct ptrace_syscall_info.seccomp, it makes sense to
++	 * initialize that subset using ptrace_get_syscall_info_entry().
++	 * This can be reconsidered in the future if these structures
++	 * diverge significantly enough.
++	 */
++	ptrace_get_syscall_info_entry(child, regs, info);
++	info->op = PTRACE_SYSCALL_INFO_SECCOMP;
++	info->seccomp.ret_data = child->ptrace_message;
++
++	/* ret_data is the last field in struct ptrace_syscall_info.seccomp */
++	return offsetofend(struct ptrace_syscall_info, seccomp.ret_data);
++}
++
++static unsigned long
++ptrace_get_syscall_info_exit(struct task_struct *child, struct pt_regs *regs,
++			     struct ptrace_syscall_info *info)
++{
++	info->op = PTRACE_SYSCALL_INFO_EXIT;
++	info->exit.rval = syscall_get_error(child, regs);
++	info->exit.is_error = !!info->exit.rval;
++	if (!info->exit.is_error)
++		info->exit.rval = syscall_get_return_value(child, regs);
++
++	/* is_error is the last field in struct ptrace_syscall_info.exit */
++	return offsetofend(struct ptrace_syscall_info, exit.is_error);
++}
++
++static int
++ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
++			void __user *datavp)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	struct ptrace_syscall_info info = {
++		.op = PTRACE_SYSCALL_INFO_NONE,
++		.arch = syscall_get_arch(child),
++		.instruction_pointer = instruction_pointer(regs),
++		.stack_pointer = user_stack_pointer(regs),
++	};
++	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
++	unsigned long write_size;
++
++	/*
++	 * This does not need lock_task_sighand() to access
++	 * child->last_siginfo because ptrace_freeze_traced()
++	 * called earlier by ptrace_check_attach() ensures that
++	 * the tracee cannot go away and clear its last_siginfo.
++	 */
++	switch (child->last_siginfo ? child->last_siginfo->si_code : 0) {
++	case SIGTRAP | 0x80:
++		switch (child->ptrace_message) {
++		case PTRACE_EVENTMSG_SYSCALL_ENTRY:
++			actual_size = ptrace_get_syscall_info_entry(child, regs,
++								    &info);
++			break;
++		case PTRACE_EVENTMSG_SYSCALL_EXIT:
++			actual_size = ptrace_get_syscall_info_exit(child, regs,
++								   &info);
++			break;
++		}
++		break;
++	case SIGTRAP | (PTRACE_EVENT_SECCOMP << 8):
++		actual_size = ptrace_get_syscall_info_seccomp(child, regs,
++							      &info);
++		break;
++	}
++
++	write_size = min(actual_size, user_size);
++	return copy_to_user(datavp, &info, write_size) ? -EFAULT : actual_size;
++}
++#endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
+ 
+ int ptrace_request(struct task_struct *child, long request,
+ 		   unsigned long addr, unsigned long data)
+@@ -1096,6 +1193,10 @@ int ptrace_request(struct task_struct *child, long request,
+ 			ret = __put_user(kiov.iov_len, &uiov->iov_len);
+ 		break;
+ 	}
++
++	case PTRACE_GET_SYSCALL_INFO:
++		ret = ptrace_get_syscall_info(child, addr, datavp);
++		break;
+ #endif
+ 
+ 	case PTRACE_SECCOMP_GET_FILTER:
 -- 
 ldv
