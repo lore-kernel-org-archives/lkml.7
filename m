@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380E8C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57432C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A8F20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1686A20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554763878;
-	bh=77yxdbS0AK8GnWOtGUqkzsZ3GwU3N3qU2hFQtWbFAAk=;
+	s=default; t=1554763942;
+	bh=c8a1hwY6u+TxWFfplKe2/XF5g4lUyh2oy7skc9WW/AY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dULDlRTrs+hj8lB96znL/O62HQdJYYEgU/aMdPCBP/08oPzHWHh7YfsoCHBFOhFZf
-	 6uMmKNfPFjCMEOeWvxtzZpaXvpICfeyYMK3hm7XE08Cz3wxDeCyIsDFVvdSmNmYrin
-	 KIjODAfb8Ds4JjxSscKk3MrsmC2HEH7A+7tsG1x4=
+	b=dceJWSucLWcr/XAiqb4K4MM8FSFCbhK9/RWyKVpVwi2RzetqSMNUj6N6DbcHQwQ5R
+	 aUxtghwVwxWNsoOYsgnv53oeyisI6o6dI5C9SN9KRszUwoX2+5YP3K1CNdFI9ysRJE
+	 mPgqIT9wCdnoqDm53YWATyWkvcvhKVGpHCqxIRPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDHWvQ (ORCPT
+        id S1727206AbfDHWwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:51:16 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:43732 "EHLO
+        Mon, 8 Apr 2019 18:52:20 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:43744 "EHLO
         mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfDHWvQ (ORCPT
+        with ESMTP id S1726188AbfDHWwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:51:16 -0400
+        Mon, 8 Apr 2019 18:52:19 -0400
 Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 6D308CBB;
-        Mon,  8 Apr 2019 22:51:15 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 15:51:14 -0700
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id E70E0CB7;
+        Mon,  8 Apr 2019 22:52:18 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 15:52:17 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
 To:     Vadim Pasternak <vadimp@mellanox.com>
 Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
         linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        idosch@mellanox.com
+        idosch@mellanox.com, Andrey Ryabinin <aryabinin@virtuozzo.com>
 Subject: Re: [PATCH v1 bitops] bitops: Fix UBSAN undefined behavior warning
  for rotation right
-Message-Id: <20190408155114.c0031348812a0590662e4bf9@linux-foundation.org>
+Message-Id: <20190408155217.3f723554ae7fbcb34eeacb30@linux-foundation.org>
 In-Reply-To: <20190407125325.24440-1-vadimp@mellanox.com>
 References: <20190407125325.24440-1-vadimp@mellanox.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
@@ -49,6 +49,8 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+(resend, cc Andrey)
 
 On Sun,  7 Apr 2019 12:53:25 +0000 Vadim Pasternak <vadimp@mellanox.com> wrote:
 
