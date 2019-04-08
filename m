@@ -2,277 +2,396 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A91C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A67C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF8720879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD40220879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="o/1XRWZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfDHW5k (ORCPT
+        id S1726632AbfDHW64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:57:40 -0400
-Received: from gate.crashing.org ([63.228.1.57]:44594 "EHLO gate.crashing.org"
+        Mon, 8 Apr 2019 18:58:56 -0400
+Received: from vps.xff.cz ([195.181.215.36]:35464 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfDHW5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:57:39 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x38MvNsS017221;
-        Mon, 8 Apr 2019 17:57:23 -0500
-Message-ID: <ef6a6ebbce2e388659ef440a12b844d23a04cc6c.camel@kernel.crashing.org>
-Subject: Re: [PATCH v3] PCI: al: Add Amazon Annapurna Labs PCIe host
- controller driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
-        alisaidi@amazon.com, zeev@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
-        hhhawa@amazon.com
-Date:   Tue, 09 Apr 2019 08:57:22 +1000
-In-Reply-To: <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
-References: <20190326125508.GG24180@google.com>
-         <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1726471AbfDHW6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 18:58:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1554764331; bh=dbHjtoHCIFlldJVxUe3HRjLtgYw978AnPPZNs3RtKkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o/1XRWZbOPUMavRZUYhxBT3pvgB/xCBMtf6s2EbLk6xzLP2aR0wS/f4UKYDa1WLFf
+         +dUfwPtYXOfJpu/nqKZQ0kAz8clQwvTl3eh11uwBINSgsUiYY741FuvR8M+0KiexYm
+         eRj5NqW66GHhjR5ZB5Dg7rMRrURSyxI1uyR20+Gc=
+Date:   Tue, 9 Apr 2019 00:58:51 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 01/12] arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
+Message-ID: <20190408225851.svelyf7h3fiw4wjw@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-2-megous@megous.com>
+ <20190408074628.e5ers4gzlqz4coyk@flea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190408074628.e5ers4gzlqz4coyk@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-28 at 13:57 +0200, Jonathan Chocron wrote:
-> Add support for Amazon's Annapurna Labs PCIe driver. The HW
-> controller
-> is based on DesignWare's IP.
+On Mon, Apr 08, 2019 at 09:46:28AM +0200, Maxime Ripard wrote:
+> On Sat, Apr 06, 2019 at 01:45:03AM +0200, megous@megous.com wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > Orange Pi 3 is a H6 based SBC made by Xulong, released in
+> > January 2019. It has the following features:
+> >
+> > - Allwinner H6 quad-core 64-bit ARM Cortex-A53
+> > - GPU Mali-T720
+> > - 1GB or 2GB LPDDR3 RAM
+> > - AXP805 PMIC
+> > - AP6256 Wifi/BT 5.0
+> > - USB 2.0 host port (A)
+> > - USB 2.0 micro usb, OTG
+> > - USB 3.0 Host + 4 port USB hub (GL3510)
+> > - Gigabit Ethernet (Realtek RTL8211E phy)
+> > - HDMI 2.0 port
+> > - soldered eMMC (optional)
+> > - 3x LED (one is on the bottom)
+> > - microphone
+> > - audio jack
+> > - PCIe
+> >
+> > Add basic support for the board.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 212 ++++++++++++++++++
+> >  2 files changed, 213 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> > index e4dce2f6fa3a..285a7cb5135b 100644
+> > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > new file mode 100644
+> > index 000000000000..7a2424fcaed7
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > @@ -0,0 +1,212 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > +/*
+> > + * Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "sun50i-h6.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +	model = "OrangePi 3";
+> > +	compatible = "xunlong,orangepi-3", "allwinner,sun50i-h6";
 > 
-> The HW doesn't support accessing the Root Port's config space via
-> ECAM,
-> so we obtain its base address via an AMZN0001 device.
+> As Clement pointed out, this should be documented in
+> Documentation/devicetree/bindings/arm/sunxi.yaml
 > 
-> Furthermore, the DesignWare PCIe controller doesn't filter out config
-> transactions sent to devices 1 and up on its bus, so they are
-> filtered
-> by the driver.
+> It's part of sunxi/for-next only at this point, and it will go through
+> a different branch than the H6 DTS, so it would be great to have it in
+> a separate patch.
 > 
-> All subordinate buses do support ECAM access.
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +
+> > +		power {
+> > +			label = "orangepi:red:power";
+> > +			gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
+> > +			default-state = "on";
+> > +		};
+> > +
+> > +		status {
+> > +			label = "orangepi:green:status";
+> > +			gpios = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
+> > +		};
+> > +	};
+> > +
+> > +	reg_vcc5v: vcc5v {
+> > +		/* board wide 5V supply directly from the DC jack */
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc-5v";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		regulator-always-on;
+> > +	};
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply = <&reg_dcdca>;
+> > +};
+> > +
+> > +&ehci0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ehci3 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&mmc0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc0_pins>;
+> > +	vmmc-supply = <&reg_cldo1>;
+> > +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> > +	bus-width = <4>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ohci0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ohci3 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pio {
+> > +	vcc-pc-supply = <&reg_bldo2>;
+> > +	vcc-pd-supply = <&reg_cldo1>;
+> > +};
+> > +
+> > +&r_i2c {
+> > +	status = "okay";
+> > +
+> > +	axp805: pmic@36 {
+> > +		compatible = "x-powers,axp805", "x-powers,axp806";
+> > +		reg = <0x36>;
+> > +		interrupt-parent = <&r_intc>;
+> > +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <1>;
+> > +		x-powers,self-working-mode;
+> > +		vina-supply = <&reg_vcc5v>;
+> > +		vinb-supply = <&reg_vcc5v>;
+> > +		vinc-supply = <&reg_vcc5v>;
+> > +		vind-supply = <&reg_vcc5v>;
+> > +		vine-supply = <&reg_vcc5v>;
+> > +		aldoin-supply = <&reg_vcc5v>;
+> > +		bldoin-supply = <&reg_vcc5v>;
+> > +		cldoin-supply = <&reg_vcc5v>;
+> > +
+> > +		regulators {
+> > +			reg_aldo1: aldo1 {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcc-pl-led-ir";
+> > +			};
+> > +
+> > +			reg_aldo2: aldo2 {
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcc33-audio-tv-ephy-mac";
+> > +			};
+> > +
+> > +			/* ALDO3 is shorted to CLDO1 */
+> > +			reg_aldo3: aldo3 {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcc33-io-pd-emmc-sd-usb-uart-1";
+> > +			};
+> > +
+> > +			reg_bldo1: bldo1 {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-name = "vcc18-dram-bias-pll";
+> > +			};
+> > +
+> > +			reg_bldo2: bldo2 {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-name = "vcc-efuse-pcie-hdmi-pc";
+> > +			};
+> > +
+> > +			bldo3 {
+> > +				/* unused */
+> > +			};
+> > +
+> > +			bldo4 {
+> > +				/* unused */
+> > +			};
+> > +
+> > +			reg_cldo1: cldo1 {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-name = "vcc33-io-pd-emmc-sd-usb-uart-2";
+> > +			};
+> > +
+> > +			cldo2 {
+> > +				/* unused */
+> > +			};
+> > +
+> > +			cldo3 {
+> > +				/* unused */
+> > +			};
+> > +
+> > +			reg_dcdca: dcdca {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <800000>;
+> > +				regulator-max-microvolt = <1160000>;
+> > +				regulator-name = "vdd-cpu";
+> > +			};
+> > +
+> > +			reg_dcdcc: dcdcc {
+> > +				regulator-min-microvolt = <810000>;
+> > +				regulator-max-microvolt = <1080000>;
+> > +				regulator-name = "vdd-gpu";
+> > +			};
+> > +
+> > +			reg_dcdcd: dcdcd {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <960000>;
+> > +				regulator-max-microvolt = <960000>;
+> > +				regulator-name = "vdd-sys";
+> > +			};
+> > +
+> > +			reg_dcdce: dcdce {
+> > +				regulator-always-on;
+> > +				regulator-min-microvolt = <1200000>;
+> > +				regulator-max-microvolt = <1200000>;
+> > +				regulator-name = "vcc-dram";
+> > +			};
+> > +
+> > +			sw {
+> > +				/* unused */
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart0_ph_pins>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usb2otg {
+> > +	dr_mode = "host";
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usb2phy {
+> > +	usb0_id_det-gpios = <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
+> > +	usb0_vbus-supply = <&reg_vcc5v>;
+> > +	usb3_vbus-supply = <&reg_vcc5v>;
+> > +	status = "okay";
 > 
-> Implementing specific PCI config access functions involves:
->  - Adding an init function to obtain the Root Port's base address
-> from
->    an AMZN0001 device.
->  - Adding a new entry in the MCFG quirk array
-> 
-> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> If we have an ID pin, then why is the OTG controller set to host?
 
-Late to the party, sorry :-) That kernel.crashing.org email is on its
-last legs...
+This board has fixed conenction between VBUS and DCIN, so if it is powered
+from DCIN and someone will try to connect it to the PC as a peripheral,
+they'll get PC's VBUS shorted to the power supply connected to DCIN.
 
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Depending on voltage difference between DCIN and PC's VBUS, you can get
+overcurrent condidion and PC's port shutdown.
 
-> ---
+The board is not entirely foolproof in this regard.
+
+- It can be host powered when connected via microUSB
+- It can be self-powered and host an device on microUSB
+- It can be self-powered and serve as a peripheral if you modify
+  a cable (cut VBUS) or the host is expecting this and has some
+  VBUS detection logic (most hosts will not have this)
+
+I just didn't want to encourage use as a peripheral, because it's not
+very foolproof. But I guess, DTS file will not stop anyone anyway.
+
+I'll change it to otg, and maybe leave a small note.
+
+regards,
+	o.
+
+> Maxime
 > 
-> --v2:
->   - Fix commit message comments (incl. using AMZN0001 instead of
->     PNP0C02)
->   - Use the usual multi-line comment style
-> 
-> --v3:
->   - Fix additional commit message comments
-> 
->  MAINTAINERS                          |  6 +++
->  drivers/acpi/pci_mcfg.c              | 12 +++++
->  drivers/pci/controller/dwc/Makefile  |  1 +
->  drivers/pci/controller/dwc/pcie-al.c | 93
-> ++++++++++++++++++++++++++++++++++++
->  include/linux/pci-ecam.h             |  1 +
->  5 files changed, 113 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32d444476a90..7a17017f9f82 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11769,6 +11769,12 @@ T:	git
-> git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
->  S:	Supported
->  F:	drivers/pci/controller/
->  
-> +PCIE DRIVER FOR ANNAPURNA LABS
-> +M:	Jonathan Chocron <jonnyc@amazon.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/pci/controller/dwc/pcie-al.c
-> +
->  PCIE DRIVER FOR AMLOGIC MESON
->  M:	Yue Wang <yue.wang@Amlogic.com>
->  L:	linux-pci@vger.kernel.org
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index a4e8432fc2fb..b42be067fb83 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -52,6 +52,18 @@ struct mcfg_fixup {
->  static struct mcfg_fixup mcfg_quirks[] = {
->  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres },
-> */
->  
-> +#define AL_ECAM(table_id, rev, seg, ops) \
-> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
-> +
-> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
-> +
->  #define QCOM_ECAM32(seg) \
->  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile
-> b/drivers/pci/controller/dwc/Makefile
-> index 7bcdcdf5024e..1ea773c0070d 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  # depending on whether ACPI, the DT driver, or both are enabled.
->  
->  ifdef CONFIG_PCI
-> +obj-$(CONFIG_ARM64) += pcie-al.o
->  obj-$(CONFIG_ARM64) += pcie-hisi.o
->  endif
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c
-> b/drivers/pci/controller/dwc/pcie-al.c
-> new file mode 100644
-> index 000000000000..65a9776c12be
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used
-> in chips
-> + * such as Graviton and Alpine)
-> + *
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights
-> Reserved.
-> + *
-> + * Author: Jonathan Chocron <jonnyc@amazon.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
-> +#include <linux/pci-acpi.h>
-> +#include "../../pci.h"
-> +
-> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> +
-> +struct al_pcie_acpi  {
-> +	void __iomem *dbi_base;
-> +};
-> +
-> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned
-> int devfn,
-> +				     int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct al_pcie_acpi *pcie = cfg->priv;
-> +	void __iomem *dbi_base = pcie->dbi_base;
-> +
-> +	if (bus->number == cfg->busr.start) {
-> +		/*
-> +		 * The DW PCIe core doesn't filter out transactions to
-> other
-> +		 * devices/functions on the primary bus num, so we do
-> this here.
-> +		 */
-> +		if (PCI_SLOT(devfn) > 0)
-> +			return NULL;
-> +		else
-> +			return dbi_base + where;
-> +	}
-> +
-> +	return pci_ecam_map_bus(bus, devfn, where);
-> +}
-> +
-> +static int al_pcie_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct acpi_device *adev = to_acpi_device(dev);
-> +	struct acpi_pci_root *root = acpi_driver_data(adev);
-> +	struct al_pcie_acpi *al_pcie;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment,
-> res);
-> +	if (ret) {
-> +		dev_err(dev, "can't get rc dbi base address for SEG
-> %d\n",
-> +			root->segment);
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
-> +
-> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(al_pcie->dbi_base)) {
-> +		long err = PTR_ERR(al_pcie->dbi_base);
-> +
-> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
-> +			res, err);
-> +		return err;
-> +	}
-> +
-> +	cfg->priv = al_pcie;
-> +
-> +	return 0;
-> +}
-> +
-> +struct pci_ecam_ops al_pcie_ops = {
-> +	.bus_shift    = 20,
-> +	.init         =  al_pcie_init,
-> +	.pci_ops      = {
-> +		.map_bus    = al_pcie_map_bus,
-> +		.read       = pci_generic_config_read,
-> +		.write      = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 29efa09d686b..a73164c85e78 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus,
-> unsigned int devfn,
->  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX
-> 1.x */
->  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene
-> PCIe v1 */
->  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene
-> PCIe v2.x */
-> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs
-> PCIe */
->  #endif
->  
->  #ifdef CONFIG_PCI_HOST_COMMON
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
 
