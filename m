@@ -2,198 +2,134 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A788DC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1497AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C14E21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEED321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="0Nbjowjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfDHMi6 (ORCPT
+        id S1726656AbfDHMjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:38:58 -0400
-Received: from mail.delivery-10-eu-central-1.prod.hydra.sophos.com ([35.159.27.106]:58552
-        "EHLO mail.delivery-10-eu-central-1.prod.hydra.sophos.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfDHMi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:38:58 -0400
-X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Apr 2019 08:38:56 EDT
-Received: from mail.delivery-50-eu-central-1.prod.hydra.sophos.com (ip-172-20-1-98.eu-central-1.compute.internal [172.20.1.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.delivery-10-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id 44d8w16wRCz8Bn
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 12:33:05 +0000 (UTC)
-Received: from ip-172-20-1-174.eu-central-1.compute.internal (ip-172-20-1-174.eu-central-1.compute.internal [127.0.0.1])
-        by mail.delivery-50-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTP id 44d8w03lV8zRhQr;
-        Mon,  8 Apr 2019 12:33:04 +0000 (UTC)
-X-Sophos-Email-ID: 3525a9a60ba84063ae1047f94d1241cb
-Received: from smtp.eckelmann.de (smtp.eckelmann.de [217.19.183.80])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by relay-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id
- 44d8vy6KszzTgCr; Mon,  8 Apr 2019 12:33:02 +0000 (UTC)
-Received: from ws161-Debian.eckelmann.group
- (2a00:1f08:4007:5c00:fde5:652:edb5:c402) by EX-SRV1.eckelmann.group
- (2a00:1f08:4007:e035:172:18:35:4) with Microsoft SMTP Server (version=TLS1_2, 
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 8 Apr
- 2019 14:33:02 +0200
-From:   Gavin Schenk <g.schenk@eckelmann.de>
-To:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <u.kleine-koenig@pengutronix.de>, <t.scherer@eckelmann.de>
-CC:     <kernel@pengutronix.de>, Gavin Schenk <g.schenk@eckelmann.de>
-Subject: [PATCH] MAINTAINERS / Documentation: Thorsten Scherer is the
- successor of Gavin Schenk
-Date:   Mon, 8 Apr 2019 14:32:08 +0200
-Message-ID: <20190408123208.10965-1-g.schenk@eckelmann.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Apr 2019 08:39:19 -0400
+Received: from mail-eopbgr690077.outbound.protection.outlook.com ([40.107.69.77]:39549
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726510AbfDHMjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:39:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBp/ZUW8my6ju8eIkgQRaJqxXz12gIub/dKK40UtbEY=;
+ b=0NbjowjnlguLpLOTC/Tapg7+eMbVDCB6mVEN2a7Ekyyab+AjOR+RJK7hKSAg/bmnmeCaesD6JBpxzIPKzkr57++e9/hfBnPOqSBZD/TxaFoa05lBAYurUbfq8dlZNdBumKub/q+pVQzVNNKvyamzV7mWrWZX7B85ws4v9M5GOos=
+Received: from BYAPR02MB4710.namprd02.prod.outlook.com (52.135.232.23) by
+ BYAPR02MB4918.namprd02.prod.outlook.com (52.135.234.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.13; Mon, 8 Apr 2019 12:39:12 +0000
+Received: from BYAPR02MB4710.namprd02.prod.outlook.com
+ ([fe80::55ca:e7d8:c514:8276]) by BYAPR02MB4710.namprd02.prod.outlook.com
+ ([fe80::55ca:e7d8:c514:8276%3]) with mapi id 15.20.1771.016; Mon, 8 Apr 2019
+ 12:39:12 +0000
+From:   Nava kishore Manne <navam@xilinx.com>
+To:     Alan Tull <atull@kernel.org>
+CC:     Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kishore m <chinnikishore369@gmail.com>
+Subject: RE: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Thread-Topic: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Thread-Index: AQHU6VAa3juPwWr490+9QB3ZXSwb5qYpMM2AgAkMFiA=
+Date:   Mon, 8 Apr 2019 12:39:11 +0000
+Message-ID: <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
+References: <20190402123123.915-1-nava.manne@xilinx.com>
+ <20190402123123.915-4-nava.manne@xilinx.com>
+ <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+In-Reply-To: <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=navam@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4468c9e0-c191-4545-4fa1-08d6bc1f33f2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BYAPR02MB4918;
+x-ms-traffictypediagnostic: BYAPR02MB4918:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR02MB49184C77CDCDB040378F622FC22C0@BYAPR02MB4918.namprd02.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(346002)(376002)(396003)(39860400002)(13464003)(189003)(199004)(54906003)(55016002)(6246003)(52536014)(6116002)(8676002)(256004)(25786009)(8936002)(9686003)(99286004)(4326008)(5660300002)(53936002)(74316002)(71200400001)(33656002)(71190400001)(81166006)(81156014)(316002)(7696005)(305945005)(2906002)(66066001)(68736007)(86362001)(3846002)(6436002)(229853002)(106356001)(97736004)(478600001)(486006)(105586002)(476003)(7736002)(76176011)(26005)(102836004)(53546011)(446003)(11346002)(6506007)(6916009)(186003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4918;H:BYAPR02MB4710.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PKcKlHAsy7dMwdTVxlCMd5KI/SWbJ7cpBDqIp1iYsdbN6kE1+EN7SYJYGGoc8Q+nDgDGtcm52IfW+PvOdTf2p4mCMMy6toJZp++JvdHrVq5AQvbyNmTe2d0CD+Lh6F5j6j1RsarElnFHHoVKcvXZ622K92Yq97YJGk9Ru62E8GV4AL6/zbFDZ9JvjixuDmrV13mdghB1yQhznWHvHs2ZztksRMhdMzkuVnDdilJ2Wc2ydH3CzxUnJI869r7jhHgkj0gKGIeNFPtjp6LWmtwN5uXNc+sI7i5J780OuPBFJl98J46CVDmuuBkeV6HOTTVTqTo0dSTkN6z07RyKT0b8GCGhvk8wqpR2/0UyL+kxGKjsquJ8ZKwlJx6hte5+zVc1VrX+1Fe78tLLLgNJ+CYbtZ7LOcE+lMRtf8Oqifqxpfw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [2a00:1f08:4007:5c00:fde5:652:edb5:c402]
-X-ClientProxiedBy: EX-SRV1.eckelmann.group (2a00:1f08:4007:e035:172:18:35:4)
- To EX-SRV1.eckelmann.group (2a00:1f08:4007:e035:172:18:35:4)
-X-LASED-Pver: 0000002
-X-Sophos-Email: [eu-central-1] Antispam-Engine: 3.1.5,
- AntispamData: 2019.4.8.121516
-X-LASED-SpamProbabilty: 0.083173
-X-LASED-Hits: BODY_SIZE_5000_5999 0.000000, BODY_SIZE_7000_LESS 0.000000,
- CT_TEXT_PLAIN_UTF8_CAPS 0.000000, FROM_SAME_AS_TO_DOMAIN 0.000000,
- HTML_00_01 0.050000, HTML_00_10 0.050000, MULTIPLE_RCPTS 0.100000,
- NO_URI_HTTPS 0.000000, WEBMAIL_SOURCE 0.000000, __ANY_URI 0.000000,
- __CC_NAME 0.000000, __CC_NAME_DIFF_FROM_ACC 0.000000, __CC_REAL_NAMES 0.000000,
- __CT 0.000000, __CTE 0.000000, __CT_TEXT_PLAIN 0.000000,
- __FROM_DOMAIN_IN_ANY_CC1 0.000000, __FROM_DOMAIN_IN_ANY_TO1 0.000000,
- __FROM_DOMAIN_IN_RCPT 0.000000, __HAS_CC_HDR 0.000000, __HAS_FROM 0.000000,
- __HAS_MSGID 0.000000, __HAS_XOIP 0.000000, __HAS_X_MAILER 0.000000,
- __MIME_TEXT_ONLY 0.000000, __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000,
- __MIME_VERSION 0.000000, __MULTIPLE_RCPTS_CC_X2 0.000000,
- __NO_HTML_TAG_RAW 0.000000, __SANE_MSGID 0.000000, __SUBJ_ALPHA_END 0.000000,
- __TO_MALFORMED_2 0.000000, __TO_NO_NAME 0.000000, __URI_NO_WWW 0.000000,
- __URI_NS 0.000000
-X-LASED-Authed: 1
-X-LASED-Spam: NonSpam
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4468c9e0-c191-4545-4fa1-08d6bc1f33f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 12:39:11.9378
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to new challenges in my life I can no longer take care of SIOX.
-Thorsten takes over my SIOX tasks.
-
-Signed-off-by: Gavin Schenk <g.schenk@eckelmann.de>
----
- Documentation/ABI/testing/sysfs-bus-siox | 22 +++++++++++-----------
- MAINTAINERS                              |  2 +-
- 2 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-siox b/Documentation/ABI/testing/sysfs-bus-siox
-index fed7c3765a4e..c2a403f20b90 100644
---- a/Documentation/ABI/testing/sysfs-bus-siox
-+++ b/Documentation/ABI/testing/sysfs-bus-siox
-@@ -1,6 +1,6 @@
- What:		/sys/bus/siox/devices/siox-X/active
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		On reading represents the current state of the bus. If it
- 		contains a "0" the bus is stopped and connected devices are
-@@ -12,7 +12,7 @@ Description:
- 
- What:		/sys/bus/siox/devices/siox-X/device_add
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Write-only file. Write
- 
-@@ -27,13 +27,13 @@ Description:
- 
- What:		/sys/bus/siox/devices/siox-X/device_remove
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Write-only file. A single write removes the last device in the siox chain.
- 
- What:		/sys/bus/siox/devices/siox-X/poll_interval_ns
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Defines the interval between two poll cycles in nano seconds.
- 		Note this is rounded to jiffies on writing. On reading the current value
-@@ -41,33 +41,33 @@ Description:
- 
- What:		/sys/bus/siox/devices/siox-X-Y/connected
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value. "0" means the Yth device on siox bus X isn't "connected" i.e.
- 		communication with it is not ensured. "1" signals a working connection.
- 
- What:		/sys/bus/siox/devices/siox-X-Y/inbytes
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value reporting the inbytes value provided to siox-X/device_add
- 
- What:		/sys/bus/siox/devices/siox-X-Y/status_errors
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Counts the number of time intervals when the read status byte doesn't yield the
- 		expected value.
- 
- What:		/sys/bus/siox/devices/siox-X-Y/type
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value reporting the type value provided to siox-X/device_add.
- 
- What:		/sys/bus/siox/devices/siox-X-Y/watchdog
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value reporting if the watchdog of the siox device is
- 		active. "0" means the watchdog is not active and the device is expected to
-@@ -75,13 +75,13 @@ Description:
- 
- What:		/sys/bus/siox/devices/siox-X-Y/watchdog_errors
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value reporting the number to time intervals when the
- 		watchdog was active.
- 
- What:		/sys/bus/siox/devices/siox-X-Y/outbytes
- KernelVersion:	4.16
--Contact:	Gavin Schenk <g.schenk@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-+Contact:	Thorsten Scherer <t.scherer@eckelmann.de>, Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- Description:
- 		Read-only value reporting the outbytes value provided to siox-X/device_add.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43b36dbed48e..34156d1c6468 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14191,7 +14191,7 @@ F:	lib/test_siphash.c
- F:	include/linux/siphash.h
- 
- SIOX
--M:	Gavin Schenk <g.schenk@eckelmann.de>
-+M:	Thorsten Scherer <t.scherer@eckelmann.de>
- M:	Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
- R:	Pengutronix Kernel Team <kernel@pengutronix.de>
- S:	Supported
--- 
-2.20.1
-
+SGkgQWxhbiwNCg0KVGhhbmtzIGZvciBsb29rIGludG8gaXQgYW5kIHByb3ZpZGluZyB0aGUgQUNL
+LiAgDQpJIGdvdCBvbmUgbWlub3IgY29tbWVudHMgZnJvbSBNb3JpdHogRmlzY2hlciBkbyB5b3Ug
+d2FudCBtZSBmaXggdGhhdCBpc3N1ZSBub3cgb3IgSSBjYW4gZml4IGl0IGxhdGVyIGFzIGl04oCZ
+cyBhIG1pbm9yIGNvbW1lbnQ/DQpJbiB3aGljaCBrZXJuZWwgdmVyc2lvbiBpIGNhbiBleHBlY3Qg
+dGhpcyBkcml2ZXIgY2hhbmdlcz8/DQoNCg0KUmVnYXJkcywNCk5hdmFraXNob3JlLg0KDQo+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFsYW4gVHVsbCBbbWFpbHRvOmF0dWxs
+QGtlcm5lbC5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDIsIDIwMTkgMTE6NTcgUE0NCj4g
+VG86IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT4NCj4gQ2M6IE1vcml0eiBG
+aXNjaGVyIDxtZGZAa2VybmVsLm9yZz47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
+OyBNYXJrDQo+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgTWljaGFsIFNpbWVrIDxt
+aWNoYWxzQHhpbGlueC5jb20+OyBSYWphbg0KPiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IEpv
+bGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPjsgbGludXgtDQo+IGZwZ2FAdmdlci5rZXJuZWwu
+b3JnOyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRQ0KPiBUUkVF
+IEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IG1vZGVyYXRlZCBsaXN0OkFS
+TS9GUkVFU0NBTEUNCj4gSU1YIC8gTVhDIEFSTSBBUkNISVRFQ1RVUkUgPGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LQ0KPiBrZXJuZWwgPGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc+OyBraXNob3JlIG0NCj4gPGNoaW5uaWtpc2hvcmUzNjlAZ21haWwuY29t
+Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDMvM10gZnBnYSBtYW5hZ2VyOiBBZGRpbmcgRlBH
+QSBNYW5hZ2VyIHN1cHBvcnQgZm9yDQo+IFhpbGlueCB6eW5xbXANCj4gDQo+IE9uIFR1ZSwgQXBy
+IDIsIDIwMTkgYXQgNzozMiBBTSBOYXZhIGtpc2hvcmUgTWFubmUgPG5hdmEubWFubmVAeGlsaW54
+LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiBIaSBOYXZhLA0KPiANCj4gTG9va3MgZ29vZC4NCj4gDQo+
+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgRlBHQSBNYW5hZ2VyIHN1cHBvcnQgZm9yIHRoZSBYaWxp
+bnggWnlucU1QIGNoaXAuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOYXZhIGtpc2hvcmUgTWFu
+bmUgPG5hdmEubWFubmVAeGlsaW54LmNvbT4NCj4gQWNrZWQtYnk6IEFsYW4gVHVsbCA8YXR1bGxA
+a2VybmVsLm9yZz4NCj4gDQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBmb3IgdjQ6DQo+ID4gICAgICAg
+ICAgICAgICAgIC1VcGRhdGVkIHRoZSBGcGdhIE1nciByZWdpc3RyYXRpb25zIGNhbGwncw0KPiA+
+ICAgICAgICAgICAgICAgICAgdG8gNS4wDQo+ID4gICAgICAgICAgICAgICAgIC1SZW1vdmVkIGRt
+YV9zZXRfbWFza19hbmRfY29oZXJlbnQoKSBBcyB0aGUgRlcNCj4gPiAgICAgICAgICAgICAgICAg
+IHN1cHBvcnRzIG9ubHkgMzItYml0IGFkZHJlc3Mgb3BlcmF0aW9ucy4NCj4gPg0KPiA+IENoYW5n
+ZXMgZm9yIHYzOg0KPiA+ICAgICAgICAgICAgICAgICAtQ3JlYXRlZCBwYXRjaGVzIG9uIHRvcCBv
+ZiA1LjAtcmM1Lg0KPiA+ICAgICAgICAgICAgICAgICAgTm8gZnVuY3Rpb25hbCBjaGFuZ2VzLg0K
+PiA+DQo+ID4gQ2hhbmdlcyBmb3IgdjI6DQo+ID4gICAgICAgICAgICAgICAgIC1GaXhlZCBzb21l
+IG1pbm9yIGNvZGluZyBpc3N1ZXMgYXMgc3VnZ2VzdGVkIGJ5DQo+ID4gICAgICAgICAgICAgICAg
+ICBNb3JpdHoNCj4gPg0KPiA+IENoYW5nZXMgZm9yIHYxOg0KPiA+ICAgICAgICAgICAgICAgICAt
+Tm9uZS4NCj4gPg0KPiA+IENoYW5nZXMgZm9yIFJGQy1WMjoNCj4gPiAgICAgICAgICAgICAgICAg
+LVVwZGF0ZWQgdGhlIEZwZ2EgTWdyIHJlZ2lzdHJhdGlvbnMgY2FsbCdzDQo+ID4gICAgICAgICAg
+ICAgICAgICB0byA0LjE4DQo+IA0KPiBUaGFua3MsDQo+IEFsYW4NCg==
