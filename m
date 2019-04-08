@@ -2,266 +2,133 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43C7C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99BAC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742D620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0F320880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCDRvqKE"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="YHYL0Jvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfDHQpZ (ORCPT
+        id S1728976AbfDHQqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:45:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40181 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfDHQpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:45:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so7642817plr.7;
-        Mon, 08 Apr 2019 09:45:24 -0700 (PDT)
+        Mon, 8 Apr 2019 12:46:38 -0400
+Received: from mail-eopbgr700050.outbound.protection.outlook.com ([40.107.70.50]:39040
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726253AbfDHQqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:46:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jrDKXuW7FC7KqAwEG6aEwq5J5Y/jHqu2dubzMvyEP9g=;
-        b=fCDRvqKE3TfSd3fJ0H6i7EAVp6O+5ajuHx2Dtk6AojR7W25eAUT1y/LmsjMtz8VtN3
-         LxLZ0ayywNdgMzfhn5gEUlGGnR9WCl5UT563rXyZds/ZHH3o1cNiFFBA+hJw8FmhwB3H
-         BKb40nMEYUYKGRas/FVoNJCktYgoVQ78Nr+n1KgH/w/GS9pCWTR4q10yKaT0WXok7cXu
-         V+MuY7W7vw+RG/6ySUOTqyTbv+rKx8o4Lk0TD/x0pb9IXvGXRb1XHGLyEC00KA7/Nr8m
-         TlrMoMnI5AMBg/V1TUtjMOOiafHK2mgGyIU7UrcYohSMGO47bXNFCy21prpeFI0khr8Y
-         fv1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jrDKXuW7FC7KqAwEG6aEwq5J5Y/jHqu2dubzMvyEP9g=;
-        b=Wb65XXORiGx0Ujg3R86oBrh6kFZ897tRoKoGUCr1cjUYfyajUtoeeBIUDF23HU7u4B
-         rgFBsushQ1dZuhKphThkCL1ICd2lv8twmX4rUeGqBOep+PGTk2qDD1mlomntCSvdevO4
-         EvEyl7eiuE4kBUzGRAVi4MuBy7dcqxxU2T6t7U9musyS9cf5BhUJrb2ckkUclbZ4bxMB
-         rEuR0XJXgR58wT9D6lSY3uCv0hs5FosBjOLdBzWX4YfiMCl8BtndncxJ75ApZtdclWXe
-         Ib355tvWb/Y4+Pxq0ZT83YdieUHHIV5OCalqyj0lMKqfj2a5bLtFiakx+799e4Xsxpse
-         7Ycg==
-X-Gm-Message-State: APjAAAVrGRlOx/GqZHhXyeSHGwaKDkcL6Rbu3zBXRW0wn7MPryv32ulL
-        Ts341++MvQHDMP508YzaoL5g/N/1lPNuJ6joYRg=
-X-Google-Smtp-Source: APXvYqzPZ4yyIjf62XXzVUThw/zEpnh/fWJ5UaX2KgOSTYw9g6wDQsoOw03VIB5pzrMrDZ8r3FuJTMmlNzd6lTuMcnE=
-X-Received: by 2002:a17:902:2c83:: with SMTP id n3mr30304931plb.281.1554741924069;
- Mon, 08 Apr 2019 09:45:24 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y6Kt/m7S8S7DhP8G3asfPNIM1z3Pii7byo93KP3JdyU=;
+ b=YHYL0JvgY99JGFGanweQrpDcm4S9sGAqafWAmog1+ERR1SOFvuFJ2QCPuvN0fXl6BGAlAxdekfo+YERVHZgavui2jfS+WWbYy/J/hx41qa8y2NUrdQCvKU6s5KuxgJIh2o/lnxEDBSkVjBJy+teKc3mnPQ2F1kT40gOcwLlFgYU=
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.38.138) by
+ DM5PR12MB1177.namprd12.prod.outlook.com (10.168.236.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.19; Mon, 8 Apr 2019 16:46:32 +0000
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::b847:c18d:397a:5ea7]) by DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::b847:c18d:397a:5ea7%5]) with mapi id 15.20.1771.021; Mon, 8 Apr 2019
+ 16:46:32 +0000
+From:   Gary R Hook <ghook@amd.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "Hook, Gary" <Gary.Hook@amd.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] x86/mm/mem_encrypt: Disable all instrumentation for SME
+ early boot code
+Thread-Topic: [PATCH] x86/mm/mem_encrypt: Disable all instrumentation for SME
+ early boot code
+Thread-Index: AQHU6yS/AQVIYa78D0OsnFnDJRviWKYsd26AgAYHgoA=
+Date:   Mon, 8 Apr 2019 16:46:31 +0000
+Message-ID: <5dfcb133-0a0e-9e07-3774-313e30814e79@amd.com>
+References: <155440965936.6194.3202659723198724589.stgit@sosrh7.amd.com>
+ <alpine.DEB.2.21.1904042237020.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904042237020.1802@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR01CA0008.prod.exchangelabs.com (2603:10b6:805:b6::21)
+ To DM5PR12MB1449.namprd12.prod.outlook.com (2603:10b6:4:d::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 995c0a5c-453f-4a8d-ea54-08d6bc41c0f1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1177;
+x-ms-traffictypediagnostic: DM5PR12MB1177:
+x-microsoft-antispam-prvs: <DM5PR12MB1177C8C0F14490264A7C0CE8FD2C0@DM5PR12MB1177.namprd12.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(366004)(136003)(396003)(39860400002)(376002)(346002)(199004)(189003)(55674003)(54906003)(14444005)(6246003)(478600001)(14454004)(52116002)(31696002)(76176011)(99286004)(4326008)(71190400001)(36756003)(446003)(66066001)(97736004)(11346002)(2616005)(106356001)(105586002)(71200400001)(256004)(26005)(486006)(476003)(25786009)(110136005)(6436002)(316002)(68736007)(6486002)(6116002)(7736002)(305945005)(229853002)(3846002)(31686004)(53936002)(81156014)(386003)(6506007)(6636002)(102836004)(6512007)(186003)(8936002)(5660300002)(72206003)(2906002)(8676002)(53546011)(81166006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1177;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IBkTd31Z87AJPsDNxnAp7rraZLjPItjOlr9Uo50juLHlSk448ZjYDpLYHT8xzAXMn1i0+BtIUkdObg/2WS1QV1zRBSGkGe38+HwKh9X//6avB5zi04yhDxzuFkfwaSM7Ip8B/34gSO8DbzTLc57mvI1AY0JaOFFDMSbmyOGd09hyoZ/0DkSfYpmO2qRtBkFb9kFm/dkAF97F8AlH+yBCmA+l3lBJAv2WmSdI0z59yi8zhWxAe66vfnY1bi56qgZGsWHjMyTJEWZWeKrA/RbtdONsZZPNrjVK/+9UdMh1VC6NOz29KynpH5j1KlcVuDtZ0+ZpPaXuNYtkTEjAOsYv9xA/r4/lHJFE0XE6uneW7a/U1VEw08HkOGrFJRR0xpEyPpqFcjE8HhPxrHZqWDwRCpCAXeyPCuA6r6KYpSHRIPU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <494D6F2F1375174CBFE2606299415E62@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com> <20190403164537.24643-12-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20190403164537.24643-12-heikki.krogerus@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Apr 2019 19:45:13 +0300
-Message-ID: <CAHp75VfKJWXM0=ycdOvn0c1BOS+LevwYbq=6iaCOiQUwk--a-Q@mail.gmail.com>
-Subject: Re: [PATCH 11/11] platform/x86: intel_cht_int33fe: Replacing the old
- connections with references
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 995c0a5c-453f-4a8d-ea54-08d6bc41c0f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 16:46:31.9462
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 7:46 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Now that the software nodes support references, and the
-> device connection API support parsing fwnode references,
-> replacing the old connection descriptions with software node
-> references. Relying on device names when matching the
-> connection would not have been possible to link the USB
-> Type-C connector and the DisplayPort connector together, but
-> with real references it's not problem.
->
-> The DisplayPort ACPI node is dag up, and the drivers own
-> software node for the DisplayPort is set as the secondary
-> node for it. The USB Type-C connector refers the software
-> node, but it is now tied to the ACPI node, and therefore any
-> device entry (struct drm_connector in practice) that the
-> node combo is assigned to.
->
-> The USB role switch device does not have ACPI node, so we
-> have to wait for the device to appear. Then we can simply
-> assign our software node for the to the device.
->
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Though one minor comment below.
-
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_cht_int33fe.c | 94 +++++++++++++++++++-----
->  1 file changed, 77 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index ed21aeacec24..f0844a04299b 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -39,15 +39,22 @@ enum {
->         INT33FE_NODE_MAX,
->  };
->
-> +enum {
-> +       INT33FE_REF_ORIENTATION,
-> +       INT33FE_REF_MODE_MUX,
-> +       INT33FE_REF_DISPLAYPORT,
-> +       INT33FE_REF_ROLE_SWITCH,
-> +       INT33FE_REF_MAX,
-> +};
-> +
->  struct cht_int33fe_data {
->         struct i2c_client *max17047;
->         struct i2c_client *fusb302;
->         struct i2c_client *pi3usb30532;
-> -       /* Contain a list-head must be per device */
-> -       struct device_connection connections[4];
->
->         struct fwnode_handle *dp;
->         struct fwnode_handle *node[INT33FE_NODE_MAX];
-> +       struct software_node_reference *ref[INT33FE_REF_MAX];
->  };
->
->  /*
-> @@ -287,6 +294,65 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
->         return ret;
->  }
->
-> +static void cht_int33fe_remove_references(struct cht_int33fe_data *data)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < INT33FE_REF_MAX; i++)
-> +               fwnode_remove_software_node_reference(data->ref[i]);
-> +}
-> +
-> +static int cht_int33fe_add_references(struct cht_int33fe_data *data)
-> +{
-> +       struct fwnode_reference_args args[2] = { };
-> +       struct software_node_reference *ref;
-> +       struct fwnode_handle *con;
-> +
-> +       con = data->node[INT33FE_NODE_USB_CONNECTOR];
-> +
-> +       /* USB Type-C muxes */
-> +       args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
-> +       args[1].fwnode = NULL;
-> +
-
-> +       ref = fwnode_create_software_node_reference(con, "orientation-switch",
-> +                                                   args);
-
-Here I really don't care about 80 character limit.
-Ditto for below cases.
-
-> +       if (IS_ERR(ref))
-> +               return PTR_ERR(ref);
-> +       data->ref[INT33FE_REF_ORIENTATION] = ref;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "mode-switch", args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_MODE_MUX] = ref;
-> +
-> +       /* USB role switch */
-> +       args[0].fwnode = data->node[INT33FE_NODE_ROLE_SWITCH];
-> +       args[1].fwnode = NULL;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "usb-role-switch",
-> +                                                   args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_ROLE_SWITCH] = ref;
-> +
-> +       /* DisplayPort */
-> +       args[0].fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
-> +       args[1].fwnode = NULL;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "displayport", args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_DISPLAYPORT] = ref;
-> +
-> +       return 0;
-> +}
-> +
->  static int cht_int33fe_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -355,22 +421,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> -       /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> -       ret = cht_int33fe_max17047(dev, data);
-> +       ret = cht_int33fe_add_references(data);
->         if (ret)
->                 goto out_remove_nodes;
->
-> -       data->connections[0].endpoint[0] = "port0";
-> -       data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
-> -       data->connections[0].id = "orientation-switch";
-> -       data->connections[1].endpoint[0] = "port0";
-> -       data->connections[1].endpoint[1] = "i2c-pi3usb30532-mux";
-> -       data->connections[1].id = "mode-switch";
-> -       data->connections[2].endpoint[0] = "i2c-fusb302";
-> -       data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
-> -       data->connections[2].id = "usb-role-switch";
-> -
-> -       device_connections_add(data->connections);
-> +       /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> +       ret = cht_int33fe_max17047(dev, data);
-> +       if (ret)
-> +               goto out_remove_references;
->
->         memset(&board_info, 0, sizeof(board_info));
->         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-> @@ -403,9 +461,11 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         i2c_unregister_device(data->fusb302);
->
->  out_unregister_max17047:
-> -       device_connections_remove(data->connections);
->         i2c_unregister_device(data->max17047);
->
-> +out_remove_references:
-> +       cht_int33fe_remove_references(data);
-> +
->  out_remove_nodes:
->         cht_int33fe_remove_nodes(data);
->
-> @@ -420,7 +480,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
->         i2c_unregister_device(data->fusb302);
->         i2c_unregister_device(data->max17047);
->
-> -       device_connections_remove(data->connections);
-> +       cht_int33fe_remove_references(data);
->         cht_int33fe_remove_nodes(data);
->
->         return 0;
-> --
-> 2.20.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gNC80LzE5IDM6NDIgUE0sIFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4gT24gVGh1LCA0IEFw
+ciAyMDE5LCBIb29rLCBHYXJ5IHdyb3RlOg0KPiANCj4+IEVuYWJsZW1lbnQgb2YgQU1EJ3MgU2Vj
+dXJlIE1lbW9yeSBFbmNyeXB0aW9uIGZlYXR1cmUgaXMgZGV0ZXJtaW5lZA0KPj4gdmVyeSBlYXJs
+eSBpbiB0aGUgYm9vdCBjeWNsZS4gUGFydCBvZiB0aGlzIHByb2NlZHVyZSBpbnZvbHZlcyBzY2Fu
+bmluZw0KPj4gdGhlIGNvbW1hbmQgbGluZSBmb3IgdGhlIHBhcmFtYXRlciAnbWVtX2VuY3J5cHQn
+Lg0KPj4NCj4+IFRvIGRldGVybWluZSBpbnRlbmRlZCBzdGF0ZSwgdGhlIGZ1bmN0aW9uIHNtZV9l
+bmFibGUoKSB1c2VzIGxpYnJhcnkNCj4+IGZ1bmN0aW9ucyBjbWRsaW5lX2ZpbmRfb3B0aW9uKCkg
+YW5kIHN0cm5jbXAoKS4gIFRoZWlyIHVzZSBvY2N1cnMgZWFybHkNCj4+IGVub3VnaCBzdWNoIHRo
+YXQgd2UgY2FuJ3QgYXNzdW1lIHRoYXQgYW55IGluc3RydW1lbnRhdGlvbiBzdWJzeXN0ZW0gaXMN
+Cj4+IGluaXRpYWxpemVkLiBGb3IgZXhhbXBsZSwgbWFraW5nIGNhbGxzIHRvIGEgS0FTQU4taW5z
+dHJ1bWVudGVkDQo+PiBmdW5jdGlvbiBiZWZvcmUgS0FTQU4gaXMgc2V0IHVwIHdpbGwgbGlrZWx5
+IHJlc3VsdCBpbiB0aGUgdXNlIG9mDQo+PiB1bmluaXRpYWxpemVkIG1lbW9yeSBhbmQgYSBib290
+IGZhaWx1cmUuDQo+Pg0KPj4gQXZvaWQgaW5zdHJ1bWVudGluZyB0aGVzZSBkZXBlbmRlbnQgZnVu
+Y3Rpb25zIGJ5Og0KPj4NCj4+IDEpIE1ha2luZyBhIGxvY2FsLCBzdGF0aWMsIHJlbmFtZWQgY29w
+eSBvZiBzdHJuY3B5KCkgZm9yIHVzZSBzb2xlbHkgaW4NCj4+IG1lbV9lbmNyeXB0X2lkZW50aXR5
+LmMuIEluIHRoaXMgZmlsZSB3ZSBhcmUgYWJsZSB0byB2ZXQgaXRzIGZldyB1c2VzDQo+PiBhbmQg
+YXZvaWQgZXhwb3NpbmcgdGhlIHJlc3Qgb2YgdGhlIGtlcm5lbCB0byBhIHViaXF1aXRvdXNseSB1
+c2VkIGJ1dA0KPj4gdW4taW5zdHJ1bWVudGVkIGZ1bmN0aW9uLg0KPj4NCj4+IDIpIERpc2FibGUg
+aW5zdHJ1bWVudGlvbiBvZiBhcmNoL3g4Ni9saWIvY21kbGluZS5jIGJhc2VkIG9uIHRoZQ0KPj4g
+YXNzdW1wdGlvbiB0aGF0IHRoZSBuZWVkZWQgZnVuY3Rpb24gKGNtZGxpbmVfZmluZF9vcHRpb24o
+KSkgaXMgdmV0dGVkDQo+PiB0aHJvdWdoIGl0cyB1c2UgdG8gZGF0ZSwgYW5kIGNvbnRhaW5zIG5v
+IGx1cmtpbmcgZmxhd3MgdGhhdCBoYXZlIG5vdA0KPj4geWV0IGJlZW4gZm91bmQgdGhyb3VnaCBp
+bnN0cnVtZW50YXRpb24gc3VjaCBhcyBLQVNBTi4NCj4gDQo+IE5vdCBoYXBweSBhYm91dCB0aGF0
+IDopDQoNCk15IHJlYXNvbmluZyAobm90IGFyZ3VpbmcpOiB0aGUgZmlsZSBoYXMgYmVlbiB0b3Vj
+aGVkIGV4YWN0bHkgb25lIHRpbWUgDQppbiA0IHllYXJzLCBieSBUaG9tYXMuIERvZXNuJ3QgYXBw
+ZWFyIHRvIGJlIGEgY2FuZGlkYXRlIGZvciBjb25zdGFudCANCm1vZGlmaWNhdGlvbiwgc28gdGhp
+cyBhcHByb2FjaCBkb2Vzbid0IHNlZW0gcmlza3kgdG8gbWUuIEkgY291bGQgYmUgd3JvbmcuDQoN
+Cj4+ICsjIFNNRSBlYXJseSBib290IGNvZGUgY2hlY2tzIHRoZSBjbWRsaW5lLCBzbyBkb24ndCBp
+bnN0cnVtZW50DQo+PiArS0NPVl9JTlNUUlVNRU5UX2NtZGxpbmUubyAgICAgICAgICAgICAgOj0g
+bg0KPj4gKw0KPj4gK0tBU0FOX1NBTklUSVpFX2NtZGxpbmUubyAgICAgICAgICAgICAgIDo9IG4N
+Cj4gDQo+IElmIHdlIGNhbid0IGNvbWUgdXAgd2l0aCBhIGJldHRlciBzb2x1dGlvbiB0aGVuIHRo
+aXMgbmVlZHMgdG8gZGVwZW5kIG9uDQo+IENPTkZJR19NRU1fRU5DUllQVCBzbyB3ZSBzdGlsbCBj
+YW4gcnVuIEtBU0FOIG9uIGNtZGxpbmUuYyB0byBjYXRjaCBjcmFwDQo+IHdoZW4gdGhlIGNvZGUg
+aXMgbW9kaWZpZWQgaW4gdGhlIGZ1dHVyZS4NCg0KV2UgaGF2ZSBjb25zaWRlcmVkIHRoaXMgcHJv
+YmxlbSwgYW5kIHNlZSBubyBhbHRlcm5hdGl2ZSBzb2x1dGlvbi4gQnV0IEkgDQp3b3VsZCBsb3Zl
+IHRvIGNvbWUgdXAgd2l0aCBvbmUuDQoNCkluIHRoZSBtZWFudGltZSwgSSd2ZSBhbHJlYWR5IGNy
+ZWF0ZWQgYSB2MiBwYXRjaCB0aGF0IGZ1bGZpbGxzIHlvdXIgDQpyZXF1ZXN0LiBJJ2xsIHdhaXQg
+YSBmZXcgbW9yZSBkYXlzIGZvciBjb21tZW50cyBiZWZvcmUgcG9zdGluZy4NCg==
