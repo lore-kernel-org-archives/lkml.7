@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC876C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5539FC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF90208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204BA20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOySidlV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxNFQTJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfDHJWv (ORCPT
+        id S1726731AbfDHJWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:22:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34410 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfDHJWe (ORCPT
+        Mon, 8 Apr 2019 05:22:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41288 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfDHJWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:22:34 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r186so14759121wmf.1;
-        Mon, 08 Apr 2019 02:22:33 -0700 (PDT)
+        Mon, 8 Apr 2019 05:22:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so15424275wrq.8;
+        Mon, 08 Apr 2019 02:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KAIN5KK91kY4ITqeAKSPL8DOT67g+hbERSyfTlOuus8=;
-        b=JOySidlVKJhOQZYIEJwVO2L7xGRtWnqgLgLDTILx0futaFhY605DkPqpcqEiE+s+Q7
-         mpfIhYwPkH63fzaCr9d+nH7C8yotjNcdfCCcQxvtSQThWRs5K+zXV/Td4U0A9bJZFo7u
-         3wb6Nm8jKesaaEU4iK+H2cpEb1fuiIVJC8EGVui1y8B3yFDyD8ROhmxt7xjzG8GzTMy3
-         KoCOwtIAzdfnhPjiHpeSh33hqJF0ObJcqH5PJDs6G8tqVwIMRU2reeBsSzMc4zJZmYG0
-         TrJJjuFGl2p22vU5HdA7SFO+B8QaEexQ7GU+gEorg6MdM7AG0vMXqV2AbXt+Osmni5+W
-         tCPg==
+        bh=Gehye2PBes+2WkveZsU+3KMZWypo81Tcgj6ag1K6XNQ=;
+        b=CxNFQTJlCof2qOWt0eb+qDsKhVDXu9GUwUYIOb+NjYTw/NGQpk6k9CZAPc97PamOfF
+         ytc+DUGvHHM+Z7fzhJ/1Pcj85aTmD5ZHBaY1zVRuFs9uAfrJkhri3QB4Tou2exe4t39f
+         I2XWmJoYtlSlYcNpztL9X9Aozuy4n6auar7Zl5/WlZXyxAWleyhXLkc9kYtrzbug4zRY
+         CQIy6rqlLxIiWKgEuW6fnK73VD0Bf/T27VWkB5oMy2LgUZnB0CwI+YvgVFJViaSwpNMX
+         n2VPQOnGlVEaB/ua1Jyuk1jpB8xVxhnLYRaBOYJBLUjOxGqkQiACs4AEASufQcqKV+8x
+         rVMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KAIN5KK91kY4ITqeAKSPL8DOT67g+hbERSyfTlOuus8=;
-        b=S8ijaamy8YyoMy0pg4HbjffRZPxhTmnykT+yKxoSjXi3hkV165MJCuEWhRHjDXLfNV
-         DqvAXlnm3Me0fmf0fhK8H99qGKwf9iwKaxcA+D+O6gsvCO96U8ApF/i1SckmxG8Y6fx/
-         sYjsgM+AZDOhjXUGphEzTs30gR352DVCL/dVNsuquzYYT1glmNCpkdSvepNq5d5wvLjN
-         TVrHc08o8lUsz9DJU8fZpA/zxox1grq7KTtCCbFe4l1i2u2SeSgkDRxLU7qX8yBHB/pH
-         tG+pkFAFmP5N5rSY7AEq9EdyiK0DfDEed8AIutND6lAba/IEPpLoaDbv+hIHCaSnziCj
-         PMJQ==
-X-Gm-Message-State: APjAAAVnkyxyHOyoSNCYvbrY6i2uE2WNnm8w6GinuXk6hw4B7te0YPll
-        DQ9ohagYHBzphI0rbYyX+8w=
-X-Google-Smtp-Source: APXvYqzRsC3IsAU6XvdcZRvLUDUcmrYDfQGd/YHf/VIrCXcqly03qHQ4GQ6b2bnt15cAWOi15yeGEw==
-X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr15392010wmf.56.1554715352526;
-        Mon, 08 Apr 2019 02:22:32 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id u17sm22671883wmu.36.2019.04.08.02.22.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=Gehye2PBes+2WkveZsU+3KMZWypo81Tcgj6ag1K6XNQ=;
+        b=IxRyEdHEGZ5/B5SAxLZNCnnq3Nf3Ye7p+6qa/V/vyc4/ARQFzUpAJh1TERx2eaaVun
+         b8Q+1pjl6g+GryNQHe0ryDEP57dLwBW4kDUChsfAEik2QqxpgnXwh9N5JsXc4WmwJiqm
+         dRB+EuMmEjUP5N1Vr1fTvw5TqXR5FBTf5KVnInf9+l7cZPK85yWojZQOnlag3mOzxBqr
+         PwwEe0ZSh7IQo0mPTpg14iYT1qGSkkPVxiuvt1BB6VMcKwnE1FnEzqLVzpNRNUy4jKq/
+         zP32FPhewFBAb3GVCroxYWIUyY2oQnq9VlSRLt9NmVEQQ3P1e/OMtEUWD/6cfBr4zk4L
+         JDLw==
+X-Gm-Message-State: APjAAAURIP1M6E2Y28i3bMxVExiLKfNqV2du3E4JhUoGdWhaVt2YnFM+
+        1yJEmq0rkNS0Rdxx6hHAsn0=
+X-Google-Smtp-Source: APXvYqzdq+E3S9zMsnrluCuntM0zINzScKFZ9mNZM6+tED4TEfvdT4TUKI3ys0hwY5HBgBBKlot1Jg==
+X-Received: by 2002:a5d:4081:: with SMTP id o1mr12578165wrp.241.1554715351410;
         Mon, 08 Apr 2019 02:22:31 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
+        by smtp.gmail.com with ESMTPSA id u17sm22671883wmu.36.2019.04.08.02.22.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 02:22:30 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -64,9 +64,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 5/6] arm64: allwinner: h6: orangepi: Add PIO regulators
-Date:   Mon,  8 Apr 2019 11:26:18 +0200
-Message-Id: <20190408092619.23152-6-peron.clem@gmail.com>
+Subject: [PATCH v3 4/6] dt-bindings: arm: sunxi: Add Beelink GS1 board
+Date:   Mon,  8 Apr 2019 11:26:17 +0200
+Message-Id: <20190408092619.23152-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190408092619.23152-1-peron.clem@gmail.com>
 References: <20190408092619.23152-1-peron.clem@gmail.com>
@@ -78,50 +78,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OrangePi One Plus and OrangePi Lite2 use the same PIO regulators.
+Beelink GS1 device-tree has been introduced.
 
-Add this in the common device tree.
+Add it to the sunxi yaml documentation.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi  | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 62e27948a3fa..16280525fd5a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -70,6 +70,12 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 11563d3f7c65..9ab9b266881d 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -136,6 +136,11 @@ properties:
+           - const: lemaker,bananapro
+           - const: allwinner,sun7i-a20
  
-+&pio {
-+        vcc-pc-supply = <&reg_bldo2>;
-+        vcc-pd-supply = <&reg_cldo1>;
-+        vcc-pg-supply = <&reg_bldo3>;
-+};
++      - description: Beelink GS1
++        items:
++          - const: azw,beelink-gs1
++          - const: allwinner,sun50i-h6
 +
- &r_i2c {
- 	status = "okay";
- 
-@@ -189,6 +195,17 @@
- 	};
- };
- 
-+&r_pio {
-+	/*
-+	 * PL0 and PL1 are used for PMIC I2C
-+	 * don't enable the pl-supply else
-+	 * it will fail at boot
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo1>;
-+	 */
-+        vcc-pm-supply = <&reg_bldo3>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
+       - description: Beelink X2
+         items:
+           - const: roofull,beelink-x2
 -- 
 2.17.1
 
