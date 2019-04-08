@@ -3,158 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D301C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C571DC282DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5352C20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D78C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfDHDxo (ORCPT
+        id S1726600AbfDHDy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:53:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6704 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726464AbfDHDxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:53:44 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 12AFFC4684C4C3C99DD1;
-        Mon,  8 Apr 2019 11:53:42 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 11:53:32 +0800
-Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
- backed by THP
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <eric.auger@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Chirstoffer Dall <christoffer.dall@arm.com>,
-        "Zheng Xiang" <zhengxiang9@huawei.com>, <andrew.murray@arm.com>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
-References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
-Date:   Mon, 8 Apr 2019 11:50:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Sun, 7 Apr 2019 23:54:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20569 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726464AbfDHDy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 23:54:58 -0400
+X-UUID: a8c593d377d1474b952a3f3ff46f9f96-20190408
+X-UUID: a8c593d377d1474b952a3f3ff46f9f96-20190408
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1040451129; Mon, 08 Apr 2019 11:54:49 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 8 Apr 2019 11:54:48 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 8 Apr 2019 11:54:42 +0800
+Message-ID: <1554695682.25248.2.camel@mtksdaap41>
+Subject: Re: [PATCH V8 3/5] drm/mediatek: using new factor for tvdpll in
+ MT2701
+From:   CK Hu <ck.hu@mediatek.com>
+To:     wangyan wang <wangyan.wang@mediatek.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
+Date:   Mon, 8 Apr 2019 11:54:42 +0800
+In-Reply-To: <20190402093605.82004-4-wangyan.wang@mediatek.com>
+References: <20190402093605.82004-1-wangyan.wang@mediatek.com>
+         <20190402093605.82004-4-wangyan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Wangyan:
 
-
-On 2019/4/2 19:06, Suzuki K Poulose wrote:
-> With commit a80868f398554842b14, we no longer ensure that the
-> THP page is properly aligned in the guest IPA. Skip the stage2
-> huge mapping for unaligned IPA backed by transparent hugepages.
+On Tue, 2019-04-02 at 17:36 +0800, wangyan wang wrote:
+> From: Wangyan Wang <wangyan.wang@mediatek.com>
 > 
-> Fixes: a80868f398554842b14 ("KVM: arm/arm64: Enforce PTE mappings at stage2 when needed")
-> Reported-by: Eric Auger <eric.auger@redhat.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Chirstoffer Dall <christoffer.dall@arm.com>
-> Cc: Zenghui Yu <yuzenghui@huawei.com>
-> Cc: Zheng Xiang <zhengxiang9@huawei.com>
-> Tested-by: Eric Auger <eric.auger@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> This is the second step to make MT2701 HDMI stable.
+> The factor depends on the divider of DPI in MT2701, therefore,
+> we should fix this factor to the right and new one.
 
-Hi Suzuki,
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Why not making use of fault_supports_stage2_huge_mapping()?  Let it do
-some checks for us.
-
-fault_supports_stage2_huge_mapping() was intended to do a *two-step*
-check to tell us that can we create stage2 huge block mappings, and this
-check is both for hugetlbfs and THP.  With commit a80868f398554842b14,
-we pass PAGE_SIZE as "map_size" for normal size pages (which turned out
-to be almost meaningless), and unfortunately the THP check no longer
-works.
-
-So we want to rework *THP* check process.  Your patch fixes the first
-checking-step, but the second is still missed, am I wrong?
-
-Can you please give a look at the below diff?
-
-
-thanks,
-
-zenghui
-
+> 
+> Signed-off-by: Wangyan Wang <wangyan.wang@mediatek.com>
 > ---
->   virt/kvm/arm/mmu.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 > 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 27c9583..4a22f5b 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1412,7 +1412,9 @@ static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
->   		 * page accordingly.
->   		 */
->   		mask = PTRS_PER_PMD - 1;
-> -		VM_BUG_ON((gfn & mask) != (pfn & mask));
-Somehow, I'd prefer keeping the VM_BUG_ON() here, let it report some
-potential issues in the future (of course I hope none:) )
-> +		/* Skip memslots with unaligned IPA and user address */
-> +		if ((gfn & mask) != (pfn & mask))
-> +			return false;
->   		if (pfn & mask) {
->   			*ipap &= PMD_MASK;
->   			kvm_release_pfn_clean(pfn);
-> 
-
----8>---
-
-Rework fault_supports_stage2_huge_mapping(), let it check THP again.
-
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
-  virt/kvm/arm/mmu.c | 11 ++++++++++-
-  1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 27c9583..5e1b258 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1632,6 +1632,15 @@ static bool 
-fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
-  	uaddr_end = uaddr_start + size;
-
-  	/*
-+	 * If the memslot is _not_ backed by hugetlbfs, then check if it
-+	 * can be backed by transparent hugepages.
-+	 *
-+	 * Currently only PMD_SIZE THPs are supported, revisit it later.
-+	 */
-+	if (map_size == PAGE_SIZE)
-+		map_size = PMD_SIZE;
-+
-+	/*
-  	 * Pages belonging to memslots that don't have the same alignment
-  	 * within a PMD/PUD for userspace and IPA cannot be mapped with stage-2
-  	 * PMD/PUD entries, because we'll end up mapping the wrong pages.
-@@ -1643,7 +1652,7 @@ static bool 
-fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
-  	 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
-  	 *    +-----+--------------------+--------------------+---+
-  	 *
--	 *    memslot->base_gfn << PAGE_SIZE:
-+	 *    memslot->base_gfn << PAGE_SHIFT:
-  	 *      +---+--------------------+--------------------+-----+
-  	 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
-  	 *      +---+--------------------+--------------------+-----+
--- 
-
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 69c6e42dad6b..4a2f4a650494 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -662,13 +662,11 @@ static unsigned int mt8173_calculate_factor(int clock)
+>  static unsigned int mt2701_calculate_factor(int clock)
+>  {
+>  	if (clock <= 64000)
+> -		return 16;
+> -	else if (clock <= 128000)
+> -		return 8;
+> -	else if (clock <= 256000)
+>  		return 4;
+> -	else
+> +	else if (clock <= 128000)
+>  		return 2;
+> +	else
+> +		return 1;
+>  }
+>  
+>  static const struct mtk_dpi_conf mt8173_conf = {
 
 
