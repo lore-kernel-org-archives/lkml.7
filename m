@@ -2,191 +2,124 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7940FC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8C1C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501B320883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0E6214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDHKvU (ORCPT
+        id S1726620AbfDHKw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:51:20 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47603 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfDHKvT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:51:19 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DF20620012;
-        Mon,  8 Apr 2019 10:51:15 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 12:51:15 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/6] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
-Message-ID: <20190408105115.akqzbs54x4xpof5b@flea>
-References: <20190408092619.23152-1-peron.clem@gmail.com>
- <20190408092619.23152-4-peron.clem@gmail.com>
+        Mon, 8 Apr 2019 06:52:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46368 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbfDHKw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:52:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B121168F;
+        Mon,  8 Apr 2019 03:52:28 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A9E13F718;
+        Mon,  8 Apr 2019 03:52:25 -0700 (PDT)
+Subject: Re: [PATCH] stm class: Fix out of bound access from bitmap allocation
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mulu He <muluhe@codeaurora.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190405122256.27840-1-saiprakash.ranjan@codeaurora.org>
+ <fe3a301b03b84761a08d5b15962b8110@AcuMS.aculab.com>
+ <dd266f56-b4ea-dc6b-eab1-50e13c820166@codeaurora.org>
+ <850ba66b-0e4a-2027-5640-0ee339a7868c@arm.com>
+ <2d5e435bf7b344fb835fc58ac36e1c19@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f3a699e5-a6c4-83f4-fff3-20515e8caa06@arm.com>
+Date:   Mon, 8 Apr 2019 11:52:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="frrkbpd7vjm33wr6"
-Content-Disposition: inline
-In-Reply-To: <20190408092619.23152-4-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <2d5e435bf7b344fb835fc58ac36e1c19@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/04/2019 11:33, David Laight wrote:
+> From: Robin Murphy
+>> Sent: 08 April 2019 11:24
+>> On 07/04/2019 05:31, Sai Prakash Ranjan wrote:
+>>> On 4/5/2019 6:44 PM, David Laight wrote:
+>>>> From: Sai Prakash Ranjan
+>>>>>
+>>>>> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+>>>>> index 93ce3aa740a9..21a5838f6e67 100644
+>>>>> --- a/drivers/hwtracing/stm/core.c
+>>>>> +++ b/drivers/hwtracing/stm/core.c
+>>>>> @@ -168,7 +168,7 @@ static int stp_master_alloc(struct stm_device
+>>>>> *stm, unsigned int idx)
+>>>>>        struct stp_master *master;
+>>>>>        size_t size;
+>>>>>
+>>>>> -    size = ALIGN(stm->data->sw_nchannels, 8) / 8;
+>>>>> +    size = ALIGN(stm->data->sw_nchannels, STM_MASTER_SZ) /
+>>>>> STM_MASTER_SZ;
+>>>>
+>>>> I'm not sure that using STP_MASTER_SZ improves readability at all.
+>>>>
+>>>
+>>> I thought it was better to have a macro than directly specifying
+>>> sizeof(unsigned long), anyways I can change it.
+>>>
+>>>> Is there something that gives the size of a bitmap for 'n' items?
+>>>>
+>>>
+>>> Not sure if there is something.
+>>
+>> If you were to ask the question "how does the bitmap code itself know
+>> what the total size of a bitmap is?", that would quickly lead you
+>> towards BITS_TO_LONGS() ;)
+>>
+>> And given that stp_master::chan_map is already an appropriate type, that
+>> suggests simplifying the entire calculation down to something neat and
+>> tidy like:
+>>
+>> size = offsetof(struct stp_master, chan_map[BITS_TO_LONGS(stm->data->sw_nchannels)]);
+> 
+> Except that is invalid.
+> You can't use offsetof() with something that isn't a compile time constant.
 
---frrkbpd7vjm33wr6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, I see the standard does actually say that, although there seem to be 
+enough non-constant uses in the kernel to suggest that it still works in 
+practice.
 
-On Mon, Apr 08, 2019 at 11:26:16AM +0200, Cl=E9ment P=E9ron wrote:
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 262 ++++++++++++++++++
->  2 files changed, 263 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
-ts
->
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..2dd806a3d5c9 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> new file mode 100644
-> index 000000000000..3087e56727e1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -0,0 +1,262 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model =3D "Beelink GS1";
-> +	compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
-> +
-> +	aliases {
-> +		ethernet0 =3D &emac;
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		power {
-> +			label =3D "beelink:white:power";
-> +			gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-> +			default-state =3D "on";
-> +		};
-> +	};
-> +
-> +	reg_vcc5v: vcc5v {
-> +		/* board wide 5V supply directly from the DC jack */
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc-5v";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&emac {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&ext_rgmii_pins>;
-> +	phy-mode =3D "rgmii";
-> +	phy-handle =3D <&ext_rgmii_phy>;
-> +	phy-supply =3D <&reg_aldo2>;
-> +	allwinner,rx-delay-ps =3D <0>;
-> +	allwinner,tx-delay-ps =3D <0>;
+However, while writing the above I was still trying to remember the 
+other thing I'd seen for handling precisely this variable-sized-struct 
+situation, which I've now found again, namely struct_size(). I guess now 
+I understand why that isn't implemented in terms of offsetof(), thanks 
+for the nudge :)
 
-These two are at their default values
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---frrkbpd7vjm33wr6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsnowAKCRDj7w1vZxhR
-xUs3AP9ecF9JxUjHuUkyPJV7+cTKxLyWGZA5H+2a3APCyQKnIgEA5xI8Yb1t56Py
-egnVkisTa1GnCZGnoY3osdAJBud57Aw=
-=VCI3
------END PGP SIGNATURE-----
-
---frrkbpd7vjm33wr6--
+Robin.
