@@ -2,104 +2,222 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E68DC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB75C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168D12147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6340321841
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfDHPlV (ORCPT
+        id S1728555AbfDHPlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:41:21 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46094 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfDHPlU (ORCPT
+        Mon, 8 Apr 2019 11:41:42 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44575 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfDHPll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:41:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 959D82842C0
-Subject: Re: [PATCH] mfd: cros_ec_dev: Add a poll handler to receive MKBP
- events
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gwendal@chromium.org, bleung@chromium.org,
-        linux-kernel@vger.kernel.org, groeck@chromium.org,
-        kernel@collabora.com, dtor@chromium.org,
-        Vincent Palatin <vpalatin@chromium.org>
-References: <20190308123659.16101-1-enric.balletbo@collabora.com>
- <20190402040647.GM4187@dell>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c6cd7740-c3aa-6420-a789-735179ba59b4@collabora.com>
-Date:   Mon, 8 Apr 2019 17:41:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 8 Apr 2019 11:41:41 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y5so8227664qkc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:41:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KbSK/X7JpCK8bNGWrUsaZVBhOGOX0n/BBtcnFxS/8fs=;
+        b=j4ZzYSTkRZ0aPVQHH94hHr+CPlP8JMC7FHL3uc75AJURcOStEpAwq5ndeRmQXZtS1u
+         x6GfK8d1hzS2AXtTmMM8WkZ5NZENbtXIDJwdt3SB4hCOdU6IV2uw/0rVy6kvYj4EEIR5
+         ZhhNAwa8jf1AVaUq9WtGA/lh2+d7VzaJZo4tNjWuxb8f4EL/9ExiT4xMoNwlWubkCfVl
+         8rz/156PzcLuEcGxfkOMGdLz1pLMUcklTpx52MLxG2xMCY71A0vW1JwttPK0cCoG+yeW
+         J518WeyYXr1Qj5msY9HmbjbD+Etdkubq63CNtkqVaCZ0djty5Q7TFJiyPOYhIIw7vTIY
+         e6Og==
+X-Gm-Message-State: APjAAAXrUcIxf066s7EylOAGMU4QNnm3fR+n5WUxsfhzmdZwrWl81Rjv
+        kwvZx9mo4nEDq53fsUWGla8l1Ih7X48=
+X-Google-Smtp-Source: APXvYqyR+Tmybn5PEyV/U1anHtWHt8mzskoJUOa0HgzEm9nr8z+jOm6rM1uak2YaEiN2laszY0bl6Q==
+X-Received: by 2002:a05:620a:1472:: with SMTP id j18mr23201976qkl.63.1554738100329;
+        Mon, 08 Apr 2019 08:41:40 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id n41sm20262796qtf.63.2019.04.08.08.41.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 08:41:39 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 11:41:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+Message-ID: <20190408114052-mutt-send-email-mst@kernel.org>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <ef0c542a-ded5-f063-e6e2-8e84d1c12c85@redhat.com>
+ <CAKgT0UfyG=0wg5jzZPcnh7Q1rf0+gd9H5Q4626GTft85EiJNeA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190402040647.GM4187@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UfyG=0wg5jzZPcnh7Q1rf0+gd9H5Q4626GTft85EiJNeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Mon, Apr 08, 2019 at 08:18:35AM -0700, Alexander Duyck wrote:
+> On Mon, Apr 8, 2019 at 5:24 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >
+> >
+> > On 4/5/19 8:09 PM, Alexander Duyck wrote:
+> > > So I am starting this thread as a spot to collect my thoughts on the
+> > > current guest free page hinting design as well as point out a few
+> > > possible things we could do to improve upon it.
+> > >
+> > > 1. The current design isn't likely going to scale well to multiple
+> > > VCPUs. The issue specifically is that the zone lock must be held to
+> > > pull pages off of the free list and to place them back there once they
+> > > have been hinted upon. As a result it would likely make sense to try
+> > > to limit ourselves to only having one thread performing the actual
+> > > hinting so that we can avoid running into issues with lock contention
+> > > between threads.
+> > >
+> > > 2. There are currently concerns about the hinting triggering false OOM
+> > > situations if too much memory is isolated while it is being hinted. My
+> > > thought on this is to simply avoid the issue by only hint on a limited
+> > > amount of memory at a time. Something like 64MB should be a workable
+> > > limit without introducing much in the way of regressions. However as a
+> > > result of this we can easily be overrun while waiting on the host to
+> > > process the hinting request. As such we will probably need a way to
+> > > walk the free list and free pages after they have been freed instead
+> > > of trying to do it as they are freed.
+> > >
+> > > 3. Even with the current buffering which is still on the larger side
+> > > it is possible to overrun the hinting limits if something causes the
+> > > host to stall and a large swath of memory is released. As such we are
+> > > still going to need some sort of scanning mechanism or will have to
+> > > live with not providing accurate hints.
+> > >
+> > > 4. In my opinion, the code overall is likely more complex then it
+> > > needs to be. We currently have 2 allocations that have to occur every
+> > > time we provide a hint all the way to the host, ideally we should not
+> > > need to allocate more memory to provide hints. We should be able to
+> > > hold the memory use for a memory hint device constant and simply map
+> > > the page address and size to the descriptors of the virtio-ring.
+> > >
+> > > With that said I have a few ideas that may help to address the 4
+> > > issues called out above. The basic idea is simple. We use a high water
+> > > mark based on zone->free_area[order].nr_free to determine when to wake
+> > > up a thread to start hinting memory out of a given free area. From
+> > > there we allocate non-"Offline" pages from the free area and assign
+> > > them to the hinting queue up to 64MB at a time. Once the hinting is
+> > > completed we mark them "Offline" and add them to the tail of the
+> > > free_area. Doing this we should cycle the non-"Offline" pages slowly
+> > > out of the free_area.
+> > any ideas about how are you planning to control this?
 
-On 2/4/19 6:06, Lee Jones wrote:
-> On Fri, 08 Mar 2019, Enric Balletbo i Serra wrote:
+I think supplying the 64M value from host is probably reasonable.
+
 > 
->> From: Vincent Palatin <vpalatin@chromium.org>
->>
->> Allow to poll on the cros_ec device to receive the MKBP events.
->>
->> The /dev/cros_[ec|fp|..] file operations now implements the poll
->> operation. The userspace can now receive specific MKBP events by doing the
->> following:
->> - Open the /dev/cros_XX file.
->> - Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
->>   events it wishes to receive as argument.
->> - Poll on the file descriptor.
->> - When it gets POLLIN, do a read on the file descriptor, the first
->>   queued event will be returned (using the struct
->>   ec_response_get_next_event format: one byte of event type, then
->>   the payload).
->>
->> The read() operation returns at most one event even if there are several
->> queued, and it might be truncated if the buffer is smaller than the
->> event (but the caller should know the maximum size of the events it is
->> reading).
->>
->> read() used to return the EC version string, it still does it when no
->> event mask or an empty event is set for backward compatibility (despite
->> nobody really using this feature).
->>
->> This will be used, for example, by the userspace daemon to receive and
->> treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
+> You mean in terms of switching the hinting on/off? The setup should be
+> pretty simple. Basically we would still need a hook like the one you
+> added after the allocation to determine where the free page ultimately
+> landed and to do a check against the high water mark I mentioned.
+> Basically if there is something like 2X the number of pages needed to
+> fulfill the 64MB requirement we could then kick off a thread running
+> on the zone to begin populating the hints and notifying the
+> virtio-balloon interface. When we can no longer fill the ring we would
+> simply stop the thread until we get back to the 2X state for nr_freed
+> versus the last nr_freed value we had hinted upon. It wouldn't be
+> dissimilar to how we currently handle the Tx path in many NICs where
+> we shut off hinting.
 > 
-> MFD does not seem like the correct place for this.  Maybe this is a
-> good candidate for drivers/platform/chrome/* where the rest of your
-> platform empire now resides.
+> For examples of doing something like this you could look at the Rx
+> softIRQ handling in the NIC drivers. Basically the idea there is you
+> trigger the event once, and then the thread is running until all work
+> has been completed. The thread itself is limiting itself to only
+> processing some number of fixed buffers for each request, and when it
+> can no longer get a full set it stops and waits to be rescheduled by
+> an interrupt.
 > 
-
-The patch itself can't be moved without moving other parts, this would imply
-move all the file_operations and the chardev, those already resides in MFD, and
-some event handling. Is this what you're suggesting?
-
-If that's the case I need to look in more detail.
-
-Thanks,
- Enric
-
-
->> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->>  drivers/mfd/cros_ec_dev.c | 163 +++++++++++++++++++++++++++++++++++++-
->>  drivers/mfd/cros_ec_dev.h |   1 +
->>  2 files changed, 160 insertions(+), 4 deletions(-)
+> > > In addition the search cost should be minimal
+> > > since all of the "Offline" pages should be aggregated to the tail of
+> > > the free_area so all pages allocated off of the free_area will be the
+> > > non-"Offline" pages until we shift over to them all being "Offline".
+> > > This should be effective for MAX_ORDER - 1 and MAX_ORDER - 2 pages
+> > > since the only real consumer of add_to_free_area_tail is
+> > > __free_one_page which uses it to place a page with an order less than
+> > > MAX_ORDER - 2 on the tail of a free_area assuming that it should be
+> > > freeing the buddy of that page shortly. The only other issue with
+> > > adding to tail would be the memory shuffling which was recently added,
+> > > but I don't see that as being something that will be enabled in most
+> > > cases so we could probably just make the features mutually exclusive,
+> > > at least for now.
+> > >
+> > > So if I am not mistaken this would essentially require a couple
+> > > changes to the mm infrastructure in order for this to work.
+> > >
+> > > First we would need to split nr_free into two counters, something like
+> > > nr_freed and nr_bound. You could use nr_freed - nr_bound to get the
+> > > value currently used for nr_free. When we pulled the pages for hinting
+> > > we would reduce the nr_freed value and then add back to it when the
+> > > pages are returned. When pages are allocated they would increment the
+> > > nr_bound value. The idea behind this is that we can record nr_free
+> > > when we collect the pages and save it to some local value. This value
+> > > could then tell us how many new pages have been added that have not
+> > > been hinted upon.
+> > >
+> > > In addition we will need some way to identify which pages have been
+> > > hinted on and which have not. The way I believe easiest to do this
+> > > would be to overload the PageType value so that we could essentially
+> > > have two values for "Buddy" pages. We would have our standard "Buddy"
+> > > pages, and "Buddy" pages that also have the "Offline" value set in the
+> > > PageType field. Tracking the Online vs Offline pages this way would
+> > > actually allow us to do this with almost no overhead as the mapcount
+> > > value is already being reset to clear the "Buddy" flag so adding a
+> > > "Offline" flag to this clearing should come at no additional cost.
+> > >
+> > > Lastly we would need to create a specialized function for allocating
+> > > the non-"Offline" pages, and to tweak __free_one_page to tail enqueue
+> > > "Offline" pages. I'm thinking the alloc function it would look
+> > > something like __rmqueue_smallest but without the "expand" and needing
+> > > to modify the !page check to also include a check to verify the page
+> > > is not "Offline". As far as the changes to __free_one_page it would be
+> > > a 2 line change to test for the PageType being offline, and if it is
+> > > to call add_to_free_area_tail instead of add_to_free_area.
+> > Is it possible that once the pages are offline, there is a large
+> > allocation request in the guest needing those offline pages as well?
 > 
+> It is possible. However the behavior here would be no different from a
+> NIC driver. NIC drivers will sit on a swath of memory for Rx purposes
+> waiting for the DMA to occur. Here we are sitting on 64MB which for a
+> large allocation should not be that significant.
+> 
+> As far as avoiding it, I don't think there is any way we can avoid
+> such an event completely. There are scenerios where the hitning will
+> get hung up while sitting on memory for an extended period of time.
+> That is why I am thinking our best mitigation for now would be to keep
+> the amount of hinting we are doing confined to something on the
+> smaller side such as 64M or less which I have already mentioned. By
+> doing that if we do hit one of the problematic scenarios we should
+> have minimal impact.
+> 
+> > >
+> > > Anyway this email ended up being pretty massive by the time I was
+> > > done. Feel free to reply to parts of it and we can break it out into
+> > > separate threads of discussion as necessary. I will start working on
+> > > coding some parts of this next week.
+> > >
+> > > Thanks.
+> > >
+> > > - Alex
+> > --
+> > Regards
+> > Nitesh
+> >
+
