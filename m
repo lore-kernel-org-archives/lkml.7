@@ -2,132 +2,69 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB5DC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0E1C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD4920663
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB6B20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rV1rVna9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDHKyN (ORCPT
+        id S1726479AbfDHKzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:54:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31118 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfDHKyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:54:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 03:54:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
-   d="scan'208";a="147454405"
-Received: from wubinbin-desk.sh.intel.com ([10.239.143.112])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2019 03:54:11 -0700
-From:   Binbin Wu <binbin.wu@intel.com>
-To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     binbin.wu@intel.com
-Subject: [PATCH] pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
-Date:   Mon,  8 Apr 2019 18:49:26 +0800
-Message-Id: <1554720566-29103-1-git-send-email-binbin.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 8 Apr 2019 06:55:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51634 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbfDHKzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:55:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mE6r+VqKccIgA61PV+7PKvY1trL7VA9MrernA232p18=; b=rV1rVna9S54v5fGpJjqmY4EAf
+        5jiI+nVhJmj9/G//zFcS7693R0+uRMGTEcI7/fcm1vHnyEU7rTHqCtECJgoDpBpswJeQ9q9TQzYLw
+        LurW0fZ5/mIa42t0zTaaWfKJViQohN99LQKqSTJ8A6jVwOTUzm1/0xypHrv4elnFRIa9o9/feq5Xg
+        hQmAcFU6UeIUYJbpZTzvlTTSRaz4eib/c0zl6U+OuL5TXayYKvpaBEypxNm9pgRx2KwT1hds3ZZnM
+        hCjYnIz/3FUvDdOMQlsJiKhkeykXPsLS25OKG91XdghqrqkT75KW5FGTXqgbrYujLcpseVQdPKeyY
+        mF9crDvlA==;
+Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDRwI-0004jl-4f; Mon, 08 Apr 2019 10:55:46 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     Deepak Rawat <drawat@vmware.com>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: revert dma direct internals abuse
+Date:   Mon,  8 Apr 2019 12:55:24 +0200
+Message-Id: <20190408105525.5493-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In current driver, SET_LATE_SYSTEM_SLEEP_PM_OPS is used to install the
-callbacks for suspend/resume.
-GPIO pin may be used as the interrupt pin by some device. However, using
-SET_LATE_SYSTEM_SLEEP_PM_OPS() to install the callbacks, the resume
-callback is called after resume_device_irqs(). Unintended interrupts may
-arrive due to resuming device irqs first, but the GPIO controller is not
-properly restored.
+Hi Linus,
 
-Normally, for a SMP system, there are multiple cores, so even when there are
-unintended interrupts, BSP gets the chance to init the gpio chip soon.
-But when there is only 1 core is active (other cores are offlined or
-single core) during resume, it is more easily to observe the unintended
-interrupts.
+unfortunately it took less than a merge window for the:
 
-This patch renames the suspend/resume function by adding suffix "_noirq",
-and installs the callbacks using SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
+/*
+ * All the dma_direct_* declarations are here just for the indirect call bypass,
+ * and must not be used directly drivers!
+ */
 
-Signed-off-by: Binbin Wu <binbin.wu@intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c |  8 ++++----
- drivers/pinctrl/intel/pinctrl-intel.h | 11 ++++++-----
- 2 files changed, 10 insertions(+), 9 deletions(-)
+warning in dma-mapping.h to be ignored.  This series reverts the offender
+to keep our API clean.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 3b18181..70638b7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1466,7 +1466,7 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
- 	return false;
- }
- 
--int intel_pinctrl_suspend(struct device *dev)
-+int intel_pinctrl_suspend_noirq(struct device *dev)
- {
- 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
- 	struct intel_community_context *communities;
-@@ -1505,7 +1505,7 @@ int intel_pinctrl_suspend(struct device *dev)
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(intel_pinctrl_suspend);
-+EXPORT_SYMBOL_GPL(intel_pinctrl_suspend_noirq);
- 
- static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
- {
-@@ -1527,7 +1527,7 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
- 	}
- }
- 
--int intel_pinctrl_resume(struct device *dev)
-+int intel_pinctrl_resume_noirq(struct device *dev)
- {
- 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
- 	const struct intel_community_context *communities;
-@@ -1589,7 +1589,7 @@ int intel_pinctrl_resume(struct device *dev)
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(intel_pinctrl_resume);
-+EXPORT_SYMBOL_GPL(intel_pinctrl_resume_noirq);
- #endif
- 
- MODULE_AUTHOR("Mathias Nyman <mathias.nyman@linux.intel.com>");
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-index b8a07d37..a8e958f 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.h
-+++ b/drivers/pinctrl/intel/pinctrl-intel.h
-@@ -177,13 +177,14 @@ int intel_pinctrl_probe_by_hid(struct platform_device *pdev);
- int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
- 
- #ifdef CONFIG_PM_SLEEP
--int intel_pinctrl_suspend(struct device *dev);
--int intel_pinctrl_resume(struct device *dev);
-+int intel_pinctrl_suspend_noirq(struct device *dev);
-+int intel_pinctrl_resume_noirq(struct device *dev);
- #endif
- 
--#define INTEL_PINCTRL_PM_OPS(_name)						  \
--const struct dev_pm_ops _name = {						  \
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend, intel_pinctrl_resume) \
-+#define INTEL_PINCTRL_PM_OPS(_name)					\
-+const struct dev_pm_ops _name = {					\
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq,	\
-+				      intel_pinctrl_resume_noirq)	\
- }
- 
- #endif /* PINCTRL_INTEL_H */
--- 
-2.7.4
-
+Thomas: please talk me first about your needs and I'll be happy to figure out
+a proper API for what you want to do.
