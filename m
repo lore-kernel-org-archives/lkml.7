@@ -2,120 +2,155 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D2BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD5621473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554742807;
-	bh=y4/V2zu09CDwajaerydJz2FxWhvpZjBBW3M/NvKWtPk=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=qnJO3yW6jpYFanPYyFTiyX6fSjDc1BOS8oG+wBrvUKQ6dude0xF6ph6wN6GIqmam2
-	 GikSQTvln0JQ9+qDCooYncX4ULX+Lyq4hCChylVlG3sWS7seyLPCTHKCUGJG7EL55P
-	 FwUMqFsCWfV87uf5fDLvCkvqyBnbe7FuSwt86JLo=
+	by mail.kernel.org (Postfix) with ESMTP id 4C7A620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HjyIXlM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfDHRAF (ORCPT
+        id S1729121AbfDHRBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:00:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbfDHRAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:00:05 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74C1D20880;
-        Mon,  8 Apr 2019 17:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554742804;
-        bh=y4/V2zu09CDwajaerydJz2FxWhvpZjBBW3M/NvKWtPk=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=JqSY3Qz3ubyu+TKWxdRQD2TSvBvcNKT+imWhmZ8vize83tZWRNPTArw6AYUQD3+WM
-         eUjEvVu4ZWKMxNrKasRHdyPfqlshi+YuYftuVye5ORSO31iUJZF6neJw4olG2DhkpZ
-         IjpkDzd3xaz9Opr/kxucW5MqxSQMPM1s8VoHn+yE=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Mon, 8 Apr 2019 13:01:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40512 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbfDHRBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:01:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so17280403wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 10:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iqf43cq8RemTopCE0ufXfp+TKKTu8jJvXQ5PxPdROIg=;
+        b=HjyIXlM9NVEpWRMBzLiUCUaHmiTdQNUC1LlZDaO1rJUZ/tc/4vFmRZuF5iD4KRzbw3
+         NqLt/XWzwexoTi/mRyEaJlSjMz7tfZSZSiQW6gwZuDcKsMocDhaPg49g3qyYGtV5L+vr
+         30cUUKqYXqOqb7V0imdhatthehWPWwxrD1/G1mYL3uKkQ2Iqd8YglOzcorT5FEEbRwAM
+         3cGwADzx1jMH3V9Jn8ZQ8KWi2Oy/yrjZM28UjMvlWOpxCr5D9N2woP1IDACfw18yF+hc
+         AQWBEFoK0BBAuDK8XfM4xYNLCXfCOlrMRA1Ex50JJQmSH/tno6gWlTUE0oJ/ew0wfqoi
+         uXBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iqf43cq8RemTopCE0ufXfp+TKKTu8jJvXQ5PxPdROIg=;
+        b=b6GYwTSFmwwR57v1pqVSli+eZ1vV8Hz9h00N2YM6cG/NziG85kSBfUtOOLnDB5ZAmG
+         gUdVEoAsAHU3cmEUKJ6WWIoJNvqzc2GTPia5kXMUxL00UX/ECWRSsNjzXCxyurps9SFl
+         IR/JivIb4jalH/hs7O+c4A24PZCYca8SAS1k78IWwGpnQwcvXLjIgr/0b8lYgNx7h2O0
+         sYint9c3GAOSYOnvi5tO90mw8DNhr9WkdVgu7Nkcst+0M/HfYR2ttVei4JvPT+Sml8dx
+         12R3VhspynNeqCyLdPVm7jHIlSWvnjUepouqG42ma9egYHoKQwElqmRaaJYu15HYziZC
+         5taw==
+X-Gm-Message-State: APjAAAUkXuoOOZl4UapuaKgpl48h3KvHMCLvaFujMQ9gdn7hk+WHQ2de
+        U84rKNJssr5OfJQq8eNNDQQGkw==
+X-Google-Smtp-Source: APXvYqwWdxX2q/Ds/K8IgAvLrxajOXIANeP6HE60KBuItPfhifSpFiyOpGhcA+XdxVSEuVYAh4fvbw==
+X-Received: by 2002:adf:ee91:: with SMTP id b17mr18169609wro.234.1554742883959;
+        Mon, 08 Apr 2019 10:01:23 -0700 (PDT)
+Received: from [192.168.43.112] ([37.161.65.57])
+        by smtp.gmail.com with ESMTPSA id u8sm30288100wrt.69.2019.04.08.10.01.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 10:01:23 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <ef1481e8-c664-5f17-4a19-bb90daabc0b7@kernel.dk>
+Date:   Mon, 8 Apr 2019 19:01:18 +0200
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190408104941.GB17594@localhost.localdomain>
-References: <20190404215344.6330-1-sboyd@kernel.org> <20190404215344.6330-2-sboyd@kernel.org> <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com> <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com> <20190408104941.GB17594@localhost.localdomain>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks list
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Message-ID: <155474280295.20095.182612336816713159@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Mon, 08 Apr 2019 10:00:02 -0700
+Message-Id: <377E06A7-14D7-4AC6-AD07-AEB691E00DEA@linaro.org>
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+ <20190408150430.GB23021@linux-x5ow.site>
+ <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+ <20190408150828.GC23021@linux-x5ow.site>
+ <5283A08F-FD6F-4A9C-841D-B49CE9B4CF1F@linaro.org>
+ <ef1481e8-c664-5f17-4a19-bb90daabc0b7@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Matti Vaittinen (2019-04-08 03:49:41)
-> On Fri, Apr 05, 2019 at 01:37:24PM -0700, Stephen Boyd wrote:
-> > Quoting Vaittinen, Matti (2019-04-04 23:51:43)
-> > > On Thu, 2019-04-04 at 14:53 -0700, Stephen Boyd wrote:
-> > > > We recently introduced a change to support devm clk lookups. That
-> > > > change
-> > > > introduced a code-path that used clk_find() without holding the
-> > > > 'clocks_mutex'. Unfortunately, clk_find() iterates over the 'clocks'
-> > > > list and so we need to prevent the list from being modified while
-> > > > iterating over it by holding the mutex. Similarly, we don't need to
-> > > > hold
-> > > > the 'clocks_mutex' besides when we're dereferencing the clk_lookup
-> > > > pointer
-> > >=20
-> > > /// Snip
-> > >=20
-> > > > -out:
-> > > > +static struct clk_lookup *clk_find(const char *dev_id, const char
-> > > > *con_id)
-> > > > +{
-> > > > +     struct clk_lookup *cl;
-> > > > +
-> > > > +     mutex_lock(&clocks_mutex);
-> > > > +     cl =3D __clk_find(dev_id, con_id);
-> > > >       mutex_unlock(&clocks_mutex);
-> > > > =20
-> > > > -     return cl ? clk : ERR_PTR(-ENOENT);
-> > > > +     return cl;
-> > > > +}
-> > >=20
-> > > I am not an expert on this but reading commit message abowe and seeing
-> > > the code for clk_find() looks a bit scary. If I understand it
-> > > correctly, the clocks_mutex should be held when dereferencing the
-> > > clk_lookup returned by clk_find. The clk_find implementation drops the
-> > > lock before returning - which makes me think I miss something here. H=
-ow
-> > > can the caller ever safely dereference returned clk_lookup pointer?
-> > > Just reading abowe makes me think that lock should be taken by whoever
-> > > is calling the clk_find, and dropped only after caller has used the
-> > > found clk_lookup for whatever caller intends to use it. Maybe I am
-> > > missing something?
-> > >=20
-> >=20
-> > The only user after this patch (devm) is doing a pointer comparison so
-> > it looks OK. But yes, in general there shouldn't be users of clk_find()
-> > that dereference the pointer because there isn't any protection besides
-> > the mutex.
+
+
+> Il giorno 8 apr 2019, alle ore 17:17, Jens Axboe <axboe@kernel.dk> ha =
+scritto:
 >=20
-> If the only (intended) user for clk_find is devm_clk_release_clkdev,
-> then we might want to write it in devm_clk_release_clkdev - just to
-> avoid similar errors (as I did with devm) in the future? I might even
-> consider renaming __clk_find to clk_find or to clk_find_unsafe - but
-> that's all just nitpicking :) Go with what you like to maintain :D
+> On 4/8/19 9:14 AM, Paolo Valente wrote:
+>>=20
+>>=20
+>>> Il giorno 8 apr 2019, alle ore 17:08, Johannes Thumshirn =
+<jthumshirn@suse.de> ha scritto:
+>>>=20
+>>> On Mon, Apr 08, 2019 at 09:05:19AM -0600, Jens Axboe wrote:
+>>>> I did consider that, and that would be doable. But honestly, I'm =
+having a
+>>>> hard time seeing what issue we are attempting to fix by doing this.
+>>>=20
+>>> Yeah, I guess the real fix would be to update the documentation and =
+the
+>>> expectations user-space has. Including eventual re-write of some =
+udev rules or
+>>> whatever is facing these files. But to me that sounds more like a =
+systemd or
+>>> even distro thing than a kernel thing.
+>>>=20
+>>=20
+>> Unfortunately the user-space people I have interacted with find crazy
+>> to have to change their software to call bfq.weight the weight of a
+>> group.  And are not willing to do it [1].
+>=20
+> Then you need to educate them.
+
+I'm not sure that educate is the right verb (I don't like the current
+messy solution either).  But I'll do my best to inform people when
+I'll have the opportunity to do it.
+
+> Some of the issues were called out years
+> ago, at the time when we could have potentially renamed.
+
+Yeah, a good window was 5.0, and at that time we tried with a more
+general solution.  But we failed.
+
+
+> A rename now
+> will solve nothing.
 >=20
 
-Sure. I was thinking along the same lines after you asked.
+I see your point, but I don't agree this rename would solve nothing.
+The real bad thing is not having done this before.  Changing names
+that nobody uses, to names that everybody already uses, but wrongly,
+would instantaneously improve the situation a lot.  And it is what
+userspace already asked explicitly for [1].  Without this simple
+change, it will take a lot for all the inconsistent documentation
+spread around the world to be synced.  And for all legacy software to
+be changed, assuming it will all be changed.
+
+Paolo
+
+[1] https://github.com/systemd/systemd/issues/7057
+
+> --=20
+> Jens Axboe
 
