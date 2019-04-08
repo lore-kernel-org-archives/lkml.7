@@ -2,186 +2,136 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850F0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C392C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BE620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392F820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 01:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="INCFqXG+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oJH54g7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfDHBb3 (ORCPT
+        id S1726564AbfDHBbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 21:31:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48768 "EHLO vps.xff.cz"
+        Sun, 7 Apr 2019 21:31:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:34341 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbfDHBb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 21:31:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554687084; bh=NXl+t2nMVmJm864zGj/Rwn3yI5gstNPEbnRkBMnxNOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=INCFqXG+pVkDfq9KNQ6q9PPzWZPzHl44jzTaFwxv8Ll8NbTywUclqj+63QDQT+T/2
-         THt8810rUP8LZ8r7EW0CsRrBZpFmFVr1At6HOBVDwm4NmyrMaDcbcO9DsvKyWVmA5B
-         7tij9SIiid05ohHLv0YI6QVkItV0ojKrraA+ONvc=
-Date:   Mon, 8 Apr 2019 03:31:24 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        brcm80211-dev-list@cypress.com, Jose Abreu <joabreu@synopsys.com>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        devicetree@vger.kernel.org,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        linux-gpio@vger.kernel.org, Wright Feng <wright.feng@cypress.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Franky Lin <franky.lin@broadcom.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 10/12] pinctrl: sunxi: Support I/O bias voltage setting
- on H6
-Message-ID: <20190408013124.y7rvhmmwsqw3i2mz@core.my.home>
-Mail-Followup-To: linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        brcm80211-dev-list@cypress.com, Jose Abreu <joabreu@synopsys.com>,
-        Naveen Gupta <naveen.gupta@cypress.com>, devicetree@vger.kernel.org,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        linux-gpio@vger.kernel.org, Wright Feng <wright.feng@cypress.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Franky Lin <franky.lin@broadcom.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>, Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-11-megous@megous.com>
+        id S1726417AbfDHBbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 21:31:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44ctDh26v9z9sQy;
+        Mon,  8 Apr 2019 11:31:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554687093;
+        bh=kDemFqGAM78mj83b/vdhlp3WyRmlQcXYrytykVZiYYI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oJH54g7f4FEIahH8au+8LBWWvDrrFlyLfjn7SFM/s6X5RiGCVxihOKhFEuhztHBJC
+         /wy/2ZRYkhra+aGiflSDgiGN12s0zRyJKiYjOW1cjiFBU/PWwXVAQr5Zh34Sa4eQHh
+         iJC6drqnauVYRhqXPah0QqWYGvVC6lCpv+ma+U/3UiDQUIHXhlWr0QTUqOmH8cZcwt
+         DuMdoiSTrY/3NM/XRcTE6TasO8Zrxcn3xnhusL9l3jpJv9qG7MegrRAkbXq/KuNwMs
+         MiaTGGnXqaBKg18WjvWHmorhORlg7c6aBZ/gUahdsSeNuZFUiynONJnNBzo4y1Wu1z
+         YJRgUQqh6fVew==
+Date:   Mon, 8 Apr 2019 11:31:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: linux-next: manual merge of the audit tree with Linus' tree
+Message-ID: <20190408113131.222f480a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-11-megous@megous.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YA13TXinWxi=57RCNhi.iwP"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 01:45:12AM +0200, verejna wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> H6 SoC has a "pio group withstand voltage mode" register (datasheet
-> description), that needs to be used to select either 1.8V or 3.3V
-> I/O mode, based on what voltage is powering the respective pin
-> banks and is thus used for I/O signals.
-> 
-> Add support for configuring this register according to the voltage
-> of the pin bank regulator (if enabled).
-> 
-> This is similar to the support for I/O bias voltage setting patch
-> for A80 and the same concerns apply. (see commit 402bfb3c135213dc
-> Support I/O bias voltage setting on A80).
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 14 ++++++++++++++
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  3 +++
->  3 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> index ef4268cc6227..30b1befa8ed8 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> @@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
->  	.irq_banks = 4,
->  	.irq_bank_map = h6_irq_bank_map,
->  	.irq_read_needs_mux = true,
-> +	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
->  };
->  
->  static int h6_pinctrl_probe(struct platform_device *pdev)
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> index 9f329fec77cf..59a4ed396d92 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  					 unsigned pin,
->  					 struct regulator *supply)
->  {
-> +	unsigned short bank = pin / PINS_PER_BANK;
-> +	unsigned long flags;
->  	u32 val, reg;
->  	int uV;
->  
-> @@ -639,6 +641,18 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
->  		reg &= ~IO_BIAS_MASK;
->  		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-> +	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
-> +		val = uV <= 1800000 ? 1 : 0;
-> +
-> +		dev_info(pctl->dev,
-> +			 "Setting voltage bias to %sV on bank P%c\n",
-> +			 val ? "1.8" : "3.3", 'A' + bank);
+--Sig_/YA13TXinWxi=57RCNhi.iwP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'll drop this logging in v2. I forgot it here, after testing the patch.
+Hi all,
 
-	o.
+Today's linux-next merge of the audit tree got conflicts in:
 
-> +		raw_spin_lock_irqsave(&pctl->lock, flags);
-> +		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-> +		reg &= ~(1 << bank);
-> +		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
->  	}
->  
->  	return 0;
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> index 476772f91dba..3a66376f141b 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -95,7 +95,10 @@
->  #define PINCTRL_SUN7I_A20	BIT(7)
->  #define PINCTRL_SUN8I_R40	BIT(8)
->  
-> +#define PIO_POW_MOD_SEL_REG	0x340
-> +
->  #define IO_BIAS_CFG_V1		1
-> +#define IO_BIAS_CFG_V2		2
->  
->  struct sunxi_desc_function {
->  	unsigned long	variant;
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+  arch/mips/kernel/ptrace.c
+  kernel/seccomp.c
+
+between commit:
+
+  b35f549df1d7 ("syscalls: Remove start and number from syscall_get_argumen=
+ts() args")
+
+from Linus' tree and commit:
+
+  16add411645c ("syscall_get_arch: add "struct task_struct *" argument")
+
+from the audit tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/mips/kernel/ptrace.c
+index 3a62f80958e1,2ead6ff919b7..000000000000
+--- a/arch/mips/kernel/ptrace.c
++++ b/arch/mips/kernel/ptrace.c
+@@@ -1418,8 -1418,8 +1418,8 @@@ asmlinkage long syscall_trace_enter(str
+  		unsigned long args[6];
+ =20
+  		sd.nr =3D syscall;
+- 		sd.arch =3D syscall_get_arch();
++ 		sd.arch =3D syscall_get_arch(current);
+ -		syscall_get_arguments(current, regs, 0, 6, args);
+ +		syscall_get_arguments(current, regs, args);
+  		for (i =3D 0; i < 6; i++)
+  			sd.args[i] =3D args[i];
+  		sd.instruction_pointer =3D KSTK_EIP(current);
+diff --cc kernel/seccomp.c
+index df27e499956a,36f36ab00f48..000000000000
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@@ -148,8 -148,8 +148,8 @@@ static void populate_seccomp_data(struc
+  	unsigned long args[6];
+ =20
+  	sd->nr =3D syscall_get_nr(task, regs);
+- 	sd->arch =3D syscall_get_arch();
++ 	sd->arch =3D syscall_get_arch(task);
+ -	syscall_get_arguments(task, regs, 0, 6, args);
+ +	syscall_get_arguments(task, regs, args);
+  	sd->args[0] =3D args[0];
+  	sd->args[1] =3D args[1];
+  	sd->args[2] =3D args[2];
+
+--Sig_/YA13TXinWxi=57RCNhi.iwP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyqpHMACgkQAVBC80lX
+0Gy01Af/XeCzjLJfHa4aJdS9laNaWzt/uoB0ern40eoTLG/FY61TbgI/Vw2hDAzG
+rvz2fo/Mt373SQf/LTHLzktDAgrGZaketo1KMPJvQQ6fR2A0UyfNQU/aNl9Q+L+O
+QNP0YVraJj7mm7gJ8juTtOEWKkCCrMPuhMr8wojhCW661Q3xCSAm2I5aL/dAZJFv
+OhEuLvLNRJh3U1SlX9W/6cmJCm0S/6eMvk2SBshm6EwuZN5eDeTv8bPiDfUpp8Sp
+TSlx9ymcC6G2uS06VbRujHia5Xjh8u+loIg0nkCi5de94Fx/EecZusp0s2Bv8r3n
+9C42uc5fp8gBRRH8oA6tvi+1cAOoWg==
+=GhgX
+-----END PGP SIGNATURE-----
+
+--Sig_/YA13TXinWxi=57RCNhi.iwP--
