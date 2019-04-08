@@ -2,202 +2,187 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56796C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF80C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AC2204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C714820855
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfDHLtS (ORCPT
+        id S1726501AbfDHLx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:49:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:46904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfDHLtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 07:49:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C29E15BF;
-        Mon,  8 Apr 2019 04:49:17 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 168953F718;
-        Mon,  8 Apr 2019 04:49:13 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:49:08 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v8 01/16] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190408114908.evij7pqml6ltqtnl@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-2-patrick.bellasi@arm.com>
- <CAJuCfpFdDK+xYZDq+TDVjRUcF8BTqeXWvF2Wex8n7nB-O5qH1g@mail.gmail.com>
+        Mon, 8 Apr 2019 07:53:57 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:22045 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfDHLx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 07:53:57 -0400
+X-IronPort-AV: E=Sophos;i="5.60,325,1549954800"; 
+   d="scan'208";a="26949593"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 08 Apr 2019 04:53:56 -0700
+Received: from localhost (10.10.76.4) by CHN-SV-EXCH01.mchp-main.com
+ (10.10.76.37) with Microsoft SMTP Server id 14.3.352.0; Mon, 8 Apr 2019
+ 04:53:55 -0700
+Date:   Mon, 8 Apr 2019 13:53:33 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: sama5d{2,4}: use SPDX-License-Identifier
+Message-ID: <20190408115333.v5ik53qx4wxq4rgi@M43218.corp.atmel.com>
+Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpFdDK+xYZDq+TDVjRUcF8BTqeXWvF2Wex8n7nB-O5qH1g@mail.gmail.com>
+In-Reply-To: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-Apr 16:51, Suren Baghdasaryan wrote:
-> On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-
-[...]
-
-> > + * The first few values calculated by this routine:
-> > + * bf(0) = 1
-> > + * bf(1) = 1
-> > + * bf(2) = 2
-> > + * bf(3) = 2
-> > + * bf(4) = 3
-> > + * ... and so on.
-> > + */
-> > +#define bits_per(n)                            \
-> > +(                                              \
-> > +       __builtin_constant_p(n) ? (             \
-> > +               ((n) == 0 || (n) == 1) ? 1 : (  \
-> > +               ((n) & (n - 1)) == 0 ?          \
+On Wed, Apr 03, 2019 at 10:52:16PM +0200, Alexandre Belloni wrote:
+> External E-Mail
 > 
-> missing braces around 'n'
-> -               ((n) & (n - 1)) == 0 ?          \
-> +               ((n) & ((n) - 1)) == 0 ?          \
 > 
-> > +                       ilog2((n) - 1) + 2 :    \
-> > +                       ilog2((n) - 1) + 1      \
+> The X11 license text [1] is explicitly for the X Consortium and has a
+> couple of extra clauses. The MIT license text [2] is actually what the
+> current DT files claim.
 > 
-> Isn't this "((n) & ((n) - 1)) == 0 ?  ilog2((n) - 1) + 2 : ilog2((n) -
-> 1) + 1" expression equivalent to a simple "ilog2(n) + 1"?
-
-Right, since we already have n=0 and n=1 as special cases, what you
-propose should work for all n>=2.
-
+> [1] https://spdx.org/licenses/X11.html
+> [2] https://spdx.org/licenses/MIT.html
 > 
-> > +               )                               \
-> > +       ) :                                     \
-> > +       __bits_per(n)                           \
-> > +)
-> >  #endif /* _LINUX_LOG2_H */
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[...]
+Applied to at91-dt.
 
-> > +static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
+Thanks
+
+> ---
+>  arch/arm/boot/dts/sama5d2.dtsi | 39 +---------------------------------
+>  arch/arm/boot/dts/sama5d4.dtsi | 39 +---------------------------------
+>  2 files changed, 2 insertions(+), 76 deletions(-)
 > 
-> Where are you using uclamp_bucket_base_value()? I would expect its
-> usage somewhere inside uclamp_rq_dec_id() when the last task in the
-> bucket is dequeued but I don't see it...
-
-This behavior is not move into a dedicated patch, as per Peter
-request:
-
-   Message-ID: <20190314111849.gx6bl6myfjtaan7r@e110439-lin>
-
-This functions was left here to support a the intialization code in
-init_uclamp() but... I notice know I'm doing the initialization in a
-different way thus, I'll move it into the following patch.
-
-> > +{
-> > +       return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
-> > +}
-> > +
-
-[...]
-
-> > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-> > +                                   unsigned int clamp_id)
-> > +{
-> > +       struct uclamp_rq *uc_rq = &rq->uclamp[clamp_id];
-> > +       struct uclamp_se *uc_se = &p->uclamp[clamp_id];
-> > +       struct uclamp_bucket *bucket;
-> > +       unsigned int rq_clamp;
-> > +
-> > +       bucket = &uc_rq->bucket[uc_se->bucket_id];
-> > +       SCHED_WARN_ON(!bucket->tasks);
-> > +       if (likely(bucket->tasks))
-> > +               bucket->tasks--;
-> > +
-> > +       if (likely(bucket->tasks))
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+> index d159ee42ef29..26ae6b34e329 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -1,46 +1,9 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>  /*
+>   * sama5d2.dtsi - Device Tree Include file for SAMA5D2 family SoC
+>   *
+>   *  Copyright (C) 2015 Atmel,
+>   *                2015 Ludovic Desroches <ludovic.desroches@atmel.com>
+> - *
+> - * This file is dual-licensed: you can use it either under the terms
+> - * of the GPL or the X11 license, at your option. Note that this dual
+> - * licensing only applies to this file, and not this project as a
+> - * whole.
+> - *
+> - *  a) This file is free software; you can redistribute it and/or
+> - *     modify it under the terms of the GNU General Public License as
+> - *     published by the Free Software Foundation; either version 2 of the
+> - *     License, or (at your option) any later version.
+> - *
+> - *     This file is distributed in the hope that it will be useful,
+> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - *     GNU General Public License for more details.
+> - *
+> - * Or, alternatively,
+> - *
+> - *  b) Permission is hereby granted, free of charge, to any person
+> - *     obtaining a copy of this software and associated documentation
+> - *     files (the "Software"), to deal in the Software without
+> - *     restriction, including without limitation the rights to use,
+> - *     copy, modify, merge, publish, distribute, sublicense, and/or
+> - *     sell copies of the Software, and to permit persons to whom the
+> - *     Software is furnished to do so, subject to the following
+> - *     conditions:
+> - *
+> - *     The above copyright notice and this permission notice shall be
+> - *     included in all copies or substantial portions of the Software.
+> - *
+> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> - *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+>  #include <dt-bindings/dma/at91.h>
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+> index 6c1e41f94549..6ab27a7b388d 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -1,46 +1,9 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>  /*
+>   * sama5d4.dtsi - Device Tree Include file for SAMA5D4 family SoC
+>   *
+>   *  Copyright (C) 2014 Atmel,
+>   *                2014 Nicolas Ferre <nicolas.ferre@atmel.com>
+> - *
+> - * This file is dual-licensed: you can use it either under the terms
+> - * of the GPL or the X11 license, at your option. Note that this dual
+> - * licensing only applies to this file, and not this project as a
+> - * whole.
+> - *
+> - *  a) This file is free software; you can redistribute it and/or
+> - *     modify it under the terms of the GNU General Public License as
+> - *     published by the Free Software Foundation; either version 2 of the
+> - *     License, or (at your option) any later version.
+> - *
+> - *     This file is distributed in the hope that it will be useful,
+> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - *     GNU General Public License for more details.
+> - *
+> - * Or, alternatively,
+> - *
+> - *  b) Permission is hereby granted, free of charge, to any person
+> - *     obtaining a copy of this software and associated documentation
+> - *     files (the "Software"), to deal in the Software without
+> - *     restriction, including without limitation the rights to use,
+> - *     copy, modify, merge, publish, distribute, sublicense, and/or
+> - *     sell copies of the Software, and to permit persons to whom the
+> - *     Software is furnished to do so, subject to the following
+> - *     conditions:
+> - *
+> - *     The above copyright notice and this permission notice shall be
+> - *     included in all copies or substantial portions of the Software.
+> - *
+> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> - *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+>  #include <dt-bindings/clock/at91.h>
+> -- 
+> 2.20.1
 > 
-> Shouldn't you adjust bucket->value if the remaining tasks in the
-> bucket have a lower clamp value than the task that was just removed?
-
-No, this is never done. As long as a bucket is not empty/idle we never
-reset it to its nominal value. In this patch specifically, the value
-is never changed since we moved the "local max tracking" bits into a
-dedicated patch.
-
-> > +               return;
-> > +
-> > +       rq_clamp = READ_ONCE(uc_rq->value);
-> > +       /*
-> > +        * Defensive programming: this should never happen. If it happens,
-> > +        * e.g. due to future modification, warn and fixup the expected value.
-> > +        */
-> > +       SCHED_WARN_ON(bucket->value > rq_clamp);
-> > +       if (bucket->value >= rq_clamp)
-> > +               WRITE_ONCE(uc_rq->value, uclamp_rq_max_value(rq, clamp_id));
-> > +}
-
-[...]
-
-> > +static void __init init_uclamp(void)
-> > +{
-> > +       unsigned int clamp_id;
-> > +       int cpu;
-> > +
-> > +       for_each_possible_cpu(cpu) {
-> > +               struct uclamp_bucket *bucket;
-> > +               struct uclamp_rq *uc_rq;
-> > +               unsigned int bucket_id;
-> > +
-> > +               memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
-> > +
-> > +               for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
-> > +                       uc_rq = &cpu_rq(cpu)->uclamp[clamp_id];
-> > +
-> > +                       bucket_id = 1;
-> > +                       while (bucket_id < UCLAMP_BUCKETS) {
-> > +                               bucket = &uc_rq->bucket[bucket_id];
-> > +                               bucket->value = bucket_id * UCLAMP_BUCKET_DELTA;
-> > +                               ++bucket_id;
-> > +                       }
-> > +               }
-> > +       }
-
-All the initialization code above is not more required after the next
-patch introducing "local max tracking".
-
-> > +
-> > +       for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
-> > +               struct uclamp_se *uc_se = &init_task.uclamp[clamp_id];
-> > +
-> > +               uc_se->value = uclamp_none(clamp_id);
-> > +               uc_se->bucket_id = uclamp_bucket_id(uc_se->value);
-> > +       }
-> > +}
-
-[...]
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
