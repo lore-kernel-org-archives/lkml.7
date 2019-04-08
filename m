@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3A0C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF80C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA3F20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D176120870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708736;
-	bh=N7eSKnf+W6K7na+3xMaYbGoytAoC27dsPIh4tUmxZiA=;
+	s=default; t=1554708746;
+	bh=9yS3auOxin1DL3oHF3phX3xEznWbeJQX/OP0tdcTrKc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=KCYd5ryv7fjz/TPPuaelCzyckL/hquJd7jP4xAicuQB3M5q1nEBqLASJ7v391Ubca
-	 PieGqbZUc6pV+C3OcKCmwQJQwIqi6+x4kgTORqyrYbl3p1pX3TG6aMDPINeSULlHMN
-	 n0THvl4cVykyAN6K2LqUlLGGrI2Y3+oNUadi4mig=
+	b=IWXHwHXP6/4CSQd2WhY1FjFbrJ3r2NMSwGovR6UgjtxRzCrZoN2O/i4uZxk+5O+u2
+	 ZunNg/lx2rkFjL3pfCmO1orsVH7dG5vGsHKaVs/04O96pMoFnfs75bGWX0EO7vpAUw
+	 R1rUFCtD5m5DSp/nOsBKHSliXXxn2JKouWoMQsiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfDHHcP (ORCPT
+        id S1726776AbfDHHcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:32:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44052 "EHLO
+        Mon, 8 Apr 2019 03:32:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44342 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHHcO (ORCPT
+        with ESMTP id S1726373AbfDHHcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:32:14 -0400
+        Mon, 8 Apr 2019 03:32:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3V7COzg9VsqwdKmX61evL9k/DgvUjpk+t1Eg5v+5cAY=; b=e896xRSpC7ly
-        ONlshISX5+ZqRf4WPwLr4qsro0gQFKAuBM2WQxcnl2NQHJzsn3Y4/d1efCHwepCJ/QZSkam+TUaZY
-        n+l3Mxn+lyYpPE5s1MNqR47LUubeEHPbWbCnqctO7A/auqARHAlmVftg3V6u3gO5Pg5mcEeN/Zgqo
-        IL2Wk=;
+        List-Archive; bh=ITrwBjYxRF02082MkJnJP0JWiVmsSZWqXgap45mz8Zw=; b=RDofjGNBViq+
+        pUTAX9OZ6zRzFZJXx9ovBBD+qsUAL7Kg29L6UXQNw1wpVzm8nABYs+l0GKjywfsHwwl1skWAjv9/z
+        TlGWmlErGt4JFbRro6SI90K3I0KrBA0itN8nZA6mYZCSSs5XdziizL3bKHUVPRQ3npnnzME28GRtK
+        BHjyo=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOlD-0003xR-VE; Mon, 08 Apr 2019 07:32:09 +0000
+        id 1hDOlN-0003xl-0X; Mon, 08 Apr 2019 07:32:18 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 246DB441D3B; Mon,  8 Apr 2019 14:31:58 +0700 (+07)
+        id BC75D441D3C; Mon,  8 Apr 2019 14:32:06 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: tegra114: add 3 wire transfer mode support" to the spi tree
-In-Reply-To:  <1554423259-26056-9-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: tegra114: add dual mode support" to the spi tree
+In-Reply-To:  <1554423259-26056-8-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408073158.246DB441D3B@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:31:58 +0700 (+07)
+Message-Id: <20190408073206.BC75D441D3C@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:32:06 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra114: add 3 wire transfer mode support
+   spi: tegra114: add dual mode support
 
 has been applied to the spi tree at
 
@@ -91,46 +91,50 @@ to this mail.
 Thanks,
 Mark
 
-From 9d199231b000414e420a35912760f2d67e9c56d7 Mon Sep 17 00:00:00 2001
+From 9877a347f2056f7aa4e770de9a20048ad288f545 Mon Sep 17 00:00:00 2001
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Thu, 4 Apr 2019 17:14:08 -0700
-Subject: [PATCH] spi: tegra114: add 3 wire transfer mode support
+Date: Thu, 4 Apr 2019 17:14:07 -0700
+Subject: [PATCH] spi: tegra114: add dual mode support
 
-This patch adds 3 wire transfer support to SPI mode list along with
-its implementation.
+This patch adds support for dual mode SPI transfer.
 
-3 wire or Bi-directional mode uses only one serial data pin for the
-transfer. SPI in master mode uses MOSI data line only and MISO data
-line is not used.
+Dual mode uses both MOSI and MISO lines in parallel where the data
+is interleaved on MOSI and MISO lines increasing the throughput.
+
+Packet from Tx FIFO is transmitted on both MOSI and MISO lines and
+packet to Rx FIFO is received from both MOSI and MISO lines. Even
+bits are transmitted or received on the MOSI data line and odd bits
+are transmitted or received on the MISO data line.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 1e749ce13029..751672b3bc16 100644
+index 402799c7f6b7..1e749ce13029 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -754,6 +754,11 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 		else
- 			command1 &= ~SPI_LSBIT_FE;
+@@ -786,6 +786,11 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
-+		if (spi->mode & SPI_3WIRE)
-+			command1 |= SPI_BIDIROE;
-+		else
-+			command1 &= ~SPI_BIDIROE;
+ 	total_fifo_words = tegra_spi_calculate_curr_xfer_param(spi, tspi, t);
+ 
++	if (t->rx_nbits == SPI_NBITS_DUAL || t->tx_nbits == SPI_NBITS_DUAL)
++		command1 |= SPI_BOTH_EN_BIT;
++	else
++		command1 &= ~SPI_BOTH_EN_BIT;
 +
- 		if (tspi->cs_control) {
- 			if (tspi->cs_control != spi)
- 				tegra_spi_writel(tspi, command1, SPI_COMMAND1);
-@@ -1158,7 +1163,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
+ 	else
+@@ -1152,7 +1157,8 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 		master->max_speed_hz = 25000000; /* 25MHz */
  
  	/* the spi->mode bits understood by this driver: */
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST |
--			    SPI_TX_DUAL | SPI_RX_DUAL;
-+			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_3WIRE;
+-	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST;
++	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST |
++			    SPI_TX_DUAL | SPI_RX_DUAL;
  	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
  	master->setup = tegra_spi_setup;
  	master->transfer_one_message = tegra_spi_transfer_one_message;
