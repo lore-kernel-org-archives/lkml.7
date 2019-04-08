@@ -2,133 +2,131 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E69C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21FDC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75B02084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B661213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="D1f4DwZ+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwTdRwMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfDHW0H (ORCPT
+        id S1727041AbfDHWae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:26:07 -0400
-Received: from vps.xff.cz ([195.181.215.36]:35100 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfDHW0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:26:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554762363; bh=mgY3RUR/Sp+vLYQe7vmo23OegwTG5IGH4KR+U6j+MH0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D1f4DwZ+f9A9ok1KlcBlDAwJd3GGWqSoNzZ2WjWSN4uGozkLWWZZ38XUAvvcalrYp
-         Kk8KVeQ5UKgNjeD3vQaj8+tFAsXl+PejlDP0rmXh2EX/vHlQ5yeaDMdnaXSywQiZXB
-         u/fy9kolnHgwkfphBIQYiGF6ehLznytptU8TDuuA=
-Date:   Tue, 9 Apr 2019 00:26:02 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Message-ID: <20190408222602.jh3mjun5shdpbsnx@core.my.home>
-Mail-Followup-To: Jagan Teki <jagan@amarulasolutions.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-8-megous@megous.com>
- <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w@mail.gmail.com>
+        Mon, 8 Apr 2019 18:30:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38943 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfDHWad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 18:30:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i17so5316472pfo.6;
+        Mon, 08 Apr 2019 15:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gy9mFEQpDUkiHzZw+24ioyedli1UnVM5xqbrv5HsyqI=;
+        b=pwTdRwMk2BB1FM0ni6b16lvU5CTBqyoJygPLMBgAiTui/QfPZ+ymajjc34StgawM3H
+         2/F2buD0ZhueU/y3GcLqVMFkQLUTexntAz/BEMqIDXAms7VC0JwrcGwjN9IzyqLWX41w
+         4j2lslhNUAJC/JTFI5+Y77smEP2KMCNu9nk+Atvksm1mROBRFoyUKGIY4rivinS2kFKj
+         l95CeOOh/WXt5i/okpC3mrJa5pCp/oE8QJOAWpNsegQPEWbRkq3hEFmXIvYOeyA3CkdF
+         6KrhX2IS1CpgePHb2GOUH161a8rjimPTHJpaw+gkha64/AUicDgQwHrpuiCFs/uCCn4N
+         pgnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gy9mFEQpDUkiHzZw+24ioyedli1UnVM5xqbrv5HsyqI=;
+        b=JPUTZoioLGRS4sEqitIgv4tyhpdvwhbpJhn4ot9aTXthb6ocX57F3Zni8e3BH01iU3
+         sWQ/b1oKGXFgoK8p0mI8OqpfoQsHxzSyxxn2ZyrBod6FlcMshIQc1NXp8T10+etLmwQT
+         9fDrtd36zFt4ZCJ2dlK2CrFjJJXrRSCINvo5O8aiRT2+JoKGtFbJvHP1xox8dxOPv2nF
+         jEKGTLo740BV2h9Z81Zhl8/bmLgGlkuWViWghy82KNv00xxYJ79MuZ3xPY2l6k2TWkWG
+         q8ZUh5OYtWuAVbHnf7ilXx6mDp1XwzCvYzKY0ccp/1FiRoUCmC1nxymogyOsj/gbfjpt
+         rfkQ==
+X-Gm-Message-State: APjAAAUtnf9mBJzSmIwy8a5jzzIryryg5ByvB8XZmE1NhbUn9fVhaKt0
+        UbFDQLOOT1GoJG5ZMnqLiRrGootyAvw9Vb7z2bQ=
+X-Google-Smtp-Source: APXvYqyUUowo86JoiAuB+BY4j0R2v8oC4mV/aV5eP1ukbS4wXw5ABztcOF+1Eb0ApK0T3ito8WyfnEVx8IY767/OASE=
+X-Received: by 2002:a63:d302:: with SMTP id b2mr30451812pgg.13.1554762632391;
+ Mon, 08 Apr 2019 15:30:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w@mail.gmail.com>
+References: <20190409073827.0ac717ab@canb.auug.org.au>
+In-Reply-To: <20190409073827.0ac717ab@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 8 Apr 2019 17:30:20 -0500
+Message-ID: <CAH2r5mvSQ6+gq92EMtj+_DYCZW_AOjZocJ9rAKHdtU09Nw-pgw@mail.gmail.com>
+Subject: Re: linux-next: Fixes tags need some work in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:41:38AM +0530, Jagan Teki wrote:
-> On Sat, Apr 6, 2019 at 5:15 AM <megous@megous.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-> > According to the phy datasheet, both regulators need to be enabled
-> > at the same time, but we can only specify a single phy-supply in
-> > the DT.
-> >
-> > This can be achieved by making one regulator depedning on the
-> > other via vin-supply. While it's not a technically correct
-> > description of the hardware, it achieves the purpose.
-> >
-> > All values of RX/TX delay were tested exhaustively and a middle
-> > one of the working values was chosen.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> 
-> This was in ML[1], I thought this change would already merged. I
-> remember Chen-Yu applied and revert due to emac node not mainlined at
-> that time.
-> 
-> [1] https://patchwork.kernel.org/patch/10558281/
+I just fixed these up manually and repushed to cifs-2.6.git for-next
 
-The patch was not merged at the time, and bitrotted a bit. Armbian folks
-were applying the bitortted patch out-of-the mainline and were experiencing
-NPEs. I fixed the patch, and it is also part of this series. It's patch 5.
+I was curious if checkpatch should have flagged this - I reran
+checkpatch on the original version of Zhang's patches and it didn't
+complain about the spacing (and probably should have).
 
-	o.
+On Mon, Apr 8, 2019 at 4:38 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> In commit
+>
+>   7d672725ba72 ("cifs: Fix lease buffer length error")
+>
+> Fixes tags
+>
+>   Fixes: 9764c02fcbad(SMB3: Add support for multidialect negotiate (SMB2.1 and later))
+>   Fixes: d5c7076b772a(smb3: add smb3.1.1 to default dialect list)
+>
+> has these problem(s):
+>
+>   - missing space between the SHA1 and the subject
+>   - missing quotes around the subject
+>
+> In commit
+>
+>   54492efdd6a2 ("cifs: Fix use-after-free in SMB2_read")
+>
+> Fixes tag
+>
+>   Fixes: eccb4422cf97(smb3: Add ftrace tracepoints for improved SMB3 debugging)
+>
+> has these problem(s):
+>
+>   - missing space between the SHA1 and the subject
+>   - missing quotes around the subject
+>
+> In commit
+>
+>   3cc71735cf9f ("cifs: Fix use-after-free in SMB2_write")
+>
+> Fixes tag
+>
+>   Fixes: eccb4422cf97(smb3: Add ftrace tracepoints for improved SMB3 debugging)
+>
+> has these problem(s):
+>
+>   - missing space between the SHA1 and the subject
+>   - missing quotes around the subject
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Thanks,
+
+Steve
