@@ -2,178 +2,159 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2B2C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904B0C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88AC821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9TU8KgG"
+	by mail.kernel.org (Postfix) with ESMTP id 672AA21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfDHQOL (ORCPT
+        id S1727367AbfDHQSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:14:11 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:34220 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbfDHQOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:14:11 -0400
-Received: by mail-it1-f194.google.com with SMTP id z17so362908itc.1;
-        Mon, 08 Apr 2019 09:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/tGx6xAR3YCjanY8oQehQa0QqUSHh/RTqgaBS7JAGck=;
-        b=F9TU8KgGQs2jcdOWKFua1MEy03htztSYf3L/ZwY9nkEuCCpcUU4ltKBVzMsgyqX+Hs
-         5ojxcfbr1JhR4QoWFJjfRbnj37gsG5awLuQc8xs7luC7MjPS5ab85tu0oQI3WcnvAoiv
-         QO7bdB9syGjXy2lUUp4eBrnjDo9uD7h1sVNy9y9I3n7eX8XAdOmCCDH9g+kcdMJ2kz8B
-         u3i3k7KWVcJRq46ZEgCrgnkyN1SrDVOm/52xSCP6PnHrZ5xuGrsgv9OandFKGD8fuSZs
-         rWjPCA/ht7Nt3q4CqupA3CU7V15CU0h4bvfnqq2igiPG8A0Av+6RV6qUSd5xqpxwTSi/
-         VN7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/tGx6xAR3YCjanY8oQehQa0QqUSHh/RTqgaBS7JAGck=;
-        b=thwQd5frNu2tbuutesvEQ1e+GVtl/GiUhTvRdzyeI0uYcJy/AH04vShBE9UF30boTG
-         4TuefwU0IxxECdORA2dMzCOF+s4uwXGgyMchS4HBzmECufAed7paf+mUMuysnafe3psQ
-         4b7PxS69NXyfFytW0XK77fCcsA1MCYGcji2fM3NjkIbYa/1vO/8DGGbNd1fF0vmC/eTB
-         EX1CJOulhgK7BgZ0HiYaR9aKe6iXoBUpG4n+ZYjHkabKTzMsTAuFg/q+fy/I0tar/NF5
-         k3tww6wj00y3u9uNLuXdmEpb82aqcV5Z3fSwDwerwe5yNnyLR+D0nJqmNnFeK/V44YQU
-         ASJA==
-X-Gm-Message-State: APjAAAWZdcwP1ne4/XcyiAaM1T/cqvmaMHhbCuAxASj3shWXMJKnAWWp
-        sjQfx5ZbYrP/MBlz48npRTV33RBusZJzHps5y0A=
-X-Google-Smtp-Source: APXvYqx6M8eQx9p9BYMoe6Qv9uywuoTe6QWpJe8brWgXjWRdFDqOoitU9vZ565qRUD6e2XnLh44p2mTpTR3P1m0yE/I=
-X-Received: by 2002:a24:e346:: with SMTP id d67mr3028631ith.42.1554740049908;
- Mon, 08 Apr 2019 09:14:09 -0700 (PDT)
+        Mon, 8 Apr 2019 12:18:07 -0400
+Received: from muru.com ([72.249.23.125]:44764 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbfDHQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:18:06 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 33C3880AA;
+        Mon,  8 Apr 2019 16:18:20 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 09:18:02 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH 3/3] ARM: omap2: move platform-specific asm-offset.h to
+ arch/arm/mach-omap2
+Message-ID: <20190408161802.GI49658@atomide.com>
+References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
+ <20190408075427.6052-3-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <20190405102455.15311-1-tiny.windzz@gmail.com> <20190405102455.15311-3-tiny.windzz@gmail.com>
- <20190405145532.cstvbv3mxbzrmpxp@flea>
-In-Reply-To: <20190405145532.cstvbv3mxbzrmpxp@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 9 Apr 2019 00:13:58 +0800
-Message-ID: <CAEExFWuDjD2Ur6UuCPD_m=hvUYJj7Z=NqQ7KXXR+tmnVtDqfbQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document operating-points-v2-sunxi-cpu
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408075427.6052-3-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 10:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
-> > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > frequency value  based on the speedbin blown in the efuse combination.
-> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > provide the OPP framework with required information.
-> > This is used to determine the voltage and frequency value for each
-> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> >
-> > This change adds documentation for the DT bindings.
-> > The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> > with following parameters:
-> > - nvmem-cells (NVMEM area containig the speedbin information)
-> > - opp-supported-hw: A single 32 bit bitmap value,
-> >   representing compatible HW:
-> >                       0:      speedbin 0
-> >                       1:      speedbin 1
-> >                       2:      speedbin 2
-> >                       3-31:   unused
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
-> >  1 file changed, 235 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> > new file mode 100644
-> > index 000000000000..80201d4e5147
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> > @@ -0,0 +1,235 @@
-> > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> > +===================================
-> > +
-> > +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> > +varies based on the silicon variant in use. Allwinner Process Voltage
-> > +Scaling Tables defines the voltage and frequency value  based on the
-> > +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> > +reads the efuse value from the SoC to provide the OPP framework with
-> > +required information.
-> > +
-> > +Required properties:
-> > +--------------------
-> > +In 'cpus' nodes:
-> > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> > +
-> > +In 'operating-points-v2' table:
-> > +- compatible: Should be
-> > +     - 'operating-points-v2-sunxi-cpu'.
-> > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> > +             efuse registers that has information about the
-> > +             speedbin that is used to select the right frequency/voltage
-> > +             value pair.
-> > +             Please refer the for nvmem-cells
-> > +             bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-> > +             and also examples below.
-> > +
-> > +In every OPP node:
-> > +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
-> > +                 Bitmap:
-> > +                     0:      speedbin 0
-> > +                     1:      speedbin 1
-> > +                     2:      speedbin 2
-> > +                     3-31:   unused
->
-> I'm wondering if that's the right approach.
->
-> I guess we could also have three different OPP tables, and pass them
-> all three through a phandle array, and have the kernel code select
-> which one is relevant based on the SID content
+Hi,
 
-It's ok. But why not use the way we already have?
-Is it necessary to introduce new helper?
+* Masahiro Yamada <yamada.masahiro@socionext.com> [190408 07:56]:
+> <generated/ti-pm-asm-offsets.h> is only generated and included
+> by arch/arm/mach-omap2/, so it does not need to reside in the
+> globally visible include/generated/.
+> 
+> I moved and renamed it to arch/arm/mach-omap2/pm-asm-offsets.h
+> since the prefix 'omap2-' is just redundant in mach-omap2/.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Can this be applied to ARM-SOC tree in a series?
+> (with Ack from the platform sub-maintainer.)
+> 
+> ti-pm-asm-offsets.h does not need to reside in include/generated/,
+> but you may ask "Why must it get out of include/generated/?"
+> 
+> My main motivation is to avoid a race condition in the currently
+> proposed patch:
+> 
+> https://lore.kernel.org/patchwork/patch/1052763/
+> 
+> This patch tries to embed some build artifacts into the kernel.
+> 
+> If arch/arm/mach-omap2/ and kernel/ are built at the same time,
+> it may embed a truncated file.
 
->
-> Another option would be to use the OF_DYNAMIC code to fill
-> operating-points-v2 at kernel boot, before (or when) cpufreq kicks in.
+Looks like a nice improvment to me, adding Keerthy and Dave to Cc.
 
-My thought is to keep the same with others. And this situation may
-make thingis complex though it works.
+Keerthy and Dave, can you please test this series with am3 and am4
+PM code?
 
-Hi  vireshk,
+Regards,
 
-I want to hear from you.
+Tony
 
-Yours,
-Yangtao
-
->
-> ATF could also do that work.
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+>  arch/arm/mach-omap2/.gitignore  | 1 +
+>  arch/arm/mach-omap2/Makefile    | 5 +++--
+>  arch/arm/mach-omap2/sleep33xx.S | 2 +-
+>  arch/arm/mach-omap2/sleep43xx.S | 2 +-
+>  4 files changed, 6 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/arm/mach-omap2/.gitignore
+> 
+> diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+> new file mode 100644
+> index 000000000000..79a8d6ea7152
+> --- /dev/null
+> +++ b/arch/arm/mach-omap2/.gitignore
+> @@ -0,0 +1 @@
+> +pm-asm-offsets.h
+> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+> index 85d1b13c9215..26baeb6477af 100644
+> --- a/arch/arm/mach-omap2/Makefile
+> +++ b/arch/arm/mach-omap2/Makefile
+> @@ -236,9 +236,10 @@ obj-y					+= omap_phy_internal.o
+>  
+>  obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
+>  
+> -include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
+> +$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+>  	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+>  
+> -$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
+> +$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+>  
+>  targets += pm-asm-offsets.s
+> +clean-files += pm-asm-offsets.h
+> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+> index 47a816468cdb..a003769121aa 100644
+> --- a/arch/arm/mach-omap2/sleep33xx.S
+> +++ b/arch/arm/mach-omap2/sleep33xx.S
+> @@ -6,7 +6,6 @@
+>   *	Dave Gerlach, Vaibhav Bedia
+>   */
+>  
+> -#include <generated/ti-pm-asm-offsets.h>
+>  #include <linux/linkage.h>
+>  #include <linux/platform_data/pm33xx.h>
+>  #include <linux/ti-emif-sram.h>
+> @@ -15,6 +14,7 @@
+>  
+>  #include "iomap.h"
+>  #include "cm33xx.h"
+> +#include "pm-asm-offsets.h"
+>  
+>  #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
+>  #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
+> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+> index 5b9343b58fc7..aa288f361c5e 100644
+> --- a/arch/arm/mach-omap2/sleep43xx.S
+> +++ b/arch/arm/mach-omap2/sleep43xx.S
+> @@ -6,7 +6,6 @@
+>   *	Dave Gerlach, Vaibhav Bedia
+>   */
+>  
+> -#include <generated/ti-pm-asm-offsets.h>
+>  #include <linux/linkage.h>
+>  #include <linux/ti-emif-sram.h>
+>  #include <linux/platform_data/pm33xx.h>
+> @@ -19,6 +18,7 @@
+>  #include "iomap.h"
+>  #include "omap-secure.h"
+>  #include "omap44xx.h"
+> +#include "pm-asm-offsets.h"
+>  #include "prm33xx.h"
+>  #include "prcm43xx.h"
+>  
+> -- 
+> 2.17.1
+> 
