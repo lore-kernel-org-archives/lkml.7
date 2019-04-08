@@ -2,329 +2,171 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB354C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C06820879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD4820857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cKVLwp5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfDHQGe (ORCPT
+        id S1727153AbfDHQHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:06:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:34513 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfDHQGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:06:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 09:06:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
-   d="scan'208";a="289753193"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 08 Apr 2019 09:06:33 -0700
-Received: from [10.254.87.204] (kliang2-mobl.ccr.corp.intel.com [10.254.87.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 7963C580472;
-        Mon,  8 Apr 2019 09:06:32 -0700 (PDT)
-Subject: Re: [PATCH V5 00/12] perf: Add Icelake support (kernel only, except
- Topdown)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190402194509.2832-1-kan.liang@linux.intel.com>
- <20190408154112.GW12232@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <ec9e3a07-4b29-b698-83d7-5b8bbcd48dc4@linux.intel.com>
-Date:   Mon, 8 Apr 2019 12:06:31 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 12:07:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36333 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfDHQHJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:07:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so7894748pfn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=TCLGovzegw701/u4c+RSrYN+SJq+Buy7ekNIjiUF7iE=;
+        b=cKVLwp5sjVO3yDLjmDytFvAVPNES9IV5smEidd9Dv+mM0QcVpWWHI3nF+xKCvEY57I
+         VC9dYpNiZklSKd8VMOX+831rRJQcmNdsRBfyu6nAwckQJZF0rNnpexRxYQx+xy/oCinC
+         wcY/Gh+Zp+acbo10+hQwTFuBGmw4gafJrBDZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=TCLGovzegw701/u4c+RSrYN+SJq+Buy7ekNIjiUF7iE=;
+        b=dSE7yNn5VnmlQpMjyTxYakCwBc9t4mxq0qOhra+y6ja70enqZ+Qfz2IZCTrK75Znl0
+         D6InMg9OUCDj6sv+suNAoZb/8UkBdsv+/hPbvWKwJ9EyOILB6HepdIMeM3ATN/oRyNzV
+         c5tVzNQM936bmNkp9C/S4ZVQoURP9TP30swPWG+cvtmxPtu1ZvVRMoY/wU2Pjcsb3gwn
+         uMNRMAjvD+58jZNc40ZY0Dr4gthUAk1HYknom+pAlgVT0KfvJ89BW4LkqBlrNgbFS5LD
+         oFkD/OhSNrVajOYvNAzyQbOSIuWPtgArSu/MHouxBbyLTm16z0RW/V/Xi1Ez4D114kfX
+         Xvrg==
+X-Gm-Message-State: APjAAAXD05Jb4cFtHFEgD2c3Dw3HgkuFvuZHbhFTSDYEyFzBORP5WWUA
+        z3ISXMbZe6KGoEz2k5QickR8+060BBI=
+X-Google-Smtp-Source: APXvYqxb6q7VwwjBHoiQ4mPiJKKDVAgFOwj3jEDSgduZAHBnpeX5be1MSsDDDANk7YBLsq/8b4hjrQ==
+X-Received: by 2002:a63:7444:: with SMTP id e4mr29603061pgn.261.1554739628321;
+        Mon, 08 Apr 2019 09:07:08 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id u5sm3105935pfa.169.2019.04.08.09.07.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 09:07:07 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 09:07:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     James Morris <jmorris@namei.org>,
+        John Johansen <john.johansen@canonical.com>
+Cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] apparmor: Restore Y/N in /sys for apparmor's "enabled"
+Message-ID: <20190408160706.GA18786@beast>
 MIME-Version: 1.0
-In-Reply-To: <20190408154112.GW12232@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Before commit c5459b829b71 ("LSM: Plumb visibility into optional "enabled"
+state"), /sys/module/apparmor/parameters/enabled would show "Y" or "N"
+since it was using the "bool" handler. After being changed to "int",
+this switched to "1" or "0", breaking the userspace AppArmor detection
+of dbus-broker. This restores the Y/N output while keeping the LSM
+infrastructure happy.
 
-On 4/8/2019 11:41 AM, Peter Zijlstra wrote:
-> 
-> I currently have something like the below on top, is that correct?
+Before:
+	$ cat /sys/module/apparmor/parameters/enabled
+	1
 
-Yes, it's correct.
+After:
+	$ cat /sys/module/apparmor/parameters/enabled
+	Y
 
-> 
-> If so, I'll fold it back in.
+Reported-by: David Rheinsberg <david.rheinsberg@gmail.com>
+Link: https://lkml.kernel.org/r/CADyDSO6k8vYb1eryT4g6+EHrLCvb68GAbHVWuULkYjcZcYNhhw@mail.gmail.com
+Fixes: c5459b829b71 ("LSM: Plumb visibility into optional "enabled" state")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+This fix, if John is okay with it, is needed in v5.1 to correct the
+userspace regression reported by David.
+---
+ security/apparmor/lsm.c | 49 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
-Thanks. It's really appreciated.
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index 49d664ddff44..87500bde5a92 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -1336,9 +1336,16 @@ module_param_named(path_max, aa_g_path_max, aauint, S_IRUSR);
+ bool aa_g_paranoid_load = true;
+ module_param_named(paranoid_load, aa_g_paranoid_load, aabool, S_IRUGO);
+ 
++static int param_get_aaintbool(char *buffer, const struct kernel_param *kp);
++static int param_set_aaintbool(const char *val, const struct kernel_param *kp);
++#define param_check_aaintbool param_check_int
++static const struct kernel_param_ops param_ops_aaintbool = {
++	.set = param_set_aaintbool,
++	.get = param_get_aaintbool
++};
+ /* Boot time disable flag */
+ static int apparmor_enabled __lsm_ro_after_init = 1;
+-module_param_named(enabled, apparmor_enabled, int, 0444);
++module_param_named(enabled, apparmor_enabled, aaintbool, 0444);
+ 
+ static int __init apparmor_enabled_setup(char *str)
+ {
+@@ -1413,6 +1420,46 @@ static int param_get_aauint(char *buffer, const struct kernel_param *kp)
+ 	return param_get_uint(buffer, kp);
+ }
+ 
++/* Can only be set before AppArmor is initialized (i.e. on boot cmdline). */
++static int param_set_aaintbool(const char *val, const struct kernel_param *kp)
++{
++	struct kernel_param kp_local;
++	bool value;
++	int error;
++
++	if (apparmor_initialized)
++		return -EPERM;
++
++	/* Create local copy, with arg pointing to bool type. */
++	value = !!*((int *)kp->arg);
++	memcpy(&kp_local, kp, sizeof(kp_local));
++	kp_local.arg = &value;
++
++	error = param_set_bool(val, &kp_local);
++	if (!error)
++		*((int *)kp->arg) = *((bool *)kp_local.arg);
++	return error;
++}
++
++/*
++ * To avoid changing /sys/module/apparmor/parameters/enabled from Y/N to
++ * 1/0, this converts the "int that is actually bool" back to bool for
++ * display in the /sys filesystem, while keeping it "int" for the LSM
++ * infrastructure.
++ */
++static int param_get_aaintbool(char *buffer, const struct kernel_param *kp)
++{
++	struct kernel_param kp_local;
++	bool value;
++
++	/* Create local copy, with arg pointing to bool type. */
++	value = !!*((int *)kp->arg);
++	memcpy(&kp_local, kp, sizeof(kp_local));
++	kp_local.arg = &value;
++
++	return param_get_bool(buffer, &kp_local);
++}
++
+ static int param_get_audit(char *buffer, const struct kernel_param *kp)
+ {
+ 	if (!apparmor_enabled)
+-- 
+2.17.1
 
-Kan
 
-> 
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -563,16 +563,17 @@ int x86_pmu_hw_config(struct perf_event
->   	/* sample_regs_user never support XMM registers */
->   	if (unlikely(event->attr.sample_regs_user & PEBS_XMM_REGS))
->   		return -EINVAL;
-> +
->   	/*
->   	 * Besides the general purpose registers, XMM registers may
->   	 * be collected in PEBS on some platforms, e.g. Icelake
->   	 */
->   	if (unlikely(event->attr.sample_regs_intr & PEBS_XMM_REGS)) {
-> -		if (!is_sampling_event(event) ||
-> -		    !event->attr.precise_ip ||
-> -		    x86_pmu.pebs_no_xmm_regs)
-> +		if (x86_pmu.pebs_no_xmm_regs)
->   			return -EINVAL;
->   
-> +		if (!event->attr.precise_ip)
-> +			return -EINVAL;
->   	}
->   
->   	return x86_setup_perfctr(event);
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3428,7 +3428,7 @@ icl_get_event_constraints(struct cpu_hw_
->   	 * Force instruction:ppp in Fixed counter 0
->   	 */
->   	if ((event->attr.precise_ip == 3) &&
-> -	    ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
-> +	    (event->hw.config == X86_CONFIG(.event=0xc0)))
->   		return &fixed_counter0_constraint;
->   
->   	return hsw_get_event_constraints(cpuc, idx, event);
-> @@ -4810,7 +4810,7 @@ __init int intel_pmu_init(void)
->   			hsw_format_attr : nhm_format_attr;
->   		extra_attr = merge_attr(extra_attr, skl_format_attr);
->   		x86_pmu.cpu_events = get_icl_events_attrs();
-> -		x86_pmu.force_gpr_event = 0x2ca;
-> +		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
->   		x86_pmu.lbr_pt_coexist = true;
->   		intel_pmu_pebs_data_source_skl(false);
->   		pr_cont("Icelake events, ");
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -853,13 +853,13 @@ struct event_constraint intel_icl_pebs_e
->   	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
->   	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
->   
-> -	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),		/* MEM_TRANS_RETIRED.LOAD_LATENCY */
-> -	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),  /* MEM_INST_RETIRED.LOAD */
-> -	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),  /* MEM_INST_RETIRED.STORE */
-> +	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
-> +	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
-> +	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),	/* MEM_INST_RETIRED.STORE */
->   
->   	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf), /* MEM_LOAD_*_RETIRED.* */
->   
-> -	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf), 	     /* MEM_INST_RETIRED.* */
-> +	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf),		/* MEM_INST_RETIRED.* */
->   
->   	/*
->   	 * Everything else is handled by PMU_FL_PEBS_ALL, because we
-> @@ -963,40 +963,42 @@ static u64 pebs_update_adaptive_cfg(stru
->   	u64 pebs_data_cfg = 0;
->   	bool gprs, tsx_weight;
->   
-> -	if ((sample_type & ~(PERF_SAMPLE_IP|PERF_SAMPLE_TIME)) ||
-> -	    attr->precise_ip < 2) {
-> +	if (!(sample_type & ~(PERF_SAMPLE_IP|PERF_SAMPLE_TIME)) &&
-> +	    attr->precise_ip > 1)
-> +		return pebs_data_cfs;
->   
-> -		if (sample_type & PERF_PEBS_MEMINFO_TYPE)
-> -			pebs_data_cfg |= PEBS_DATACFG_MEMINFO;
-> +	if (sample_type & PERF_PEBS_MEMINFO_TYPE)
-> +		pebs_data_cfg |= PEBS_DATACFG_MEMINFO;
->   
-> +	/*
-> +	 * We need GPRs when:
-> +	 * + user requested them
-> +	 * + precise_ip < 2 for the non event IP
-> +	 * + For RTM TSX weight we need GPRs for the abort code.
-> +	 */
-> +	gprs = (sample_type & PERF_SAMPLE_REGS_INTR) &&
-> +	       (attr->sample_regs_intr & PEBS_GPRS_REGS);
-> +
-> +	tsx_weight = (sample_type & PERF_SAMPLE_WEIGHT) &&
-> +		     ((attr->config & INTEL_ARCH_EVENT_MASK) ==
-> +		      x86_pmu.rtm_abort_event);
-> +
-> +	if (gprs || (attr->precise_ip < 2) || tsx_weight)
-> +		pebs_data_cfg |= PEBS_DATACFG_GPRS;
-> +
-> +	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
-> +	    (attr->sample_regs_intr & PERF_XMM_REGS))
-> +		pebs_data_cfg |= PEBS_DATACFG_XMMS;
-> +
-> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
->   		/*
-> -		 * Cases we need the registers:
-> -		 * + user requested registers
-> -		 * + precise_ip < 2 for the non event IP
-> -		 * + For RTM TSX weight we need GPRs too for the abort
-> -		 * code. But we don't want to force GPRs for all other
-> -		 * weights.  So add it only collectfor the RTM abort event.
-> +		 * For now always log all LBRs. Could configure this
-> +		 * later.
->   		 */
-> -		gprs = (sample_type & PERF_SAMPLE_REGS_INTR) &&
-> -			      (attr->sample_regs_intr & 0xffffffff);
-> -		tsx_weight = (sample_type & PERF_SAMPLE_WEIGHT) &&
-> -			     ((attr->config & 0xffff) == x86_pmu.force_gpr_event);
-> -		if (gprs || (attr->precise_ip < 2) || tsx_weight)
-> -			pebs_data_cfg |= PEBS_DATACFG_GPRS;
-> -
-> -		if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
-> -		    (attr->sample_regs_intr >> 32))
-> -			pebs_data_cfg |= PEBS_DATACFG_XMMS;
-> -
-> -		if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> -			/*
-> -			 * For now always log all LBRs. Could configure this
-> -			 * later.
-> -			 */
-> -			pebs_data_cfg |= PEBS_DATACFG_LBRS |
-> -				((x86_pmu.lbr_nr-1) << PEBS_DATACFG_LBR_SHIFT);
-> -		}
-> +		pebs_data_cfg |= PEBS_DATACFG_LBRS |
-> +			((x86_pmu.lbr_nr-1) << PEBS_DATACFG_LBR_SHIFT);
->   	}
-> +
->   	return pebs_data_cfg;
->   }
->   
-> @@ -1022,13 +1024,8 @@ pebs_update_state(bool needed_cb, struct
->   	}
->   
->   	/*
-> -	 * The PEBS record doesn't shrink on the del. Because to get
-> -	 * an accurate config needs to go through all the existing pebs events.
-> -	 * It's not necessary.
-> -	 * There is no harmful for a bigger PEBS record, except little
-> -	 * performance impacts.
-> -	 * Also, for most cases, the same pebs config is applied for all
-> -	 * pebs events.
-> +	 * The PEBS record doesn't shrink on pmu::del(). Doing so would require
-> +	 * iterating all remaining PEBS events to reconstruct the config.
->   	 */
->   	if (x86_pmu.intel_cap.pebs_baseline && add) {
->   		u64 pebs_data_cfg;
-> @@ -1076,8 +1073,7 @@ void intel_pmu_pebs_enable(struct perf_e
->   
->   	cpuc->pebs_enabled |= 1ULL << hwc->idx;
->   
-> -	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
-> -	    (x86_pmu.version < 5))
-> +	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
->   		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
->   	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
->   		cpuc->pebs_enabled |= 1ULL << 63;
-> @@ -1766,8 +1762,7 @@ static void intel_pmu_drain_pebs_core(st
->   			       setup_pebs_fixed_sample_data);
->   }
->   
-> -static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc,
-> -						 int size)
-> +static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int size)
->   {
->   	struct perf_event *event;
->   	int bit;
-> @@ -1826,8 +1821,7 @@ static void intel_pmu_drain_pebs_nhm(str
->   
->   		/* PEBS v3 has more accurate status bits */
->   		if (x86_pmu.intel_cap.pebs_format >= 3) {
-> -			for_each_set_bit(bit, (unsigned long *)&pebs_status,
-> -					 size)
-> +			for_each_set_bit(bit, (unsigned long *)&pebs_status, size)
->   				counts[bit]++;
->   
->   			continue;
-> @@ -1866,8 +1860,7 @@ static void intel_pmu_drain_pebs_nhm(str
->   		 * If collision happened, the record will be dropped.
->   		 */
->   		if (p->status != (1ULL << bit)) {
-> -			for_each_set_bit(i, (unsigned long *)&pebs_status,
-> -					 x86_pmu.max_pebs_events)
-> +			for_each_set_bit(i, (unsigned long *)&pebs_status, size)
->   				error[i]++;
->   			continue;
->   		}
-> @@ -1875,7 +1868,7 @@ static void intel_pmu_drain_pebs_nhm(str
->   		counts[bit]++;
->   	}
->   
-> -	for (bit = 0; bit < size; bit++) {
-> +	for_each_set_bit(bit, (unsigned long *)&mask, size) {
->   		if ((counts[bit] == 0) && (error[bit] == 0))
->   			continue;
->   
-> @@ -1939,7 +1932,7 @@ static void intel_pmu_drain_pebs_icl(str
->   			counts[bit]++;
->   	}
->   
-> -	for (bit = 0; bit < size; bit++) {
-> +	for_each_set_bit(bit, (unsigned long *)mask, size) {
->   		if (counts[bit] == 0)
->   			continue;
->   
-> @@ -1980,6 +1973,9 @@ void __init intel_ds_init(void)
->   		char *pebs_qual = "";
->   		int format = x86_pmu.intel_cap.pebs_format;
->   
-> +		if (format < 4)
-> +			x86_pmu.intel_cap.pebs_baseline = 0;
-> +
->   		switch (format) {
->   		case 0:
->   			pr_cont("PEBS fmt0%c, ", pebs_type);
-> @@ -2042,8 +2038,6 @@ void __init intel_ds_init(void)
->   			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
->   			x86_pmu.pebs = 0;
->   		}
-> -		if (format != 4)
-> -			x86_pmu.intel_cap.pebs_baseline = 0;
->   	}
->   }
->   
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -303,8 +303,8 @@ struct cpu_hw_events {
->   	__EVENT_CONSTRAINT(c, n, m, HWEIGHT(n), 0, 0)
->   
->   /*
-> - * Only works for Intel events, which has 'small' event codes.
-> - * Need to fix the rang compare for 'big' event codes, e.g AMD64_EVENTSEL_EVENT
-> + * The constraint_match() function only works for 'simple' event codes
-> + * and not for extended (AMD64_EVENTSEL_EVENT) events codes.
->    */
->   #define EVENT_CONSTRAINT_RANGE(c, e, n, m) \
->   	__EVENT_CONSTRAINT_RANGE(c, e, n, m, HWEIGHT(n), 0, 0)
-> @@ -672,12 +672,12 @@ struct x86_pmu {
->   			pebs_no_xmm_regs	:1;
->   	int		pebs_record_size;
->   	int		pebs_buffer_size;
-> +	int		max_pebs_events;
->   	void		(*drain_pebs)(struct pt_regs *regs);
->   	struct event_constraint *pebs_constraints;
->   	void		(*pebs_aliases)(struct perf_event *event);
-> -	int 		max_pebs_events;
->   	unsigned long	large_pebs_flags;
-> -	u64		force_gpr_event;
-> +	u64		rtm_abort_event;
->   
->   	/*
->   	 * Intel LBR
-> 
+-- 
+Kees Cook
