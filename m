@@ -2,136 +2,308 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D1FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4235AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433E820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041AD20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 20:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaVs/v49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgCLhNRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDHT7g (ORCPT
+        id S1726983AbfDHUA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:59:36 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42699 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfDHT7g (ORCPT
+        Mon, 8 Apr 2019 16:00:56 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46686 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfDHUA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:59:36 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w25so6792168pfi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:59:36 -0700 (PDT)
+        Mon, 8 Apr 2019 16:00:56 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s81so8775682qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 13:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=RSStTgCMJwvCqECwFlnDBhxtF8I569p9e6PuxiQP1oM=;
-        b=IaVs/v49W9F4RB08+llfR3LzCZzsnZdb9KI01bTePyyBQrFAkbpQgsu5FDJDr4nZ/m
-         YA6tTLHgZuvBGyWo/ywVHmrLflS/IVvDlnqE04G9JZQ6H5X7Xn+Co+j/3YHc5dB4U07s
-         hbx3CzJxJZajypW7gQfNirQWke+RqbuAZFyNwtCXf8XQqi4eOU+ydwDNX5yNZ0pO+7N5
-         GmmBYlJvxnFG59cHiMFKUAf6KwMbkN173hB3GNxcqSoZtnqFuDaGFZTSblrnWbNsLT/W
-         kMw1dwylomWuocQ2hW4ZhH1yohtb86UkZvXeLQtvEK96NHD+YFp2Wh06ZkCcU3MSMPt2
-         H3pQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TYUTvWmjE4ISEtIOVJ3Zl49bZfuq5JwU9OUPy5nFVe4=;
+        b=VgCLhNRSXUpatqIKhm1/TGOI+ml0bKaor6asxMcYsallIgc93rJKL7xY/Fu/VRDA3t
+         6wVu7/HOxICrVUr+jdM5B7rlAruXiPKahAH3e2mWkOCsLNKjEfWaEcCd12Vb0sP+N+h8
+         ZjzHdGXzBGEKRwVH4fjEZfxoqW2QVFaME2IVuh6RzK/rWFtybEBvVmZKDQszmh1+9Sxs
+         bGEI/Hfgyxc8z24REJcH6YS668Czy9gYA9bmbyVxshLLcAEFS4x3KEshk0tWPxmUcqLz
+         vSvN2H66MPJYkwoavucjLlWvmeQ5zDTJXgRP3XKBhmPqgW6UOrefVA5T3uQ67qcmRXKR
+         07sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=RSStTgCMJwvCqECwFlnDBhxtF8I569p9e6PuxiQP1oM=;
-        b=f/UU+1pXBr8t88+seRcgkVV4DQu/IP7AGVEFYKwrHPMH6I8TFR7mF8ndbGzivhB2Ug
-         0r75RHqag8VsgeLofoOY/JDROShTjKJ3txPpV9RkgciA0ZNGeqtSiKG3PX0yOpfIwe/j
-         O2IJLdxNEh6q+B5fohkuwnYJUCWy/dG4Ll6bDUrOdjEvmP/fyIhFOFUGjeXkj7NkwDcL
-         mh1qr/oYZ5oZk64HVdNvQG8yIWAkrBKEt+EaJ5lNQGdKcnLl3ujphTjCKU6OmW72X849
-         HiybvmoIlpJMIWBrJ29jnKrnqBy0rH+Ze5Yfeykm1DtVHKvFyGPXXvaQl3GBht6reEyb
-         GGiQ==
-X-Gm-Message-State: APjAAAX4HmFIFPgZTcyHtORzewdqEUALTHGBGM3ftlS+pvIsMO9MxwXs
-        FCqRYj8nF2TfCI0LHKlAIIowdw==
-X-Google-Smtp-Source: APXvYqzfmpdTWEuDsxZC2Dtn2LoyYq29oaMJey0FNJtIvQ4jPQhwzXYeWniqDVNGM3maON9MarpjjA==
-X-Received: by 2002:a65:5383:: with SMTP id x3mr12785290pgq.60.1554753574808;
-        Mon, 08 Apr 2019 12:59:34 -0700 (PDT)
-Received: from [100.112.89.103] ([104.133.8.103])
-        by smtp.gmail.com with ESMTPSA id j16sm41059643pfi.58.2019.04.08.12.59.33
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Apr 2019 12:59:33 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:59:32 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Kelley Nielsen <kelleynnn@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 3/4] mm: swapoff: take notice of completion sooner
-In-Reply-To: <alpine.LSU.2.11.1904081249370.1523@eggly.anvils>
-Message-ID: <alpine.LSU.2.11.1904081258200.1523@eggly.anvils>
-References: <alpine.LSU.2.11.1904081249370.1523@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TYUTvWmjE4ISEtIOVJ3Zl49bZfuq5JwU9OUPy5nFVe4=;
+        b=Aug+pJ+3gxi08ssBcN4r4PPcnGc+jXZ7JCA2NBAAKNdfCLQ+ZiyIXJ+bPW8qkLnn9x
+         fK9zzFIruBZ19ANnJvuQDLWu+S151JcuX/84jThNIXn39zKxzlDCQo/uEUiI6zhHkifO
+         25n7loPHp9kfBkq9c9jI1ZS+0VFwBoYI0VcotfNqWnaIxnxXkvE6od20m1pkbMZo4CAG
+         Q9bSeTqzUiFhKRu+Q4Ju1Mj2ZIPj+SB43U7nW/Pm5Ge5r3LRK/juxgMkGpaT/uP2z9y0
+         Jz3NZRTvyLDvaQwumHNpFcEyXfCU1EZKy7ZgJE2bMrThmnbVEm5CiXRG6QNMAkjt0FBo
+         TAQw==
+X-Gm-Message-State: APjAAAWdqbyCBpBTuaaVQHqonCeCz0JodU3AXl5Juhun+AcEbcWCKzFW
+        FFcr5nG//dAd1EHTuAiOVog=
+X-Google-Smtp-Source: APXvYqyGO7CoIftjgzDdpXfFqEL0OqPfjmq+ApZbuNPV0Rd1KQKxaQR8HO+TLLicBGRiQVAlhB5amg==
+X-Received: by 2002:a37:6c84:: with SMTP id h126mr25034842qkc.168.1554753654542;
+        Mon, 08 Apr 2019 13:00:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id a47sm21199348qtb.79.2019.04.08.13.00.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 13:00:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AD7094039C; Mon,  8 Apr 2019 17:00:50 -0300 (-03)
+Date:   Mon, 8 Apr 2019 17:00:50 -0300
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf header: Fix lock/unlock imbalances
+Message-ID: <20190408200050.GD5796@kernel.org>
+References: <20190408173355.GA10501@embeddedor>
+ <B581617C-53AD-435A-8352-5E5A74B76B34@fb.com>
+ <3867ffda-5d01-412b-ed55-e39ee9db2ceb@embeddedor.com>
+ <20190408193555.GA5796@kernel.org>
+ <3958468b-e98b-67da-f802-f1a5d5c81d91@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3958468b-e98b-67da-f802-f1a5d5c81d91@embeddedor.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old try_to_unuse() implementation was driven by find_next_to_unuse(),
-which terminated as soon as all the swap had been freed.  Add inuse_pages
-checks now (alongside signal_pending()) to stop scanning mms and swap_map
-once finished.  The same ought to be done in shmem_unuse() too, but never
-was before, and needs a different interface: so leave it as is for now.
+Em Mon, Apr 08, 2019 at 02:52:52PM -0500, Gustavo A. R. Silva escreveu:
+> 
+> 
+> On 4/8/19 2:35 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Apr 08, 2019 at 01:26:09PM -0500, Gustavo A. R. Silva escreveu:
+> >>
+> >>
+> >> On 4/8/19 1:22 PM, Song Liu wrote:
+> >>>
+> >>>
+> >>>> On Apr 8, 2019, at 10:33 AM, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
+> >>>>
+> >>>> Fix lock/unlock imbalances by refactoring the code a bit and adding
+> >>>> calls to up_write() before return.
+> >>>>
+> >>>> Addresses-Coverity-ID: 1444315 ("Missing unlock")
+> >>>> Addresses-Coverity-ID: 1444316 ("Missing unlock")
+> >>>> Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to perf.data")
+> >>>> Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
+> >>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >>>
+> >>> Acked-by: Song Liu <songliubraving@fb.com>
+> >>>
+> >>> Thanks for the fix!
+> >>>
+> >>
+> >> Glad to help. :)
+> > 
+> > Super cool, using the same idiom as the kernel and living in the kernel
+> > sources has its advantages 8-)
+> > 
+> 
+> :P
+> 
+> > But see below, 
+> > 
+> >>>> +++ b/tools/perf/util/header.c
+> >>>> @@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+> >>>> 		perf_env__insert_bpf_prog_info(env, info_node);
+> >>>> 	}
+> >>>>
+> >>>> +	up_write(&env->bpf_progs.lock);
+> >>>> 	return 0;
+> >>>> out:
+> >>>> 	free(info_linear);
+> >>>> @@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
+> >>>> static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+> >>>> {
+> >>>> 	struct perf_env *env = &ff->ph->env;
+> >>>> +	struct btf_node *node;
+> >>>> 	u32 count, i;
+> >>>> +	int err = -1;
+> > 
+> > Why are you using this 'err' variable? It is only set here and at the
+> > end, i.e. one write, one read. We could as well have that out: block
+> > return -1 straight away.
+> > 
+> > Else we could do, see below
+> > 
+> >>>>
+> >>>> 	if (ff->ph->needs_swap) {
+> >>>> 		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
+> >>>> @@ -2636,31 +2639,33 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+> >>>> 	down_write(&env->bpf_progs.lock);
+> >>>>
+> >>>> 	for (i = 0; i < count; ++i) {
+> >>>> -		struct btf_node *node;
+> >>>> 		u32 id, data_size;
+> >>>>
+> >>>> +		node = NULL;
+> >>>> 		if (do_read_u32(ff, &id))
+> >>>> -			return -1;
+> >>>> +			goto out;
+> >>>> 		if (do_read_u32(ff, &data_size))
+> >>>> -			return -1;
+> >>>> +			goto out;
+> >>>>
+> >>>> 		node = malloc(sizeof(struct btf_node) + data_size);
+> >>>> 		if (!node)
+> >>>> -			return -1;
+> >>>> +			goto out;
+> >>>>
+> >>>> 		node->id = id;
+> >>>> 		node->data_size = data_size;
+> >>>>
+> >>>> -		if (__do_read(ff, node->data, data_size)) {
+> >>>> -			free(node);
+> >>>> -			return -1;
+> >>>> -		}
+> >>>> +		if (__do_read(ff, node->data, data_size))
+> >>>> +			goto out;
+> >>>>
+> >>>> 		perf_env__insert_btf(env, node);
+> >>>> 	}
+> > 
+> >       err = 0;
+> > 
+> >>>>
+> > 
+> > out:
+> > 
+> >>>> 	up_write(&env->bpf_progs.lock);
+> > 
+> >       return err;
+> > 
+> > And delete the rest.
+> > 
+> > but I see, you used the same pattern in the first #ifdef HAVE_LIBBPF_SUPPORT
+> > block :-)
+> > 
+> > Anyway, since we're fixing up that other case, we might as well
+> > streamline this, please check the patch below.
+> > 
+> 
+> Yeah. This is exactly how I would have coded this from the beginning. But, as you
+> correctly pointed out, I'm using the same pattern as in HAVE_LIBBPF_SUPPORT. :)
+> 
+> Just a comment below...
+> 
+> >>>> 	return 0;
+> > 
+> >>>> +out:
+> >>>> +	up_write(&env->bpf_progs.lock);
+> >>>> +	free(node);
+> >>>> +	return err;
+> > 
+> > So, that is what I'm applying, please holler if I introduced some
+> > problem:
+> > 
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index b9e693825873..2d2af2ac2b1e 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+> >  		perf_env__insert_bpf_prog_info(env, info_node);
+> >  	}
+> >  
+> > +	up_write(&env->bpf_progs.lock);
+> >  	return 0;
+> >  out:
+> >  	free(info_linear);
+> > @@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
+> >  static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+> >  {
+> >  	struct perf_env *env = &ff->ph->env;
+> > +	struct btf_node *node = NULL;
+> >  	u32 count, i;
+> > +	int err = -1;
+> >  
+> >  	if (ff->ph->needs_swap) {
+> >  		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
+> > @@ -2636,31 +2639,32 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+> >  	down_write(&env->bpf_progs.lock);
+> >  
+> >  	for (i = 0; i < count; ++i) {
+> > -		struct btf_node *node;
+> >  		u32 id, data_size;
+> >  
+> >  		if (do_read_u32(ff, &id))
+> > -			return -1;
+> > +			goto out;
+> >  		if (do_read_u32(ff, &data_size))
+> > -			return -1;
+> > +			goto out;
+> >  
+> >  		node = malloc(sizeof(struct btf_node) + data_size);
+> >  		if (!node)
+> > -			return -1;
+> > +			goto out;
+> >  
+> >  		node->id = id;
+> >  		node->data_size = data_size;
+> >  
+> > -		if (__do_read(ff, node->data, data_size)) {
+> > -			free(node);
+> > -			return -1;
+> > -		}
+> > +		if (__do_read(ff, node->data, data_size))
+> > +			goto out;
+> >  
+> >  		perf_env__insert_btf(env, node);
+> > +		node = NULL;
+> 
+> If we move this assignment to the beginning of the for loop, as in
+> the original patch, we avoid the same assignment while declaring
+> node at the beginning of the function.
 
-Fixes: b56a2d8af914 ("mm: rid swapoff of quadratic complexity")
-Signed-off-by: Hugh Dickins <hughd@google.com>
----
+No, we don't, since the common exit path frees node, we better not free
+the last node in the success case, that is why I moved it to the end,
+i.e. after we're done with it, nullify it, so that the last btf_node
+isn't freed in the now uncoditionall free(node); call :-)
 
- mm/swapfile.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+Right?
 
---- 5.1-rc4/mm/swapfile.c	2019-04-07 19:15:01.269054187 -0700
-+++ linux/mm/swapfile.c	2019-04-07 19:17:13.291957539 -0700
-@@ -2051,11 +2051,9 @@ retry:
+- Arnaldo
  
- 	spin_lock(&mmlist_lock);
- 	p = &init_mm.mmlist;
--	while ((p = p->next) != &init_mm.mmlist) {
--		if (signal_pending(current)) {
--			retval = -EINTR;
--			break;
--		}
-+	while (si->inuse_pages &&
-+	       !signal_pending(current) &&
-+	       (p = p->next) != &init_mm.mmlist) {
- 
- 		mm = list_entry(p, struct mm_struct, mmlist);
- 		if (!mmget_not_zero(mm))
-@@ -2082,7 +2080,9 @@ retry:
- 	mmput(prev_mm);
- 
- 	i = 0;
--	while ((i = find_next_to_unuse(si, i, frontswap)) != 0) {
-+	while (si->inuse_pages &&
-+	       !signal_pending(current) &&
-+	       (i = find_next_to_unuse(si, i, frontswap)) != 0) {
- 
- 		entry = swp_entry(type, i);
- 		page = find_get_page(swap_address_space(entry), i);
-@@ -2123,8 +2123,11 @@ retry:
- 	 * separate lists, and wait for those lists to be emptied; but it's
- 	 * easier and more robust (though cpu-intensive) just to keep retrying.
- 	 */
--	if (si->inuse_pages)
--		goto retry;
-+	if (si->inuse_pages) {
-+		if (!signal_pending(current))
-+			goto retry;
-+		retval = -EINTR;
-+	}
- out:
- 	return (retval == FRONTSWAP_PAGES_UNUSED) ? 0 : retval;
- }
+> For the rest, the code looks good to me.
+> 
+> Thanks for your comments. :)
+> --
+> Gustavo
+> 
+> >  	}
+> >  
+> > +	err = 0;
+> > +out:
+> >  	up_write(&env->bpf_progs.lock);
+> > -	return 0;
+> > +	free(node);
+> > +	return err;
+> >  }
+> >  
+> >  struct feature_ops {
+> > 
+
+-- 
+
+- Arnaldo
