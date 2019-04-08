@@ -2,159 +2,91 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904B0C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B57C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672AA21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C6B2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554740295;
+	bh=7Nu9QXvcI0vEF10mrCEynsPN8ROv6UmoVrwf8Folv9w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VEyyX2BlXxIICL3HAx3qx4oQ4ODAZ88/6TsWWO9WKhIc+rWlZtir/6A7DUxnQnekV
+	 gmGQ/cz2TvYZJsJHsCnAintiE2jmFejjUADjPgg+TAFVJINen43kduNsbbcR4UduNm
+	 tOiADi3wOKsn2/toC6hEGH4TZRUDGmta0AtKD9OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfDHQSH (ORCPT
+        id S1727976AbfDHQSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:18:07 -0400
-Received: from muru.com ([72.249.23.125]:44764 "EHLO muru.com"
+        Mon, 8 Apr 2019 12:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbfDHQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:18:06 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 33C3880AA;
-        Mon,  8 Apr 2019 16:18:20 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 09:18:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 3/3] ARM: omap2: move platform-specific asm-offset.h to
- arch/arm/mach-omap2
-Message-ID: <20190408161802.GI49658@atomide.com>
-References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
- <20190408075427.6052-3-yamada.masahiro@socionext.com>
+        id S1726228AbfDHQSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:18:13 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C5521874
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 16:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554740293;
+        bh=7Nu9QXvcI0vEF10mrCEynsPN8ROv6UmoVrwf8Folv9w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UV4jNJDky2SjzQFhe1zoqjj57aiUKZ7K27mCBSIReawC/43mWhYpKymoWXrR9UJBA
+         gHKcuyuPhMsYAV7h/MJUkdWvsVv2jzAc87Kun+n6P43Bs/Mhf6WvL0SMEh8eUK8aBB
+         RYQLncI67mSplO1metmFZ6ibUX6oADCVv3wD+elo=
+Received: by mail-wr1-f48.google.com with SMTP id k17so17092581wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:18:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAVdJBsDFBXUuFdkH5GFMucozcw8SFHUFsotmPVmZ6m3NZFm3bIJ
+        cJ3081BzX11YObqrWnod0SLx938dXv5E0EJFE7perA==
+X-Google-Smtp-Source: APXvYqyzggfHsIweLj7oq9QZYJ+zvKZpBvd4p6ctMbSXrs9DIRmjrj9d9ZXl6wdgEo/SKMcXu2nVjgrxNC8gBexykag=
+X-Received: by 2002:adf:efc1:: with SMTP id i1mr19176947wrp.199.1554740291374;
+ Mon, 08 Apr 2019 09:18:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408075427.6052-3-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de>
+ <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
+ <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
+ <CALCETrXyfEu5MHCDp+OiRdHcYQ1tMNhTMSxcAhWkOx_8r2rxsA@mail.gmail.com> <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 8 Apr 2019 09:18:00 -0700
+X-Gmail-Original-Message-ID: <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
+Message-ID: <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
+Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard pages
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Apr 7, 2019 at 11:46 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Sun, 7 Apr 2019, Andy Lutomirski wrote:
+> > On Sun, Apr 7, 2019 at 3:44 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > Actually we have: save_stack_trace()
+> > >
+> >
+> > Like I did here:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=WIP.x86/stackguards
+>
+> Kinda, but what that code wants is to skip any entry before 'caller'. So we
+> either add something like save_stack_trace_from() which is trivial on x86
+> because unwind_start() already has an argument to hand in the start of
+> stack or we filter out the entries up to 'caller' in that code.
+>
+>
 
-* Masahiro Yamada <yamada.masahiro@socionext.com> [190408 07:56]:
-> <generated/ti-pm-asm-offsets.h> is only generated and included
-> by arch/arm/mach-omap2/, so it does not need to reside in the
-> globally visible include/generated/.
-> 
-> I moved and renamed it to arch/arm/mach-omap2/pm-asm-offsets.h
-> since the prefix 'omap2-' is just redundant in mach-omap2/.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Can this be applied to ARM-SOC tree in a series?
-> (with Ack from the platform sub-maintainer.)
-> 
-> ti-pm-asm-offsets.h does not need to reside in include/generated/,
-> but you may ask "Why must it get out of include/generated/?"
-> 
-> My main motivation is to avoid a race condition in the currently
-> proposed patch:
-> 
-> https://lore.kernel.org/patchwork/patch/1052763/
-> 
-> This patch tries to embed some build artifacts into the kernel.
-> 
-> If arch/arm/mach-omap2/ and kernel/ are built at the same time,
-> it may embed a truncated file.
+Whoops!
 
-Looks like a nice improvment to me, adding Keerthy and Dave to Cc.
-
-Keerthy and Dave, can you please test this series with am3 and am4
-PM code?
-
-Regards,
-
-Tony
-
->  arch/arm/mach-omap2/.gitignore  | 1 +
->  arch/arm/mach-omap2/Makefile    | 5 +++--
->  arch/arm/mach-omap2/sleep33xx.S | 2 +-
->  arch/arm/mach-omap2/sleep43xx.S | 2 +-
->  4 files changed, 6 insertions(+), 4 deletions(-)
->  create mode 100644 arch/arm/mach-omap2/.gitignore
-> 
-> diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
-> new file mode 100644
-> index 000000000000..79a8d6ea7152
-> --- /dev/null
-> +++ b/arch/arm/mach-omap2/.gitignore
-> @@ -0,0 +1 @@
-> +pm-asm-offsets.h
-> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-> index 85d1b13c9215..26baeb6477af 100644
-> --- a/arch/arm/mach-omap2/Makefile
-> +++ b/arch/arm/mach-omap2/Makefile
-> @@ -236,9 +236,10 @@ obj-y					+= omap_phy_internal.o
->  
->  obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
->  
-> -include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
-> +$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
->  	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
->  
-> -$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
-> +$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
->  
->  targets += pm-asm-offsets.s
-> +clean-files += pm-asm-offsets.h
-> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
-> index 47a816468cdb..a003769121aa 100644
-> --- a/arch/arm/mach-omap2/sleep33xx.S
-> +++ b/arch/arm/mach-omap2/sleep33xx.S
-> @@ -6,7 +6,6 @@
->   *	Dave Gerlach, Vaibhav Bedia
->   */
->  
-> -#include <generated/ti-pm-asm-offsets.h>
->  #include <linux/linkage.h>
->  #include <linux/platform_data/pm33xx.h>
->  #include <linux/ti-emif-sram.h>
-> @@ -15,6 +14,7 @@
->  
->  #include "iomap.h"
->  #include "cm33xx.h"
-> +#include "pm-asm-offsets.h"
->  
->  #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
->  #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
-> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
-> index 5b9343b58fc7..aa288f361c5e 100644
-> --- a/arch/arm/mach-omap2/sleep43xx.S
-> +++ b/arch/arm/mach-omap2/sleep43xx.S
-> @@ -6,7 +6,6 @@
->   *	Dave Gerlach, Vaibhav Bedia
->   */
->  
-> -#include <generated/ti-pm-asm-offsets.h>
->  #include <linux/linkage.h>
->  #include <linux/ti-emif-sram.h>
->  #include <linux/platform_data/pm33xx.h>
-> @@ -19,6 +18,7 @@
->  #include "iomap.h"
->  #include "omap-secure.h"
->  #include "omap44xx.h"
-> +#include "pm-asm-offsets.h"
->  #include "prm33xx.h"
->  #include "prcm43xx.h"
->  
-> -- 
-> 2.17.1
-> 
+I could add a save_stack_trace_from() or I could add a "caller"
+argument to struct stack_trace.  Any preference as to which looks
+better?  The latter seems a little nicer to me.
