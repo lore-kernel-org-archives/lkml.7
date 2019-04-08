@@ -2,241 +2,131 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE2C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ADCC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C112147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eFzv5xOD"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA2421473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfDHNZ5 (ORCPT
+        id S1726668AbfDHN2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:25:57 -0400
-Received: from smtprelay2.synopsys.com ([198.182.60.111]:37476 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfDHNZ4 (ORCPT
+        Mon, 8 Apr 2019 09:28:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46200 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726415AbfDHN2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:25:56 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id DA77710C1224;
-        Mon,  8 Apr 2019 06:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554729955; bh=MvSqQLiXy6Rc3V+fkPlQUd5ddPy5GSerb8n1UVOQkIQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=eFzv5xODpBWe7jttgoAv8ldGpXx+fU9mBC2+GaqxqHEQoXJuVpSE3k42ZcjxcmgZx
-         ubaxx875847WSpTBM38WAt87zGfJkGDByaE3U0Y73NegBz7kOTNz515l8W/NeB2+FD
-         9oDCTd9N2X6I1EPB3povTtCuWxpFikSDqcA+0q7RUGOhvtRQL2TrVtGEquSN4eHJNx
-         BiVeMKKCGGhibip4+77yhNGwOzlWuKbDDUeGrDhWUP9izWM05LxJKTLpSzBCerO7/q
-         K6aLasQovKgRy9PSX6c10tnyvxoiFwwlk6dxoF+7SqOnqf0JQlZXZmXPJDosmR6yJD
-         djSHrKYLN0i4w==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id CB9C0A00A9;
-        Mon,  8 Apr 2019 13:25:55 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 8 Apr 2019 06:25:55 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 8 Apr 2019 15:25:53 +0200
-From:   Vitor Soares <vitor.soares@synopsys.com>
-To:     Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vitor.soares@synopsys.com" <vitor.soares@synopsys.com>
-CC:     Joao Pinto <joao.pinto@synopsys.com>,
-        "nelson.costa@synopsys.com" <nelson.costa@synopsys.com>,
-        Luis de Oliveira <luis.oliveira@synopsys.com>,
-        "eugeniy.Paltsev@synopsys.com" <eugeniy.paltsev@synopsys.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Alexey Brodkin" <alexey.brodkin@synopsys.com>,
-        "jose.abreu@synopsys.com" <jose.abreu@synopsys.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>
-Subject: RE: [PATCH] reset: axs10x: Implement assert and deassert callbacks
-Thread-Topic: [PATCH] reset: axs10x: Implement assert and deassert callbacks
-Thread-Index: AQHU7fY/sgXWn9xFbEa32e8T2GxPdqYyAiQAgAA2fXA=
-Date:   Mon, 8 Apr 2019 13:25:52 +0000
-Message-ID: <13D59CF9CEBAF94592A12E8AE55501350A611EA9@DE02WEMBXB.internal.synopsys.com>
-References: <33ed7b90da8439aecb3544c3ff7dcfb511e03b8e.1554457026.git.vitor.soares@synopsys.com>
- <1554723600.2797.58.camel@synopsys.com>
-In-Reply-To: <1554723600.2797.58.camel@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jYzI5aGNtVnpYR0Z3Y0dSaGRHRmNjbTloYldsdVoxd3dPV1E0TkRsaU5p?=
- =?utf-8?B?MHpNbVF6TFRSaE5EQXRPRFZsWlMwMllqZzBZbUV5T1dVek5XSmNiWE5uYzF4?=
- =?utf-8?B?dGMyY3RaREpsTVdRM05HSXROV0V3TVMweE1XVTVMVGd5TXpndFpEUTRNV1Ez?=
- =?utf-8?B?T0RVeE9EQm1YR0Z0WlMxMFpYTjBYR1F5WlRGa056UmpMVFZoTURFdE1URmxP?=
- =?utf-8?B?UzA0TWpNNExXUTBPREZrTnpnMU1UZ3dabUp2WkhrdWRIaDBJaUJ6ZWowaU16?=
- =?utf-8?B?TXlNeUlnZEQwaU1UTXhPVGt5TURNMU5UQTJOamc0TURjNUlpQm9QU0p6UjBG?=
- =?utf-8?B?TVREWkJVWFpXU3pCcVQyVkJXVk5FTkZKd0t6Tk9Va0U5SWlCcFpEMGlJaUJp?=
- =?utf-8?B?YkQwaU1DSWdZbTg5SWpFaUlHTnBQU0pqUVVGQlFVVlNTRlV4VWxOU1ZVWk9R?=
- =?utf-8?B?MmRWUVVGQ1VVcEJRVUpRYTBrMlZrUjFOMVZCVm5CTldUQk9WVWt4WWxsWGEz?=
- =?utf-8?B?aHFVVEZSYWxaMFowOUJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlNFRkJRVUZEYTBOQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UlVGQlVVRkNRVUZCUVZaNlpHaEhaMEZCUVVGQlFVRkJRVUZCUVVGQlFVbzBR?=
- =?utf-8?B?VUZCUW0xQlIydEJZbWRDYUVGSE5FRlpkMEpzUVVZNFFXTkJRbk5CUjBWQllt?=
- =?utf-8?B?ZENkVUZIYTBGaVowSnVRVVk0UVdSM1FtaEJTRkZCV2xGQ2VVRkhNRUZaVVVK?=
- =?utf-8?B?NVFVZHpRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdk?=
- =?utf-8?B?QlFVRkJRVUZ1WjBGQlFVZFpRV0ozUWpGQlJ6UkJXa0ZDZVVGSWEwRllkMEoz?=
- =?utf-8?B?UVVkRlFXTm5RakJCUnpSQldsRkNlVUZJVFVGWWQwSnVRVWRaUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVTkJRVUZCUVVGRFpVRkJRVUZhWjBKMlFVaFZRV0puUW10QlNF?=
- =?utf-8?B?bEJaVkZDWmtGSVFVRlpVVUo1UVVoUlFXSm5RbXhCU0VsQlkzZENaa0ZJVFVG?=
- =?utf-8?B?WlVVSjBRVWhOUVdSUlFuVkJSMk5CV0hkQ2FrRkhPRUZpWjBKdFFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRa0ZCUVVGQlFVRkJRVUZKUVVGQlFVRkJTalJCUVVGQ2JVRkhPRUZr?=
- =?utf-8?B?VVVKMVFVZFJRV05uUWpWQlJqaEJZMEZDYUVGSVNVRmtRVUoxUVVkVlFXTm5R?=
- =?utf-8?B?bnBCUmpoQlkzZENhRUZITUVGamQwSXhRVWMwUVZwM1FtWkJTRWxCV2xGQ2Vr?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVGQlowRkJRVUZCUVc1blFV?=
- =?utf-8?B?RkJSMWxCWW5kQ01VRkhORUZhUVVKNVFVaHJRVmgzUW5kQlIwVkJZMmRDTUVG?=
- =?utf-8?B?SE5FRmFVVUo1UVVoTlFWaDNRbnBCUnpCQllWRkNha0ZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJRVUZCUVVGQlFVRkJRMEZC?=
- =?utf-8?B?UVVGQlFVTmxRVUZCUVZwblFuWkJTRlZCWW1kQ2EwRklTVUZsVVVKbVFVaEJR?=
- =?utf-8?B?VmxSUW5sQlNGRkJZbWRDYkVGSVNVRmpkMEptUVVoTlFXUkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZDUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnRRVWM0UVdSUlFuVkJSMUZCWTJk?=
- =?utf-8?B?Q05VRkdPRUZqUVVKb1FVaEpRV1JCUW5WQlIxVkJZMmRDZWtGR09FRmtRVUo2?=
- =?utf-8?B?UVVjd1FWbDNRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZIV1VGaWQwSXhR?=
- =?utf-8?B?VWMwUVZwQlFubEJTR3RCV0hkQ2QwRkhSVUZqWjBJd1FVYzBRVnBSUW5sQlNF?=
- =?utf-8?B?MUJXSGRDTVVGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVG?=
- =?utf-8?B?QlduZENNRUZJVFVGWWQwSjNRVWhKUVdKM1FtdEJTRlZCV1hkQ01FRkdPRUZr?=
- =?utf-8?B?UVVKNVFVZEZRV0ZSUW5WQlIydEJZbWRDYmtGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJR?=
- =?utf-8?B?VUZCUVVvMFFVRkJRbnBCUjBWQllrRkNiRUZJVFVGWWQwSm9RVWROUVZsM1Fu?=
- =?utf-8?B?WkJTRlZCWW1kQ01FRkdPRUZqUVVKelFVZEZRV0puUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVoTlFWbFJRbk5CUjFWQlkzZENaa0ZJ?=
- =?utf-8?B?UlVGa1VVSjJRVWhSUVZwUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmpkMEoxUVVoQlFX?=
- =?utf-8?B?TjNRbVpCUjNkQllWRkNha0ZIVlVGaVowSjZRVWRWUVZoM1FqQkJSMVZCWTJk?=
- =?utf-8?B?Q2RFRkdPRUZOVVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlNqUkJRVUZD?=
- =?utf-8?B?ZWtGSE5FRmpRVUo2UVVZNFFXSkJRbkJCUjAxQldsRkNkVUZJVFVGYVVVSm1R?=
- =?utf-8?B?VWhSUVZwUlFubEJSekJCV0hkQ2VrRklVVUZrVVVKclFVZFZRV0puUWpCQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVVZCUVVGQlFVRkJRVUZCWjBGQlFV?=
- =?utf-8?B?RkJRVzVuUVVGQlNGbEJXbmRDWmtGSGMwRmFVVUkxUVVoalFXSjNRbmxCUjFG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGUlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlEwRkJRVUZCUVVFOUlpOCtQQzl0WlhSaFBnPT0=?=
-x-originating-ip: [10.107.19.165]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 8 Apr 2019 09:28:31 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38DQIpS091620
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 09:28:30 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rr72m0e4m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:28:29 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Mon, 8 Apr 2019 14:28:28 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Apr 2019 14:28:25 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38DSOsA33816624
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Apr 2019 13:28:25 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF0FCAE04D;
+        Mon,  8 Apr 2019 13:28:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CB96AE051;
+        Mon,  8 Apr 2019 13:28:24 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  8 Apr 2019 13:28:24 +0000 (GMT)
+Date:   Mon, 8 Apr 2019 15:28:23 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/mm: Silence compiler warning when compiling without
+ CONFIG_PGSTE
+References: <20190407125509.6380-1-thuth@redhat.com>
+ <0e63589f-190f-d3a4-b373-4188dfe54e26@redhat.com>
+ <84da6d4e-9b85-1c3b-4f48-bdb19ac7f650@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84da6d4e-9b85-1c3b-4f48-bdb19ac7f650@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19040813-0008-0000-0000-000002D7883D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040813-0009-0000-0000-00002243A41C
+Message-Id: <20190408132823.GA13200@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=724 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904080113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRXVnZW5peSwNCg0KRnJvbTogRXVnZW5peSBQYWx0c2V2IDxwYWx0c2V2QHN5bm9wc3lzLmNv
-bT4NCkRhdGU6IE1vbiwgQXByIDA4LCAyMDE5IGF0IDEyOjQwOjAwDQoNCj4gSGkgVml0b3IsDQo+
-IA0KPiBPbiBNb24sIDIwMTktMDQtMDggYXQgMTI6MzEgKzAyMDAsIFZpdG9yIFNvYXJlcyB3cm90
-ZToNCj4gPiBTb21lIGN1c3RvbSBJUC1ibG9jayBjb25uZWN0ZWQgdG8gQVJDIEFYUzEweCBib2Fy
-ZCBuZWVkIGFzc2VydCBhbmQNCj4gPiBkZWFzc2VydCBmdW5jdGlvbnMgdG8gY29udHJvbCByZXNl
-dCBzaWduYWwgb2Ygc2VsZWN0ZWQgcGVyaXBoZXJhbHMuDQo+ID4gDQo+ID4gVGhpcyBwYXRjaCBp
-bXByb3ZlIEFYUzEweCByZXNldCBkcml2ZXIgYnkgYWRkaW5nIGFzc2VydCBhbmQgZGVhc3NlcnQN
-Cj4gPiBjYWxsYmFja3MuDQo+IA0KPiANCj4gSW4gdGhlIEFYUzEweCByZXNldCBkcml2ZXIgb25s
-eSAncmVzZXQnIGNhbGxiYWNrIGlzIGludGVudGlvbmFsbHkgDQo+ID4gaW1wbGVtZW50ZWQuDQo+
-IEFYUzEweCBpcyBGUEdBIGJhc2VkIGJvYXJkcyBhbmQgd2l0aCBvdXIgZGVmYXVsdCBmaXJtd2Fy
-ZSBBWFMxMHggcmVzZXQgDQo+ID4gcmVnaXN0ZXIgaXMgaW1wbGVtZW50ZWQgYXMgc2VsZi1kZWFz
-c2VydGVkLg0KPiANCg0KSSBoYXZlIGFub3RoZXIgcmVzZXQgYmxvY2sgY29ubmVjdCB0aHJvdWdo
-IEFYSS4NCg0KPiBEbyB5b3UgaGF2ZSBzb21laG93IG1vZGlmaWVkIEFYUzEweCBmaXJtd2FyZSB3
-aGVyZSByZXNldCByZWdpc3RlciBpcyBub3QgDQo+ID4gc2VsZi1kZWFzc2VydGVkPw0KPiBJbiB0
-aGF0IGNhc2UgInNpbXBsZS1yZXNldCIgZHJpdmVyIHdpbGwgYmUgc3VpdGFibGUgZm9yIHlvdSwg
-SSBndWVzcy4NCg0KSSB3aWxsIHRyeSBpdC4NCg0KPiBPdGhlcndpc2UgdGhpcyBpbXBsZW1lbnRh
-dGlvbiBpcyBpbmNvcnJlY3QgLSB0aGVyZSBzaG91bGQgYmUgbm8gJ2Fzc2VydCcgZm9yIA0KPiA+
-IHJlc2V0IGNvbnRyb2xsZXIgd2l0aCBzZWxmLWRlYXNzZXJ0ZWQgbG9naWMuDQoNClNvIHRoZSBh
-c3NlcnQgYW5kIHJlc2V0IGNhbGxiYWNrIGFyZSBtdXR1YWxseSBleGNsdXNpdmU/DQoNCj4gDQo+
-IA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpdG9yIFNvYXJlcyA8dml0b3Iuc29hcmVzQHN5
-bm9wc3lzLmNvbT4NCj4gPiANCj4gPiBDYzogRXVnZW5peSBQYWx0c2V2IDxldWdlbml5LlBhbHRz
-ZXZAc3lub3BzeXMuY29tPg0KPiA+IENjOiBBbGV4ZXkgQnJvZGtpbiA8YWJyb2RraW5Ac3lub3Bz
-eXMuY29tPg0KPiA+IENjOiBKb2FvIFBpbnRvIDxqcGludG9Ac3lub3BzeXMuY29tPg0KPiA+IENj
-OiBKb3NlIEFicmV1IDxqb3NlLmFicmV1QHN5bm9wc3lzLmNvbT4NCj4gPiBDYzogTHVpcyBPbGl2
-ZWlyYSA8bG9saXZlaUBzeW5vcHN5cy5jb20+DQo+ID4gQ2M6IEd1c3Rhdm8gUGltZW50ZWwgPGd1
-c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tPg0KPiA+IENjOiBOZWxzb24gQ29zdGEgPG5lbHNv
-bi5jb3N0YUBzeW5vcHN5cy5jb20+DQo+ID4gQ2M6IFBlZHJvIFNvdXNhIDxwZWRyb20uc291c2FA
-c3lub3BzeXMuY29tPg0KPiA+IENjOiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
-LmRlPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Jlc2V0L3Jlc2V0LWF4czEweC5jIHwgMzAgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cmVzZXQvcmVzZXQtYXhzMTB4LmMgYi9kcml2ZXJzL3Jlc2V0L3Jlc2V0LWF4czEweC5jDQo+ID4g
-aW5kZXggYTg1NGVmNDEuLjEyZGFjOGIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9yZXNldC9y
-ZXNldC1heHMxMHguYw0KPiA+ICsrKyBiL2RyaXZlcnMvcmVzZXQvcmVzZXQtYXhzMTB4LmMNCj4g
-PiBAQCAtMzcsOCArMzcsMzYgQEAgc3RhdGljIGludCBheHMxMHhfcmVzZXRfcmVzZXQoc3RydWN0
-IA0KPiA+IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCj4gPiAgCXJldHVybiAwOw0KPiA+
-ICB9DQo+ID4gIA0KPiA+ICtzdGF0aWMgaW50IGF4czEweF9yZXNldF9hc3NlcnQoc3RydWN0IHJl
-c2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCj4gPiArCQkJICAgICAgIHVuc2lnbmVkIGxvbmcg
-aWQpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBheHMxMHhfcnN0ICpyc3QgPSB0b19heHMxMHhfcnN0
-KHJjZGV2KTsNCj4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKw0KPiA+ICsJc3Bpbl9s
-b2NrX2lycXNhdmUoJnJzdC0+bG9jaywgZmxhZ3MpOw0KPiA+ICsJd3JpdGVsKHJlYWRsKHJzdC0+
-cmVnc19yc3QpICYgfkJJVChpZCksIHJzdC0+cmVnc19yc3QpOw0KPiA+ICsJc3Bpbl91bmxvY2tf
-aXJxcmVzdG9yZSgmcnN0LT5sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+
-ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYXhzMTB4X3Jlc2V0X2RlYXNzZXJ0KHN0cnVj
-dCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQo+ID4gKwkJCQkgdW5zaWduZWQgbG9uZyBp
-ZCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGF4czEweF9yc3QgKnJzdCA9IHRvX2F4czEweF9yc3Qo
-cmNkZXYpOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4gKwlzcGluX2xv
-Y2tfaXJxc2F2ZSgmcnN0LT5sb2NrLCBmbGFncyk7DQo+ID4gKwl3cml0ZWwocmVhZGwocnN0LT5y
-ZWdzX3JzdCkgfCBCSVQoaWQpLCByc3QtPnJlZ3NfcnN0KTsNCj4gPiArCXNwaW5fdW5sb2NrX2ly
-cXJlc3RvcmUoJnJzdC0+bG9jaywgZmxhZ3MpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+
-ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHJlc2V0X2NvbnRyb2xfb3BzIGF4
-czEweF9yZXNldF9vcHMgPSB7DQo+ID4gLQkucmVzZXQJPSBheHMxMHhfcmVzZXRfcmVzZXQsDQo+
-ID4gKwkucmVzZXQJCT0gYXhzMTB4X3Jlc2V0X3Jlc2V0LA0KPiA+ICsJLmFzc2VydAkJPSBheHMx
-MHhfcmVzZXRfYXNzZXJ0LA0KPiA+ICsJLmRlYXNzZXJ0CT0gYXhzMTB4X3Jlc2V0X2RlYXNzZXJ0
-LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgc3RhdGljIGludCBheHMxMHhfcmVzZXRfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gLS0gDQo+ICBFdWdlbml5IFBhbHRzZXYNCj4g
-DQoNCkJlc3QgcmVnYXJkcywNClZpdG9yIFNvYXJlcw0KDQo=
+On Mon, Apr 08, 2019 at 12:36:32PM +0200, Thomas Huth wrote:
+> On 08/04/2019 09.09, David Hildenbrand wrote:
+> > On 07.04.19 14:55, Thomas Huth wrote:
+> >> If CONFIG_PGSTE is not set (e.g. when compiling without KVM), GCC complains:
+> >>
+> >>   CC      arch/s390/mm/pgtable.o
+> >> arch/s390/mm/pgtable.c:413:15: warning: ‘pmd_alloc_map’ defined but not
+> >>  used [-Wunused-function]
+> >>  static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+> >>                ^~~~~~~~~~~~~
+> >>
+> >> Wrap the function with "#ifdef CONFIG_PGSTE" to silence the warning.
+> >>
+> >> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> >> ---
+> >>  arch/s390/mm/pgtable.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
+> >> index 8485d6dc2754..9ebd01219812 100644
+> >> --- a/arch/s390/mm/pgtable.c
+> >> +++ b/arch/s390/mm/pgtable.c
+> >> @@ -410,6 +410,7 @@ static inline pmd_t pmdp_flush_lazy(struct mm_struct *mm,
+> >>  	return old;
+> >>  }
+> >>  
+> >> +#ifdef CONFIG_PGSTE
+> >>  static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+> >>  {
+> >>  	pgd_t *pgd;
+> >> @@ -427,6 +428,7 @@ static pmd_t *pmd_alloc_map(struct mm_struct *mm, unsigned long addr)
+> >>  	pmd = pmd_alloc(mm, pud, addr);
+> >>  	return pmd;
+> >>  }
+> >> +#endif
+> >>  
+> > 
+> > We could also move the function down to the functions where it is used
+> 
+> Yeah, I thought about that, too. Both have advantages:
+> 
+> - If we keep the code here, "git blame" shows a nicer history of these
+>   lines
+> - If we move the code, we need less #ifdefs
+> 
+> I'll leave the decision to the maintainers... Martin, Heiko?
+
+Applied without changes. Thanks!
+
