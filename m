@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886EDC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20CF218FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5CE21905
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750870;
-	bh=uvROHEpNp2NBptS+cCMC5UsCFczqwBdYKoGvYyEyhMw=;
+	s=default; t=1554750873;
+	bh=MKxnJ5skaoaSquHjNRTW1TOhmckqz7DGje7Pnp2Deis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=xzb6QMZPr8BtQ713z265vZ/jm+cWTzFFbMEHsxl2HpGIsY2y7Du8mg/H89CniYJ+7
-	 VJkp34sDXr4J/l2RKrNALUj8tROVpu+z5cWxbHgVSDNTGjmrMVCo/lwxdgOurUPZwB
-	 V7l0z0V8hhe4xeNDT22eeGY8c9WDyZeWE3GsIDXY=
+	b=D/mEmvvr0Wkv/Su3LgP4D8lZzE+xsyNokJw0fL1FYwvLmXPyyajNv1HwJh0DcC4sT
+	 Wbugst+etqmt9WV4lhxUYf8gzQ9Iyd8uQGGZrXfv5Dax9zrHk2WGNvV/jXSLHH+bpB
+	 GcUm84ydScoRmf8B78XP1K3UooEnjG/wAl8KQYDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfDHTO3 (ORCPT
+        id S1728134AbfDHTOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45170 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfDHTOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:25 -0400
+        id S1727291AbfDHTOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:30 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B3E2148E;
-        Mon,  8 Apr 2019 19:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C3821874;
+        Mon,  8 Apr 2019 19:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750865;
-        bh=uvROHEpNp2NBptS+cCMC5UsCFczqwBdYKoGvYyEyhMw=;
+        s=default; t=1554750868;
+        bh=MKxnJ5skaoaSquHjNRTW1TOhmckqz7DGje7Pnp2Deis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=UkHmTBS711n8hyuEFVZYqba8WZm5mzNBkeBzGsaZpMwtDoGhUcuZqXK3tCms0eBBU
-         zWuF9anI0tE2SkMDSBxeRbxkre3pDHdo44j1vFj0NrVF0LKEaTu0ZEEJApdnjgNiM+
-         5844lH0KrjN1SKBClzUn6tdWaNLHXA5SNFNXFXoM=
+        b=srOl5P6BKmhkmOEl/h+cPhpAI4vGCEU7ODYWgr5g3S+A7yP3u9GbHrCOafXnF+1JY
+         m3nJMEunjHgmPjgO0PJXwnAoybzuss7tOIsCMO1aWbJQBvMucmQTquGJXEMbRSzwCb
+         ulBeQ6+KD0mzbdjhQNVxcLg6svoo2tF+ZcEpRTKo=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
 Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
         jkacur@redhat.com, bigeasy@linutronix.de,
         daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
-Subject: [PATCH 04/13] locking/rt-mutex: Flush block plug on __down_read()
-Date:   Mon,  8 Apr 2019 14:14:06 -0500
-Message-Id: <79f9717af336849789ff62bab08a5c05d78ae1f8.1554737688.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 06/13] softirq: Avoid "local_softirq_pending" messages if ksoftirqd is blocked
+Date:   Mon,  8 Apr 2019 14:14:08 -0500
+Message-Id: <07c2c239ec6a9cc26b4d4c149dc76e88462c68d9.1554737688.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
@@ -64,65 +63,113 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Scott Wood <swood@redhat.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 0d5d32425a0cab4a282dd79fc953d76a3ab17072 ]
+[ Upstream commit 2cf32c1a3d9352df8017dbf84a1462c4a60a1826 ]
 
-__down_read() bypasses the rtmutex frontend to call
-rt_mutex_slowlock_locked() directly, and thus it needs to call
-blk_schedule_flush_flug() itself.
+If the ksoftirqd thread has a softirq pending and is blocked on the
+`local_softirq_locks' lock then softirq_check_pending_idle() won't
+complain because the "lock owner" will mask away this softirq from the
+mask of pending softirqs.
+If ksoftirqd has an additional softirq pending then it won't be masked
+out because we never look at ksoftirqd's mask.
+
+If there are still pending softirqs while going to idle check
+ksoftirqd's and ktimersfotd's mask before complaining about unhandled
+softirqs.
 
 Cc: stable-rt@vger.kernel.org
-Signed-off-by: Scott Wood <swood@redhat.com>
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
- Conflicts:
-	kernel/locking/rwsem-rt.c
 ---
- kernel/locking/rtmutex.c  | 2 +-
- kernel/locking/rwsem-rt.c | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ kernel/softirq.c | 57 ++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 41 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 2cf515877b8e..1177f2815040 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1946,7 +1946,7 @@ rt_mutex_fastlock(struct rt_mutex *lock, int state,
- 	 * If rt_mutex blocks, the function sched_submit_work will not call
- 	 * blk_schedule_flush_plug (because tsk_is_pi_blocked would be true).
- 	 * We must call blk_schedule_flush_plug here, if we don't call it,
--	 * a deadlock in device mapper may happen.
-+	 * a deadlock in I/O may happen.
- 	 */
- 	if (unlikely(blk_needs_flush_plug(current)))
- 		blk_schedule_flush_plug(current);
-diff --git a/kernel/locking/rwsem-rt.c b/kernel/locking/rwsem-rt.c
-index 26991ddb6c5a..dbdde2476b1c 100644
---- a/kernel/locking/rwsem-rt.c
-+++ b/kernel/locking/rwsem-rt.c
-@@ -1,5 +1,6 @@
- /*
-  */
-+#include <linux/blkdev.h>
- #include <linux/rwsem.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/signal.h>
-@@ -86,6 +87,14 @@ void __sched __down_read(struct rw_semaphore *sem)
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 583c9ecf04e3..be752eadfc68 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -92,6 +92,31 @@ static inline void softirq_clr_runner(unsigned int sirq)
+ 	sr->runner[sirq] = NULL;
+ }
  
- 	if (__down_read_trylock(sem))
- 		return;
++static bool softirq_check_runner_tsk(struct task_struct *tsk,
++				     unsigned int *pending)
++{
++	bool ret = false;
++
++	if (!tsk)
++		return ret;
++
 +	/*
-+	 * If rt_mutex blocks, the function sched_submit_work will not call
-+	 * blk_schedule_flush_plug (because tsk_is_pi_blocked would be true).
-+	 * We must call blk_schedule_flush_plug here, if we don't call it,
-+	 * a deadlock in I/O may happen.
++	 * The wakeup code in rtmutex.c wakes up the task
++	 * _before_ it sets pi_blocked_on to NULL under
++	 * tsk->pi_lock. So we need to check for both: state
++	 * and pi_blocked_on.
 +	 */
-+	if (unlikely(blk_needs_flush_plug(current)))
-+		blk_schedule_flush_plug(current);
++	raw_spin_lock(&tsk->pi_lock);
++	if (tsk->pi_blocked_on || tsk->state == TASK_RUNNING) {
++		/* Clear all bits pending in that task */
++		*pending &= ~(tsk->softirqs_raised);
++		ret = true;
++	}
++	raw_spin_unlock(&tsk->pi_lock);
++
++	return ret;
++}
++
+ /*
+  * On preempt-rt a softirq running context might be blocked on a
+  * lock. There might be no other runnable task on this CPU because the
+@@ -104,6 +129,7 @@ static inline void softirq_clr_runner(unsigned int sirq)
+  */
+ void softirq_check_pending_idle(void)
+ {
++	struct task_struct *tsk;
+ 	static int rate_limit;
+ 	struct softirq_runner *sr = this_cpu_ptr(&softirq_runners);
+ 	u32 warnpending;
+@@ -113,24 +139,23 @@ void softirq_check_pending_idle(void)
+ 		return;
  
- 	might_sleep();
- 	raw_spin_lock_irq(&m->wait_lock);
+ 	warnpending = local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK;
++	if (!warnpending)
++		return;
+ 	for (i = 0; i < NR_SOFTIRQS; i++) {
+-		struct task_struct *tsk = sr->runner[i];
++		tsk = sr->runner[i];
+ 
+-		/*
+-		 * The wakeup code in rtmutex.c wakes up the task
+-		 * _before_ it sets pi_blocked_on to NULL under
+-		 * tsk->pi_lock. So we need to check for both: state
+-		 * and pi_blocked_on.
+-		 */
+-		if (tsk) {
+-			raw_spin_lock(&tsk->pi_lock);
+-			if (tsk->pi_blocked_on || tsk->state == TASK_RUNNING) {
+-				/* Clear all bits pending in that task */
+-				warnpending &= ~(tsk->softirqs_raised);
+-				warnpending &= ~(1 << i);
+-			}
+-			raw_spin_unlock(&tsk->pi_lock);
+-		}
++		if (softirq_check_runner_tsk(tsk, &warnpending))
++			warnpending &= ~(1 << i);
++	}
++
++	if (warnpending) {
++		tsk = __this_cpu_read(ksoftirqd);
++		softirq_check_runner_tsk(tsk, &warnpending);
++	}
++
++	if (warnpending) {
++		tsk = __this_cpu_read(ktimer_softirqd);
++		softirq_check_runner_tsk(tsk, &warnpending);
+ 	}
+ 
+ 	if (warnpending) {
 -- 
 2.14.1
 
