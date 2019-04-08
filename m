@@ -2,123 +2,97 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDD7C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C0DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFCD20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E12320833
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LA29vNTy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="unTPajCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfDHVne (ORCPT
+        id S1728673AbfDHVnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 8 Apr 2019 17:43:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:46875 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727300AbfDHVne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 17:43:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36327 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfDHVn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:43:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r24so888436ljg.3;
-        Mon, 08 Apr 2019 14:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2KBWTMEMtRtwMsmta6uI9Ct0NHdu3EaaYE8CORm6INI=;
-        b=LA29vNTytL0sLNYaMiFFsRIL/lSZMN3uwNOF3pEDmU7OwoDOl0KyZ9nfn6KnAzvjtt
-         3wMhrqdJ3TCCEs0IP9l3jCZjYGzB6db1fVqZBxTHym4uEcL1tUEKiikqhMprBU303zQi
-         7QFKiq1KcRgOMJ0yNbdtgduq/r6Iq6KUp76K+s7PaeWooX37khDiCwUgAbblLifeqkdx
-         tEJ9qle158Gk0gp+OgtO/pVPo0gbzI/Q8MppbeP3ndxtdiR/D6asjQrUTgNUu4fDImHd
-         cUb9YAznrWn8nhp3Wkazc4pUenkQBEVO6CHKHQxqUFPkqFhkOeL1BYIoSUbh1z1cKj4+
-         ixGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2KBWTMEMtRtwMsmta6uI9Ct0NHdu3EaaYE8CORm6INI=;
-        b=nw7h5n/HPJEYTU0yh25qDm1GcO+K2ztllPqgawgVm/nF4wXedNKjuO7L8U9a49J8pj
-         jY3yKBzoQ2vHZmj0QwNxjDAnxu21ey8oaFUIqx6jfW97dZPbWuq7S4TMrxJA11G00s/H
-         EGfdsmLszpJlpA8DkyKfcar1cs9PHBE2T1Rvvu17reyra2YVT0LFp4dYbS8pDfyPTYuG
-         OECC90nGcRUhkDORalsQazhE5zu1TGwF7DHIzSrFyjuqPx6omLFrYSPuVWlTQ9DB9ieY
-         COhCfGDTyonzK4deKT/X7d2S5b8AhM6jf8eQbuWjRxftZLr4dYjywhlah/8O6nA3yjTR
-         sanA==
-X-Gm-Message-State: APjAAAXOI2e+ouVU91SlI5wR9KO8gPVwCccqfsTmObgLUhBVycPTIE8T
-        70kLqk2pT1ri8jyQ4U2rOBE=
-X-Google-Smtp-Source: APXvYqyuu4ewWklTqwI/KvE07ZiNVBG3SAeOZrAjin8lu0uhLSJ5KjxskcBtZ5UQOUeJY1pu9lfU+A==
-X-Received: by 2002:a2e:7215:: with SMTP id n21mr18254086ljc.105.1554759804177;
-        Mon, 08 Apr 2019 14:43:24 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id j6sm5286048ljc.0.2019.04.08.14.43.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 14:43:23 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH 14/14] media: ov6650: Fix stored crop rectangle not in sync with hardware
-Date:   Mon,  8 Apr 2019 23:42:42 +0200
-Message-Id: <20190408214242.9603-15-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190408214242.9603-1-jmkrzyszt@gmail.com>
-References: <20190408214242.9603-1-jmkrzyszt@gmail.com>
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dP770mcmz9sR6;
+        Tue,  9 Apr 2019 07:43:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554759811;
+        bh=9xzjUSXGt7ADCgYz7gsriNNa7oF9NYyoYlh6kg7Rif8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=unTPajCHPw/CxFiU0bdfbhsEGk3TiGr0GR2Mlr7iGh2uvtxx6EEehZ66ethxQHYi1
+         JYLfHXdldrBqE0Pt9Ccp9eSGz9I2fLeyO7Q1G3hVSAlZoBsW65iCuGkyYgXpjvqXIG
+         qOLIeQ6WJxjwznIlEbh/iFvBd7eIXxYNQzdU2zt5QgYcRDvvuyaqr58+wceDIYkTiE
+         wX45GUhAo1AtJNLIaCdCUh5711f+g4d20BQ9aTHevLjFP0W0r5vK/GA8CocwhkEQl+
+         p16djpbONXl+2843FgUCDk5/H3RrlRMrpoYYiLzHOU2dXnYnp9zTDWlDCxZKtBRnGV
+         ry8K4eNSZRfpg==
+Date:   Tue, 9 Apr 2019 07:43:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Murphy Zhou <jencce.kernel@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the nfsd tree
+Message-ID: <20190409074329.26801b64@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9e/4N1PA4V9e9d4qymNxMLY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver stores crop rectangle settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, crop rectangle width and height settings are not updated
-correctly when rectangle offset settings are applied on hardware.  If
-an error occurs while the device is updated, the stored settings my no
-longer reflect hardware state and consecutive calls to .get_selection()
-as well as .get_fmt() may return incorrect information.  That in turn
-may affect ability of a host device to use correct DMA transfer
-settings if such incorrect informamtion on active frame format returned
-by .get_fmt() is used.
+--Sig_/9e/4N1PA4V9e9d4qymNxMLY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Assuming a failed update of the device means its actual settings
-haven't changed, update crop rectangle width and height settings stored
-in the device private structure correctly while the rectangle offset is
-successfully applied on hardware so the stored values always reflect
-actual hardware state to the extent possible.
+Hi all,
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc: stable@vger.kernel.org
----
- drivers/media/i2c/ov6650.c | 2 ++
- 1 file changed, 2 insertions(+)
+In commit
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 001457d39742..cffe6aa906b2 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -500,6 +500,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 
- 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
- 	if (!ret) {
-+		priv->rect.width += priv->rect.left - sel->r.left;
- 		priv->rect.left = sel->r.left;
- 		ret = ov6650_reg_write(client, REG_HSTOP,
- 				       (sel->r.left + sel->r.width) >> 1);
-@@ -509,6 +510,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
- 	}
- 	if (!ret) {
-+		priv->rect.height += priv->rect.top - sel->r.top;
- 		priv->rect.top = sel->r.top;
- 		ret = ov6650_reg_write(client, REG_VSTOP,
- 				       (sel->r.top + sel->r.height) >> 1);
--- 
-2.21.0
+  3c86794ac0e6 ("nfsd/nfsd3_proc_readdir: fix buffer count and page pointer=
+s")
 
+Fixes tag
+
+  Fixes: f875a79 "nfsd: allow nfsv3 readdir request to be larger"
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+  - Missing parentheses around the subject
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9e/4N1PA4V9e9d4qymNxMLY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyrwIEACgkQAVBC80lX
+0GwU0Qf9H6glBzH4VbccEdwi1wq4IHb9hE69dtBYsU2F6JgbiBOCrYWekKoAkCNu
+Kn7XcXfKZhwmmtC+1JmgqkURf+BGCn+Fl3Gw4MSmpDEvQn2HP8cTC8dMD2P2AbKe
+HngGZGtWlW58uDePlSybDMi5y+2Frqb/jsgjkOD3yKebD7Jfnsdnv/iGW+Eqs33e
+3QODl2RFg1nG7DyX9nRiHiVNxs+Ih/DyNQ60Hq3bQzlT8iTc+Cpoq2AHYzTYB+Ug
+a8t0J7WG+p9mbQJ9KaFwSXZbY8CuZYCEqyFokFiwmku7iRyqEElBxAjhfmkWp12n
+65cGXcyy2Vab4m/T4rYGzREuVmK22g==
+=DMCd
+-----END PGP SIGNATURE-----
+
+--Sig_/9e/4N1PA4V9e9d4qymNxMLY--
