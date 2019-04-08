@@ -2,108 +2,161 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6A4C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D274CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C084420883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A4A20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554708329;
+	bh=dCNcnkOJ+pwmWzKcihivS0gytr3JUKfIaaTmrnpPb+Y=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=HRSdDcOYOTdOJoDCtjlJyczq1HcKhm8ABXHauvyEs280bgFK8cCeZ8FEJ9rg3oDKK
+	 e0FD6X8RVUp9hMZPH3WxM7uf5R074Wgwwp5yVKe/szrojic3vk3QCcYa/IEGyb0G55
+	 n+yzKLNY9lG+laa9vg6hH2eQwWn4nkg09N+HvG2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDHHZV (ORCPT
+        id S1726571AbfDHHZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:25:21 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45685 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDHHZV (ORCPT
+        Mon, 8 Apr 2019 03:25:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60426 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfDHHZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:25:21 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8600C60015;
-        Mon,  8 Apr 2019 07:25:14 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 09:25:14 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 05/12] net: stmmac: sun8i: add support for Allwinner H6
- EMAC
-Message-ID: <20190408072514.hu3hlw2wnq75bwko@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-6-megous@megous.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sn66egperoh44kyv"
-Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-6-megous@megous.com>
-User-Agent: NeoMutt/20180716
+        Mon, 8 Apr 2019 03:25:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=hrvU3KmX+veuLkO4nUMkBgb9eTK9uvZcDy/c06SA3U4=; b=Bmsj+9xMS+C7
+        SCwvXmiCqYVrnIj48RIjxhIONjIrTIPamMJe2VK1hzQuha/2xnI5yt5/i55/bNyWhhPfkHM+taSQe
+        lVrl1BqrxNur+o9Vu0spXlxG0JKAARBeIBMCrp+JNkeS3+RX2O+ZQm2f0CGFtEexev59++43BK5k9
+        njme8=;
+Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hDOe0-0003o7-Kk; Mon, 08 Apr 2019 07:24:41 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 38023441D3B; Mon,  8 Apr 2019 14:24:31 +0700 (+07)
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: Intel: bytcht_es8316: Add quirk for the Teclast X98+ II" to the asoc tree
+In-Reply-To:  <20190329215045.6254-3-paul@crapouillou.net>
+X-Patchwork-Hint: ignore
+Message-Id: <20190408072431.38023441D3B@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:24:31 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---sn66egperoh44kyv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: Intel: bytcht_es8316: Add quirk for the Teclast X98+ II
 
-On Sat, Apr 06, 2019 at 01:45:07AM +0200, megous@megous.com wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY"
-> on H6 is on a co-packaged AC200 chip, and it's not really internal (it's
-> connected via RMII at PA GPIO bank).
->
-> Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+has been applied to the asoc tree at
 
-This should have your Signed-off-by (just like all the other
-subsequent patches from someone else you sent in this series).
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Maxime
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---sn66egperoh44kyv
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKr3WgAKCRDj7w1vZxhR
-xZ8nAP44yyjuAE9TtbEGHFkaKyLkxl7F2Q0L7pmcOFdjbGKQ2QD/QJXwjP10roZm
-1dcyGGo45LpEaS4aYrYDCw8UFL2Q+wA=
-=qEtE
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---sn66egperoh44kyv--
+From a8d218f4fe8116395e4c4a13b63029ecf00d4035 Mon Sep 17 00:00:00 2001
+From: Paul Cercueil <paul@crapouillou.net>
+Date: Fri, 29 Mar 2019 22:50:45 +0100
+Subject: [PATCH] ASoC: Intel: bytcht_es8316: Add quirk for the Teclast X98+ II
+
+The Teclast X98+ II is a Cherrytrail tablet, which require two quirks:
+- it has stereo speakers,
+- its jack detection mechanism is inverted.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/intel/boards/bytcht_es8316.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
+index ccf552e92d53..38975827e276 100644
+--- a/sound/soc/intel/boards/bytcht_es8316.c
++++ b/sound/soc/intel/boards/bytcht_es8316.c
+@@ -22,6 +22,7 @@
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
+ #include <linux/device.h>
++#include <linux/dmi.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+@@ -441,11 +442,25 @@ static const struct acpi_gpio_mapping byt_cht_es8316_gpios[] = {
+ 	{ },
+ };
+ 
++/* Please keep this list alphabetically sorted */
++static const struct dmi_system_id byt_cht_es8316_quirk_table[] = {
++	{	/* Teclast X98 Plus II */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
++		},
++		.driver_data = (void *)(BYT_CHT_ES8316_INTMIC_IN1_MAP
++					| BYT_CHT_ES8316_JD_INVERTED),
++	},
++	{}
++};
++
+ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
+ {
+ 	static const char * const mic_name[] = { "in1", "in2" };
+ 	struct property_entry props[MAX_NO_PROPS] = {};
+ 	struct byt_cht_es8316_private *priv;
++	const struct dmi_system_id *dmi_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct snd_soc_acpi_mach *mach;
+ 	const char *platform_name;
+@@ -488,7 +503,10 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	/* Check for BYTCR or other platform and setup quirks */
+-	if (x86_match_cpu(baytrail_cpu_ids) &&
++	dmi_id = dmi_first_match(byt_cht_es8316_quirk_table);
++	if (dmi_id) {
++		quirk = (int)dmi_id->driver_data;
++	} else if (x86_match_cpu(baytrail_cpu_ids) &&
+ 	    mach->mach_params.acpi_ipc_irq_index == 0) {
+ 		/* On BYTCR default to SSP0, internal-mic-in2-map, mono-spk */
+ 		quirk = BYT_CHT_ES8316_SSP0 | BYT_CHT_ES8316_INTMIC_IN2_MAP |
+-- 
+2.20.1
+
