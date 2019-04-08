@@ -2,133 +2,145 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC86CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547C020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:01:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="VbtIk6D/"
+	by mail.kernel.org (Postfix) with ESMTP id B25AA20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfDHGBf (ORCPT
+        id S1726570AbfDHGDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:01:35 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39146 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfDHGBe (ORCPT
+        Mon, 8 Apr 2019 02:03:33 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35645 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHGDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:01:34 -0400
-Received: by mail-it1-f193.google.com with SMTP id 139so19031175ita.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 23:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=4T36vFbzXz9I4WYORZ+tCw1SAFVgCJwxQq7ShjEX1i0=;
-        b=VbtIk6D/mX5+ufb9Vmk6hkvP2DPi3SRez32l7eae/k9phducOd/lsHYT4byjSKl/Ff
-         Zj0tkGY4ndnRGG3TGzdVndelgoz0Ns3M8eK+/T9Om+mCL+crmTI0j7/XrDEAHoK5lTH/
-         06XNjddytFqzXXpsgpZ2DC0M15MRNFQQi5+7k=
+        Mon, 8 Apr 2019 02:03:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s39so10525723edb.2;
+        Sun, 07 Apr 2019 23:03:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=4T36vFbzXz9I4WYORZ+tCw1SAFVgCJwxQq7ShjEX1i0=;
-        b=F1F5+Gyniluiq7f9MlmTCx8CcDGjfWBjhkoynYBxxJsIn5TvR54yzGR9vQsmPojYva
-         heGpxptPlwksTnUmhbd8gPHp7xUQVQeHPPWIGqvty0cPouR+fOaQE/PWaqirjIY//8qZ
-         FTE8OqXmCHkhu0yTktCayOiRwX1cUBf5Is5VDeIc1G923VDbM+t192mHsY5ZRUQm2JO5
-         Qa+g/9iiFqehM0qKp1QZ5/3fUmVrCOWOOt/zQOoZ6lJe4qCEINJS46gOnofAUC95LPS7
-         EuCpxEMlWuFiO3N6XjVBVLnvePtTCSgMMMvdl6G3AsUTzn9n1KgnsQT4onxGUpiy39Te
-         mVSQ==
-X-Gm-Message-State: APjAAAX7cXluR8VK7Vpu4DfMFVMQaZVAy9j+FCtZNVZkIOOxROrMH4WR
-        ueWpZOYZcXt7BZQvsnpOzTjHugzWNhSAM4CtQst2qQ==
-X-Google-Smtp-Source: APXvYqxuHX5chO2bTnqc2xiKpfYIYN9eWQBWiafvz1uph6MM3vnXKa3S0XyS+iakXfq5webXTSCWnIL6VOKjkgPF0ns=
-X-Received: by 2002:a24:cd01:: with SMTP id l1mr8827379itg.150.1554703293850;
- Sun, 07 Apr 2019 23:01:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=9iRQ0LjHXaiZNgPu0/n0A6d0cMpaNc8Ae4QAy9FAhEM=;
+        b=rYTkMirA03Mgw6T3wahGsP4XBNeztdXrHx1yxBKoQ7VWWUCi1SYV4HmnRjpLOtRrTp
+         cq8rC5divM4M/snTBd3q389kNfcWAVuQlE9fIXSh+eSQfYp1bpSxJtPIA8JExWgE4ULC
+         co+jsZlZzmVc1tdqYr6UVbIbZLoSCBuRUxDosDf6PBXyEz6MJZzXNgvwLIpu3vOwAQIK
+         CLqtqZHCc0sXRGhiykRXXhIAObFRotXLRXUJs52ZRvL5v0BzQc1of2X/aIhK2PLHubvg
+         yia5j7zN4QnjSCyCU8urUN1OVKVJWiC/Zj+0iQbXh9cH7+jFRkylRNu+9rwEwkeES5K1
+         Jtfw==
+X-Gm-Message-State: APjAAAWxIo/wHD/wjraiOLExT49DTbgmrfYx6LFsnqQhA9iJSgZzGHfx
+        1NhuVKCKqv3zAJMTttUDKQVyz+2xUkw=
+X-Google-Smtp-Source: APXvYqwQV8cjrOyNtfrJ10TqSD/0WPnIdzyvbJyPb/30LGQ9mKataQcTmfQN50lGffsSaNaxJtcxww==
+X-Received: by 2002:a17:906:924e:: with SMTP id c14mr15220751ejx.230.1554703411135;
+        Sun, 07 Apr 2019 23:03:31 -0700 (PDT)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id g46sm8625848edc.10.2019.04.07.23.03.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id n25so13240443wmk.4;
+        Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
+X-Received: by 2002:a1c:40c3:: with SMTP id n186mr16625540wma.3.1554703410424;
+ Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190405234514.6183-1-megous@megous.com> <CAJiuCcew10Q3PUOk4VPoiyFc7ZhXwJzxXHQHNeVBUvVAQ3BkbQ@mail.gmail.com>
- <20190407143237.2qyoef4r5e3qvbmh@core.my.home>
-In-Reply-To: <20190407143237.2qyoef4r5e3qvbmh@core.my.home>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 8 Apr 2019 11:31:22 +0530
-Message-ID: <CAMty3ZDpppM5zBvxCBx3NjdVsRm4S93yz5kqi5Z5a0rhC-+zPg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 00/12] Add support for Orange Pi 3
-To:     megous@megous.com,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+References: <20190408055415.1374-1-jagan@amarulasolutions.com>
+In-Reply-To: <20190408055415.1374-1-jagan@amarulasolutions.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 8 Apr 2019 14:03:17 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64g9=VoHP0s2OKt2Xv8Fj97dhy7iUkAp-hqLKBLZd5qAg@mail.gmail.com>
+Message-ID: <CAGb2v64g9=VoHP0s2OKt2Xv8Fj97dhy7iUkAp-hqLKBLZd5qAg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663
+ CTP node
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+        linux-amarula@amarulasolutions.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 7, 2019 at 8:02 PM 'Ond=C5=99ej Jirman' via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
+On Mon, Apr 8, 2019 at 1:54 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> On Sun, Apr 07, 2019 at 03:36:21PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Sat, 6 Apr 2019 at 01:45, megous via linux-sunxi
-> > <linux-sunxi@googlegroups.com> wrote:
-> > >
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > This series implements support for Xunlong Orange Pi 3 board.
-> >
-> > OrangePi 3 Lite2 and One Plus boards support has already been merged.
-> > The support is not complete but you should rebase your patches on top
-> > of sunxi/for-next
+> Add Goodix GT5663 capacitive touch controller node on
+> Amarula A64-Relic board.
 >
-> Hi,
+> The CTP connected to board with,
+> - SDA, SCK from i2c1
+> - GPIO-LD0 as AVDD28 supply
+> - PH4 gpio as interrupt pin
+> - PH8 gpio as reset pin
+> - X axis is inverted
+> - Y axis is inverted
 >
-> OrangePi 3 is somewhat different from these two boards (mostly it has a d=
-iffernt
-> power tree). It doesn't use the AXP regulators that are defined in the
-> sun50i-h6-orangepi.dtsi in the same way.
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 >
-> For example:
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> index 3575db216016..a76353d59aaa 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> @@ -49,6 +49,28 @@
+>         bias-pull-up;
+>  };
 >
-> - bldo3 (is turned always on in sun50i-h6-orangepi.dtsi but unused for op=
-i3)
-> - cldo2 and cldo3 are unused on opi3 and have nothing to do with WiFi
-> - aldo3 is not for dram
-> - bldo1 on the other hand is for dram on opi3
-> - some other regulators are used for different/more functions and thus
->   named differntly
-> - USB id-det pin is differnt
-> - ...
+> +&i2c1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&i2c1_pins>;
+> +       status = "okay";
+> +
+> +       touchscreen@5d {
+> +               compatible = "goodix,gt5663";
+> +               reg = <0x5d>;
+> +               AVDD28-supply = <&reg_ldo_io0>;                 /* VCC-CTP: GPIO0-LDO */
+> +               interrupt-parent = <&pio>;
+> +               interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
+> +               irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;        /* CTP-INT: PH4 */
+> +               reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;      /* CTP-RST: PH8 */
+> +               touchscreen-inverted-x;
+> +               touchscreen-inverted-y;
+> +       };
+> +};
+> +
+> +&i2c1_pins {
+> +       bias-pull-up;
+> +};
+> +
 
-Based on my communication with OrangePI, OPI-3 has PCIE, 4 USB-3.0
-ports and AV are the key differences and rest seems to be similar. but
-if we have a diff or unused regulators may be we can't enable them in
-dtsi (I never looked that close as of now)
+Do you know if the pins have external pull-ups? If so then you
+don't need this bit. Same for the other patch.
+
+AFAIK the internal pull-ups are kind of weak.
+
+>  &mmc1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&mmc1_pins>;
+> @@ -212,6 +234,13 @@
+>         regulator-name = "vdd-cpus";
+>  };
+>
+> +&reg_ldo_io0 {
+> +       regulator-min-microvolt = <3300000>;
+> +       regulator-max-microvolt = <3300000>;
+> +       regulator-name = "vcc-ctp";
+> +       status = "okay";
+> +};
+> +
+>  &reg_rtc_ldo {
+>         regulator-name = "vcc-rtc";
+>  };
+> --
+> 2.18.0.321.gffc6fa0e3
+>
