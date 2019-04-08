@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF80C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8732C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D176120870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891D920870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708746;
-	bh=9yS3auOxin1DL3oHF3phX3xEznWbeJQX/OP0tdcTrKc=;
+	s=default; t=1554708751;
+	bh=IPev5wO5UUfssHnrHb1W/Xg47YDFJ+UylPef1BgH9FE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IWXHwHXP6/4CSQd2WhY1FjFbrJ3r2NMSwGovR6UgjtxRzCrZoN2O/i4uZxk+5O+u2
-	 ZunNg/lx2rkFjL3pfCmO1orsVH7dG5vGsHKaVs/04O96pMoFnfs75bGWX0EO7vpAUw
-	 R1rUFCtD5m5DSp/nOsBKHSliXXxn2JKouWoMQsiM=
+	b=ZqW5yfbdho25ErwCyZGWYETtTdmteZkK0yC8uRPv/sQpKMbjy+mRn5MMALemPJR/i
+	 6wCXoE5Qd/QJao0J7fRRVpWlNPBc0J6Z3JT+fP6+y5TAydJCugUYAqLpoVBcsFO+DI
+	 qQw/cLmgeCmBEYIHtTipYPP2P+Z01o6pNMDQJpiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfDHHcZ (ORCPT
+        id S1726789AbfDHHca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:32:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44342 "EHLO
+        Mon, 8 Apr 2019 03:32:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44460 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHHcY (ORCPT
+        with ESMTP id S1726373AbfDHHc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:32:24 -0400
+        Mon, 8 Apr 2019 03:32:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ITrwBjYxRF02082MkJnJP0JWiVmsSZWqXgap45mz8Zw=; b=RDofjGNBViq+
-        pUTAX9OZ6zRzFZJXx9ovBBD+qsUAL7Kg29L6UXQNw1wpVzm8nABYs+l0GKjywfsHwwl1skWAjv9/z
-        TlGWmlErGt4JFbRro6SI90K3I0KrBA0itN8nZA6mYZCSSs5XdziizL3bKHUVPRQ3npnnzME28GRtK
-        BHjyo=;
+        List-Archive; bh=1HHBuqUJMg6qfY4FJ7Z0UW+CokHoLrU1408RpkEN+pg=; b=iV150W642i7r
+        xtVPI4F10S/WHNNVmYWWVgBe4CpauHW2G9k0dSUR5b12LitkWjvSZX6rLTuiqRLuKGreF1FjiDra7
+        nOzskc7JbgwRTsRKAow0tX3EgfJ3p7wkuDn7QLHhcs9V6aUdi639AASU9pQPI5oMhcDhO+clnV9ZS
+        SJcgk=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOlN-0003xl-0X; Mon, 08 Apr 2019 07:32:18 +0000
+        id 1hDOlV-0003y5-BP; Mon, 08 Apr 2019 07:32:26 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BC75D441D3C; Mon,  8 Apr 2019 14:32:06 +0700 (+07)
+        id 70AD5441D3B; Mon,  8 Apr 2019 14:32:15 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com,
-        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: tegra114: add dual mode support" to the spi tree
-In-Reply-To:  <1554423259-26056-8-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: gpio: Use devm_spi_register_master()" to the spi tree
+In-Reply-To:  <20190403040133.1459-13-andrew.smirnov@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408073206.BC75D441D3C@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:32:06 +0700 (+07)
+Message-Id: <20190408073215.70AD5441D3B@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:32:15 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra114: add dual mode support
+   spi: gpio: Use devm_spi_register_master()
 
 has been applied to the spi tree at
 
@@ -91,53 +90,70 @@ to this mail.
 Thanks,
 Mark
 
-From 9877a347f2056f7aa4e770de9a20048ad288f545 Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Thu, 4 Apr 2019 17:14:07 -0700
-Subject: [PATCH] spi: tegra114: add dual mode support
+From 79567c1a321e7396e734135d56950311dde07db2 Mon Sep 17 00:00:00 2001
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Date: Tue, 2 Apr 2019 21:01:33 -0700
+Subject: [PATCH] spi: gpio: Use devm_spi_register_master()
 
-This patch adds support for dual mode SPI transfer.
+Replace spi_bitbang_start() with a combination of spi_bitbang_init()
+and devm_spi_register_master() and drop all of the explicit
+cleanup-related code that's no longer necessary.
 
-Dual mode uses both MOSI and MISO lines in parallel where the data
-is interleaved on MOSI and MISO lines increasing the throughput.
-
-Packet from Tx FIFO is transmitted on both MOSI and MISO lines and
-packet to Rx FIFO is received from both MOSI and MISO lines. Even
-bits are transmitted or received on the MOSI data line and odd bits
-are transmitted or received on the MISO data line.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/spi/spi-gpio.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 402799c7f6b7..1e749ce13029 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -786,6 +786,11 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index d4a22f22b04c..487ee55d26f7 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -396,8 +396,6 @@ static int spi_gpio_probe(struct platform_device *pdev)
  
- 	total_fifo_words = tegra_spi_calculate_curr_xfer_param(spi, tspi, t);
+ 	spi_gpio = spi_master_get_devdata(master);
  
-+	if (t->rx_nbits == SPI_NBITS_DUAL || t->tx_nbits == SPI_NBITS_DUAL)
-+		command1 |= SPI_BOTH_EN_BIT;
-+	else
-+		command1 &= ~SPI_BOTH_EN_BIT;
-+
- 	if (tspi->is_packed)
- 		command1 |= SPI_PACKED;
- 	else
-@@ -1152,7 +1157,8 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 		master->max_speed_hz = 25000000; /* 25MHz */
+-	platform_set_drvdata(pdev, spi_gpio);
+-
+ 	status = spi_gpio_request(dev, spi_gpio);
+ 	if (status)
+ 		return status;
+@@ -437,19 +435,11 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	}
+ 	bb->setup_transfer = spi_bitbang_setup_transfer;
  
- 	/* the spi->mode bits understood by this driver: */
--	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST |
-+			    SPI_TX_DUAL | SPI_RX_DUAL;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
- 	master->setup = tegra_spi_setup;
- 	master->transfer_one_message = tegra_spi_transfer_one_message;
+-	return spi_bitbang_start(&spi_gpio->bitbang);
+-}
+-
+-static int spi_gpio_remove(struct platform_device *pdev)
+-{
+-	struct spi_gpio			*spi_gpio;
+-
+-	spi_gpio = platform_get_drvdata(pdev);
+-
+-	/* stop() unregisters child devices too */
+-	spi_bitbang_stop(&spi_gpio->bitbang);
++	status = spi_bitbang_init(&spi_gpio->bitbang);
++	if (status)
++		return status;
+ 
+-	return 0;
++	return devm_spi_register_master(&pdev->dev, spi_master_get(master));
+ }
+ 
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+@@ -460,7 +450,6 @@ static struct platform_driver spi_gpio_driver = {
+ 		.of_match_table = of_match_ptr(spi_gpio_dt_ids),
+ 	},
+ 	.probe		= spi_gpio_probe,
+-	.remove		= spi_gpio_remove,
+ };
+ module_platform_driver(spi_gpio_driver);
+ 
 -- 
 2.20.1
 
