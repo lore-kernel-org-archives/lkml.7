@@ -2,221 +2,216 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A886BC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D3C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6657F20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921C220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqdpUfv/"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kYBqsms4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfDHQvz (ORCPT
+        id S1729067AbfDHQyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:51:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33454 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbfDHQvy (ORCPT
+        Mon, 8 Apr 2019 12:54:07 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37990 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728995AbfDHQyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:51:54 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k19so7670017pgh.0;
-        Mon, 08 Apr 2019 09:51:53 -0700 (PDT)
+        Mon, 8 Apr 2019 12:54:07 -0400
+Received: by mail-it1-f196.google.com with SMTP id f22so194161ita.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Arp8gh1Xr6XyymCJiPWyeH2RDVnKUpQtarjO35H+wWU=;
-        b=hqdpUfv/nXIL9kWnT2m0sISkxB2zCvdO85QPmBr1UJ4ap8y6Xxki/eNZ6w/VJUJg9T
-         Smql4mealjq8xCFXo5Cxvyq+Xgu7wI4jzvfMaspq50aPrTYy5kRfuYu3ihdAW7zVCLDI
-         6OQzDpSXM4EG4ykkuuOSU8Nhw/yneIrlYKTVGvKXt9aBZlG03qwjxK4u/vNi/zE1jwBs
-         /d+QVdJ2E+FhiC1Pagg7CZnL4u+cLqNu0/iE2ZAopTdkTFNDs3c8f4UV7xE0Zqn1fYO7
-         uVyMDV0vwMxAj+pihrcLql6LtVP574WyyRWC+nxDI+j0/X3IirZX9Z4tV5jYos+Di/Y5
-         D36Q==
+        bh=iTUAGD6lWza4tKmi+pA/GqOUIGhro2T5N3WoQ+3jgyE=;
+        b=kYBqsms4GyP2kEAhIkWfhkPdLjMOxT9glTqJSYGlAbP7WcJXOaCvc6t9QIZ6wcM/h+
+         Qu+uCoLvLKjC/sCtJxRMpHTrTYUFOrukcPgGjkY+8VfYBMIY2TgAB3otfGn4aC3yZ+oL
+         MNXXtIGNuFb6z3lEeErFuntZ/f301f5F0+xqNx0L/Sen9u9uVMNnZrs24Ievi7yZpNGb
+         Ny5RZ2sm06AkR2RhI4yg2Jp5aqBMKq0l7wNiLpFsVssB417UzE0xLdjZ9tc6TtUYsBfU
+         SLTh9Khpk6nmhGl8/y24ZvS0H2gyN3BA8/3EgJCJ/Ey8E4AhSS3LLQUbE/yEfHnn9Q2p
+         rTjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Arp8gh1Xr6XyymCJiPWyeH2RDVnKUpQtarjO35H+wWU=;
-        b=jLOpYcsCzcmY+yEyKentzGZo9vu6VM2Def2R2b9a3H6caaPaTg8cnVDy6Z3fOMMgtI
-         LUagYC+kBcdRrtaiBKXy2MQLHydZQj3DIIq11UPuiKnFnGPmypqAInEgoxV39J+Sbm4r
-         mlHkDwEEZvHFD2QHvXxv54dAbBzcgX+cMyw48DMPftGLf+QNzoUbpH3MfINZFJdH7a5F
-         paEEGrkldQLSXgxQxzg7Tg6kePgHbBSi3dyZyKmjBCn3ZlQJvP/M4vtM8EwpXVsqkdF7
-         YTyJ2WYagdMI6ZWGoTJh1+H8KGjG4XouuNHnofk1dtO9zSjZcOoHhqT6YDpwbSp4AOGY
-         yCHA==
-X-Gm-Message-State: APjAAAXNPEWmFAxIW1vOfnnB6uNI/7dpwhZPHPdy732vlRCnSfVzq/Xk
-        eN6/K7JuKn27N8S5vw8iiDwDAUopILrVe6qYXWk=
-X-Google-Smtp-Source: APXvYqyHy8wAm8WBRj7x2FhKV2PD4eFyB2j5NITupIPy7i8VKSU082AIou3My5+e7dfyku32yRMZucHhjrAb/pvHEvE=
-X-Received: by 2002:a63:fd49:: with SMTP id m9mr29704922pgj.16.1554742313181;
- Mon, 08 Apr 2019 09:51:53 -0700 (PDT)
+        bh=iTUAGD6lWza4tKmi+pA/GqOUIGhro2T5N3WoQ+3jgyE=;
+        b=r/3iLtZhxfgJs3bvCBWwDpdTlmDKOps8aOVSYd/OBcLSaVLiJSIB+zBsvyL9kxOyGn
+         4dOohIVz5KrqLv1zkz6E2Nz2bndboj73oUUPJjm3CGOrzXj8SfT98B8/ULAkxXZbhFsm
+         UV09MscXgOgVQrHoWPu2PMPoDcZPqJ2IL2SoamiEklgFKhxgnVWGZSbzWftXpL/7pTJw
+         ws80SnCJo5jRtk/FcA5VxeEqrgAgF4jdmr5h3Rl6cqq97YbXt92a0W5f9TnGqirQG1U6
+         5giBbGA6vYMF1UNyX/27gI4e8EXM97PCGv7i2S2fd8MUSJ51VIW/i0PnlBpHX7AS8/Hc
+         jfeQ==
+X-Gm-Message-State: APjAAAX969QVMcMBRTUVILnV2ypQXuSli8RQ3OFJ0p2KLmX1A/Q5e1O2
+        aHP5HTq8wUWsG5ZzOXUCGuqW5tDz0T36g9nFswPk9w==
+X-Google-Smtp-Source: APXvYqwhR7r2iesmJKfaZ5pzDBLjiuEOFOIWt+OZN+p6wrtIl5MqoLcyYSMvgkRg01f0pg4JSLSopohg+83+pWqDW2U=
+X-Received: by 2002:a24:7c9:: with SMTP id f192mr2921343itf.97.1554742446016;
+ Mon, 08 Apr 2019 09:54:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
-In-Reply-To: <20190405203558.19160-1-rajatja@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Apr 2019 19:51:41 +0300
-Message-ID: <CAHp75Vd+_aFxomzPP_-8y5D1p0crbYo6R+=7fGGOKW86D2+=CQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com> <CAKOZuetS6Bg0ubxQgCBKVKeWOzuwH_C=nCRn-OPmHYJvs6sybQ@mail.gmail.com>
+In-Reply-To: <CAKOZuetS6Bg0ubxQgCBKVKeWOzuwH_C=nCRn-OPmHYJvs6sybQ@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 8 Apr 2019 09:53:54 -0700
+Message-ID: <CAOesGMi++NMi-60smmd9f+P4C1d9oQiz-hS6QWa6ViqzqJrfBA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        furquan@google.com, evgreen@google.com,
-        Rajat Jain <rajatxjain@gmail.com>
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
+On Mon, Apr 8, 2019 at 9:37 AM Daniel Colascione <dancol@google.com> wrote:
 >
-> Convert the intel_pmc_core driver to a platform driver, and attach using
-> the ACPI enumeration method (via the ACPI device "INT33A1").
+> On Mon, Apr 8, 2019 at 9:29 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Mar 20, 2019 at 9:31 AM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > >
+> > > Introduce in-kernel headers and other artifacts which are made available
+> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > > it possible to build kernel modules, run eBPF programs, and other
+> > > tracing programs that need to extend the kernel for tracing purposes
+> > > without any dependency on the file system having headers and build
+> > > artifacts.
+> > >
+> > > On Android and embedded systems, it is common to switch kernels but not
+> > > have kernel headers available on the file system. Further once a
+> > > different kernel is booted, any headers stored on the file system will
+> > > no longer be useful. By storing the headers as a compressed archive
+> > > within the kernel, we can avoid these issues that have been a hindrance
+> > > for a long time.
+> > >
+> > > The best way to use this feature is by building it in. Several users
+> > > have a need for this, when they switch debug kernels, they donot want to
+> > > update the filesystem or worry about it where to store the headers on
+> > > it. However, the feature is also buildable as a module in case the user
+> > > desires it not being part of the kernel image. This makes it possible to
+> > > load and unload the headers from memory on demand. A tracing program, or
+> > > a kernel module builder can load the module, do its operations, and then
+> > > unload the module to save kernel memory. The total memory needed is 3.8MB.
+> > >
+> > > By having the archive available at a fixed location independent of
+> > > filesystem dependencies and conventions, all debugging tools can
+> > > directly refer to the fixed location for the archive, without concerning
+> > > with where the headers on a typical filesystem which significantly
+> > > simplifies tooling that needs kernel headers.
+> > >
+> > > The code to read the headers is based on /proc/config.gz code and uses
+> > > the same technique to embed the headers.
+> > >
+> > > To build a module, the below steps have been tested on an x86 machine:
+> > > modprobe kheaders
+> > > rm -rf $HOME/headers
+> > > mkdir -p $HOME/headers
+> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > cd my-kernel-module
+> > > make -C $HOME/headers M=$(pwd) modules
+> > > rmmod kheaders
+> > >
+> > > Additional notes:
+> > > (1) external modules must be built on the same arch as the host that
+> > > built vmlinux. This can be done either in a qemu emulated chroot on the
+> > > target, or natively. This is due to host arch dependency of kernel
+> > > scripts.
+> > >
+> > > (2)
+> > > If module building is used, since Module.symvers is not available in the
+> > > archive due to a cyclic dependency with building of the archive into the
+> > > kernel or module binaries, the modules built using the archive will not
+> > > contain symbol versioning (modversion). This is usually not an issue
+> > > since the idea of this patch is to build a kernel module on the fly and
+> > > load it into the same kernel. An appropriate warning is already printed
+> > > by the kernel to alert the user of modules not having modversions when
+> > > built using the archive. For building with modversions, the user can use
+> > > traditional header packages. For our tracing usecases, we build modules
+> > > on the fly with this so it is not a concern.
+> > >
+> > > (3) I have left IKHD_ST and IKHD_ED markers as is to facilitate
+> > > future patches that would extract the headers from a kernel or module
+> > > image.
+> > >
+> > > (v4 was Tested-by the following folks,
+> > >  v5 only has minor changes and has passed my testing).
+> > > Tested-by: qais.yousef@arm.com
+> > > Tested-by: dietmar.eggemann@arm.com
+> > > Tested-by: linux@manojrajarao.com
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >
+> > Sorry to be late at the party with this kind of feedback, but I find
+> > the whole ".tar.gz in procfs" to be an awkward solution, especially if
+> > there's expected to be userspace tooling that depends on this
+> > long-term.
+> > [snip]
 >
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+> The approaches you proposed were explored in detail on this thread and
+> other related threads.
 
-> -static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> -       INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
-> -       INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
-> -       INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
-> -       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
-> -       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
-> -       INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
-> -       {}
-> -};
-> -
-> -MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
-> -
+Not on this thread, but maybe on others. Since they weren't linked and
+referenced, I didn't find them. Having them summarized in the patch
+description would be a great idea.
 
-> +static int pmc_core_probe(struct platform_device *pdev)
->  {
-> +       static bool device_initialized;
->         struct pmc_dev *pmcdev = &pmc;
-> -       const struct x86_cpu_id *cpu_id;
->         u64 slp_s0_addr;
->         int err;
->
-> -       cpu_id = x86_match_cpu(intel_pmc_core_ids);
-> -       if (!cpu_id)
-> +       if (device_initialized)
->                 return -ENODEV;
->
-> -       pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
+> The tarball in proc approach is a simple,
+> pragmatic approach that allows makes a lot of scenarios Just Work
+> where they didn't before.
 
-> +       switch (boot_cpu_data.x86_model) {
+"My pragmatic solution, your messy hack".
 
-I didn't get why this should be boot CPU?
-Otherwise, leave the structure and leave the x86_match_cpu() call.
+It's an awkward solution that will now be permanently locked in due to
+the /proc interface being an ABI.
 
-> +       case INTEL_FAM6_SKYLAKE_MOBILE:
-> +       case INTEL_FAM6_SKYLAKE_DESKTOP:
-> +       case INTEL_FAM6_KABYLAKE_MOBILE:
-> +       case INTEL_FAM6_KABYLAKE_DESKTOP:
->
-> -       /*
-> -        * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
-> -        * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
-> -        * in this case.
-> -        */
-> -       if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
-> +               pmcdev->map = &spt_reg_map;
-> +
-> +               /*
-> +                * Special case: Coffeelake has CPU ID of Kabylake, but has
-> +                * Cannonlake PCH. So need to use cnp_reg_map instead of
-> +                * spt_reg_map for this special case. The PMC core PCI device
-> +                * on Coffeelake is hidden, so use that as the deciding factor.
-> +                */
-> +               if (!pci_dev_present(pmc_pci_ids))
-> +                       pmcdev->map = &cnp_reg_map;
-> +
-> +               break;
-> +
-> +       case INTEL_FAM6_CANNONLAKE_MOBILE:
->                 pmcdev->map = &cnp_reg_map;
-> +               break;
-> +
-> +       case INTEL_FAM6_ICELAKE_MOBILE:
-> +               pmcdev->map = &icl_reg_map;
-> +               break;
-> +       default:
-> +               /*
-> +                * Which map should we use by default? If not specified
-> +                * explicitly, assume Icelake by default for now.
-> +                */
-> +               pmcdev->map = &icl_reg_map;
-> +               break;
-> +       }
->
->         if (lpit_read_residency_count_address(&slp_s0_addr))
->                 pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-> @@ -890,26 +903,47 @@ static int __init pmc_core_probe(void)
->
->         err = pmc_core_dbgfs_register(pmcdev);
->         if (err < 0) {
-> -               pr_warn(" debugfs register failed.\n");
-> +               dev_warn(&pdev->dev, "debugfs register failed.\n");
->                 iounmap(pmcdev->regbase);
->                 return err;
->         }
->
->         dmi_check_system(pmc_core_dmi_table);
-> -       pr_info(" initialized\n");
-> +       platform_set_drvdata(pdev, pmcdev);
-> +
-> +       dev_info(&pdev->dev, " initialized\n");
-> +       device_initialized = true;
-> +
->         return 0;
->  }
-> -module_init(pmc_core_probe)
->
-> -static void __exit pmc_core_remove(void)
-> +static int pmc_core_remove(struct platform_device *pdev)
->  {
-> -       struct pmc_dev *pmcdev = &pmc;
-> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
->
-> +       platform_set_drvdata(pdev, NULL);
->         pmc_core_dbgfs_unregister(pmcdev);
->         mutex_destroy(&pmcdev->lock);
->         iounmap(pmcdev->regbase);
-> +       return 0;
->  }
-> -module_exit(pmc_core_remove)
-> +
-> +static const struct acpi_device_id pmc_core_acpi_ids[] = {
-> +       {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
-> +
-> +static struct platform_driver pmc_core_driver = {
-> +       .driver = {
-> +               .name = "pmc_core",
-> +               .acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
-> +       },
-> +       .probe = pmc_core_probe,
-> +       .remove = pmc_core_remove,
-> +};
-> +
-> +module_platform_driver(pmc_core_driver);
->
->  MODULE_LICENSE("GPL v2");
->  MODULE_DESCRIPTION("Intel PMC Core Driver");
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+> Approaches like a new filesystem, a
+> mountable block device, a custom debuginfo format, and so on add
+> complexity without providing concrete gains in functionality.
+
+It definitely provides concrete gains in functionality, in particular
+it provides a significantly less fragile way of providing the data
+such that having it out of sync with the running kernel is a lot less
+accident-prone.
+
+> We'd
+> like to get this work into the tree sooner rather than later.
+
+That has _never_ been a good argument for picking up something that
+will need to be supported as an ABI forever.
+
+We've solved these kind of things in the past without exporting
+tarballs from the kernel. We can do it again.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+I literally didn't hear a single valid reason for why this patch
+should go in from you.
+
+
+-Olof
