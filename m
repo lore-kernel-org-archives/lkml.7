@@ -2,99 +2,128 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE48DC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7DEC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6272084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF962087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554745908;
+	bh=1orv67/nJvj831HmkEmwh44HkEEEt0WHiWIAul4l4FE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=x15b3ag+HB6zq2Dz36jqx8iJJnhyijJee+4/H9O1Cgs618ROEl7VOg2CPCQkEsKSE
+	 XbHVfkRupjOK1uE1YsFS1wzpf+yA0rBKF+GjVsdMguvlPcV4wkiyRYm5D/dCiBRKOH
+	 WhounJOUkjdkIy1Ssn4bcZNT1aImTiq9Ma1K3+HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbfDHRsH (ORCPT
+        id S1728926AbfDHRvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:48:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:17704 "EHLO mga02.intel.com"
+        Mon, 8 Apr 2019 13:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfDHRsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:48:06 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 10:48:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,326,1549958400"; 
-   d="scan'208";a="336034025"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Apr 2019 10:48:05 -0700
-Date:   Mon, 8 Apr 2019 10:48:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v6 12/20] kvm/vmx: Emulate MSR TEST_CTL
-Message-ID: <20190408174805.GJ25880@linux.intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
- <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1904051400230.1802@nanos.tec.linutronix.de>
- <423f329a8e194d799c6c41470266a04a9f90bc84.camel@linux.intel.com>
+        id S1726373AbfDHRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:51:47 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1120820863;
+        Mon,  8 Apr 2019 17:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554745906;
+        bh=1orv67/nJvj831HmkEmwh44HkEEEt0WHiWIAul4l4FE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eH0Ec1LtDxjUG28GC1NmqfuGSKc9FG7i/Q2dx9vFjucnYamqgCgPgYPcjMtlAxYCH
+         a+eAcGwu0lhekxJW/KMCqaCo/ItV6z9fp7mwRQtoJGd/7gMqExf6YYRVJJdm/jcE4j
+         TdNv+pedIgmhDNMwh46/T1KJZfpu0eegDaK58/iw=
+Subject: Re: [PATCH linux-next v9 7/7] selftests/ptrace: add a test case for
+ PTRACE_GET_SYSCALL_INFO
+To:     "Dmitry V. Levin" <ldv@altlinux.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190408174036.GA11889@altlinux.org>
+ <20190408174236.GH11889@altlinux.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f2f015da-35d4-7207-cd57-e6589cd9d2c4@kernel.org>
+Date:   Mon, 8 Apr 2019 11:51:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <423f329a8e194d799c6c41470266a04a9f90bc84.camel@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190408174236.GH11889@altlinux.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 05:54:25PM +0800, Xiaoyao Li wrote:
-> On Fri, 2019-04-05 at 14:30 +0200, Thomas Gleixner wrote:
-> > On Wed, 3 Apr 2019, Fenghua Yu wrote:
-> > > @@ -1663,6 +1663,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct
-> > > msr_data *msr_info)
-> > >  	u32 index;
-> > >  
-> > >  	switch (msr_info->index) {
-> > > +	case MSR_TEST_CTL:
-> > > +		if (!msr_info->host_initiated &&
-> > > +		    !(vcpu->arch.core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
-> > 
-> > Errm? If the MSR_TEST_CTL is exposed to the guest via CPUID then the
-> > rdmsr() in the guest is not supposed to fail just because
-> > CORE_CAP_SPLIT_LOCK_DETECT is not set.
+On 4/8/19 11:42 AM, Dmitry V. Levin wrote:
+> Check whether PTRACE_GET_SYSCALL_INFO semantics implemented in the kernel
+> matches userspace expectations.
 > 
-> you're right.
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Elvira Khabirova <lineprinter@altlinux.org>
+> Cc: Eugene Syromyatnikov <esyr@redhat.com>
+> Cc: linux-kselftest@vger.kernel.org
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> ---
 > 
-> > vmx->msr_test_ctl holds the proper value, which is either 0 or
-> > CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported.
-> > 
-> > So the chek needs to be guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY).
+> Notes:
+>      v9: unchanged
+>      v8: unchanged
+>      v7: unchanged
+>      v6: made PTRACE_GET_SYSCALL_INFO return value checks strict
+>      v5: initial revision
 > 
-> I don't think so. There is no dependecy between
-> guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) and MSR_TEST_CTL.
-> guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) only indicates that guest has MSR
-> CORE_CAPABILITY.
+>   tools/testing/selftests/ptrace/.gitignore     |   1 +
+>   tools/testing/selftests/ptrace/Makefile       |   2 +-
+>   .../selftests/ptrace/get_syscall_info.c       | 271 ++++++++++++++++++
+>   3 files changed, 273 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/ptrace/get_syscall_info.c
 > 
-> Due to the fact that MSR_TEST_CTL is emulated with vmx->msr_test_ctl. I think it
-> 's ok to always let userspace or guest to read MSR_TEST_CTL, it just returns the
-> emulated value. Like you said, " vmx->msr_test_ctl holds the proper value, which
-> is either 0 or CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported."
+> diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
+> index b3e59d41fd82..cfcc49a7def7 100644
+> --- a/tools/testing/selftests/ptrace/.gitignore
+> +++ b/tools/testing/selftests/ptrace/.gitignore
+> @@ -1 +1,2 @@
+> +get_syscall_info
+>   peeksiginfo
+> diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
+> index 8a2bc5562179..4bc550b6b845 100644
+> --- a/tools/testing/selftests/ptrace/Makefile
+> +++ b/tools/testing/selftests/ptrace/Makefile
+> @@ -1,5 +1,5 @@
+>   CFLAGS += -iquote../../../../include/uapi -Wall
+>   
+> -TEST_GEN_PROGS := peeksiginfo
+> +TEST_GEN_PROGS := get_syscall_info peeksiginfo
+>   
+>   include ../lib.mk
+> diff --git a/tools/testing/selftests/ptrace/get_syscall_info.c b/tools/testing/selftests/ptrace/get_syscall_info.c
+> new file mode 100644
+> index 000000000000..28e972825b74
+> --- /dev/null
+> +++ b/tools/testing/selftests/ptrace/get_syscall_info.c
+> @@ -0,0 +1,271 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later
+> + *
 
-Assuming the next version implements "vmx->msr_test_ctl_mask", KVM should
-inject #GP if the guest attempts RDMSR(MSR_TEST_CTL) and the mask is zero.
-It stands to reason that a kernel can only reasonably assume the MSR exists
-if the (virtual) CPU supports at least one feature enabled via MSR_TEST_CTL.
+This should be just GPL-2.0+
+
+The rest looks good to me. Assuming this patch has dependency on the
+rest of the patches in this series and once the above change is made:
+
+Acked-by: Shuah Khan <shuah@kernel.org>
+
+thnaks,
+-- Shuah
+
