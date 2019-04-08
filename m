@@ -2,90 +2,85 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90091C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C6BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4996E20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3145A2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554749622;
+	bh=blGY1qBPro1jw5Z5Gd58ZnDylLrpiIcmAONOcprkPwA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=nYua5o7tF4bmH4GDuS2lrVDToDfl+Y854W381+yEbUxjUPSf5/3XvkoMHN86ZRImc
+	 MwDSbiisSx3YdoIAOwZElMrOVBRaPBexf1uwEVnsYWIKEjW81pPzK+jRwJJeuNxjjP
+	 PMOZHZCcv5oLiFNbaDqso1B+kAfMgM5m9z/43Vao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfDHSxb convert rfc822-to-8bit (ORCPT
+        id S1729235AbfDHSxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:53:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726349AbfDHSxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:53:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 63189AF93;
-        Mon,  8 Apr 2019 18:53:29 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 20:53:28 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 4/6] MIPS: SGI-IP27: fix readb/writeb addressing
-Message-Id: <20190408205328.062042a4f6e12f750bd4c05e@suse.de>
-In-Reply-To: <20190408145834.GO7480@piout.net>
-References: <20190408142100.27618-1-tbogendoerfer@suse.de>
-        <20190408142100.27618-5-tbogendoerfer@suse.de>
-        <20190408145834.GO7480@piout.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Mon, 8 Apr 2019 14:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbfDHSxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:53:40 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE03720857;
+        Mon,  8 Apr 2019 18:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554749620;
+        bh=blGY1qBPro1jw5Z5Gd58ZnDylLrpiIcmAONOcprkPwA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QhI6VJtnwwSxkcdT3KoRgIgFI+3uW+KQS80XJj1D5pkrixaLBe6/GzRJXJ7pFI9PY
+         vb/DQ/SfT/aJSH+SYcbbTCsxJnWCGn08r86NLgKPOi33kceVjcovlYsCPvSa0ZAdgm
+         kJzEsSeS8f4P9jUFv38cGwhlWseRrh4+fzd9lHc8=
+Subject: Re: [PATCH kselftest-next] selftests: cgroup: fix cleanup path in
+ test_memcg_subtree_control()
+To:     Roman Gushchin <guroan@gmail.com>, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>
+References: <20190328025659.25684-1-guro@fb.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <32b7ae48-99dd-1261-4086-37d416ffcfd5@kernel.org>
+Date:   Mon, 8 Apr 2019 12:53:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190328025659.25684-1-guro@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Apr 2019 16:58:34 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-
-> On 08/04/2019 16:20:56+0200, Thomas Bogendoerfer wrote:
-> > diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
-> > index 0cf6507de3c7..05f0d91366af 100644
-> > --- a/drivers/rtc/rtc-m48t35.c
-> > +++ b/drivers/rtc/rtc-m48t35.c
-> > @@ -24,6 +24,16 @@
-> >  
-> >  struct m48t35_rtc {
-> >  	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
-> > +#ifdef CONFIG_SGI_IP27
-> > +	u8	hour;
-> > +	u8	min;
-> > +	u8	sec;
-> > +	u8	control;
-> > +	u8	year;
-> > +	u8	month;
-> > +	u8	date;
-> > +	u8	day;
-> > +#else
+On 3/27/19 8:56 PM, Roman Gushchin wrote:
+> Dan reported, that cleanup path in test_memcg_subtree_control()
+> triggers a static checker warning:
+>    ./tools/testing/selftests/cgroup/test_memcontrol.c:76 \
+>    test_memcg_subtree_control()
+>    error: uninitialized symbol 'child2'.
 > 
-> I'm not sure why the RTC driver has to know about that. Shouldn't your
-> accessors be fixing that?
+> Fix this by initializing child2 and parent2 variables and
+> split the cleanup path into few stages.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Fixes: 84092dbcf901 ("selftests: cgroup: add memory controller self-tests")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
 
-no, because the hardware is weird. RTC is connected to IOC3 byte bus and IOC3 is
-connected to PCI. With a correct readb for PCI bus access to RTC behind IOC3 is byte
-swapped.
 
-Thomas.
+ From and Signed-off don't match. Please fix it and resend the patch.
 
--- 
-SUSE Linux GmbH
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+thanks,
+-- Shuah
+
