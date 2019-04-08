@@ -2,106 +2,88 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B91C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3D21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E16A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfDHPEc (ORCPT
+        id S1727958AbfDHPEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:04:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727013AbfDHPEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:04:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 42928ACEE;
-        Mon,  8 Apr 2019 15:04:31 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 17:04:30 +0200
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Paolo Valente' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        lennart@poettering.net, mkoutny@suse.cz
-Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-Message-ID: <20190408150430.GB23021@linux-x5ow.site>
-References: <20190408143935.9062-1-paolo.valente@linaro.org>
- <20190408143935.9062-2-paolo.valente@linaro.org>
- <20190408144925.GA23021@linux-x5ow.site>
- <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+        Mon, 8 Apr 2019 11:04:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55050 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDHPEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:04:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 86BC530BB366;
+        Mon,  8 Apr 2019 15:04:39 +0000 (UTC)
+Received: from [10.43.17.46] (unknown [10.43.17.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D599C608CA;
+        Mon,  8 Apr 2019 15:04:38 +0000 (UTC)
+Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
+ filename $module/.rodata.cst{16,32}
+To:     sedat.dilek@gmail.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
+ <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com>
+ <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
+ <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com>
+ <863a33cf-0a1a-17af-0ea8-42e288f8a1fd@redhat.com>
+ <CA+icZUVvtLkNNor+9wQy1_bt=NfRAfJD9f_daqX2Da=EcdjAaA@mail.gmail.com>
+ <5c5c169d-3bad-9e34-8c56-bedca3e5ae08@redhat.com>
+ <CA+icZUUk8jhGqsu65A8oHFcqzrqNRon+riPff9aJu2UFLXL7wQ@mail.gmail.com>
+ <CA+icZUVy0-F7==ES2ar+0LumE3LTv8jye8LAz=DHAoDZKiyC5A@mail.gmail.com>
+From:   Denys Vlasenko <dvlasenk@redhat.com>
+Message-ID: <ceec77ac-28e5-5d2f-3ea9-ef132a35acc5@redhat.com>
+Date:   Mon, 8 Apr 2019 17:04:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+icZUVy0-F7==ES2ar+0LumE3LTv8jye8LAz=DHAoDZKiyC5A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 08 Apr 2019 15:04:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Cc Michal ]
-On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
+On 4/8/19 4:57 PM, Sedat Dilek wrote:
+> We have arch/x86/crypto/chacha-avx2-x86_64.S and
+> arch/x86/crypto/chacha-avx512vl-x86_64.S:
 > 
+> .rodata.cst32.CTR2BL
+> .rodata.cst32.CTR4BL
+> .rodata.cst32.CTR2BL
+> .rodata.cst32.CTR4BL
 > 
-> > Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
-> > 
-> > On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
-> >> From: Angelo Ruocco <angeloruocco90@gmail.com>
-> >> 
-> >> When bfq was merged into mainline, there were two I/O schedulers that
-> >> implemented the proportional-share policy: bfq for blk-mq and cfq for
-> >> legacy blk. bfq's interface files in the blkio/io controller have the
-> >> same names as cfq. But the cgroups interface doesn't allow two
-> >> entities to use the same name for their files, so for bfq we had to
-> >> prepend the "bfq" prefix to each of its files. However no legacy code
-> >> uses these modified file names. This naming also causes confusion, as,
-> >> e.g., in [1].
-> >> 
-> >> Now cfq has gone with legacy blk, so there is no need any longer for
-> >> these prefixes in (the never used) bfq names. In view of this fact, this
-> >> commit removes these prefixes, thereby enabling legacy code to truly
-> >> use the proportional share policy in blk-mq.
-> >> 
-> >> [1] https://github.com/systemd/systemd/issues/7057
-> > 
-> > Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
-> > Do you know what's using it and what breaks due to this conversion?
-> > 
+> ...and in arch/x86/crypto/sha256-avx2-asm.S and
+> arch/x86/crypto/sha512-avx2-asm.S:
 > 
-> Yep, but AFAIK, the problem is exactly the opposite: nobody uses these
-> names for the proportional-share policy, or wants to use these names.  I'm
-> CCing Lennart too, in case he has some improbable news on this.
+> .rodata.cst32.PSHUFFLE_BYTE_FLIP_MASK
 > 
-> So the idea is to align names to what people expect, possibly before
-> more confusion arises.
+> Correct?
 
-OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
-symlinks?
+You mean, we have duplicate section names.
 
-This way we can a) keep the old files and b) have them point to the new (a.k.a
-cfq style) files.
+Well, this brings me to my initial response -
+"Not sure how exactly this causes the error".
 
-Byte,
-	Johannes
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
+Duplicate section names are allowed by the linker.
+There is nothing wrong with that.
+
+The warnings you see come from some other tooling,
+which does not handle correctly object files with more
+than one section with the same name.
+
+(Having unique names is still preferable,
+it helps humans to more easily find where sections come from,
+and for potential future --gc-sections optimization).
