@@ -2,120 +2,134 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09266C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73873C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80FA20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F61120833
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwabJv1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfDHKW1 (ORCPT
+        id S1726582AbfDHKWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:22:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44740 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725947AbfDHKW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:22:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1621FADFB;
-        Mon,  8 Apr 2019 10:22:24 +0000 (UTC)
-Subject: Re: Possible bio merging breakage in mp bio rework
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@osandov.com>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>
-References: <59c19acf-999f-1911-b0b8-1a5cec8116c5@suse.com>
- <20190406001653.GA4805@ming.t460p>
- <eb586b8f-f8d4-f455-6203-4ceae2420274@suse.de>
- <20190408101903.GC19589@ming.t460p>
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b9a33021-bb4f-1f11-13c9-80a5d39e2004@suse.de>
-Date:   Mon, 8 Apr 2019 12:22:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 8 Apr 2019 06:22:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46006 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfDHKWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:22:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s15so15626987wra.12;
+        Mon, 08 Apr 2019 03:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=II/MsfRha9YtyfnMSzYYK9zpAFxrnUzG9JARyw86CmI=;
+        b=IwabJv1nlo3EPBlsdD2yZz2EpyR1VgN2pCCcP5H91JdqKf1n18fPJYJE/5b/DLAnyO
+         YTiIvSer9ALLsBPfwFX+rK/v8G7/4kl8ftETXyoFCXB/wtYM++sb8BigDYvQbLM8hQrD
+         aKAFGGK5J4mqIsJ8H1SHBhjfyuRuwtjmSqbCzJMv/zjmCVfmrRktl/QgUxrhbs61x+96
+         VxDrt5mo2gv55SVHk49XAM386LFwVc/nrBxlMqum+tJ3QD31i2xNzkL8KO5S3zigbhI5
+         eEDIujw9kyUr7uu3n47/o8L9lJ2Jr4YPqkeoYapQjLq11Sh8m82zBbQ2NMcKzH8yDMFi
+         RVUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=II/MsfRha9YtyfnMSzYYK9zpAFxrnUzG9JARyw86CmI=;
+        b=JKdzbybQQFSi827TFIHeMapgiA4lnBHuoFtbhLMTFOZotfhHYj45y9DroDPEg0Vy3Z
+         OMf64VcplpXL0QZG+k7PeZLaR3oQbYAFT6kD8i+Je03KU3f118DVuVPPjzFLwmy5tANq
+         p+3xHff3QU0+8yawaWu+Ou319Js0E93j3SxLpDb4WAdpagq7M7Nl1VfGIkohNJnGJNyG
+         8DUuVeyA//sCahD23u3T/j4tmvhXVvfpidTtvRSvZ2u/M4ZhhNLnsK3bYtm6bGRiyycz
+         MqxQPkAEg8SqmN3kaoD4bfTpirvw+Kz+FkWfAUeZzAOW9yqlqisE5Kenc0z7JLeoHagk
+         vYqw==
+X-Gm-Message-State: APjAAAUG8gZQJPoYfRBjZboogk3u1LkhKZuBAmzqxx69q34ss2poo7+J
+        tWY0RnKieIVMAsR0oqUFmP4=
+X-Google-Smtp-Source: APXvYqy1UcIjuf3hRWFQ9gqCAlvchUSWpy7XLFYx4YwlTwblvZTKZUllw665l8mEALi7vRSTRLhmpA==
+X-Received: by 2002:adf:e407:: with SMTP id g7mr10526495wrm.47.1554718970979;
+        Mon, 08 Apr 2019 03:22:50 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id o1sm11403927wmh.47.2019.04.08.03.22.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 03:22:50 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 12:22:49 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rtc: tegra: set range
+Message-ID: <20190408102249.GC6644@ulmo>
+References: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408101903.GC19589@ming.t460p>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
+Content-Disposition: inline
+In-Reply-To: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 12:19, Ming Lei wrote:
-> bio_add_page() is absolutely the fast path, and it is much more efficient
-> to apply the limit just once in the queue's .make_request_fn.
 
-You're right, this makes sense.
+--oJ71EGRlYNjSvfq7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-	Johannes
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
+On Sun, Apr 07, 2019 at 11:16:44PM +0200, Alexandre Belloni wrote:
+> The Tegra 20 RTC is a 32bit seconds counter (with an unused millisecond
+> counter).
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-tegra.c | 24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+> index c6b0a99aa3a9..3f93a1f7abb5 100644
+> --- a/drivers/rtc/rtc-tegra.c
+> +++ b/drivers/rtc/rtc-tegra.c
+> @@ -306,6 +306,13 @@ static int __init tegra_rtc_probe(struct platform_de=
+vice *pdev)
+> =20
+>  	info->tegra_rtc_irq =3D ret;
+> =20
+> +	info->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(info->rtc_dev))
+> +		return PTR_ERR(info->rtc_dev);
+> +
+> +	info->rtc_dev->ops =3D &tegra_rtc_ops;
+> +	info->rtc_dev->range_max =3D U32_MAX;
+
+The placement of this new block seems somewhat arbitrary, but either
+way:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--oJ71EGRlYNjSvfq7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyrIPUACgkQ3SOs138+
+s6EFHA//bcDrlv65Vh810bQ+bQqBQKmZg2VMLx1IKXABdzXeKleGTHMjVs+zvkeC
+zL+p1/6J+z8Oaq2uhCFuwdZG42ZFqGb59afSg3nLp0Sn6Dl5yNrYKmW5ZOO2FmW2
+oSw72M0WUR0B8E3yL7d8eFBYnLwEPk18hwdBjke9T71DiP6UB3q1XrD53vrqZHB/
+iJhThMJoiwnhkKa/XOEidPyr1qkP8dsVttND6iEuQBK0s+y/KK+X6AcMHDK1Ng5E
+tnby4q1fXHNb4avEHp0JIk7cCdHAM7NKnxbBza7gKe0UcytRWYChvigAuP6qStgR
+/QvNPaDkQy0QNq1j0+8yvFkq+gkmIjr5CUI08ev+3Q8AOZJDq1RM4/NKPpvwKIy9
+/J8rvlATzd7YTqXc4gM1T6r/rwGdbjjvTgvR6qWq/3NfDeK5rL0MXKsrGQkcgHsE
+JJhK+vE051ltQ4OZ7VjBFfyvFsQZ4Tc3AR/9Zl7z5m5+5IwukcZnn1P83RS7uOFL
+goZfATBFgtq2hUzRrIdlXLga0CQa1KZDx0jCribeEy4H1DdW6nFG4uJPFzKrcZHf
++gq875Wbp7of4h4pGeKs95aPwIXEyDNg05TX9EjFDc0oZUs4OXnQl4qK2WhLhNG3
+sd8uVIYu6IcEcW4ZmIGw/M5OZJEOjLcPi1ADA9DOz+3VYLXgSLU=
+=Pr/2
+-----END PGP SIGNATURE-----
+
+--oJ71EGRlYNjSvfq7--
