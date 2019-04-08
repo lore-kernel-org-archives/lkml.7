@@ -2,259 +2,337 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EA4C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB8BC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F00214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BA3214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554738395;
+	bh=8A5QHdE58c1jzfo4WlaHX/YRKVNy1mf+xVPx8nM1bm8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jxkIGWuG5zNXk/YIKtPbE9IVYWVqwMD9imG1Oxi3XbEeUNIucJVwC96MaUuSn6mMb
+	 FvvaHcABA9EthkvI+RAhKjhQsYIf6nq1pOO/zoxGT23vT4WnYh2LtwoeWhUY1tpTwP
+	 p/gfmWuY4qTSAZ2Q0c+geZK/oPDWSZk7uzv0WE58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfDHPqZ (ORCPT
+        id S1728820AbfDHPqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:46:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725983AbfDHPqY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:46:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38Fj6mY109283
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 11:46:22 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rr71fyf6c-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:46:21 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 8 Apr 2019 16:46:19 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 16:46:14 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38FkDeM30867608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 15:46:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30E6EB205F;
-        Mon,  8 Apr 2019 15:46:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3BABB2066;
-        Mon,  8 Apr 2019 15:46:12 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Apr 2019 15:46:12 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 117B516C1171; Mon,  8 Apr 2019 08:46:16 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 08:46:16 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
-Reply-To: paulmck@linux.ibm.com
-References: <20190402142816.GA13084@linux.ibm.com>
- <134026717.535.1554665176677.JavaMail.zimbra@efficios.com>
- <20190407193202.GA30934@localhost>
- <1632568795.549.1554669696728.JavaMail.zimbra@efficios.com>
- <20190407210718.GA6656@localhost>
- <20190408022728.GF14111@linux.ibm.com>
- <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
- <20190408142230.GJ14111@linux.ibm.com>
- <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040815-0068-0000-0000-000003B22805
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010890; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01186165; UDB=6.00621219; IPR=6.00966922;
- MB=3.00026346; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-08 15:46:18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040815-0069-0000-0000-00004815C977
-Message-Id: <20190408154616.GO14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080129
+        Mon, 8 Apr 2019 11:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725983AbfDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:46:33 -0400
+Received: from localhost.localdomain (unknown [218.0.233.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C456F21473;
+        Mon,  8 Apr 2019 15:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554738391;
+        bh=8A5QHdE58c1jzfo4WlaHX/YRKVNy1mf+xVPx8nM1bm8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HD0V+PeUCCobXMNe+GBwZFqC10A2G6o3QB9zP5e1iE4j7scdhm06Nr7BvT1X7L2eS
+         SNqITr6NBTwujP3ECxnKxVWUPL+MYrvcZtU+oYJBQvSF9wtxpEBiJ/uF4g9nJmz8kr
+         NbD8ovRu2AQv9A4VX7gaU2e7XrkDegAvhruaB5e4=
+From:   guoren@kernel.org
+To:     arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        ren_guo@c-sky.com
+Subject: [PATCH] csky: Support dynamic start physical address
+Date:   Mon,  8 Apr 2019 23:46:19 +0800
+Message-Id: <1554738379-5318-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
-> 
-> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
-> >> 
-> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
-> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
-> >> >> > 
-> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
-> >> >> > wrote:
-> >> >> > 
-> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
-> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> > >> 
-> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
-> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
-> >> >> > >> > 
-> >> >> > >> > [ . . . ]
-> >> >> > >> > 
-> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
-> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
-> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
-> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
-> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
-> >> >> > >> >> > > @@ -338,6 +338,10 @@
-> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
-> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
-> >> >> > >> >> > > +		. = ALIGN(8);						\
-> >> >> > >> >> > > +		__start___srcu_struct = .;				\
-> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
-> >> >> > >> >> > > +		__end___srcu_struct = .;				\
-> >> >> > >> >> > >  	}								\
-> >> >> > >> >> > 
-> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
-> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
-> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
-> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
-> >> >> > >> >> > of the dev branch.
-> >> >> > >> >> 
-> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
-> >> >> > >> >> work.
-> >> >> > >> >> 
-> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
-> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
-> >> >> > >> >> optimism?
-> >> >> > >> > 
-> >> >> > >> > And to answer the other question, in the case where I am suffering from
-> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
-> >> >> > >> > for the updated original commit thus far.
-> >> >> > >> > 
-> >> >> > >> > And may I have your Tested-by?
-> >> >> > >> 
-> >> >> > >> Just to confirm: does the cleanup performed in the modules going
-> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
-> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
-> >> >> > >> module unload ?
-> >> >> > >> 
-> >> >> > > 
-> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
-> >> >> > > responsibility of the module writer to prevent delays for all modules.
-> >> >> > 
-> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
-> >> >> > srcu domain within that module, I don't see how it would cause delays for
-> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
-> >> >> > am I missing ?
-> >> >> 
-> >> >> Yes you are right. I thought of this after I just sent my email. I think it
-> >> >> makes sense for srcu case to do and could avoid a class of bugs.
-> >> > 
-> >> > If there are call_srcu() callbacks outstanding, the module writer still
-> >> > needs the srcu_barrier() because otherwise callbacks arrive after
-> >> > the module text has gone, which will be disappoint the CPU when it
-> >> > tries fetching instructions that are no longer mapped.  If there are
-> >> > no call_srcu() callbacks from that module, then there is no need for
-> >> > srcu_barrier() either way.
-> >> > 
-> >> > So if an srcu_barrier() is needed, the module developer needs to
-> >> > supply it.
-> >> 
-> >> When you say "callbacks arrive after the module text has gone",
-> >> I think you assume that free_module() is invoked before the
-> >> MODULE_STATE_GOING notifiers are called. But it's done in the
-> >> opposite order: going notifiers are called first, and then
-> >> free_module() is invoked.
-> >> 
-> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
-> >> going notifier.
-> >> 
-> >> Or am I missing something ?
-> > 
-> > We do seem to be talking past each other.  ;-)
-> > 
-> > This has nothing to do with the order of events at module-unload time.
-> > 
-> > So please let me try again.
-> > 
-> > If a given srcu_struct in a module never has call_srcu() invoked, there
-> > is no need to invoke rcu_barrier() at any time, whether at module-unload
-> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
-> > for no good reason.
-> 
-> Not if we invoke srcu_barrier() for that specific domain. If
-> call_srcu was never invoked for a srcu domain, I don't see why
-> srcu_barrier() should be more expensive than a simple check that
-> the domain does not have any srcu work queued.
+From: Guo Ren <ren_guo@c-sky.com>
 
-But that simple check does involve a cache miss for each possible CPU (not
-just each online CPU), so it is non-trivial, especially on large systems.
+Before this patch csky-linux need CONFIG_RAM_BASE to determine start
+physical address. Now we use phys_offset variable to replace the macro
+of PHYS_OFFSET and we setup phys_offset with real physical address which
+is determined during startup in head.S.
 
-> > If a given srcu_struct in a module does have at least one call_srcu()
-> > invoked, it is already that module's responsibility to make sure that
-> > the code sticks around long enough for the callback to be invoked.
-> 
-> I understand that when users do explicit dynamic allocation/cleanup of
-> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
-> However, if they do static definition of srcu domains, it would be nice
-> if we can handle the barriers under the hood.
+With this patch we needn't re-compile kernel for different start
+physical address. ie: 0x0 / 0xc0000000 start physical address could use
+the same vmlinux, be care different start address must be 512MB aligned.
 
-All else being equal, of course.  But...
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/csky/abiv1/inc/abi/ckmmu.h     | 20 +++++++++++++++++++
+ arch/csky/abiv1/inc/abi/entry.h     | 19 ++++++++++++++++--
+ arch/csky/abiv2/inc/abi/ckmmu.h     | 20 +++++++++++++++++++
+ arch/csky/abiv2/inc/abi/entry.h     | 24 +++++++++++++++++++++--
+ arch/csky/include/asm/mmu_context.h |  4 ++--
+ arch/csky/include/asm/page.h        | 39 +++++++++++++++----------------------
+ arch/csky/kernel/setup.c            |  5 +++++
+ 7 files changed, 102 insertions(+), 29 deletions(-)
 
-> > This means that correct SRCU users that invoke call_srcu() already
-> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
-> > reasonable probability, now get a WARN_ON() at module-unload time, with
-> > the per-CPU state getting leaked.  Before this change, they would (also
-> > with reasonable probability) instead get an instruction-fetch fault when
-> > the SRCU callback was invoked after the completion of the module unload.
-> > Furthermore, in all cases where they would previously have gotten the
-> > instruction-fetch fault, they now get the WARN_ON(), like this:
-> > 
-> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
-> >		return; /* Forgot srcu_barrier(), so just leak it! */
-> > 
-> > So this change already represents an improvement in usability.
-> 
-> Considering that we can do a srcu_barrier() for the specific domain,
-> and that it should add no noticeable overhead if there is no queued
-> callbacks, I don't see a good reason for leaving the srcu_barrier
-> invocation to the user rather than implicitly doing it from the
-> module going notifier.
-
-Now, I could automatically add an indicator of whether or not a
-call_srcu() had happened, but then again, that would either add a
-call_srcu() scalability bottleneck or again require a scan of all possible
-CPUs...  to figure out if it was necessary to scan all possible CPUs.
-
-Or is scanning all possible CPUs down in the noise in this case?  Or
-am I missing a trick that would reduce the overhead?
-
-							Thanx, Paul
+diff --git a/arch/csky/abiv1/inc/abi/ckmmu.h b/arch/csky/abiv1/inc/abi/ckmmu.h
+index 3a00201..85339bd 100644
+--- a/arch/csky/abiv1/inc/abi/ckmmu.h
++++ b/arch/csky/abiv1/inc/abi/ckmmu.h
+@@ -40,6 +40,26 @@ static inline void write_mmu_entryhi(int value)
+ 	cpwcr("cpcr4", value);
+ }
+ 
++static inline unsigned long read_mmu_msa0(void)
++{
++	return cprcr("cpcr30");
++}
++
++static inline void write_mmu_msa0(unsigned long value)
++{
++	cpwcr("cpcr30", value);
++}
++
++static inline unsigned long read_mmu_msa1(void)
++{
++	return cprcr("cpcr31");
++}
++
++static inline void write_mmu_msa1(unsigned long value)
++{
++	cpwcr("cpcr31", value);
++}
++
+ /*
+  * TLB operations.
+  */
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index fa26461..1d66bcd 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -128,9 +128,24 @@
+ .endm
+ 
+ .macro SETUP_MMU rx
+-	lrw	\rx, PHYS_OFFSET | 0xe
++	/* Select MMU as co-processor */
++	cpseti	cp15
++
++	/*
++	 * cpcr30 format:
++	 * 31 - 29 | 28 - 4 | 3 | 2 | 1 | 0
++	 *   BA     Reserved  C   D   V
++	 */
++	cprcr	\rx, cpcr30
++	lsri	\rx, 28
++	lsli	\rx, 28
++	addi	\rx, 0xe
+ 	cpwcr	\rx, cpcr30
+-	lrw	\rx, (PHYS_OFFSET + 0x20000000) | 0xe
++
++	lsri	\rx, 28
++	addi	\rx, 2
++	lsli	\rx, 28
++	addi	\rx, 0xe
+ 	cpwcr	\rx, cpcr31
+ .endm
+ 
+diff --git a/arch/csky/abiv2/inc/abi/ckmmu.h b/arch/csky/abiv2/inc/abi/ckmmu.h
+index 97230ad..31d75e1 100644
+--- a/arch/csky/abiv2/inc/abi/ckmmu.h
++++ b/arch/csky/abiv2/inc/abi/ckmmu.h
+@@ -42,6 +42,26 @@ static inline void write_mmu_entryhi(int value)
+ 	mtcr("cr<4, 15>", value);
+ }
+ 
++static inline unsigned long read_mmu_msa0(void)
++{
++	return mfcr("cr<30, 15>");
++}
++
++static inline void write_mmu_msa0(unsigned long value)
++{
++	mtcr("cr<30, 15>", value);
++}
++
++static inline unsigned long read_mmu_msa1(void)
++{
++	return mfcr("cr<31, 15>");
++}
++
++static inline void write_mmu_msa1(unsigned long value)
++{
++	mtcr("cr<31, 15>", value);
++}
++
+ /*
+  * TLB operations.
+  */
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 31d0aa9..15ada63 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -143,9 +143,29 @@
+ .endm
+ 
+ .macro SETUP_MMU rx
+-	lrw	\rx, PHYS_OFFSET | 0xe
++	/* Check MMU on | off */
++	mfcr	\rx, cr18
++	btsti	\rx, 0
++	bt	1f
++	grs	\rx, 1f
++	br	2f
++1:
++	/*
++	 * cr<30, 15> format:
++	 * 31 - 29 | 28 - 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
++	 *   BA     Reserved  SH  WA  B   SO SEC  C   D   V
++	 */
++	mfcr	\rx, cr<30, 15>
++2:
++	lsri	\rx, 28
++	lsli	\rx, 28
++	addi	\rx, 0x1ce
+ 	mtcr	\rx, cr<30, 15>
+-	lrw	\rx, (PHYS_OFFSET + 0x20000000) | 0xe
++
++	lsri	\rx, 28
++	addi	\rx, 2
++	lsli	\rx, 28
++	addi	\rx, 0x1ce
+ 	mtcr	\rx, cr<31, 15>
+ .endm
+ 
+diff --git a/arch/csky/include/asm/mmu_context.h b/arch/csky/include/asm/mmu_context.h
+index b2905c0..c41f86b 100644
+--- a/arch/csky/include/asm/mmu_context.h
++++ b/arch/csky/include/asm/mmu_context.h
+@@ -17,7 +17,7 @@
+ static inline void tlbmiss_handler_setup_pgd(unsigned long pgd, bool kernel)
+ {
+ 	pgd -= PAGE_OFFSET;
+-	pgd += PHYS_OFFSET;
++	pgd += phys_offset;
+ 	pgd |= 1;
+ 	setup_pgd(pgd, kernel);
+ }
+@@ -29,7 +29,7 @@ static inline void tlbmiss_handler_setup_pgd(unsigned long pgd, bool kernel)
+ 
+ static inline unsigned long tlb_get_pgd(void)
+ {
+-	return ((get_pgd() - PHYS_OFFSET) & ~1) + PAGE_OFFSET;
++	return ((get_pgd() - phys_offset) & ~1) + PAGE_OFFSET;
+ }
+ 
+ #define cpu_context(cpu, mm)	((mm)->context.asid[cpu])
+diff --git a/arch/csky/include/asm/page.h b/arch/csky/include/asm/page.h
+index 73cf2bd..4ce3d5c 100644
+--- a/arch/csky/include/asm/page.h
++++ b/arch/csky/include/asm/page.h
+@@ -8,7 +8,7 @@
+ #include <linux/const.h>
+ 
+ /*
+- * PAGE_SHIFT determines the page size
++ * PAGE_SHIFT determines the page size: 4KB
+  */
+ #define PAGE_SHIFT	12
+ #define PAGE_SIZE	(_AC(1, UL) << PAGE_SHIFT)
+@@ -17,12 +17,18 @@
+ #define THREAD_MASK	(~(THREAD_SIZE - 1))
+ #define THREAD_SHIFT	(PAGE_SHIFT + 1)
+ 
++
+ /*
+- * NOTE: virtual isn't really correct, actually it should be the offset into the
+- * memory node, but we have no highmem, so that works for now.
+- * TODO: implement (fast) pfn<->pgdat_idx conversion functions, this makes lots
+- * of the shifts unnecessary.
++ * For C-SKY "User-space:Kernel-space" is "2GB:2GB" fixed by hardware and there
++ * are two segment registers (MSA0 + MSA1) to mapping 512MB + 512MB physical
++ * address region. We use them mapping kernel 1GB direct-map address area and
++ * for more than 1GB of memory we use highmem.
+  */
++#define PAGE_OFFSET	0x80000000
++#define SSEG_SIZE	0x20000000
++#define LOWMEM_LIMIT	(SSEG_SIZE * 2)
++
++#define PHYS_OFFSET_OFFSET (CONFIG_RAM_BASE & (SSEG_SIZE - 1))
+ 
+ #ifndef __ASSEMBLY__
+ 
+@@ -50,9 +56,6 @@ struct page;
+ 
+ struct vm_area_struct;
+ 
+-/*
+- * These are used to make use of C type-checking..
+- */
+ typedef struct { unsigned long pte_low; } pte_t;
+ #define pte_val(x)	((x).pte_low)
+ 
+@@ -69,18 +72,13 @@ typedef struct page *pgtable_t;
+ #define __pgd(x)	((pgd_t) { (x) })
+ #define __pgprot(x)	((pgprot_t) { (x) })
+ 
+-#endif /* !__ASSEMBLY__ */
+-
+-#define PHYS_OFFSET		(CONFIG_RAM_BASE & ~(LOWMEM_LIMIT - 1))
+-#define PHYS_OFFSET_OFFSET	(CONFIG_RAM_BASE & (LOWMEM_LIMIT - 1))
+-#define ARCH_PFN_OFFSET		PFN_DOWN(CONFIG_RAM_BASE)
++extern unsigned long phys_offset;
+ 
+-#define	PAGE_OFFSET	0x80000000
+-#define LOWMEM_LIMIT	0x40000000
++#define ARCH_PFN_OFFSET	PFN_DOWN(phys_offset + PHYS_OFFSET_OFFSET)
+ 
+-#define __pa(x)		((unsigned long)(x) - PAGE_OFFSET + PHYS_OFFSET)
++#define __pa(x)		((unsigned long)(x) - PAGE_OFFSET + phys_offset)
+ #define __va(x)		((void *)((unsigned long)(x) + PAGE_OFFSET - \
+-				  PHYS_OFFSET))
++				  phys_offset))
+ #define __pa_symbol(x)	__pa(RELOC_HIDE((unsigned long)(x), 0))
+ 
+ #define MAP_NR(x)	PFN_DOWN((unsigned long)(x) - PAGE_OFFSET - \
+@@ -90,15 +88,10 @@ typedef struct page *pgtable_t;
+ #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | VM_EXEC | \
+ 				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+ 
+-/*
+- * main RAM and kernel working space are coincident at 0x80000000, but to make
+- * life more interesting, there's also an uncached virtual shadow at 0xb0000000
+- * - these mappings are fixed in the MMU
+- */
+-
+ #define pfn_to_kaddr(x)	__va(PFN_PHYS(x))
+ 
+ #include <asm-generic/memory_model.h>
+ #include <asm-generic/getorder.h>
+ 
++#endif /* !__ASSEMBLY__ */
+ #endif /* __ASM_CSKY_PAGE_H */
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index dff8b89..c377194 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -142,11 +142,16 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ }
+ 
++unsigned long phys_offset;
++EXPORT_SYMBOL(phys_offset);
++
+ asmlinkage __visible void __init csky_start(unsigned int unused, void *param)
+ {
+ 	/* Clean up bss section */
+ 	memset(__bss_start, 0, __bss_stop - __bss_start);
+ 
++	phys_offset = read_mmu_msa0() & ~(SSEG_SIZE - 1);
++
+ 	pre_trap_init();
+ 	pre_mmu_init();
+ 
+-- 
+2.7.4
 
