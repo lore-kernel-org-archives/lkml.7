@@ -2,224 +2,122 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC1AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AF2C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743A720879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DB621841
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XMwu/OM3"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="CxRgh2PJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfDHVJx (ORCPT
+        id S1729027AbfDHVKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:09:53 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36730 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfDHVJw (ORCPT
+        Mon, 8 Apr 2019 17:10:05 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:5262 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfDHVKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:09:52 -0400
-Received: by mail-it1-f196.google.com with SMTP id y10so1536228itc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 14:09:52 -0700 (PDT)
+        Mon, 8 Apr 2019 17:10:05 -0400
+X-IronPort-AV: E=Sophos;i="5.60,326,1549954800"; 
+   d="scan'208";a="31064773"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 Apr 2019 14:10:04 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.105) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Mon, 8 Apr 2019 14:10:04 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mptKACXQhQgDUMyPlZCGnxz/gjpJxP41cGsb1cPqYVU=;
-        b=XMwu/OM3C30WusJ5IRy0a755wR5/hGFHKy+PE1wc+s8sN7UBIBHHwNQffv/DsuqUDh
-         gWVLhyCeqFQMMTcvJQipnqLEhmGLuujc4fWgfQZSOBYqoKAAmwMdHqTGf4nzayA8Gebt
-         D3UT5auR8UoaTHPmfRftp7sXiC41DoJUWuoHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mptKACXQhQgDUMyPlZCGnxz/gjpJxP41cGsb1cPqYVU=;
-        b=NtAlzd287ya/pTLnr8m68BbfnAtLyVaXE0PQP2TJmnwXuRIiYT8m9V8rxhCj98N529
-         GyJ8WbFALAT3/2NL7rnYTHztcncJbjKnGxaWivJaQ4Q2jg/ut/0z9OshxW0KnGSM+6Sh
-         h/2VjBkEQ2HfBnpqWwAo5GjPtO7NBHnCluRQxoi7VPqVNE+iwokHPHUZDqjHtu1xez6+
-         ENwS+IwH0eEw8VSX47lGTZtmtwYOSDPCP1XuJeWfAVmDxtd/ZEAEQ+wLMNwnC73B3Sf5
-         IcRR4Q//LJ8mDxulZJm/FPg76f6oKpDwXUJD6/yhSVrrVHa6Yxl+dHpenilD8Gwsh1NX
-         Cnvg==
-X-Gm-Message-State: APjAAAUUQOeKxG1ssPiq3+XZPoI3241QOVzfnki2UDWOEYQhd1WrbuD7
-        /ApT9uOFI3AZcAdEgcE0mHo+m87FSn5TFQ==
-X-Google-Smtp-Source: APXvYqyjQd2bHKrXkGFwW5NyekIFO41yE1xnVCvh3pa7GXrAlJCXt96QQmsCBUWrkmHYNMbW/XV1DQ==
-X-Received: by 2002:a02:6553:: with SMTP id u80mr22998491jab.51.1554757791468;
-        Mon, 08 Apr 2019 14:09:51 -0700 (PDT)
-Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:3175:8c2d:44b6:cfea])
-        by smtp.gmail.com with ESMTPSA id e27sm13339122ioc.14.2019.04.08.14.09.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Apr 2019 14:09:50 -0700 (PDT)
-From:   Tim Wawrzynczak <twawrzynczak@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Subject: [PATCH v4] platform/chrome: mfd/cros_ec_debugfs: Add debugfs entry to retrieve EC uptime.
-Date:   Mon,  8 Apr 2019 15:09:47 -0600
-Message-Id: <20190408210947.150095-1-twawrzynczak@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327182040.112651-1-twawrzynczak@chromium.org>
-References: <20190327182040.112651-1-twawrzynczak@chromium.org>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OMnXaO79Wm2nA4VJfkULzZngG7rPbDIzRah2uVI7Iuk=;
+ b=CxRgh2PJhQfqbVf8GMTzxOZfb3FV70uT8JKSEoYC4WtoafNFEFEOmlKV0Zl6lkr82+Yfgw631UbvmEgRKOH2hus9AxDG4+yW1JqtQjdXzFKj+IjYJf8iPvrzMn0xwlDCMk0L+oa806KuldGz+ea+6WLl+o2QlwYjkpwI/GMl4s8=
+Received: from MWHPR11MB1373.namprd11.prod.outlook.com (10.169.234.7) by
+ MWHPR11MB1983.namprd11.prod.outlook.com (10.175.54.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Mon, 8 Apr 2019 21:10:01 +0000
+Received: from MWHPR11MB1373.namprd11.prod.outlook.com
+ ([fe80::583a:f4d8:147c:549]) by MWHPR11MB1373.namprd11.prod.outlook.com
+ ([fe80::583a:f4d8:147c:549%5]) with mapi id 15.20.1771.016; Mon, 8 Apr 2019
+ 21:10:01 +0000
+From:   <Adham.Abozaeid@microchip.com>
+To:     <hofrat@osadl.org>
+CC:     <Ajay.Kathat@microchip.com>, <gregkh@linuxfoundation.org>,
+        <linux-wireless@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] staging: wilc1000: give usleep_range a range
+Thread-Topic: [PATCH RFC] staging: wilc1000: give usleep_range a range
+Thread-Index: AQHU7HE8koeh5e9EOkuq/fEUQd8KZ6YyxfUA
+Date:   Mon, 8 Apr 2019 21:10:00 +0000
+Message-ID: <d38b17d8-5b0f-5b5e-2933-0626700e8546@microchip.com>
+References: <1554552067-15421-1-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1554552067-15421-1-git-send-email-hofrat@osadl.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [198.175.253.81]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+x-clientproxiedby: BYAPR02CA0008.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::21) To MWHPR11MB1373.namprd11.prod.outlook.com
+ (2603:10b6:300:24::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Adham.Abozaeid@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6144131b-7c8d-4c12-06fa-08d6bc668fd7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR11MB1983;
+x-ms-traffictypediagnostic: MWHPR11MB1983:
+x-microsoft-antispam-prvs: <MWHPR11MB198355FBDC37E9F10713E1578D2C0@MWHPR11MB1983.namprd11.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(366004)(346002)(136003)(189003)(199004)(36756003)(4326008)(26005)(8676002)(446003)(53546011)(6506007)(386003)(64126003)(5660300002)(305945005)(97736004)(3846002)(106356001)(71190400001)(31686004)(6116002)(11346002)(71200400001)(68736007)(102836004)(25786009)(486006)(99286004)(52116002)(476003)(105586002)(86362001)(31696002)(6436002)(7736002)(53936002)(6512007)(186003)(65806001)(229853002)(14444005)(6246003)(316002)(478600001)(72206003)(81166006)(65956001)(14454004)(66066001)(2616005)(6916009)(6486002)(256004)(65826007)(76176011)(2906002)(58126008)(54906003)(81156014)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1983;H:MWHPR11MB1373.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: onpMLBL4CIVLTMQjHLK2EiEkN7Svb7G6WsCM5eoCM99ds7Fjk5O69EfuqpkDgHxcRyIKrhxS99uV2exmVzm75IJHUQSbVxAqmSnVixtu+VWbphTLRYEOyyaAOJ8C8pKta7DGYWMWZOoxbiqrIWdn3mGZU/fcq22wMjSBcKW9CQA0yHtDbNlBovwduid2dwDHWc1mNhmRnaZiU9hYx3Lr8g8qHW8epyzXLwYuqB1yCuJmyHvys6dcw/ObpiX4WE94tQemPMhtry9rmi8/+pN+SqP7pFj9l//wNZwg7omf83kb4DBv4Uc87Ad6phhFLxOI+azVYMv29Q+A928jNT5BBcMN++kU5SaBgIK5I/ROx2BfeZfHhYBT6oXmb+Bc3vQFnM+TkIXAOPuAckY6qJErUeUFsZA23Wr8aIJg3KrqCtQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5BFE0523E5B1E14398BFCE5E7F576BFA@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6144131b-7c8d-4c12-06fa-08d6bc668fd7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 21:10:00.9116
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1983
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new debugfs entry 'uptime' is being made available to userspace so that
-a userspace daemon can synchronize EC logs with host time.
-
-Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
----
-Enric, AFAIK only the cros_ec supports the 'uptime' command for now.
-And yes, the file does need to be seekable; the userspace daemon that
-consumes the file keeps the file open and seeks back to the beginning
-to get the latest uptime value.
-Based on your second response to v3, I kept the separate 'create_uptime'
-function b/c of the logic for checking support for the uptime command.
-Let me know if you'd like me to move all of that logic into _probe.
-
-Changelist from v3:
- 1) Don't check return values of debugfs_* functions.
- 2) Only expose 'uptime' file if EC supports it.
----
- Documentation/ABI/testing/debugfs-cros-ec | 10 +++
- drivers/platform/chrome/cros_ec_debugfs.c | 78 +++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
-
-diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
-new file mode 100644
-index 000000000000..24b781c67a4c
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-cros-ec
-@@ -0,0 +1,10 @@
-+What:		/sys/kernel/debug/cros_ec/uptime
-+Date:		March 2019
-+KernelVersion:	5.1
-+Description:
-+		Read-only.
-+		Reads the EC's current uptime information
-+		(using EC_CMD_GET_UPTIME_INFO) and prints
-+		time_since_ec_boot_ms into the file.
-+		This is used for synchronizing AP host time
-+		with the cros_ec log.
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index 71308766e891..226545a2150b 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -201,6 +201,50 @@ static int cros_ec_console_log_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static int cros_ec_get_uptime(struct cros_ec_device *ec_dev, u32 *uptime)
-+{
-+	struct {
-+		struct cros_ec_command msg;
-+		struct ec_response_uptime_info resp;
-+	} __packed ec_buf;
-+	struct ec_response_uptime_info *resp;
-+	struct cros_ec_command *msg;
-+
-+	msg = &ec_buf.msg;
-+	resp = (struct ec_response_uptime_info *)msg->data;
-+
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->version = 0;
-+	msg->insize = sizeof(*resp);
-+	msg->outsize = 0;
-+
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	*uptime = resp->time_since_ec_boot_ms;
-+	return 0;
-+}
-+
-+static ssize_t cros_ec_uptime_read(struct file *file,
-+				   char __user *user_buf,
-+				   size_t count,
-+				   loff_t *ppos)
-+{
-+	struct cros_ec_debugfs *debug_info = file->private_data;
-+	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
-+	char read_buf[32];
-+	int ret;
-+	u32 uptime;
-+
-+	ret = cros_ec_get_uptime(ec_dev, &uptime);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = scnprintf(read_buf, sizeof(read_buf), "%u\n", uptime);
-+	return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
-+}
-+
- static ssize_t cros_ec_pdinfo_read(struct file *file,
- 				   char __user *user_buf,
- 				   size_t count,
-@@ -269,6 +313,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
- 	.llseek = default_llseek,
- };
- 
-+const struct file_operations cros_ec_uptime_fops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = cros_ec_uptime_read,
-+	.llseek = default_llseek,
-+};
-+
- static int ec_read_version_supported(struct cros_ec_dev *ec)
- {
- 	struct ec_params_get_cmd_versions_v1 *params;
-@@ -413,6 +464,29 @@ static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
- 	return 0;
- }
- 
-+static int cros_ec_create_uptime(struct cros_ec_debugfs *debug_info)
-+{
-+	struct cros_ec_debugfs *debug_info = file->private_data;
-+	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
-+	u32 uptime;
-+	int ret;
-+
-+	/*
-+	 * If the EC does not support the uptime command, which is
-+	 * indicated by xfer_status() returning -EINVAL, then no
-+	 * debugfs entry will be created.
-+	 */
-+	ret = cros_ec_get_uptime(ec_dev, &uptime);
-+
-+	if (ret == -EINVAL)
-+		return supported;
-+
-+	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
-+			&cros_ec_uptime_fops);
-+
-+	return 0;
-+}
-+
- static int cros_ec_debugfs_probe(struct platform_device *pd)
- {
- 	struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
-@@ -442,6 +516,10 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 	if (ret)
- 		goto remove_log;
- 
-+	ret = cros_ec_create_uptime(debug_info);
-+	if (ret)
-+		goto remove_log;
-+
- 	ec->debug_info = debug_info;
- 
- 	dev_set_drvdata(&pd->dev, ec);
--- 
-2.20.1
-
+SGkgTmljaG9sYXMNCg0KT24gNC82LzE5IDU6MDEgQU0sIE5pY2hvbGFzIE1jIEd1aXJlIHdyb3Rl
+Og0KPiBFeHRlcm5hbCBFLU1haWwNCj4NCj4NCj4gU29tZW9uZSB0aGF0IGtub3dzIHRoZSBtb3Rp
+dmF0aW9uIGZvciBzZXR0aW5nIHRoZSB0aW1lIHRvIDIgbWlsbGlzZWNvbmQNCj4gbWlnaHQgbmVl
+ZCB0byBjaGVjayBpZiB0aGUgMiBtaWxsaXNlY29uZHMgd2hlcmUgc2VlbiBhcyB0b2xsZXJhYmxl
+IG1heCBvcg0KPiBtaW4gLSBJJ20gYXNzdW1pbmcgaXQgd2FzIHRoZSBtaW4gc28gZXh0ZW5kaW5n
+Lg0KDQoyIG1zZWMgaXMgdGhlIHRpbWUgdGhlIGNoaXAgdGFrZXMgdG8gd2FrZSB1cCBmcm9tIHNs
+ZWVwLg0KDQpJbmNyZWFzaW5nIHRoZSBtYXhpbXVtIHRvIDUgbXNlYyB3aWxsIGltcGFjdCB0aGUg
+dGhyb3VnaHB1dCBzaW5jZSB0aGlzIGNhbGwgaXMgb24gdGhlIHRyYW5zbWl0IHBhdGguDQoNCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93aWxjMTAwMC93aWxjX3dsYW4uYyBiL2RyaXZl
+cnMvc3RhZ2luZy93aWxjMTAwMC93aWxjX3dsYW4uYw0KPiBpbmRleCBjMjM4OTY5Li40MmRhNTMz
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2lsYzEwMDAvd2lsY193bGFuLmMNCj4g
+KysrIGIvZHJpdmVycy9zdGFnaW5nL3dpbGMxMDAwL3dpbGNfd2xhbi5jDQo+IEBAIC00MDgsNyAr
+NDA4LDcgQEAgdm9pZCBjaGlwX3dha2V1cChzdHJ1Y3Qgd2lsYyAqd2lsYykNCj4gIAkJCXdpbGMt
+PmhpZl9mdW5jLT5oaWZfd3JpdGVfcmVnKHdpbGMsIDEsIHJlZyAmIH5CSVQoMSkpOw0KPiAgDQo+
+ICAJCQlkbyB7DQo+IC0JCQkJdXNsZWVwX3JhbmdlKDIgKiAxMDAwLCAyICogMTAwMCk7DQo+ICsJ
+CQkJdXNsZWVwX3JhbmdlKDIgKiAxMDAwLCA1ICogMTAwMCk7DQo+ICAJCQkJd2lsY19nZXRfY2hp
+cGlkKHdpbGMsIHRydWUpOw0KPiAgCQkJfSB3aGlsZSAod2lsY19nZXRfY2hpcGlkKHdpbGMsIHRy
+dWUpID09IDApOw0KPiAgCQl9IHdoaWxlICh3aWxjX2dldF9jaGlwaWQod2lsYywgdHJ1ZSkgPT0g
+MCk7DQo+IEBAIC00MjMsNyArNDIzLDcgQEAgdm9pZCBjaGlwX3dha2V1cChzdHJ1Y3Qgd2lsYyAq
+d2lsYykNCj4gIAkJCQkJCSAgICAgJmNsa19zdGF0dXNfcmVnKTsNCj4gIA0KPiAgCQkJd2hpbGUg
+KChjbGtfc3RhdHVzX3JlZyAmIDB4MSkgPT0gMCkgew0KPiAtCQkJCXVzbGVlcF9yYW5nZSgyICog
+MTAwMCwgMiAqIDEwMDApOw0KPiArCQkJCXVzbGVlcF9yYW5nZSgyICogMTAwMCwgNSAqIDEwMDAp
+Ow0KPiAgDQo+ICAJCQkJd2lsYy0+aGlmX2Z1bmMtPmhpZl9yZWFkX3JlZyh3aWxjLCAweGYxLA0K
+PiAgCQkJCQkJCSAgICAgJmNsa19zdGF0dXNfcmVnKTsNCg0KDQpUaGFua3MsDQoNCkFkaGFtDQoN
+Cg==
