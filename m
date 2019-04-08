@@ -2,139 +2,122 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF0CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FDEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9235820857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B71C20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 02:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfDHCaW (ORCPT
+        id S1726591AbfDHCbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 22:30:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726412AbfDHCaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 22:30:21 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x382TDEU138324
-        for <linux-kernel@vger.kernel.org>; Sun, 7 Apr 2019 22:30:20 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rqtexxk5y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 22:30:20 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 8 Apr 2019 03:30:19 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 03:30:15 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x382UEdf19464312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 02:30:14 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E125B2064;
-        Mon,  8 Apr 2019 02:30:14 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C115B205F;
-        Mon,  8 Apr 2019 02:30:14 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.136.16])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Apr 2019 02:30:14 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CE65516C36AE; Sun,  7 Apr 2019 19:30:15 -0700 (PDT)
-Date:   Sun, 7 Apr 2019 19:30:15 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        kernel-team@android.com, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2] srcu: Remove unused vmlinux srcu linker entries
-Reply-To: paulmck@linux.ibm.com
-References: <20190408004719.178484-1-joel@joelfernandes.org>
+        Sun, 7 Apr 2019 22:31:51 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42008 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726510AbfDHCbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 22:31:51 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 92ACEB5C83C009E88F9C;
+        Mon,  8 Apr 2019 10:31:49 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
+ 10:31:48 +0800
+Subject: Re: [PATCH v2 0/2] iommu/arm-smmu-v3: make sure the kdump kernel can
+ work well when smmu is enabled
+To:     Will Deacon <will.deacon@arm.com>
+References: <20190318131243.20716-1-thunder.leizhen@huawei.com>
+ <20190404153031.GE27558@fuggles.cambridge.arm.com>
+CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5CAAB293.3080600@huawei.com>
+Date:   Mon, 8 Apr 2019 10:31:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408004719.178484-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040802-2213-0000-0000-000003733292
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010887; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01185902; UDB=6.00621059; IPR=6.00966657;
- MB=3.00026334; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-08 02:30:18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040802-2214-0000-0000-00005DF14ECB
-Message-Id: <20190408023015.GH14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080021
+In-Reply-To: <20190404153031.GE27558@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 07, 2019 at 08:47:19PM -0400, Joel Fernandes (Google) wrote:
-> The SRCU for modules optimization (commit title "srcu: Allocate per-CPU
-> data for DEFINE_SRCU() in modules") introduced vmlinux linker entries
-> which is unused since it applies only to the built-in vmlinux. So remove
-> it to prevent any space usage due to the 8 byte alignment it added.
-> vmlinux.lds.h has no effect on module loading and is not used for
-> building the module object, so the changes were not needed in the first
-> place since the optimization is specific to modules.
-> 
-> Tested with SRCU torture_type and rcutorture. Put prints in module
-> loader to confirm it is able to find and initialize the srcu structures.
-> 
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: kernel-team@android.com
-> Cc: paulmck@linux.vnet.ibm.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Hi Will,
 
-Queued, thank you, Joel!
+On 2019/4/4 23:30, Will Deacon wrote:
+> Hi Zhen Lei,
+> 
+> On Mon, Mar 18, 2019 at 09:12:41PM +0800, Zhen Lei wrote:
+>> v1 --> v2:
+>> 1. Drop part2. Now, we only use the SMMUv3 hardware feature STE.config=0b000
+>> (Report abort to device, no event recorded) to suppress the event messages
+>> caused by the unexpected devices.
+>> 2. rewrite the patch description.
+> 
+> This issue came up a while back:
+> 
+> https://lore.kernel.org/linux-pci/20180302103032.GB19323@arm.com/
+> 
+> and I'd still prefer to solve it using the disable_bypass logic which we
+> already have. Something along the lines of the diff below?
 
-							Thanx, Paul
+Yes, my patches also use disable_bypass=1(set ste.config=0b000). If
+SMMU_IDR0.ST_LEVEL=0(Linear Stream table supported), then all STE entries
+are allocated and initialized(set ste.config=0b000). But if SMMU_IDR0.ST_LEVEL=1
+(2-level Stream Table), we only allocated and initialized the first level tables,
+but leave level 2 tables dynamic allocated. That means, C_BAD_STREAMID(eventid=0x2)
+will be reported, if an unexpeted device access memory without reinitialized in
+kdump kernel. So my patches allocated a dummy level 2 table(STE table), and make
+all level 1 table entries pointer to it in advance. That means abort all unexpected
+devices memory access base this dummy STE table. When an expected device(need to be
+used in kdump kernel) attached, we will allocate a new level 2 table(STE table)
+accordingly, but keep others still pointer to the dummy STE table.
 
-> ---
-> v1->v2: Added more context to change log.
+
 > 
->  include/asm-generic/vmlinux.lds.h | 4 ----
->  1 file changed, 4 deletions(-)
+> We're relying on the DMA API not subsequently requesting a passthrough
+> domain, but it should only do that if you've configured your crashkernel
+> to do so.
 > 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index c2d919a1566e..f8f6f04c4453 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -338,10 +338,6 @@
->  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
->  		__stop___tracepoints_ptrs = .;				\
->  		*(__tracepoints_strings)/* Tracepoints: strings */	\
-> -		. = ALIGN(8);						\
-> -		__start___srcu_struct = .;				\
-> -		*(___srcu_struct_ptrs)					\
-> -		__end___srcu_struct = .;				\
->  	}								\
->  									\
->  	.rodata1          : AT(ADDR(.rodata1) - LOAD_OFFSET) {		\
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
+> Will
 > 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d3880010c6cf..91b8f3b2ee25 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2454,13 +2454,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+>  	/* Clear CR0 and sync (disables SMMU and queue processing) */
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
+>  	if (reg & CR0_SMMUEN) {
+> -		if (is_kdump_kernel()) {
+> -			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+> -			arm_smmu_device_disable(smmu);
+> -			return -EBUSY;
+> -		}
+> -
+>  		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
+> +		WARN_ON(is_kdump_kernel() && !disable_bypass);
+> +		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+>  	}
+>  
+>  	ret = arm_smmu_device_disable(smmu);
+> 
+> .
+> 
+
+-- 
+Thanks!
+BestRegards
 
