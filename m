@@ -2,149 +2,97 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10892C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51CDC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C72218E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="epfTus88"
+	by mail.kernel.org (Postfix) with ESMTP id B9D4C2147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDHOBc (ORCPT
+        id S1726939AbfDHOC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:01:32 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38698 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfDHOBc (ORCPT
+        Mon, 8 Apr 2019 10:02:29 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39837 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfDHOC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:01:32 -0400
-Received: by mail-yw1-f65.google.com with SMTP id m207so4950145ywd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=87ry1+exZi+/r/H1mx0oaRyz2ApizjtVLTtMVs6O4KM=;
-        b=epfTus88c4eRGhAeKPB+w0UBih0X5+8GOVPdjdeDrOIuawJkAra876VswUDkPrzXrF
-         HZTNiUGKFjHK6EliBB7LfVnu7J0YbJ4gRjnRJw9sZn4eyu6XtfKYm1rQM10dUOk5SUhK
-         qFOgKLY0E/90a+l+opyE6j2jJpUCsoihkBrcw43HRL5UwF4znQ4fQnXsvdP5SOy/tS8S
-         NiITnNxXRlSHZZp7KB4R4sdBaEaWcaIX3eAv0UYF9kxSw2bHw+xwXYeNwL+1usE2pRMP
-         z6ybCG6ck+RDO66DAUGOPFouG/rkKzWIZU7wogBnKXOAYFkI7XQG3JWkKpT/wTTKrjPj
-         X2SQ==
+        Mon, 8 Apr 2019 10:02:29 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t28so15484808qte.6;
+        Mon, 08 Apr 2019 07:02:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=87ry1+exZi+/r/H1mx0oaRyz2ApizjtVLTtMVs6O4KM=;
-        b=EH7HKvqGx+9ZSftSMgXaSUijwX5n7D7C4yVNO5mWKHM0udNFBvHfkzAbZWOT2rZ6O2
-         kClHqlKhjuG5fimP4b8Vo2G966mA08IFovxMSFpVBP/hwRJYblIQ+Noo4q/8jgiG93ph
-         aVsoMdwWJC7eVHrAoCcJ06CBaA/swv7qhaah5YK+8t3bNCD7lwcAXzKsnj2H6kUZGIq0
-         Z3blKZjFTLZCVSxhl92GIp7q+5qbuYbvCjdjwXj4K4QAVUuhcot6KaKVYYOeaMq+uHQT
-         4Q+Oq57zebIjQqpBBb2MDw1npetkC/xhtlzA28nqTYWaRAdeyyIPOrE27q9gHiOVxuFW
-         JMlQ==
-X-Gm-Message-State: APjAAAVO504LoPtzqv8Ky83x7D5Km4wQW2QM6GC94FDUFqLQVN+g+gs3
-        cmF01mqcbrjnQK8+8ZOpKjVsag==
-X-Google-Smtp-Source: APXvYqwV60OGZXfXmQa9eBA+1B3IhacLaxH+kmOW6+TFCdnaJ58QyKiI6bsfa/3fbPi/PhIPcFpIDA==
-X-Received: by 2002:a81:52c2:: with SMTP id g185mr24177643ywb.386.1554732090855;
-        Mon, 08 Apr 2019 07:01:30 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li931-65.members.linode.com. [45.56.113.65])
-        by smtp.gmail.com with ESMTPSA id p3sm2698232ywd.94.2019.04.08.07.01.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 07:01:29 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 22:01:15 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mathieu.poirier@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Message-ID: <20190408140115.GA6541@leoy-ThinkPad-X240s>
-References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-2-leo.yan@linaro.org>
- <b661edd2-5b99-f8f7-b5a5-8e4497043087@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5yuKN26rYg6l+QIW3rEeREcNG5bzTh6MchTpVd+Fy9w=;
+        b=NOLpfUSVt45L6UfqBhsOFxPWVq53x6NTbFWwd+XE7IFbXuouAXubM0K6Ow2LPAoy73
+         VSQjpFzKQntXUBoSI9FUahKNGMZhHZqyZEzsfcnCQXLh1+nSwIW2GzjJFuBb1gGbT4k4
+         UKfacVMoAKxZcNqepQn/l5rnOO06nMNrI7eGY0cgP7qKRVzHYXSDS/uE0qUoZUkZX9pa
+         03NjWbEl0Oo2iUJcqws0/gy2tUJRs5SKWaFHQ6t36vWwQQDtE8nKNAewZsIjmEgp8pLn
+         akRTHOeX62maYQzK8IYJVrODIpZSykpHDtqJfBzL+Kq25F/reerm07UK5FTTbpmTEVxy
+         c+sg==
+X-Gm-Message-State: APjAAAXLJ7yR56So+0GtvEGtquP8QhpmaI2aWRqXi9WvaZ+eV5R/TBxY
+        gEzeCl9vXt+zMN9SBmpDFX+KvWlWoA17zDEgPHc=
+X-Google-Smtp-Source: APXvYqzTA87jgwpL66Wb5dUEQW8CRB0gSz1o58R7QIJssUUEt60fLdlTxutLd/VVNvBDOx5rppp+3WJpkdafnF4mmf8=
+X-Received: by 2002:a0c:e014:: with SMTP id j20mr23307167qvk.172.1554732148079;
+ Mon, 08 Apr 2019 07:02:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b661edd2-5b99-f8f7-b5a5-8e4497043087@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190407140741.GE7480@piout.net> <20190408085812.db187b4a6f8ffc76d3d5ebdc@ao2.it>
+In-Reply-To: <20190408085812.db187b4a6f8ffc76d3d5ebdc@ao2.it>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 8 Apr 2019 16:02:11 +0200
+Message-ID: <CAK8P3a0TKUQC7GkYsWrJGFaRsvK5AQjPn74AnkRcPioXUFef-Q@mail.gmail.com>
+Subject: Re: Removing pcap? (EZX support in mainline linux)
+To:     Antonio Ospite <ao2@ao2.it>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Harald Welte <laforge@gnumonks.org>, linux-rtc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Mon, Apr 8, 2019 at 8:58 AM Antonio Ospite <ao2@ao2.it> wrote:
+> On Sun, 7 Apr 2019 16:07:41 +0200
+> Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+> adding Robert to CC as he is listed as the current maintainer of
+> ARM/EZX SMARTPHONES in the MAINTAINERS file.
+>
+> > I've had a look at the PCAP RTC driver because I'm removing a few
+> > deprecated APIs. While doing so, I've discovered that the driver has
+> > never worked properly because PCAP_RTC_TOD_MASK and PCAP_RTC_DAY_MASK
+> > are both missing a bit so every day would roll over at 18:12:15 and the
+> > whole the date would roll over in 2014.
+> >
+> > I discussed with Arnd about 59ee93a528b9 ("ARM: pxa: remove irq_to_gpio
+> > from ezx-pcap driver") and it seems the whole EZX support has been
+> > broken for a while.
+> >
+>
+> As Harald said in another message I tried taking over OpenEZX for a
+> while, but eventually lost interest.
+>
+> JFTR some parts of the project has been backed up here:
+> https://gitlab.com/openezx
+>
+> I should also have a git backup of the wiki somewhere.
+>
+> > Is it worth fixing the RTC driver or could I remove it?
+> >
+>
+> I am not aware of any active user but I'd leave the final word to
+> Robert, IIRC he received some EZX hardware "recently".
+>
+> FWIW I think EZX code can be removed if it is a maintenance burden for
+> anyone.
 
-On Mon, Apr 08, 2019 at 11:44:56AM +0100, Suzuki K Poulose wrote:
-> On 04/06/2019 12:21 PM, Leo Yan wrote:
-> > CoreSight uses below bindings for replicator:
-> > 
-> >    Static replicator, aka. non-configurable replicator:
-> >      "arm,coresight-replicator";
-> > 
-> >    Dynamic replicator, aka. configurable replicator:
-> >      "arm,coresight-dynamic-replicator", "arm,primecell";
-> > 
-> > The compatible string "arm,coresight-replicator" is not an explicit
-> > naming to express the replicator is 'static'.  To unify the naming
-> > convention, this patch introduces a new compatible string
-> > "arm,coresight-static-replicator" for the static replicator; the
-> > compatible string "arm,coresight-replicator" is still kept thus we
-> > can support the old DT binding, but tag it as obsolete and suggest
-> > to use the new compatible string.
-> > 
-> > As result CoreSight replicator have below bindings:
-> > 
-> >    Static replicator:
-> >      "arm,coresight-replicator"; (obsolete)
-> >      "arm,coresight-static-replicator";
-> > 
-> >    Dynamic replicator:
-> >      "arm,coresight-dynamic-replicator", "arm,primecell";
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >   Documentation/devicetree/bindings/arm/coresight.txt | 8 ++++++--
-> >   1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > index f8aff65ab921..f8f794869af2 100644
-> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > @@ -69,7 +69,11 @@ its hardware characteristcs.
-> >   	* compatible: Currently supported value is (note the absence of the
-> >   	  AMBA markee):
-> > -		- "arm,coresight-replicator"
-> > +		- Coresight Non-configurable Replicator, the compatible string
-> > +		  "arm,coresight-replicator" is obsolete, keep it to support
-> 
-> To make it more obvious : s/obsolete/OBSOLETE/
-> 
-> > +		  the old DT bindings:
-> > +			"arm,coresight-replicator";
-> > +			"arm,coresight-static-replicator";
-> 
-> nit: I would re-order the compatible strings to show the precedence of
-> choice.
-> 
-> e.g,
-> 	- CoreSight non-configurable Replicator
-> 		"arm,coresight-static-replicator";
-> 		"arm,coresight-replicator"; (OBSOLETE. For
-> 			backward compatibility. Will be removed )
+I would prefer if we could either keep or remove all of the ezx code, but not
+just remove a particular driver. Removing it all now would let us skip that
+discussion the next time someone has a problem with another device driver
+for it.
 
-The suggestion looks good to me since it's neat.  Will do it.
-
-> Also, please could we put a warning in the driver when we encounter it
-> and request to update it ?
-
-Will do.
-
-Thanks for reviewing!
-Leo Yan
+      Arnd
