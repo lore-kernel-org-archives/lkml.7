@@ -2,228 +2,164 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457CBC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A3C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152B821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E2321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKMeJicU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfDHOWi (ORCPT
+        id S1726774AbfDHOYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:22:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42742 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726806AbfDHOWh (ORCPT
+        Mon, 8 Apr 2019 10:24:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33362 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHOX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:22:37 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38EERrs002796
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 10:22:36 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rr72m3kf6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 10:22:35 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 8 Apr 2019 15:22:35 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 15:22:29 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38EMSrF33095754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 14:22:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08215B2067;
-        Mon,  8 Apr 2019 14:22:28 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5EAAB2064;
-        Mon,  8 Apr 2019 14:22:27 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Apr 2019 14:22:27 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CD5BC16C1171; Mon,  8 Apr 2019 07:22:30 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 07:22:30 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
-Reply-To: paulmck@linux.ibm.com
-References: <20190402142816.GA13084@linux.ibm.com>
- <20190407133941.GC14111@linux.ibm.com>
- <20190407135937.GA30053@linux.ibm.com>
- <134026717.535.1554665176677.JavaMail.zimbra@efficios.com>
- <20190407193202.GA30934@localhost>
- <1632568795.549.1554669696728.JavaMail.zimbra@efficios.com>
- <20190407210718.GA6656@localhost>
- <20190408022728.GF14111@linux.ibm.com>
- <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
+        Mon, 8 Apr 2019 10:23:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z6so98243wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=hJZeisUDTLSfqcq/veZ5B7pzvTvzhEpC8ZWVzvwPuls=;
+        b=FKMeJicUbfagnmgT+Hay4+CphiW8FmCgFGhFy9nJtJCXw9rIqe6tzZzKzFXfREKdii
+         A2ZZRomh/t9S3W/MMmfRv4mBchuQRLUvsXDTsRhxVghzn0Pblsh/45fIjU9p1uQDQjcl
+         82tuxbqrjwLsF+wXrULEWV8SwIc8BfYEXsp5Qze69uKxWs1ynjeQ+gfTsHU2jt0n/tmC
+         WBx1Kk/fnhAcXGqLgVb16yCsvSDgLzDf+rCYh5xwNFRT7f2SnlpBFm7z+9IBe8tCjkfo
+         GP6BTMm0Y+6GYcuT32cvPQ8XnCookdCTRlzovlJIn9azsBgbNlmG7gK6KfeCBRW8hgHb
+         XcJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=hJZeisUDTLSfqcq/veZ5B7pzvTvzhEpC8ZWVzvwPuls=;
+        b=gB25UUmVEUqjka11T014O88fRdcbDrW9E9Rom5NGUeB9tHvsAwEhsHocLJf+ECbVwc
+         4jQqkp0i7lEkMc7VAjPa/e4hOBqyKI1RTvC16cQpHzHXg0DUw329IoB4BMDB3gNa9LqQ
+         CnNhke9Vgv7tX6K67qRb4XZxT8+hOx8hcvbL/Lo5Sc21SCBkuRVxrbpPai4NT42SwFzO
+         vMQA4NQwB5YLDMuAgbIvu+PGLU6v+St7iKjNZKhc+fUiqASnIT8KNj3aOgNc+00K3fbK
+         6jznwidWQxQga8iuesw4qq8c//VBIB6sLPh/N2oh5fDuMYyngNG3i4kKGzD/45xj4p9c
+         BmLA==
+X-Gm-Message-State: APjAAAX1Ezrvib4NvyI2k7Gvo/F1aSn2BGtzoyPzr5Yf8OqmpLOCSA2Z
+        j9G2tHG/AAGGDxr1mylM7n9+Qx+NV7JO9BGG5iU=
+X-Google-Smtp-Source: APXvYqx7FK/FDApzERyXVTR1vRlP17e+5FoVF1TKnyRAhSETSDvC1Kr5yYj6kI5ipTBQHFZowfp+oyjoCwznBBMzchA=
+X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr1090912wmk.108.1554733437235;
+ Mon, 08 Apr 2019 07:23:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040814-0064-0000-0000-000003C7FEF1
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010889; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01186137; UDB=6.00621202; IPR=6.00966894;
- MB=3.00026343; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-08 14:22:33
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040814-0065-0000-0000-00003CFD615A
-Message-Id: <20190408142230.GJ14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=971 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080120
+References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
+ <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com> <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
+In-Reply-To: <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 8 Apr 2019 16:23:45 +0200
+Message-ID: <CA+icZUUw3SgyCdk9fyv+mVUGDepDNGj8Bm7t0WWOE3Q0sHJs4Q@mail.gmail.com>
+Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
+ filename $module/.rodata.cst{16,32}
+To:     Denys Vlasenko <dvlasenk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
-> 
-> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
-> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
-> >> > 
-> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
-> >> > wrote:
-> >> > 
-> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
-> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> > >> 
-> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
-> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
-> >> > >> > 
-> >> > >> > [ . . . ]
-> >> > >> > 
-> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
-> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
-> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
-> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
-> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
-> >> > >> >> > > @@ -338,6 +338,10 @@
-> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
-> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
-> >> > >> >> > > +		. = ALIGN(8);						\
-> >> > >> >> > > +		__start___srcu_struct = .;				\
-> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
-> >> > >> >> > > +		__end___srcu_struct = .;				\
-> >> > >> >> > >  	}								\
-> >> > >> >> > 
-> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
-> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
-> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
-> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
-> >> > >> >> > of the dev branch.
-> >> > >> >> 
-> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
-> >> > >> >> work.
-> >> > >> >> 
-> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
-> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
-> >> > >> >> optimism?
-> >> > >> > 
-> >> > >> > And to answer the other question, in the case where I am suffering from
-> >> > >> > excessive optimism, it should be a separate commit.  Please see below
-> >> > >> > for the updated original commit thus far.
-> >> > >> > 
-> >> > >> > And may I have your Tested-by?
-> >> > >> 
-> >> > >> Just to confirm: does the cleanup performed in the modules going
-> >> > >> notifier end up acting as a barrier first before freeing the memory ?
-> >> > >> If not, is it explicitly stated that a barrier must be issued before
-> >> > >> module unload ?
-> >> > >> 
-> >> > > 
-> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
-> >> > > responsibility of the module writer to prevent delays for all modules.
-> >> > 
-> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
-> >> > srcu domain within that module, I don't see how it would cause delays for
-> >> > "all" modules if we implicitly issue the barrier on module unload. What
-> >> > am I missing ?
-> >> 
-> >> Yes you are right. I thought of this after I just sent my email. I think it
-> >> makes sense for srcu case to do and could avoid a class of bugs.
-> > 
-> > If there are call_srcu() callbacks outstanding, the module writer still
-> > needs the srcu_barrier() because otherwise callbacks arrive after
-> > the module text has gone, which will be disappoint the CPU when it
-> > tries fetching instructions that are no longer mapped.  If there are
-> > no call_srcu() callbacks from that module, then there is no need for
-> > srcu_barrier() either way.
-> > 
-> > So if an srcu_barrier() is needed, the module developer needs to
-> > supply it.
-> 
-> When you say "callbacks arrive after the module text has gone",
-> I think you assume that free_module() is invoked before the
-> MODULE_STATE_GOING notifiers are called. But it's done in the
-> opposite order: going notifiers are called first, and then
-> free_module() is invoked.
-> 
-> So AFAIU it would be safe to issue the srcu_barrier() from the module
-> going notifier.
-> 
-> Or am I missing something ?
+On Mon, Apr 8, 2019 at 3:58 PM Denys Vlasenko <dvlasenk@redhat.com> wrote:
+>
+> On 4/8/19 3:56 PM, Denys Vlasenko wrote:
+> > I propose to change section name, append _module_ name and optionally
+> > a comment why this is done:
+> >
+> >   /* NB: section is mergeable, all elements must be aligned 16-byte blocks */
+> > +/* There is more than one object in this section, let's use module name
+> > +   as unique suffix */
+>
+> Probably not clear enough... maybe this is better:
+>
+> +/* There is more than one object in this section, let's use module name
+> +   instead of object name as unique suffix */
+> -.section        .rodata.cst16, "aM", @progbits, 16
+>
+> and do not use '-' in the name, replace with '_':
+>
+> +.section        .rodata.cst16.cast6_avx_x86_64_asm_64, "aM", @progbits, 16
+>
+>
 
-We do seem to be talking past each other.  ;-)
+Hi Denys,
 
-This has nothing to do with the order of events at module-unload time.
+Thanks for the quick answer!
 
-So please let me try again.
+For the .rodata.cst16 part you mean sth. like this?
 
-If a given srcu_struct in a module never has call_srcu() invoked, there
-is no need to invoke rcu_barrier() at any time, whether at module-unload
-time or not.  Adding rcu_barrier() in this case adds overhead and latency
-for no good reason.
+sdi@iniza:~/src/linux-kernel/linux$ git --no-pager diff
+diff --git a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+index a14af6eb09cb..19b2b80258d2 100644
+--- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
++++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+@@ -573,8 +573,12 @@
+ENDPROC(roundsm16_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
+        vmovdqu y7, 15 * 16(rio);
 
-If a given srcu_struct in a module does have at least one call_srcu()
-invoked, it is already that module's responsibility to make sure that
-the code sticks around long enough for the callback to be invoked.
 
-This means that correct SRCU users that invoke call_srcu() already
-have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
-reasonable probability, now get a WARN_ON() at module-unload time, with
-the per-CPU state getting leaked.  Before this change, they would (also
-with reasonable probability) instead get an instruction-fetch fault when
-the SRCU callback was invoked after the completion of the module unload.
-Furthermore, in all cases where they would previously have gotten the
-instruction-fetch fault, they now get the WARN_ON(), like this:
+-/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
+-.section       .rodata.cst16, "aM", @progbits, 16
++/*
++ * NB: section is mergeable, all elements must be aligned 16-byte blocks
++ * There is more than one object in this section, let's use module name
++ * instead of object name as unique suffix
++ */
++.section        .rodata.cst16.camellia-aesni-avx-asm_64, "aM", @progbits, 16
+ .align 16
 
-	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
-		return; /* Forgot srcu_barrier(), so just leak it! */
+ #define SHUFB_BYTES(idx) \
+diff --git a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+index b66bbfa62f50..d6ce36e82a93 100644
+--- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
++++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+@@ -626,8 +626,12 @@
+ENDPROC(roundsm32_x4_x5_x6_x7_x0_x1_x2_x3_y4_y5_y6_y7_y0_y1_y2_y3_ab)
+        .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
+        .long 0x00010203, 0x04050607, 0x80808080, 0x80808080
 
-So this change already represents an improvement in usability.
+-/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
+-.section       .rodata.cst16, "aM", @progbits, 16
++/*
++ * NB: section is mergeable, all elements must be aligned 16-byte blocks
++ * There is more than one object in this section, let's use module name
++ * instead of object name as unique suffix
++*/
++.section        .rodata.cst16.ccamellia-aesni-avx2-asm_64, "aM", @progbits, 16
+ .align 16
 
-							Thanx, Paul
+ /* For CTR-mode IV byteswap */
+diff --git a/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
+b/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
+index 7f30b6f0d72c..fcd5732aba4d 100644
+--- a/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
++++ b/arch/x86/crypto/cast6-avx-x86_64-asm_64.S
+@@ -225,7 +225,12 @@
+        vpshufb rmask,          x2, x2;       \
+        vpshufb rmask,          x3, x3;
 
+-.section       .rodata.cst16, "aM", @progbits, 16
++/*
++ * NB: section is mergeable, all elements must be aligned 16-byte blocks
++ * There is more than one object in this section, let's use module name
++ * instead of object name as unique suffix
++ */
++.section        .rodata.cst16.cast6_avx_x86_64_asm_64, "aM", @progbits, 16
+ .align 16
+ .Lxts_gf128mul_and_shl1_mask:
+        .byte 0x87, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0
+
+Regards,
+- Sedat -
