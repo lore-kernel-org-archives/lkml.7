@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43711C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18971214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABEE214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554742779;
-	bh=wHyMRSFjDyBqV0ifAwpqlWE4g2Yaas9E9cdpqCa//og=;
+	s=default; t=1554742780;
+	bh=if1Z0eEzQ5edJp18rD+1ZPqQDKauUXmCc4Mu/XTPKBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOwimwpOIU+5DaeK+UmOGsgdzWRNLX+g5s0S6Uhve2Ukd643eclZbxubjLj3/+LDn
-	 dd0WSfgtdTyQwrBc+lvYDlS2wRVC1DhPpdD/rSUuSKEi0zYquP4RHgDXCxktH2j2tR
-	 /7DAK7J6d/ZDV1hXyzdJH0jqPkRLkdeNZZSbyg/U=
+	b=cbbehPgaHfJPt3GS3LT4vke+D0FrtuaUm2Ik6383Xfu6DRZi4Ofuu4G60xoPQeEFH
+	 CO0VMlRRHg+kpePc7YCAGTL4wLQXhb2uzNyWZ4LSXpAKn0mw+bpm1oH4bBOzbNZLrN
+	 YfJSMPb/JDSVdo0xI3YZCZlnncZ2AhGqDIm6UBhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfDHQ7h (ORCPT
+        id S1729439AbfDHQ7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:59:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58704 "EHLO
+        Mon, 8 Apr 2019 12:59:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58658 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbfDHQ6h (ORCPT
+        with ESMTP id S1729216AbfDHQ6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 12:58:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,26 +33,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+/vCN7w/a3YnQuR/e0FP5otvIT6v5wA3Of7QaeCzNFU=; b=IdoZk4/sdR4D24H0/5tm3OgWcm
-        qy3B7mj6J2idGSSpoA10DITR7UfnWVjIRtYLjO4QKUFCh+zNeqEJqA+GjESL/IT4VYwPqrkTOun8f
-        RrQcosCqbhTl1pMH7dYNIGwqCQnUIrWuYesFMJI3vWTLMTWV2Gy+AAYDTBeHhK04gx86hNAnbcapj
-        Mdp6tRpWztE9a9go9ZybDr9jJ0loG94FZc2XTsUif7LgINTZX+ZCTvRKgb63hRQXqgUyN0JOpGp3l
-        BzNtS6DF+LvKUAbOjzvEMunoTX94SvP6igU3ksnDVgtFHqgWSwe/AcJXuzzaaYP8BdaZpy+BNqGEQ
-        vMEDk8KA==;
+        bh=3lbueKY2QWXhiM6Ovr6FNUSfEqePGFl1NYF40OVZJjQ=; b=eDBAbtAUP5buPahjSpkYlNfP8e
+        sJ6/Guuo1y2RWNBB7dWCzd/eSO518C7FUNhythIKQUyrIcvjb+DQt/URjLf0c85dck7yLrKgGzqhP
+        1n1t8YFu7g78MW1gVWbwbErbyBtZ6gpn5o5GxBB7v1+OlF3AiuK6xfQ1qojCJLhbjPGG8fds6Z0mU
+        ozmOEqnXlvk5cvwa2d2fz4CgpsMOMi7gCZvn/+lq/nUzUnmTALbPYUfqUSU/R9ph00Z13/Ew/lMqq
+        7cRpoUZDz4EYn5DYuEGjFNPcsZEqmWV9wHpFSxKDS3Ell0qkf/qV0iPIVxLvj04nbuRrhJFzSyTHN
+        fe2MaBkQ==;
 Received: from [179.95.33.162] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hDXbO-0005Sq-5w; Mon, 08 Apr 2019 16:58:34 +0000
+        id 1hDXbO-0005Sw-7h; Mon, 08 Apr 2019 16:58:34 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hDXbI-0005nT-By; Mon, 08 Apr 2019 13:58:28 -0300
+        id 1hDXbI-0005n5-6m; Mon, 08 Apr 2019 13:58:28 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 08/10] docs: ntb.rst: add blank lines to clean up some Sphinx warnings
-Date:   Mon,  8 Apr 2019 13:58:24 -0300
-Message-Id: <e2c2fafcce7fd5d631e5f187a3a05a7bfd73c98e.1554742526.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 02/10] docs: atomic_bitops.txt: add a title for this document
+Date:   Mon,  8 Apr 2019 13:58:18 -0300
+Message-Id: <b71822db8abbb22175042fce7712e2c9108c7353.1554742526.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1554742526.git.mchehab+samsung@kernel.org>
 References: <cover.1554742526.git.mchehab+samsung@kernel.org>
@@ -63,48 +63,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make it easier to parse and produce the right output,
-add some extra blank lines.
+This document misses a title. Add it, in order to follow
+the documentation standard.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/other/ntb.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/atomic_bitops.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/other/ntb.rst b/Documentation/other/ntb.rst
-index 344a075f81f5..074a423c853c 100644
---- a/Documentation/other/ntb.rst
-+++ b/Documentation/other/ntb.rst
-@@ -77,11 +77,13 @@ outbound memory window so to have access to the shared memory region.
+diff --git a/Documentation/atomic_bitops.txt b/Documentation/atomic_bitops.txt
+index be70b32c95d9..093cdaefdb37 100644
+--- a/Documentation/atomic_bitops.txt
++++ b/Documentation/atomic_bitops.txt
+@@ -1,6 +1,6 @@
+-
+-On atomic bitops.
+-
++=============
++Atomic bitops
++=============
  
- As one can see the described scenarios can be combined in one portable
- algorithm.
-+
-  Local device:
-   1) Allocate memory for a shared window
-   2) Initialize memory window by translated address of the allocated region
-      (it may fail if local memory window initialization is unsupported)
-   3) Send the translated address and memory window index to a peer device
-+
-  Peer device:
-   1) Initialize memory window with retrieved address of the allocated
-      by another device memory region (it may fail if peer memory window
-@@ -90,6 +92,7 @@ algorithm.
- 
- In accordance with this scenario, the NTB Memory Window API can be used as
- follows:
-+
-  Local device:
-   1) ntb_mw_count(pidx) - retrieve number of memory ranges, which can
-      be allocated for memory windows between local device and peer device
-@@ -105,6 +108,7 @@ follows:
-   5) Send translated base address (usually together with memory window
-      number) to the peer device using, for instance, scratchpad or message
-      registers.
-+
-  Peer device:
-   1) ntb_peer_mw_set_trans(pidx, midx) - try to set received from other
-      device (related to pidx) translated address for specified memory
+ While our bitmap_{}() functions are non-atomic, we have a number of operations
+ operating on single bits in a bitmap that are atomic.
 -- 
 2.20.1
 
