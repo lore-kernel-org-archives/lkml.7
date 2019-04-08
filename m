@@ -2,178 +2,121 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ACBC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DAEC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE69120880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNfv6zDb"
+	by mail.kernel.org (Postfix) with ESMTP id 32EC620863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554752710;
+	bh=9Kbqrvw6Vxmv5QUvjZc2024VCkrsqnOx5zOB1yP/8Rg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a0wdZ7nQvtEnVM2nH/ZV00m1DEwURehhWAAkHkqXCUKnrnDjmUsyBzFSUzjgbIhuq
+	 e+cYWJrn0bZQhiaDp6IJTeMVm+sziaoE4mTRFhKRj3LjqZ9HZe8yVaLIflFsyNbLN9
+	 h4Nl8oULwgjmb2Xb6b4r0iOwuq1CImeDA+3Qe6u8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbfDHTjm (ORCPT
+        id S1726644AbfDHTpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:39:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44879 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfDHTjj (ORCPT
+        Mon, 8 Apr 2019 15:45:09 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:34081 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfDHTpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:39:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g12so7892029pll.11;
-        Mon, 08 Apr 2019 12:39:39 -0700 (PDT)
+        Mon, 8 Apr 2019 15:45:08 -0400
+Received: by mail-yb1-f194.google.com with SMTP id a3so1237204ybr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9QzejewaFdMKjPQNyj8Ku/+3qlbUdJ83+naJQ570xrE=;
-        b=GNfv6zDb32qh0zEdHefmpQoYu8Ae0k0ZB2yN9h/QU604LhJHiGC4pl1W1buJKJi9FA
-         cEwLxHJiqXiPBYDvW8NJPZ+//sbOb4jqss+tO5PydCFcqQs4xKrK9YE0wA9rOCv8dP2G
-         h3cU5LOac7EQ8gAH9DwrJ2SI7BVa+o3skRdKt+Egrzu89OLL7/V2oc0Mz2Eu2n6ML7+e
-         VsuEJVqJGI4gaS0zXkcJSfkE0DgjsZYlauwnwm1pN+j/xi221V1LqODX+sGGyVZplzrn
-         iMJmJWG1eTxVaUu09GETwIMWQzjHLy/XyQUyFL9SUwA5pHTjpS7jJApNpXNLKGU8AIOP
-         XZjA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OjTnuzTQHiA0MMFJAawTA1rDWjQ+jv2E5LPgh/fJhNg=;
+        b=uz6609eamMx0VrhzrqfWEDu1oQ3cLtp8ONVFgvmBf1LZBBCinI5dhZC2O8ubKGiMA4
+         EZHNfO/Vno7spe4dfP0QK/pPj/KlUZQqiUq0HPcqGiI/Mx51+sVcwxStWFW3xc9sN6yP
+         Qds49ANFscwiyQfrBAY/VemTqVo91KoyztTkVV2eNqKl4cPTX+xQU5T6JWL/zztoia97
+         JUKLpMOCqCNvJeJbIMTagV4ijn2X6Raag1w7BOLyhC5MqCZ5FpNcidnxBToacEOHYc3d
+         YhMFd877+5rXZH6aPjzIfbaMVJF9D1wrHGP2mLN+NKjB7VhUTR7KGv15mugRoVyLk8LN
+         +M8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=9QzejewaFdMKjPQNyj8Ku/+3qlbUdJ83+naJQ570xrE=;
-        b=D+ECQul8S0qDFhzmqCIylVT4FL1YBb6W8Cd7O7olzbA6CymGiod78Am9IvFBdi5lpy
-         ueM2TyVRqv2oCiQumyiHRJF0GzayuVVb1uoDf2Nm+m7nS6YFNQ++JUDS570h0R6oWRjG
-         HqRrNcr4TFoEIE2uY7eHMQyWFaJEqdM46DKWi8V6PMmcW1k3M/ek4A5F90wmjMvzCTEh
-         hGIwSD050uCMj4DUTYxI1z1gb9wxTHgWqg3LPqoh1uh5DaNnP8etQNzSezPwAVe77sNc
-         czByJn9J76uQLngl+kvgd4hoBjU4LUVw890TAqiuYtCQ6kQuPQoNkIPCEd/GY+cjum/A
-         0pmQ==
-X-Gm-Message-State: APjAAAVOOPrXc77HZyu09/vEsrm/2woPchep4ZGTRReDnmznoB6Xmv0C
-        Pa17aDWt/2lFslofNA+w9q00g5y2
-X-Google-Smtp-Source: APXvYqx9fezUY/IN0+pySCDULfKzbUUQcMoeOk1G1rU9Kk96vk8IYC1XFFWQGF5QS34GjNHPP1hsuw==
-X-Received: by 2002:a17:902:f81:: with SMTP id 1mr32624572plz.216.1554752378716;
-        Mon, 08 Apr 2019 12:39:38 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n1sm35371700pgv.19.2019.04.08.12.39.38
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OjTnuzTQHiA0MMFJAawTA1rDWjQ+jv2E5LPgh/fJhNg=;
+        b=INijM3ueSWIv1e5EwI6mIp3myFcNab/J2ypkk9oy5Rquwk9FicVNFpPDKD8Ejyuhfr
+         FNa2q4Rckunqh7m86Dj9qk0G+jCZ7J0zo59J9NkXnih/BHwrfehovomTb0L66dAShLxS
+         bUBKnxVh3y+pulCmiNudp5aMgxDYE9Dp5sUxzRXzCPv5zz4hk8toBug4SnZYosDlPwP2
+         KoPRAWZTn+inxlYspBGzLy+0jFIGObojc94EQIo689+YSNbiQ0StQn1UllLXaxDTCl/B
+         d2+OiArr3EBJtVEyybYevKIbbmlwttdNgIGaxXOl8n8HZw7wFRXjOvakuUSgwufcrkBF
+         byQg==
+X-Gm-Message-State: APjAAAVKSL1/x4SWZsmd+8hnJxPc8glBKdUaFLx5QHv/lbsEahXAUE9Y
+        IV9zlYH9b7GoKO2/eMQOzLycjd3q
+X-Google-Smtp-Source: APXvYqzMNJUGOmY+raFf7vAQj4R9qFlDU3umPD4Hob5erOgTuwNXoI+QTZGMyYSjncLd769Con2wLw==
+X-Received: by 2002:a25:3716:: with SMTP id e22mr26063201yba.20.1554752707770;
+        Mon, 08 Apr 2019 12:45:07 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::3:135c])
+        by smtp.gmail.com with ESMTPSA id d64sm11091993ywb.64.2019.04.08.12.45.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 12:39:38 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 01/22] watchdog: armada_37xx_wdt: Convert to use device managed functions and other improvements
-Date:   Mon,  8 Apr 2019 12:38:25 -0700
-Message-Id: <1554752326-13319-2-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
-References: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
+        Mon, 08 Apr 2019 12:45:06 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 12:45:05 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 2/2] sched: Distangle worker accounting from rq lock
+Message-ID: <20190408194505.GK1975820@devbig004.ftw2.facebook.com>
+References: <20190313165548.19713-1-bigeasy@linutronix.de>
+ <20190313165548.19713-3-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313165548.19713-3-bigeasy@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Hello,
 
-The conversion was done automatically with coccinelle using the
-following semantic patches. The semantic patches and the scripts
-used to generate this commit log are available at
-https://github.com/groeck/coccinelle-patches
+On Wed, Mar 13, 2019 at 05:55:48PM +0100, Sebastian Andrzej Siewior wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> The worker accounting for CPU bound workers is plugged into the core
+> scheduler code and the wakeup code. This is not a hard requirement and
+> can be avoided by keeping track of the state in the workqueue code
+> itself.
+> 
+> Keep track of the sleeping state in the worker itself and call the
+> notifier before entering the core scheduler. There might be false
+> positives when the task is woken between that call and actually
+> scheduling, but that's not really different from scheduling and being
+> woken immediately after switching away. When nr_running is updated when
+> the task is retunrning from schedule() then it is later compared when it
+> is done from ttwu().
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Link: http://lkml.kernel.org/r/20110622174919.135236139@linutronix.de
+> Link: http://lkml.kernel.org/r/ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [bigeasy: preempt_disable() around wq_worker_sleeping() by Daniel Bristot de
+>           Oliveira]
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-- Drop assignments to otherwise unused variables
-- Drop unnecessary braces around conditional return statements
-- Drop empty remove function
-- Use devm_add_action_or_reset() for calls to clk_disable_unprepare
-- Use devm_watchdog_register_driver() to register watchdog device
-- Replace shutdown function with call to watchdog_stop_on_reboot()
+This looks good from wq side.  Peter, are you okay with routing this
+through the wq tree?  If you wanna take it through the sched tree,
+please feel free to add
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/watchdog/armada_37xx_wdt.c | 43 +++++++++++++-------------------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
+Acked-by: Tejun Heo <tj@kernel.org>
 
-diff --git a/drivers/watchdog/armada_37xx_wdt.c b/drivers/watchdog/armada_37xx_wdt.c
-index 4b4054f54df9..e5dcb26d85f0 100644
---- a/drivers/watchdog/armada_37xx_wdt.c
-+++ b/drivers/watchdog/armada_37xx_wdt.c
-@@ -244,6 +244,11 @@ static const struct watchdog_ops armada_37xx_wdt_ops = {
- 	.get_timeleft = armada_37xx_wdt_get_timeleft,
- };
- 
-+static void armada_clk_disable_unprepare(void *data)
-+{
-+	clk_disable_unprepare(data);
-+}
-+
- static int armada_37xx_wdt_probe(struct platform_device *pdev)
- {
- 	struct armada_37xx_watchdog *dev;
-@@ -278,12 +283,14 @@ static int armada_37xx_wdt_probe(struct platform_device *pdev)
- 	ret = clk_prepare_enable(dev->clk);
- 	if (ret)
- 		return ret;
-+	ret = devm_add_action_or_reset(&pdev->dev,
-+				       armada_clk_disable_unprepare, dev->clk);
-+	if (ret)
-+		return ret;
- 
- 	dev->clk_rate = clk_get_rate(dev->clk);
--	if (!dev->clk_rate) {
--		ret = -EINVAL;
--		goto disable_clk;
--	}
-+	if (!dev->clk_rate)
-+		return -EINVAL;
- 
- 	/*
- 	 * Since the timeout in seconds is given as 32 bit unsigned int, and
-@@ -307,35 +314,15 @@ static int armada_37xx_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &dev->wdt.status);
- 
- 	watchdog_set_nowayout(&dev->wdt, nowayout);
--	ret = watchdog_register_device(&dev->wdt);
-+	watchdog_stop_on_reboot(&dev->wdt);
-+	ret = devm_watchdog_register_device(&pdev->dev, &dev->wdt);
- 	if (ret)
--		goto disable_clk;
-+		return ret;
- 
- 	dev_info(&pdev->dev, "Initial timeout %d sec%s\n",
- 		 dev->wdt.timeout, nowayout ? ", nowayout" : "");
- 
- 	return 0;
--
--disable_clk:
--	clk_disable_unprepare(dev->clk);
--	return ret;
--}
--
--static int armada_37xx_wdt_remove(struct platform_device *pdev)
--{
--	struct watchdog_device *wdt = platform_get_drvdata(pdev);
--	struct armada_37xx_watchdog *dev = watchdog_get_drvdata(wdt);
--
--	watchdog_unregister_device(wdt);
--	clk_disable_unprepare(dev->clk);
--	return 0;
--}
--
--static void armada_37xx_wdt_shutdown(struct platform_device *pdev)
--{
--	struct watchdog_device *wdt = platform_get_drvdata(pdev);
--
--	armada_37xx_wdt_stop(wdt);
- }
- 
- static int __maybe_unused armada_37xx_wdt_suspend(struct device *dev)
-@@ -370,8 +357,6 @@ MODULE_DEVICE_TABLE(of, armada_37xx_wdt_match);
- 
- static struct platform_driver armada_37xx_wdt_driver = {
- 	.probe		= armada_37xx_wdt_probe,
--	.remove		= armada_37xx_wdt_remove,
--	.shutdown	= armada_37xx_wdt_shutdown,
- 	.driver		= {
- 		.name	= "armada_37xx_wdt",
- 		.of_match_table = of_match_ptr(armada_37xx_wdt_match),
+Thanks.
+
 -- 
-2.7.4
-
+tejun
