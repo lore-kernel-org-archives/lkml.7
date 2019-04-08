@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601DCC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10316C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D2420870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11DA20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708664;
-	bh=vo822jbXOCPBNioXS4nRdAEkZz89KoByd2cn6+dR3HM=;
+	s=default; t=1554708671;
+	bh=FjoJknlPr1qwJ5xICgd3EHIPOiGxx4t5Tj7zvzW8NHI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UnzGqx5lPar64Y4Eq5StpGTCHUY79fyEGZGlbWcy5BuqtnFLWIxEQpt+cp9uQg1/U
-	 sROLnMObo0HZvr/svlfa2yxYKmqq7yt0HYA6z0D47g8qEanDXaXNOG0MhjMm9xEYMc
-	 caeCFxfLmVoZBrD1Q4MWodNH4dKN3St3nnav0vMs=
+	b=KKi1mRBCZDLeYSJUZAVxGsgqph75IUupnXEesesbUQYmr7oJO6b/jm+YqY4UE7ZAx
+	 2elXANwr4BMvmOLQf8bh/2cGGVSoEAJoajxi0e3ntfiXR30/t69l2b5IexXOtiGvWq
+	 QX05Fgta6w7J9O3qxaXAy6Rr14wrqdZUqpD2OcVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDHHbC (ORCPT
+        id S1726726AbfDHHbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:31:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41956 "EHLO
+        Mon, 8 Apr 2019 03:31:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42214 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfDHHbC (ORCPT
+        with ESMTP id S1725871AbfDHHbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:31:02 -0400
+        Mon, 8 Apr 2019 03:31:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1uiwfrlk24djJQDJcka1CpYBVUwPU5cQHE34sg+IKNY=; b=xeJa7zcDJcs/
-        Ar7cexdmeXVsf2OXSoron/ZGX1pHqZHJ9qS/Gw3V4WNW9hqVis7bGh479vI9h7hKLNY1uDiPWOrzK
-        o7aVcgUPIlve60xd1XOAKpA+QmLwtAxhkKdY8F93kloqOe37PdnlMn9kNsmhfxTif2qrCqGuI//y1
-        J253E=;
+        List-Archive; bh=+KI9tYfIMh+7suFHxCnx1xXtMrkPvZE1aBidoCQQUDw=; b=NY+1Enae4DzP
+        CwMxHmCxTZDDdMRa+WYODtmRS7LweDI+ODVdHRdoyRtMPgt3UZ4BKp6xkkerdXfX6JlNAKzFHw/nm
+        QJafq5psHUqDJ7fynCWBHin5TFm7K7/fwpPe4Sij27prQ5/sgG0099779WUqZ7Qd7gkpM1GAUD6iB
+        /mB6Q=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOk6-0003vd-Lt; Mon, 08 Apr 2019 07:30:59 +0000
+        id 1hDOkD-0003vo-Pt; Mon, 08 Apr 2019 07:31:06 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id DB454441D3C; Mon,  8 Apr 2019 14:30:48 +0700 (+07)
+        id 1B101441D3B; Mon,  8 Apr 2019 14:30:56 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
+To:     Nicholas Mc Guire <hofrat@opentech.at>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: bd718x7: Use rdev_get_id() to get regulator id" to the regulator tree
+Subject: Applied "ASoC: ab8500: add range to usleep_range" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190408073048.DB454441D3C@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:30:48 +0700 (+07)
+Message-Id: <20190408073056.1B101441D3B@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:30:56 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: bd718x7: Use rdev_get_id() to get regulator id
+   ASoC: ab8500: add range to usleep_range
 
 has been applied to the regulator tree at
 
@@ -85,35 +85,39 @@ to this mail.
 Thanks,
 Mark
 
-From 0a245f0efcb5f5d70f3512bfd0ed8277256503c5 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 7 Apr 2019 17:03:02 +0800
-Subject: [PATCH] regulator: bd718x7: Use rdev_get_id() to get regulator id
+From 45a310136b3ed52267e757c57e835f583140aa5f Mon Sep 17 00:00:00 2001
+From: Nicholas Mc Guire <hofrat@opentech.at>
+Date: Sun, 7 Apr 2019 04:59:34 +0200
+Subject: [PATCH] ASoC: ab8500: add range to usleep_range
 
-Use rdev_get_id() instead of directly access rdev->desc->id.
-While at it also remove unneeded init for ramp_value variable.
+Providing a range for usleep_range() allows the hrtimer subsystem to
+coalesce timers - as this delay has no upper limit anyway (interrupts
+or context switch is possible) it should not hurt to extend this
+from 2 to 2-4 milliseconds.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/bd718x7-regulator.c | 4 ++--
+ sound/soc/codecs/ab8500-codec.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index b2191be49670..fde4264da6ff 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -27,8 +27,8 @@
- static int bd718xx_buck1234_set_ramp_delay(struct regulator_dev *rdev,
- 					   int ramp_delay)
- {
--	int id = rdev->desc->id;
--	unsigned int ramp_value = BUCK_RAMPRATE_10P00MV;
-+	int id = rdev_get_id(rdev);
-+	unsigned int ramp_value;
- 
- 	dev_dbg(&rdev->dev, "Buck[%d] Set Ramp = %d\n", id + 1,
- 		ramp_delay);
+diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
+index 03bbbcd3b6c1..dac207dc5b65 100644
+--- a/sound/soc/codecs/ab8500-codec.c
++++ b/sound/soc/codecs/ab8500-codec.c
+@@ -1062,10 +1062,10 @@ static void anc_iir(struct snd_soc_component *component, unsigned int bnk,
+ 			snd_soc_component_update_bits(component, AB8500_ANCCONF1,
+ 					BIT(AB8500_ANCCONF1_ANCIIRINIT),
+ 					BIT(AB8500_ANCCONF1_ANCIIRINIT));
+-			usleep_range(AB8500_ANC_SM_DELAY, AB8500_ANC_SM_DELAY);
++			usleep_range(AB8500_ANC_SM_DELAY, AB8500_ANC_SM_DELAY*2);
+ 			snd_soc_component_update_bits(component, AB8500_ANCCONF1,
+ 					BIT(AB8500_ANCCONF1_ANCIIRINIT), 0);
+-			usleep_range(AB8500_ANC_SM_DELAY, AB8500_ANC_SM_DELAY);
++			usleep_range(AB8500_ANC_SM_DELAY, AB8500_ANC_SM_DELAY*2);
+ 		} else {
+ 			snd_soc_component_update_bits(component, AB8500_ANCCONF1,
+ 					BIT(AB8500_ANCCONF1_ANCIIRUPDATE),
 -- 
 2.20.1
 
