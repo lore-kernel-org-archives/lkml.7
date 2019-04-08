@@ -2,369 +2,122 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF4FC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079ECC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A7B21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65772084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LZQe1ebN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfDHRmo (ORCPT
+        id S1729309AbfDHRqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:42:44 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:33770 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHRmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:42:43 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id C25AE72CCAC;
-        Mon,  8 Apr 2019 20:42:36 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id B55177CCE4F; Mon,  8 Apr 2019 20:42:36 +0300 (MSK)
-Date:   Mon, 8 Apr 2019 20:42:36 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Oleg Nesterov <oleg@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromyatnikov <esyr@redhat.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH linux-next v9 7/7] selftests/ptrace: add a test case for
- PTRACE_GET_SYSCALL_INFO
-Message-ID: <20190408174236.GH11889@altlinux.org>
-References: <20190408174036.GA11889@altlinux.org>
+        Mon, 8 Apr 2019 13:46:07 -0400
+Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:55876
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726373AbfDHRqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:46:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sbh/zzKlzWnsJKjm7NnORGJ6/vlYsNtf4rWcjHAkNd8=;
+ b=LZQe1ebNqU7dQfkY51HAiQgzT10AtjwYg4mCtLdlChicX7J4He5Z+anVtXACEus4hQwIWp6H+v1fX/Ms6wQ9t8dcm09tZn5admIctjikJRixKO+zF5wTWJew1omgC0iPyI1yy3RDMs5P88mV1SCWVCTlIjNGJEveEQmKqamDitY=
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.23.144) by
+ VI1PR0402MB3901.eurprd04.prod.outlook.com (52.134.17.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.21; Mon, 8 Apr 2019 17:46:02 +0000
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::b8b3:8509:a056:360e]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::b8b3:8509:a056:360e%2]) with mapi id 15.20.1771.011; Mon, 8 Apr 2019
+ 17:46:02 +0000
+From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
+Thread-Topic: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
+Thread-Index: AQHU7jLtjTghFqR720GjUH/3qPjtqQ==
+Date:   Mon, 8 Apr 2019 17:46:02 +0000
+Message-ID: <385f7948-d12b-1fc2-2ed2-23d1e76034a0@nxp.com>
+In-Reply-To: <20190319051512.14950-3-qiangqing.zhang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VE1PR08CA0017.eurprd08.prod.outlook.com
+ (2603:10a6:803:104::30) To VI1PR0402MB2863.eurprd04.prod.outlook.com
+ (2603:10a6:800:b6::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stefan-gabriel.mirea@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1c4a69f2-f921-4334-880b-08d6bc4a115d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3901;
+x-ms-traffictypediagnostic: VI1PR0402MB3901:
+x-microsoft-antispam-prvs: <VI1PR0402MB39017F2C411AA20E21C257B7DF2C0@VI1PR0402MB3901.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(366004)(376002)(39860400002)(54094003)(51444003)(189003)(199004)(14454004)(6436002)(97736004)(2616005)(476003)(11346002)(8676002)(6246003)(478600001)(8936002)(14444005)(26005)(102836004)(256004)(99286004)(186003)(66066001)(31686004)(7736002)(2501003)(68736007)(81156014)(81166006)(5660300002)(6512007)(6506007)(53936002)(386003)(36756003)(25786009)(305945005)(486006)(6116002)(52116002)(229853002)(2201001)(3846002)(2906002)(110136005)(106356001)(71190400001)(86362001)(31696002)(105586002)(316002)(71200400001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3901;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ieNaCaDstvWpft2ymsMCQYuJn5Mm1IV/M2S5Io/FxeQaNh8F+VX0DRX+9zlJW8PwgOAhX8W6S/C9fmyM/7Nz5PClJtKJlLYkzuH2AGyJApT3Pb3Tkcp1oyktRY7n//hOBLNfzg9/dA8WRcymQ8ug3HQbjcSEQU6r4WhZTNiNC/ROonqCCi6TpIjM5EkaTX5c2D0G1F/VNmNQ/1QM/EvGZA7LFytfYfKzHrEt5AVj1xO0eRfcqEbqKfkqfN6o5InGE3f7beDuR+yN716iCAiuBtZNqQN/5CPqjosrPH+itgZ4Ew7H0TvfeacAH1xnjCOiQtc6P0v1f2NHb01hUdofnvesIT1d5Jfzox1y8QDIzsUsz2tZVJk+QZE8yHj39BIoYUkIiStlIACCBQjhcxl9PKEnjVRv2JT/Eax29Qp10Ns=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <FBD65A23CD1BED428B72C287AF2E9DFA@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408174036.GA11889@altlinux.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c4a69f2-f921-4334-880b-08d6bc4a115d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 17:46:02.7420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3901
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check whether PTRACE_GET_SYSCALL_INFO semantics implemented in the kernel
-matches userspace expectations.
+Hello Joakim,
 
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: Eugene Syromyatnikov <esyr@redhat.com>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
----
+I successfully validated your CAN FD support on an S32V234 based board.
+Here are some points which are not very clear to me:
 
-Notes:
-    v9: unchanged
-    v8: unchanged
-    v7: unchanged
-    v6: made PTRACE_GET_SYSCALL_INFO return value checks strict
-    v5: initial revision
+Joakim Zhang <qiangqing.zhang@nxp.com> writes:
+> +		priv->write(reg_mcr | FLEXCAN_MCR_FDEN, &regs->mcr);
 
- tools/testing/selftests/ptrace/.gitignore     |   1 +
- tools/testing/selftests/ptrace/Makefile       |   2 +-
- .../selftests/ptrace/get_syscall_info.c       | 271 ++++++++++++++++++
- 3 files changed, 273 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/ptrace/get_syscall_info.c
+According to the S32V234 reference manual (not sure if this applies to
+i.MX8QM as well), CAN_CTRL1[SMP] cannot be asserted when CAN FD is
+enabled. Is it safe to configure the interface with both "fd on" and
+"triple-sampling on"? If not, flexcan_open should return an error when
+both CAN_CTRLMODE_FD and CAN_CTRLMODE_3_SAMPLES are set in ctrlmode.
 
-diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
-index b3e59d41fd82..cfcc49a7def7 100644
---- a/tools/testing/selftests/ptrace/.gitignore
-+++ b/tools/testing/selftests/ptrace/.gitignore
-@@ -1 +1,2 @@
-+get_syscall_info
- peeksiginfo
-diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
-index 8a2bc5562179..4bc550b6b845 100644
---- a/tools/testing/selftests/ptrace/Makefile
-+++ b/tools/testing/selftests/ptrace/Makefile
-@@ -1,5 +1,5 @@
- CFLAGS += -iquote../../../../include/uapi -Wall
- 
--TEST_GEN_PROGS := peeksiginfo
-+TEST_GEN_PROGS := get_syscall_info peeksiginfo
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/ptrace/get_syscall_info.c b/tools/testing/selftests/ptrace/get_syscall_info.c
-new file mode 100644
-index 000000000000..28e972825b74
---- /dev/null
-+++ b/tools/testing/selftests/ptrace/get_syscall_info.c
-@@ -0,0 +1,271 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later
-+ *
-+ * Copyright (c) 2018 Dmitry V. Levin <ldv@altlinux.org>
-+ * All rights reserved.
-+ *
-+ * Check whether PTRACE_GET_SYSCALL_INFO semantics implemented in the kernel
-+ * matches userspace expectations.
-+ */
-+
-+#include "../kselftest_harness.h"
-+#include <err.h>
-+#include <signal.h>
-+#include <asm/unistd.h>
-+#include "linux/ptrace.h"
-+
-+static int
-+kill_tracee(pid_t pid)
-+{
-+	if (!pid)
-+		return 0;
-+
-+	int saved_errno = errno;
-+
-+	int rc = kill(pid, SIGKILL);
-+
-+	errno = saved_errno;
-+	return rc;
-+}
-+
-+static long
-+sys_ptrace(int request, pid_t pid, unsigned long addr, unsigned long data)
-+{
-+	return syscall(__NR_ptrace, request, pid, addr, data);
-+}
-+
-+#define LOG_KILL_TRACEE(fmt, ...)				\
-+	do {							\
-+		kill_tracee(pid);				\
-+		TH_LOG("wait #%d: " fmt,			\
-+		       ptrace_stop, ##__VA_ARGS__);		\
-+	} while (0)
-+
-+TEST(get_syscall_info)
-+{
-+	static const unsigned long args[][7] = {
-+		/* a sequence of architecture-agnostic syscalls */
-+		{
-+			__NR_chdir,
-+			(unsigned long) "",
-+			0xbad1fed1,
-+			0xbad2fed2,
-+			0xbad3fed3,
-+			0xbad4fed4,
-+			0xbad5fed5
-+		},
-+		{
-+			__NR_gettid,
-+			0xcaf0bea0,
-+			0xcaf1bea1,
-+			0xcaf2bea2,
-+			0xcaf3bea3,
-+			0xcaf4bea4,
-+			0xcaf5bea5
-+		},
-+		{
-+			__NR_exit_group,
-+			0,
-+			0xfac1c0d1,
-+			0xfac2c0d2,
-+			0xfac3c0d3,
-+			0xfac4c0d4,
-+			0xfac5c0d5
-+		}
-+	};
-+	const unsigned long *exp_args;
-+
-+	pid_t pid = fork();
-+
-+	ASSERT_LE(0, pid) {
-+		TH_LOG("fork: %m");
-+	}
-+
-+	if (pid == 0) {
-+		/* get the pid before PTRACE_TRACEME */
-+		pid = getpid();
-+		ASSERT_EQ(0, sys_ptrace(PTRACE_TRACEME, 0, 0, 0)) {
-+			TH_LOG("PTRACE_TRACEME: %m");
-+		}
-+		ASSERT_EQ(0, kill(pid, SIGSTOP)) {
-+			/* cannot happen */
-+			TH_LOG("kill SIGSTOP: %m");
-+		}
-+		for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
-+			syscall(args[i][0],
-+				args[i][1], args[i][2], args[i][3],
-+				args[i][4], args[i][5], args[i][6]);
-+		}
-+		/* unreachable */
-+		_exit(1);
-+	}
-+
-+	const struct {
-+		unsigned int is_error;
-+		int rval;
-+	} *exp_param, exit_param[] = {
-+		{ 1, -ENOENT },	/* chdir */
-+		{ 0, pid }	/* gettid */
-+	};
-+
-+	unsigned int ptrace_stop;
-+
-+	for (ptrace_stop = 0; ; ++ptrace_stop) {
-+		struct ptrace_syscall_info info = {
-+			.op = 0xff	/* invalid PTRACE_SYSCALL_INFO_* op */
-+		};
-+		const size_t size = sizeof(info);
-+		const int expected_none_size =
-+			(void *) &info.entry - (void *) &info;
-+		const int expected_entry_size =
-+			(void *) &info.entry.args[6] - (void *) &info;
-+		const int expected_exit_size =
-+			(void *) (&info.exit.is_error + 1) -
-+			(void *) &info;
-+		int status;
-+		long rc;
-+
-+		ASSERT_EQ(pid, wait(&status)) {
-+			/* cannot happen */
-+			LOG_KILL_TRACEE("wait: %m");
-+		}
-+		if (WIFEXITED(status)) {
-+			pid = 0;	/* the tracee is no more */
-+			ASSERT_EQ(0, WEXITSTATUS(status));
-+			break;
-+		}
-+		ASSERT_FALSE(WIFSIGNALED(status)) {
-+			pid = 0;	/* the tracee is no more */
-+			LOG_KILL_TRACEE("unexpected signal %u",
-+					WTERMSIG(status));
-+		}
-+		ASSERT_TRUE(WIFSTOPPED(status)) {
-+			/* cannot happen */
-+			LOG_KILL_TRACEE("unexpected wait status %#x", status);
-+		}
-+
-+		switch (WSTOPSIG(status)) {
-+		case SIGSTOP:
-+			ASSERT_EQ(0, ptrace_stop) {
-+				LOG_KILL_TRACEE("unexpected signal stop");
-+			}
-+			ASSERT_EQ(0, sys_ptrace(PTRACE_SETOPTIONS, pid, 0,
-+						PTRACE_O_TRACESYSGOOD)) {
-+				LOG_KILL_TRACEE("PTRACE_SETOPTIONS: %m");
-+			}
-+			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
-+						      pid, size,
-+						      (unsigned long) &info))) {
-+				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
-+			}
-+			ASSERT_EQ(expected_none_size, rc) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_EQ(PTRACE_SYSCALL_INFO_NONE, info.op) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.arch) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.instruction_pointer) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.stack_pointer) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			break;
-+
-+		case SIGTRAP | 0x80:
-+			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
-+						      pid, size,
-+						      (unsigned long) &info))) {
-+				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
-+			}
-+			switch (ptrace_stop) {
-+			case 1: /* entering chdir */
-+			case 3: /* entering gettid */
-+			case 5: /* entering exit_group */
-+				exp_args = args[ptrace_stop / 2];
-+				ASSERT_EQ(expected_entry_size, rc) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(PTRACE_SYSCALL_INFO_ENTRY, info.op) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.arch) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.instruction_pointer) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.stack_pointer) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[0], info.entry.nr) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[1], info.entry.args[0]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[2], info.entry.args[1]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[3], info.entry.args[2]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[4], info.entry.args[3]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[5], info.entry.args[4]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[6], info.entry.args[5]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				break;
-+			case 2: /* exiting chdir */
-+			case 4: /* exiting gettid */
-+				exp_param = &exit_param[ptrace_stop / 2 - 1];
-+				ASSERT_EQ(expected_exit_size, rc) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(PTRACE_SYSCALL_INFO_EXIT, info.op) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.arch) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.instruction_pointer) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.stack_pointer) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(exp_param->is_error,
-+					  info.exit.is_error) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(exp_param->rval, info.exit.rval) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				break;
-+			default:
-+				LOG_KILL_TRACEE("unexpected syscall stop");
-+				abort();
-+			}
-+			break;
-+
-+		default:
-+			LOG_KILL_TRACEE("unexpected stop signal %#x",
-+					WSTOPSIG(status));
-+			abort();
-+		}
-+
-+		ASSERT_EQ(0, sys_ptrace(PTRACE_SYSCALL, pid, 0, 0)) {
-+			LOG_KILL_TRACEE("PTRACE_SYSCALL: %m");
-+		}
-+	}
-+
-+	ASSERT_EQ(ARRAY_SIZE(args) * 2, ptrace_stop);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-ldv
+Joakim Zhang <qiangqing.zhang@nxp.com> writes:
+> +		priv->offload.is_canfd =3D true;
+
+Shouldn't is_canfd be assigned false in the "else" branch? Otherwise,
+is_canfd will stay true after the following sequence:
+
+root@s32v234evb:~# ip link set can0 type can bitrate 500000 dbitrate
+2000000 fd on
+root@s32v234evb:~# ip link set can0 up
+root@s32v234evb:~# ip link set can0 down
+root@s32v234evb:~# ip link set can0 type can bitrate 500000 fd off
+root@s32v234evb:~# ip link set can0 up
+
+Moreover, I wonder if we even need is_canfd, because frames should be
+fed to the kernel as classic or FD based only on the EDL bit in the C/S
+word of the Rx MB, to keep their original format. That is, you may
+either read EDL from within a new callback (but I think that
+mailbox_read should remain the only one which both locks and unlocks the
+mailboxes) or let mailbox_read call alloc_can(fd)_skb itself.
+
+Regards,
+Stefan
