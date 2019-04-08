@@ -2,86 +2,183 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDD6C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8CDC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1354621473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E9F213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CK5L/ufc"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="LLU6wpEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfDHNEo (ORCPT
+        id S1726620AbfDHNFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:04:44 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.47.9]:53350 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfDHNEo (ORCPT
+        Mon, 8 Apr 2019 09:05:37 -0400
+Received: from mail.efficios.com ([167.114.142.138]:51532 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHNFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:04:44 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 4BF9C24E23AD;
-        Mon,  8 Apr 2019 06:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554728684; bh=y5nQEi4zDjXR0zK6FQbL3G62aNT4nNlPliULmMOnVoE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CK5L/ufculwZ8XcL8gtIPFVGAliiueistdHbLiZ4T3PUiKY15TUhNgcHs+azpxANj
-         YgrgHeb4vAQMXbT2Gpc6JS7Gt6K/dIvCKhtU/jDQAYcQzoQVyM9BnlCLuvGTcOEKtK
-         4srAhca6Dy+LX6l5s2A3K5uaozYMP4GuLeeG649B4zNPUS0mK4XfSeR/lsp5SSIINk
-         DSb3HDtzOGPQiSheEqH0zZ4iCKmWNNdzFv+L35ruLlY25j7zkMwQEDtPoSAxaj01ow
-         zq2kqPIlQF33YXFEIvGTfzNiurMIfzvCEELzhliKu/FoehDby+2F5pz6oDheTz0n+9
-         WfBxkcVUY/1uA==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B5D34A0070;
-        Mon,  8 Apr 2019 13:04:42 +0000 (UTC)
-From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-Subject: [PATCH] ARC: memset: fix build with L1_CACHE_SHIFT != 6
-Date:   Mon,  8 Apr 2019 16:04:38 +0300
-Message-Id: <20190408130438.11466-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.14.5
+        Mon, 8 Apr 2019 09:05:37 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 58F661D3586;
+        Mon,  8 Apr 2019 09:05:35 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id PtQ77tI-IfcW; Mon,  8 Apr 2019 09:05:34 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id D6A391D357F;
+        Mon,  8 Apr 2019 09:05:34 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D6A391D357F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554728734;
+        bh=4KWeUe1zEYlZHMr94RvdvAAbYkTTz9T5rSe6qMcbpbo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=LLU6wpEHrlhIRhp6lwxD1vxQpjFmu3Vbzg91f16+uKXqaBVSSyyuCMqW6FI5JZO44
+         fXFpJnJ/UhYzyI5xU2k6G9BZF8nkkvKrz5Q0bHGCB5tf8f6p01oH/lkeO9UcjN0HmN
+         BmizSlqjdQGWQNQ40x7fvfyuiaXjjEumPFVEVrHiHceETyP12NXt+K1GxTs0so12n6
+         hQJBgBHryHg0NEIi1+HIAa/3CbjoSUJ0RhcXl0zSt+WY0SFTnaIuqKBrCUkUOrJ+fw
+         wmkZYPLxJYn/ZtoAVe1X7HPHuI3XPdHo9L23mFqIHRP1GHEguKcKwwHh1Qq8CTwsXf
+         SqT8OvTanDCmQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id hLzv2-PiwuKH; Mon,  8 Apr 2019 09:05:34 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id AE5741D3576;
+        Mon,  8 Apr 2019 09:05:34 -0400 (EDT)
+Date:   Mon, 8 Apr 2019 09:05:34 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     paulmck <paulmck@linux.ibm.com>
+Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Message-ID: <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190408022728.GF14111@linux.ibm.com>
+References: <20190402142816.GA13084@linux.ibm.com> <20190407133941.GC14111@linux.ibm.com> <20190407135937.GA30053@linux.ibm.com> <134026717.535.1554665176677.JavaMail.zimbra@efficios.com> <20190407193202.GA30934@localhost> <1632568795.549.1554669696728.JavaMail.zimbra@efficios.com> <20190407210718.GA6656@localhost> <20190408022728.GF14111@linux.ibm.com>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Forbid static SRCU use in modules
+Thread-Index: 6Wi1BRbHvu8UojrhC+5MRcqIGW5XLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of 'L1_CACHE_SHIFT != 6' we define dummy assembly macroses
-PREALLOC_INSTR and PREFETCHW_INSTR without arguments. However
-we pass arguments to them in code which cause build errors.
-Fix that.
+----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/lib/memset-archs.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
+>> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
+>> > 
+>> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
+>> > wrote:
+>> > 
+>> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
+>> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
+>> > >> 
+>> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
+>> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
+>> > >> > 
+>> > >> > [ . . . ]
+>> > >> > 
+>> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
+>> > >> >> > > b/include/asm-generic/vmlinux.lds.h
+>> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
+>> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
+>> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
+>> > >> >> > > @@ -338,6 +338,10 @@
+>> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+>> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
+>> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+>> > >> >> > > +		. = ALIGN(8);						\
+>> > >> >> > > +		__start___srcu_struct = .;				\
+>> > >> >> > > +		*(___srcu_struct_ptrs)					\
+>> > >> >> > > +		__end___srcu_struct = .;				\
+>> > >> >> > >  	}								\
+>> > >> >> > 
+>> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
+>> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
+>> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
+>> > >> >> > just fine. You could squash the below patch into this one or apply it on top
+>> > >> >> > of the dev branch.
+>> > >> >> 
+>> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
+>> > >> >> work.
+>> > >> >> 
+>> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
+>> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
+>> > >> >> optimism?
+>> > >> > 
+>> > >> > And to answer the other question, in the case where I am suffering from
+>> > >> > excessive optimism, it should be a separate commit.  Please see below
+>> > >> > for the updated original commit thus far.
+>> > >> > 
+>> > >> > And may I have your Tested-by?
+>> > >> 
+>> > >> Just to confirm: does the cleanup performed in the modules going
+>> > >> notifier end up acting as a barrier first before freeing the memory ?
+>> > >> If not, is it explicitly stated that a barrier must be issued before
+>> > >> module unload ?
+>> > >> 
+>> > > 
+>> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
+>> > > responsibility of the module writer to prevent delays for all modules.
+>> > 
+>> > It's a srcu barrier yes. Considering it would be a barrier specific to the
+>> > srcu domain within that module, I don't see how it would cause delays for
+>> > "all" modules if we implicitly issue the barrier on module unload. What
+>> > am I missing ?
+>> 
+>> Yes you are right. I thought of this after I just sent my email. I think it
+>> makes sense for srcu case to do and could avoid a class of bugs.
+> 
+> If there are call_srcu() callbacks outstanding, the module writer still
+> needs the srcu_barrier() because otherwise callbacks arrive after
+> the module text has gone, which will be disappoint the CPU when it
+> tries fetching instructions that are no longer mapped.  If there are
+> no call_srcu() callbacks from that module, then there is no need for
+> srcu_barrier() either way.
+> 
+> So if an srcu_barrier() is needed, the module developer needs to
+> supply it.
 
-diff --git a/arch/arc/lib/memset-archs.S b/arch/arc/lib/memset-archs.S
-index f230bb7092fd..b3373f5c88e0 100644
---- a/arch/arc/lib/memset-archs.S
-+++ b/arch/arc/lib/memset-archs.S
-@@ -30,10 +30,10 @@
- 
- #else
- 
--.macro PREALLOC_INSTR
-+.macro PREALLOC_INSTR	reg, off
- .endm
- 
--.macro PREFETCHW_INSTR
-+.macro PREFETCHW_INSTR	reg, off
- .endm
- 
- #endif
+When you say "callbacks arrive after the module text has gone",
+I think you assume that free_module() is invoked before the
+MODULE_STATE_GOING notifiers are called. But it's done in the
+opposite order: going notifiers are called first, and then
+free_module() is invoked.
+
+So AFAIU it would be safe to issue the srcu_barrier() from the module
+going notifier.
+
+Or am I missing something ?
+
+Thanks,
+
+Mathieu
+
+
 -- 
-2.14.5
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
