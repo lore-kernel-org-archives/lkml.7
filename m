@@ -2,186 +2,195 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E9C282DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD0C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD1D208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B528420870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jXTBqI9w"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O44LSWDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbfDHHiG (ORCPT
+        id S1726554AbfDHHiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:38:06 -0400
-Received: from mout.web.de ([212.227.17.12]:44991 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfDHHiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:38:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554709050;
-        bh=VShkqZmICf6eV4rGT0El95C9oUWz6IpqeQsQewAXvVk=;
-        h=X-UI-Sender-Class:Subject:Cc:References:From:To:Date:In-Reply-To;
-        b=jXTBqI9wk/pz7WWgBTyw+KU2wSJjcuqD91frJBVr6bdYCxhCfXo4/Hh1CHao7z5hz
-         nmptQthFrCFoCvfqXDx34+HbgBkPPR+qUH3nhkQQccTN74S9N9lNFWAMdqwbDh+v1c
-         lTDDHI82Pr/0W0Izmi56p5URs8pR+0NsXW5XmM9M=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.184.114]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M3T1Y-1gvayf42SG-00qyXg; Mon, 08
- Apr 2019 09:37:30 +0200
-Subject: Re: [PATCH 3/5] mt76: fix a leaked reference by adding a
- missingof_node_put
-Cc:     UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        John Linn <John.Linn@xilinx.com>,
-        Yi Wang <wang.yi59@zte.com.cn>, linux-kernel@vger.kernel.org
-References: <201904081455561126540@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Wen Yang <wen.yang99@zte.com.cn>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Message-ID: <63a3b39a-0b01-f224-3c1c-d142519b7dd7@web.de>
-Date:   Mon, 8 Apr 2019 09:37:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 03:38:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45663 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfDHHiu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:38:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s15so14983739wra.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 00:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=M34WUxJXElG+xCIPmMPrZPxdlhgyl9xNwpJ13GMLopY=;
+        b=O44LSWDra/2gwBedXk5or+Weqq5HCFJY0XOjsHIJ6LhmWSPCxVU4l/7k/Gub+XBVy2
+         MtkFAA6dcSocMxyXdiqtzBOZpgSF3FourKrG4i3mW5zcSC9hQumWFMt/7q5viQ6jYEFO
+         Y2HkIxNoOomIU1Yljx3ga+PYpQg1OcJG7MW1ZdsHBnfvKlJlM5V4K5EGimGGVzgVra0f
+         pzK4puTNSnsEdU5IzQPhI41NOZQ6QREeoivFGimZbYvt4Pxl1fi119ZVJkJnEL5dOICm
+         cMUWKQApP7S5ipW0XqUfkKRoCfBqTvsx4EMNMNqUSNhOSPtArRGUhMMs4QlkVDT3im+z
+         VEqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=M34WUxJXElG+xCIPmMPrZPxdlhgyl9xNwpJ13GMLopY=;
+        b=uXOpG6WRAmINEC+hp9uB68V+TbU2N9QM4n5hv82vIAqDpJ5merxIA2oaKzaSgLGQPd
+         M1OPLlJlLzNhHd4dbnJoJvatZ3T6OQPU0TFTbiDiZB9SER6lrnS801BcvoBljn4uwP8j
+         GXEznOO+/lvjbHHSYBXfLM++FR6gBDMdnS5J9UYRETkQPtLiDG1Cj9dDXGMQucjY4xuS
+         6oi9jP+MztQJpw2rKifsKyy/dHai/M0Mt4//QBksoygZjbvimJaVhJIuNjnl4GS6B9k1
+         gnE/Do3TtQHC5h/cYekRlWk0MQJH/GJ0hmblPQVgohN8LwRBcNAH89m/GftqbfcNIMwX
+         dODw==
+X-Gm-Message-State: APjAAAVkx7FctICTYwmzwPCyQSOguFyQpC9iVgewDGCQ6ZbyMPRulAG8
+        F2y2i4NwUiFBcT1pnG8If7VuM3yjmnc=
+X-Google-Smtp-Source: APXvYqya+98giA+Gl7P1A6wG7gR0BYEfTb9Zk8is/I02ucG3bcrMTUSRqE6G6YpPpG/7xwhDXK7tOQ==
+X-Received: by 2002:adf:e889:: with SMTP id d9mr2257765wrm.162.1554709127980;
+        Mon, 08 Apr 2019 00:38:47 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id f15sm34190799wru.21.2019.04.08.00.38.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Apr 2019 00:38:47 -0700 (PDT)
+Message-ID: <7bd9dd9123779165cc172853ae7ee6d3d63c329f.camel@baylibre.com>
+Subject: Re: [PATCH 1/4] clk: meson: mpll: add init callback and regs
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Emilio Lopez <emilio@elopez.com.ar>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 08 Apr 2019 09:38:44 +0200
+In-Reply-To: <155449701325.20095.2265240732374772927@swboyd.mtv.corp.google.com>
+References: <20190325111200.15940-1-jbrunet@baylibre.com>
+         <20190325111200.15940-2-jbrunet@baylibre.com>
+         <155353381842.20095.17915880223118004926@swboyd.mtv.corp.google.com>
+         <8b6f0bc6210834af2aff2de7dc95692dd87db539.camel@baylibre.com>
+         <155389767798.20095.10570017301900287354@swboyd.mtv.corp.google.com>
+         <6ef984dabf626760ae606567facdc5245fbba984.camel@baylibre.com>
+         <CAEG3pNCrANkLBeEA_wVU7n4U57X3sd-1EzhUZ_PHBryqPHoAaQ@mail.gmail.com>
+         <155449701325.20095.2265240732374772927@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <201904081455561126540@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:W0XYYVf3gKwX03vcM0gWkGN9VYz76Fkk+FNo1QKMKG8IJVLJZsc
- ggG2T0c2pkq/2cpMT1rAavHYyUsYziuPs3btezM9kA3BOH4h01wIU04qN+iYAjV0MLJIaJi
- dob7arOCikkGiJI0KrrverD9lRjJJhPa0bmawVFCPglVKfWawk7NE3Ogzgq/6IhUeJzKADB
- eHkOElg3ekhY8rSg3xaRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IgzGU5NqPGc=:AYLypjgo0qIstYg1rzhUl0
- rJp235hUqmDs7Hc9EqOuYgdplG4rZ9Nb3vOD1k2Chqv+/GlMc6tM68uLYdD0twmuhVsIUynik
- PeMBL7JhLQj0OZKYN9KWmywoVt1z4zuZGIo++UaToQIZneG8X0AH3ccGI/xETqL1M8GYQUYc1
- 9f8zX0MLaIf5voeWQpeaNhswzsheUhz6YsRNkakn3UxgGWAu6r0mzPvZZqFymYAwqn3UAPU/d
- Cs90OTLWhZAXTScZuv3ECqxVl+xKqKBUD2Yp2I0fH9VPgS1tIZAew9qf1ECtbdSL0CHTxgL5D
- VnUIHOomXpEg13LTgiuL+dqnDuRVvXcP2Zvv0FbK9BP9wXw5IbOTK0EaEq+n2fZm70jwxN6CQ
- Ag1gxph7oo8IgY9zmE2QC7BTkByRKONHj8xQRdYmCSDUSupqQbgbQBoV2aqIUJDteuxFfMkcf
- 7Wlh+QRvdYZ7GMoGc94D2dztDlvhN+vK//l+WyyjCK8/COc90GZ0J6tsHmvXXpgHmBNzgWLdv
- if/2XuuQHrR7fZ61xGWMf5VNy00JkPiqg2pfKJNKAJb0asV7O0lcJO384iXImY+rp4CKRwNS5
- nkSN1jrUp+UjUHaJ9BqvDmg7UwL+I22CTRpUNKuN6z1jLbTQC2+EuQuO2gVKFdIR/YYgK8pcH
- oFl5shn4ZtBLIjssaLPdI+MLHu/V2z0oTFs4Tq/ZuKRRHvcVUDBr+brdKrCLD1siqWcdJ+z8P
- gb9Ae9n2v/9Jdfz3forQYeOV9Z5QTylcOyZxaHhX/jpIax4C0DkhEdJ0wMzs3rCgEQZTTRS8I
- qLvYKvTb2IvMd1Dy89szv6/cJ2xnUVkVJWnLyr01q0+LaI1HPXIK/Y/ZNaVl0twkvVORG0jGi
- xZdgS3mYP9VGqXqEQJ4l//HPjh8we0r/2FkjSy3auNgBw1tax4t4E9FG72u1K++HRP6CaMVJW
- Rbiktak+cfQ==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> @@ -54,22 +54,30 @@  mt76_get_of_eeprom(struct mt76_dev *dev, int len)
->>>          part =3D np->name;
->>>
->>>      mtd =3D get_mtd_device_nm(part);
->> =E2=80=A6
->>> +    if (retlen < len) {
->>> +        ret =3D -EINVAL;
->>> +        goto out_put_node;
->>
->> I find a jump to an immediately following source code place unnecessary=
-.
->> Would you like to delete it?
->>
->>
->>> +    }
->>>
->>> -    return 0;
->>> +out_put_node:
->>> +    of_node_put(np);
->>> +    return ret;
->>>  #else
->>
->> Can another bit of fine-tuning matter here?
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
-e/drivers/net/wireless/mediatek/mt76/eeprom.c?id=3D34e022d8b780a03902d82fb=
-3997ba7c7b1f40c81#n73
-=E2=80=A6
-> We may have some different opinions here.
+On Fri, 2019-04-05 at 13:43 -0700, Stephen Boyd wrote:
+> Quoting Michael Turquette (2019-04-05 08:43:40)
+> > Hi Jerome,
+> > 
+> > On Fri, Mar 29, 2019 at 3:58 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > > On Fri, 2019-03-29 at 15:14 -0700, Stephen Boyd wrote:
+> > > > > > We actively discourage using init callbacks. Can you do this some other
+> > > > > > way?
+> > > > > 
+> > > > > Yes I'm aware of that but init it the right place to do this.
+> > > > > To be clear, this is not initializing the clock to some particular rate, the
+> > > > > rate is preserved.
+> > > > > 
+> > > > > It just applies the necessary settings that needs to be done only once to make
+> > > > > sure the clock is in working order and that the rate calculated is actually
+> > > > > accurate.
+> > > > 
+> > > > Ok, but can you do that in your driver's probe routine instead of
+> > > > attaching to the init callback? We want to get rid of "init" at some
+> > > > point so throwing the init sequence stuff into the driver probe around
+> > > > registration is a solution. Or we should think about not discouraging
+> > > > the init callback
+> > > 
+> > > Is is callback really a problem after all ?
+> > 
+> > It is a problem, insofar as Stephen and I want to remove .init some day.
+> > 
+> > > I think we should actively prevent using it to set a particular rate.
+> > > 
+> > > Here, the goal is put the clock in working order. The bootloader does not
+> > > always do that for us.
+> > 
+> > The above two sentences make it sound like this sequence belongs in .prepare().
+> > 
+> > I know that you're concerned with setting rate, but I guess it is safe
+> > to assume that you'll always complete .prepare() before you begin to
+> > execute .set_rate(), no? This also avoids the ugliness of putting it
+> > in the .probe(), which I agree doesn't feel like an accurate thing to
+> > do for a clock's own programming sequence.
+> > 
+> > .probe() is an OK place to put policy (turn these clocks on or set
+> > them to this rate, for a known-good configuration).
+> > 
+> 
+> Following along with this reasoning, maybe we need a 'prepare_once'
+> callback that does this the first time the clk is prepared or set_rate
+> is called on it. The problem I have with the init callback is that the
+> semantics of when it's called and what has happened before it's called
+> isn't clearly defined. I'm afraid to remove it and also afraid to move
+> around where it's called from. I've been itching to get it out of under
+> all the locks we're holding at registration time, but I don't know if
+> that's feasible, for example.
+> 
 
-Obviously, yes for this implementation detail.
+If removing .init() is important for you, I would prefer to help guys. That
+being said, we need a decent solution to some use case if this is going to
+work.
+
+I'll illustrate with examples from the meson code but I think they represent
+fairly common cases:
+
+1) clk-pll: Without the work done init(), the pll just won't lock ...
+
+I agree that we would see the problem when the clock is finally enabled, so we
+could do "init" sequence in .prepare() each time it is called. The sequence
+might be "long" (with a couple of delays in it) so doing it on each call to
+.prepare() is wasting time but it could work.
+
+Something like .prepare_once would help for this.
+
+2) clk-mpll: Without the work done in .init(), the fractional part of the
+divider will not work, only the integer part works => the rate calculated is
+off by a significant margin. IOW, until the initial setup is done, the result
+of .recalc_rate() is off and cannot be trusted.
+
+.prepare() (and .prepare_once() if called a the same stage) is too late. We
+would need something that runs before any call to .recalc_rate() is made.
+
+We could also think about clocks with the ability to observe and feedback
+(read-only) on the actual output signal. Such thing might need an initial()
+setup as well.
+
+3) sclk: This is a kind of divider which gates when the value is zero. We need
+to save the divider value on .disable() to restore it on .enable(). In
+.init(), if divider value is 0 (gated) we init cached value to the maximum
+divider value. This done so a call to .enable() works, even without prior
+calls to .set_rate().
+
+Here, again, I think .prepare() is a too late.
+
+Maybe it is a bit extreme but we could also think about weird muxes not
+reporting the parent accurately until some prior setting is done. For those
+you need something that runs before all the orphan mechanism in the clock
+register.
+
+Whatever the name we give it, It think it would help if we had a (not
+discouraged) callback that is guaranteed to run before anything else is called
+on the clock. This is what I tried to do with 541debae0adf ("clk: call the
+clock init() callback before any other ops callback").
+
+Having the counterpart callback, guaranteed to run last, would allow a clock
+to allocate (and de-allocate) stuff. It would be an interesting addition IMO.
+For clocks which needs to store things (such as sclk), it would allow to take
+the runtime data out of the init data.
+
+What about .register() and .deregister() ? It would map nicely to the CCF API
+?
 
 
-> Deleting the goto statement may not be good.
-
-I find such an adjustment helpful here.
 
 
-> If the code further up is changed it's easy enough to miss
-> that a goto statement needs to be added here.
-
-There are the usual consequences to consider for every change.
-
-
-> Better to set ret to zero explicitly, this is the success path after all=
-.
-
-I disagree to this information because the variable was set to
-the return value from a call of the function =E2=80=9Cmtd_read=E2=80=9D al=
-ready.
-
-Regards,
-Markus
