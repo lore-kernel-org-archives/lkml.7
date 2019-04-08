@@ -8,122 +8,130 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6761C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF4C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D61B213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C74213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbUrc8a0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MchLEDOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfDHWdj (ORCPT
+        id S1727787AbfDHWfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:33:39 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35574 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfDHWdi (ORCPT
+        Mon, 8 Apr 2019 18:35:25 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41475 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfDHWfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:33:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s39so13179224edb.2;
-        Mon, 08 Apr 2019 15:33:37 -0700 (PDT)
+        Mon, 8 Apr 2019 18:35:25 -0400
+Received: by mail-ed1-f67.google.com with SMTP id u2so8744178eds.8;
+        Mon, 08 Apr 2019 15:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/zZ6MqEe/5u/116LxAogiG2NpDwuN4xleJLV8b87cz0=;
-        b=nbUrc8a0BU8kBk7BiAqI+GrUztZRfylvmbsEGy2QhunADpk8S6VHI4KeKyeubCXPey
-         JYAThEx05tzwJqktCKr5AXks5pt72CQwc1ZV+rBXoj7aOzKGaLMJZU3p28753Yafs20l
-         X97E5lW6eq0Ko9cQ9FJvNzlRw7N2hTZf9ELRHKcVccUbZYzrXYLOUAy7lPCJowOkSJ5p
-         o2th9g491vCpaTCmdtn82IFQgolSl8V6hKLyNRSXafIOyTN4ajsgsMHmpaS2mkS3A4W5
-         NkpYmBW19E7JRqvuzOL0VyA3JXN44btf+RKzeVkL4K6HZuOi6JvsCFSdSu2hVABCvtip
-         ftzA==
+        bh=AJTWu+gzIUIvtWlNqA1e99iCU+3wNgpuuBcFCKmYYzI=;
+        b=MchLEDOssAovwrDCxnZWnsSB99u9map72+dURApDIZfwla/M44b+uoSu8mZPqdUIh0
+         f+8dJVyfY4PvKjGep8ULxvPKEuU/ilL5ZUbUe0LnVRSqxowkUqHSkU48j5vUSX3RSwP3
+         0IpzytEHiuOR7HkgUb5G56uH0PDbuTP2zd3AB3Sm/mlWTMqp4+DiLY1HAHLXrgGKGp3d
+         PIYa5wCtsx3GIrA3p0nx9HQgTYPFurXN9gHG1dGs5rCHFAvu/bubxqONmrRgJXmY+/v/
+         n6ByH4UcOQAO1NND8IAagMANBJPE/nQijnY5hTMCTUMZCi2gdccBS1DB60CVcvZ62i8k
+         z6mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/zZ6MqEe/5u/116LxAogiG2NpDwuN4xleJLV8b87cz0=;
-        b=IsHuw2NsQ7wx489+Rrk8SmKZG6YYuroSshxuaBicv8YLuYW2zhFq/m9OCYDa9Ozgat
-         uSHJ/U9jR0wrcjY9Pl66nMFzkaNXs/dfFTvdx/pWXHiOmjYFLUlr2g7vBNU1gc/HJOG4
-         Dhu+TggvOqgjLrVkml7g1cvNBrCNX/v93/ccvkkxCeqMZA5VqvA1Tg7eBFG06G3sLwdB
-         rO4MIcjz3Np2NR89sSuykG5gXMmQm4fZgWctBYLLfmcGy27qTqNHJPebZiPofUeSdczV
-         1oznkInzz+t9WcfLuKf+45QPO1Wp6M7Ncg2/my/oG6XFjMsAlBUmI4UebDNXR5zh9kDD
-         BdIA==
-X-Gm-Message-State: APjAAAWSoIpG3q3zZDhazxZX3oY5d4YX34rbVLq3+Q12B1gLsysRn8DC
-        OOfkYEXUdNgcwsrEgs2pDMI=
-X-Google-Smtp-Source: APXvYqzuW+JJsI1VWkZ+AGhsrCWk95sE/CyjQtzQBT+s2LjM0DSs4PigHK5NmdET+ntFXS/geYZ22Q==
-X-Received: by 2002:a50:a4aa:: with SMTP id w39mr20865551edb.206.1554762817169;
-        Mon, 08 Apr 2019 15:33:37 -0700 (PDT)
+        bh=AJTWu+gzIUIvtWlNqA1e99iCU+3wNgpuuBcFCKmYYzI=;
+        b=NltfdMFoUUMIuPMhDZhp45jaFf91kyx2ZvSHu8y0Fgd5Do5+PEmKMwE5CojkCAvxzS
+         AYnxT+JK30Q8fn/TcIc0TJOxEOtbASdelNhlfKtr5zRWuJvRsBiGEZpMxyc+udy96JCl
+         JtzQbY0gA9AOjTe27rgQQ++KrDkY5IPBEnlB0KKIRcmiH4wOQwvOQ+8GWK7593X4P6H+
+         pLrQdr45tTIcJFCo8yeuQfaAW/wxhck3sfydztVfAG7KJ5kXXv+FkphLtaLn+QNfgpS5
+         RIErtIOyNZEcDxlbIaTXgUn/GumVjcwqy6yh9V3DMG96L1QPdqQjvFR2oFA/dH/OB+Ne
+         AqjQ==
+X-Gm-Message-State: APjAAAVL67LVTU+HJqXINlAlXWPD2gNprAr2MFs1ffAFZSBau8ya6tJa
+        DZoXjcXGxJazAOBiJouERzYJgwPdc8t7ng==
+X-Google-Smtp-Source: APXvYqy9OBmjwRCy5fSl7SmoJah/JCXmykWQkK8AQEwrUta0ooOAFnALQE7AcndYAO9m0zSAdARcFA==
+X-Received: by 2002:a50:912b:: with SMTP id e40mr21122665eda.44.1554762923695;
+        Mon, 08 Apr 2019 15:35:23 -0700 (PDT)
 Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id w58sm9213684edd.69.2019.04.08.15.33.36
+        by smtp.gmail.com with ESMTPSA id i1sm8904250edi.15.2019.04.08.15.35.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Apr 2019 15:33:36 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 15:33:34 -0700
+        Mon, 08 Apr 2019 15:35:22 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 15:35:20 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/12] s390: ctcm: fix ctcm_new_device error return code
-Message-ID: <20190408223334.GD18333@archlinux-i9>
+Subject: Re: [PATCH 07/12] s390: cio: fix cio_irb declaration
+Message-ID: <20190408223520.GE18333@archlinux-i9>
 References: <20190408212648.2407234-1-arnd@arndb.de>
- <20190408212648.2407234-6-arnd@arndb.de>
+ <20190408212648.2407234-7-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408212648.2407234-6-arnd@arndb.de>
+In-Reply-To: <20190408212648.2407234-7-arnd@arndb.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:26:19PM +0200, Arnd Bergmann wrote:
-> clang points out that the return code from this function is
-> undefined for one of the error paths:
+On Mon, Apr 08, 2019 at 11:26:20PM +0200, Arnd Bergmann wrote:
+> clang points out that the declaration of cio_irb does not match the
+> definition exactly, it is missing the alignment attribute:
 > 
-> ../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
->       [-Wsometimes-uninitialized]
->                 if (priv->channel[direction] == NULL) {
->                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
->         return result;
->                ^~~~~~
-> ../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
->                 if (priv->channel[direction] == NULL) {
->                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
->         int result;
->                   ^
-> 
-> Make it return -ENODEV here, as in the related failure cases.
-> gcc has a known bug in underreporting some of these warnings
-> when it has already eliminated the assignment of the return code
-> based on some earlier optimization step.
+> ../drivers/s390/cio/cio.c:50:1: warning: section does not match previous declaration [-Wsection]
+> DEFINE_PER_CPU_ALIGNED(struct irb, cio_irb);
+> ^
+> ../include/linux/percpu-defs.h:150:2: note: expanded from macro 'DEFINE_PER_CPU_ALIGNED'
+>         DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)     \
+>         ^
+> ../include/linux/percpu-defs.h:93:9: note: expanded from macro 'DEFINE_PER_CPU_SECTION'
+>         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
+>                ^
+> ../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+>         __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+>                                 ^
+> ../drivers/s390/cio/cio.h:118:1: note: previous attribute is here
+> DECLARE_PER_CPU(struct irb, cio_irb);
+> ^
+> ../include/linux/percpu-defs.h:111:2: note: expanded from macro 'DECLARE_PER_CPU'
+>         DECLARE_PER_CPU_SECTION(type, name, "")
+>         ^
+> ../include/linux/percpu-defs.h:87:9: note: expanded from macro 'DECLARE_PER_CPU_SECTION'
+>         extern __PCPU_ATTRS(sec) __typeof__(type) name
+>                ^
+> ../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+>         __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+>                                 ^
+> Use DECLARE_PER_CPU_ALIGNED() here, to make the two match.
 > 
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
 > ---
->  drivers/s390/net/ctcm_main.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/s390/cio/cio.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-> index 7617d21cb296..f63c5c871d3d 100644
-> --- a/drivers/s390/net/ctcm_main.c
-> +++ b/drivers/s390/net/ctcm_main.c
-> @@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
->  		if (priv->channel[direction] == NULL) {
->  			if (direction == CTCM_WRITE)
->  				channel_free(priv->channel[CTCM_READ]);
-> +			result = -ENODEV;
->  			goto out_dev;
->  		}
->  		priv->channel[direction]->netdev = dev;
+> diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+> index 9811fd8a0c73..92eabbb5f18d 100644
+> --- a/drivers/s390/cio/cio.h
+> +++ b/drivers/s390/cio/cio.h
+> @@ -115,7 +115,7 @@ struct subchannel {
+>  	struct schib_config config;
+>  } __attribute__ ((aligned(8)));
+>  
+> -DECLARE_PER_CPU(struct irb, cio_irb);
+> +DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
+>  
+>  #define to_subchannel(n) container_of(n, struct subchannel, dev)
+>  
 > -- 
 > 2.20.0
 > 
