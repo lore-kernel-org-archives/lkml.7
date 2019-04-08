@@ -3,184 +3,259 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434EDC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7684C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1016B21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D5A2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfDHMYx (ORCPT
+        id S1726778AbfDHMY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:24:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55357 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfDHMYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:24:53 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o25so14096315wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:24:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FdH/eVjOF5vJubpcVL00uT0hsMhVuQ70Ri1ks9OE+zo=;
-        b=cf1JDrzgvDe78FX1p6Ozqh7ELkeeueqaHim278HYEFfohuLYjKt/SnMN/ztss4FwY+
-         ak+fbrFIllhEEX6xWznZaLT+TYxxNJs/H++G/Y0HPqy/ssKwxpmGvyCgB6UGVrlzQCN+
-         LcAxJ96lwJUbyAwal1KNlhvkD4yjZty1kXZ1h2hoqawzVaRHek7AIJGKfocKBoWMGEnk
-         17GezSBmpQzou18S8o52IPryaIaojzweyqhhcG9CE3Lb5a6igDT9R54SvbCfcQD4VlrY
-         nXdK3tmC7yJgjthzysB7p3Mj6ZkGw61wrUoUvuYTfegRw3eu7M4t7BDV4+CODEQZn8Wc
-         PWng==
-X-Gm-Message-State: APjAAAX2c1A3TEOiS5o3ZCOb1C5hc8EiVuFqCSL9C6sjhJH/h9Mi78DO
-        6RzlL/xm17AxESnbtnu1kOW4ig==
-X-Google-Smtp-Source: APXvYqzG02kKB25fQioCE8HbB19hFJB4jzB5CiK6+cXUSU+GoWbaXIMiHhtYbkmzM78uYu5/sqGnNg==
-X-Received: by 2002:a7b:cd95:: with SMTP id y21mr17851706wmj.29.1554726290933;
-        Mon, 08 Apr 2019 05:24:50 -0700 (PDT)
-Received: from t460s.bristot.redhat.com ([193.205.81.200])
-        by smtp.gmail.com with ESMTPSA id x205sm12866725wmg.9.2019.04.08.05.24.48
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 05:24:50 -0700 (PDT)
-Subject: Re: [PATCH V2 2/2] trace,x86: Add nmi to the irq_vectors class
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-References: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
- <d9e0e9d14d2ef394cea974e2f47c0099b7d18839.1554142415.git.bristot@redhat.com>
- <alpine.DEB.2.21.1904052323200.1802@nanos.tec.linutronix.de>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <9fc0399e-ab53-1074-623a-a826e2466277@redhat.com>
-Date:   Mon, 8 Apr 2019 14:24:47 +0200
+        Mon, 8 Apr 2019 08:24:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:24558 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbfDHMYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:24:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BDE0883CA;
+        Mon,  8 Apr 2019 12:24:54 +0000 (UTC)
+Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5804B665C4;
+        Mon,  8 Apr 2019 12:24:45 +0000 (UTC)
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <ef0c542a-ded5-f063-e6e2-8e84d1c12c85@redhat.com>
+Date:   Mon, 8 Apr 2019 08:24:43 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904052323200.1802@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="njUWTaoJWBqh1lxfc3zrAPUOXJa2c60xB"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 08 Apr 2019 12:24:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/19 11:50 PM, Thomas Gleixner wrote:
-> On Mon, 1 Apr 2019, Daniel Bristot de Oliveira wrote:
->> Currently, the irq_vector class of tracepoints does not include the NMI
->> entry. The NMI was in the first set of tracepoints for IRQs, but it was
->> dropped off because of the logic of switching IDT when enabling trace[1].
->> However, as the switching IDT logic was removed [2], it is possible to add
-> 
-> Well, not really. tracepoints inside of do_nmi() have been there for a long
-> time.
-> 
-> The nasty part was that the irq_vector patches injected the tracepoints way
-> down in the low level entry code, which caused more problems than it solved
-> including the extra IDT switcheroo.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--njUWTaoJWBqh1lxfc3zrAPUOXJa2c60xB
+Content-Type: multipart/mixed; boundary="pt3BIrnFE3FYH1MLYjSIxqGd4MxszPRyq";
+ protected-headers="v1"
+From: Nitesh Narayan Lal <nitesh@redhat.com>
+To: Alexander Duyck <alexander.duyck@gmail.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, David Hildenbrand <david@redhat.com>
+Cc: kvm list <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-mm <linux-mm@kvack.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ lcapitulino@redhat.com, pagupta@redhat.com, wei.w.wang@intel.com,
+ Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
+ dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Message-ID: <ef0c542a-ded5-f063-e6e2-8e84d1c12c85@redhat.com>
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+In-Reply-To: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
 
-humm... the benefits of having the tracepoints at the very begin/end of the
-handler is that it captures better the amount of interference/overhead it caused
-in the current thread (and IRQ too in the case of NMIs).
+--pt3BIrnFE3FYH1MLYjSIxqGd4MxszPRyq
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
->> the NMI tracepoints back.
-> 
-> So again we have two tracepoints. One for the entry and one for the
-> handlers. Do we really need both? If so please provide some rationale.
 
-For example:
+On 4/5/19 8:09 PM, Alexander Duyck wrote:
+> So I am starting this thread as a spot to collect my thoughts on the
+> current guest free page hinting design as well as point out a few
+> possible things we could do to improve upon it.
+>
+> 1. The current design isn't likely going to scale well to multiple
+> VCPUs. The issue specifically is that the zone lock must be held to
+> pull pages off of the free list and to place them back there once they
+> have been hinted upon. As a result it would likely make sense to try
+> to limit ourselves to only having one thread performing the actual
+> hinting so that we can avoid running into issues with lock contention
+> between threads.
+>
+> 2. There are currently concerns about the hinting triggering false OOM
+> situations if too much memory is isolated while it is being hinted. My
+> thought on this is to simply avoid the issue by only hint on a limited
+> amount of memory at a time. Something like 64MB should be a workable
+> limit without introducing much in the way of regressions. However as a
+> result of this we can easily be overrun while waiting on the host to
+> process the hinting request. As such we will probably need a way to
+> walk the free list and free pages after they have been freed instead
+> of trying to do it as they are freed.
+>
+> 3. Even with the current buffering which is still on the larger side
+> it is possible to overrun the hinting limits if something causes the
+> host to stall and a large swath of memory is released. As such we are
+> still going to need some sort of scanning mechanism or will have to
+> live with not providing accurate hints.
+>
+> 4. In my opinion, the code overall is likely more complex then it
+> needs to be. We currently have 2 allocations that have to occur every
+> time we provide a hint all the way to the host, ideally we should not
+> need to allocate more memory to provide hints. We should be able to
+> hold the memory use for a memory hint device constant and simply map
+> the page address and size to the descriptors of the virtio-ring.
+>
+> With that said I have a few ideas that may help to address the 4
+> issues called out above. The basic idea is simple. We use a high water
+> mark based on zone->free_area[order].nr_free to determine when to wake
+> up a thread to start hinting memory out of a given free area. From
+> there we allocate non-"Offline" pages from the free area and assign
+> them to the hinting queue up to 64MB at a time. Once the hinting is
+> completed we mark them "Offline" and add them to the tail of the
+> free_area. Doing this we should cycle the non-"Offline" pages slowly
+> out of the free_area.=20
+any ideas about how are you planning to control this?
+> In addition the search cost should be minimal
+> since all of the "Offline" pages should be aggregated to the tail of
+> the free_area so all pages allocated off of the free_area will be the
+> non-"Offline" pages until we shift over to them all being "Offline".
+> This should be effective for MAX_ORDER - 1 and MAX_ORDER - 2 pages
+> since the only real consumer of add_to_free_area_tail is
+> __free_one_page which uses it to place a page with an order less than
+> MAX_ORDER - 2 on the tail of a free_area assuming that it should be
+> freeing the buddy of that page shortly. The only other issue with
+> adding to tail would be the memory shuffling which was recently added,
+> but I don't see that as being something that will be enabled in most
+> cases so we could probably just make the features mutually exclusive,
+> at least for now.
+>
+> So if I am not mistaken this would essentially require a couple
+> changes to the mm infrastructure in order for this to work.
+>
+> First we would need to split nr_free into two counters, something like
+> nr_freed and nr_bound. You could use nr_freed - nr_bound to get the
+> value currently used for nr_free. When we pulled the pages for hinting
+> we would reduce the nr_freed value and then add back to it when the
+> pages are returned. When pages are allocated they would increment the
+> nr_bound value. The idea behind this is that we can record nr_free
+> when we collect the pages and save it to some local value. This value
+> could then tell us how many new pages have been added that have not
+> been hinted upon.
+>
+> In addition we will need some way to identify which pages have been
+> hinted on and which have not. The way I believe easiest to do this
+> would be to overload the PageType value so that we could essentially
+> have two values for "Buddy" pages. We would have our standard "Buddy"
+> pages, and "Buddy" pages that also have the "Offline" value set in the
+> PageType field. Tracking the Online vs Offline pages this way would
+> actually allow us to do this with almost no overhead as the mapcount
+> value is already being reset to clear the "Buddy" flag so adding a
+> "Offline" flag to this clearing should come at no additional cost.
+>
+> Lastly we would need to create a specialized function for allocating
+> the non-"Offline" pages, and to tweak __free_one_page to tail enqueue
+> "Offline" pages. I'm thinking the alloc function it would look
+> something like __rmqueue_smallest but without the "expand" and needing
+> to modify the !page check to also include a check to verify the page
+> is not "Offline". As far as the changes to __free_one_page it would be
+> a 2 line change to test for the PageType being offline, and if it is
+> to call add_to_free_area_tail instead of add_to_free_area.
+Is it possible that once the pages are offline, there is a large
+allocation request in the guest needing those offline pages as well?
+>
+> Anyway this email ended up being pretty massive by the time I was
+> done. Feel free to reply to parts of it and we can break it out into
+> separate threads of discussion as necessary. I will start working on
+> coding some parts of this next week.
+>
+> Thanks.
+>
+> - Alex
+--=20
+Regards
+Nitesh
 
-  f-4447  [000] d.Z.  1253.162036: nmi_entry: vector=2
-  f-4447  [000] d.Z.  1253.162038: nmi_handler: nmi_cpu_backtrace_handler()
-delta_ns: 354 handled: 0
-  f-4447  [000] d.Z.  1253.162267: nmi_exit: vector=2
 
-The nmi_handler tracepoint points to an interference of 354 ns, what is very
-good! But the difference of time between the two irq_vectors tracepoint is:
+--pt3BIrnFE3FYH1MLYjSIxqGd4MxszPRyq--
 
-  1253.162267-1253.162036 = 231 us!
+--njUWTaoJWBqh1lxfc3zrAPUOXJa2c60xB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-The number looks really odd, but tracing with function tracer, we see this:
+-----BEGIN PGP SIGNATURE-----
 
-Thread running:
-  f-4447  [000] d.Z.  1487.689288: rcu_nmi_enter <-do_nmi
-  f-4447  [000] d.Z.  1487.689289: rcu_dynticks_curr_cpu_in_eqs <-rcu_nmi_enter
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyrPYwACgkQo4ZA3AYy
+oznpSA//axsfJiWt0W5AbdGPm5Veo7CmnDLt6jlDH0lM7uji3BnfL9mxcHruoLIC
+62iRfMZ+ank2gZzyGyhhy7gYfIeQtbzBkYJAsUBV7NBu5WTwI03C3e4ipWZd3d1G
+1W/vSU4kavSfIMcxjdDwD0uaJhJhvybz6cPs/Mmwe+UmgYKBloP4jntx9Wadmx+J
+CMTwuDl8RViz/VobReQiIg5PdgebFqDojcPSQVV8jLxj0PP9F4YznN2x9zzQg9Yq
+eHgaXqii6EW7DN5M/hxPXBwXtO636LtJrXWSZTDsF/qnLX+tc8PzRv+pNTYyo1WV
+4vbg/wzknckDQhWsEz2jeqNRr3x+/e7L/YQGP+JCeVihDZnms6uut/T7c7mAvuCq
+kFPSJEx5xnYs2yxwJCKU3enqe8j6rZ+zYToHRNFwnbo6I1Q24LTVi/XIklyp9Rug
+Z7twHWJ35R3WwAbDA9YEROHSjG4qKor4MKMxrWzQdK5bFD1tJ0eLqBCK9lczQZBb
+DjBRyXWQ+S3c1Qs8sWhgDAM1q2wyyQYjpUzg7OgLvmAn7U4y/pxZb5M3kxFfx7Js
+AP+/mKQRoALp/+D1ZPElH6LQ2IOxcoM6Y/6aHcMVYNRNQJHBTIjtTplqLA1sbaxV
+sc7bDt1Gs7ivLwV3wNE3Lw3dtg40cVjTkYKSNy9KsMD6kERADnk=
+=2pVJ
+-----END PGP SIGNATURE-----
 
-NMI starts:
-  f-4447  [000] d.Z.  1487.689290: nmi_entry: vector=2
-  f-4447  [000] d.Z.  1487.689291: default_do_nmi <-do_nmi
-  f-4447  [000] d.Z.  1487.689291: nmi_handle <-default_do_nmi
-  f-4447  [000] d.Z.  1487.689291: nmi_cpu_backtrace_handler <-nmi_handle
-
-It handles very fast:
-  f-4447  [000] d.Z.  1487.689292: nmi_handler: nmi_cpu_backtrace_handler()
-delta_ns: 780 handled: 0
-
-But some other functions continues running in the NMI context:
-[Dazed and confused, but trying to continue message ]
-  f-4447  [000] d.Z.  1487.689292: _raw_spin_trylock <-default_do_nmi
-  f-4447  [000] d.Z.  1487.689566: unknown_nmi_error <-default_do_nmi
-  f-4447  [000] d.Z.  1487.689566: nmi_handle <-unknown_nmi_error
-  f-4447  [000] d.Z.  1487.689567: printk <-unknown_nmi_error
-  f-4447  [000] d.Z.  1487.689567: vprintk_func <-printk
-  f-4447  [000] d.Z.  1487.689567: printk_safe_log_store <-vprintk_func
-  f-4447  [000] d.Z.  1487.689569: arch_irq_work_raise <-irq_work_queue
-  f-4447  [000] d.Z.  1487.689569: default_send_IPI_self <-arch_irq_work_raise
-  f-4447  [000] d.Z.  1487.689569: __default_send_IPI_shortcut
-<-default_send_IPI_self
-  f-4447  [000] d.Z.  1487.689585: native_apic_wait_icr_idle <-arch_irq_work_raise
-  f-4447  [000] d.Z.  1487.689588: printk <-unknown_nmi_error
-  f-4447  [000] d.Z.  1487.689588: vprintk_func <-printk
-  f-4447  [000] d.Z.  1487.689588: printk_safe_log_store <-vprintk_func
-  f-4447  [000] d.Z.  1487.689588: printk <-unknown_nmi_error.cold.13
-  f-4447  [000] d.Z.  1487.689588: vprintk_func <-printk
-  f-4447  [000] d.Z.  1487.689588: printk_safe_log_store <-vprintk_func
-
-Handler finishes:
-  f-4447  [000] d.Z.  1487.689589: nmi_exit: vector=2
-  f-4447  [000] d.Z.  1487.689589: rcu_nmi_exit <-do_nmi
-  f-4447  [000] d.Z.  1487.689589: rcu_irq_exit <-rcu_nmi_exit
-
-And it was actually also (potentially) delaying an timer:
-  f-4447  [000] d...  1487.689590: smp_irq_work_interrupt <-irq_work_interrupt
-
-So, the nmi_handle tracepoint would not make suspicious that the NMI caused the
-delay, but the irq_vectors would (because of their position).
-
-Finally, we would have to enable a single class of tracepoints to monitor all
-interrupts.
-
-PS: I am using the vanilla kernel in a vm, so the numbers are higher, but still,
-they have the same scale in the bare metal.
-
-Thoughts?
-
--- Daniel
-
->> The tracepoints looks like:
->>           <idle>-0     [000] d.Z.   179.594315: nmi_entry: vector=2
->>           <idle>-0     [000] d.Z.   179.594396: nmi_exit: vector=2
->>
->> [1] trace,x86: irq vector tracepoint support
->>     https://lwn.net/Articles/555465/
-> 
-> Please use https://lkml.kernel.org/r/$MESSAGE-ID
-> 
->> [2] commit 4b9a8dca0e58 ("x86/idt: Remove the tracing IDT completely")
->>
->> Changes from V1:
->>   - Fix a compilation problem when CONFIG_X86_LOCAL_APIC is not set (kbuild test)
-> 
-> Please put changes below the '---' separator. They are not part of the
-> final changelog and having them below spares the maintainer the time to
-> remove them manually.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-
+--njUWTaoJWBqh1lxfc3zrAPUOXJa2c60xB--
