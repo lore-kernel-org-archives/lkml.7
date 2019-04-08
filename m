@@ -2,90 +2,86 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715BAC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E119CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491F320857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2F520880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfDHQnY (ORCPT
+        id S1728738AbfDHQpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:43:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:38405 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbfDHQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:43:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 09:43:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
-   d="scan'208";a="159288432"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Apr 2019 09:43:23 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hDXMg-0008Mp-Hb; Tue, 09 Apr 2019 00:43:22 +0800
-Date:   Tue, 9 Apr 2019 00:42:40 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     kbuild-all@01.org, cluster-devel@redhat.com,
-        Bob Peterson <rpeterso@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH gfs2] gfs2: gfs2_buf_lops can be static
-Message-ID: <20190408164240.GA95319@lkp-sb05>
-References: <201904090050.0WbeTSpF%lkp@intel.com>
+        Mon, 8 Apr 2019 12:45:02 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53414 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfDHQpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:45:02 -0400
+Received: from p5492ee6e.dip0.t-ipconnect.de ([84.146.238.110] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hDXOB-0002vn-Eu; Mon, 08 Apr 2019 18:44:55 +0200
+Date:   Mon, 8 Apr 2019 18:44:49 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard
+ pages
+In-Reply-To: <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904081841400.2352@nanos.tec.linutronix.de>
+References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de> <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com> <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
+ <CALCETrXyfEu5MHCDp+OiRdHcYQ1tMNhTMSxcAhWkOx_8r2rxsA@mail.gmail.com> <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de> <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201904090050.0WbeTSpF%lkp@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 8 Apr 2019, Andy Lutomirski wrote:
+> On Sun, Apr 7, 2019 at 11:46 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Sun, 7 Apr 2019, Andy Lutomirski wrote:
+> > > On Sun, Apr 7, 2019 at 3:44 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > > Actually we have: save_stack_trace()
+> > > >
+> > >
+> > > Like I did here:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=WIP.x86/stackguards
+> >
+> > Kinda, but what that code wants is to skip any entry before 'caller'. So we
+> > either add something like save_stack_trace_from() which is trivial on x86
+> > because unwind_start() already has an argument to hand in the start of
+> > stack or we filter out the entries up to 'caller' in that code.
+> >
+> >
+> Whoops!
+> 
+> I could add a save_stack_trace_from() or I could add a "caller"
+> argument to struct stack_trace.  Any preference as to which looks
+> better?  The latter seems a little nicer to me.
 
-Fixes: 159238adb2ac ("gfs2: Remove unnecessary extern declarations")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- lops.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The whole interface with struct stack_trace sucks. Why is skip and max
+entries in that struct and not an argument? I went through all the call
+sites and it just makes me shudder. That terminate trace with ULONG_MAX is
+another horrible hack which is then undone on several callsites
+again. Before we add more hacky stuff to it, lets cleanup that whole mess
+first.
 
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index 2fd6185..6c1ec6c 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -870,7 +870,7 @@ static void databuf_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- }
- 
- 
--const struct gfs2_log_operations gfs2_buf_lops = {
-+static const struct gfs2_log_operations gfs2_buf_lops = {
- 	.lo_before_commit = buf_lo_before_commit,
- 	.lo_after_commit = buf_lo_after_commit,
- 	.lo_before_scan = buf_lo_before_scan,
-@@ -879,7 +879,7 @@ const struct gfs2_log_operations gfs2_buf_lops = {
- 	.lo_name = "buf",
- };
- 
--const struct gfs2_log_operations gfs2_revoke_lops = {
-+static const struct gfs2_log_operations gfs2_revoke_lops = {
- 	.lo_before_commit = revoke_lo_before_commit,
- 	.lo_after_commit = revoke_lo_after_commit,
- 	.lo_before_scan = revoke_lo_before_scan,
-@@ -888,7 +888,7 @@ const struct gfs2_log_operations gfs2_revoke_lops = {
- 	.lo_name = "revoke",
- };
- 
--const struct gfs2_log_operations gfs2_databuf_lops = {
-+static const struct gfs2_log_operations gfs2_databuf_lops = {
- 	.lo_before_commit = databuf_lo_before_commit,
- 	.lo_after_commit = databuf_lo_after_commit,
- 	.lo_scan_elements = databuf_lo_scan_elements,
+Thanks,
+
+	tglx
+
+
+
