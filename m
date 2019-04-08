@@ -2,221 +2,277 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E56AC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A91C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAD320857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF8720879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfDHWxI (ORCPT
+        id S1726494AbfDHW5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:53:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58372 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728690AbfDHWxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:53:07 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38MnBv5041577
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 18:53:06 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rreyegxwx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 18:53:06 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Mon, 8 Apr 2019 23:53:03 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 23:52:59 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38MqwdX56492210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 22:52:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A3E54C040;
-        Mon,  8 Apr 2019 22:52:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C90A4C044;
-        Mon,  8 Apr 2019 22:52:56 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.157.39])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Apr 2019 22:52:56 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2 3/3] powerpc: Add support to initialize ima policy rules
-Date:   Mon,  8 Apr 2019 18:52:34 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1554763954-11795-1-git-send-email-nayna@linux.ibm.com>
-References: <1554763954-11795-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19040822-4275-0000-0000-00000325B113
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040822-4276-0000-0000-00003834C80D
-Message-Id: <1554763954-11795-4-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080164
+        Mon, 8 Apr 2019 18:57:40 -0400
+Received: from gate.crashing.org ([63.228.1.57]:44594 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbfDHW5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 18:57:39 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x38MvNsS017221;
+        Mon, 8 Apr 2019 17:57:23 -0500
+Message-ID: <ef6a6ebbce2e388659ef440a12b844d23a04cc6c.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3] PCI: al: Add Amazon Annapurna Labs PCIe host
+ controller driver
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
+        alisaidi@amazon.com, zeev@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com
+Date:   Tue, 09 Apr 2019 08:57:22 +1000
+In-Reply-To: <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
+References: <20190326125508.GG24180@google.com>
+         <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PowerNV secure boot relies on the kernel IMA security subsystem to
-perform the OS kernel image signature verification. Since each secure
-boot mode has different IMA policy requirements, dynamic definition of
-the policy rules based on the runtime secure boot mode of the system is
-required. On systems that support secure boot, but have it disabled,
-only measurement policy rules of the kernel image and modules are
-defined.
+On Thu, 2019-03-28 at 13:57 +0200, Jonathan Chocron wrote:
+> Add support for Amazon's Annapurna Labs PCIe driver. The HW
+> controller
+> is based on DesignWare's IP.
+> 
+> The HW doesn't support accessing the Root Port's config space via
+> ECAM,
+> so we obtain its base address via an AMZN0001 device.
+> 
+> Furthermore, the DesignWare PCIe controller doesn't filter out config
+> transactions sent to devices 1 and up on its bus, so they are
+> filtered
+> by the driver.
+> 
+> All subordinate buses do support ECAM access.
+> 
+> Implementing specific PCI config access functions involves:
+>  - Adding an init function to obtain the Root Port's base address
+> from
+>    an AMZN0001 device.
+>  - Adding a new entry in the MCFG quirk array
+> 
+> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
+> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
-This patch defines the arch-specific implementation to retrieve the
-secure boot mode of the system and accordingly configures the IMA policy
-rules.
+Late to the party, sorry :-) That kernel.crashing.org email is on its
+last legs...
 
-This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
-config is enabled.
+Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/Kconfig           | 14 +++++++++
- arch/powerpc/kernel/Makefile   |  1 +
- arch/powerpc/kernel/ima_arch.c | 54 ++++++++++++++++++++++++++++++++++
- include/linux/ima.h            |  3 +-
- 4 files changed, 71 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/kernel/ima_arch.c
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2d0be82c3061..7407af79ed8a 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -901,6 +901,20 @@ config PPC_MEM_KEYS
- 
- 	  If unsure, say y.
- 
-+config PPC_SECURE_BOOT
-+	prompt "Enable PowerPC Secure Boot"
-+	bool
-+	default n
-+	depends on PPC64
-+	depends on OPAL_SECVAR
-+	depends on IMA
-+	depends on IMA_ARCH_POLICY
-+	help
-+	  Linux on POWER with firmware secure boot enabled needs to define
-+	  security policies to extend secure boot to the OS.
-+	  This config allows user to enable OS Secure Boot on PowerPC systems
-+	  that have firmware secure boot support.
-+
- endmenu
- 
- config ISA_DMA_API
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index cddadccf551d..fcbc7a94888b 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -119,6 +119,7 @@ ifdef CONFIG_IMA
- obj-y				+= ima_kexec.o
- endif
- endif
-+obj-$(CONFIG_PPC_SECURE_BOOT)	+= ima_arch.o
- 
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-new file mode 100644
-index 000000000000..871b321656fb
---- /dev/null
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * ima_arch.c
-+ *      - initialize ima policies for PowerPC Secure Boot
-+ */
-+
-+#include <linux/ima.h>
-+#include <asm/secboot.h>
-+
-+bool arch_ima_get_secureboot(void)
-+{
-+	bool sb_mode;
-+
-+	sb_mode = get_powerpc_sb_mode();
-+	if (sb_mode)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+/*
-+ * File signature verification is not needed, include only measurements
-+ */
-+static const char *const default_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK",
-+	"measure func=MODULE_CHECK",
-+	NULL
-+};
-+
-+/* Both file signature verification and measurements are needed */
-+static const char *const sb_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK",
-+	"measure func=MODULE_CHECK",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig",
-+#if !IS_ENABLED(CONFIG_MODULE_SIG)
-+	"appraise func=MODULE_CHECK appraise_type=imasig",
-+#endif
-+	NULL
-+};
-+
-+/*
-+ * On PowerPC, file measurements are to be added to the IMA measurement list
-+ * irrespective of the secure boot state of the system. Signature verification
-+ * is conditionally enabled based on the secure boot state.
-+ */
-+const char *const *arch_get_ima_policy(void)
-+{
-+	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
-+		return sb_arch_rules;
-+	return default_arch_rules;
-+}
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index dc12fbcf484c..ab81a204cf4c 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -31,7 +31,8 @@ extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
- 
--#if defined(CONFIG_X86) && defined(CONFIG_EFI)
-+#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) \
-+			 || defined(CONFIG_PPC_SECURE_BOOT)
- extern bool arch_ima_get_secureboot(void);
- extern const char * const *arch_get_ima_policy(void);
- #else
--- 
-2.20.1
+> ---
+> 
+> --v2:
+>   - Fix commit message comments (incl. using AMZN0001 instead of
+>     PNP0C02)
+>   - Use the usual multi-line comment style
+> 
+> --v3:
+>   - Fix additional commit message comments
+> 
+>  MAINTAINERS                          |  6 +++
+>  drivers/acpi/pci_mcfg.c              | 12 +++++
+>  drivers/pci/controller/dwc/Makefile  |  1 +
+>  drivers/pci/controller/dwc/pcie-al.c | 93
+> ++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-ecam.h             |  1 +
+>  5 files changed, 113 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32d444476a90..7a17017f9f82 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11769,6 +11769,12 @@ T:	git
+> git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+>  S:	Supported
+>  F:	drivers/pci/controller/
+>  
+> +PCIE DRIVER FOR ANNAPURNA LABS
+> +M:	Jonathan Chocron <jonnyc@amazon.com>
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/pci/controller/dwc/pcie-al.c
+> +
+>  PCIE DRIVER FOR AMLOGIC MESON
+>  M:	Yue Wang <yue.wang@Amlogic.com>
+>  L:	linux-pci@vger.kernel.org
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index a4e8432fc2fb..b42be067fb83 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -52,6 +52,18 @@ struct mcfg_fixup {
+>  static struct mcfg_fixup mcfg_quirks[] = {
+>  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres },
+> */
+>  
+> +#define AL_ECAM(table_id, rev, seg, ops) \
+> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
+> +
+> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
+> +
+>  #define QCOM_ECAM32(seg) \
+>  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
+>  
+> diff --git a/drivers/pci/controller/dwc/Makefile
+> b/drivers/pci/controller/dwc/Makefile
+> index 7bcdcdf5024e..1ea773c0070d 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  # depending on whether ACPI, the DT driver, or both are enabled.
+>  
+>  ifdef CONFIG_PCI
+> +obj-$(CONFIG_ARM64) += pcie-al.o
+>  obj-$(CONFIG_ARM64) += pcie-hisi.o
+>  endif
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c
+> b/drivers/pci/controller/dwc/pcie-al.c
+> new file mode 100644
+> index 000000000000..65a9776c12be
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -0,0 +1,93 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used
+> in chips
+> + * such as Graviton and Alpine)
+> + *
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights
+> Reserved.
+> + *
+> + * Author: Jonathan Chocron <jonnyc@amazon.com>
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/pci-acpi.h>
+> +#include "../../pci.h"
+> +
+> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> +
+> +struct al_pcie_acpi  {
+> +	void __iomem *dbi_base;
+> +};
+> +
+> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned
+> int devfn,
+> +				     int where)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +	struct al_pcie_acpi *pcie = cfg->priv;
+> +	void __iomem *dbi_base = pcie->dbi_base;
+> +
+> +	if (bus->number == cfg->busr.start) {
+> +		/*
+> +		 * The DW PCIe core doesn't filter out transactions to
+> other
+> +		 * devices/functions on the primary bus num, so we do
+> this here.
+> +		 */
+> +		if (PCI_SLOT(devfn) > 0)
+> +			return NULL;
+> +		else
+> +			return dbi_base + where;
+> +	}
+> +
+> +	return pci_ecam_map_bus(bus, devfn, where);
+> +}
+> +
+> +static int al_pcie_init(struct pci_config_window *cfg)
+> +{
+> +	struct device *dev = cfg->parent;
+> +	struct acpi_device *adev = to_acpi_device(dev);
+> +	struct acpi_pci_root *root = acpi_driver_data(adev);
+> +	struct al_pcie_acpi *al_pcie;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+> +	if (!al_pcie)
+> +		return -ENOMEM;
+> +
+> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment,
+> res);
+> +	if (ret) {
+> +		dev_err(dev, "can't get rc dbi base address for SEG
+> %d\n",
+> +			root->segment);
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
+> +
+> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(al_pcie->dbi_base)) {
+> +		long err = PTR_ERR(al_pcie->dbi_base);
+> +
+> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
+> +			res, err);
+> +		return err;
+> +	}
+> +
+> +	cfg->priv = al_pcie;
+> +
+> +	return 0;
+> +}
+> +
+> +struct pci_ecam_ops al_pcie_ops = {
+> +	.bus_shift    = 20,
+> +	.init         =  al_pcie_init,
+> +	.pci_ops      = {
+> +		.map_bus    = al_pcie_map_bus,
+> +		.read       = pci_generic_config_read,
+> +		.write      = pci_generic_config_write,
+> +	}
+> +};
+> +
+> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index 29efa09d686b..a73164c85e78 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus,
+> unsigned int devfn,
+>  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX
+> 1.x */
+>  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene
+> PCIe v1 */
+>  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene
+> PCIe v2.x */
+> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs
+> PCIe */
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_HOST_COMMON
 
