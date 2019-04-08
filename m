@@ -2,105 +2,177 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963B8C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C75C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7186520880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9F820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfDHMCH (ORCPT
+        id S1726497AbfDHMDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:02:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46516 "EHLO huawei.com"
+        Mon, 8 Apr 2019 08:03:12 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2522 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726005AbfDHMCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:02:07 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E05DEE44A01EEE3C951F;
-        Mon,  8 Apr 2019 20:02:04 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 20:02:01 +0800
-Date:   Mon, 8 Apr 2019 13:01:51 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        <linux-iio@vger.kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: linux-next: manual merge of the staging tree with the
- staging.current tree
-Message-ID: <20190408130151.0000278a@huawei.com>
-In-Reply-To: <20190408103437.GK9224@smile.fi.intel.com>
-References: <20190408130212.0a41f2a8@canb.auug.org.au>
-        <20190408091458.00004e48@huawei.com>
-        <20190408100121.GH9224@smile.fi.intel.com>
-        <20190408111439.000049bc@huawei.com>
-        <20190408103437.GK9224@smile.fi.intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1726050AbfDHMDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:03:12 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 476B3E16A1C1A2953609;
+        Mon,  8 Apr 2019 20:03:10 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 8 Apr 2019 20:03:09 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 8 Apr 2019 20:03:09 +0800
+Subject: Re: [PATCH] f2fs: fix to avoid accessing xattr across the boundary
+To:     Randall Huang <huangrandall@google.com>, <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <20190408085016.13042-1-huangrandall@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <bc8b164b-4787-cf81-9b47-334e7e0be630@huawei.com>
+Date:   Mon, 8 Apr 2019 20:03:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20190408085016.13042-1-huangrandall@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme705-chm.china.huawei.com (10.1.199.101) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Apr 2019 13:34:37 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Hi Randall,
 
-> On Mon, Apr 08, 2019 at 11:14:39AM +0100, Jonathan Cameron wrote:
-> > On Mon, 8 Apr 2019 13:01:21 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > On Mon, Apr 08, 2019 at 09:14:58AM +0100, Jonathan Cameron wrote:  
-> > > > On Mon, 8 Apr 2019 13:02:12 +1000
-> > > > Stephen Rothwell <sfr@canb.auug.org.au> wrote:  
+On 2019/4/8 16:50, Randall Huang wrote:
+> When we traverse xattr entries via __find_xattr(),
+> if the raw filesystem content is faked or any hardware failure occurs,
+> out-of-bound error can be detected by KASAN.
+> Fix the issue by introducing boundary check.
 > 
-> > > > > Today's linux-next merge of the staging tree got a conflict in:
-> > > > > 
-> > > > >   drivers/iio/industrialio-buffer.c
-> > > > > 
-> > > > > between commit:
-> > > > > 
-> > > > >   20ea39ef9f2f ("iio: Fix scan mask selection")
-> > > > > 
-> > > > > from the staging.current tree and commit:
-> > > > > 
-> > > > >   3862828a903d ("iio: buffer: Switch to bitmap_zalloc()")
-> > > > > 
-> > > > > from the staging tree.
-> > > > > 
-> > > > > I fixed it up (I just used the staging tree version) and can carry the
-> > > > > fix as necessary. This is now fixed as far as linux-next is concerned,
-> > > > > but any non trivial conflicts should be mentioned to your upstream
-> > > > > maintainer when your tree is submitted for merging.  You may also want
-> > > > > to consider cooperating with the maintainer of the conflicting tree to
-> > > > > minimise any particularly complex conflicts.
-> > > > >     
-> > > > Thanks Stephen,
-> > > > 
-> > > > That is the correct resolution.    
-> > > 
-> > > I think it still misses the following fix:  
+> [   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
+> [   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
+> [   38.402935] c7   1827 Call trace:
+> [   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
+> [   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
+> [   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
+> [   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
+> [   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
+> [   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
+> [   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
+> [   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
+> [   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
+> [   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
+> [   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
+> [   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
+> [   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
+> [   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
+> [   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
+> [   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
+> [   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
+> [   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
+> [   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
+> [   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
+> [   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
+> [   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
 > 
-> > Is that actually a problem given it's copied over from buffer->scan_mask just after allocation?
-> > The two masks are the same length so I don't think we have a problem with this one.
-> > Am I missing something?  
+> Bug: 126558260
 > 
-> Hmm... I didn't get why the commit 20ea39ef9f2f fixes anything.
+> Signed-off-by: Randall Huang <huangrandall@google.com>
+> ---
+>  fs/f2fs/xattr.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
 > 
-Good point.  I'm don't think it ever did.  
+> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+> index 848a785abe25..0531c1e38275 100644
+> --- a/fs/f2fs/xattr.c
+> +++ b/fs/f2fs/xattr.c
+> @@ -202,12 +202,17 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
+>  	return handler;
+>  }
+>  
+> -static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
+> -					size_t len, const char *name)
+> +static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
+> +				int base_addr_limit, int index,
 
-Alex, any thoughts?
+unsigned int max_size,
 
-Jonathan
+> +				size_t len, const char *name)
+>  {
+>  	struct f2fs_xattr_entry *entry;
+> +	void *max_addr = base_addr + ENTRY_SIZE(XATTR_ENTRY(base_addr)) +
+> +		base_addr_limit - 1;
 
+If I'm not missing something, shouldn't it be?
+
+void *max_addr = base_addr + max_size;
+
+>  
+>  	list_for_each_xattr(entry, base_addr) {
+> +		if ((void *)entry + sizeof(__u32) > max_addr)
+> +			return NULL;
+>  		if (entry->e_name_index != index)
+>  			continue;
+>  		if (entry->e_name_len != len)
+> @@ -337,9 +342,9 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>  	else
+>  		cur_addr = txattr_addr;
+>  
+> -	*xe = __find_xattr(cur_addr, index, len, name);
+> +	*xe = __find_xattr(cur_addr, XATTR_PADDING_SIZE, index, len, name);
+
+max_size = *base_size - (txattr_addr - cur_addr);
+*xe = __find_xattr(cur_addr, max_size, index, len, name);
+
+>  check:
+> -	if (IS_XATTR_LAST_ENTRY(*xe)) {
+> +	if (!*xe || IS_XATTR_LAST_ENTRY(*xe)) {
+
+If xattr entry across boundary of max xattr space size, maybe we'd better return -EFAULT
+which can be distinguished from a real -ENODATA error, latter, we can set SBI_NEED_FSCK
+to give a repairing hint to fsck. :)
+
+>  		err = -ENODATA;
+>  		goto out;
+>  	}
+> @@ -606,9 +611,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+>  		return error;
+>  
+>  	/* find entry with wanted name. */
+> -	here = __find_xattr(base_addr, index, len, name);
+> +	here = __find_xattr(base_addr, inline_xattr_size(inode) +
+> +			VALID_XATTR_BLOCK_SIZE + XATTR_PADDING_SIZE,
+> +			index, len, name);
+
+unsigned int size = F2FS_I(inode)->i_xattr_nid ? VALID_XATTR_BLOCK_SIZE : 0;
+unsigned int max_size = inline_xattr_size(inode) + size + XATTR_PADDING_SIZE;
+
+here = __find_xattr(..., max_size, ...);
+
+if (!here)
+	return -EFAULT;
+
+Thanks,
+
+>  
+> -	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
+> +	if (!here)
+> +		found = 0;
+> +	else
+> +		found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
+>  
+>  	if (found) {
+>  		if ((flags & XATTR_CREATE)) {
+> 
