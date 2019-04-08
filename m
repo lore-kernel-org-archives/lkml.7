@@ -2,150 +2,102 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDD4C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BC2C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899A92148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A2D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="XeJlXlZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfDHRd7 (ORCPT
+        id S1728624AbfDHRfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:33:59 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.9]:29887 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726818AbfDHRd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:33:58 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 1792C2AE5D0
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 12:33:57 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id DY9dhtbtR90onDY9dh6KDf; Mon, 08 Apr 2019 12:33:57 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=53148 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hDY9c-003smF-5A; Mon, 08 Apr 2019 12:33:56 -0500
-Date:   Mon, 8 Apr 2019 12:33:55 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] perf header: Fix lock/unlock imbalances
-Message-ID: <20190408173355.GA10501@embeddedor>
+        Mon, 8 Apr 2019 13:35:11 -0400
+Received: from mail-eopbgr680047.outbound.protection.outlook.com ([40.107.68.47]:37910
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726668AbfDHRfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:35:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jAQfi1uf9nlcY03MOAa0mD3o5jGz0a+BDKd+WEYUYWA=;
+ b=XeJlXlZv3xulQ2Yr4zy2gZC3dtPL2gb73Ha1oPD7xWXFPfex5KX8nh580yZx7WrY57KzuI2tFIapR1leUHjDFyPZYbw+VnQRtZlLHeLXRVTVIihDvu3Hz26fC1Hu6GyvU5IwdNVgXfkBw++JJV5kBZWAVJGcEbYfLMrbWE/TvIs=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5240.namprd05.prod.outlook.com (20.177.231.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.8; Mon, 8 Apr 2019 17:35:00 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::4140:b8f2:8e3:f5fd]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::4140:b8f2:8e3:f5fd%4]) with mapi id 15.20.1792.009; Mon, 8 Apr 2019
+ 17:35:00 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Pv-drivers <Pv-drivers@vmware.com>,
+        Julien Freche <jfreche@vmware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] mm/balloon_compaction: list interfaces
+Thread-Topic: [PATCH v2 1/4] mm/balloon_compaction: list interfaces
+Thread-Index: AQHU5L/fQHqTTJNOzkOghmdzHIOs1aYymUeA
+Date:   Mon, 8 Apr 2019 17:35:00 +0000
+Message-ID: <679D6F11-07D7-4227-9D02-41F9F8901E61@vmware.com>
+References: <20190328010718.2248-1-namit@vmware.com>
+ <20190328010718.2248-2-namit@vmware.com>
+In-Reply-To: <20190328010718.2248-2-namit@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c34b376-8f74-4cef-37cf-08d6bc488704
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB5240;
+x-ms-traffictypediagnostic: BYAPR05MB5240:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR05MB5240F2FA3DBBA7F7A637AFFFD02C0@BYAPR05MB5240.namprd05.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(136003)(376002)(346002)(189003)(199004)(5660300002)(486006)(53936002)(33656002)(6246003)(25786009)(53546011)(6506007)(229853002)(76176011)(11346002)(6116002)(3846002)(6512007)(66066001)(476003)(446003)(82746002)(6486002)(316002)(305945005)(4326008)(2616005)(6436002)(7736002)(2906002)(256004)(71200400001)(71190400001)(81166006)(6916009)(106356001)(36756003)(83716004)(8936002)(68736007)(186003)(81156014)(8676002)(99286004)(478600001)(86362001)(4744005)(54906003)(14454004)(102836004)(105586002)(97736004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5240;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mH91q6AQ0GhnZ2PSC6QH7gXuC8+Qbt9fHvuYhNxDpd8U69Sc2mWXMaDh1SqLIJqD1Tj+eo+13ncY/GtofcJBXvK1hGsZasEes/jAVd35OsLa5G60JKpY92NcBG+9xAbMcE2RuYMlBjEbpjUYtKWwQI3YL8KfF9yNgBDoCFactv+iEgx8vHyY6NE25Gu1kf5ScoxRkkP0GfXgczKKSsv+JJKV0nYp1KQB8IzxeMlV8SBingiNNtpPQf1MoLSiYJ4U0Ez9VJDKkCSBpdYHWQovzfhF1Zd2u7BclerQ3iiQtdU3EaATEEI6EJ71xdcXNzgM9S28Pih5ilLpCNfcbbu0rWbgzk2EpEldetNC2wgds/f2hnHKun+UjQgAtJUfkrAXhhc5tBpMaTSev0cPLttHpOnzXVLUSdG8wfT48VdWraQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <49C9D19A64CC2A4D9009D73284BA2801@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hDY9c-003smF-5A
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.139.70]:53148
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c34b376-8f74-4cef-37cf-08d6bc488704
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 17:35:00.6520
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5240
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix lock/unlock imbalances by refactoring the code a bit and adding
-calls to up_write() before return.
+> On Mar 27, 2019, at 6:07 PM, Nadav Amit <namit@vmware.com> wrote:
+>=20
+> Introduce interfaces for ballooning enqueueing and dequeueing of a list
+> of pages. These interfaces reduce the overhead of storing and restoring
+> IRQs by batching the operations. In addition they do not panic if the
+> list of pages is empty.
+>=20
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
 
-Addresses-Coverity-ID: 1444315 ("Missing unlock")
-Addresses-Coverity-ID: 1444316 ("Missing unlock")
-Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to perf.data")
-Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- tools/perf/util/header.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index b9e693825873..06028e0ee06a 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
- 		perf_env__insert_bpf_prog_info(env, info_node);
- 	}
- 
-+	up_write(&env->bpf_progs.lock);
- 	return 0;
- out:
- 	free(info_linear);
-@@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
- static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
- {
- 	struct perf_env *env = &ff->ph->env;
-+	struct btf_node *node;
- 	u32 count, i;
-+	int err = -1;
- 
- 	if (ff->ph->needs_swap) {
- 		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
-@@ -2636,31 +2639,33 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
- 	down_write(&env->bpf_progs.lock);
- 
- 	for (i = 0; i < count; ++i) {
--		struct btf_node *node;
- 		u32 id, data_size;
- 
-+		node = NULL;
- 		if (do_read_u32(ff, &id))
--			return -1;
-+			goto out;
- 		if (do_read_u32(ff, &data_size))
--			return -1;
-+			goto out;
- 
- 		node = malloc(sizeof(struct btf_node) + data_size);
- 		if (!node)
--			return -1;
-+			goto out;
- 
- 		node->id = id;
- 		node->data_size = data_size;
- 
--		if (__do_read(ff, node->data, data_size)) {
--			free(node);
--			return -1;
--		}
-+		if (__do_read(ff, node->data, data_size))
-+			goto out;
- 
- 		perf_env__insert_btf(env, node);
- 	}
- 
- 	up_write(&env->bpf_progs.lock);
- 	return 0;
-+out:
-+	up_write(&env->bpf_progs.lock);
-+	free(node);
-+	return err;
- }
- 
- struct feature_ops {
--- 
-2.21.0
+Michael, may I ping for your ack?
 
