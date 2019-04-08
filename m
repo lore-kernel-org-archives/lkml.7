@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E140BC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D1FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E772148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433E820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fy4t1CyU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaVs/v49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfDHT6S (ORCPT
+        id S1726882AbfDHT7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:58:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33775 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfDHT6S (ORCPT
+        Mon, 8 Apr 2019 15:59:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42699 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfDHT7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:58:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k19so7920889pgh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:58:17 -0700 (PDT)
+        Mon, 8 Apr 2019 15:59:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so6792168pfi.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=29W9ucIOqItYnzmL2gQIQ5ExGyQgwi2PVG1yglWaKBM=;
-        b=Fy4t1CyUr8Vd/Tq1kRsSKxv77weNKQj5DhgPy9nD2bCEsiBn3FEGyA8sZ83Fpwo6bW
-         tRb1hXjVG3V8vMhxBjeLI6C1RvZMzNOtU33E4GDSDs0Ps0T0NgRjLBkn9n5ALGsshrwb
-         Oxspjm1t7dapzNkUm1UBxH7cqGC7RV4j4v9uZukrNkd09KxA+zKmao0FCp1YBCvYdbAN
-         76r1I75mjP8bgo4nUEuuqhIjwkoGsrIzEzuTrPl0JUP+dwFcE0tW06qlb0KlIOOev7tg
-         5f+JD1JqYlb1nfbuCaPOdDZFwIKIgmIe2jO8gc4TX04rNrLUFEsId6g6YZYGYoCqlm2Z
-         r0zA==
+        bh=RSStTgCMJwvCqECwFlnDBhxtF8I569p9e6PuxiQP1oM=;
+        b=IaVs/v49W9F4RB08+llfR3LzCZzsnZdb9KI01bTePyyBQrFAkbpQgsu5FDJDr4nZ/m
+         YA6tTLHgZuvBGyWo/ywVHmrLflS/IVvDlnqE04G9JZQ6H5X7Xn+Co+j/3YHc5dB4U07s
+         hbx3CzJxJZajypW7gQfNirQWke+RqbuAZFyNwtCXf8XQqi4eOU+ydwDNX5yNZ0pO+7N5
+         GmmBYlJvxnFG59cHiMFKUAf6KwMbkN173hB3GNxcqSoZtnqFuDaGFZTSblrnWbNsLT/W
+         kMw1dwylomWuocQ2hW4ZhH1yohtb86UkZvXeLQtvEK96NHD+YFp2Wh06ZkCcU3MSMPt2
+         H3pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=29W9ucIOqItYnzmL2gQIQ5ExGyQgwi2PVG1yglWaKBM=;
-        b=eJBI8TPFs1aTbOWfB/YuJqm66XS/2OA34OLlJ/0GrN9AgakOWt3Cqn2WeVMtcU7nXx
-         rDLhyjpCi4UkS/brAPr6d4hayO4MsqastyrWk2Rs0mB4nKtPc4TQ1qjQDyB3SQQAxebW
-         pYwt+f9QTBat7/dgo/S+z+bgCD90WbxSkWrIqYBZn2LGsBgDcdVQZ61+ecrlTeyZm8Hn
-         VBisOyv+IgoiXh3oo/2jxaRmClV3wWklyDm+h4oI5EYsCWFDjloHTgYPKAYc4K+26Trf
-         XWgH/DPHEfyjv6GGK5JN3nDjhsDNgX5+ZZF2svFKTOdE937d4TpmrjWkPQ1Btvx5YU6C
-         OdzQ==
-X-Gm-Message-State: APjAAAWUEm5KEhMrRuXtkyrxxmnkbrbRGKEFzP9B6b4zKDk4WqMZ30yI
-        zB82G2P1fJ+CKOnfGEPgOTfdWQ==
-X-Google-Smtp-Source: APXvYqwgOOpcElBS1UxKQNb+mYhbX92mCmLobuI2RnT22NAeFYi++VncsNYP/Uv6ILgmoBb2UinsgQ==
-X-Received: by 2002:a62:209c:: with SMTP id m28mr31113893pfj.233.1554753496623;
-        Mon, 08 Apr 2019 12:58:16 -0700 (PDT)
+        bh=RSStTgCMJwvCqECwFlnDBhxtF8I569p9e6PuxiQP1oM=;
+        b=f/UU+1pXBr8t88+seRcgkVV4DQu/IP7AGVEFYKwrHPMH6I8TFR7mF8ndbGzivhB2Ug
+         0r75RHqag8VsgeLofoOY/JDROShTjKJ3txPpV9RkgciA0ZNGeqtSiKG3PX0yOpfIwe/j
+         O2IJLdxNEh6q+B5fohkuwnYJUCWy/dG4Ll6bDUrOdjEvmP/fyIhFOFUGjeXkj7NkwDcL
+         mh1qr/oYZ5oZk64HVdNvQG8yIWAkrBKEt+EaJ5lNQGdKcnLl3ujphTjCKU6OmW72X849
+         HiybvmoIlpJMIWBrJ29jnKrnqBy0rH+Ze5Yfeykm1DtVHKvFyGPXXvaQl3GBht6reEyb
+         GGiQ==
+X-Gm-Message-State: APjAAAX4HmFIFPgZTcyHtORzewdqEUALTHGBGM3ftlS+pvIsMO9MxwXs
+        FCqRYj8nF2TfCI0LHKlAIIowdw==
+X-Google-Smtp-Source: APXvYqzfmpdTWEuDsxZC2Dtn2LoyYq29oaMJey0FNJtIvQ4jPQhwzXYeWniqDVNGM3maON9MarpjjA==
+X-Received: by 2002:a65:5383:: with SMTP id x3mr12785290pgq.60.1554753574808;
+        Mon, 08 Apr 2019 12:59:34 -0700 (PDT)
 Received: from [100.112.89.103] ([104.133.8.103])
-        by smtp.gmail.com with ESMTPSA id l5sm55488310pfi.97.2019.04.08.12.58.15
+        by smtp.gmail.com with ESMTPSA id j16sm41059643pfi.58.2019.04.08.12.59.33
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Apr 2019 12:58:15 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:58:14 -0700 (PDT)
+        Mon, 08 Apr 2019 12:59:33 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 12:59:32 -0700 (PDT)
 From:   Hugh Dickins <hughd@google.com>
 X-X-Sender: hugh@eggly.anvils
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -68,9 +68,9 @@ cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Huang Ying <ying.huang@intel.com>,
         Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH 2/4] mm: swapoff: remove too limiting SWAP_UNUSE_MAX_TRIES
+Subject: [PATCH 3/4] mm: swapoff: take notice of completion sooner
 In-Reply-To: <alpine.LSU.2.11.1904081249370.1523@eggly.anvils>
-Message-ID: <alpine.LSU.2.11.1904081256170.1523@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.1904081258200.1523@eggly.anvils>
 References: <alpine.LSU.2.11.1904081249370.1523@eggly.anvils>
 User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
@@ -80,66 +80,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWAP_UNUSE_MAX_TRIES 3 appeared to work well in earlier testing, but
-further testing has proved it to be a source of unnecessary swapoff
-EBUSY failures (which can then be followed by unmount EBUSY failures).
-
-When mmget_not_zero() or shmem's igrab() fails, there is an mm exiting
-or inode being evicted, freeing up swap independent of try_to_unuse().
-Those typically completed much sooner than the old quadratic swapoff,
-but now it's more common that swapoff may need to wait for them.
-
-It's possible to move those cases from init_mm.mmlist and shmem_swaplist
-to separate "exiting" swaplists, and try_to_unuse() then wait for those
-lists to be emptied; but we've not bothered with that in the past, and
-don't want to risk missing some other forgotten case. So just revert
-to cycling around until the swap is gone, without any retries limit.
+The old try_to_unuse() implementation was driven by find_next_to_unuse(),
+which terminated as soon as all the swap had been freed.  Add inuse_pages
+checks now (alongside signal_pending()) to stop scanning mms and swap_map
+once finished.  The same ought to be done in shmem_unuse() too, but never
+was before, and needs a different interface: so leave it as is for now.
 
 Fixes: b56a2d8af914 ("mm: rid swapoff of quadratic complexity")
 Signed-off-by: Hugh Dickins <hughd@google.com>
 ---
 
- mm/swapfile.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ mm/swapfile.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- 5.1-rc4/mm/swapfile.c	2019-03-17 16:18:15.713823942 -0700
-+++ linux/mm/swapfile.c	2019-04-07 19:15:01.269054187 -0700
-@@ -2023,7 +2023,6 @@ static unsigned int find_next_to_unuse(s
-  * If the boolean frontswap is true, only unuse pages_to_unuse pages;
-  * pages_to_unuse==0 means all pages; ignored if frontswap is false
-  */
--#define SWAP_UNUSE_MAX_TRIES 3
- int try_to_unuse(unsigned int type, bool frontswap,
- 		 unsigned long pages_to_unuse)
- {
-@@ -2035,7 +2034,6 @@ int try_to_unuse(unsigned int type, bool
- 	struct page *page;
- 	swp_entry_t entry;
- 	unsigned int i;
--	int retries = 0;
+--- 5.1-rc4/mm/swapfile.c	2019-04-07 19:15:01.269054187 -0700
++++ linux/mm/swapfile.c	2019-04-07 19:17:13.291957539 -0700
+@@ -2051,11 +2051,9 @@ retry:
  
- 	if (!si->inuse_pages)
- 		return 0;
-@@ -2117,14 +2115,16 @@ retry:
- 	 * If yes, we would need to do retry the unuse logic again.
- 	 * Under global memory pressure, swap entries can be reinserted back
- 	 * into process space after the mmlist loop above passes over them.
--	 * Its not worth continuosuly retrying to unuse the swap in this case.
--	 * So we try SWAP_UNUSE_MAX_TRIES times.
-+	 *
-+	 * Limit the number of retries? No: when shmem_unuse()'s igrab() fails,
-+	 * a shmem inode using swap is being evicted; and when mmget_not_zero()
-+	 * above fails, that mm is likely to be freeing swap from exit_mmap().
-+	 * Both proceed at their own independent pace: we could move them to
-+	 * separate lists, and wait for those lists to be emptied; but it's
-+	 * easier and more robust (though cpu-intensive) just to keep retrying.
+ 	spin_lock(&mmlist_lock);
+ 	p = &init_mm.mmlist;
+-	while ((p = p->next) != &init_mm.mmlist) {
+-		if (signal_pending(current)) {
+-			retval = -EINTR;
+-			break;
+-		}
++	while (si->inuse_pages &&
++	       !signal_pending(current) &&
++	       (p = p->next) != &init_mm.mmlist) {
+ 
+ 		mm = list_entry(p, struct mm_struct, mmlist);
+ 		if (!mmget_not_zero(mm))
+@@ -2082,7 +2080,9 @@ retry:
+ 	mmput(prev_mm);
+ 
+ 	i = 0;
+-	while ((i = find_next_to_unuse(si, i, frontswap)) != 0) {
++	while (si->inuse_pages &&
++	       !signal_pending(current) &&
++	       (i = find_next_to_unuse(si, i, frontswap)) != 0) {
+ 
+ 		entry = swp_entry(type, i);
+ 		page = find_get_page(swap_address_space(entry), i);
+@@ -2123,8 +2123,11 @@ retry:
+ 	 * separate lists, and wait for those lists to be emptied; but it's
+ 	 * easier and more robust (though cpu-intensive) just to keep retrying.
  	 */
--	if (++retries >= SWAP_UNUSE_MAX_TRIES)
--		retval = -EBUSY;
--	else if (si->inuse_pages)
-+	if (si->inuse_pages)
- 		goto retry;
--
+-	if (si->inuse_pages)
+-		goto retry;
++	if (si->inuse_pages) {
++		if (!signal_pending(current))
++			goto retry;
++		retval = -EINTR;
++	}
  out:
  	return (retval == FRONTSWAP_PAGES_UNUSED) ? 0 : retval;
  }
