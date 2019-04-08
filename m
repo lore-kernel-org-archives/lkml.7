@@ -2,129 +2,168 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB52C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E02C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915B620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11DC20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDHDv2 (ORCPT
+        id S1726630AbfDHDx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:51:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46508 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726499AbfDHDv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:51:27 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 39C40A6C51BE0B737F19;
-        Mon,  8 Apr 2019 11:51:25 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 11:51:17 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] at76c50x-usb: Don't register led_trigger if usb_register_driver failed
-Date:   Mon, 8 Apr 2019 11:45:29 +0800
-Message-ID: <20190408034529.27500-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sun, 7 Apr 2019 23:53:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34174 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726464AbfDHDx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 23:53:27 -0400
+X-UUID: ac7cb0f2f5524fb69318d01e9c274bcc-20190408
+X-UUID: ac7cb0f2f5524fb69318d01e9c274bcc-20190408
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1106134830; Mon, 08 Apr 2019 11:53:21 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 8 Apr 2019 11:53:20 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 8 Apr 2019 11:53:20 +0800
+Message-ID: <1554695600.25248.1.camel@mtksdaap41>
+Subject: Re: [PATCH V8 1/5] drm/mediatek: remove flag CLK_SET_RATE_PARENT
+ for mt2701 hdmi phy to not propagate rate change to parent
+From:   CK Hu <ck.hu@mediatek.com>
+To:     wangyan wang <wangyan.wang@mediatek.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
+Date:   Mon, 8 Apr 2019 11:53:20 +0800
+In-Reply-To: <20190402093605.82004-2-wangyan.wang@mediatek.com>
+References: <20190402093605.82004-1-wangyan.wang@mediatek.com>
+         <20190402093605.82004-2-wangyan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Hi, Wangyan:
 
-Syzkaller report this:
+On Tue, 2019-04-02 at 17:36 +0800, wangyan wang wrote:
+> From: Wangyan Wang <wangyan.wang@mediatek.com>
+> 
+> This is the first step to make MT2701 hdmi stable.
+> The parent rate of hdmi phy had set by DPI driver.
+> We should not set or change the parent rate of MT2701 hdmi phy,
+> as a result we should remove the flags of "CLK_SET_RATE_PARENT"
+> from the clock of MT2701 hdmi phy.
+> 
+> Signed-off-by: Wangyan Wang <wangyan.wang@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 13 +++++--------
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  1 +
+>  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  1 +
+>  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c |  1 +
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> index 4ef9c57ffd44..13bbaf997819 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> @@ -110,13 +110,11 @@ mtk_hdmi_phy_dev_get_ops(const struct mtk_hdmi_phy *hdmi_phy)
+>  		return NULL;
+>  }
+>  
+> -static void mtk_hdmi_phy_clk_get_ops(struct mtk_hdmi_phy *hdmi_phy,
+> -				     const struct clk_ops **ops)
+> +static void mtk_hdmi_phy_clk_get_data(struct mtk_hdmi_phy *hdmi_phy,
+> +				     struct clk_init_data *clk_init)
 
-[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
-[ 1213.469530] #PF error: [normal kernel read fault]
-[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
-[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
-[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
-[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
-[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
-[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
-[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
-[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
-[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
-[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
-[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
-[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1213.473514] PKRU: 55555554
-[ 1213.473514] Call Trace:
-[ 1213.473514]  led_trigger_register+0x112/0x3f0
-[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
-[ 1213.473514]  ? 0xffffffffc1c10000
-[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
-[ 1213.473514]  do_one_initcall+0xbc/0x47d
-[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  do_init_module+0x1b5/0x547
-[ 1213.473514]  load_module+0x6405/0x8c10
-[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
-[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
-[ 1213.473514]  ? find_held_lock+0x32/0x1c0
-[ 1213.473514]  ? cap_capable+0x1ae/0x210
-[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
-[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
-[ 1213.473514]  ? wait_for_completion+0x370/0x370
-[ 1213.473514]  ? vfs_write+0x204/0x4a0
-[ 1213.473514]  ? do_syscall_64+0x18/0x450
-[ 1213.473514]  do_syscall_64+0x9f/0x450
-[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1213.473514] RIP: 0033:0x462e99
-[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
-[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
-[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
-[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+Align the first character to the right of '('.
 
-If usb_register failed, no need to call led_trigger_register_simple.
+Regards,
+CK
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1264b951463a ("at76c50x-usb: add driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/atmel/at76c50x-usb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/atmel/at76c50x-usb.c b/drivers/net/wireless/atmel/at76c50x-usb.c
-index e99e766..1cabae4 100644
---- a/drivers/net/wireless/atmel/at76c50x-usb.c
-+++ b/drivers/net/wireless/atmel/at76c50x-usb.c
-@@ -2585,8 +2585,8 @@ static int __init at76_mod_init(void)
- 	if (result < 0)
- 		printk(KERN_ERR DRIVER_NAME
- 		       ": usb_register failed (status %d)\n", result);
--
--	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
-+	else
-+		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
- 	return result;
- }
- 
--- 
-2.7.4
+>  {
+> -	if (hdmi_phy && hdmi_phy->conf && hdmi_phy->conf->hdmi_phy_clk_ops)
+> -		*ops = hdmi_phy->conf->hdmi_phy_clk_ops;
+> -	else
+> -		dev_err(hdmi_phy->dev, "Failed to get clk ops of phy\n");
+> +	clk_init->flags = hdmi_phy->conf->flags;
+> +	clk_init->ops = hdmi_phy->conf->hdmi_phy_clk_ops;
+>  }
+>  
+>  static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+> @@ -129,7 +127,6 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+>  	struct clk_init_data clk_init = {
+>  		.num_parents = 1,
+>  		.parent_names = (const char * const *)&ref_clk_name,
+> -		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+>  	};
+>  
+>  	struct phy *phy;
+> @@ -167,7 +164,7 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+>  	hdmi_phy->dev = dev;
+>  	hdmi_phy->conf =
+>  		(struct mtk_hdmi_phy_conf *)of_device_get_match_data(dev);
+> -	mtk_hdmi_phy_clk_get_ops(hdmi_phy, &clk_init.ops);
+> +	mtk_hdmi_phy_clk_get_data(hdmi_phy, &clk_init);
+>  	hdmi_phy->pll_hw.init = &clk_init;
+>  	hdmi_phy->pll = devm_clk_register(dev, &hdmi_phy->pll_hw);
+>  	if (IS_ERR(hdmi_phy->pll)) {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> index f39b1fc66612..0045824c1be9 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> @@ -21,6 +21,7 @@ struct mtk_hdmi_phy;
+>  
+>  struct mtk_hdmi_phy_conf {
+>  	bool tz_disabled;
+> +	unsigned long flags;
+>  	const struct clk_ops *hdmi_phy_clk_ops;
+>  	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+>  	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> index fcc42dc6ea7f..67a814649e19 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> @@ -202,6 +202,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+>  
+>  struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
+>  	.tz_disabled = true,
+> +	.flags = CLK_SET_RATE_GATE,
+>  	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+>  	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+>  	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> index ed5916b27658..f44066875dcd 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> @@ -309,6 +309,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+>  }
+>  
+>  struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf = {
+> +	.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+>  	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+>  	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+>  	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
 
 
