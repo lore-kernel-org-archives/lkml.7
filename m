@@ -1,165 +1,154 @@
 Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FFC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7361EC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A293020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFAD20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ScqoEwoB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNPTXECW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfDHRG7 (ORCPT
+        id S1729233AbfDHRHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:06:59 -0400
-Received: from mail.efficios.com ([167.114.142.138]:48890 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfDHRG6 (ORCPT
+        Mon, 8 Apr 2019 13:07:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40156 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbfDHRHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:06:58 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5AF9E1D3607;
-        Mon,  8 Apr 2019 13:06:57 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Ys74DFmM8U1Z; Mon,  8 Apr 2019 13:06:56 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A2E771D3601;
-        Mon,  8 Apr 2019 13:06:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A2E771D3601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554743216;
-        bh=l5HpI5zsrdJ+zT8Qe+qc4dzBnIdMp5RBzEz96NeNGkw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=ScqoEwoBENFlZ1EzgkYqDRySrRGsgPZmuE69XaycaOmcK3cWwa9yu/LqPjGDIqLl8
-         zCnPzk0Cs89fEmf+SL+Olp4XHAcxWO14rQXtELtkhdo1cKLq8T4Tc9iICyktbGJCL3
-         qNfEulxOC1NQojwkC0crWb2jz6etC4W1S9bUL7T03zDFQmq6AlA1X3YnBTLZhtt2ec
-         5MAfGTnz/2rVzFjQndBUS8Ly1PL8uQ/BlpoLrUV+voIWEt3XrHyuoRCAhVj31JZPub
-         WEjgTfIAn4h9bL+SRbHIwZYGAXdcTygs59hArIdX8+XTYzX+sNCWVnZlJPIutVVwQJ
-         UmjoyltVyTNwA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id d6gh7LuEONte; Mon,  8 Apr 2019 13:06:56 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 843691D35FA;
-        Mon,  8 Apr 2019 13:06:56 -0400 (EDT)
-Date:   Mon, 8 Apr 2019 13:06:56 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     paulmck <paulmck@linux.ibm.com>
-Cc:     Rong Chen <rong.a.chen@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>
-Message-ID: <118257214.1376.1554743216233.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190408152112.GM14111@linux.ibm.com>
-References: <20190408135610.GN11264@shao2-debian> <20190408143037.GL14111@linux.ibm.com> <20190408145750.GO11264@shao2-debian> <20190408152112.GM14111@linux.ibm.com>
-Subject: Re: [srcu] a365bb5f6e: leaking_addresses.proc.___srcu_struct_ptrs.
+        Mon, 8 Apr 2019 13:07:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so3142447pgl.7;
+        Mon, 08 Apr 2019 10:07:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IoEqp9VXr7ZHjWgHuKuuRapGCnmDj5ipp6Qfksvb9Kg=;
+        b=cNPTXECWXcmiM+EaSME17AYTqoLm9zu1ecJeONWVJ1SBwpTxWlTucK+W9GIw2S+Dgl
+         7m3Owf9EXIhzXNBmXzrYs5Ah5HLnexKtMSaIyBa2+1JF9owZaHpRh1VB02nqLXxhK52N
+         3LDsb9NdviMalyTk4AeDCgnl1yTuzybuO0e6aQJQXV2Vdj8GfHRFA14LhhV0aaUfQYaH
+         peReTMFZXD5Xg4qlyN3jMNWU45YgI6de/eWQ8ildWhDrilAkkwKofgzPEsKOPieEFymL
+         SnsLsjfUCEYdn38yHbOB2oApV9ypWCR26LzdFad1yoO+NYHIPSrsMGa03AUVXzdpMbP0
+         rw9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IoEqp9VXr7ZHjWgHuKuuRapGCnmDj5ipp6Qfksvb9Kg=;
+        b=UIHmcxsXMFizVmoNNcFPFOHYE2wPMIp8UXyVGAhSqIkgMSqyvHRViLLjU6QRvCgLyA
+         gxcCx8iuQH6lU9/ME5c0PhLI+5f3cHKP8o5JOM/5SFuQsMGJ70C2je2F7wRwkTCXEuS7
+         p2VYEDJDLrCcbz1h0PM0WG7LidzVgWiuETeypN+ClX3Bsb3dGWAU9FI5ND8zcMn+M4VY
+         WYdmGFDHmsWwWguslwdqALNGhTfCxSCW/TjT3TdfjXN+f3bISIbOe0SeCXeacxgJalcb
+         DQKAZm1NLKePXuB7IKouq5/OHyQtZMz8HqlJBBp3nwXBDPxncqaH4ch0sNqEHgrjnG2F
+         GmBw==
+X-Gm-Message-State: APjAAAWF3GcKGK4QkOkoznSjbDN0UoqwyQPNdh6kZNy/cCXdE0775pEv
+        S3lx5EALzL/yffPM28FBcqtehliP6EiDf2fkVhY=
+X-Google-Smtp-Source: APXvYqxeOTXZ4hXQlak7D3T7syxINgYjh05OGKtWKI1VKHDtHUHrnL3ce3sbNJade9+duyybdEp51jxJW+P+v0PnjgY=
+X-Received: by 2002:a65:6210:: with SMTP id d16mr28697627pgv.110.1554743250315;
+ Mon, 08 Apr 2019 10:07:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: a365bb5f6e: leaking_addresses.proc.___srcu_struct_ptrs.
-Thread-Index: vId/4PeL+B5wBwXNI5Zlh9FxzlN7uA==
+References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
+ <20190405203558.19160-3-rajatja@google.com>
+In-Reply-To: <20190405203558.19160-3-rajatja@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Apr 2019 20:07:19 +0300
+Message-ID: <CAHp75VcB=gBa01UJLYVzApZ-2g745zX=mEtE9nJUyfzFdk3-pw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] platform/x86: intel_pmc_core: Instantiate pmc_core
+ device on legacy platforms
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        furquan@google.com, evgreen@google.com,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 8, 2019, at 11:21 AM, paulmck paulmck@linux.ibm.com wrote:
+On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
+>
+> Add code to instantiate the pmc_core platform device and thus attach to
+> the driver, if the ACPI device for the same ("INT33A1") is not present
+> in a system where it should be. This was discussed here:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+>
 
-> On Mon, Apr 08, 2019 at 10:57:50PM +0800, Rong Chen wrote:
->> On Mon, Apr 08, 2019 at 07:30:37AM -0700, Paul E. McKenney wrote:
->> > On Mon, Apr 08, 2019 at 09:56:10PM +0800, kernel test robot wrote:
->> > > FYI, we noticed the following commit (built with gcc-7):
->> > > 
->> > > commit: a365bb5f6eafb220a1448674054b05c250829313 ("srcu: Allocate per-CPU data
->> > > for DEFINE_SRCU() in modules")
->> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git
->> > > tmp.2019.04.07a
->> > > 
->> > > in testcase: leaking_addresses
->> > > with following parameters:
->> > > 
->> > > 
->> > > 
->> > > 
->> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
->> > > 
->> > > caused below changes (please refer to attached dmesg/kmsg for entire
->> > > log/backtrace):
->> > > 
->> > > 
->> > > +-------------------------------------------------+------------+------------+
->> > > |                                                 | a44a55abae | a365bb5f6e |
->> > > +-------------------------------------------------+------------+------------+
->> > > | boot_successes                                  | 0          | 3          |
->> > > | boot_failures                                   | 4          | 6          |
->> > > | BUG:kernel_reboot-without-warning_in_test_stage | 4          | 6          |
->> > > | leaking_addresses.proc.___srcu_struct_ptrs.     | 0          | 6          |
->> > > +-------------------------------------------------+------------+------------+
->> > 
->> > Please help me out here.  Without this commit, the kernel never succeeds
->> > in booting, but with it the kernel sometimes succeeds in booting?  Or am
->> > I misinterpreting the above table?
->> > 
->> > 							Thanx, Paul
->> 
->> Hi Paul,
->> 
->> The message "kernel_reboot-without-warning_in_test_stage" is from 0day,
->> leaking addresses generated many dmesgs, so 0day thought some bootings may
->> failed.
-> 
-[...]
->> > 
->> > > [1 .rodata.cst16.POLY] 0xffffffffc0498360
->> > > [1 .rodata.cst32.byteshift_table] 0xffffffffc03f50f0
->> > > [19 __bug_table] 0xffffffffc02be184
->> > > [2 __tracepoints_ptrs] 0xffffffffc02f1cd0
->> > > [15 .smp_locks] 0xffffffffc042b2cc
->> > > [1 .rodata.cst16.enc] 0xffffffffc0498420
->> > > [11 __ksymtab_gpl] 0xffffffffc042b028
->> > > [8 __ex_table] 0xffffffffc04f13f4
->> > > [1 .init.rodata] 0xffffffffc0316000
->> > > [36 .note.gnu.build-id] 0xffffffffc03ed000
->> > > [1 .rodata.cst16.dec] 0xffffffffc0498410
->> > > [16 .parainstructions] 0xffffffffc03ed940
->> > > [8 .text..refcount] 0xffffffffc04e2aaa
->> > > [36 .gnu.linkonce.this_module] 0xffffffffc03f12c0
->> > > [2 __bpf_raw_tp_map] 0xffffffffc03054a0
->> > > [30 .orc_unwind_ip] 0xffffffffc03ee9f9
->> > > [8 .altinstr_replacement] 0xffffffffc0497372
->> > > [26 .rodata.str1.8] 0xffffffffc03ed1f0
->> > > [11 __verbose] 0xffffffffc05c9398
->> > > [1 .rodata.cst16.TWOONE] 0xffffffffc0498380
->> > > [1 uevent] KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
->> > > [1 .rodata.cst16.ONE] 0xffffffffc04983e0
->> > > [8 .altinstructions] 0xffffffffc0498430
->> > > [36 modules] crct10dif_pclmul 16384 1 - Live 0xffffffffc03f4000
->> > > [1 ___srcu_struct_ptrs] 0xffffffffc03840d0
->> > > 
 
-This list of "leaked" memory seems to include the __tracepoint_ptrs
-as well. So at least you seem to have the same behavior as the tracepoint
-code, which was your source of inspiration for this implementation,
-which is a good start.
 
-So the remaining question is: is this memory allocated for module sections
-really leaked for each module, or is it an issue with memory allocation
-tracking ?
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <asm/cpu_device_id.h>
+> +#include <asm/intel-family.h>
+> +
+> +static struct platform_device pmc_core_device = {
+> +       .name = "pmc_core",
+> +};
+> +
 
-Thanks,
+> +static int dummy;
+> +/*
+> + * INTEL_CPU_FAM6 macro won't take NULL for driver_data (uses &driver_data),
+> + * thus provide a dummy driver_data.
+> + */
 
-Mathieu
+You may use pmc_core_device instead, right?
 
+> +static const struct x86_cpu_id intel_pmc_core_ids[] = {
+> +       INTEL_CPU_FAM6(SKYLAKE_MOBILE, dummy),
+> +       INTEL_CPU_FAM6(SKYLAKE_DESKTOP, dummy),
+> +       INTEL_CPU_FAM6(KABYLAKE_MOBILE, dummy),
+> +       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, dummy),
+> +       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, dummy),
+> +       INTEL_CPU_FAM6(ICELAKE_MOBILE, dummy),
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+> +
+> +static int __init pmc_core_platform_init(void)
+> +{
+> +       int ret;
+> +
+> +       /* Skip creating the platform device if ACPI already has a device */
+> +       if (acpi_dev_present("INT33A1", NULL, -1) ||
+> +           !x86_match_cpu(intel_pmc_core_ids))
+> +               return -ENODEV;
+
+Split it to one conditional per line.
+
+> +
+> +       ret = platform_device_register(&pmc_core_device);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return 0;
+> +}
+> +
+> +static void __exit pmc_core_platform_exit(void)
+> +{
+
+> +       if (!acpi_dev_present("INT33A1", NULL, -1) &&
+> +           x86_match_cpu(intel_pmc_core_ids))
+
+Redundant check.
+
+> +               platform_device_unregister(&pmc_core_device);
+> +}
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+With Best Regards,
+Andy Shevchenko
