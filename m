@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABBAC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF24C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169C6214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCF5214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCzyutxI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZDdPA19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfDHPYp (ORCPT
+        id S1729064AbfDHPYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:24:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37459 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbfDHPYk (ORCPT
+        Mon, 8 Apr 2019 11:24:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46141 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728659AbfDHPYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:24:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so15180967wmf.2;
-        Mon, 08 Apr 2019 08:24:38 -0700 (PDT)
+        Mon, 8 Apr 2019 11:24:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t17so16867026wrw.13;
+        Mon, 08 Apr 2019 08:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SxFvkVpa8VWLBDyRAQWldAx6uUHt15CBoCTIKAb2fTY=;
-        b=tCzyutxIrAgCHpu1Hr9HE6eFoM63Wc3IzwroLXL8BQAG8pswu+Y8QwxMhFIA9L2TrP
-         WT6WpVAd1FzP7T/vZUtrHtpF2bj8nLc8AxKNfvBSBCnTc9pYW2suWxfNgO18Z+LVxKjA
-         lHFUqlv1O8QenK6gglYyo3YPv+P0aQpX0hsysJqzt1RL00AuYEho5GQUyNSiFVmBwBns
-         3rMyHZgRgS6SQiePGbAjDZpmw5Ic00omSAU75HzhIrybrFoXlB1q10RVNr94owsnj1op
-         kmGXWwboHQLLQp5x2I+7CCygwV0UZfk7v27KCb6PttzVi9dNW32MXdYjogiBijmUfjnO
-         Jb7Q==
+        bh=o/l3LkI3W5rGWEVlxH7QSopgh6fyIfDuQSQVjTcAbuE=;
+        b=GZDdPA19naT8wo9Zy7eu7rU1xIPMv/fFicXFoYhmjsMZsIzzTW6d5jtBzrXeiNqDGk
+         6EioZ+REXNSNiqEE7KbkLJAo4fVhicJxFW4uvS/AnCtiOuDrKyczToLDrI/jYaRBgweJ
+         2ZbkBOg8beqognOrj4tYVXAu89/tMbCyVzHJ+qxBGBEZsd7gb9oWz+ASsAmw+yWI0u+Q
+         /AzRdMugPDE6AMbWjQjXRP0OX4138svAcHaa2nyzLHLVj18xjHJWfaHGgWOa+Rg4pWNi
+         Ubg3gy1iAoo4cFBCdbiDC7xdQcqgmkfgSfRKfbDKLMgxKEFp9KwTkDSLaCyDPkoNsXId
+         R58Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SxFvkVpa8VWLBDyRAQWldAx6uUHt15CBoCTIKAb2fTY=;
-        b=mcx6XCSLKPIznksyAdnZqvhAJr3vg7mIzpyv22porOIsAtA1J8UIp8mFmzgbLeTP46
-         Zo9dfaMCQw4IXVq6FtHCkUNgJbExgcxyNEWeP9maY1jDcUxY8uL0G+NWK9nq0b9E4w8a
-         dtkl4s/uNzs6a7mRa5fVL7FongmWk0y3gK6DKs97gjVdOcNDZqoT7e/RA6cSdAyVGTTy
-         lkv+9UVhlWKCfnhJ6GbA88LdNTCEnnIJl28wpPya0AQLkmQnwkkeIcCA2pPK62gQ/ztj
-         u6zP8RRwSplSwx8plsqyNeZmN80FH1mcRt6YkzVCZg1wQruChOLi1xS4VTxeuAmY96VT
-         6z0w==
-X-Gm-Message-State: APjAAAXMdB0zfFZWWyzsarK3+hcYNM246gmoVc2N1OyhcKqyzgC6KVRq
-        htlOXrwtjtK2gXA/EKUAQQE=
-X-Google-Smtp-Source: APXvYqwC0Tx2migf/c6z30xuu6HFdRoRhqjUYKAKqT2KqD5TTTxo4J7xGoSW+zaYHZcJI7VGNruqmw==
-X-Received: by 2002:a1c:1b10:: with SMTP id b16mr19238519wmb.90.1554737078211;
-        Mon, 08 Apr 2019 08:24:38 -0700 (PDT)
+        bh=o/l3LkI3W5rGWEVlxH7QSopgh6fyIfDuQSQVjTcAbuE=;
+        b=gt6fIEZmMdnnpW4uBGJbo/B6YlxqeVNQpMi1bfPJig45osimVG09Y+WVK4/sVuwYsE
+         HaWHBG6SP3WI7QI9ujowhxfOTvFFPzSPCQT0cQEtXhweVuYh43UYt2n5GoPohDiwV223
+         HKMz6K7WtNbKXAZVIL2wP6dcbpGM4gJSoB2ygtg+RA+InFkFVngP56Jx3EO8Imy5GPuz
+         zGDSiPM7ijM1Ebb2twwXEdKxhPEzRQYywULz5wtrtD3T2MUPfH0pKpbV5XYF8B/4udho
+         k4Z9NKvs6HxARzAQw7qxBEDV/GPP1DZP9ZP+Ylup1OMVk5tEEU3ucrBiel/2XbW3GAD+
+         OWYg==
+X-Gm-Message-State: APjAAAXNlgJEmkgNQJrxrLquypiis2bLZnMPxf1MAR6LbUemWGr2Ky+A
+        pWh73N8Pl0pbMUi7JcgKUBs=
+X-Google-Smtp-Source: APXvYqwuUmoILY6JDjMSWG9rkBcKh8NUKy0ZDzTlqVeQ47XzFY0bkcgTnAuaXXKLfSsXsxu3u9J/nQ==
+X-Received: by 2002:adf:dc83:: with SMTP id r3mr18724495wrj.179.1554737079393;
+        Mon, 08 Apr 2019 08:24:39 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id o12sm32137298wrx.92.2019.04.08.08.24.36
+        by smtp.gmail.com with ESMTPSA id o12sm32137298wrx.92.2019.04.08.08.24.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:24:37 -0700 (PDT)
+        Mon, 08 Apr 2019 08:24:38 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -64,9 +64,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 5/6] arm64: dts: allwinner: h6: orangepi: Add PIO regulators
-Date:   Mon,  8 Apr 2019 17:27:54 +0200
-Message-Id: <20190408152755.17405-6-peron.clem@gmail.com>
+Subject: [PATCH v4 6/6] arm64: dts: allwinner: h6: pine64: Add PIO regulators
+Date:   Mon,  8 Apr 2019 17:27:55 +0200
+Message-Id: <20190408152755.17405-7-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190408152755.17405-1-peron.clem@gmail.com>
 References: <20190408152755.17405-1-peron.clem@gmail.com>
@@ -78,33 +78,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OrangePi One Plus and OrangePi Lite2 use the same PIO regulators.
-
-Add this in the common device tree.
+Add PIO regulators for Pine64 board.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi  | 17 +++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts   | 17 +++++++++++++++++
  1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 62e27948a3fa..4044f2dc66ac 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -70,6 +70,12 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 4802902e128f..6f2d9adf4f10 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -127,6 +127,12 @@
  	status = "okay";
  };
  
 +&pio {
 +	vcc-pc-supply = <&reg_bldo2>;
 +	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_bldo3>;
++	vcc-pg-supply = <&reg_bldo2>;
 +};
 +
  &r_i2c {
  	status = "okay";
  
-@@ -189,6 +195,17 @@
+@@ -247,6 +253,17 @@
  	};
  };
  
@@ -116,7 +114,7 @@ index 62e27948a3fa..4044f2dc66ac 100644
 +	 *
 +	 * vcc-pl-supply = <&reg_aldo1>;
 +	 */
-+	vcc-pm-supply = <&reg_bldo3>;
++	vcc-pm-supply = <&reg_bldo2>;
 +};
 +
  &uart0 {
