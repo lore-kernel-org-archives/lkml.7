@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F12C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E5CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ED420879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED4920879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750919;
-	bh=6eCzGmVks969R3cfYzDLxLHgQcXT9gF4bP0XIW3m3ro=;
+	s=default; t=1554750933;
+	bh=R898RYWcfSbMLiskJxSelNaT1b9QJrsjBRQJ9a/G1hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=KgTWLD8TwyVGKrjPWeA/0ZHDlIuEE1uOsAXv7ilwfiVFlvyY3B6YHovkdhn+MZxIS
-	 BzG7xZD7454kYoqbYUCzX8bWIL4/0lOuxCSm/XbJPD58mb1JaLlFMzoXw+bOYryqaS
-	 naKPVqAcpTWAMq0y9NAc0Dep3ZBgXN6P9kmIVBZw=
+	b=BzoithgK2Du0IuO+/WtumFbOeW/gUul5eB9O4oDGcYFsmyaNZ+e+87WODxo6VjKw6
+	 Y7Dpl9cgwkikeKSPGicQaaVYr/ISCIEiylY8mRQ1FIQIYhx+tBrAk2xKW3BgfvJ+A0
+	 aXZt9DqEKBBamFgAMjd4eTETt+XQVw/HnrWrO2xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfDHTPS (ORCPT
+        id S1729134AbfDHTPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:15:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbfDHTOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:32 -0400
+        id S1727011AbfDHTO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:27 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04C221924;
-        Mon,  8 Apr 2019 19:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3604421841;
+        Mon,  8 Apr 2019 19:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750871;
-        bh=6eCzGmVks969R3cfYzDLxLHgQcXT9gF4bP0XIW3m3ro=;
+        s=default; t=1554750867;
+        bh=R898RYWcfSbMLiskJxSelNaT1b9QJrsjBRQJ9a/G1hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=rmbdmkEPLoCYvC2UZGw+YOryhC73IxrICTjtihmTjcvflO9p1g0u10MUcWTVUqgq9
-         SKaryVoX1QltDU46Ne1vdf0gtKfbs0m2Lko5zuFnnY0uRKVzgjy5N8G6gZb60yn+qn
-         HGTtPTPrkNHsmDxhVyRvoONOLmlVTEtiAQ2QhFz0=
+        b=HFh+kiafDG/mf/W36s1NG89PYymL+GFp0LjgzAvpLl5UhZFUN3P/zvHcHihdltxtU
+         /kDPeX2eiFUEDRgs8x6FxLZYNAtD7zTvpGwgXYVQCfg9QHUV6pQ59CRxM//omd1ZUg
+         r9caF9UQwDgev3y8BisWtkPi3F+FAw9zmho3FaM0=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
 Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
         jkacur@redhat.com, bigeasy@linutronix.de,
         daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
-Subject: [PATCH 08/13] hrtimer: Don't lose state in cpu_chill()
-Date:   Mon,  8 Apr 2019 14:14:10 -0500
-Message-Id: <53a19e573f13967322ba8221fcf121948803ccf4.1554737688.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 05/13] rtmutex/rwlock: preserve state like a sleeping lock
+Date:   Mon,  8 Apr 2019 14:14:07 -0500
+Message-Id: <784bd79865718c40cd2564db00f430ae6ac014da.1554737688.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
@@ -66,48 +66,33 @@ If anyone has any objections, please let me know.
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 585456236766349f692f9fbcc089d71411831f88 ]
+[ Upstream commit 4a1bf9e54a013d55ab156cb462c68054cb52ee2d ]
 
-In cpu_chill() the state is set to TASK_UNINTERRUPTIBLE and a timer is
-programmed. On return the state is always TASK_RUNNING which means we
-lose the state if it was something other than RUNNING. Also
-set_current_state() sets ->task_state_change to within cpu_chill() which
-is not expected.
+The rwlock is spinning while acquiring a lock. Therefore it must become
+a sleeping lock on RT and preserve its task state while sleeping and
+waiting for the lock to become available.
 
-Save the task state on entry and restore it on return. Simply set the
-state in order to avoid updating ->task_state_change.
-
+Reported-by: Joe Korty <Joe.Korty@concurrent-rt.com>
 Cc: stable-rt@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- kernel/time/hrtimer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/locking/rwlock-rt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index c8d806126381..6da6b5dded3c 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1866,15 +1866,18 @@ void cpu_chill(void)
- {
- 	ktime_t chill_time;
- 	unsigned int freeze_flag = current->flags & PF_NOFREEZE;
-+	long saved_state;
- 
-+	saved_state = current->state;
- 	chill_time = ktime_set(0, NSEC_PER_MSEC);
--	set_current_state(TASK_UNINTERRUPTIBLE);
-+	__set_current_state_no_track(TASK_UNINTERRUPTIBLE);
- 	current->flags |= PF_NOFREEZE;
- 	sleeping_lock_inc();
- 	schedule_hrtimeout(&chill_time, HRTIMER_MODE_REL_HARD);
- 	sleeping_lock_dec();
- 	if (!freeze_flag)
- 		current->flags &= ~PF_NOFREEZE;
-+	__set_current_state_no_track(saved_state);
- }
- EXPORT_SYMBOL(cpu_chill);
- #endif
+diff --git a/kernel/locking/rwlock-rt.c b/kernel/locking/rwlock-rt.c
+index f2e155b2c4a8..c3b91205161c 100644
+--- a/kernel/locking/rwlock-rt.c
++++ b/kernel/locking/rwlock-rt.c
+@@ -128,7 +128,7 @@ void __sched __read_rt_lock(struct rt_rw_lock *lock)
+ 	 * That would put Reader1 behind the writer waiting on
+ 	 * Reader2 to call read_unlock() which might be unbound.
+ 	 */
+-	rt_mutex_init_waiter(&waiter, false);
++	rt_mutex_init_waiter(&waiter, true);
+ 	rt_spin_lock_slowlock_locked(m, &waiter, flags);
+ 	/*
+ 	 * The slowlock() above is guaranteed to return with the rtmutex is
 -- 
 2.14.1
 
