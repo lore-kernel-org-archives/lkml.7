@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8AAC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029E72084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF482084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Kd8dsrB8"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="QJoM8NsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbfDHFyf (ORCPT
+        id S1726638AbfDHFyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 01:54:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34315 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbfDHFyf (ORCPT
+        Mon, 8 Apr 2019 01:54:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42552 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbfDHFyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 01:54:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v12so6655138pgq.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 22:54:34 -0700 (PDT)
+        Mon, 8 Apr 2019 01:54:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w25so5474338pfi.9
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 22:54:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6l0dSdFF4WCYp2QwS6OTopGcAlUv8JXieQgw4XEpynM=;
-        b=Kd8dsrB8YqUg/j253TMFqmXt7tisBy7WbuhlOt7NnV9zbai8rqQFguV8xUfcAxAODZ
-         IL4VZnmDQFncbGNpfzVHV8i2ftPShwkKFLHYeD7+MuYiHRCYvUeqJ+GIACkm5GOb2FFj
-         MGVWzruNcJj2GSzwnOCz1Mxg7FOA7YH2Micic=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cxx5ypZqGFJEVdHb1LskbC0G/Dn/FbT8LG6QdiUJVeY=;
+        b=QJoM8NsNDJBoTMO9r/0ePkPfIeEXqpKa2FFz8CKo42xCSNuLXMlVPekUlJc+8VBfbY
+         3O9v8CfvrAahR5faK47S3EW2PVJQkQuQSsMmQ+9zetegFbFNTVsFrKaTUWRd3loP58zs
+         bDX9zQSKrYKgEwTpe2ZCtdLO0WenRFhKvCtug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6l0dSdFF4WCYp2QwS6OTopGcAlUv8JXieQgw4XEpynM=;
-        b=iyaneIovtLfPFLHAocfbJ2+zbmnoOrgn72P+YuP7+STuZrfk+Yv6STiobYeOefw4iG
-         SaNekOuurZPYkdudnmjdG/C/auhDpCy+8u8KnctYoYEIS98kOX2AMnAtJ+NH17dclw53
-         I7Vln9kEPDlw/lzJsw9Ae6nr13SIOXqv1G+x/ki/Rt/u8nNXiCjQMUEdnyj8ivjr1N5p
-         X9eWglThn+wVmMGYDQ2MLQ4cQUxKBsepM4izfx23Q70y7Pcsvmoq8E++X+wLBzH0Ombd
-         ZoewkKlQHub5DBPsQNnRCE2oirMTbmP9ayGxLbdrW0FtibfY9H2NpMap6DlTABJJWXcU
-         g8iA==
-X-Gm-Message-State: APjAAAX+sQfKWJgbW7Ms3gMuJfHyQAIxKPFNIih2i61f8hVIrGv6/JsA
-        Jw2TE/UFcXfLln3nM/aXzbms8A==
-X-Google-Smtp-Source: APXvYqzE3XCiuI0FWVAcXMd/+gXXx7NwcuMXdaTbvD2EBFHwZl1kve3WJ3hqOchBK1U9179Syz51Pw==
-X-Received: by 2002:a62:6c43:: with SMTP id h64mr28593142pfc.123.1554702874291;
-        Sun, 07 Apr 2019 22:54:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cxx5ypZqGFJEVdHb1LskbC0G/Dn/FbT8LG6QdiUJVeY=;
+        b=eXmPCpAZ1ovSvL9xOSu6xCMuDjwY+8qsEYUj1gNnZoDLGwN6cE7LxDu+RAMjm2szVD
+         MqLvhJUDQLyGK0+HGglKxToxWS9DKmpc1iiauFCAHse73HlVpwcYTn7Onv4zSDl2Olu5
+         YpsJwf6ZehSenFBDtbUujJ7oKJeQuUdsAKKAWiryIPmRwS0kJRSmGmBfeD60J+3pefY/
+         7xwpLLXQaiuABhfAGsovWF1OnDDYxHy5OLw9rwuvurWrAe2Q90x7RtBkxBnZcdwEDr2m
+         DMfkHSkEcbLzw2vL3FsWlFlmHNzErugEScvdQuIB58m+c/E66Pl/h0kBu2QyUCcppXiG
+         reKg==
+X-Gm-Message-State: APjAAAXNUykeGu66BgFNEstJsADxsZZBFArKl4MoHSKRQzW1hypKNlk6
+        241gf63i5YAcroavlPaTl5t6wI8CdIk=
+X-Google-Smtp-Source: APXvYqyFPQiC5fkC4W7hGUE7Xc7Snl3DRIdvT50w1uG32k3NnurmAdtEx4CHhEYdz7aBUXuQ3d6qhQ==
+X-Received: by 2002:a62:ae13:: with SMTP id q19mr28095617pff.152.1554702878402;
+        Sun, 07 Apr 2019 22:54:38 -0700 (PDT)
 Received: from localhost.localdomain ([183.82.229.217])
-        by smtp.gmail.com with ESMTPSA id l1sm31076164pgp.9.2019.04.07.22.54.30
+        by smtp.gmail.com with ESMTPSA id l1sm31076164pgp.9.2019.04.07.22.54.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2019 22:54:33 -0700 (PDT)
+        Sun, 07 Apr 2019 22:54:37 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
@@ -61,10 +61,12 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
-Date:   Mon,  8 Apr 2019 11:24:14 +0530
-Message-Id: <20190408055415.1374-1-jagan@amarulasolutions.com>
+Subject: [PATCH 2/2] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
+Date:   Mon,  8 Apr 2019 11:24:15 +0530
+Message-Id: <20190408055415.1374-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190408055415.1374-1-jagan@amarulasolutions.com>
+References: <20190408055415.1374-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,69 +74,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Goodix GT5663 capacitive touch controller node on
-Amarula A64-Relic board.
+Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
 
 The CTP connected to board with,
-- SDA, SCK from i2c1
+- SDA, SCK from i2c0
 - GPIO-LD0 as AVDD28 supply
 - PH4 gpio as interrupt pin
-- PH8 gpio as reset pin
+- PH11 gpio as reset pin
 - X axis is inverted
 - Y axis is inverted
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 3575db216016..a76353d59aaa 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -49,6 +49,28 @@
- 	bias-pull-up;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index 6a2154525d1e..5b0631929a6c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -37,6 +37,28 @@
+ 	status = "okay";
  };
  
-+&i2c1 {
++&i2c0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
++	pinctrl-0 = <&i2c0_pins>;
 +	status = "okay";
 +
 +	touchscreen@5d {
-+		compatible = "goodix,gt5663";
++		compatible = "goodix,gt911";
 +		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
 +		interrupt-parent = <&pio>;
 +		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
 +		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
 +		touchscreen-inverted-x;
 +		touchscreen-inverted-y;
 +	};
 +};
 +
-+&i2c1_pins {
++&i2c0_pins {
 +	bias-pull-up;
 +};
 +
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
-@@ -212,6 +234,13 @@
- 	regulator-name = "vdd-cpus";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-ctp";
-+	status = "okay";
-+};
-+
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.18.0.321.gffc6fa0e3
 
