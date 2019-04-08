@@ -2,243 +2,175 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D609AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF64C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9897C20855
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h1XTfxUM"
+	by mail.kernel.org (Postfix) with ESMTP id 1DCEA206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfDHSg4 (ORCPT
+        id S1729122AbfDHShz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:36:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37759 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfDHSgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:36:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v13so12189949ljk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pYRDyIkEqmVC9oW4qAFujNVNCZfTEsyj7q+UIxB7Wy8=;
-        b=h1XTfxUM25v3TL4rIfr6EgQPQLYer2qJuyM31nUw6IYN1POMSOvyGCYbhnejTmVI3d
-         TAiza3ImnAwbH0eo/Tl6xIbkVbi2PwJIjAV1lyUYswmwsrWDPnOFIZ0AfvRjPYwJK6yS
-         feB/d8/wRcCbq510XDX0D8wg3YDhT3HSseWh50V0v3kF/CLWiYhx3BxOxQgOw0b9ZUEq
-         ajwClMxn7GQ30Ax59ezLpP44RRz15YxWJ5n5Y3L/sN/qwM+4RKZFP+fqKvUdOXKiGhmr
-         uYSm8DOfjmX1dJiALDC77pQWml0wMh3SLadVAovjRX6BukKt5mNEApDs4Kogr3qaD1hs
-         tdZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pYRDyIkEqmVC9oW4qAFujNVNCZfTEsyj7q+UIxB7Wy8=;
-        b=K4NOcE4Eslq97pws7Y/BbzuQJ19GmoNW1i+wQqROAci41JSnhumIbXmf8NbYlowcJX
-         m4/VhE5xbEsM8uJ5z+aNjU4RfRdJcAtR6e6oppGvRQpIt6BzFuYkDLKsjHEsrucd1Op/
-         MRrUBLcWiHCzGPeeXm0s2G8smTj+FDPMArnEwxSJ4OMPPqRuhYOS0CZ2NW98RusYmj+z
-         fYrCEE1xL1ZWeBEc/QzZ2W9+bJir2oR7ha1eVnQclSUyEc85qjdZdevL9yVB8z55+uZ7
-         B5scLYlPR4S/A0GAPpG6Io1GzCNvOYnLDAUuysZLHNwbPyawk5Fn67rPybMlsiP3xX0s
-         Sbow==
-X-Gm-Message-State: APjAAAUC92UHz+Diz2i6oizKvxMBknrAQEY2ZvvbgMH7hddAp0leebUN
-        XksesBl+Yds41cWRWXB0ygAYE3rGPvEmwAREblC9jQ==
-X-Google-Smtp-Source: APXvYqzqTkXd9+kmayIYfKxzc6Qu9J1rTwgo0IC4f8x5jV/0gXUlu6kaPnEabwzveANPw+0ePTgF1610Vn0KugRa16o=
-X-Received: by 2002:a2e:884a:: with SMTP id z10mr16620904ljj.21.1554748612610;
- Mon, 08 Apr 2019 11:36:52 -0700 (PDT)
+        Mon, 8 Apr 2019 14:37:55 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54422 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727258AbfDHShz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:37:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7804E15BE;
+        Mon,  8 Apr 2019 11:37:54 -0700 (PDT)
+Received: from [10.37.12.66] (unknown [10.37.12.66])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1342F3F718;
+        Mon,  8 Apr 2019 11:37:51 -0700 (PDT)
+Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
+ backed by THP
+To:     yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org
+Cc:     kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        zhengxiang9@huawei.com, andrew.murray@arm.com,
+        wanghaibin.wang@huawei.com
+References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
+ <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
+ <a9c084fb-0c84-e632-a192-b361773a0bc8@arm.com>
+ <44ffad26-a407-4603-0bb6-145f7290adbe@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <730c25b4-dbc5-8d8b-514c-4ed8641701ce@arm.com>
+Date:   Mon, 8 Apr 2019 19:40:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
- <20190405203558.19160-2-rajatja@google.com> <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
-In-Reply-To: <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 8 Apr 2019 11:36:15 -0700
-Message-ID: <CACK8Z6FGFiS_jN_5ctWmjKbrcUyjGkV0MsVs7_2TsaS7UAoydA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <44ffad26-a407-4603-0bb6-145f7290adbe@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 10:02 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > Add a module parameter which when enabled, will check on resume, if the
-> > last S0ix attempt was successful. If not, the driver would warn and provide
-> > helpful debug information (which gets latched during the failed suspend
-> > attempt) to debug the S0ix failure.
-> >
-> > This information is very useful to debug S0ix failures. Specially since
-> > the latched debug information will be lost (over-written) if the system
-> > attempts to go into runtime (or imminent) S0ix again after that failed
-> > suspend attempt.
->
-> > +#ifdef CONFIG_PM_SLEEP
-> > +
-> > +static bool warn_on_s0ix_failures;
-> > +module_param(warn_on_s0ix_failures, bool, 0644);
-> > +MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
-> > +
-> > +static int pmc_core_suspend(struct device *dev)
-> > +{
-> > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> > +
-> > +       /* Save PC10 and S0ix residency for checking later */
->
-> > +       if (warn_on_s0ix_failures && !pm_suspend_via_firmware() &&
-> > +           !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
-> > +           !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
-> > +               pmcdev->check_counters = true;
->
-> Perhaps something like
->
-> pmcdev->check_counters = false;
-> /* User doesn't want to be warned */
-> if (!warn_on...)
->  return 0;
-> /* We do suspend via firmware */
-> if (...)
->  return 0;
-> ...
->
-> ?
+Hi Zenhui,
 
-I guess what you mean is one conditional per line. Sure, I will do that.
+On 04/08/2019 04:11 PM, Zenghui Yu wrote:
+> Hi Suzuki,
+> 
+> Thanks for the reply.
+> 
 
->
-> > +       else
-> > +               pmcdev->check_counters = false;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static inline bool pc10_failed(struct pmc_dev *pmcdev)
->
-> To be or not to be? :-)
-> Perhaps names of the functions should be
->
-> pmc_code_is_pc10_failed()
->
-> and so on
+...
 
-I think the suggestion is to use pmc_core_* as the function names. OK,
-I will rename the functions to:
+>>> Hi Suzuki,
+>>>
+>>> Why not making use of fault_supports_stage2_huge_mapping()?  Let it do
+>>> some checks for us.
+>>>
+>>> fault_supports_stage2_huge_mapping() was intended to do a *two-step*
+>>> check to tell us that can we create stage2 huge block mappings, and this
+>>> check is both for hugetlbfs and THP.  With commit a80868f398554842b14,
+>>> we pass PAGE_SIZE as "map_size" for normal size pages (which turned out
+>>> to be almost meaningless), and unfortunately the THP check no longer
+>>> works.
+>>
+>> Thats correct.
+>>
+>>>
+>>> So we want to rework *THP* check process.  Your patch fixes the first
+>>> checking-step, but the second is still missed, am I wrong?
+>>
+>> It fixes the step explicitly for the THP by making sure that the GPA and
+>> the HVA are aligned to the map size.
+> 
+> Yes, I understand how your patch had fixed the issue.  But what I'm
+> really concerned about here is the *second* checking-step in
+> fault_supports_stage2_huge_mapping().
+> 
+> We have to check if we are mapping a non-block aligned or non-block
+> sized memslot, if so, we can not create block mappings for the beginning
+> and end of this memslot.  This is what the second part of
+> fault_supports_stage2_huge_mapping() had done.
+> 
+> I haven't seen this checking-step in your patch, did I miss something?
+> 
 
-pmc_core_pc10_failed()
-and
-pmc_core_s0ix_failed()
+I see.
 
+>> I don't think this calls for a VM_BUG_ON(). It is simply a case where
+>> the GPA is not aligned to HVA, but for normal VMA that could be made THP.
+>>
+>> We had this VM_BUG_ON(), which would have never hit because we would
+>> have set force_pte if they were not aligned.
+> 
+> Yes, I agree.
+> 
+>>>> +        /* Skip memslots with unaligned IPA and user address */
+>>>> +        if ((gfn & mask) != (pfn & mask))
+>>>> +            return false;
+>>>>           if (pfn & mask) {
+>>>>               *ipap &= PMD_MASK;
+>>>>               kvm_release_pfn_clean(pfn);
+>>>>
+>>>
+>>> ---8>---
+>>>
+>>> Rework fault_supports_stage2_huge_mapping(), let it check THP again.
+>>>
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>> ---
+>>>   virt/kvm/arm/mmu.c | 11 ++++++++++-
+>>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index 27c9583..5e1b258 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -1632,6 +1632,15 @@ static bool 
+>>> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
+>>>       uaddr_end = uaddr_start + size;
+>>>
+>>>       /*
+>>> +     * If the memslot is _not_ backed by hugetlbfs, then check if it
+>>> +     * can be backed by transparent hugepages.
+>>> +     *
+>>> +     * Currently only PMD_SIZE THPs are supported, revisit it later.
+>>> +     */
+>>> +    if (map_size == PAGE_SIZE)
+>>> +        map_size = PMD_SIZE;
+>>> +
+>>
+>> This looks hackish. What is we support PUD_SIZE huge page in the future
+>> ?
+> 
+> Yes, this might make the code a little difficult to understand. But by
+> doing so, we follow the same logic before commit a80868f398554842b14,
+> that said, we do the two-step checking for normal size pages in
+> fault_supports_stage2_huge_mapping(), to decide if we can create THP
+> mappings for these pages.
+> 
+> As for PUD_SIZE THPs, to be honest, I have no idea now :(
 
->
-> > +{
-> > +       u64 pc10_counter;
-> > +
-> > +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
-> > +           pc10_counter == pmcdev->pc10_counter)
-> > +               return true;
->
-> > +       else
->
-> Redundant.
+How about the following diff ?
 
-OK, I'll remove the "else" part here.
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 97b5417..98e5cec 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1791,7 +1791,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, 
+phys_addr_t fault_ipa,
+  		 * currently supported. This code will need to be
+  		 * updated to support other THP sizes.
+  		 */
+-		if (transparent_hugepage_adjust(&pfn, &fault_ipa))
++		if (fault_supports_stage2_huge_mappings(memslot, hva, PMD_SIZE) &&
++		    transparent_hugepage_adjust(&pfn, &fault_ipa))
+  			vma_pagesize = PMD_SIZE;
+  	}
 
->
-> > +               return false;
-> > +}
-> > +
-> > +static inline bool s0ix_failed(struct pmc_dev *pmcdev)
-> > +{
-> > +       u64 s0ix_counter;
-> > +
-> > +       if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
-> > +           s0ix_counter == pmcdev->s0ix_counter)
-> > +               return true;
->
-> > +       else
->
-> Ditto.
-
-OK, I'll remove the "else" part here.
-
->
-> > +               return false;
-> > +}
-> > +
-> > +static int pmc_core_resume(struct device *dev)
-> > +{
-> > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> > +
-> > +       if (!pmcdev->check_counters)
-> > +               return 0;
-> > +
-> > +       if (pc10_failed(pmcdev)) {
-> > +               dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
-> > +                        pmcdev->pc10_counter);
-> > +       } else if (s0ix_failed(pmcdev)) {
-> > +
-> > +               const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
-> > +               const struct pmc_bit_map *map;
-> > +               int offset = pmcdev->map->slps0_dbg_offset;
-> > +               u32 data;
-> > +
-> > +               dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
-> > +                        pmcdev->s0ix_counter);
-> > +               while (*maps) {
-> > +                       map = *maps;
-> > +                       data = pmc_core_reg_read(pmcdev, offset);
-> > +                       offset += 4;
-> > +                       while (map->name) {
-> > +                               dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
-> > +                                        map->name,
-> > +                                        data & map->bit_mask ? "Yes" : "No");
-> > +                               ++map;
-> > +                       }
-> > +                       ++maps;
-> > +               }
->
-> Can't we utilize existing print helpers?
-
-I didn't quite see any existing print helpers in this file. I took
-this code from pmc_core_slps0_dbg_show(), and I think although I can
-abstract out this code into a static function, the calling code need
-to use seq_printf(s,...) and dev_warn(dev,...) respectively. - so
-might be overkill (did not feel that the benefits were worth it).
-Please let me know if you have any suggestions and will be happy to
-use them.
-
-Thanks,
-
-Rajat
+-- 
+2.7.4
 
 
->
-> > +       }
-> > +       return 0;
-> > +}
-> > +
-> > +#endif
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+Suzuki
