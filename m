@@ -2,139 +2,142 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B00C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADAC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EDF21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B76621473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fa0/u/rK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XD50hFB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfDHPCS (ORCPT
+        id S1727829AbfDHPDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:02:18 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37175 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfDHPCS (ORCPT
+        Mon, 8 Apr 2019 11:03:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37652 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbfDHPC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:02:18 -0400
-Received: by mail-it1-f193.google.com with SMTP id u65so21508046itc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:02:17 -0700 (PDT)
+        Mon, 8 Apr 2019 11:02:59 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v14so15091853wmf.2;
+        Mon, 08 Apr 2019 08:02:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TOCc576NIn+amDyUdAM4HKdCXeGo3EpKDvfX/hvQKTg=;
-        b=fa0/u/rKkBOsugD2/pikR6sNZniYbUo93QdE451unN2p3ScYhEelZrBTbWjmcUZFRK
-         TZb3N1F8wBRBcDBjioDouEkcrI91aA/FMzb5bvsgC8rYIOgUOJHim1t0qgQvw/SsO/Vy
-         zPiWLaWvG4Z4jQPRx1mvd28glCZo6TlJbyM4lNf47ttXK77Pg0bH00pomzs1NYBwC+xO
-         AKQGO+PE2KjdiLdprtbOO2UfuVkaLexpNkatzoFHxnQtFQK7a1AKiLrJV41BQod+yRVF
-         yEeKp5WJntDrlOM8JIfXQ/CChO/QmDOAlQC+9GYe0yr3x5/yT+1imPyh4BRs4149WYk/
-         n1Gw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fGBfhMWeRrQGORS5NyKcAVeIa/HorxH2EOZq3fBJ2tA=;
+        b=XD50hFB6dJ8laiwAaakQZCIwHT6fYvZk9VUJqj+1HY31a9qLd10nCJ+moIAWSgvwGu
+         9fk/0JBkyCNqySjlt7uxRJmHLFHEp1vwfKlTff2BbysEIrqL2l9tLcG3DdGCxDSGFfpG
+         ybY8NnEAPzoryvfaw6088VemIS8VTZXR0A7lQDt9yMSzLZW6g5juv2+fcl/J7EWSvc72
+         xlJVWr/3Om9GemvlTaPATFNwa/CAFKNYQt0D3pUsEJzjtYWnaDNT4ryMhGnymDK3dh0F
+         yHlzsKq1SkvV5AkGQg5BqDMbDaT8FND0Rl+jci2kgHvQksEfz08qF1YyGPKNaVcWAWw0
+         Li5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TOCc576NIn+amDyUdAM4HKdCXeGo3EpKDvfX/hvQKTg=;
-        b=RfzpnEAwyHbSEypcILJZ5Z0NysP4NopRBK+DhykZ2kimVmtfJXI+0UmLw2POj0rbDv
-         AA2sgAdQPScH8zGvNq0us4+AnRddYVFVr1z3Gglo0gAJaft7JaneDmW79Wsh1iA+CDzx
-         tkXMCGWU/xSZE5DMshp4rYPWKJHtz+dfrEW9z62wE97hdoNQ9EfMbc+a/tVmPlFaayue
-         5hE/x3ZP7UHOrSksEtS3nHuXiiWUZ38tqzho/QTwQylC/CX0EgKX7sDCmbDOLzKVLTOl
-         lWZ1BzoO8k5boTAenrgbiukSmSyXPFF4sZJNFRieCqkp9sMpdMcsatkaAb72behMDWBN
-         pL/w==
-X-Gm-Message-State: APjAAAWc35z+ndqRXw/NefQUgZBmYCcLHOq6YZEJ1Lfwr/tQJA+D/8nP
-        mEsOH5uUdtpVYZkx48jXxLXmWDemgvXKjhCClMDAXA==
-X-Google-Smtp-Source: APXvYqzDIxQMDMBx+2zvU86aLUooqgXfgMCINNpd+XSnCoIlpW4k7FaJYvjxcCrMDkAuuNGsG7tm50xGnOtLazej76k=
-X-Received: by 2002:a02:7654:: with SMTP id z81mr21259527jab.79.1554735736845;
- Mon, 08 Apr 2019 08:02:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fGBfhMWeRrQGORS5NyKcAVeIa/HorxH2EOZq3fBJ2tA=;
+        b=T7zOodkFXpW/fTlN3e46AdzCsFwM/gtqGBrYChCP3ztQajplr3AARAuoKIhtyTT4mq
+         0KXpr6Pa7US/D1f/aWsgN98rOetu/KLZa5pggmqhzmk/XpqtsWwXhlYr2Z0hVHJwCP+S
+         WFqwyqrLhJ5sGfXDG6ZHQocO7u4ImBE6sipz4KpIwcwbMb/4ybgZv0ypSm1L87s6mbc7
+         UmWNKWFmXw0n1W8H/V2X8K++cJXLawp0fFrvquIkexazkW08foudziKfW6kkM0eHuD47
+         bp8hYP557N8GxH2R7etuiTbJ63kJRLqRsHWZnlGsZ1FylnBF5yjs09t0/p/Ywefezedg
+         NMfw==
+X-Gm-Message-State: APjAAAUi4TRoAoisPqeLts4bvRX020BbnKwYF99h7Nu3MURtdUyvycND
+        eFJL099Bna5IyOTu7kpYrHw=
+X-Google-Smtp-Source: APXvYqyO+osh1QTlxvJbpoqfSoAUjcAQNH9tdPKMpHIxq1h+12wgTZdqeMJdMCGslx5D5+X9EeMJ1g==
+X-Received: by 2002:a1c:9691:: with SMTP id y139mr17956721wmd.64.1554735777904;
+        Mon, 08 Apr 2019 08:02:57 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id a11sm30933017wrx.5.2019.04.08.08.02.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 08:02:56 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 17:02:55 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-usb@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] usb: host: xhci-tegra: Add Tegra186 XUSB support
+Message-ID: <20190408150255.GA13288@ulmo>
+References: <20190408081739.GB6644@ulmo>
+ <Pine.LNX.4.44L0.1904081006330.1440-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <00000000000027f6f6056bc8e0f8@google.com>
-In-Reply-To: <00000000000027f6f6056bc8e0f8@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 8 Apr 2019 17:02:03 +0200
-Message-ID: <CACT4Y+YxLq+1=tF7y9KTdCB4n1Y=G-YAGiWmJG2nko7Z5DGawA@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage in corrupted
-To:     syzbot <syzbot+5cec30d9329f61f2fb29@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1904081006330.1440-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 9, 2018 at 7:03 PM syzbot
-<syzbot+5cec30d9329f61f2fb29@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    036db8bd9637 Merge branch 'for-4.17-fixes' of git://git.ke..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14d187e7800000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=31f4b3733894ef79
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5cec30d9329f61f2fb29
-> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> userspace arch: i386
-> syzkaller repro:https://syzkaller.appspot.com/x/repro.syz?x=1110de07800000
 
-This wasn't reproduced during bisection attempt, happened once a year ago.
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#syz invalid
+On Mon, Apr 08, 2019 at 10:07:38AM -0400, Alan Stern wrote:
+> On Mon, 8 Apr 2019, Thierry Reding wrote:
+>=20
+> > On Mon, Apr 01, 2019 at 12:40:44PM +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >=20
+> > > Hi,
+> > >=20
+> > > This series introduces support for XUSB to the Tegra186 SoC. This is
+> > > mostly the same as on earlier generations in that it provides an XHCI
+> > > compatible interface with a bit of vendor-specific glue. Perhaps the
+> > > most notable change is the removal of the IPFS wrapper. Patches for
+> > > the UPHY related changes that control the PHYs for the XUSB controller
+> > > were merged into v5.1.
+> > >=20
+> > > This version is a rebase of the series posted here:
+> > >=20
+> > >     http://patchwork.ozlabs.org/project/linux-tegra/list/?series=3D88=
+193
+> > >=20
+> > > There have been no code changes and I collected Reviewed-by and Acked=
+-by
+> > > tags.
+> > >=20
+> > > Greg, can you pick up patches 1-3 with Rob's and Mathias' Acked-by,
+> > > respectively? I'll pick up patches 4-6 into the Tegra tree.
+> >=20
+> > Hi Greg,
+> >=20
+> > would you mind picking up patches 1-3 of this series?
+>=20
+> FYI: Greg is on vacation for the coming week, with no email access.
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+5cec30d9329f61f2fb29@syzkaller.appspotmail.com
->
-> random: sshd: uninitialized urandom read (32 bytes read)
-> random: sshd: uninitialized urandom read (32 bytes read)
-> IPVS: ftp: loaded support on port[0] = 21
->
-> =============================
-> WARNING: suspicious RCU usage
-> 4.17.0-rc4+ #64 Not tainted
-> -----------------------------
-> arch/x86/kernel/traps.c:537 entry code didn't wake RCU!
->
-> other info that might help us debug this:
->
->
-> RCU used illegally from idle CPU!
-> rcu_scheduler_active = 2, debug_locks = 1
-> RCU used illegally from extended quiescent state!
-> no locks held by swapper/0/0.
->
-> stack backtrace:
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report.
-> If you forgot to add the Reported-by tag, once the fix for this bug is
-> merged
-> into any tree, please reply to this email with:
-> #syz fix: exact-commit-title
-> If you want to test a patch for this bug, please reply with:
-> #syz test: git://repo/address.git branch
-> and provide the patch inline or as an attachment.
-> To mark this as a duplicate of another syzbot report, please reply with:
-> #syz dup: exact-subject-of-another-report
-> If it's a one-off invalid bug report, please reply with:
-> #syz invalid
-> Note: if the crash happens again, it will cause creation of a new bug
-> report.
-> Note: all commands must start from beginning of the line in the email body.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000027f6f6056bc8e0f8%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+Thanks for letting me know, Alan. I'll ping Greg again when he's back.
+
+Thierry
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyrYpwACgkQ3SOs138+
+s6EkeA/8C715419f8XxaZRrI3OuZ9lSHxmV5+wcNuR6Acb+qy5nYhDpG4bW97odQ
+2VBkvUFPPlSciHcFsJ7qP70gd3mCLU0/1fvbuYwyRXJtak5XaJNWqcvOJJoNs4Iv
+dZeOq+VVEiXYqle6ca6dT3j2Ofh81rpVcqWCTx2Olyo+uCUDv7V13kaW803QH6XJ
+NMFAwB/ajxAcBEzg19pXDHttA4jJRNiz1ekt8cDi8D4h5lQy2ebRDjRO14VIeXGz
+c1dx8gJXQihPc5HLy+bGl6mXNcmfw8tb9CJaD3ssZCIbzSYdYQcWA+vvFUT1Ltq5
+IABNXL3HEJk7VWSSyJ66wsIonsdISVbQp9GbjKaRZbDAS25va7gaWMCUKEUQcFBy
+sEWPRYJ4QASuRubFP6BZ9FhhNcm0Y0ALRnVIK5oQlTRqU7b/VLx0OalwFgy+zQu9
+PG7NawTw8mVdWyAkdx2hUZ2IYgfWMnty53EYjuvsOSoLMZhTzyfaxSZfdi2IANHu
+/MEKzKQvafzb+4KsEhPrBZfp1whhWjAZL35Qs17UXqPlEAXoYHaX+RXF/uB6S+Dl
+6UrZlO/WXR4Pg/xh0r4AgcEePOgZdYjpg6lCq5DPHONSAnO4o+oyN/qtYAvlnJr8
+kUJLDi/1iX6IW0JfOWiX89T1sO+YPx18eX2xMlTz9id0vIhDYF8=
+=V6kD
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
