@@ -2,116 +2,117 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14574C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C74CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C4121473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BCp7MYmj"
+	by mail.kernel.org (Postfix) with ESMTP id 3848621473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbfDHMyO (ORCPT
+        id S1726663AbfDHMy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:54:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46063 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfDHMyL (ORCPT
+        Mon, 8 Apr 2019 08:54:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44500 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHMy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:54:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t15so5531803lfl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nXrNLau4jzYolEjIyjWqN0Ii33iGgL5TkNiIMQjR8E0=;
-        b=BCp7MYmjzqKsxpjpRfui22RI+dj38/+eZpKMZjKSVTsoiABg/LL1DXGP5ZWshQt7Pz
-         VslIvC9Q5FCDdl22mhMMrNGKGOlFKzt/a51hsO10kgEOWB79sEamIgVctLacE1SdxlJ7
-         KahiKPMouTExOmRvN0yHUlHlCBYdbCgPc1/vCvMwaj32C7wAtWzLBgeHGpGPNi/TjeMA
-         9hHHsX4h7hMy+BlSK9QfyDhtP7SvHG3b/qnH56fqQ97S15PK8XsifGbJ0XVFFxKr9S+p
-         /ODeHzr5vTZxdwbS3cXxj6Ldq3b0APe/yO0ZuV9OCQDhucwnwbP/XgT9VNA4bNnBn5tY
-         XKCw==
+        Mon, 8 Apr 2019 08:54:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y7so653076wrn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:54:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nXrNLau4jzYolEjIyjWqN0Ii33iGgL5TkNiIMQjR8E0=;
-        b=hv++ulPWzY/WDDRm3erWcskBWOEd7arUh4uzPEZ0d6qqQqSpbl8g3dyPPBkpvaDv+l
-         96jqYmpvAPVn7ZEmFgeZoM91xVp8saji/9ayhVsaaqB61WyXd5GEFbme1jfMLlsIcJLI
-         Eu5YpFVf3/J2kjk0X10KQ/h5U9KSALvJzBefsCc/pO63q7Jylsu3o26/DSV0ew0ZFtd0
-         goFc5/nq01qn6nYiJuzGD+Ul5SoaTFlqGnto7E7ph/d0+xQGxxc84Uj+9U6F4aBx+3kA
-         mlblOxeGihh3Uv4eN38uhC2K/9Rq2xEnOZ4Ny3vTD9sq1ihDz03gING9Dj8DUBdQNU6R
-         vR0g==
-X-Gm-Message-State: APjAAAXJTaxbhwe3cOkdbwFaNz7y9aZJXBC9GucXk2vvF63ZHzQecEei
-        Di2Xae0YsLMU63UJiPxDSOwIyxvEQS7BVEyHy1JisA==
-X-Google-Smtp-Source: APXvYqxfMB/eilL6r3Dt4yX0a6WuXtBKkH6JLvwhrN0CySOTh8e6NnyyDkI6jj3mpQC6L7vLb8Azsg8rXJqNieg2M/o=
-X-Received: by 2002:ac2:485a:: with SMTP id 26mr15436847lfy.128.1554728049625;
- Mon, 08 Apr 2019 05:54:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IcmElKgZzP/E+nnV4t5MPl9ZdFT0jiBnp8i8whHXBQg=;
+        b=Hco5upz5VB5d5fuWgB09GFYjEgrKIugLdEy/CpARcS61mO4FPuV7rKy+LI/UAvQ5Hd
+         iyyXgNMpgt4ZuaB5vh1kNM+7MKrOsLgaloykAEQaDFLxH40ie2D8PhtbmwsJLhJmhG8V
+         qwlYMk3oqHKsJO13w+UCE2a1jx0bD51Q/0TK7JSS7X5x8h0LtkG+7KZePINp39APzhvr
+         qdiNoadzy4+b8oaBbeVTcaJLLTF6210jawguGWPo6CFDVx4EKVLQ91cfUsE9g/z8FC7U
+         eEKvcNz3ZVcaf2QcuHTX5h213B+ojAKFdgRb/d2cgdnEUfbMzf14HDTrxLyq6OAKQCTy
+         cgjQ==
+X-Gm-Message-State: APjAAAX321eH5NiTIxdfqQ2AmveyzyyIG52VpmOtjZwP8ayhLB+cT2HC
+        YlmeKJVkEauquNDzGS8lR5At9Q==
+X-Google-Smtp-Source: APXvYqxeHw8Y6txWsC0t0ITJPKGOXu73YNW2pzOPwdD14BiofN5druKHGgcOPsmFLRYieLcd9oY05Q==
+X-Received: by 2002:a5d:4843:: with SMTP id n3mr13130446wrs.256.1554728096892;
+        Mon, 08 Apr 2019 05:54:56 -0700 (PDT)
+Received: from t460s.bristot.redhat.com ([193.205.81.200])
+        by smtp.gmail.com with ESMTPSA id 7sm102539928wrc.81.2019.04.08.05.54.55
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 05:54:56 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/7] Early task context tracking
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
+        paulmck@linux.vnet.ibm.com, Clark Williams <williams@redhat.com>,
+        x86@kernel.org
+References: <cover.1554234787.git.bristot@redhat.com>
+ <20190404174037.GA183378@google.com>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <09416831-0c99-16ea-9ff0-128dd75f1b1f@redhat.com>
+Date:   Mon, 8 Apr 2019 14:54:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190405234514.6183-1-megous@megous.com> <20190405234514.6183-10-megous@megous.com>
-In-Reply-To: <20190405234514.6183-10-megous@megous.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Apr 2019 14:53:58 +0200
-Message-ID: <CACRpkdY=G0rpxVZL8TKJOQcf+Na8o5_FwG0EyBfb-ZCYXi=_oA@mail.gmail.com>
-Subject: Re: [PATCH 09/12] pinctrl: sunxi: Prepare for alternative bias
- voltage setting methods
-To:     megous@megous.com
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190404174037.GA183378@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 6, 2019 at 1:45 AM <megous@megous.com> wrote:
+On 4/4/19 7:40 PM, Joel Fernandes wrote:
+>> Currently, recursion control uses the preempt_counter to
+>> identify the current context. The NMI/HARD/SOFT IRQ counters
+>> are set in the preempt_counter in the irq_enter/exit functions.
+> Just started looking.
+> 
+> Thinking out loud... can we not just update the preempt_count as early on
+> entry and as late on exit, as possible, and fix it that way? (Haven't fully
+> yet looked into what could break if we did that.)
+> 
+> I also feel the context tracking should be unified, right now we already have
+> two methods AFAIK - preempt_count and lockdep. Now this is yet another third.
+> Granted lockdep cannot be enabled in production, but still. It will be nice
+> to unify these tracking methods and if there is a single point of all such
+> context tracking that works well, and even better if we can just fix
+> preempt_count and use that for non-debugging usecases.
+> 
+> Also I feel in_interrupt() etc should be updated to rely on such tracking
+> methods if something other than preempt_count is used..
 
-> From: Ondrej Jirman <megous@megous.com>
->
-> H6 has a different I/O voltage bias setting method than A80. Prepare
-> existing code for using alternative bias voltage setting methods.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 38 ++++++++++++-----------
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  4 ++-
+Hi Joel,
 
-I need Maxime's ACK on these patches to merge.
+I agree with you that it is important to have a single method to identify the
+context.
 
-Can the pinctrl parts be applied independently of the rest
-of the changes when Maxime is happy with the patches?
+I did the RFC using a specific percpu variable to make things simpler. Also
+because I tried to move set/unset of the preempt_counter and my dev VM stopped
+booting. So it looked, somehow, risky to move the preempt_counter.
 
-Yours,
-Linus Walleij
+Still, if people believe it is better to use the preempt_counter... I am not
+against...
+
+-- Daniel
+
+
+> thanks,
+> 
+>  - Joel
+> 
+> 
+
