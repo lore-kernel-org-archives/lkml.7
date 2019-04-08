@@ -6,130 +6,92 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B08C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E312C282DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F261620870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697C920870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfDHJxC (ORCPT
+        id S1726548AbfDHJx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:53:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39196 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726666AbfDHJxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:53:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D63C3AE31;
-        Mon,  8 Apr 2019 09:52:59 +0000 (UTC)
-Subject: Re: Possible bio merging breakage in mp bio rework
-To:     Ming Lei <ming.lei@redhat.com>, Nikolay Borisov <nborisov@suse.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@osandov.com>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>
-References: <59c19acf-999f-1911-b0b8-1a5cec8116c5@suse.com>
- <20190406001653.GA4805@ming.t460p>
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <eb586b8f-f8d4-f455-6203-4ceae2420274@suse.de>
-Date:   Mon, 8 Apr 2019 11:52:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190406001653.GA4805@ming.t460p>
-Content-Type: text/plain; charset=utf-8
+        Mon, 8 Apr 2019 05:53:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:29193 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725983AbfDHJx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 05:53:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-166-5mVXfh7ONdefGJDZ8ozDoQ-1; Mon, 08 Apr 2019 10:53:52 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 8 Apr 2019 10:55:01 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 8 Apr 2019 10:55:00 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Lyude Paul' <lyude@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Input: i8042 - disable KBD port on Late-2016 Razer Blade
+ Stealth
+Thread-Topic: [PATCH] Input: i8042 - disable KBD port on Late-2016 Razer Blade
+ Stealth
+Thread-Index: AQHU7ZUSkPdkw/c760Gm06JTgZ9iKaYyBMIg
+Date:   Mon, 8 Apr 2019 09:55:00 +0000
+Message-ID: <28dc38a55c45467dad6f11e9ea459172@AcuMS.aculab.com>
+References: <20190407213735.10658-1-lyude@redhat.com>
+         <20190407221034.GA162359@dtor-ws>
+ <0ac9aef48f4cf974f4f7046aad1267ab5c8fe525.camel@redhat.com>
+In-Reply-To: <0ac9aef48f4cf974f4f7046aad1267ab5c8fe525.camel@redhat.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: 5mVXfh7ONdefGJDZ8ozDoQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 02:16, Ming Lei wrote:
-> Hi Nikolay,
-> 
-> On Fri, Apr 05, 2019 at 07:04:18PM +0300, Nikolay Borisov wrote:
->> Hello Ming, 
->>
->> Following the mp biovec rework what is the maximum 
->> data that a bio could contain? Should it be PAGE_SIZE * bio_vec 
-> 
-> There isn't any maximum data limit on the bio submitted from fs,
-> and block layer will make the final bio sent to driver correct
-> by applying all kinds of queue limit, such as max segment size,
-> max segment number, max sectors, ...
+RnJvbTogTHl1ZGUgUGF1bA0KPiBTZW50OiAwNyBBcHJpbCAyMDE5IDIzOjU1DQo+IE9uIFN1biwg
+MjAxOS0wNC0wNyBhdCAxNToxMCAtMDcwMCwgRG1pdHJ5IFRvcm9raG92IHdyb3RlOg0KPiA+IEhp
+IEx5dWRlLA0KPiA+DQo+ID4gT24gU3VuLCBBcHIgMDcsIDIwMTkgYXQgMDU6Mzc6MzRQTSAtMDQw
+MCwgTHl1ZGUgUGF1bCB3cm90ZToNCj4gPiA+IFRoZSBsYXRlIDIwMTYgbW9kZWwgb2YgdGhlIFJh
+emVyIEJsYWRlIFN0ZWFsdGggaGFzIGEgYnVpbHQtaW4gVVNCDQo+ID4gPiBrZXlib2FyZCwgYnV0
+IGZvciBzb21lIHJlYXNvbiB0aGUgQklPUyBleHBvc2VzIGFuIGk4MDQyIGNvbnRyb2xsZXIgd2l0
+aA0KPiA+ID4gYSBjb25uZWN0ZWQgS0JEIHBvcnQuIFdoaWxlIHRoaXMgZmFrZSBBVCBLZXlib2Fy
+ZCBkZXZpY2UgZG9lc24ndCBhcHBlYXINCj4gPiA+IHRvIHJlcG9ydCBhbnkgZXZlbnRzLCBhdHRl
+bXB0aW5nIHRvIGNoYW5nZSB0aGUgc3RhdGUgb2YgdGhlIGNhcHMgbG9jaw0KPiA+ID4gTEVEIG9u
+IGl0IGZyb20gb24gdG8gb2ZmIGNhdXNlcyB0aGUgZW50aXJlIHN5c3RlbSB0byBoYW5nLg0KPiA+
+ID4NCj4gPiA+IFNvLCBpbnRyb2R1Y2UgYSBxdWlyayB0YWJsZSBmb3IgZGlzYWJsaW5nIGtleWJv
+YXJkIHByb2JpbmcgYnkgZGVmYXVsdCwNCj4gPiA+IGk4MDQyX2RtaV9ub2tiZF90YWJsZSwgYW5k
+IGFkZCB0aGlzIHNwZWNpZmljIG1vZGVsIG9mIFJhemVyIGxhcHRvcCB0bw0KPiA+ID4gdGhhdCB0
+YWJsZS4NCj4gPg0KPiA+IFdoYXQgZG9lcyBkbWVzZyBzaG93IGFib3V0IGk4MDQyIGZvciB0aGlz
+IGRldmljZT8gRXNwZWNpYWxseSBsaW5lICJQTlA6DQo+ID4gUFMvMiBDb250cm9sbGVyICAuLi4i
+Pw0KPiA+DQo+IA0KPiBBcHIgMDcgMTg6NDI6NDYgbWFsYWNoaXRlIGtlcm5lbDogaTgwNDI6IFBO
+UDogTm8gUFMvMiBjb250cm9sbGVyIGZvdW5kLg0KPiBBcHIgMDcgMTg6NDI6NDYgbWFsYWNoaXRl
+IGtlcm5lbDogaTgwNDI6IFByb2JpbmcgcG9ydHMgZGlyZWN0bHkuDQo+IEFwciAwNyAxODo0Mjo0
+NiBtYWxhY2hpdGUga2VybmVsOiBzZXJpbzogaTgwNDIgS0JEIHBvcnQgYXQgMHg2MCwweDY0IGly
+cSAxDQo+IEFwciAwNyAxODo0Mjo0NiBtYWxhY2hpdGUga2VybmVsOiBzZXJpbzogaTgwNDIgQVVY
+IHBvcnQgYXQgMHg2MCwweDY0IGlycSAxMg0KPiBBcHIgMDcgMTg6NDI6NDYgbWFsYWNoaXRlIGtl
+cm5lbDogbW91c2VkZXY6IFBTLzIgbW91c2UgZGV2aWNlIGNvbW1vbiBmb3IgYWxsIG1pY2UNCg0K
+VGhhdCBpcyB0aGUgJ2RlZmF1bHQnIHByb2JlIG9mIHRoZSBwcy8yIHNlcmlhbCBwb3J0cy4NCkxv
+b2tzIGxpa2UgdGhlIEJJT1MgaXMgY29ycmVjdCBpbiBub3QgZXhwb3NpbmcgdGhlIHBzLzIgY29u
+dHJvbGxlci4NClVzdWFsbHkgdGhleSBqdXN0IGZhaWwgdG8gZXhwb3NlIHRoZSBtb3VzZSB3aGVu
+IGl0IG5lZWRzIGEgcHMvMiBzcGxpdHRlciA6LSgNCg0KSSBkbyB3b25kZXIgd2hhdCB0aGV5J3Zl
+IGNvbm5lY3RlZCBpdCB0byB0aG91Z2guDQpJdCBpcyBleHRyZW1lbHkgdW5saWtlbHkgdGhleSd2
+ZSBmb3VuZCBhbiB4ODYgY2hpcHNldCB0aGF0IGRvZXNuJ3QNCmhhdmUgdGhlIHBzLzIgc2VyaWFs
+IHBvcnRzIGF0IHRoZSBzdGFuZGFyZCBpbyBhZGRyZXNzZXMuDQoNCglEYXZpZA0KDQotDQpSZWdp
+c3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9u
+IEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Naive question, why are we creating possibly huge bios just to split
-them according the the LLDD's limits afterwards?
-
-Can't we look at the limits in e.g. bio_add_page() and decide if we need
-to split there?
-
-This is just me thinking about it, I haven't though if there are any
-resulting performance penalties from it, yet.
-
-Byte,
-	Johannes
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
