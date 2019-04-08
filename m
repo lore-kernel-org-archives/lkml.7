@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF102C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7343C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D88420883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9086B208E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708367;
-	bh=CrcJG5Y0o4wfZuJBz/Ue1zg26TPEaQoTe5xPGhMl11U=;
+	s=default; t=1554708371;
+	bh=tUeHvaz1mtziC/gvA8V3XQdO9029ZziTsD1/FzNEkNo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AFF1yQgSTpMOpOyO75wmm4V2o9N2vC584AZbK9MIPxnQckhOBA2GXd//3CDiJIDOd
-	 eumy4G8yahJ/LwTLvvry9pQuPu3P/0+tS6EMlYXwOfO8TUwreW3uV7WiDmCmCwvm+E
-	 osSxrQ5tXc99j2kAQzzp1mOD+VyMl/ExWSSk+t1I=
+	b=HoL/g4my5d9RzHE82GLIEvHPHhzoc/lWUErVzkUupoWmlGIe4PK+ZCi6PeHStNnua
+	 GVC7ycT1eT1HzbcpTkpWB1Yh7GQZdvM+emD2QW9X0BbVbfKgWCrsbry6z2IjBL08U1
+	 ncFgWK1BQkGFoYNnykvsFhCZL2VGSQLuDTT+cRrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfDHH0G (ORCPT
+        id S1726512AbfDHH0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:26:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33352 "EHLO
+        Mon, 8 Apr 2019 03:26:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33452 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfDHH0F (ORCPT
+        with ESMTP id S1725993AbfDHH0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:26:05 -0400
+        Mon, 8 Apr 2019 03:26:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=OF32AdMGz9qGno4Sq2WPCUNbV3+0lXRDGQsy2yMrCU8=; b=pKFhx9McYbqy
-        YZ96m1vmDg9P+4PGg+uq416594UM3nsuI6KeKEYjozdQeVCDbz9tCOHETmP41IM1yiZ7Ys7c4bXl4
-        +Niegg6O4ipvSf2sglqnNm0t7bHRKaoUFla91XkS0XcIqZzXd4rkziHZ4usqSoLOY7eCpyC2AYwc0
-        Q4mAM=;
+        List-Archive; bh=G490sET7cjt6wYbqkPoZfZNPjdA36XERssFBLmkaUV4=; b=jCwTi826VgQy
+        DMC5tr9LPZVhJdW6m1bXQQsqPAFz25RlZmGJmilWSxjTLNlp/Jz8h1i6Pgv0oSRBIrIv9OQ9Mi69h
+        nWZQEmfW9XtCWJd/VCfLdvjZjKbjc7OvN/GbRIKFI9YLMf0Io976DVuJUHL/lGLNGClkfeP9DRwRI
+        kwgbs=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOf8-0003pT-BZ; Mon, 08 Apr 2019 07:25:51 +0000
+        id 1hDOer-0003ox-4Y; Mon, 08 Apr 2019 07:25:34 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 20432441D3C; Mon,  8 Apr 2019 14:25:40 +0700 (+07)
+        id 52262441D3C; Mon,  8 Apr 2019 14:25:21 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Andra Danciu <andradanciu1997@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>, timur@kernel.org,
@@ -55,11 +55,11 @@ Cc:     Mark Brown <broonie@kernel.org>, timur@kernel.org,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         daniel.baluta@nxp.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: mx27vis-aic32x4: Switch to SPDX identifier" to the asoc tree
-In-Reply-To:  <20190405115010.28838-16-andradanciu1997@gmail.com>
+Subject: Applied "ASoC: p1022_rdk: Switch to SPDX identifier" to the asoc tree
+In-Reply-To:  <20190405115010.28838-18-andradanciu1997@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408072540.20432441D3C@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:25:40 +0700 (+07)
+Message-Id: <20190408072521.52262441D3C@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:25:21 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: mx27vis-aic32x4: Switch to SPDX identifier
+   ASoC: p1022_rdk: Switch to SPDX identifier
 
 has been applied to the asoc tree at
 
@@ -92,10 +92,10 @@ to this mail.
 Thanks,
 Mark
 
-From 1021ec41a909ee7961f63f38afd90b5ccc592c49 Mon Sep 17 00:00:00 2001
+From 8acfeb65cbaa92ff2e4f3305c7a18a6edabd1d92 Mon Sep 17 00:00:00 2001
 From: Andra Danciu <andradanciu1997@gmail.com>
-Date: Fri, 5 Apr 2019 14:50:05 +0300
-Subject: [PATCH] ASoC: mx27vis-aic32x4: Switch to SPDX identifier
+Date: Fri, 5 Apr 2019 14:50:07 +0300
+Subject: [PATCH] ASoC: p1022_rdk: Switch to SPDX identifier
 
 Adopt the SPDX license identifier headers to ease license compliance
 management.
@@ -103,46 +103,49 @@ management.
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/mx27vis-aic32x4.c | 29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ sound/soc/fsl/p1022_rdk.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/sound/soc/fsl/mx27vis-aic32x4.c b/sound/soc/fsl/mx27vis-aic32x4.c
-index d7ec3d20065c..37a4520aef62 100644
---- a/sound/soc/fsl/mx27vis-aic32x4.c
-+++ b/sound/soc/fsl/mx27vis-aic32x4.c
-@@ -1,25 +1,10 @@
--/*
-- * mx27vis-aic32x4.c
+diff --git a/sound/soc/fsl/p1022_rdk.c b/sound/soc/fsl/p1022_rdk.c
+index 4afbdd610bfa..1c32c2d8c6b0 100644
+--- a/sound/soc/fsl/p1022_rdk.c
++++ b/sound/soc/fsl/p1022_rdk.c
+@@ -1,21 +1,17 @@
+-/**
+- * Freescale P1022RDK ALSA SoC Machine driver
 - *
-- * Copyright 2011 Vista Silicon S.L.
+- * Author: Timur Tabi <timur@freescale.com>
 - *
-- * Author: Javier Martin <javier.martin@vista-silicon.com>
+- * Copyright 2012 Freescale Semiconductor, Inc.
 - *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
+- * This file is licensed under the terms of the GNU General Public License
+- * version 2.  This program is licensed "as is" without any warranty of any
+- * kind, whether express or implied.
 - *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
+- * Note: in order for audio to work correctly, the output controls need
+- * to be enabled, because they control the clock.  So for playback, for
+- * example:
 - *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-- * MA 02110-1301, USA.
+- *      amixer sset 'Left Output Mixer PCM' on
+- *      amixer sset 'Right Output Mixer PCM' on
 - */
-+// SPDX-License-Identifier: GPL-2.0+
++// SPDX-License-Identifier: GPL-2.0
 +//
-+// mx27vis-aic32x4.c
++// Freescale P1022RDK ALSA SoC Machine driver
 +//
-+// Copyright 2011 Vista Silicon S.L.
++// Author: Timur Tabi <timur@freescale.com>
 +//
-+// Author: Javier Martin <javier.martin@vista-silicon.com>
++// Copyright 2012 Freescale Semiconductor, Inc.
++//
++// Note: in order for audio to work correctly, the output controls need
++// to be enabled, because they control the clock.  So for playback, for
++// example:
++//
++//      amixer sset 'Left Output Mixer PCM' on
++//      amixer sset 'Right Output Mixer PCM' on
  
  #include <linux/module.h>
- #include <linux/moduleparam.h>
+ #include <linux/fsl/guts.h>
 -- 
 2.20.1
 
