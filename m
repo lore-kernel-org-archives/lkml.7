@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE20C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C17218FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20CF218FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750868;
-	bh=RO8g8Bkeg0OX5k3pLgVOkyGX79APyegOKZFWbogP8zc=;
+	s=default; t=1554750870;
+	bh=uvROHEpNp2NBptS+cCMC5UsCFczqwBdYKoGvYyEyhMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=WuivJk0ynJvD56IVuNcqFyNxQg5lJb/jpbbXTmD0WvkkXj2ycoU/WPVZhg8r5Soyw
-	 wuaAvN5CZXkBVSHBgXj/VsgFbkG7/MJtyDN7mJROpiI5qQ5AKJJKJBsK01YdxFOp/v
-	 9VCs/y2rWoq+Nv4xtUGgxAhbDCrAuvJeyG8W85DM=
+	b=xzb6QMZPr8BtQ713z265vZ/jm+cWTzFFbMEHsxl2HpGIsY2y7Du8mg/H89CniYJ+7
+	 VJkp34sDXr4J/l2RKrNALUj8tROVpu+z5cWxbHgVSDNTGjmrMVCo/lwxdgOurUPZwB
+	 V7l0z0V8hhe4xeNDT22eeGY8c9WDyZeWE3GsIDXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfDHTO1 (ORCPT
+        id S1727321AbfDHTO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbfDHTOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:24 -0400
+        id S1726921AbfDHTOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:25 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06F8D20880;
-        Mon,  8 Apr 2019 19:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B3E2148E;
+        Mon,  8 Apr 2019 19:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750863;
-        bh=RO8g8Bkeg0OX5k3pLgVOkyGX79APyegOKZFWbogP8zc=;
+        s=default; t=1554750865;
+        bh=uvROHEpNp2NBptS+cCMC5UsCFczqwBdYKoGvYyEyhMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=t7VtfGXOdT19BX8oMFyk/CuT4pBP+Q7nkrmZkDH83vi4eOs9BKRH3nE6oT+qRSulx
-         sebh5Gm7c0Fd0h54XpD9OlS9z4nVAh20jETVrnrlw6L51fne3yP5/bOJ5QwsosmorM
-         6OI3lVT730TV2f9iXH2pZYgVRu+BIhLdA1ojSD1M=
+        b=UkHmTBS711n8hyuEFVZYqba8WZm5mzNBkeBzGsaZpMwtDoGhUcuZqXK3tCms0eBBU
+         zWuF9anI0tE2SkMDSBxeRbxkre3pDHdo44j1vFj0NrVF0LKEaTu0ZEEJApdnjgNiM+
+         5844lH0KrjN1SKBClzUn6tdWaNLHXA5SNFNXFXoM=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
 Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
         jkacur@redhat.com, bigeasy@linutronix.de,
         daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
-Subject: [PATCH 03/13] sched/fair: Make the hrtimers non-hard again
-Date:   Mon,  8 Apr 2019 14:14:05 -0500
-Message-Id: <5916f8123c2cac32790a91414b17e1b9d6dbf7bf.1554737688.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 04/13] locking/rt-mutex: Flush block plug on __down_read()
+Date:   Mon,  8 Apr 2019 14:14:06 -0500
+Message-Id: <79f9717af336849789ff62bab08a5c05d78ae1f8.1554737688.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
@@ -64,36 +64,65 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Scott Wood <swood@redhat.com>
 
-[ Upstream commit 73d5c2697339118cd33dc1ff1ffcb21d59cafe1a ]
+[ Upstream commit 0d5d32425a0cab4a282dd79fc953d76a3ab17072 ]
 
-Since commit "sched/fair: Robustify CFS-bandwidth timer locking" both
-hrtimer can run in softirq context because now interrupts are disabled
-as part of the locking procedure.
+__down_read() bypasses the rtmutex frontend to call
+rt_mutex_slowlock_locked() directly, and thus it needs to call
+blk_schedule_flush_flug() itself.
 
+Cc: stable-rt@vger.kernel.org
+Signed-off-by: Scott Wood <swood@redhat.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
----
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 46403e462404..7d2a8fa9a6ed 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4704,9 +4704,9 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- 	cfs_b->period = ns_to_ktime(default_cfs_period());
+ Conflicts:
+	kernel/locking/rwsem-rt.c
+---
+ kernel/locking/rtmutex.c  | 2 +-
+ kernel/locking/rwsem-rt.c | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 2cf515877b8e..1177f2815040 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -1946,7 +1946,7 @@ rt_mutex_fastlock(struct rt_mutex *lock, int state,
+ 	 * If rt_mutex blocks, the function sched_submit_work will not call
+ 	 * blk_schedule_flush_plug (because tsk_is_pi_blocked would be true).
+ 	 * We must call blk_schedule_flush_plug here, if we don't call it,
+-	 * a deadlock in device mapper may happen.
++	 * a deadlock in I/O may happen.
+ 	 */
+ 	if (unlikely(blk_needs_flush_plug(current)))
+ 		blk_schedule_flush_plug(current);
+diff --git a/kernel/locking/rwsem-rt.c b/kernel/locking/rwsem-rt.c
+index 26991ddb6c5a..dbdde2476b1c 100644
+--- a/kernel/locking/rwsem-rt.c
++++ b/kernel/locking/rwsem-rt.c
+@@ -1,5 +1,6 @@
+ /*
+  */
++#include <linux/blkdev.h>
+ #include <linux/rwsem.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/signal.h>
+@@ -86,6 +87,14 @@ void __sched __down_read(struct rw_semaphore *sem)
  
- 	INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
--	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
-+	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
- 	cfs_b->period_timer.function = sched_cfs_period_timer;
--	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
-+	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
- 	cfs_b->distribute_running = 0;
- }
+ 	if (__down_read_trylock(sem))
+ 		return;
++	/*
++	 * If rt_mutex blocks, the function sched_submit_work will not call
++	 * blk_schedule_flush_plug (because tsk_is_pi_blocked would be true).
++	 * We must call blk_schedule_flush_plug here, if we don't call it,
++	 * a deadlock in I/O may happen.
++	 */
++	if (unlikely(blk_needs_flush_plug(current)))
++		blk_schedule_flush_plug(current);
+ 
+ 	might_sleep();
+ 	raw_spin_lock_irq(&m->wait_lock);
 -- 
 2.14.1
 
