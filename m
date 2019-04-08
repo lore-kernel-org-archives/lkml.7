@@ -2,181 +2,78 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF8CC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B476C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A54C20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDFA20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDHD5R (ORCPT
+        id S1725953AbfDHEBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:57:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65471 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726349AbfDHD5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:57:17 -0400
-X-UUID: b2115b878b0c43bf9500f7badeb9a1d0-20190408
-X-UUID: b2115b878b0c43bf9500f7badeb9a1d0-20190408
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2112315914; Mon, 08 Apr 2019 11:57:14 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 8 Apr 2019 11:57:13 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 8 Apr 2019 11:57:13 +0800
-Message-ID: <1554695833.25248.4.camel@mtksdaap41>
-Subject: Re: [PATCH V8 4/5] drm/mediatek: no change parent rate in
- round_rate() for mt2701 hdmi phy
-From:   CK Hu <ck.hu@mediatek.com>
-To:     wangyan wang <wangyan.wang@mediatek.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
-Date:   Mon, 8 Apr 2019 11:57:13 +0800
-In-Reply-To: <20190402093605.82004-5-wangyan.wang@mediatek.com>
-References: <20190402093605.82004-1-wangyan.wang@mediatek.com>
-         <20190402093605.82004-5-wangyan.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 8 Apr 2019 00:01:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbfDHEBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 00:01:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CC375D64260818A7C064;
+        Mon,  8 Apr 2019 12:01:31 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 8 Apr 2019 12:01:22 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <akpm@linux-foundation.org>, <rafael@kernel.org>,
+        <david@redhat.com>, <rafael.j.wysocki@intel.com>,
+        <mhocko@suse.com>, <osalvador@suse.de>
+CC:     <vbabka@suse.cz>, <iamjoonsoo.kim@lge.com>,
+        <bsingharora@gmail.com>, <gregkh@linuxfoundation.org>,
+        <yangyingliang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+Subject: [PATCH] mm/memory_hotplug: Do not unlock when fails to take the device_hotplug_lock
+Date:   Mon, 8 Apr 2019 12:00:12 +0800
+Message-ID: <1554696012-9254-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Wangyan:
+When adding the memory by probing memory block in sysfs interface, there is an
+obvious issue that we will unlock the device_hotplug_lock when fails to takes it.
 
-On Tue, 2019-04-02 at 17:36 +0800, wangyan wang wrote:
-> From: Wangyan Wang <wangyan.wang@mediatek.com>
-> 
-> This is the third step to make MT2701 HDMI stable.
-> We should not change the rate of parent for hdmi phy when
-> doing round_rate for this clock. The parent clock of hdmi
-> phy must be the same as it. We change it when doing set_rate
-> only.
-> 
-> Signed-off-by: Wangyan Wang <wangyan.wang@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 14 --------------
->  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  2 --
->  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  6 ++++++
->  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 14 ++++++++++++++
->  4 files changed, 20 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> index 13bbaf997819..fe05aa762107 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> @@ -15,20 +15,6 @@ static const struct phy_ops mtk_hdmi_phy_dev_ops = {
->  	.owner = THIS_MODULE,
->  };
->  
-> -long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> -			     unsigned long *parent_rate)
-> -{
-> -	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
-> -
-> -	hdmi_phy->pll_rate = rate;
-> -	if (rate <= 74250000)
-> -		*parent_rate = rate;
-> -	else
-> -		*parent_rate = rate / 2;
-> -
-> -	return rate;
-> -}
-> -
->  unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
->  				       unsigned long parent_rate)
->  {
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> index 0045824c1be9..86895be0d192 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> @@ -49,8 +49,6 @@ void mtk_hdmi_phy_set_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
->  void mtk_hdmi_phy_mask(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
->  		       u32 val, u32 mask);
->  struct mtk_hdmi_phy *to_mtk_hdmi_phy(struct clk_hw *hw);
-> -long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> -			     unsigned long *parent_rate);
->  unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
->  				       unsigned long parent_rate);
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> index 844e622f052c..5f8c2b044034 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> @@ -154,6 +154,12 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->  	return 0;
->  }
->  
-> +static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			     unsigned long *parent_rate)
+That issue was introduced in Commit 8df1d0e4a265
+("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
 
-Align the first character to the right of '('.
+We should drop out in time when fails to take the device_hotplug_lock.
 
-> +{
-> +	return rate;
+Fixes: 8df1d0e4a265 ("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+Reported-by: Yang yingliang <yangyingliang@huawei.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ drivers/base/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You do not assign hdmi_phy->pll_rate here because you depend on the
-patch 'drm/mediatek: make implementation of recalc_rate() to match the
-definition', so you should move that patch before this patch.
-
-> +}
-> +
->  static const struct clk_ops mtk_hdmi_phy_pll_ops = {
->  	.prepare = mtk_hdmi_pll_prepare,
->  	.unprepare = mtk_hdmi_pll_unprepare,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> index f44066875dcd..472d2fda0a03 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> @@ -285,6 +285,20 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->  	return 0;
->  }
->  
-> +static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			     unsigned long *parent_rate)
-
-Align the first character to the right of '('.
-
-Regards,
-CK
-
-> +{
-> +	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
-> +
-> +	hdmi_phy->pll_rate = rate;
-> +	if (rate <= 74250000)
-> +		*parent_rate = rate;
-> +	else
-> +		*parent_rate = rate / 2;
-> +
-> +	return rate;
-> +}
-> +
->  static const struct clk_ops mtk_hdmi_phy_pll_ops = {
->  	.prepare = mtk_hdmi_pll_prepare,
->  	.unprepare = mtk_hdmi_pll_unprepare,
-
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index d9ebb89..8b0cec7 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -507,7 +507,7 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
+ 
+ 	ret = lock_device_hotplug_sysfs();
+ 	if (ret)
+-		goto out;
++		goto ret;
+ 
+ 	nid = memory_add_physaddr_to_nid(phys_addr);
+ 	ret = __add_memory(nid, phys_addr,
+-- 
+1.7.12.4
 
