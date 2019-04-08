@@ -2,97 +2,139 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70250C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0847C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3917821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AB121473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O1nKyhbq"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="H0KlnDP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfDHPFj (ORCPT
+        id S1728192AbfDHPFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:05:39 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40516 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfDHPFj (ORCPT
+        Mon, 8 Apr 2019 11:05:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44053 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfDHPFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:05:39 -0400
-Received: by mail-vs1-f68.google.com with SMTP id f22so7797161vso.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:05:38 -0700 (PDT)
+        Mon, 8 Apr 2019 11:05:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i2so7474107pgj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yZiduu5sc9tcqdSWfryyiqTG8OwyOaOXxZnxCgv42Xc=;
-        b=O1nKyhbq7EeYe3i8YJQ+qYMh6MvxDG34lCLSma+lXXO/4TI8TR66JJUigjVagFtxQp
-         KW2+WRJX5FcQcZ+YuKer4WRLW3Mk04V6nWJ8ooHoixHThGtezfX/fXUpVjX2UFM+RRO4
-         /nrv84VvNQC9ljqYAXIDyGESqQbzjcpUUNGvg=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5Jkv18JdyywQcAMH+26JaXdx635APtj+ZQjab56XFoE=;
+        b=H0KlnDP81c5QfmtGX2gRqoA5b3h9c7EBb7zQA6xOIf/vWpRMsII5sRI37Ryf49szAB
+         lSs2mM2raciZT8erMpXwNSg4GQxgUwV+v+r3PDLZ1uqY6ziPsGfMz9MEsmT6WCbagEWl
+         wTXv3OUyEKgYcIAXaQ3NVSNd04te6MHkEtJ/2kYQ6ICWhgtfxil8JvEdC/5y4vgsCe/C
+         xZINgsBbZyroGZFabM4bfNT9xmGmHXRpSzUtWWOT0RFpW7/6myBpQdsYi3oUdjPC3fpD
+         h9XjFL/HseXboQuVI9q69ng7B597L0RDYAB1ZveNKy5jm0M6/hfacW20fl4LBq9RfpBw
+         eo8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yZiduu5sc9tcqdSWfryyiqTG8OwyOaOXxZnxCgv42Xc=;
-        b=cv1SiVBRBSbzFhjSw4ZlmMiL+TLaLnQQtLm1IIzwKyQtOFci2KfCUIonx+vcmE6Y+5
-         pYh14R5PejKeECkiaHHkYlKWCgr61Du1+Ag6xk9kAjWffqduRq65pSsJ9uTzu+jZK10B
-         tIg+8QQJRpKq2KYzYopYog6CBVg9hd8rr23AaRUtMJacP3qt8X60TraLkdbktsUZLP3f
-         h+kTu2ZKXFmyOYaY91US2GSibPS0NhpEV83o6DS7OfSrAm+CHTqaM8KTwBlzq2/ib+5R
-         ZmjvcrRsfvhA7yHRpLrSaXXWRZDNlkm/7/48H28wIfy7RncoeTqYsGO/jZ/ZU9xakddK
-         nAyQ==
-X-Gm-Message-State: APjAAAVJWNqL6z40vQyCTDxHTfVjlgFIxiONsEQaRF/fpfomaiZWd5MR
-        pal2qOlNF37aGH8nCJMwFMdUqKwyBhQ=
-X-Google-Smtp-Source: APXvYqxAZI2ZEQ170yLOq5lkal4U4lk/6VCndrH6CEAUmOsxtZPTPjX75cA83t6Zo7+12XgXja70Ew==
-X-Received: by 2002:a67:e2cc:: with SMTP id i12mr16490993vsm.17.1554735938164;
-        Mon, 08 Apr 2019 08:05:38 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id z127sm10534302vsc.5.2019.04.08.08.05.37
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5Jkv18JdyywQcAMH+26JaXdx635APtj+ZQjab56XFoE=;
+        b=ZQQzAzZJQT1vBAVGG8hi4JnQCcy718PGgvf+nOvJOJuWB80dP2rjop9fpEF50lJvt8
+         1fxYt41MS9OkpaYfueFIIkxNzuqK1AimicMD7EsDR0hd/WL+IScKYl77r8YOaXOPYqvf
+         SqYGIC1PxoKsoxfsXLYJhGiAn7n5rNqPwHG9ZZO5k99EYz5xgCM8r//OKruNBwyxzBNq
+         jp+bgPx/0wq9GRT4Yu7iKEs63bSq8R1obLAkA/SQmjPcBMcB9ERkY9bFkr1mgILnVcDp
+         0Jp1cnOLcEZQCLuQYwhcgFTvP56bu6N3X0aLt/vE0uPp+ZQFUsp6wAhyfjJdYp3sJLno
+         aapA==
+X-Gm-Message-State: APjAAAVzOVH4iDW1OXDoHSqdnq9vNK8qT6ZCQezGFyXKPDUZbhoDuMNM
+        o39tPcqxYI6rBTU7UwZ4j6fOtg==
+X-Google-Smtp-Source: APXvYqxCYPM25ukh86JVTxEEhzCynDUHfDyHIc+PoZ0h2w0mYdVRUjoZrAOtXi09pHG4fcBove16ag==
+X-Received: by 2002:a63:d304:: with SMTP id b4mr28983553pgg.300.1554735922659;
+        Mon, 08 Apr 2019 08:05:22 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id 66sm56181877pfr.44.2019.04.08.08.05.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:05:37 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id a190so827230vsd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:05:37 -0700 (PDT)
-X-Received: by 2002:a67:7e12:: with SMTP id z18mr17726475vsc.82.1554735560480;
- Mon, 08 Apr 2019 07:59:20 -0700 (PDT)
+        Mon, 08 Apr 2019 08:05:21 -0700 (PDT)
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+ <20190408150430.GB23021@linux-x5ow.site>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+Date:   Mon, 8 Apr 2019 09:05:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190405015859.32755-1-tobin@kernel.org> <3d1bc44f-313b-5a58-3492-b706d9510d34@kernel.org>
-In-Reply-To: <3d1bc44f-313b-5a58-3492-b706d9510d34@kernel.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 8 Apr 2019 07:59:08 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL+BhKGrsYU1Gfe=htLiYGiXt+-TqJOb+7RR_oA7HzyPw@mail.gmail.com>
-Message-ID: <CAGXu5jL+BhKGrsYU1Gfe=htLiYGiXt+-TqJOb+7RR_oA7HzyPw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] lib/string: Add strscpy_pad() function
-To:     shuah <shuah@kernel.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408150430.GB23021@linux-x5ow.site>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 7:09 AM shuah <shuah@kernel.org> wrote:
-> The patch is series in now in linux-kselftest next for 5.2
+On 4/8/19 9:04 AM, Johannes Thumshirn wrote:
+> [+Cc Michal ]
+> On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
+>>
+>>
+>>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
+>>>
+>>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+>>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
+>>>>
+>>>> When bfq was merged into mainline, there were two I/O schedulers that
+>>>> implemented the proportional-share policy: bfq for blk-mq and cfq for
+>>>> legacy blk. bfq's interface files in the blkio/io controller have the
+>>>> same names as cfq. But the cgroups interface doesn't allow two
+>>>> entities to use the same name for their files, so for bfq we had to
+>>>> prepend the "bfq" prefix to each of its files. However no legacy code
+>>>> uses these modified file names. This naming also causes confusion, as,
+>>>> e.g., in [1].
+>>>>
+>>>> Now cfq has gone with legacy blk, so there is no need any longer for
+>>>> these prefixes in (the never used) bfq names. In view of this fact, this
+>>>> commit removes these prefixes, thereby enabling legacy code to truly
+>>>> use the proportional share policy in blk-mq.
+>>>>
+>>>> [1] https://github.com/systemd/systemd/issues/7057
+>>>
+>>> Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
+>>> Do you know what's using it and what breaks due to this conversion?
+>>>
+>>
+>> Yep, but AFAIK, the problem is exactly the opposite: nobody uses these
+>> names for the proportional-share policy, or wants to use these names.  I'm
+>> CCing Lennart too, in case he has some improbable news on this.
+>>
+>> So the idea is to align names to what people expect, possibly before
+>> more confusion arises.
+> 
+> OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
+> symlinks?
+> 
+> This way we can a) keep the old files and b) have them point to the new (a.k.a
+> cfq style) files.
 
-Yay, awesome! :) Thanks!
+I did consider that, and that would be doable. But honestly, I'm having a
+hard time seeing what issue we are attempting to fix by doing this.
 
 -- 
-Kees Cook
+Jens Axboe
+
