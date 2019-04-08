@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1134DC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12659C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C141620863
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB1420863
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfDHX6T (ORCPT
+        id S1728695AbfDHX6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 19:58:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9984 "EHLO mga04.intel.com"
+        Mon, 8 Apr 2019 19:58:18 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9985 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfDHX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726532AbfDHX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 19:57:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:08 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
-   d="scan'208";a="149169954"
+   d="scan'208";a="149169935"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 16:57:07 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -41,12 +41,10 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         "Christoph Hellwig" <hch@infradead.org>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
         Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, Liu@vger.kernel.org,
-        Yi L <yi.l.liu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH 07/18] iommu: Introduce attach/detach_pasid_table API
-Date:   Mon,  8 Apr 2019 16:59:22 -0700
-Message-Id: <1554767973-30125-8-git-send-email-jacob.jun.pan@linux.intel.com>
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 02/18] ioasid: Add custom IOASID allocator
+Date:   Mon,  8 Apr 2019 16:59:17 -0700
+Message-Id: <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -55,197 +53,266 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In virtualization use case, when a guest is assigned
-a PCI host device, protected by a virtual IOMMU on the guest,
-the physical IOMMU must be programmed to be consistent with
-the guest mappings. If the physical IOMMU supports two
-translation stages it makes sense to program guest mappings
-onto the first stage/level (ARM/Intel terminology) while the host
-owns the stage/level 2.
+Sometimes, IOASID allocation must be handled by platform specific
+code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs need
+to be allocated by the host via enlightened or paravirt interfaces.
 
-In that case, it is mandated to trap on guest configuration
-settings and pass those to the physical iommu driver.
+This patch adds an extension to the IOASID allocator APIs such that
+platform drivers can register a custom allocator, possibly at boot
+time, to take over the allocation. IDR is still used for tracking
+and searching purposes internal to the IOASID code. Private data of
+an IOASID can also be set after the allocation.
 
-This patch adds a new API to the iommu subsystem that allows
-to set/unset the pasid table information.
-
-A generic iommu_pasid_table_config struct is introduced in
-a new iommu.h uapi header. This is going to be used by the VFIO
-user API.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-
 ---
+ drivers/base/ioasid.c  | 124 +++++++++++++++++++++++++++++++++++++++++++++----
+ include/linux/ioasid.h |  28 ++++++++++-
+ 2 files changed, 143 insertions(+), 9 deletions(-)
 
-This patch generalizes the API introduced by Jacob & co-authors in
-https://lwn.net/Articles/754331/
-
-v3 -> v4:
-- s/set_pasid_table/attach_pasid_table
-- restore detach_pasid_table. Detach can be used on unwind path.
-- add padding
-- remove @abort
-- signature used for config and format
-- add comments for fields in the SMMU struct
-
-v2 -> v3:
-- replace unbind/bind by set_pasid_table
-- move table pointer and pasid bits in the generic part of the struct
-
-v1 -> v2:
-- restore the original pasid table name
-- remove the struct device * parameter in the API
-- reworked iommu_pasid_smmuv3
----
- drivers/iommu/iommu.c      | 19 +++++++++++++++++++
- include/linux/iommu.h      | 22 ++++++++++++++++++++++
- include/uapi/linux/iommu.h | 47 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 88 insertions(+)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index ac7e6b3..242f702 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1547,6 +1547,25 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- }
- EXPORT_SYMBOL_GPL(iommu_attach_device);
- 
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
-+{
-+	if (unlikely(!domain->ops->attach_pasid_table))
-+		return -ENODEV;
-+
-+	return domain->ops->attach_pasid_table(domain, cfg);
-+}
-+EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
-+
-+void iommu_detach_pasid_table(struct iommu_domain *domain)
-+{
-+	if (unlikely(!domain->ops->detach_pasid_table))
-+		return;
-+
-+	domain->ops->detach_pasid_table(domain);
-+}
-+EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
-+
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index f12f251..9f870ae 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -190,6 +190,8 @@ struct iommu_resv_region {
-  * @is_attach_deferred: Check if domain attach should be deferred from iommu
-  *                      driver init to device driver init (default no)
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-+ * @attach_pasid_table: attach a pasid table
-+ * @detach_pasid_table: detach the pasid table
-  */
- struct iommu_ops {
- 	bool (*capable)(enum iommu_cap);
-@@ -233,6 +235,10 @@ struct iommu_ops {
- 	int (*of_xlate)(struct device *dev, struct of_phandle_args *args);
- 	bool (*is_attach_deferred)(struct iommu_domain *domain, struct device *dev);
- 
-+	int (*attach_pasid_table)(struct iommu_domain *domain,
-+				  struct iommu_pasid_table_config *cfg);
-+	void (*detach_pasid_table)(struct iommu_domain *domain);
-+
- 	unsigned long pgsize_bitmap;
+diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
+index cf122b2..294e856 100644
+--- a/drivers/base/ioasid.c
++++ b/drivers/base/ioasid.c
+@@ -17,6 +17,74 @@ struct ioasid_data {
  };
  
-@@ -343,6 +349,9 @@ extern int iommu_attach_device(struct iommu_domain *domain,
- 			       struct device *dev);
- extern void iommu_detach_device(struct iommu_domain *domain,
- 				struct device *dev);
-+extern int iommu_attach_pasid_table(struct iommu_domain *domain,
-+				    struct iommu_pasid_table_config *cfg);
-+extern void iommu_detach_pasid_table(struct iommu_domain *domain);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -781,6 +790,19 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ static DEFINE_IDR(ioasid_idr);
++static DEFINE_MUTEX(ioasid_allocator_lock);
++static const struct ioasid_allocator *ioasid_allocator;
++
++
++/**
++ * ioasid_set_allocator - register a custom allocator
++ *
++ * Custom allocator take precedence over the default IDR based allocator.
++ * Private data associated with the ASID are managed by ASID common code
++ * similar to IDR data.
++ */
++int ioasid_set_allocator(struct ioasid_allocator *allocator)
++{
++	int ret = 0;
++
++	if (!allocator)
++		return -EINVAL;
++
++	mutex_lock(&ioasid_allocator_lock);
++	if (ioasid_allocator) {
++		ret = -EBUSY;
++		goto exit_unlock;
++	}
++	ioasid_allocator = allocator;
++
++exit_unlock:
++	mutex_unlock(&ioasid_allocator_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_set_allocator);
++
++/**
++ * ioasid_clear_allocator - Free the custom IOASID allocator
++ *
++ * REVISIT: So far there is only one custom allocator allowed.
++ */
++void ioasid_clear_allocator(void)
++{
++	mutex_lock(&ioasid_allocator_lock);
++	ioasid_allocator = NULL;
++	mutex_unlock(&ioasid_allocator_lock);
++}
++EXPORT_SYMBOL_GPL(ioasid_clear_allocator);
++
++/**
++ * ioasid_set_data - Set private data for an allocated ioasid
++ *
++ * For IOASID that is already allocated, private data can be set
++ * via this API. Future lookup can be done via ioasid_find.
++ */
++int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	struct ioasid_data *ioasid_data;
++	int ret = 0;
++
++	idr_lock(&ioasid_idr);
++	ioasid_data = idr_find(&ioasid_idr, ioasid);
++	if (ioasid_data)
++		ioasid_data->private = data;
++	else
++		ret = -ENOENT;
++	idr_unlock(&ioasid_idr);
++	/* getter may use the private data */
++	synchronize_rcu();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_set_data);
+ 
+ /**
+  * ioasid_alloc - Allocate an IOASID
+@@ -32,7 +100,7 @@ static DEFINE_IDR(ioasid_idr);
+ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 		      void *private)
+ {
+-	int id = -1;
++	int id = INVALID_IOASID;
+ 	struct ioasid_data *data;
+ 
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+@@ -42,13 +110,30 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 	data->set = set;
+ 	data->private = private;
+ 
++	/* Use custom allocator if available, otherwise default to IDR */
++	if (ioasid_allocator) {
++		mutex_lock(&ioasid_allocator_lock);
++		id = ioasid_allocator->alloc(min, max, ioasid_allocator->pdata);
++		mutex_unlock(&ioasid_allocator_lock);
++		if (id == INVALID_IOASID) {
++			pr_err("Failed ASID allocation by custom allocator\n");
++			goto exit_free;
++		}
++		/*
++		 * Use IDR to manage private data also sanitiy check custom
++		 * allocator for duplicates.
++		 */
++		min = id;
++		max = id + 1;
++	}
+ 	idr_preload(GFP_KERNEL);
+ 	idr_lock(&ioasid_idr);
+ 	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
+ 	idr_unlock(&ioasid_idr);
+ 	idr_preload_end();
+ 
+-	if (id < 0) {
++exit_free:
++	if (id < 0 || id == INVALID_IOASID) {
+ 		kfree(data);
+ 		return INVALID_IOASID;
+ 	}
+@@ -60,9 +145,20 @@ EXPORT_SYMBOL_GPL(ioasid_alloc);
+  * ioasid_free - Free an IOASID
+  * @ioasid: the ID to remove
+  */
+-void ioasid_free(ioasid_t ioasid)
++int ioasid_free(ioasid_t ioasid)
+ {
+ 	struct ioasid_data *ioasid_data;
++	int ret = 0;
++
++	if (ioasid_allocator) {
++		mutex_lock(&ioasid_allocator_lock);
++		ret = ioasid_allocator->free(ioasid, ioasid_allocator->pdata);
++		mutex_unlock(&ioasid_allocator_lock);
++	}
++	if (ret) {
++		pr_err("ioasid %d custom allocator free failed\n", ioasid);
++		return ret;
++	}
+ 
+ 	idr_lock(&ioasid_idr);
+ 	ioasid_data = idr_remove(&ioasid_idr, ioasid);
+@@ -70,6 +166,8 @@ void ioasid_free(ioasid_t ioasid)
+ 
+ 	if (ioasid_data)
+ 		kfree_rcu(ioasid_data, rcu);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ioasid_free);
+ 
+@@ -84,7 +182,8 @@ EXPORT_SYMBOL_GPL(ioasid_free);
+  * if @getter returns false, then the object is invalid and NULL is returned.
+  *
+  * If the IOASID has been allocated for this set, return the private pointer
+- * passed to ioasid_alloc. Otherwise return NULL.
++ * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
++ * if the IOASID is not found or not belong to the set.
+  */
+ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 		  bool (*getter)(void *))
+@@ -94,11 +193,20 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 
+ 	rcu_read_lock();
+ 	ioasid_data = idr_find(&ioasid_idr, ioasid);
+-	if (ioasid_data && ioasid_data->set == set) {
+-		priv = ioasid_data->private;
+-		if (getter && !getter(priv))
+-			priv = NULL;
++	if (!ioasid_data) {
++		priv = ERR_PTR(-ENOENT);
++		goto unlock;
++	}
++	if (set && ioasid_data->set != set) {
++		/* data found but does not belong to the set */
++		priv = ERR_PTR(-EACCES);
++		goto unlock;
+ 	}
++	/* Now IOASID and its set is verified, we can return the private data */
++	priv = ioasid_data->private;
++	if (getter && !getter(priv))
++		priv = NULL;
++unlock:
+ 	rcu_read_unlock();
+ 
+ 	return priv;
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+index 6f3655a..64994e7 100644
+--- a/include/linux/ioasid.h
++++ b/include/linux/ioasid.h
+@@ -5,20 +5,31 @@
+ #define INVALID_IOASID ((ioasid_t)-1)
+ typedef unsigned int ioasid_t;
+ typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
++typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
++typedef int (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+ 
+ struct ioasid_set {
+ 	int dummy;
+ };
+ 
++struct ioasid_allocator {
++	ioasid_alloc_fn_t alloc;
++	ioasid_free_fn_t free;
++	void *pdata;
++};
++
+ #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+ 
+ #ifdef CONFIG_IOASID
+ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 		      void *private);
+-void ioasid_free(ioasid_t ioasid);
++int ioasid_free(ioasid_t ioasid);
+ 
+ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 		  bool (*getter)(void *));
++int ioasid_set_allocator(struct ioasid_allocator *allocator);
++void ioasid_clear_allocator(void);
++int ioasid_set_data(ioasid_t ioasid, void *data);
+ 
+ #else /* !CONFIG_IOASID */
+ static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+@@ -36,5 +47,20 @@ static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ {
  	return NULL;
  }
- 
-+static inline
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
++
++static inline int ioasid_set_allocator(struct ioasid_allocator *allocator)
 +{
-+	return -ENODEV;
++	return -EINVAL;
 +}
 +
-+static inline
-+void iommu_detach_pasid_table(struct iommu_domain *domain)
++static inline void ioasid_clear_allocator(void)
 +{
-+	return -ENODEV;
 +}
 +
- #endif /* CONFIG_IOMMU_API */
- 
- #ifdef CONFIG_IOMMU_DEBUGFS
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 7ebf23e..e9065bf 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -112,4 +112,51 @@ struct iommu_fault {
- 		struct iommu_fault_page_request prm;
- 	};
- };
++static inline int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	return -EINVAL;
++}
 +
-+/**
-+ * SMMUv3 Stream Table Entry stage 1 related information
-+ * The PASID table is referred to as the context descriptor (CD) table.
-+ *
-+ * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
-+   or 2-level table)
-+ * @s1dss: STE s1dss (specifies the behavior when pasid_bits != 0
-+   and no pasid is passed along with the incoming transaction)
-+ * Please refer to the smmu 3.x spec (ARM IHI 0070A) for full details
-+ */
-+struct iommu_pasid_smmuv3 {
-+#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
-+	__u32	version;
-+	__u8 s1fmt;
-+	__u8 s1dss;
-+	__u8 padding[2];
-+};
-+
-+/**
-+ * PASID table data used to bind guest PASID table to the host IOMMU
-+ * Note PASID table corresponds to the Context Table on ARM SMMUv3.
-+ *
-+ * @version: API version to prepare for future extensions
-+ * @format: format of the PASID table
-+ * @base_ptr: guest physical address of the PASID table
-+ * @pasid_bits: number of PASID bits used in the PASID table
-+ * @config: indicates whether the guest translation stage must
-+ * be translated, bypassed or aborted.
-+ */
-+struct iommu_pasid_table_config {
-+#define PASID_TABLE_CFG_VERSION_1 1
-+	__u32	version;
-+#define IOMMU_PASID_FORMAT_SMMUV3	1
-+	__u32	format;
-+	__u64	base_ptr;
-+	__u8	pasid_bits;
-+#define IOMMU_PASID_CONFIG_TRANSLATE	1
-+#define IOMMU_PASID_CONFIG_BYPASS	2
-+#define IOMMU_PASID_CONFIG_ABORT	3
-+	__u8	config;
-+	__u8    padding[6];
-+	union {
-+		struct iommu_pasid_smmuv3 smmuv3;
-+	};
-+};
-+
- #endif /* _UAPI_IOMMU_H */
+ #endif /* CONFIG_IOASID */
+ #endif /* __LINUX_IOASID_H */
 -- 
 2.7.4
 
