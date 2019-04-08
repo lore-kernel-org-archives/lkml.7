@@ -2,71 +2,93 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F0C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8E8C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964CD20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3C620870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDHGqS (ORCPT
+        id S1726501AbfDHGqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:46:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51380 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDHGqR (ORCPT
+        Mon, 8 Apr 2019 02:46:30 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:38894 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfDHGqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:46:17 -0400
-Received: from p5492ee6e.dip0.t-ipconnect.de ([84.146.238.110] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hDO2p-0003OD-K9; Mon, 08 Apr 2019 08:46:15 +0200
-Date:   Mon, 8 Apr 2019 08:46:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard
- pages
-In-Reply-To: <CALCETrXyfEu5MHCDp+OiRdHcYQ1tMNhTMSxcAhWkOx_8r2rxsA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de>
-References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de> <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com> <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
- <CALCETrXyfEu5MHCDp+OiRdHcYQ1tMNhTMSxcAhWkOx_8r2rxsA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 8 Apr 2019 02:46:30 -0400
+X-IronPort-AV: E=Sophos;i="5.60,324,1549954800"; 
+   d="scan'208";a="29649650"
+Received: from unknown (HELO smtp.microsemi.com) ([208.19.100.22])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Apr 2019 23:46:29 -0700
+Received: from AVMBX1.microsemi.net (10.100.34.31) by AVMBX2.microsemi.net
+ (10.100.34.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Sun, 7 Apr 2019
+ 23:46:28 -0700
+Received: from AVMBX2.microsemi.net (10.100.34.32) by AVMBX1.microsemi.net
+ (10.100.34.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Sun, 7 Apr 2019
+ 23:46:27 -0700
+Received: from server1.microsemi.net (10.188.116.154) by avmbx2.microsemi.net
+ (10.100.34.32) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sun, 7 Apr 2019 23:46:25 -0700
+From:   Wesley Sheng <wesley.sheng@microchip.com>
+To:     <kurt.schwemmer@microsemi.com>, <logang@deltatee.com>,
+        <jdmason@kudzu.us>, <dave.jiang@intel.com>, <allenbh@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <wesleyshenggit@sina.com>, <wesley.sheng@microchip.com>,
+        <kelvin.cao@microchip.com>
+Subject: [PATCH 0/3] Redundant steps removal and bug fix of ntb_hw_switchtec
+Date:   Mon, 8 Apr 2019 22:45:19 +0800
+Message-ID: <1554734722-7833-1-git-send-email-wesley.sheng@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Apr 2019, Andy Lutomirski wrote:
-> On Sun, Apr 7, 2019 at 3:44 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > Actually we have: save_stack_trace()
-> >
-> 
-> Like I did here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=WIP.x86/stackguards
+Hi, Everyone,
 
-Kinda, but what that code wants is to skip any entry before 'caller'. So we
-either add something like save_stack_trace_from() which is trivial on x86
-because unwind_start() already has an argument to hand in the start of
-stack or we filter out the entries up to 'caller' in that code.
+This patch series remove redundant steps and fix one bug of the 
+ntb_hw_switchtec module.
 
-Btw, your patch will explode badly because stack_trace::entries is just a
-pointer. It does not provide a storage array :)
+When a re-initialization is caused by a link event, the driver will
+re-setup the shared memory windows. But at that time, the shared memory
+is still valid, and it's unnecessary to free, reallocate and then
+initialize it again. Remove these redundant steps.
 
-Thanks,
+In case of NTB crosslink topology, the setting of shared memory window
+in the virtual partition doesn't reset on peer's reboot. So skip the
+re-setup of shared memory window for that case.
 
-	tglx
+Switchtec does not support setting multiple MWs simultaneously. However,
+there's a race condition when a re-initialization is caused by a link 
+event, the driver will re-setup the shared memory window asynchronously
+and this races with the client setting up its memory windows on the 
+link up event. Fix this by ensure do the entire initialization in a work
+queue and signal the client once it's done. 
 
+Regard,
+Wesley
+
+Joey Zhang (2):
+  ntb_hw_switchtec: Remove redundant steps of
+    switchtec_ntb_reinit_peer() function
+  ntb_hw_switchtec: Fix setup MW with failure bug
+
+Wesley Sheng (1):
+  ntb_hw_switchtec: Skip unnecessary re-setup of shared memory window
+    for crosslink case
+
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 80 +++++++++++++++++++++-------------
+ 1 file changed, 49 insertions(+), 31 deletions(-)
+
+-- 
+2.7.4
 
