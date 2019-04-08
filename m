@@ -2,99 +2,157 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924AFC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B04C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4867220879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ih0iRH9J"
+	by mail.kernel.org (Postfix) with ESMTP id CC95E20879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfDHRlZ (ORCPT
+        id S1729191AbfDHRla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:41:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34744 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbfDHRlW (ORCPT
+        Mon, 8 Apr 2019 13:41:30 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:60562 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbfDHRl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:41:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b3so8047102pfd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 10:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cqpWNodamv1eUSJSNNofxMV6WCSyHNg+Yh/sQooGGpw=;
-        b=Ih0iRH9JDgXLJ1qyKayI8LBXShhh2MPHgqF5i3y4gOTn+jABAPdIq7iPlBWpdBqF/A
-         wbmfSYI7zXudrI8+pRxFLwzZ67STju6nXw56KWZm0yeMAIAt2qnrn2GsajOjmC5nPDch
-         Xvp5QiLqLxYlgezRlC1oY7G8qifyPFOiTUYtHAr7ugVC5MmkkKG43OS32jwR+J1cs8cs
-         U56mMu7sqtAFi8XCYVV5em7eUXQnKSsRP4Q1pHY7pzIX0lwiQxV23HVJhOR+8AyZEQzz
-         rJ9AdMZ7pHn9hDp5hhtySGcr0VbIskAnDpqNj95MVmip9qcJkKCLbhUdGrrXVUuHrogh
-         ZviA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cqpWNodamv1eUSJSNNofxMV6WCSyHNg+Yh/sQooGGpw=;
-        b=hlqB1p4sLGfxbz0ZVFjuAIdB84FuH5++lLcpoZ+fqni+UTq22qkV53OblaoqgwsBWK
-         vVG9MtJWeR6FcFFQAZom7s9r3rSRyIhBG7ZwIk0M+YLJwwCBw5NhA/JA7dNt5OPkwgfA
-         GxjG2WzWIhsUeOTObXJBNcAd+kV15AkIIWkAzF9BtwgJMdjR4Y7qnnTxCiea8HqaGw6T
-         g7kttGYSnglbl6NsuNE9Jkcsl1RGyo1B5PBdaij0TrD3f5nZovfgJ1n6s4tyTyy7PXUe
-         CEpFeqDPJ1KrOLD12jDw88XDgGFr540OnjyLDkzSb+Ivj7lKS86ysMH3LMSH5xJJxSPD
-         pxyA==
-X-Gm-Message-State: APjAAAUTLOYQ5KgVmFxMYT9lL2DVLAvItJJ3RJVESFWI3XCPBT7YdgBL
-        Otn9XlnXnhVJY7l+nG7MFKeKyQ==
-X-Google-Smtp-Source: APXvYqx1T9NOaiyozTTZjIPOheuJaw8zj1M7E1Cm8p4SgRVrH+TRsD204yf9gWKXMzK+SOScLTpQRA==
-X-Received: by 2002:a63:360c:: with SMTP id d12mr28202147pga.404.1554745281911;
-        Mon, 08 Apr 2019 10:41:21 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id i2sm43527566pfo.9.2019.04.08.10.41.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 10:41:21 -0700 (PDT)
-Subject: Re: Thinkpad X60: regression with 5.1-rc1 and 5.1-rc4
-To:     Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>
-Cc:     paolo.valente@linaro.org, linux-block@vger.kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org
-References: <20190408173914.GA13260@amd>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <678ab058-986c-9727-58d7-d3f5283e2225@kernel.dk>
-Date:   Mon, 8 Apr 2019 11:41:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 13:41:29 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id B7DFC72CCAC;
+        Mon,  8 Apr 2019 20:41:27 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id AD23B7CCE4F; Mon,  8 Apr 2019 20:41:27 +0300 (MSK)
+Date:   Mon, 8 Apr 2019 20:41:27 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH linux-next v9 1/7] nds32: fix asm/syscall.h
+Message-ID: <20190408174127.GB11889@altlinux.org>
+References: <20190408174036.GA11889@altlinux.org>
 MIME-Version: 1.0
-In-Reply-To: <20190408173914.GA13260@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408174036.GA11889@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 11:39 AM, Pavel Machek wrote:
-> Hi!
-> 
-> For some reason, Thinkpad X60 now crashes during boot. I see some
-> weird backtraces, and it may be bfq related... or maybe ACPI idle.
-> 
-> Does x86-32 work for you?
-> 
-> Weird thing is, 5.1.0-rc3-next-20190408 boots here (but later has
-> problems during resume, making it unusable, too). They may not have
-> 100% same configs. 
+All syscall_get_*() and syscall_set_*() functions must be defined
+as static inline as on all other architectures, otherwise asm/syscall.h
+cannot be included in more than one compilation unit.
 
-Can you try and revert:
+This bug has to be fixed in order to extend the generic
+ptrace API with PTRACE_GET_SYSCALL_INFO request.
 
-9dee8b3b057e1
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 1932fbe36e02 ("nds32: System calls handling")
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: Eugene Syromyatnikov <esyr@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
 
-and see if that helps?
+Dear nds32 maintainers, this fix is waiting for ACK since early January.
 
+Notes:
+    v9: rebased to linux-next again due to syscall_get_arguments() signature change
+    v8: unchanged
+    v7: initial revision
+
+ arch/nds32/include/asm/syscall.h | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/syscall.h
+index 174b8571d362..d08439a54034 100644
+--- a/arch/nds32/include/asm/syscall.h
++++ b/arch/nds32/include/asm/syscall.h
+@@ -26,7 +26,8 @@ struct pt_regs;
+  *
+  * It's only valid to call this when @task is known to be blocked.
+  */
+-int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
++static inline int
++syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	return regs->syscallno;
+ }
+@@ -47,7 +48,8 @@ int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+  * system call instruction.  This may not be the same as what the
+  * register state looked like at system call entry tracing.
+  */
+-void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
++static inline void
++syscall_rollback(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	regs->uregs[0] = regs->orig_r0;
+ }
+@@ -62,7 +64,8 @@ void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
++static inline long
++syscall_get_error(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	unsigned long error = regs->uregs[0];
+ 	return IS_ERR_VALUE(error) ? error : 0;
+@@ -79,7 +82,8 @@ long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
++static inline long
++syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	return regs->uregs[0];
+ }
+@@ -99,8 +103,9 @@ long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+-			      int error, long val)
++static inline void
++syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
++			 int error, long val)
+ {
+ 	regs->uregs[0] = (long)error ? error : val;
+ }
+@@ -118,8 +123,9 @@ void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+ #define SYSCALL_MAX_ARGS 6
+-void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+-			   unsigned long *args)
++static inline void
++syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned long *args)
+ {
+ 	args[0] = regs->orig_r0;
+ 	args++;
+@@ -138,8 +144,9 @@ void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+  * It's only valid to call this when @task is stopped for tracing on
+  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-void syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
+-			   const unsigned long *args)
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
+ {
+ 	regs->orig_r0 = args[0];
+ 	args++;
 -- 
-Jens Axboe
-
+ldv
