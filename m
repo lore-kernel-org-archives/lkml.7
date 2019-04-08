@@ -2,90 +2,259 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C846C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EA4C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B53921473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F00214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbfDHPqC (ORCPT
+        id S1728774AbfDHPqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:46:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10486 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbfDHPqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:46:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 08:46:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,325,1549958400"; 
-   d="scan'208";a="149048078"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 08:46:01 -0700
-Received: from [10.254.87.204] (kliang2-mobl.ccr.corp.intel.com [10.254.87.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A8FD55807A0;
-        Mon,  8 Apr 2019 08:46:00 -0700 (PDT)
-Subject: Re: [PATCH V5 08/12] perf/x86/intel: Add Icelake support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190402194509.2832-1-kan.liang@linux.intel.com>
- <20190402194509.2832-9-kan.liang@linux.intel.com>
- <20190408150654.GV12232@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <4ff8fec9-fb41-b11d-b7ed-4c716b558adc@linux.intel.com>
-Date:   Mon, 8 Apr 2019 11:45:59 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Apr 2019 11:46:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55874 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725983AbfDHPqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:46:24 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38Fj6mY109283
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 11:46:22 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rr71fyf6c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:46:21 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 8 Apr 2019 16:46:19 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Apr 2019 16:46:14 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38FkDeM30867608
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Apr 2019 15:46:13 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30E6EB205F;
+        Mon,  8 Apr 2019 15:46:13 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F3BABB2066;
+        Mon,  8 Apr 2019 15:46:12 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Apr 2019 15:46:12 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 117B516C1171; Mon,  8 Apr 2019 08:46:16 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 08:46:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+Reply-To: paulmck@linux.ibm.com
+References: <20190402142816.GA13084@linux.ibm.com>
+ <134026717.535.1554665176677.JavaMail.zimbra@efficios.com>
+ <20190407193202.GA30934@localhost>
+ <1632568795.549.1554669696728.JavaMail.zimbra@efficios.com>
+ <20190407210718.GA6656@localhost>
+ <20190408022728.GF14111@linux.ibm.com>
+ <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
+ <20190408142230.GJ14111@linux.ibm.com>
+ <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408150654.GV12232@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040815-0068-0000-0000-000003B22805
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010890; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01186165; UDB=6.00621219; IPR=6.00966922;
+ MB=3.00026346; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-08 15:46:18
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040815-0069-0000-0000-00004815C977
+Message-Id: <20190408154616.GO14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904080129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/8/2019 11:06 AM, Peter Zijlstra wrote:
-> On Tue, Apr 02, 2019 at 12:45:05PM -0700, kan.liang@linux.intel.com wrote:
->> +static struct event_constraint *
->> +icl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->> +			  struct perf_event *event)
->> +{
->> +	/*
->> +	 * Fixed counter 0 has less skid.
->> +	 * Force instruction:ppp in Fixed counter 0
->> +	 */
->> +	if ((event->attr.precise_ip == 3) &&
->> +	    ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
->> +		return &fixed_counter0_constraint;
+On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
+> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
 > 
-> Does that want to be:
+> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
+> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
+> >> 
+> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
+> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
+> >> >> > 
+> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
+> >> >> > wrote:
+> >> >> > 
+> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
+> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
+> >> >> > >> 
+> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
+> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
+> >> >> > >> > 
+> >> >> > >> > [ . . . ]
+> >> >> > >> > 
+> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
+> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
+> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
+> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
+> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
+> >> >> > >> >> > > @@ -338,6 +338,10 @@
+> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
+> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+> >> >> > >> >> > > +		. = ALIGN(8);						\
+> >> >> > >> >> > > +		__start___srcu_struct = .;				\
+> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
+> >> >> > >> >> > > +		__end___srcu_struct = .;				\
+> >> >> > >> >> > >  	}								\
+> >> >> > >> >> > 
+> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
+> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
+> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
+> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
+> >> >> > >> >> > of the dev branch.
+> >> >> > >> >> 
+> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
+> >> >> > >> >> work.
+> >> >> > >> >> 
+> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
+> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
+> >> >> > >> >> optimism?
+> >> >> > >> > 
+> >> >> > >> > And to answer the other question, in the case where I am suffering from
+> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
+> >> >> > >> > for the updated original commit thus far.
+> >> >> > >> > 
+> >> >> > >> > And may I have your Tested-by?
+> >> >> > >> 
+> >> >> > >> Just to confirm: does the cleanup performed in the modules going
+> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
+> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
+> >> >> > >> module unload ?
+> >> >> > >> 
+> >> >> > > 
+> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
+> >> >> > > responsibility of the module writer to prevent delays for all modules.
+> >> >> > 
+> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
+> >> >> > srcu domain within that module, I don't see how it would cause delays for
+> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
+> >> >> > am I missing ?
+> >> >> 
+> >> >> Yes you are right. I thought of this after I just sent my email. I think it
+> >> >> makes sense for srcu case to do and could avoid a class of bugs.
+> >> > 
+> >> > If there are call_srcu() callbacks outstanding, the module writer still
+> >> > needs the srcu_barrier() because otherwise callbacks arrive after
+> >> > the module text has gone, which will be disappoint the CPU when it
+> >> > tries fetching instructions that are no longer mapped.  If there are
+> >> > no call_srcu() callbacks from that module, then there is no need for
+> >> > srcu_barrier() either way.
+> >> > 
+> >> > So if an srcu_barrier() is needed, the module developer needs to
+> >> > supply it.
+> >> 
+> >> When you say "callbacks arrive after the module text has gone",
+> >> I think you assume that free_module() is invoked before the
+> >> MODULE_STATE_GOING notifiers are called. But it's done in the
+> >> opposite order: going notifiers are called first, and then
+> >> free_module() is invoked.
+> >> 
+> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
+> >> going notifier.
+> >> 
+> >> Or am I missing something ?
+> > 
+> > We do seem to be talking past each other.  ;-)
+> > 
+> > This has nothing to do with the order of events at module-unload time.
+> > 
+> > So please let me try again.
+> > 
+> > If a given srcu_struct in a module never has call_srcu() invoked, there
+> > is no need to invoke rcu_barrier() at any time, whether at module-unload
+> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
+> > for no good reason.
 > 
-> 		event->hw.config == X86_CONFIG(.event=0xc0)
-> 
-> ?
-> 
-> That is, are there really bits we want to mask in there?
+> Not if we invoke srcu_barrier() for that specific domain. If
+> call_srcu was never invoked for a srcu domain, I don't see why
+> srcu_barrier() should be more expensive than a simple check that
+> the domain does not have any srcu work queued.
 
-For instruction event, right, we don't need mask it.
-I will change it.
+But that simple check does involve a cache miss for each possible CPU (not
+just each online CPU), so it is non-trivial, especially on large systems.
 
-Thanks,
-Kan
-
+> > If a given srcu_struct in a module does have at least one call_srcu()
+> > invoked, it is already that module's responsibility to make sure that
+> > the code sticks around long enough for the callback to be invoked.
 > 
->> +
->> +	return hsw_get_event_constraints(cpuc, idx, event);
->> +}
+> I understand that when users do explicit dynamic allocation/cleanup of
+> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
+> However, if they do static definition of srcu domains, it would be nice
+> if we can handle the barriers under the hood.
+
+All else being equal, of course.  But...
+
+> > This means that correct SRCU users that invoke call_srcu() already
+> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
+> > reasonable probability, now get a WARN_ON() at module-unload time, with
+> > the per-CPU state getting leaked.  Before this change, they would (also
+> > with reasonable probability) instead get an instruction-fetch fault when
+> > the SRCU callback was invoked after the completion of the module unload.
+> > Furthermore, in all cases where they would previously have gotten the
+> > instruction-fetch fault, they now get the WARN_ON(), like this:
+> > 
+> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
+> >		return; /* Forgot srcu_barrier(), so just leak it! */
+> > 
+> > So this change already represents an improvement in usability.
+> 
+> Considering that we can do a srcu_barrier() for the specific domain,
+> and that it should add no noticeable overhead if there is no queued
+> callbacks, I don't see a good reason for leaving the srcu_barrier
+> invocation to the user rather than implicitly doing it from the
+> module going notifier.
+
+Now, I could automatically add an indicator of whether or not a
+call_srcu() had happened, but then again, that would either add a
+call_srcu() scalability bottleneck or again require a scan of all possible
+CPUs...  to figure out if it was necessary to scan all possible CPUs.
+
+Or is scanning all possible CPUs down in the noise in this case?  Or
+am I missing a trick that would reduce the overhead?
+
+							Thanx, Paul
+
