@@ -2,97 +2,116 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CC1C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0189BC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349D220857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708151;
-	bh=kjpyB2qay5tHjTtMtL3Jp0bStANyEsieV9qDpUX+83Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wIQcL8AbYlEJlVcFG3A19V1yqnw/1srOxFCOSaLc1osSeOhYPXL6VjtPfSCjpwOV7
-	 FVCZBx0Xr63D2xKdaZAupg/4vY3uVN4mlCYFIGwUfrTeWGuWe5wyvSNlwezqoxuLKC
-	 PNivHMTyAp0OeTaFugTmarHWQvp4MjYUGXpyQWbk=
+	by mail.kernel.org (Postfix) with ESMTP id CC8CD20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfDHHWa (ORCPT
+        id S1726462AbfDHHWw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:22:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55348 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDHHW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:22:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WKn9Q19sjk+ei/BCk8jaN1m1VGj6cilDYm/WkWrvljM=; b=kodxnnVTQuX8MeL1szeJbfjtG
-        +Ixz/+CyauBympUQE3ivBxDAHSQ8oJdo99R9k/fsrzfL2LQzP3iuhvVORDYxu2e17eftkremJfynW
-        5sS/qKljLq9MI3oWLlQIwRmlTtb+ootOYscQEVopPmqTqeskXVxA/rRoGrEtmrEFAHMgk=;
-Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hDObn-0003n3-4Q; Mon, 08 Apr 2019 07:22:24 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 6AF67441D3B; Mon,  8 Apr 2019 14:22:11 +0700 (+07)
-Date:   Mon, 8 Apr 2019 14:22:11 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com,
-        ldewangan@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 19/20] DT bindings: spi: document tx/rx clock delay
- properties
-Message-ID: <20190408072211.GL2803@sirena.org.uk>
-References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
- <1554423259-26056-19-git-send-email-skomatineni@nvidia.com>
+        Mon, 8 Apr 2019 03:22:52 -0400
+Received: from smtp.asem.it ([151.1.184.197]:50917 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfDHHWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:22:52 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003797119.MSG 
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:22:44 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Mon, 8
+ Apr 2019 09:22:44 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Mon, 8 Apr 2019 09:22:44 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
+Thread-Topic: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
+Thread-Index: AQHU6izzMP9bJdl0YUGdR5AsgVFjFaYuiBOAgAByKgCAAuR9QA==
+Date:   Mon, 8 Apr 2019 07:22:44 +0000
+Message-ID: <58b8e1bc2b064abcb67db04369cf9c6e@asem.it>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
+ <20190406125550.GA7480@piout.net>
+In-Reply-To: <20190406125550.GA7480@piout.net>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Bzq2cJcN05fcPrs+"
-Content-Disposition: inline
-In-Reply-To: <1554423259-26056-19-git-send-email-skomatineni@nvidia.com>
-X-Cookie: Shah, shah!  Ayatollah you so!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0213.5CAAF6C5.0031,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+HI,
 
---Bzq2cJcN05fcPrs+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 06/04/2019 01:07:13-0500, Rob Herring wrote:
+> > On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
+> > > Some RTC devices have a battery-low automatic detection circuit.
+> > > The battery-low event is usually reported with:
+> > >
+> > > - a bit change in a RTC status register
+> > > - a hw signaling (generally using an interrupt generation), changing
+> > >   the hw level of a specific pin;
+> > >
+> > > The new property "battery-low-hw-alarm" enable the RTC to generate the
+> > > hw signaling in case of battery-low event.
+> > >
+> > > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> > > ---
+> > >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt
+> b/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > index a97fc6a..f93a44d 100644
+> > > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > @@ -31,6 +31,9 @@ below.
+> > >                              expressed in femto Farad (fF).
+> > >                              The default value shall be listed (if
+> optional),
+> > >                              and likewise all valid values.
+> > > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This
+> function
+> > > +                            is available on the following devices:
+> > > +                            - pcf2127 - pin used for alarm: INTn
+> >
+> > Boolean? If there's cases where which pin is selectable, then we'd need
+> > this to take a value. Not sure how likely that is?
+> >
+> 
+> Indeed, there is at least the pcf85363 that has two possible pins for
+> that interrupt. How would you select the pin then? a zero based index? a
+> string?
 
-On Thu, Apr 04, 2019 at 05:14:18PM -0700, Sowjanya Komatineni wrote:
-> Tegra SPI controller has TX and RX trimmers to tuning the delay of
-> SPI master clock with respect to the data.
+I think the string could be clearer for the final user and would give
+more freedom for future changes.
+For example, we can call this property, instead of "battery-low-alarm" or 
+"low-voltage-alarm", simply: "alarm-pin_1" and then the string argument 
+can describe the function used; for example:
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+alarm-pin_1 = "backup-supply-low-voltage-alarm";
+alarm-pin_2 = "......";
 
---Bzq2cJcN05fcPrs+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyq9qIACgkQJNaLcl1U
-h9CL1Qf+Jzho0wXetIigWcaXeklQTCcQGD/HvADTvRefQVzgKGRbdbYM7XofM95W
-d6UkqYM3UZokgjeqckpNZ0YsvlMkUJDXcTAldSA91XHo/rPfnM6VEAtIHLYNZ60K
-DyHx7b+AETu8NGFx916xDLSnkzibjXM66JSR/P9IQANLHBiU8xIYWIJ5pHTO2j1h
-5Hq9gjGcLRvldhmwpk8OlNSak7MlOb+EYwmKMMvFvLWaivr9w+gyNbtwELL6GaUx
-XP9wCV1ZFJs3cKxSg7IL1etBKbvVny/1suM08+0IlniqYDQdlA3LRqQuk4+unkRd
-OePcmB7Ut740XUhSQH6ZmV6CykWsQw==
-=trro
------END PGP SIGNATURE-----
-
---Bzq2cJcN05fcPrs+--
+Flavio Suligoi
