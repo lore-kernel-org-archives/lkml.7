@@ -2,132 +2,177 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D4DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039DF2084C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gQB6U321"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC9C2084C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfDHSOd (ORCPT
+        id S1726738AbfDHSP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:14:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46486 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfDHSOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:14:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id p23so11257250iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yAux5Ku0F8TRvhryUL3sJjmWLG4xBlH/cwp7PMlXDQ4=;
-        b=gQB6U321p5l/j1bhWHg7deKeKkPzJq3JDVM1H/jgmbf5pBBh0E4d6ZZ8Nu6vPs8yyJ
-         Thc2griKgGO8Bh/PKRIxYl0aiZDySne4Ur20bcxor2I7eFhUiaWxuzfFcJplwTz23qFr
-         UgT6OPKw0vGt1HGM21aY+9Mu0sCOkYEBIvcdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yAux5Ku0F8TRvhryUL3sJjmWLG4xBlH/cwp7PMlXDQ4=;
-        b=p9aT36dOYe75AlZp910NoadMHh70pnKkh56fGbUoOCtsHMnaO9Rfgf9Jtp5dgXqDgc
-         YGgp4kO0m7Iz6UikBsIJdKEhwJ/IAiaSNo67E4KN56DjCXp2nk9ci031lK78Q/qXtw0t
-         WuDAzaHSrb1UtRuDzVM7T5Ld7DCsMvx5+pSUUVnmvP11l3V7rApLQsxFXAmWmL5Ow5R6
-         r1hqBrzFfg/91CrH+SheVLEQLtRmwRynkyqO86b6AA/Lqd/0zlMhXvzzImPRYTR0xsLd
-         Kn+tw2rA2LJzr0hBPnZa8pA/OfkYv7oUV60fAqfZX62FkBUjZCkNhFRB/0nQLSNTM4gc
-         XrFw==
-X-Gm-Message-State: APjAAAXXif2k6tXOeKkmYT0C7Ii+hma7ljzHC5xGYkq5WwUoWdfoqY25
-        5rZZQDOBD1m5SrGNaXW/6k8jA+YY9jo=
-X-Google-Smtp-Source: APXvYqxaTClI+Lp7TGeGXpG9ea784pwPDWyGQSn9YyfY14bPWjO+70PLTDNNWb2eyPEIaeygX60xYw==
-X-Received: by 2002:a6b:b797:: with SMTP id h145mr12658227iof.190.1554747271383;
-        Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
-Received: from mail-it1-f178.google.com (mail-it1-f178.google.com. [209.85.166.178])
-        by smtp.gmail.com with ESMTPSA id y24sm11412111iol.8.2019.04.08.11.14.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
-Received: by mail-it1-f178.google.com with SMTP id q14so662683itk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 11:14:31 -0700 (PDT)
-X-Received: by 2002:a24:298b:: with SMTP id p133mr22379438itp.81.1554746949463;
- Mon, 08 Apr 2019 11:09:09 -0700 (PDT)
+        Mon, 8 Apr 2019 14:15:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56333 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbfDHSP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:15:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 11:15:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,326,1549958400"; 
+   d="scan'208";a="159317003"
+Received: from raj-desk2.iind.intel.com ([10.223.107.30])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Apr 2019 11:15:23 -0700
+Date:   Mon, 8 Apr 2019 23:32:03 +0530
+From:   Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH v3 3/3] platform/x86: intel_pmc_core: Instantiate
+ pmc_core device on legacy platforms
+Message-ID: <20190408180202.GA769@raj-desk2.iind.intel.com>
+References: <20190313222124.229371-1-rajatja@google.com>
+ <20190405203558.19160-1-rajatja@google.com>
+ <20190405203558.19160-3-rajatja@google.com>
 MIME-Version: 1.0
-References: <20190131192533.34130-1-thgarnie@chromium.org> <20190131192533.34130-15-thgarnie@chromium.org>
- <01000168a5b35a86-b79bfe67-191e-43bc-a5c7-0e74eac06195-000000@email.amazonses.com>
- <CAJcbSZGKR7dKVqNEDEO7Qzf7tnNqmL=p1uVKvsUefS=Hs-=iNA@mail.gmail.com>
- <01000168a6e5ab88-0deea73f-387f-4941-bd11-d1c161aac88a-000000@email.amazonses.com>
- <CAJcbSZFvafvNX1pS96jaTBGNJad+NszLwSgKnRQgyT70gUGWqQ@mail.gmail.com>
- <CAJcbSZETNhr=Pv+0daEWUsD2=qnZxT9rbmFaE+y7ag-xKOs89w@mail.gmail.com> <01000169fe18026e-a0951268-516c-4604-a4c3-140f3cbb6f7a-000000@email.amazonses.com>
-In-Reply-To: <01000169fe18026e-a0951268-516c-4604-a4c3-140f3cbb6f7a-000000@email.amazonses.com>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Mon, 8 Apr 2019 11:08:58 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZFVnJ6qYNsGipf6foa8dtsX_RDykRWK-edP85ySQacsVg@mail.gmail.com>
-Message-ID: <CAJcbSZFVnJ6qYNsGipf6foa8dtsX_RDykRWK-edP85ySQacsVg@mail.gmail.com>
-Subject: Re: [PATCH v6 14/27] x86/percpu: Adapt percpu for PIE support
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405203558.19160-3-rajatja@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 10:56 AM Christopher Lameter <cl@linux.com> wrote:
->
-> On Mon, 8 Apr 2019, Thomas Garnier wrote:
->
-> > > It didn't work originally but I will revisit to see if I missed something.
-> >
-> > I revisited and couldn't find a way to prevent relocations to the
-> > percpu section. Without PIE, you can reference absolute address which
-> > was convenient for percpu.
->
-> Can you switch PIE off for the percpu section? If not maybe the linker
-> needs to have an additional option?
+On Fri, Apr 05, 2019 at 01:35:58PM -0700, Rajat Jain wrote:
+> Add code to instantiate the pmc_core platform device and thus attach to
+> the driver, if the ACPI device for the same ("INT33A1") is not present
+> in a system where it should be. This was discussed here:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v3: (first version of *this* patch -to go with rest of v3 patchset)
+> v2: (does not exist)
+> v1: (does not exist)
+> 
+>  drivers/platform/x86/Makefile                 |  2 +-
+>  .../platform/x86/intel_pmc_core_plat_init.c   | 64 +++++++++++++++++++
+>  2 files changed, 65 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/x86/intel_pmc_core_plat_init.c
 
-I don't think so or I didn't find any option to do that. Changing the
-linker might be a bit too much if we have a software solution which
-doesn't impact performance.
+Can we call this intel_pmc_core_plat_drv.c instead?
 
->
-> Cannot imagine that this is not possible. You neeed to be able to
-> reference registers that are in fixed memory locations.
->
->
-> > Christopher: Did you have something specific in mind?
->
-> I thought that we just leave it as is.
+> 
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 86cb76677bc8..83d0bb9a14bb 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+>  				   intel_telemetry_pltdrv.o \
+>  				   intel_telemetry_debugfs.o
+> -obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
+> +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_init.o
 
-I would like to as well. I will try couple things at the assembly
-level instead of the linker and come back to this thread.
+ditto
+
+>  obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+>  obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+>  obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+> diff --git a/drivers/platform/x86/intel_pmc_core_plat_init.c b/drivers/platform/x86/intel_pmc_core_plat_init.c
+> new file mode 100644
+> index 000000000000..45be89e7586c
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_pmc_core_plat_init.c
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Intel PMC Core platform init
+> + * Copyright (c) 2019, Google Inc.
+
+I'd like to consult Andy and Darren if we should also have Intel Copyright
+too?
+
+> + * Author - Rajat Jain
+> + *
+> + * This code instantiates platform devices for intel_pmc_core driver, only
+> + * on supported platforms that may not have the ACPI devices in the ACPI tables.
+> + * No new platforms should be added here, because we expect that new platforms
+> + * should all have the ACPI device, which is the preferred way of enumeration.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <asm/cpu_device_id.h>
+> +#include <asm/intel-family.h>
+> +
+> +static struct platform_device pmc_core_device = {
+> +	.name = "pmc_core",
+> +};
+> +
+> +static int dummy;
+> +/*
+> + * INTEL_CPU_FAM6 macro won't take NULL for driver_data (uses &driver_data),
+> + * thus provide a dummy driver_data.
+> + */
+> +static const struct x86_cpu_id intel_pmc_core_ids[] = {
+> +	INTEL_CPU_FAM6(SKYLAKE_MOBILE, dummy),
+> +	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, dummy),
+> +	INTEL_CPU_FAM6(KABYLAKE_MOBILE, dummy),
+> +	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, dummy),
+> +	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, dummy),
+> +	INTEL_CPU_FAM6(ICELAKE_MOBILE, dummy),
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+> +
+> +static int __init pmc_core_platform_init(void)
+> +{
+> +	int ret;
+> +
+> +	/* Skip creating the platform device if ACPI already has a device */
+> +	if (acpi_dev_present("INT33A1", NULL, -1) ||
+> +	    !x86_match_cpu(intel_pmc_core_ids))
+> +		return -ENODEV;
+> +
+> +	ret = platform_device_register(&pmc_core_device);
+> +	if (ret)
+> +		return ret;
+
+we can just return platform_devie_register (...) and avoid extra lines and
+variable.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit pmc_core_platform_exit(void)
+> +{
+> +	if (!acpi_dev_present("INT33A1", NULL, -1) &&
+> +	    x86_match_cpu(intel_pmc_core_ids))
+> +		platform_device_unregister(&pmc_core_device);
+> +}
+> +
+> +module_init(pmc_core_platform_init);
+> +module_exit(pmc_core_platform_exit);
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
+
+-- 
+Best Regards,
+Rajneesh
