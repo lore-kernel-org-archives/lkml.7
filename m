@@ -2,82 +2,84 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748AFC10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB4BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F4E208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA29A208E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e10dChI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfDHLDx (ORCPT
+        id S1726554AbfDHLEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:03:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46470 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbfDHLDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 07:03:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33A25168F;
-        Mon,  8 Apr 2019 04:03:53 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88CED3F718;
-        Mon,  8 Apr 2019 04:03:51 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 12:03:49 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     bjorn.andersson@linaro.org, andy.gross@linaro.org,
-        david.brown@linaro.org, robh+dt@kernel.org, lee.jones@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: Add Lenovo Miix 630
-Message-ID: <20190408110348.GF6139@lakrids.cambridge.arm.com>
-References: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
+        Mon, 8 Apr 2019 07:04:41 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42204 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfDHLEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 07:04:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v22so10795723lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 04:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fN2q96xVycurDGmq4UjJL5OOPxCnIpFiqWWnRAd8kvg=;
+        b=e10dChI9McDOtOAqTLHnBgNwF5SmWGMmEZcCnR0U88vnCiaS7nr13D1OrOHC28rVfU
+         U00tX9G3rWH97Bw6QOnxmiTa0fISfrlyHe1Y4xua3prqGbuRHp1vwcBjrv+xxtQ1ggA4
+         lx//5C+M+zytlCLF6ph8Du2LbNn2MOGLoxWFKm/T0kSUdM5h9PxwtBvYhc0h507zORdo
+         i6zREbvZ8ZOB57RVOgluW3dwZ5GBWSzYe9+Sm7Kg114kgs32ToBVXRHEzx2QGIXNKcGD
+         DZWc3KrWheDxHjlAY+bvIgUuAZ3xAxj7aMfS+T5ZDb4zZVns1gGhleBQ3azd3z3dyMHV
+         SZ4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fN2q96xVycurDGmq4UjJL5OOPxCnIpFiqWWnRAd8kvg=;
+        b=syPtFgWUiiBq/zu7lXsr5oDOcb1NI88lOlaamCw8pk1vXVYwvO0Bj/tl48iQNPxu8X
+         G+VMQYTKiztuOGKsGHYfAVxhRHHQhw3SB+qlhZQ4AUfXJFf/+btE/hDkDiEpZFdVyfNU
+         ICG+0Uw+2j7UVrVRaMMVLR8fHRNv0Tw+Mgbup9tbBe8+XvBnf5YS5l6qumvtZQPqG3XA
+         KOYnBxulaBxnA/uVNTfnBiTXOUzd/0vOOWWntwgIc/EjElDhZvksZeaUTti6RDiOT7qb
+         0vRKzdHhd31dBc/EgCpuKpLzqUZc2rCuOTBHiw90qis2yNBHlB3jUKW6d7rwqDYvhtwJ
+         2SBg==
+X-Gm-Message-State: APjAAAXnUWcGBt3YFJ7WltVA0oD7D5jXLqYkEh7wyTHZ4FClRMEQIgtz
+        alBBoCuk/KKaUETjGdjR5eKLvpV0az16LjeC058ymQ==
+X-Google-Smtp-Source: APXvYqx/Rf8XzMbh6t42iYf7W66VeqeMOFrmw7qPFixc5UDiRQzu7Fp4IBZWCY/9PF3dsIycbx6I4ZgzevceUWQ+xOk=
+X-Received: by 2002:a2e:5d56:: with SMTP id r83mr15612473ljb.74.1554721478718;
+ Mon, 08 Apr 2019 04:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20190329084229.17018-1-geert+renesas@glider.be>
+In-Reply-To: <20190329084229.17018-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 Apr 2019 13:04:27 +0200
+Message-ID: <CACRpkdY2G6xJf7WbraXvH0p2Rp=FVJxnsnJBCzCpZZmPag5bNw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: Optimize quirk checks
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:55:25AM -0700, Jeffrey Hugo wrote:
-> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+On Fri, Mar 29, 2019 at 9:42 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-I was under the impression that the Miix 630 came with Windows, and the
-firmware therefore provided (as least a simulacrum of) ACPI. Why do we
-need a DT?
+> Simple string comparisons are cheaper than DT lookups, as the latter
+> involve taking a spinlock and traversing properties.
+> Hence optimize quirk checks by postponing DT lookups after string
+> comparisons.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[...]
+Thanks Geert! I merged v5.1-rc3 into my devel branch and
+applied this on top.
 
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-cls.dtsi
-> @@ -0,0 +1,278 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> +
-> +/*
-> + * Common include for MSM8998 clamshell (cls) devices, ie the Lenovo Miix 630,
-> + * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
-> + * same, with differences in peripherals.
-> + */
-
-I think it would be better to consistently use "clamshell" (e.g. rename
-this to msm8998-clamshell.dtsi), and mention the "cls" terminology in
-the comment if that's necessary.
-
-[...]
-
-> +	keyboard@3a {
-> +		/* QTEC0001 is the ACPI HID, which could be used for quirks */
-> +		compatible = "QTEC0001", "hid-over-i2c";
-
-Please give this a real compatible string rather than forcing the ACPI
-HID in.
-
-Thanks,
-Mark.
+Yours,
+Linus Walleij
