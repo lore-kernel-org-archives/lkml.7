@@ -2,159 +2,134 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F44C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A6CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929CD20643
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEB720883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfDHKtC (ORCPT
+        id S1726577AbfDHKtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:49:02 -0400
-Received: from foss.arm.com ([217.140.101.70]:46300 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfDHKtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:49:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 102F2168F;
-        Mon,  8 Apr 2019 03:49:01 -0700 (PDT)
-Received: from [10.37.12.66] (unknown [10.37.12.66])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBAFC3F718;
-        Mon,  8 Apr 2019 03:48:58 -0700 (PDT)
-Subject: Re: [PATCH v4 3/4] dt-bindings: arm: coresight: Unify funnel DT
- binding
-To:     leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-4-leo.yan@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <7f63abef-76fc-a767-723d-caacc8da29ae@arm.com>
-Date:   Mon, 8 Apr 2019 11:51:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 8 Apr 2019 06:49:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36260 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDHKtq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:49:46 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so10781046ljg.3;
+        Mon, 08 Apr 2019 03:49:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RNvDnWFUi7oLGJe16w2MEZduBWFKJmeFIcfhrdOnJDs=;
+        b=bTewvL30Pf38VUGM/kH40tI0cq6iLvKOG/1dJk3vhaq7BXYFhvscxWFn7/0R91H4Eq
+         Dbi7ddEV2/0EplOHFP9opUJSIMgD2PLKxf59PHVMAoHRfmmKvAawqfjq4yoyQXK4oPUl
+         nRIT9odRh4i8l3+nnJ2fOICQHZxVxHu9ZvsS/i9goRFY4L8uAxaoYYHXF22bl75kfN3a
+         Lz57qvq8L3a9VYhwLT9zvQV5vZn4GNYD8ig8l4DAmbTXyCjB+whhYlV0SnjwB27+DiCz
+         Mg0XmjTX8/twmNwhf2jTYcHP/BoYcox84mc0RXggek9eEgI1noliRO+vJrec2o8twwDl
+         ao7A==
+X-Gm-Message-State: APjAAAUAYm5CxXBNLIHqvdkw3B+IiTjX0gCdXI35eLhdCfsEEAnC/1Qc
+        bi73/r3CCq+H9vTV6TR3Pc8=
+X-Google-Smtp-Source: APXvYqwHttfHKKm2freCA2Ns3K+ko26f7zr2gbmnMdH4qyCIe97xAMBbTDSvlX1x3GcyPwASojCH/w==
+X-Received: by 2002:a2e:22c4:: with SMTP id i187mr15140111lji.94.1554720584710;
+        Mon, 08 Apr 2019 03:49:44 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id q77sm5903847lje.11.2019.04.08.03.49.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 03:49:44 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 13:49:41 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
+Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks
+ list
+Message-ID: <20190408104941.GB17594@localhost.localdomain>
+References: <20190404215344.6330-1-sboyd@kernel.org>
+ <20190404215344.6330-2-sboyd@kernel.org>
+ <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
+ <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190406112145.15184-4-leo.yan@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/2019 12:21 PM, Leo Yan wrote:
-> Following the same fashion with replicator DT binding, this patch is to
-> unify the DT binding for funnel to support static and dynamic modes;
-> finally we get the funnel DT binding as below:
+On Fri, Apr 05, 2019 at 01:37:24PM -0700, Stephen Boyd wrote:
+> Quoting Vaittinen, Matti (2019-04-04 23:51:43)
+> > On Thu, 2019-04-04 at 14:53 -0700, Stephen Boyd wrote:
+> > > We recently introduced a change to support devm clk lookups. That
+> > > change
+> > > introduced a code-path that used clk_find() without holding the
+> > > 'clocks_mutex'. Unfortunately, clk_find() iterates over the 'clocks'
+> > > list and so we need to prevent the list from being modified while
+> > > iterating over it by holding the mutex. Similarly, we don't need to
+> > > hold
+> > > the 'clocks_mutex' besides when we're dereferencing the clk_lookup
+> > > pointer
+> > 
+> > /// Snip
+> > 
+> > > -out:
+> > > +static struct clk_lookup *clk_find(const char *dev_id, const char
+> > > *con_id)
+> > > +{
+> > > +     struct clk_lookup *cl;
+> > > +
+> > > +     mutex_lock(&clocks_mutex);
+> > > +     cl = __clk_find(dev_id, con_id);
+> > >       mutex_unlock(&clocks_mutex);
+> > >  
+> > > -     return cl ? clk : ERR_PTR(-ENOENT);
+> > > +     return cl;
+> > > +}
+> > 
+> > I am not an expert on this but reading commit message abowe and seeing
+> > the code for clk_find() looks a bit scary. If I understand it
+> > correctly, the clocks_mutex should be held when dereferencing the
+> > clk_lookup returned by clk_find. The clk_find implementation drops the
+> > lock before returning - which makes me think I miss something here. How
+> > can the caller ever safely dereference returned clk_lookup pointer?
+> > Just reading abowe makes me think that lock should be taken by whoever
+> > is calling the clk_find, and dropped only after caller has used the
+> > found clk_lookup for whatever caller intends to use it. Maybe I am
+> > missing something?
+> > 
 > 
-> Before patch:
-> 
->    Static funnel, aka. non-configurable funnel:
->      Not supported;
-> 
->    Dynamic funnel, aka. configurable funnel:
->      "arm,coresight-funnel", "arm,primecell";
-> 
-> After patch:
-> 
->    Static funnel:
->      "arm,coresight-static-funnel";
-> 
->    Dynamic funnel:
->      "arm,coresight-funnel", "arm,primecell"; (obsolete)
->      "arm,coresight-dynamic-funnel", "arm,primecell";
-> 
-> At the end of this patch, it gives an example for static funnel DT
-> binding, and updates the dynamic funnel example.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->   .../devicetree/bindings/arm/coresight.txt     | 52 +++++++++++++++++--
->   1 file changed, 48 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index f8f794869af2..f8ad11a17cd5 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
->   sink. Each CoreSight component device should use these properties to describe
->   its hardware characteristcs.
->   
-> -* Required properties for all components *except* non-configurable replicators:
-> +* Required properties for all components *except* non-configurable replicators
-> +  and non-configurable funnels:
->   
->   	* compatible: These have to be supplemented with "arm,primecell" as
->   	  drivers are using the AMBA bus interface.  Possible values include:
-> @@ -24,8 +25,11 @@ its hardware characteristcs.
->   		  discovered at boot time when the device is probed.
->   			"arm,coresight-tmc", "arm,primecell";
->   
-> -		- Trace Funnel:
-> +		- Trace Programmable Funnel, the compatible string
-> +		  "arm,coresight-funnel" is obsolete, keep it to support
-> +		  the old DT bindings:
->   			"arm,coresight-funnel", "arm,primecell";
-> +			"arm,coresight-dynamic-funnel", "arm,primecell";
+> The only user after this patch (devm) is doing a pointer comparison so
+> it looks OK. But yes, in general there shouldn't be users of clk_find()
+> that dereference the pointer because there isn't any protection besides
+> the mutex.
 
-Same comments as the first patch here.
+If the only (intended) user for clk_find is devm_clk_release_clkdev,
+then we might want to write it in devm_clk_release_clkdev - just to
+avoid similar errors (as I did with devm) in the future? I might even
+consider renaming __clk_find to clk_find or to clk_find_unsafe - but
+that's all just nitpicking :) Go with what you like to maintain :D
 
+Best regards
+    Matti Vaittinen
 
-> +	funnel {
-> +		/*
-> +		 * non-configurable funnel don't show up on the AMBA
-> +		 * bus.  As such no need to add "arm,primecell".
-> +		 */
-> +		compatible = "arm,coresight-static-funnel";
-> +		clocks = <&crg_ctrl HI3660_PCLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		out-ports {
-> +			port {
-> +				combo_funnel_out: endpoint {
-> +					remote-endpoint = <&top_funnel_in>;
-> +				};
-> +			};
-> +		};
-> +
-> +		in-ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				combo_funnel_in0: endpoint {
-> +					remote-endpoint = <&cluster0_etf_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				combo_funnel_in1: endpoint {
-> +					remote-endpoint = <&cluster1_etf_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->   	funnel@20040000 {
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Should we rename this to say dynamic_funnel@2004000 { ?
-
-> -		compatible = "arm,coresight-funnel", "arm,primecell";
-> +		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
->   		reg = <0 0x20040000 0 0x1000>;
-
-
-Rest looks fine to me.
-
-Suzuki
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
