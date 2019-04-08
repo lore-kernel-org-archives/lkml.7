@@ -2,226 +2,78 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA83C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C3C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0502148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0452148E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GvgiXh2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfDHPOw (ORCPT
+        id S1728774AbfDHPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:14:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54598 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726228AbfDHPOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:14:51 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 17EC4198ED3F8C73999C;
-        Mon,  8 Apr 2019 23:14:47 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
- 23:14:39 +0800
-Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
- backed by THP
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <eric.auger@redhat.com>,
-        <marc.zyngier@arm.com>, <christoffer.dall@arm.com>,
-        <zhengxiang9@huawei.com>, <andrew.murray@arm.com>,
-        <wanghaibin.wang@huawei.com>
-References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
- <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
- <a9c084fb-0c84-e632-a192-b361773a0bc8@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <44ffad26-a407-4603-0bb6-145f7290adbe@huawei.com>
-Date:   Mon, 8 Apr 2019 23:11:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Mon, 8 Apr 2019 11:15:14 -0400
+Received: from a9-37.smtp-out.amazonses.com ([54.240.9.37]:46396 "EHLO
+        a9-37.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728479AbfDHPPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:15:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554736511;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=lNudCzZ4w2s8/H8+lpBX7L/o8a8N/r9Gfx4wno1thXs=;
+        b=GvgiXh2jwzAKEcSIvSEHZ7wXwO53kEXUrIQ32sBEP9JQ5xZuwvt2G2bVkMYkRab/
+        s8KivUTDhpY3S/pzO5O2k7tEkQI0ZyRGpdsqWx71a9wJfL775CkbpHGn71j6vP8XsjD
+        q7weJEid6EUbqwZjDvHiR2VVskTLBYw+21QKoko0=
+Date:   Mon, 8 Apr 2019 15:15:11 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        penberg@kernel.org, David Rientjes <rientjes@google.com>,
+        iamjoonsoo.kim@lge.com, Tejun Heo <tj@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] slab: fix a crash by reading /proc/slab_allocators
+In-Reply-To: <CAHk-=wgr5ZYM3b4Sn9AwnJkiDNeHcW6qLY1Aha3VGT3pPih+WQ@mail.gmail.com>
+Message-ID: <01000169fd847a25-5933cc1e-a520-416a-b634-84b3e7ce9960-000000@email.amazonses.com>
+References: <20190406225901.35465-1-cai@lca.pw> <CAHk-=wgr5ZYM3b4Sn9AwnJkiDNeHcW6qLY1Aha3VGT3pPih+WQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <a9c084fb-0c84-e632-a192-b361773a0bc8@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.04.08-54.240.9.37
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Sun, 7 Apr 2019, Linus Torvalds wrote:
 
-Thanks for the reply.
+> On Sat, Apr 6, 2019 at 12:59 PM Qian Cai <cai@lca.pw> wrote:
+> >
+> > The commit 510ded33e075 ("slab: implement slab_root_caches list")
+> > changes the name of the list node within "struct kmem_cache" from
+> > "list" to "root_caches_node", but leaks_show() still use the "list"
+> > which causes a crash when reading /proc/slab_allocators.
+>
+> The patch does seem to be correct, and I have applied it.
+>
+> However, it does strike me that apparently this wasn't caught for two
+> years. Which makes me wonder whether we should (once again) discuss
+> just removing SLAB entirely, or at least removing the
+> /proc/slab_allocators file. Apparently it has never been used in the
+> last two years. At some point a "this can't have worked if  anybody
+> ever tried to use it" situation means that the code should likely be
+> excised.
 
-On 2019/4/8 18:35, Suzuki K Poulose wrote:
-> On 04/08/2019 04:50 AM, Zenghui Yu wrote:
->>
->>
->> On 2019/4/2 19:06, Suzuki K Poulose wrote:
->>> With commit a80868f398554842b14, we no longer ensure that the
->>> THP page is properly aligned in the guest IPA. Skip the stage2
->>> huge mapping for unaligned IPA backed by transparent hugepages.
->>>
->>> Fixes: a80868f398554842b14 ("KVM: arm/arm64: Enforce PTE mappings at 
->>> stage2 when needed")
->>> Reported-by: Eric Auger <eric.auger@redhat.com>
->>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>> Cc: Chirstoffer Dall <christoffer.dall@arm.com>
->>> Cc: Zenghui Yu <yuzenghui@huawei.com>
->>> Cc: Zheng Xiang <zhengxiang9@huawei.com>
->>> Tested-by: Eric Auger <eric.auger@arm.com>
->>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>
->> Hi Suzuki,
->>
->> Why not making use of fault_supports_stage2_huge_mapping()?  Let it do
->> some checks for us.
->>
->> fault_supports_stage2_huge_mapping() was intended to do a *two-step*
->> check to tell us that can we create stage2 huge block mappings, and this
->> check is both for hugetlbfs and THP.  With commit a80868f398554842b14,
->> we pass PAGE_SIZE as "map_size" for normal size pages (which turned out
->> to be almost meaningless), and unfortunately the THP check no longer
->> works.
-> 
-> Thats correct.
-> 
->>
->> So we want to rework *THP* check process.  Your patch fixes the first
->> checking-step, but the second is still missed, am I wrong?
-> 
-> It fixes the step explicitly for the THP by making sure that the GPA and
-> the HVA are aligned to the map size.
-
-Yes, I understand how your patch had fixed the issue.  But what I'm
-really concerned about here is the *second* checking-step in
-fault_supports_stage2_huge_mapping().
-
-We have to check if we are mapping a non-block aligned or non-block
-sized memslot, if so, we can not create block mappings for the beginning
-and end of this memslot.  This is what the second part of
-fault_supports_stage2_huge_mapping() had done.
-
-I haven't seen this checking-step in your patch, did I miss something?
-
->>
->> Can you please give a look at the below diff?
->>
->>
->> thanks,
->>
->> zenghui
->>
->>> ---
->>>   virt/kvm/arm/mmu.c | 4 +++-
->>>   1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index 27c9583..4a22f5b 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -1412,7 +1412,9 @@ static bool 
->>> transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
->>>            * page accordingly.
->>>            */
->>>           mask = PTRS_PER_PMD - 1;
->>> -        VM_BUG_ON((gfn & mask) != (pfn & mask));
->> Somehow, I'd prefer keeping the VM_BUG_ON() here, let it report some
->> potential issues in the future (of course I hope none:) )
-> 
-> I don't think this calls for a VM_BUG_ON(). It is simply a case where
-> the GPA is not aligned to HVA, but for normal VMA that could be made THP.
-> 
-> We had this VM_BUG_ON(), which would have never hit because we would
-> have set force_pte if they were not aligned.
-
-Yes, I agree.
-
->>> +        /* Skip memslots with unaligned IPA and user address */
->>> +        if ((gfn & mask) != (pfn & mask))
->>> +            return false;
->>>           if (pfn & mask) {
->>>               *ipap &= PMD_MASK;
->>>               kvm_release_pfn_clean(pfn);
->>>
->>
->> ---8>---
->>
->> Rework fault_supports_stage2_huge_mapping(), let it check THP again.
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   virt/kvm/arm/mmu.c | 11 ++++++++++-
->>   1 file changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->> index 27c9583..5e1b258 100644
->> --- a/virt/kvm/arm/mmu.c
->> +++ b/virt/kvm/arm/mmu.c
->> @@ -1632,6 +1632,15 @@ static bool 
->> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->>       uaddr_end = uaddr_start + size;
->>
->>       /*
->> +     * If the memslot is _not_ backed by hugetlbfs, then check if it
->> +     * can be backed by transparent hugepages.
->> +     *
->> +     * Currently only PMD_SIZE THPs are supported, revisit it later.
->> +     */
->> +    if (map_size == PAGE_SIZE)
->> +        map_size = PMD_SIZE;
->> +
-> 
-> This looks hackish. What is we support PUD_SIZE huge page in the future
-> ?
-
-Yes, this might make the code a little difficult to understand. But by
-doing so, we follow the same logic before commit a80868f398554842b14,
-that said, we do the two-step checking for normal size pages in
-fault_supports_stage2_huge_mapping(), to decide if we can create THP
-mappings for these pages.
-
-As for PUD_SIZE THPs, to be honest, I have no idea now :(
-
-
-
-thanks,
-
-zenghui
-
->> +    /*
->>        * Pages belonging to memslots that don't have the same alignment
->>        * within a PMD/PUD for userspace and IPA cannot be mapped with 
->> stage-2
->>        * PMD/PUD entries, because we'll end up mapping the wrong pages.
->> @@ -1643,7 +1652,7 @@ static bool 
->> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->>        *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
->>        *    +-----+--------------------+--------------------+---+
->>        *
->> -     *    memslot->base_gfn << PAGE_SIZE:
->> +     *    memslot->base_gfn << PAGE_SHIFT:
-> 
-> That could be fixed.
-> 
->>        *      +---+--------------------+--------------------+-----+
->>        *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
->>        *      +---+--------------------+--------------------+-----+
-> 
-> 
-> But personally I don't think this is the right way to fix it. And as
-> mentioned, the VM_BUG_ON() is unnecessary and could easily be triggered
-> by the user by using unaligned GPA/HVA. All we need to do is, use page
-> mapping in such cases, which we do with my patch.
-> 
-> 
-> Cheers
-> Suzuki
-> 
-> .
+This is only occurring with specially build kernels so that memory leaks
+can be investigated. The same is done with other tools (kasan and friends)
+today I guess and also the SLUB debugging tools are much more user
+friendly. So this means that some esoteric debugging feature of SLAB was
+broken.
 
