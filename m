@@ -2,87 +2,79 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC381C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A89C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9561D208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536AB2063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbfDHLyL (ORCPT
+        id S1726562AbfDHLz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 07:54:11 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:43819 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfDHLyK (ORCPT
+        Mon, 8 Apr 2019 07:55:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1726 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725983AbfDHLz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 07:54:10 -0400
-X-Originating-IP: 109.213.33.177
-Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C88661BF205;
-        Mon,  8 Apr 2019 11:54:06 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 13:54:06 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-rtc@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rtc: tegra: set range
-Message-ID: <20190408115406.GJ7480@piout.net>
-References: <20190407211646.14962-1-alexandre.belloni@bootlin.com>
- <20190408102249.GC6644@ulmo>
+        Mon, 8 Apr 2019 07:55:26 -0400
+X-UUID: a3ede97d3a9d408d93cb7dfeffec574d-20190408
+X-UUID: a3ede97d3a9d408d93cb7dfeffec574d-20190408
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <stu.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 39682696; Mon, 08 Apr 2019 19:55:16 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 8 Apr 2019 19:55:14 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 8 Apr 2019 19:55:14 +0800
+From:   Stu Hsieh <stu.hsieh@mediatek.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Stu Hsieh <stu.hsieh@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH 00/14] Add mediatek mipicsi driver for Mediatek SOC MT2712
+Date:   Mon, 8 Apr 2019 19:54:51 +0800
+Message-ID: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408102249.GC6644@ulmo>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 12:22:49+0200, Thierry Reding wrote:
-> On Sun, Apr 07, 2019 at 11:16:44PM +0200, Alexandre Belloni wrote:
-> > The Tegra 20 RTC is a 32bit seconds counter (with an unused millisecond
-> > counter).
-> > 
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> >  drivers/rtc/rtc-tegra.c | 24 ++++++++++++++----------
-> >  1 file changed, 14 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-> > index c6b0a99aa3a9..3f93a1f7abb5 100644
-> > --- a/drivers/rtc/rtc-tegra.c
-> > +++ b/drivers/rtc/rtc-tegra.c
-> > @@ -306,6 +306,13 @@ static int __init tegra_rtc_probe(struct platform_device *pdev)
-> >  
-> >  	info->tegra_rtc_irq = ret;
-> >  
-> > +	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> > +	if (IS_ERR(info->rtc_dev))
-> > +		return PTR_ERR(info->rtc_dev);
-> > +
-> > +	info->rtc_dev->ops = &tegra_rtc_ops;
-> > +	info->rtc_dev->range_max = U32_MAX;
-> 
-> The placement of this new block seems somewhat arbitrary, but either
-> way:
-> 
+Add mediatek mipicsi driver for Mediatek SOC MT2712
 
-Well, I needed it to be before the clk_prepare_enable call so it can
-just return and I thought it would be better to leave devm_clk_get close
-to that clk_prepare_enable call. I don't mind, I can respin with it
-placed somewhere else.
+Stu Hsieh (14):
+  [media] mtk-mipicsi: add mediatek mipicsi driver for mt2712
+  [media] mtk-mipicsi: add pm function
+  [media] mtk-mipicsi: add color format support for mt2712
+  [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
+  [media] mtk-mipicsi: add function to support SerDes for link number
+  [media] mtk-mipicsi: add mipicsi reg setting for mt2712
+  [media] mtk-mipicsi: enable/disable ana clk
+  [media] mtk-mipicsi: enable/disable cmos for mt2712
+  [media] mtk-mipicsi: add ISR for writing the data to buffer
+  [media] mtk-mipicsi: set the output address in HW reg
+  [media] mtk-mipicsi: add function to get the format
+  [media] mtk-mipicsi: add the function for Get/Set PARM for application
+  [media] mtk-mipicsi: add debug message for mipicsi driver
+  [media] mtk-mipicsi: add debugfs for mipicsi driver
 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-
-
+ drivers/media/platform/mtk-mipicsi/Makefile   |    4 +
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 1692 +++++++++++++++++
+ 2 files changed, 1696 insertions(+)
+ create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
+ create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.18.0
+
