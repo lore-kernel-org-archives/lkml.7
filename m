@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47020C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDEC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F94D2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E172147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfDHPtv (ORCPT
+        id S1729012AbfDHPuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 8 Apr 2019 11:50:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50680 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728965AbfDHPtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 11:49:51 -0400
-Received: from foss.arm.com ([217.140.101.70]:50668 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbfDHPtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:49:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 121BE19F6;
-        Mon,  8 Apr 2019 08:49:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C86A1B4B;
+        Mon,  8 Apr 2019 08:49:51 -0700 (PDT)
 Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.196.92])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45C2E3F557;
-        Mon,  8 Apr 2019 08:49:47 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 506AD3F557;
+        Mon,  8 Apr 2019 08:49:49 -0700 (PDT)
 From:   Marc Zyngier <marc.zyngier@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Russell King <linux@arm.linux.org.uk>,
@@ -35,9 +35,9 @@ Cc:     Russell King <linux@arm.linux.org.uk>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 6/7] clocksource/arm_arch_timer: Remove use of workaround static key
-Date:   Mon,  8 Apr 2019 16:49:06 +0100
-Message-Id: <20190408154907.223536-7-marc.zyngier@arm.com>
+Subject: [PATCH 7/7] clocksource/arm_arch_timer: Use arch_timer_read_counter to access stable counters
+Date:   Mon,  8 Apr 2019 16:49:07 +0100
+Message-Id: <20190408154907.223536-8-marc.zyngier@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190408154907.223536-1-marc.zyngier@arm.com>
 References: <20190408154907.223536-1-marc.zyngier@arm.com>
@@ -48,94 +48,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of a static key in a hotplug path has proved to be a real
-nightmare, and makes it impossible to have scream-free lockdep
-kernel.
+Instead of always going via arch_counter_get_cntvct_stable to
+access the counter workaround, let's have arch_timer_read_counter
+to point to the right method.
 
-Let's remove the static key altogether, and focus on something saner.
+For that, we need to track whether any CPU in the system has a
+workaround for the counter. This is done by having an atomic
+variable tracking this.
 
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- arch/arm64/include/asm/arch_timer.h  |  4 ----
- drivers/clocksource/arm_arch_timer.c | 25 +++++++------------------
- 2 files changed, 7 insertions(+), 22 deletions(-)
+ arch/arm/include/asm/arch_timer.h    | 14 ++++++--
+ arch/arm64/include/asm/arch_timer.h  | 16 ++++++++--
+ drivers/clocksource/arm_arch_timer.c | 48 +++++++++++++++++++++++++---
+ 3 files changed, 70 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
+index 3f0a0191f763..4b66ecd6be99 100644
+--- a/arch/arm/include/asm/arch_timer.h
++++ b/arch/arm/include/asm/arch_timer.h
+@@ -83,7 +83,7 @@ static inline u32 arch_timer_get_cntfrq(void)
+ 	return val;
+ }
+ 
+-static inline u64 arch_counter_get_cntpct(void)
++static inline u64 __arch_counter_get_cntpct(void)
+ {
+ 	u64 cval;
+ 
+@@ -92,7 +92,12 @@ static inline u64 arch_counter_get_cntpct(void)
+ 	return cval;
+ }
+ 
+-static inline u64 arch_counter_get_cntvct(void)
++static inline u64 __arch_counter_get_cntpct_stable(void)
++{
++	return __arch_counter_get_cntpct();
++}
++
++static inline u64 __arch_counter_get_cntvct(void)
+ {
+ 	u64 cval;
+ 
+@@ -101,6 +106,11 @@ static inline u64 arch_counter_get_cntvct(void)
+ 	return cval;
+ }
+ 
++static inline u64 __arch_counter_get_cntvct_stable(void)
++{
++	return __arch_counter_get_cntvct();
++}
++
+ static inline u32 arch_timer_get_cntkctl(void)
+ {
+ 	u32 cntkctl;
 diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index 4a06d46def7e..5502ea049b63 100644
+index 5502ea049b63..48b2100f4aaa 100644
 --- a/arch/arm64/include/asm/arch_timer.h
 +++ b/arch/arm64/include/asm/arch_timer.h
-@@ -45,13 +45,9 @@
- 		(__wa && __wa->h) ? __wa->h : arch_timer_##h;		\
- 	})
+@@ -174,18 +174,30 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
+ 	isb();
+ }
  
--extern struct static_key_false arch_timer_read_ool_enabled;
--#define needs_unstable_timer_counter_workaround() \
--	static_branch_unlikely(&arch_timer_read_ool_enabled)
- #else
- #define has_erratum_handler(h)			   false
- #define erratum_handler(h)			   (arch_timer_##h)
--#define needs_unstable_timer_counter_workaround()  false
- #endif
+-static inline u64 arch_counter_get_cntpct(void)
++static inline u64 __arch_counter_get_cntpct_stable(void)
+ {
+ 	isb();
+ 	return arch_timer_reg_read_stable(cntpct_el0);
+ }
  
- enum arch_timer_erratum_match_type {
+-static inline u64 arch_counter_get_cntvct(void)
++static inline u64 __arch_counter_get_cntpct(void)
++{
++	isb();
++	return read_sysreg(cntpct_el0);
++}
++
++static inline u64 __arch_counter_get_cntvct_stable(void)
+ {
+ 	isb();
+ 	return arch_timer_reg_read_stable(cntvct_el0);
+ }
+ 
++static inline u64 __arch_counter_get_cntvct(void)
++{
++	isb();
++	return read_sysreg(cntvct_el0);
++}
++
+ static inline int arch_timer_arch_init(void)
+ {
+ 	return 0;
 diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index c7f5b66d893c..da487fbfada3 100644
+index da487fbfada3..5fcccc467868 100644
 --- a/drivers/clocksource/arm_arch_timer.c
 +++ b/drivers/clocksource/arm_arch_timer.c
-@@ -372,8 +372,6 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
+@@ -152,6 +152,26 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
+ 	return val;
+ }
+ 
++static u64 arch_counter_get_cntpct_stable(void)
++{
++	return __arch_counter_get_cntpct_stable();
++}
++
++static u64 arch_counter_get_cntpct(void)
++{
++	return __arch_counter_get_cntpct();
++}
++
++static u64 arch_counter_get_cntvct_stable(void)
++{
++	return __arch_counter_get_cntvct_stable();
++}
++
++static u64 arch_counter_get_cntvct(void)
++{
++	return __arch_counter_get_cntvct();
++}
++
+ /*
+  * Default to cp15 based access because arm64 uses this function for
+  * sched_clock() before DT is probed and the cp15 method is guaranteed
+@@ -372,6 +392,7 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
  DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
  
--DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
--EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
++static atomic_t timer_unstable_counter_workaround_in_use = ATOMIC_INIT(0);
  
  static void erratum_set_next_event_tval_generic(const int access, unsigned long evt,
  						struct clock_event_device *clk)
-@@ -552,12 +550,6 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
+@@ -550,6 +571,9 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
  			per_cpu(timer_unstable_counter_workaround, i) = wa;
  	}
  
--	/*
--	 * Use the locked version, as we're called from the CPU
--	 * hotplug framework. Otherwise, we end-up in deadlock-land.
--	 */
--	static_branch_enable_cpuslocked(&arch_timer_read_ool_enabled);
--
++	if (wa->read_cntvct_el0 || wa->read_cntpct_el0)
++		atomic_set(&timer_unstable_counter_workaround_in_use, 1);
++
  	/*
  	 * Don't use the vdso fastpath if errata require using the
  	 * out-of-line counter accessor. We may change our mind pretty
-@@ -573,7 +565,7 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
- static void arch_timer_check_ool_workaround(enum arch_timer_erratum_match_type type,
- 					    void *arg)
+@@ -606,9 +630,15 @@ static bool arch_timer_this_cpu_has_cntvct_wa(void)
  {
--	const struct arch_timer_erratum_workaround *wa;
-+	const struct arch_timer_erratum_workaround *wa, *__wa;
- 	ate_match_fn_t match_fn = NULL;
- 	bool local = false;
+ 	return has_erratum_handler(read_cntvct_el0);
+ }
++
++static bool arch_timer_counter_has_wa(void)
++{
++	return atomic_read(&timer_unstable_counter_workaround_in_use);
++}
+ #else
+ #define arch_timer_check_ool_workaround(t,a)		do { } while(0)
+ #define arch_timer_this_cpu_has_cntvct_wa()		({false;})
++#define arch_timer_counter_has_wa()			({false;})
+ #endif /* CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND */
  
-@@ -597,16 +589,13 @@ static void arch_timer_check_ool_workaround(enum arch_timer_erratum_match_type t
- 	if (!wa)
- 		return;
+ static __always_inline irqreturn_t timer_handler(const int access,
+@@ -957,12 +987,22 @@ static void __init arch_counter_register(unsigned type)
  
--	if (needs_unstable_timer_counter_workaround()) {
--		const struct arch_timer_erratum_workaround *__wa;
--		__wa = __this_cpu_read(timer_unstable_counter_workaround);
--		if (__wa && wa != __wa)
--			pr_warn("Can't enable workaround for %s (clashes with %s\n)",
--				wa->desc, __wa->desc);
-+	__wa = __this_cpu_read(timer_unstable_counter_workaround);
-+	if (__wa && wa != __wa)
-+		pr_warn("Can't enable workaround for %s (clashes with %s\n)",
-+			wa->desc, __wa->desc);
+ 	/* Register the CP15 based counter if we have one */
+ 	if (type & ARCH_TIMER_TYPE_CP15) {
++		u64 (*rd)(void);
++
+ 		if ((IS_ENABLED(CONFIG_ARM64) && !is_hyp_mode_available()) ||
+-		    arch_timer_uses_ppi == ARCH_TIMER_VIRT_PPI)
+-			arch_timer_read_counter = arch_counter_get_cntvct;
+-		else
+-			arch_timer_read_counter = arch_counter_get_cntpct;
++		    arch_timer_uses_ppi == ARCH_TIMER_VIRT_PPI) {
++			if (arch_timer_counter_has_wa())
++				rd = arch_counter_get_cntvct_stable;
++			else
++				rd = arch_counter_get_cntvct;
++		} else {
++			if (arch_timer_counter_has_wa())
++				rd = arch_counter_get_cntpct_stable;
++			else
++				rd = arch_counter_get_cntpct;
++		}
  
--		if (__wa)
--			return;
--	}
-+	if (__wa)
-+		return;
- 
- 	arch_timer_enable_workaround(wa, local);
- 	pr_info("Enabling %s workaround for %s\n",
++		arch_timer_read_counter = rd;
+ 		clocksource_counter.archdata.vdso_direct = vdso_default;
+ 	} else {
+ 		arch_timer_read_counter = arch_counter_get_cntvct_mem;
 -- 
 2.20.1
 
