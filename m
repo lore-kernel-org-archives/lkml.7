@@ -2,137 +2,149 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AC4C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FCC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E53F20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708788;
-	bh=oB3ZA3grj2eQgQKkflDvu0R0EZc6Q6XffLWEo4mZu/s=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=gWSNhTOEQc5ql6HAL3pGfWWdgA/0qNai/yGFeO9jFvE+6X54WO+aMQELO3ZiLDlTQ
-	 I0wUUvDDfGYryIk0Vx2ilbjvV3LZ2CSXvQroFzmKxObpWccPtpE20I5IcOarWnFV4c
-	 IAoYRjaaskGOVTRpROER/6TbeIhbX9oOCyYqMjz4=
+	by mail.kernel.org (Postfix) with ESMTP id 8EF6020870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="gjsqDx62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfDHHdG (ORCPT
+        id S1726699AbfDHHdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:33:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45528 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfDHHdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:33:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=lJiu/8K1CwNpnXq+nV6CsEuCn1vgrNfutreOCSlcCxA=; b=T3XEtuSHp0MQ
-        HrVGNBW1zjvJRDRo8xNKeSGSZCsoD9cZy9CziqdLubtB8IXwkvLMeM/hojoDOdlmQc4JC9iqq0HJm
-        19ClGVlqRIUZs7fhOtkeyi4Gvgr7RmHhGSepLRFUcrUSCUrDphLDmR7RjhJqLXcd15zANgQZDvpV1
-        T76Sg=;
-Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOlv-0003yo-AC; Mon, 08 Apr 2019 07:32:52 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id EEC2C441D3C; Mon,  8 Apr 2019 14:32:41 +0700 (+07)
-From:   Mark Brown <broonie@kernel.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Mark Brown <broonie@kernel.org>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Applied "spi: pxa2xxx: change "no DMA channels..." msg from debug to warning" to the spi tree
-In-Reply-To:  <1554468022-17416-1-git-send-email-f.suligoi@asem.it>
-X-Patchwork-Hint: ignore
-Message-Id: <20190408073241.EEC2C441D3C@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:32:41 +0700 (+07)
+        Mon, 8 Apr 2019 03:33:25 -0400
+Received: from mail-eopbgr80072.outbound.protection.outlook.com ([40.107.8.72]:27269
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbfDHHdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 03:33:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6RXtrUTV/i/t7lept2PD7W47FA6JGD+lYwtCHBfum3Q=;
+ b=gjsqDx623AKbQYzTDsbC1be0xNNWBnecjlYFPx0lWKQoEByDCN4Vv1Xxgct9oYNFCithvdZBliZxpr0EIupiDEXDQv6YJAT//pFJVVJ/eeU72sUtK5HAvqR4SyeSwdAXAHqeitTHOOeYk/VeY/jA9dTjvmUKMFRdj9fhR3PAkwU=
+Received: from DB6PR0801MB1990.eurprd08.prod.outlook.com (10.168.81.21) by
+ DB6PR0801MB1735.eurprd08.prod.outlook.com (10.169.226.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Mon, 8 Apr 2019 07:33:20 +0000
+Received: from DB6PR0801MB1990.eurprd08.prod.outlook.com
+ ([fe80::e47e:4064:53b5:86dc]) by DB6PR0801MB1990.eurprd08.prod.outlook.com
+ ([fe80::e47e:4064:53b5:86dc%11]) with mapi id 15.20.1771.021; Mon, 8 Apr 2019
+ 07:33:20 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [RFC,v2] drm/komeda: Creates plane alpha and blend mode
+ properties
+Thread-Topic: [RFC,v2] drm/komeda: Creates plane alpha and blend mode
+ properties
+Thread-Index: AQHU7d1WKUuPsGOeO0KOLFLgeLy+Kw==
+Date:   Mon, 8 Apr 2019 07:33:20 +0000
+Message-ID: <20190408073312.GA1419@james-ThinkStation-P300>
+References: <1554372625-3659-1-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1554372625-3659-1-git-send-email-lowry.li@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.9.4 (2018-02-28)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR04CA0088.apcprd04.prod.outlook.com
+ (2603:1096:202:15::32) To DB6PR0801MB1990.eurprd08.prod.outlook.com
+ (2603:10a6:4:6c::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6bff90a6-0fb3-4329-af11-08d6bbf4791e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB6PR0801MB1735;
+x-ms-traffictypediagnostic: DB6PR0801MB1735:
+x-ms-exchange-purlcount: 3
+nodisclaimer: True
+x-microsoft-antispam-prvs: <DB6PR0801MB173569401A09696A846715C8B32C0@DB6PR0801MB1735.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0001227049
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(136003)(396003)(39850400004)(346002)(376002)(199004)(189003)(386003)(102836004)(52116002)(476003)(446003)(11346002)(33656002)(6862004)(486006)(58126008)(76176011)(55236004)(256004)(54906003)(5024004)(4326008)(97736004)(316002)(105586002)(186003)(33716001)(25786009)(106356001)(6506007)(99286004)(26005)(71200400001)(71190400001)(53936002)(1076003)(14454004)(81156014)(66066001)(8936002)(8676002)(7736002)(305945005)(6116002)(81166006)(6512007)(5660300002)(6436002)(2906002)(478600001)(86362001)(6486002)(6636002)(6246003)(68736007)(966005)(6306002)(3846002)(9686003)(229853002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0801MB1735;H:DB6PR0801MB1990.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pXKNZYeLxJjrIEW1bYt934p8GZ3b0WimiSqK5PGOpnT8+0nJzC04/qevCVNBYrLRJVvf2ZOo40Ut3j3doyqTJN9NHp3x0KvwQbyXA6Voe0LamJ/YoOi2amPbfrIzvvoWk8VrX/DVFnDdxlk0FK6vbsJoGI3Y9/PDjUP/1pCmVf5Wq4WB9GBHlbwKuJe8VbBHRUB+hXQRmPtvpH8wyFESllo4aWea1iUfEIEJTr4assF74dTIQXCzqVcz3GWHT9Ga+Y7LUmILi3arA0EuIpOXMIvHe/qvwwiqjyfJJ8dPaqtgNxIqfUigSH2nkWaFpp3n8PDVMhoHE3DE5EGSw8PWRWXEL7tTLKXYtDrvto6RQ/YjkuSJ1PgKytIQMad3ws9AsV+vZRRrVh3JOM9ryhnrgxbcK6+tbu3AVVc5EaQblrs=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B44572A931DEE0499D5E647368CB6A9D@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bff90a6-0fb3-4329-af11-08d6bbf4791e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 07:33:20.1014
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Thu, Apr 04, 2019 at 10:10:36AM +0000, Lowry Li (Arm Technology China) w=
+rote:
+> Creates plane alpha and blend mode properties attached to plane.
+>=20
+> This patch depends on:
+> - https://patchwork.freedesktop.org/series/54448/
+> - https://patchwork.freedesktop.org/series/54449/
+> - https://patchwork.freedesktop.org/series/54450/
+>=20
+> Changes since v1:
+> - Adds patch denpendency in the comment
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_plane.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/=
+gpu/drm/arm/display/komeda/komeda_plane.c
+> index 68cd2c9e..aae5e80 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> @@ -220,6 +220,17 @@ static int komeda_plane_add(struct komeda_kms_dev *k=
+ms,
+> =20
+>  	drm_plane_helper_add(plane, &komeda_plane_helper_funcs);
+> =20
+> +	err =3D drm_plane_create_alpha_property(plane);
+> +	if (err)
+> +		goto cleanup;
+> +
+> +	err =3D drm_plane_create_blend_mode_property(plane,
+> +			BIT(DRM_MODE_BLEND_PIXEL_NONE) |
+> +			BIT(DRM_MODE_BLEND_PREMULTI)   |
+> +			BIT(DRM_MODE_BLEND_COVERAGE));
+> +	if (err)
+> +		goto cleanup;
+> +
+>  	return 0;
+>  cleanup:
+>  	komeda_plane_destroy(plane);
 
-   spi: pxa2xxx: change "no DMA channels..." msg from debug to warning
+Looks good to me.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 8b57b11bc45ee512566513259cd3c302df3c9dae Mon Sep 17 00:00:00 2001
-From: Flavio Suligoi <f.suligoi@asem.it>
-Date: Fri, 5 Apr 2019 14:40:22 +0200
-Subject: [PATCH] spi: pxa2xxx: change "no DMA channels..." msg from debug to
- warning
-
-Change the type of the diagnostic message:
-
-"no DMA channels available, using PIO"
-
-from debug to warning.
-
-The lack of an available DMA channel is very important regard the
-spi-pxa2xx performance. The transfer speed can be reduced more than 50%.
-
-So it is very important to warn the user about this, without enabling
-the full SPI debug with CONFIG_SPI_DEBUG.
-
-Moreover, enabling the full SPI debug only to enable this specific
-debug message, the dmesg buffer fills quickly with a lot of
-repetitive information during the SPI data transfer.
-This cause the loss of all the first important messages
-written during the initialization.
-
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-pxa2xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 6160fe0ce7ab..f7068ccfe7d2 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1696,7 +1696,7 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
- 	if (platform_info->enable_dma) {
- 		status = pxa2xx_spi_dma_setup(drv_data);
- 		if (status) {
--			dev_dbg(dev, "no DMA channels available, using PIO\n");
-+			dev_warn(dev, "no DMA channels available, using PIO\n");
- 			platform_info->enable_dma = false;
- 		} else {
- 			controller->can_dma = pxa2xx_spi_can_dma;
--- 
-2.20.1
-
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
