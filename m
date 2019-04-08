@@ -2,122 +2,139 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079ECC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5976EC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65772084F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LZQe1ebN"
+	by mail.kernel.org (Postfix) with ESMTP id 376AE2084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfDHRqH (ORCPT
+        id S1729320AbfDHRr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:46:07 -0400
-Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:55876
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726373AbfDHRqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:46:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sbh/zzKlzWnsJKjm7NnORGJ6/vlYsNtf4rWcjHAkNd8=;
- b=LZQe1ebNqU7dQfkY51HAiQgzT10AtjwYg4mCtLdlChicX7J4He5Z+anVtXACEus4hQwIWp6H+v1fX/Ms6wQ9t8dcm09tZn5admIctjikJRixKO+zF5wTWJew1omgC0iPyI1yy3RDMs5P88mV1SCWVCTlIjNGJEveEQmKqamDitY=
-Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.23.144) by
- VI1PR0402MB3901.eurprd04.prod.outlook.com (52.134.17.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.21; Mon, 8 Apr 2019 17:46:02 +0000
-Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
- ([fe80::b8b3:8509:a056:360e]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
- ([fe80::b8b3:8509:a056:360e%2]) with mapi id 15.20.1771.011; Mon, 8 Apr 2019
- 17:46:02 +0000
-From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
-Thread-Topic: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
-Thread-Index: AQHU7jLtjTghFqR720GjUH/3qPjtqQ==
-Date:   Mon, 8 Apr 2019 17:46:02 +0000
-Message-ID: <385f7948-d12b-1fc2-2ed2-23d1e76034a0@nxp.com>
-In-Reply-To: <20190319051512.14950-3-qiangqing.zhang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VE1PR08CA0017.eurprd08.prod.outlook.com
- (2603:10a6:803:104::30) To VI1PR0402MB2863.eurprd04.prod.outlook.com
- (2603:10a6:800:b6::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=stefan-gabriel.mirea@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1c4a69f2-f921-4334-880b-08d6bc4a115d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3901;
-x-ms-traffictypediagnostic: VI1PR0402MB3901:
-x-microsoft-antispam-prvs: <VI1PR0402MB39017F2C411AA20E21C257B7DF2C0@VI1PR0402MB3901.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0001227049
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(366004)(376002)(39860400002)(54094003)(51444003)(189003)(199004)(14454004)(6436002)(97736004)(2616005)(476003)(11346002)(8676002)(6246003)(478600001)(8936002)(14444005)(26005)(102836004)(256004)(99286004)(186003)(66066001)(31686004)(7736002)(2501003)(68736007)(81156014)(81166006)(5660300002)(6512007)(6506007)(53936002)(386003)(36756003)(25786009)(305945005)(486006)(6116002)(52116002)(229853002)(2201001)(3846002)(2906002)(110136005)(106356001)(71190400001)(86362001)(31696002)(105586002)(316002)(71200400001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3901;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ieNaCaDstvWpft2ymsMCQYuJn5Mm1IV/M2S5Io/FxeQaNh8F+VX0DRX+9zlJW8PwgOAhX8W6S/C9fmyM/7Nz5PClJtKJlLYkzuH2AGyJApT3Pb3Tkcp1oyktRY7n//hOBLNfzg9/dA8WRcymQ8ug3HQbjcSEQU6r4WhZTNiNC/ROonqCCi6TpIjM5EkaTX5c2D0G1F/VNmNQ/1QM/EvGZA7LFytfYfKzHrEt5AVj1xO0eRfcqEbqKfkqfN6o5InGE3f7beDuR+yN716iCAiuBtZNqQN/5CPqjosrPH+itgZ4Ew7H0TvfeacAH1xnjCOiQtc6P0v1f2NHb01hUdofnvesIT1d5Jfzox1y8QDIzsUsz2tZVJk+QZE8yHj39BIoYUkIiStlIACCBQjhcxl9PKEnjVRv2JT/Eax29Qp10Ns=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <FBD65A23CD1BED428B72C287AF2E9DFA@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Apr 2019 13:47:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34473 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfDHRrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 13:47:55 -0400
+Received: from static-50-53-47-167.bvtn.or.frontiernet.net ([50.53.47.167] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1hDYN6-0004nr-Jd; Mon, 08 Apr 2019 17:47:52 +0000
+Subject: Re: [PATCH] apparmor: Restore Y/N in /sys for apparmor's "enabled"
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190408160706.GA18786@beast>
+ <73c80352-ded1-626b-0eb0-a9481165f25d@canonical.com>
+ <CAGXu5j+k86VtegoRxV1s++YZdMxXEhQhqx1Yh7eu+YKHn0wNZA@mail.gmail.com>
+From:   John Johansen <john.johansen@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <a7216d87-df56-8112-fd71-e9a4ff827804@canonical.com>
+Date:   Mon, 8 Apr 2019 10:47:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c4a69f2-f921-4334-880b-08d6bc4a115d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2019 17:46:02.7420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3901
+In-Reply-To: <CAGXu5j+k86VtegoRxV1s++YZdMxXEhQhqx1Yh7eu+YKHn0wNZA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Joakim,
+On 4/8/19 10:25 AM, Kees Cook wrote:
+> On Mon, Apr 8, 2019 at 9:58 AM John Johansen
+> <john.johansen@canonical.com> wrote:
+>>> +/* Can only be set before AppArmor is initialized (i.e. on boot cmdline). */
+>>> +static int param_set_aaintbool(const char *val, const struct kernel_param *kp)
+>>> +{
+>>> +     struct kernel_param kp_local;
+>>> +     bool value;
+>>> +     int error;
+>>> +
+>>> +     if (apparmor_initialized)
+>>> +             return -EPERM;
+>>> +
+>> This isn't sufficient/correct. apparmor_initialized is only set after
+>> apparmor has gone through and completed initialization. However if
+>> apparmor is not selected as one of the LSMs to enable, then this check
+>> won't stop apparmor_enabled from being set post boot.
+>>
+>> However with the apparmor_enabled param being 0444 and the
+>> apparmor_enabled_setup() fn handling boot cmdline do with even need
+>> the set parameter fn?
+> 
+> Yup, that's true. I've gone and tested this, and yes, the 0444 is
+> sufficient to protect the logic here (even if root chmods the inode).
+> So the test here is redundant. However, very early in the threads
+> about LSM boot cmdline enabling it was made clear that
+> "apparmor.enabled=..." needed to stay working, which means the "set"
+> op is still needed. (But I'm happy to do whatever you want here -- I
+> was just trying to keep the functionality as it was.)
+> 
 
-I successfully validated your CAN FD support on an S32V234 based board.
-Here are some points which are not very clear to me:
+Right, though the legacy case that most document reference is apparmor=0/1
+which is handled by __apparmor_enabled_setup()
 
-Joakim Zhang <qiangqing.zhang@nxp.com> writes:
-> +		priv->write(reg_mcr | FLEXCAN_MCR_FDEN, &regs->mcr);
+still best not to break apparmor.enabled
 
-According to the S32V234 reference manual (not sure if this applies to
-i.MX8QM as well), CAN_CTRL1[SMP] cannot be asserted when CAN FD is
-enabled. Is it safe to configure the interface with both "fd on" and
-"triple-sampling on"? If not, flexcan_open should return an error when
-both CAN_CTRLMODE_FD and CAN_CTRLMODE_3_SAMPLES are set in ctrlmode.
+> Should I send a v2 without the "initialized" check or is this okay to
+> leave as-is with the redundant check?
+> 
 
-Joakim Zhang <qiangqing.zhang@nxp.com> writes:
-> +		priv->offload.is_canfd =3D true;
+redundant is fine, it will help protect against shooting ourselves in
+the foot if some one ever tries changing the 0444
 
-Shouldn't is_canfd be assigned false in the "else" branch? Otherwise,
-is_canfd will stay true after the following sequence:
-
-root@s32v234evb:~# ip link set can0 type can bitrate 500000 dbitrate
-2000000 fd on
-root@s32v234evb:~# ip link set can0 up
-root@s32v234evb:~# ip link set can0 down
-root@s32v234evb:~# ip link set can0 type can bitrate 500000 fd off
-root@s32v234evb:~# ip link set can0 up
-
-Moreover, I wonder if we even need is_canfd, because frames should be
-fed to the kernel as classic or FD based only on the EDL bit in the C/S
-word of the Rx MB, to keep their original format. That is, you may
-either read EDL from within a new callback (but I think that
-mailbox_read should remain the only one which both locks and unlocks the
-mailboxes) or let mailbox_read call alloc_can(fd)_skb itself.
-
-Regards,
-Stefan
+you can have my Acked-by: John Johansen <john.johansen@canonical.com>
