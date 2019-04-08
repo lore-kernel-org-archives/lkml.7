@@ -6,109 +6,107 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F040C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E40C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40C920857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17B420857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfDHV2e (ORCPT
+        id S1729424AbfDHV2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:28:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:33649 "EHLO
+        Mon, 8 Apr 2019 17:28:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:54375 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfDHV2d (ORCPT
+        with ESMTP id S1726930AbfDHV2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:28:33 -0400
+        Mon, 8 Apr 2019 17:28:43 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N6Kl7-1gp0TL0O2T-016jYr; Mon, 08 Apr 2019 23:28:26 +0200
+ 1Mn2Fb-1gViE70viR-00k6NX; Mon, 08 Apr 2019 23:28:36 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
+        Arnd Bergmann <arnd@arndb.de>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/12] s390: cio: fix cio_irb declaration
-Date:   Mon,  8 Apr 2019 23:26:20 +0200
-Message-Id: <20190408212648.2407234-7-arnd@arndb.de>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/12] s390: syscall_wrapper: avoid clang warning
+Date:   Mon,  8 Apr 2019 23:26:21 +0200
+Message-Id: <20190408212648.2407234-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190408212648.2407234-1-arnd@arndb.de>
 References: <20190408212648.2407234-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Ha6PNgK0PYpqwPhlNU5XWyfhsmbCXU4naSHTKfBYwheY6UWeYAT
- r+vInJvVpAWCMC4Tp4cuBYykXoLxXiWEgJ8tTEOUTfbCxA2PbaRJxriXiZSirRyZHzXZDOl
- WUTkzwc/NdsdtVOV0ALHzQqV42zFSNjNJL8sEGzz6HfMy1Wqpbrc013M+rL8aCAMdro4nuE
- 3w3wjFfHMYViSa9JpLVIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ggJ9BSGwLmo=:aEmq0SVEfr/yQYnHXxiXHi
- DWaBMfkP0YN8Y/XH3dqZMG0wG/ZLxgDICXH81SkxxRvxUSsyyAdc2WUH1QuyGDlvpU8wg2MVq
- D6/SpnuWOqjHKbNBM0rPe2gSx3n8m3Hcc9R5E1zb/ZDEjkZxDtvfqEtfQJV/54zf1cKX3yK4J
- dNnp759ZBKcsFoEXheOnT960pUQJcRvmM4Kk19xSQ9Va0HEsJf82pCgpKhS+xlFwQwBk/ksY1
- Ehs/JsQbbOVdGJiPKrm3jZ+gu/6ff015MD2fDF4NUAH+IHkVE6DIojwoJkI5YfV4/01OMvpM5
- OLum7Lz1j3xkEywUJI31jo9/iVAoGEOeV4iPmhbhLAMHK70Fc3oVSE1mRsdM03l1i+6VWXlt3
- m2g8aO5/RiCz8ScQnNUJE3sjBEEv+elj2lK2q0JP+79DbbnJE7NG5efOY1ygzzViEsPGnc9TM
- Yc4V5LcxGYEK00R3XLYwoYd1Di9/GuEdbbp2r5nlYVHCunnQ6PhEX+pmpve8DL6lrwZPlzPgB
- 3Q+cU5k0Io4pjFZZ96npDafp08hGaKbBcmc0LJTK87jBqBWl4SAPiu+2d4MRqcoFeDDpGOdf0
- BhIMDm79LwEgbfgFrFX6keHgNf7cmYmATMTMFKerC7zRvA3mV38/ZRb+RLWtx8zmn1B/tV23W
- /20EeBSzIgxwoWsr4TOUqxTesn8Nw6zDPoVtT+g6a6Zq278r2dqQYjRiozxz1COvPLpbJvA0m
- 1c7saP9TW+2sFH3QlE4ADPeSn4APUMUWFbHz3g==
+X-Provags-ID: V03:K1:a7z6K92Aqxd+6jYl8kxTzV0/4l7UDWHqxrRdCWm4WIz1hRaB51E
+ JCrx4Cn3T9QAALoQ1tdC5DCiQvUN4GM4cwmos2Nsk5Ji3yi4TknMztqTJFJimP0/pWcv7Nd
+ l0OwAiPftnJ7oNUu2azun8bJ+WRIFer3ER/Pwdv6ycmqP0dI6AXp9TU6msH8KOoI0c85bcZ
+ wI8q/jtMMSfpDWJsDVE1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xiKi11OGdTE=:XRlwXMab1lwX6qPWoGlUS4
+ 8PUxGXiRdSCedrtjZ0Fo33+KPKB9jshAx1gI2WuBFwdysBHulFDP14eOie3uM2n8HcRQrM+SE
+ g5OyKVWNAETGbMk4EZBtm7n+LodH5/1ErIo2/s/pP+oOCZE6A+bDFE09utB0JK4mJa8khpfap
+ jw9H2b36eEjYLTbAFcXRLmbnu35hdxq4t4Iex7ckBDPz7K4XJxXzNMEVae3LXtF6vY2f4/Z9K
+ +E0cb9iMNlPNxJk+g+BGS8AS6YiVjhWHpB9VZKlhj0gZXmcOg1TNKT9k1z2NRBy6s2fYa5Q7q
+ CZoiRZahqliFFfhWkOH/LK9+VhkFE0w5GVlzT2i07LERaHyTV1j2GfGLE/o4qa31HuEqb/Be1
+ 7veeHn6Tz/B3MaOnfVZ68H9/WYTw0eVkwF+anp+qM8w2u/JPbM58bjnKoICyx95MZEnq3ggU4
+ LiEuPjtxPEZE4Fd0xx604XyPVKimGdIdgHT96ZhIH0kAscz7ZzYi8EYg9e70eTFMIw/0zr6qz
+ 6uG57r98TDP0G4hTmf7s7OKEgLYzKsx+UEkQ+v0nHh7PWtuT+7cY3qpZYKK/TUY8whFanCbk0
+ J3/D3h2k5Uc4HkZ7eUjhSmjfSFJQQsdGRuY/qtGSdA2/D/XVxxvVJt17gB3SUbPmd+fhvJrSj
+ QL1bFrktKha6I+I7hp4qNYxLoi5AAOR5czIfLLw3jZ073qpstw8pqpKH8BSgar4dU1Tp+LVqv
+ 9XDxyKakz51C/FAzyZ0/xAvisAghsY7ZNvfEoQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out that the declaration of cio_irb does not match the
-definition exactly, it is missing the alignment attribute:
+Building system calls with clang results in a warning
+about an alias from a global function to a static one:
 
-../drivers/s390/cio/cio.c:50:1: warning: section does not match previous declaration [-Wsection]
-DEFINE_PER_CPU_ALIGNED(struct irb, cio_irb);
+../fs/namei.c:3847:1: warning: unused function '__se_sys_mkdirat' [-Wunused-function]
+SYSCALL_DEFINE3(mkdirat, int, dfd, const char __user *, pathname, umode_t, mode)
 ^
-../include/linux/percpu-defs.h:150:2: note: expanded from macro 'DEFINE_PER_CPU_ALIGNED'
-        DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)     \
+../include/linux/syscalls.h:219:36: note: expanded from macro 'SYSCALL_DEFINE3'
+ #define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
+                                   ^
+../include/linux/syscalls.h:228:2: note: expanded from macro 'SYSCALL_DEFINEx'
+        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
         ^
-../include/linux/percpu-defs.h:93:9: note: expanded from macro 'DEFINE_PER_CPU_SECTION'
-        extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
-               ^
-../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
-        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
-                                ^
-../drivers/s390/cio/cio.h:118:1: note: previous attribute is here
-DECLARE_PER_CPU(struct irb, cio_irb);
+../arch/s390/include/asm/syscall_wrapper.h:126:18: note: expanded from macro '__SYSCALL_DEFINEx'
+        asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))          \
+                        ^
+<scratch space>:31:1: note: expanded from here
+__se_sys_mkdirat
 ^
-../include/linux/percpu-defs.h:111:2: note: expanded from macro 'DECLARE_PER_CPU'
-        DECLARE_PER_CPU_SECTION(type, name, "")
-        ^
-../include/linux/percpu-defs.h:87:9: note: expanded from macro 'DECLARE_PER_CPU_SECTION'
-        extern __PCPU_ATTRS(sec) __typeof__(type) name
-               ^
-../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
-        __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
-                                ^
-Use DECLARE_PER_CPU_ALIGNED() here, to make the two match.
+
+The only reference to the static __se_sys_mkdirat() here is the alias, but
+this only gets evaluated later. Making this function global as well avoids
+the warning.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/s390/cio/cio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I considered opening a bug report for llvm here, but I suspect the
+behavior is intentional, so I'm just fixing it here. Let me know if
+you disagree.
+---
+ arch/s390/include/asm/syscall_wrapper.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index 9811fd8a0c73..92eabbb5f18d 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -115,7 +115,7 @@ struct subchannel {
- 	struct schib_config config;
- } __attribute__ ((aligned(8)));
- 
--DECLARE_PER_CPU(struct irb, cio_irb);
-+DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
- 
- #define to_subchannel(n) container_of(n, struct subchannel, dev)
- 
+diff --git a/arch/s390/include/asm/syscall_wrapper.h b/arch/s390/include/asm/syscall_wrapper.h
+index 5596c5c625d2..3c3d6fe8e2f0 100644
+--- a/arch/s390/include/asm/syscall_wrapper.h
++++ b/arch/s390/include/asm/syscall_wrapper.h
+@@ -119,8 +119,8 @@
+ 		      "Type aliasing is used to sanitize syscall arguments");\
+ 	asmlinkage long __s390x_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))	\
+ 		__attribute__((alias(__stringify(__se_sys##name))));		\
+-	ALLOW_ERROR_INJECTION(__s390x_sys##name, ERRNO);				\
+-	static long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));		\
++	ALLOW_ERROR_INJECTION(__s390x_sys##name, ERRNO);			\
++	long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));			\
+ 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
+ 	__S390_SYS_STUBx(x, name, __VA_ARGS__)					\
+ 	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))		\
 -- 
 2.20.0
 
