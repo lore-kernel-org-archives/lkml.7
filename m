@@ -2,93 +2,233 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727FDC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2AFC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FB02083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01CE20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfDHFKo (ORCPT
+        id S1726373AbfDHFMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 01:10:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50634 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725995AbfDHFKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 01:10:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5D63FADD9;
-        Mon,  8 Apr 2019 05:10:42 +0000 (UTC)
-Subject: Re: [PATCH] xen: xen-pciback: fix warning Using plain integer as NULL
- pointer
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20190406122912.GA403@hari-Inspiron-1545>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <66d79100-c66f-a043-0523-962632bd9cb7@suse.com>
-Date:   Mon, 8 Apr 2019 07:10:41 +0200
+        Mon, 8 Apr 2019 01:12:41 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41110 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfDHFMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 01:12:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1D4915BF;
+        Sun,  7 Apr 2019 22:12:39 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D063F59C;
+        Sun,  7 Apr 2019 22:12:36 -0700 (PDT)
+Subject: Re: [PATCH v8 6/9] KVM: arm64: Add vcpu feature flags to control
+ ptrauth accessibility
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+ <1554172037-4516-7-git-send-email-amit.kachhap@arm.com>
+ <20190405110245.GT3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <ff139c2b-61bc-d4dd-51af-d3c8b5c3ca2e@arm.com>
+Date:   Mon, 8 Apr 2019 10:42:33 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190406122912.GA403@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+In-Reply-To: <20190405110245.GT3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2019 14:29, Hariprasad Kelam wrote:
-> Changes passing function argument 0 to NULL to avoid below sparse
-> warning
+Hi,
+
+On 4/5/19 4:32 PM, Dave Martin wrote:
+> On Tue, Apr 02, 2019 at 07:57:14AM +0530, Amit Daniel Kachhap wrote:
+>> Since Pointer authentication will be enabled or disabled on a
+>> per-vcpu basis, vcpu feature flags are added in order to know which
+>> vcpus have it enabled from userspace.
+>>
+>> This features will allow the KVM guest to allow the handling of
+>> pointer authentication instructions or to treat them as undefined
+>> if not set.
+>>
+>> The helper macro added checks the feature flag along with other
+>> conditions such as VHE mode present and system support for
+>> pointer address/generic authentication.
 > 
->  CHECK   drivers/xen/xen-pciback/xenbus.c
-> drivers/xen/xen-pciback/xenbus.c:700:51: warning: Using plain integer as
-> NULL pointer
+> Can this patch be put after the context switch patch instead?
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Here, we accept a request from userspace to enable ptrauth, but it will
+> mysteriously fail to work.  I worked around a similar issue by defining
+> KVM_ARM64_GUEST_HAS_SVE early in the SVE series, but putting the logic
+> to set this flag in vcpu->arch.flags later on (see also comments about
+> this below).
+> 
+>> Necessary documentations are added to reflect the changes done.
+>>
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
+>>
+>> Changes since v7:
+>> * Moved the check for userspace features in this patch [James Morse].
+>> * Moved the vcpu feature flags Documentation in this patch [James Morse].
+>>
+>>   Documentation/arm64/pointer-authentication.txt | 13 +++++++++----
+>>   Documentation/virtual/kvm/api.txt              |  4 ++++
+>>   arch/arm64/include/asm/kvm_host.h              |  8 +++++++-
+>>   arch/arm64/include/uapi/asm/kvm.h              |  2 ++
+>>   arch/arm64/kvm/reset.c                         |  7 +++++++
+>>   5 files changed, 29 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
+>> index 5baca42..b164886 100644
+>> --- a/Documentation/arm64/pointer-authentication.txt
+>> +++ b/Documentation/arm64/pointer-authentication.txt
+>> @@ -87,7 +87,12 @@ used to get and set the keys for a thread.
+>>   Virtualization
+>>   --------------
+>>   
+>> -Pointer authentication is not currently supported in KVM guests. KVM
+>> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
+>> -the feature will result in an UNDEFINED exception being injected into
+>> -the guest.
+>> +Pointer authentication is enabled in KVM guest when each virtual cpu is
+>> +initialised by passing flags KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] and
+>> +requesting these two separate cpu features to be enabled. The current KVM
+>> +guest implementation works by enabling both features together, so both these
+>> +userspace flags are checked together before enabling pointer authentication.
+>> +The separate userspace flag will allow to have no userspace ABI changes when
+>> +both features are implemented in an isolated way in future.
+> 
+> Nit: we might make this change, but we don't promise that it will happsen.
+> 
+> So, maybe write:
+> 
+> "[...] have no userspace ABI changes if support is added in the future
+> to allow these two features to be enabled independently of one another."
+Ok. sounds good.
+> 
+>> +
+>> +Pointer Authentication is supported in KVM guest only in VHE mode.
+>> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+>> index 7de9eee..aaa048d 100644
+>> --- a/Documentation/virtual/kvm/api.txt
+>> +++ b/Documentation/virtual/kvm/api.txt
+>> @@ -2659,6 +2659,10 @@ Possible features:
+>>   	  Depends on KVM_CAP_ARM_PSCI_0_2.
+>>   	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
+>>   	  Depends on KVM_CAP_ARM_PMU_V3.
+>> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS: Enables Address Pointer authentication
+>> +	  for the CPU and supported only on arm64 architecture.
+> 
+> We should probably add:
+> 
+> 	Must be requested if KVM_ARM_VCPU_PTRAUTH_GENERIC is also requested.
+> 
+>> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC: Enables Generic Pointer authentication
+>> +	  for the CPU and supported only on arm64 architecture.
+> 
+> Similarly:
+> 
+> 	Must be requested if KVM_ARM_VCPU_PTRAUTH_ADDRESS is also requested.
+ok.
+> 
+> (Or otherwise explain that both features must enabled together or not at
+> all.)
+> 
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index e3ccd7b..9dd2918 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -45,7 +45,7 @@
+>>   
+>>   #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+>>   
+>> -#define KVM_VCPU_MAX_FEATURES 4
+>> +#define KVM_VCPU_MAX_FEATURES 6
+>>   
+>>   #define KVM_REQ_SLEEP \
+>>   	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>> @@ -491,6 +491,12 @@ static inline bool kvm_arch_requires_vhe(void)
+>>   	return false;
+>>   }
+>>   
+>> +#define vcpu_has_ptrauth(vcpu)	(has_vhe() && \
+>> +		system_supports_address_auth() && \
+>> +		system_supports_generic_auth() && \
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) && \
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features))
+> 
+> We're checking 5 things here, which we don't necessarily want to do
+> every time.
+> 
+> Is this used on any hot path?
+These checks are used in vcpu_load level but not in vcpu_run level.
+> 
+> This kind of thing is one reason why I added vcpu->arch.flags: we can
+> make the policy decision about whether to set the flag in
+> kvm_reset_vcpu(), then afterwards we only need to check the flag.
+Yes agree that deep checks can be avoided. Let me check your SVE series 
+of using vcpu->arch.flags.
+> 
+>> +
+>>   static inline void kvm_arch_hardware_unsetup(void) {}
+>>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>>   static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+>> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+>> index 97c3478..8806f71 100644
+>> --- a/arch/arm64/include/uapi/asm/kvm.h
+>> +++ b/arch/arm64/include/uapi/asm/kvm.h
+>> @@ -102,6 +102,8 @@ struct kvm_regs {
+>>   #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
+>>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
+>>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
+>> +#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	4 /* VCPU uses address authentication */
+>> +#define KVM_ARM_VCPU_PTRAUTH_GENERIC	5 /* VCPU uses generic authentication */
+>>   
+>>   struct kvm_vcpu_init {
+>>   	__u32 target;
+>> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+>> index f16a5f8..717afed 100644
+>> --- a/arch/arm64/kvm/reset.c
+>> +++ b/arch/arm64/kvm/reset.c
+>> @@ -128,6 +128,13 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>>   	if (loaded)
+>>   		kvm_arch_vcpu_put(vcpu);
+>>   
+>> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
+>> +		/* Verify that KVM startup matches the conditions for ptrauth */
+>> +		if (!vcpu_has_ptrauth(vcpu))
+>> +			goto out;
+>> +	}
+>> +
+> 
+> This looks like it works, but I find the way vcpu->arch.features is used
+> in two different ways at the same time a bit confusing.
+ok. Will check if some other way of placing the checks with vcpu->arch.flags
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+Thanks,
+Amit D.
+> 
+> Cheers
+> ---Dave
+> 
