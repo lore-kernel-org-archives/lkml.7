@@ -3,68 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78185C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA524C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8B62147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37F320833
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfDHN6a (ORCPT
+        id S1726967AbfDHN7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:58:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42026 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfDHN6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:58:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 71ACE307D976;
-        Mon,  8 Apr 2019 13:58:30 +0000 (UTC)
-Received: from [10.43.17.46] (unknown [10.43.17.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE46B60BE5;
-        Mon,  8 Apr 2019 13:58:29 +0000 (UTC)
-Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
- filename $module/.rodata.cst{16,32}
-From:   Denys Vlasenko <dvlasenk@redhat.com>
-To:     sedat.dilek@gmail.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
- <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com>
-Message-ID: <99dde862-6aee-65a0-8b39-33b8ac10df45@redhat.com>
-Date:   Mon, 8 Apr 2019 15:58:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 8 Apr 2019 09:59:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35538 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfDHN7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:59:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h39so6683684qte.2;
+        Mon, 08 Apr 2019 06:59:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jYS4YB6xQJBW5Cjgq2FmmiodlQqxQnUu/xaaZZ+5Xjc=;
+        b=c98tOlUyKAxfiiAGSqUyy0ZNCQTfvfjcYwKUYRv04KX5t7ZeJXY+QP3Rcmjqe6zei8
+         2yv8DJrzrmbCLpLNzTuMX0mYc8vt3vZGVOZfeHav2GFhG4+syygbTQ3VFUtLL31dVn+P
+         JQ/WGlSaybHnYybIee2Qw8g0TMzXyp/PkjtiLhBisdBv8LiTtgBqQdMuqdJX3f40aiIY
+         Nd2WUby+cwreYgrMlU4lbJutNjBesObxD+YMDvv/1cjBjyIIbbRjbSyKL1IGuurV8GnQ
+         Iyyd7uWqPDggk6Et/+NzdPb/bThxU1PNnphNu6qqSEIrgBgrqiLzF0TVqCSuotjYgZxD
+         Vl5g==
+X-Gm-Message-State: APjAAAUyUA5dmE5owhOi3hE80DrvFe84MnClm6d8cl6SOyyMdBtzP0Yt
+        dXvI6GKukgN4n5+v1u0m3akxDm/qCCpD0sS0Dek=
+X-Google-Smtp-Source: APXvYqz4/6RA0TtmJoUO3ceRJPcXWmziqc/CWyBiNthFnT0Vt89eOxJ4G4XuugcKUKeWNrFr3aTfmrwO+i3H/TA06Zo=
+X-Received: by 2002:ac8:8b9:: with SMTP id v54mr25473996qth.64.1554731941101;
+ Mon, 08 Apr 2019 06:59:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 08 Apr 2019 13:58:30 +0000 (UTC)
+References: <20190408124640.GA607@lst.de>
+In-Reply-To: <20190408124640.GA607@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 8 Apr 2019 15:58:44 +0200
+Message-ID: <CAK8P3a13NVbkJzzoZG_7HrDT9qGPR5ptbRUL=xH1oZ1a+5ksHw@mail.gmail.com>
+Subject: Re: CONFIG_* symbols in UAPI headers?
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jie Zhang <jie.zhang@analog.com>,
+        Mike Frysinger <vapier@gentoo.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 3:56 PM, Denys Vlasenko wrote:
-> I propose to change section name, append _module_ name and optionally
-> a comment why this is done:
-> 
->   /* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-> +/* There is more than one object in this section, let's use module name
-> +   as unique suffix */
+On Mon, Apr 8, 2019 at 2:46 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> I just stumbled over the MAP_UNINITIALIZED defintion, initially
+> added by:
+>
+> commit ea637639591def87a54cea811cbac796980cb30d
+> Author: Jie Zhang <jie.zhang@analog.com>
+> Date:   Mon Dec 14 18:00:02 2009 -0800
+>
+>     nommu: fix malloc performance by adding uninitialized flag
+>
+> The defintion depends on CONFIG_MMAP_ALLOW_UNINITIALIZED, which
+> will never be set by userspace.  How is this supposed to work?
+>
+> Shoudn't we define the symbol unconditionally and just turn it
+> into a no-op in the implementation?
 
-Probably not clear enough... maybe this is better:
+Right, good catch. That should work. It can probably be done
+by adding another check before the conditional, like:
 
-+/* There is more than one object in this section, let's use module name
-+   instead of object name as unique suffix */
--.section        .rodata.cst16, "aM", @progbits, 16
+       /* clear anonymous mappings that don't ask for uninitialized data */
+       if (!vma->vm_file &&
+           !(IS_ENABLED(CONFIG_MMAP_ALLOW_UNINITIALIZED) &&
+             (flags & MAP_UNINITIALIZED))
+               memset((void *)region->vm_start, 0,
+                      region->vm_end - region->vm_start);
 
-and do not use '-' in the name, replace with '_':
+> There are a few similar issues, like struct elf_prstatus having
+> a different layout depending on CONFIG_BINFMT_ELF_FDPIC, or
+> MAX_SHARED_LIBS defending on CONFIG_BINFMT_SHARED_FLAT.
 
-+.section        .rodata.cst16.cast6_avx_x86_64_asm_64, "aM", @progbits, 16
+I thought we had cleaned them out a long time ago, but it looks
+like those have been there since the uapi headers got split out,
+and are still wrong.
 
+Why doesn't scripts/headers_check.pl find those?
 
+      Arnd
