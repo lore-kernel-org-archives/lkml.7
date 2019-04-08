@@ -2,145 +2,132 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC86CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C6CC282DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25AA20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C748D20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 06:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbfDHGDd (ORCPT
+        id S1726615AbfDHGDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 02:03:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35645 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfDHGDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 02:03:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s39so10525723edb.2;
-        Sun, 07 Apr 2019 23:03:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9iRQ0LjHXaiZNgPu0/n0A6d0cMpaNc8Ae4QAy9FAhEM=;
-        b=rYTkMirA03Mgw6T3wahGsP4XBNeztdXrHx1yxBKoQ7VWWUCi1SYV4HmnRjpLOtRrTp
-         cq8rC5divM4M/snTBd3q389kNfcWAVuQlE9fIXSh+eSQfYp1bpSxJtPIA8JExWgE4ULC
-         co+jsZlZzmVc1tdqYr6UVbIbZLoSCBuRUxDosDf6PBXyEz6MJZzXNgvwLIpu3vOwAQIK
-         CLqtqZHCc0sXRGhiykRXXhIAObFRotXLRXUJs52ZRvL5v0BzQc1of2X/aIhK2PLHubvg
-         yia5j7zN4QnjSCyCU8urUN1OVKVJWiC/Zj+0iQbXh9cH7+jFRkylRNu+9rwEwkeES5K1
-         Jtfw==
-X-Gm-Message-State: APjAAAWxIo/wHD/wjraiOLExT49DTbgmrfYx6LFsnqQhA9iJSgZzGHfx
-        1NhuVKCKqv3zAJMTttUDKQVyz+2xUkw=
-X-Google-Smtp-Source: APXvYqwQV8cjrOyNtfrJ10TqSD/0WPnIdzyvbJyPb/30LGQ9mKataQcTmfQN50lGffsSaNaxJtcxww==
-X-Received: by 2002:a17:906:924e:: with SMTP id c14mr15220751ejx.230.1554703411135;
-        Sun, 07 Apr 2019 23:03:31 -0700 (PDT)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
-        by smtp.gmail.com with ESMTPSA id g46sm8625848edc.10.2019.04.07.23.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
-Received: by mail-wm1-f52.google.com with SMTP id n25so13240443wmk.4;
-        Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
-X-Received: by 2002:a1c:40c3:: with SMTP id n186mr16625540wma.3.1554703410424;
- Sun, 07 Apr 2019 23:03:30 -0700 (PDT)
+        Mon, 8 Apr 2019 02:03:40 -0400
+Received: from foss.arm.com ([217.140.101.70]:41432 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726349AbfDHGDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 02:03:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9885115BF;
+        Sun,  7 Apr 2019 23:03:39 -0700 (PDT)
+Received: from [10.162.42.195] (p8cg001049571a15.blr.arm.com [10.162.42.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30A803F59C;
+        Sun,  7 Apr 2019 23:03:31 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64/mm: Enable ZONE_DEVICE
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>, james.morse@arm.com,
+        Mark Rutland <mark.rutland@arm.com>, cpandya@codeaurora.org,
+        arunks@codeaurora.org, osalvador@suse.de,
+        Logan Gunthorpe <logang@deltatee.com>,
+        David Hildenbrand <david@redhat.com>, cai@lca.pw,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-7-git-send-email-anshuman.khandual@arm.com>
+ <ea5567c7-caad-8a4e-7c6f-cec4b772a526@arm.com>
+ <0d72db39-e20d-1cbd-368e-74dda9b6c936@arm.com>
+ <CAPcyv4h5YskvjR306FsHnVHpPjnT4s2JPJXgk6CxiMz8bjhqkg@mail.gmail.com>
+ <a16a9867-7019-10ab-1901-c114bcd8712b@arm.com>
+ <CAPcyv4j0Z2ASeJGgS18Bpgr_2F8XdZdCq4T9W5fgkG1oWKtNHg@mail.gmail.com>
+ <20190408040346.GA26243@iweiny-DESK2.sc.intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <946f090f-e048-cb9e-053e-371029fd7ba8@arm.com>
+Date:   Mon, 8 Apr 2019 11:33:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190408055415.1374-1-jagan@amarulasolutions.com>
-In-Reply-To: <20190408055415.1374-1-jagan@amarulasolutions.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 8 Apr 2019 14:03:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64g9=VoHP0s2OKt2Xv8Fj97dhy7iUkAp-hqLKBLZd5qAg@mail.gmail.com>
-Message-ID: <CAGb2v64g9=VoHP0s2OKt2Xv8Fj97dhy7iUkAp-hqLKBLZd5qAg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663
- CTP node
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408040346.GA26243@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 1:54 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> Add Goodix GT5663 capacitive touch controller node on
-> Amarula A64-Relic board.
->
-> The CTP connected to board with,
-> - SDA, SCK from i2c1
-> - GPIO-LD0 as AVDD28 supply
-> - PH4 gpio as interrupt pin
-> - PH8 gpio as reset pin
-> - X axis is inverted
-> - Y axis is inverted
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> index 3575db216016..a76353d59aaa 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> @@ -49,6 +49,28 @@
->         bias-pull-up;
->  };
->
-> +&i2c1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c1_pins>;
-> +       status = "okay";
-> +
-> +       touchscreen@5d {
-> +               compatible = "goodix,gt5663";
-> +               reg = <0x5d>;
-> +               AVDD28-supply = <&reg_ldo_io0>;                 /* VCC-CTP: GPIO0-LDO */
-> +               interrupt-parent = <&pio>;
-> +               interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-> +               irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;        /* CTP-INT: PH4 */
-> +               reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;      /* CTP-RST: PH8 */
-> +               touchscreen-inverted-x;
-> +               touchscreen-inverted-y;
-> +       };
-> +};
-> +
-> +&i2c1_pins {
-> +       bias-pull-up;
-> +};
-> +
 
-Do you know if the pins have external pull-ups? If so then you
-don't need this bit. Same for the other patch.
 
-AFAIK the internal pull-ups are kind of weak.
+On 04/08/2019 09:33 AM, Ira Weiny wrote:
+> On Sun, Apr 07, 2019 at 03:11:00PM -0700, Dan Williams wrote:
+>> On Thu, Apr 4, 2019 at 2:47 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>>> On 04/04/2019 06:04, Dan Williams wrote:
+>>>> On Wed, Apr 3, 2019 at 9:42 PM Anshuman Khandual
+>>>> <anshuman.khandual@arm.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 04/03/2019 07:28 PM, Robin Murphy wrote:
+>>>>>> [ +Dan, Jerome ]
+>>>>>>
+>>>>>> On 03/04/2019 05:30, Anshuman Khandual wrote:
+>>>>>>> Arch implementation for functions which create or destroy vmemmap mapping
+>>>>>>> (vmemmap_populate, vmemmap_free) can comprehend and allocate from inside
+>>>>>>> device memory range through driver provided vmem_altmap structure which
+>>>>>>> fulfils all requirements to enable ZONE_DEVICE on the platform. Hence just
+>>>>>>
+>>>>>> ZONE_DEVICE is about more than just altmap support, no?
+>>>>>
+>>>>> Hot plugging the memory into a dev->numa_node's ZONE_DEVICE and initializing the
+>>>>> struct pages for it has stand alone and self contained use case. The driver could
+>>>>> just want to manage the memory itself but with struct pages either in the RAM or
+>>>>> in the device memory range through struct vmem_altmap. The driver may not choose
+>>>>> to opt for HMM, FS DAX, P2PDMA (use cases of ZONE_DEVICE) where it may have to
+>>>>> map these pages into any user pagetable which would necessitate support for
+>>>>> pte|pmd|pud_devmap.
+>>>>
+>>>> What's left for ZONE_DEVICE if none of the above cases are used?
+>>>>
+>>>>> Though I am still working towards getting HMM, FS DAX, P2PDMA enabled on arm64,
+>>>>> IMHO ZONE_DEVICE is self contained and can be evaluated in itself.
+>>>>
+>>>> I'm not convinced. What's the specific use case.
+>>>
+>>> The fundamental "roadmap" reason we've been doing this is to enable
+>>> further NVDIMM/pmem development (libpmem/Qemu/etc.) on arm64. The fact
+>>> that ZONE_DEVICE immediately opens the door to the various other stuff
+>>> that the CCIX folks have interest in is a definite bonus, so it would
+>>> certainly be preferable to get arm64 on par with the current state of
+>>> things rather than try to subdivide the scope further.
+>>>
+>>> I started working on this from the ZONE_DEVICE end, but got bogged down
+>>> in trying to replace my copied-from-s390 dummy hot-remove implementation
+>>> with something proper. Anshuman has stepped in to help with hot-remove
+>>> (since we also have cloud folks wanting that for its own sake), so is
+>>> effectively coming at the problem from the opposite direction, and I'll
+>>> be the first to admit that we've not managed the greatest job of meeting
+>>> in the middle and coordinating our upstream story; sorry about that :)
+>>>
+>>> Let me freshen up my devmap patches and post them properly, since that
+>>> discussion doesn't have to happen in the context of hot-remove; they're
+>>> effectively just parallel dependencies for ZONE_DEVICE.
+>>
+>> Sounds good. It's also worth noting that Ira's recent patches for
+>> supporting get_user_pages_fast() for "longterm" pins relies on
+>> PTE_DEVMAP to determine when fast-GUP is safe to proceed, or whether
+>> it needs to fall back to slow-GUP. So it really is the case that
+>> "devmap" support is an assumption for ZONE_DEVICE.
+> 
+> Could you cc me on the patches when you post?
 
->  &mmc1 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc1_pins>;
-> @@ -212,6 +234,13 @@
->         regulator-name = "vdd-cpus";
->  };
->
-> +&reg_ldo_io0 {
-> +       regulator-min-microvolt = <3300000>;
-> +       regulator-max-microvolt = <3300000>;
-> +       regulator-name = "vcc-ctp";
-> +       status = "okay";
-> +};
-> +
->  &reg_rtc_ldo {
->         regulator-name = "vcc-rtc";
->  };
-> --
-> 2.18.0.321.gffc6fa0e3
->
+Sure will do.
