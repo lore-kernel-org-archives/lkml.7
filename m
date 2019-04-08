@@ -2,178 +2,126 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79187C282DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED90C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7C2208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591FD208E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfDHIOV (ORCPT
+        id S1726731AbfDHIOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:14:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12779 "EHLO mga01.intel.com"
+        Mon, 8 Apr 2019 04:14:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43882 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfDHIOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:14:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 01:14:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,324,1549958400"; 
-   d="scan'208";a="147424259"
-Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2019 01:14:06 -0700
-From:   Zhao Yakui <yakui.zhao@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, tglx@linutronix.de,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: [RFC PATCH v3 2/4] x86: Add the support of ACRN guest
-Date:   Mon,  8 Apr 2019 16:12:09 +0800
-Message-Id: <1554711131-21514-3-git-send-email-yakui.zhao@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
+        id S1725925AbfDHIOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 04:14:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4061159468;
+        Mon,  8 Apr 2019 08:14:35 +0000 (UTC)
+Received: from localhost.default (ovpn-116-79.phx2.redhat.com [10.3.116.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 77DB25D71B;
+        Mon,  8 Apr 2019 08:14:33 +0000 (UTC)
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+Subject: [PATCH V3 1/2] trace,x86: Add external_interrupts to the irq_vectors class
+Date:   Mon,  8 Apr 2019 10:14:30 +0200
+Message-Id: <5c3037f244dcab6c8c380a66034e4c10764c024a.1554710696.git.bristot@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 08 Apr 2019 08:14:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACRN is an open-source hypervisor maintained by Linuxfoundation.
-This is to add the Linux guest support on acrn-hypervisor.
+Currently, the irq_vectors is showing the entry and exit events for
+the interrupts of the architecture, but not for external interrupts.
 
-Add x86_hyper_acrn into supported hypervisors array, which enables
-Linux ACRN guest running on ACRN hypervisor. It is restricted to X86_64.
+Adds the tracepoints for external interrupts.
 
-Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+Example of output:
+ <idle>-0     [000] d.h.   102.890935: external_interrupt_entry: vector=35
+ <idle>-0     [000] d.h.   102.890960: external_interrupt_exit: vector=35
+
+Changes from V1:
+  - Fix a compilation problem when CONFIG_X86_LOCAL_APIC is not set.
+    (kbuild test)
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Clark Williams <williams@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org
 ---
-v1->v2: Change the CONFIG_ACRN to CONFIG_ACRN_GUEST, which makes it easy to
-understand.
-        Remove the export of x86_hyper_acrn.
+ arch/x86/include/asm/trace/irq_vectors.h | 10 +++++++++-
+ arch/x86/kernel/irq.c                    |  2 ++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-v2->v3: Remove the unnecessary dependency of PARAVIRT
----
- arch/x86/Kconfig                  |  8 ++++++++
- arch/x86/include/asm/hypervisor.h |  1 +
- arch/x86/kernel/cpu/Makefile      |  1 +
- arch/x86/kernel/cpu/acrn.c        | 35 +++++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/hypervisor.c  |  4 ++++
- 5 files changed, 49 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/acrn.c
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 54d1fbc..d77d215 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -845,6 +845,14 @@ config JAILHOUSE_GUEST
- 	  cell. You can leave this option disabled if you only want to start
- 	  Jailhouse and run Linux afterwards in the root cell.
- 
-+config ACRN_GUEST
-+	bool "ACRN Guest support"
-+	depends on X86_64
-+	help
-+	  This option allows to run Linux as guest in ACRN hypervisor. Enabling
-+	  this will allow the kernel to boot in virtualized environment under
-+	  the ACRN hypervisor.
-+
- endif #HYPERVISOR_GUEST
- 
- source "arch/x86/Kconfig.cpu"
-diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
-index 8c5aaba..50a30f6 100644
---- a/arch/x86/include/asm/hypervisor.h
-+++ b/arch/x86/include/asm/hypervisor.h
-@@ -29,6 +29,7 @@ enum x86_hypervisor_type {
- 	X86_HYPER_XEN_HVM,
- 	X86_HYPER_KVM,
- 	X86_HYPER_JAILHOUSE,
-+	X86_HYPER_ACRN,
- };
- 
- #ifdef CONFIG_HYPERVISOR_GUEST
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index cfd24f9..17a7cdf 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
- obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
- 
- obj-$(CONFIG_HYPERVISOR_GUEST)		+= vmware.o hypervisor.o mshyperv.o
-+obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
- 
- ifdef CONFIG_X86_FEATURE_NAMES
- quiet_cmd_mkcapflags = MKCAP   $@
-diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-new file mode 100644
-index 0000000..3956567
---- /dev/null
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ACRN detection support
-+ *
-+ * Copyright (C) 2019 Intel Corporation. All rights reserved.
-+ *
-+ * Jason Chen CJ <jason.cj.chen@intel.com>
-+ * Zhao Yakui <yakui.zhao@intel.com>
-+ *
-+ */
-+
-+#include <asm/hypervisor.h>
-+
-+static uint32_t __init acrn_detect(void)
-+{
-+	return hypervisor_cpuid_base("ACRNACRNACRN\0\0", 0);
-+}
-+
-+static void __init acrn_init_platform(void)
-+{
-+}
-+
-+static bool acrn_x2apic_available(void)
-+{
-+	/* do not support x2apic */
-+	return false;
-+}
-+
-+const __initconst struct hypervisor_x86 x86_hyper_acrn = {
-+	.name                   = "ACRN",
-+	.detect                 = acrn_detect,
-+	.type			= X86_HYPER_ACRN,
-+	.init.init_platform     = acrn_init_platform,
-+	.init.x2apic_available  = acrn_x2apic_available,
-+};
-diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-index 479ca47..87e39ad 100644
---- a/arch/x86/kernel/cpu/hypervisor.c
-+++ b/arch/x86/kernel/cpu/hypervisor.c
-@@ -32,6 +32,7 @@ extern const struct hypervisor_x86 x86_hyper_xen_pv;
- extern const struct hypervisor_x86 x86_hyper_xen_hvm;
- extern const struct hypervisor_x86 x86_hyper_kvm;
- extern const struct hypervisor_x86 x86_hyper_jailhouse;
-+extern const struct hypervisor_x86 x86_hyper_acrn;
- 
- static const __initconst struct hypervisor_x86 * const hypervisors[] =
- {
-@@ -49,6 +50,9 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
- #ifdef CONFIG_JAILHOUSE_GUEST
- 	&x86_hyper_jailhouse,
+diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/asm/trace/irq_vectors.h
+index 33b9d0f0aafe..38e73d56db70 100644
+--- a/arch/x86/include/asm/trace/irq_vectors.h
++++ b/arch/x86/include/asm/trace/irq_vectors.h
+@@ -138,6 +138,12 @@ DEFINE_IRQ_VECTOR_EVENT(deferred_error_apic);
+ DEFINE_IRQ_VECTOR_EVENT(thermal_apic);
  #endif
-+#ifdef CONFIG_ACRN_GUEST
-+	&x86_hyper_acrn,
-+#endif
- };
  
- enum x86_hypervisor_type x86_hyper_type;
++/*
++ * external_interrupt - called when entering/exiting from regular device
++ * interrupt vector handler.
++ */
++DEFINE_IRQ_VECTOR_EVENT(external_interrupt);
++
+ TRACE_EVENT(vector_config,
+ 
+ 	TP_PROTO(unsigned int irq, unsigned int vector,
+@@ -385,7 +391,9 @@ TRACE_EVENT(vector_free_moved,
+ 		  __entry->is_managed)
+ );
+ 
+-
++#else /* CONFIG_X86_LOCAL_APIC */
++#define trace_external_interrupt_entry(vector) do {} while(0)
++#define trace_external_interrupt_exit(vector) do {} while(0)
+ #endif /* CONFIG_X86_LOCAL_APIC */
+ 
+ #undef TRACE_INCLUDE_PATH
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 59b5f2ea7c2f..715afe3a4f24 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -237,6 +237,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
+ 	unsigned vector = ~regs->orig_ax;
+ 
+ 	entering_irq();
++	trace_external_interrupt_entry(vector);
+ 
+ 	/* entering_irq() tells RCU that we're not quiescent.  Check it. */
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+@@ -255,6 +256,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
+ 		}
+ 	}
+ 
++	trace_external_interrupt_exit(vector);
+ 	exiting_irq();
+ 
+ 	set_irq_regs(old_regs);
 -- 
-2.7.4
+2.20.1
 
