@@ -6,95 +6,96 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A3C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF4AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C459F20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2274C20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfDHVbM (ORCPT
+        id S1727297AbfDHVbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:31:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:37753 "EHLO
+        Mon, 8 Apr 2019 17:31:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:59935 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfDHVbL (ORCPT
+        with ESMTP id S1726826AbfDHVbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:31:11 -0400
+        Mon, 8 Apr 2019 17:31:14 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MYedH-1hQ0Az0Akd-00Vkv1; Mon, 08 Apr 2019 23:28:58 +0200
+ 1Mv3I0-1gvwTg0DAW-00r1Bs; Mon, 08 Apr 2019 23:28:48 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
+        Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] s390: avoid __builtin_return_address(n) on clang
-Date:   Mon,  8 Apr 2019 23:26:23 +0200
-Message-Id: <20190408212648.2407234-10-arnd@arndb.de>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 09/12] s390: make __load_psw_mask work with clang
+Date:   Mon,  8 Apr 2019 23:26:22 +0200
+Message-Id: <20190408212648.2407234-9-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190408212648.2407234-1-arnd@arndb.de>
 References: <20190408212648.2407234-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ZmbNTcWWXcZFOu9pYUwZHanm3aNR7zdy1Jq0xKUgcSGMxA6iUIX
- 1/vrvowcwhMsTyRXO7j2R0HqNlxsmoIxRA+FAZUo6QTUjBssk1B6rEfW+vHO6v7o8Jjv92L
- QqN4uN6itj0eTzPCYXYHSLO1obgdKAP3UDr5gdFf5cB2PttphKSu37C0S1GSzpBSltpft+P
- utRZj3Rh3rjWFryYPy1yQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:v7Q/Qbjvw/4=:WfsFPCgAfcRRRvrnNcKaVa
- SUjtnyoMRr7ZToW07cc8wIV1zciKiTjsIDUxXJivxdwvdMBULUjlM2MyxF9Sb3BEKZBD1RIVU
- d9F4o+C9671lbPTYHPDlZci5cMA8S/uoY5UaLgVLH1NSjUo8KGBNqxwkJH1RoN9ybG/5ByDGj
- z+3MgcBsOIorRL1988x7xt41pgCUZ+vhRR3tdQYeA0PKpfAvhuWmrPYzUVf8eKQC4hJ8pXRWk
- 3HfVs/vzuRQZJwus3PXDbmchKOTs1KlFNMIbU5Vq01Ae2K7MNHuYE0lnn2hTItAeMOwUIMFmu
- qF11mRdXuNbuhRMmAGiG/5eioNd2xozeg9twpPQAGNXCxP/8i0cxEZcwMVldqeufvLgBdWfIt
- GHTH7nvGC/ngBJQhCue+WxpEGUcswtq0FVfWfuYfxqpeI6XD+aqkYeZyUUvV9Tlw7QxTLqtEE
- 2ZAzcwWSgOifBJYyfu2gPIBeLybzAOW/MednihhhhmW4kmheyAKZdTzZ5ipJ1eTv4JeCS311B
- 7gYcS66NWcMpH9imybbGUyeFHBCTphBn7BFJSld6VkSZKNNWRoxGJ9wifxZV+xyuC+0FVclpX
- p42bMYsY2OqgYBHkDrLLOjhyg/njjTMlRS421AAEJn1rEL5wt7hv4MPN2/HSmDZzfTXU/0k69
- ymNc9uYeqLMqFD2lqliRYeYSab7/3eMr2aLxMXSFu9yjAeZFUMOQSQWzCZZJvpiqWG7XwSEgi
- so01zVQbQFCtrvG5dZwMrHzgEECBLZePwqEMvw==
+X-Provags-ID: V03:K1:ueHq0cRCIAo1fFwSIyE2OQG9Knnqslc/mc2Pd6mGkzSBwQeAWSh
+ qJ9D6svp43z9Gx3F/xTbVSWAy+dqDLwAZO8BpGXmwqVAgU1yMAC36mhFYN0jldSiugWrJte
+ 31rw6BcRyxpqpsKIe0KqWOX0mSAD+SmeM0yl1R/K8FLitvF0JtWylz69g4qFhBl1kfR3GX9
+ owWxvZYRQ0hAo5FKI1aOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:04y7NOSLvhs=:ayvR2CDPLuO9o1tDpp1gEE
+ Iqz9oxoXaMM+DNHFnraJChoHvR9UHM11BWPXNEqts/GtpAspB9xW0O8d1SZOjlHPyfIMIfoY3
+ ay9gsNUVttNVJCTSrxFzwaGpZU2MZ24SI0cKxJi5pPGzAGMIz+zZ/xpEZTKiOe3P+p6g4xz5Y
+ fLgYl66IEKsasdIcCVpAc/zVrvDCi+aEjD2K817h3VQcx0ERN4lwp31m5fX+QiLO3xE1xWyca
+ eSUmtzXw1Fld2I1Iqa9BoSeHZJCCKlUY7bLzCMApBQsT06EIxv4EhLT2ZMMu+24mnCXxz3gUA
+ c9AelG5DWQPRbkND4xuoekINPqAdC/l1IXeCRIIWJ/UdU6cJtw3W+ScHZ1jve3h7FeO6VKn79
+ J8uthO48Wy04Wvq2njXVJy5WyAAXlPQjF4fn+eF4DbqtFJ0J4qe66r4iFCw8v6oUBlvzhOeeE
+ JTKYJW4qVtmWeZS0xBBy5s2pUCbVTS11f58QT2GlgIKlAxX3eP8m/ls39YiY+AWJwLK/jdsJl
+ McHs3OKBHI9dBsQPZ2CHRzma9iQIIpZla03mT4O6FUqZc6xL8HB1o50m6pSlUILa+uCnP2KlM
+ kkH3k3mefLZ89UK+fLVop7HpBX++vgrSXTU6TPDo0mdeEUQ41V1wdRMKllJQ1Waa9RntAKqJ7
+ n7Oqdt59wshwFBwunH1pFeVxnVNXisxA9EgIYXXjHSQF54e1S3NtoE8gseaRqGDFi8awrk9M7
+ 07pQHguhgJJ+0oeCjJ1i1ry1FicniKIldVWoWQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-llvm on s390 has problems with __builtin_return_address(n), with n>0,
-this results in a somewhat cryptic error message:
+clang fails to use the %O and %R inline assembly modifiers
+the same way as gcc, leading to build failures with every use
+of __load_psw_mask():
 
-fatal error: error in backend: Unsupported stack frame traversal count
+/tmp/nmi-4a9f80.s: Assembler messages:
+/tmp/nmi-4a9f80.s:571: Error: junk at end of line: `+8(160(%r11))'
+/tmp/nmi-4a9f80.s:626: Error: junk at end of line: `+8(160(%r11))'
 
-To work around it, use the direct return address directly. This
-is probably not ideal here, but gets things to compile and should
-only lead to inferior reporting, not to misbehavior of the generated
-code.
+Replace these with a more conventional way of passing the addresses
+that should work with both clang and gcc.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=41424
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/s390/include/asm/ftrace.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/include/asm/processor.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-index 5a3c95b11952..7923c63946fb 100644
---- a/arch/s390/include/asm/ftrace.h
-+++ b/arch/s390/include/asm/ftrace.h
-@@ -13,7 +13,12 @@
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index 81038ab357ce..700c650ffd4f 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -339,10 +339,10 @@ static __no_kasan_or_inline void __load_psw_mask(unsigned long mask)
  
- #ifndef __ASSEMBLY__
+ 	asm volatile(
+ 		"	larl	%0,1f\n"
+-		"	stg	%0,%O1+8(%R1)\n"
+-		"	lpswe	%1\n"
++		"	stg	%0,%1\n"
++		"	lpswe	%2\n"
+ 		"1:"
+-		: "=&d" (addr), "=Q" (psw) : "Q" (psw) : "memory", "cc");
++		: "=&d" (addr), "=Q" (psw.addr) : "Q" (psw) : "memory", "cc");
+ }
  
-+#ifdef CONFIG_CC_IS_CLANG
-+/* https://bugs.llvm.org/show_bug.cgi?id=41424 */
-+#define ftrace_return_address(n) __builtin_return_address(0)
-+#else
- #define ftrace_return_address(n) __builtin_return_address(n)
-+#endif
- 
- void _mcount(void);
- void ftrace_caller(void);
+ /*
 -- 
 2.20.0
 
