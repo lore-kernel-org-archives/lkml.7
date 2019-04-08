@@ -2,122 +2,158 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB0FC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9991C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E76C20879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W71iU6HP"
+	by mail.kernel.org (Postfix) with ESMTP id 717DA20879
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554750906;
+	bh=XP8f6UkErQBti+a6Kf6jSIfBEuoaOPaxDWYr0P9+J8Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=OKkR+ndQoPyMpZkyCpqnxLo4NQlTTaeWrxgzc5OQmadgOZgN3TmuZow97lGmUSSee
+	 nNMkVjP+bu9j+NljHZH+wvM8+l0BwzVfVSvC8BiBsn/LCE1SwTdnOm2QoPou1DItsw
+	 VxW/Hb/n6pkT306zbUjo/cgsrRWhfzjLzHaaoXiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbfDHTO4 (ORCPT
+        id S1729081AbfDHTPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:14:56 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:38111 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbfDHTOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:53 -0400
-Received: by mail-lj1-f170.google.com with SMTP id p14so12292365ljg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yb2QTzhusxsvH9pJg14HyaDB+kuXzyas0sFtWi6B7b4=;
-        b=W71iU6HPsihXgv5L1860WJPgZsLYvVkA8bOcaSeW3LrJJzYR4EOy37JnlTthbJM+7r
-         GLeY8h9O1d33qj4U+Xf2H5p5QfnsHOfgS+KI1O3zKKeoPKjKvpu20jmxzR8qqDZAjmvZ
-         0dfZmigx3CVIm+VDKrCrcgIlXck38eqjcZfPiqKmkXaJhbVeAqGsdsLMeq3+XriGQywv
-         zQivVow0En7Z/WHG87A+zLeYP3TKfuRnkBGlENxnJ3GE5CGzv5UeyB3a6XPBmEnXYdDW
-         pKROVmWG2fIRxDU8qnr1++VY5e7ob9ik18PUAh65SJlS1pDyNrd/gUPNRGnoV0abnoQo
-         sDVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yb2QTzhusxsvH9pJg14HyaDB+kuXzyas0sFtWi6B7b4=;
-        b=kDH/Orgept8A3K91soV6C6dM9SRvrE+qrjeQSUEtdAsUGLt1CV8PyaJ22hmYhTukUQ
-         lVkUDC8Yo3smTHEtUIimsHphg/rBvboJbRgvnyTcl47tDyBJS53GL++cqxiSj0dEIGt6
-         qX63xyI6oC4Jtde66PCdXPb833ufb7taQ7ZSG+YZpr2M3zXygc+pf2RTUXLdhXo4ZcO2
-         fgTgOvqLlVHecyLMzjIJTbU5IyJNK6hQ+93fuuYvkrh+vMYd+F6huXzqlQJQIpHbTeYX
-         sk48iI9mtP+7F2PA06zD+3URAfx7POFkO6M9/fdkQT+cytnv+nZQjeo/zO6ObCXR5ZTL
-         xVaQ==
-X-Gm-Message-State: APjAAAVkaKhV5gwYEIXszEUgsHLef4+wHduHnEbS/5bnei3jeePe0vK4
-        s7RgkYIaLH0Dz23iVutScq0=
-X-Google-Smtp-Source: APXvYqw2ZLI2O8n1oUkMJzoNL4L8MydDi61RBfP9q0wk4PAkNxM5qXimFrLXJSNRoeRZh1ofDVtLbA==
-X-Received: by 2002:a2e:5d56:: with SMTP id r83mr17094652ljb.74.1554750891111;
-        Mon, 08 Apr 2019 12:14:51 -0700 (PDT)
-Received: from localhost.localdomain (h-155-4-222-95.NA.cust.bahnhof.se. [155.4.222.95])
-        by smtp.gmail.com with ESMTPSA id r77sm6554494ljb.29.2019.04.08.12.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 12:14:50 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     yamada.masahiro@socionext.com
-Cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] Coccinelle: kstrdup: Fix typo in warning messages
-Date:   Mon,  8 Apr 2019 21:14:32 +0200
-Message-Id: <20190408191432.1269-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Apr 2019 15:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728820AbfDHTOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:39 -0400
+Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E08F21906;
+        Mon,  8 Apr 2019 19:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554750878;
+        bh=XP8f6UkErQBti+a6Kf6jSIfBEuoaOPaxDWYr0P9+J8Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=iY/XJHTTsl4atbrhZB7NMhWahIxIphYE0ccmVNDfOditqsQn5JiAgSonGlQShDiS0
+         paFDkE/ea0pSK22N5geIYzy+1m5bOOHfwwL+07i9ABXr8mJrVSrQGOKw9oKJ4wzhCX
+         BaV/H9Qmy58ntVo0AxfDBr4S/pthXK/VtoaisYiE=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
+        jkacur@redhat.com, bigeasy@linutronix.de,
+        daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
+Subject: [PATCH 12/13] powerpc/pseries/iommu: Use a locallock instead local_irq_save()
+Date:   Mon,  8 Apr 2019 14:14:14 -0500
+Message-Id: <d7bed9f2ba9b6eef76cdcf106d3fc6bd82fddf58.1554737688.git.tom.zanussi@linux.intel.com>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace 'kstrdep' with 'kstrdup' in warning messages.
+4.14.109-rt58-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+------------------
+
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+[ Upstream commit 5c1b4cd70e2ca0c81038b65babe6dc66086322e0 ]
+
+The locallock protects the per-CPU variable tce_page. The function
+attempts to allocate memory while tce_page is protected (by disabling
+interrupts).
+
+Use local_irq_save() instead of local_irq_disable().
+
+Cc: stable-rt@vger.kernel.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- scripts/coccinelle/api/kstrdup.cocci | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/pseries/iommu.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/scripts/coccinelle/api/kstrdup.cocci b/scripts/coccinelle/api/kstrdup.cocci
-index 09cba54ed0cf..6d13d54a6ee6 100644
---- a/scripts/coccinelle/api/kstrdup.cocci
-+++ b/scripts/coccinelle/api/kstrdup.cocci
-@@ -76,7 +76,7 @@ p1 << r1.p1;
- p2 << r1.p2;
- @@
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 7c181467d0ad..4bd046492c60 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -38,6 +38,7 @@
+ #include <linux/of.h>
+ #include <linux/iommu.h>
+ #include <linux/rculist.h>
++#include <linux/locallock.h>
+ #include <asm/io.h>
+ #include <asm/prom.h>
+ #include <asm/rtas.h>
+@@ -213,6 +214,7 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ }
  
--cocci.print_main("WARNING opportunity for kstrdep",p1)
-+cocci.print_main("WARNING opportunity for kstrdup",p1)
- cocci.print_secs("strcpy",p2)
+ static DEFINE_PER_CPU(__be64 *, tce_page);
++static DEFINE_LOCAL_IRQ_LOCK(tcp_page_lock);
  
- @script:python depends on org@
-@@ -84,7 +84,7 @@ p1 << r2.p1;
- p2 << r2.p2;
- @@
+ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 				     long npages, unsigned long uaddr,
+@@ -233,7 +235,8 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 		                           direction, attrs);
+ 	}
  
--cocci.print_main("WARNING opportunity for kstrdep",p1)
-+cocci.print_main("WARNING opportunity for kstrdup",p1)
- cocci.print_secs("memcpy",p2)
+-	local_irq_save(flags);	/* to protect tcep and the page behind it */
++	/* to protect tcep and the page behind it */
++	local_lock_irqsave(tcp_page_lock, flags);
  
- @script:python depends on report@
-@@ -92,7 +92,7 @@ p1 << r1.p1;
- p2 << r1.p2;
- @@
+ 	tcep = __this_cpu_read(tce_page);
  
--msg = "WARNING opportunity for kstrdep (strcpy on line %s)" % (p2[0].line)
-+msg = "WARNING opportunity for kstrdup (strcpy on line %s)" % (p2[0].line)
- coccilib.report.print_report(p1[0], msg)
+@@ -244,7 +247,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+ 		/* If allocation fails, fall back to the loop implementation */
+ 		if (!tcep) {
+-			local_irq_restore(flags);
++			local_unlock_irqrestore(tcp_page_lock, flags);
+ 			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+ 					    direction, attrs);
+ 		}
+@@ -278,7 +281,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+ 		tcenum += limit;
+ 	} while (npages > 0 && !rc);
  
- @script:python depends on report@
-@@ -100,5 +100,5 @@ p1 << r2.p1;
- p2 << r2.p2;
- @@
+-	local_irq_restore(flags);
++	local_unlock_irqrestore(tcp_page_lock, flags);
  
--msg = "WARNING opportunity for kstrdep (memcpy on line %s)" % (p2[0].line)
-+msg = "WARNING opportunity for kstrdup (memcpy on line %s)" % (p2[0].line)
- coccilib.report.print_report(p1[0], msg)
+ 	if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
+ 		ret = (int)rc;
+@@ -436,13 +439,14 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
+ 	u64 rc = 0;
+ 	long l, limit;
+ 
+-	local_irq_disable();	/* to protect tcep and the page behind it */
++	/* to protect tcep and the page behind it */
++	local_lock_irq(tcp_page_lock);
+ 	tcep = __this_cpu_read(tce_page);
+ 
+ 	if (!tcep) {
+ 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+ 		if (!tcep) {
+-			local_irq_enable();
++			local_unlock_irq(tcp_page_lock);
+ 			return -ENOMEM;
+ 		}
+ 		__this_cpu_write(tce_page, tcep);
+@@ -488,7 +492,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
+ 
+ 	/* error cleanup: caller will clear whole range */
+ 
+-	local_irq_enable();
++	local_unlock_irq(tcp_page_lock);
+ 	return rc;
+ }
+ 
 -- 
-2.21.0
+2.14.1
 
