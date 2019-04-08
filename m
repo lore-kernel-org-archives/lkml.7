@@ -2,107 +2,128 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DECC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6761C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D89213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D61B213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1NNcI75"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbUrc8a0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfDHWcs (ORCPT
+        id S1727641AbfDHWdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:32:48 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42887 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfDHWcs (ORCPT
+        Mon, 8 Apr 2019 18:33:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35574 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfDHWdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:32:48 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p6so8089668pgh.9;
-        Mon, 08 Apr 2019 15:32:47 -0700 (PDT)
+        Mon, 8 Apr 2019 18:33:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s39so13179224edb.2;
+        Mon, 08 Apr 2019 15:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=9gURMCfoOgoTkHI/WJj+bRmGByb2rAQnY4p70cixdkM=;
-        b=i1NNcI75+g2upSaeC1/N3mMZXEf5X0ASPgi1UDAZ1IxRbyeo5FdgSnuCx32plocEIb
-         rcEEPo9Q1vH2Q1ZRUyW5jffOTFrAM/KegPvRsExYc3kPbrx5UQm+q/RHChaVu28aK9KF
-         mvAD6jpTEG9ZU7Veh6+2UpZ64h81iu8TKdiqYnDZ1CvFTmd8eoooNgwTSO9Jw5qSk7wJ
-         t1T9cFAVyWCBzkn2jiF65ny+cYWQJLf1u3x5KEFBRinR0NSIz6lXIH6Li2wg/whe2pUu
-         JoqYO0kvX8YV/uyV3vzahAUpnX00OtE6w2n1AcH70z4gigK5OXtDGYspSv5tRPy7+1gL
-         O6NQ==
+        bh=/zZ6MqEe/5u/116LxAogiG2NpDwuN4xleJLV8b87cz0=;
+        b=nbUrc8a0BU8kBk7BiAqI+GrUztZRfylvmbsEGy2QhunADpk8S6VHI4KeKyeubCXPey
+         JYAThEx05tzwJqktCKr5AXks5pt72CQwc1ZV+rBXoj7aOzKGaLMJZU3p28753Yafs20l
+         X97E5lW6eq0Ko9cQ9FJvNzlRw7N2hTZf9ELRHKcVccUbZYzrXYLOUAy7lPCJowOkSJ5p
+         o2th9g491vCpaTCmdtn82IFQgolSl8V6hKLyNRSXafIOyTN4ajsgsMHmpaS2mkS3A4W5
+         NkpYmBW19E7JRqvuzOL0VyA3JXN44btf+RKzeVkL4K6HZuOi6JvsCFSdSu2hVABCvtip
+         ftzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9gURMCfoOgoTkHI/WJj+bRmGByb2rAQnY4p70cixdkM=;
-        b=qe2nHABtVT2fIKliCj+mY56+tTtXWK6BpN59SJSiGQNy/iVhobs0kcGHsKqN4ifiY3
-         9Zx03TcDzFoPqSUPXIsjiS6Gx5LY1f/OKlIgyLGcbz/M35OdERNaoh+bL657tjn4NYWv
-         m2FxphLuL3jzyhIbv51alSLpTNfxB3NMdSlWAlSorRoOfnWlhJTQWftcpM3YrbycqYEg
-         GU57mS5ZyZMv+DOvs6JP2ZkorlPgOAxidpaxKeHOWJn8TWJtMOVoN6XnbZ8xNywqUnHF
-         rkm8kdaH/XmhNawJeVzDXhyUZ+/9Mme/IIuBMRmzjlhSCeYrws23rVbR4Tq85noAiWc5
-         5/ug==
-X-Gm-Message-State: APjAAAVLXMPQ5t2P+PHTHzwTyVPjc1YqX0KrjDeoomWwgb9MaRRCvMgm
-        dvcqxuY7ipL7OfocQm9aJo8=
-X-Google-Smtp-Source: APXvYqzXp5yvcRUDAZ8JYCI+6Q8UQW2R43ki9hg1Qw7iMNcFXU1zZarpGTH+ofkOTCqO+fHHrSEPxg==
-X-Received: by 2002:aa7:938b:: with SMTP id t11mr31966899pfe.67.1554762766686;
-        Mon, 08 Apr 2019 15:32:46 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f22sm3107057pgv.45.2019.04.08.15.32.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 15:32:45 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 15:32:43 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 6/6] Input: add IOC3 serio driver
-Message-ID: <20190408223243.GB200740@dtor-ws>
-References: <20190408142100.27618-1-tbogendoerfer@suse.de>
- <20190408142100.27618-7-tbogendoerfer@suse.de>
- <20190408190218.GA200740@dtor-ws>
- <20190408190842.GS7480@piout.net>
+        bh=/zZ6MqEe/5u/116LxAogiG2NpDwuN4xleJLV8b87cz0=;
+        b=IsHuw2NsQ7wx489+Rrk8SmKZG6YYuroSshxuaBicv8YLuYW2zhFq/m9OCYDa9Ozgat
+         uSHJ/U9jR0wrcjY9Pl66nMFzkaNXs/dfFTvdx/pWXHiOmjYFLUlr2g7vBNU1gc/HJOG4
+         Dhu+TggvOqgjLrVkml7g1cvNBrCNX/v93/ccvkkxCeqMZA5VqvA1Tg7eBFG06G3sLwdB
+         rO4MIcjz3Np2NR89sSuykG5gXMmQm4fZgWctBYLLfmcGy27qTqNHJPebZiPofUeSdczV
+         1oznkInzz+t9WcfLuKf+45QPO1Wp6M7Ncg2/my/oG6XFjMsAlBUmI4UebDNXR5zh9kDD
+         BdIA==
+X-Gm-Message-State: APjAAAWSoIpG3q3zZDhazxZX3oY5d4YX34rbVLq3+Q12B1gLsysRn8DC
+        OOfkYEXUdNgcwsrEgs2pDMI=
+X-Google-Smtp-Source: APXvYqzuW+JJsI1VWkZ+AGhsrCWk95sE/CyjQtzQBT+s2LjM0DSs4PigHK5NmdET+ntFXS/geYZ22Q==
+X-Received: by 2002:a50:a4aa:: with SMTP id w39mr20865551edb.206.1554762817169;
+        Mon, 08 Apr 2019 15:33:37 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id w58sm9213684edd.69.2019.04.08.15.33.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Apr 2019 15:33:36 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 15:33:34 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/12] s390: ctcm: fix ctcm_new_device error return code
+Message-ID: <20190408223334.GD18333@archlinux-i9>
+References: <20190408212648.2407234-1-arnd@arndb.de>
+ <20190408212648.2407234-6-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408190842.GS7480@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190408212648.2407234-6-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 09:08:42PM +0200, Alexandre Belloni wrote:
-> On 08/04/2019 12:02:18-0700, Dmitry Torokhov wrote:
-> > > +MODULE_AUTHOR("Stanislaw Skowronek <skylark@unaligned.org>");
-> > > +MODULE_DESCRIPTION("SGI IOC3 serio driver");
-> > > +MODULE_LICENSE("GPL");
-> > 
-> > "GPL v2" to match SPDX header?
-> > 
+On Mon, Apr 08, 2019 at 11:26:19PM +0200, Arnd Bergmann wrote:
+> clang points out that the return code from this function is
+> undefined for one of the error paths:
 > 
-> I've been told this is not true:
+> ../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
+>       [-Wsometimes-uninitialized]
+>                 if (priv->channel[direction] == NULL) {
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
+>         return result;
+>                ^~~~~~
+> ../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
+>                 if (priv->channel[direction] == NULL) {
+>                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
+>         int result;
+>                   ^
 > 
-> https://lore.kernel.org/linux-rtc/371999940784dbd281669122c3027805ab0ecfd9.camel@perches.com/
+> Make it return -ENODEV here, as in the related failure cases.
+> gcc has a known bug in underreporting some of these warnings
+> when it has already eliminated the assignment of the return code
+> based on some earlier optimization step.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Ah, great, nevermind then.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Thanks.
-
--- 
-Dmitry
+> ---
+>  drivers/s390/net/ctcm_main.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+> index 7617d21cb296..f63c5c871d3d 100644
+> --- a/drivers/s390/net/ctcm_main.c
+> +++ b/drivers/s390/net/ctcm_main.c
+> @@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
+>  		if (priv->channel[direction] == NULL) {
+>  			if (direction == CTCM_WRITE)
+>  				channel_free(priv->channel[CTCM_READ]);
+> +			result = -ENODEV;
+>  			goto out_dev;
+>  		}
+>  		priv->channel[direction]->netdev = dev;
+> -- 
+> 2.20.0
+> 
