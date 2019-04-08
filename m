@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBADC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB0BC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DB72148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E7A21841
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gz2yzpBF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYZEMZFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfDHVnT (ORCPT
+        id S1727164AbfDHVnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:43:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41667 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfDHVnO (ORCPT
+        Mon, 8 Apr 2019 17:43:20 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36315 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfDHVnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:43:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so12614235lja.8;
-        Mon, 08 Apr 2019 14:43:13 -0700 (PDT)
+        Mon, 8 Apr 2019 17:43:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so888106ljg.3;
+        Mon, 08 Apr 2019 14:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rbgUHGjL1xlbhm4c7TA1e007Ia4N5yQjhJSCjSQrlG4=;
-        b=Gz2yzpBFmZKAVC3+G4MSMz9MbVA6uZZz81GdKDIQjv2OLQa5OJgapvd/gWAoBN/W3N
-         d5c/eacu7gHMpO8hDJ/6rSaRjLjvxqqA0XY2DrqFiiBr367oX3sS7y5y0GaSK9xUbnGD
-         K0Y/q6X8Bnu67LGPv/vrGWRR8lTdKX/sCtqdWWDGVOSDDkexs3VlWDwVDH8Y/xPoZW8/
-         /D6jFuIYw5geVquOTVdQUWouhxHvDCI8X2jL8UXcaPo61hIWAi74fCrdo+G8aRZxPzKv
-         lZsl3F+jSolFiWISXm+qBAwtOQ6fXmcV1Q0gOcIFTiW6lizXlKi5JADSSsGTe5uZnCZn
-         2l9A==
+        bh=ina1sug/tV7DpNodQARtmW1O98Az5HmyxzHtxFz5C9Q=;
+        b=rYZEMZFg+74Q9FodscmpozPnMJuIdLHxCJndLHe2yscN20QYNhLv/YdqkTQS+tG1i4
+         thcQYHx9arols07rgNbhTqeur93BE8OVhWgFYmn/pu6gF2U8Kr3ONa1kFw97n75JDlF/
+         k7wq0tJS5yHvzIzsAuojmP4zHKmKBVf5bxJA3AUMiRJcx79eJCyxo8uTT9U43cL9oRYA
+         8XqXQfwnGNBT9fzIGFErRQkzkDK3djby9+vo7euW3e3vwW7v1JkAHaPzBMq22biqcumC
+         n4FvK9aBgth/X3uaEMBdHE+xmwNPGAaLjKuIGN2bsoRiOnzknJE7KSn5sJdIENdwqxEB
+         xp1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rbgUHGjL1xlbhm4c7TA1e007Ia4N5yQjhJSCjSQrlG4=;
-        b=Pzw9vsDbZJrfmQq38ya/ZSgYj1uy8phXcZsj3jBZRM6zcTpBqEa9iUod0orYhcyCci
-         HVixrrQuBcqowsob3CrpBkUe+zHdRw2G0mPdqFsuMyi+5ah1vc3MyoghJ/f+c83GYota
-         ZVBMKeEJWJV+EIPJqXhVn1WpIiyPFuAtS64zftOy4hlB8xAqCj4RabhWrfockv2bSrVT
-         +ZzX3GOQChRm3RpPtHSLq5jxCHzWFccGITdhHtrROqnm8DXOwtirr/DfLHU80oxupS9e
-         QXEXfa3O4of9SmG0gyC6qlnehsiH53m9nmJAwkw2Cd1h3U2040O6jAqoEGPn7D+Fd40/
-         Cw4A==
-X-Gm-Message-State: APjAAAVpgao5xRKbVjrlZdmja+7h2IcLWG7V+XKCEwUPur/jdfC7V5Ur
-        1AZpo/Tlyo97Ah9p3zTUVGo=
-X-Google-Smtp-Source: APXvYqwaLCRlql5xhgTnrM13tvT/qr8vUX1h+Jj5AJzgIpGqjFfKxlqRPG/MhURFuNZ16uthFe+Vzw==
-X-Received: by 2002:a2e:3803:: with SMTP id f3mr18200964lja.165.1554759792252;
-        Mon, 08 Apr 2019 14:43:12 -0700 (PDT)
+        bh=ina1sug/tV7DpNodQARtmW1O98Az5HmyxzHtxFz5C9Q=;
+        b=W8OA242bo0aP+RRg/9/1y3C2aRlGJBupnffYCAFGhSEkLBTw0odxgOf5VOX8EevIEH
+         kjUE+wt5QMtSwNpZnyjGEi9YVmMGmNngBUL8ILBp2HE5ojPEuksalBtU0XnlQjq4KzKv
+         PnnjVkdcoYCiJXeA84ONsqZMBme6hUIC35Q1I30zGz3MCI3XQ5km365QrjycnoDeUfTc
+         CiLy8/kT0lI1Bok73kZo6oum031LzwEHjaUFnQtqtx8hYyFMnzFootD6VA7Iq3IMwLNW
+         NggZUoRTJwz9qzZ2VZFQoeK5k7Gshc7fTnYw5Nv7wD+D9dC2yyBUPC2PQfv5+1ogpnkE
+         biyg==
+X-Gm-Message-State: APjAAAXf4XgpuuvN4IsFshFkZCy1dw8nZzfU6xnPEz7Gjl4sEJSa+Pzv
+        ksjb9GqPVpeyGr838LU/yTE=
+X-Google-Smtp-Source: APXvYqxUKZ8HkAowwwJVw6qY9IRGO66+uJ1o+tPgFTPL4mO4y/5S4k1evlo5zb2J0WPbkIvVRf7FYw==
+X-Received: by 2002:a2e:9ec3:: with SMTP id h3mr1550336ljk.131.1554759793535;
+        Mon, 08 Apr 2019 14:43:13 -0700 (PDT)
 Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id j6sm5286048ljc.0.2019.04.08.14.43.11
+        by smtp.gmail.com with ESMTPSA id j6sm5286048ljc.0.2019.04.08.14.43.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 14:43:11 -0700 (PDT)
+        Mon, 08 Apr 2019 14:43:12 -0700 (PDT)
 From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Hans Verkuil <hans.verkuil@cisco.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH 05/14] media: ov6650: Fix unverified arguments accepted by .enum_mbus_code()
-Date:   Mon,  8 Apr 2019 23:42:33 +0200
-Message-Id: <20190408214242.9603-6-jmkrzyszt@gmail.com>
+Subject: [PATCH 06/14] media: ov6650: Fix unverified pad IDs accepted by .get/set_selectioon()
+Date:   Mon,  8 Apr 2019 23:42:34 +0200
+Message-Id: <20190408214242.9603-7-jmkrzyszt@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190408214242.9603-1-jmkrzyszt@gmail.com>
 References: <20190408214242.9603-1-jmkrzyszt@gmail.com>
@@ -75,49 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ebcff5fce6b1 ("[media] v4l2: replace enum_mbus_fmt by
-enum_mbus_code") converted a former ov6650_enum_fmt() video operation
-callback to an ov6650_enum_mbus_fmt() pad operation callback.  However,
-the function dees not verify correctness of code->which flag and pad
-config pointer arguments.  Fix it.
+Commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
+converted former ov6650_g/s_crop() video operation callbacks to
+ov6650_get/set_selection() pad operation callbacks.  However, the new
+functions don't verify correctness of pad IDs passed in user arguments.
+Fix it.
 
-Even if the function has no need to dereference the pad config pointer
-argument, return -EINVAL if it is NULL on V4L2_SUBDEV_FORMAT_TRY.
+Even if pad ID arguments are not actually used in those functions,
+assumed to be 0, always return -EINVAL if an operation on an invalid
+(non-zero) pad is requested by a user.
 
-Fixes: ebcff5fce6b1 ("[media] v4l2: replace enum_mbus_fmt by enum_mbus_code")
+Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 Cc: stable@vger.kernel.org
 ---
- drivers/media/i2c/ov6650.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov6650.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 5c1738c5a847..d72fcf56930a 100644
+index d72fcf56930a..5df81dec06ae 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -737,7 +737,21 @@ static int ov6650_enum_mbus_code(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_mbus_code_enum *code)
- {
--	if (code->pad || code->index >= ARRAY_SIZE(ov6650_codes))
-+	if (code->pad)
+@@ -444,6 +444,9 @@ static int ov6650_get_selection(struct v4l2_subdev *sd,
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct ov6650 *priv = to_ov6650(client);
+ 
++	if (sel->pad)
 +		return -EINVAL;
 +
-+	switch (code->which) {
-+	case V4L2_SUBDEV_FORMAT_ACTIVE:
-+		break;
-+	case V4L2_SUBDEV_FORMAT_TRY:
-+		if (cfg)
-+			break;
-+		/* fall through */
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (code->index >= ARRAY_SIZE(ov6650_codes))
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
  		return -EINVAL;
  
- 	code->code = ov6650_codes[code->index];
+@@ -471,6 +474,9 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ 	struct v4l2_rect rect = sel->r;
+ 	int ret;
+ 
++	if (sel->pad)
++		return -EINVAL;
++
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
+ 		return -EINVAL;
 -- 
 2.21.0
 
