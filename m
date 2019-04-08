@@ -2,209 +2,137 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E9C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CC4C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBDA20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F0420833
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 18:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TElP45/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfDHSkX (ORCPT
+        id S1728725AbfDHSlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 14:40:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57736 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbfDHSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 14:40:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 465C6307D91F;
-        Mon,  8 Apr 2019 18:40:22 +0000 (UTC)
-Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A596F6402B;
-        Mon,  8 Apr 2019 18:40:12 +0000 (UTC)
-Subject: Re: Thoughts on simple scanner approach for free page hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
- <01d5f4e8-742b-33f5-6d91-0c7c396d1cfc@redhat.com>
- <CAKgT0UfbVS2iupbf4Dfp91PAdgHNHwZ-RNyL=mcPsS_68Ly_9Q@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <ef4c219f-6686-f5f6-fd22-d1da0b1720f3@redhat.com>
-Date:   Mon, 8 Apr 2019 20:40:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 8 Apr 2019 14:41:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34773 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726625AbfDHSlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 14:41:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y6so7834843plt.1;
+        Mon, 08 Apr 2019 11:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ak5oe05a/Wjim9Pmg5/vpEGktaM5SyuHiXmryKJDbkw=;
+        b=TElP45/yjYFHg11Apky2Q6oUIW4P8zgxqvxcv+IxyzwdimfurEFksLKl+Ls3IjVK8W
+         A1tddO7pC4CpSKAqQZ76E7gMmXLhmF5XoRycJE7uo2r6yhRjrhvNde1VHtBv5tuEXrYd
+         GuTeuZzPQW0EI23XCmD0lHl3ccYJvDHjDUuy5FK0cXnCTc/Fm8XbSccPJxnn6lyN6jem
+         EpefDMHXW2ro+y4XC97Qx27aYmq8WpsBD9dYGPqjAqK7mynhYmdJTUSVa/n93c0ZcMEW
+         KOjMPLjf8JuLP1b7TcS1v4DZxS4nDllBsQtSdgLc0M2xXPpUethtBcu7SrNKmKEZ15mI
+         GPcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ak5oe05a/Wjim9Pmg5/vpEGktaM5SyuHiXmryKJDbkw=;
+        b=YskkDrEIsu7yEEY9ud3bw1B7L0rAFk+clC18qnU/Pkb8pPwQEVKskEougN0b//wTvR
+         QdsdIIxsxw71/qeaUzS6l1Pt/T0Wmzu0XhHrQsWtqXYSCxXKFA40lINFl9Qdj3AEEHVx
+         r6nXPHqHhZCPtLdjQsBIvNTOLpqPIT1cay5rWQV7c2djBiNorL/dJWA68VCRYdZJGhyq
+         yp1/TntQt3YiZAdr5tArNNLCTiuqBQrntb96chDbKGWYPeGSsVKgGczvvYE6b70EXONe
+         ggKH0u3su7a4CBl7T1o1R2EQoG0wHZA4P1DYVaAZJadeusl7ixrhTcKlvkud3oW8Ujae
+         jFkg==
+X-Gm-Message-State: APjAAAW7glIlpUQBPeUUqj2+Pnoq4LOkD7IqCh8W49QtzKohvf2qnOlh
+        hix2Dx3PzGiHMvXllpsEVulorOZ9JwjQCU4MXrk=
+X-Google-Smtp-Source: APXvYqzo6g4f1UiVbNqnMDIvRcK/+NVeKuSGx3EU9EH+MCQgpZyju/93ybghN/VkGXFHyKOOAjUy0t6Cw/J3CbmdLMA=
+X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr32187919plb.155.1554748879362;
+ Mon, 08 Apr 2019 11:41:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfbVS2iupbf4Dfp91PAdgHNHwZ-RNyL=mcPsS_68Ly_9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 08 Apr 2019 18:40:22 +0000 (UTC)
+References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
+ <20190405203558.19160-2-rajatja@google.com> <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
+ <CACK8Z6FGFiS_jN_5ctWmjKbrcUyjGkV0MsVs7_2TsaS7UAoydA@mail.gmail.com>
+In-Reply-To: <CACK8Z6FGFiS_jN_5ctWmjKbrcUyjGkV0MsVs7_2TsaS7UAoydA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Apr 2019 21:41:07 +0300
+Message-ID: <CAHp75Ve9zq2MWbiHhNV6RSV8xgmWQdqaMi=UdE7RFiZ9QgmH5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Evan Green <evgreen@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>
->>> In addition we will need some way to identify which pages have been
->>> hinted on and which have not. The way I believe easiest to do this
->>> would be to overload the PageType value so that we could essentially
->>> have two values for "Buddy" pages. We would have our standard "Buddy"
->>> pages, and "Buddy" pages that also have the "Offline" value set in the
->>> PageType field. Tracking the Online vs Offline pages this way would
->>> actually allow us to do this with almost no overhead as the mapcount
->>> value is already being reset to clear the "Buddy" flag so adding a
->>> "Offline" flag to this clearing should come at no additional cost.
->>
->> Just nothing here that this will require modifications to kdump
->> (makedumpfile to be precise and the vmcore information exposed from the
->> kernel), as kdump only checks for the the actual mapcount value to
->> detect buddy and offline pages (to exclude them from dumps), they are
->> not treated as flags.
->>
->> For now, any mapcount values are really only separate values, meaning
->> not the separate bits are of interest, like flags would be. Reusing
->> other flags would make our life a lot easier. E.g. PG_young or so. But
->> clearing of these is then the problematic part.
->>
->> Of course we could use in the kernel two values, Buddy and BuddyOffline.
->> But then we have to check for two different values whenever we want to
->> identify a buddy page in the kernel.
-> 
-> Actually this may not be working the way you think it is working.
+On Mon, Apr 8, 2019 at 9:36 PM Rajat Jain <rajatja@google.com> wrote:
+> On Mon, Apr 8, 2019 at 10:02 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
 
-Trust me, I know how it works. That's why I was giving you the notice.
+> > Perhaps something like
+> >
+> > pmcdev->check_counters = false;
+> > /* User doesn't want to be warned */
+> > if (!warn_on...)
+> >  return 0;
+> > /* We do suspend via firmware */
+> > if (...)
+> >  return 0;
+> > ...
+> >
+> > ?
+>
+> I guess what you mean is one conditional per line. Sure, I will do that.
 
-Read the first paragraph again and ignore the others. I am only
-concerned about makedumpfile that has to be changed.
+Yes
 
-PAGE_OFFLINE_MAPCOUNT_VALUE
-PAGE_BUDDY_MAPCOUNT_VALUE
+> > > +static inline bool pc10_failed(struct pmc_dev *pmcdev)
+> >
+> > To be or not to be? :-)
+> > Perhaps names of the functions should be
+> >
+> > pmc_code_is_pc10_failed()
+> >
+> > and so on
+>
+> I think the suggestion is to use pmc_core_* as the function names. OK,
+> I will rename the functions to:
+>
+> pmc_core_pc10_failed()
+> and
+> pmc_core_s0ix_failed()
 
-Once you find out how these values are used, you should understand what
-has to be changed and where.
+And verb "to be". See above.
 
->>>
->>> Lastly we would need to create a specialized function for allocating
->>> the non-"Offline" pages, and to tweak __free_one_page to tail enqueue
->>> "Offline" pages. I'm thinking the alloc function it would look
->>> something like __rmqueue_smallest but without the "expand" and needing
->>> to modify the !page check to also include a check to verify the page
->>> is not "Offline". As far as the changes to __free_one_page it would be
->>> a 2 line change to test for the PageType being offline, and if it is
->>> to call add_to_free_area_tail instead of add_to_free_area.
->>
->> As already mentioned, there might be scenarios where the additional
->> hinting thread might consume too much CPU cycles, especially if there is
->> little guest activity any you mostly spend time scanning a handful of
->> free pages and reporting them. I wonder if we can somehow limit the
->> amount of wakeups/scans for a given period to mitigate this issue.
-> 
-> That is why I was talking about breaking nr_free into nr_freed and
-> nr_bound. By doing that I can record the nr_free value to a
-> virtio-balloon specific location at the start of any walk and should
-> know exactly now many pages were freed between that call and the next
-> one. By ordering things such that we place the "Offline" pages on the
-> tail of the list it should make the search quite fast since we would
-> just be always allocating off of the head of the queue until we have
-> hinted everything int he queue. So when we hit the last call to alloc
-> the non-"Offline" pages and shut down our thread we can use the
-> nr_freed value that we recorded to know exactly how many pages have
-> been added that haven't been hinted.
-> 
->> One main issue I see with your approach is that we need quite a lot of
->> core memory management changes. This is a problem. I wonder if we can
->> factor out most parts into callbacks.
-> 
-> I think that is something we can't get away from. However if we make
-> this generic enough there would likely be others beyond just the
-> virtualization drivers that could make use of the infrastructure. For
-> example being able to track the rate at which the free areas are
-> cycling in and out pages seems like something that would be useful
-> outside of just the virtualization areas.
+> > Can't we utilize existing print helpers?
+>
+> I didn't quite see any existing print helpers in this file. I took
+> this code from pmc_core_slps0_dbg_show(), and I think although I can
+> abstract out this code into a static function, the calling code need
+> to use seq_printf(s,...) and dev_warn(dev,...) respectively. - so
+> might be overkill (did not feel that the benefits were worth it).
+> Please let me know if you have any suggestions and will be happy to
+> use them.
 
-Might be, but might be the other extreme, people not wanting such
-special cases in core mm. I assume the latter until I see a very clear
-design where such stuff has been properly factored out.
-
-> 
->> E.g. in order to detect where to queue a certain page (front/tail), call
->> a callback if one is registered, mark/check pages in a core-mm unknown
->> way as offline etc.
->>
->> I still wonder if there could be an easier way to combine recording of
->> hints and one hinting thread, essentially avoiding scanning and some of
->> the required core-mm changes.
-> 
-> The concern I have with trying to avoid the scanning by tracking is
-> that if you fall behind it becomes something where just tracking the
-> metadata for the page hints would start to become expensive.
-
-Depends, if it is mostly only marking a bit in a bitmap, it should in
-general not be too much of an issue. As usual, the datastructure used is
-the important bit.
+Instead of adding module parameter and doing these prints, perhaps
+introduce another debugfs node.
 
 -- 
-
-Thanks,
-
-David / dhildenb
+With Best Regards,
+Andy Shevchenko
