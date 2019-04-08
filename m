@@ -2,75 +2,68 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF80AC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9362EC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB7C20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:08:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="wvktmTqo"
+	by mail.kernel.org (Postfix) with ESMTP id 61BD1214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554732541;
+	bh=Dk0wePsmzGllGLI1Tfcx9rPsXy1gIkozkBirqlGseWI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=owUzzK4cYmnzqo6yHs1WgwZ1S+OOr8RmVriUS2FR4BQyUlfZdKlC3vbTN7eLSqLIj
+	 KwsfdPDWWPZ5oX2sbrJPWcqs5k+OSmzmWaFpZDEr5xZPTjHFmGobN5cpPWRt4cqGUK
+	 747iV+Kc6S4tmfZNPyYtj0su5JOBWDrzWvLPrQeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfDHOIo (ORCPT
+        id S1726952AbfDHOJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:08:44 -0400
-Received: from mail-pg1-f172.google.com ([209.85.215.172]:34742 "EHLO
-        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfDHOIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:08:43 -0400
-Received: by mail-pg1-f172.google.com with SMTP id v12so7409601pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zF+WAgdXstfJGx28YvwgdyT0+OmlWLncurQnEu5QHcs=;
-        b=wvktmTqoZyiIktbZlJ/uX5dLTj/YCveTyukLRs4iCsDVBZ8ntlSkBQ0gNt/nUJhKul
-         4jcjBKYdEo77dEyfOg8459AVSZ0KQCbovfaBUND44svTKlHApt7sHdo4Fz9bm6ybVTnx
-         fZM4Q+LG/egJy6djWldQsVVmz95kdwFJAZz7OvNPNt/iSrvXJHkZef3+G6A1tHO0nKCo
-         NuG2rbg0ewvryjqW6MA8kZGoVVajyhgvaV4N53/zl9C3Cnnqf0n4APGbYxeo2JgvAHoD
-         IkyL4DSLTzuQSKYVqLD7suZhhcsA7ed+EWmK0b0fn3A+MVCAIqs2n1kC/Krpy2qkhEbr
-         RPvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zF+WAgdXstfJGx28YvwgdyT0+OmlWLncurQnEu5QHcs=;
-        b=aP7+Ca2NDanR0zBmxYgbwne+iGVMEYKydXZFSWxNy5Eb+b+wBV+HjXl2ODNLHqm4+z
-         p1CbvhB6JSp6kTt7azuhADhvaKgtIK73Q1GLfudAbVnNSZC9pWfxdfhJsKciExG7PiMR
-         GeZzs8coN3yXV6Rt6aKkHjJJ4DnswppE6dIFFMaXYLuAah5X7jDdom+8LOmmkHiQd5Ln
-         tBzhdfFz7aKtqBw4nFrdYXLPWlg/QlbCpJ8HPhlXVxXygtOMP717zdqxJ7Fglg0Wkb1V
-         nc20ulO9xLfrSF6/7tYJa4d88AOU+lo5ElcvjJoN9ceq5McCJ/VmJ4i5POJs7oTC8p+R
-         Y7bw==
-X-Gm-Message-State: APjAAAUcVDulnd5VxdTmvXmN9LiY4j50oUbci7Sn4pSpbCcSapi2pkof
-        SVAd9jWXBhpd50lXNLGLJBURaQ==
-X-Google-Smtp-Source: APXvYqxFK96T5IWKcan85n860h0JHEQlFVUHe9LfLmkMPM7UUmZtXvQjnPzFjimgwSoIazu1BmHqxw==
-X-Received: by 2002:a62:6c6:: with SMTP id 189mr2627548pfg.36.1554732522919;
-        Mon, 08 Apr 2019 07:08:42 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id y5sm34468379pgv.15.2019.04.08.07.08.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 07:08:41 -0700 (PDT)
-Subject: Re: [PATCH 1/1] virtio_blk: replace 0 by HCTX_TYPE_DEFAULT to index
- blk_mq_tag_set->map
-To:     Dongli Zhang <dongli.zhang@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, jasowang@redhat.com
-References: <1552354316-20204-1-git-send-email-dongli.zhang@oracle.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <22ed96be-fa8c-a30b-980c-9777afbfcae6@kernel.dk>
-Date:   Mon, 8 Apr 2019 08:08:39 -0600
+        Mon, 8 Apr 2019 10:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfDHOI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:08:59 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A7D20883;
+        Mon,  8 Apr 2019 14:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554732538;
+        bh=Dk0wePsmzGllGLI1Tfcx9rPsXy1gIkozkBirqlGseWI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Tv32B8r2m+6I5xTkRHUX3FvYOtI0iAgHan3EAuI0NjqImBbNIl1HuxL1+RpM52zQI
+         fK+sSEziXWpnLWa6DdnVGzkoNMS+zJFLg5rxj0r4VhrANl5AWsCjNg2BKXBzaqA4Oi
+         OVVNfig/rbcrhgHzIeAVqsakJIldJFpa3dSb5gH8=
+Subject: Re: [PATCH v4 0/6] lib/string: Add strscpy_pad() function
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190405015859.32755-1-tobin@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3d1bc44f-313b-5a58-3492-b706d9510d34@kernel.org>
+Date:   Mon, 8 Apr 2019 08:08:45 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1552354316-20204-1-git-send-email-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190405015859.32755-1-tobin@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,11 +71,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/19 7:31 PM, Dongli Zhang wrote:
-> Use HCTX_TYPE_DEFAULT instead of 0 to avoid hardcoding.
+On 4/4/19 7:58 PM, Tobin C. Harding wrote:
+> Hi Shua,
+> 
+> Here is the set with cleanup as suggested by Kees on v3.
+> 
+> Configured, built, and tested all modules loaded by
+> tools/testing/selftests/lib/*.sh
+> 
+>>From previous cover letters ...
+> 
+> While doing the testing for strscpy_pad() it was noticed that there is
+> duplication in how test modules are being fed to kselftest and also in
+> the test modules themselves.
+> 
+> This set makes an attempt at adding a framework to kselftest for writing
+> kernel test modules.  It also adds a script for use in creating script
+> test runners for kselftest.  My macro-foo is not great, all criticism
+> and suggestions very much appreciated.  The design is based on test
+> modules lib/test_printf.c, lib/test_bitmap.c, lib/test_xarray.c.
+> 
+> Changes since last version:
+> 
+>   - Remove dependency on Bash (thanks Kees)
+>   - Use oneliner to implement kselftest test runners (thanks Kees)
+>   - Squash patch that adds kselftest script creator script with patch
+>     that uses it.
+>   - Fix typos (thanks Randy)
+>   - Add Kees' Acked-by tags to all patches
+> 
+> thanks,
+> Tobin.
+> 
+> 
 
-Applied, thanks.
+Hi Tobin,
 
--- 
-Jens Axboe
+Thanks for this restructuring work and adding the framework. Thanks Kees
+for the reviews.
 
+The patch is series in now in linux-kselftest next for 5.2
+
+thanks,
+-- Shuah
