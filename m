@@ -2,91 +2,92 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B57C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC84C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C6B2147A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554740295;
-	bh=7Nu9QXvcI0vEF10mrCEynsPN8ROv6UmoVrwf8Folv9w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VEyyX2BlXxIICL3HAx3qx4oQ4ODAZ88/6TsWWO9WKhIc+rWlZtir/6A7DUxnQnekV
-	 gmGQ/cz2TvYZJsJHsCnAintiE2jmFejjUADjPgg+TAFVJINen43kduNsbbcR4UduNm
-	 tOiADi3wOKsn2/toC6hEGH4TZRUDGmta0AtKD9OE=
+	by mail.kernel.org (Postfix) with ESMTP id 0A2F92147A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:21:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iyGBERBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfDHQSO (ORCPT
+        id S1728442AbfDHQVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbfDHQSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 12:18:13 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1C5521874
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2019 16:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554740293;
-        bh=7Nu9QXvcI0vEF10mrCEynsPN8ROv6UmoVrwf8Folv9w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UV4jNJDky2SjzQFhe1zoqjj57aiUKZ7K27mCBSIReawC/43mWhYpKymoWXrR9UJBA
-         gHKcuyuPhMsYAV7h/MJUkdWvsVv2jzAc87Kun+n6P43Bs/Mhf6WvL0SMEh8eUK8aBB
-         RYQLncI67mSplO1metmFZ6ibUX6oADCVv3wD+elo=
-Received: by mail-wr1-f48.google.com with SMTP id k17so17092581wrx.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 09:18:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAVdJBsDFBXUuFdkH5GFMucozcw8SFHUFsotmPVmZ6m3NZFm3bIJ
-        cJ3081BzX11YObqrWnod0SLx938dXv5E0EJFE7perA==
-X-Google-Smtp-Source: APXvYqyzggfHsIweLj7oq9QZYJ+zvKZpBvd4p6ctMbSXrs9DIRmjrj9d9ZXl6wdgEo/SKMcXu2nVjgrxNC8gBexykag=
-X-Received: by 2002:adf:efc1:: with SMTP id i1mr19176947wrp.199.1554740291374;
- Mon, 08 Apr 2019 09:18:11 -0700 (PDT)
+        Mon, 8 Apr 2019 12:21:22 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:32867 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbfDHQVW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 12:21:22 -0400
+Received: by mail-it1-f194.google.com with SMTP id v8so384767itf.0;
+        Mon, 08 Apr 2019 09:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3+ALvzkw2MlVDdVtF7B/3XBzAdAmSRxZaOAezn8/f0A=;
+        b=iyGBERBHOT/R298RzohGko7w7fQKNP00f1hDBFJM/gS4CU1XcZ27v4JFzg5dy1lA5k
+         BNWfUhEpGervaxx8mQDHDHBEFMU0lJs9js0xYWKF+OiRPvffY9MfqGDPen3InCTBR/hr
+         On1ocwD3rig6XLmPrnDuTbCk0X+whbqI1pGC1bkkLjTELqvKUdKvnYmWVHZ4F4tF9Qmb
+         2OvubAZPN8Toosx6oLfBbdXE6fwot7kalbu08dlXNia4i7AEiHiEopPaUo4H854r5IFD
+         oCA+XGQ9qhcbA7Xj70ry2boRdMkQGTZ2fvoPzjUGZNqE4mix/oXL3TJ/sSQNW7n6GOWZ
+         QFDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3+ALvzkw2MlVDdVtF7B/3XBzAdAmSRxZaOAezn8/f0A=;
+        b=YZ1mdfN32Mlug7jbry/A++RbmPWqlrzrt/paZTSI1ZfiU/G06mDl58x0hbn7um82/R
+         bm0ZciT6T/tajYojd7onh4AB5Fy9hAkMXqx+3cwQcTyDuAgfVUwFacyrm1+/l/HRTWo7
+         m/2yCRadJgQp7fbLk/Jj0Y8zF/svkNt/EMhDnYLnoGFqRxWeiCx/fO18Yep2cpCIkAAq
+         zpcix0/mtrxX3gf/Ahgb4M3e9n1QbIUTA1g4oycnQgrFegV8YSCLru8kwvhMxm+dIW9S
+         KmR2KXLl2QTxdK7NCQsVfWHRWaB+GDC5rBImv6O0TPKwZIMDRChZHErHenM77GkuI0sk
+         ql8w==
+X-Gm-Message-State: APjAAAVsV8w/GybzsHneaf2Rc9g/He9zJ4qLE0RcToChAB649Mos0bdn
+        V3C6/3KxjVkD/C+2d1nQJVmh8SHK+HjrDjDURgo=
+X-Google-Smtp-Source: APXvYqzY2eS5L9/JEabSQilfuMukwFPgFXioQ6ZsmH+hQf0tKiWhm8tWwpxT4FFy+0bLn1wM8w9gjiWiNSgJ4ixsCEA=
+X-Received: by 2002:a24:56c7:: with SMTP id o190mr21890168itb.120.1554740481013;
+ Mon, 08 Apr 2019 09:21:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190405150658.237064784@linutronix.de> <20190405150930.967389183@linutronix.de>
- <CALCETrWF_YgQODJ=Rpm2MnhFxJXCfoo4H792hUQni0GS9on7og@mail.gmail.com>
- <alpine.DEB.2.21.1904080043390.1840@nanos.tec.linutronix.de>
- <CALCETrXyfEu5MHCDp+OiRdHcYQ1tMNhTMSxcAhWkOx_8r2rxsA@mail.gmail.com> <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904080839480.1840@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 8 Apr 2019 09:18:00 -0700
-X-Gmail-Original-Message-ID: <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
-Message-ID: <CALCETrX_Pyo-H8H2feZz1+hiz_E99ZqVBqb+xvZfZ+gvFGL5gw@mail.gmail.com>
-Subject: Re: [patch V2 28/29] x86/irq/64: Remap the IRQ stack with guard pages
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20190329115544.GA27351@linux.intel.com> <alpine.LRH.2.21.1903300540530.2240@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1903300540530.2240@namei.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 8 Apr 2019 09:21:09 -0700
+Message-ID: <CAA9_cmdyERPGwz-S3XuyJXnYrHM5V1fb_BCf_NS_kgQdN-YS=A@mail.gmail.com>
+Subject: Re: [GIT PULL] tpmdd fixes for Linux v5.1
+To:     James Morris <jmorris@namei.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 7, 2019 at 11:46 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, Mar 29, 2019 at 11:42 AM James Morris <jmorris@namei.org> wrote:
 >
-> On Sun, 7 Apr 2019, Andy Lutomirski wrote:
-> > On Sun, Apr 7, 2019 at 3:44 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > Actually we have: save_stack_trace()
-> > >
+> On Fri, 29 Mar 2019, Jarkko Sakkinen wrote:
+>
+> > Hi James,
 > >
-> > Like I did here:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=WIP.x86/stackguards
+> > These are critical fixes for v5.1. Contains also couple of new selftests for
+> > v5.1 features (partial reads in /dev/tpm0). I hope these could still reach
+> > the release. Thanks.
 >
-> Kinda, but what that code wants is to skip any entry before 'caller'. So we
-> either add something like save_stack_trace_from() which is trivial on x86
-> because unwind_start() already has an argument to hand in the start of
-> stack or we filter out the entries up to 'caller' in that code.
->
->
+> Applied to
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-tpm
 
-Whoops!
+Hi James,
 
-I could add a save_stack_trace_from() or I could add a "caller"
-argument to struct stack_trace.  Any preference as to which looks
-better?  The latter seems a little nicer to me.
+Friendly ping on when might this go to Linus?
+
+I was hoping that 3d0b1a381f6e ("KEYS: trusted: allow trusted.ko to
+initialize w/o a TPM") would have hit -rc4. The NVDIMM subsystem has
+been broken since -rc1.
