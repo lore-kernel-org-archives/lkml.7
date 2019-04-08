@@ -2,186 +2,205 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AACC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F4CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331E520879
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="lcXjvX2h"
+	by mail.kernel.org (Postfix) with ESMTP id CF58520880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 04:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbfDHEVO (ORCPT
+        id S1726189AbfDHEbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 00:21:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34713 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfDHEVO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 00:21:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b3so6819574pfd.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 21:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=HLyGtSvUMet/S5RgCgXDemVbE9lWzPHB3e2/ltMkfyQ=;
-        b=lcXjvX2hF+Dowgl73lOMd4N+KKRbna2ZdQeEjf6Z/DWhma4V/zfzyKSGkHy6inOpoH
-         1NH4hd94qOFGkl8BfyIaCzhU8G6bEKNgNBkegx2HUDwLSVZhPmRXF+IOPmwTSeqJeye/
-         8hLyNW7Y+pFxowiDGASt1HkKRu8EcivB3Hqs42Tgh79fld+hnwejoC5xoYHAYSsVKKyN
-         GtcH2fCrnTlrUq9FCoo2owvfsJObozsGGYA9QlK+WckmF72XKmJSDObNM0sDQi8wEpJ8
-         6236sqiI0BxrrajVBpuGcxQv3RhYc+seBZt6F9LySr62JTWZf5NamcmECReDv+nxH6Wj
-         +opA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HLyGtSvUMet/S5RgCgXDemVbE9lWzPHB3e2/ltMkfyQ=;
-        b=SPpiAlFxeP+ZBDbB6tzx0Dy14rkZN/DFtClmFGZTkwlLq36CLvPhg1xDv4mUkSANhe
-         IHJDx6y5ajwqGysqabRitARe2dxXuM5kcy/jjVrZQb2NvkIlbwyoUWvBVLafH8zzCqHM
-         Sy/YYKgInRGzxNLZPTgcEU4/iKIp5QXw1Ue8RylWy+urIDBf0Wy+wynhsDTj9tqcJB6w
-         +sMPYt+p+qvZ9UcvZFkTZN+lg1tq43YobIahFz6+EXfHDYeBqVDnlEN0WX09sVuLZEuB
-         8HySWFhtH+dLhtnsHtjr9nQx8Sry4qenQxNzM7mvD76V0c+FlHIbVQENLzK8hruue+Aw
-         HYpQ==
-X-Gm-Message-State: APjAAAVensqLkPEgIb6FOjRIyHMU6Py2iPfK2H6xacrtU9C1n9MsX0Im
-        nwut3LQfwsje4xBPV0INF9B45g==
-X-Google-Smtp-Source: APXvYqxiO8j18SUVqvPZizIqaw4Lvd66wBqmd7z4kzYiLdvzogjseb+IkAHISbZZD2pPiA8clQXgSw==
-X-Received: by 2002:a63:c104:: with SMTP id w4mr26426338pgf.409.1554697273134;
-        Sun, 07 Apr 2019 21:21:13 -0700 (PDT)
-Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
-        by smtp.gmail.com with ESMTPSA id x28sm24840248pgl.38.2019.04.07.21.21.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 07 Apr 2019 21:21:12 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     andriy.shevchenko@intel.com, mika.westerberg@linux.intel.com,
-        heikki.krogerus@linux.intel.com
-Cc:     drake@endlessm.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
-Date:   Mon,  8 Apr 2019 12:21:03 +0800
-Message-Id: <20190408042103.3804-1-chiu@endlessm.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Mon, 8 Apr 2019 00:31:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:40914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfDHEbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 00:31:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D55E15AD;
+        Sun,  7 Apr 2019 21:31:32 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EE0C3F718;
+        Sun,  7 Apr 2019 21:31:29 -0700 (PDT)
+Subject: Re: [PATCH v8 4/9] KVM: arm/arm64: preserve host HCR_EL2 value
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+ <1554172037-4516-5-git-send-email-amit.kachhap@arm.com>
+ <20190405110229.GR3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <8066f634-b2e0-33c3-a6f4-4f38729b3f86@arm.com>
+Date:   Mon, 8 Apr 2019 10:01:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190405110229.GR3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The touchpad of the ASUS laptops E403NA, X540NA, X541NA are not
-responsive after suspend/resume. The following error message
-shows after resume.
- i2c_hid i2c-ELAN1200:00: failed to reset device.
+Hi,
 
-On these laptops, the touchpad interrupt is connected via a GPIO
-pin which is controlled by Intel pinctrl. After system resumes,
-the GPIO is in ACPI mode and no longer works as an IRQ.
+On 4/5/19 4:32 PM, Dave Martin wrote:
+> On Tue, Apr 02, 2019 at 07:57:12AM +0530, Amit Daniel Kachhap wrote:
+>> From: Mark Rutland <mark.rutland@arm.com>
+>>
+>> When restoring HCR_EL2 for the host, KVM uses HCR_HOST_VHE_FLAGS, which
+>> is a constant value. This works today, as the host HCR_EL2 value is
+>> always the same, but this will get in the way of supporting extensions
+>> that require HCR_EL2 bits to be set conditionally for the host.
+>>
+>> To allow such features to work without KVM having to explicitly handle
+>> every possible host feature combination, this patch has KVM save/restore
+>> for the host HCR when switching to/from a guest HCR. The saving of the
+>> register is done once during cpu hypervisor initialization state and is
+>> just restored after switch from guest.
+>>
+>> For fetching HCR_EL2 during kvm initialisation, a hyp call is made using
+>> kvm_call_hyp and is helpful in non-VHE case.
+>>
+>> For the hyp TLB maintenance code, __tlb_switch_to_host_vhe() is updated
+>> to toggle the TGE bit with a RMW sequence, as we already do in
+>> __tlb_switch_to_guest_vhe().
+>>
+>> The value of hcr_el2 is now stored in struct kvm_cpu_context as both host
+>> and guest can now use this field in a common way.
+>>
+>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>> [Added cpu_init_host_ctxt, hcr_el2 field in struct kvm_cpu_context,
+>> save hcr_el2 in hyp init stage]
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index a01fe087..3b09fd0 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -209,6 +209,8 @@ struct kvm_cpu_context {
+>>   		u32 copro[NR_COPRO_REGS];
+>>   	};
+>>   
+>> +	/* HYP host/guest configuration */
+>> +	u64 hcr_el2;
+> 
+> Minor nit: You could delete "host/guest" from the comment here.  This is
+> implied by the fact that the member is in struct kvm_cpu_context in the
+> first place.
+ok. Agree with you.
+> 
+>>   	struct kvm_vcpu *__hyp_running_vcpu;
+>>   };
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+>> index 3563fe6..f5cefa1 100644
+>> --- a/arch/arm64/kvm/hyp/switch.c
+>> +++ b/arch/arm64/kvm/hyp/switch.c
+> 
+> [...]
+> 
+>> @@ -159,9 +159,10 @@ static void deactivate_traps_vhe(void)
+>>   }
+>>   NOKPROBE_SYMBOL(deactivate_traps_vhe);
+>>   
+>> -static void __hyp_text __deactivate_traps_nvhe(void)
+>> +static void __hyp_text __deactivate_traps_nvhe(struct kvm_cpu_context *host_ctxt)
+> 
+> Where __hyp_text functions accept pointer arguments, they are usually
+> hyp pointers already...  (see below)
+> 
+>>   {
+>>   	u64 mdcr_el2 = read_sysreg(mdcr_el2);
+>> +	struct kvm_cpu_context *hyp_host_ctxt = kern_hyp_va(host_ctxt);
+>>   
+>>   	__deactivate_traps_common();
+>>   
+>> @@ -169,25 +170,28 @@ static void __hyp_text __deactivate_traps_nvhe(void)
+>>   	mdcr_el2 |= MDCR_EL2_E2PB_MASK << MDCR_EL2_E2PB_SHIFT;
+>>   
+>>   	write_sysreg(mdcr_el2, mdcr_el2);
+>> -	write_sysreg(HCR_HOST_NVHE_FLAGS, hcr_el2);
+>> +	write_sysreg(hyp_host_ctxt->hcr_el2, hcr_el2);
+>>   	write_sysreg(CPTR_EL2_DEFAULT, cptr_el2);
+>>   }
+>>   
+>>   static void __hyp_text __deactivate_traps(struct kvm_vcpu *vcpu)
+>>   {
+>> +	struct kvm_cpu_context *host_ctxt;
+>> +
+>> +	host_ctxt = vcpu->arch.host_cpu_context;
+> 
+> host_ctxt is not otherwise used here, so can we convert it up-front so
+> that the argument to __deactivate_traps_nvhe() and
+> deactivate_traps_vhe() is a hyp pointer already?
+> 
+> So:
+> 
+> 	struct kvm_cpu_context *hyp_host_ctxt;
+> 
+> 	hyp_host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> 
+>>   	/*
+>>   	 * If we pended a virtual abort, preserve it until it gets
+>>   	 * cleared. See D1.14.3 (Virtual Interrupts) for details, but
+>>   	 * the crucial bit is "On taking a vSError interrupt,
+>>   	 * HCR_EL2.VSE is cleared to 0."
+>>   	 */
+>> -	if (vcpu->arch.hcr_el2 & HCR_VSE)
+>> -		vcpu->arch.hcr_el2 = read_sysreg(hcr_el2);
+>> +	if (vcpu->arch.ctxt.hcr_el2 & HCR_VSE)
+>> +		vcpu->arch.ctxt.hcr_el2 = read_sysreg(hcr_el2);
+>>   
+>>   	if (has_vhe())
+>> -		deactivate_traps_vhe();
+>> +		deactivate_traps_vhe(host_ctxt);
+>>   	else
+>> -		__deactivate_traps_nvhe();
+>> +		__deactivate_traps_nvhe(host_ctxt);
+> 
+> Then just pass hyp_host_ctxt to both of these, and drop the
+> kern_hyp_va() conversion from __deactivate_traps_nvhe().
+> 
+> This may be a bit less confusing.
+Yes your explanation makes sense.
+> 
+> Alternatively, just pass in the vcpu pointer (since this pattern is
+> already well established all over the place).
+I think passing vcpu as parameter will make it consistent with other 
+existing functions. __kvm_vcpu_run_nvhe function also takes vcpu and 
+extracts hyp_host_ctxt.
+> 
+> Another option could be to pull the hcr_el2 write out of the backends
+> entirely and put it in this common code instead.  This doesn't look
+> straightforward though (or at least, I don't remember enough about how
+> all these traps handling functions fit together...)
+ok.
 
-This commit saves the HOSTSW_OWN value during suspend, make sure
-the HOSTSW_OWN mode remains the same after resume.
-
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 50 ++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 8cda7b535b02..3930819049c4 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -81,6 +81,7 @@ struct intel_pad_context {
- 
- struct intel_community_context {
- 	u32 *intmask;
-+	u32 *hostown;
- };
- 
- struct intel_pinctrl_context {
-@@ -1284,7 +1285,7 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 
- 	for (i = 0; i < pctrl->ncommunities; i++) {
- 		struct intel_community *community = &pctrl->communities[i];
--		u32 *intmask;
-+		u32 *intmask, *hostown;
- 
- 		intmask = devm_kcalloc(pctrl->dev, community->ngpps,
- 				       sizeof(*intmask), GFP_KERNEL);
-@@ -1292,6 +1293,13 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 			return -ENOMEM;
- 
- 		communities[i].intmask = intmask;
-+
-+		hostown = devm_kcalloc(pctrl->dev, community->ngpps,
-+				       sizeof(*hostown), GFP_KERNEL);
-+		if (!hostown)
-+			return -ENOMEM;
-+
-+		communities[i].hostown = hostown;
- 	}
- 
- 	pctrl->context.pads = pads;
-@@ -1503,6 +1511,10 @@ int intel_pinctrl_suspend(struct device *dev)
- 		base = community->regs + community->ie_offset;
- 		for (gpp = 0; gpp < community->ngpps; gpp++)
- 			communities[i].intmask[gpp] = readl(base + gpp * 4);
-+
-+		base = community->regs + community->hostown_offset;
-+		for (gpp = 0; gpp < community->ngpps; gpp++)
-+			communities[i].hostown[gpp] = readl(base + gpp * 4);
- 	}
- 
- 	return 0;
-@@ -1529,6 +1541,28 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
- 	}
- }
- 
-+static u32
-+intel_gpio_is_requested(struct gpio_chip *chip, int base, unsigned int size)
-+{
-+	u32 requested = 0;
-+	unsigned int i;
-+
-+	for (i = 0; i < size; i++)
-+		if (gpiochip_is_requested(chip, base + i))
-+			requested |= BIT(i);
-+
-+	return requested;
-+}
-+
-+static void
-+intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
-+{
-+	u32 curr = readl(hostown);
-+	u32 updated = (curr & ~mask) | (value & mask);
-+
-+	return writel(updated, hostown);
-+}
-+
- int intel_pinctrl_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
-@@ -1588,6 +1622,20 @@ int intel_pinctrl_resume(struct device *dev)
- 			dev_dbg(dev, "restored mask %d/%u %#08x\n", i, gpp,
- 				readl(base + gpp * 4));
- 		}
-+
-+		base = community->regs + community->hostown_offset;
-+		for (gpp = 0; gpp < community->ngpps; gpp++) {
-+			const struct intel_padgroup *padgrp = &community->gpps[gpp];
-+			u32 requested = 0;
-+
-+			if (padgrp->gpio_base < 0)
-+				continue;
-+
-+			requested = intel_gpio_is_requested(&pctrl->chip,
-+					padgrp->gpio_base, padgrp->size);
-+			intel_gpio_update_pad_mode(base + gpp * 4, requested,
-+					communities[i].hostown[gpp]);
-+		}
- 	}
- 
- 	return 0;
--- 
-2.21.0
-
+Thanks,
+Amit D
+> 
+> [...]
+> 
+> Cheers
+> ---Dave
+> 
