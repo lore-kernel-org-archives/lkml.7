@@ -2,122 +2,141 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDC6C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912BC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B069520818
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C5720818
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 14:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqXoDnxM"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Q+7dFksf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfDHOf6 (ORCPT
+        id S1727190AbfDHOgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 10:35:58 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39554 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfDHOf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 10:35:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z9so1122201lfh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 07:35:56 -0700 (PDT)
+        Mon, 8 Apr 2019 10:36:41 -0400
+Received: from mail-eopbgr730081.outbound.protection.outlook.com ([40.107.73.81]:64688
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726564AbfDHOgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 10:36:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vJJdncPS/fbDD3g3BxkMZoOWsWQ0Y/n0jjwJo4sSka4=;
-        b=BqXoDnxMeqtJ4JEPGdLqFfB4KXY0b38QBQFBWbCHW3RTGT9NxY8FqJXk5YLiupZKBw
-         UUs+pf2wrCs8K43/q9J/tpJtXF/pZUlVuv6LkKiG4WY2+UZak5oHEHmnNImssOdCCx4o
-         GQPrg/08TAMUdcFqkbjUxHT/zUVDXmikQ57bcZuOax/vRVfqZhAw+48OacX8EiLnayPN
-         u9QrfZDRdY7rO/omd90f21n6nYJ1hOrvNqGu+N2ony/S6Fe28sntZ+0KHeFDuxwPbEKY
-         Yhhln56jrKnGqxD20WPFwTF2hmwxnAkByQlvgpFqb+MMio++Owon2BPJFKqyEx5a7mKX
-         hR6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vJJdncPS/fbDD3g3BxkMZoOWsWQ0Y/n0jjwJo4sSka4=;
-        b=ckCDEPRM7QdpCxwqLjyLF5TBn6AfsxMzolINKHmJCJCFyKy7H3b3/QmkY+vWxwZp8G
-         w/xvOvziADRN+gSHTYR9FxkscbRYgj6KGFxprCY/T4i2UX4xV1n7f3vEf9gzT583YcJN
-         TtLz4B2Uu4eQ0FAdfXd0ZAjA74B6GaV0eYueZ3RoLlq8PaY46i5fRh+jwjhOutm0/a/U
-         9Wxtwz9QubpQE/KsPbghPqB5gYIOBgGa4mjr+CmTedWOxmBvSTIbkktyfmv3WF55n70L
-         cRniCvBgX30bF9I7M0RYBTkLvTDkc6bicLF09JvGUoutUnaNDKuqMaE0lR7LH9vCw4Uq
-         dd9A==
-X-Gm-Message-State: APjAAAVOhEALTksTWrziwn7sJRYPqmewJHT115AMXfR36f9B8ECDJBkx
-        u45c15DyQdvebv8sy+alJ28ztrUrljw=
-X-Google-Smtp-Source: APXvYqxRK9FEMnNsxQnQkJE279IHQHK6uywmuZMynkoK0hOwqUSKAZMXbz6tqKrKz9fro3ZRRo/+5A==
-X-Received: by 2002:ac2:561c:: with SMTP id v28mr3872799lfd.125.1554734156131;
-        Mon, 08 Apr 2019 07:35:56 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id c17sm1389028lfj.58.2019.04.08.07.35.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 07:35:55 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id C066A46090D; Mon,  8 Apr 2019 17:35:54 +0300 (MSK)
-Date:   Mon, 8 Apr 2019 17:35:54 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Andrey Vagin <avagin@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linuxfoundation.org>
-Subject: [PATCH -next] prctl: Fix false positive in validate_prctl_map
-Message-ID: <20190408143554.GY1421@uranus.lan>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kOeQK7Y7TTOPaGVrtyMWVGg/mDyyvUNP1UOMIdN01yU=;
+ b=Q+7dFksf2FUaKwxeNN9H7e+WQwZzkQglQaceHfZDlMPXou8egrUiUwz3YxUFgm67P5Zf0zYSRWpgCZR3K9sq+6KDY2QRbqZJ4We+Z76ez9SArGGAxDU1z3bCiykNuVcePXNqoPDwqDrQHWi44MFs6C8ngePQJWdWoWMzJ/JkHhM=
+Received: from CY4PR02CA0026.namprd02.prod.outlook.com (2603:10b6:903:117::12)
+ by SN1PR02MB2015.namprd02.prod.outlook.com (2a01:111:e400:7be7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.16; Mon, 8 Apr
+ 2019 14:36:35 +0000
+Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by CY4PR02CA0026.outlook.office365.com
+ (2603:10b6:903:117::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16 via Frontend
+ Transport; Mon, 8 Apr 2019 14:36:35 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1771.16
+ via Frontend Transport; Mon, 8 Apr 2019 14:36:35 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hDVNy-0006Nm-U9; Mon, 08 Apr 2019 07:36:34 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hDVNt-0006En-QF; Mon, 08 Apr 2019 07:36:29 -0700
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x38EaJ18021891;
+        Mon, 8 Apr 2019 07:36:19 -0700
+Received: from [172.30.17.111]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1hDVNi-0006D0-Oz; Mon, 08 Apr 2019 07:36:18 -0700
+Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+To:     Alan Tull <atull@kernel.org>, Nava kishore Manne <navam@xilinx.com>
+CC:     Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kishore m <chinnikishore369@gmail.com>
+References: <20190402123123.915-1-nava.manne@xilinx.com>
+ <20190402123123.915-4-nava.manne@xilinx.com>
+ <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+ <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
+ <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <d425bd61-238b-f085-f450-d052349878a8@xilinx.com>
+Date:   Mon, 8 Apr 2019 16:36:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(346002)(2980300002)(199004)(189003)(2616005)(229853002)(6246003)(11346002)(305945005)(110136005)(54906003)(6636002)(126002)(47776003)(50466002)(31696002)(64126003)(446003)(356004)(426003)(6666004)(106002)(476003)(65826007)(336012)(36756003)(36386004)(186003)(81156014)(2870700001)(478600001)(76176011)(4326008)(9786002)(8676002)(81166006)(8936002)(2906002)(77096007)(93886005)(26005)(65956001)(486006)(65806001)(58126008)(316002)(4744005)(5660300002)(23676004)(31686004)(2486003)(106466001)(53546011)(63266004)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR02MB2015;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 009283da-d1a3-4e3c-f53c-08d6bc2f9a3b
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4709054)(2017052603328);SRVR:SN1PR02MB2015;
+X-MS-TrafficTypeDiagnostic: SN1PR02MB2015:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <SN1PR02MB20153CCA4CECE95BC616773FC62C0@SN1PR02MB2015.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0001227049
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: TN0yURDSr2wc5/AXHD4O5SFWJWdhj9/hzdWe6x3ec0YkiowMY+Gl+onywCWN6aYqN46Jp7ZCHMNFDTi80QZWWqWwCEASxoBfP3a9o1/pJRqvpHzAuItxLREZPEQaspyfnWJCxCFnt8QvO6vwU4ACwWgF7rQ21Rud/vSMJA/d3+g0TmW/UORnNO6q5TqRtABhvbEvCNoWPSJlcn+naa5cS9ouAM5IOAEEGi5E3/xMwo4B8+YZyXszlfszQXdE2u7RRSbkM4lWiuWWlrASVE5K8tB0TLNnf9+Y3JkT2VG08V27abbtzkDp0C0riXzyT77z9R4ubOqDM1K/Va5hU7KFG8nJX8lAOYtmkeS/c/P+x1Fxky8uItUHGO7QrgozArc6dkyjtdnBbSMmROT2grcObDKV7DrKKAEN+yRPilN0oMI=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2019 14:36:35.3356
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 009283da-d1a3-4e3c-f53c-08d6bc2f9a3b
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR02MB2015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While validating new map we require the @start_data to be strictly less
-than @end_data, which is fine for regular applications (this is why this
-nit didn't trigger for that long). These members are set from executable
-loaders such as elf halders, still it is pretty valid to have a loadable
-data section with zero size in file, in such case the start_data is equal
-to end_data once kernel loader finishes.
+On 08. 04. 19 16:17, Alan Tull wrote:
+> On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> wrote:
+>>
+>> Hi Alan,
+>>
+>> Thanks for look into it and providing the ACK.
+>> I got one minor comments from Moritz Fischer do you want me fix that issue now or I can fix it later as it’s a minor comment?
+> 
+> Please fix for Moritz comment.
+> 
+>> In which kernel version i can expect this driver changes??
+> 
+> Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
+> thing, it's drivers/firmware.
 
-In result when we'are trying to restore such program the procedure fails
-and kernel returns -EINVAL. From the image dump of a program:
+I can take it via arm-soc guys if you are ok with that.
+Just need to have your ack in commits.
+We have done it like this several times, IIRC reset, nvmem.
 
- | "mm_start_code": "0x400000",
- | "mm_end_code": "0x8f5fb4",
- | "mm_start_data": "0xf1bfb0",
- | "mm_end_data": "0xf1bfb0",
-
-Thus we need to change validate_prctl_map from strictly less to less or
-equal operator use.
-
-Fixes: f606b77f1a9e362451aca8f81d8f36a3a112139e
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-CC: Andrey Vagin <avagin@gmail.com>
-CC: Dmitry Safonov <0x7f454c46@gmail.com>
-CC: Pavel Emelyanov <xemul@virtuozzo.com>
-CC: Andrew Morton <akpm@linuxfoundation.org>
----
-I don't consider this issue as a critical one, since it triggered first
-time for in more than 4 years period (and report came from a proprietary
-program).
-
- kernel/sys.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: linux-next.git/kernel/sys.c
-===================================================================
---- linux-next.git.orig/kernel/sys.c
-+++ linux-next.git/kernel/sys.c
-@@ -1924,7 +1924,7 @@ static int validate_prctl_map(struct prc
- 	((unsigned long)prctl_map->__m1 __op				\
- 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
- 	error  = __prctl_check_order(start_code, <, end_code);
--	error |= __prctl_check_order(start_data, <, end_data);
-+	error |= __prctl_check_order(start_data,<=, end_data);
- 	error |= __prctl_check_order(start_brk, <=, brk);
- 	error |= __prctl_check_order(arg_start, <=, arg_end);
- 	error |= __prctl_check_order(env_start, <=, env_end);
+Thanks,
+Michal
