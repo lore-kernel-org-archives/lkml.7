@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF4AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9D5C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2274C20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08EF20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 21:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfDHVbR (ORCPT
+        id S1728078AbfDHVbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 17:31:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:59935 "EHLO
+        Mon, 8 Apr 2019 17:31:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:34471 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfDHVbO (ORCPT
+        with ESMTP id S1726836AbfDHVbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 17:31:14 -0400
+        Mon, 8 Apr 2019 17:31:15 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mv3I0-1gvwTg0DAW-00r1Bs; Mon, 08 Apr 2019 23:28:48 +0200
+ 1N9dbx-1gsJJO1ZYr-015ddJ; Mon, 08 Apr 2019 23:29:31 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>
@@ -30,72 +30,79 @@ Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] s390: make __load_psw_mask work with clang
-Date:   Mon,  8 Apr 2019 23:26:22 +0200
-Message-Id: <20190408212648.2407234-9-arnd@arndb.de>
+        Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/12] [PROBABLY WRONG] s390: void '0' constraint in inline assembly
+Date:   Mon,  8 Apr 2019 23:26:25 +0200
+Message-Id: <20190408212648.2407234-12-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190408212648.2407234-1-arnd@arndb.de>
 References: <20190408212648.2407234-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ueHq0cRCIAo1fFwSIyE2OQG9Knnqslc/mc2Pd6mGkzSBwQeAWSh
- qJ9D6svp43z9Gx3F/xTbVSWAy+dqDLwAZO8BpGXmwqVAgU1yMAC36mhFYN0jldSiugWrJte
- 31rw6BcRyxpqpsKIe0KqWOX0mSAD+SmeM0yl1R/K8FLitvF0JtWylz69g4qFhBl1kfR3GX9
- owWxvZYRQ0hAo5FKI1aOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:04y7NOSLvhs=:ayvR2CDPLuO9o1tDpp1gEE
- Iqz9oxoXaMM+DNHFnraJChoHvR9UHM11BWPXNEqts/GtpAspB9xW0O8d1SZOjlHPyfIMIfoY3
- ay9gsNUVttNVJCTSrxFzwaGpZU2MZ24SI0cKxJi5pPGzAGMIz+zZ/xpEZTKiOe3P+p6g4xz5Y
- fLgYl66IEKsasdIcCVpAc/zVrvDCi+aEjD2K817h3VQcx0ERN4lwp31m5fX+QiLO3xE1xWyca
- eSUmtzXw1Fld2I1Iqa9BoSeHZJCCKlUY7bLzCMApBQsT06EIxv4EhLT2ZMMu+24mnCXxz3gUA
- c9AelG5DWQPRbkND4xuoekINPqAdC/l1IXeCRIIWJ/UdU6cJtw3W+ScHZ1jve3h7FeO6VKn79
- J8uthO48Wy04Wvq2njXVJy5WyAAXlPQjF4fn+eF4DbqtFJ0J4qe66r4iFCw8v6oUBlvzhOeeE
- JTKYJW4qVtmWeZS0xBBy5s2pUCbVTS11f58QT2GlgIKlAxX3eP8m/ls39YiY+AWJwLK/jdsJl
- McHs3OKBHI9dBsQPZ2CHRzma9iQIIpZla03mT4O6FUqZc6xL8HB1o50m6pSlUILa+uCnP2KlM
- kkH3k3mefLZ89UK+fLVop7HpBX++vgrSXTU6TPDo0mdeEUQ41V1wdRMKllJQ1Waa9RntAKqJ7
- n7Oqdt59wshwFBwunH1pFeVxnVNXisxA9EgIYXXjHSQF54e1S3NtoE8gseaRqGDFi8awrk9M7
- 07pQHguhgJJ+0oeCjJ1i1ry1FicniKIldVWoWQ==
+X-Provags-ID: V03:K1:/523MLjqVgMjdMMdQozji7Pa+uMzu03WWSDDICQXvB4QKMS7Oow
+ 9r92BFyrTb5IKqo1HqDs52BLOY0TZ34uTbd8FSYI5IhCSrurBij39jiW27O7q2vFzUWCJ23
+ elyG7wQt33TnJbV51kEZPkWhZIIO6JuCn1H+FlnbnWoAktIs8mz1tmSX6s160zvESOXMw0V
+ 1KIRwvFEYpMyU78lDufcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZMEZuQtfJXc=:napCevtCoaEVls+FA1p7Nd
+ oPgvXre3cFbpqmvHA+X9zsd1K6q9Ee2tX83v0ihEpDjRrJScc5RWLO8LFfDJ0nTTt2E3qB3HZ
+ 7GkU5qokZFJCJ4UrqV3Q1xN8AOVlr4/bhWp5/XEmCySQKid/nXLMkKGXFVGNd29C9d3Jo3wyo
+ 63h4qAfdeI+pUkvaQLdAZQLLfoZ333gJu/cz9tVYzspOzYWnX1D4iFfTIVIyioqspcTsqJ50G
+ gQR3JXOhj1bs7xsRkcxWQMtzcCFaNnGc/XnIAbLuHlGGdEE77eyq3+6JPLHnqYV3tDEyRUguI
+ m4DZFIV4Q7Gbtik9Q4qgotfKeaASZ9n59QH39gZkbZcgNR45JVV2WVtEGiX8YQPzVTGo0mVB1
+ 1crcMlDZDFQD5hpogwjeVTKnhN/nhK3bfF9uZgR01dYbW/RAhQbt9+miA0icdwtGNLEU+nxGE
+ r9Vz+FbMvburIaZhlkLPZiQsyPhlJ5/oh3lzOQJA3H+Mwzsq1o7PKnFPqZy8qIiKwWExrOvoT
+ wDl4hOOmHwS89E1ZiMN0u1+lr9TMC86mx6HSbXknCjnd1MB+Y7YPcTVkVgj/g1GN1lDgI3731
+ 7RcVcIVwDneHToETNWj3oCsSwYrAAfF6cmpl9MdAEeGE2/3zqMrhjveB5pnDht/edORPLkUYj
+ GHtyzg3mbMuHhA2ME6d/j7krG9YYNJqB+1ZYDev47QNp9ZX+TEwVo3TQRt0LEOzjBZj4nPsVx
+ /3zSAih3T9KK3ziT/lWLO8ECzndgjZn+QrMPrQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang fails to use the %O and %R inline assembly modifiers
-the same way as gcc, leading to build failures with every use
-of __load_psw_mask():
+clang does not understand the contraint "0" in the CALL_ON_STACK()
+macro:
 
-/tmp/nmi-4a9f80.s: Assembler messages:
-/tmp/nmi-4a9f80.s:571: Error: junk at end of line: `+8(160(%r11))'
-/tmp/nmi-4a9f80.s:626: Error: junk at end of line: `+8(160(%r11))'
+../arch/s390/mm/maccess.c:117:10: error: invalid input constraint '0' in asm
+                return CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack,
+                       ^
+../arch/s390/include/asm/processor.h:292:20: note: expanded from macro 'CALL_ON_STACK'
+                  [_fn] "X" (fn) CALL_FMT_##nr : CALL_CLOBBER_##nr);    \
+                                 ^
+<scratch space>:207:1: note: expanded from here
+CALL_FMT_3
+^
+../arch/s390/include/asm/processor.h:267:20: note: expanded from macro 'CALL_FMT_3'
+ #define CALL_FMT_3 CALL_FMT_2, "d" (r4)
+                   ^
+../arch/s390/include/asm/processor.h:266:20: note: expanded from macro 'CALL_FMT_2'
+ #define CALL_FMT_2 CALL_FMT_1, "d" (r3)
+                   ^
+../arch/s390/include/asm/processor.h:265:32: note: expanded from macro 'CALL_FMT_1'
+ #define CALL_FMT_1 CALL_FMT_0, "0" (r2)
+                               ^
 
-Replace these with a more conventional way of passing the addresses
-that should work with both clang and gcc.
+I don't know what the correct fix here would be, changing it to "d" made
+it build, since clang does understand this one.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/s390/include/asm/processor.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/s390/include/asm/processor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
-index 81038ab357ce..700c650ffd4f 100644
+index 700c650ffd4f..84c59c99668a 100644
 --- a/arch/s390/include/asm/processor.h
 +++ b/arch/s390/include/asm/processor.h
-@@ -339,10 +339,10 @@ static __no_kasan_or_inline void __load_psw_mask(unsigned long mask)
+@@ -262,7 +262,7 @@ static __no_kasan_or_inline unsigned short stap(void)
+ 	register unsigned long r4 asm("6") = (unsigned long)(arg5)
  
- 	asm volatile(
- 		"	larl	%0,1f\n"
--		"	stg	%0,%O1+8(%R1)\n"
--		"	lpswe	%1\n"
-+		"	stg	%0,%1\n"
-+		"	lpswe	%2\n"
- 		"1:"
--		: "=&d" (addr), "=Q" (psw) : "Q" (psw) : "memory", "cc");
-+		: "=&d" (addr), "=Q" (psw.addr) : "Q" (psw) : "memory", "cc");
- }
- 
- /*
+ #define CALL_FMT_0
+-#define CALL_FMT_1 CALL_FMT_0, "0" (r2)
++#define CALL_FMT_1 CALL_FMT_0, "d" (r2)
+ #define CALL_FMT_2 CALL_FMT_1, "d" (r3)
+ #define CALL_FMT_3 CALL_FMT_2, "d" (r4)
+ #define CALL_FMT_4 CALL_FMT_3, "d" (r5)
 -- 
 2.20.0
 
