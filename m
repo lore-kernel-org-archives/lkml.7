@@ -2,88 +2,96 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A42C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F9DC10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090CD20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4401320883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 12:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eosgU5hi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbfDHMto (ORCPT
+        id S1726623AbfDHMuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 08:49:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47324 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHMto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 08:49:44 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B7FC89C45;
-        Mon,  8 Apr 2019 12:49:44 +0000 (UTC)
-Received: from treble (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF8BB3DA4;
-        Mon,  8 Apr 2019 12:49:42 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 07:49:40 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Elena Reshetova <elena.reshetova@intel.com>
-Cc:     luto@kernel.org, linux-kernel@vger.kernel.org, luto@amacapital.net,
-        keescook@chromium.org, jannh@google.com, enrico.perla@intel.com,
-        mingo@redhat.com, bp@alien8.de, tglx@linutronix.de,
-        peterz@infradead.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190408124940.hb4d2mvwue7aydjj@treble>
-References: <20190408061358.21288-1-elena.reshetova@intel.com>
+        Mon, 8 Apr 2019 08:50:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46568 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHMut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 08:50:49 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r25so801721lfn.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 05:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kObOSXeLNarr4A7JyCeGDmf2Aqlc+AnUxoBbHSTRZHQ=;
+        b=eosgU5hidfriIgdzaffD+gEjxqfYzI3r3ZsjYh7VmHGSIrCKhE0HubpIvm4G6Q66JC
+         RmlZkX8thltFNhRW7qB2FRiv6rWE0gDjg9utnyKd97Nrj6YKU5tepS45ju+O4mnVeU5s
+         la/UeY1gCcgYSVlcA9mdEjGXHp42yRzQfi6eA5qUweC3RNJ8cBsI9uQLWnp0lEJEgKqi
+         /hYnBQmrRh3WqiIsdSSqkRy5/WCC7nM/M9OMMudpC0ndIklTQmbpRJVj4LSvmJ/638Mx
+         IIwgPo2M19TUfc0yd4ZllxLYHmUqp5oBXEjATgeE0LjILu/Y97JPmRGWjy6zhwWwaJqY
+         0HMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kObOSXeLNarr4A7JyCeGDmf2Aqlc+AnUxoBbHSTRZHQ=;
+        b=s03bodLGXnY5oZclGuRzRYBq5e6e93BUPQdanMjeL41m/iAntSRPq4RSUPOV3w1KOJ
+         i1DxGbcEwE4sxzSsllxvmlvHu44erZcdWEbytDBR2ByTzyT48Yrz7gCjMqgP4rTof0RB
+         R7cUrUbF2RdTG9b3e/a8sVfF4MbgyMW7e3w/Wjlv58LrC1vfzodNwucKVpiCfYfOJ3or
+         b0obOzYVtW5818fLky3tbIyDMYPp3/Bmcr8YPL9REQ2Q/orstx/KjSSTjZwtEhFbgzUV
+         yDLPT2GVcODzGXbeIINqOzayEmoHYEeB8hjIQpMjrmjx6XYOXxJXLszBtSEsJp8f+Uf2
+         Us+w==
+X-Gm-Message-State: APjAAAUJyYteK5JjhTcQaNf8ZsM/qBKpe0IyPK7O9l5sG002s9DDLn9h
+        kULZdBJMXYlcf9zoCN2Cy5l/RDyeX5BBzbOx/e9JSg==
+X-Google-Smtp-Source: APXvYqxm6gQM5RizB+QB98o/vRKWl9Hck0t3rr9vH0/mChEJSdcx8mhIM4dkN1BSfuO67QpDJ3ehnEaYQ430riupIIk=
+X-Received: by 2002:ac2:54b0:: with SMTP id w16mr16050034lfk.138.1554727847932;
+ Mon, 08 Apr 2019 05:50:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190408061358.21288-1-elena.reshetova@intel.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 08 Apr 2019 12:49:44 +0000 (UTC)
+References: <20190320103927.21227-1-geert+renesas@glider.be>
+In-Reply-To: <20190320103927.21227-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 Apr 2019 14:50:36 +0200
+Message-ID: <CACRpkdaAZ8C-kmhWRMqu3y6yVJ--6UFjnoRi_iRtogwzzyGseQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: pca953x: Configure wake-up path when wake-up is enabled
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 09:13:58AM +0300, Elena Reshetova wrote:
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index 7bc105f47d21..38ddc213a5e9 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -35,6 +35,12 @@
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/syscalls.h>
->  
-> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-> +#include <linux/random.h>
-> +
-> +void *alloca(size_t size);
-> +#endif
-> +
->  #ifdef CONFIG_CONTEXT_TRACKING
->  /* Called on entry from user mode with IRQs off. */
->  __visible inline void enter_from_user_mode(void)
-> @@ -273,6 +279,13 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
->  {
->  	struct thread_info *ti;
->  
-> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-> +	size_t offset = ((size_t)prandom_u32()) % 256;
-> +	char *ptr = alloca(offset);
-> +
-> +	asm volatile("":"=m"(*ptr));
-> +#endif
-> +
->  	enter_from_user_mode();
->  	local_irq_enable();
->  	ti = current_thread_info();
+On Wed, Mar 20, 2019 at 11:39 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Would it make sense to also do this for the compat syscalls
-(do_fast_syscall_32, do_int80_syscall_32)?
+> If a device is part of the wake-up path, it should indicate this by
+> setting its power.wakeup_path field.  This allows the genpd core code to
+> keep the device enabled during system suspend when needed.
+>
+> As regulators powering devices are not handled by genpd, the driver
+> handles these itself, and thus must skip regulator control when the
+> device is part of the wake-up path.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Josh
+Patch applied with Ulf's Review tag.
+
+If there are even better ways to do it I think we can fix that on top of
+this, it is best to start with something that obviously works and
+take it from there.
+
+Yours,
+Linus Walleij
