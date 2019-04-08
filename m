@@ -2,181 +2,138 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A6DC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792CDC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D71521473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4300D20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 17:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A+grWCdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfDHRKq (ORCPT
+        id S1729120AbfDHRNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 13:10:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727367AbfDHRKq (ORCPT
+        Mon, 8 Apr 2019 13:13:48 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45201 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbfDHRNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 13:10:46 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x38H4HM3124977
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Apr 2019 13:10:45 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rr7152hk9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 13:10:44 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 8 Apr 2019 18:10:42 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Apr 2019 18:10:39 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x38HAcue26935518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Apr 2019 17:10:39 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B184AB2066;
-        Mon,  8 Apr 2019 17:10:38 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 84A20B2064;
-        Mon,  8 Apr 2019 17:10:38 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Apr 2019 17:10:38 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B53BC16C349E; Mon,  8 Apr 2019 10:10:41 -0700 (PDT)
-Date:   Mon, 8 Apr 2019 10:10:41 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Rong Chen <rong.a.chen@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>
-Subject: Re: [srcu] a365bb5f6e: leaking_addresses.proc.___srcu_struct_ptrs.
-Reply-To: paulmck@linux.ibm.com
-References: <20190408135610.GN11264@shao2-debian>
- <20190408143037.GL14111@linux.ibm.com>
- <20190408145750.GO11264@shao2-debian>
- <20190408152112.GM14111@linux.ibm.com>
- <118257214.1376.1554743216233.JavaMail.zimbra@efficios.com>
+        Mon, 8 Apr 2019 13:13:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id y3so7665044pgk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 10:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=zFQBbigOTEog9L119nzi8yUiDvvH6RzigfyLgG6e7ew=;
+        b=A+grWCdx8z6DrlFCINwSLbdf9vaJ7EjSoWTqNtWAYNMIyN+2qOt3uI4yxc/tXEXyg6
+         dQwK6bkrKK1/uoT39PDU+fb7IQYs+t4wnjMD/xTfE5X7xmalBdq0nDqcZfuUb54j9FsH
+         J/jFy9SleTnf3cpSJiLA7pg20hVWQx5J9sI3M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=zFQBbigOTEog9L119nzi8yUiDvvH6RzigfyLgG6e7ew=;
+        b=kN55/x4IIw1PonYKYFtSh75/qqbpBx933EHGvGdZkYDJWEDt9d7Hohm3MsqsoSjb+C
+         bIVjmMkRvT3vLgmyI16wVZoEfzfiEg85+kiNQa8eVWOyFrhgoS07o2zUWGxAwXvGoWnq
+         j+IjQPzVpakYb7sDFnmkdqV+C0V0h/334q0klKjbnio43vQX10gxhPT90W8zycYCOYlo
+         V8bUIuIHyYOzV/6ZV8Fxg/eykzMpZnH2DoWz9xvM65dP/CXwQmgz56H7z/9kD/vVCWWs
+         5pBHrQWNz1QiWVBqWBAEHLpmBImSl6TiSHZygz6HbYSh7GELS0WOrGnXfu/thC4x16Ic
+         PdKA==
+X-Gm-Message-State: APjAAAXda0q+HhtCs85DOzkCht7hoAZH3KM9WD/AEf74cS0FIXFGt5jb
+        z6GNE+iV2APxCBSulgn93tVSdMFjt1U=
+X-Google-Smtp-Source: APXvYqys6hvSOZ9splDIvNZr1em+rB79WhDX7d53/z4j33eJRfaI58bJnejLgDCzio9DPkERc3gyhQ==
+X-Received: by 2002:a62:1795:: with SMTP id 143mr31584409pfx.104.1554743626910;
+        Mon, 08 Apr 2019 10:13:46 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id v43sm17080239pgn.57.2019.04.08.10.13.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 10:13:46 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 10:13:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Stanislav Kinsbursky <skinsbursky@parallels.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/ipc: Fix msgque compiler warnings
+Message-ID: <20190408171344.GA22803@beast>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <118257214.1376.1554743216233.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040817-0060-0000-0000-0000032A14BA
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010890; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01186193; UDB=6.00621236; IPR=6.00966950;
- MB=3.00026346; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-08 17:10:41
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040817-0061-0000-0000-000048E0D440
-Message-Id: <20190408171041.GQ14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904080138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 01:06:56PM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 8, 2019, at 11:21 AM, paulmck paulmck@linux.ibm.com wrote:
-> 
-> > On Mon, Apr 08, 2019 at 10:57:50PM +0800, Rong Chen wrote:
-> >> On Mon, Apr 08, 2019 at 07:30:37AM -0700, Paul E. McKenney wrote:
-> >> > On Mon, Apr 08, 2019 at 09:56:10PM +0800, kernel test robot wrote:
-> >> > > FYI, we noticed the following commit (built with gcc-7):
-> >> > > 
-> >> > > commit: a365bb5f6eafb220a1448674054b05c250829313 ("srcu: Allocate per-CPU data
-> >> > > for DEFINE_SRCU() in modules")
-> >> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git
-> >> > > tmp.2019.04.07a
-> >> > > 
-> >> > > in testcase: leaking_addresses
-> >> > > with following parameters:
-> >> > > 
-> >> > > 
-> >> > > 
-> >> > > 
-> >> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
-> >> > > 
-> >> > > caused below changes (please refer to attached dmesg/kmsg for entire
-> >> > > log/backtrace):
-> >> > > 
-> >> > > 
-> >> > > +-------------------------------------------------+------------+------------+
-> >> > > |                                                 | a44a55abae | a365bb5f6e |
-> >> > > +-------------------------------------------------+------------+------------+
-> >> > > | boot_successes                                  | 0          | 3          |
-> >> > > | boot_failures                                   | 4          | 6          |
-> >> > > | BUG:kernel_reboot-without-warning_in_test_stage | 4          | 6          |
-> >> > > | leaking_addresses.proc.___srcu_struct_ptrs.     | 0          | 6          |
-> >> > > +-------------------------------------------------+------------+------------+
-> >> > 
-> >> > Please help me out here.  Without this commit, the kernel never succeeds
-> >> > in booting, but with it the kernel sometimes succeeds in booting?  Or am
-> >> > I misinterpreting the above table?
-> >> > 
-> >> > 							Thanx, Paul
-> >> 
-> >> Hi Paul,
-> >> 
-> >> The message "kernel_reboot-without-warning_in_test_stage" is from 0day,
-> >> leaking addresses generated many dmesgs, so 0day thought some bootings may
-> >> failed.
-> > 
-> [...]
-> >> > 
-> >> > > [1 .rodata.cst16.POLY] 0xffffffffc0498360
-> >> > > [1 .rodata.cst32.byteshift_table] 0xffffffffc03f50f0
-> >> > > [19 __bug_table] 0xffffffffc02be184
-> >> > > [2 __tracepoints_ptrs] 0xffffffffc02f1cd0
-> >> > > [15 .smp_locks] 0xffffffffc042b2cc
-> >> > > [1 .rodata.cst16.enc] 0xffffffffc0498420
-> >> > > [11 __ksymtab_gpl] 0xffffffffc042b028
-> >> > > [8 __ex_table] 0xffffffffc04f13f4
-> >> > > [1 .init.rodata] 0xffffffffc0316000
-> >> > > [36 .note.gnu.build-id] 0xffffffffc03ed000
-> >> > > [1 .rodata.cst16.dec] 0xffffffffc0498410
-> >> > > [16 .parainstructions] 0xffffffffc03ed940
-> >> > > [8 .text..refcount] 0xffffffffc04e2aaa
-> >> > > [36 .gnu.linkonce.this_module] 0xffffffffc03f12c0
-> >> > > [2 __bpf_raw_tp_map] 0xffffffffc03054a0
-> >> > > [30 .orc_unwind_ip] 0xffffffffc03ee9f9
-> >> > > [8 .altinstr_replacement] 0xffffffffc0497372
-> >> > > [26 .rodata.str1.8] 0xffffffffc03ed1f0
-> >> > > [11 __verbose] 0xffffffffc05c9398
-> >> > > [1 .rodata.cst16.TWOONE] 0xffffffffc0498380
-> >> > > [1 uevent] KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
-> >> > > [1 .rodata.cst16.ONE] 0xffffffffc04983e0
-> >> > > [8 .altinstructions] 0xffffffffc0498430
-> >> > > [36 modules] crct10dif_pclmul 16384 1 - Live 0xffffffffc03f4000
-> >> > > [1 ___srcu_struct_ptrs] 0xffffffffc03840d0
-> >> > > 
-> 
-> This list of "leaked" memory seems to include the __tracepoint_ptrs
-> as well. So at least you seem to have the same behavior as the tracepoint
-> code, which was your source of inspiration for this implementation,
-> which is a good start.
-> 
-> So the remaining question is: is this memory allocated for module sections
-> really leaked for each module, or is it an issue with memory allocation
-> tracking ?
+This fixes the various compiler warnings when building the msgque
+selftest. The primary change is using sys/msg.h instead of linux/msg.h
+directly to gain the API declarations.
 
-Thank you, Mathieu!
+Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/ipc/msgque.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Also, is there some way to put this read-only (OK, relocated-only)
-memory in with the module .text segment?  ;-)
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index dac927e82336..4c156aeab6b8 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -1,9 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <linux/msg.h>
++#include <sys/msg.h>
+ #include <fcntl.h>
+ 
+ #include "../kselftest.h"
+@@ -73,7 +74,7 @@ int restore_queue(struct msgque_data *msgque)
+ 	return 0;
+ 
+ destroy:
+-	if (msgctl(id, IPC_RMID, 0))
++	if (msgctl(id, IPC_RMID, NULL))
+ 		printf("Failed to destroy queue: %d\n", -errno);
+ 	return ret;
+ }
+@@ -120,7 +121,7 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+ 
+ 	ret = 0;
+ err:
+-	if (msgctl(msgque->msq_id, IPC_RMID, 0)) {
++	if (msgctl(msgque->msq_id, IPC_RMID, NULL)) {
+ 		printf("Failed to destroy queue: %d\n", -errno);
+ 		return -errno;
+ 	}
+@@ -129,7 +130,7 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+ 
+ int dump_queue(struct msgque_data *msgque)
+ {
+-	struct msqid64_ds ds;
++	struct msqid_ds ds;
+ 	int kern_id;
+ 	int i, ret;
+ 
+@@ -245,7 +246,7 @@ int main(int argc, char **argv)
+ 	return ksft_exit_pass();
+ 
+ err_destroy:
+-	if (msgctl(msgque.msq_id, IPC_RMID, 0)) {
++	if (msgctl(msgque.msq_id, IPC_RMID, NULL)) {
+ 		printf("Failed to destroy queue: %d\n", -errno);
+ 		return ksft_exit_fail();
+ 	}
+-- 
+2.17.1
 
-							Thanx, Paul
 
+-- 
+Kees Cook
