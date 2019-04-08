@@ -2,112 +2,93 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92EC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B7AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBCA20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NcUitqfj"
+	by mail.kernel.org (Postfix) with ESMTP id 52E2C20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfDHWA4 (ORCPT
+        id S1727127AbfDHWDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:00:56 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33799 "EHLO ozlabs.org"
+        Mon, 8 Apr 2019 18:03:16 -0400
+Received: from ms.lwn.net ([45.79.88.28]:38246 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbfDHWAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:00:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726693AbfDHWDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 18:03:16 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dPW82wwPz9sNG;
-        Tue,  9 Apr 2019 08:00:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554760852;
-        bh=B/UYTqHWbY7WRlEakFDoXaGWrazjErnV7X/SGPqMP00=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NcUitqfjQZTAk86CBJ9gg8eaZvVSq9JcHIB4srD2got0yFvVeKx4WLcpJ8Js9qlb6
-         Fl6jZWD4SAdmCuFNd9Xg94pnDOOcFEuLFwRWsgvMMALYvabdidxuZOy0krTvKYewFg
-         z37KQLeG9iIORo4wqzm/kw8hAj0EZH746q0YfrhUB65Nv0GSc5tWZSkjXCWmpILK8q
-         6DohQq7zGMJFqE7jB5YBL2rO/zlBdEZHwZcv+ysL7LZYoEt4KusMLL+DDJdckn+TFb
-         Lo1t31j67joV/LqYwEMOfXDjzfQqRHTcSeep0rjLE8bNokbJ8ndHnyiXED5lNcOcem
-         XxMpDMxKXazkg==
-Date:   Tue, 9 Apr 2019 08:00:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eli Britstein <elibr@mellanox.com>
-Subject: linux-next: Fixes tags need some work in the net-next tree
-Message-ID: <20190409080051.3cc54e1e@canb.auug.org.au>
+        by ms.lwn.net (Postfix) with ESMTPSA id A5AC3301;
+        Mon,  8 Apr 2019 22:03:15 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 16:03:14 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel-doc: Let backtick and backslash escape percent
+ sign
+Message-ID: <20190408160314.05bc5ecb@lwn.net>
+In-Reply-To: <20190405211820.17617-1-sean.j.christopherson@intel.com>
+References: <20190405211820.17617-1-sean.j.christopherson@intel.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1nioSGE/ngx_G5KfUGe8bw3"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1nioSGE/ngx_G5KfUGe8bw3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri,  5 Apr 2019 14:18:20 -0700
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Hi all,
+> There are a handful of instances where kernel doc comments want an
+> actual '%' in the final output, e.g. vsnprintf() wants to display "%n"
+> and "%p" to document format specifiers, and assembly functions that use
+> a custom call ABI may want to document their register usage, e.g. %eax.
+> 
+> Because kernel-doc unconditionally interprets '%' followed by a word
+> character as a constant definition, i.e. %CONST, it's impossible to get
+> an actual '%\w' when kernel-doc is used to translate comments into rst
+> format.  Treat backtick and backlash as escaping '%', the former to
+> handle '%' in a ``LITERAL``, and the latter to allow '%' when using
+> standard formatting.
 
-In commit
+So I'm sympathetic toward the goal; we want this stuff to format properly.
+But I'm less convinced about this specific solution.  Starting with the
+details: 
 
-  6fca9d1e603a ("net/mlx5e: Allow VLAN rewrite of prio field with the same =
-match")
+> -my $type_constant2 = '\%([-_\w]+)';
+> +my $type_constant2 = '(^|[^\`\\\])\%([-_\w]+)';
 
-Fixes tag
+This only escapes the % if it occurs *immediately* after the backtick, so
+something like ``foo %p`` will still get processed incorrectly.  Somebody
+will surely run into that at some point and waste a bunch of time trying to
+figure out what's going on.
 
-  Fixes: 37410902874c ("net/mlx5e: Support VLAN modify action")
+Also, believe it or not, I don't think you have enough backslashes; that
+inner expression, I believe, should be:
 
-has these problem(s):
+	[^\`\\\\]
 
-  - Target SHA1 does not exist
+Gosh Perl regexes are fun...  This highlights the danger of adding
+functionality that isn't exercised anywhere; I don't think it works here.
 
-In commit
+Now to more general considerations.  Willy's suggestion of using %% instead
+makes some sense, though it may lead to pushback from the "no extra markup
+ever" contingent.  It should be more straightforward to implement
+correctly.
 
-  bf2f3bca1c5d ("net/mlx5e: Deny VLAN rewrite if there is no VLAN header ma=
-tch")
+I have to wonder if the % thing is actually buying us much, honestly.  It's
+another form of markup that kind of duplicates the Sphinx notation, and
+we've kind of agreed that most of the time, we don't want to clutter our
+text with ``explicit markup`` like that.  I'm curious what people think:
+might the best solution be to just make %const do nothing special, with the
+idea of phasing it out?
 
-Fixes tag
+Thanks,
 
-  Fixes: 37410902874c ("net/mlx5e: Support VLAN modify action")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: bdc837eecf73 ("net/mlx5e: Support VLAN modify action")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1nioSGE/ngx_G5KfUGe8bw3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyrxJMACgkQAVBC80lX
-0Gz7fggAkoBgU9zhYPP4JYUuabGM8rj0MGmi0PdToMvoYuB2OPsMlULWOdgWOaiX
-nwsFovdVSMMQf0+31/t3h2l+9NuiOQaCV+eQ/e5p2iVxxTMIO10aRRHCKoUB1p8q
-0Y8UMi0VgrH/iD81YOVmW1YVRSnXjugXCGZ8RzEU6PfEXho78z/kqHBpC3twejEw
-G5Oq4LLam5k5yApyEVMOfjDqkI74RgB+bCrvH0zVFx7OE/Vd9f+oRHV+FMG2Zder
-vGoKWPOAgZ7eL6gqF4KRcjbd9Z5QuHAEz0rUFg14KWi93qe8g9D0a8be8xlpEhO/
-4ejPo3bFN1J5cmk8py1fVvhj1+PUHg==
-=8nP6
------END PGP SIGNATURE-----
-
---Sig_/1nioSGE/ngx_G5KfUGe8bw3--
+jon
