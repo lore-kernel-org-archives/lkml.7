@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C06BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F64EC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2CC208E3
+	by mail.kernel.org (Postfix) with ESMTP id EEC12208E3
 	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 11:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfDHLzg (ORCPT
+        id S1726736AbfDHLzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 8 Apr 2019 07:55:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40790 "EHLO
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46273 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726189AbfDHLzc (ORCPT
+        with ESMTP id S1726401AbfDHLzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 07:55:32 -0400
-X-UUID: 1c4d780bf5f04db88ee61b68e56e650b-20190408
-X-UUID: 1c4d780bf5f04db88ee61b68e56e650b-20190408
+X-UUID: 9f66060c3e2a4549bc5113c4906cb91d-20190408
+X-UUID: 9f66060c3e2a4549bc5113c4906cb91d-20190408
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1732746787; Mon, 08 Apr 2019 19:55:25 +0800
+        with ESMTP id 1300803878; Mon, 08 Apr 2019 19:55:25 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 8 Apr 2019 19:55:24 +0800
+ 15.0.1395.4; Mon, 8 Apr 2019 19:55:23 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
  Transport; Mon, 8 Apr 2019 19:55:24 +0800
@@ -39,9 +39,9 @@ CC:     Stu Hsieh <stu.hsieh@mediatek.com>, <linux-kernel@vger.kernel.org>,
         <linux-media@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH 05/14] [media] mtk-mipicsi: add function to support SerDes for link number
-Date:   Mon, 8 Apr 2019 19:54:56 +0800
-Message-ID: <1554724505-19882-6-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 04/14] [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
+Date:   Mon, 8 Apr 2019 19:54:55 +0800
+Message-ID: <1554724505-19882-5-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
@@ -53,119 +53,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add function to support SerDes for link number.
-
-Mt2712 can server at most four camera link for each mipicsi port.
-Therefore, driver need to know how many camera link in SerDes and
-set the mipicsi HW to serve.
+This patch get the w/h/bytepwerline to save in mtk_mipicsi.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index f9deff1e5a9f..899cf17df480 100644
+index ccf2d18a3e74..f9deff1e5a9f 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -57,12 +57,16 @@
- #define MIPICSI_COMMON_CLK 2
- #define MTK_CAMDMA_MAX_NUM 4U
- #define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
-+#define MAX_DES_LINK 4U
-+#define SUBDEV_LINK_REG 0x49
- #define MTK_DATAWIDTH_8					(0x01U << 7U)
- #define MAX_SUPPORT_WIDTH             4096U
- #define MAX_SUPPORT_HEIGHT            4096U
- #define MAX_BUFFER_NUM			32U
- #define VID_LIMIT_BYTES			(100U * 1024U * 1024U)
+@@ -100,6 +100,9 @@ struct mtk_mipicsi_dev {
+ 	u32 id;
+ 	int clk_num;
+ 	struct clk		*clk[MIPICSI_CLK];
++	u32 width;
++	u32 height;
++	u32 bytesperline;
+ };
  
-+#define SerDes_support 1
-+
- /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -93,6 +97,7 @@ struct mtk_mipicsi_dev {
- 	bool streamon;
- 	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
- 	unsigned int link;
-+	u8 link_reg_val;
- 	unsigned long enqueue_cnt;
- 	unsigned long dequeue_cnt;
- 	struct v4l2_ctrl_handler ctrl_hdl;
-@@ -114,6 +119,64 @@ struct mtk_mipicsi_dev {
+ #define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
+@@ -111,13 +114,36 @@ struct mtk_mipicsi_dev {
  		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
  		V4L2_MBUS_DATA_ACTIVE_HIGH)
  
-+static int get_subdev_register(const struct soc_camera_device *icd,
-+	struct v4l2_dbg_register *reg)
++static u32 get_bytesperline(const u32 fmt, const u32 width)
 +{
-+	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
-+	int ret = 0;
++	u32 bytesperline = 0;
 +
-+	reg->match.type = V4L2_CHIP_MATCH_SUBDEV;
-+	reg->match.addr = 0;
-+	ret = v4l2_subdev_call(sd, core, g_register, reg);
-+	if (ret != 2) {
-+		dev_err(icd->parent, "mipicsi get des register 0x%llx fail, ret=%d\n",
-+			reg->reg, ret);
-+		return -EIO;
++	switch (fmt) {
++	case MEDIA_BUS_FMT_UYVY8_2X8:
++	case MEDIA_BUS_FMT_VYUY8_2X8:
++	case MEDIA_BUS_FMT_YUYV8_2X8:
++	case MEDIA_BUS_FMT_YVYU8_2X8:
++		bytesperline = width * 2U;
++		break;
++	default:
++		break;
 +	}
 +
-+	dev_info(icd->parent, "read DES [reg/val/ret] is [0x%llx/0x%llx/%d]\n",
-+		reg->reg, reg->val, ret);
-+	return ret;
++	return bytesperline;
 +}
 +
-+static int get_subdev_link(const struct soc_camera_device *icd,
-+	unsigned int *link, u8 *link_reg_val)
-+{
-+	struct v4l2_dbg_register reg;
-+	int ret = 0;
-+	unsigned int index = 0U;
-+	*link_reg_val = 0x0U;
-+
-+	if (SerDes_support == 0) {
-+		*link = 1;
-+		*link_reg_val = 0x1;
-+		dev_info(icd->parent, "subdev not support SerDes\n");
-+		return 0;
-+	}
-+
-+	if (link == NULL)
-+		return -EINVAL;
-+
-+	memset(&reg, 0, sizeof(reg));
-+	/*get camera link number*/
-+	reg.reg = SUBDEV_LINK_REG;
-+	ret = get_subdev_register(icd, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	*link = 0U;
-+	for (index = 0U; index < MAX_DES_LINK; ++index) {
-+		if ((reg.val & 0x01U) == 0x01U) {
-+			*link += 1U;
-+			*link_reg_val |= (0x01U << index);
-+		}
-+		reg.val >>= 1U;
-+	}
-+
-+	dev_info(icd->parent, "%u camera linked to sub device\n", *link);
-+	return 0;
-+}
-+
- static u32 get_bytesperline(const u32 fmt, const u32 width)
+ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
  {
- 	u32 bytesperline = 0;
-@@ -145,6 +208,7 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 	u32 height;
- 	u32 fmt;
++	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
++	struct mtk_mipicsi_dev *mipicsi = ici->priv;
+ 	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
+ 	struct v4l2_subdev_format format = {
+ 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+ 	};
+ 	int ret;
++	u32 width;
++	u32 height;
++	u32 fmt;
  
-+	(void)get_subdev_link(icd, &mipicsi->link, &mipicsi->link_reg_val);
  	/* Get width/height info from subdev. Then use them to set register */
  	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &format);
- 	if (ret < 0) {
+@@ -126,6 +152,19 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
+ 		return ret;
+ 	}
+ 
++	width = format.format.width;
++	height = format.format.height;
++	fmt = format.format.code;
++	mipicsi->bytesperline = get_bytesperline(fmt, width);
++	if ((width == 0U) || (height == 0U) || (mipicsi->bytesperline == 0U)) {
++		dev_err(icd->parent, "invalid sub device width/height/bytesperline %d/%d/%d\n",
++			width, height, mipicsi->bytesperline);
++		return -EINVAL;
++	}
++
++	mipicsi->width = width;
++	mipicsi->height = height;
++
+ 	/*
+ 	 * If power domain was closed before, it will be open.
+ 	 * Then clock will be open and register will be set
 -- 
 2.18.0
 
