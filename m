@@ -2,91 +2,104 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F6FC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1E9C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0887520883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663F020880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDHIxl (ORCPT
+        id S1726688AbfDHIyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:53:41 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:59405 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfDHIxk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:53:40 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 3849F30000D31;
-        Mon,  8 Apr 2019 10:53:38 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id EB9263F2B3; Mon,  8 Apr 2019 10:53:37 +0200 (CEST)
-Date:   Mon, 8 Apr 2019 10:53:37 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v3 19/36] thunderbolt: Extend tunnel creation to more
- than 2 adjacent switches
-Message-ID: <20190408085337.slcnajkgxjq4twkh@wunner.de>
-References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
- <20190328123633.42882-20-mika.westerberg@linux.intel.com>
- <20190407165425.2z5kqm3wcfrxvqzb@wunner.de>
- <20190408073517.GA3622@lahna.fi.intel.com>
+        Mon, 8 Apr 2019 04:54:46 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:45356 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfDHIyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 04:54:46 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 6759A21931;
+        Mon,  8 Apr 2019 10:54:44 +0200 (CEST)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 576DB2192F;
+        Mon,  8 Apr 2019 10:54:44 +0200 (CEST)
+Subject: Re: [PATCH v3 8/9] soc: qcom: rpmpd: Add MSM8998 power-domains
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190327123832.11566-1-sibis@codeaurora.org>
+ <20190327123832.11566-9-sibis@codeaurora.org>
+ <3b3bd18b-4491-c290-a421-7be8df371925@free.fr>
+ <a5e9aef9c8d972424f14d5af96a9af58@codeaurora.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <e4506b18-597e-4537-fba1-1cf7ffa60929@free.fr>
+Date:   Mon, 8 Apr 2019 10:54:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408073517.GA3622@lahna.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <a5e9aef9c8d972424f14d5af96a9af58@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Apr  8 10:54:44 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:35:17AM +0300, Mika Westerberg wrote:
-> On Sun, Apr 07, 2019 at 06:54:25PM +0200, Lukas Wunner wrote:
-> > According to the code comment in struct tb_regs_hop (in tb_regs.h),
-> > the out_hopid ("next_hop" in struct tb_regs_hop) denotes the
-> > "hop to take after sending the packet through out_port (on the
-> > incoming port of the next switch)".
-> > 
-> > So intuitively, the hop config space is like a routing table and
-> > the entry in in_port's hop config space specifies through which
-> > out_port the packets shall be routed, and which entry to look up
-> > on the remote port reachable through out_port.
-> > 
-> > This means that the out_hopid must always be identical to the in_hopid
-> > of out_port->remote.  Otherwise the routing wouldn't work.
-> > 
-> > And yet, you've introduced *two* struct ida for each port in
-> > patch 16.  This doesn't seem to make sense:  The out_hopids ida
-> > of a port always has to be identical to the in_hopids ida of that
-> > port's remote.  But if it's identical, why does it have to exist
-> > twice?
+On 08/04/2019 10:30, Sibi Sankar wrote:
+> On 2019-04-05 20:38, Marc Gonzalez wrote:
+>> On 27/03/2019 13:38, Sibi Sankar wrote:
+>>
+>>> Add the shared cx/mx and sensor sub-system's cx and mx
+>>> power-domains found on MSM8998.
+>>>
+>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>> ---
+>>>  drivers/soc/qcom/rpmpd.c | 36 ++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 36 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+>>> index 238a9e02e890..706a3f63038e 100644
+>>> --- a/drivers/soc/qcom/rpmpd.c
+>>> +++ b/drivers/soc/qcom/rpmpd.c
+>>> @@ -19,9 +19,12 @@
+>>>  /* Resource types */
+>>>  #define RPMPD_SMPA 0x61706d73 /* smpa */
+>>>  #define RPMPD_LDOA 0x616f646c /* ldoa */
+>>> +#define RPMPD_RWCX 0x78637772 /* rwcx */
+>>>  #define RPMPD_RWMX 0x786d7772 /* rwmx */
+>>>  #define RPMPD_RWLC 0x636c7772 /* rwlc */
+>>>  #define RPMPD_RWLM 0x6d6c7772 /* rwlm */
+>>> +#define RPMPD_RWSC 0x63737772 /* rwsc */
+>>> +#define RPMPD_RWSM 0x6d737772 /* rwsm */
+>>
+>> I do not see any value in the comments. Maybe remove them?
 > 
-> The reason for two HopID allocators (struct idas) is to make it possible
-> to track HopIDs to each direction. The same port can be output for one
-> path and input for another. I'm not sure how that can be done without
-> having two struct idas per port.
+> comments were included to add value
+> though, however I guess the comments
+> were definitely not clear enough.
+> The magic values for the resources
+> are calculated as follows:
 > 
-> You are right, in case of out port HopID connecter to remote in port,
-> they should use the same HopID.
+> ascii to hex in reverse order
+> eg: smpa -> 0x61706d73
+> 
+> 0x61 0x70 0x6d 0x73
+>    a    p    m    s
 
-Hm, what other cases are there, i.e. what is the meaning of a tb_regs_hop's
-"next_hop" field if "out_port" doesn't have a remote?  (And why does it
-need to be tracked on the out_port?  In case a remote is added later?)
+Ah... I see now.
 
-Thanks,
+I agree that explaining *why* e.g. RPMPD_SMPA is defined as 0x61706d73
+is worthwhile indeed.
 
-Lukas
+What I meant is that adding /* smpa */ to a macro named RPMPD_SMPA does
+not really bring any new information ;-)
+
+How about prefixing the whole block with a small blurb, for example
+
+/* The value of RPMPD_X is X encoded as a little-endian, lower-case, ASCII string */
+
+Regards.
