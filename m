@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537B6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D584CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E9D20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C90820870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 07:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554708536;
-	bh=Ywzlfoi1hx/tuaHcqziPkkePrj5xqkMq656qAFnm24g=;
+	s=default; t=1554708547;
+	bh=Ghllp4BOJxuctWus8tPUgS8a5kQwQqNO3clZBm+1wqc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GaqQ3E/KzjUsEmKrA9OVR5GCPMCSTwZzTda8vyrbCiSiRRBCJlDuGM0MW+NW9kVqT
-	 CXYGuI1s+9uw+0nHfTBcF68z69oqSi3ao06uynRa1l0pmpcQINn0Vjhkmh5M2QmBDD
-	 LETAScdzm7GmbubboJLGDOTAyavfeM4S5e4WdZWY=
+	b=itX55nAfdpe+BV+0MmS3M3gsqS8InyQcmrKWRVvylbshw1TKQBUQ/5STsG2e1AzR1
+	 xWilwVoXkBJN64PtrDkSgJwPoBvR/o6OAhCPWdV+Hb1jwgAs0X7xzUflM4V2eRInpx
+	 btW8I0zaEoHNJY6xSLMmFXHBslYRFS95sOqOsurU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfDHH2z (ORCPT
+        id S1726576AbfDHH3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 03:28:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38198 "EHLO
+        Mon, 8 Apr 2019 03:29:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38568 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfDHH2y (ORCPT
+        with ESMTP id S1725854AbfDHH3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 03:28:54 -0400
+        Mon, 8 Apr 2019 03:29:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=0jqs/0gl1ByisjPtYwG6G07nI6LPLQb8LLWWcvJBVxU=; b=FkvfZPfR5cId
-        8V9CpPrHEGNeSSGDvDshSF6+5mx7F7saWhxKCpFzzxOPDOsegUsyTXLZOLnrNEfoCRWdy4YcLvVdD
-        M54hXtkp0jERbsXnXNObwtgTdQlyYqieD8s3eqm5ObvrvooY4V+IyqF4gt8O131dyn21V+yBXuAVu
-        D6kTU=;
+        List-Archive; bh=XR9ayC+yP7VTg7FNAonmE5/A0IO8JmccmzqBhgRk2uo=; b=TPzsz2VDKdYe
+        aQpXY8zlioZ136D7mDInz0VyB0766zDs62hv014nx+9etYlOqf7VazFRAATeal9wGxTHhCyeA9JI3
+        OlXs3n9nkI7mPIu93kD/t48x5Ch+R+SXkqnkl37rfmq3dTLPN6y15PTml2j2cBwbqUaKbcl8K+l5B
+        6TcF0=;
 Received: from [8.46.76.46] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hDOhs-0003ro-Qk; Mon, 08 Apr 2019 07:28:42 +0000
+        id 1hDOi3-0003rt-GK; Mon, 08 Apr 2019 07:28:52 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 83E4A441D3B; Mon,  8 Apr 2019 14:28:23 +0700 (+07)
+        id 99F2E441D3C; Mon,  8 Apr 2019 14:28:35 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Andra Danciu <andradanciu1997@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>, timur@kernel.org,
@@ -55,11 +55,11 @@ Cc:     Mark Brown <broonie@kernel.org>, timur@kernel.org,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         daniel.baluta@nxp.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: imx-ssi: Switch to SPDX identifier" to the asoc tree
-In-Reply-To:  <20190405115010.28838-11-andradanciu1997@gmail.com>
+Subject: Applied "ASoC: imx-spdif: Switch to SPDX identifier" to the asoc tree
+In-Reply-To:  <20190405115010.28838-10-andradanciu1997@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190408072823.83E4A441D3B@finisterre.ee.mobilebroadband>
-Date:   Mon,  8 Apr 2019 14:28:23 +0700 (+07)
+Message-Id: <20190408072835.99F2E441D3C@finisterre.ee.mobilebroadband>
+Date:   Mon,  8 Apr 2019 14:28:35 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: imx-ssi: Switch to SPDX identifier
+   ASoC: imx-spdif: Switch to SPDX identifier
 
 has been applied to the asoc tree at
 
@@ -92,10 +92,10 @@ to this mail.
 Thanks,
 Mark
 
-From bdc16b5748926412ca90cf0521c718a46e2ca2b7 Mon Sep 17 00:00:00 2001
+From 58dbd1015d3ed47d53a99e7c4da0bbd3543177da Mon Sep 17 00:00:00 2001
 From: Andra Danciu <andradanciu1997@gmail.com>
-Date: Fri, 5 Apr 2019 14:50:00 +0300
-Subject: [PATCH] ASoC: imx-ssi: Switch to SPDX identifier
+Date: Fri, 5 Apr 2019 14:49:59 +0300
+Subject: [PATCH] ASoC: imx-spdif: Switch to SPDX identifier
 
 Adopt the SPDX license identifier headers to ease license compliance
 management.
@@ -103,89 +103,30 @@ management.
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/imx-ssi.c | 57 ++++++++++++++++++-----------------------
- sound/soc/fsl/imx-ssi.h |  6 +----
- 2 files changed, 26 insertions(+), 37 deletions(-)
+ sound/soc/fsl/imx-spdif.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-ssi.c b/sound/soc/fsl/imx-ssi.c
-index 06790615e04e..9038b61317be 100644
---- a/sound/soc/fsl/imx-ssi.c
-+++ b/sound/soc/fsl/imx-ssi.c
-@@ -1,35 +1,28 @@
+diff --git a/sound/soc/fsl/imx-spdif.c b/sound/soc/fsl/imx-spdif.c
+index 797d66e43d49..4f7f210beb18 100644
+--- a/sound/soc/fsl/imx-spdif.c
++++ b/sound/soc/fsl/imx-spdif.c
+@@ -1,13 +1,6 @@
 -/*
-- * imx-ssi.c  --  ALSA Soc Audio Layer
+- * Copyright (C) 2013 Freescale Semiconductor, Inc.
 - *
-- * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
 - *
-- * This code is based on code copyrighted by Freescale,
-- * Liam Girdwood, Javier Martin and probably others.
-- *
-- *  This program is free software; you can redistribute  it and/or modify it
-- *  under  the terms of  the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the  License, or (at your
-- *  option) any later version.
-- *
-- *
-- * The i.MX SSI core has some nasty limitations in AC97 mode. While most
-- * sane processor vendors have a FIFO per AC97 slot, the i.MX has only
-- * one FIFO which combines all valid receive slots. We cannot even select
-- * which slots we want to receive. The WM9712 with which this driver
-- * was developed with always sends GPIO status data in slot 12 which
-- * we receive in our (PCM-) data stream. The only chance we have is to
-- * manually skip this data in the FIQ handler. With sampling rates different
-- * from 48000Hz not every frame has valid receive data, so the ratio
-- * between pcm data and GPIO status data changes. Our FIQ handler is not
-- * able to handle this, hence this driver only works with 48000Hz sampling
-- * rate.
-- * Reading and writing AC97 registers is another challenge. The core
-- * provides us status bits when the read register is updated with *another*
-- * value. When we read the same register two times (and the register still
-- * contains the same value) these status bits are not set. We work
-- * around this by not polling these bits but only wait a fixed delay.
-- *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
 - */
 +// SPDX-License-Identifier: GPL-2.0+
 +//
-+// imx-ssi.c  --  ALSA Soc Audio Layer
-+//
-+// Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
-+//
-+// This code is based on code copyrighted by Freescale,
-+// Liam Girdwood, Javier Martin and probably others.
-+//
-+// The i.MX SSI core has some nasty limitations in AC97 mode. While most
-+// sane processor vendors have a FIFO per AC97 slot, the i.MX has only
-+// one FIFO which combines all valid receive slots. We cannot even select
-+// which slots we want to receive. The WM9712 with which this driver
-+// was developed with always sends GPIO status data in slot 12 which
-+// we receive in our (PCM-) data stream. The only chance we have is to
-+// manually skip this data in the FIQ handler. With sampling rates different
-+// from 48000Hz not every frame has valid receive data, so the ratio
-+// between pcm data and GPIO status data changes. Our FIQ handler is not
-+// able to handle this, hence this driver only works with 48000Hz sampling
-+// rate.
-+// Reading and writing AC97 registers is another challenge. The core
-+// provides us status bits when the read register is updated with *another*
-+// value. When we read the same register two times (and the register still
-+// contains the same value) these status bits are not set. We work
-+// around this by not polling these bits but only wait a fixed delay.
++// Copyright (C) 2013 Freescale Semiconductor, Inc.
  
- #include <linux/clk.h>
- #include <linux/delay.h>
-diff --git a/sound/soc/fsl/imx-ssi.h b/sound/soc/fsl/imx-ssi.h
-index be6562365b6a..19cd0937e740 100644
---- a/sound/soc/fsl/imx-ssi.h
-+++ b/sound/soc/fsl/imx-ssi.h
-@@ -1,8 +1,4 @@
--/*
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- #ifndef _IMX_SSI_H
- #define _IMX_SSI_H
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
 -- 
 2.20.1
 
