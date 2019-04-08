@@ -2,82 +2,86 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC4C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380E8C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8052148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A8F20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 22:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554763878;
+	bh=77yxdbS0AK8GnWOtGUqkzsZ3GwU3N3qU2hFQtWbFAAk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dULDlRTrs+hj8lB96znL/O62HQdJYYEgU/aMdPCBP/08oPzHWHh7YfsoCHBFOhFZf
+	 6uMmKNfPFjCMEOeWvxtzZpaXvpICfeyYMK3hm7XE08Cz3wxDeCyIsDFVvdSmNmYrin
+	 KIjODAfb8Ds4JjxSscKk3MrsmC2HEH7A+7tsG1x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfDHWti (ORCPT
+        id S1726882AbfDHWvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 18:49:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59932 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbfDHWti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:49:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 15:49:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
-   d="scan'208";a="289856923"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 08 Apr 2019 15:49:37 -0700
-Received: from [10.254.87.204] (kliang2-mobl.ccr.corp.intel.com [10.254.87.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 83FB15807AA;
-        Mon,  8 Apr 2019 15:49:36 -0700 (PDT)
-Subject: Re: [PATCH V5 00/12] perf: Add Icelake support (kernel only, except
- Topdown)
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190402194509.2832-1-kan.liang@linux.intel.com>
- <20190408154112.GW12232@hirez.programming.kicks-ass.net>
- <ec9e3a07-4b29-b698-83d7-5b8bbcd48dc4@linux.intel.com>
-Message-ID: <02e4ddaf-b5a0-a2cb-b829-5720f0bb10d4@linux.intel.com>
-Date:   Mon, 8 Apr 2019 18:49:35 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <ec9e3a07-4b29-b698-83d7-5b8bbcd48dc4@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Apr 2019 18:51:16 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:43732 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfDHWvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 18:51:16 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 6D308CBB;
+        Mon,  8 Apr 2019 22:51:15 +0000 (UTC)
+Date:   Mon, 8 Apr 2019 15:51:14 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        idosch@mellanox.com
+Subject: Re: [PATCH v1 bitops] bitops: Fix UBSAN undefined behavior warning
+ for rotation right
+Message-Id: <20190408155114.c0031348812a0590662e4bf9@linux-foundation.org>
+In-Reply-To: <20190407125325.24440-1-vadimp@mellanox.com>
+References: <20190407125325.24440-1-vadimp@mellanox.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun,  7 Apr 2019 12:53:25 +0000 Vadim Pasternak <vadimp@mellanox.com> wrote:
 
+> The warning is caused by call to rorXX(), if the second parameters of
+> this function "shift" is zero. In such case UBSAN reports the warning
+> for the next expression: (word << (XX - shift), where XX is
+> 64, 32, 16, 8 for respectively ror64, ror32, ror16, ror8.
+> Fix adds validation of this parameter - in case it's equal zero, no
+> need to rotate, just original "word" is to be returned to caller.
+> 
+> The UBSAN undefined behavior warning has been reported for call to
+> ror32():
+> [   11.426543] UBSAN: Undefined behaviour in ./include/linux/bitops.h:93:33
+> [   11.434045] shift exponent 32 is too large for 32-bit type 'unsigned int'
 
-On 4/8/2019 12:06 PM, Liang, Kan wrote:
-> @@ -1875,7 +1868,7 @@ static void intel_pmu_drain_pebs_nhm(str
->            counts[bit]++;
->        }
-> -    for (bit = 0; bit < size; bit++) {
-> +    for_each_set_bit(bit, (unsigned long *)&mask, size) {
->            if ((counts[bit] == 0) && (error[bit] == 0))
->                continue;
-> @@ -1939,7 +1932,7 @@ static void intel_pmu_drain_pebs_icl(str
->                counts[bit]++;
->        }
-> -    for (bit = 0; bit < size; bit++) {
-> +    for_each_set_bit(bit, (unsigned long *)mask, size) {
->            if (counts[bit] == 0)
->                continue;
+hm, do we care?
 
-I have finished the tests for the changes. There is one more regression 
-found by another typo on ICL.
+> ...
+>
 
-Should be "for_each_set_bit(bit, (unsigned long *)&mask, size) {"
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -70,6 +70,9 @@ static inline __u64 rol64(__u64 word, unsigned int shift)
+>   */
+>  static inline __u64 ror64(__u64 word, unsigned int shift)
+>  {
+> +	if (!shift)
+> +		return word;
+> +
+>  	return (word >> shift) | (word << (64 - shift));
+>  }
 
-Thanks,
-Kan
+Is there any known architecture or compiler for which UL<<64 doesn't
+reliably produce zero?  Is there any prospect that this will become a
+problem in the future?
+
