@@ -2,141 +2,142 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68B6C282DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9FEC282DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8515214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554716311;
-	bh=oLj+mpVfYrMAKVzT100KDOGJ3d3S70Ze+nV+TsWJcxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zzpruSsprIEHix9JU+WvFR1BwXLEDsrg0krxqL8YyOjgKGyBxcMQNKgHvaBGEBr/Y
-	 fIqURGnoJOmr/uTpUs/l76LHeUOAAOH2meFawp0oIAOmMrtDQBALaaAjq/mGr0+F1H
-	 JvfqHVU54GEA4kn6N+Xv2LT0/1GzRn2uIEjaehBM=
+	by mail.kernel.org (Postfix) with ESMTP id 56D3620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 09:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfDHJia (ORCPT
+        id S1726554AbfDHJlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 05:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfDHJi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 05:38:29 -0400
-Received: from earth.universe (dyndsl-037-138-087-101.ewe-ip-backbone.de [37.138.87.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A5120880;
-        Mon,  8 Apr 2019 09:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554716308;
-        bh=oLj+mpVfYrMAKVzT100KDOGJ3d3S70Ze+nV+TsWJcxM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sJTL5FvqkzJtA8kNPhmF3T1ag21WUT1NXgRgQH/Dn+E+pxvdZCxTWrJzg7ep1k9oS
-         CEBjrZhwDmwxOCMnPm+R9V1pNFoeCE2qV671rrzH0zObL60yra4hMNbBZxxTTNbJRK
-         vQg4M8LUyyzMRjWETQ2Fedg1G2bvUiywIBoBsSX4=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 312AA3C08D4; Mon,  8 Apr 2019 11:38:24 +0200 (CEST)
-Date:   Mon, 8 Apr 2019 11:38:24 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery driver.
-Message-ID: <20190408093824.yzpd7mve6df7lpka@earth.universe>
-References: <20190323172809.14407-1-contact@artur-rojek.eu>
- <20190323172809.14407-4-contact@artur-rojek.eu>
- <20190324153137.04857cdf@archlinux>
- <20190407165234.is66vmnjfc35jnho@earth.universe>
- <1554664077.4322.0@crapouillou.net>
+        Mon, 8 Apr 2019 05:41:15 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59577 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbfDHJlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 05:41:14 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 2F56C80477; Mon,  8 Apr 2019 11:41:02 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 11:41:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dmitry Torokhov <dtor@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Nick Crews <ncrews@chromium.org>, enric.balletbo@collabora.com,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, alexandre.belloni@bootlin.com,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        dlaurie@chromium.org, sjg@google.com,
+        Guenter Roeck <groeck@google.com>
+Subject: Keyboard backlight LED naming was Re: [PATCH v5 2/3]
+ platform/chrome: Add Wilco EC keyboard backlight LEDs support
+Message-ID: <20190408094113.GB30958@amd>
+References: <20190404171007.160878-1-ncrews@chromium.org>
+ <20190404171007.160878-2-ncrews@chromium.org>
+ <20190405201534.GA4426@roeck-us.net>
+ <20190406084157.GA27043@amd>
+ <CAE_wzQ9WG1+K1ZzVoii8ukDe_g+4Ha0bh6YvsRhceinwPjC+Kw@mail.gmail.com>
+ <20190407221846.GB6327@amd>
+ <CAE_wzQ_5Ha6hNt28_+j-pF3mAdXXifv9CuotDCeXff8KC1DNmA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kxv5ige2aqijufid"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
 Content-Disposition: inline
-In-Reply-To: <1554664077.4322.0@crapouillou.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAE_wzQ_5Ha6hNt28_+j-pF3mAdXXifv9CuotDCeXff8KC1DNmA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---kxv5ige2aqijufid
-Content-Type: text/plain; charset=iso-8859-1
+--NDin8bjvE/0mNLFQ
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
+Hi!
 
-On Sun, Apr 07, 2019 at 09:07:57PM +0200, Paul Cercueil wrote:
-> Hi Sebastian,
+> > > > > This document also states "The naming scheme above leaves scope
+> > > > > for further attributes should they be needed". It does not permit,
+> > > > > however, to redefine one of the fields to mean "location", much l=
+ess
+> > > > > the declaration that a devicename of "platform" shall refer to an
+> > > > > "internal" backlight, or that there shall be no more than one
+> > > > > "internal" backlight in a given system.
+> > > >
+> > > > "platform" is as good devicename as "wilco" or "chromeos".
+> > >
+> > > No, because "platform" is not a device, it is something that you are
+> > > trying to assign a magic meaning to.
+> >
+> > "chromeos" is not a device, either.
 >=20
-> Le dim. 7 avril 2019 =E0 18:52, Sebastian Reichel <sre@kernel.org> a =E9c=
-rit :
-> > Hi,
-> >=20
-> > On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
-> > >  On Sat, 23 Mar 2019 18:28:09 +0100
-> > >  Artur Rojek <contact@artur-rojek.eu> wrote:
-> > >=20
-> > >  > Add a driver for battery present on Ingenic JZ47xx SoCs.
-> > >  >
-> > >  > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> > >  The IIO parts look fine to me.
-> > >  Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >=20
-> > >  Sebastian, assuming you are happy with this version,
-> >=20
-> > The driver itself looks ok. I'm a bit unhappy, that we already have
-> > jz4740-battery. This driver is much cleaner, but does not yet seem
-> > to be ready to replace it. Artur Rojek what are your plans regarding
-> > to the existing driver? Is there currently work going on migrating
-> > JZ47xx to DT?
->=20
-> Why do you think it's not ready? Feature-wise, it has everything we
-> need to replace jz4740-battery, which will be trashed as soon as the
-> LB60 board code is updated to use the new driver.
+> I agree, it is not a device name. We do not assign any specific
+> meaning to it though. We could change it to "cros_ec" if so desired
+> and nothing should break.
 
-jz4740-battery has a few features not provided by your driver.
-For example the gpio providing the charging status. Assuming
-you plan to trash the old driver soon:
+Yes. And you can also change it to "platform" and nothing will break
+:-). Can we end the discussion here?
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+If not, lets take a look at existing names:
 
-> We are working on porting the JZ47xx code to devicetree, yes. The
-> ultimate goal is to completely get rid of
-> arch/mips/jz4740/board-qi_lb60.c and arch/mips/jz4740/platform.c.
+=2E/drivers/platform/x86/asus-laptop.c:		cdev->name =3D "asus::kbd_backligh=
+t";
+=2E/drivers/platform/x86/samsung-laptop.c:		samsung->kbd_led.name =3D "sams=
+ung::kbd_backlight";
+=2E/drivers/platform/x86/thinkpad_acpi.c:		.name		=3D "tpacpi::kbd_backligh=
+t",
+=2E/drivers/platform/x86/toshiba_acpi.c:		dev->kbd_led.name =3D "toshiba::k=
+bd_backlight";
+=2E/drivers/platform/x86/asus-wmi.c:		asus->kbd_led.name =3D "asus::kbd_bac=
+klight";
+=2E/drivers/platform/x86/dell-laptop.c:	.name           =3D "dell::kbd_back=
+light",
+=2E/drivers/platform/chrome/cros_kbd_led_backlight.c:	cdev->name =3D "chrom=
+eos::kbd_backlight";
+=2E/drivers/hwmon/applesmc.c:	.name			=3D "smc::kbd_backlight",
+=2E/drivers/hid/hid-asus.c:	drvdata->kbd_backlight->cdev.name =3D "asus::kb=
+d_backlight";
+=2E/drivers/hid/hid-google-hammer.c:	kbd_backlight->cdev.name =3D "hammer::=
+kbd_backlight";
+=2E/drivers/input/misc/ims-pcu.c:		 "pcu%d::kbd_backlight", pcu->device_no);
 
-Ok, sounds good.
+asus, samsung, toshiba, asus, dell, chromeos... Those are really not
+device names, either. But in these cases, LED is probably controlled
+by EC, or by ACPI BIOS talking to the EC. People usually call such
+devices "platform devices".
 
--- Sebastian
+(Linux Platform Device Driver - CodeProject
+=EF=BF=BChttps://www.codeproject.com/tips/1080177/linux-platform-device-dri=
+ver
+A platform device is one which is hardwired on the board and hence not
+hot-pluggable. )
 
---kxv5ige2aqijufid
+You can take a look at discussion around micmute LED.
+
+Thus "platform" is quite suitable name in your case, and incidentaly,
+it will be more useful for userspace than "cros_ec".
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--NDin8bjvE/0mNLFQ
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlyrFowACgkQ2O7X88g7
-+pqAVw/+NKyxFp5GIWuXBnG+OV0ezhW5bAYrBsST5OtDqg8x4aACWv6BjwNwLQJN
-TREW2Rda/Jqyy0fxhwUDdcGJ0deWMqWbFi0+OPQXBZ4Xd8kpTLjs1uwcHRag8mkN
-Sre9c6FIsCytrd73CYFgJjz7PMmB4FBaRr/Z7qhWhdgTh66i+m+Ql5GjVI0sl2nL
-m9fxTCpJgh7zmVuLepEosq7YgwrOTP8ZZaMCJSD/Bo8ejDIW9ox9IMjbdUFEqWC1
-sxzpDvBhZT6rcvuwVx57/F0XtGIcsJEMruB3YFKCOS5XJhk7GExs1c1zos9xBap6
-N0WBllMu4PhLpZphW/7zWWDxeco/whNupy682YPh3r9hg7u5npCfaxu9z+h5Kp53
-YCW/dClq8WId9IG1nxI2Pl4M7pXiieiMR3ms9Bq/VMLYRLT08QWRopsA2QVZ/dyt
-wle6YdFZtgvt+yFfKNOHF0ogmhApuA4J01PP9T65KAEcV4RDH3ZgLNlZuEZeYFCq
-YcKPp5e2dQGv66qqRNnMPLyhUAOY3s6UG8YCSkSGtRZZjZheb/nqHaw/w7CjitrR
-JbDcw+iBLeoDxgYRLSQKGFpkvxSt1x8rd8xBHKmVailT/9IAUgrejm0CL+MS3fZm
-te+QRKM+DvDMGvKXnuF6WjTqw6yTNngyd/aM2yQQ4XQ604fXBNo=
-=/UP4
+iEYEARECAAYFAlyrFzkACgkQMOfwapXb+vJlgwCguCID6XvkjcM8i9lF5T/C4qOa
+CNQAn1xrrUlWgNG+JX2gh9qDIDpJ0ckJ
+=oyOJ
 -----END PGP SIGNATURE-----
 
---kxv5ige2aqijufid--
+--NDin8bjvE/0mNLFQ--
