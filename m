@@ -2,131 +2,234 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2B5C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0342DC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64583213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D2C213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltxasCY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfDHNGB (ORCPT
+        id S1726760AbfDHNGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:06:01 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48238 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHNGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:06:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DB0815BF;
-        Mon,  8 Apr 2019 06:06:00 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 919783F68F;
-        Mon,  8 Apr 2019 06:05:55 -0700 (PDT)
-Subject: Re: [PATCH v8 4/9] KVM: arm/arm64: preserve host HCR_EL2 value
-To:     James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
- <1554172037-4516-5-git-send-email-amit.kachhap@arm.com>
- <f27a3e70-2099-45a6-48e6-481a67e360eb@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <6131d2cb-1062-6331-c2c3-7026081c458a@arm.com>
-Date:   Mon, 8 Apr 2019 18:35:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <f27a3e70-2099-45a6-48e6-481a67e360eb@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 8 Apr 2019 09:06:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36479 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfDHNGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:06:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h18so14638371wml.1;
+        Mon, 08 Apr 2019 06:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CMFjVidRxaCqjr2B6wu9J8FIGMu638S6yJ2otQIbk4I=;
+        b=ltxasCY9vpH/ilmJ/3rQxhVShEMYB7P/c0tkga0n1sE3FsKq2X3t75dx4wHRNVCVQf
+         7jOEZmvXr/5eCYMIUQuna2/xNl/cuTsBJuVw3kwli6VO1r9WHRSgiYnhrKsugXgNiMHs
+         2KAPLjtCIC9v5TS/cSLzxHi8W+ZAJ8iD+Gdkbc6ofXQmpikSZ/hQouEogz7MeTVS78pi
+         7lAtdew6QUsT2tREnfsnQoBheZLz5xmfzA6HBThM+LqfUnmr1Duk5jua6waaJRJoB0DX
+         mjfMFxnJDkMVdElrlmPJ5ENEMSy6JDb98ToflEMdX+uQwzmnO5wp7mQGfMzvWixIvY2F
+         G+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CMFjVidRxaCqjr2B6wu9J8FIGMu638S6yJ2otQIbk4I=;
+        b=sqtITvtXO/xveJI50QL4nLPFNN56Kj6Eq4UUzdCblpk4IIf5HhV2bmKa2P5LUltywU
+         DQ31jQirqzXhhRrm9FZ+AxrkrBrBLLRienFst6LiuAHEiFIoISMROVJdmNVbfO6OCptL
+         JMbz1AP6PbRSWCPuGuYapg955VwfYyp6XQi6A4tf30x2A/vBo0LdtPRVG5DMwYOwNHIb
+         238EAa8uPtmbewj596sfWVEisRprW/nKtaTChrPsLwW/cAlSYtUDmlGwjrw/13WGN25G
+         ftid4rWiUqUpy/CV1abFdfnYhufv/LjiXdQA54rkJSX4TwGIVHWT3qi0sEzxP+dhkC8T
+         +sYw==
+X-Gm-Message-State: APjAAAWBuyCg5TArr7YRzGtlJaJYRM9iYm4Q0ZjGn2TyPF2BhH+ok0gF
+        3AANh6Bcg3fumKp0IhT0gV/ptMAQXeQ=
+X-Google-Smtp-Source: APXvYqw3ngorBEV/0v9294ppIO7ZG+Om+j7BlNocqoMfSV74JPmMgRYoX2In30PcQXR1/FnGV3P71Q==
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr16635390wmh.81.1554728777168;
+        Mon, 08 Apr 2019 06:06:17 -0700 (PDT)
+Received: from localhost.localdomain (93-34-117-55.ip49.fastwebnet.it. [93.34.117.55])
+        by smtp.gmail.com with ESMTPSA id w14sm25579526wrr.16.2019.04.08.06.06.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 06:06:16 -0700 (PDT)
+From:   Angelo Ruocco <angelo.ruocco.90@gmail.com>
+X-Google-Original-From: Angelo Ruocco <angeloruocco90@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, paolo.valente@linaro.org,
+        linux-kernel@vger.kernel.org, trivial@kernel.org
+Subject: [PATCH] block, bfq: fix some typos in comments
+Date:   Mon,  8 Apr 2019 15:05:45 +0200
+Message-Id: <20190408130545.26211-1-angeloruocco90@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+Some of the comments in the bfq files had typos. This patch fixes them.
 
-On 4/6/19 4:07 PM, James Morse wrote:
-> Hi Amit,
-> 
-> On 02/04/2019 03:27, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> When restoring HCR_EL2 for the host, KVM uses HCR_HOST_VHE_FLAGS, which
->> is a constant value. This works today, as the host HCR_EL2 value is
->> always the same, but this will get in the way of supporting extensions
->> that require HCR_EL2 bits to be set conditionally for the host.
->>
->> To allow such features to work without KVM having to explicitly handle
->> every possible host feature combination, this patch has KVM save/restore
->> for the host HCR when switching to/from a guest HCR. The saving of the
->> register is done once during cpu hypervisor initialization state and is
->> just restored after switch from guest.
->>
->> For fetching HCR_EL2 during kvm initialisation, a hyp call is made using
->> kvm_call_hyp and is helpful in non-VHE case.
->>
->> For the hyp TLB maintenance code, __tlb_switch_to_host_vhe() is updated
->> to toggle the TGE bit with a RMW sequence, as we already do in
->> __tlb_switch_to_guest_vhe().
->>
->> The value of hcr_el2 is now stored in struct kvm_cpu_context as both host
->> and guest can now use this field in a common way.
-> 
-> These HCR_EL2 flags have had me confused for quite a while.
-> I thought this was preserving the value that head.S or cpufeature.c had set, and with
-> ptrauth we couldn't know what this register should be anymore, the host flags has to vary.
-> 
-> Kristina's explanation of it[0], clarified things, and with a bit more digging it appears
-> we always set API/APK, even if the hardware doesn't support the feature (as its harmless).
-> So we don't need to vary the host flags...
+Signed-off-by: Angelo Ruocco <angeloruocco90@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.c | 16 ++++++++--------
+ block/bfq-iosched.h |  4 ++--
+ block/bfq-wf2q.c    | 10 +++++-----
+ 4 files changed, 16 insertions(+), 16 deletions(-)
 
-API/APK is always set for NVHE host mode.
-> 
-> My question is, what breaks if this patch isn't merged? (the MDCR change is cleanup we can
-> do because of this HCR change), is this HCR change just cleanup too? If so, can we merge
-> ptrauth without either, so we only make the change when its needed? (it will cause some
-> changes in your patch 7, but I can't see where you depend on the host flags).
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 319c2444dc71..f56046163731 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -1102,7 +1102,7 @@ struct cftype bfq_blkcg_legacy_files[] = {
+ 	},
+ #endif /* CONFIG_DEBUG_BLK_CGROUP */
+ 
+-	/* the same statictics which cover the bfqg and its descendants */
++	/* the same statistics which cover the bfqg and its descendants */
+ 	{
+ 		.name = "io_service_bytes_recursive",
+ 		.private = (unsigned long)&blkcg_policy_bfq,
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 4c592496a16a..09fd8d92e380 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -189,7 +189,7 @@ static const int bfq_default_max_budget = 16 * 1024;
+ /*
+  * When a sync request is dispatched, the queue that contains that
+  * request, and all the ancestor entities of that queue, are charged
+- * with the number of sectors of the request. In constrast, if the
++ * with the number of sectors of the request. In contrast, if the
+  * request is async, then the queue and its ancestor entities are
+  * charged with the number of sectors of the request, multiplied by
+  * the factor below. This throttles the bandwidth for async I/O,
+@@ -217,7 +217,7 @@ const int bfq_timeout = HZ / 8;
+  * queue merging.
+  *
+  * As can be deduced from the low time limit below, queue merging, if
+- * successful, happens at the very beggining of the I/O of the involved
++ * successful, happens at the very beginning of the I/O of the involved
+  * cooperating processes, as a consequence of the arrival of the very
+  * first requests from each cooperator.  After that, there is very
+  * little chance to find cooperators.
+@@ -433,7 +433,7 @@ void bfq_schedule_dispatch(struct bfq_data *bfqd)
+ 
+ /*
+  * Lifted from AS - choose which of rq1 and rq2 that is best served now.
+- * We choose the request that is closesr to the head right now.  Distance
++ * We choose the request that is closer to the head right now.  Distance
+  * behind the head is penalized and only allowed to a certain extent.
+  */
+ static struct request *bfq_choose_req(struct bfq_data *bfqd,
+@@ -955,7 +955,7 @@ static unsigned int bfq_wr_duration(struct bfq_data *bfqd)
+ 	 *   of several files
+ 	 * mplayer took 23 seconds to start, if constantly weight-raised.
+ 	 *
+-	 * As for higher values than that accomodating the above bad
++	 * As for higher values than that accommodating the above bad
+ 	 * scenario, tests show that higher values would often yield
+ 	 * the opposite of the desired result, i.e., would worsen
+ 	 * responsiveness by allowing non-interactive applications to
+@@ -2408,8 +2408,8 @@ static bool bfq_allow_bio_merge(struct request_queue *q, struct request *rq,
+ 		/*
+ 		 * bic still points to bfqq, then it has not yet been
+ 		 * redirected to some other bfq_queue, and a queue
+-		 * merge beween bfqq and new_bfqq can be safely
+-		 * fulfillled, i.e., bic can be redirected to new_bfqq
++		 * merge between bfqq and new_bfqq can be safely
++		 * fulfilled, i.e., bic can be redirected to new_bfqq
+ 		 * and bfqq can be put.
+ 		 */
+ 		bfq_merge_bfqqs(bfqd, bfqd->bio_bic, bfqq,
+@@ -2855,7 +2855,7 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 	/*
+ 	 * All in-service entities must have been properly deactivated
+ 	 * or requeued before executing the next function, which
+-	 * resets all in-service entites as no more in service.
++	 * resets all in-service entities as no more in service.
+ 	 */
+ 	__bfq_bfqd_reset_in_service(bfqd);
+ }
+@@ -5157,7 +5157,7 @@ static void bfq_prepare_request(struct request *rq, struct bio *bio)
+  * preparation is that, after the prepare_request hook is invoked for
+  * rq, rq may still be transformed into a request with no icq, i.e., a
+  * request not associated with any queue. No bfq hook is invoked to
+- * signal this tranformation. As a consequence, should these
++ * signal this transformation. As a consequence, should these
+  * preparation operations be performed when the prepare_request hook
+  * is invoked, and should rq be transformed one moment later, bfq
+  * would end up in an inconsistent state, because it would have
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 062e1c4787f4..c0121ebb09fb 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -89,7 +89,7 @@ struct bfq_service_tree {
+  * expiration. This peculiar definition allows for the following
+  * optimization, not yet exploited: while a given entity is still in
+  * service, we already know which is the best candidate for next
+- * service among the other active entitities in the same parent
++ * service among the other active entities in the same parent
+  * entity. We can then quickly compare the timestamps of the
+  * in-service entity with those of such best candidate.
+  *
+@@ -140,7 +140,7 @@ struct bfq_weight_counter {
+  *
+  * Unless cgroups are used, the weight value is calculated from the
+  * ioprio to export the same interface as CFQ.  When dealing with
+- * ``well-behaved'' queues (i.e., queues that do not spend too much
++ * "well-behaved" queues (i.e., queues that do not spend too much
+  * time to consume their budget and have true sequential behavior, and
+  * when there are no external factors breaking anticipation) the
+  * relative weights at each level of the cgroups hierarchy should be
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 63311d1ff1ed..d82a9ca82fa2 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -59,7 +59,7 @@ static bool bfq_update_parent_budget(struct bfq_entity *next_in_service);
+  * bfq_update_next_in_service - update sd->next_in_service
+  * @sd: sched_data for which to perform the update.
+  * @new_entity: if not NULL, pointer to the entity whose activation,
+- *		requeueing or repositionig triggered the invocation of
++ *		requeueing or repositioning triggered the invocation of
+  *		this function.
+  * @expiration: id true, this function is being invoked after the
+  *             expiration of the in-service entity
+@@ -90,7 +90,7 @@ static bool bfq_update_next_in_service(struct bfq_sched_data *sd,
+ 
+ 	/*
+ 	 * If this update is triggered by the activation, requeueing
+-	 * or repositiong of an entity that does not coincide with
++	 * or repositioning of an entity that does not coincide with
+ 	 * sd->next_in_service, then a full lookup in the active tree
+ 	 * can be avoided. In fact, it is enough to check whether the
+ 	 * just-modified entity has the same priority as
+@@ -1396,7 +1396,7 @@ static struct bfq_entity *bfq_first_active_entity(struct bfq_service_tree *st,
+  * In this first case, update the virtual time in @st too (see the
+  * comments on this update inside the function).
+  *
+- * In constrast, if there is an in-service entity, then return the
++ * In contrast, if there is an in-service entity, then return the
+  * entity that would be set in service if not only the above
+  * conditions, but also the next one held true: the currently
+  * in-service entity, on expiration,
+@@ -1479,12 +1479,12 @@ static struct bfq_entity *bfq_lookup_next_entity(struct bfq_sched_data *sd,
+ 		 * is being invoked as a part of the expiration path
+ 		 * of the in-service queue. In this case, even if
+ 		 * sd->in_service_entity is not NULL,
+-		 * sd->in_service_entiy at this point is actually not
++		 * sd->in_service_entity at this point is actually not
+ 		 * in service any more, and, if needed, has already
+ 		 * been properly queued or requeued into the right
+ 		 * tree. The reason why sd->in_service_entity is still
+ 		 * not NULL here, even if expiration is true, is that
+-		 * sd->in_service_entiy is reset as a last step in the
++		 * sd->in_service_entity is reset as a last step in the
+ 		 * expiration path. So, if expiration is true, tell
+ 		 * __bfq_lookup_next_entity that there is no
+ 		 * sd->in_service_entity.
+-- 
+2.17.1
 
-Yes you are right that this patch does not directly effect pointer 
-authentication functionality but contains several optimizations and 
-cleanups such as,
-
-* Removes assigning static flags HCR_HOST_VHE_FLAGS/HCR_HOST_NVHE_FLAGS 
-from switch.c so switching functions now are more generic in nature.
-* Currently the variation in hcr_el2 flags is across modes (VHE/NVHE). 
-Any future conditional change within those modes in host HCR_EL2 may not 
-effect code changes in switch.c
-* Save of hcr_el2 done at hyp init time so not expensive switching wise.
-
-I am fine on posting it separately also.
-> 
-> I recall Christoffer wanting to keep the restored DAIF register value on guest-exit static
-> to avoid extra loads/stores when we know what the value would be. I think the same logic
-> applies here.
-Yes the saving of host registers once was suggested by Christoffer.
-
-Thanks,
-Amit D
-> 
-> You mentioned in the cover letter the series has some history to it!
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> [0] http://lore.kernel.org/r/7ec2f950-7587-5ecd-6caa-c2fd091ad22c@arm.com
-> 
