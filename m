@@ -1,106 +1,135 @@
-Return-Path: <SRS0=A1VX=SJ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21C4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 23:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594DEC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 00:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8505420856
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Apr 2019 23:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A52F20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 00:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554682145;
+	bh=93YWfPt7ICFT3nKl55MDHYx1afF1R+7GO79TXwMfV3I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VUL7eBwpCH9FjbMG9NhojZobC2aVSBxCJkNZuy6Zf1W4YYaiFG7f9TLirap2/dQ82
+	 O5p9SGlFlRP8JC9EZwZIRby5JyARgTLMNPRXf+b5FX4bSfMMA9LlJCaJJKft0UNkvG
+	 T4lTaa5wKAoB2denZY6VzYbgNtzFEHKQFthK2IlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfDGXrV (ORCPT
+        id S1726446AbfDHAJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 19:47:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59044 "EHLO mx1.redhat.com"
+        Sun, 7 Apr 2019 20:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfDGXrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 19:47:20 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726223AbfDHAJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 20:09:03 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A2C03082E56;
-        Sun,  7 Apr 2019 23:47:20 +0000 (UTC)
-Received: from malachite.redhat.com (ovpn-121-19.rdu2.redhat.com [10.10.121.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CF6119C56;
-        Sun,  7 Apr 2019 23:47:17 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Input: i8042 - disable KBD port on Razer Blade Stealth V2 (2017 model)
-Date:   Sun,  7 Apr 2019 19:46:57 -0400
-Message-Id: <20190407234658.11626-1-lyude@redhat.com>
-In-Reply-To: <20190407213735.10658-1-lyude@redhat.com>
-References: <20190407213735.10658-1-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 07 Apr 2019 23:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73BD020879;
+        Mon,  8 Apr 2019 00:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554682142;
+        bh=93YWfPt7ICFT3nKl55MDHYx1afF1R+7GO79TXwMfV3I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WmGAjaajiMW8an+Qles5MrygIN6ie7p8/IhvdGTACceZbl1GTXdSWboSNEuMqDm1S
+         gLh3BDmXOL1MjqhmmQRDNMxOgjYUqYWSXiSbPkPvGZujQbzn9uvuC6dDg005VphNKU
+         QhXJ3Au0Cj7PPWzCPBvYLiCxreakl0MGWGZZH0f4=
+Date:   Mon, 8 Apr 2019 09:08:57 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Tom Zanussi <zanussi@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: [RFC][PATCH 0/3] tracing: Make error_log per instance
+Message-Id: <20190408090857.47efc559ae4a09378993cb17@kernel.org>
+In-Reply-To: <20190402182951.130809543@goodmis.org>
+References: <20190402182951.130809543@goodmis.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The late 2017 model of the Razer Blade Stealth has a built-in USB
-keyboard, but for some reason the BIOS exposes an i8042 controller with
-a connected KBD port. While this fake AT Keyboard device doesn't appear
-to report any events, attempting to change the state of the caps lock
-LED on it from on to off causes the entire system to hang.
+Hi Steve,
 
-So, introduce a quirk table for disabling keyboard probing by default,
-i8042_dmi_nokbd_table, and add this specific model of Razer laptop to
-that table.
+Sorry for replying late.
 
-Changes since v1:
-- Correct model (should be V2, 2017)
+On Tue, 02 Apr 2019 14:29:51 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
----
- drivers/input/serio/i8042-x86ia64io.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> Hi Tom,
+> 
+> I noticed that you created an error_log file in every instance, but
+> they all show the same errors. These three patches make it so that
+> the errors appear in the instance directory that they happened in.
+> If you write a bad error to
+> 
+>    /sys/kernel/tracing/instance/foo/events/sched/sched_switch/hist
+> 
+> It appears only in
+> 
+>   /sys/kernel/tracing/instances/foo/error_log
+> 
+> Which I think is the proper approach, especially instances should not
+> affect the top directory or other instances.
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index 136f6e7bf797..f65570691980 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -884,6 +884,22 @@ static const struct dmi_system_id __initconst i8042_dmi_kbdreset_table[] = {
- 	{ }
- };
- 
-+static const struct dmi_system_id i8042_dmi_nokbd_table[] __initconst = {
-+	{
-+		/*
-+		 * Razer Blade Stealth V2 (2017 model) - Keyboard is on USB
-+		 * but the system exposes a fake AT keyboard that crashes the
-+		 * system if the caps lock LED is changed
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Razer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Blade Stealth"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "2.04"),
-+		},
-+	},
-+	{ }
-+};
-+
- #endif /* CONFIG_X86 */
- 
- #ifdef CONFIG_PNP
-@@ -1040,6 +1056,9 @@ static int __init i8042_pnp_init(void)
- #ifdef CONFIG_X86
- 	if (dmi_check_system(i8042_dmi_nopnp_table))
- 		i8042_nopnp = true;
-+
-+	if (dmi_check_system(i8042_dmi_nokbd_table))
-+		i8042_nokbd = true;
- #endif
- 
- 	if (i8042_nopnp) {
+Agreed, leaking the probe-event error on instance will not be good.
+
+> 
+> For those errors that do not have an associated instance (creating a
+> kprobe/uprobe event or perf), a NULL passed to tracing_log_err() will
+> result in the error message in the top level error message.
+> 
+> Do you (or Masami) have any issues with this patch set?
+> 
+> If not, please add a "reviewed-by" or "acked-by" and I'll add it
+> to your patch series and push them to for-next (after more testing).
+
+This looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
+> 
+> If this isn't obvious, this patch series is on top of:
+> 
+>   http://lkml.kernel.org/r/cover.1554072478.git.tom.zanussi@linux.intel.com
+> 
+> Actually, I added it right after patch 5 of that series (before the
+> selftests and documentation).
+> 
+> Thanks!
+> 
+> -- Steve
+> 
+> 
+> 
+> Steven Rostedt (VMware) (3):
+>       tracing: Add trace_array parameter to create_event_filter()
+>       tracing: Have histogram code pass around trace_array for error handling
+>       tracing: Have the error logs show up in the proper instances
+> 
+> ----
+>  kernel/trace/trace.c                |  55 +++++++++-----
+>  kernel/trace/trace.h                |   8 +-
+>  kernel/trace/trace_events_filter.c  |  25 ++++---
+>  kernel/trace/trace_events_hist.c    | 145 ++++++++++++++++++++----------------
+>  kernel/trace/trace_events_trigger.c |   3 +-
+>  kernel/trace/trace_probe.c          |   2 +-
+>  6 files changed, 142 insertions(+), 96 deletions(-)
+
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
