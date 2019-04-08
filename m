@@ -2,110 +2,189 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CA6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3530DC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776A12148E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42682083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEfy4aEi"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vCOXEuCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfDHTeI (ORCPT
+        id S1727199AbfDHTfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:34:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37862 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfDHTeH (ORCPT
+        Mon, 8 Apr 2019 15:35:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40894 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfDHTfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:34:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so7873306pgc.4;
-        Mon, 08 Apr 2019 12:34:07 -0700 (PDT)
+        Mon, 8 Apr 2019 15:35:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c207so8204248pfc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 12:35:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b6l7wTzWQN9GvZ7EyQjK6wXZcZeUcC8uhQgz6Bw25NY=;
-        b=mEfy4aEiMVKfZx2ynfFfc0x+vK66RFf0udP49NPJWCdYHY1HgrTXH2PmDTNt/bpxz9
-         ZAoCifw0kH74KKfUKaHSF7k1hH6okHgx3959FqEnL8Ey82D+3y7n/7fnQ8nvBjrVu88p
-         /4OB60PBm7sIrGIMpmlFTS3pF4IixrHP753qmd0DKbFw3k4UNZEn2QcXsGWVchkrhUNW
-         BztX4gsvKo6ZxMyIMO5PuZWdqzZPuPtwhTFfOVpti3QZAEN3pAFskDl7Io0II5wtnRz7
-         KZRwPPEX8O3IFE4VRPgY/sRM9+3N4I65GQFAU/UImp4N/dgdGtGTXaEi0b/ieWsln3aX
-         FcKw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dnfaLDhWKK+bdxMDnKDSQrkA21nT3L/ZGr97EYstUIc=;
+        b=vCOXEuCTPmUd5JPK4pHqnAWa90OJx2D+pkBFLkDayUEwb1S/lqnLN65jxDGKZWBo/L
+         dRWstS/QnY+dUE4SLU0OUypT36YkYUSKOKd0j0MCUam5TH9H8lvbGYvvihLpzBk70WdC
+         YlBIY2kjlxz8PxTirdvgeJsYLbU3zU2Lq6Q1o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b6l7wTzWQN9GvZ7EyQjK6wXZcZeUcC8uhQgz6Bw25NY=;
-        b=Ds4hOmgtPnejDVFl39eFrVCzdTSNITNTlxy9JD9nuECNRUZNPV2d44DuEPrRWwEVja
-         8QfiMSZlVYJon4PYGtEBSD7tVsMEh4tQduZ7A0dnGi/yTFH04p4ggBHl2VZB/mdOYAU0
-         x9wsAz7EuRZxcE/pvNJyYUwYC5a2fft2A9Ard40ihIW1mIYeSpbQA+rym/vwqKl5NtrE
-         EMURMZx3Vsgbi8TWq6VwEEdkF2wwlZTng6uK8wWQHlUdR5PHQ5S7B9Umk72O39IwryEy
-         sdDpidc9bQJLFUoZGirlZ8NpBOh5+/CV98tLBQiPHRKAipAYQZrNp2eLWjc0lOmKFZiK
-         mRMg==
-X-Gm-Message-State: APjAAAVv/Z/TwF5IPPujfcMuXGjlDXCAjZwqV/pv3NNryI2HTAh8TwqP
-        0F1QMdm4KR/mXR9CBs9HXURQ6+BjZmKZ4Se44v8=
-X-Google-Smtp-Source: APXvYqz3tcGPBiyT8e/ULtoHlH0jXmeElSaATOFoVc3Ssf0X+Ol0i3xlwU1hegbWJsoA0p/GZU2xfwhXcdbVVg6QwZg=
-X-Received: by 2002:a62:6587:: with SMTP id z129mr32060389pfb.88.1554752046652;
- Mon, 08 Apr 2019 12:34:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dnfaLDhWKK+bdxMDnKDSQrkA21nT3L/ZGr97EYstUIc=;
+        b=HpSI6DLHh9Sbp7qQh7aEBk4SlQyZKYQbJkIxMEupzUEd6PhsVTJL35nkZyP0i9ORmu
+         E0j2vozJpPZYHBaBQQXCuQzEBylEVicO9k7lof7okaMGeshFv2NjR2TQfClsKSX1Q7PN
+         zqiBr8EMxUsLGiKYe82Kr/L5F6vLLpBKmXZX6AGNq2Xd/ekuZaRdiGPK0NUHh/yQaTH+
+         2UZnXey/6FARfyCJLcdI4EVIh4XLRsFT1UPcyexE2RT64+K+ixYYa5/ftmHkJno88vna
+         VAOaMFnEWH6fYOBViPr55BX+o/DsZmFhgkR7hKMbuE1MO++DPadVQl01uGOw7va+SHjU
+         D4jg==
+X-Gm-Message-State: APjAAAWhIbDEL48Wy7cjQDHeVuvvN04p4ny8wLPXQe2fHHE4TV6iMlDo
+        f+JPsdWyZtrGNnUblqOdIR/Llg==
+X-Google-Smtp-Source: APXvYqxmkHzinTo/c/u+lH4QuYyfczDmi5t38CExfctIY1jBdFusT+T0AzPxDlCQl+ytU9s/4r8b8g==
+X-Received: by 2002:a63:2c3:: with SMTP id 186mr29393444pgc.161.1554752116264;
+        Mon, 08 Apr 2019 12:35:16 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id f7sm56408835pga.56.2019.04.08.12.35.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 12:35:15 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 15:35:14 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     paulmck <paulmck@linux.ibm.com>, Rong Chen <rong.a.chen@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>
+Subject: Re: [srcu] a365bb5f6e: leaking_addresses.proc.___srcu_struct_ptrs.
+Message-ID: <20190408193514.GD133872@google.com>
+References: <20190408135610.GN11264@shao2-debian>
+ <20190408143037.GL14111@linux.ibm.com>
+ <20190408145750.GO11264@shao2-debian>
+ <20190408152112.GM14111@linux.ibm.com>
+ <118257214.1376.1554743216233.JavaMail.zimbra@efficios.com>
+ <20190408171041.GQ14111@linux.ibm.com>
+ <1930819602.1467.1554744349263.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
- <20190405203558.19160-2-rajatja@google.com> <CAHp75VehpYPm1ApFozisSsNi1g0EtbKBm3C97jxXC2u04tpt0A@mail.gmail.com>
- <CACK8Z6FGFiS_jN_5ctWmjKbrcUyjGkV0MsVs7_2TsaS7UAoydA@mail.gmail.com>
- <CAHp75Ve9zq2MWbiHhNV6RSV8xgmWQdqaMi=UdE7RFiZ9QgmH5Q@mail.gmail.com> <CACK8Z6Fb603NV-CreX6mxgj=JF0VmfP0kORHZg5T8L5vOeTsQA@mail.gmail.com>
-In-Reply-To: <CACK8Z6Fb603NV-CreX6mxgj=JF0VmfP0kORHZg5T8L5vOeTsQA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Apr 2019 22:33:54 +0300
-Message-ID: <CAHp75VcU9VvV3M5jVxE6ezii7d4JtFXPG7D-0zRF_amW+bEGdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Wysocki <Wysocki@google.com>,
-        Rafael J <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1930819602.1467.1554744349263.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 9:58 PM Rajat Jain <rajatja@google.com> wrote:
-> On Mon, Apr 8, 2019 at 11:41 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Apr 8, 2019 at 9:36 PM Rajat Jain <rajatja@google.com> wrote:
+On Mon, Apr 08, 2019 at 01:25:49PM -0400, Mathieu Desnoyers wrote:
+> ----- On Apr 8, 2019, at 1:10 PM, paulmck paulmck@linux.ibm.com wrote:
+> 
+> > On Mon, Apr 08, 2019 at 01:06:56PM -0400, Mathieu Desnoyers wrote:
+> >> ----- On Apr 8, 2019, at 11:21 AM, paulmck paulmck@linux.ibm.com wrote:
+> >> 
+> >> > On Mon, Apr 08, 2019 at 10:57:50PM +0800, Rong Chen wrote:
+> >> >> On Mon, Apr 08, 2019 at 07:30:37AM -0700, Paul E. McKenney wrote:
+> >> >> > On Mon, Apr 08, 2019 at 09:56:10PM +0800, kernel test robot wrote:
+> >> >> > > FYI, we noticed the following commit (built with gcc-7):
+> >> >> > > 
+> >> >> > > commit: a365bb5f6eafb220a1448674054b05c250829313 ("srcu: Allocate per-CPU data
+> >> >> > > for DEFINE_SRCU() in modules")
+> >> >> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git
+> >> >> > > tmp.2019.04.07a
+> >> >> > > 
+> >> >> > > in testcase: leaking_addresses
+> >> >> > > with following parameters:
+> >> >> > > 
+> >> >> > > 
+> >> >> > > 
+> >> >> > > 
+> >> >> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
+> >> >> > > 
+> >> >> > > caused below changes (please refer to attached dmesg/kmsg for entire
+> >> >> > > log/backtrace):
+> >> >> > > 
+> >> >> > > 
+> >> >> > > +-------------------------------------------------+------------+------------+
+> >> >> > > |                                                 | a44a55abae | a365bb5f6e |
+> >> >> > > +-------------------------------------------------+------------+------------+
+> >> >> > > | boot_successes                                  | 0          | 3          |
+> >> >> > > | boot_failures                                   | 4          | 6          |
+> >> >> > > | BUG:kernel_reboot-without-warning_in_test_stage | 4          | 6          |
+> >> >> > > | leaking_addresses.proc.___srcu_struct_ptrs.     | 0          | 6          |
+> >> >> > > +-------------------------------------------------+------------+------------+
+> >> >> > 
+> >> >> > Please help me out here.  Without this commit, the kernel never succeeds
+> >> >> > in booting, but with it the kernel sometimes succeeds in booting?  Or am
+> >> >> > I misinterpreting the above table?
+> >> >> > 
+> >> >> > 							Thanx, Paul
+> >> >> 
+> >> >> Hi Paul,
+> >> >> 
+> >> >> The message "kernel_reboot-without-warning_in_test_stage" is from 0day,
+> >> >> leaking addresses generated many dmesgs, so 0day thought some bootings may
+> >> >> failed.
+> >> > 
+> >> [...]
+> >> >> > 
+> >> >> > > [1 .rodata.cst16.POLY] 0xffffffffc0498360
+> >> >> > > [1 .rodata.cst32.byteshift_table] 0xffffffffc03f50f0
+> >> >> > > [19 __bug_table] 0xffffffffc02be184
+> >> >> > > [2 __tracepoints_ptrs] 0xffffffffc02f1cd0
+> >> >> > > [15 .smp_locks] 0xffffffffc042b2cc
+> >> >> > > [1 .rodata.cst16.enc] 0xffffffffc0498420
+> >> >> > > [11 __ksymtab_gpl] 0xffffffffc042b028
+> >> >> > > [8 __ex_table] 0xffffffffc04f13f4
+> >> >> > > [1 .init.rodata] 0xffffffffc0316000
+> >> >> > > [36 .note.gnu.build-id] 0xffffffffc03ed000
+> >> >> > > [1 .rodata.cst16.dec] 0xffffffffc0498410
+> >> >> > > [16 .parainstructions] 0xffffffffc03ed940
+> >> >> > > [8 .text..refcount] 0xffffffffc04e2aaa
+> >> >> > > [36 .gnu.linkonce.this_module] 0xffffffffc03f12c0
+> >> >> > > [2 __bpf_raw_tp_map] 0xffffffffc03054a0
+> >> >> > > [30 .orc_unwind_ip] 0xffffffffc03ee9f9
+> >> >> > > [8 .altinstr_replacement] 0xffffffffc0497372
+> >> >> > > [26 .rodata.str1.8] 0xffffffffc03ed1f0
+> >> >> > > [11 __verbose] 0xffffffffc05c9398
+> >> >> > > [1 .rodata.cst16.TWOONE] 0xffffffffc0498380
+> >> >> > > [1 uevent] KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
+> >> >> > > [1 .rodata.cst16.ONE] 0xffffffffc04983e0
+> >> >> > > [8 .altinstructions] 0xffffffffc0498430
+> >> >> > > [36 modules] crct10dif_pclmul 16384 1 - Live 0xffffffffc03f4000
+> >> >> > > [1 ___srcu_struct_ptrs] 0xffffffffc03840d0
+> >> >> > > 
+> >> 
+> >> This list of "leaked" memory seems to include the __tracepoint_ptrs
+> >> as well. So at least you seem to have the same behavior as the tracepoint
+> >> code, which was your source of inspiration for this implementation,
+> >> which is a good start.
+> >> 
+> >> So the remaining question is: is this memory allocated for module sections
+> >> really leaked for each module, or is it an issue with memory allocation
+> >> tracking ?
+> > 
 
-> > Instead of adding module parameter and doing these prints, perhaps
-> > introduce another debugfs node.
->
-> Uh, I actually did wanted to print them at the resume time in kernel
-> logs, because I think this is something kernel developers would be
-> responsible for debugging and thus would be great to have this
-> included within the kernel logs. User space tools may differ on
-> different distros and may or may not be looking for S0ix failures, and
-> particularly may not dump this new debugfs attribute.
->
-> The other thing is that seemingly this could also help in situations
-> where debugfs is not configured?
+It looks to me like this has nothing to do with memory allocation. This is
+the leaking_addresses.pl script isn't it? It basically finds out if
+any /proc filesystem entries or dmesg lines have kernel addresses which could
+be "leaking" into userspace. I have no idea which filesystem entries leak
+these addresses.
 
-The keywords above "developers", "debugging",  so, the concept of this
-driver is almost all about debugging, debugfs is not for users or esp.
-user space tools.
-So, I don't see any issue here with creating another node and use it
-for *debugging* whenever it's needed.
+This commit that introduced the script is:
 
--- 
-With Best Regards,
-Andy Shevchenko
+commit 136fc5c41f349296db1910677bb7402b0eeff376
+Author: Tobin C. Harding <me@tobin.cc>
+Date:   Mon Nov 6 16:19:27 2017 +1100
+
+    scripts: add leaking_addresses.pl
+
+    Currently we are leaking addresses from the kernel to user space. This
+    script is an attempt to find some of those leakages. Script parses
+    `dmesg` output and /proc and /sys files for hex strings that look like
+    kernel addresses.
+
+thanks,
+
+ - Joel
+
