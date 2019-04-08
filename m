@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ADBC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DAAC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B182214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC6E20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 16:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554742690;
-	bh=TwN7Oy5iVlWfQyWMfX4zx8Ea6uKwPpmBH/7ucAWtBnk=;
+	s=default; t=1554742701;
+	bh=WUhXHJXtBBOOHJfV9e27Xl89wCf7Toeord7PvhzbQOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYkXGtwCwSwytzMym/W+YJy1/oVMsvYFVPY8o+12th/oQIM+OWOOncJ9/LVaT5a84
-	 UQqgKrpCF/paQvPLqq99V+BWgr1/AT/tlFqb1Y2IUxuN14k1ywFW2QLk11WWccxhDQ
-	 7QbuqWiDU9dbxOazpeTQVqZzEhbyzKp8czWRtRIQ=
+	b=KT5R5pHxj6Z0EA0oE6rThBVQtSTqSTGJDWyof7UugzKDcfcOk9eYI5MebSvRDohGE
+	 IOwSYpiaLlK5db9T6KgK4TpqFxrxn5zecPUAFDfOaHnd8KyxJ7MyHreARQ0yb6OhZW
+	 tZmeMGAOECGg+kh3Sy7lu+mvDGYBixyATYilFyLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfDHQ6J (ORCPT
+        id S1729194AbfDHQ6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 12:58:09 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:43738 "EHLO
+        Mon, 8 Apr 2019 12:58:20 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:43714 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbfDHQ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728654AbfDHQ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 12:57:49 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id B46EA5FC63; Tue,  9 Apr 2019 00:57:46 +0800 (CST)
+        id A192E5F87D; Tue,  9 Apr 2019 00:57:46 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -41,9 +41,9 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor Interface)
-Date:   Tue,  9 Apr 2019 00:57:42 +0800
-Message-Id: <20190408165744.11672-5-wens@kernel.org>
+Subject: [PATCH 2/6] dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
+Date:   Tue,  9 Apr 2019 00:57:40 +0800
+Message-Id: <20190408165744.11672-3-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190408165744.11672-1-wens@kernel.org>
 References: <20190408165744.11672-1-wens@kernel.org>
@@ -61,65 +61,25 @@ lingo), which is similar to the one found on the A64 and H3. The only
 difference seems to be that support of MIPI CSI through a connected
 MIPI CSI-2 bridge.
 
-Add a device node for it, and pinctrl nodes for the commonly used MCLK
-and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-the pinctrl nodes to keep the device tree blob size down if they are
-unused.
+Add a compatible string for this variant.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index f739b88efb53..0c52f945fd5f 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -682,6 +682,20 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			/omit-if-no-ref/
-+			csi_8bit_parallel_pins: csi-8bit-parallel-pins {
-+				pins = "PE0", "PE2", "PE3", "PE6", "PE7",
-+				       "PE8", "PE9", "PE10", "PE11",
-+				       "PE12", "PE13";
-+				function = "csi";
-+			};
-+
-+			/omit-if-no-ref/
-+			csi_mclk_pin: csi-mclk-pin {
-+				pins = "PE1";
-+				function = "csi";
-+			};
-+
- 			emac_rgmii_pins: emac-rgmii-pins {
- 				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
- 				       "PD11", "PD12", "PD13", "PD14", "PD18",
-@@ -994,6 +1008,23 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		csi: camera@1cb0000 {
-+			compatible = "allwinner,sun8i-a83t-csi";
-+			reg = <0x01cb0000 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CSI>,
-+				 <&ccu CLK_CSI_SCLK>,
-+				 <&ccu CLK_DRAM_CSI>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CSI>;
-+			status = "disabled";
-+
-+			csi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun8i-a83t-dw-hdmi";
- 			reg = <0x01ee0000 0x10000>;
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+index 0dd540bb03db..a2e3e56f0257 100644
+--- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -6,6 +6,7 @@ Allwinner V3s SoC features a CSI module(CSI1) with parallel interface.
+ Required properties:
+   - compatible: value must be one of:
+     * "allwinner,sun6i-a31-csi"
++    * "allwinner,sun8i-a83t-csi"
+     * "allwinner,sun8i-h3-csi"
+     * "allwinner,sun8i-v3s-csi"
+     * "allwinner,sun50i-a64-csi"
 -- 
 2.20.1
 
