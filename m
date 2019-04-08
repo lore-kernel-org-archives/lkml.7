@@ -2,105 +2,120 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFDFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DC0208E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aCSelvFz"
+	by mail.kernel.org (Postfix) with ESMTP id C2C24206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDHDCV (ORCPT
+        id S1726668AbfDHDQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:02:21 -0400
-Received: from ozlabs.org ([203.11.71.1]:33899 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHDCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:02:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44cwFM06M7z9sQx;
-        Mon,  8 Apr 2019 13:02:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554692539;
-        bh=YOFk+atCKrXbjCML7jZe9KGogxn1YoR//ITrERqtAqU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aCSelvFz9iY//hXDTkWTikYlPZ+N2W4B6gl1vZxyiGce0fRqjr5JRW6A60EsWjLOj
-         ZLLy/FtOH6bL1A9x3/NBRUuOn3sLv2IGVUFetVtEt53xynPBCkYovstX8Te0Qr/m2e
-         9i4lStEEELMZzD3dsj75ycM+utrVMg8mgJa3l/5oi6cdz7Bh6BuI2HoKaSVjyF8Y3i
-         uwfeoBHUIchJoXPGb+GEHfU0aY1i/ekzmwynn2l7CFt6juM3bj90mZgMzgQLcaoSjV
-         ff3UpLluR9ANd8o8lVVM2/pcDgTYfdVXTD7Ahu7YSEe9Rr9P84Fr4d/5ygZTC+MW0G
-         RJCMJraNM7BMg==
-Date:   Mon, 8 Apr 2019 13:02:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: linux-next: manual merge of the staging tree with the
- staging.current tree
-Message-ID: <20190408130212.0a41f2a8@canb.auug.org.au>
+        Sun, 7 Apr 2019 23:16:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726349AbfDHDQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Apr 2019 23:16:34 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9665736192FA5693B86B;
+        Mon,  8 Apr 2019 11:16:31 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Mon, 8 Apr 2019
+ 11:16:22 +0800
+Subject: Re: [PATCH v4 0/6] normalize IOMMU dma mode boot options
+To:     Hanjun Guo <guohanjun@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Joerg Roedel" <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        "Gerald Schaefer" <gerald.schaefer@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+References: <20190407124147.13576-1-thunder.leizhen@huawei.com>
+ <b20fd8a6-88ce-7d26-8eb0-ed9f095988a6@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5CAABD03.9000301@huawei.com>
+Date:   Mon, 8 Apr 2019 11:16:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/p70eTziV7_X5O6WDD_8LHup"; protocol="application/pgp-signature"
+In-Reply-To: <b20fd8a6-88ce-7d26-8eb0-ed9f095988a6@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/p70eTziV7_X5O6WDD_8LHup
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the staging tree got a conflict in:
+On 2019/4/8 9:14, Hanjun Guo wrote:
+> Hi Zhen,
+> 
+> On 2019/4/7 20:41, Zhen Lei wrote:
+>> As Robin Murphy's suggestion:
+>> "It's also not necessarily obvious to the user how this interacts with
+>> IOMMU_DEFAULT_PASSTHROUGH, so if we really do go down this route, maybe it
+>> would be better to refactor the whole lot into a single selection of something
+>> like IOMMU_DEFAULT_MODE anyway."
+>>
+>> In this version, I tried to normalize the IOMMU dma mode boot options for all
+>> ARCHs. When IOMMU is enabled, there are 3 dma modes: paasthrough(bypass),
+>> lazy(mapping but defer the IOTLB invalidation), strict. But currently each
+>> ARCHs defined their private boot options, different with each other. For
+>> example, to enable/disable "passthrough", ARM64 use iommu.passthrough=1/0,
+>> X86 use iommu=pt/nopt, PPC/POWERNV use iommu=nobypass.
+>>
+>>
+>> Zhen Lei (6):
+>>   iommu: use iommu.dma_mode to replace iommu.passthrough and
+>>     iommu.strict
+>>   iommu: keep dma mode build options consistent with cmdline options
+>>   iommu: add iommu_default_dma_mode_get() helper
+>>   s390/pci: use common boot option iommu.dma_mode
+>>   powernv/iommu: use common boot option iommu.dma_mode
+>>   x86/iommu: use common boot option iommu.dma_mode
+> 
+> This will break systems using boot options as now, and I think
+> this is unacceptable. If you want to do so, just introduce iommu.dma_mode
+> on top of those iommu boot options with dma mode boot options unchanged,
+> and iommu.dma_mode is for all archs but compatible with them.
 
-  drivers/iio/industrialio-buffer.c
+I just changed the boot options name, but keep the function no change. I added
+all related maintainers/supporters in the "to=" list, maybe we can disuss this.
+Should I add some "obsoleted" warnings for old options and keep them for a while?
+But I think this kind of thing is best done in one go.
 
-between commit:
+> 
+> Thanks
+> Hanjun
+> 
+> 
+> .
+> 
 
-  20ea39ef9f2f ("iio: Fix scan mask selection")
+-- 
+Thanks!
+BestRegards
 
-from the staging.current tree and commit:
-
-  3862828a903d ("iio: buffer: Switch to bitmap_zalloc()")
-
-from the staging tree.
-
-I fixed it up (I just used the staging tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/p70eTziV7_X5O6WDD_8LHup
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyqubQACgkQAVBC80lX
-0GyEVwf+L3iLA/ah+KrLo74edL+x9cSVgb1NT/g2yBFQYdp+cA1ZMoLw280rsvhN
-Iq6qti5DUj/Zi2XxWN+MFVyyMUBHEtU7natiLK7N9uApcodg7uR3/wU34vmUQ6Ci
-3W5rxgzSjyX4ZQ4aCT6KDTcDsZwqEgd49LQeg9E3VrDJAxDI0orP9gM4Vh98zA5Y
-c2zk58fu3qQYRctdY6UnGVmHUc5/l0WTc27LWxV7wlLP5f11DJq35Rl+0YE2Nxrf
-fktymUWXQOEoxOZF0CF/3nHWueXCHudeDh0uCdZkH2GrXHw5I3r7Q2YswENa4Nhp
-HW12SJUlC9sQmMewXecNK6mb0yuxFg==
-=7ixT
------END PGP SIGNATURE-----
-
---Sig_/p70eTziV7_X5O6WDD_8LHup--
