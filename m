@@ -2,131 +2,173 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C85BC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAD8C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4614320880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B3D21841
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 19:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554750861;
-	bh=UHqMDDtQOqOxGKgfkJ41h5RR0HAzENzv75YV2K8MuNg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=n2/b/eXX7qLTYCJUsglo8UeAvhdjorO42yWMRFmK97pJzsrsNdXfp3BC89Ve15dUa
-	 AXeIExJEBMMOj2k4OmcyLSzyDCk5ktN9MU7JbFtZz7Dh3ymJFkqJWWB+cR5KKAy/Tb
-	 JVWQHvtIUe13by5t6tU1EOyerJsrHOsJrWY3Y6NM=
+	s=default; t=1554750865;
+	bh=sFZj5PWbQwM9lYkGkYzvILhlUtNY/iGXZe7nNm+nm1U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=wB18+7jsgNqLaOawXkzNZ4N569mOTu/0Wv80YH9DvGFY9bJ4g2bRi952X3HHYmYL9
+	 dOG5s1dmrmjLzHQboSLlrTAKZZVvFksS4//Hk/QRt6yNwcFKWN0XETCz2wC3jbOzZJ
+	 pv446EXIf2IXQALhCpq/xe7K0TosPr7iNg1xHOXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfDHTOT (ORCPT
+        id S1726908AbfDHTOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 15:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 15:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfDHTOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 15:14:19 -0400
+        id S1726050AbfDHTOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 15:14:21 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32BF20879;
-        Mon,  8 Apr 2019 19:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2EC22087F;
+        Mon,  8 Apr 2019 19:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554750858;
-        bh=UHqMDDtQOqOxGKgfkJ41h5RR0HAzENzv75YV2K8MuNg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Bstkjv11vWjtox2y0NfHrsbg5j1WOC4aik5dED6OGFJcb2EIFBcocue51L2S5lKWl
-         PwOvnnWHaYsL0+iSuwR2A6Wh8tm2uARNS2aB9VWC2tJIjJ6AboTFkf6oYz6oXAdL0L
-         ey3QYfvwc1LfVIKw77TNZ8plVyim+vfZTHU80NIM=
+        s=default; t=1554750860;
+        bh=sFZj5PWbQwM9lYkGkYzvILhlUtNY/iGXZe7nNm+nm1U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=2JQUBS2+Pe/BuDdgU4qAz8OgTYK1dVpCztDsx7ItLq/3CFFsrlD2bEWSG7AEUJoYa
+         UIAh+8cERUFbQZ7uWSCmk8e8ZhOyZ5Dk92Cnc06jDQgkh3TT1XpZp36TbFimC6iVuE
+         an7zWqh7Cko94KsyQ4FdAbwzIpKdzcHguLYD1PSY=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
 Cc:     rostedt@goodmis.org, tglx@linutronix.de, C.Emde@osadl.org,
         jkacur@redhat.com, bigeasy@linutronix.de,
         daniel.wagner@siemens.com, julia@ni.com, amartin@nvidia.com
-Subject: [PATCH 00/13] Linux 4.14.109-rt58-rc1
-Date:   Mon,  8 Apr 2019 14:14:02 -0500
-Message-Id: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 01/13] arm64: fpsimd: use preemp_disable in addition to local_bh_disable()
+Date:   Mon,  8 Apr 2019 14:14:03 -0500
+Message-Id: <b639e14b57a08f3a8931e44ed26101867414b4be.1554737688.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+In-Reply-To: <cover.1554737688.git.tom.zanussi@linux.intel.com>
+References: <cover.1554737688.git.tom.zanussi@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
+4.14.109-rt58-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-Hello RT Folks!
+------------------
 
-This is the RT stable review cycle of patch 4.14.109-rt58-rc1.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Please scream at me if I messed something up. Please test the
-patches too.
+[ Upstream commit 3afdfe419c33c1655d0763e070350aad44416594 ]
 
-The -rc release will be uploaded to kernel.org and will be
-deleted when the final release is out. This is just a review
-release (or release candidate).
+In v4.16-RT I noticed a number of warnings from task_fpsimd_load(). The
+code disables BH and expects that it is not preemptible. On -RT the
+task remains preemptible but remains the same CPU. This may corrupt the
+content of the SIMD registers if the task is preempted during
+saving/restoring those registers.
 
-The pre-releases will not be pushed to the git repository,
-only the final release is.
+Add preempt_disable()/enable() to enfore the required semantic on -RT.
 
-If all goes well, this patch will be converted to the next
-main release on 4/12/2019.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+[tom.zanussi@linux.intel.com: ignored sve-related changes]
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-To build 4.14.109-rt58-rc1 directly, the following patches should be applied:
+ Conflicts:
+	arch/arm64/kernel/fpsimd.c
+---
+ arch/arm64/kernel/fpsimd.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.109.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.109-rt58-rc1.patch.xz
-
-You can also build from 4.14.109-rt57 by applying the incremental patch:
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.109-rt57-rt58-rc1.patch.xz
-
-Enjoy!
-   
-   Tom
-
-Changes from v4.14.109-rt57:
-
-Julien Grall (1):
-  tty/sysrq: Convert show_lock to raw_spinlock_t
-
-Peter Zijlstra (1):
-  sched/fair: Robustify CFS-bandwidth timer locking
-
-Scott Wood (1):
-  locking/rt-mutex: Flush block plug on __down_read()
-
-Sebastian Andrzej Siewior (9):
-  arm64: fpsimd: use preemp_disable in addition to local_bh_disable()
-  sched/fair: Make the hrtimers non-hard again
-  rtmutex/rwlock: preserve state like a sleeping lock
-  softirq: Avoid "local_softirq_pending" messages if ksoftirqd is
-    blocked
-  softirq: Avoid "local_softirq_pending" messages if task is in
-    cpu_chill()
-  hrtimer: Don't lose state in cpu_chill()
-  x86: lazy-preempt: properly check against preempt-mask
-  hrtimer: cpu_chill(): save task state in ->saved_state()
-  powerpc/pseries/iommu: Use a locallock instead local_irq_save()
-
-Tom Zanussi (1):
-  Linux 4.14.109-rt58
-
- arch/arm64/kernel/fpsimd.c             | 10 ++++++
- arch/powerpc/platforms/pseries/iommu.c | 16 +++++----
- arch/x86/include/asm/preempt.h         |  2 +-
- drivers/tty/sysrq.c                    |  6 ++--
- kernel/locking/rtmutex.c               |  2 +-
- kernel/locking/rwlock-rt.c             |  2 +-
- kernel/locking/rwsem-rt.c              |  9 +++++
- kernel/sched/fair.c                    | 34 ++++++++++---------
- kernel/softirq.c                       | 60 +++++++++++++++++++++++++---------
- kernel/time/hrtimer.c                  | 15 +++++++--
- localversion-rt                        |  2 +-
- 11 files changed, 111 insertions(+), 47 deletions(-)
-
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 5d547deb6996..049641a458f3 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -172,6 +172,7 @@ void fpsimd_flush_thread(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
++	preempt_disable();
+ 	local_bh_disable();
+ 
+ 	memset(&current->thread.fpsimd_state, 0, sizeof(struct fpsimd_state));
+@@ -179,6 +180,7 @@ void fpsimd_flush_thread(void)
+ 	set_thread_flag(TIF_FOREIGN_FPSTATE);
+ 
+ 	local_bh_enable();
++	preempt_enable();
+ }
+ 
+ /*
+@@ -190,12 +192,14 @@ void fpsimd_preserve_current_state(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
++	preempt_disable();
+ 	local_bh_disable();
+ 
+ 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE))
+ 		fpsimd_save_state(&current->thread.fpsimd_state);
+ 
+ 	local_bh_enable();
++	preempt_enable();
+ }
+ 
+ /*
+@@ -208,6 +212,7 @@ void fpsimd_restore_current_state(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
++	preempt_disable();
+ 	local_bh_disable();
+ 
+ 	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
+@@ -219,6 +224,7 @@ void fpsimd_restore_current_state(void)
+ 	}
+ 
+ 	local_bh_enable();
++	preempt_enable();
+ }
+ 
+ /*
+@@ -231,6 +237,7 @@ void fpsimd_update_current_state(struct fpsimd_state *state)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
++	preempt_disable();
+ 	local_bh_disable();
+ 
+ 	fpsimd_load_state(state);
+@@ -242,6 +249,7 @@ void fpsimd_update_current_state(struct fpsimd_state *state)
+ 	}
+ 
+ 	local_bh_enable();
++	preempt_enable();
+ }
+ 
+ /*
+@@ -281,6 +289,7 @@ void kernel_neon_begin(void)
+ 
+ 	BUG_ON(!may_use_simd());
+ 
++	preempt_disable();
+ 	local_bh_disable();
+ 
+ 	__this_cpu_write(kernel_neon_busy, true);
+@@ -295,6 +304,7 @@ void kernel_neon_begin(void)
+ 	preempt_disable();
+ 
+ 	local_bh_enable();
++	preempt_enable();
+ }
+ EXPORT_SYMBOL(kernel_neon_begin);
+ 
 -- 
 2.14.1
 
