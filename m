@@ -5,100 +5,105 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3402EC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B57C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E1521841
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD90421841
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfDHN4L (ORCPT
+        id S1726905AbfDHN5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:56:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46502 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfDHN4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:56:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BF72344F9F;
-        Mon,  8 Apr 2019 13:56:10 +0000 (UTC)
-Received: from [10.43.17.46] (unknown [10.43.17.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6DAF64292;
-        Mon,  8 Apr 2019 13:56:09 +0000 (UTC)
-Subject: Re: CBL issue #431: lld: x86_64: sysfs: cannot create duplicate
- filename $module/.rodata.cst{16,32}
-To:     sedat.dilek@gmail.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-References: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
-From:   Denys Vlasenko <dvlasenk@redhat.com>
-Message-ID: <e5d3d2fc-874c-a8e3-1320-f9396a3621b5@redhat.com>
-Date:   Mon, 8 Apr 2019 15:56:08 +0200
+        Mon, 8 Apr 2019 09:57:11 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36959 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfDHN5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:57:11 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so16551158wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 06:57:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wsuW/A/A/2IZbYOm99nwKA0chJUmq1KGQa/aD2KSNeE=;
+        b=nKw479GiLNNOhX3gcMdE94lb/AFLXAmfyfYxawMxIvI85LBAs9sDYcVJjxe2HnzJSG
+         w31T9eYEzTFSjuvPiqffrVB0+o55Dt9joNa+63kKwJRGPm0+m0V04+q+Uq1IdATX4Os5
+         sSi07OHQCLQ3gShrNWCOg9A+D+etZ0ZxrPACFLpg5k7myn+rwWchYPZhhkislQwIY37m
+         3rk0KqvYnV23Zkzu3miX8pSYvMggG/+aNsUFpWl7/VFe3VEvWQhoz2CM5QYd5BfLh99T
+         HRS4/wQjvB08pzGE3jfu+HfcZm9Y5KS6NXTeO+7tZL45Lo3xyxUSrKIm6Mv8PfAxsmon
+         tqoQ==
+X-Gm-Message-State: APjAAAWtjtWSqZIqRnkR2PfGFB86ZdXMsBwP8kO6mI/ks26kO6AeGYR6
+        0tGJSvY6L0+1VylD2+74v4VIVg==
+X-Google-Smtp-Source: APXvYqx5wsfcDx+IzJVWFibOMvbgB9E1q0b7vtZVVlLk4ucYSSSI5DrxSDgZ6RPgHoNnlq+gmRiulw==
+X-Received: by 2002:a5d:6681:: with SMTP id l1mr19311262wru.186.1554731829302;
+        Mon, 08 Apr 2019 06:57:09 -0700 (PDT)
+Received: from t460s.bristot.redhat.com ([193.205.81.200])
+        by smtp.gmail.com with ESMTPSA id z13sm46303628wrw.36.2019.04.08.06.57.08
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 06:57:08 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] trace,x86: Add nmi to the irq_vectors class
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+References: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
+ <d9e0e9d14d2ef394cea974e2f47c0099b7d18839.1554142415.git.bristot@redhat.com>
+ <alpine.DEB.2.21.1904052323200.1802@nanos.tec.linutronix.de>
+ <9fc0399e-ab53-1074-623a-a826e2466277@redhat.com>
+ <20190408094633.7ff8dbf4@gandalf.local.home>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <1da7473c-a602-9a49-35a1-6de43bb744b9@redhat.com>
+Date:   Mon, 8 Apr 2019 15:57:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CA+icZUVW2X6G=qukJTrZuUevcnrOiuShJGxnxVaqyONNxv+RYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190408094633.7ff8dbf4@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 08 Apr 2019 13:56:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 3:36 PM, Sedat Dilek wrote:
-> I fell over your commit "crypto: x86 - make constants readonly, allow
-> linker to merge them" [1] while digging into ClangBuiltLinux issue 431
-> [0].
+On 4/8/19 3:46 PM, Steven Rostedt wrote:
+> On Mon, 8 Apr 2019 14:24:47 +0200
+> Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
 > 
-> I see the following in my dmesg-log:
+>> NMI starts:
+>>   f-4447  [000] d.Z.  1487.689290: nmi_entry: vector=2
+>>   f-4447  [000] d.Z.  1487.689291: default_do_nmi <-do_nmi
+>>   f-4447  [000] d.Z.  1487.689291: nmi_handle <-default_do_nmi
+>>   f-4447  [000] d.Z.  1487.689291: nmi_cpu_backtrace_handler <-nmi_handle
+>>
+>> It handles very fast:
+>>   f-4447  [000] d.Z.  1487.689292: nmi_handler: nmi_cpu_backtrace_handler()
+>> delta_ns: 780 handled: 0
+>>
+>> But some other functions continues running in the NMI context:
+>> [Dazed and confused, but trying to continue message ]
+>>   f-4447  [000] d.Z.  1487.689292: _raw_spin_trylock <-default_do_nmi
+>>   f-4447  [000] d.Z.  1487.689566: unknown_nmi_error <-default_do_nmi
+>>   f-4447  [000] d.Z.  1487.689566: nmi_handle <-unknown_nmi_error
+>>   f-4447  [000] d.Z.  1487.689567: printk <-unknown_nmi_error
+>>   f-4447  [000] d.Z.  1487.689567: vprintk_func <-printk
+>>   f-4447  [000] d.Z.  1487.689567: printk_safe_log_store <-vprintk_func
+>>   f-4447  [000] d.Z.  1487.689569: arch_irq_work_raise <-irq_work_queue
+>>   f-4447  [000] d.Z.  1487.689569: default_send_IPI_self <-arch_irq_work_raise
+>>   f-4447  [000] d.Z.  1487.689569: __default_send_IPI_shortcut
+>> <-default_send_IPI_self
 > 
-> $ grep sysfs: dmesg_5.0.4-rc1-1-amd64-cbl-asmgoto.txt
-> [Fri Mar 22 10:32:09 2019] sysfs: cannot create duplicate filename
-> '/module/usbcore/sections/.rodata.cst16'
-> [Fri Mar 22 10:32:18 2019] sysfs: cannot create duplicate filename
-> '/module/nfsd/sections/.rodata.cst32'
-> [Fri Mar 22 10:32:18 2019] sysfs: cannot create duplicate filename
-> '/module/iwlwifi/sections/.rodata.cst16'
-> [Fri Mar 22 10:32:18 2019] sysfs: cannot create duplicate filename
-> '/module/i915/sections/.rodata.cst32'
-> [Fri Mar 22 10:32:18 2019] sysfs: cannot create duplicate filename
-> '/module/mac80211/sections/.rodata.cst32'
-> [Fri Mar 22 10:32:18 2019] sysfs: cannot create duplicate filename
-> '/module/iwlmvm/sections/.rodata.cst16'
-> [Fri Mar 22 10:32:20 2019] sysfs: cannot create duplicate filename
-> '/module/bluetooth/sections/.rodata.cst16'
-> 
-> Above modules have dependencies to stuff from arch/x86/crypto (see below P.S.).
+> Just to remove confusion. Your example is to show that the new
+> tracepoints would have shown that the NMI was long due to the printk? As
+> running printk from NMI (even with the delayed output) isn't a normal
+> path.
 
-Not sure how exactly this causes the error, but the cause seems to be
-having more than one section with the same name. This occurs in only three files
-(grep for ".rodata.cst16," string):
+The example is "to show that the new tracepoints would have shown that the NMI
+was longer than what the existing tracepoint pointed." The example was not the
+best, I agree.. but... it serves to illustrate the idea.
 
-cast6-avx-x86_64-asm_64.S
-camellia-aesni-avx2-asm_64.S
-camellia-aesni-avx-asm_64.S
-
-/* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-.section        .rodata.cst16, "aM", @progbits, 16
-
-In other places I used .rodata.cst16.OBJECTNAME, but in these three cases
-there are more than one object in the section, so I left it w/o OBJECTNAME.
-
-I propose to change section name, append _module_ name and optionally
-a comment why this is done:
-
-  /* NB: section is mergeable, all elements must be aligned 16-byte blocks */
-+/* There is more than one object in this section, let's use module name
-+   as unique suffix */
--.section        .rodata.cst16, "aM", @progbits, 16
-+.section        .rodata.cst16.cast6-avx-x86_64-asm_64, "aM", @progbits, 16
-
-
-> Looks like LLD defaults to -ffunction-sections and -fdata-sections.
-> Do you happen to know what the defaults are for BFD linker?
-
-linker does not create section names. Compiler does for .c files,
-for .S files they are made by a human.
+-- Daniel
