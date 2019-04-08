@@ -2,98 +2,160 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98941C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98323C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6345B20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5870920883
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8sS501G"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ozBjAJEi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ER0em7f4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbfDHIH5 (ORCPT
+        id S1726486AbfDHIK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:07:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38479 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDHIHz (ORCPT
+        Mon, 8 Apr 2019 04:10:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47162 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDHIKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:07:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w15so13611886wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 01:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eETP41IES64G6d2VWh0CccmMhh0+VN/BPxiIdaxr2eA=;
-        b=X8sS501GmNUqzyl+5ai0554WhNdS2Jc0hME8tsmlN1G9IC8v+V1g9YVNBhC9yIuLV8
-         0NoG+SwDnovFf/cwZOoG3cjMPSfwpaybXZNil8BUd4DyDzKxVNhdo7G73xlKMbG/DvlF
-         4VptigRC3aEtrq85svw16JPq8JRqZYpSbm/+cSl0un8+HgFiA64LrbxM6Vkn7NL6oGui
-         CnV3wbCXJncZWPsJ9Q3ylYSAV71aus13T5/EuCztWIvY8cdljoLMCr+Lc2BdpZ/16LUn
-         CiRKoFkg/EM9OmAukX6hozLhlx0Q6jqvxx7vVLI/aZmyaI8VDcwqqw6q3zFYmOtWhyim
-         YDzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eETP41IES64G6d2VWh0CccmMhh0+VN/BPxiIdaxr2eA=;
-        b=QTUBVSEB5WKv/tnYJrjsQD34A7XEiGhuxMvs0uJ3XdxFUGpg82Z5WOXeWLHlXmBhs1
-         TAr3W8WXx4rWUNFjZ19u/Y0iHek+slnjRQ3p6vs8ZObT4rwWozU0LAzug5h8SWPLxlbz
-         rTldykgCiFNdXePx8dKMusDP7f3rfEDKAhMIyKR7r5CDkg7GKDur4uF31JnrQ+cJJ8+k
-         pYTA9D49k9ty7W5zofYSqOrhIp5F0HznaDftRcHQQs64AteKUBIsYLO3j7TzP1K1L3BZ
-         gicp5JfrYxIF5XsiJvFKrZeYpktnFDjaSxKuw5FY9c29N1AnvhKEFz5cohrPCQKgThQD
-         s2LQ==
-X-Gm-Message-State: APjAAAWzh2vMUFC1j4qr+tIzIHS/kB1De0j+7VcMs93pUdYdxecQ91gI
-        qCWpIA6hhXT8GfsJc1HvlD0=
-X-Google-Smtp-Source: APXvYqy9iQfQfvl1k59ZpNTJQUfNEXnw10Npx2Un6xLvqEzF380fEGrMQ4YAQOsbFaEkaFGp0QDnGw==
-X-Received: by 2002:a05:600c:219:: with SMTP id 25mr17362775wmi.7.1554710873376;
-        Mon, 08 Apr 2019 01:07:53 -0700 (PDT)
-Received: from localhost.localdomain (85-169-74-166.rev.numericable.fr. [85.169.74.166])
-        by smtp.gmail.com with ESMTPSA id f1sm8374450wml.28.2019.04.08.01.07.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 01:07:52 -0700 (PDT)
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org
-Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>
-Subject: [PATCH v2] Add COMPILE_TEST to CONFIG_ARM_TIMER_SP804
-Date:   Mon,  8 Apr 2019 10:07:45 +0200
-Message-Id: <20190408080745.22012-1-david.abdurachmanov@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Apr 2019 04:10:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E577A61110; Mon,  8 Apr 2019 08:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554711054;
+        bh=B24mPUafIFdtauVdiqO2enUJ5L0Zb4appgFJkVFD068=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ozBjAJEipqwfICme8UViDxTu0kW/b0FN8T8MY17wMEIdWaYrBu3T/mnIQN056+C94
+         fZoRuss8G/z9B7tOPYAP/iT3CnQehK/gqIinlL51LNwYk2twQ4YdCsNqsClVEqhR3T
+         Jbj6B3KDdEsQKD5SFe2BxZMVN1hrGRrmrtS8sCH0=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 4C5286022B;
+        Mon,  8 Apr 2019 08:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554711051;
+        bh=B24mPUafIFdtauVdiqO2enUJ5L0Zb4appgFJkVFD068=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ER0em7f4jXYH/BF3xw6fhpDnwHS4TutXmh0S4lw58uY+l2dWLEAtRW7/Yz9pPdBSj
+         THn1PWg0nIWOfC+UST+TLERWvGaoOW58LYCimwCgezSxieadRrONTZdqIPhos3DMJ6
+         jj8eb2K8mL/SBu3mgDTnQ3o6ViS/yTRQTSr3gXW4=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Apr 2019 13:40:49 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        andy.gross@linaro.org, rnayak@codeaurora.org
+Cc:     david.brown@linaro.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/9] arm64: dts: qcom: qcs404: Add rpmpd node
+In-Reply-To: <20190327123832.11566-7-sibis@codeaurora.org>
+References: <20190327123832.11566-1-sibis@codeaurora.org>
+ <20190327123832.11566-7-sibis@codeaurora.org>
+Message-ID: <3686ccecbbf8c13ad6b2aa12167f8510@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is only used on arm and arm64 platforms. Add COMPILE_TEST option.
+On 2019-03-27 18:08, Sibi Sankar wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Add the rpmpd node on the qcs404 and define the available levels.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> [sibis: fixup available levels]
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 55 ++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index e8fd26633d57..a7d46647c416 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/power/qcom-rpmpd.h>
+> 
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -230,6 +231,60 @@
+>  				compatible = "qcom,rpmcc-qcs404";
+>  				#clock-cells = <1>;
+>  			};
+> +
+> +			rpmpd: power-controller {
+> +				compatible = "qcom,qcs404-rpmpd";
+> +				#power-domain-cells = <1>;
+> +				operating-points-v2 = <&rpmpd_opp_table>;
+> +
+> +				rpmpd_opp_table: opp-table {
+> +					compatible = "operating-points-v2";
+> +
+> +					rpmpd_opp_ret: opp1 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION>;
+> +					};
+> +
+> +					rpmpd_opp_ret_plus: opp2 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
+> +					};
+> +
+> +					rpmpd_opp_min_svs: opp3 {
+> +						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
+> +					};
+> +
+> +					rpmpd_opp_low_svs: opp4 {
+> +						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
+> +					};
+> +
 
-Tested with 5.1-rc3+ on Fedora/RISCV. CONFIG_ARM_TIMER_SP804 no more shows
-up in riscv config.
+typo in opp5 - opp11 rpmhpd/rpmpd
+will fix it in the next re-spin
 
-Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
----
- drivers/clocksource/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +					rpmhpd_opp_svs: opp5 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_plus: opp6 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_nom: opp7 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_plus: opp8 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo: opp9 {
+> +						opp-level = <RPM_SMD_LEVEL_TURBO>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_no_cpr: opp10 {
+> +						opp-level = <RPM_SMD_LEVEL_TURBO_NO_CPR>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_plus: opp11 {
+> +						opp-level = <RPM_SMD_LEVEL_BINNING>;
+> +					};
+> +				};
+> +			};
+>  		};
+>  	};
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 171502a356aa..ede5d20299b9 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -379,7 +379,7 @@ config ARM_GLOBAL_TIMER
- 	  This options enables support for the ARM global timer unit
- 
- config ARM_TIMER_SP804
--	bool "Support for Dual Timer SP804 module"
-+	bool "Support for Dual Timer SP804 module" if COMPILE_TEST
- 	depends on GENERIC_SCHED_CLOCK && CLKDEV_LOOKUP
- 	select CLKSRC_MMIO
- 	select TIMER_OF if OF
 -- 
-2.20.1
-
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
