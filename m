@@ -2,165 +2,84 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B974C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB532C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090BE21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4D321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0909WOp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oHY2aZyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfDHPGy (ORCPT
+        id S1728555AbfDHPHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:06:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55071 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDHPGy (ORCPT
+        Mon, 8 Apr 2019 11:07:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58444 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbfDHPHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:06:54 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so14768152wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=eAkVGL8LuYrWK2HSKnJoGKtfb768PfHiEnLOTq+qGeM=;
-        b=g0909WOpVaY8LRC/Xa+v/jGqL0gEvjsPdUfTvNJr2wRjddJLW2HrkE1CR9QmPUDB90
-         jbI4iqkFXuf2E2tjUSxfUdM2KJTLnFJLFwjqSlVdd4sfnpRQaQgytRq3miL1HERLR//F
-         K63Yi+ZwNB1AWpSOTI85KRMjjDyX8/4rmvp1vnWVYsGVU3CFhOBftd9yJe/a6RUym7Tk
-         gwDXlHkwUuUD3o/3Q9lfCnRFiHdVpU2IzFC8VoSEgTkl9WhcXocTIOKX/W4R/F0iMLM8
-         cufzA4I9sn7r1a4ePUDLsefsQXtXRnS9gwh+fVCxlC9j2uvxQ/GjHFzm5SCCel2uI792
-         6gZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=eAkVGL8LuYrWK2HSKnJoGKtfb768PfHiEnLOTq+qGeM=;
-        b=nHoPmQZ1VGdhCYFFjvqSJqGNolfbqx6JjiisnuWonP4fSjec0XVLj2dRIWJky7AwNf
-         AtEnhGxCQFd2FeCeFD/MKduxdE6M3mg4BXn+S2IS8+6OkPzCndvSZ3U1d7op/BL5TaUx
-         4oobHyC1ByPDz36tmxnVpUFBsWAavptFqEOAcja7jaBUbaJlpMUZVFdrBb24Mg3z8+zR
-         QCPqhMdDVPK66c0PsuLYYC451XjTPm9PQnsE9QjrFx82DDByXudKaDMLEjTDPGcxyrPR
-         PhiUkGNPsmHtb2dByY4auaze8CNfDZ3tMVJw3v07OQhrZYbXicT9dLPEgDHAinZUC8hc
-         lUww==
-X-Gm-Message-State: APjAAAXAzvF98qEjVlCz9gxF6+mW0Cap7g0TpEpppzftc63mT8n0KeRf
-        AWCWxPN4jaouAJABISfx2lThTw==
-X-Google-Smtp-Source: APXvYqz5wk5CVsf1SCEbEItZbOWgJ84MZIEvEU5bOD5aGKQpNdCZoc4Jl+IWFrE71mTc2NCb+W3zsg==
-X-Received: by 2002:a7b:c301:: with SMTP id k1mr18719569wmj.37.1554736012178;
-        Mon, 08 Apr 2019 08:06:52 -0700 (PDT)
-Received: from [192.168.0.100] ([88.147.51.116])
-        by smtp.gmail.com with ESMTPSA id g10sm21900262wrq.2.2019.04.08.08.06.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 08:06:51 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
-Date:   Mon, 8 Apr 2019 17:06:47 +0200
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Paolo Valente' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Angelo Ruocco <angeloruocco90@gmail.com>,
-        lennart@poettering.net, mkoutny@suse.cz
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <938957C8-3A0F-4664-8D1F-A822F6D6D4E7@linaro.org>
-References: <20190408143935.9062-1-paolo.valente@linaro.org>
- <20190408143935.9062-2-paolo.valente@linaro.org>
- <20190408144925.GA23021@linux-x5ow.site>
- <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
- <20190408150430.GB23021@linux-x5ow.site>
- <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 8 Apr 2019 11:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6d9mR4p7vs7OsmiaEc7Ha2nAzVtyWfYKDp8ELxTJV7Q=; b=oHY2aZyVAkJ/tu31jCXw+fyda
+        iJfGHG0GUxDFZX48MmsBs8GIQpn/LHNVjKz00cEnzSS7MXf0qzaka/T0QkanePGeNuNGrLeI/4Hkv
+        enlAODK+wAycHjRSmFX+so4O74DmFb901Lv0MgJCJW+yoiCTRH+L2dBHI+SWmq4+uNDK4x9UiqbP/
+        pDcOwOXdO1A7hBzkcOJKoytOrcRwSUUe8iAVNrWOYf21Z4M0/vNChJS5/PFSkhD6trPiitiDq2AXQ
+        W99oKC4Ur5eJzWsOy9R22AjG1y/3rqauQytUBhNQVHRe8FG5P4cKCZN/bS+j0gu/bJuE+dYTak5Ka
+        PftnhS7YQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDVrN-0007c0-T3; Mon, 08 Apr 2019 15:06:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 05C9629B0DE15; Mon,  8 Apr 2019 17:06:55 +0200 (CEST)
+Date:   Mon, 8 Apr 2019 17:06:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V5 08/12] perf/x86/intel: Add Icelake support
+Message-ID: <20190408150654.GV12232@hirez.programming.kicks-ass.net>
+References: <20190402194509.2832-1-kan.liang@linux.intel.com>
+ <20190402194509.2832-9-kan.liang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402194509.2832-9-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 02, 2019 at 12:45:05PM -0700, kan.liang@linux.intel.com wrote:
+> +static struct event_constraint *
+> +icl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+> +			  struct perf_event *event)
+> +{
+> +	/*
+> +	 * Fixed counter 0 has less skid.
+> +	 * Force instruction:ppp in Fixed counter 0
+> +	 */
+> +	if ((event->attr.precise_ip == 3) &&
+> +	    ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
+> +		return &fixed_counter0_constraint;
 
+Does that want to be:
 
-> Il giorno 8 apr 2019, alle ore 17:05, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 4/8/19 9:04 AM, Johannes Thumshirn wrote:
->> [+Cc Michal ]
->> On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
->>>=20
->>>=20
->>>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn =
-<jthumshirn@suse.de> ha scritto:
->>>>=20
->>>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
->>>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
->>>>>=20
->>>>> When bfq was merged into mainline, there were two I/O schedulers =
-that
->>>>> implemented the proportional-share policy: bfq for blk-mq and cfq =
-for
->>>>> legacy blk. bfq's interface files in the blkio/io controller have =
-the
->>>>> same names as cfq. But the cgroups interface doesn't allow two
->>>>> entities to use the same name for their files, so for bfq we had =
-to
->>>>> prepend the "bfq" prefix to each of its files. However no legacy =
-code
->>>>> uses these modified file names. This naming also causes confusion, =
-as,
->>>>> e.g., in [1].
->>>>>=20
->>>>> Now cfq has gone with legacy blk, so there is no need any longer =
-for
->>>>> these prefixes in (the never used) bfq names. In view of this =
-fact, this
->>>>> commit removes these prefixes, thereby enabling legacy code to =
-truly
->>>>> use the proportional share policy in blk-mq.
->>>>>=20
->>>>> [1] https://github.com/systemd/systemd/issues/7057
->>>>=20
->>>> Hmm, but isn't this a user-space facing interface and thus some =
-sort of ABI?
->>>> Do you know what's using it and what breaks due to this conversion?
->>>>=20
->>>=20
->>> Yep, but AFAIK, the problem is exactly the opposite: nobody uses =
-these
->>> names for the proportional-share policy, or wants to use these =
-names.  I'm
->>> CCing Lennart too, in case he has some improbable news on this.
->>>=20
->>> So the idea is to align names to what people expect, possibly before
->>> more confusion arises.
->>=20
->> OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
->> symlinks?
->>=20
->> This way we can a) keep the old files and b) have them point to the =
-new (a.k.a
->> cfq style) files.
->=20
-> I did consider that, and that would be doable. But honestly, I'm =
-having a
-> hard time seeing what issue we are attempting to fix by doing this.
->=20
+		event->hw.config == X86_CONFIG(.event=0xc0)
 
-The problem is ~100% of people and software believing to set weights and =
-not doing it.
+?
 
-Paolo
+That is, are there really bits we want to mask in there?
 
-> --=20
-> Jens Axboe
-
+> +
+> +	return hsw_get_event_constraints(cpuc, idx, event);
+> +}
