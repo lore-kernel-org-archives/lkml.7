@@ -2,257 +2,139 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1C2C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE6C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072C42083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029E72084F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 05:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Kd8dsrB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfDHFxq (ORCPT
+        id S1726615AbfDHFyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 01:53:46 -0400
-Received: from mx-ginzinger.sigmacloud.services ([185.154.235.147]:39957 "EHLO
-        mx-ginzinger.sigmacloud.services" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726201AbfDHFxq (ORCPT
+        Mon, 8 Apr 2019 01:54:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34315 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbfDHFyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 01:53:46 -0400
-Received: from [31.193.165.228] (port=43721 helo=mx-ginzinger.sigmacloud.services)
-        by mx-ginzinger.sigmacloud.services with esmtps (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.82_1-5b7a7c0-XX)
-        (envelope-from <Martin.Kepplinger@ginzinger.com>)
-        id 1hDNDq-0007hS-2u; Mon, 08 Apr 2019 07:53:35 +0200
-Received: from [10.10.1.120] (10.10.1.120) by exc1.buero.ginzinger.com
- (10.1.1.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 8 Apr 2019
- 07:53:34 +0200
-X-CTCH-RefID: str=0001.0A0B0206.5CAAE1DE.0082,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Subject: Re: Regression in suspend-to-ram (TPM related) with 5.1-rc1 (BISECTED)
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Zimmerman <pauldzim@gmail.com>
-CC:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <CADBGO7_WUoA53gM8EDFy6Q36SDEZPU9V=OUBA0QM20FOko51Rg@mail.gmail.com>
- <CADBGO7-UkQMxSPdSX9bGVPxSRROj75FA16FuXeFrVmcKVQ_Qdg@mail.gmail.com>
- <CADBGO7_XnbXiWHB=O1B_+b+CUA9g-bYJHN37VJ2SsxXMNHcPOQ@mail.gmail.com>
- <20190321134140.GA4603@linux.intel.com>
-From:   Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=martin.kepplinger@ginzinger.com; prefer-encrypt=mutual;
- keydata=
- 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
- qvHmgI95tw==
-Message-ID: <31f75727-d2c3-1afa-ab14-1dbc62a6315b@ginzinger.com>
-Date:   Mon, 8 Apr 2019 07:53:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <20190321134140.GA4603@linux.intel.com>
-X-Originating-IP: [10.10.1.120]
-X-ClientProxiedBy: exc1.buero.ginzinger.com (10.1.1.204) To
- exc1.buero.ginzinger.com (10.1.1.204)
-X-EXCLAIMER-MD-ORIGINAL-SUBJECT: [NODISC][NOSIG]Re: Regression in
- suspend-to-ram (TPM related) with 5.1-rc1 (BISECTED)
-X-EXCLAIMER-MD-CONFIG: 9dd172f7-de2e-4231-b886-ec11f46e03b3
+        Mon, 8 Apr 2019 01:54:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v12so6655138pgq.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 22:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6l0dSdFF4WCYp2QwS6OTopGcAlUv8JXieQgw4XEpynM=;
+        b=Kd8dsrB8YqUg/j253TMFqmXt7tisBy7WbuhlOt7NnV9zbai8rqQFguV8xUfcAxAODZ
+         IL4VZnmDQFncbGNpfzVHV8i2ftPShwkKFLHYeD7+MuYiHRCYvUeqJ+GIACkm5GOb2FFj
+         MGVWzruNcJj2GSzwnOCz1Mxg7FOA7YH2Micic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6l0dSdFF4WCYp2QwS6OTopGcAlUv8JXieQgw4XEpynM=;
+        b=iyaneIovtLfPFLHAocfbJ2+zbmnoOrgn72P+YuP7+STuZrfk+Yv6STiobYeOefw4iG
+         SaNekOuurZPYkdudnmjdG/C/auhDpCy+8u8KnctYoYEIS98kOX2AMnAtJ+NH17dclw53
+         I7Vln9kEPDlw/lzJsw9Ae6nr13SIOXqv1G+x/ki/Rt/u8nNXiCjQMUEdnyj8ivjr1N5p
+         X9eWglThn+wVmMGYDQ2MLQ4cQUxKBsepM4izfx23Q70y7Pcsvmoq8E++X+wLBzH0Ombd
+         ZoewkKlQHub5DBPsQNnRCE2oirMTbmP9ayGxLbdrW0FtibfY9H2NpMap6DlTABJJWXcU
+         g8iA==
+X-Gm-Message-State: APjAAAX+sQfKWJgbW7Ms3gMuJfHyQAIxKPFNIih2i61f8hVIrGv6/JsA
+        Jw2TE/UFcXfLln3nM/aXzbms8A==
+X-Google-Smtp-Source: APXvYqzE3XCiuI0FWVAcXMd/+gXXx7NwcuMXdaTbvD2EBFHwZl1kve3WJ3hqOchBK1U9179Syz51Pw==
+X-Received: by 2002:a62:6c43:: with SMTP id h64mr28593142pfc.123.1554702874291;
+        Sun, 07 Apr 2019 22:54:34 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.229.217])
+        by smtp.gmail.com with ESMTPSA id l1sm31076164pgp.9.2019.04.07.22.54.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Apr 2019 22:54:33 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
+Date:   Mon,  8 Apr 2019 11:24:14 +0530
+Message-Id: <20190408055415.1374-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----57B085029EC531FB670104379D1A5B9A"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an S/MIME signed message
+Add Goodix GT5663 capacitive touch controller node on
+Amarula A64-Relic board.
 
-------57B085029EC531FB670104379D1A5B9A
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+The CTP connected to board with,
+- SDA, SCK from i2c1
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH8 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
 
-On 21.03.19 14:41, Jarkko Sakkinen wrote:
-> On Tue, Mar 19, 2019 at 04:03:37PM -0700, Paul Zimmerman wrote:
->> So I bisected this down to:
->>
->> # first bad commit: [a3fbfae82b4cb3ff9928e29f34c64d0507cad874] tpm:
->> take TPM chip power gating out of tpm_transmit()
->>
->> but this doesn't revert cleanly on Linus' HEAD. Anyone have an idea what
->> could be wrong here?
-> 
-> Sorry I've been in flu for the early week. I spotted the bug
-> immediately.  When I did these patches I did not have TPM 1.x at my
-> hand. I used fTPM 2.0 and dTPM 2.0. Stefan did TPM 1.x testing but I
-> probably forgot to ask him to try out suspend.
-> 
-> Anyway, the bug is obvious and I'll send you a patch to try out.
-> Thanks a lot for bisecting this!
-> 
-> /Jarkko
-> 
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-
-Hi,
-
-Any news on this? It seems not to be fixed in -rc4. I'd happily test a
-patch too.
-
-thanks a lot,
-
-                            martin
-
-------57B085029EC531FB670104379D1A5B9A
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIIOHAYJKoZIhvcNAQcCoIIODTCCDgkCAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggshMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
-hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
-Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
-bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
-UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
-fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
-KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
-03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
-k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
-AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
-HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
-oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
-b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
-cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
-AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
-GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
-ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
-WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
-NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
-2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
-BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
-fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
-cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
-2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
-csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUzMIIEG6AD
-AgECAhBNQrEzGzrZ6FVYh1EEYH4+MA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
-b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAe
-Fw0xODA3MTgwMDAwMDBaFw0yMTA3MTcyMzU5NTlaMDAxLjAsBgkqhkiG9w0BCQEW
-H21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDsMC77L0D+2D8I8X5ubnBhADLgU+HtlwMTFt/WJIhc
-kgbvnawYXWrCIpk8F6BJ0R/iFCykPdG7741EmlcHRKOJfhVxjXhwnoGFqnYmurCt
-fvZLR3+mT3FWnVv2RAdrXscXH3BpijqqWabdtTbiTvmcl86Zc6mNlVhYZSbDul/E
-voIGZotGcGIWrgZxN+8MQJQHKb0KHyWlPVPkrjvEfOJHKKLFsBNSnNMR95Ijg3Sp
-h8/8RG490/zRHflGzUlxDSlLyY9YJGzSdDzcFKoYcc4oaaUY5N3uhRna43TLUIQh
-6ybt3DKVz1Pw/ikwYJrOsulJrVr3D8KVHdGxq7HYl7jnAgMBAAGjggHfMIIB2zAf
-BgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQU/GtSUbHg
-14sPDlmo27eQYwtjaS0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
-VR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEYGA1UdIAQ/MD0wOwYMKwYBBAGy
-MQECAQMFMCswKQYIKwYBBQUHAgEWHWh0dHBzOi8vc2VjdXJlLmNvbW9kby5uZXQv
-Q1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NP
-TU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmww
-gYsGCCsGAQUFBwEBBH8wfTBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5jb21vZG9j
-YS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMCoG
-A1UdEQQjMCGBH21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wDQYJKoZI
-hvcNAQELBQADggEBAGEuG01K1tt5i3gUdQkYem/KpbJUYBZd43QwmoTa0TGXUiYq
-b+g/TeGG9QQ1yq+73xOr8fu6oT2608C7EiJc6JmjTs485/OZmTqgYkrLfs71F1kB
-3Z59WPf5aoR/pnn5vdfkkoO29V1cKPJR4z+iOG2hOlcK/dXrX8i6mnL5DGIe8l5n
-udUPvIbUhbMavrDd6kwhs0oCjylwdKGlFkCpKMn3HPflfDeHuV9Z8Nrpeq/7+Pm0
-I/fLPkaYlULASJoJCucMYcedY9rmuro9JhV+NuVXaqLIrQPc1vyKFeRuLHh84M6c
-1h1DArdGTykXZUwjXnnHtuOtzjIAzkx2Ns43vEsxggK/MIICuwIBATCBrDCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMT
-NENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEE1CsTMbOtnoVViHUQRgfj4wDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZI
-hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkwNDA4MDU1MzQx
-WjAvBgkqhkiG9w0BCQQxIgQgvOtctXk8KV2F8g6/p3VOElK665DoRMfAJuRhiR3z
-kJIweQYJKoZIhvcNAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
-AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEA
-UZ38tqKsz6CZ0aq1IOXOrwNOfnWW8EjY5WJMhnb5HFi1kLin+9IU+W5ez6sqzDVc
-9Ns7erlsz2TWFfzhlTeVYlzPmOmk84K7Lw4Aihe5gE1rGByGhVwBrJSrJu81gNHN
-J+6La2QYP7m4HMdCiFJb7zJwfaU8LKr8BcfCf0Wv9jpBs1xhuBDwr4cQz4n4lRis
-NNwi37PlZx5xwGGODVWL03Nc4BO7sDeywiGpe16XRq/VZJsXKfzJpyIrJrV9an1V
-IfcU+J+XzBZ8yE/7bHttq6juAMEqzs10HJhUAiiSIK+NRhgwaUihBkqPaSBjIHNI
-5JNj8/FA72RQFujEca161w==
-
-------57B085029EC531FB670104379D1A5B9A--
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 3575db216016..a76353d59aaa 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -49,6 +49,28 @@
+ 	bias-pull-up;
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt5663";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
++&i2c1_pins {
++	bias-pull-up;
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+@@ -212,6 +234,13 @@
+ 	regulator-name = "vdd-cpus";
+ };
+ 
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
+ };
+-- 
+2.18.0.321.gffc6fa0e3
 
