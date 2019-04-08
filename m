@@ -2,104 +2,222 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1E9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EAFC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663F020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C777F20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfDHIyq (ORCPT
+        id S1726626AbfDHI4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:54:46 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45356 "EHLO ns.iliad.fr"
+        Mon, 8 Apr 2019 04:56:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:44352 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfDHIyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:54:46 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 6759A21931;
-        Mon,  8 Apr 2019 10:54:44 +0200 (CEST)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 576DB2192F;
-        Mon,  8 Apr 2019 10:54:44 +0200 (CEST)
-Subject: Re: [PATCH v3 8/9] soc: qcom: rpmpd: Add MSM8998 power-domains
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190327123832.11566-1-sibis@codeaurora.org>
- <20190327123832.11566-9-sibis@codeaurora.org>
- <3b3bd18b-4491-c290-a421-7be8df371925@free.fr>
- <a5e9aef9c8d972424f14d5af96a9af58@codeaurora.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <e4506b18-597e-4537-fba1-1cf7ffa60929@free.fr>
-Date:   Mon, 8 Apr 2019 10:54:44 +0200
+        id S1726189AbfDHI4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 04:56:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7648515AD;
+        Mon,  8 Apr 2019 01:56:09 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79ED13F718;
+        Mon,  8 Apr 2019 01:56:07 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] iommu: io-pgtable: Add ARM Mali midgard MMU page
+ table format
+From:   Steven Price <steven.price@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        iommu@lists.linux-foundation.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sean Paul <sean@poorly.run>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-2-robh@kernel.org>
+ <4ab58561-17e8-364c-a315-e55955ffdd49@arm.com>
+ <a5a11a56-46dc-ab44-564b-d2216f32451e@arm.com>
+ <0c5f474e-6dd4-8ba5-8c2b-52a99e9b1ca5@arm.com>
+Message-ID: <e826958c-59e7-8397-ab14-cf55a5387a8f@arm.com>
+Date:   Mon, 8 Apr 2019 09:56:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <a5e9aef9c8d972424f14d5af96a9af58@codeaurora.org>
+In-Reply-To: <0c5f474e-6dd4-8ba5-8c2b-52a99e9b1ca5@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Apr  8 10:54:44 2019 +0200 (CEST)
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 10:30, Sibi Sankar wrote:
-> On 2019-04-05 20:38, Marc Gonzalez wrote:
->> On 27/03/2019 13:38, Sibi Sankar wrote:
+On 05/04/2019 11:36, Steven Price wrote:
+> On 05/04/2019 10:51, Robin Murphy wrote:
+>> Hi Steve,
 >>
->>> Add the shared cx/mx and sensor sub-system's cx and mx
->>> power-domains found on MSM8998.
+>> On 05/04/2019 10:42, Steven Price wrote:
+>>> First let me say congratulations to everyone working on Panfrost - it's
+>>> an impressive achievement!
 >>>
->>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>> Full disclosure: I used to work on the Mali kbase driver. And have been
+>>> playing around with running the Mali user-space blob with the Panfrost
+>>> kernel driver.
+>>>
+>>> On 01/04/2019 08:47, Rob Herring wrote:
+>>>> ARM Mali midgard GPU is similar to standard 64-bit stage 1 page
+>>>> tables, but
+>>>> have a few differences. Add a new format type to represent the
+>>>> format. The
+>>>> input address size is 48-bits and the output address size is 40-bits
+>>>> (and
+>>>> possibly less?). Note that the later bifrost GPUs follow the standard
+>>>> 64-bit stage 1 format.
+>>>>
+>>>> The differences in the format compared to 64-bit stage 1 format are:
+>>>>
+>>>> The 3rd level page entry bits are 0x1 instead of 0x3 for page entries.
+>>>>
+>>>> The access flags are not read-only and unprivileged, but read and write.
+>>>> This is similar to stage 2 entries, but the memory attributes field
+>>>> matches
+>>>> stage 1 being an index.
+>>>>
+>>>> The nG bit is not set by the vendor driver. This one didn't seem to
+>>>> matter,
+>>>> but we'll keep it aligned to the vendor driver.
+>>>
+>>> The nG bit should be ignored by the hardware.
+>>>
+>>> The MMU in Midgard/Bifrost has a quirk similar to
+>>> IO_PGTABLE_QUIRK_TLBI_ON_MAP - you must perform a cache flush for the
+>>> GPU to (reliably) pick up new page table mappings.
+>>>
+>>> You may not have seen this because of the use of the JS_CONFIG_START_MMU
+>>> bit - this effectively performs a cache flush and TLB invalidate before
+>>> starting a job, however when using a GPU like T760 (e.g. on the Firefly
+>>> RK3288) this bit isn't being set. In my testing on the Firefly board I
+>>> saw GPU page faults because of this.
+>>>
+>>> There's two options for fixing this - a patch like below adds the quirk
+>>> mode to the MMU. Or alternatively always set JS_CONFIG_START_MMU on
+>>> jobs. In my testing both options solve the page faults.
+>>>
+>>> To be honest I don't know the reasoning behind kbase making the
+>>> JS_CONFIG_START_MMU bit conditional - I'm not aware of any reason why it
+>>> can't always be set. My guess is performance, but I haven't benchmarked
+>>> the difference between this and JS_CONFIG_START_MMU.
+>>>
+>>> -----8<----------
+>>>  From e3f75c7f04e43238dfc579029b8c11fb6b4a0c18 Mon Sep 17 00:00:00 2001
+>>> From: Steven Price <steven.price@arm.com>
+>>> Date: Thu, 4 Apr 2019 15:53:17 +0100
+>>> Subject: [PATCH] iommu: io-pgtable: IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE
+>>>
+>>> Midgard/Bifrost GPUs require a TLB invalidation when mapping pages,
+>>> implement IO_PGTABLE_QUIRK_TLBI_ON_MAP for LPAE iommu page table
+>>> formats and add the quirk bit to Panfrost.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
 >>> ---
->>>  drivers/soc/qcom/rpmpd.c | 36 ++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 36 insertions(+)
+>>>   drivers/gpu/drm/panfrost/panfrost_mmu.c |  1 +
+>>>   drivers/iommu/io-pgtable-arm.c          | 11 +++++++++--
+>>>   2 files changed, 10 insertions(+), 2 deletions(-)
 >>>
->>> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
->>> index 238a9e02e890..706a3f63038e 100644
->>> --- a/drivers/soc/qcom/rpmpd.c
->>> +++ b/drivers/soc/qcom/rpmpd.c
->>> @@ -19,9 +19,12 @@
->>>  /* Resource types */
->>>  #define RPMPD_SMPA 0x61706d73 /* smpa */
->>>  #define RPMPD_LDOA 0x616f646c /* ldoa */
->>> +#define RPMPD_RWCX 0x78637772 /* rwcx */
->>>  #define RPMPD_RWMX 0x786d7772 /* rwmx */
->>>  #define RPMPD_RWLC 0x636c7772 /* rwlc */
->>>  #define RPMPD_RWLM 0x6d6c7772 /* rwlm */
->>> +#define RPMPD_RWSC 0x63737772 /* rwsc */
->>> +#define RPMPD_RWSM 0x6d737772 /* rwsm */
+>>> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>>> b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>>> index f3aad8591cf4..094312074d66 100644
+>>> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>>> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>>> @@ -343,6 +343,7 @@ int panfrost_mmu_init(struct panfrost_device *pfdev)
+>>>       mmu_write(pfdev, MMU_INT_MASK, ~0);
+>>>
+>>>       pfdev->mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
+>>> +        .quirks        = IO_PGTABLE_QUIRK_TLBI_ON_MAP,
+>>>           .pgsize_bitmap    = SZ_4K, // | SZ_2M | SZ_1G),
+>>>           .ias        = 48,
+>>>           .oas        = 40,    /* Should come from dma mask? */
+>>> diff --git a/drivers/iommu/io-pgtable-arm.c
+>>> b/drivers/iommu/io-pgtable-arm.c
+>>> index 84beea1f47a7..45fd7bbdf9aa 100644
+>>> --- a/drivers/iommu/io-pgtable-arm.c
+>>> +++ b/drivers/iommu/io-pgtable-arm.c
+>>> @@ -505,7 +505,13 @@ static int arm_lpae_map(struct io_pgtable_ops *ops,
+>>> unsigned long iova,
+>>>        * Synchronise all PTE updates for the new mapping before there's
+>>>        * a chance for anything to kick off a table walk for the new iova.
+>>>        */
+>>> -    wmb();
+>>> +    if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_TLBI_ON_MAP) {
+>>> +        io_pgtable_tlb_add_flush(&data->iop, iova, size,
+>>> +                     ARM_LPAE_BLOCK_SIZE(2, data), false);
 >>
->> I do not see any value in the comments. Maybe remove them?
+>> For correctness (in case this ever ends up used for something with
+>> VMSA-like invalidation behaviour), the granule would need to be "size"
+>> here, rather than effectively hard-coded.
 > 
-> comments were included to add value
-> though, however I guess the comments
-> were definitely not clear enough.
-> The magic values for the resources
-> are calculated as follows:
+> Ah yes - I did rather just copy/paste this from io-pgtable-arm-v7s with
+> minor fix-ups.
 > 
-> ascii to hex in reverse order
-> eg: smpa -> 0x61706d73
+>> However, since Mali's invalidations appear to operate on arbitrary
+>> ranges, it would probably be a lot more efficient for the driver to
+>> handle this case directly, by just issuing a single big invalidation
+>> after the for_each_sg() loop in panfrost_mmu_map().
 > 
-> 0x61 0x70 0x6d 0x73
->    a    p    m    s
+> Yes - that would probably be a better option. Although I think
+> personally I'd lean towards just using JS_CONFIG_START_MMU for most
+> cases. The only thing that won't handle is modifying the MMU while the
+> job is running (e.g. faulting in pages). But that can be handled
+> internally in Panfrost by invalidating the exact region which is being
+> populated.
 
-Ah... I see now.
+I asked around. Apparently there are some interesting issues with
+START_MMU on some hardware revisions. So best to follow mali_kbase here
+and only use START_MMU on those hardware revisions that mali_kbase does
+(what Panfrost is already doing). Which means we'll definitely need this
+quirk in some form.
 
-I agree that explaining *why* e.g. RPMPD_SMPA is defined as 0x61706d73
-is worthwhile indeed.
+Steve
 
-What I meant is that adding /* smpa */ to a macro named RPMPD_SMPA does
-not really bring any new information ;-)
+> 
+> Steve
+> 
+>> Robin.
+>>
+>>> +        io_pgtable_tlb_sync(&data->iop);
+>>> +    } else {
+>>> +        wmb();
+>>> +    }
+>>>
+>>>       return ret;
+>>>   }
+>>> @@ -800,7 +806,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg
+>>> *cfg, void *cookie)
+>>>       struct arm_lpae_io_pgtable *data;
+>>>
+>>>       if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+>>> IO_PGTABLE_QUIRK_NO_DMA |
+>>> -                IO_PGTABLE_QUIRK_NON_STRICT))
+>>> +                IO_PGTABLE_QUIRK_NON_STRICT |
+>>> +                IO_PGTABLE_QUIRK_TLBI_ON_MAP))
+>>>           return NULL;
+>>>
+>>>       data = arm_lpae_alloc_pgtable(cfg);
+>>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-How about prefixing the whole block with a small blurb, for example
-
-/* The value of RPMPD_X is X encoded as a little-endian, lower-case, ASCII string */
-
-Regards.
