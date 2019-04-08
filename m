@@ -2,55 +2,86 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86441C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDD6C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600EA21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1354621473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 13:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CK5L/ufc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfDHNDn (ORCPT
+        id S1726712AbfDHNEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 09:03:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42987 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfDHNDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 09:03:41 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44d9bG6lLhz9sQr; Mon,  8 Apr 2019 23:03:38 +1000 (AEST)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: dd9a994fc68d196a052b73747e3366c57d14a09e
-X-Patchwork-Hint: ignore
-In-Reply-To: <0d8c9cb7fb43bde8663333bb6a69d16380a219a5.1554380255.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: powerpc/vdso32: fix CLOCK_MONOTONIC on PPC64
-Message-Id: <44d9bG6lLhz9sQr@ozlabs.org>
-Date:   Mon,  8 Apr 2019 23:03:38 +1000 (AEST)
+        Mon, 8 Apr 2019 09:04:44 -0400
+Received: from us01smtprelay-2.synopsys.com ([198.182.47.9]:53350 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfDHNEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 09:04:44 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id 4BF9C24E23AD;
+        Mon,  8 Apr 2019 06:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1554728684; bh=y5nQEi4zDjXR0zK6FQbL3G62aNT4nNlPliULmMOnVoE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CK5L/ufculwZ8XcL8gtIPFVGAliiueistdHbLiZ4T3PUiKY15TUhNgcHs+azpxANj
+         YgrgHeb4vAQMXbT2Gpc6JS7Gt6K/dIvCKhtU/jDQAYcQzoQVyM9BnlCLuvGTcOEKtK
+         4srAhca6Dy+LX6l5s2A3K5uaozYMP4GuLeeG649B4zNPUS0mK4XfSeR/lsp5SSIINk
+         DSb3HDtzOGPQiSheEqH0zZ4iCKmWNNdzFv+L35ruLlY25j7zkMwQEDtPoSAxaj01ow
+         zq2kqPIlQF33YXFEIvGTfzNiurMIfzvCEELzhliKu/FoehDby+2F5pz6oDheTz0n+9
+         WfBxkcVUY/1uA==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
+        by mailhost.synopsys.com (Postfix) with ESMTP id B5D34A0070;
+        Mon,  8 Apr 2019 13:04:42 +0000 (UTC)
+From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+Subject: [PATCH] ARC: memset: fix build with L1_CACHE_SHIFT != 6
+Date:   Mon,  8 Apr 2019 16:04:38 +0300
+Message-Id: <20190408130438.11466-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-04 at 12:20:05 UTC, Christophe Leroy wrote:
-> Commit b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC
-> inconsistencies across Y2038") changed the type of wtom_clock_sec
-> to s64 on PPC64. Therefore, VDSO32 needs to read it with a 4 bytes
-> shift in order to retrieve the lower part of it.
-> 
-> Fixes: b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038")
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+In case of 'L1_CACHE_SHIFT != 6' we define dummy assembly macroses
+PREALLOC_INSTR and PREFETCHW_INSTR without arguments. However
+we pass arguments to them in code which cause build errors.
+Fix that.
 
-Applied to powerpc fixes, thanks.
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/lib/memset-archs.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-https://git.kernel.org/powerpc/c/dd9a994fc68d196a052b73747e3366c5
+diff --git a/arch/arc/lib/memset-archs.S b/arch/arc/lib/memset-archs.S
+index f230bb7092fd..b3373f5c88e0 100644
+--- a/arch/arc/lib/memset-archs.S
++++ b/arch/arc/lib/memset-archs.S
+@@ -30,10 +30,10 @@
+ 
+ #else
+ 
+-.macro PREALLOC_INSTR
++.macro PREALLOC_INSTR	reg, off
+ .endm
+ 
+-.macro PREFETCHW_INSTR
++.macro PREFETCHW_INSTR	reg, off
+ .endm
+ 
+ #endif
+-- 
+2.14.5
 
-cheers
