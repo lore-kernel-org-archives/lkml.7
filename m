@@ -2,172 +2,131 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39823C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B63321473
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7D421473
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="E6ggRi1i"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PY7IxFzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfDHPAQ (ORCPT
+        id S1727291AbfDHPBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:00:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47076 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbfDHPAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:00:16 -0400
-Received: from zn.tnic (p200300EC2F07270021E2DB6109CF2936.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:2700:21e2:db61:9cf:2936])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4BCEB1EC086F;
-        Mon,  8 Apr 2019 17:00:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554735615;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CzkhWpRYPOmlT9VD2G/d+dI/JEzYpliXkcMuNXJzuQo=;
-        b=E6ggRi1ip1hNuyNkwrTySvTH5TJ+H2uj1rpYnjUKr2WACi0+E40h20rI0pUnY3TuHxgS//
-        NnNgIe1+sQ/Kv8TcDHpda7bgH1HwvfWuldW48ngwGV5iGYUN/VXKF3J+5vWKwU4NVucYPM
-        vfwRnSzVd5j6PoCkYtUnBjS9WsGdVnU=
-Date:   Mon, 8 Apr 2019 17:00:11 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Zhao Yakui <yakui.zhao@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v3 3/4] x86: Use HYPERVISOR_CALLBACK_VECTOR for
- acrn_guest upcall vector
-Message-ID: <20190408150011.GH15689@zn.tnic>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
- <1554711131-21514-4-git-send-email-yakui.zhao@intel.com>
+        Mon, 8 Apr 2019 11:01:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36422 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfDHPBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 11:01:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 85so7483841pgc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LaHrubOReFozmFeTDPlIY0uKL2st1iavJ7Kz8XOZfys=;
+        b=PY7IxFzlGhViayhuK99TrPj0sEfIyzGmIsmpiPAR0eTXVeAyy1vAnePpVk2xq7yvfn
+         FSEHsUgnIFy2klXMulpcOk3ZRLOoD7RRQqUTi19hlHxb6QwM1dO8vN9DgA5z1AeR4GIT
+         HgHZ7fGAJkyhMxK5L26uQImwrMiLq0J6umDLsO6ANyBP5rcP6cOYcv+JoCKfWO8YLzZV
+         0+NXs3hSSqsmGQEWAqnfxnSFS2D1ubSQ6ID9wmJDbN4Ap+QmXnmPygr2YjKkZbtyc2Pd
+         WX2kxwoZPN9CJAbUClA0xHih4zwbrWe1WEPzq0c5CZSbLyQ4CfXPfGrpnt4YAVBpZNWt
+         uN5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LaHrubOReFozmFeTDPlIY0uKL2st1iavJ7Kz8XOZfys=;
+        b=k1V2daq/1nJtn10bdUGPas6O+kqu6BMoSPlRYGnhz36DYirm/mz69If3L2hlZoX8Xd
+         xg5Sneb/aA4U+EYkdTW8Y0kBRlfKGTxns23DKMfKWZ9hp9bHZk9MTslFGUqm2PTe019q
+         pp0WzNrDhVyI9NGWkqNrmQhM2w9tiBRB25U+UFOd0e9igto9NdBQEbm/5OTd+I7XMgNx
+         bIO4z2XwLH45NJZk86dMUgNVYiNCd0ldAqftEENMk1zuvSUMYIPZXW4WiwQCt3Wh+ZK8
+         BCrTeGjmjHaA9EaCmFWZQWtWdBJSaK0oJCbLwhyMIrynBybj5dvUXz8/T1q3Soohvk7L
+         5JTw==
+X-Gm-Message-State: APjAAAXYEXj36K4W6SnZL6Yglau8PWGEwdl/5Kh2CiYmcuAWJamSzoOE
+        /MtqijBDAkurt1i0Digwy3BeKA==
+X-Google-Smtp-Source: APXvYqw0zaknEpCG4OK+ILLdErXeU2cRIkVaARlhbFydAFDfocYLsIiWUd1NV84170jM3/tYlx2jHA==
+X-Received: by 2002:a63:db10:: with SMTP id e16mr28762512pgg.142.1554735681626;
+        Mon, 08 Apr 2019 08:01:21 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id c1sm42564428pfd.114.2019.04.08.08.01.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 08:01:20 -0700 (PDT)
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <51290bbe-21e0-1f12-d163-78dfe0d09bac@kernel.dk>
+Date:   Mon, 8 Apr 2019 09:01:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1554711131-21514-4-git-send-email-yakui.zhao@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You can prefix your subject now like this:
-
-x86/acrn: Use ...
-
-On Mon, Apr 08, 2019 at 04:12:10PM +0800, Zhao Yakui wrote:
-> Linux kernel uses the HYPERVISOR_CALLBACK_VECTOR for hypervisor upcall
-> vector. And it is already used for Xen and HyperV.
-> After Acrn hypervisor is detected, it will also use this defined vector
-> to notify kernel.
+On 4/8/19 8:54 AM, Paolo Valente wrote:
 > 
-> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
-> ---
-> V1->V2: Remove the unused API definition of acrn_setup_intr_handler and
-> acrn_remove_intr_handler.
->         Adjust the order of header file
->         Add the declaration of acrn_hv_vector_handler and tracing
-> definition of acrn_hv_callback_vector.
-> ---
->  arch/x86/Kconfig                 |  1 +
->  arch/x86/entry/entry_64.S        |  5 +++++
->  arch/x86/include/asm/acrnhyper.h | 19 +++++++++++++++++++
->  arch/x86/kernel/cpu/acrn.c       | 22 ++++++++++++++++++++++
->  4 files changed, 47 insertions(+)
->  create mode 100644 arch/x86/include/asm/acrnhyper.h
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index d77d215..ae4d38b 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -848,6 +848,7 @@ config JAILHOUSE_GUEST
->  config ACRN_GUEST
->  	bool "ACRN Guest support"
->  	depends on X86_64
-> +	select X86_HV_CALLBACK_VECTOR
->  	help
->  	  This option allows to run Linux as guest in ACRN hypervisor. Enabling
->  	  this will allow the kernel to boot in virtualized environment under
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index 1f0efdb..d1b8ad3 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1129,6 +1129,11 @@ apicinterrupt3 HYPERV_STIMER0_VECTOR \
->  	hv_stimer0_callback_vector hv_stimer0_vector_handler
->  #endif /* CONFIG_HYPERV */
->  
-> +#if IS_ENABLED(CONFIG_ACRN_GUEST)
-> +apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
-> +	acrn_hv_callback_vector acrn_hv_vector_handler
-> +#endif
-> +
->  idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=DEBUG_STACK
->  idtentry int3			do_int3			has_error_code=0
->  idtentry stack_segment		do_stack_segment	has_error_code=1
-> diff --git a/arch/x86/include/asm/acrnhyper.h b/arch/x86/include/asm/acrnhyper.h
-> new file mode 100644
-> index 0000000..9f9c239
-> --- /dev/null
-> +++ b/arch/x86/include/asm/acrnhyper.h
+>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
+>>
+>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
+>>>
+>>> When bfq was merged into mainline, there were two I/O schedulers that
+>>> implemented the proportional-share policy: bfq for blk-mq and cfq for
+>>> legacy blk. bfq's interface files in the blkio/io controller have the
+>>> same names as cfq. But the cgroups interface doesn't allow two
+>>> entities to use the same name for their files, so for bfq we had to
+>>> prepend the "bfq" prefix to each of its files. However no legacy code
+>>> uses these modified file names. This naming also causes confusion, as,
+>>> e.g., in [1].
+>>>
+>>> Now cfq has gone with legacy blk, so there is no need any longer for
+>>> these prefixes in (the never used) bfq names. In view of this fact, this
+>>> commit removes these prefixes, thereby enabling legacy code to truly
+>>> use the proportional share policy in blk-mq.
+>>>
+>>> [1] https://github.com/systemd/systemd/issues/7057
+>>
+>> Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
+>> Do you know what's using it and what breaks due to this conversion?
+>>
+> 
+> Yep, but AFAIK, the problem is exactly the opposite: nobody uses these
+> names for the proportional-share policy, or wants to use these names.  I'm
+> CCing Lennart too, in case he has some improbable news on this.
+> 
+> So the idea is to align names to what people expect, possibly before
+> more confusion arises.
 
-Simply
-
-	.../acrn.h
-
-I'd say.
-
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_ACRNHYPER_H
-> +#define _ASM_X86_ACRNHYPER_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/atomic.h>
-> +#include <linux/nmi.h>
-> +#include <asm/io.h>
-> +
-> +#ifdef CONFIG_ACRN_GUEST
-
-Why is that ifdef needed?
-
-> +void acrn_hv_callback_vector(void);
-> +#ifdef CONFIG_TRACING
-> +#define trace_acrn_hv_callback_vector acrn_hv_callback_vector
-> +#endif
-> +
-> +void acrn_hv_vector_handler(struct pt_regs *regs);
-
-end marker:
-
-#endif /* _ASM_X86_ACRNHYPER_H */
-
-> diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-> index 3956567..7a233b5 100644
-> --- a/arch/x86/kernel/cpu/acrn.c
-> +++ b/arch/x86/kernel/cpu/acrn.c
-> @@ -9,7 +9,11 @@
->   *
->   */
->  
-> +#include <linux/interrupt.h>
->  #include <asm/hypervisor.h>
-> +#include <asm/acrnhyper.h>
-> +#include <asm/desc.h>
-> +#include <asm/irq_regs.h>
-
-What's the sorting order here? Length or alphabetic? Or none? :)
-
-linux/ path includes still need to come first, of course.
+We can't just rename them since they've already been in a shipped kernel.
+The window for doing this passed long ago.
 
 -- 
-Regards/Gruss,
-    Boris.
+Jens Axboe
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
