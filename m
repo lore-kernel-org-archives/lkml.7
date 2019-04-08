@@ -2,73 +2,108 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A0EC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCD1C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283EA214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD302148E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 15:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AOrhh3OJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfDHPMG (ORCPT
+        id S1728708AbfDHPNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 11:12:06 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37699 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfDHPMG (ORCPT
+        Mon, 8 Apr 2019 11:13:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34155 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbfDHPNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 11:12:06 -0400
-X-Originating-IP: 109.213.33.177
-Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 5185E1BF221;
-        Mon,  8 Apr 2019 15:12:02 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] ARM: dts: at91sam9261ek: remove unused chosen nodes
-Date:   Mon,  8 Apr 2019 17:11:55 +0200
-Message-Id: <20190408151155.20279-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Apr 2019 11:13:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b3so7812910pfd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 08:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nWRmV5hnWcj49GRojO3p9tTh3nnI78KHTzO7Ks82NPI=;
+        b=AOrhh3OJhv6fTgAN3lnFSC9P62p3kWX2b95w6xUrE5zmBy/mACCOcIaL04LdDW5UcU
+         5x/neDtDbP+AV04jGUSZbehpsvOYe/lL7SjhBPyps1nnJCy3hptyMUQjLrhANj0f/XcO
+         gbv4W5FZ7VptYg22lXnLODtRjhFxXvXIqajpH9ZVQlnmLGlD0VwQ3xYskLMDi8bhrmKo
+         Q/WEY9qskUiJ2Jg+FV9E4ENFEo8q1s8gIk5lwRjWIvVWC2PidRHko/8jYy4XU6ECWFk0
+         kVYtzeFq+fezy8FxJWeJdd2kQVcuspOT/HUnioRllLQQGROHyWTprsHS2vgGprbrvJ3N
+         p3kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWRmV5hnWcj49GRojO3p9tTh3nnI78KHTzO7Ks82NPI=;
+        b=dt/9V+IXGFE5lvHdcDGfJEQmIQATcVK558M4JkTnR2krAyVAvDufQBtLdKTfL3/JfT
+         Jpxq3Dz8DtxeJWyUo3ho5kO+MxlvhJ6FZ6JP7kHyFiUVIoTTc3TONVENn9SPVOvqfiWu
+         fodiGRTr209Q62w/JkOzFJfwT5q+em4lqd8/b3+eZMzRZ/MLtzu4VrSdDY2I6U8fr823
+         xfOpHJJw7UQfpA+pt3U3Sm5Ow1golbcdsdPNega0wDfGKVAOro1ukmK6T5oorhzxMNqe
+         xhapHK+3leHFVv47SWqug6hHEK/i9LXjgJqsobZBDE1IRMrYmAWJmEvEVHRZtsd1OjxM
+         OKHw==
+X-Gm-Message-State: APjAAAUB06rMELjBu2yU656COo3XOUwLmxrGRv2Z+F71FGV3bC5pQvYZ
+        PnyUdIGvT6D7CNPdXuGV6p901+QbqOm4ug==
+X-Google-Smtp-Source: APXvYqyC4lebBvqpoMDFRPcl9LSlOCct2H5VzPdRztvGNyNyYoaj7J3CJ+ns1DcZBrMblJJesmG9jg==
+X-Received: by 2002:a63:9a4a:: with SMTP id e10mr28779764pgo.366.1554736415473;
+        Mon, 08 Apr 2019 08:13:35 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id g64sm70307820pfg.13.2019.04.08.08.13.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 08:13:34 -0700 (PDT)
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Johannes Thumshirn <jthumshirn@suse.de>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org>
+ <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org>
+ <20190408150430.GB23021@linux-x5ow.site>
+ <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+ <20190408150828.GC23021@linux-x5ow.site>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d5c1fb9c-16ec-420c-4067-53d6bccb4ebd@kernel.dk>
+Date:   Mon, 8 Apr 2019 09:13:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190408150828.GC23021@linux-x5ow.site>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chosen clocksource and clockevent bindings have never been accepted and
-parsed, remove them.
+On 4/8/19 9:08 AM, Johannes Thumshirn wrote:
+> On Mon, Apr 08, 2019 at 09:05:19AM -0600, Jens Axboe wrote:
+>> I did consider that, and that would be doable. But honestly, I'm having a
+>> hard time seeing what issue we are attempting to fix by doing this.
+> 
+> Yeah, I guess the real fix would be to update the documentation and the
+> expectations user-space has. Including eventual re-write of some udev rules or
+> whatever is facing these files. But to me that sounds more like a systemd or
+> even distro thing than a kernel thing.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- arch/arm/boot/dts/at91sam9261ek.dts | 8 --------
- 1 file changed, 8 deletions(-)
+I agree. Trying to force someones hand by renaming isn't going to fix
+anything, but it will potentially cause issues.
 
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index a57f2d435dca..11ed55d8a87d 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -15,14 +15,6 @@
- 	chosen {
- 		bootargs = "rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs rw";
- 		stdout-path = "serial0:115200n8";
--
--		clocksource {
--			timer = <&timer0>;
--		};
--
--		clockevent {
--			timer = <&timer1>;
--		};
- 	};
- 
- 	memory {
 -- 
-2.20.1
+Jens Axboe
 
