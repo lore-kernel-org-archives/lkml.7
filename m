@@ -2,90 +2,112 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6077C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1714AC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A101C20833
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1B120880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 10:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dxarpl8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfDHKTR (ORCPT
+        id S1726507AbfDHKVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 06:19:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42628 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfDHKTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 06:19:17 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C1CEC81113;
-        Mon,  8 Apr 2019 10:19:16 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-31.pek2.redhat.com [10.72.8.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2679760CD0;
-        Mon,  8 Apr 2019 10:19:08 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 18:19:04 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Johannes Thumshirn <jthumshirn@suse.de>
-Cc:     Nikolay Borisov <nborisov@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@osandov.com>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>
-Subject: Re: Possible bio merging breakage in mp bio rework
-Message-ID: <20190408101903.GC19589@ming.t460p>
-References: <59c19acf-999f-1911-b0b8-1a5cec8116c5@suse.com>
- <20190406001653.GA4805@ming.t460p>
- <eb586b8f-f8d4-f455-6203-4ceae2420274@suse.de>
+        Mon, 8 Apr 2019 06:21:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40991 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfDHKVg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 06:21:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 188so7357935pfd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 03:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W13ir/3O4kQtJcvEFgEzE8M84aMPh80E8shkyCcmrhQ=;
+        b=Dxarpl8cgx29GxFDAS7SxpwcLQbKg2Dvp5vG4HrT/fFafnmk60oLfcKJOEIE5EVkNw
+         /pYz772fK4UHJtey7FtWuEgzsLLfqIP+Irmx52pk/+kw7d+W+OyH8m/3jpvGzqgXbzhI
+         9KMvgZxEuWvOYhX3NbfbE+SN1GNW+Y39VW7hOTf5SQ6NGp8XhZxDlswvaWQGeVXP4e+0
+         ufpcz4JA3T6jwsJIhi0eEs1cC1yXYBygYfAgYnAcLOY6RMVdusUPyCp0xGuOVLUhCL4c
+         2LVqOXosi5ArfN9fBFpD/8BxyxrbmQ7jNJVloqTXaQFBC1SRlhJLu0vAo1OUq/pdQIZo
+         Sy8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W13ir/3O4kQtJcvEFgEzE8M84aMPh80E8shkyCcmrhQ=;
+        b=GviG0h1fJDxVpsD02mD5IACcw5YVGKqSNijiukB7+pgeltrhL479eifLneWZqFUyLB
+         576KU0DlZHTikQv5SR90RlMn5ZN5q2ARVIkAcqYxixNAxwftE7ZEBSjas3A1witZZKkz
+         d6CuzbMQ7xbD2+0W/g5mUGUaaAQ3N/IxlhbWUTsAhORmhL6uloOW9+rABvtzKdfc4zcT
+         RowO5MPmFuy5PeitRaBd8oWqbwT8CuHnMyAS0QHMg2b2hj4DpdycNXH5LO43DyjZxsGV
+         Mo4rPCs56jG9eb3yEiOIEc/ZfvQJWJ553C40dZCriLkprdjJkpXhzUCXgiB4xSX60kLP
+         wNvw==
+X-Gm-Message-State: APjAAAVjQxG/ccIIFu/mh63PMR+Fx8iEN3sq5m88tHCMZDEbxPAkQzaF
+        IxkpPL0CTd0W2odzjTbjC6j1nA==
+X-Google-Smtp-Source: APXvYqwxFhnB9dPeuD10c50fkcf9nVu79YtQWcFipFxNi82iB6EkKf96TBdBleIVJDB3DsmI2uEh3A==
+X-Received: by 2002:a62:5582:: with SMTP id j124mr29254633pfb.53.1554718896145;
+        Mon, 08 Apr 2019 03:21:36 -0700 (PDT)
+Received: from localhost ([122.172.162.162])
+        by smtp.gmail.com with ESMTPSA id l192sm14128086pge.42.2019.04.08.03.21.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 03:21:34 -0700 (PDT)
+Date:   Mon, 8 Apr 2019 15:51:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/7] cpufreq: ap806: fix possible object reference leak
+Message-ID: <20190408102132.jeuulxxwkyvbppdp@vireshk-i7>
+References: <1554082674-2049-1-git-send-email-wen.yang99@zte.com.cn>
+ <1554082674-2049-2-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb586b8f-f8d4-f455-6203-4ceae2420274@suse.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 08 Apr 2019 10:19:16 +0000 (UTC)
+In-Reply-To: <1554082674-2049-2-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:52:59AM +0200, Johannes Thumshirn wrote:
-> On 06/04/2019 02:16, Ming Lei wrote:
-> > Hi Nikolay,
-> > 
-> > On Fri, Apr 05, 2019 at 07:04:18PM +0300, Nikolay Borisov wrote:
-> >> Hello Ming, 
-> >>
-> >> Following the mp biovec rework what is the maximum 
-> >> data that a bio could contain? Should it be PAGE_SIZE * bio_vec 
-> > 
-> > There isn't any maximum data limit on the bio submitted from fs,
-> > and block layer will make the final bio sent to driver correct
-> > by applying all kinds of queue limit, such as max segment size,
-> > max segment number, max sectors, ...
+On 01-04-19, 09:37, Wen Yang wrote:
+> The call to of_find_compatible_node returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
 > 
-> Naive question, why are we creating possibly huge bios just to split
-> them according the the LLDD's limits afterwards?
-
-bio split is one important IO model in block layer, which simplifies
-stacked driver(dm, md, bcache, ...) a lot.
-
-It is very reasonable to apply the queue limits in its. make_request_fn().
-
-Otherwise, it will cause huge mess in stacking driver if queue limits
-are applied in bio_add_page(), see previous .merge_bvec_fn's implementation
-in these stacking drivers.
-
-Not only bio_add_page(), there is also bio clone involved.
-
+> Detected by coccinelle with the following warnings:
+> ./drivers/cpufreq/armada-8k-cpufreq.c:187:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 130, but without a corresponding object release within this function.
+> ./drivers/cpufreq/armada-8k-cpufreq.c:191:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 130, but without a corresponding object release within this function.
 > 
-> Can't we look at the limits in e.g. bio_add_page() and decide if we need
-> to split there?
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/cpufreq/armada-8k-cpufreq.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-bio_add_page() is absolutely the fast path, and it is much more efficient
-to apply the limit just once in the queue's .make_request_fn.
+I haven't received the cover-letter and patch 4/7 (because the tags in that
+commit were incorrect). I have applied all the 7 patches to my cpufreq tree
+though.
 
-Thanks,
-Ming
+Thanks.
+
+-- 
+viresh
