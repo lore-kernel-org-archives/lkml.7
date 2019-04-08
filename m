@@ -2,160 +2,167 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98323C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9E8C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5870920883
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6BE20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 08:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ozBjAJEi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ER0em7f4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hP7L9iKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfDHIK4 (ORCPT
+        id S1726189AbfDHIMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 04:10:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47162 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDHIKz (ORCPT
+        Mon, 8 Apr 2019 04:12:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52852 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDHIMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 04:10:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E577A61110; Mon,  8 Apr 2019 08:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554711054;
-        bh=B24mPUafIFdtauVdiqO2enUJ5L0Zb4appgFJkVFD068=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ozBjAJEipqwfICme8UViDxTu0kW/b0FN8T8MY17wMEIdWaYrBu3T/mnIQN056+C94
-         fZoRuss8G/z9B7tOPYAP/iT3CnQehK/gqIinlL51LNwYk2twQ4YdCsNqsClVEqhR3T
-         Jbj6B3KDdEsQKD5SFe2BxZMVN1hrGRrmrtS8sCH0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 4C5286022B;
-        Mon,  8 Apr 2019 08:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554711051;
-        bh=B24mPUafIFdtauVdiqO2enUJ5L0Zb4appgFJkVFD068=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ER0em7f4jXYH/BF3xw6fhpDnwHS4TutXmh0S4lw58uY+l2dWLEAtRW7/Yz9pPdBSj
-         THn1PWg0nIWOfC+UST+TLERWvGaoOW58LYCimwCgezSxieadRrONTZdqIPhos3DMJ6
-         jj8eb2K8mL/SBu3mgDTnQ3o6ViS/yTRQTSr3gXW4=
+        Mon, 8 Apr 2019 04:12:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3888NqJ139100;
+        Mon, 8 Apr 2019 08:12:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2018-07-02; bh=HiUbrj12MPa2Z7DU5uSYa65BaW2pN4N2CCdbBgsulKI=;
+ b=hP7L9iKH7tbatxNfhhBso3njNJkMEorOKASDKceJzbhbq4ZxTh2ZIyeRmWeN8vl2PQtr
+ OfYpSf0AvnuGuDOA+Wap1iv8UW0JVUtKdG8YzoQKu8p5o7MslrUKNtq59vb9PS0mMLRC
+ 0oJsr4AbWEqdQuNX1jQ0epA8BGhSVRrLlKy5tXVGkujBIGtEX/4ukltDOsD22tLi2iOZ
+ y1ANXFPjIFG+0Q6j1lvgjFUO5Jf1HesOqJT68//+oEfibl+rTAn2u/Ig9DuV65yBrFKP
+ kl1vOp9b2WOJDZ7F50GBNUlzSLdZMAcji2L1SkK3uCYbQvk5cgKYQ/eamJrt0JFudND1 /Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2rpkhsmp5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Apr 2019 08:12:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x388A1c6096044;
+        Mon, 8 Apr 2019 08:10:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2rpkehjvra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Apr 2019 08:10:05 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x388A1MB026277;
+        Mon, 8 Apr 2019 08:10:03 GMT
+Received: from kadam (/41.202.241.3)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Apr 2019 01:10:01 -0700
+Date:   Mon, 8 Apr 2019 11:09:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2 1/2] cpumask: Introduce possible_cpu_safe()
+Message-ID: <20190408080950.GA15239@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 08 Apr 2019 13:40:49 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        andy.gross@linaro.org, rnayak@codeaurora.org
-Cc:     david.brown@linaro.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 6/9] arm64: dts: qcom: qcs404: Add rpmpd node
-In-Reply-To: <20190327123832.11566-7-sibis@codeaurora.org>
-References: <20190327123832.11566-1-sibis@codeaurora.org>
- <20190327123832.11566-7-sibis@codeaurora.org>
-Message-ID: <3686ccecbbf8c13ad6b2aa12167f8510@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404104527.GX4038@hirez.programming.kicks-ass.net>
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9220 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904080076
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9220 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904080076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-27 18:08, Sibi Sankar wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Add the rpmpd node on the qcs404 and define the available levels.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> [sibis: fixup available levels]
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 55 ++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index e8fd26633d57..a7d46647c416 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -4,6 +4,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
->  #include <dt-bindings/clock/qcom,rpmcc.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
-> 
->  / {
->  	interrupt-parent = <&intc>;
-> @@ -230,6 +231,60 @@
->  				compatible = "qcom,rpmcc-qcs404";
->  				#clock-cells = <1>;
->  			};
-> +
-> +			rpmpd: power-controller {
-> +				compatible = "qcom,qcs404-rpmpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmpd_opp_table>;
-> +
-> +				rpmpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmpd_opp_ret: opp1 {
-> +						opp-level = <RPM_SMD_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmpd_opp_ret_plus: opp2 {
-> +						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
-> +					};
-> +
-> +					rpmpd_opp_min_svs: opp3 {
-> +						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmpd_opp_low_svs: opp4 {
-> +						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-> +					};
-> +
+There have been two cases recently where we pass user a controlled "cpu"
+to possible_cpus().  That's not allowed.  If it's invalid, it will
+trigger a WARN_ONCE() and an out of bounds read which could result in an
+Oops.
 
-typo in opp5 - opp11 rpmhpd/rpmpd
-will fix it in the next re-spin
+This patch introduces possible_cpu_safe() which first checks to see if
+the cpu is valid, turns off speculation and then checks if the cpu is
+possible.
 
-> +					rpmhpd_opp_svs: opp5 {
-> +						opp-level = <RPM_SMD_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_plus: opp6 {
-> +						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp7 {
-> +						opp-level = <RPM_SMD_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_plus: opp8 {
-> +						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp9 {
-> +						opp-level = <RPM_SMD_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_no_cpr: opp10 {
-> +						opp-level = <RPM_SMD_LEVEL_TURBO_NO_CPR>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_plus: opp11 {
-> +						opp-level = <RPM_SMD_LEVEL_BINNING>;
-> +					};
-> +				};
-> +			};
->  		};
->  	};
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: Use nr_cpumask_bits instead of NR_CPUS.
+    Split cpumask_validate_cpu() into a separate function.
 
+I still left cpumask_test_cpu_safe() return 0 for invalid cpus, instead
+of returning -ERANGE I feel it's simpler to stay consistent with the
+normal possible_cpu() function.
+
+ include/linux/cpumask.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 147bdec42215..f371e44cb5ff 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -11,6 +11,7 @@
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
+ #include <linux/bug.h>
++#include <linux/nospec.h>
+ 
+ /* Don't assign or return these: may not be this big! */
+ typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;
+@@ -102,6 +103,7 @@ extern struct cpumask __cpu_active_mask;
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+ #define cpu_online(cpu)		cpumask_test_cpu((cpu), cpu_online_mask)
+ #define cpu_possible(cpu)	cpumask_test_cpu((cpu), cpu_possible_mask)
++#define cpu_possible_safe(cpu)	cpumask_test_cpu_safe((cpu), cpu_possible_mask)
+ #define cpu_present(cpu)	cpumask_test_cpu((cpu), cpu_present_mask)
+ #define cpu_active(cpu)		cpumask_test_cpu((cpu), cpu_active_mask)
+ #else
+@@ -111,6 +113,7 @@ extern struct cpumask __cpu_active_mask;
+ #define num_active_cpus()	1U
+ #define cpu_online(cpu)		((cpu) == 0)
+ #define cpu_possible(cpu)	((cpu) == 0)
++#define cpu_possible_safe(cpu)  ((cpu) == 0)
+ #define cpu_present(cpu)	((cpu) == 0)
+ #define cpu_active(cpu)		((cpu) == 0)
+ #endif
+@@ -344,6 +347,28 @@ static inline int cpumask_test_cpu(int cpu, const struct cpumask *cpumask)
+ 	return test_bit(cpumask_check(cpu), cpumask_bits((cpumask)));
+ }
+ 
++static inline unsigned int cpumask_validate_cpu(unsigned int cpu)
++{
++	if (cpu >= nr_cpumask_bits)
++		return nr_cpumask_bits;
++	return array_index_nospec(cpu, nr_cpumask_bits);
++}
++
++/**
++ * cpumask_test_cpu_safe - test for a cpu in a cpumask
++ * @cpu: cpu number
++ * @cpumask: the cpumask pointer
++ *
++ * Returns 1 if @cpu is valid and set in @cpumask, else returns 0
++ */
++static inline int cpumask_test_cpu_safe(int cpu, const struct cpumask *cpumask)
++{
++	cpu = cpumask_validate_cpu(cpu);
++	if (cpu >= nr_cpu_ids)
++		return 0;
++	return test_bit(cpu, cpumask_bits(cpumask));
++}
++
+ /**
+  * cpumask_test_and_set_cpu - atomically test and set a cpu in a cpumask
+  * @cpu: cpu number (< nr_cpu_ids)
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
