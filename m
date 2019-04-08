@@ -2,158 +2,109 @@ Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4668BC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245D3C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192E820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6AB20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 03:51:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="V/Lk3DoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfDHDoW (ORCPT
+        id S1726580AbfDHDvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Apr 2019 23:44:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40159 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfDHDoW (ORCPT
+        Sun, 7 Apr 2019 23:51:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39840 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726499AbfDHDvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Apr 2019 23:44:22 -0400
-Received: from mail-qt1-f199.google.com ([209.85.160.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hDLCm-0005XP-Ct
-        for linux-kernel@vger.kernel.org; Mon, 08 Apr 2019 03:44:20 +0000
-Received: by mail-qt1-f199.google.com with SMTP id z34so11625357qtz.14
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 20:44:20 -0700 (PDT)
+        Sun, 7 Apr 2019 23:51:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i17so3641979pfo.6
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2019 20:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tjgz+p51HeiaMbDLnm0drZ9stCL+Kor1sdDvXcft+W4=;
+        b=V/Lk3DoVpfFrrekwElZJMduUOvtlLsSXWTpYD+ETl8Gf+ikmUxMbhlDSps4MMbQB7b
+         4AEFr59acw0Swxv1tvcO2Dh8BrT0ajbEoVwu3DrYXXnFHfhrNASHKyeD6dkBJlIIEun7
+         1pwCB9IDgwtyUhEK3RI4eJ+QgoCKW+dh8bXU4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2JIaDBayuL3uBjV+gAUXNn7OjCmpE8H2R4sqnbLcGE4=;
-        b=s7kDtic7QHaaoVqLZNs2HiugJsl9f+2onU6ByElaCesi2oLDJFZeJJL1AQ1VHyLaan
-         yo6mnWqdnotsgR9ZbMABeV0grOpcBj95SnrQQw2HN+g7WYu1d0krYN5HcoNliDn4RhiK
-         Dwy3M2dlaoHQFflXKPI+1ZngcZ3HjiPIlus5kpKth+r+GYdEeYNuEgBQmaBdLH1DsLIb
-         bHF1AHoKoAK8bDY48rGuYXib/7rbSEwE9geoJL7g/kKWFmCqrTzvIgVFZZKpV9UuKB7d
-         NsiiRn7KcMNYviYgVsGhvHUr12beH7CbeK1YISjtMUWXKPrfXfSk2XqHfpjr2g85nNmO
-         tPwg==
-X-Gm-Message-State: APjAAAWVoVxuU+XCSTEUdjNkzAlDLLpbnFlRaV4msxyOeNhL79+ESr1d
-        XQkBshvv8fIY83fSM0w+iFLBcV8KewsCTg3d6Z/qFpQBoV9ZGpDGWNNclb3HfLR+r6C8/5BrGmX
-        4Bw49kFzI95jPvPU+VEuOzcAzTcryP2/PESjuS67XAg==
-X-Received: by 2002:ac8:27b0:: with SMTP id w45mr22444508qtw.341.1554695059561;
-        Sun, 07 Apr 2019 20:44:19 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy0gWZ8l9nizdbXOcxT+d8cxm7PyDkpnIXppndq0PQ7+geFE2V6DklqMKly2eMmC48Krahxtw==
-X-Received: by 2002:ac8:27b0:: with SMTP id w45mr22444492qtw.341.1554695059296;
-        Sun, 07 Apr 2019 20:44:19 -0700 (PDT)
-Received: from [10.101.46.46] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id v8sm17730005qtc.69.2019.04.07.20.44.16
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tjgz+p51HeiaMbDLnm0drZ9stCL+Kor1sdDvXcft+W4=;
+        b=IplYJTxBCrsVKmQnb6VhmyYqjITj8IjcdCsX0Q3GeeabtAKefMlOF40kNEPaqOtxUz
+         QlP4i9TjEwsRDbNikn1MFn2j6rOC9aAn0iArOgDOt+Z8Qom4nhpIqwidiUD7cBBS8wNT
+         gCLNx0FBO8ASHMNp88OYLfbxmswxpIP9pJtQo7FZ3TURfSLgerpGtBvFqygmD8Bd790B
+         qFqwqUut8Q/FzDElTaOnZYgH3HZIz0dyQOGWYZ8w1iCSsCDi/0ATDfBZiwgQ2YgYzXaO
+         MIA+x9lJbRP1xopr1zI3irfzsIFjnszXfRnqewkEkA+TEm3EgTbLlM/JbpKqx1p4KuvW
+         dJnA==
+X-Gm-Message-State: APjAAAVmWrnoLbdlA+v8GLxRb0HUHO4dCOLSTYLrboiL2dDHPHNKW7Dn
+        FbmAL9nBZac1dFRLgIJKOiowiw==
+X-Google-Smtp-Source: APXvYqwKajm9AFqif4rrsqoAoX+7h2/4t826lQxcogaHA37nUmnwT2gb5ih5BQ9P0Yv80RET09IyOw==
+X-Received: by 2002:a63:6786:: with SMTP id b128mr26367137pgc.318.1554695468526;
+        Sun, 07 Apr 2019 20:51:08 -0700 (PDT)
+Received: from [172.27.227.131] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id l19sm36108179pff.1.2019.04.07.20.51.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2019 20:44:18 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-From:   Kai Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
-Date:   Mon, 8 Apr 2019 11:44:11 +0800
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <EE3052A4-7566-4C92-B5FC-93918B297465@canonical.com>
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
- <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com>
- <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
-To:     "Robert R. Howell" <RHowell@uwyo.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Sun, 07 Apr 2019 20:51:07 -0700 (PDT)
+Subject: Re: [PATCH net v3] net: vrf: Fix ping failed when vrf mtu is set to 0
+To:     linmiaohe <linmiaohe@huawei.com>, shrijeet@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mingfangsen <mingfangsen@huawei.com>
+References: <b32ed160-6c7f-fb8e-aa14-11d935a1cb15@huawei.com>
+From:   David Ahern <dsa@cumulusnetworks.com>
+Message-ID: <22ff0d05-c1af-ad08-4cae-39dec91eff47@cumulusnetworks.com>
+Date:   Sun, 7 Apr 2019 20:51:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <b32ed160-6c7f-fb8e-aa14-11d935a1cb15@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 4:58 AM, Robert R. Howell <RHowell@uwyo.edu> wrote:
+On 4/7/19 7:04 PM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> When the mtu of a vrf device is set to 0, it would cause ping
+> failed. So I think we should limit vrf mtu in a reasonable range
+> to solve this problem. I set dev->min_mtu to IPV6_MIN_MTU, so it
+> will works for both ipv4 and ipv6. And if dev->max_mtu still be 0
+> can be confusing, so I set dev->max_mtu to ETH_MAX_MTU.
+> 
+> Here is the reproduce step:
+> 
+> 1.Config vrf interface and set mtu to 0:
+> 3: enp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel
+> master vrf1 state UP mode DEFAULT group default qlen 1000
+>     link/ether 52:54:00:9e:dd:c1 brd ff:ff:ff:ff:ff:ff
+> 
+> 2.Ping peer:
+> 3: enp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel
+> master vrf1 state UP group default qlen 1000
+>     link/ether 52:54:00:9e:dd:c1 brd ff:ff:ff:ff:ff:ff
+>     inet 10.0.0.1/16 scope global enp4s0
+>        valid_lft forever preferred_lft forever
+> connect: Network is unreachable
+> 
+> 3.Set mtu to default value, ping works:
+> PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+> 64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=1.88 ms
+> 
+> Fixes: ad49bc6361ca2 ("net: vrf: remove MTU limits for vrf device")
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
 
-> On 4/3/19 2:54 AM, Hans de Goede wrote:
->
->> Hi,
->>
->> On 03-04-19 07:43, Kai-Heng Feng wrote:
->>> i2c-designware-platdrv fails to work after the system restored from
->>> hibernation:
->>> [ 272.775692] i2c_designware 80860F41:00: Unknown Synopsys component  
->>> type: 0xffffffff
->>>
->>> Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
->>> resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
->>> on BYT/CHT as resume_from_noirq is set. This means dw_i2c_plat_resume()
->>> doesn't gets called by acpi_lpss_resume_early(), and this causes the
->>> issue.
-> ...
->> The ordering problem fixed by commit 48402cee6889 can hit hibernate too,
->> so I think it would be better to do this instead to fix this problem:
->>
->> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
->> index 1e2a10a06b9d..cf768608437e 100644
-> ...
->> If people affected by the problem can give my version of the fix a test,
->> then that would be great.
->>
->> Regards,
->>
->> Hans
->
-> I did try applying your (Hans') patch to a 5.0.0 and a 5.1-rc3 kernel,  
-> instead of what I had
-> been doing previously, which was reverting commit 02e45646d53b.  I tested  
-> it on an ASUS T100TA
-> and unfortunately with both kernels after resume from hibernation I still  
-> get errors like those
-> listed below, and sound no longer works.  I also tried applying the patch  
-> from Kai-Heng Feng
-> (instead of Hans' patch or my revert) on both kernels and again in both  
-> cases I get these same errors.
-
-Hmm, Hans’ works for me, as acpi_lpss_resume_noirq() calls  
-acpi_lpss_do_resume_early() for S4.
-
->
-> In contrast, on the 5.0.0 kernel when I revert 02e45646d53b, the problem  
-> is fixed.  Because
-> of changes in adjacent code in 5.1-rc3, I haven't yet found a way to  
-> merge the new code
-> and the 02e45646d53b revert without causing worse problems. But that's  
-> probably because
-> I don't really understand the details of that code.
->
-> [  120.690428] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.690442] rt5640 i2c-10EC5640:00: Failed to write 13d = 3600: -110
-> [  120.712860] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.737389] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.759657] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.781797] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.804153] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  120.826467] i2c_designware 80860F41:01: timeout waiting for bus ready
-> [  121.965886] i2c_designware 80860F41:01: timeout in disabling adapter
-> .....
-> [  132.782634] i2c_designware 80860F41:01: controller timed out
-> [  133.806538] i2c_designware 80860F41:01: controller timed out
-> [  134.830991] i2c_designware 80860F41:01: controller timed out
-> [  135.855183] i2c_designware 80860F41:01: controller timed out
->
-> Let me know if I can do any other testing to help.
-
-Is it possible to attach full dmesg? Thanks.
-
-Kai-Heng
-
->
-> Bob Howell
-
+Reviewed-by: David Ahern <dsahern@gmail.com>
 
