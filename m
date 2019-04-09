@@ -2,88 +2,97 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52821C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12741C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167E320857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:12:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cb/34mFo"
+	by mail.kernel.org (Postfix) with ESMTP id D959A20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfDISML (ORCPT
+        id S1726599AbfDISR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 14:12:11 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45463 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfDISMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 14:12:10 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bf11so9858518plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 11:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yK/ReiU68p6yLLDcuH/19uzJguQ8yZsF+lcd3IFSfvU=;
-        b=cb/34mFo7iZzHeSQRgeCSitDZ4yKq0IRE3Rjibizns5eFb8kpPmnjHdVkHUVcfLzMn
-         Ff6qOaA9t/QGjfl3MH1cNMjF4NgTDFELEQP2qoOvtghPMNo3wIfRZH9UKdSNgM59NDjy
-         VtIDo7BTwEidJH9YcpeXnfeZGWsDJdDSo532a+FEPNN8IhkBqDEI5AgosZcDtlNwzMKm
-         q1deBzv55o42yShktHx4nELTDxDcDQixQYRflU5oKYjS9nQii4RrAF8Xz0AM5G5zODVK
-         1eeBT3kpGRG5wbykQGH7hO6fewRGLWT3kY1tVbi7pkxkpgfEwoZFb3pYVs8nbGfN5xcY
-         mqVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yK/ReiU68p6yLLDcuH/19uzJguQ8yZsF+lcd3IFSfvU=;
-        b=H8mzSOS20TadxG/9/S0uzIvMzeLa6JwHW0Ukne+RYUeq6riXzCm6ro5RgcG+l68Cst
-         5g3hoXYZB68qfpULYsUT/4M+eoN6fpsx+vvijRhjqxra9tXo+53xOaCDH2a8kf+0Mjnb
-         CaXsyl26jkLDUUPinCLg3utpEQw8JGuIOgRIJGTTl8fYrCbkTivN69IyzX6jaIw5olwm
-         HUBcgRsxyMuGFqXexZAXZBNyB5ic6qOOiqQfAl6auGLQr5IevJ0uER+4/Q9VDYhnqGkr
-         Qt1eNvmiEcqU8H5T6wQguOF29q83KhByIhFnD9Hu1NQNqZs+H7R+c0LeXVmT/n0Dobfz
-         Xygg==
-X-Gm-Message-State: APjAAAWlqHT2KpHazp1lNynSifb2yQC7wWILK7dYsXwhMYzgKSRyHOOR
-        0meaDuhdLBgaC3EDQ/MOtXz52ijQ2pPVt5oJiHGpEg==
-X-Google-Smtp-Source: APXvYqzWLLD6OW1OU4pegPjaW4PYwS35X8JxsU9yzhgOALGQYEEz2HsySJTLyG8OEuzJ2nxzWu0JGx2sPpvG1Cii060=
-X-Received: by 2002:a17:902:8a8b:: with SMTP id p11mr38611843plo.227.1554833529078;
- Tue, 09 Apr 2019 11:12:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-3-arnd@arndb.de>
- <20190408220312.GA18333@archlinux-i9> <CAK8P3a39NqQOp+0=WYuWh0UmpH=kEFLKyymNYm8DH-0gx9XaaQ@mail.gmail.com>
- <20190409163049.GA2046@archlinux-i9>
-In-Reply-To: <20190409163049.GA2046@archlinux-i9>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 9 Apr 2019 11:11:57 -0700
-Message-ID: <CAKwvOd=BGeCoRVDQ7WgMZ0rGXfTawm507_JMC7dMM90Vg1Tr7g@mail.gmail.com>
-Subject: Re: [PATCH 03/12] s390: purgatory: pass --target option to clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Tue, 9 Apr 2019 14:17:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60778 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfDISR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 14:17:27 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4668E66971;
+        Tue,  9 Apr 2019 18:17:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBF33619A2;
+        Tue,  9 Apr 2019 18:17:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAK8P3a13NVbkJzzoZG_7HrDT9qGPR5ptbRUL=xH1oZ1a+5ksHw@mail.gmail.com>
+References: <CAK8P3a13NVbkJzzoZG_7HrDT9qGPR5ptbRUL=xH1oZ1a+5ksHw@mail.gmail.com> <20190408124640.GA607@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
+        Jie Zhang <jie.zhang@analog.com>,
+        Mike Frysinger <vapier@gentoo.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: CONFIG_* symbols in UAPI headers?
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3478.1554833845.1@warthog.procyon.org.uk>
+Date:   Tue, 09 Apr 2019 19:17:25 +0100
+Message-ID: <3479.1554833845@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 09 Apr 2019 18:17:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 9:30 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> It did just occur to me that we added the --target and --gcc-toolchain
-> flags to a clang specific variable, CLANG_FLAGS, that has already been
-> used by powerpc in commit 813af51f5d30 ("powerpc/boot: Set target when
-> cross-compiling for clang"). I assume that could be used here?
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-I think reusing CLANG_FLAGS is a better approach.
+> > I just stumbled over the MAP_UNINITIALIZED defintion, initially
+> > added by:
+> >
+> > commit ea637639591def87a54cea811cbac796980cb30d
+> > Author: Jie Zhang <jie.zhang@analog.com>
+> > Date:   Mon Dec 14 18:00:02 2009 -0800
+> >
+> >     nommu: fix malloc performance by adding uninitialized flag
+> >
+> > The defintion depends on CONFIG_MMAP_ALLOW_UNINITIALIZED, which
+> > will never be set by userspace.  How is this supposed to work?
+> >
+> > Shoudn't we define the symbol unconditionally and just turn it
+> > into a no-op in the implementation?
 
--- 
-Thanks,
-~Nick Desaulniers
+Yes.
+
+> Right, good catch. That should work. It can probably be done
+> by adding another check before the conditional, like:
+> 
+>        /* clear anonymous mappings that don't ask for uninitialized data */
+>        if (!vma->vm_file &&
+>            !(IS_ENABLED(CONFIG_MMAP_ALLOW_UNINITIALIZED) &&
+>              (flags & MAP_UNINITIALIZED))
+>                memset((void *)region->vm_start, 0,
+>                       region->vm_end - region->vm_start);
+
+Sounds good.
+
+> > There are a few similar issues, like struct elf_prstatus having
+> > a different layout depending on CONFIG_BINFMT_ELF_FDPIC, or
+> > MAX_SHARED_LIBS defending on CONFIG_BINFMT_SHARED_FLAT.
+
+Because the kernel code uses that header and that struct too, so you'd break
+compilation of binfmt_elf_fdpic.c.  There is a way round it - and that's to
+copy the struct into the non-UAPI backing header and delete the conditional
+section from the UAPI one.  You'd have to stop the non-UAPI header from
+#including the UAPI header, though, and you'd have to hope that no one is
+trying to set it in userspace (gdb doesn't).
+
+David
