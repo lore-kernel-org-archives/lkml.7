@@ -5,126 +5,152 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C09C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5FC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08482070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262FB2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfDINn1 (ORCPT
+        id S1727264AbfDINoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:43:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42506 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbfDINn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:43:26 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x39DeXq6043845
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 09:43:25 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rruwfj9sj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:43:24 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 9 Apr 2019 14:43:22 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Apr 2019 14:43:18 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x39DhHix57737368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Apr 2019 13:43:18 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD57EAE05F;
-        Tue,  9 Apr 2019 13:43:17 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81321AE04D;
-        Tue,  9 Apr 2019 13:43:17 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  9 Apr 2019 13:43:17 +0000 (GMT)
-Date:   Tue, 9 Apr 2019 15:43:16 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] ubsan: Avoid unnecessary 128-bit shifts
-References: <201904050158.x351wr9f016512@sdf.org>
+        Tue, 9 Apr 2019 09:44:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40992 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbfDINoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:44:11 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B95313A5C;
+        Tue,  9 Apr 2019 13:44:10 +0000 (UTC)
+Received: from [10.36.116.33] (ovpn-116-33.ams2.redhat.com [10.36.116.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23BA917996;
+        Tue,  9 Apr 2019 13:43:58 +0000 (UTC)
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <d2413648-8943-4414-708a-9442ab4b9e65@redhat.com>
+ <20190409092625-mutt-send-email-mst@kernel.org>
+ <43aa1bd2-4aac-5ac4-3bd4-fe1e4a342c79@redhat.com>
+ <20190409093642-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <f25504a0-9763-5184-7b7e-ba618c99f4a2@redhat.com>
+Date:   Tue, 9 Apr 2019 15:43:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201904050158.x351wr9f016512@sdf.org>
-X-TM-AS-GCONF: 00
-x-cbid: 19040913-0016-0000-0000-0000026CF29F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040913-0017-0000-0000-000032C91C40
-Message-Id: <20190409134316.GC4227@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904090087
+In-Reply-To: <20190409093642-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 09 Apr 2019 13:44:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:58:53AM +0000, George Spelvin wrote:
-> If CONFIG_ARCH_SUPPORTS_INT128, s_max is 128 bits, and variable
-> sign-extending shifts of such a double-word data type are a non-trivial
-> amount of code and complexity.  Do a single-word sign-extension *before*
-> the cast to (s_max), greatly simplifying the object code.
+On 09.04.19 15:37, Michael S. Tsirkin wrote:
+> On Tue, Apr 09, 2019 at 03:36:08PM +0200, David Hildenbrand wrote:
+>> On 09.04.19 15:31, Michael S. Tsirkin wrote:
+>>> On Tue, Apr 09, 2019 at 11:20:36AM +0200, David Hildenbrand wrote:
+>>>> BTW I like the idea of allocating pages that have already been hinted as
+>>>> last "choice", allocating pages that have not been hinted yet first.
+>>>
+>>> OK I guess but note this is just a small window during which
+>>> not all pages have been hinted.
+>>
+>> Yes, good point. It might sound desirable but might be completely
+>> irrelevant in practice.
+>>
+>>>
+>>> So if we actually think this has value then we need
+>>> to design something that will desist and not drop pages
+>>> in steady state too.
+>>
+>> By dropping, you mean dropping hints of e.g. MAX_ORDER - 1 or e.g. not
+>> reporting MAX_ORDER - 3?
 > 
-> Rasmus Villemoes suggested using sign_extend* from <linux/bitops.h>.
-> 
-> On s390 (and perhaps some other arches), gcc implements variable
-> 128-bit shifts using an __ashrti3 helper function which the kernel
-> doesn't provide, causing a link error.  In that case, this patch is
-> a prerequisite for enabling INT128 support.  Andrey Ryabinin has gven
-> permission for any arch that needs it to cherry-pick it so they don't
-> have to wait for ubsan to be merged into Linus' tree.
+> I mean the issue is host unmaps the pages from guest right?  That is
+> what makes hinted pages slower than non-hinted ones.  If we do not want
+> that to happen for some pages, then either host can defer acting on the
+> hint, or we can defer hinting.
 
-Still, this should go upstream via Andrew Morton.
+Ah right, I think what Alex mentioned is that pages processed in the
+hypervisor via MADVISE_FREE will be set RO, so the kernel can detect if
+they will actually be used again, resulting int
 
-As soon as this gets merged I'd like to select ARCH_SUPPORTS_INT128 on
-s390 unconditionally.
+1. A pagefault if written and the page(s) have not been reused by the host
+2. A pagefault if read/written if the page(s) have been reused by the host
 
-However... ;)
+Now, assuming hinting is fast,  most pages will be hinted right away and
+therefore result in pagefaults. I think this is what you meant.
 
-> +static inline long sign_extend_long(unsigned long value, int index)
-> +{
-> +	if (sizeof(value) == 4)
-> +		return sign_extend32(value);
-> +	return sign_extend64(value);
-> +}
-> +
+Deferring processing in the hypervisor cannot be done after a request
+has been marked as processed and handed back to the guest. (otherwise
+pages might already get reused)
 
-This doesn't compile:
+So pages would have to "age" in the guest instead before they might be
+worth hinting. Marking pages as "Offline" alone won't help. Agreed.
 
-In file included from ./include/linux/kernel.h:12,
-                 from ./arch/s390/include/asm/bug.h:5,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-./include/linux/bitops.h: In function 'sign_extend_long':
-./include/linux/bitops.h:163:10: error: too few arguments to function 'sign_extend32'
-   return sign_extend32(value);
-          ^~~~~~~~~~~~~
-./include/linux/bitops.h:143:21: note: declared here
- static inline __s32 sign_extend32(__u32 value, int index)
-                     ^~~~~~~~~~~~~
-./include/linux/bitops.h:164:9: error: too few arguments to function 'sign_extend64'
-  return sign_extend64(value);
-         ^~~~~~~~~~~~~
-./include/linux/bitops.h:154:21: note: declared here
- static inline __s64 sign_extend64(__u64 value, int index)
-                     ^~~~~~~~~~~~~
+-- 
 
+Thanks,
+
+David / dhildenb
