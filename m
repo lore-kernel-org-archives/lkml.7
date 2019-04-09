@@ -4,137 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B36C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8991C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2615320818
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3639213F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554772246;
-	bh=udsn4aAsvTKiApOCJyOPVPRbRWdn4i433mxFi4XcIuc=;
+	s=default; t=1554772699;
+	bh=rLjHczM1eoSRrpHR2Rcw+V0t8QCKzoYFvPsJ1LtNbQA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I78C6BuJCIcqxACfX+kgPMrp9rKsSrr1F3J0mFYrCbY5c6eEGqJGifGWe31K87IIi
-	 4L8RIcF+vNYrpzxrF+NGgPQWt9VT20Y97DWkDbSyMM/wiNL4rRcqxKPOnVI6vikZbj
-	 HbI5vxhBJZm15X7eaM8geVyLBaERlxMDxguLIgo4=
+	b=FkVyaH00u31nssxE3XLklvn/gqUx5/Ih2OI6CMUP/q7dcQDB2Dj1ek6f2RTDWaNF+
+	 99vtZ++VTIXaDN6Pdf8kWqfPTU34g3V905zZ5vKp0G37+6C3W9bFr4Sm4wCB4NyVl/
+	 GMh+/oUeIZfjFg9k4Pgm85JfZf8imLGa6U7k8kqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDIBKo (ORCPT
+        id S1726461AbfDIBSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41016 "EHLO mail.kernel.org"
+        Mon, 8 Apr 2019 21:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfDIBKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:10:44 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        id S1725950AbfDIBSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:18:18 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61075218D2;
-        Tue,  9 Apr 2019 01:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F19321841;
+        Tue,  9 Apr 2019 01:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554772242;
-        bh=udsn4aAsvTKiApOCJyOPVPRbRWdn4i433mxFi4XcIuc=;
+        s=default; t=1554772697;
+        bh=rLjHczM1eoSRrpHR2Rcw+V0t8QCKzoYFvPsJ1LtNbQA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IOPmsLfWI4eXFcTKMnd+9dGBaY9G1Lq1AfojTte+WisTSh7eAnh5BgPaNne9+xQzd
-         G1Xto8pEWQevHI3UV8LYIqginQan5OAjxX+7egTGUkpT3dIFUL9z+EJvGExvFG71X/
-         5Rwxjf7bECA7AaZ3GTo3bdu11jUzakxwp9ZTZIuU=
-Received: by mail-qk1-f176.google.com with SMTP id y5so9240124qkc.11;
-        Mon, 08 Apr 2019 18:10:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAXlOx1IC3E/Oi6yuUH3RjujJ7lpxLSvxYTIuRIfAOe57lN3JDH2
-        M+gPk2Oobynn0T2Hd+gQV3lYAt/y7uiP2E29AQ==
-X-Google-Smtp-Source: APXvYqzaYjIRetkEt5M1YjX5yIvE26DvUM9AyZZiUx2/mNCLUp1okE3cOLsoTEjuDkPhAL61pw3grFBBKcWDlzbG6Zw=
-X-Received: by 2002:ae9:e313:: with SMTP id v19mr24091020qkf.153.1554772241641;
- Mon, 08 Apr 2019 18:10:41 -0700 (PDT)
+        b=ZeYQtVe7pbmE3fqefs/62T4OIAc+kTJMvRjZ10UnRnuFQdKRcs5LmlZsk0Y0dUdTz
+         XHptHdz/4pnWW5XugeSvnXi19Mj9hVLzjJ+7Vo4CZiWMvPWcvbSgWkm2t7fmq6crwr
+         3PzMei7l6xHeuNBVkzK/jVpQeTgO4zDigvIEIH9E=
+Received: by mail-qk1-f175.google.com with SMTP id w20so9259219qka.7;
+        Mon, 08 Apr 2019 18:18:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMuJ0IgUG8OCGYj5yUiXdFnvkePz50E1pvXgoK3SvWqz1aTdKz
+        j591PbAckPFQ6mPbX5LmNIN/yvoaavJNBAoZhQ==
+X-Google-Smtp-Source: APXvYqwQ+7nn5OkCgR3ReLL2YIREWjc9gB13vhodkvVViZN2Mi237p/7zXwjo5pi+5ufShlhcU0IPkRhmqBMeS8/qBc=
+X-Received: by 2002:a37:7183:: with SMTP id m125mr11798299qkc.119.1554772696266;
+ Mon, 08 Apr 2019 18:18:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-3-brgl@bgdev.pl>
- <20190406070746.GA29624@bogus> <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <5ca84214.1c69fb81.e3ace.21e5@mx.google.com> <20190406125550.GA7480@piout.net>
+ <58b8e1bc2b064abcb67db04369cf9c6e@asem.it>
+In-Reply-To: <58b8e1bc2b064abcb67db04369cf9c6e@asem.it>
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 8 Apr 2019 20:10:30 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
-Message-ID: <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
-Subject: Re: [PATCH v8 02/11] dt-bindings: power: supply: add DT bindings for max77650
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 8 Apr 2019 20:18:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLO20u39Vds_Z_S325D2My1aYKM6BS6RKdWSmyEVh-DtQ@mail.gmail.com>
+Message-ID: <CAL_JsqLO20u39Vds_Z_S325D2My1aYKM6BS6RKdWSmyEVh-DtQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 7:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Mon, Apr 8, 2019 at 2:22 AM Flavio Suligoi <f.suligoi@asem.it> wrote:
 >
-> sob., 6 kwi 2019 o 09:07 Rob Herring <robh@kernel.org> napisa=C5=82(a):
-> >
-> > On Wed, Apr 03, 2019 at 11:00:59AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Add the DT binding document for the battery charger module of max7765=
-0.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > ---
-> > >  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++=
-++
-> > >  1 file changed, 27 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/supply/ma=
-x77650-charger.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/power/supply/max77650-=
-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charg=
-er.txt
-> > > new file mode 100644
-> > > index 000000000000..fef188144386
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger=
-.txt
-> > > @@ -0,0 +1,27 @@
-> > > +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> > > +
-> > > +This module is part of the MAX77650 MFD device. For more details
-> > > +see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > > +
-> > > +The charger is represented as a sub-node of the PMIC node on the dev=
-ice tree.
-> > > +
-> > > +Required properties:
-> > > +--------------------
-> > > +- compatible:                Must be "maxim,max77650-charger"
-> > > +
-> > > +Optional properties:
-> > > +--------------------
-> > > +- min-microvolt:     Minimum CHGIN regulation voltage (in microvolts=
-). Must be
-> > > +                     one of: 4000000, 4100000, 4200000, 4300000, 440=
-0000,
-> > > +                     4500000, 4600000, 4700000.
-> > > +- current-limit-microamp:    CHGIN input current limit (in microamps=
-). Must
-> > > +                             be one of: 95000, 190000, 285000, 38000=
-0, 475000.
-> >
-> > To repeat what I said on v6, these should be common properties IMO (and
-> > therefore documented as such).
-> >
+> HI,
 >
-> Do you mean a separate "charger.txt" document in
-> Documentation/devicetree/bindings/power/supply/?
+> > On 06/04/2019 01:07:13-0500, Rob Herring wrote:
+> > > On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
+> > > > Some RTC devices have a battery-low automatic detection circuit.
+> > > > The battery-low event is usually reported with:
+> > > >
+> > > > - a bit change in a RTC status register
+> > > > - a hw signaling (generally using an interrupt generation), changing
+> > > >   the hw level of a specific pin;
+> > > >
+> > > > The new property "battery-low-hw-alarm" enable the RTC to generate the
+> > > > hw signaling in case of battery-low event.
+> > > >
+> > > > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt
+> > b/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > > index a97fc6a..f93a44d 100644
+> > > > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+> > > > @@ -31,6 +31,9 @@ below.
+> > > >                              expressed in femto Farad (fF).
+> > > >                              The default value shall be listed (if
+> > optional),
+> > > >                              and likewise all valid values.
+> > > > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This
+> > function
+> > > > +                            is available on the following devices:
+> > > > +                            - pcf2127 - pin used for alarm: INTn
+> > >
+> > > Boolean? If there's cases where which pin is selectable, then we'd need
+> > > this to take a value. Not sure how likely that is?
+> > >
+> >
+> > Indeed, there is at least the pcf85363 that has two possible pins for
+> > that interrupt. How would you select the pin then? a zero based index? a
+> > string?
 
-Yes, though I thought we had something already.
+I prefer an index.
+
+> I think the string could be clearer for the final user and would give
+> more freedom for future changes.
+> For example, we can call this property, instead of "battery-low-alarm" or
+> "low-voltage-alarm", simply: "alarm-pin_1" and then the string argument
+> can describe the function used; for example:
+>
+> alarm-pin_1 = "backup-supply-low-voltage-alarm";
+> alarm-pin_2 = "......";
+
+How many pins and functions then? And how does this relate to any interrupts?
 
 Rob
