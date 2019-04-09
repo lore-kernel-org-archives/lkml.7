@@ -2,261 +2,146 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60B0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E0CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746C320857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F8920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TJ4QXgoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbfDIHEd (ORCPT
+        id S1726591AbfDIHE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:04:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48582 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfDIHEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:04:33 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 27A35280827;
-        Tue,  9 Apr 2019 08:04:31 +0100 (BST)
-Date:   Tue, 9 Apr 2019 09:04:27 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, juliensu@mxic.com.tw,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
- randomizer support
-Message-ID: <20190409090427.22de9917@collabora.com>
-In-Reply-To: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 9 Apr 2019 03:04:57 -0400
+Received: from mail-eopbgr80074.outbound.protection.outlook.com ([40.107.8.74]:37398
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725781AbfDIHE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:04:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wY72fsFKTu+kZsYRvTD+Mg8+jOFtIGOl4wTfz6Bypvw=;
+ b=TJ4QXgoFubZlUAlA7Q+NO5TOFGFfuu6IAcpPuHQyf956pD07Zia0DGaU+vM7WrN7AZeKQdFwVux0Wv/UYeImCItk46ziM5HMy5HtEFiV7BGqSnI9p4xHgeI1HuAzcBb5Yhptf0ZHMDESz1f06k5AW+ds4N8fDRM/k6tSiX3pfmM=
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.23.144) by
+ VI1PR0402MB2784.eurprd04.prod.outlook.com (10.172.255.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.14; Tue, 9 Apr 2019 07:04:53 +0000
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::b8b3:8509:a056:360e]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::b8b3:8509:a056:360e%2]) with mapi id 15.20.1792.009; Tue, 9 Apr 2019
+ 07:04:53 +0000
+From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
+Thread-Topic: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
+Thread-Index: AQHU7jLtjTghFqR720GjUH/3qPjtqaYzFYcAgABPh5A=
+Date:   Tue, 9 Apr 2019 07:04:53 +0000
+Message-ID: <VI1PR0402MB286355821F5C81122A7C86E2DF2D0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <20190319051512.14950-3-qiangqing.zhang@nxp.com>
+ <385f7948-d12b-1fc2-2ed2-23d1e76034a0@nxp.com>
+ <DB7PR04MB46181D2AC261EAB6DEECEFCCE62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB46181D2AC261EAB6DEECEFCCE62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stefan-gabriel.mirea@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 25e393c0-2030-4978-edb3-08d6bcb9aa70
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2784;
+x-ms-traffictypediagnostic: VI1PR0402MB2784:
+x-microsoft-antispam-prvs: <VI1PR0402MB2784E21F46E24397BF2BD1C8DF2D0@VI1PR0402MB2784.eurprd04.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(136003)(366004)(189003)(199004)(8676002)(3846002)(25786009)(110136005)(486006)(6116002)(54906003)(105586002)(5660300002)(256004)(99286004)(106356001)(14444005)(52536014)(55016002)(8936002)(81156014)(81166006)(316002)(68736007)(2906002)(74316002)(7736002)(305945005)(7696005)(229853002)(9686003)(6436002)(102836004)(6506007)(76176011)(26005)(186003)(4326008)(33656002)(11346002)(476003)(14454004)(97736004)(446003)(53936002)(6246003)(478600001)(71190400001)(71200400001)(86362001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2784;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JJSJWMg2CvyN+7OlZoL6gIXgnYaoY61l9tgpuEX8Sdzez+IzP8Q8SCmQ82uEdSEpbps/8CNFRJSkJik/tZje7cdbUO1m91k7CdwhxHkMOLU3Cukj61SRJon66jO6AHyHW5GnZwI5eAIhnC5kUEGZvqxNZnCZxOJFAOVjFWK95G5HHBEjxbMAmf/dFhMFbvAvXFBU7kyHwZHJQTJgOKZltTlg4JnQsxvrg7vxKiBhoQdlOwd/up8CkNYBPeuwEHA2Li7UKO4+Mkb0vR9IawvKaKe5hSmUD15ishZfBhxifq8M+81og32LnTBcsg2VnrhiR0xHZWIWGl8WfAgYgE0NKokc56AG9h671o2rMdYtcNpry6Qd3LW3fjxOQFNOU2SLITSJY1fvxYSgwmg5j7WVyMvfFPJbdprV+BOmu89vJx0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25e393c0-2030-4978-edb3-08d6bcb9aa70
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 07:04:53.2902
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2784
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Apr 2019 11:22:52 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
+> From: Joakim Zhang
+> Sent: Tuesday, April 9, 2019 5:07 AM
+> Hi Stefan,
+>=20
+> Thanks for your validation! Could you add your test tag if you can=20
+> successfully validated?
 
-> Add a driver for Macronix NAND read retry and randomizer.
+Sure, no problem. Please note that I needed to replace "flexcan_read" and "=
+flexcan_write" with "priv->read" and "priv->write" respectively, in PATCH V=
+2 4/5.
 
-These are 2 orthogonal changes, and should thus bit split in 2 patches.
+>  [Joakim Zhang] We added can fd support in 4.9 kernel which let=20
+> mailbox_read call alloc_can(fd)_skb in the past. Now the driver=20
+> allocate skb before mailbox_read in rx_offload and also read the overflow=
+ frames.
+>               I add the "is_canfd" since I don't want to change the=20
+> rx_offload framework too much. @mkl@pengutronix.de, could you give=20
+> some advice, which solution is better?
 
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/nand/raw/nand_macronix.c | 169 +++++++++++++++++++++++++++++++++++
->  1 file changed, 169 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 47d8cda..a19caa4 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -17,6 +17,174 @@
->  
->  #include "internals.h"
->  
-> +#define MACRONIX_READ_RETRY_BIT BIT(0)
-> +#define MACRONIX_RANDOMIZER_BIT BIT(1)
-> +#define MACRONIX_READ_RETRY_MODE 5
-> +
-> +#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-> +
-> +struct nand_onfi_vendor_macronix {
-> +	u8 reserved[1];
-> +	u8 reliability_func;
-> +} __packed;
-> +
-> +struct nand_chip *mxic_sysfs;
-> +
-> +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-> +{
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
-> +	int ret;
-> +
-> +	if (mode > MACRONIX_READ_RETRY_MODE)
-> +		mode = MACRONIX_READ_RETRY_MODE;
-> +
-> +	feature[0] = mode;
-> +	ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-> +	if (ret)
-> +		pr_err("failed to enter read retry moded:%d\n", mode);
-> +
-> +	if (mode == 0)
-> +		ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY,
-> +					 feature);
-> +		if (ret)
-> +			pr_err("failed to exits read retry moded:%d\n", mode);
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t mxic_nand_rand_type_show(struct kobject *kobj,
-> +					struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct nand_chip *chip = mxic_sysfs;
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
-> +	int ret;
-> +
-> +	nand_select_target(chip, 0);
-> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +	if (ret)
-> +		pr_err("failed to check mxic nand device randomizer\n");
-> +
-> +	return sprintf(buf, "MXIC NAND device randomizer %s(0x%x)\n",
-> +		       feature[0] & MACRONIX_RANDOMIZER_BIT ?
-> +		       "enable" : "disable", feature[0]);
-> +}
-> +
-> +static ssize_t mxic_nand_rand_type_store(struct kobject *kobj,
-> +					 struct kobj_attribute *attr,
-> +					 const char *buf, size_t count)
-> +{
-> +	struct nand_chip *chip = mxic_sysfs;
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
-> +	unsigned int rand_layout;
-> +	int ret;
-> +
-> +	nand_select_target(chip, 0);
-> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +
-> +	if (feature[0]) {
-> +		pr_err("Randomizer is enabled 0x%x\n", feature[0]);
-> +		goto err_out;
-> +	}
-> +
-> +	ret = kstrtouint(buf, 0, &rand_layout);
-> +	if (ret)
-> +		goto err_out;
-> +
-> +	if (rand_layout > 7) {
-> +		pr_err("Error parameter value:0x%x\n", rand_layout);
-> +		goto err_out;
-> +	}
-> +
-> +	feature[0] = rand_layout & 0x07;
-> +	nand_select_target(chip, 0);
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +	if (ret) {
-> +		pr_err("device randomizer set feature failed\n");
-> +		goto err_out;
-> +	}
-> +
-> +	feature[0] = 0x0;
-> +	nand_select_target(chip, 0);
-> +	ret = nand_prog_page_op(chip, 0, 0, feature, 1);
-> +	nand_deselect_target(chip);
-> +	if (ret) {
-> +		pr_err("Prog device randomizer failed\n");
-> +		goto err_out;
-> +	}
-> +
-> +	feature[0] = 0x0;
-> +	nand_select_target(chip, 0);
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +	if (ret)
-> +		pr_err("failed to exits prog device randomizer\n");
-> +
-> +err_out:
-> +	return count;
-> +}
-> +
-> +static const struct kobj_attribute sysfs_mxic_nand =
-> +	__ATTR(nand_random, S_IRUGO | S_IWUSR,
-> +	       mxic_nand_rand_type_show,
-> +	       mxic_nand_rand_type_store);
+This is more of a functionality issue. For example, candump from canutils 4=
+.0.6 never shows CAN FD frames, but should still be able to show the CAN 2.=
+0 ones regardless of whether "fd on" was supplied. I suggest the following =
+separation:
 
-No, we don't want to expose that through a sysfs file, especially since
-changing the randomizer config means making the NAND unreadable for
-those that have used it before the change.
+can_rx_offload_offload_one:
+	struct sk_buff *skb =3D NULL;
+	...
+	bool drop =3D unlikely(skb_queue_len(&offload->skb_queue) >
+			     offload->skb_queue_len_max);
 
-BTW, why would we want to disable the randomizer? If it's here I guess
-it's needed. The only use case I have in mind is when the controller
-also has a randomizer and you want to use this one instead of the on-die
-one.
+	if (offload->mailbox_read(offload, drop, &skb, &timestamp, n) && !skb)
+		offload->dev->stats.rx_dropped++;
 
-> +
-> +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> +{
-> +	struct nand_parameters *p = &chip->parameters;
-> +	struct kobject *kobj;
-> +	int ret;
-> +
-> +	mxic_sysfs = chip;
-> +	if (p->onfi) {
-> +		struct nand_onfi_vendor_macronix *mxic =
-> +				(void *)p->onfi->vendor;
-> +
-> +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
-> +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
-> +			chip->setup_read_retry =
-> +				 macronix_nand_setup_read_retry;
-> +			if (p->supports_set_get_features) {
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->set_feature_list);
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->get_feature_list);
-> +			}
-> +		}
-> +
-> +		if (mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-> +			if (p->supports_set_get_features) {
-> +				set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +					p->set_feature_list);
-> +				set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +					p->get_feature_list);
-> +				/*
-> +				 * create syfs-fs for MXIC NAND device
-> +				 * randomizer status check & enable
-> +				 * operations.
-> +				 */
-> +				kobj = kobject_create_and_add("mxic_rand_nand",
-> +							      NULL);
-> +				if (!kobj)
-> +					return;
-> +
-> +				ret = sysfs_create_file(kobj,
-> +							&sysfs_mxic_nand.attr);
-> +				if (ret) {
-> +					pr_err("Err: mxic_rand_nand sysfs");
-> +					kobject_put(kobj);
-> +				}
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  /*
->   * Macronix AC series does not support using SET/GET_FEATURES to change
->   * the timings unlike what is declared in the parameter page. Unflag
-> @@ -65,6 +233,7 @@ static int macronix_nand_init(struct nand_chip *chip)
->  		chip->bbt_options |= NAND_BBT_SCAN2NDPAGE;
->  
->  	macronix_nand_fix_broken_get_timings(chip);
-> +	macronix_nand_onfi_init(chip);
->  
->  	return 0;
->  }
+	if (skb) {
+		struct can_rx_offload_cb *cb =3D can_rx_offload_get_cb(skb);
 
+		cb->timestamp =3D timestamp;
+	}
+
+	return skb;
+
+flexcan_mailbox_read:
+	...
+	if (!drop) {
+		if (reg_ctrl & FLEXCAN_MB_CNT_EDL)
+			*skb =3D alloc_canfd_skb(offload->dev, &cf);
+		else
+			*skb =3D alloc_can_skb(offload->dev,
+					     (struct can_frame **)&cf);
+	}
+	if (*skb) {
+		/* use cf */
+		...
+	}
+	/* mark as read */
+
+Although not visible in the FlexCAN case, the socket buffers would be also =
+freed from inside mailbox_read if errors were encountered after allocation.
+
+Regards,
+Stefan
