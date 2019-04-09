@@ -2,178 +2,100 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C63AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE98C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B0220850
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE01214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:00:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgKQFcsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDIQ5Z (ORCPT
+        id S1726547AbfDIRA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:57:25 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59995 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDIQ5Y (ORCPT
+        Tue, 9 Apr 2019 13:00:58 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:46075 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDIRA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:57:24 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hDu3k-0002Zi-Tu; Tue, 09 Apr 2019 18:57:20 +0200
-Message-ID: <1554829036.5799.6.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] media: docs-rst: Document memory-to-memory video
- decoder interface
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Tiffany Lin =?UTF-8?Q?=28=E6=9E=97=E6=85=A7=E7=8F=8A=29?= 
-        <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Date:   Tue, 09 Apr 2019 18:57:16 +0200
-In-Reply-To: <8f05866a-1244-5e85-9b37-409526970779@xs4all.nl>
-References: <20190124100419.26492-1-tfiga@chromium.org>
-         <20190124100419.26492-2-tfiga@chromium.org>
-         <1554461965.3060.5.camel@pengutronix.de>
-         <8f05866a-1244-5e85-9b37-409526970779@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 9 Apr 2019 13:00:57 -0400
+Received: by mail-lf1-f44.google.com with SMTP id t15so9025817lfl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 10:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EVEEcAd9WHhYjPxPs9+RgAT+g9az+iC7s/1ataG+iSY=;
+        b=SgKQFcskFAzwd49wNA4VbDlzcCwa5tkIkxDn5LKGrzx/JWQHhpH2M45WVG7errFM5h
+         9FVfWPfMfh16Mivgy51er/QukcyhGkaSZxWeGWmdEETIp8V4g8m2oWgLU2IipnU0sj2N
+         ASezx+WmRXxQrJnvuzIvBW33SbDbvYgHLbDjCdOpeBxPeStMruskMJ++fQQNA5nffbF7
+         9Nd5JGdXK0L+uI9ioGnDNK/4miD68Y6Paoq7BMZIbULFdbtpki/bUc4XPYT6fgenK/JK
+         w6q6RRVTcpqCVWFZdQr3NmdGj3UZEGFQA1NDeSsxHBRi7ekLWh6lcIzwVSTOifFLUldZ
+         22/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EVEEcAd9WHhYjPxPs9+RgAT+g9az+iC7s/1ataG+iSY=;
+        b=Za0LHXbmwDbtBTu4Vwl8xCmQTWxG30om2grEvqRNdYvCFrVZMFCBxBDnI0lwAvQbiw
+         k2wRuwujokmCwt8a7Hd9jhK0atTSKUNvNnQedl5Vdpemw8zeW8kHkR4obPiNvzXgu20I
+         513jET9oTxs5qW6gxBaqeQiAD6SQAYTgQXshCLdyiDBN5Kauf7wDZ0jVvBkW8eGEdqFY
+         tfNrabE2Jhtu7MBvRaNxHvfAYaw6+lIJomUKQv2ARBe75G/6Kw2eLu/SOXVRdPjwswJA
+         fm7fF021YJpD8X5+sdauPYyt39Wwc6IRqZSMLRtgMGtXimRVpaTHanY1M0+KMjCqzIeS
+         iy7g==
+X-Gm-Message-State: APjAAAWng+Ez36FR5Sh+XqDVSmgzX1H4aBGlNNTZ8t0/BukXW0UjDaoC
+        OEu7Hgk/a7MDnsF9WErzr4FZ08pC
+X-Google-Smtp-Source: APXvYqy3/1b4a2EVEqb9i7SZH+MXGJ1pfq8WYe3ZCpunokseVop/O6Zxw3h+8AaFqErA4jo6e0HIoA==
+X-Received: by 2002:a19:761a:: with SMTP id c26mr3126814lff.8.1554829255789;
+        Tue, 09 Apr 2019 10:00:55 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id q5sm5273294lff.30.2019.04.09.10.00.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 10:00:54 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 737B44606E7; Tue,  9 Apr 2019 20:00:54 +0300 (MSK)
+Date:   Tue, 9 Apr 2019 20:00:54 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
+Message-ID: <20190409170054.GF1421@uranus.lan>
+References: <20190403191944.GH1421@uranus.lan>
+ <20190403203144.GI1421@uranus.lan>
+ <alpine.DEB.2.21.1904040922350.3758@macbook-air>
+ <20190404133327.GP1421@uranus.lan>
+ <alpine.DEB.2.21.1904041234340.5098@macbook-air>
+ <20190404164700.GR1421@uranus.lan>
+ <alpine.DEB.2.21.1904041454290.5597@macbook-air>
+ <20190404202038.GT1421@uranus.lan>
+ <20190407202055.GX1421@uranus.lan>
+ <alpine.DEB.2.21.1904091237090.15486@macbook-air>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904091237090.15486@macbook-air>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-05 at 13:21 +0200, Hans Verkuil wrote:
-> On 4/5/19 12:59 PM, Philipp Zabel wrote:
-> > On Thu, 2019-01-24 at 19:04 +0900, Tomasz Figa wrote:
-> > > Due to complexity of the video decoding process, the V4L2 drivers of
-> > > stateful decoder hardware require specific sequences of V4L2 API calls
-> > > to be followed. These include capability enumeration, initialization,
-> > > decoding, seek, pause, dynamic resolution change, drain and end of
-> > > stream.
-> > > 
-> > > Specifics of the above have been discussed during Media Workshops at
-> > > LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
-> > > Conference Europe 2014 in Düsseldorf. The de facto Codec API that
-> > > originated at those events was later implemented by the drivers we already
-> > > have merged in mainline, such as s5p-mfc or coda.
-> > > 
-> > > The only thing missing was the real specification included as a part of
-> > > Linux Media documentation. Fix it now and document the decoder part of
-> > > the Codec API.
-> > > 
-> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> > > ---
-> > >  Documentation/media/uapi/v4l/dev-decoder.rst  | 1076 +++++++++++++++++
-> > >  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    5 +
-> > >  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
-> > >  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
-> > >  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   40 +-
-> > >  Documentation/media/uapi/v4l/vidioc-g-fmt.rst |   14 +
-> > >  6 files changed, 1135 insertions(+), 15 deletions(-)
-> > >  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
-> > > 
-> > > diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentation/media/uapi/v4l/dev-decoder.rst
-> > > new file mode 100644
-> > > index 000000000000..b7db2352ad41
-> > > --- /dev/null
-> > > +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
-> > > @@ -0,0 +1,1076 @@
-> > > +.. -*- coding: utf-8; mode: rst -*-
-> > > +
-> > > +.. _decoder:
-> > > +
-> > > +*************************************************
-> > > +Memory-to-memory Stateful Video Decoder Interface
-> > > +*************************************************
-> > > +
-> > 
-> > [...]
-> > > +
-> > > +Drain
-> > > +=====
-> > > +
-> > 
-> > [...]
-> > > +
-> > > +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_STOP`` call
-> > > +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the decoder is
-> > > +   stopped and it will accept, but not process, any newly queued ``OUTPUT``
-> > > +   buffers until the client issues any of the following operations:
-> > > +
-> > 
-> > [...]
-> > > +
-> > > +.. note::
-> > > +
-> > > +   Once the drain sequence is initiated, the client needs to drive it to
-> > > +   completion, as described by the steps above, unless it aborts the process by
-> > > +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
-> > > +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START`` or
-> > > +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progress and they
-> > > +   will fail with -EBUSY error code if attempted.
-> > 
-> > Should the V4L2_DEC_CMD_STOP documentation in
-> > Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst:
-> > 
-> >   * - ``V4L2_DEC_CMD_STOP``
-> >     - 1
-> >     - Stop the decoder. When the decoder is already stopped, this
-> >       command does nothing.
-> > 
-> > be updated to mention that for mem2mem decoders this not only does
-> > nothing, but returns an -EBUSY error return value?
+On Tue, Apr 09, 2019 at 12:38:25PM -0400, Vince Weaver wrote:
 > 
-> Yes. Basically in this case the STOP is still in progress, so returning
-> EBUSY makes sense and should be documented.
-> 
-> > 
-> > Also, if V4L2_DEC_CMD_STOP_IMMEDIATELY is set, should the decoder drop
-> > all pending buffers and signal EOS immediately? Should this be mentioned
-> > here?
-> 
-> Hmm, the decoder spec says that flags should be set to 0, and current codec
-> drivers explicitly disallow a non-0 flags value.
-> 
-> I'm not sure if there is a practical use-case for V4L2_DEC_CMD_STOP_IMMEDIATELY
-> in the context of a decoder. If you want to stop immediately, then just call
-> streamoff on the OUTPUT queue.
+> It still crashes at the same place with this patch and my reproducible 
+> test case.
 
-v4l2-compliance currently complains if V4L2_DEC_CMD_STOP_IMMEDIATELY is
-not supported:
-
-                fail: v4l2-test-codecs.cpp(104): ret != 0
-        test VIDIOC_(TRY_)DECODER_CMD: FAIL
-
-Should testDecoder be changed to set the V4L2_DEC_CMD_STOP_IMMEDIATELY
-flag only if node->codec_mask does not have the STATEFUL_DECODER bit
-set?
-
-regards
-Philipp
+Thank for testing, Vince! At least now we know it is unrelated to
+alias events. Will ping you once I get more ideas.
