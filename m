@@ -2,146 +2,206 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B657C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9D7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EBA2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8DE2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nMJMSoyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDIQkA (ORCPT
+        id S1726629AbfDIQkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:40:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33478 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfDIQkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:40:00 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62121461CD;
-        Tue,  9 Apr 2019 16:39:59 +0000 (UTC)
-Received: from [10.36.112.33] (ovpn-112-33.ams2.redhat.com [10.36.112.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0AEF75D71F;
-        Tue,  9 Apr 2019 16:39:56 +0000 (UTC)
-Subject: Re: [PATCH v2] svm/avic: Fix invalidate logical APIC id entry
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "joro@8bytes.org" <joro@8bytes.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-References: <20190326035711.77916-1-suravee.suthikulpanit@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <5425ef2b-75bc-d500-d39a-3d73e217a13c@redhat.com>
-Date:   Tue, 9 Apr 2019 18:39:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 12:40:35 -0400
+Received: from mail.efficios.com ([167.114.142.138]:58812 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDIQkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 12:40:35 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 4D65B7D18E;
+        Tue,  9 Apr 2019 12:40:32 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id I_J-ieZMQGxX; Tue,  9 Apr 2019 12:40:31 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B4C797D186;
+        Tue,  9 Apr 2019 12:40:31 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B4C797D186
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554828031;
+        bh=PxcmcmLMtwLrf+79sMs61KL1Cdsf5Z49BKLPudyVOZM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=nMJMSoyPQ1nhNs7vZw/dRH5oA37rw5LdK+CEap8GEGqY2FmzuahYqep4VjA5nkO0V
+         PM9/VwEv16fZwoFdXMUD3mcvxyecp4LPbFnZ16NaxXhF1C32NqJMvSauVx+WWQgV3p
+         dpbdDD7Gp7RsxGIILDu77qEJU+m8HZqpeeV36/SjE8AhYPHaIN/4q5kTBcpVHtbyOT
+         t7hIG7cMgu8oVBOfYJpLavu4doaGvokVEAeEkTjkaB2CWQ5l4EV72hDG7poQSFv+WQ
+         Qk4asoAc6+ONR/m5qtNW2rSzSJmtOaq+uzkTXYUDV41Ydw6s9wj9+XegYLyl20bLXt
+         IeM7EZOgW2gdw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id DExBj-kL-AT7; Tue,  9 Apr 2019 12:40:31 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 8D6C97D179;
+        Tue,  9 Apr 2019 12:40:31 -0400 (EDT)
+Date:   Tue, 9 Apr 2019 12:40:31 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Carlos O'Donell <codonell@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        heiko carstens <heiko.carstens@de.ibm.com>,
+        gor <gor@linux.ibm.com>, schwidefsky <schwidefsky@de.ibm.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1788266905.2400.1554828031463.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190404214151.6ogrm34dok52az4h@pburton-laptop>
+References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com> <20190212194253.1951-2-mathieu.desnoyers@efficios.com> <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com> <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com> <602718e0-7375-deb7-b6e6-2d17022173c5@redhat.com> <20190404214151.6ogrm34dok52az4h@pburton-laptop>
+Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v7)
 MIME-Version: 1.0
-In-Reply-To: <20190326035711.77916-1-suravee.suthikulpanit@amd.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 09 Apr 2019 16:39:59 +0000 (UTC)
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v7)
+Thread-Index: 7m11ofhkxzIm+Ccm0xLpdzhlit83GM7rDAkAgAAOc4D1QSG1QA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/19 04:57, Suthikulpanit, Suravee wrote:
-> Only clear the valid bit when invalidate logical APIC id entry.
-> The current logic clear the valid bit, but also set the rest of
-> the bits (including reserved bits) to 1.
-> 
-> Fixes: 98d90582be2e ('svm: Fix AVIC DFR and LDR handling')
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> ---
->  arch/x86/kvm/svm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 7a4ce1a22ca0..8a123bd0f591 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -270,6 +270,7 @@ struct amd_svm_iommu_ir {
->  };
->  
->  #define AVIC_LOGICAL_ID_ENTRY_GUEST_PHYSICAL_ID_MASK	(0xFF)
-> +#define AVIC_LOGICAL_ID_ENTRY_VALID_BIT			31
->  #define AVIC_LOGICAL_ID_ENTRY_VALID_MASK		(1 << 31)
->  
->  #define AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK	(0xFFULL)
-> @@ -4640,7 +4641,7 @@ static void avic_invalidate_logical_id_entry(struct kvm_vcpu *vcpu)
->  	u32 *entry = avic_get_logical_id_entry(vcpu, svm->ldr_reg, flat);
->  
->  	if (entry)
-> -		WRITE_ONCE(*entry, (u32) ~AVIC_LOGICAL_ID_ENTRY_VALID_MASK);
-> +		clear_bit(AVIC_LOGICAL_ID_ENTRY_VALID_BIT, (unsigned long *)entry);
->  }
->  
->  static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
-> 
+----- On Apr 4, 2019, at 5:41 PM, Paul Burton paul.burton@mips.com wrote:
 
-Queued both this and the revert, thanks.
+> Hi Carlos / all,
+> 
+> On Thu, Apr 04, 2019 at 04:50:08PM -0400, Carlos O'Donell wrote:
+>> > > > +/* Signature required before each abort handler code.  */
+>> > > > +#define RSEQ_SIG 0x53053053
+>> > > 
+>> > > Why isn't this a mips-specific op code?
+>> > 
+>> > MIPS also has a literal pool just before the abort handler, and it
+>> > jumps over it. My understanding is that we can use any signature value
+>> > we want, and it does not need to be a valid instruction, similarly to ARM:
+>> > 
+>> > #define __RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown, \
+>> >                                  abort_label, version, flags, \
+>> >                                  start_ip, post_commit_offset, abort_ip) \
+>> >                  ".balign 32\n\t" \
+>> >                  __rseq_str(table_label) ":\n\t" \
+>> >                  ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
+>> >                  LONG " " U32_U64_PAD(__rseq_str(start_ip)) "\n\t" \
+>> >                  LONG " " U32_U64_PAD(__rseq_str(post_commit_offset)) "\n\t" \
+>> >                  LONG " " U32_U64_PAD(__rseq_str(abort_ip)) "\n\t" \
+>> >                  ".word " __rseq_str(RSEQ_SIG) "\n\t" \
+>> >                  __rseq_str(label) ":\n\t" \
+>> >                  teardown \
+>> >                  "b %l[" __rseq_str(abort_label) "]\n\t"
+>> > 
+>> > Perhaps Paul Burton can confirm this ?
+>> 
+>> Yes please.
+>> 
+>> You also want to avoid the value being a valid MIPS insn that's common.
+>> 
+>> Did you check that?
+> 
+> This does not decode as a standard MIPS instruction, though it does
+> decode for both the microMIPS (ori) & nanoMIPS (lwxs; sll) ISAs.
+> 
+> I imagine I copied the value from another architecture when porting, and
+> since it doesn't get executed it seemed fine.
+> 
+> One maybe nicer option along the same lines would be 0x72736571 or
+> 0x71657372 (ASCII 'rseq') neither of which decode as a MIPS instruction.
+> 
+>> I think the order of preference is:
+>> 
+>> 1.  An uncommon insn (with random immediate values), in a literal pool, that is
+>>     not a useful ROP/JOP sequence (very uncommon)
+> 
+> For that option on MIPS we could do something like:
+> 
+>  sll $0, $0, 31     # effectively a nop, but looks weird
+> 
+>> 2a. A uncommon TRAP hopefully with some immediate data encoded (maybe uncommon)
+> 
+> Our break instruction has a 19b immediate in nanoMIPS (20b for microMIPS
+> & classic MIPS) so that could be something like:
+> 
+>  break 0x7273       # ASCII 'rs'
+> 
+> That's pretty unlikely to be seen in normal code, or the teq instruction
+> has a rarely used code field (4b in microMIPS, 5b in nanoMIPS, 10b in
+> classic MIPS) that's meaningless to hardware so something like this
+> would be possible:
+> 
+>  teq $0, $0, 0x8    # ASCII backspace
+> 
+>> 2b. A NOP to avoid affecting speculative execution (maybe uncommon)
+>> 
+>> With 2a/2b being roughly equivalent depending on speculative execution policy.
+> 
+> There are a bunch of potential odd looking nops possible, one of which
+> would be the sll I mentioned above.
+> 
+> Another option would be to use a priveleged instruction which userland
+> code can't execute & should normally never contain. That would decode as
+> a valid instruction & effectively behave like a trap instruction but
+> look very odd to anyone reading disassembled code. eg:
+> 
+>  mfc0 $0, 13        # Try to read the cause register; take SIGILL
+> 
+> In order to handle MIPS vs microMIPS vs nanoMIPS differences I'm
+> thinking it may be best to switch to one of these real instructions that
+> looks strange. The ugly part would be the nest of #ifdef's to deal with
+> endianness & ISA when defining it as a number...
 
-Paolo
+Note that we can have different signatures for each sub-architecture, as
+long as they don't have to co-exist within the same process.
+
+Ideally we'd need a patch on top of the Linux kernel
+tools/testing/selftests/rseq/rseq-mips.h file that updates
+the signature value. I think the current discussion leads us
+towards a trap with unlikely immediate operand. Note that we
+can special-case with #ifdef for each sub-architecture and endianness
+if need be.
+
+/*
+ * TODO: document trap instruction objdump output on each sub-architecture
+ * instruction sets.
+ */
+#define RSEQ_SIG 0x########
+
+Should we do anything specific for big/little endian ? Is the byte order
+of the instruction encoding the same as data ?
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
