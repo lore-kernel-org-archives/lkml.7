@@ -2,105 +2,98 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDB7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8D0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E7C20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5451720883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PEOwFrOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfDIBho (ORCPT
+        id S1726694AbfDIBjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:37:44 -0400
-Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:35628 "EHLO
-        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfDIBhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:37:43 -0400
-Received: by mail.osadl.at (Postfix, from userid 1001)
-        id 802B05C2174; Tue,  9 Apr 2019 03:36:56 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 03:36:56 +0200
-From:   Nicholas Mc Guire <der.herr@hofr.at>
-To:     Adham.Abozaeid@microchip.com
-Cc:     hofrat@osadl.org, Ajay.Kathat@microchip.com,
-        gregkh@linuxfoundation.org, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] staging: wilc1000: give usleep_range a range
-Message-ID: <20190409013656.GA22293@osadl.at>
-References: <1554552067-15421-1-git-send-email-hofrat@osadl.org>
- <d38b17d8-5b0f-5b5e-2933-0626700e8546@microchip.com>
+        Mon, 8 Apr 2019 21:39:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53562 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfDIBjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:39:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x391dJu2080266;
+        Tue, 9 Apr 2019 01:39:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=j4Cdgmb3epUrJ87NfkbFLyJhjtgeFOZYHV246lxYQxU=;
+ b=PEOwFrOzbXuuSs3gkQmvoPzelE1R74NDV71q9VylbaApUL11kwSO+LJC9Me/+AYXQKT3
+ hdb866EF08V74JmHQP4G69rIQoUDCo4hm8JashLHtL/B10GxKSNfO5xC3xuShEE6rP+s
+ Y+o8c3AN0bhmsVXi66uUrq//9Ken4J1VHb2f5+vY63j6h1ypvrzq13cqwtuFna0AjSQf
+ iK3lV0WVTOOt4ElWoq/GlRpNpTlMuipKtHtUXo+5kjNG0NhFZwbVZLEMAu9/MKKYROwh
+ o0nF0vZ/iSUp5aHyzp3g73O5BTUE5Yzdgf2UHWs+iv+kTp/6n5xxeHnVqDGZPeBGMEj5 LQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2rpmrq1uug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Apr 2019 01:39:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x391boCO166824;
+        Tue, 9 Apr 2019 01:39:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2rpytbbf6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Apr 2019 01:39:18 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x391dGqD029461;
+        Tue, 9 Apr 2019 01:39:17 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Apr 2019 18:39:16 -0700
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Rik Faith <faith@cs.unc.edu>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] fdomain: Resurrect fdomain and fdomain_cs drivers
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190407185617.8467-1-linux@zary.sk>
+        <20190407185617.8467-2-linux@zary.sk>
+Date:   Mon, 08 Apr 2019 21:39:14 -0400
+In-Reply-To: <20190407185617.8467-2-linux@zary.sk> (Ondrej Zary's message of
+        "Sun, 7 Apr 2019 20:56:16 +0200")
+Message-ID: <yq1imvoot31.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d38b17d8-5b0f-5b5e-2933-0626700e8546@microchip.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=820
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904090009
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=863 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904090009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 09:10:00PM +0000, Adham.Abozaeid@microchip.com wrote:
-> Hi Nicholas
-> 
-> On 4/6/19 5:01 AM, Nicholas Mc Guire wrote:
-> > External E-Mail
-> >
-> >
-> > Someone that knows the motivation for setting the time to 2 millisecond
-> > might need to check if the 2 milliseconds where seen as tollerable max or
-> > min - I'm assuming it was the min so extending.
-> 
-> 2 msec is the time the chip takes to wake up from sleep.
-> 
-> Increasing the maximum to 5 msec will impact the throughput since this call is on the transmit path.
-> 
 
-ok - would it be tollerable to make it 2 - 2.5 ms ?
-even that would allow for the hrtimer subsystem to optimize
-a lot. In any case the min==max case gives you very little
-if you run a test-case with usleep_range(1000,1000) and
-a loop with usleep_range(1000,2000) and look at the distribution
-you will have a hard time seeing any difference.
+Hi Ondrej,
 
-I doubt you would readily see the change from usleep_range(2000,2000)
-to usleep_range(2000,3000) in benchmarks - maybe (2000,5000) would
-be visible.
+> This reverts commit e184f2bf4d9f1a3c612a8c1d67e73e9cf8ab5ab9.
+> It does not compile but following patches will fix that.
 
-My assumption (I have not analyzed it in detail) is that if
-you have a high re-use of existing timers that the setup of the timer
-is faster and thats why increasing the range > 0 can actually result
-in better jitter distribution.
+I don't have any particular objections to reviving this driver if people
+are actually using it. However, breaking bisection is going to be a
+problem. So you'll have to squash the revert and the fixup patch and
+carefully annotate the resolutions in the commit description.
 
-thx!
-hofrat
+Thanks!
 
-> > diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-> > index c238969..42da533 100644
-> > --- a/drivers/staging/wilc1000/wilc_wlan.c
-> > +++ b/drivers/staging/wilc1000/wilc_wlan.c
-> > @@ -408,7 +408,7 @@ void chip_wakeup(struct wilc *wilc)
-> >  			wilc->hif_func->hif_write_reg(wilc, 1, reg & ~BIT(1));
-> >  
-> >  			do {
-> > -				usleep_range(2 * 1000, 2 * 1000);
-> > +				usleep_range(2 * 1000, 5 * 1000);
-> >  				wilc_get_chipid(wilc, true);
-> >  			} while (wilc_get_chipid(wilc, true) == 0);
-> >  		} while (wilc_get_chipid(wilc, true) == 0);
-> > @@ -423,7 +423,7 @@ void chip_wakeup(struct wilc *wilc)
-> >  						     &clk_status_reg);
-> >  
-> >  			while ((clk_status_reg & 0x1) == 0) {
-> > -				usleep_range(2 * 1000, 2 * 1000);
-> > +				usleep_range(2 * 1000, 5 * 1000);
-> >  
-> >  				wilc->hif_func->hif_read_reg(wilc, 0xf1,
-> >  							     &clk_status_reg);
-> 
-> 
-> Thanks,
-> 
-> Adham
-> 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
