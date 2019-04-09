@@ -2,133 +2,253 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F830C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F49C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A37C20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C030F20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:06:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="WiPLHisM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfDIHFb (ORCPT
+        id S1726629AbfDIHGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:05:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfDIHFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:05:30 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 11D85C04D943;
-        Tue,  9 Apr 2019 07:05:30 +0000 (UTC)
-Received: from [10.36.117.49] (ovpn-117-49.ams2.redhat.com [10.36.117.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E109110A1822;
-        Tue,  9 Apr 2019 07:05:16 +0000 (UTC)
-Subject: Re: Thoughts on simple scanner approach for free page hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
- <20190408203541-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <ba84ec1f-79f2-e15b-e225-7d2e2885a4c6@redhat.com>
-Date:   Tue, 9 Apr 2019 09:05:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 9 Apr 2019 03:06:31 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22796 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDIHGb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:06:31 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x3976If2018583;
+        Tue, 9 Apr 2019 16:06:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x3976If2018583
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554793579;
+        bh=KAxjHSs77HgHMF8yn1xIgefgEIAQ2wmiGIkkKkEE8x4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WiPLHisM16Tn2IOcWtbGYceOvoLXo3zvHw0YIfbqTboxIotj3QwRch+54nXxh+deJ
+         mFCYXRO/EVbigM5klmwdV49tKXzuki0bJrCXDLz5otOviUex7/4fcOm+2xOC+5ipN8
+         T5Z0BNePjTsQFPwqBIyBDMJOD1c3SAew5JTBxFx60gYJ1MnGhgAkVKgNucSTM+JMug
+         KN1nLpdJmNBPHfelJTfKJwvTco17x1U2/3bpiixtGW1aS8aMXw5OUftC1kM7FMNQQA
+         eIcMSE1vj4AXRXUaCahPa0qPAp/fvEq+/1Y9QHkRMMk00qB0fotGL20B1J3He/5ZHT
+         ntEH6qwNERGUQ==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id c13so5139614uao.12;
+        Tue, 09 Apr 2019 00:06:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAV+raAHbX6jPyM0dimQ1gVU/c0Nlre3QEyeWze8w1EA6PruYCLX
+        B1cgZPYcRSH76Y7Lp0CBTjQFdKezq5JAyAzOdAA=
+X-Google-Smtp-Source: APXvYqwfjQUpWsYYPe2SZTy4BhMJ8FF5YXoRgZs0BvxcHj8Z1gpVBFy4IRxZqrtG+hFCPflITFM9rycvsg7JueOa/ls=
+X-Received: by 2002:ab0:348a:: with SMTP id c10mr12894893uar.79.1554793577884;
+ Tue, 09 Apr 2019 00:06:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190408203541-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 09 Apr 2019 07:05:30 +0000 (UTC)
+References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
+ <20190408075427.6052-3-yamada.masahiro@socionext.com> <20190408161802.GI49658@atomide.com>
+ <6308904e-443a-46ff-9633-2ccb3b03bef9@ti.com> <CAK7LNASYqkhW_W6K5Y9NvmqnZ2aSCbGZNw0ZFrBB3Dd2FRN8yg@mail.gmail.com>
+ <39d9cc92-ef2f-993c-3abd-99b134e1c22e@ti.com>
+In-Reply-To: <39d9cc92-ef2f-993c-3abd-99b134e1c22e@ti.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 9 Apr 2019 16:05:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARKW94j=sOdUd24mNMOcunu9TYXjPMeo_y_kHv7xqnE2Q@mail.gmail.com>
+Message-ID: <CAK7LNARKW94j=sOdUd24mNMOcunu9TYXjPMeo_y_kHv7xqnE2Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: omap2: move platform-specific asm-offset.h to arch/arm/mach-omap2
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, arm-soc <arm@kernel.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.19 04:44, Michael S. Tsirkin wrote:
-> On Fri, Apr 05, 2019 at 05:09:45PM -0700, Alexander Duyck wrote:
->> In addition we will need some way to identify which pages have been
->> hinted on and which have not. The way I believe easiest to do this
->> would be to overload the PageType value so that we could essentially
->> have two values for "Buddy" pages. We would have our standard "Buddy"
->> pages, and "Buddy" pages that also have the "Offline" value set in the
->> PageType field. Tracking the Online vs Offline pages this way would
->> actually allow us to do this with almost no overhead as the mapcount
->> value is already being reset to clear the "Buddy" flag so adding a
->> "Offline" flag to this clearing should come at no additional cost.
-> 
-> It bothers me a bit that this doesn't scale to multiple hint types
-> if we ever need them. Would it be better to have two
-> free lists: hinted and non-hinted one?
+On Tue, Apr 9, 2019 at 2:17 PM Keerthy <j-keerthy@ti.com> wrote:
+>
+>
+>
+> On 09/04/19 10:37 AM, Masahiro Yamada wrote:
+> > On Tue, Apr 9, 2019 at 2:00 PM Keerthy <j-keerthy@ti.com> wrote:
+> >>
+> >>
+> >>
+> >> On 08/04/19 9:48 PM, Tony Lindgren wrote:
+> >>> Hi,
+> >>>
+> >>> * Masahiro Yamada <yamada.masahiro@socionext.com> [190408 07:56]:
+> >>>> <generated/ti-pm-asm-offsets.h> is only generated and included
+> >>>> by arch/arm/mach-omap2/, so it does not need to reside in the
+> >>>> globally visible include/generated/.
+> >>>>
+> >>>> I moved and renamed it to arch/arm/mach-omap2/pm-asm-offsets.h
+> >>>> since the prefix 'omap2-' is just redundant in mach-omap2/.
+> >>>>
+> >>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >>>> ---
+> >>>>
+> >>>> Can this be applied to ARM-SOC tree in a series?
+> >>>> (with Ack from the platform sub-maintainer.)
+> >>>>
+> >>>> ti-pm-asm-offsets.h does not need to reside in include/generated/,
+> >>>> but you may ask "Why must it get out of include/generated/?"
+> >>>>
+> >>>> My main motivation is to avoid a race condition in the currently
+> >>>> proposed patch:
+> >>>>
+> >>>> https://lore.kernel.org/patchwork/patch/1052763/
+> >>>>
+> >>>> This patch tries to embed some build artifacts into the kernel.
+> >>>>
+> >>>> If arch/arm/mach-omap2/ and kernel/ are built at the same time,
+> >>>> it may embed a truncated file.
+> >>>
+> >>> Looks like a nice improvment to me, adding Keerthy and Dave to Cc.
+> >>>
+> >>> Keerthy and Dave, can you please test this series with am3 and am4
+> >>> PM code?
+> >>
+> >> Tested for Deep Sleep0 on AM33xx Beaglebone-black.
+> >> Tested for Deep Sleep0 on AM437x-gp-evm.
+> >>
+> >> Applied this on top of Tony's for-next with the gpio patch
+> >> required for RTC+DDR mode on am437x-gp-evm.
+> >
+> > Was it applied to TI tree?
+> >
+> > If so ...
+> >
+> > Arnd, Olof,
+> > Please just ignore this patch
+> > since it looks it was already applied to TI tree.
+>
+> Masahiro Yamada,
+>
+> No i manually applied this on top.
+>
+> Regards,
+> Keerthy
 
-That would imply having to change all places trying to allocate memory
-to have a look at both lists? I think that could be factored out. I
-assume keeping track of the amount of pages would feel more naturally
-than having split counters for the existing lists.
+Keerthy,
+Sorry, I misunderstood.
 
-I think I'd actually prefer something like that, avoiding mixing page
-types and working with different types per list.
+You just applied it to your local tree for testing.
+
+Then, I still think it is better to
+apply this series in a correct order.
+
+The reason I sent this in a series was
+to make sure asm-offset headers are correctly
+cleaned up.
+
+
+Thank you.
+
+
+
+> >
+> > Thanks.
+> > Masahiro Yamada
+> >
+> >
+> >
+> >
+> >> Tested-by: Keerthy <j-keerthy@ti.com>
+> >>
+> >>>
+> >>> Regards,
+> >>>
+> >>> Tony
+> >>>
+> >>>>    arch/arm/mach-omap2/.gitignore  | 1 +
+> >>>>    arch/arm/mach-omap2/Makefile    | 5 +++--
+> >>>>    arch/arm/mach-omap2/sleep33xx.S | 2 +-
+> >>>>    arch/arm/mach-omap2/sleep43xx.S | 2 +-
+> >>>>    4 files changed, 6 insertions(+), 4 deletions(-)
+> >>>>    create mode 100644 arch/arm/mach-omap2/.gitignore
+> >>>>
+> >>>> diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+> >>>> new file mode 100644
+> >>>> index 000000000000..79a8d6ea7152
+> >>>> --- /dev/null
+> >>>> +++ b/arch/arm/mach-omap2/.gitignore
+> >>>> @@ -0,0 +1 @@
+> >>>> +pm-asm-offsets.h
+> >>>> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+> >>>> index 85d1b13c9215..26baeb6477af 100644
+> >>>> --- a/arch/arm/mach-omap2/Makefile
+> >>>> +++ b/arch/arm/mach-omap2/Makefile
+> >>>> @@ -236,9 +236,10 @@ obj-y                                   += omap_phy_internal.o
+> >>>>
+> >>>>    obj-$(CONFIG_MACH_OMAP2_TUSB6010)  += usb-tusb6010.o
+> >>>>
+> >>>> -include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
+> >>>> +$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+> >>>>       $(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+> >>>>
+> >>>> -$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
+> >>>> +$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+> >>>>
+> >>>>    targets += pm-asm-offsets.s
+> >>>> +clean-files += pm-asm-offsets.h
+> >>>> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+> >>>> index 47a816468cdb..a003769121aa 100644
+> >>>> --- a/arch/arm/mach-omap2/sleep33xx.S
+> >>>> +++ b/arch/arm/mach-omap2/sleep33xx.S
+> >>>> @@ -6,7 +6,6 @@
+> >>>>     * Dave Gerlach, Vaibhav Bedia
+> >>>>     */
+> >>>>
+> >>>> -#include <generated/ti-pm-asm-offsets.h>
+> >>>>    #include <linux/linkage.h>
+> >>>>    #include <linux/platform_data/pm33xx.h>
+> >>>>    #include <linux/ti-emif-sram.h>
+> >>>> @@ -15,6 +14,7 @@
+> >>>>
+> >>>>    #include "iomap.h"
+> >>>>    #include "cm33xx.h"
+> >>>> +#include "pm-asm-offsets.h"
+> >>>>
+> >>>>    #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED                     0x00030000
+> >>>>    #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE                       0x0003
+> >>>> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+> >>>> index 5b9343b58fc7..aa288f361c5e 100644
+> >>>> --- a/arch/arm/mach-omap2/sleep43xx.S
+> >>>> +++ b/arch/arm/mach-omap2/sleep43xx.S
+> >>>> @@ -6,7 +6,6 @@
+> >>>>     * Dave Gerlach, Vaibhav Bedia
+> >>>>     */
+> >>>>
+> >>>> -#include <generated/ti-pm-asm-offsets.h>
+> >>>>    #include <linux/linkage.h>
+> >>>>    #include <linux/ti-emif-sram.h>
+> >>>>    #include <linux/platform_data/pm33xx.h>
+> >>>> @@ -19,6 +18,7 @@
+> >>>>    #include "iomap.h"
+> >>>>    #include "omap-secure.h"
+> >>>>    #include "omap44xx.h"
+> >>>> +#include "pm-asm-offsets.h"
+> >>>>    #include "prm33xx.h"
+> >>>>    #include "prcm43xx.h"
+> >>>>
+> >>>> --
+> >>>> 2.17.1
+> >>>>
+> >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+> >
+
+
 
 -- 
-
-Thanks,
-
-David / dhildenb
+Best Regards
+Masahiro Yamada
