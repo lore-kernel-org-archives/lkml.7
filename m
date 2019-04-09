@@ -2,141 +2,201 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB60BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DDBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86A020833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16942084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Culiuvlb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yr9/d3C4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfDIE4l (ORCPT
+        id S1726886AbfDIE60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 00:56:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37100 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfDIE4l (ORCPT
+        Tue, 9 Apr 2019 00:58:26 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46846 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfDIE60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 00:56:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so8577714pgc.4;
-        Mon, 08 Apr 2019 21:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fSbzNkjsSwkHQttu+TEGQLmXcM0+AN4d0v8/VJDirT0=;
-        b=Culiuvlbppghdx3mpcnmXq4pzQXD5BxfSCgJKFEUMLy2pfANurqs3aMveGuAU+//Sd
-         C+HkR2TId1a65C+Bo6ktfpH6qtezABxMeWdi3IU4yxdHOMX7CRbwtNVqVQtGFydqlqY7
-         J4tA52veE1Z4EaI+8fPOA13dAMVMWacUydP6vlOr0ZFcaDJgDFjZQYFNCevaLZ6D62A/
-         tA3Ifbn7eRJHLljSTd4MnV015V0Y+o5bLCLfTqzo4ObooBELVzIPxaTivrRIsWe3PSQu
-         29mm7qT0SQn+xhx4bh4fKQ48FF7Z9PTbrFcfy9kHalvV2kkQOxpVOSB1se0uqwyjeovy
-         lNQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fSbzNkjsSwkHQttu+TEGQLmXcM0+AN4d0v8/VJDirT0=;
-        b=uci5mu2fvUufliuqobiWXh3FpXXPGRlwMl5aTikXqQY8Lem9erOFWd35UdNozcNkxl
-         Fa1VUAr6DPt9znLTUZ9t76aCO2qehwRtJsbEOY6aPKH8vt5N0+bWZakw+6oCGo0GiQST
-         d3Ki79jJFbmdGOdhrNJLNLV2rbLx24Vrc3A0YsL98+SKjw3+RHjH1RoKdJGn/EjL/BiC
-         Mv5b/CCosO0dTQ0+KRe9YAEw0fRXCGiDjhazeCrFhiutdZqVqrbU+dBwJn5qrYvLmswm
-         JOTAWj7GKhp00LUHFgK7Kgjxav6mUO5c0e+kdvQVT/BjpL2M9yojmuuws7xl1xa0xWOx
-         xJmg==
-X-Gm-Message-State: APjAAAU2lmA/PIMst0FZWAfliPCKPd76dCtzw7M3l6fs4rBDRRjASBtJ
-        o5zWezuKDm2jmoEWTXo2UbI=
-X-Google-Smtp-Source: APXvYqzVtYQ7/TWepFOzztOXYsTBLeJbErgA6c9WPKnHOmXfWudaRv0t8mDaEzmknLvq8tWARXeHxg==
-X-Received: by 2002:a63:195e:: with SMTP id 30mr32256554pgz.312.1554785800471;
-        Mon, 08 Apr 2019 21:56:40 -0700 (PDT)
-Received: from icarus ([2001:268:c1c0:11e:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id c189sm48847177pfg.24.2019.04.08.21.56.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 21:56:39 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 13:57:28 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     gregkh@linuxfoundation.org, jic23@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org,
-        david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk,
-        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        patrick.havelange@essensium.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v10 01/18] counter: Introduce the Generic Counter
- interface
-Message-ID: <20190409045728.GA2842@icarus>
-References: <cover.1554184734.git.vilhelm.gray@gmail.com>
- <ad3a8c427a911848373eae1c08e89353ffb6cb6d.1554184734.git.vilhelm.gray@gmail.com>
- <20190408215515.GA27592@amd>
+        Tue, 9 Apr 2019 00:58:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x394wATd040692;
+        Mon, 8 Apr 2019 23:58:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554785890;
+        bh=dgebePCSsT99tgVhfQuDdmRIZXqeLMkufuMOZthSLrQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yr9/d3C42nab/vuahfEMQ+Io88HeZdBEu9DeYtoJxpJg4c/6txpaA6NwbZTnMbOKr
+         hepEvu5bHS6hQhKYVvPEq/wdx4Mq41Md2QKrfl8quZqRP7StfOfj47uzdeAfNrmg8v
+         qoqgG0RIt3IuJ+70rGUnFkfBEyau6TlbuUYal++Q=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x394wAuc005997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Apr 2019 23:58:10 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Apr
+ 2019 23:58:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 8 Apr 2019 23:58:09 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x394w6XM040016;
+        Mon, 8 Apr 2019 23:58:07 -0500
+Subject: Re: [PATCH 3/3] ARM: omap2: move platform-specific asm-offset.h to
+ arch/arm/mach-omap2
+To:     Tony Lindgren <tony@atomide.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     <arm@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
+References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
+ <20190408075427.6052-3-yamada.masahiro@socionext.com>
+ <20190408161802.GI49658@atomide.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <6308904e-443a-46ff-9633-2ccb3b03bef9@ti.com>
+Date:   Tue, 9 Apr 2019 10:28:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190408215515.GA27592@amd>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190408161802.GI49658@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:55:15PM +0200, Pavel Machek wrote:
-> Hi!
+
+
+On 08/04/19 9:48 PM, Tony Lindgren wrote:
+> Hi,
 > 
-> > +const char *const counter_count_direction_str[2] = {
-> > +	[COUNTER_COUNT_DIRECTION_FORWARD] = "forward",
-> > +	[COUNTER_COUNT_DIRECTION_BACKWARD] = "backward"
-> > +};
-> > +EXPORT_SYMBOL_GPL(counter_count_direction_str);
-> > +
-> > +const char *const counter_count_mode_str[4] = {
-> > +	[COUNTER_COUNT_MODE_NORMAL] = "normal",
-> > +	[COUNTER_COUNT_MODE_RANGE_LIMIT] = "range limit",
-> > +	[COUNTER_COUNT_MODE_NON_RECYCLE] = "non-recycle",
-> > +	[COUNTER_COUNT_MODE_MODULO_N] = "modulo-n"
-> > +};
-> > +EXPORT_SYMBOL_GPL(counter_count_mode_str);
+> * Masahiro Yamada <yamada.masahiro@socionext.com> [190408 07:56]:
+>> <generated/ti-pm-asm-offsets.h> is only generated and included
+>> by arch/arm/mach-omap2/, so it does not need to reside in the
+>> globally visible include/generated/.
+>>
+>> I moved and renamed it to arch/arm/mach-omap2/pm-asm-offsets.h
+>> since the prefix 'omap2-' is just redundant in mach-omap2/.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> ---
+>>
+>> Can this be applied to ARM-SOC tree in a series?
+>> (with Ack from the platform sub-maintainer.)
+>>
+>> ti-pm-asm-offsets.h does not need to reside in include/generated/,
+>> but you may ask "Why must it get out of include/generated/?"
+>>
+>> My main motivation is to avoid a race condition in the currently
+>> proposed patch:
+>>
+>> https://lore.kernel.org/patchwork/patch/1052763/
+>>
+>> This patch tries to embed some build artifacts into the kernel.
+>>
+>> If arch/arm/mach-omap2/ and kernel/ are built at the same time,
+>> it may embed a truncated file.
 > 
-> Dunno. Exporting const tables saying "forward" and "backward". Can we
-> ... somehow make it work without need to export this?
+> Looks like a nice improvment to me, adding Keerthy and Dave to Cc.
 > 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> Keerthy and Dave, can you please test this series with am3 and am4
+> PM code?
 
-Right now there are only have 4 counter devices supported in this
-patchset, but it is expected that support for a greater variety of
-devices will be added. For these future cases, new count directions will
-be added to match their functionality.
+Tested for Deep Sleep0 on AM33xx Beaglebone-black.
+Tested for Deep Sleep0 on AM437x-gp-evm.
 
-For example, suppose support for a rotary encoder device is added. These
-type of devices do not move forward/backward but rather rotate. In these
-cases, the following count directions may be added:
+Applied this on top of Tony's for-next with the gpio patch
+required for RTC+DDR mode on am437x-gp-evm.
 
-    [COUNTER_COUNT_DIRECTION_CLOCKWISE] = "clockwise",
-    [COUNTER_COUNT_DIRECTION_COUNTERCLOCKWISE] = "counterclockwise"
+Tested-by: Keerthy <j-keerthy@ti.com>
 
-Or as another example, suppose support for a two-axis precision
-positioning table is added. These devices support positioning in a
-cartesian coordinate system. In these cases, spatial direction may serve
-as useful count directions:
-
-    [COUNTER_COUNT_DIRECTION_NORTH] = "north",
-    [COUNTER_COUNT_DIRECTION_NORTHEAST] = "northeast",
-    [COUNTER_COUNT_DIRECTION_EAST] = "east",
-    [COUNTER_COUNT_DIRECTION_SOUTHEAST] = "southeast",
-    [COUNTER_COUNT_DIRECTION_SOUTH] = "south",
-    [COUNTER_COUNT_DIRECTION_SOUTHWEST] = "southwest",
-    [COUNTER_COUNT_DIRECTION_WEST] = "west",
-    [COUNTER_COUNT_DIRECTION_NORTHWEST] = "northwest"
-
-A const table is conveinent in these scenarios because support for new
-count directions may be easily added by simple entry into the table.
-
-William Breathitt Gray
+> 
+> Regards,
+> 
+> Tony
+> 
+>>   arch/arm/mach-omap2/.gitignore  | 1 +
+>>   arch/arm/mach-omap2/Makefile    | 5 +++--
+>>   arch/arm/mach-omap2/sleep33xx.S | 2 +-
+>>   arch/arm/mach-omap2/sleep43xx.S | 2 +-
+>>   4 files changed, 6 insertions(+), 4 deletions(-)
+>>   create mode 100644 arch/arm/mach-omap2/.gitignore
+>>
+>> diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+>> new file mode 100644
+>> index 000000000000..79a8d6ea7152
+>> --- /dev/null
+>> +++ b/arch/arm/mach-omap2/.gitignore
+>> @@ -0,0 +1 @@
+>> +pm-asm-offsets.h
+>> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+>> index 85d1b13c9215..26baeb6477af 100644
+>> --- a/arch/arm/mach-omap2/Makefile
+>> +++ b/arch/arm/mach-omap2/Makefile
+>> @@ -236,9 +236,10 @@ obj-y					+= omap_phy_internal.o
+>>   
+>>   obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
+>>   
+>> -include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
+>> +$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+>>   	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+>>   
+>> -$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
+>> +$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+>>   
+>>   targets += pm-asm-offsets.s
+>> +clean-files += pm-asm-offsets.h
+>> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+>> index 47a816468cdb..a003769121aa 100644
+>> --- a/arch/arm/mach-omap2/sleep33xx.S
+>> +++ b/arch/arm/mach-omap2/sleep33xx.S
+>> @@ -6,7 +6,6 @@
+>>    *	Dave Gerlach, Vaibhav Bedia
+>>    */
+>>   
+>> -#include <generated/ti-pm-asm-offsets.h>
+>>   #include <linux/linkage.h>
+>>   #include <linux/platform_data/pm33xx.h>
+>>   #include <linux/ti-emif-sram.h>
+>> @@ -15,6 +14,7 @@
+>>   
+>>   #include "iomap.h"
+>>   #include "cm33xx.h"
+>> +#include "pm-asm-offsets.h"
+>>   
+>>   #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
+>>   #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
+>> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+>> index 5b9343b58fc7..aa288f361c5e 100644
+>> --- a/arch/arm/mach-omap2/sleep43xx.S
+>> +++ b/arch/arm/mach-omap2/sleep43xx.S
+>> @@ -6,7 +6,6 @@
+>>    *	Dave Gerlach, Vaibhav Bedia
+>>    */
+>>   
+>> -#include <generated/ti-pm-asm-offsets.h>
+>>   #include <linux/linkage.h>
+>>   #include <linux/ti-emif-sram.h>
+>>   #include <linux/platform_data/pm33xx.h>
+>> @@ -19,6 +18,7 @@
+>>   #include "iomap.h"
+>>   #include "omap-secure.h"
+>>   #include "omap44xx.h"
+>> +#include "pm-asm-offsets.h"
+>>   #include "prm33xx.h"
+>>   #include "prcm43xx.h"
+>>   
+>> -- 
+>> 2.17.1
+>>
