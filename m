@@ -2,95 +2,99 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FD2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2B4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44732084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="c3RBLKxg"
+	by mail.kernel.org (Postfix) with ESMTP id 52AE82084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfDINJZ (ORCPT
+        id S1727345AbfDINMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:09:25 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:53370 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbfDINJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:09:24 -0400
-X-Greylist: delayed 476 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Apr 2019 09:09:23 EDT
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id C891E2E14F9;
-        Tue,  9 Apr 2019 16:01:25 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 7a8Rsk49OT-1PeORcnc;
-        Tue, 09 Apr 2019 16:01:25 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1554814885; bh=QNJxg5ExNJ6bFzaVN3amxQmlqui1fp3QtzeKauuH4OE=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=c3RBLKxgg6odcBewDveWr9wGVAyT5Go0jzwAmnYQ/OYLui+I7j3QN4kxE4m3hwfk2
-         mjmXxCWFbnoRe6MOBCRZvwwhs3xf5G7FZpNvW7jCxr5GFH1zS7RwhPURJvzRUnrSCN
-         0sIOkHKsr9odKr5P1o7FYMdp9tYMJbG31hQLqgMw=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:0:3711::1:6d])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id Z1ZqwzxHC4-1P0mS5oG;
-        Tue, 09 Apr 2019 16:01:25 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] mm/vmstat: fix /proc/vmstat format for
- CONFIG_DEBUG_TLBFLUSH=y CONFIG_SMP=n
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Jann Horn <jannh@google.com>
-Date:   Tue, 09 Apr 2019 16:01:24 +0300
-Message-ID: <155481488468.467.4295519102880913454.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 9 Apr 2019 09:12:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6717 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727070AbfDINMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:12:38 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 374B09D1F641A5F1B7F6;
+        Tue,  9 Apr 2019 21:12:32 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.120) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Tue, 9 Apr 2019
+ 21:12:25 +0800
+From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
+Subject: Re: [PATCH] fs/buffer.c: Fix data corruption when buffer write with
+ IO error
+To:     Jan Kara <jack@suse.cz>
+CC:     <viro@zeniv.linux.org.uk>, <tytso@mit.edu>,
+        <adilger.kernel@dilger.ca>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+References: <1554534793-31444-1-git-send-email-zhangxiaoxu5@huawei.com>
+ <20190408111108.GB18662@quack2.suse.cz>
+Message-ID: <cdc7faed-20a0-4024-9405-ab74d7d18ab8@huawei.com>
+Date:   Tue, 9 Apr 2019 21:11:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190408111108.GB18662@quack2.suse.cz>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.120]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
-depends on skipping vmstat entries with empty name introduced in commit
-7aaf77272358 ("mm: don't show nr_indirectly_reclaimable in /proc/vmstat")
-but reverted in commit b29940c1abd7 ("mm: rename and change semantics of
-nr_indirectly_reclaimable_bytes").
 
-So, skipping no longer works and /proc/vmstat has misformatted lines " 0".
-This patch simply shows debug counters "nr_tlb_remote_*" for UP.
 
-Fixes: 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- mm/vmstat.c |    5 -----
- 1 file changed, 5 deletions(-)
+On 4/8/2019 7:11 PM, Jan Kara wrote:
+> On Sat 06-04-19 15:13:13, ZhangXiaoxu wrote:
+>> When the buffer write failed, 'end_buffer_write_sync' and
+>> 'end_buffer_async_write' will clear the uptodate flag. But the
+>> data in the buffer maybe newer than disk. In some case, this
+>> will lead data corruption.
+>>
+>> For example: ext4 flush metadata to disk failed, it will clear
+>> the uptodate flag. when a new coming call want the buffer, it will
+>> read it from the disk(because the buffer no uptodate flag). But
+>> the journal not checkpoint now, it will read old data from disk.
+>> If read successfully, ext4 will write the old data to the new
+>> journal, the data will corruption.
+>>
+>> So, don't clear the uptodate flag when write the buffer failed.
+>>
+>> Signed-off-by: ZhangXiaoxu<zhangxiaoxu5@huawei.com>
+> Thanks for the patch. But what are the chances that after the write has
+> failed the read will succeed? Also there were places that were using
+> buffer_uptodate() to detect IO errors. Did you check all those got
+> converted to using buffer_write_io_error() instead?
+> 
+> 								Honza
+> 
+I encountered this situation when using iscsi target as the ext4 volume,
+if the network down a while when ext4 write metadata to disk, and maybe
+read will success after the network recovered.
+In my testcase, just create and delete files, when disconnect the network,
+the dir entry maybe corruption. I add some logs when read entry buffer from
+disk, the buffer stats maybe buffer_write_io_error() and !buffer_uptodate().
+In this case, the ext4 will corruption high probability. Because the buffer
+is read from disk, and some newer information just on journal. In this case,
+we should not read buffer from the disk.
 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 36b56f858f0f..a7d493366a65 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1274,13 +1274,8 @@ const char * const vmstat_text[] = {
- #endif
- #endif /* CONFIG_MEMORY_BALLOON */
- #ifdef CONFIG_DEBUG_TLBFLUSH
--#ifdef CONFIG_SMP
- 	"nr_tlb_remote_flush",
- 	"nr_tlb_remote_flush_received",
--#else
--	"", /* nr_tlb_remote_flush */
--	"", /* nr_tlb_remote_flush_received */
--#endif /* CONFIG_SMP */
- 	"nr_tlb_local_flush_all",
- 	"nr_tlb_local_flush_one",
- #endif /* CONFIG_DEBUG_TLBFLUSH */
+I don't know any other filesystem how to use the uptodate flag. But I think
+uptodate means the buffer is valid and newer than disk, am I right?
+
+I just test ext4 use the xfstest.
+
+Any other idea about my problem?
+
+
+
+
 
