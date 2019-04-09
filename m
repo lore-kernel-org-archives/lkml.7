@@ -6,69 +6,126 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8132DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691AFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597C620833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430CC20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDIHWV (ORCPT
+        id S1726708AbfDIHWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:22:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59518 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfDIHWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:22:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49D49307D849;
-        Tue,  9 Apr 2019 07:22:20 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CF35D719;
-        Tue,  9 Apr 2019 07:22:19 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 0489C16E03; Tue,  9 Apr 2019 09:22:19 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 09:22:18 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190409072218.nepac7a4pngacweh@sirius.home.kraxel.org>
-References: <20190409160849.391d3efa@canb.auug.org.au>
+        Tue, 9 Apr 2019 03:22:47 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:50539 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfDIHWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:22:47 -0400
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4CEAD100004;
+        Tue,  9 Apr 2019 07:22:38 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 09:22:37 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 01/12] arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
+Message-ID: <20190409072237.fn2pe7ugtukdlnm2@flea>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-2-megous@megous.com>
+ <20190408074628.e5ers4gzlqz4coyk@flea>
+ <20190408225851.svelyf7h3fiw4wjw@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vazlaal22ii7l2e2"
 Content-Disposition: inline
-In-Reply-To: <20190409160849.391d3efa@canb.auug.org.au>
+In-Reply-To: <20190408225851.svelyf7h3fiw4wjw@core.my.home>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 09 Apr 2019 07:22:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 04:08:49PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the drm-misc tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
-> 
-> drivers/gpu/drm/cirrus/cirrus.c: In function 'cirrus_fb_blit_rect':
-> drivers/gpu/drm/cirrus/cirrus.c:310:25: error: implicit declaration of function '__io_virt'; did you mean '__do_irq'? [-Werror=implicit-function-declaration]
->    drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
->                          ^~~~~~~~~
->                          __do_irq
 
-Probably just a missing arm/io.h include.
-Test build is running ...
+--vazlaal22ii7l2e2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers,
-  Gerd
+On Tue, Apr 09, 2019 at 12:58:51AM +0200, Ond=C5=99ej Jirman wrote:
+> > > +&usb2otg {
+> > > +	dr_mode =3D "host";
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&usb2phy {
+> > > +	usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
+> > > +	usb0_vbus-supply =3D <&reg_vcc5v>;
+> > > +	usb3_vbus-supply =3D <&reg_vcc5v>;
+> > > +	status =3D "okay";
+> >
+> > If we have an ID pin, then why is the OTG controller set to host?
+>
+> This board has fixed conenction between VBUS and DCIN, so if it is powered
+> from DCIN and someone will try to connect it to the PC as a peripheral,
+> they'll get PC's VBUS shorted to the power supply connected to DCIN.
+>
+> Depending on voltage difference between DCIN and PC's VBUS, you can get
+> overcurrent condidion and PC's port shutdown.
+>
+> The board is not entirely foolproof in this regard.
+>
+> - It can be host powered when connected via microUSB
+> - It can be self-powered and host an device on microUSB
+> - It can be self-powered and serve as a peripheral if you modify
+>   a cable (cut VBUS) or the host is expecting this and has some
+>   VBUS detection logic (most hosts will not have this)
+>
+> I just didn't want to encourage use as a peripheral, because it's not
+> very foolproof. But I guess, DTS file will not stop anyone anyway.
+>
+> I'll change it to otg, and maybe leave a small note.
 
+Your solution was great actually. I guess making a comment explaining
+what you just did would be better though, so that no one is confused.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--vazlaal22ii7l2e2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxIPQAKCRDj7w1vZxhR
+xQcXAQDol3REexlF7y84fFUCcIEyEMiedbnGpFQLj6gLdmA1LQD6AnjKbKwNsJqo
+Is/r3wfDkq5t5cMb3FvH7ld60Tv3rA0=
+=d1oR
+-----END PGP SIGNATURE-----
+
+--vazlaal22ii7l2e2--
