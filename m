@@ -2,133 +2,112 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB18BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA66C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8384720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB7020857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oB9oLm9h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sOS3EzK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfDILdW (ORCPT
+        id S1727115AbfDILew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:33:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49504 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfDILdV (ORCPT
+        Tue, 9 Apr 2019 07:34:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42838 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfDILev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:33:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x39BIZ1l139835;
-        Tue, 9 Apr 2019 11:33:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=9HVSF2/9UDRbz8uuFqKN0XR7+6YZznZ/dCu0+vyJWog=;
- b=oB9oLm9hZzGeU9sAHPm/iof0GnOa+xVsNIJDhZf4lDVAfGRpSnl6m4vzCVS+nDCoMukJ
- g0LI8fzAu3l/RghU1sN0HTlUrSFPYyrLwu074l/n+vHIJryiIFwWJwb0/6yg/vYW1YTD
- LeTjwQ3YGUB5OmsFewDFKvgaCvsbPTRnY1vsSeIFl3LM8IqsSTaNTcyR+etgOMVELOH7
- Tv6zW7wueISQOdJpWWFO8YCE+jtJsIWVSIIa5L3Qjm9QnFY7JEF1c1CAJeLVgn5CIJiF
- hALlj6g1bGH8CxqeHRBjVH8oheyNhmv4xXD2lRvVLSK4Cc0qKqUtwlDoe0/n7hbiF6Bp Fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2rpkhsvcuy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 11:33:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x39BWRVA177130;
-        Tue, 9 Apr 2019 11:33:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2rph7sh757-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 11:33:09 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x39BX8UU013723;
-        Tue, 9 Apr 2019 11:33:08 GMT
-Received: from kadam (/197.157.0.24)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Apr 2019 04:33:08 -0700
-Date:   Tue, 9 Apr 2019 14:32:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] brcmfmac: fix leak of mypkt on error return path
-Message-ID: <20190409113245.GB6095@kadam>
-References: <20190409112011.19546-1-colin.king@canonical.com>
+        Tue, 9 Apr 2019 07:34:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9As9lymReqB8M1UxoTk2pigPZNCxLpfhb2NVImuLGIE=; b=sOS3EzK0ZSN+9uc66v3iaMF0S
+        qnydfgGdrI7Jgn20mjQnaZdsLPiNJd7fKK49/5Uk7p9CNKahKsMfcUZ1MnWOTJ/dpgzadtsDWvCbj
+        Ln4R1AHmtgWQU/2/Bs0uSsyqFwInv5xe8Adjh7KQaMjV4vwK2XJT4GpXVM5M1TPdfK+c+oUq9hbTy
+        OGOVoEjTyakYFggHdmEaxMyvbDDLoLpuOnm8Oi2kGrKuA3lhZnC45EIkpOE468QG1KpvaWgLJquuZ
+        bcdRM5nvN4EhMxrstktt4VwiaM26o9WXeK1QBYX9DfO7LiKLBXJjBLwPs+OM12ua8KKy3gep+qXTM
+        R57jUR3+Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDp1C-0007ta-T2; Tue, 09 Apr 2019 11:34:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 400B429B1224C; Tue,  9 Apr 2019 13:34:21 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 13:34:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Babu Moger <babu.moger@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Byungchul Park <byungchul.park@lge.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Christoffer Dall <cdall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 10/14] kernel/watchdog: Add a function to obtain
+ the watchdog_allowed_mask
+Message-ID: <20190409113421.GU4038@hirez.programming.kicks-ass.net>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1551283518-18922-11-git-send-email-ricardo.neri-calderon@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190409112011.19546-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904090074
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904090074
+In-Reply-To: <1551283518-18922-11-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 12:20:11PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently if the call to brcmf_sdiod_set_backplane_window fails then
-> then error return path leaks mypkt. Fix this by returning by a new
-> error path labelled 'out' that calls brcmu_pkt_buf_free_skb to free
-> mypkt.
-> 
-> Addresses-Coverity: ("Resource Leak")
-> Fixes: a7c3aa1509e2 ("brcmfmac: Remove brcmf_sdiod_addrprep()")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> index ec129864cc9c..f3d11e024e71 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> @@ -628,7 +628,7 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
+On Wed, Feb 27, 2019 at 08:05:14AM -0800, Ricardo Neri wrote:
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index 8fbfda94a67b..367aa81294ef 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -44,7 +44,7 @@ int __read_mostly soft_watchdog_user_enabled = 1;
+>  int __read_mostly watchdog_thresh = 10;
+>  int __read_mostly nmi_watchdog_available;
 >  
->  	err = brcmf_sdiod_set_backplane_window(sdiodev, addr);
->  	if (err)
-> -		return err;
-> +		goto out;
+> -struct cpumask watchdog_allowed_mask __read_mostly;
+> +static struct cpumask watchdog_allowed_mask __read_mostly;
 >  
->  	addr &= SBSDIO_SB_OFT_ADDR_MASK;
->  	addr |= SBSDIO_SB_ACCESS_2_4B_FLAG;
-> @@ -636,7 +636,7 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
->  	if (!err)
-            ^^^^
-This is not required, btw.
+>  struct cpumask watchdog_cpumask __read_mostly;
+>  unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
 
->  		err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr,
->  					       mypkt);
-> -
-> +out:
->  	brcmu_pkt_buf_free_skb(mypkt);
-
-regards,
-dan carpenter
-
+Hurmph, more struct cpumask, ideally this would get converted to
+cpumask_var_t, I don't think we need this before the allocators work, do
+we?
