@@ -2,146 +2,219 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716F4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C19EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403DF20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6FE20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="p4lYenqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfDILfd (ORCPT
+        id S1727214AbfDILgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:35:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53615 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfDILfd (ORCPT
+        Tue, 9 Apr 2019 07:36:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43974 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfDILgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:35:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hDp2J-0007dX-9A; Tue, 09 Apr 2019 11:35:31 +0000
-Subject: Re: [PATCH] brcmfmac: fix leak of mypkt on error return path
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190409112011.19546-1-colin.king@canonical.com>
- <20190409113245.GB6095@kadam>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
- fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
- +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
- LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
- BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
- dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
- uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
- LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
- zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
- FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
- IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
- CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
- n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
- vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
- nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
- fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
- gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
- 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
- Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
- u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
- Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
- EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
- 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
- v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
- cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
- rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
- 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
- IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
- 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
- 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
- 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
- Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
- t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
- LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
- pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
- KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
- 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
- TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
- WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
- QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
- GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Message-ID: <e0d4531b-bece-e9f3-9347-e0325225b712@canonical.com>
-Date:   Tue, 9 Apr 2019 12:35:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 07:36:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k17so20411970wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 04:36:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=J2G8itL6On7XrTj4IGeUKtu8uuc7mhO20zhj78qvweE=;
+        b=p4lYenqK99tT+pYGYZhJ48Jb6j33SCV5epzBTrTaL92xw/td44gqLpZWDn3bXbNLxE
+         6ACZfZLFKbgBS5kFzhMh2QXD1AQTB2rtmKUA2ssvRtCi1B8mbG9ynGJlnevKOTLJrjLn
+         0bkoT5/KQaw8FyPtE6ggqd16+dgP00nFw3u2mehvdRzIlrhRNg49PsDNZqOTuhtSt4ww
+         dP13KdATPJjncf1amoVEfq0ZEbHE7z9xBSiOKRcKQb2L/3tfJVLH8De6la7K7tAu/d6W
+         Am/zWf3x1oZntTTzgRHocNwAuMFMkwyUiGFWn7mgsPs+as0Oct0m7rdhRYnEJLI/kSEO
+         Gwtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=J2G8itL6On7XrTj4IGeUKtu8uuc7mhO20zhj78qvweE=;
+        b=jGeOXC84LMS0nCSAY9v/swro8f8x23oomZ1z4TdSoXCiblA9U+kDC/mh/SDEL5JNt0
+         YTsfX9V0ggrgtboNBFMtkcIwpmbRzp6Jq1hk3eaVak0hL8cjgyHS3dB8ZTNSCouoZEVN
+         4YzAeGFjrF/EaUpZ4hYss3otnpOEkcH1hhDQ0zmX93JWwx4z+vP/iY5QAge46zA4CK39
+         TPEtvL7HWQZYX3vl9rU6wsnPs1E9wRZkLHW7yDAwb1OIYgATj0ilUvpVZuU16vd0NMMw
+         eYjlxIm2U5mumPPu38s+6VUxVb/kP8g4lnHhRP6EzwHR9IuHKuPvFtCtWzbbuDJRu9Ba
+         SARA==
+X-Gm-Message-State: APjAAAWM97FFpHGjAClAc88NRE/6FBQCFIiDxnSQij6kV/20TfFy3y87
+        MK31WcaJ2vvFT3JbVZomrCmNsg==
+X-Google-Smtp-Source: APXvYqyOav8eVbZIzeuuDcu8S0m5tQQjnYPEId2xZ7DfLy40syxbR1wafBmcXOSR096S1UU2+tghZw==
+X-Received: by 2002:a5d:6b02:: with SMTP id v2mr12450408wrw.84.1554809776032;
+        Tue, 09 Apr 2019 04:36:16 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id w11sm96427814wre.15.2019.04.09.04.36.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Apr 2019 04:36:15 -0700 (PDT)
+Message-ID: <c79c89b5a0cb1b132543aea70ff1c16872b6f6e7.camel@baylibre.com>
+Subject: Re: stable/linux-5.0.y boot bisection: v5.0.7 on
+ meson-gxl-s805x-p241
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com,
+        Sasha Levin <sashal@kernel.org>,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 09 Apr 2019 13:36:12 +0200
+In-Reply-To: <5ca84614.1c69fb81.e2ab3.2e61@mx.google.com>
+References: <5ca84614.1c69fb81.e2ab3.2e61@mx.google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190409113245.GB6095@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 12:32, Dan Carpenter wrote:
-> On Tue, Apr 09, 2019 at 12:20:11PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently if the call to brcmf_sdiod_set_backplane_window fails then
->> then error return path leaks mypkt. Fix this by returning by a new
->> error path labelled 'out' that calls brcmu_pkt_buf_free_skb to free
->> mypkt.
->>
->> Addresses-Coverity: ("Resource Leak")
->> Fixes: a7c3aa1509e2 ("brcmfmac: Remove brcmf_sdiod_addrprep()")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
->> index ec129864cc9c..f3d11e024e71 100644
->> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
->> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
->> @@ -628,7 +628,7 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
->>  
->>  	err = brcmf_sdiod_set_backplane_window(sdiodev, addr);
->>  	if (err)
->> -		return err;
->> +		goto out;
->>  
->>  	addr &= SBSDIO_SB_OFT_ADDR_MASK;
->>  	addr |= SBSDIO_SB_ACCESS_2_4B_FLAG;
->> @@ -636,7 +636,7 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
->>  	if (!err)
->             ^^^^
-> This is not required, btw.
+On Fri, 2019-04-05 at 23:24 -0700, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> 
+> stable/linux-5.0.y boot bisection: v5.0.7 on meson-gxl-s805x-p241
+> 
+> Summary:
+>   Start:      8b298d3a0bd5 Linux 5.0.7
+>   Details:    https://kernelci.org/boot/id/5ca7df3959b5141abafe6036
+>   Plain log:  https://storage.kernelci.org//stable/linux-5.0.y/v5.0.7/arm64/defconfig/gcc-7/lab-baylibre/boot-meson-gxl-s805x-p241.txt
+>   HTML log:   https://storage.kernelci.org//stable/linux-5.0.y/v5.0.7/arm64/defconfig/gcc-7/lab-baylibre/boot-meson-gxl-s805x-p241.html
+>   Result:     9b0f430450cf clk: meson: clean-up clock registration
+> 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       stable
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+>   Branch:     linux-5.0.y
+>   Target:     meson-gxl-s805x-p241
+>   CPU arch:   arm64
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-7
+>   Config:     defconfig
+>   Test suite: boot
+> 
+> Breaking commit found:
 
-Good point.
+The problem is that one of the clock (the cec clock) is registered twice.
+
+> gxbb-aoclkc c8100000.sys-ctrl:clock-controller: Clock registration failed
+> gxbb-aoclkc: probe of c8100000.sys-ctrl:clock-controller failed with error
+-17
+
+It is not a problem on mainline because there has been some rework on AO clock
+controller before this particular patch.
+
+It is safe to drop this patch from the stable branch, it does fix anything. It
+is a clean up.
+
+If you prefer, I can try to submit a fixup to keep the patch in stable.
+
+Status is the same for the stable/linux-4.19.y.
 
 > 
->>  		err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr,
->>  					       mypkt);
->> -
->> +out:
->>  	brcmu_pkt_buf_free_skb(mypkt);
+> -------------------------------------------------------------------------------
+> commit 9b0f430450cf230e736bc40f95bf34fbdb99cead
+> Author: Jerome Brunet <jbrunet@baylibre.com>
+> Date:   Fri Dec 21 17:02:36 2018 +0100
 > 
-> regards,
-> dan carpenter
+>     clk: meson: clean-up clock registration
+>     
+>     [ Upstream commit 8d9981efbcab066d17af4d3c85c169200f6f78df ]
+>     
+>     Order, ids and size  between the table of regmap clocks and the onecell
+>     data table could be different.
+>     
+>     Set regmap pointer in all the regmap clocks before starting the
+>     registration using the onecell data, to make sure we don't
+>     get into an incoherent situation.
+>     
+>     Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>     Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+>     Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>     Link: https://lkml.kernel.org/r/20181221160239.26265-3-jbrunet@baylibre.com
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
+> diff --git a/drivers/clk/meson/meson-aoclk.c b/drivers/clk/meson/meson-aoclk.c
+> index f965845917e3..258c8d259ea1 100644
+> --- a/drivers/clk/meson/meson-aoclk.c
+> +++ b/drivers/clk/meson/meson-aoclk.c
+> @@ -65,15 +65,20 @@ int meson_aoclkc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	/*
+> -	 * Populate regmap and register all clks
+> -	 */
+> -	for (clkid = 0; clkid < data->num_clks; clkid++) {
+> +	/* Populate regmap */
+> +	for (clkid = 0; clkid < data->num_clks; clkid++)
+>  		data->clks[clkid]->map = regmap;
+>  
+> +	/* Register all clks */
+> +	for (clkid = 0; clkid < data->hw_data->num; clkid++) {
+> +		if (!data->hw_data->hws[clkid])
+> +			continue;
+> +
+>  		ret = devm_clk_hw_register(dev, data->hw_data->hws[clkid]);
+> -		if (ret)
+> +		if (ret) {
+> +			dev_err(dev, "Clock registration failed\n");
+>  			return ret;
+> +		}
+>  	}
+>  
+>  	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [820c1fa515010d280551075da59fc2668ba8b3ae] Linux 5.0.6
+> git bisect good 820c1fa515010d280551075da59fc2668ba8b3ae
+> # bad: [8b298d3a0bd5feeb47129c4889356b38b78ab231] Linux 5.0.7
+> git bisect bad 8b298d3a0bd5feeb47129c4889356b38b78ab231
+> # good: [55d7152d37dccfa9add45df82fd45c373e032f46] cgroup, rstat: Don't flush subtree root unless necessary
+> git bisect good 55d7152d37dccfa9add45df82fd45c373e032f46
+> # good: [8b3b22aa7c558e713a179710a6f1e2fdbef44b20] block, bfq: fix queue removal from weights tree
+> git bisect good 8b3b22aa7c558e713a179710a6f1e2fdbef44b20
+> # good: [ebd0f3066c35bd27d3a4b224135e638eeaf70b8d] netfilter: physdev: relax br_netfilter dependency
+> git bisect good ebd0f3066c35bd27d3a4b224135e638eeaf70b8d
+> # bad: [9b0f430450cf230e736bc40f95bf34fbdb99cead] clk: meson: clean-up clock registration
+> git bisect bad 9b0f430450cf230e736bc40f95bf34fbdb99cead
+> # good: [bfb59eabe2c940c6869f128200f2047d46215845] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
+> git bisect good bfb59eabe2c940c6869f128200f2047d46215845
+> # good: [ab79dc3ef0244c9b3d712d0cef17b74c363d6069] brcmfmac: Use firmware_request_nowarn for the clm_blob
+> git bisect good ab79dc3ef0244c9b3d712d0cef17b74c363d6069
+> # good: [c8a8dd1d85ca715ec65169feac54a7a06b8d2a29] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
+> git bisect good c8a8dd1d85ca715ec65169feac54a7a06b8d2a29
+> # good: [a644d2d28baf8472368903b28823cf85c9a13a1d] drm/fb-helper: fix leaks in error path of drm_fb_helper_fbdev_setup
+> git bisect good a644d2d28baf8472368903b28823cf85c9a13a1d
+> # first bad commit: [9b0f430450cf230e736bc40f95bf34fbdb99cead] clk: meson: clean-up clock registration
+> -------------------------------------------------------------------------------
+
 
