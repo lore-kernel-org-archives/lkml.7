@@ -1,173 +1,144 @@
-Return-Path: <SRS0=N68d=SK=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1455AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14143C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54D62190A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Apr 2019 23:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B5620857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfDHX6i (ORCPT
+        id S1726517AbfDIAHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 19:58:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:63285 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfDHX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 19:57:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 16:57:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
-   d="scan'208";a="149169938"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 16:57:07 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 03/18] ioasid: Convert ioasid_idr to XArray
-Date:   Mon,  8 Apr 2019 16:59:18 -0700
-Message-Id: <1554767973-30125-4-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        Mon, 8 Apr 2019 20:07:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47500 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfDIAHo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 20:07:44 -0400
+Received: from [IPv6:2a02:2450:102f:3e0:845d:198:7d0e:69e8] (unknown [IPv6:2a02:2450:102f:3e0:845d:198:7d0e:69e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: robertfoss)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F0E84263AF8;
+        Tue,  9 Apr 2019 01:07:41 +0100 (BST)
+Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
+To:     Fabio Estevam <festevam@gmail.com>,
+        Gary Bisson <gary.bisson@boundarydevices.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190408175319.9106-1-robert.foss@collabora.com>
+ <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+From:   Robert Foss <robert.foss@collabora.com>
+Message-ID: <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com>
+Date:   Tue, 9 Apr 2019 02:07:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IDR is to be replaced by XArray, keep up with the changes.
-XArray has internal locking for normal APIs used here, also removed
-radix tree related preload.
+Hey Fabio,
 
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/base/ioasid.c | 35 ++++++++++++++++-------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+On 4/8/19 10:37 PM, Fabio Estevam wrote:
+> Hi Robert,
+> 
+> [Adding Gary]
+> 
+> On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
+>>
+>> If a LVDS device is not connected, having the LVDS channels
+>> enabled will prevent imx-ldb from probing correctly even
+>> if other CRTCs are connected.
+>>
+>> Signed-off-by: Robert Foss <robert.foss@collabora.com>
+>> ---
+>>   arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+>> index 39200e5dc896..5b413cf4c250 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+>> @@ -703,7 +703,7 @@
+>>          status = "okay";
+>>
+>>          lvds-channel@0 {
+>> -               status = "okay";
+>> +               status = "disabled";
+>>
+>>                  port@4 {
+>>                          reg = <4>;
+>> @@ -715,7 +715,7 @@
+>>          };
+>>
+>>          lvds-channel@1 {
+>> -               status = "okay";
+>> +               status = "disabled";
+> 
+> I am not sure I understood what you are trying to fix.
 
-diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
-index 294e856..35bdc680 100644
---- a/drivers/base/ioasid.c
-+++ b/drivers/base/ioasid.c
-@@ -4,7 +4,7 @@
-  * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
-  * free IOASIDs with ioasid_alloc and ioasid_free.
-  */
--#include <linux/idr.h>
-+#include <linux/xarray.h>
- #include <linux/ioasid.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-@@ -16,7 +16,7 @@ struct ioasid_data {
- 	struct rcu_head rcu;
- };
- 
--static DEFINE_IDR(ioasid_idr);
-+static DEFINE_XARRAY_ALLOC(ioasid_xa);
- static DEFINE_MUTEX(ioasid_allocator_lock);
- static const struct ioasid_allocator *ioasid_allocator;
- 
-@@ -24,9 +24,9 @@ static const struct ioasid_allocator *ioasid_allocator;
- /**
-  * ioasid_set_allocator - register a custom allocator
-  *
-- * Custom allocator take precedence over the default IDR based allocator.
-+ * Custom allocator take precedence over the default xarray based allocator.
-  * Private data associated with the ASID are managed by ASID common code
-- * similar to IDR data.
-+ * similar to data stored in xa.
-  */
- int ioasid_set_allocator(struct ioasid_allocator *allocator)
- {
-@@ -72,13 +72,12 @@ int ioasid_set_data(ioasid_t ioasid, void *data)
- 	struct ioasid_data *ioasid_data;
- 	int ret = 0;
- 
--	idr_lock(&ioasid_idr);
--	ioasid_data = idr_find(&ioasid_idr, ioasid);
-+	ioasid_data = xa_load(&ioasid_xa, ioasid);
- 	if (ioasid_data)
- 		ioasid_data->private = data;
- 	else
- 		ret = -ENOENT;
--	idr_unlock(&ioasid_idr);
-+
- 	/* getter may use the private data */
- 	synchronize_rcu();
- 
-@@ -110,7 +109,7 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
- 	data->set = set;
- 	data->private = private;
- 
--	/* Use custom allocator if available, otherwise default to IDR */
-+	/* Use custom allocator if available, otherwise default to xarray */
- 	if (ioasid_allocator) {
- 		mutex_lock(&ioasid_allocator_lock);
- 		id = ioasid_allocator->alloc(min, max, ioasid_allocator->pdata);
-@@ -120,17 +119,18 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
- 			goto exit_free;
- 		}
- 		/*
--		 * Use IDR to manage private data also sanitiy check custom
-+		 * Use XA to manage private data also sanitiy check custom
- 		 * allocator for duplicates.
- 		 */
- 		min = id;
- 		max = id + 1;
- 	}
--	idr_preload(GFP_KERNEL);
--	idr_lock(&ioasid_idr);
--	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
--	idr_unlock(&ioasid_idr);
--	idr_preload_end();
-+
-+	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
-+		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
-+		goto exit_free;
-+	}
-+	data->id = id;
- 
- exit_free:
- 	if (id < 0 || id == INVALID_IOASID) {
-@@ -160,10 +160,7 @@ int ioasid_free(ioasid_t ioasid)
- 		return ret;
- 	}
- 
--	idr_lock(&ioasid_idr);
--	ioasid_data = idr_remove(&ioasid_idr, ioasid);
--	idr_unlock(&ioasid_idr);
--
-+	ioasid_data = xa_erase(&ioasid_xa, ioasid);
- 	if (ioasid_data)
- 		kfree_rcu(ioasid_data, rcu);
- 
-@@ -192,7 +189,7 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
- 	struct ioasid_data *ioasid_data;
- 
- 	rcu_read_lock();
--	ioasid_data = idr_find(&ioasid_idr, ioasid);
-+	ioasid_data = xa_load(&ioasid_xa, ioasid);
- 	if (!ioasid_data) {
- 		priv = ERR_PTR(-ENOENT);
- 		goto unlock;
--- 
-2.7.4
+If CONFIG_DRM_IMX_LDB is enabled, LVDS DT channels are enabled
+and no LVDS-panels are connected the imx-ldb driver will
+fail to bind.
 
+This is a problem, since it will prevent other actually connected
+display output from being used, even if they bind properly.
+
+> 
+> Could you please share some logs when imx-ldb fails to probe correctly?
+
+
+[    2.119563] component_bind_all() trying to bind: ldb
+[    2.124600] imx-drm display-subsystem: binding ldb (ops imx_ldb_ops)
+[    2.146169] drm_of_find_panel_or_bridge() np->name=lvds-channel  np->type=<NULL>
+[    2.153709] drm_of_find_panel_or_bridge() no panel found for remote
+[    2.160081] drm_of_find_panel_or_bridge() bridge needed
+[    2.162043] drm_of_find_panel_or_bridge() bridge not found
+[    2.165331] drm_of_find_panel_or_bridge() failed
+[    2.170023] imx-drm display-subsystem: failed to bind ldb (ops imx_ldb_ops): -517
+
+This at the same time as HDMI binds properly:
+
+[    4.458954] dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.30a with 
+HDCP (DWC HDMI 3D TX PHY)
+[    4.469633] imx-drm display-subsystem: bound 120000.hdmi (ops dw_hdmi_imx_ops)
+
+Which in the end causes the IMX driver to not initialize properly
+and ignore the HDMI connection that bound properly.
+This in turn prevents us from having any graphical output while there
+is no LVDS panel connected.
+
+
+> 
+> Is this a regression?
+> 
+
+Not as far as I know.
+
+How a Nitrogen6-Max board without a LVDS panel, but using the
+imx_v6_v7_defconfig ever started and had displayed graphical
+output on other connected displays I don't know though.
+
+
+Rob.
