@@ -2,117 +2,134 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2424C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D414C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C4C213F2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA87C21473
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fjahxyfH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NpW5HJxX";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="NgQZjamW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfDIDgD (ORCPT
+        id S1727256AbfDIDgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 23:36:03 -0400
-Received: from mail-eopbgr30050.outbound.protection.outlook.com ([40.107.3.50]:9542
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726081AbfDIDgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 23:36:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+        Mon, 8 Apr 2019 23:36:07 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:64898 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfDIDgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 23:36:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1554780966; x=1586316966;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=m1SU6SG4bJpDHYBoK0GmD4Zz5O7Ld8oYO6X2tb7fbLY=;
+  b=NpW5HJxXMkctAJdQySTa5s/XvlkhIcBrLbwev4+Us3GIEfQvYqI7Ml10
+   +Pq1Ay0VDLcd+YttOYl+HMllggkY1t6uBUjKB4CH7uKNYLDdPTGv/hAqg
+   efH+ieeALGL4DeKgSBOcQxnAu9Io5bG1aZOvGvO+gva72YULn3+UJXe7d
+   F2ebwMWaNjsnxuHs3fCqgtqnX6qrPi/t2C2Llcwykxu6T0uR4IPm9bna4
+   1kJVP+wD/01jtR2yS15GDQE1SAntT8ae5jrnaac2OSek5z/QwrGdpkjOA
+   EEi3Jx7A8ln3FIP5vBzAdB5QtPpzpmlxn/6c+YWPKSAxGLcndA1hh9+P8
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,327,1549900800"; 
+   d="scan'208";a="110351421"
+Received: from mail-by2nam03lp2052.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.52])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Apr 2019 11:36:05 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xiboL5DFU1frlvmKdtgzRMcGtQOUNZRuntmlCvjbNaQ=;
- b=fjahxyfHYd9unyZgrHVSnbrjJ3QFjdmPxgwictRblDdciy7VqhS4JDql0vtMJsQQjre2xqK3FUurdcLwsjLromnyXuZ90cDn40z8la5JEpsTM8/V2CICjVrMVIo0p3pTsU+RDfUEt1N1gT1pHCCMdLSTDO4fTmM8ypH/SW0YyoI=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB5252.eurprd04.prod.outlook.com (20.177.42.33) with Microsoft SMTP
+ bh=m1SU6SG4bJpDHYBoK0GmD4Zz5O7Ld8oYO6X2tb7fbLY=;
+ b=NgQZjamWKyoiUCUL9AXcgBQlO4SMff3I0KRmfIK3pb36c45WgHYoxntM7HcMakSYJpcs3DFSEXWXGlQgvsgzu7yrxy2eKFV/qOjLqgNND8wr6mzMUkH7UKyraNiY4oU0YfXTnaRh1Q1bzaZGkPf9pHjeAUhBTOR9ZvlJ4MXw8vw=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6271.namprd04.prod.outlook.com (20.178.245.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.19; Tue, 9 Apr 2019 03:35:59 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
- 03:35:59 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ 15.20.1771.16; Tue, 9 Apr 2019 03:36:03 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::ad2f:3a0f:2de1:6fb2]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::ad2f:3a0f:2de1:6fb2%5]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
+ 03:36:03 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Guo Ren <guoren@kernel.org>
+CC:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V6 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Topic: [PATCH V6 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Index: AQHU7n4FMdKcp4NQJ0ukn8zURCHpWaYzKXfggAADpACAAABHMA==
-Date:   Tue, 9 Apr 2019 03:35:59 +0000
-Message-ID: <AM0PR04MB4211677CFB66218EEAC0DE20802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1554777487-31075-1-git-send-email-Anson.Huang@nxp.com>
- <1554777487-31075-4-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211CEA77AB034B5DCF71FE2802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916E7D387D5FA74CFB719C6F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916E7D387D5FA74CFB719C6F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>, Gary Guo <gary@garyguo.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: RE: [PATCH v2] RISC-V: Implement ASID allocator
+Thread-Topic: [PATCH v2] RISC-V: Implement ASID allocator
+Thread-Index: AQHU5TAIKaRDCttA7UazIjpcDaomMKYzNveAgAAJAEA=
+Date:   Tue, 9 Apr 2019 03:36:03 +0000
+Message-ID: <MN2PR04MB6061824812AF1E83BA2434408D2D0@MN2PR04MB6061.namprd04.prod.outlook.com>
+References: <20190328063211.13052-1-anup.patel@wdc.com>
+ <20190409030231.GA14861@guoren-Inspiron-7460>
+In-Reply-To: <20190409030231.GA14861@guoren-Inspiron-7460>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-originating-ip: [129.253.179.161]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b2eaa99d-18ef-40ae-1057-08d6bc9c7b7e
+x-ms-office365-filtering-correlation-id: 62262d5e-14db-4deb-bba6-08d6bc9c7dfc
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5252;
-x-ms-traffictypediagnostic: AM0PR04MB5252:
-x-microsoft-antispam-prvs: <AM0PR04MB5252CC99334B10AA10D5079E802D0@AM0PR04MB5252.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6271;
+x-ms-traffictypediagnostic: MN2PR04MB6271:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <MN2PR04MB6271AA5FEE8525799C04016B8D2D0@MN2PR04MB6271.namprd04.prod.outlook.com>
 x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(86362001)(68736007)(229853002)(6506007)(4744005)(66066001)(6436002)(478600001)(6116002)(71190400001)(4326008)(3846002)(186003)(25786009)(9686003)(2906002)(106356001)(102836004)(97736004)(26005)(53936002)(105586002)(6246003)(71200400001)(2201001)(5660300002)(81166006)(8676002)(55016002)(110136005)(76176011)(11346002)(52536014)(305945005)(476003)(446003)(74316002)(7736002)(316002)(33656002)(256004)(81156014)(7696005)(2501003)(99286004)(93886005)(44832011)(486006)(14454004)(7416002)(8936002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5252;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(366004)(346002)(376002)(13464003)(199004)(189003)(3846002)(4744005)(76176011)(102836004)(8936002)(53546011)(81156014)(6916009)(99286004)(54906003)(25786009)(81166006)(71200400001)(71190400001)(52536014)(316002)(86362001)(6116002)(6506007)(229853002)(2906002)(5660300002)(6246003)(8676002)(14454004)(105586002)(305945005)(26005)(9686003)(4326008)(53936002)(33656002)(478600001)(476003)(74316002)(446003)(55016002)(66066001)(7696005)(72206003)(7736002)(68736007)(11346002)(6436002)(97736004)(186003)(256004)(106356001)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6271;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5nAaJhxwmSUGmfC6Djqk2nXJRCYh0SzAUm4fGMUkilB83of4vX9mwfX62Mv7p+1qMsuht/BmxSZeHNbaufTTjC7R6JCWxpZ28NwBeqtojUAuPqSJtGEkAgIC3EEu5Cg+VrIkJvXRjXxiIOg6ekaEkYNPuZlcnxLXA2kBPoknkcSxhU+8OY8gONaXq/a4ZwqCtRogT9XYhBgLC5WIiOttOMh2gv3hLDV2WB5hKIfdZtSJzCa4pBGZ7Pw2hCkIpfyA4o1Tf/ZiAcRhN/U+VWBvBvcfVxn/0OSeyyR7srw5iTjRnxH0a5NQmrNj2TwDOeUNbjnT63ohuo+jc63lIqGlxBfAGgozWMbxKOOJr3z3w0/5UBkjr/3wlFiBRz9j/ZYtBYVYIZ/Cb4D88ca92kcdzIACTH09wNDzAsoaDP9cOBM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 71VLu+T9pdYUSuQca4dhVQpLvLOizj9f3lew8OIn9bSP/wQYHKexRxx8VqapBV3qYJObQX+mUjVT2Z7uaXy5/rZlT5vDBe6NH/pMmF/FnP//y1N64IG2zYb9ZQaODjohSJeLISjJQxkAYMJKrD6UqbMaK+sTg5ZJchF0siPZ5Z4oKyycwqe54gRQ6CmIAjorlNiwnEcuYym/oQZudOAYZhZVBPpsooJW/Qm5sWWt/tLbTdxTKx7D09eqnOQt6lrr2TyKtCWZ5QsjAa466YnHs645XxBHVPSxsIG87ZBTSENOW3pjRHjygYq2xZ66kuZvqvmf/r3Ckw/ypkP3xWI2E7G7k0wF0x792eNqrtUZYDdOlailSi9PVCYvQmjr+77iBz6a+uMk6BML+axncp1j/PQVQtBV+/J1xpf7NpRKvDg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2eaa99d-18ef-40ae-1057-08d6bc9c7b7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 03:35:59.1362
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62262d5e-14db-4deb-bba6-08d6bc9c7dfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 03:36:03.2227
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5252
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6271
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wy4uLl0NCg0KPiA+ID4gK3N0YXRpYyBpbnQgaW14X3NjX3J0Y19hbGFybV9pcnFfZW5hYmxlKHN0
-cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQNCj4gPiA+ICtpbnQNCj4gPiA+ICtlbmFibGUpIHsN
-Cj4gPiA+ICsJaW14X3NjdV9pcnFfZW5hYmxlKFNDX0lSUV9HUk9VUF9SVEMsIFNDX0lSUV9SVEMs
-IGVuYWJsZSk7DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gK30NCj4gPiA+ICsN
-Cj4gPiA+ICtzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF9hbGFybShzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdA0KPiA+ID4gK3J0Y193a2Fscm0NCj4gPiA+ICsqYWxybSkgew0KPiA+DQo+ID4g
-SSBzdGlsbCB0aGluayBoZXJlIG5lZWRzIGEgZG9jIGV4cGxhaW4gd2h5IG5lZWRzIHRoaXMgYW5k
-IHdoeSBpdCdzDQo+ID4gc2FmZSB0byBkbyB0aGF0Lg0KPiANCj4gSSB3aWxsIGFkZCBhIGNvbW1l
-bnQgaGVyZSwgZm9yIHRoZSBkb2MsIGl0IHNob3VsZCBiZSBhbm90aGVyIHRvcGljIG9mIFJUQw0K
-PiBmcmFtZXdvcmssIHdlIGNhbiBkbyBpdCBsYXRlci4NCg0KSSdtIGZpbmUgd2l0aCBpdC4NCkJU
-VywgZG9uJ3QgbWlzcyB0aGUgbmV4dCBtaW5vciBjb21tZW50cyB3aGVuIHlvdSByZXNlbmQuDQoN
-ClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+ID4gPiArCS5zZXRfYWxhcm0gPSBpbXhfc2NfcnRj
-X3NldF9hbGFybSwNCj4gPiA+ICsJLmFsYXJtX2lycV9lbmFibGUgPSBpbXhfc2NfcnRjX2FsYXJt
-X2lycV9lbmFibGUsIH07DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIGludCBpbXhfc2NfcnRjX2Fs
-YXJtX3NjX25vdGlmeShzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KPiA+ID4gKwkJCQkJdW5z
-aWduZWQgbG9uZyBldmVudCwgdm9pZCAqZ3JvdXApDQo+ID4NCj4gPiBOb3QgbmVjZXNzYXJ5IHRv
-IGhhdmUgc3VjaCBhIGxvbmcgZnVuY3Rpb24gbmFtZS4NCj4gPiBJbXhfc2NfcnRjX2FsYXJtX25v
-dGlmeSgpIHNob3VsZCBiZSBvaw0KPiA+DQoNCg==
+
+
+> -----Original Message-----
+> From: Guo Ren <guoren@kernel.org>
+> Sent: Tuesday, April 9, 2019 8:33 AM
+> To: Anup Patel <Anup.Patel@wdc.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>; Albert Ou
+> <aou@eecs.berkeley.edu>; linux-kernel@vger.kernel.org; Mike Rapoport
+> <rppt@linux.ibm.com>; Christoph Hellwig <hch@infradead.org>; Atish Patra
+> <Atish.Patra@wdc.com>; Gary Guo <gary@garyguo.net>; Paul Walmsley
+> <paul.walmsley@sifive.com>; linux-riscv@lists.infradead.org
+> Subject: Re: [PATCH v2] RISC-V: Implement ASID allocator
+>=20
+> Hi Anup,
+>=20
+> On Thu, Mar 28, 2019 at 06:32:36AM +0000, Anup Patel wrote:
+> > This patch is tested on QEMU/virt machine and SiFive Unleashed board.
+> > On QEMU/virt machine, we see 10% (approx) performance improvement
+> with
+> > SW emulated TLBs provided by QEMU. Unfortunately, ASID bits of SATP
+> > CSR are not implemented on SiFive Unleashed board so we don't see any
+> > change in performance.
+> Can you tell me what is the test case ?
+
+I am testing this using hackbench.
+
+Regards,
+Anup
