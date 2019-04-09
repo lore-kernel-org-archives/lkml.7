@@ -2,47 +2,47 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E1BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2055EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FED2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E7E20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yDrh5wOv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZI/rNFGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfDILAT (ORCPT
+        id S1726832AbfDILDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:00:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41514 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfDILAS (ORCPT
+        Tue, 9 Apr 2019 07:03:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39778 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfDILDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:00:18 -0400
+        Tue, 9 Apr 2019 07:03:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4MNrtPReHgTdlubJ6RA99o6zlc1NcScJp4aN2SxpjRM=; b=yDrh5wOvwNF4zer2WsQ25BTsd
-        uaogI5FDdrZHIXd7sRLAqNuz9gDk23hBAbxJWb/VSOjK2AjzGK1OBDT4VK0Vwko+XTJ6NDzN0ZdPV
-        bPxehnFnM9Vi0huH31n3thYm5vwmqmU+leo7LaOeTDcz/Yz8BLiSdmAqUFK+52P9YZoKaMQIBAtNW
-        KqN6APfWI3StV80XsFcBKPfVrsJDgvYvilOWmCv9FjokT/s+cuVZpPECA3VIY+jRv9t0mluHF88hP
-        Apvgfu4CEvW1ZU6ErMObpdjj5xwoB0zi9wESJ4BOWdf1H2pTmV1n8fGHZPS3U1XThCIVDmCzHPelQ
-        znFGQd+6A==;
+         bh=Sa9IPnO7XJIY1BdPSTotZfMB3FWwmm613L8mJrYOXKc=; b=ZI/rNFGAwWJMfm/w/cIIP3W9C
+        cHUJT7At+g+kJgyl5U+p5pvzrcks7whmy7fQYFg0RZrNy7veeUyYwAMkCNJdT1e/tge7glmgHi2cb
+        74rov+y4h3sknfXdLACPJLMDesI6NXW7nRF6vpB8DEPf/bMUYBa6C/d4Q6hVYOgEdJysh/Dj0/JJO
+        N7bkAgHvT7VB0j3b+W2Z4+Yjl+/9mKeo8tlLaDHBA1ykE/l+nNXqaQSdJoK5b8u8EvO8mXJGK2UK/
+        i+sWwB5Mqliu4GtMCJ3Ro2Y8nAuiNyIQwQbRHVJ4LqhYmgVBRRk1byx/wHyYuDPzwtT4mgKag/fcV
+        yEGv+bK0g==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hDoTk-0006Zp-Tu; Tue, 09 Apr 2019 10:59:49 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDoXW-0002IW-HC; Tue, 09 Apr 2019 11:03:42 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D90F201F29A4; Tue,  9 Apr 2019 12:59:46 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 12:59:46 +0200
+        id 313CF201F29A4; Tue,  9 Apr 2019 13:03:40 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 13:03:40 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
         Ashok Raj <ashok.raj@intel.com>,
         Andi Kleen <andi.kleen@intel.com>,
@@ -62,68 +62,47 @@ Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Nayna Jain <nayna@linux.ibm.com>
 Subject: Re: [RFC PATCH v2 11/14] x86/watchdog/hardlockup: Add an HPET-based
  hardlockup detector
-Message-ID: <20190409105946.GR4038@hirez.programming.kicks-ass.net>
+Message-ID: <20190409110340.GS4038@hirez.programming.kicks-ass.net>
 References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
  <1551283518-18922-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <alpine.DEB.2.21.1903262029310.1789@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903262029310.1789@nanos.tec.linutronix.de>
+In-Reply-To: <1551283518-18922-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 09:49:13PM +0100, Thomas Gleixner wrote:
-> So way you should handle this is:
-> 
-> 	cpumask_set_cpu(cpu, hld_data->cpu_monitored_mask);
-> 
-> 	if (!hld_data->enabled_cpus++) {
-> 		hld_data->handling_cpu = cpu;
-> 		kick_timer();
-> 		enable_timer();
-> 	}
-> 
-> The cpu mask starts off empty and each CPU sets itself when the function is
-> invoked on it.
-> 
-> data->enabled_cpus keeps track of the enabled cpus so you avoid
-> reconfiguration just because a different cpu comes online. And it's
-> required for disable as well.
-> 
-> > +void hardlockup_detector_hpet_disable(void)
-> > +{
-> > +	struct cpumask *allowed = watchdog_get_allowed_cpumask();
-> > +
-> > +	if (!hld_data)
-> > +		return;
-> > +
-> > +	/* Only disable the timer if there are no more CPUs to monitor. */
-> > +	if (!cpumask_weight(allowed))
-> > +		disable_timer(hld_data);
-> 
-> Again this should be:
-> 
-> 	cpumask_clear_cpu(cpu, hld_data->cpu_monitored_mask);
-> 	hld_data->enabled_cpus--;
-> 
-> 	if (hld_data->handling_cpu != cpu)
-> 		return;
-> 
-> 	disable_timer();
-> 	if (hld_data->enabled_cpus)
-> 		return;
+On Wed, Feb 27, 2019 at 08:05:15AM -0800, Ricardo Neri wrote:
+> diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
+> index 4d559e0c746f..15dc3b576496 100644
+> --- a/arch/x86/include/asm/hpet.h
+> +++ b/arch/x86/include/asm/hpet.h
+> @@ -123,12 +123,24 @@ struct hpet_hld_data {
+>  	u32		num;
+>  	u32		flags;
+>  	u64		ticks_per_second;
+> +	u32		handling_cpu;
+> +	struct cpumask	cpu_monitored_mask;
+> +	struct msi_msg	msi_msg;
+>  };
 
-	if (!hld_data->enabled_cpus)
-		return;
+Please don't use struct cpumask unless you absolutely have to.
 
-> 
-> 	hld_data->handling_cpu = cpumask_first(hld_data->cpu_monitored_mask);
-> 	enable_timer();
+The above is better written as:
 
-That said; you can do the above without ->enabled_cpus, by using
-->handling_cpu == nr_cpu_ids to indicate 'empty'. But I'm not at all
-sure that is worth the effort, it results in less obious code.
+
+	struct hpet_hld_data {
+		...
+		unsigned long cpumask[0];
+	};
+
+and allocated using:
+
+	struct hpet_hld_data *hhd = kzalloc(sizeof(struct hpet_hld_data) + cpumask_size());
+
+and used as:
+
+	to_cpumask(hhd->cpumask);
