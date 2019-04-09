@@ -2,31 +2,31 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CC2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30883C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2420521841
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03250218D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QMEK3GyT"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iWt6uPWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfDIAZB (ORCPT
+        id S1726920AbfDIAZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 20:25:01 -0400
-Received: from vps.xff.cz ([195.181.215.36]:35922 "EHLO vps.xff.cz"
+        Mon, 8 Apr 2019 20:25:02 -0400
+Received: from vps.xff.cz ([195.181.215.36]:35960 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfDIAZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726349AbfDIAZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Apr 2019 20:25:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554769497; bh=kTkUEE4b8KfN2+bg+NMY2jHHocg8Jgi0MH//+uZ9Pms=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QMEK3GyT2a9UbuSHWmgQPnm3SRje+CVi5a11ZIqfocCP0AxDLCr5ilQSg+/cd5jKP
-         s9JpuxALHqYyUpCF+Z8+sndfXkm3ZZE92cRv34K7vD3Mwl24gihECNaN+5I3D28o2d
-         syLQAiRXlc9bVqyLxtlk5YGoOK6z9Akt+k+o3jJU=
+        t=1554769497; bh=UC9wB2J233KlPA4rT3KG60p9zim2aCkkBwSknLoN7uQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iWt6uPWJZf0R+Ily15VN6bwtxIzMwBwdgrlNBMhtyCJGBLMndNK4lQtfwCJHXXI2l
+         b9PjwcFctSRBlGjN/x0v8yDPQQH9b3oUfynGWPrAPkqfmvO6BFvqis+ZYO/xCUot0e
+         RPW3XMV7y8AmvrV1QvQP/LgQIk5x8l36i4Sb3Hfk=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -53,9 +53,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 00/13] Add support for Orange Pi 3
-Date:   Tue,  9 Apr 2019 02:24:39 +0200
-Message-Id: <20190409002452.14551-1-megous@megous.com>
+Subject: [PATCH v2 01/13] dt-bindings: sunxi: Add compatible for OrangePi 3 board
+Date:   Tue,  9 Apr 2019 02:24:40 +0200
+Message-Id: <20190409002452.14551-2-megous@megous.com>
+In-Reply-To: <20190409002452.14551-1-megous@megous.com>
+References: <20190409002452.14551-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,91 +67,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-This series implements support for Xunlong Orange Pi 3 board.
+Add new Xunlong Orange Pi 3 board compatible string to the bindings
+documentation.
 
-Unfortunately, this board needs some small driver patches, so I have
-split the boards DT patch into chunks that require patches for drivers
-in various subsystems.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-In v2 of this series I've reordered the patches and I've put less
-controversial patches first.
-
-Suggested merging plan/dependencies:
-
-- Basic board dts can work alone. (patches 1-2)
-- Pinctrl and stmmac patches are needed for ethernet support.
-  (patches 3-7)
-- HDMI depends on sorting out how to model DDC voltage shifter
-  in DT, which is not clear yet. (patches 8-10)
-- WiFi stuff will have to wait for H6 RTC patches, which in turn
-  depend on ChenYu's RTC series, to be merged. That will take a
-  while yet. I'm just keeping them in the series for completness.
-  (patches 11-13)
-
-This patch is also needed to not get segfault on boot (it was already
-merged a day ago or so): 
-  https://lkml.org/lkml/2019/4/5/856
-
-Changes in v2:
-- added dt-bindings documentation for the board's compatible string
-  (suggested by Clement)
-- addressed checkpatch warnings and code formatting issues (on Maxime's
-  suggestions)
-- stmmac: dropped useless parenthesis, reworded description of the patch
-  (suggested by Sergei)
-- drop useles dev_info() about the selected io bias voltage
-- docummented io voltage bias selection variant macros
-- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
-  because wifi depends on H6 RTC support that's not merged yet (suggested
-  by Clement)
-- added missing signed-of-bys
-- changed &usb2otg dr_mode to otg, and added a note about VBUS
-- improved wording of HDMI driver's DDC power supply patch
-
-Open questions ATM:
-- should mmc1_pins be default pinconf for mmc1?
-- how to model DDC IO voltage shifter enable signal for HDMI? (it's not
-  really a power supply, but it's modelled as one in the patches for now)
-
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-Icenowy Zheng (2):
-  net: stmmac: sun8i: add support for Allwinner H6 EMAC
-  net: stmmac: sun8i: force select external PHY when no internal one
-
-Ondrej Jirman (11):
-  dt-bindings: sunxi: Add compatible for OrangePi 3 board
-  arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
-  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
-  pinctrl: sunxi: Support I/O bias voltage setting on H6
-  arm64: dts: allwinner: orange-pi-3: Enable ethernet
-  drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
-  dt-bindings: display: sun4i-drm: Add DDC power supply
-  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-  brcmfmac: Loading the correct firmware for brcm43456
-  [DO NOT MERGE] arm64: dts: allwinner: h6: Add MMC1 pins
-  [DO NOT MERGE] arm64: dts: allwinner: orange-pi-3: Enable WiFi
-
- .../devicetree/bindings/arm/sunxi.yaml        |   5 +
- .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 343 ++++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   8 +
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  21 ++
- .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  49 ++-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   9 +-
- 13 files changed, 441 insertions(+), 21 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 11563d3f7c65..b82db740125b 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -711,6 +711,11 @@ properties:
+           - const: xunlong,orangepi-2
+           - const: allwinner,sun8i-h3
+ 
++      - description: Xunlong OrangePi 3
++        items:
++          - const: xunlong,orangepi-3
++          - const: allwinner,sun50i-h6
++
+       - description: Xunlong OrangePi Lite
+         items:
+           - const: xunlong,orangepi-lite
 -- 
 2.21.0
 
