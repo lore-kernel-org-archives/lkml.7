@@ -2,201 +2,229 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135A9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 22:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3966AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCC120830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 22:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D9820830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfDIWzu (ORCPT
+        id S1726768AbfDIXCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 18:55:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41474 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbfDIWzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 18:55:49 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x39MsEqG069754
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 18:55:48 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rs18ffj3w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:55:48 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <cclaudio@linux.ibm.com>;
-        Tue, 9 Apr 2019 23:55:47 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Apr 2019 23:55:44 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x39Mthsp29360202
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Apr 2019 22:55:43 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D72EAE05F;
-        Tue,  9 Apr 2019 22:55:43 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D65FAE05C;
-        Tue,  9 Apr 2019 22:55:41 +0000 (GMT)
-Received: from [9.80.221.121] (unknown [9.80.221.121])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Apr 2019 22:55:41 +0000 (GMT)
-Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-efi <linux-efi@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
- <CACdnJuumhkqTb4+1=QBiLmbW4xd3wW=MZu6Tj_KdaoTMhCN+Tg@mail.gmail.com>
- <4ce5e057-0702-b0d5-7bb2-cea5b22e2efa@linux.ibm.com>
- <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
- <2208f156-d441-3082-2f4c-8030c84ef788@linux.ibm.com>
- <CACdnJuu8OqMrSs0esOmf=ro9n00aYEQ-nikAh6v6sk+YAQw4cQ@mail.gmail.com>
- <d79f47f8-9006-3a47-2bdc-58012cef5c7e@linux.ibm.com>
- <CACdnJuv_5A1_6CH1+Jn7SCrmW8Y6JuzsMmJoc1=_vn0nKdYMjQ@mail.gmail.com>
-From:   Claudio Carvalho <cclaudio@linux.ibm.com>
-Date:   Tue, 9 Apr 2019 19:55:40 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 9 Apr 2019 19:02:25 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45114 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726573AbfDIXCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 19:02:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 899A815AB;
+        Tue,  9 Apr 2019 16:02:24 -0700 (PDT)
+Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0B0B3F68F;
+        Tue,  9 Apr 2019 16:02:21 -0700 (PDT)
+Subject: Re: Re: [PATCH] usb: xhci: inherit dma_mask from bus if set correctly
+To:     Sriram Dash <sriram.dash@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>,
+        mathias.nyman@intel.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, mgautam@codeaurora.org,
+        felipe.balbi@linux.intel.com
+References: <CGME20190402094246epcas1p1f43795d840b4c3a1f7efddc0523b2c89@epcas1p1.samsung.com>
+ <1554198011-24342-1-git-send-email-pankaj.dubey@samsung.com>
+ <0d3e8992-06e1-57e4-edd5-ba230caaa189@arm.com>
+ <CAGcde9F1h31FQ7qLUdFTvZ_1vt67956=5r-Do6qU3Q0vSVe6=g@mail.gmail.com>
+ <CAOD6=z69K9bBqUikwogJ2YH_OfxODfsy+uRb6dX9x9AOuP6Wpw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <da9f396c-c6e6-8ee7-b3b2-1202d00aa8d2@arm.com>
+Date:   Wed, 10 Apr 2019 00:02:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CACdnJuv_5A1_6CH1+Jn7SCrmW8Y6JuzsMmJoc1=_vn0nKdYMjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19040922-0064-0000-0000-000003C8AB6D
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010898; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01186785; UDB=6.00621592; IPR=6.00967545;
- MB=3.00026369; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-09 22:55:47
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040922-0065-0000-0000-00003D018DD4
-Message-Id: <28bfc0a7-9ae5-2c99-e472-ea53f856bafc@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904090144
+In-Reply-To: <CAOD6=z69K9bBqUikwogJ2YH_OfxODfsy+uRb6dX9x9AOuP6Wpw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/5/19 7:19 PM, Matthew Garrett wrote:
-> On Fri, Apr 5, 2019 at 2:11 PM Claudio Carvalho <cclaudio@linux.ibm.com> wrote:
+On 2019-04-09 3:56 am, Sriram Dash wrote:
+> On Tue, Apr 2, 2019 at 9:53 PM Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
 >>
->> On 4/3/19 7:27 PM, Matthew Garrett wrote:
->>> Not supporting dbx seems like a pretty significant shortcoming. How
->>> are signatures meant to be revoked?
+>> On Tue, 2 Apr 2019 at 15:34, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>>> On 02/04/2019 10:40, Pankaj Dubey wrote:
+>>>> From: Sriram Dash <sriram.dash@samsung.com>
+>>>>
+>>>> The xhci forcefully converts the dma_mask to either 64 or 32 and the
+>>>> dma-mask set by the bus is somewhat ignored. If the platform  sets the
+>>>> correct dma_mask, then respect that.
+>>>
+>>> It's expected for dma_mask to be larger than bus_dma_mask if the latter
+>>> is set - conceptually, the device mask represents what the device is
+>>> inherently capable of, while the bus mask represents external
+>>> interconnect restrictions which individual drivers should not have to
+>>> care about. The DMA API backend should take care of combining the two to
+>>> find the intersection.
 >>
->> We began by focusing on certificates for keys that can be added at
->> runtime.  Before adding support for revocation, we plan to gather
->> additional use cases.  In the meantime, unwanted certificates can be
->> removed by the administrator.
-> Based on our experience doing this in UEFI, that's insufficient - you
-> want to be able to block individual binaries or leaf certificates
-> without dropping trust in an intermediate certificate entirely.
-
-
-We agree that a dbx would be useful for blacklisting particular kernels
-signed with given certificate. However, we have been avoiding doing so for
-the initial release of secure boot on OpenPOWER. We don't have individual
-firmware binaries in OpenPOWER. Kernels are currently the only concern for
-the OS secure boot certificates we're discussing here. Also, we have a very
-limited keystore space in POWER9.
-
-Petitboot doesn't have standardized OS kernel verification at all right
-now.  Having the capability even without dbx seems valuable.
-
-
->
->>>> PK, KEK and db updates will be signed the same way, that is, using
->>>> userspace tooling like efitools in PowerNV. As for the authentication
->>>> descriptors, only the EFI_VARIABLE_AUTHENTICATION_2 descriptor will be
->>>> supported.
->>> Is this API documented?
+>> Thanks for the review.
 >>
->> The API is still a work in progress.  We are planning to publish a document
->> describing the current API and overall design shortly.
-> Ok. How are the attributes interpreted by the API?
-
-
-We support a subset of standard EFI variable attributes, and we only use
-EFI variables that relate to secure boot. Our goal is not to implement
-UEFI.  However, we do seek to be compatible with user space tooling and
-reuse as much existing infrastructure as possible. We don’t support the
-following: EFI_VARIABLE_HARDWARE_ERROR_RECORD,
-EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS and
-EFI_VARIABLE_ENHANCED_AUTHENTICATED_ACCESS.
-
-
->
->> Perhaps the biggest departure is that the secure variables are stored in
->> flash memory that is not lockable.  In order to protect the secure
->> variables, hashes of the flash regions where they're stored are written to
->> TPM NVRAM indices.  The TPM NVRAM indices we use are write locked at
->> runtime.  The sysadmin enqueues update commands in flash.  During the next
->> boot, the firmware verifies and processes the commands to update the
->> certificate store and accompanying integrity hashes in the TPM NVRAM
->> indices and write locks them.  Before certificates read from flash are
->> used, the certificate store is hashed and compared against the hashes
->> stored from the TPM.  The one exception is the PK. We store it in a TPM
->> NVRAM index by itself rather than flash because updates to it must be
->> guaranteed to be atomic.
-> What's the behaviour if multiple updates are enqueued? Does reading
-> back show a mocked up updated variable or the original state?
-
-
-Our secure variable updates are only applied at boot time. If any one of
-them fails, they all fail.
-
-
->
->>> I think that depends on exactly what problem you're trying to solve.
->>> Some aspects of the EFI secure boot design end up mirroring the
->>> economics of the PC ecosystem rather than being inherently good design
->>> goals, so it'd be helpful to know whether you're taking this solution
->>> because you want the same three-level key infrastructure or because
->>> that just leaves you compatible with the tooling.
+>> We are dealing here with the xhci platform which inherits the dma mask
+>> of the parent, which is from a controller device.
 >>
->> In our use case,  the three-level key hierarchy conveniently supports the
->> concept of (1) an administrator authority, who authorizes (2) other
->> organizations, e.g., distros, to provide (3) certificates for their code
->> signing keys.   By using efivars, we leverage pre-existing userspace EFI
->> tools to generate authenticated updates and certificates.  Additionally,
->> pre-existing kernel infrastructure simplifies efivars processing.
-> I'm not really clear on the workflow here. Who's the administrator
-> authority? When would they be updating the second level of keys? If
-> there's no support for revocation, why would distributions need two
-> levels of key in the system database rather than just distributing a
-> single intermediate and signing their actual signing certs with that?
+>> When the controller dma mask is set by the platform in DT, what we
+>> observe is, its not getting inherited properly and the xhci bus is
+>> forcing the dma address to be either 32 bit or 64 bit.
+>>
+>> In "drivers/usb/host/xhci-plat.c" we have dma_mask setting as below:
+>>
+>>   /* Try to set 64-bit DMA first */
+>> if (WARN_ON(!sysdev->dma_mask))
+>>       /* Platform did not initialize dma_mask */
+>>       ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+>> else
+>>       ret = dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+>>
+>> So even if the controller device has set the dma_mask as per it's
+>> configuration in DT, xhci-plat.c will override it here in else part.
+>>
+>> Next it goes to "drivers/usb/host/xhci.c" file, here we have code as:
+>>
+>> /* Set dma_mask and coherent_dma_mask to 64-bits,
+>>   * if xHC supports 64-bit addressing */
+>> if (HCC_64BIT_ADDR(xhci->hcc_params) &&
+>>                  !dma_set_mask(dev, DMA_BIT_MASK(64))) {
+>>          xhci_dbg(xhci, "Enabling 64-bit DMA addresses.\n");
+>>          dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+>> } else {
+>>          /*
+>>           * This is to avoid error in cases where a 32-bit USB
+>>           * controller is used on a 64-bit capable system.
+>>           */
+>>          retval = dma_set_mask(dev, DMA_BIT_MASK(32));
+>>          if (retval)
+>>                  return retval;
+>>          xhci_dbg(xhci, "Enabling 32-bit DMA addresses.\n");
+>>          dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>> }
+>>
+>> So xhci will force the dma_mask to either DMA_BIT_MASK(32) or
+>> DMA_BIT_MASK(64), what if my device needs other than 32 bit or 64 bit
+>> dma_mask.
+>>
+>> The bus_dma_mask was introduced for a case when the bus from a
+>> device's dma interface may carry fewer address bits. But apparently,
+>> it is the only mask which retains the original dma addressing from the
+>> parent. So basically what we observe is currently there is no way we
+>> can pass dma_mask greater than 32-bit, from DT via dev->dma_mask or
+>> dev->coherent_dma_mask due to below logic in
+>>
+>> from "drivers/of/platform.c" we have
+>> static struct platform_device *of_platform_device_create_pdata(
+>>                                          struct device_node *np,
+>>                                          const char *bus_id,
+>>                                          void *platform_data,
+>>                                          struct device *parent)
+>> {
+>>        struct platform_device *dev;
+>>        ...
+>>        dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>>        if (!dev->dev.dma_mask)
+>>               dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+>>    ...
+>> }
+>>
+>> and then in of_dma_configure function in "drivers/of/device.c" we have..
+>>
+>> mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1); //This mask
+>> computation is going fine and gets mask greater than 32-bit if defined
+>> in DT
+>> dev->coherent_dma_mask &= mask;  // Here the higher bit [63:32] will
+>> get truncated as coherent_dma_mask is initialized to DMA_BIT_MASK(32)
+>> in platform.c
+>>
+>> *dev->dma_mask &= mask; //Same here higher bits will get truncated
+>> /* ...but only set bus mask if we found valid dma-ranges earlier */
+>> if (!ret)
+>> dev->bus_dma_mask = mask; //Only bus_dma_mask can carry the original
+>> mask as specified in platform DT.
+>>
+>> To minimise the impact on existing code, we reused the bus_dma_mask
+>> for finding the dma addressing bits.
+>>
+>> Or other way we may need to initialise dma_mask/coherent_dma_mask as
+>> DMA_BIT_MASK(64) in "drivers/of/platform.c" and let all devices set
+>> dma_mask via DT using "dma-ranges" property or respective platform
+>> driver.
+>>
+>>> Are you seeing an actual problem here, and if so
+>>> on which platform? (If the bus mask is set at all then it wouldn't seem
+>>> to be the DT PCI issue that I'm still trying to fix).
+>>>
+>>
+>>
+>> We are facing this issue in one of the Samsung's upcoming SoC where we
+>> need dma_mask greater than 32-bit.
+>>
+>> Thanks,
+>> Pankaj
+>>> Robin.
+>>>
+>>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>>> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+>>>> ---
+>>>>    drivers/usb/host/xhci.c | 10 ++++++++++
+>>>>    1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>>>> index 005e659..55cf89e 100644
+>>>> --- a/drivers/usb/host/xhci.c
+>>>> +++ b/drivers/usb/host/xhci.c
+>>>> @@ -5119,6 +5119,16 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
+>>>>                dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>>>>        }
+>>>>
+>>>> +     /*
+>>>> +      * A platform may require coherent masks other than 64/32 bit, and we
+>>>> +      * should respect that. If the firmware has already requested for a
+>>>> +      * dma-range, we inherit the dma_mask presuming the platform knows
+>>>> +      * what it is doing.
+>>>> +      */
+>>>> +
+>>>> +     if (dev->bus_dma_mask)
+>>>> +             dma_set_mask_and_coherent(dev, dev->bus_dma_mask);
+>>>> +
+>>>>        xhci_dbg(xhci, "Calling HCD init\n");
+>>>>        /* Initialize HCD and host controller data structures. */
+>>>>        retval = xhci_init(hcd);
+>>>>
+> 
+> Hello Robin,
+> 
+> Hope you found the crux of the matter. Any comments on the same?
 
+Sorry, I never received either of these replies - I've just happened to 
+notice this thread again by pure chance while looking at the linux-usb 
+patchwork for something else entirely, and managed to dredge an mbox off 
+lore.kernel.org to reply to. Mail is not my area of expertise, but 
+looking at the headers of the initial patch in my inbox it seems that 
+outlook.com is doing SPF negotiation with samsung.com, so sending via 
+gmail (as those replies appear to be) may be failing that and getting 
+silently discarded (they're not even in my spam quarantine).
 
-In OpenPOWER systems, we enable our customers and business partners to
-establish and manage the platform key certificate, which is the root of our
-key hierarchy. From there, through the KEK, they can delegate authority to
-intermediate level organizations, e.g. distros or IT departments or
-business operations. Those intermediate level organizations then manage the
-code signing certificates in the DB. If this answer doesn’t address your
-question, can you please rephrase?
+ From the snippets of code quoted above I don't see anything obviously 
+wrong, but I'll take a closer look tomorrow. AFAICS though, if 
+dev->bus_dma_mask is set then dev is probably the appropriate device for 
+DMA, so I wouldn't expect a problem - XHCI is inherently a 64-bit 
+device, so its driver *should* be setting a 64-bit mask in this case. To 
+reiterate, what's the nature of the DMA issue? Do the mapping operations 
+fail, or do you actually see transfers going wrong due to address 
+truncation? Also, which arch is involved here - is it arm64 (as I seem 
+to have assumed), or something else?
 
-
-Thanks,
-Claudio
-
+Robin.
