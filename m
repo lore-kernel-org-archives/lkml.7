@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B09C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E8520883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11D020883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gbjUtSze"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Wc8Mra/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfDIAZO (ORCPT
+        id S1727300AbfDIAZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 20:25:14 -0400
-Received: from vps.xff.cz ([195.181.215.36]:36070 "EHLO vps.xff.cz"
+        Mon, 8 Apr 2019 20:25:13 -0400
+Received: from vps.xff.cz ([195.181.215.36]:36194 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbfDIAZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 20:25:01 -0400
+        id S1726864AbfDIAZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 20:25:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554769499; bh=VCU/uAG/CGlp0N/Ie+gLjiEg/N8Z0m54HtEJgdiJHWQ=;
+        t=1554769500; bh=ta9jNeaOzUhhF9iRKrx9XUH+NO8eB903r/yZVGfZaE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gbjUtSzeRdh7FATQqGiFByU6Guckc2xeeL1it9EhlJk2j/TOZLYwTEJFvrEeBxAY/
-         FqWptLn1aZdZ/LRxI25uG+3dhukUZ7HKPHxQfKvwYicMhZL2r7Yc3ufWwUN6O2GFvx
-         hFxD3YjGLCGTv8ecfNzMpHfViQ7UkRomfScZxbuc=
+        b=Wc8Mra/Efwwvg3CQH7nwd7pOZcnDmtxqtKCcc12YGs1B2w2ZkoL9vmpeuyAKDRWd6
+         p1b22kamXioHjRENcvv+1A+waDZshCxjkkyUvqYuaPqYLLa8ahnT+pWeMG83nZqmKu
+         ndtuxjdpPXQ95u3KmMLO1n+N7Um7xkG7BscSaYlo=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
+Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -53,11 +53,10 @@ Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org,
-        Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v2 04/13] net: stmmac: sun8i: force select external PHY when no internal one
-Date:   Tue,  9 Apr 2019 02:24:43 +0200
-Message-Id: <20190409002452.14551-5-megous@megous.com>
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 07/13] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date:   Tue,  9 Apr 2019 02:24:46 +0200
+Message-Id: <20190409002452.14551-8-megous@megous.com>
 In-Reply-To: <20190409002452.14551-1-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 MIME-Version: 1.0
@@ -67,41 +66,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Ondrej Jirman <megous@megous.com>
 
-The PHY selection bit also exists on SoCs without an internal PHY; if it's
-set to 1 (internal PHY, default value) then the MAC will not make use of
-any PHY such SoCs.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time,
+but we can only specify a single phy-supply in the DT.
 
-This problem appears when adapting for H6, which has no real internal PHY
-(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-connected via RMII interface at GPIO bank A).
+This can be achieved by making one regulator depedning on the other via
+vin-supply. While it's not a technically correct description of the
+hardware, it achieves the purpose.
 
-Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-to address the problem of a wrong default value.
+All values of RX/TX delay were tested exhaustively and a middle one of the
+working values was chosen.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 20c19afb8316..cb7e7f53be7d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		 * address. No need to mask it again.
- 		 */
- 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-+	} else {
-+		/* For SoCs without internal PHY the PHY selection bit should be
-+		 * set to 0 (external PHY).
-+		 */
-+		reg &= ~H3_EPHY_SELECT;
- 	}
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 5fbc5e410883..523f1d848042 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
- 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -44,6 +45,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
++
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
++	 * at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++
++		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
++		 * enable two regulators to power the phy. This is one way
++		 * to achieve that.
++		 */
++		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
++	};
+ };
+ 
+ &cpu0 {
+@@ -58,6 +80,28 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
 -- 
 2.21.0
 
