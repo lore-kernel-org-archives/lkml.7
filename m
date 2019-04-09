@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFB6C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88F4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C84A20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B8020883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eV2EbIcX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXIHLeaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbfDIRYl (ORCPT
+        id S1727039AbfDIRZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:24:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41317 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfDIRYg (ORCPT
+        Tue, 9 Apr 2019 13:25:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42001 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfDIRYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:24:36 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so10101963pfd.8;
-        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+        Tue, 9 Apr 2019 13:24:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p6so9680840pgh.9;
+        Tue, 09 Apr 2019 10:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wD2DSazscH8pXYOvV/UE8CSsvEV5LX5/5sBBOGKP7p8=;
-        b=eV2EbIcXbFp6kSeKeMNvf5UqnqRATv1xl1WZ+nYPml+zy6bcX/dFqOoeXypThBKXpI
-         Lf1dEWoGHeHrQanv3ZMbUbvQiaDOx9yRszWjxb/3qyadSGi+0kysQFgNSIBl5ZIHPoJk
-         m85t125W/rODREVLJW8JeKQNjJ2P2EmyibFTOWEpiUmZp6FgQvqlQ/ltXJybYKalw5kb
-         iFnfw2dEQezAwcjwCYyxKtTmHSx2hPRWixPTu3xGLEVWPuf4cEcnK24sLp1rUaX+0R+j
-         HDE7DEYoO9MjGADWk0M7EIV8tpPj3UECDpJlJL/24LJGCo0nGHrs8pEgBdHSZRuOZ/Jt
-         IpAw==
+        bh=LjXyeY61Q8IuuG1hh9T51lQPEaZHlcAN/+KWHwI+dVE=;
+        b=dXIHLeaKyxHPjUY4JJgxryi/6ufUxkP/CHFSdqR+fmn0stHaLNbGM5agKZyAKvgMTD
+         EOF5aSlOlf59xUDvJy6CfvpYsn0M9fUhOgyO3LoyWnoiUCQPDQ3r1bDRgtGa1jpXJWs9
+         yD0ZZ1ZFC331fibCFf7eWP0QEEWFG4811ypbEUw1eDbieVcneiqnWyWFWRj8qJLKT0LQ
+         L210dAJJ1HbGzBTlIwjh5zBW8MlF4VeMKX9MuZaIILM9VkwKFc6ZM52IJwdKQWz9sDju
+         CwFns9vk6yZFC5AVJfqiZq2lDMQ+Ml1hZApt07Nsyfp+zr0XF3I+uAkWKAE1ruBJwZE1
+         ZnZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=wD2DSazscH8pXYOvV/UE8CSsvEV5LX5/5sBBOGKP7p8=;
-        b=FyrNeUyEbxeh+EN/GzMgOdhPNp33PKfL4vBv980gsObHKWdx6yxm0dKakFv4dX3k4G
-         QSogSJzsd+GAnjE2RTbIUdq/rCAbn14JHwXRBp02iZQ4Uh36KvEjYLjj9RtbZKVNxmV8
-         aLJD/PtVtnUfLTXArLYHzil95U+6Pwxtd+Erp4hSMl9qp5glSyexEQ6zXbu4k6zGhGSK
-         sL86BjBVfTnSNJ+UFFIGh8cyraMoK6cyXbn3haw4+wXakfRQe2xakS32XIqcxYfJsdQW
-         Bkq8n7KtHYDMwqb2wLTJ2VQgGkW3udk13SPEgBS87qBLSObGdTptIs9nQych1wcufsYR
-         mwvw==
-X-Gm-Message-State: APjAAAXxYoqQ+zlgpNsQQRV9PMFJ3akzk1fPXC4ulO86X8uIKh4DbUx/
-        nYta2VkjcDcwo4iLFacUuy+e/S0K
-X-Google-Smtp-Source: APXvYqxX7yq7oeJCIHOJZAA6eu5MS+m+Z8J0sAWhG5A7iGuMBYVg8Q46PO4tCBnuFW2fSL6aOmJKGQ==
-X-Received: by 2002:a65:5286:: with SMTP id y6mr35447051pgp.79.1554830675591;
-        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+        bh=LjXyeY61Q8IuuG1hh9T51lQPEaZHlcAN/+KWHwI+dVE=;
+        b=Wvp5xhUBZJ6bqmrMueURxIITvC9i/QhNq24RSLTzk5lHrBPQBz3WivSdAjy6G6NYBH
+         +s7wj1hP1qA0JKqCidGz4ns4UFNa8ez+GQSPne6VqUnPKlhBSVpwFzsLhoZu17fVAXIL
+         6XKygLZRIGJ1qDy6Hrvjfu5giJBuCw29BG4DVYsix37R3KFrWDos4GCOo2NJQ6bMzHrq
+         /8IKShL3ymHZPhEQhJncV3nQ1kaexde+gWfTR3nnU9h4hFd8bXDZnbESjG9ftVxNc0rp
+         NL92rXeNzLPsy4f6G6FmV5eOVY4m7VdbpJaKmwVBLdYUp/InIig1Iz/MAiEAtCOA/iAG
+         pmog==
+X-Gm-Message-State: APjAAAWCO9Fsddtm8cDOPbtahKDNtBpTD/RhX2Qyy8gSgH7lMAgRDG0p
+        0ea957eUAEXUO0Yo4hsGMvKqWbkO
+X-Google-Smtp-Source: APXvYqwwX4X15/vOJSIOcGoNs31H6HZ1IkyLKtNz6ucoR3CGTvSkSnFaYZjXFCbBiPa0GCd/lU9leA==
+X-Received: by 2002:a63:c104:: with SMTP id w4mr36190874pgf.409.1554830681136;
+        Tue, 09 Apr 2019 10:24:41 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v43sm25926590pgn.57.2019.04.09.10.24.34
+        by smtp.gmail.com with ESMTPSA id s9sm17492543pfe.183.2019.04.09.10.24.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+        Tue, 09 Apr 2019 10:24:40 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Barry Song <baohua@kernel.org>
-Subject: [PATCH 17/23] watchdog: sirfsoc_wdt: Convert to use device managed functions and other improvements
-Date:   Tue,  9 Apr 2019 10:23:55 -0700
-Message-Id: <1554830641-9247-18-git-send-email-linux@roeck-us.net>
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 21/23] watchdog: stpmic1_wdt: Use 'dev' instead of dereferencing it repeatedly
+Date:   Tue,  9 Apr 2019 10:23:59 -0700
+Message-Id: <1554830641-9247-22-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
@@ -71,85 +70,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Introduce local variable 'struct device *dev' and use it instead of
+dereferencing it repeatedly.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
-- Drop empty remove function
-- Introduce local variable 'struct device *dev' and use it instead of
-  dereferencing it repeatedly
-- Replace shutdown function with call to watchdog_stop_on_reboot()
-- Replace stop on remove with call to watchdog_stop_on_unregister()
-- Use devm_watchdog_register_driver() to register watchdog device
-
-Cc: Barry Song <baohua@kernel.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/sirfsoc_wdt.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/watchdog/stpmic1_wdt.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/watchdog/sirfsoc_wdt.c b/drivers/watchdog/sirfsoc_wdt.c
-index 2559062d35da..e79a4097d50b 100644
---- a/drivers/watchdog/sirfsoc_wdt.c
-+++ b/drivers/watchdog/sirfsoc_wdt.c
-@@ -146,6 +146,7 @@ static struct watchdog_device sirfsoc_wdd = {
+diff --git a/drivers/watchdog/stpmic1_wdt.c b/drivers/watchdog/stpmic1_wdt.c
+index ad431d8ad95f..45d0c543466f 100644
+--- a/drivers/watchdog/stpmic1_wdt.c
++++ b/drivers/watchdog/stpmic1_wdt.c
+@@ -81,18 +81,19 @@ static const struct watchdog_ops pmic_watchdog_ops = {
  
- static int sirfsoc_wdt_probe(struct platform_device *pdev)
+ static int pmic_wdt_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
  	int ret;
- 	void __iomem *base;
+ 	struct stpmic1 *pmic;
+ 	struct stpmic1_wdt *wdt;
  
-@@ -155,11 +156,13 @@ static int sirfsoc_wdt_probe(struct platform_device *pdev)
+-	if (!pdev->dev.parent)
++	if (!dev->parent)
+ 		return -EINVAL;
  
- 	watchdog_set_drvdata(&sirfsoc_wdd, (__force void *)base);
+-	pmic = dev_get_drvdata(pdev->dev.parent);
++	pmic = dev_get_drvdata(dev->parent);
+ 	if (!pmic)
+ 		return -EINVAL;
  
--	watchdog_init_timeout(&sirfsoc_wdd, timeout, &pdev->dev);
-+	watchdog_init_timeout(&sirfsoc_wdd, timeout, dev);
- 	watchdog_set_nowayout(&sirfsoc_wdd, nowayout);
--	sirfsoc_wdd.parent = &pdev->dev;
-+	sirfsoc_wdd.parent = dev;
+-	wdt = devm_kzalloc(&pdev->dev, sizeof(struct stpmic1_wdt), GFP_KERNEL);
++	wdt = devm_kzalloc(dev, sizeof(struct stpmic1_wdt), GFP_KERNEL);
+ 	if (!wdt)
+ 		return -ENOMEM;
  
--	ret = watchdog_register_device(&sirfsoc_wdd);
-+	watchdog_stop_on_reboot(&sirfsoc_wdd);
-+	watchdog_stop_on_unregister(&sirfsoc_wdd);
-+	ret = devm_watchdog_register_device(dev, &sirfsoc_wdd);
+@@ -102,15 +103,15 @@ static int pmic_wdt_probe(struct platform_device *pdev)
+ 	wdt->wdtdev.ops = &pmic_watchdog_ops;
+ 	wdt->wdtdev.min_timeout = PMIC_WDT_MIN_TIMEOUT;
+ 	wdt->wdtdev.max_timeout = PMIC_WDT_MAX_TIMEOUT;
+-	wdt->wdtdev.parent = &pdev->dev;
++	wdt->wdtdev.parent = dev;
+ 
+ 	wdt->wdtdev.timeout = PMIC_WDT_DEFAULT_TIMEOUT;
+-	watchdog_init_timeout(&wdt->wdtdev, 0, &pdev->dev);
++	watchdog_init_timeout(&wdt->wdtdev, 0, dev);
+ 
+ 	watchdog_set_nowayout(&wdt->wdtdev, nowayout);
+ 	watchdog_set_drvdata(&wdt->wdtdev, wdt);
+ 
+-	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdtdev);
++	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
  	if (ret)
  		return ret;
- 
-@@ -168,19 +171,6 @@ static int sirfsoc_wdt_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void sirfsoc_wdt_shutdown(struct platform_device *pdev)
--{
--	struct watchdog_device *wdd = platform_get_drvdata(pdev);
--
--	sirfsoc_wdt_disable(wdd);
--}
--
--static int sirfsoc_wdt_remove(struct platform_device *pdev)
--{
--	sirfsoc_wdt_shutdown(pdev);
--	return 0;
--}
--
- #ifdef	CONFIG_PM_SLEEP
- static int sirfsoc_wdt_suspend(struct device *dev)
- {
-@@ -218,8 +208,6 @@ static struct platform_driver sirfsoc_wdt_driver = {
- 		.of_match_table	= sirfsoc_wdt_of_match,
- 	},
- 	.probe = sirfsoc_wdt_probe,
--	.remove = sirfsoc_wdt_remove,
--	.shutdown = sirfsoc_wdt_shutdown,
- };
- module_platform_driver(sirfsoc_wdt_driver);
  
 -- 
 2.7.4
