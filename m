@@ -2,84 +2,89 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F7AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40564C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F36420830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1009B20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfDIOWG (ORCPT
+        id S1726523AbfDIO0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:22:06 -0400
-Received: from muru.com ([72.249.23.125]:44998 "EHLO muru.com"
+        Tue, 9 Apr 2019 10:26:12 -0400
+Received: from smtp.radex.nl ([178.250.146.7]:33289 "EHLO radex-web.radex.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfDIOWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:22:05 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 004258027;
-        Tue,  9 Apr 2019 14:22:19 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 07:22:01 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rtc tree with the omap tree
-Message-ID: <20190409142201.GC2839@atomide.com>
-References: <20190409152226.5fecccd1@canb.auug.org.au>
- <1e3bc22e-97b5-3f63-c202-e04cfad48222@ti.com>
+        id S1726001AbfDIO0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:26:11 -0400
+X-Greylist: delayed 571 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Apr 2019 10:26:10 EDT
+Received: from ferry-quad.fritz.box (cust-178-250-146-69.breedbanddelft.nl [178.250.146.69])
+        by radex-web.radex.nl (Postfix) with ESMTPS id 830212404C;
+        Tue,  9 Apr 2019 16:16:37 +0200 (CEST)
+Received: from ferry by ferry-quad.fritz.box with local (Exim 4.91)
+        (envelope-from <ferry@exalondelft.nl>)
+        id 1hDrYD-00054f-AI; Tue, 09 Apr 2019 16:16:37 +0200
+From:   Ferry Toth <ftoth@exalondelft.nl>
+Cc:     andriy.shevchenko@linux.intel.com, wagi@monom.org,
+        Ferry Toth <ftoth@exalondelft.nl>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btbcm: Add default address for BCM43341B
+Date:   Tue,  9 Apr 2019 16:15:50 +0200
+Message-Id: <20190409141550.19458-1-ftoth@exalondelft.nl>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e3bc22e-97b5-3f63-c202-e04cfad48222@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Keerthy <j-keerthy@ti.com> [190409 13:25]:
-> 
-> 
-> On 09/04/19 10:52 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Today's linux-next merge of the rtc tree got a conflict in:
-> > 
-> >    drivers/rtc/rtc-omap.c
-> > 
-> > between commit:
-> > 
-> >    6256f7f7f217 ("rtc: OMAP: Add support for rtc-only mode")
-> > 
-> > from the omap tree and commit:
-> > 
-> >    35118b7a4ea0 ("rtc: omap: let the core handle range")
-> > 
-> > from the rtc tree.
-> > 
-> > I fixed it up (I used the latter resolution around tm2bcd() changes) and
-> > can carry the fix as necessary. This is now fixed as far as linux-next
-> > is concerned, but any non trivial conflicts should be mentioned to your
-> > upstream maintainer when your tree is submitted for merging.  You may
-> > also want to consider cooperating with the maintainer of the conflicting
-> > tree to minimise any particularly complex conflicts.
-> 
-> 
-> Thanks Stephen. I have tested with Latest next and rtc+ddr mode is
-> functional with an additional fix that Tony is about to queue.
-> 
-> I also reviewed the rtc driver and looks fine.
+The BCM43341B has the default MAC address 43:34:1B:00:1F:AC if none
+is given. This address was found when enabling Bluetooth on multiple
+Intel Edison modules. It also contains the sequence 43341B, the name
+the chip identifies itself as. Using the same BD_ADDR is problematic
+when having multiple Intel Edison modules in each others range.
+The default address also has the LAA (locally administered address)
+bit set which prevents a BNEP device from being created, needed for
+BT tethering.
 
-Thanks, it's probably better to keep the merge conflict rather
-than bring in all the rest of the rtc tree changes in this
-case.
+Add this to the list of black listed default MAC addresses and let
+the user configure a valid one using f.i.
+`btmgmt -i hci0 public-addr xx:xx:xx:xx:xx:xx`
 
-Regards,
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Ferry Toth <ftoth@exalondelft.nl>
+---
+ drivers/bluetooth/btbcm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Tony
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index d5d6e6e5da3b..62d3aa2b26f6 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -37,6 +37,7 @@
+ #define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
+ #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
+ #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
++#define BDADDR_BCM43341B (&(bdaddr_t) {{0xac, 0x1f, 0x00, 0x1b, 0x34, 0x43}})
+ 
+ int btbcm_check_bdaddr(struct hci_dev *hdev)
+ {
+@@ -82,7 +83,8 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
+ 	    !bacmp(&bda->bdaddr, BDADDR_BCM20702A1) ||
+ 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
+ 	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
+-	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0)) {
++	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0) ||
++	    !bacmp(&bda->bdaddr, BDADDR_BCM43341B)) {
+ 		bt_dev_info(hdev, "BCM: Using default device address (%pMR)",
+ 			    &bda->bdaddr);
+ 		set_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks);
+-- 
+2.19.1
+
