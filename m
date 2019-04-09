@@ -2,357 +2,146 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349AC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7072C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3F521473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G5e5PYnw"
+	by mail.kernel.org (Postfix) with ESMTP id A237720818
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfDIFaS (ORCPT
+        id S1727541AbfDIFb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:30:18 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:55414 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfDIFaS (ORCPT
+        Tue, 9 Apr 2019 01:31:56 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58228 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfDIFbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:30:18 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x395OQhE037119;
-        Tue, 9 Apr 2019 05:30:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=su3ixxBc2ovQWzmQ9/v1Os38Ax8F/YPHBU0NA41zfVk=;
- b=G5e5PYnwou3btMOqJx2XgE7EhCdQa+BS83Zd/we+zzwfBVh/I7Gbbvca3XmHD7/xzgg4
- ykK8fI0aO/0rpbZdRQoMfLriypxHnyUsqEQH2rR9CXswb7eyzyWDUUtboDd6Lot9LFfR
- +FP2Zvr/Pex9fqsLZjrZVFB8aP9D5mfvusUh+8L2BaLtw8q9kqmYOry3RY9WJtHXcmkA
- KhBQ5LaZJ64CBIL4a6vyAiMNZ4d/RkIbiq8UcGafZLj8r/bsCQi8GTSchJYFb2QzTM2z
- NVKdwVVwCXIIZfWomMCmcs72wonYjc00zro2kAGJRLyjFG3OpswhIj+yLO6mBN7FbK0G oA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2rphmeapwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 05:30:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x395ScF4002820;
-        Tue, 9 Apr 2019 05:30:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2rph7scx2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 05:30:12 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x395UAVF022109;
-        Tue, 9 Apr 2019 05:30:11 GMT
-Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Apr 2019 22:30:09 -0700
-From:   Jianchao Wang <jianchao.w.wang@oracle.com>
-To:     axboe@kernel.dk
-Cc:     viro@zeniv.linux.org.uk, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] io_uring: introduce inline reqs for IORING_SETUP_IOPOLL
-Date:   Tue,  9 Apr 2019 13:21:54 +0800
-Message-Id: <1554787314-27179-1-git-send-email-jianchao.w.wang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904090037
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904090037
+        Tue, 9 Apr 2019 01:31:55 -0400
+X-AuditID: c0a8fbf4-519ff700000014c1-4b-5cac2e499425
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id E1.60.05313.94E2CAC5; Tue,  9 Apr 2019 07:31:53 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 9 Apr 2019 07:31:50 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
+Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks
+ list
+Thread-Topic: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating
+ clocks list
+Thread-Index: AQHU6zDhsEv70ksLMUWTxM/SG851haYtACOAgADmtACABJvRRIAAOCYAgAB4WwA=
+Date:   Tue, 9 Apr 2019 05:31:48 +0000
+Message-ID: <4e63d42b27bc5bdf7d991c00f9105ba96a34dc8a.camel@fi.rohmeurope.com>
+References: <20190404215344.6330-1-sboyd@kernel.org>
+         <20190404215344.6330-2-sboyd@kernel.org>
+         <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com>
+         <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com>
+         <20190408104941.GB17594@localhost.localdomain>
+         <155474280295.20095.182612336816713159@swboyd.mtv.corp.google.com>
+         <20190408222106.ect7nwjsklzhmdwj@shell.armlinux.org.uk>
+In-Reply-To: <20190408222106.ect7nwjsklzhmdwj@shell.armlinux.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD60D10BBB662F44AA0BDF694ED06F27@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsVyYMXvjbqeemtiDHrPcFm8eXSE2eLK43SL
+        jz33WC0u75rDZnFo6l5Gi8Pt+1gtLp5ytfh3bSOLxc9D55kcOD0uX7vI7PH+Riu7x7w11R6X
+        +3qZPDY8Ws3qsWlVJ5vH501yAexR3DZJiSVlwZnpefp2CdwZl46eYC94o1bxbMoDpgbGN6pd
+        jJwcEgImEq8uXGfvYuTiEBK4xihx5sgcJgjnOKPEtikbgTIcHGwCNhJdN9lBGkQEYiTmndwM
+        VsMs8JFJYuq8CYwgCWGBYIm7d14zQxSFSPzY/poRpFdEwE9i55dkkDCLgIrEu4s9YHN4gcK9
+        66+xQuxayCyx/U0DE0iCU8BFYv/8V2wgNqOArERnwzuwOLOAuMSmZ99ZIa4WkFiy5zwzhC0q
+        8fLxP6i4ksTenw9ZQPYyC2hKrN+lD9HqIHFo/Wc2CFtRYkr3Q6gbBCVOznzCMoFRbBaSDbMQ
+        umch6Z6FpHsWku4FjKyrGCVyEzNz0hNLUg31ilJL9YryM3KBVHJ+7iZGSDR/2cH4/5DnIUYB
+        DkYlHl4JjTUxQqyJZcWVuYcYJTmYlER5T7SujhHiS8pPqcxILM6ILyrNSS0+xCjBwawkwrtz
+        6qoYId6UxMqq1KJ8mJQ0B4uSOG/58ikxQgIgm7NTUwtSi2CyMhwcShK8urpAewSLUtNTK9Iy
+        c0oQ0kwcnCDDuaREilPzUlKLEktLMuJBqSW+GJhcQFI8QHv5QNp5iwsSc4GiEK2nGLU5Dix6
+        OJeZ4+3B53OZhVjy8vNSpcR5XUFKBUBKM0rz4Ba9YhQH+leYVxYkywNM+XBzXgGtYAJaMUVn
+        NciKkkSElFQDo9rqP7sCVzWkPhWW8K+UmRU4q6ik0DOWiSX91Fs38ws1abLbHzSFVRce2nBz
+        Yf91uRJZPkejmo0tkz9e5jWcvNqma1r6lUZf4/BX7h15nU0+Z74Ks7eXZhRNnZW72VZAll/Z
+        zlDWXC+R39asZd3eB83NcV2une4b7l0MD4zbpPfyXMLrs3ZKLMUZiYZazEXFiQCfJnRXtgMA
+        AA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the IORING_SETUP_IOPOLL case, all of the submission and
-completion are handled under ctx->uring_lock or in SQ poll thread
-context, so io_get_req and io_put_req has been serialized well.
-The only exception is the asynchronous workqueue context where could
-free the io_kiocb for error. To overcome this, we allocate a new
-io_kiocb and free the previous inlined one.
-
-Based on this, we introduce the preallocated reqs list per ctx and
-needn't to provide any lock to serialize the updating of list. The
-performacne benefits from this. The test result of following fio
-command
-
-fio --name=io_uring_test --ioengine=io_uring --hipri --fixedbufs
---iodepth=16 --direct=1 --numjobs=1 --filename=/dev/nvme0n1 --bs=4k
---group_reporting --runtime=10
-
-shows IOPS upgrade from 197K to 206K.
-
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
----
-V2 -> V1:
- - use list to maintian the preallocated io_kiocb
- - allocate a new io_kiocb when punt io to workqueue context
-
- fs/io_uring.c | 142 +++++++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 112 insertions(+), 30 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 6aaa3058..e944ec0 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -104,11 +104,17 @@ struct async_list {
- 	size_t			io_pages;
- };
- 
-+#define INLINE_REQS_TOTAL 128
-+
- struct io_ring_ctx {
- 	struct {
- 		struct percpu_ref	refs;
- 	} ____cacheline_aligned_in_smp;
- 
-+	struct io_kiocb 		*inline_req_array;
-+	struct list_head 		inline_req_list;
-+	unsigned int 			inline_available_reqs;
-+
- 	struct {
- 		unsigned int		flags;
- 		bool			compat;
-@@ -226,9 +232,9 @@ struct io_kiocb {
- #define REQ_F_FIXED_FILE	4	/* ctx owns file */
- #define REQ_F_SEQ_PREV		8	/* sequential with previous */
- #define REQ_F_PREPPED		16	/* prep already done */
-+#define REQ_F_INLINE		32	/* ctx inline req */
- 	u64			user_data;
- 	u64			error;
--
- 	struct work_struct	work;
- };
- 
-@@ -396,6 +402,23 @@ static void io_ring_drop_ctx_refs(struct io_ring_ctx *ctx, unsigned refs)
- 		wake_up(&ctx->wait);
- }
- 
-+static struct io_kiocb *io_get_inline_req(struct io_ring_ctx *ctx)
-+{
-+	struct io_kiocb *req;
-+
-+	req = list_first_entry(&ctx->inline_req_list, struct io_kiocb, list);
-+	list_del_init(&req->list);
-+	ctx->inline_available_reqs--;
-+	return req;
-+}
-+
-+static void io_free_inline_req(struct io_ring_ctx *ctx, struct io_kiocb *req)
-+{
-+	INIT_LIST_HEAD(&req->list);
-+	list_add(&req->list, &ctx->inline_req_list);
-+	ctx->inline_available_reqs++;
-+}
-+
- static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 				   struct io_submit_state *state)
- {
-@@ -405,10 +428,14 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 	if (!percpu_ref_tryget(&ctx->refs))
- 		return NULL;
- 
--	if (!state) {
-+	if (ctx->inline_available_reqs) {
-+		req = io_get_inline_req(ctx);
-+	    req->flags = REQ_F_INLINE;
-+	} else if (!state) {
- 		req = kmem_cache_alloc(req_cachep, gfp);
- 		if (unlikely(!req))
- 			goto out;
-+		req->flags = 0;
- 	} else if (!state->free_reqs) {
- 		size_t sz;
- 		int ret;
-@@ -429,14 +456,15 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 		state->free_reqs = ret - 1;
- 		state->cur_req = 1;
- 		req = state->reqs[0];
-+		req->flags = 0;
- 	} else {
- 		req = state->reqs[state->cur_req];
- 		state->free_reqs--;
- 		state->cur_req++;
-+		req->flags = 0;
- 	}
- 
- 	req->ctx = ctx;
--	req->flags = 0;
- 	/* one is dropped after submission, the other at completion */
- 	refcount_set(&req->refs, 2);
- 	return req;
-@@ -456,10 +484,15 @@ static void io_free_req_many(struct io_ring_ctx *ctx, void **reqs, int *nr)
- 
- static void io_free_req(struct io_kiocb *req)
- {
-+	struct io_ring_ctx	*ctx = req->ctx;
-+
- 	if (req->file && !(req->flags & REQ_F_FIXED_FILE))
- 		fput(req->file);
- 	io_ring_drop_ctx_refs(req->ctx, 1);
--	kmem_cache_free(req_cachep, req);
-+	if (req->flags & REQ_F_INLINE)
-+		io_free_inline_req(ctx, req);
-+	else
-+	    kmem_cache_free(req_cachep, req);
- }
- 
- static void io_put_req(struct io_kiocb *req)
-@@ -492,7 +525,7 @@ static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
- 			 * completions for those, only batch free for fixed
- 			 * file.
- 			 */
--			if (req->flags & REQ_F_FIXED_FILE) {
-+			if (!(req->flags & REQ_F_INLINE) && req->flags & REQ_F_FIXED_FILE) {
- 				reqs[to_free++] = req;
- 				if (to_free == ARRAY_SIZE(reqs))
- 					io_free_req_many(ctx, reqs, &to_free);
-@@ -1593,6 +1626,45 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
- 	return 0;
- }
- 
-+static int io_punt_req_to_work(struct io_ring_ctx *ctx, struct sqe_submit *s,
-+			 struct io_kiocb *req)
-+{
-+	struct io_uring_sqe *sqe_copy;
-+	struct io_kiocb *req_copy;
-+	struct async_list *list;
-+
-+	sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
-+	if (!sqe_copy)
-+		return -ENOMEM;
-+
-+	if (req->flags & REQ_F_INLINE) {
-+		req_copy = kmem_cache_alloc(req_cachep, GFP_KERNEL);
-+		if (!req_copy) {
-+			kfree(sqe_copy);
-+			return -ENOMEM;
-+		}
-+
-+		memcpy(req_copy, req, sizeof(*req));
-+		req_copy->flags &= ~REQ_F_INLINE;
-+		io_free_inline_req(ctx, req);
-+		req = req_copy;
-+	}
-+
-+	memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
-+	s->sqe = sqe_copy;
-+
-+	memcpy(&req->submit, s, sizeof(*s));
-+	list = io_async_list_from_sqe(ctx, s->sqe);
-+	if (!io_add_to_prev_work(list, req)) {
-+		if (list)
-+			atomic_inc(&list->cnt);
-+		INIT_WORK(&req->work, io_sq_wq_submit_work);
-+		queue_work(ctx->sqo_wq, &req->work);
-+	}
-+
-+	return 0;
-+}
-+
- static int io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
- 			 struct io_submit_state *state)
- {
-@@ -1613,31 +1685,13 @@ static int io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
- 
- 	ret = __io_submit_sqe(ctx, req, s, true, state);
- 	if (ret == -EAGAIN) {
--		struct io_uring_sqe *sqe_copy;
--
--		sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
--		if (sqe_copy) {
--			struct async_list *list;
--
--			memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
--			s->sqe = sqe_copy;
--
--			memcpy(&req->submit, s, sizeof(*s));
--			list = io_async_list_from_sqe(ctx, s->sqe);
--			if (!io_add_to_prev_work(list, req)) {
--				if (list)
--					atomic_inc(&list->cnt);
--				INIT_WORK(&req->work, io_sq_wq_submit_work);
--				queue_work(ctx->sqo_wq, &req->work);
--			}
--
--			/*
--			 * Queued up for async execution, worker will release
--			 * submit reference when the iocb is actually
--			 * submitted.
--			 */
-+		/*
-+		 * Queued up for async execution, worker will release
-+		 * submit reference when the iocb is actually
-+		 * submitted.
-+		 */
-+		if (!io_punt_req_to_work(ctx, s, req))
- 			return 0;
--		}
- 	}
- 
- out:
-@@ -2520,6 +2574,9 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
- 		sock_release(ctx->ring_sock);
- #endif
- 
-+	if (ctx->inline_req_array)
-+		kfree(ctx->inline_req_array);
-+
- 	io_mem_free(ctx->sq_ring);
- 	io_mem_free(ctx->sq_sqes);
- 	io_mem_free(ctx->cq_ring);
-@@ -2783,7 +2840,7 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
- 	struct user_struct *user = NULL;
- 	struct io_ring_ctx *ctx;
- 	bool account_mem;
--	int ret;
-+	int ret, i;
- 
- 	if (!entries || entries > IORING_MAX_ENTRIES)
- 		return -EINVAL;
-@@ -2817,6 +2874,31 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
- 		free_uid(user);
- 		return -ENOMEM;
- 	}
-+
-+	/*
-+	 * When IORING_SETUP_IOPOLL and direct_io, all of submit and
-+	 * completion are handled under ctx->uring_lock or in SQ poll
-+	 * thread context, so io_get_req and io_put_req are serialized
-+	 * well. we could update inline_reqs_h and inline_reqs_t w/o any
-+	 * lock and benefit from the inline reqs.
-+	 */
-+	ctx->inline_available_reqs = 0;
-+	if (ctx->flags & IORING_SETUP_IOPOLL) {
-+		ctx->inline_req_array = kmalloc(
-+			sizeof(struct io_kiocb) * INLINE_REQS_TOTAL,
-+			GFP_KERNEL);
-+		if (ctx->inline_req_array) {
-+			struct io_kiocb *req;
-+			INIT_LIST_HEAD(&ctx->inline_req_list);
-+			for (i = 0; i < INLINE_REQS_TOTAL; i++) {
-+				req = ctx->inline_req_array + i;
-+			    INIT_LIST_HEAD(&req->list);
-+			    list_add_tail(&req->list, &ctx->inline_req_list);
-+			}
-+			ctx->inline_available_reqs = INLINE_REQS_TOTAL;
-+		}
-+	}
-+
- 	ctx->compat = in_compat_syscall();
- 	ctx->account_mem = account_mem;
- 	ctx->user = user;
--- 
-2.7.4
-
+T24gTW9uLCAyMDE5LTA0LTA4IGF0IDIzOjIxICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggYWRtaW4NCndyb3RlOg0KPiBPbiBNb24sIEFwciAwOCwgMjAxOSBhdCAxMDowMDowMkFNIC0w
+NzAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+ID4gUXVvdGluZyBNYXR0aSBWYWl0dGluZW4gKDIw
+MTktMDQtMDggMDM6NDk6NDEpDQo+ID4gPiBPbiBGcmksIEFwciAwNSwgMjAxOSBhdCAwMTozNzoy
+NFBNIC0wNzAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+ID4gPiA+IFF1b3RpbmcgVmFpdHRpbmVu
+LCBNYXR0aSAoMjAxOS0wNC0wNCAyMzo1MTo0MykNCj4gPiA+ID4gPiBPbiBUaHUsIDIwMTktMDQt
+MDQgYXQgMTQ6NTMgLTA3MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gPiA+ID4gPiA+IFdlIHJl
+Y2VudGx5IGludHJvZHVjZWQgYSBjaGFuZ2UgdG8gc3VwcG9ydCBkZXZtIGNsaw0KPiA+ID4gPiA+
+ID4gbG9va3Vwcy4gVGhhdA0KPiA+ID4gPiA+ID4gY2hhbmdlDQo+ID4gPiA+ID4gPiBpbnRyb2R1
+Y2VkIGEgY29kZS1wYXRoIHRoYXQgdXNlZCBjbGtfZmluZCgpIHdpdGhvdXQgaG9sZGluZw0KPiA+
+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiAnY2xvY2tzX211dGV4Jy4gVW5mb3J0dW5hdGVseSwg
+Y2xrX2ZpbmQoKSBpdGVyYXRlcyBvdmVyIHRoZQ0KPiA+ID4gPiA+ID4gJ2Nsb2NrcycNCj4gPiA+
+ID4gPiA+IGxpc3QgYW5kIHNvIHdlIG5lZWQgdG8gcHJldmVudCB0aGUgbGlzdCBmcm9tIGJlaW5n
+IG1vZGlmaWVkDQo+ID4gPiA+ID4gPiB3aGlsZQ0KPiA+ID4gPiA+ID4gaXRlcmF0aW5nIG92ZXIg
+aXQgYnkgaG9sZGluZyB0aGUgbXV0ZXguIFNpbWlsYXJseSwgd2UgZG9uJ3QNCj4gPiA+ID4gPiA+
+IG5lZWQgdG8NCj4gPiA+ID4gPiA+IGhvbGQNCj4gPiA+ID4gPiA+IHRoZSAnY2xvY2tzX211dGV4
+JyBiZXNpZGVzIHdoZW4gd2UncmUgZGVyZWZlcmVuY2luZyB0aGUNCj4gPiA+ID4gPiA+IGNsa19s
+b29rdXANCj4gPiA+ID4gPiA+IHBvaW50ZXINCj4gPiA+ID4gPiANCj4gPiA+ID4gPiAvLy8gU25p
+cA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gLW91dDoNCj4gPiA+ID4gPiA+ICtzdGF0aWMgc3Ry
+dWN0IGNsa19sb29rdXAgKmNsa19maW5kKGNvbnN0IGNoYXIgKmRldl9pZCwNCj4gPiA+ID4gPiA+
+IGNvbnN0IGNoYXINCj4gPiA+ID4gPiA+ICpjb25faWQpDQo+ID4gPiA+ID4gPiArew0KPiA+ID4g
+PiA+ID4gKyAgICAgc3RydWN0IGNsa19sb29rdXAgKmNsOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4g
+PiA+ID4gKyAgICAgbXV0ZXhfbG9jaygmY2xvY2tzX211dGV4KTsNCj4gPiA+ID4gPiA+ICsgICAg
+IGNsID0gX19jbGtfZmluZChkZXZfaWQsIGNvbl9pZCk7DQo+ID4gPiA+ID4gPiAgICAgICBtdXRl
+eF91bmxvY2soJmNsb2Nrc19tdXRleCk7DQo+ID4gPiA+ID4gPiAgDQo+ID4gPiA+ID4gPiAtICAg
+ICByZXR1cm4gY2wgPyBjbGsgOiBFUlJfUFRSKC1FTk9FTlQpOw0KPiA+ID4gPiA+ID4gKyAgICAg
+cmV0dXJuIGNsOw0KPiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJIGFtIG5v
+dCBhbiBleHBlcnQgb24gdGhpcyBidXQgcmVhZGluZyBjb21taXQgbWVzc2FnZSBhYm93ZQ0KPiA+
+ID4gPiA+IGFuZCBzZWVpbmcNCj4gPiA+ID4gPiB0aGUgY29kZSBmb3IgY2xrX2ZpbmQoKSBsb29r
+cyBhIGJpdCBzY2FyeS4gSWYgSSB1bmRlcnN0YW5kIGl0DQo+ID4gPiA+ID4gY29ycmVjdGx5LCB0
+aGUgY2xvY2tzX211dGV4IHNob3VsZCBiZSBoZWxkIHdoZW4gZGVyZWZlcmVuY2luZw0KPiA+ID4g
+PiA+IHRoZQ0KPiA+ID4gPiA+IGNsa19sb29rdXAgcmV0dXJuZWQgYnkgY2xrX2ZpbmQuIFRoZSBj
+bGtfZmluZCBpbXBsZW1lbnRhdGlvbg0KPiA+ID4gPiA+IGRyb3BzIHRoZQ0KPiA+ID4gPiA+IGxv
+Y2sgYmVmb3JlIHJldHVybmluZyAtIHdoaWNoIG1ha2VzIG1lIHRoaW5rIEkgbWlzcyBzb21ldGhp
+bmcNCj4gPiA+ID4gPiBoZXJlLiBIb3cNCj4gPiA+ID4gPiBjYW4gdGhlIGNhbGxlciBldmVyIHNh
+ZmVseSBkZXJlZmVyZW5jZSByZXR1cm5lZCBjbGtfbG9va3VwDQo+ID4gPiA+ID4gcG9pbnRlcj8N
+Cj4gPiA+ID4gPiBKdXN0IHJlYWRpbmcgYWJvd2UgbWFrZXMgbWUgdGhpbmsgdGhhdCBsb2NrIHNo
+b3VsZCBiZSB0YWtlbg0KPiA+ID4gPiA+IGJ5IHdob2V2ZXINCj4gPiA+ID4gPiBpcyBjYWxsaW5n
+IHRoZSBjbGtfZmluZCwgYW5kIGRyb3BwZWQgb25seSBhZnRlciBjYWxsZXIgaGFzDQo+ID4gPiA+
+ID4gdXNlZCB0aGUNCj4gPiA+ID4gPiBmb3VuZCBjbGtfbG9va3VwIGZvciB3aGF0ZXZlciBjYWxs
+ZXIgaW50ZW5kcyB0byB1c2UgaXQuIE1heWJlDQo+ID4gPiA+ID4gSSBhbQ0KPiA+ID4gPiA+IG1p
+c3Npbmcgc29tZXRoaW5nPw0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIG9ubHkg
+dXNlciBhZnRlciB0aGlzIHBhdGNoIChkZXZtKSBpcyBkb2luZyBhIHBvaW50ZXINCj4gPiA+ID4g
+Y29tcGFyaXNvbiBzbw0KPiA+ID4gPiBpdCBsb29rcyBPSy4gQnV0IHllcywgaW4gZ2VuZXJhbCB0
+aGVyZSBzaG91bGRuJ3QgYmUgdXNlcnMgb2YNCj4gPiA+ID4gY2xrX2ZpbmQoKQ0KPiA+ID4gPiB0
+aGF0IGRlcmVmZXJlbmNlIHRoZSBwb2ludGVyIGJlY2F1c2UgdGhlcmUgaXNuJ3QgYW55IHByb3Rl
+Y3Rpb24NCj4gPiA+ID4gYmVzaWRlcw0KPiA+ID4gPiB0aGUgbXV0ZXguDQo+ID4gPiANCj4gPiA+
+IElmIHRoZSBvbmx5IChpbnRlbmRlZCkgdXNlciBmb3IgY2xrX2ZpbmQgaXMNCj4gPiA+IGRldm1f
+Y2xrX3JlbGVhc2VfY2xrZGV2LA0KPiA+ID4gdGhlbiB3ZSBtaWdodCB3YW50IHRvIHdyaXRlIGl0
+IGluIGRldm1fY2xrX3JlbGVhc2VfY2xrZGV2IC0ganVzdA0KPiA+ID4gdG8NCj4gPiA+IGF2b2lk
+IHNpbWlsYXIgZXJyb3JzIChhcyBJIGRpZCB3aXRoIGRldm0pIGluIHRoZSBmdXR1cmU/IEkgbWln
+aHQNCj4gPiA+IGV2ZW4NCj4gPiA+IGNvbnNpZGVyIHJlbmFtaW5nIF9fY2xrX2ZpbmQgdG8gY2xr
+X2ZpbmQgb3IgdG8gY2xrX2ZpbmRfdW5zYWZlIC0NCj4gPiA+IGJ1dA0KPiA+ID4gdGhhdCdzIGFs
+bCBqdXN0IG5pdHBpY2tpbmcgOikgR28gd2l0aCB3aGF0IHlvdSBsaWtlIHRvIG1haW50YWluDQo+
+ID4gPiA6RA0KPiA+ID4gDQo+ID4gDQo+ID4gU3VyZS4gSSB3YXMgdGhpbmtpbmcgYWxvbmcgdGhl
+IHNhbWUgbGluZXMgYWZ0ZXIgeW91IGFza2VkLg0KPiANCj4gVGhpcyBpcyBydWJiaXNoLiAgVGhl
+IHJlYXNvbiBjbGtfZmluZCgpIGRvZXNuJ3QgdGFrZSB0aGUgbG9jayBpcyB0aGF0DQo+IHlvdSBf
+bmVlZF8gdG8gaG9sZCB0aGUgbG9jayB3aGlsZSB5b3UgZGVyZWZlcmVuY2UgdGhlIGNsa19sb29r
+dXANCj4gZGF0YS4NCg0KSSB0aGluayB3ZSBhbGwgYWdyZWVkIG9uIHRoaXMgYWxyZWFkeS4gU3Rl
+cGhlbiBwb2ludGVkIG91dCB0aGF0IHRoZQ0KY3VycmVudCB1c2VyKHMpIG9mIGNsa19maW5kKCkg
+ZG8gX25vdF8gZGVyZWZlcmVuY2UgdGhlIHBvaW50ZXIuDQoNCj4gVGhlIGxvY2sgaXNuJ3QgcHJv
+dGVjdGluZyBqdXN0IHRoZSBsb29rdXAsIGl0IHByb3RlY3RzIHdoYXQgeW91IGRvDQo+IHdpdGgN
+Cj4gdGhlIHJlc3VsdCBvZiB0aGUgbG9va3VwIGFzIHdlbGwuDQoNCkFuZCB3ZSBhZ3JlZWQgb24g
+dGhpcyB0b28uDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0KDQoNCg==
