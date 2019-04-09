@@ -3,151 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309BDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F017C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5FD20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E0E20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cVoTyC8I"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p8RXRYuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfDIIIW (ORCPT
+        id S1726789AbfDIIJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:08:22 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37886 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfDIIIW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:08:22 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v13so13601855ljk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 01:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Eit/w4NkCblkd4Zt520MbW+x9Fgtq9JEmsGvXZKi/TU=;
-        b=cVoTyC8ISGBK8QKC1agMZzRhhwNk3WCSeoAkv0SfUwmWFX0jvJAi1E0bvki+JIHIMz
-         NhVNulWcFHoglb0t4JUR75dLPkKZstVsryFTPpO4R0pxxGWTYsHpWDgyjv4rI/zitKcf
-         GAopx27X75L10B8S4K75s+MUrHcwTDYgnDJr0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Eit/w4NkCblkd4Zt520MbW+x9Fgtq9JEmsGvXZKi/TU=;
-        b=ilrIGujJANMqsR1vZQ90Y9J8n5l+oI0C44VqJMgd/VYiFNAB1bMKHBW+XjNVkNHIvU
-         oK0vMAXRcgkP6+nnMsSGgA8yGO63MBA5a+qQSzYTyRw08IR9P0D0fKmWv7bTtVsfsGHc
-         AK+g7LuZyypjzfpiwgI9pvvQNoUVWgfaUIe2t/x6VpWdf3teKpq/BXLoagYIdP5MqpmD
-         3lznqXui8eMoEC3ruhxS4AoNoOustirYmMo3ThJVRgTAfk4kTYq6mmmharX40vbsqjeE
-         fWriKe8EJCW0cbh9rKvq+ofJ3NORu+gJnW7TGIOnnOG5YMg8UcAOZUwBMCrUn72UcnS5
-         0f+g==
-X-Gm-Message-State: APjAAAU+2e5CbwnAFYZNanBZ+MW5tLcJiKPPSsF70rEHjmXIUcaOxcX0
-        KgNmJcDA36iY0j0b6ZmsiwKRsQ==
-X-Google-Smtp-Source: APXvYqyRGDZVvWc9b/9JQHPhqDhG7FRG2TVENG8x0vy/MAMwEtVLKCv23dPYLLzEWO1XO5r7AeQbzw==
-X-Received: by 2002:a2e:4a09:: with SMTP id x9mr2403472lja.19.1554797300040;
-        Tue, 09 Apr 2019 01:08:20 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id r77sm6755216ljb.29.2019.04.09.01.08.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 01:08:19 -0700 (PDT)
-Subject: Re: [PATCH v1 bitops] bitops: Fix UBSAN undefined behavior warning
- for rotation right
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        idosch@mellanox.com, Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20190407125325.24440-1-vadimp@mellanox.com>
- <20190408155217.3f723554ae7fbcb34eeacb30@linux-foundation.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f38907e5-82a4-1e9f-a3a4-b4e366dbb90b@rasmusvillemoes.dk>
-Date:   Tue, 9 Apr 2019 10:08:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 04:09:03 -0400
+Received: from ozlabs.org ([203.11.71.1]:58753 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbfDIIJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 04:09:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dg0n1krNz9sNk;
+        Tue,  9 Apr 2019 18:08:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554797340;
+        bh=3Nq4WF0VrT2jEDeO/gtW2yc5tdXu472w5pkscgUFTJI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p8RXRYuB67ikTR0NxGz1bJCbRP3y1WqnbYXZCYG8T/EPb2EYubbbcgdEdazPN0OfE
+         labtPAgHP4CmAEE6A4Sc2W4sMnoog9uxUR9TSktyaKURly+9UaEC2wNbE5MBDF1Omr
+         stsZAXf09kAKgEyQqaffq2yvwzWp1w63Qs1ws4wae1AvAwS1/OThgFjCfGrdPnmna4
+         A5KYNKZExzISHUzUsrP2dY0SblTWk0h0xB8ue4Ij9O4mr9HnwBuIwnwQn9DJoJK/A+
+         lW7/2aOI1ShK7VYMAVTe9EhCp2ogeVqAzZdYlciLBwRzKw3EAIWbWCCuRrjHAGwp0Q
+         /KjKSgDIL8l6w==
+Date:   Tue, 9 Apr 2019 18:08:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20190409180855.6a33e4e9@canb.auug.org.au>
+In-Reply-To: <20190409072218.nepac7a4pngacweh@sirius.home.kraxel.org>
+References: <20190409160849.391d3efa@canb.auug.org.au>
+        <20190409072218.nepac7a4pngacweh@sirius.home.kraxel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190408155217.3f723554ae7fbcb34eeacb30@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/z3HVKEe3u0hM5_Y3vXgAWZB"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 00.52, Andrew Morton wrote:
-> (resend, cc Andrey)
-> 
-> On Sun,  7 Apr 2019 12:53:25 +0000 Vadim Pasternak <vadimp@mellanox.com> wrote:
-> 
->> The warning is caused by call to rorXX(), if the second parameters of
->> this function "shift" is zero. In such case UBSAN reports the warning
->> for the next expression: (word << (XX - shift), where XX is
->> 64, 32, 16, 8 for respectively ror64, ror32, ror16, ror8.
->> Fix adds validation of this parameter - in case it's equal zero, no
->> need to rotate, just original "word" is to be returned to caller.
->>
->> The UBSAN undefined behavior warning has been reported for call to
->> ror32():
->> [   11.426543] UBSAN: Undefined behaviour in ./include/linux/bitops.h:93:33
->> [   11.434045] shift exponent 32 is too large for 32-bit type 'unsigned int'
-> 
-> hm, do we care?
-> 
->> ...
->>
-> 
->> --- a/include/linux/bitops.h
->> +++ b/include/linux/bitops.h
->> @@ -70,6 +70,9 @@ static inline __u64 rol64(__u64 word, unsigned int shift)
->>   */
->>  static inline __u64 ror64(__u64 word, unsigned int shift)
->>  {
->> +	if (!shift)
->> +		return word;
->> +
->>  	return (word >> shift) | (word << (64 - shift));
->>  }
-> 
-> Is there any known architecture or compiler for which UL<<64 doesn't
-> reliably produce zero?  Is there any prospect that this will become a
-> problem in the future?
+--Sig_/z3HVKEe3u0hM5_Y3vXgAWZB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There's a somewhat obscure platform called x86 which ignores anything
-but the low 5 bits in %ecx for a shift instruction for a 32 bit shift
-(and in 64 bit mode, the low 6 bits), so there the instruction foo << 64
-would yield foo. Which is also ok in this case, of course, except for
-the formal UB.
+Hi Gerd,
 
-Now, there are other architectures that behave similarly, so one could do
+On Tue, 9 Apr 2019 09:22:18 +0200 Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> On Tue, Apr 09, 2019 at 04:08:49PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the drm-misc tree, today's linux-next build (powerpc
+> > allyesconfig) failed like this:
+> >=20
+> > drivers/gpu/drm/cirrus/cirrus.c: In function 'cirrus_fb_blit_rect':
+> > drivers/gpu/drm/cirrus/cirrus.c:310:25: error: implicit declaration of =
+function '__io_virt'; did you mean '__do_irq'? [-Werror=3Dimplicit-function=
+-declaration]
+> >    drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
+> >                          ^~~~~~~~~
+> >                          __do_irq =20
+>=20
+> Probably just a missing arm/io.h include.
 
-u32 ror32(u32 x, unsigned s)
-{
-	return (x >> (s&31)) | (x << ((32-s)&31));
-}
+I assume you meant asm/io.h?
 
-to make the shifts always well-defined and also work as expected for s
->= 32... if only gcc recognized that the masking is redundant, so that
-its "that's a ror" pattern detection could kick in. Unfortunately, it
-seems that the above generates
+--=20
+Cheers,
+Stephen Rothwell
 
-   0:   89 f1                   mov    %esi,%ecx
-   2:   89 f8                   mov    %edi,%eax
-   4:   f7 d9                   neg    %ecx
-   6:   d3 e0                   shl    %cl,%eax
-   8:   89 f1                   mov    %esi,%ecx
-   a:   d3 ef                   shr    %cl,%edi
-   c:   09 f8                   or     %edi,%eax
-   e:   c3                      retq
+--Sig_/z3HVKEe3u0hM5_Y3vXgAWZB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-while without the masking one gets
+-----BEGIN PGP SIGNATURE-----
 
-  10:   89 f8                   mov    %edi,%eax
-  12:   89 f1                   mov    %esi,%ecx
-  14:   d3 c8                   ror    %cl,%eax
-  16:   c3                      retq
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlysUxcACgkQAVBC80lX
+0Gzskgf/YCKaKjcJzoDMfYeruWGquXXzPKTwqS4mgnOxiAxQKG9YDbzTf4micFd2
+PaUeRMwXd7MGVejYsfPUY0GAobdddYI5k2toUkpfzaAJKpcqQXWPxFVRcvY+vt+4
+Qdhdad4ot2cm102kEkvUNZo8y/4cvUat7K3uCHhORYkhrOK1AfLAyl6cvs/ujXmN
+pq5LqSJTTg+0QiS1QFygD5a0l2+e5frWVIpFSvzV9A1nZKlDeUSVCC4hN+59mB4T
+Kixky5dbUpH7/PKtmNHmbFW0k94A4IegVxVOkpKQRjgMQj72CylRkCfs/V2JVZTn
+zLHYloGeVYrsMP4JUKYkF3pPhSpdhg==
+=cXB5
+-----END PGP SIGNATURE-----
 
-
-Rasmus
+--Sig_/z3HVKEe3u0hM5_Y3vXgAWZB--
