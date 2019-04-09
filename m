@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1A9C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570E5C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0F52084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AD02084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfDIULc (ORCPT
+        id S1726723AbfDIUMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 16:11:32 -0400
-Received: from namei.org ([65.99.196.166]:32978 "EHLO namei.org"
+        Tue, 9 Apr 2019 16:12:02 -0400
+Received: from namei.org ([65.99.196.166]:32992 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfDIULc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 16:11:32 -0400
+        id S1726489AbfDIUMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 16:12:02 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x39KBJA2007756;
-        Tue, 9 Apr 2019 20:11:19 GMT
-Date:   Wed, 10 Apr 2019 06:11:19 +1000 (AEST)
+        by namei.org (8.14.4/8.14.4) with ESMTP id x39KBwBR007797;
+        Tue, 9 Apr 2019 20:11:58 GMT
+Date:   Wed, 10 Apr 2019 06:11:58 +1000 (AEST)
 From:   James Morris <jmorris@namei.org>
 To:     Kees Cook <keescook@chromium.org>
 cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
         John Johansen <john.johansen@canonical.com>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         linux-security-module <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        John Johansen <john.johansen@canonical.com>
 Subject: Re: [PATCH] apparmor: Restore Y/N in /sys for apparmor's "enabled"
 In-Reply-To: <CAGXu5j+g8tPrDAYVKv26ci6zvGuvC1TMXto7weVP2QBymMRjhw@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.1904100611110.7633@namei.org>
+Message-ID: <alpine.LRH.2.21.1904100611310.7633@namei.org>
 References: <20190408160706.GA18786@beast> <CADyDSO4NkEY-SPT-abnyRXT9kGWhF8LbU3XQGNp-5k_15debDg@mail.gmail.com> <CAGXu5j+g8tPrDAYVKv26ci6zvGuvC1TMXto7weVP2QBymMRjhw@mail.gmail.com>
 User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
@@ -90,7 +91,7 @@ On Tue, 9 Apr 2019, Kees Cook wrote:
 > 
 > James, are you able to take this for v5.1 fixes?
 
-Sure.
+Actually, JJ usually submits directly to Linus.  
 
 -- 
 James Morris
