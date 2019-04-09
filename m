@@ -2,96 +2,93 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13197C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053D22070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88EF2070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfDINi2 (ORCPT
+        id S1727116AbfDINlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:38:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56062 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDINi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:38:27 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hDqx9-0000Jq-Et; Tue, 09 Apr 2019 13:38:19 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Karen Xie <kxie@chelsio.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: cxgbi: remove redundant __kfree_skb call on skb
-Date:   Tue,  9 Apr 2019 14:38:19 +0100
-Message-Id: <20190409133819.21127-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 9 Apr 2019 09:41:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60142 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726685AbfDINlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:41:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7489FB13F;
+        Tue,  9 Apr 2019 13:41:10 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 15:41:09 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
+Message-ID: <20190409134109.ounidzwphouqr3w2@pathway.suse.cz>
+References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+ <20190402021419.GA617@jagdpanzerIV>
+ <20190402022840.et7sbiamxeutbw2q@shbuild888>
+ <20190402022900.GA2219@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402022900.GA2219@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue 2019-04-02 11:29:00, Sergey Senozhatsky wrote:
+> On (04/02/19 10:28), Feng Tang wrote:
+> > > So my first thought was - let's not add a `bool flag', but instead add
+> > > an `enum' with clear flag names, e.g. DUMP_ALL/DUMP_PENDING, etc. Something
+> > > similar to what ftrace_dump(DUMP_ALL) does. And we already have panic_print
+> > > bit-mask and panic_print_sys_info(), which controls what we print when in
+> > > panic. So we can move console_flush_on_panic() to panic_print_sys_info()
+> > > and handle different types of console_flush_on_panic() there:
+> > > 
+> > > ---
+> > > 
+> > > diff --git a/kernel/panic.c b/kernel/panic.c
+> > > index 0ae0d7332f12..e142faaebbcd 100644
+> > > --- a/kernel/panic.c
+> > > +++ b/kernel/panic.c
+> > > @@ -134,6 +134,11 @@ EXPORT_SYMBOL(nmi_panic);
+> > >  
+> > >  static void panic_print_sys_info(void)
+> > >  {
+> > > +	if (panic_print & PANIC_PRINT_REPLAY_LOGBUF)
+> > > +		console_flush_on_panic(DUMP_ALL);
+> > > +	else
+> > > +		console_flush_on_panic(DUMP_PENDING);
+> > > +
+> > >  	if (panic_print & PANIC_PRINT_TASK_INFO)
+> > >  		show_state();
+> > >  
+> > > @@ -277,7 +282,6 @@ void panic(const char *fmt, ...)
+> > >  	 * panic() is not being callled from OOPS.
+> > >  	 */
+> > >  	debug_locks_off();
+> > > -	console_flush_on_panic();
+> > >  
+> > >  	panic_print_sys_info();
+> > >  
+> > 
+> > I guess this is what my 2/2 patch exactly does :)
+> 
+> Oh, indeed... I didn't check 2/2.
 
-The error return path via label rel_resource checks for a non-null
-skb before free'ing it.  However, skb is always null at this exit
-path, so the null check and the free are redundant and can be removed.
-Removing this allows the original goto's to rel_resource to be cleaned
-up; the first can be replaced by a return of -EINVAL, the second can
-be replaced by a more appropriate -ENOMEM return since allow_wr has
-failed go allocate some memory.
+I suggest to merge the two patches into one. It will
+still be rather small and easier to review.
 
-Addresses-Coverity: ("Logically Dead Code")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-index 75e1273a44b3..5a4387f437d5 100644
---- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-+++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-@@ -979,14 +979,14 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
- 	if (csk->atid < 0) {
- 		pr_err("NO atid available.\n");
--		goto rel_resource;
-+		return -EINVAL;
- 	}
- 	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
- 	cxgbi_sock_get(csk);
- 
- 	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
- 	if (!skb)
--		goto rel_resource;
-+		return -ENOMEM;
- 	skb->sk = (struct sock *)csk;
- 	set_arp_failure_handler(skb, act_open_arp_failure);
- 	csk->snd_win = cxgb3i_snd_win;
-@@ -1007,11 +1007,6 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	cxgbi_sock_set_state(csk, CTP_ACTIVE_OPEN);
- 	send_act_open_req(csk, skb, csk->l2t);
- 	return 0;
--
--rel_resource:
--	if (skb)
--		__kfree_skb(skb);
--	return -EINVAL;
- }
- 
- cxgb3_cpl_handler_func cxgb3i_cpl_handlers[NUM_CPL_CMDS] = {
--- 
-2.20.1
-
+Best Regards,
+Petr
