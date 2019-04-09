@@ -2,101 +2,129 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851AEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE2AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C3920883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1612920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sA0I15Ib"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ApftFrBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfDIVWt (ORCPT
+        id S1726575AbfDIVZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 17:22:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:45473 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbfDIVWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 17:22:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44f0cj2GJNz9sTc;
-        Wed, 10 Apr 2019 07:22:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554844965;
-        bh=9IK4OUkGqdGV47oGAdI1QtMfqxRd5L75CXMARq0N46g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sA0I15Ibadk85OAoCEcSVynXVdeuAQxHjF7h8nRlFuak3l/tCGNWtx+7rQbmWdVOz
-         zrZ2NoVUW+0Pa9+kmdT/jnv/OfU5xRtIWTgTqAx8a681dU5rLM+1jTeIq6Oc1OhrVD
-         4KpdtVp8OyG3VVfgDhC7o5WL+bfxTXpHOj5AbDy8QCP2jXGOCPFE4e5JK4GiUJTnnv
-         HS6qybx6dePC6814vX65Q91YbvmSJArkcOy1buQ6a/P1kNVK2JmipN1Pf6HaYO/pn6
-         OJC5XUFU99KvZ7Cj5QHr1GPJqYxrkUq5cN8YH9C5VZgmlijEUxGnDoedkT7AgRR35C
-         Y/hcO2KYQD9Kw==
-Date:   Wed, 10 Apr 2019 07:22:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shiraz Saleem <shiraz.saleem@intel.com>
-Subject: linux-next: Fixes tag needs some work in the rdma tree
-Message-ID: <20190410072243.085d9811@canb.auug.org.au>
+        Tue, 9 Apr 2019 17:25:53 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45725 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfDIVZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 17:25:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o26so95818edv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 14:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DEibYvnJOT/AXrEykbQH+ZEm0O+Co96okaAqfEd0oe0=;
+        b=ApftFrBp2GKWzpizNkRot6/E2kafAeHEayvgCvWkzyqFMUHkPv0Puo84qIaJIvHuOG
+         7E9HbLIukZFDuX/ZSXdx8fRQYnraVsKdfurUV90y8HiVkho++04I5EJjBUUhLwH5lUUX
+         GrcQFZwHiCD34KHgRUcacicW+Gf80EXMJVX90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DEibYvnJOT/AXrEykbQH+ZEm0O+Co96okaAqfEd0oe0=;
+        b=ShoW/XV7yARgl//GXpReYvtdXRPn4eWsHomiHA2zoRYTdKlcH1Cb6l0EVgjmZqlHeu
+         o2ClMsLA2rUffxTwDKTv9UtVr+b41LO9bfDTatd6gCVIJPjFE94ULImvm5oc2+4MHk2M
+         LAbdxeqVJDQJEOx+WjsLD0j83q1XDlRYfT1zu/RCzr7hu6ecA0+IizKJChoyT7GF/UBX
+         nLZd+UkT1aHWvJF8mYvd/m7AvyDPOC2OdL8E4rlJVG8jJOjab+oYTj1cQr6WRrOIvAEC
+         dsC+EI8OPg4c7lOvAeT6wJmceOZLwHPmp13RRir/IXqmpH8hKre5Kb+PzPvSeNuaqOr6
+         U27w==
+X-Gm-Message-State: APjAAAVKp4gpQ+p/hR2lJ5u4TX/QzMXjugfQ6u6jIf+qTECRvbix8Tcg
+        L1nwFRn02/sDJSIr5UTo/KlV4JH4FEbPmkCr
+X-Google-Smtp-Source: APXvYqwRRQpYse2JKy7O0+MQPpjToIC2KiJl10KZ5FIj1p46BJAckzLHtv1USMyNV6zx14fgC0GcCQ==
+X-Received: by 2002:a17:906:5149:: with SMTP id s9mr21353914ejl.25.1554845151506;
+        Tue, 09 Apr 2019 14:25:51 -0700 (PDT)
+Received: from prevas-ravi.prevas.se (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
+        by smtp.gmail.com with ESMTPSA id i26sm3477986ejc.51.2019.04.09.14.25.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 14:25:50 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
+Date:   Tue,  9 Apr 2019 23:25:07 +0200
+Message-Id: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/a1yXBXPTbE0Rmg0fjFH97Q="; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a1yXBXPTbE0Rmg0fjFH97Q=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Similar to CONFIG_GENERIC_BUG_RELATIVE_POINTERS that replaces (8 byte)
+const char* members by (4 byte) signed offsets from the bug_entry,
+this implements the similar thing for struct _ddebug, the descriptors
+underlying pr_debug() and friends in a CONFIG_DYNAMIC_DEBUG kernel.
 
-Hi all,
+Since struct _ddebug has four string members, we save 16 byte per
+instance. The total savings seem to be comparable to what is saved by
+an architecture selecting GENERIC_BUG_RELATIVE_POINTERS (see patch 8
+for some numbers for a common distro config).
 
-In commit
+While refreshing these patches, which were orignally just targeted at
+x86-64, it occured to me that despite the implementation relying on
+inline asm, there's nothing x86 specific about it, and indeed it seems
+to work out-of-the-box for ppc64 and arm64 as well, but those have
+only been compile-tested.
 
-  b5efc447c650 ("RDMA/umem: Use correct value for SG entries in sg_copy_to_=
-buffer()")
+The first 6 patches are rather pedestrian preparations. The fun stuff
+is in patch 7, and the remaining three patches are just the minimal
+boilerplate to hook up the config option and asm-generic header on the
+three architectures.
 
-Fixes tag
+Rasmus Villemoes (10):
+  linux/device.h: use unique identifier for each struct _ddebug
+  linux/net.h: use unique identifier for each struct _ddebug
+  linux/printk.h: use unique identifier for each struct _ddebug
+  dynamic_debug: introduce accessors for string members of struct
+    _ddebug
+  dynamic_debug: drop use of bitfields in struct _ddebug
+  dynamic_debug: introduce CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
+  dynamic_debug: add asm-generic implementation for
+    DYNAMIC_DEBUG_RELATIVE_POINTERS
+  x86-64: select DYNAMIC_DEBUG_RELATIVE_POINTERS
+  arm64: select DYNAMIC_DEBUG_RELATIVE_POINTERS
+  powerpc: select DYNAMIC_DEBUG_RELATIVE_POINTERS for PPC64
 
-  Fixes: a4ca56b2b416 ("RDMA/umem: Combine contiguous PAGE_SIZE regions in =
-SGEs")
+ arch/arm64/Kconfig                          |   1 +
+ arch/arm64/include/asm/Kbuild               |   1 +
+ arch/powerpc/Kconfig                        |   1 +
+ arch/powerpc/include/asm/Kbuild             |   1 +
+ arch/x86/Kconfig                            |   1 +
+ arch/x86/entry/vdso/vdso32/vclock_gettime.c |   1 +
+ arch/x86/include/asm/Kbuild                 |   1 +
+ include/asm-generic/dynamic_debug.h         | 116 ++++++++++++++++++++
+ include/linux/device.h                      |   4 +-
+ include/linux/dynamic_debug.h               |  26 +++--
+ include/linux/jump_label.h                  |   2 +
+ include/linux/net.h                         |   4 +-
+ include/linux/printk.h                      |   4 +-
+ lib/Kconfig.debug                           |   3 +
+ lib/dynamic_debug.c                         | 111 ++++++++++++++-----
+ 15 files changed, 237 insertions(+), 40 deletions(-)
+ create mode 100644 include/asm-generic/dynamic_debug.h
 
-has these problem(s):
+-- 
+2.20.1
 
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in SG=
-Es")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/a1yXBXPTbE0Rmg0fjFH97Q=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytDSMACgkQAVBC80lX
-0Gx/Zwf/eiuiRjzriGtVJaBBa/RTA9uWMMnD5wQ8F4e1H024QY4bwl3yP432Wb4y
-63UAAHSHK6CFgj2j/RVwrNDXu7XfGR/yDiCHofnCaTBdNNZYvB6CzfRBJ1dU77BI
-U+ib66Io9RVKVLgAk0EAPJeCI9UhQ0IqLaHdtgAO6b2u+3CQLxl6cG3Jhoi8B8db
-LkymLjzhGBVcKJIFHn1mrWS9VgjZiERJawJkiud56udU7U+QfEaeWGGFdJhh8oYP
-zh8pf1Ct0hZMdSjQHhvrIyxEeJ7KgL9vcpfZHXSi9ougKpPqZp+tIjnSqOxqDlwV
-vjp8jzlFb38xdPLDhx9K98wOvKoXnw==
-=tnql
------END PGP SIGNATURE-----
-
---Sig_/a1yXBXPTbE0Rmg0fjFH97Q=--
