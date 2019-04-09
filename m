@@ -2,85 +2,97 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA92C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE3AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC13A20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554844210;
-	bh=1tsuJvnKTXfrqz8sSJQwsVTickHMT5Mc9M+11az52Wk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dA5ZeYJvLTE0iHYJn7+/96cGgycBwAy9+WAyhP7HzFS1SVj7slcEynE6UMcQAHjdW
-	 FJLzzvYFfh3QP7t8d4EWIsioWfvDMu1F6jadMQM6ae2ZC70CHIReNbBBZxKzJG+Kjq
-	 tM7v+3ACX7jviGvpgS/UQSv+/8QfbtHURFZBjQJY=
+	by mail.kernel.org (Postfix) with ESMTP id 871A620833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SCHnd5dB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfDIVKJ (ORCPT
+        id S1726568AbfDIVQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 17:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Tue, 9 Apr 2019 17:16:06 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42195 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726337AbfDIVKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 17:10:08 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726444AbfDIVQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 17:16:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CD020857;
-        Tue,  9 Apr 2019 21:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554844208;
-        bh=1tsuJvnKTXfrqz8sSJQwsVTickHMT5Mc9M+11az52Wk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RwW4BapeLKspn7750o+P8xxep60sGvNx8ksOtZvE4Ag69kulOXwVEIWRlLNOU7s62
-         3etr5EIfq4hyBEFhptZ1VqiNMLqsdwAqR/G/iMvzbIRkwveKSUyizJlCGgqmUsZmNN
-         /RqCnuTBztsMkpwlU+GDBAhubhhyOd66Q2a54YUI=
-Received: by mail-qk1-f180.google.com with SMTP id g1so11228423qki.5;
-        Tue, 09 Apr 2019 14:10:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAVSEb0PmfjolpfT2i7hgvvTB8AFyGG1kGv4/yngaYYlSqffUKFm
-        B+ILWQn0DtylmzazGc3sXqH8e6cNPYRQOmH0Ag==
-X-Google-Smtp-Source: APXvYqwE1DN2D/a4442lvpp5swyvq7UeA+qb1C7nhNJb/VX1p0gM91HRF7ibs7jJDurwWOaQrgqbSlarv4h+2bvmuvw=
-X-Received: by 2002:a37:5805:: with SMTP id m5mr30018011qkb.136.1554844207093;
- Tue, 09 Apr 2019 14:10:07 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44f0Sy1RPSz9sTL;
+        Wed, 10 Apr 2019 07:16:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554844562;
+        bh=CY7vp+AOdaEGbXRn0Jb4+9n9d17lWmVWbiC3unm7Z3I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SCHnd5dBbc0IGTylTQkZXh/s+esQd6DvQILhORg7fWWGfaYOrIyaeph8IE8RIcMXZ
+         18VraCzsUbKw44/WMzZcT7sEhizlVkwAO0IdTM3h/ksoqSJluNq2aITgk0JZmkDx6E
+         5yFDOg0o8Wg3GVlmT5Eso2iNDFNQ34xCwC4UeVLeS1PHXESkZz5KaFJb80LPYmTz85
+         XbbDhoFIV9qKdeSPyvXVHeM2o4OU1mYeOM7ArFeY9sVLS0oRZl15txMmwT5Mcim+Iy
+         ToXJprhy8ooqaOUanyGtDsjagAbZmo3gL3LJiidptLYGH9NC2T2SKC46IJDhj+RHB7
+         u3247RHySMwqg==
+Date:   Wed, 10 Apr 2019 07:15:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: linux-next: Fixes tag needs some work in the nvdimm-fixes tree
+Message-ID: <20190410071555.6a283e81@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190409144250.7237-1-TheSven73@gmail.com> <20190409144250.7237-5-TheSven73@gmail.com>
- <CAL_JsqJhefb3qmPN4Fn5zMz_UYFTRdPthqi4NNGMNqwNtSy76A@mail.gmail.com>
- <CAGngYiX15ts+dr4MzvtHcEfasZCSK1Lok=PkVhqRwKtzWVnQtA@mail.gmail.com> <CAGngYiX+53Rk2gTJ7G0QhQvEL-fF=Zan5jW9h7cR3gV1-J9xCg@mail.gmail.com>
-In-Reply-To: <CAGngYiX+53Rk2gTJ7G0QhQvEL-fF=Zan5jW9h7cR3gV1-J9xCg@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 9 Apr 2019 16:09:56 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLx1a+rENo7QvF-ZXmpLG9Bf2-AGkTPP7hx+Nr_Uh+NvQ@mail.gmail.com>
-Message-ID: <CAL_JsqLx1a+rENo7QvF-ZXmpLG9Bf2-AGkTPP7hx+Nr_Uh+NvQ@mail.gmail.com>
-Subject: Re: [PATCH v10 4/7] dt-bindings: anybus-controller: document
- devicetree binding
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Lh_f5ZKb7voCN2YyW9N7roG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 12:32 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Tue, Apr 9, 2019 at 1:16 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> >
-> > My apologies for the confusion. You already offered your tag to an
-> > identical commit in v3:
-> > https://lkml.org/lkml/2018/11/6/66
-> >
-> > Am I ok to add it, given that nothing has changed in this particular commit?
->
-> I added a link to the wrong version. The current patch is identical to
-> v5, where you
-> said it looks fine, but the series itself still has discussion.
-> https://lkml.org/lkml/2018/12/7/600
->
-> Should I re-post to the DT list?
+--Sig_/Lh_f5ZKb7voCN2YyW9N7roG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No. If you send again, then add my R-by if it hasn't changed.
+Hi Dan,
+
+In commit
+
+  631804370762 ("tools/testing/nvdimm: Retain security state after overwrit=
+e")
+
+Fixes tag
+
+  Fixes: 926f74802cb ("tools/testing/nvdimm: Add overwrite support for nfit=
+_test")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Lh_f5ZKb7voCN2YyW9N7roG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytC4sACgkQAVBC80lX
+0GwrPQf/cxotoDN5+QHPjWSNJ1vkJYZRiAmUIAa0RMJMbJhdRCpUtjZDCAKuu/EB
+aRrnCIO6eftLIR6my8lrzpDeqxHT0omHY9AWJI791mcvjIqcqmVF0mskGd6DJpGy
+VxvleYMuWo1ReJM84bplc2vu25JrgT2AGl9svOVE5fPXCEOHk7gGog8Jzov8uQfu
+Os6SaVf2Xjvyr9M9umf8Q9apzvmoSsN0Ebxr3zNfO8seYaZgEJ64mQQ+tuXdTW2k
+IgkAuu9OS47L/XGYaLJucHhylQ9ZpD+syiglw0V6cLyblYTEIFqvG6lGX+2iBmle
+PGz9mOfLt5+truOrhqxlA6NwcMOS4w==
+=PjQh
+-----END PGP SIGNATURE-----
+
+--Sig_/Lh_f5ZKb7voCN2YyW9N7roG--
