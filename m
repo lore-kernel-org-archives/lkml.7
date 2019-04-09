@@ -4,59 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556EDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE8C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E852084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFC82084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCk8k4Zk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sMri3+l3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbfDIOgU (ORCPT
+        id S1726666AbfDIOhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:36:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35248 "EHLO
+        Tue, 9 Apr 2019 10:37:21 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41529 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfDIOgK (ORCPT
+        with ESMTP id S1726461AbfDIOhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:36:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t4so14705002ljc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:36:08 -0700 (PDT)
+        Tue, 9 Apr 2019 10:37:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k8so14675586lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GRmQuqs3ki74ifaBC4duDeXTD7XEpeEOC8f0jKIOaIY=;
-        b=LCk8k4Zkg0y1iFhGdvdkxB+n46LRjRrwwK32lZepZHauaMPbdjO+9IlenZ5JcY70XE
-         47j0iTv5MwFNG3TC4w/RweT2niA2WGDNYyt2xq+kj8VBXx1mQi34W2lGtoU7UgNv7R7x
-         nO6Q4f6FejCktD3AebC4qvdzLbSmimPUex2P8xwiiGxagkXGXPyYnDUMIlfeCgIOTY0k
-         knG5g979wo6Ryt8Vjw9bFdElhiH28AOJcVAo0kvhy2zQeXIetFeIwxIcaXUB8Cm+jYbb
-         LwVlof9EaSZIT5PLgMfJTz+K4Mfgn0zud11KypKP3x0LrDXdmRDHa5PXQjAPTDdSuddz
-         Dc3Q==
+        bh=H6HmPYaPwOpwJuCKqBKpSpAi4qM33mYGqixAwWsXtEU=;
+        b=sMri3+l3lSootdyI+pEqPFlNJ0B6q/UO2VCW2e3LQlbpFcbhYlHHOrMuSAM38/5AdN
+         tcFQY1VS+YSWvFxK+BCqZTd0g1pmaGeScQRAUZ8mN7TbjYc5IoTiX36UBggZ3QYjyxY0
+         UwYWHtsXgACO+Zy5HKhNf/cqadlbMG4ZO3sk+0s223uQBP2ZIvmZRwPeAI00MtI0eXnq
+         ETBZiYFYW9SK6zPbnFlqKPNzaGYjDExes/EgE4f7co3DkpL3VaCmdm7z2Ve0WEvNPYbn
+         yIklBrvFUf+1/RLUURbMFb6ftu0Lcgf+DJGOmwDGDodRjT23YMJOAywYNi72xE6gLVwE
+         xb9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GRmQuqs3ki74ifaBC4duDeXTD7XEpeEOC8f0jKIOaIY=;
-        b=aBhaRojnmRdW+cY+dxeDKRcxzl6cCLkiLmXzIlpaECF3+cvvzu6Iunihvcm7DCdc30
-         +J2BhBFiYijVZJy6ZO6FEQ0ks/F1kbOjObfTkcu3Inpft7sDxcjctDT0CFauv12K1YGS
-         mB91IKogH3NNozPDIKR/kfmZiygLWYpgIjujPAWzMmrCDllWNT81DLJfXYq3bd7SY2Ru
-         WLe5CEXceK1NopcuhSIVfbBL/iQJ4R1GmL5sQWsNz0IQSolPXvOUScfK7+mZSQI9EUgZ
-         65gHbEnTRB1l9hGVY3Q8pKwuFhUGjukE20hFi3swehn5kQ8VQCkMSVMPs/57sK/XVMYd
-         v+Gw==
-X-Gm-Message-State: APjAAAWxDXiF3hVXyhuNwd96vBEmds9Nl7HJiFakKyTXyJwkJQAshjHf
-        du0ZXkOdB6xtqEtAS7UR5858OQ==
-X-Google-Smtp-Source: APXvYqyLc3sO65Z2SZuDoRhtOIvze8wC+nFjxz8Mz9QrL1JYPTFxWMV3Qkf0tufAzwZpYiWKTCO2Lg==
-X-Received: by 2002:a2e:9b48:: with SMTP id o8mr3654468ljj.51.1554820566747;
-        Tue, 09 Apr 2019 07:36:06 -0700 (PDT)
+        bh=H6HmPYaPwOpwJuCKqBKpSpAi4qM33mYGqixAwWsXtEU=;
+        b=tD0/XAk0iFXom9K85i0ADaKt9L40cBOtv5UtichpdF4qRNuiyab3QocToFVA1a7Pl5
+         Fv7MhGPbfeBT4mJS54zlW/ROCvnxZbQ89NFlMxxuPUz4CJViwa7ozcTUXZj++W2QLoGR
+         nYP+4fZiLXj7jw2z3JDDDdFCl/wUDrOZJsqJdQ+vuwkHYpCPLZTfZr1f3gpdagaJpCFX
+         2I8A+Pc3VFh/ZpcMtxMGWq3Ed28Kjy+HmElt5OMawhbWlyXIUOOIntPt7kSoULlsMD1/
+         foZ7+sqHT2y2zVa3/PyBoQFwEfZkKzi+gwekNOQDiyhP5DVNwE+1GB1ro0INZRVQiZbR
+         fUyg==
+X-Gm-Message-State: APjAAAUSS/i+WkeowNSplgVTnNcPqb6r/0uCXR4c0UkUu6SVhDzdh3h/
+        +wN/LpX1jv10Hfdy5zvP3KSd/g==
+X-Google-Smtp-Source: APXvYqzwW7zlyCMhIUIkhsBXrPbFbSt/Zw2O3ElzbECHfa7nxXKJk4qkhEiuOj7eNFti0vmDmjJVEQ==
+X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr19502815lja.164.1554820637857;
+        Tue, 09 Apr 2019 07:37:17 -0700 (PDT)
 Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id e17sm6783545ljj.20.2019.04.09.07.36.04
+        by smtp.googlemail.com with ESMTPSA id 13sm6596433lfy.2.2019.04.09.07.37.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 07:36:05 -0700 (PDT)
-Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
+        Tue, 09 Apr 2019 07:37:17 -0700 (PDT)
+Subject: Re: [PATCH 2/4] OPP: Add support for parsing the interconnect
+ bandwidth
 To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
         robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
@@ -67,8 +69,8 @@ Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <20190313090010.20534-2-georgi.djakov@linaro.org>
- <20190314062312.vwyu3ryeyc6iv55h@vireshk-i7>
+ <20190313090010.20534-3-georgi.djakov@linaro.org>
+ <20190314063047.urmzez52bdyrkdsu@vireshk-i7>
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
@@ -114,10 +116,10 @@ Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
  7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
  E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
  KEmKjLDvB0pePJkdTw==
-Message-ID: <e462c932-4789-4f59-ad58-98c62266d977@linaro.org>
-Date:   Tue, 9 Apr 2019 17:36:01 +0300
+Message-ID: <0cb2d777-4d05-2b06-e458-755d171b3436@linaro.org>
+Date:   Tue, 9 Apr 2019 17:37:12 +0300
 MIME-Version: 1.0
-In-Reply-To: <20190314062312.vwyu3ryeyc6iv55h@vireshk-i7>
+In-Reply-To: <20190314063047.urmzez52bdyrkdsu@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -128,103 +130,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Viresh,
 
-On 3/14/19 08:23, Viresh Kumar wrote:
+On 3/14/19 08:30, Viresh Kumar wrote:
 > On 13-03-19, 11:00, Georgi Djakov wrote:
->> In addition to frequency and voltage, some devices may have bandwidth
->> requirements for their interconnect throughput - for example a CPU
->> or GPU may also need to increase or decrease their bandwidth to DDR
->> memory based on the current operating performance point.
+>> The OPP bindings now support bandwidth values, so add support to parse it
+>> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
+>> is part of the dev_pm_opp.
 >>
->> Extend the OPP tables with additional property to describe the bandwidth
->> needs of a device. The average and peak bandwidth values depend on the
->> hardware and its properties.
+>> Also add and export the dev_pm_opp_set_path() and dev_pm_opp_put_path()
+>> helpers, to set (and release) an interconnect path to a device. The
+>> bandwidth of this path will be updated when the OPPs are switched.
 >>
 >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 >> ---
->>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
->>  1 file changed, 45 insertions(+)
+>>  drivers/opp/core.c     | 67 ++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/opp/of.c       | 44 +++++++++++++++++++++++++++
+>>  drivers/opp/opp.h      |  6 ++++
+>>  include/linux/pm_opp.h | 14 +++++++++
+>>  4 files changed, 131 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
->> index 76b6c79604a5..fa598264615f 100644
->> --- a/Documentation/devicetree/bindings/opp/opp.txt
->> +++ b/Documentation/devicetree/bindings/opp/opp.txt
->> @@ -129,6 +129,9 @@ Optional properties:
->>  - opp-microamp-<name>: Named opp-microamp property. Similar to
->>    opp-microvolt-<name> property, but for microamp instead.
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index e06a0ab05ad6..4b019cecaa07 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/device.h>
+>>  #include <linux/export.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/pm_domain.h>
+>>  #include <linux/regulator/consumer.h>
 >>  
->> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
->> +  the two integer values for average and peak bandwidth in megabytes per second.
->> +
->>  - opp-level: A value representing the performance level of the device,
->>    expressed as a 32-bit integer.
+>> @@ -1645,6 +1646,72 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
+>>  }
+>>  EXPORT_SYMBOL_GPL(dev_pm_opp_put_clkname);
 >>  
->> @@ -546,3 +549,45 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
->>  		};
->>  	};
->>  };
->> +
->> +Example 7: opp-bw-MBs:
->> +(example: average and peak bandwidth values are defined for each OPP and the
->> +interconnect between CPU and DDR memory is scaled together with CPU frequency)
->> +
->> +/ {
->> +	cpus {
->> +		CPU0: cpu@0 {
->> +			compatible = "arm,cortex-a53", "arm,armv8";
->> +			...
->> +			operating-points-v2 = <&cpu_opp_table>;
->> +			/* path between the CPU and DDR memory */
->> +			interconnects = <&rpm_bimc MASTER_AMPSS_M0
->> +					&rpm_bimc SLAVE_EBI_CH0>;
+>> +/**
+>> + * dev_pm_opp_set_path() - Set interconnect path for a device
+>> + * @dev: Device for which interconnect path is being set.
+>> + * @name: Interconnect path name or NULL.
+>> + *
+>> + * This must be called before any OPPs are initialized for the device.
+>> + */
+>> +struct opp_table *dev_pm_opp_set_path(struct device *dev, const char *name)
 > 
-> Can we have multiple paths for a device ?
+> Maybe the OPP core can do it itself in a similar way to how we do
+> clk_get() today ?
 
-I suppose that this is also a possible scenario. Will propose something
-to handle multiple paths too.
+Do you mean to directly call of_icc_get() in _allocate_opp_table()?
 
->> +		};
->> +	};
->> +
->> +	cpu_opp_table: cpu_opp_table {
->> +		compatible = "operating-points-v2";
->> +		opp-shared;
->> +
->> +		opp-200000000 {
->> +			opp-hz = /bits/ 64 <200000000>;
->> +			/* 457 MB/s average and 1525 MB/s peak bandwidth */
->> +			opp-bw-MBs = <457 1525>;
+[..]
+>> +static int opp_parse_icc_bw(struct dev_pm_opp *opp, struct device *dev,
+>> +			    struct opp_table *opp_table)
+>> +{
+>> +	struct property *prop = NULL;
+>> +	char name[NAME_MAX];
+>> +	int count;
+>> +	u32 avg = 0;
+>> +	u32 peak = 0;
 > 
-> In that case fixing this to just 2 entries in the array is incorrect
-> and we should take care of that in the bindings here.
+> Why init to 0 ?
 
-We can encode the path name into the property (when there are multiple
-paths). We already have opp-microamp-<name> and opp-microamp-<name>, so
-we can follow the same practice.
+Right, seems not necessary.
 
-For example:
+>> +
+>> +	/* Search for "opp-bw-MBs" */
+>> +	sprintf(name, "opp-bw-MBs");
+>> +	prop = of_find_property(opp->np, name, NULL);
+>> +
+>> +	/* Missing property is not a problem */
+>> +	if (!prop) {
+>> +		dev_dbg(dev, "%s: Missing opp-bw-MBs\n", __func__);
+>> +		return 0;
+>> +	}
+>> +
+>> +	count = of_property_count_u32_elems(opp->np, name);
+>> +	if (count != 2) {
+>> +		dev_err(dev, "%s: Invalid number of elements in %s property\n",
+>> +			__func__, name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	opp->bandwidth = kzalloc(sizeof(*opp->bandwidth), GFP_KERNEL);
+> 
+> You forgot to free it.
 
-CPU0: cpu@0 {
-	compatible = "arm,cortex-a53", "arm,armv8";
-	...
-	operating-points-v2 = <&cpu_opp_table>;
-	/* path between the CPU and DDR and path between CPU and L3 */
-	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
-			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
-	interconnect-names "cpu-mem", "cpu-l3";
-};
+Will fix.
 
-cpu_opp_table: cpu_opp_table {
-	compatible = "operating-points-v2";
-	opp-shared;
+[..]>> +/**
+>> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
+>> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
+>> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
+>> + *
+>> + * This structure stores the bandwidth values for a single interconnect path.
+>> + */
+>> +struct dev_pm_opp_icc_bw {
+>> +	u32 avg;
+>> +	u32 peak;
+>> +};
+> 
+> There is only one user of this structure, maybe we can directly add
+> the elements in teh dev_pm_opp structure.
 
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
-		opp-bw-MBps-cpu-mem = <457 1525>;
-		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
-		opp-bw-MBps-cpu-l3 = <914 3050>;
-	};
-};
+Ok, will do it.
 
 Thanks,
 Georgi
