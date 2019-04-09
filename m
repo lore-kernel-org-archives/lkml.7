@@ -2,368 +2,340 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA55C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F8C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FD020883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED29208C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfDIOku (ORCPT
+        id S1726600AbfDIOlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:40:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59024 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbfDIOku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:40:50 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC67D3092676;
-        Tue,  9 Apr 2019 14:40:49 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20D551001E6B;
-        Tue,  9 Apr 2019 14:40:36 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 10:40:33 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH ghak10 v7 2/2] ntp: Audit NTP parameters adjustment
-Message-ID: <20190409144033.pqcvuzllanqfgj7n@madcap2.tricolour.ca>
-References: <20190409123134.19350-1-omosnace@redhat.com>
- <20190409123134.19350-3-omosnace@redhat.com>
+        Tue, 9 Apr 2019 10:41:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44099 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfDIOlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:41:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y7so5652916wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:41:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PGwHiTy3w6TTvN4tiJzIGEvDD3LckMpwND5QTpBxOgY=;
+        b=hQGhbykknJX3G+5Jc0SfHxIhpq525E8cn+EN2GCIxLNTWFEEiCMYaP///ZEbVQjYAz
+         GLLCsaWxISEj3nQwma5YeEyBAkdYS+X046M0hzxRWwD5bi7iVVdcZT+UwSrlaJbe4jHp
+         2WGN4ND+i28/L+LXzZzdiRqEoKpkIMWgA9W7NlqNq9A36xpPamfPb1lhF4wLzzJ6ISDI
+         roTD94mMjOtX9hx1s4KeuO7El4KgqzovvIK3nf5zITKQxZBCIqewfGKjKaBNqG/9O8nl
+         3NazMvwPzwCPF/YJ6cQRbkGMzZ3hwgqzA+sgPYusPdZtoXoRZggHTLKnw2KTIztDVTXj
+         iZWw==
+X-Gm-Message-State: APjAAAWdaSdvYiJ4NpSrAdN67kt0aFu8DGWWkYZkDkq/S0cEV+mm9g32
+        zjNCySd72+XntSWmf1B7YexBD+ruUd8=
+X-Google-Smtp-Source: APXvYqwULSnz4QRriK6GpjwcQqKR1e6ooTk04kX1se5ft/VEVTQ0bs02E/g13TngNaSd/UzW59Kb+g==
+X-Received: by 2002:a5d:46c9:: with SMTP id g9mr21788211wrs.211.1554820874270;
+        Tue, 09 Apr 2019 07:41:14 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id g12sm32263895wrw.40.2019.04.09.07.41.12
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 07:41:13 -0700 (PDT)
+Subject: Re: [PATCH v2] usb: typec: tcpm: collision avoidance
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kyle Tso <kyletso@google.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190322121745.159768-1-kyletso@google.com>
+ <20190404141345.GF21319@kuha.fi.intel.com>
+ <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net>
+ <CAGZ6i=2zKLhS4By8Xanc863G+jSxPYg8SLU-UHkY94r5MiEYag@mail.gmail.com>
+ <20190409130230.GC20058@kuha.fi.intel.com>
+ <20190409130649.GD20058@kuha.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com>
+Date:   Tue, 9 Apr 2019 16:41:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409123134.19350-3-omosnace@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 09 Apr 2019 14:40:49 +0000 (UTC)
+In-Reply-To: <20190409130649.GD20058@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-09 14:31, Ondrej Mosnacek wrote:
-> Emit an audit record every time selected NTP parameters are modified
-> from userspace (via adjtimex(2) or clock_adjtime(2)). These parameters
-> may be used to indirectly change system clock, and thus their
-> modifications should be audited.
-> 
-> Such events will now generate records of type AUDIT_TIME_ADJNTPVAL
-> containing the following fields:
->   - op -- which value was adjusted:
->     - offset -- corresponding to the time_offset variable
->     - freq   -- corresponding to the time_freq variable
->     - status -- corresponding to the time_status variable
->     - adjust -- corresponding to the time_adjust variable
->     - tick   -- corresponding to the tick_usec variable
->     - tai    -- corresponding to the timekeeping's TAI offset
->   - old -- the old value
->   - new -- the new value
-> 
-> Example records:
-> 
-> type=TIME_ADJNTPVAL msg=audit(1530616044.507:7): op=status old=64 new=8256
-> type=TIME_ADJNTPVAL msg=audit(1530616044.511:11): op=freq old=0 new=49180377088000
-> 
-> The records of this type will be associated with the corresponding
-> syscall records.
-> 
-> An overview of parameter changes that can be done via do_adjtimex()
-> (based on information from Miroslav Lichvar) and whether they are
-> audited:
->   __timekeeping_set_tai_offset() -- sets the offset from the
->                                     International Atomic Time
->                                     (AUDITED)
->   NTP variables:
->     time_offset -- can adjust the clock by up to 0.5 seconds per call
->                    and also speed it up or slow down by up to about
->                    0.05% (43 seconds per day) (AUDITED)
->     time_freq -- can speed up or slow down by up to about 0.05%
+Hi,
 
-(I think you want an "(AUDITED)" at the end of the "time_freq" line.)
-
->     time_status -- can insert/delete leap seconds and it also enables/
->                    disables synchronization of the hardware real-time
->                    clock (AUDITED)
->     time_maxerror, time_esterror -- change error estimates used to
->                                     inform userspace applications
->                                     (NOT AUDITED)
->     time_constant -- controls the speed of the clock adjustments that
->                      are made when time_offset is set (NOT AUDITED)
->     time_adjust -- can temporarily speed up or slow down the clock by up
->                    to 0.05% (AUDITED)
->     tick_usec -- a more extreme version of time_freq; can speed up or
->                  slow down the clock by up to 10% (AUDITED)
+On 09-04-19 15:06, Heikki Krogerus wrote:
+> On Tue, Apr 09, 2019 at 04:02:30PM +0300, Heikki Krogerus wrote:
+>> +Hans
+>>
+>> On Mon, Apr 08, 2019 at 10:17:35PM +0800, Kyle Tso wrote:
+>>> On Fri, Apr 5, 2019 at 9:42 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>>>
+>>>> On 4/4/19 7:13 AM, Heikki Krogerus wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Fri, Mar 22, 2019 at 08:17:45PM +0800, Kyle Tso wrote:
+>>>>>> This patch provides the implementation of Collision Avoidance introduced
+>>>>>> in PD3.0. The start of each Atomic Message Sequence (AMS) initiated by
+>>>>>> the port will be denied if the current AMS is not interruptible. The
+>>>>>> Source port will set the CC to SinkTxNG if it is going to initiate an
+>>>>>> AMS, and SinkTxOk otherwise. Meanwhile, any AMS initiated by a Sink port
+>>>>>> will be denied in TCPM if the port partner (Source) sets SinkTxNG except
+>>>>>> for HARD_RESET and SOFT_RESET.
+>>>>>
+>>>>> I tested this with my GDBWin which has fusb302. When I plug-in
+>>>>> DisplayPort adapter, the partner device never gets registered, and I
+>>>>> see steady flow of warnings from fusb302:
+>>>>>
+>>>>
+>>>> FWIW, I made multiple attempts to review the patch. Each time I get stuck
+>>>> after a while and notice that I don't understand what is going on.
+>>>>
+>>>> Maybe the state machine needs a complete overhaul. It seems to have reached
+>>>> a point where it is getting too complex to understand what is going on.
+>>>>
+>>>>> [  693.391176] Vconn is on during toggle start
+>>>>> [  693.391250] WARNING: CPU: 2 PID: 30 at drivers/usb/typec/tcpm/fusb302.c:562 fusb302_set_toggling+0x129/0x130 [fusb302]
+>>>>> [  693.400293] Modules linked in: intel_xhci_usb_role_switch fusb302 tcpm roles pi3usb30532 i915 typec intel_gtt intel_cht_int33fe
+>>>>> [  693.406309] CPU: 2 PID: 30 Comm: kworker/u8:1 Tainted: G        W         5.1.0-rc3-heikki+ #17
+>>>>> [  693.408434] cht_wcove_pwrsrc cht_wcove_pwrsrc: Could not detect charger type
+>>>>> [  693.412278] Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
+>>>>> [  693.412283] Workqueue: i2c-fusb302 tcpm_state_machine_work [tcpm]
+>>>>> [  693.424256] RIP: 0010:fusb302_set_toggling+0x129/0x130 [fusb302]
+>>>>> [  693.427234] Code: 89 df e8 da ef ff ff 85 c0 78 c6 c6 83 b0 01 00 00 00 eb b7 b9 02 00 00 00 e9 48 ff ff ff 48 c7 c7 20 e8 21 a0 e8 8e 0c e4 e0 <0f> 0b e9 58 ff ff ff 41 55 4c 8d 6f e8 41 54 41 89 f4 55 53 48 8d
+>>>>> [  693.436204] RSP: 0000:ffffc9000076bd90 EFLAGS: 00010286
+>>>>> [  693.439174] RAX: 0000000000000000 RBX: ffff888178080028 RCX: 0000000000000000
+>>>>> [  693.442157] RDX: 000000000000001f RSI: ffffffff8259051f RDI: ffffffff8259091f
+>>>>> [  693.445130] RBP: 0000000000000003 R08: ffffffff82590500 R09: 00000000000202c0
+>>>>> [  693.448100] R10: 0000010cb24a3d18 R11: 000000000000001e R12: ffff8881780801b0
+>>>>> [  693.451086] R13: ffffffffa021e4e5 R14: 0000000000000003 R15: ffff888178080040
+>>>>> [  693.454060] FS:  0000000000000000(0000) GS:ffff88817bb00000(0000) knlGS:0000000000000000
+>>>>> [  693.460009] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>> [  693.462984] CR2: 00000000f7fb74a0 CR3: 000000000200d000 CR4: 00000000001006e0
+>>>>> [  693.465969] Call Trace:
+>>>>> [  693.468937]  tcpm_set_cc+0xb9/0x170 [fusb302]
+>>>>> [  693.471894]  tcpm_ams_start+0x1b8/0x2a0 [tcpm]
+>>>>
+>>>> tcpm_ams_start() sets TYPEC_CC_RP_1_5 unconditionally, no matter what. This causes
+>>>> the fusb302 code to start toggling. As such, it may well attempt to start toggling
+>>>> in the wrong state.
+>>>>
+>>>> Guenter
+>>>>
+>>>
+>>> I read the fusb302 spec but failed to find the statement that says it
+>>> should "set toggling" when CC switches among default/medium/high.
+>>>
+>>> quot from fusb302 spec:
+>>> "The FUSB302 allows the host software to change the charging current
+>>> capabilities of the port through the HOST_CUR control bits. If the
+>>> HOST_CUR bits are changed prior to attach, the FUSB302 automatically
+>>> indicates the programmed current capability when a device is attached.
+>>> If the current capabilities are changed after a device is attached,
+>>> the FUSB302 immediately changes the CC line to the programmed
+>>> capability."
+>>>
+>>> Is it possible to skip fusb302_set_toggling() @ line#658 if
+>>> tcpm_set_cc() is called in order to switch the cc among
+>>> default/medium/high of Rp ?
 > 
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> Hans, you introduced that in commit daf81d0137a9c ("usb: typec:
+> fusb302: Refactor / simplify tcpm_set_cc()"), so could you take a look
+> at this.
 
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+I do not believe that that commit introduces the fusb302_set_toggling()
+as the subject of the commit says it just refactors things, the
+set_toggling call was introduced by:
 
-> ---
->  include/linux/audit.h      | 54 ++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/audit.h |  1 +
->  kernel/auditsc.c           | 23 ++++++++++++++++
->  kernel/time/ntp.c          | 22 +++++++++++++---
->  kernel/time/ntp_internal.h |  4 ++-
->  kernel/time/timekeeping.c  |  7 ++++-
->  6 files changed, 106 insertions(+), 5 deletions(-)
+commit ea3b4d5523bc8("usb: typec: fusb302: Resolve fixed power role contract setup")
+
+Before that:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/typec/tcpm/fusb302.c?id=40326e857c57a0095d3f9d72c14cb13aef4ca564
+
+tcpm_set_cc actually turned toggling off in all cases.
+
+I've no doubt that Adam was seeing a real problem, but I've doubted if this
+was the right fix before. I even had it reverted in my tree for a while, but
+since in my use-cases so far it has not caused any problems I've not looked
+into it further.
+
+In the mean time the code has changed quite a bit though, so making
+tcpm_set_cc() behave as it did before, see:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/typec/tcpm/fusb302.c?id=40326e857c57a0095d3f9d72c14cb13aef4ca564
+
+Will require writing something from scratch based on the new code which
+mimicks the behaviour of the old code; and then we also need to fix Adam's
+problem on top.
+
+Regards,
+
+Hans
+
+
+
+
+
+
 > 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 2c62c0468888..1c372ad7ebe9 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -86,6 +86,26 @@ struct audit_field {
->  	u32				op;
->  };
->  
-> +#define AUDIT_NTP_OFFSET	0
-> +#define AUDIT_NTP_FREQ		1
-> +#define AUDIT_NTP_STATUS	2
-> +#define AUDIT_NTP_TAI		3
-> +#define AUDIT_NTP_TICK		4
-> +#define AUDIT_NTP_ADJUST	5
-> +#define AUDIT_NTP_NVALS		6 /* count */
-> +
-> +#ifdef CONFIG_AUDITSYSCALL
-> +struct audit_ntp_val {
-> +	s64 oldval, newval;
-> +};
-> +
-> +struct audit_ntp_data {
-> +	struct audit_ntp_val vals[AUDIT_NTP_NVALS];
-> +};
-> +#else
-> +struct audit_ntp_data {};
-> +#endif
-> +
->  extern int is_audit_feature_set(int which);
->  
->  extern int __init audit_register_class(int class, unsigned *list);
-> @@ -366,6 +386,7 @@ extern void __audit_mmap_fd(int fd, int flags);
->  extern void __audit_log_kern_module(char *name);
->  extern void __audit_fanotify(unsigned int response);
->  extern void __audit_tk_injoffset(struct timespec64 offset);
-> +extern void __audit_ntp_log(const struct audit_ntp_data *ad);
->  
->  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
->  {
-> @@ -478,6 +499,27 @@ static inline void audit_tk_injoffset(struct timespec64 offset)
->  		__audit_tk_injoffset(offset);
->  }
->  
-> +static inline void audit_ntp_init(struct audit_ntp_data *ad)
-> +{
-> +	memset(ad, 0, sizeof(*ad));
-> +}
-> +
-> +static inline void audit_ntp_set_old(struct audit_ntp_data *ad, int id, s64 val)
-> +{
-> +	ad->vals[id].oldval = val;
-> +}
-> +
-> +static inline void audit_ntp_set_new(struct audit_ntp_data *ad, int id, s64 val)
-> +{
-> +	ad->vals[id].newval = val;
-> +}
-> +
-> +static inline void audit_ntp_log(const struct audit_ntp_data *ad)
-> +{
-> +	if (!audit_dummy_context())
-> +		__audit_ntp_log(ad);
-> +}
-> +
->  extern int audit_n_rules;
->  extern int audit_signals;
->  #else /* CONFIG_AUDITSYSCALL */
-> @@ -594,6 +636,18 @@ static inline void audit_fanotify(unsigned int response)
->  static inline void audit_tk_injoffset(struct timespec64 offset)
->  { }
->  
-> +static inline void audit_ntp_init(struct audit_ntp_data *ad)
-> +{ }
-> +
-> +static inline void audit_ntp_set_old(struct audit_ntp_data *ad, int id, s64 val)
-> +{ }
-> +
-> +static inline void audit_ntp_set_new(struct audit_ntp_data *ad, int id, s64 val)
-> +{ }
-> +
-> +static inline void audit_ntp_log(const struct audit_ntp_data *ad)
-> +{ }
-> +
->  static inline void audit_ptrace(struct task_struct *t)
->  { }
->  #define audit_n_rules 0
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index ab58d67baf4d..a1280af20336 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -115,6 +115,7 @@
->  #define AUDIT_KERN_MODULE	1330	/* Kernel Module events */
->  #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
->  #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
-> +#define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
->  
->  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
->  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 80dfe0cdc636..519ada7522ad 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2518,6 +2518,29 @@ void __audit_tk_injoffset(struct timespec64 offset)
->  		  "sec=%lli nsec=%li", (long long)offset.tv_sec, offset.tv_nsec);
->  }
->  
-> +static void audit_log_ntp_val(const struct audit_ntp_data *ad,
-> +			      const char *type, int id)
-> +{
-> +	const struct audit_ntp_val *val = &ad->vals[id];
-> +
-> +	if (val->newval == val->oldval)
-> +		return;
-> +
-> +	audit_log(audit_context(), GFP_KERNEL, AUDIT_TIME_ADJNTPVAL,
-> +		  "op=%s old=%lli new=%lli", type,
-> +		  (long long)val->oldval, (long long)val->newval);
-> +}
-> +
-> +void __audit_ntp_log(const struct audit_ntp_data *ad)
-> +{
-> +	audit_log_ntp_val(ad, "offset",	AUDIT_NTP_OFFSET);
-> +	audit_log_ntp_val(ad, "freq",	AUDIT_NTP_FREQ);
-> +	audit_log_ntp_val(ad, "status",	AUDIT_NTP_STATUS);
-> +	audit_log_ntp_val(ad, "tai",	AUDIT_NTP_TAI);
-> +	audit_log_ntp_val(ad, "tick",	AUDIT_NTP_TICK);
-> +	audit_log_ntp_val(ad, "adjust",	AUDIT_NTP_ADJUST);
-> +}
-> +
->  static void audit_log_task(struct audit_buffer *ab)
->  {
->  	kuid_t auid, uid;
-> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-> index 92a90014a925..ac5555e25733 100644
-> --- a/kernel/time/ntp.c
-> +++ b/kernel/time/ntp.c
-> @@ -17,6 +17,7 @@
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/rtc.h>
-> +#include <linux/audit.h>
->  
->  #include "ntp_internal.h"
->  #include "timekeeping_internal.h"
-> @@ -709,7 +710,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
->   * kernel time-keeping variables. used by xntpd.
->   */
->  int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
-> -		  s32 *time_tai)
-> +		  s32 *time_tai, struct audit_ntp_data *ad)
->  {
->  	int result;
->  
-> @@ -720,14 +721,29 @@ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
->  			/* adjtime() is independent from ntp_adjtime() */
->  			time_adjust = txc->offset;
->  			ntp_update_frequency();
-> +
-> +			audit_ntp_set_old(ad, AUDIT_NTP_ADJUST,	save_adjust);
-> +			audit_ntp_set_new(ad, AUDIT_NTP_ADJUST,	time_adjust);
->  		}
->  		txc->offset = save_adjust;
->  	} else {
-> -
->  		/* If there are input parameters, then process them: */
-> -		if (txc->modes)
-> +		if (txc->modes) {
-> +			audit_ntp_set_old(ad, AUDIT_NTP_OFFSET,	time_offset);
-> +			audit_ntp_set_old(ad, AUDIT_NTP_FREQ,	time_freq);
-> +			audit_ntp_set_old(ad, AUDIT_NTP_STATUS,	time_status);
-> +			audit_ntp_set_old(ad, AUDIT_NTP_TAI,	*time_tai);
-> +			audit_ntp_set_old(ad, AUDIT_NTP_TICK,	tick_usec);
-> +
->  			process_adjtimex_modes(txc, time_tai);
->  
-> +			audit_ntp_set_new(ad, AUDIT_NTP_OFFSET,	time_offset);
-> +			audit_ntp_set_new(ad, AUDIT_NTP_FREQ,	time_freq);
-> +			audit_ntp_set_new(ad, AUDIT_NTP_STATUS,	time_status);
-> +			audit_ntp_set_new(ad, AUDIT_NTP_TAI,	*time_tai);
-> +			audit_ntp_set_new(ad, AUDIT_NTP_TICK,	tick_usec);
-> +		}
-> +
->  		txc->offset = shift_right(time_offset * NTP_INTERVAL_FREQ,
->  				  NTP_SCALE_SHIFT);
->  		if (!(time_status & STA_NANO))
-> diff --git a/kernel/time/ntp_internal.h b/kernel/time/ntp_internal.h
-> index 40e6122e634e..908ecaa65fc3 100644
-> --- a/kernel/time/ntp_internal.h
-> +++ b/kernel/time/ntp_internal.h
-> @@ -8,6 +8,8 @@ extern void ntp_clear(void);
->  extern u64 ntp_tick_length(void);
->  extern ktime_t ntp_get_next_leap(void);
->  extern int second_overflow(time64_t secs);
-> -extern int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts, s32 *time_tai);
-> +extern int __do_adjtimex(struct __kernel_timex *txc,
-> +			 const struct timespec64 *ts,
-> +			 s32 *time_tai, struct audit_ntp_data *ad);
->  extern void __hardpps(const struct timespec64 *phase_ts, const struct timespec64 *raw_ts);
->  #endif /* _LINUX_NTP_INTERNAL_H */
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index 3d24be4cd607..f366f2fdf1b0 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -2307,6 +2307,7 @@ static int timekeeping_validate_timex(const struct __kernel_timex *txc)
->  int do_adjtimex(struct __kernel_timex *txc)
->  {
->  	struct timekeeper *tk = &tk_core.timekeeper;
-> +	struct audit_ntp_data ad;
->  	unsigned long flags;
->  	struct timespec64 ts;
->  	s32 orig_tai, tai;
-> @@ -2330,13 +2331,15 @@ int do_adjtimex(struct __kernel_timex *txc)
->  		audit_tk_injoffset(delta);
->  	}
->  
-> +	audit_ntp_init(&ad);
-> +
->  	ktime_get_real_ts64(&ts);
->  
->  	raw_spin_lock_irqsave(&timekeeper_lock, flags);
->  	write_seqcount_begin(&tk_core.seq);
->  
->  	orig_tai = tai = tk->tai_offset;
-> -	ret = __do_adjtimex(txc, &ts, &tai);
-> +	ret = __do_adjtimex(txc, &ts, &tai, &ad);
->  
->  	if (tai != orig_tai) {
->  		__timekeeping_set_tai_offset(tk, tai);
-> @@ -2347,6 +2350,8 @@ int do_adjtimex(struct __kernel_timex *txc)
->  	write_seqcount_end(&tk_core.seq);
->  	raw_spin_unlock_irqrestore(&timekeeper_lock, flags);
->  
-> +	audit_ntp_log(&ad);
-> +
->  	/* Update the multiplier immediately if frequency was set directly */
->  	if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
->  		timekeeping_advance(TK_ADV_FREQ);
-> -- 
-> 2.20.1
+>>> the tcpm log on another PD controller:
+>>> [ 1215.709538] CC1: 0 -> 2, CC2: 0 -> 1 [state DRP_TOGGLING, polarity
+>>> 0, connected]
+>>> [ 1215.709551] state change DRP_TOGGLING -> SRC_ATTACH_WAIT
+>>> [ 1215.709576] pending state change SRC_ATTACH_WAIT -> SRC_ATTACHED @
+>>> 200 ms
+>>> [ 1215.907465] state change SRC_ATTACH_WAIT -> SRC_ATTACHED [delayed
+>>> 200 ms]
+>>> [ 1215.907670] polarity 0
+>>> [ 1215.908070] Requesting mux state 1, usb-role 1, orientation 1
+>>> [ 1215.909342] vconn:=1
+>>> [ 1215.909549] vbus:=1 charge=0
+>>> [ 1215.909633] Setting pd capable false
+>>> [ 1215.909637] pending state change SRC_ATTACHED -> SRC_UNATTACHED @
+>>> 480 ms
+>>> [ 1215.909685] VBUS on
+>>> [ 1215.909687] state change SRC_ATTACHED -> SRC_STARTUP
+>>> [ 1215.914263] AMS POWER_NEGOTIATION start
+>>> [ 1215.914267] cc:=4
+>>> [ 1215.914288] state change SRC_STARTUP -> AMS_START in AMS POWER_NEGOTIATION
+>>> [ 1215.914294] state change AMS_START -> SRC_SEND_CAPABILITIES in AMS
+>>> POWER_NEGOTIATION
+>>> [ 1215.914298] PD TX, header: 0x11a1
+>>> [ 1215.919552] PD TX complete, status: 2
+>>> [ 1215.919577] pending state change SRC_SEND_CAPABILITIES ->
+>>> SRC_SEND_CAPABILITIES @ 150 ms in AMS POWER_NEGOTIATION
+>>> [ 1216.071041] state change SRC_SEND_CAPABILITIES ->
+>>> SRC_SEND_CAPABILITIES [delayed 150 ms]
+>>> [ 1216.071049] PD TX, header: 0x11a1
+>>> [ 1216.072508] PD TX complete, status: 0
+>>> [ 1216.072535] Setting pd capable true
+>>> [ 1216.072645] pending state change SRC_SEND_CAPABILITIES ->
+>>> HARD_RESET_SEND @ 150 ms in AMS POWER_NEGOTIATION
+>>> [ 1216.073915] PD RX, header: 0x1042 [1]
+>>> [ 1216.073920] state change SRC_SEND_CAPABILITIES -> SRC_NEGOTIATE_CAPABILITIES
+>>> [ 1216.073941] Requested 5000 mV, 900 mA for 900 / 900 mA
+>>> [ 1216.073944] PD TX, header: 0x363
+>>> [ 1216.075281] PD TX complete, status: 0
+>>> [ 1216.075337] pending state change SRC_NEGOTIATE_CAPABILITIES ->
+>>> SRC_TRANSITION_SUPPLY @ 35 ms
+>>> [ 1216.113742] state change SRC_NEGOTIATE_CAPABILITIES ->
+>>> SRC_TRANSITION_SUPPLY [delayed 35 ms]
+>>> [ 1216.113752] PD TX, header: 0x566
+>>> [ 1216.116743] PD TX complete, status: 0
+>>> [ 1216.117175] state change SRC_TRANSITION_SUPPLY -> SRC_READY
+>>> [ 1216.118737] PD TX, header: 0x176f
+>>> [ 1216.120285] PD TX complete, status: 0
+>>> [ 1216.122455] PD RX, header: 0x524f [1]
+>>> [ 1216.122463] Rx VDM cmd 0xff008041 type 1 cmd 1 len 5
+>>> [ 1216.122511] Identity: 04b4:1120.0000
+>>> [ 1216.122531] PD TX, header: 0x196f
+>>> [ 1216.123965] PD TX complete, status: 0
+>>> [ 1216.125573] PD RX, header: 0x244f [1]
+>>> [ 1216.125578] Rx VDM cmd 0xff008042 type 1 cmd 2 len 2
+>>> [ 1216.125581] SVID 1: 0xff01
+>>> [ 1216.125603] PD TX, header: 0x1b6f
+>>> [ 1216.127074] PD TX complete, status: 0
+>>> [ 1216.128750] PD RX, header: 0x264f [1]
+>>> [ 1216.128754] Rx VDM cmd 0xff018043 type 1 cmd 3 len 2
+>>> [ 1216.128758]  Alternate mode 0: SVID 0xff01, VDO 1: 0x00000405
+>>>
+>>>>> [  693.474855]  ? _cond_resched+0x10/0x20
+>>>>> [  693.477807]  tcpm_state_machine_work+0x57e/0x28f6 [tcpm]
+>>>>> [  693.480776]  ? tcpm_pd_event_handler+0x111/0x320 [tcpm]
+>>>>> [  693.483743]  process_one_work+0x1da/0x410
+>>>>> [  693.486703]  worker_thread+0x28/0x3c0
+>>>>> [  693.489651]  ? process_one_work+0x410/0x410
+>>>>> [  693.492603]  kthread+0x10b/0x130
+>>>>> [  693.495548]  ? kthread_create_on_node+0x60/0x60
+>>>>> [  693.498506]  ret_from_fork+0x1f/0x30
+>>>>>
+>>>>>
+>>>>> Here's the tcpm debugfs log:
+>>>>>
+>>>>> [  692.553000] CC1: 0 -> 2, CC2: 0 -> 1 [state DRP_TOGGLING, polarity 0, connected]
+>>>>> [  692.553016] state change DRP_TOGGLING -> SRC_ATTACH_WAIT
+>>>>> [  692.553056] pending state change SRC_ATTACH_WAIT -> SNK_TRY @ 200 ms
+>>>>> [  692.757402] state change SRC_ATTACH_WAIT -> SNK_TRY [delayed 200 ms]
+>>>>> [  692.757410] cc:=2
+>>>>> [  692.761946] pending state change SNK_TRY -> SNK_TRY_WAIT @ 100 ms
+>>>>> [  692.869308] state change SNK_TRY -> SNK_TRY_WAIT [delayed 100 ms]
+>>>>> [  692.869313] state change SNK_TRY_WAIT -> SRC_TRYWAIT
+>>>>> [  692.869317] cc:=3
+>>>>> [  692.873657] pending state change SRC_TRYWAIT -> SRC_TRYWAIT_UNATTACHED @ 100 ms
+>>>>> [  692.882524] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_TRYWAIT, polarity 0, connected]
+>>>>> [  692.882537] state change SRC_TRYWAIT -> SRC_TRYWAIT_DEBOUNCE
+>>>>> [  692.882567] pending state change SRC_TRYWAIT_DEBOUNCE -> SRC_ATTACHED @ 200 ms
+>>>>> [  693.085337] state change SRC_TRYWAIT_DEBOUNCE -> SRC_ATTACHED [delayed 200 ms]
+>>>>> [  693.085347] polarity 0
+>>>>> [  693.085352] Requesting mux state 1, usb-role 1, orientation 1
+>>>>> [  693.346845] vconn:=1
+>>>>> [  693.347174] vbus:=1 charge=0
+>>>>> [  693.358340] pending state change SRC_ATTACHED -> SRC_UNATTACHED @ 480 ms
+>>>>> [  693.378702] VBUS on
+>>>>> [  693.378711] state change SRC_ATTACHED -> SRC_STARTUP
+>>>>> [  693.378741] AMS POWER_NEGOTIATION start
+>>>>> [  693.378745] cc:=4
+>>>>> [  693.505321] state change SRC_STARTUP -> AMS_START in AMS POWER_NEGOTIATION
+>>>>> [  693.505325] state change AMS_START -> SRC_SEND_CAPABILITIES in AMS POWER_NEGOTIATION
+>>>>> [  693.505327] PD TX, header: 0x11a1
+>>>>> [  693.613296] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES @ 150 ms in AMS POWER_NEGOTIATION
+>>>>> [  693.613309] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_SEND_CAPABILITIES, polarity 0, connected]
+>>>>> [  693.765730] state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES [delayed 150 ms]
+>>>>> [  693.765753] PD TX, header: 0x11a1
+>>>>> [  693.770016] PD TX complete, status: 0
+>>>>> [  693.770261] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES_TIMEOUT @ 150 ms in AMS POWER_NEGOTIATION
+>>>>> [  693.775178] PD RX, header: 0x1042 [1]
+>>>>> [  693.775195] state change SRC_SEND_CAPABILITIES -> SRC_NEGOTIATE_CAPABILITIES
+>>>>> [  693.775236] Requested 5000 mV, 400 mA for 400 / 900 mA
+>>>>> [  693.775244] PD TX, header: 0x363
+>>>>> [  693.778253] PD TX complete, status: 0
+>>>>> [  693.778363] pending state change SRC_NEGOTIATE_CAPABILITIES -> SRC_TRANSITION_SUPPLY @ 35 ms
+>>>>> [  693.803463] Received hard reset
+>>>>> [  693.803473] state change SRC_NEGOTIATE_CAPABILITIES -> HARD_RESET_START
+>>>>> [  693.806323] pending state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF @ 30 ms
+>>>>> [  693.837400] state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF [delayed 30 ms]
+>>>>> [  693.837414] vconn:=1
+>>>>> [  693.837426] vbus:=0 charge=0
+>>>>> [  693.843380] Requesting mux state 1, usb-role 1, orientation 1
+>>>>> [  693.844554] pending state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON @ 760 ms
+>>>>> [  693.844575] VBUS off
+>>>>> [  693.844580] state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON
+>>>>> [  693.844617] vbus:=1 charge=0
+>>>>> [  693.850688] pending state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED @ 480 ms
+>>>>> [  693.868706] VBUS on
+>>>>> [  693.868713] state change SRC_HARD_RESET_VBUS_ON -> SRC_STARTUP
+>>>>> [  693.868742] AMS POWER_NEGOTIATION start
+>>>>> [  693.868749] cc:=4
+>>>>> [  694.101422] state change SRC_STARTUP -> AMS_START in AMS POWER_NEGOTIATION
+>>>>> [  694.101425] state change AMS_START -> SRC_SEND_CAPABILITIES in AMS POWER_NEGOTIATION
+>>>>> [  694.101428] PD TX, header: 0x11a1
+>>>>> [  694.205301] pending state change SRC_SEND_CAPABILITIES -> SRC_SEND_CAPABILITIES @ 150 ms in AMS POWER_NEGOTIATION
+>>>>> [  694.205317] CC1: 2 -> 2, CC2: 1 -> 1 [state SRC_SEND_CAPABILITIES, polarity 0, connected]
+>>>>> [  694.325808] Received hard reset
+>>>>> [  694.325816] state change SRC_SEND_CAPABILITIES -> HARD_RESET_START in AMS NONE_AMS
+>>>>> [  694.329208] pending state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF @ 30 ms in AMS NONE_AMS
+>>>>> [  694.359394] state change HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF [delayed 30 ms]
+>>>>> [  694.359401] vconn:=1
+>>>>> [  694.359408] vbus:=0 charge=0
+>>>>> [  694.366321] Requesting mux state 1, usb-role 1, orientation 1
+>>>>> [  694.367685] pending state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON @ 760 ms in AMS NONE_AMS
+>>>>> [  694.367700] VBUS off
+>>>>> [  694.367704] state change SRC_HARD_RESET_VBUS_OFF -> SRC_HARD_RESET_VBUS_ON in AMS NONE_AMS
+>>>>> [  694.367721] vbus:=1 charge=0
+>>>>> [  694.374175] pending state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED @ 480 ms in AMS NONE_AMS
+>>>>> [  694.374194] CC1: 2 -> 0, CC2: 1 -> 0 [state SRC_HARD_RESET_VBUS_ON, polarity 0, disconnected]
+>>>>> [  694.374201] state change SRC_HARD_RESET_VBUS_ON -> SRC_UNATTACHED in AMS NONE_AMS
+>>>>> [  694.631957] Start DRP toggling
 > 
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+> thanks,
+> 
