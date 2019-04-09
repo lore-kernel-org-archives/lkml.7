@@ -2,77 +2,79 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00732C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E4C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD33E20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A693B20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnLUsQGU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PoL/k0X6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfDISow (ORCPT
+        id S1726765AbfDISqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 14:44:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40077 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfDISow (ORCPT
+        Tue, 9 Apr 2019 14:46:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41854 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbfDISqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 14:44:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q66so15431391ljq.7;
-        Tue, 09 Apr 2019 11:44:50 -0700 (PDT)
+        Tue, 9 Apr 2019 14:46:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d1so9936154plj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 11:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WfCzyC8QBaiprEbkfnq16RnTqbITQWA6W2Znk7EGPpw=;
-        b=PnLUsQGUS56d0pBtW/zA8U6dsJTDk3o2N7ufgXJCi6WcTNubG7Wq7w7p3UqcTG5ko5
-         Kg33h2HbNi019uTouEp5bP6fbG3Xu/ePFHFJHqBorqlliidQQZwF+BVbTExNJsTD2kaB
-         rhcILzhwAkpyBfb6jCUqtxzAm1a8hiA8oU4Xq4hAjO9VTXE5vBfYzVHPzjgMFgaKe3Dm
-         aPVOMKvFk2raDeJjkVqG+oIFOcET3CwxDEgICbJD5JEGH2YtlMrqa2CLJgegHosm4kj9
-         CH9iQpihjvFO3dXxq6CO15ViNUKLAengi8HJ66lQPm2uCGqBI++ieFkBSii6Grptiaww
-         hWlA==
+        bh=0vApW/buY6OtCIWOQhnD5Xdm5WPEcH/+QK5/B7HgPtU=;
+        b=PoL/k0X6ejuMiI0c9MQKWm9xd2VHgVKAB9jdtVvO3kK/e3wM/mpcxFVRmHspMNOgC/
+         bB1b9loCQDjA1VnrgOvVXwfQ+gllNSnaecp+jqKsn9Ol/BtRXIIFVul4IVhADr9weE42
+         RmAetUkOE3iZ2F1dLzmooSr/dt7QAdit053yA0l7Ki1DaYGkdFO4G4au7kSPT/OGcAQh
+         Z0fQe4/q+c454Z4G2I+jsz9dXCNoeiS86mBjV0JUUkCKoFzQGQ27zq84otl/tuAokojP
+         sdcsLxvOVvYmCI8FetX8eTq51isRqSaQ3OyPWhKyRVHE9xa+Ru/n4KgX9T+OeZS2KB0P
+         SCLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=WfCzyC8QBaiprEbkfnq16RnTqbITQWA6W2Znk7EGPpw=;
-        b=WqTk02MWk46kHb5H0gpZzyOP/wWr3wgI6Fq8XzpOMaPzQnUwcoo/L9abJwkLsTjCor
-         y3WQ9OoPW3wCWO+/eOQZTl/ctpYNlTudGMDcCUeDGLv4YpvIQsj19YbSabLQ0QKN8Elj
-         4MrBRUHi3tQBg0jJiBJYdB8E+u82eNIMoMblJG0GWCRBG2OlP9c63yMh9Fq0pmOfpAF8
-         qLsidR+5jYCMKOlgdUVRA76GuR4A42yLbhTgHjZYSYN+FA+SAY9rmNpolJ+x2Nvqm+1X
-         LYD7xkskYfi5WPpNa2QBHl2HB41ebP0xLdBRYHmWerPDcP1LZpDHkX4iF8s2cw6nWLKP
-         m2Lw==
-X-Gm-Message-State: APjAAAWmgy0VI4AbZASIDXDNl/SI/SpqwXeHqOaCTVM/AdJvbsLukMXB
-        yK6lQUv+HUVShw/sGrBbS7drxqYo
-X-Google-Smtp-Source: APXvYqxrK9pqDCWW81Q2fAs17hk0536RwmtZCpqGpGpnS5NlpelJavDqLL28frjVr+LSbV0srWXl5g==
-X-Received: by 2002:a2e:808e:: with SMTP id i14mr21539694ljg.103.1554835489771;
-        Tue, 09 Apr 2019 11:44:49 -0700 (PDT)
-Received: from [192.168.1.19] (civ8.neoplus.adsl.tpnet.pl. [83.31.45.8])
-        by smtp.gmail.com with ESMTPSA id p25sm722981lfh.0.2019.04.09.11.44.48
+        bh=0vApW/buY6OtCIWOQhnD5Xdm5WPEcH/+QK5/B7HgPtU=;
+        b=E1uPxW3hZ3vcNkvkdR7gi6TLN99NKaP0rcppeOci9g1vTW19g3oTHD5s1k5CLvn2Yq
+         l9Y9tXVOKnNctvECsJS+Ocav2RKA588Zw90hYoBBIlAvwNrN914DYXvDR6h/UxDUhO4W
+         4VadCOJfehHR7XbDNoS61ZMsnFla7mx5XlAQVluFMCfS47eWJHOv3Eq2/63lsTAxvdPH
+         e3lTTY/KsnULoBAiggv+HsxinxA6PN1U11f7kC+3NGd11ssHP8Ug1xB9xN7ZDrUw498R
+         qJikRuGZKqybKCsxTXSjUXdGwlArR5vwomh8OX/cdhJFWf8SqjyFW0hB7E68a08o078i
+         UqCQ==
+X-Gm-Message-State: APjAAAUMb5bjtopQUTH/nL3qIrIkjyfmRVFAQkH+5ouF15Khd2GZDDPs
+        ibyaw8Re4sqUz943AFyIR/Sl1ZZIqkISTA==
+X-Google-Smtp-Source: APXvYqxCFYzGofLG3ra9STFDozNvsDGaIZYxmKv5Hy7Ee58vyLLkvQg2fJGIj6Q+oooq1xpqXuGskA==
+X-Received: by 2002:a17:902:ec0c:: with SMTP id cy12mr16772022plb.291.1554835577855;
+        Tue, 09 Apr 2019 11:46:17 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id h4sm42587504pgn.20.2019.04.09.11.46.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 11:44:49 -0700 (PDT)
-Subject: Re: [PATCH 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-To:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz,
-        lee.jones@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-References: <20190405145540.27703-1-dmurphy@ti.com>
- <20190405145540.27703-2-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <1dcaa34b-cce6-63fc-5866-242c1757a4cb@gmail.com>
-Date:   Tue, 9 Apr 2019 20:44:47 +0200
+        Tue, 09 Apr 2019 11:46:16 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: add support for barrier fsync
+To:     Chris Mason <clm@fb.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <7c7276e4-8ffa-495a-6abf-926a58ee899e@kernel.dk>
+ <20190409181742.GA24925@infradead.org>
+ <5f8d9644-9e8f-c9d2-611e-4b144c62539c@kernel.dk>
+ <5BF7FDDE-212E-4F9A-9B50-26BDA99E952A@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a7f00629-f822-7271-7a4e-ad3b802752e4@kernel.dk>
+Date:   Tue, 9 Apr 2019 12:46:15 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190405145540.27703-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <5BF7FDDE-212E-4F9A-9B50-26BDA99E952A@fb.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,37 +82,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On 4/9/19 12:42 PM, Chris Mason wrote:
+> On 9 Apr 2019, at 14:23, Jens Axboe wrote:
+> 
+>> On 4/9/19 12:17 PM, Christoph Hellwig wrote:
+>>> On Tue, Apr 09, 2019 at 10:27:43AM -0600, Jens Axboe wrote:
+>>>> It's a quite common use case to issue a bunch of writes, then an 
+>>>> fsync
+>>>> or fdatasync when they complete. Since io_uring doesn't guarantee 
+>>>> any
+>>>> type of ordering, the application must track issued writes and wait
+>>>> with the fsync issue until they have completed.
+>>>>
+>>>> Add an IORING_FSYNC_BARRIER flag that helps with this so the 
+>>>> application
+>>>> doesn't have to do this manually. If this flag is set for the fsync
+>>>> request, we won't issue it until pending IO has already completed.
+>>>
+>>> I think we need a much more detailed explanation of the semantics,
+>>> preferably in man page format.
+>>>
+>>> Barrier at least in Linux traditionally means all previously 
+>>> submitted
+>>> requests have finished and no new ones are started until the
+>>> barrier request finishes, which is very heavy handed.  Is that what
+>>> this is supposed to do?  If not what are the exact guarantees vs
+>>> ordering and or barrier semantics?
+>>
+>> The patch description isn't that great, and maybe the naming isn't 
+>> that
+>> intuitive either. The way it's implemented, the fsync will NOT be 
+>> issued
+>> until previously issued IOs have completed. That means both reads and
+>> writes, since there's no way to wait for just one.  In terms of
+>> semantics, any previously submitted writes will have completed before
+>> this fsync is issued. The barrier fsync has no ordering wrt future
+>> writes, no ordering is implied there. Hence:
+>>
+>> W1, W2, W3, FSYNC_W_BARRIER, W4, W5
+>>
+>> W1..3 will have been completed by the hardware side before we start
+>> FSYNC_W_BARRIER. We don't wait with issuing W4..5 until after the 
+>> fsync
+>> completes, no ordering is provided there.
+> 
+> Looking at the patch, why is fsync special?  Seems like you could add 
+> this ordering bit to any write?
 
-Regulator maintainers should be added too.
+It's really not, the exact same technique could be used on any type of
+command to imply ordering. My initial idea was to have an explicit
+barrier/ordering command, but I didn't think that separating it from an
+actual command would be needed/useful.
 
-On 4/5/19 4:55 PM, Dan Murphy wrote:
-> The use of and enablement of the GPIO can be used across devices.
-> Use the enable_reg in the regulator descriptor for the register to
-> write.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/regulator/lm363x-regulator.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-> index c876e161052a..382b1cecdd93 100644
-> --- a/drivers/regulator/lm363x-regulator.c
-> +++ b/drivers/regulator/lm363x-regulator.c
-> @@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
->   
->   	if (gpiod) {
->   		cfg.ena_gpiod = gpiod;
-> -
-> -		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
-> +		ret = regmap_update_bits(regmap,
-> +					 lm363x_regulator_desc[id].enable_reg,
->   					 LM3632_EXT_EN_MASK,
->   					 LM3632_EXT_EN_MASK);
->   		if (ret) {
-> 
+> While you're here, do you want to add a way to FUA/cache flush?  
+> Basically the rest of what user land would need to make their own 
+> write-back-cache-safe implementation.
+
+FUA would be a WRITEV/WRITE_FIXED flag, that should be trivially doable.
+
+In terms of cache flush, that's very heavy handed (and storage
+oriented).  What applications would want/need to do an explicit whole
+device flush?
 
 -- 
-Best regards,
-Jacek Anaszewski
+Jens Axboe
+
