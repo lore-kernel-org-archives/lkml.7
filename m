@@ -3,185 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D5DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866A5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6F120830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5663620857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfDIJ43 (ORCPT
+        id S1726554AbfDIJ5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:56:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56818 "EHLO mga11.intel.com"
+        Tue, 9 Apr 2019 05:57:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:49236 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfDIJ43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:56:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 02:56:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="149286846"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2019 02:56:25 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hDnUN-0001SX-QL; Tue, 09 Apr 2019 12:56:23 +0300
-Date:   Tue, 9 Apr 2019 12:56:23 +0300
-From:   Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 00/18] Shared virtual address IOMMU and VT-d support
-Message-ID: <20190409095623.GB9224@smile.fi.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        id S1726035AbfDIJ5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:57:52 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id A73E668B02; Tue,  9 Apr 2019 11:57:40 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 11:57:40 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Deepak Singh Rawat <drawat@vmware.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: revert dma direct internals abuse
+Message-ID: <20190409095740.GE6827@lst.de>
+References: <20190408105525.5493-1-hch@lst.de> <7d5f35da4a6b58639519f0764c7edbfe4dd1ba02.camel@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7d5f35da4a6b58639519f0764c7edbfe4dd1ba02.camel@vmware.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 04:59:15PM -0700, Jacob Pan wrote:
-> Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
-> platforms allow address space sharing between device DMA and applications.
-> SVA can reduce programming complexity and enhance security.
-> This series is intended to enable SVA virtualization, i.e. shared guest
-> application address space and physical device DMA address. Only IOMMU portion
-> of the changes are included in this series. Additional support is needed in
-> VFIO and QEMU (will be submitted separately) to complete this functionality.
-> 
-> To make incremental changes and reduce the size of each patchset. This series
-> does not inlcude support for page request services.
-> 
-> In VT-d implementation, PASID table is per device and maintained in the host.
-> Guest PASID table is shadowed in VMM where virtual IOMMU is emulated.
+On Mon, Apr 08, 2019 at 06:47:52PM +0000, Thomas Hellstrom wrote:
+> We HAVE discussed our needs, although admittedly some of my emails
+> ended up unanswered.
 
-This seems missed the comments I gave you internally.
+And than you haven't followed up, and instead ignored the layering
+instructions and just commited a broken patch?
 
-> 
->     .-------------.  .---------------------------.
->     |   vIOMMU    |  | Guest process CR3, FL only|
->     |             |  '---------------------------'
->     .----------------/
->     | PASID Entry |--- PASID cache flush -
->     '-------------'                       |
->     |             |                       V
->     |             |                CR3 in GPA
->     '-------------'
-> Guest
-> ------| Shadow |--------------------------|--------
->       v        v                          v
-> Host
->     .-------------.  .----------------------.
->     |   pIOMMU    |  | Bind FL for GVA-GPA  |
->     |             |  '----------------------'
->     .----------------/  |
->     | PASID Entry |     V (Nested xlate)
->     '----------------\.------------------------------.
->     |             |   |SL for GPA-HPA, default domain|
->     |             |   '------------------------------'
->     '-------------'
-> Where:
->  - FL = First level/stage one page tables
->  - SL = Second level/stage two page tables
-> 
-> 
-> This work is based on collaboration with other developers on the IOMMU
-> mailing list. Notably,
-> 
-> [1] [PATCH v6 00/22] SMMUv3 Nested Stage Setup by Eric Auger
-> https://lkml.org/lkml/2019/3/17/124
-> 
-> [2] [RFC PATCH 2/6] drivers core: Add I/O ASID allocator by Jean-Philippe
-> Brucker
-> https://www.spinics.net/lists/iommu/msg30639.html
-> 
-> [3] [RFC PATCH 0/5] iommu: APIs for paravirtual PASID allocation by Lu Baolu
-> https://lkml.org/lkml/2018/11/12/1921
-> 
-> There are roughly three parts:
-> 1. Generic PASID allocator [1] with extension to support custom allocator
-> 2. IOMMU cache invalidation passdown from guest to host
-> 3. Guest PASID bind for nested translation
-> 
-> All generic IOMMU APIs are reused from [1], which has a v7 just published with
-> no real impact to the patches used here. It is worth noting that unlike sMMU
-> nested stage setup, where PASID table is owned by the guest, VT-d PASID table is
-> owned by the host, individual PASIDs are bound instead of the PASID table.
-> 
-> 
-> Jacob Pan (15):
->   ioasid: Add custom IOASID allocator
->   ioasid: Convert ioasid_idr to XArray
->   driver core: add per device iommu param
->   iommu: introduce device fault data
->   iommu: introduce device fault report API
->   iommu: Introduce attach/detach_pasid_table API
->   iommu/vt-d: Add custom allocator for IOASID
->   iommu/vt-d: Replace Intel specific PASID allocator with IOASID
->   iommu: Add guest PASID bind function
->   iommu/vt-d: Move domain helper to header
->   iommu/vt-d: Add nested translation support
->   iommu/vt-d: Add bind guest PASID support
->   iommu: add max num of cache and granu types
->   iommu/vt-d: Support flushing more translation cache types
->   iommu/vt-d: Add svm/sva invalidate function
-> 
-> Jean-Philippe Brucker (1):
->   drivers core: Add I/O ASID allocator
-> 
-> Liu, Yi L (1):
->   iommu: Introduce cache_invalidate API
-> 
-> Lu Baolu (1):
->   iommu/vt-d: Enlightened PASID allocation
-> 
->  drivers/base/Kconfig        |   7 ++
->  drivers/base/Makefile       |   1 +
->  drivers/base/ioasid.c       | 211 +++++++++++++++++++++++++++++++++++++
->  drivers/iommu/Kconfig       |   1 +
->  drivers/iommu/dmar.c        |  48 +++++++++
->  drivers/iommu/intel-iommu.c | 219 ++++++++++++++++++++++++++++++++++++--
->  drivers/iommu/intel-pasid.c | 191 +++++++++++++++++++++++++++++-----
->  drivers/iommu/intel-pasid.h |  24 ++++-
->  drivers/iommu/intel-svm.c   | 217 +++++++++++++++++++++++++++++++++++---
->  drivers/iommu/iommu.c       | 207 +++++++++++++++++++++++++++++++++++-
->  include/linux/device.h      |   3 +
->  include/linux/intel-iommu.h |  40 +++++--
->  include/linux/intel-svm.h   |   7 ++
->  include/linux/ioasid.h      |  66 ++++++++++++
->  include/linux/iommu.h       | 127 +++++++++++++++++++++++
->  include/uapi/linux/iommu.h  | 248 ++++++++++++++++++++++++++++++++++++++++++++
->  16 files changed, 1559 insertions(+), 58 deletions(-)
->  create mode 100644 drivers/base/ioasid.c
->  create mode 100644 include/linux/ioasid.h
->  create mode 100644 include/uapi/linux/iommu.h
-> 
-> -- 
-> 2.7.4
-> 
+> We've as you're well aware of had a discussion with the other
+> subsystems doing user-space DMA-buffers wanting this functionality from
+> the dma api (AMD graphics and RDMA people IIRC). that is a bool that
+> tells us whether streaming dma mappings are coherent, and I described
+> in detail why we couldn't use the dma_sync_* API and
+> dma_alloc_coherent().
 
--- 
-With Best Regards,
-Andy Shevchenko
+And that is not at all what you either check or claim to do in the
+changelog (which btw, are two different things).
 
+> The other option we have is to just fail miserably without messages if
+> streaming DMA is not coherent, which I think the other drivers might
+> do... That's all I'm trying to avoid here. I'd much prefer to have the
+> dma API export this bool.
 
+Both DMA direct and non-DMA direct streaming mappings can be either
+coherent or incoherent, so your patch doesn't archive that.  The
+commit log claims the following:
+
+"drm/vmwgfx: Improve on IOMMU detection
+    
+ instead of relying on intel_iommu_enabled, use the fact that the
+ dma_map_ops::map_page != dma_direct_map_page"
+
+which has nothing to do with the fact that streaming mappings are
+coherent.  It also is incorrect as there are direct mapping that
+do not use dma_direct_map_page (e.g. on ARM, or x86 with VMD).
