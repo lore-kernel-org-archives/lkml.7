@@ -2,110 +2,124 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589FBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D4DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244C52084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="gxnGbicq"
+	by mail.kernel.org (Postfix) with ESMTP id 295272084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfDINNI (ORCPT
+        id S1727498AbfDINNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:13:08 -0400
-Received: from vern.gendns.com ([98.142.107.122]:45110 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbfDINNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XWViNH1Wxw9uYqCVZQz/ft4Cplusn+KMz/3xhiiHXMY=; b=gxnGbicq2ll7/v2m+YTmEGhEQM
-        Ter0pWlqbGSOz5XMmxVWe5lboZfAn7EIv7TWYDAqMjlXqXVCRRYr9kg9xgecdK9K4+mUQK4vtvvGV
-        AtD5lwRL2I19cvAh/r+JYzTJL2qNwCuNqP59r8QJBwBZaZ2VsdvyODJEyVi5laIvuBFMGCIcUGeE8
-        SKYQSTHIMVaSCkElu/OH5Th9JpzuXe1WF3GSWAt/1/mVCiFZ43YV7ke6YOdsP56ohL6ZaKhQEUyym
-        alehLdG37gR83zxezdc93ps0/NJAoWNIyb6YU86ZNgAfBN1uw7ZpAGf7i7kANrVaThSn2YJTiN3lw
-        nFzLMdMA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:50018 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <david@lechnology.com>)
-        id 1hDqYf-0002Gd-Bw; Tue, 09 Apr 2019 09:13:01 -0400
-Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
- sysfs documentation
-To:     Pavel Machek <pavel@ucw.cz>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     gregkh@linuxfoundation.org, jic23@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        thierry.reding@gmail.com, esben@haabendal.dk,
-        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        patrick.havelange@essensium.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <cover.1554184734.git.vilhelm.gray@gmail.com>
- <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
- <20190408215531.GB27592@amd>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <d7a44b77-a8e5-d4fa-9a11-96cdde862b4c@lechnology.com>
-Date:   Tue, 9 Apr 2019 08:12:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 09:13:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39714 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727136AbfDINNt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:13:49 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x39DAb3F048541
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 09:13:48 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rrupc9hvk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:13:47 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Tue, 9 Apr 2019 14:13:44 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 9 Apr 2019 14:13:40 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x39DDdD855312418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Apr 2019 13:13:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA783A4051;
+        Tue,  9 Apr 2019 13:13:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A1F8A4040;
+        Tue,  9 Apr 2019 13:13:39 +0000 (GMT)
+Received: from dyn-9-152-212-151.boeblingen.de.ibm.com (unknown [9.152.212.151])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  9 Apr 2019 13:13:39 +0000 (GMT)
+Date:   Tue, 9 Apr 2019 15:13:38 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] s390: cio: fix cio_irb declaration
+In-Reply-To: <20190408212648.2407234-7-arnd@arndb.de>
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-7-arnd@arndb.de>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-In-Reply-To: <20190408215531.GB27592@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19040913-0016-0000-0000-0000026CEF52
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040913-0017-0000-0000-000032C918AC
+Message-Id: <alpine.LFD.2.21.1904091512530.2591@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=970 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904090084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 4:55 PM, Pavel Machek wrote:
+On Mon, 8 Apr 2019, Arnd Bergmann wrote:
+> clang points out that the declaration of cio_irb does not match the
+> definition exactly, it is missing the alignment attribute:
 > 
-> pavel@amd:~$ cat /sys/power/state
-> freeze mem disk
+> ../drivers/s390/cio/cio.c:50:1: warning: section does not match previous declaration [-Wsection]
+> DEFINE_PER_CPU_ALIGNED(struct irb, cio_irb);
+> ^
+> ../include/linux/percpu-defs.h:150:2: note: expanded from macro 'DEFINE_PER_CPU_ALIGNED'
+>         DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)     \
+>         ^
+> ../include/linux/percpu-defs.h:93:9: note: expanded from macro 'DEFINE_PER_CPU_SECTION'
+>         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
+>                ^
+> ../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+>         __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+>                                 ^
+> ../drivers/s390/cio/cio.h:118:1: note: previous attribute is here
+> DECLARE_PER_CPU(struct irb, cio_irb);
+> ^
+> ../include/linux/percpu-defs.h:111:2: note: expanded from macro 'DECLARE_PER_CPU'
+>         DECLARE_PER_CPU_SECTION(type, name, "")
+>         ^
+> ../include/linux/percpu-defs.h:87:9: note: expanded from macro 'DECLARE_PER_CPU_SECTION'
+>         extern __PCPU_ATTRS(sec) __typeof__(type) name
+>                ^
+> ../include/linux/percpu-defs.h:49:26: note: expanded from macro '__PCPU_ATTRS'
+>         __percpu __attribute__((section(PER_CPU_BASE_SECTION sec)))     \
+>                                 ^
+> Use DECLARE_PER_CPU_ALIGNED() here, to make the two match.
 > 
-> And we use [] to mark current selection:
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I know this is used elsewhere, but I don't think it is a good pattern
-to copy. Parsing it from user-space is annoying. Also it breaks the
-sysfs rule of "one item per file" since it tells us two things - the
-list of possible values _and_ the current active value.
-
-> 
-> pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
-> [none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
-> kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
-> kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
-> kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
-> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
-> phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
-> rfkill1
-> 
-> Note this only works if you have less than PAGE_SIZE of entries... and
-> will never have more.
-> 
-> 									Pavel
-> 
+Thanks for the patch! Applied.
+Sebastian
 
