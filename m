@@ -2,89 +2,128 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500EAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E46C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2E92084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554827732;
-	bh=HRBPs67NX51hS9+xhNpq+siKPLn/zPsSzmUzlF9wEg8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x9rLN+13VHJ25ABBxCvqiLbDUPZiQIRRLcqGRw8wEFbysDZ15Feo7XpgzZGiGnFXI
-	 V4dCzflZLWMgbbj9jqBWOugDt+QhxFzsspXbU0Zur535AIC96zONSKe8ZZVzRsjcSZ
-	 WzJ92VqGMyarjoxnA1iRk/QUKqCF++9CsQNQJTpE=
+	by mail.kernel.org (Postfix) with ESMTP id DCE302084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Td2OyzsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfDIQfb (ORCPT
+        id S1726638AbfDIQfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:35:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34318 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfDIQfa (ORCPT
+        Tue, 9 Apr 2019 12:35:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53652 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfDIQfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:35:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v10so14128177oib.1;
-        Tue, 09 Apr 2019 09:35:30 -0700 (PDT)
+        Tue, 9 Apr 2019 12:35:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so4348487wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kVY6gm93IxOicC2fEC0J47/R327+OQXdPKJ+Wc5c6E8=;
+        b=Td2OyzsETjXiNxxyrCwZCh3GbsO7MDlHuRiQ/LCapEbezj4Hggno5+xpcDaZgiNDU7
+         7ZHOZ7L+MOlC53rlvf7uQTEyC+QcKwTd5nOa9f85wD5IHJeIQcCu31tcM1m9Wf+0D59p
+         4M/UIZo39IezGeCUHRWuy6fi3FLj/3toP4epYwKypwg6zoJHcGhuUkJ9LxNvUJUK7ASg
+         QN5SCQksYWRlv2/2Rl6ciZs1ix1L/tDleCBGaba4mCGgKjnx9y6RMzftBak1rdnkl4Ww
+         d0Kkbu2YoiFrGf5Bg6EZKlihq4BXkwLFZIoK5+gOsl2HO04KXXvvCm/DkfYlhdDkJWSv
+         anJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZdEm+nCT8GqpIePrQVMM/gBx9GNJtS18lIPrfCPPOg=;
-        b=tO6F5pKY/PxqJR2ijua/sxRNF5weswWDhzYKFG4sVhxiPujDcicwa1sGES3Mbmlpjg
-         ZdCQxzWYY4x8ixeLC1aNqQQjIxScs+4m2uCFqhcFH7xXR8Y56FdMyBKG0em3jeEeXGg+
-         S3VbdJ1P43KqR6IYRL7mpEQDLkKSrqZyNDJaw8M1OfxmoBcbLc5t2nHkJZWgiOkZ43Fl
-         qRnPgwhWHyXEbGCVMUF0RFiIJBndrvlkZNpIzA0gTCSEN1VVVSSmvsz3mKHaj2Yq6LpR
-         c+/CohOyEsAYAhG4nhE8yvUXjpahz1bWIENIsjFsPG7nArDI/LSgZnEexMcL9eyHNEPh
-         hbag==
-X-Gm-Message-State: APjAAAV5aN2YLJQV3SgGyUahJiuRXv7Z9EOFkjxb8WGHxsfoZvtgjcQa
-        ewk5ZW38R9DTo6gndRuDfk7BXEGzbJ7bDpGVJ0PcLg==
-X-Google-Smtp-Source: APXvYqypp6hkyTgy573ENPphDlYvwABo/k7hJJjDXXMBnHEqn1tks7soNY8myyidxPs0sm1vGL/sKKRLfQT566R1Hp8=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr20408814oib.95.1554827729558;
- Tue, 09 Apr 2019 09:35:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190329001135.15847-1-changbin.du@gmail.com> <CAJZ5v0gKX9E+U_9eKfTr7pWGH=jxMLz_Jr850-6BcbG3xBz5qg@mail.gmail.com>
- <CAJZ5v0jbCi3Jgn5YXPCP+zgs-O7z-9_3p3XZGvm40_6RDsJqkQ@mail.gmail.com>
- <20190403133613.13f3fd75@lwn.net> <CAHp75VdXffhc+2YcFNOr2XwauTt08Bw75ao2ia7cNvAqhJnUQQ@mail.gmail.com>
-In-Reply-To: <CAHp75VdXffhc+2YcFNOr2XwauTt08Bw75ao2ia7cNvAqhJnUQQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Apr 2019 18:35:18 +0200
-Message-ID: <CAJZ5v0hba3CPdTBNv0RC+rLY2EGBPHU0tbAcAYQNbc5XZZHx_A@mail.gmail.com>
-Subject: Re: [PATCH v2 00/24] Include linux ACPI docs into Sphinx TOC tree
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kVY6gm93IxOicC2fEC0J47/R327+OQXdPKJ+Wc5c6E8=;
+        b=DCas6j1p9PGjjlNHnYlvO/BumaMPV9g77aMOFpDEsB4g3EuCSw63XRw9Vphy3uaNol
+         ZK/LimRKxjA0hEYFcGZbw4gmxILQjwfk8tWmUYTjODxXbsjRwvOCG8TY+A5ryXrhLu96
+         LARZT6DxjHPKRiRyEnsGdl+o4465IK+q0CRA2l2DkjeY9zQeFnElmmKRqY+/CEW+qRYX
+         TgopqHDJAm5SC+oUMQp3gPVl56Bfi+sQyQGWWuKp4OnkYxYhuET0HLlbYw2CXso6JeV3
+         PR7Sdl8z3IUplBt0n/suEeB54tdr4ViX8OW0NlGSqa+t8ARPJJJ9VjZ8HesrOx/YCRBQ
+         7bZw==
+X-Gm-Message-State: APjAAAVnpyVSPwBNAG0rKTSSzxeWkzrtnIqaoTYe1xICHRor4OMMB+0s
+        T2ubTpNnP14fACyRQTZGTrgHfA==
+X-Google-Smtp-Source: APXvYqz2TDdi7UCDhvoeR1eOs1eAO1vnYR+6NdJrUCh3mNN3DAxteX/OYqTz3dLe2c+WXCh8QLRMVA==
+X-Received: by 2002:a1c:a7c5:: with SMTP id q188mr15353008wme.126.1554827737361;
+        Tue, 09 Apr 2019 09:35:37 -0700 (PDT)
+Received: from [192.168.0.105] ([88.147.54.190])
+        by smtp.gmail.com with ESMTPSA id j11sm44523040wrw.85.2019.04.09.09.35.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 09:35:36 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: Thinkpad X60: regression with 5.1-rc1 and 5.1-rc4
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190409163304.GA23829@amd>
+Date:   Tue, 9 Apr 2019 18:35:35 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, rjw@rjwysocki.net,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F6306562-0022-4043-BBF8-13FE4872CA31@linaro.org>
+References: <20190408173914.GA13260@amd>
+ <678ab058-986c-9727-58d7-d3f5283e2225@kernel.dk> <20190409163304.GA23829@amd>
+To:     Pavel Machek <pavel@ucw.cz>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 10:40 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Apr 3, 2019 at 10:38 PM Jonathan Corbet <corbet@lwn.net> wrote:
-> > On Tue, 2 Apr 2019 10:25:23 +0200
->
->
-> > Admin guide
-> >         cppc_sysfs
->
-> >         initrd_table_override
->
-> > other:
-> >         dsdt-override: find another home for those five lines
->
-> This is similar to initrd_table_override for some particular case, and
-> sounds like Admin guide, indeed.
 
-Right, I would put this one into admin-guide.
+
+> Il giorno 9 apr 2019, alle ore 18:33, Pavel Machek <pavel@ucw.cz> ha =
+scritto:
+>=20
+> On Mon 2019-04-08 11:41:18, Jens Axboe wrote:
+>> On 4/8/19 11:39 AM, Pavel Machek wrote:
+>>> Hi!
+>>>=20
+>>> For some reason, Thinkpad X60 now crashes during boot. I see some
+>>> weird backtraces, and it may be bfq related... or maybe ACPI idle.
+>>>=20
+>>> Does x86-32 work for you?
+>>>=20
+>>> Weird thing is, 5.1.0-rc3-next-20190408 boots here (but later has
+>>> problems during resume, making it unusable, too). They may not have
+>>> 100% same configs.
+>=20
+> I now noticed it said:
+>=20
+> EIP is in bfq_bfqq_expire
+>=20
+>> Can you try and revert:
+>>=20
+>> 9dee8b3b057e1
+>>=20
+>> and see if that helps?
+>=20
+> Yes, I tried and yes, it helps. What are the next steps?=20
+>=20
+
+Try my fix:
+
+=
+https://lore.kernel.org/linux-block/20190409191420.3f56d493@fire.localdoma=
+in/T/#m30a14045e710b870f00f7c51cdaa7c403977b767
+
+and cross your fingers :)
+
+Thanks,
+Paolo
+
+> 									=
+Pavel
+>=20
+> --=20
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) =
+http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
