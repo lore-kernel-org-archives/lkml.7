@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD811C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95B5C282DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B493520880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48F220880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfDILZZ (ORCPT
+        id S1727126AbfDILZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:25:25 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5538 "EHLO mga02.intel.com"
+        Tue, 9 Apr 2019 07:25:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34173 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfDILZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:25:20 -0400
+        id S1727069AbfDILZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 07:25:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 04:25:19 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 04:25:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="141230473"
+   d="scan'208";a="159551204"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 09 Apr 2019 04:25:16 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2019 04:25:16 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D50E82C2; Tue,  9 Apr 2019 14:25:15 +0300 (EEST)
+        id BE7D2155; Tue,  9 Apr 2019 14:25:15 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Darren Hart <dvhart@infradead.org>,
         platform-driver-x86@vger.kernel.org,
@@ -38,12 +38,10 @@ To:     Darren Hart <dvhart@infradead.org>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         junxiao.chang@intel.com, linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/4] platform/x86: intel_pmc_ipc: Don't map non-used optional resources
-Date:   Tue,  9 Apr 2019 14:25:14 +0300
-Message-Id: <20190409112515.84725-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
+Date:   Tue,  9 Apr 2019 14:25:12 +0300
+Message-Id: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
-References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,136 +49,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intel_pmc_ipc driver has a placeholder for all possible resources
-that may have been provided by ACPI. Since there are few optional ones,
-the driver still uses them and binds to wrong ranges in resource tree:
+Use BIT() and BIT_MASK() macros for definitions.
 
-  # grep intel_punit_ipc /proc/iomem
-  00000000-00000000 : intel_punit_ipc
-    00000000-00000000 : intel_punit_ipc
-      00000000-00000000 : intel_punit_ipc
-        00000000-00000000 : intel_punit_ipc
-
-This leads to issues with resource management during inserting and
-removing modules, such as intel_pmc_ipc itself, which can't be inserted
-anymore after first removal.
-
-Count the actual resources provided and supply only them to the child device.
-
-This is a real fix of the commit 8cc7fb4a6523
-
-  ("intel_pmc_ipc: update acpi resource structure for Punit")
-
-that also fixes a symptoms described in the commit 6cc8cbbc8868
-
-  ("platform/x86: intel_punit_ipc: Fix resource ioremap warning")
-
-that is going to be reverted afterwards.
-
-Reported-by: Junxiao Chang <junxiao.chang@intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Qipeng Zha <qipeng.zha@intel.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 9007aa717586..55037ff258f8 100644
+index d37cbd1cf58c..eb0b342996ca 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -131,6 +131,7 @@ static struct intel_pmc_ipc_dev {
+@@ -41,13 +41,13 @@
+  * the IPC1 registers, updates the IPC_STS response register with the status.
+  */
+ #define IPC_CMD			0x0
+-#define		IPC_CMD_MSI		0x100
++#define		IPC_CMD_MSI		BIT(8)
+ #define		IPC_CMD_SIZE		16
+ #define		IPC_CMD_SUBCMD		12
+ #define IPC_STATUS		0x04
+-#define		IPC_STATUS_IRQ		0x4
+-#define		IPC_STATUS_ERR		0x2
+-#define		IPC_STATUS_BUSY		0x1
++#define		IPC_STATUS_IRQ		BIT(2)
++#define		IPC_STATUS_ERR		BIT(1)
++#define		IPC_STATUS_BUSY		BIT(0)
+ #define IPC_SPTR		0x08
+ #define IPC_DPTR		0x0C
+ #define IPC_WRITE_BUFFER	0x80
+@@ -107,7 +107,7 @@
+ /* PMC register bit definitions */
  
- 	/* punit */
- 	struct platform_device *punit_dev;
-+	unsigned int punit_res_count;
- 
- 	/* Telemetry */
- 	resource_size_t telem_pmc_ssram_base;
-@@ -682,7 +683,7 @@ static int ipc_create_punit_device(void)
- 		.name = PUNIT_DEVICE_NAME,
- 		.id = -1,
- 		.res = punit_res_array,
--		.num_res = ARRAY_SIZE(punit_res_array),
-+		.num_res = ipcdev.punit_res_count,
- 		};
- 
- 	pdev = platform_device_register_full(&pdevinfo);
-@@ -789,7 +790,7 @@ static int ipc_create_pmc_devices(void)
- 
- static int ipc_plat_get_res(struct platform_device *pdev)
- {
--	struct resource *res, *punit_res;
-+	struct resource *res, *punit_res = punit_res_array;
- 	void __iomem *addr;
- 	int size;
- 
-@@ -804,7 +805,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	ipcdev.acpi_io_size = size;
- 	dev_info(&pdev->dev, "io res: %pR\n", res);
- 
--	punit_res = punit_res_array;
-+	ipcdev.punit_res_count = 0;
-+
- 	/* This is index 0 to cover BIOS data register */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_BIOS_DATA_INDEX);
-@@ -812,7 +814,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
- 		return -ENXIO;
- 	}
--	*punit_res = *res;
-+	punit_res[ipcdev.punit_res_count++] = *res;
- 	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
- 
- 	/* This is index 1 to cover BIOS interface register */
-@@ -822,42 +824,38 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
- 		return -ENXIO;
- 	}
--	*++punit_res = *res;
-+	punit_res[ipcdev.punit_res_count++] = *res;
- 	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
- 
- 	/* This is index 2 to cover ISP data register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_ISP_DATA_INDEX);
--	++punit_res;
- 	if (res) {
--		*punit_res = *res;
-+		punit_res[ipcdev.punit_res_count++] = *res;
- 		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
- 	}
- 
- 	/* This is index 3 to cover ISP interface register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_ISP_IFACE_INDEX);
--	++punit_res;
- 	if (res) {
--		*punit_res = *res;
-+		punit_res[ipcdev.punit_res_count++] = *res;
- 		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
- 	}
- 
- 	/* This is index 4 to cover GTD data register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_GTD_DATA_INDEX);
--	++punit_res;
- 	if (res) {
--		*punit_res = *res;
-+		punit_res[ipcdev.punit_res_count++] = *res;
- 		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
- 	}
- 
- 	/* This is index 5 to cover GTD interface register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_GTD_IFACE_INDEX);
--	++punit_res;
- 	if (res) {
--		*punit_res = *res;
-+		punit_res[ipcdev.punit_res_count++] = *res;
- 		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
- 	}
+ /* PMC_CFG_REG bit masks */
+-#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
++#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
+ #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
+ #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
  
 -- 
 2.20.1
