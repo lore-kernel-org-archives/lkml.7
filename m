@@ -2,190 +2,162 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E74C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C06BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A37220833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7DE20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qow7hBpJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDIJZz (ORCPT
+        id S1726795AbfDIJ15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:25:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49839 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfDIJZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:25:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB4FF81E0E;
-        Tue,  9 Apr 2019 09:25:53 +0000 (UTC)
-Received: from [10.36.117.49] (ovpn-117-49.ams2.redhat.com [10.36.117.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 69B7C5D9D3;
-        Tue,  9 Apr 2019 09:25:50 +0000 (UTC)
-Subject: Re: [PATCH RFC 3/3] mm/memory_hotplug: Remove memory block devices
- before arch_remove_memory()
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>, mike.travis@hpe.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>, linux-mm@kvack.org,
-        dan.j.williams@intel.com
-References: <20190408101226.20976-1-david@redhat.com>
- <20190408101226.20976-4-david@redhat.com>
- <20190409091844.yvjmglawf2fmiy3o@d104.suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <c3fb1f07-6e59-8e0b-6130-3830515b6df0@redhat.com>
-Date:   Tue, 9 Apr 2019 11:25:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 9 Apr 2019 05:27:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46449 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfDIJ14 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:27:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so9340011pfj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yQ6cGU9e1HcpfNnOWrggaDgBCo6QSjXldC+bP+sxWas=;
+        b=Qow7hBpJKXoR9VKRYOUbsOmFzT1Re0sZHz0gN7+SiHcFeeIWfby5kbsmfh5AHO/sH7
+         8KI/cW1C2egEGJ8IZ2bZPbRib2I59hARuFHbL+a3yq9O7l+R8jK7LJzkuv+7wt2Bx8kn
+         x2zqvp0YCYWwDFzdpsMWwd5TilP2tZ29zFekqRw40dzy0ylhD7c+vt7uPNWRPih/DOXD
+         up58Y47qnrWrt05KAANNXEpDKjw6HHwequyoJKYOEW+cgDeGMR4rVMbhu6/EiufBdo5R
+         Th6ZqIv31MIt1NQ31JnULHrmWqHhVbv3iYovcl07r6ndsEzWXVRzeSDHoWPz5C78esot
+         94EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yQ6cGU9e1HcpfNnOWrggaDgBCo6QSjXldC+bP+sxWas=;
+        b=O8E0qoDhQbGpufiTJk0LMQVDymH69yo0IbkalHwOwfSSjPHtjt7Gxvb3ZQKHy/kFH4
+         NX8tbin6Q4MrdwYX4TNEm/DWVWwIVMrhxQcJFp6AGmOBXuQpNgIA5omAouHxDK96sXt2
+         3w+p1IHfXVJkVY9EyDfbiFgKXzdnwL0mGWbEK6ye0+XVeOB7C9pTFYwB8AOG1tU3LhMx
+         NcSQ5raAzJaokiUPkFHrwkGtmXm+0Zb1SKU5woiNum7zO6UeilV/e/yNB77itvKC5iIg
+         k8AbKoDgjM4u5Ljfv9uRYylEMehvsAdHSALQBvoD9SmwvSg055aM4O0X37l2CpufOPCg
+         J/ag==
+X-Gm-Message-State: APjAAAXoKyEiAniQcLRm7JCChYx+y/aaEZUYvSR/7214rMfsSKkO7iYZ
+        Dg3GOoHnSG4iS3xJbj1Q8sv3SQ==
+X-Google-Smtp-Source: APXvYqwc59ErLm3IIJBSj8tQ7h3CyOPh4s3LoAQDGB/G2f8eTz+bYSkq8XEUd0DfddCX34hv/OJFbA==
+X-Received: by 2002:a62:388d:: with SMTP id f135mr35358281pfa.103.1554802075765;
+        Tue, 09 Apr 2019 02:27:55 -0700 (PDT)
+Received: from localhost ([122.172.162.162])
+        by smtp.gmail.com with ESMTPSA id v7sm44193904pgh.53.2019.04.09.02.27.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 02:27:55 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 14:57:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kyle Lin <linkyle0915@gmail.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq: stats: Use lock by stat to replace global
+ spin lock
+Message-ID: <20190409092752.kvaiq2gqjqjmy3pr@vireshk-i7>
+References: <20190409084304.35855-1-linkyle0915@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190409091844.yvjmglawf2fmiy3o@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 09 Apr 2019 09:25:54 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409084304.35855-1-linkyle0915@gmail.com>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.19 11:18, Oscar Salvador wrote:
-> On Mon, Apr 08, 2019 at 12:12:26PM +0200, David Hildenbrand wrote:
->> Let's factor out removing of memory block devices, which is only
->> necessary for memory added via add_memory() and friends that created
->> memory block devices. Remove the devices before calling
->> arch_remove_memory().
->>
->> TODO: We should try to get rid of the errors that could be reported by
->> unregister_memory_block_under_nodes(). Ignoring failures is not that
->> nice.
+On 09-04-19, 16:43, Kyle Lin wrote:
+> Stats is updated by each policy, using the lock by stat can
+> reduce the contention.
 > 
-> Hi David,
+> Signed-off-by: Kyle Lin <linkyle0915@gmail.com>
+> ---
+> Changes in v2:
+>   - Drop the comment of the lock.
 > 
-> I am sorry but I will not have to look into this until next week as I am
-> up to my ears with work plus I am in the middle of a move.
-
-No worries, I have plenty of other stuff to do as well and this is only
-an RFC that will require other refactorings and maybe discussions first
-- one of these, I will send out shortly so we can discuss.
-
-Happy moving :)
-
+>  drivers/cpufreq/cpufreq_stats.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> I remember I was once trying to simplify unregister_mem_sect_under_nodes (your
-> new unregister_memory_block_under_nodes), and I checked whether we could get
-> rid of the NODEMASK_ALLOC there, something like:
-
-Yeah, something like that makes perfect sense. Thanks!
-
-> 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 8598fcbd2a17..f4294a2928dd 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -805,16 +805,10 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
->  int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
->                                     unsigned long phys_index)
+> diff --git a/drivers/cpufreq/cpufreq_stats.c b/drivers/cpufreq/cpufreq_stats.c
+> index e2db5581489a..08b192eb22c6 100644
+> --- a/drivers/cpufreq/cpufreq_stats.c
+> +++ b/drivers/cpufreq/cpufreq_stats.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  
+> -static DEFINE_SPINLOCK(cpufreq_stats_lock);
+>  
+>  struct cpufreq_stats {
+>  	unsigned int total_trans;
+> @@ -23,6 +22,7 @@ struct cpufreq_stats {
+>  	unsigned int state_num;
+>  	unsigned int last_index;
+>  	u64 *time_in_state;
+> +	spinlock_t lock;
+>  	unsigned int *freq_table;
+>  	unsigned int *trans_table;
+>  };
+> @@ -39,12 +39,12 @@ static void cpufreq_stats_clear_table(struct cpufreq_stats *stats)
 >  {
-> -       NODEMASK_ALLOC(nodemask_t, unlinked_nodes, GFP_KERNEL);
-> +       nodemask_t unlinked_nodes;
->         unsigned long pfn, sect_start_pfn, sect_end_pfn;
+>  	unsigned int count = stats->max_state;
 >  
-> -       if (!mem_blk) {
-> -               NODEMASK_FREE(unlinked_nodes);
-> -               return -EFAULT;
-> -       }
-> -       if (!unlinked_nodes)
-> -               return -ENOMEM;
-> -       nodes_clear(*unlinked_nodes);
-> +       nodes_clear(unlinked_nodes);
->  
->         sect_start_pfn = section_nr_to_pfn(phys_index);
->         sect_end_pfn = sect_start_pfn + PAGES_PER_SECTION - 1;
-> @@ -826,14 +820,13 @@ int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
->                         continue;
->                 if (!node_online(nid))
->                         continue;
-> -               if (node_test_and_set(nid, *unlinked_nodes))
-> +               if (node_test_and_set(nid, unlinked_nodes))
->                         continue;
->                 sysfs_remove_link(&node_devices[nid]->dev.kobj,
->                          kobject_name(&mem_blk->dev.kobj));
->                 sysfs_remove_link(&mem_blk->dev.kobj,
->                          kobject_name(&node_devices[nid]->dev.kobj));
->         }
-> -       NODEMASK_FREE(unlinked_nodes);
->         return 0;
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	memset(stats->time_in_state, 0, count * sizeof(u64));
+>  	memset(stats->trans_table, 0, count * count * sizeof(int));
+>  	stats->last_time = get_jiffies_64();
+>  	stats->total_trans = 0;
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
 >  }
-> 
-> 
-> nodemask_t is 128bytes when CONFIG_NODES_SHIFT is 10 , which is the maximum value.
-> We just need to check whether we can overflow the stack or not.
-> 
-> AFAICS, it is not really a shore stack but it might not be that deep either.
+>  
+>  static ssize_t show_total_trans(struct cpufreq_policy *policy, char *buf)
+> @@ -62,9 +62,9 @@ static ssize_t show_time_in_state(struct cpufreq_policy *policy, char *buf)
+>  	if (policy->fast_switch_enabled)
+>  		return 0;
+>  
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	cpufreq_stats_update(stats);
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
+>  
+>  	for (i = 0; i < stats->state_num; i++) {
+>  		len += sprintf(buf + len, "%u %llu\n", stats->freq_table[i],
+> @@ -211,6 +211,7 @@ void cpufreq_stats_create_table(struct cpufreq_policy *policy)
+>  	stats->state_num = i;
+>  	stats->last_time = get_jiffies_64();
+>  	stats->last_index = freq_table_get_index(stats, policy->cur);
+> +	spin_lock_init(&stats->lock);
+>  
+>  	policy->stats = stats;
+>  	ret = sysfs_create_group(&policy->kobj, &stats_attr_group);
+> @@ -242,11 +243,11 @@ void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
+>  	if (old_index == -1 || new_index == -1 || old_index == new_index)
+>  		return;
+>  
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	cpufreq_stats_update(stats);
+>  
+>  	stats->last_index = new_index;
+>  	stats->trans_table[old_index * stats->max_state + new_index]++;
+>  	stats->total_trans++;
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
+>  }
 
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-
-Thanks,
-
-David / dhildenb
+viresh
