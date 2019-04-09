@@ -4,62 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5314FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243BAC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14AD92147C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1A720883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="E/3soZ0f"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="SZQYcuuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfDIV0A (ORCPT
+        id S1727019AbfDIV0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 17:26:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44132 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfDIVZ5 (ORCPT
+        Tue, 9 Apr 2019 17:26:37 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40778 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfDIVZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 17:25:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d11so101057edp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 14:25:56 -0700 (PDT)
+        Tue, 9 Apr 2019 17:25:59 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h22so120831edw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 14:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NMdfYCF2Y0BJ3MV+fDSR37wOUAxiXZPH6PiL1kw5XrE=;
-        b=E/3soZ0fucmmT9O2o/PIpJ0FQzTwq0ZtXbcOdUX5awpfc9cAe/fsyEhoCmHzhQ2a6X
-         2w7VGffcchaQW2szQcVVVYfNGI3Y/QgUlXIvEED0vYQZaMTyKxkasn/gbN0Cv8nncP4W
-         EI1lSGSCcGcLfqMAGHpL6aSEpxqxWax1gHTpg=
+        bh=kEKRMgTdUMek0P/9cZkgQ7AhOi9UL44pxpzfZBdVTbQ=;
+        b=SZQYcuuGVGNexBIYNpHl92Z1XaLRJNK3QCmDGLBQHFeMw7/S4V78CkHL3Nrfq/eBeW
+         68IBeIT/+0ltr2PtwIwq10G8VBoTSjpH3GGA2rrcXPPqxIKk1rNKk5B/fQi0jMEUOq79
+         nO3WDv2Zne+MY8NqQ6IYD3Lmewll2BmehxZEM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NMdfYCF2Y0BJ3MV+fDSR37wOUAxiXZPH6PiL1kw5XrE=;
-        b=oqbs3AjTjhp64+ahUnU4ekk8i+DCz0tVWTEbBQhMgErTUN6X70FNEQ4nUUvsH/p5U8
-         AeSLnytEe43FB5d4AjngkSSiCHqI9oifyXKTNjJUVl/IPpN/SJGFuv3oQQpf9wm8upSn
-         PBAT+2Vcgdj8obA3Z/xua3nPt5MepJfEayylu1ASfbbL5QVczSqsRjREDNGHx6RdxEs1
-         eMtaNxt5tUIRrAncGEVLh2nLL9dtQk6L3WKhWIQ8/KLLMWQP9J7vHfnObY0QIYypDqA6
-         o7RnTam2nrwR6Cpiup3DmkGV1ue2zB2+2s9DExoDgVWGey5VfOTqTmywuO6lvGeI4zeo
-         plnA==
-X-Gm-Message-State: APjAAAUGALbizMMs3ZEdtDSWL7ppaQBUOeUhhD5thW/pHR0OMvDU/PGv
-        gFk5op25/S70cVKHrbqZAWHOjQ==
-X-Google-Smtp-Source: APXvYqx7LGmueNwCPyrl2a3ENDQrUyDmmMMlZEwG3k/Yi4I7mVE6rML8P3UdfAdymQmZYJ6YTMqjEw==
-X-Received: by 2002:a05:6402:895:: with SMTP id e21mr15154920edy.139.1554845155822;
-        Tue, 09 Apr 2019 14:25:55 -0700 (PDT)
+        bh=kEKRMgTdUMek0P/9cZkgQ7AhOi9UL44pxpzfZBdVTbQ=;
+        b=ML7mwd0Mp43MiAjErklCy7fk/fO5QDvHof6bN85u4st0Mv7Bm3yLVzF17gZVAa+CUG
+         QjlwCjmWjXGoGoQ+Bbqon2+M/7PidI9ZrgQ9IytcXR1bim2q+i3+fyuIilKIleH7zEfJ
+         vo8D5nVt3hKDfpeYGlL6k7twsIs5wRL9ftvG9rwqja662d3k6N1/ux9CcKRQP1/fRVS4
+         KJa+8WtKTwctU54kdtfavnY1fxN8UUszP4qjscpBSHEzcLjm8pzP2NvE/5RjJKn3sqDh
+         sq5G6e/GAL8nCq3rz57EBgwTKUIpaQCF7BwP3/lfyBL0zw4Cg8nMZR13RmPBUPHQo1E1
+         pylw==
+X-Gm-Message-State: APjAAAVsyyRfEsq35KozFdwu9GLKYws9IYbgW9DZOmk+L79iLWcvZpz5
+        QtaUol9EJ49C9Jy4DXIxJsQ0UQ==
+X-Google-Smtp-Source: APXvYqzZ5D2KYrx93GaBAbC2zdBqr+ZenMBgK9mqbjeMrwbokKxtJEi7Bp1zfO8sOqBGxrRdvJab+w==
+X-Received: by 2002:a50:e844:: with SMTP id k4mr24220032edn.249.1554845157684;
+        Tue, 09 Apr 2019 14:25:57 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id i26sm3477986ejc.51.2019.04.09.14.25.54
+        by smtp.gmail.com with ESMTPSA id i26sm3477986ejc.51.2019.04.09.14.25.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 14:25:55 -0700 (PDT)
+        Tue, 09 Apr 2019 14:25:57 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH 05/10] dynamic_debug: drop use of bitfields in struct _ddebug
-Date:   Tue,  9 Apr 2019 23:25:12 +0200
-Message-Id: <20190409212517.7321-6-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH 07/10] dynamic_debug: add asm-generic implementation for DYNAMIC_DEBUG_RELATIVE_POINTERS
+Date:   Tue,  9 Apr 2019 23:25:14 +0200
+Message-Id: <20190409212517.7321-8-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
 References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
@@ -70,194 +75,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properly initializing a struct containing bitfields in assembly is
-hard. Instead, merge lineno and flags to a single unsigned int, which we
-mask manually. This should not cause any worse code than what gcc would
-need to generate for accessing the bitfields anyway.
+A 64 bit architecture can reduce the size of the kernel image by
+selecting CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS, but it must provide
+a proper DEFINE_DYNAMIC_DEBUG_METADATA macro for emitting the struct
+_ddebug in assembly. However, since that does not involve any
+instructions, this generic implementation should be usable by most if
+not all.
 
-Actually, on 64 bit, there is a four byte hole after these fields, so we
-could just give flags and lineno each their own u32. But I don't think
-that's worth the ifdeffery.
+It relies on
 
-Acked-by: Jason Baron <jbaron@akamai.com>
+(1) standard assembly directives that should work on
+all architectures
+(2) the "i" constraint for an constant, and
+(3) %cN emitting the constant operand N without punctuation
+
+and of course the layout of _ddebug being what one expects. I've
+succesfully built x86-64, arm64 and ppc64 defconfig +
+CONFIG_DYNAMIC_DEBUG + patches to hook up this header, and boot-tested
+the x86-64 one.
+
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/linux/dynamic_debug.h | 12 ++++------
- lib/dynamic_debug.c           | 44 +++++++++++++++++++++++------------
- 2 files changed, 34 insertions(+), 22 deletions(-)
+ include/asm-generic/dynamic_debug.h | 116 ++++++++++++++++++++++++++++
+ include/linux/jump_label.h          |   2 +
+ 2 files changed, 118 insertions(+)
+ create mode 100644 include/asm-generic/dynamic_debug.h
 
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index c2be029b9b53..e2fa2737a485 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -20,7 +20,6 @@ struct _ddebug {
- 	const char *function;
- 	const char *filename;
- 	const char *format;
--	unsigned int lineno:18;
- 	/*
- 	 * The flags field controls the behaviour at the callsite.
- 	 * The bits here are changed dynamically when the user
-@@ -37,7 +36,7 @@ struct _ddebug {
- #else
- #define _DPRINTK_FLAGS_DEFAULT 0
- #endif
--	unsigned int flags:8;
-+	unsigned int flags_lineno; /* flags in lower 8 bits, lineno in upper 24 */
+diff --git a/include/asm-generic/dynamic_debug.h b/include/asm-generic/dynamic_debug.h
+new file mode 100644
+index 000000000000..f1dd3019cd98
+--- /dev/null
++++ b/include/asm-generic/dynamic_debug.h
+@@ -0,0 +1,116 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_GENERIC_DYNAMIC_DEBUG_H
++#define _ASM_GENERIC_DYNAMIC_DEBUG_H
++
++#ifndef _DYNAMIC_DEBUG_H
++#error "don't include asm/dynamic_debug.h directly"
++#endif
++
++#include <linux/build_bug.h>
++#ifdef CONFIG_JUMP_LABEL
++#include <linux/jump_label.h>
++#endif
++
++/*
++ * We need to know the exact layout of struct _ddebug in order to
++ * initialize it in assembly. Check that all members are at expected
++ * offsets - if any of these fail, the arch cannot use this generic
++ * dynamic_debug.h. DYNAMIC_DEBUG_RELATIVE_POINTERS is pointless for
++ * !64BIT, so we expect the static_key to be at an 8-byte boundary
++ * since it contains stuff which is long-aligned.
++ */
++
++static_assert(BITS_PER_LONG == 64);
++static_assert(offsetof(struct _ddebug, modname_disp)  == 0);
++static_assert(offsetof(struct _ddebug, function_disp) == 4);
++static_assert(offsetof(struct _ddebug, filename_disp) == 8);
++static_assert(offsetof(struct _ddebug, format_disp)   == 12);
++static_assert(offsetof(struct _ddebug, flags_lineno)  == 16);
++
++#ifdef CONFIG_JUMP_LABEL
++static_assert(offsetof(struct _ddebug, key)        == 24);
++static_assert(offsetof(struct static_key, enabled) == 0);
++static_assert(offsetof(struct static_key, type)    == 8);
++
++/* <4 bytes padding>, .enabled, <4 bytes padding>, .type */
++# ifdef DEBUG
++# define _DPRINTK_ASM_KEY_INIT \
++	"\t.int 0\n" "\t.int 1\n" "\t.int 0\n" "\t.quad "__stringify(__JUMP_TYPE_TRUE)"\n"
++# else
++# define _DPRINTK_ASM_KEY_INIT \
++	"\t.int 0\n" "\t.int 0\n" "\t.int 0\n" "\t.quad "__stringify(__JUMP_TYPE_FALSE)"\n"
++# endif
++#else /* !CONFIG_JUMP_LABEL */
++#define _DPRINTK_ASM_KEY_INIT ""
++#endif
++
++/*
++ * There's a bit of magic involved here.
++ *
++ * First, unlike the bug table entries, we need to define an object in
++ * assembly which we can reference from C code (for use by the
++ * DYNAMIC_DEBUG_BRANCH macro), but we don't want 'name' to have
++ * external linkage (that would require use of globally unique
++ * identifiers, which we can't guarantee). Fortunately, the "extern"
++ * keyword just tells the compiler that _somebody_ provides that
++ * symbol - usually that somebody is the linker, but in this case it's
++ * the assembler, and since we do not do .globl name, the symbol gets
++ * internal linkage.
++ *
++ * So far so good. The next problem is that there's no scope in
++ * assembly, so the identifier 'name' has to be unique within each
++ * translation unit - otherwise all uses of that identifier end up
++ * referring to the same struct _ddebug instance. pr_debug and friends
++ * do this by use of indirection and __UNIQUE_ID(), and new users of
++ * DEFINE_DYNAMIC_DEBUG_METADATA() should do something similar. We
++ * need to catch cases where this is not done at build time.
++ *
++ * With assembly-level .ifndef we can ensure that we only define a
++ * given identifier once, preventing "symbol 'foo' already defined"
++ * errors. But we still need to detect and fail on multiple uses of
++ * the same identifer. The simplest, and wrong, solution to that is to
++ * add an .else .error branch to the .ifndef. The problem is that just
++ * because the DEFINE_DYNAMIC_DEBUG_METADATA() macro is only expanded
++ * once with a given identifier, the compiler may emit the assembly
++ * code multiple times, e.g. if the macro appears in an inline
++ * function. Now, in a normal case like
++ *
++ *   static inline get_next_id(void) { static int v; return ++v; }
++ *
++ * all inlined copies of get_next_id are _supposed_ to refer to the
++ * same object 'v'. So we do need to allow this chunk of assembly to
++ * appear multiple times with the same 'name', as long as they all
++ * came from the same DEFINE_DYNAMIC_DEBUG_METADATA() instance. To do
++ * that, we pass __COUNTER__ to the asm(), and set an assembler symbol
++ * name.ddebug.once to that value when we first define 'name'. When we
++ * meet a second attempt at defining 'name', we compare
++ * name.ddebug.once to %6 and error out if they are different.
++ */
++
++#define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)			\
++	extern struct _ddebug name;					\
++	asm volatile(".ifndef " __stringify(name) "\n"			\
++		     ".pushsection __verbose,\"aw\"\n"			\
++		     ".type "__stringify(name)", STT_OBJECT\n"		\
++		     ".size "__stringify(name)", %c5\n"			\
++		     "1:\n"						\
++		     __stringify(name) ":\n"				\
++		     "\t.int %c0 - 1b /* _ddebug::modname_disp */\n"	\
++		     "\t.int %c1 - 1b /* _ddebug::function_disp */\n"	\
++		     "\t.int %c2 - 1b /* _ddebug::filename_disp */\n"	\
++		     "\t.int %c3 - 1b /* _ddebug::format_disp */\n"	\
++		     "\t.int %c4      /* _ddebug::flags_lineno */\n"	\
++		     _DPRINTK_ASM_KEY_INIT				\
++		     "\t.org 1b+%c5\n"					\
++		     ".popsection\n"					\
++		     ".set "__stringify(name)".ddebug.once, %c6\n"	\
++		     ".elseif "__stringify(name)".ddebug.once - %c6\n"	\
++		     ".line "__stringify(__LINE__) " - 1\n"             \
++		     ".error \"'"__stringify(name)"' used as _ddebug identifier more than once\"\n" \
++		     ".endif\n"						\
++		     : : "i" (KBUILD_MODNAME), "i" (__func__),		\
++		       "i" (__FILE__), "i" (fmt),			\
++		       "i" (_DPRINTK_FLAGS_LINENO_INIT),		\
++		       "i" (sizeof(struct _ddebug)), "i" (__COUNTER__))
++
++#endif /* _ASM_GENERIC_DYNAMIC_DEBUG_H */
+diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+index 3e113a1fa0f1..2b027d2ef3d0 100644
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -190,6 +190,8 @@ struct module;
+ 
  #ifdef CONFIG_JUMP_LABEL
- 	union {
- 		struct static_key_true dd_key_true;
-@@ -46,7 +45,7 @@ struct _ddebug {
- #endif
- } __attribute__((aligned(8)));
  
--
-+#define _DPRINTK_FLAGS_LINENO_INIT (((unsigned)__LINE__ << 8) | _DPRINTK_FLAGS_DEFAULT)
- 
- #if defined(CONFIG_DYNAMIC_DEBUG)
- int ddebug_add_module(struct _ddebug *tab, unsigned int n,
-@@ -78,8 +77,7 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
- 		.function = __func__,				\
- 		.filename = __FILE__,				\
- 		.format = (fmt),				\
--		.lineno = __LINE__,				\
--		.flags = _DPRINTK_FLAGS_DEFAULT,		\
-+		.flags_lineno = _DPRINTK_FLAGS_LINENO_INIT,	\
- 		_DPRINTK_KEY_INIT				\
- 	}
- 
-@@ -104,10 +102,10 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
- 
- #ifdef DEBUG
- #define DYNAMIC_DEBUG_BRANCH(descriptor) \
--	likely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
-+	likely(descriptor.flags_lineno & _DPRINTK_FLAGS_PRINT)
- #else
- #define DYNAMIC_DEBUG_BRANCH(descriptor) \
--	unlikely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
-+	unlikely(descriptor.flags_lineno & _DPRINTK_FLAGS_PRINT)
- #endif
- 
- #endif
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 497b1c8ccc2a..482a35a68752 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -53,6 +53,18 @@ static inline const char *dd_format(const struct _ddebug *dd)
- {
- 	return dd->format;
- }
-+static inline unsigned dd_lineno(const struct _ddebug *dd)
-+{
-+	return dd->flags_lineno >> 8;
-+}
-+static inline unsigned dd_flags(const struct _ddebug *dd)
-+{
-+	return dd->flags_lineno & 0xff;
-+}
-+static inline void dd_set_flags(struct _ddebug *dd, unsigned newflags)
-+{
-+	dd->flags_lineno = (dd_lineno(dd) << 8) | newflags;
-+}
- 
- extern struct _ddebug __start___verbose[];
- extern struct _ddebug __stop___verbose[];
-@@ -111,7 +123,7 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
- 
- 	BUG_ON(maxlen < 6);
- 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
--		if (dp->flags & opt_array[i].flag)
-+		if (dd_flags(dp) & opt_array[i].flag)
- 			*p++ = opt_array[i].opt_char;
- 	if (p == buf)
- 		*p++ = '_';
-@@ -157,7 +169,7 @@ static int ddebug_change(const struct ddebug_query *query,
- {
- 	int i;
- 	struct ddebug_table *dt;
--	unsigned int newflags;
-+	unsigned int newflags, oldflags;
- 	unsigned int nfound = 0;
- 	char flagbuf[10];
- 
-@@ -194,27 +206,28 @@ static int ddebug_change(const struct ddebug_query *query,
- 
- 			/* match against the line number range */
- 			if (query->first_lineno &&
--			    dp->lineno < query->first_lineno)
-+			    dd_lineno(dp) < query->first_lineno)
- 				continue;
- 			if (query->last_lineno &&
--			    dp->lineno > query->last_lineno)
-+			    dd_lineno(dp) > query->last_lineno)
- 				continue;
- 
- 			nfound++;
- 
--			newflags = (dp->flags & mask) | flags;
--			if (newflags == dp->flags)
-+			oldflags = dd_flags(dp);
-+			newflags = (oldflags & mask) | flags;
-+			if (newflags == oldflags)
- 				continue;
- #ifdef CONFIG_JUMP_LABEL
--			if (dp->flags & _DPRINTK_FLAGS_PRINT) {
-+			if (oldflags & _DPRINTK_FLAGS_PRINT) {
- 				if (!(flags & _DPRINTK_FLAGS_PRINT))
- 					static_branch_disable(&dp->key.dd_key_true);
- 			} else if (flags & _DPRINTK_FLAGS_PRINT)
- 				static_branch_enable(&dp->key.dd_key_true);
- #endif
--			dp->flags = newflags;
-+			dd_set_flags(dp, newflags);
- 			vpr_info("changed %s:%d [%s]%s =%s\n",
--				 trim_prefix(dd_filename(dp)), dp->lineno,
-+				 trim_prefix(dd_filename(dp)), dd_lineno(dp),
- 				 dt->mod_name, dd_function(dp),
- 				 ddebug_describe_flags(dp, flagbuf,
- 						       sizeof(flagbuf)));
-@@ -537,10 +550,11 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
- {
- 	int pos_after_tid;
- 	int pos = 0;
-+	unsigned flags = dd_flags(desc);
- 
- 	*buf = '\0';
- 
--	if (desc->flags & _DPRINTK_FLAGS_INCL_TID) {
-+	if (flags & _DPRINTK_FLAGS_INCL_TID) {
- 		if (in_interrupt())
- 			pos += snprintf(buf + pos, remaining(pos), "<intr> ");
- 		else
-@@ -548,15 +562,15 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
- 					task_pid_vnr(current));
- 	}
- 	pos_after_tid = pos;
--	if (desc->flags & _DPRINTK_FLAGS_INCL_MODNAME)
-+	if (flags & _DPRINTK_FLAGS_INCL_MODNAME)
- 		pos += snprintf(buf + pos, remaining(pos), "%s:",
- 				dd_modname(desc));
--	if (desc->flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
-+	if (flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
- 		pos += snprintf(buf + pos, remaining(pos), "%s:",
- 				dd_function(desc));
--	if (desc->flags & _DPRINTK_FLAGS_INCL_LINENO)
-+	if (flags & _DPRINTK_FLAGS_INCL_LINENO)
- 		pos += snprintf(buf + pos, remaining(pos), "%d:",
--				desc->lineno);
-+				dd_lineno(desc));
- 	if (pos - pos_after_tid)
- 		pos += snprintf(buf + pos, remaining(pos), " ");
- 	if (pos >= PREFIX_SIZE)
-@@ -807,7 +821,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	}
- 
- 	seq_printf(m, "%s:%u [%s]%s =%s \"",
--		   trim_prefix(dd_filename(dp)), dp->lineno,
-+		   trim_prefix(dd_filename(dp)), dd_lineno(dp),
- 		   iter->table->mod_name, dd_function(dp),
- 		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
- 	seq_escape(m, dd_format(dp), "\t\r\n\"");
++#define __JUMP_TYPE_FALSE	0
++#define __JUMP_TYPE_TRUE	1
+ #define JUMP_TYPE_FALSE		0UL
+ #define JUMP_TYPE_TRUE		1UL
+ #define JUMP_TYPE_LINKED	2UL
 -- 
 2.20.1
 
