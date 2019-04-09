@@ -4,73 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE8C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0471AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFC82084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FCB20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sMri3+l3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lT63tMDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfDIOhV (ORCPT
+        id S1726517AbfDIOjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:37:21 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41529 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfDIOhU (ORCPT
+        Tue, 9 Apr 2019 10:39:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39653 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfDIOjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:37:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so14675586lja.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:37:18 -0700 (PDT)
+        Tue, 9 Apr 2019 10:39:13 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l7so14692020ljg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:39:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H6HmPYaPwOpwJuCKqBKpSpAi4qM33mYGqixAwWsXtEU=;
-        b=sMri3+l3lSootdyI+pEqPFlNJ0B6q/UO2VCW2e3LQlbpFcbhYlHHOrMuSAM38/5AdN
-         tcFQY1VS+YSWvFxK+BCqZTd0g1pmaGeScQRAUZ8mN7TbjYc5IoTiX36UBggZ3QYjyxY0
-         UwYWHtsXgACO+Zy5HKhNf/cqadlbMG4ZO3sk+0s223uQBP2ZIvmZRwPeAI00MtI0eXnq
-         ETBZiYFYW9SK6zPbnFlqKPNzaGYjDExes/EgE4f7co3DkpL3VaCmdm7z2Ve0WEvNPYbn
-         yIklBrvFUf+1/RLUURbMFb6ftu0Lcgf+DJGOmwDGDodRjT23YMJOAywYNi72xE6gLVwE
-         xb9g==
+        bh=qlDhnxDACuBK8FDzC88Tu2WKQxYpwT1zCWYXx/J5Wfk=;
+        b=lT63tMDJS+pe85FRKa0e0QAA3pE42J9FpALxFEH3AUW9XW4mqmSM62WGJ+iOuSuZPQ
+         W09YG1z16U2c91V6LIMU8gjL2Xj/RJZW9h/CqMuljk8tuuqpFlr+eEDHllIWvK1l44Ku
+         GsKDhpWI+UfDktg99vMzgOvGOPZEH7cMwzdjPQamPMi9NA5EQr9+xdulal2wBUcE3QPn
+         HAHGGfnP3cBxGIoxDTQx0t0rryx7igLsEbgaLPqdV17HMMgweUfqoSZiBHRFqyXZJNi/
+         xkxVPrdQmjpV29vaL83vcWa1OBFZ0lxl43J+S1L3tpKKOy4OPbk68LNJn2juZ82Zq5AP
+         v8nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=H6HmPYaPwOpwJuCKqBKpSpAi4qM33mYGqixAwWsXtEU=;
-        b=tD0/XAk0iFXom9K85i0ADaKt9L40cBOtv5UtichpdF4qRNuiyab3QocToFVA1a7Pl5
-         Fv7MhGPbfeBT4mJS54zlW/ROCvnxZbQ89NFlMxxuPUz4CJViwa7ozcTUXZj++W2QLoGR
-         nYP+4fZiLXj7jw2z3JDDDdFCl/wUDrOZJsqJdQ+vuwkHYpCPLZTfZr1f3gpdagaJpCFX
-         2I8A+Pc3VFh/ZpcMtxMGWq3Ed28Kjy+HmElt5OMawhbWlyXIUOOIntPt7kSoULlsMD1/
-         foZ7+sqHT2y2zVa3/PyBoQFwEfZkKzi+gwekNOQDiyhP5DVNwE+1GB1ro0INZRVQiZbR
-         fUyg==
-X-Gm-Message-State: APjAAAUSS/i+WkeowNSplgVTnNcPqb6r/0uCXR4c0UkUu6SVhDzdh3h/
-        +wN/LpX1jv10Hfdy5zvP3KSd/g==
-X-Google-Smtp-Source: APXvYqzwW7zlyCMhIUIkhsBXrPbFbSt/Zw2O3ElzbECHfa7nxXKJk4qkhEiuOj7eNFti0vmDmjJVEQ==
-X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr19502815lja.164.1554820637857;
-        Tue, 09 Apr 2019 07:37:17 -0700 (PDT)
+        bh=qlDhnxDACuBK8FDzC88Tu2WKQxYpwT1zCWYXx/J5Wfk=;
+        b=X5WSNQ6UMEMpoJrR1Pssuh7v4WAPYtjpYoVsmb4Wi+fJTu8kT3cnBVgdczdwPyLU4w
+         OrB6iqX+AoxjlEaeSdwx8/kzSw2nOFVRUIdDkSROYuUhRguUbt0+suCZyxGlwmgq6I/J
+         BOdwKhkUym6Xy2SP01VuFrx3j1BhGfKl5G47k7drgSjBZS+Pv+TUTNFp2NcWiD9sxfNu
+         3eZlKyOR+YKONgY0zMJX2gJKmOrG2OKspd6ET8szDZuUauXnKJdJuJOwZvBvZl6AdEkU
+         iQsStlP//fgG0+dj+cW3h4zjEXlnTK6p/qZuuz3OtbAhDwHLFMoYhCuQIOWeWIlxtusq
+         Zotg==
+X-Gm-Message-State: APjAAAV3JdPjAEoJXgtwchDJG6YjlES2O3YjCpUjOk/ytGTs0TioJEXs
+        c2MVgeVOG14b74tw1uQKAvaUwg==
+X-Google-Smtp-Source: APXvYqxt1Vq+L4R+uwOAELhm3DNFzsrCKx+m0hhrrSTFPJ780mKkAkpuP7k8FhV4+C+EwK8T/61wkQ==
+X-Received: by 2002:a2e:81da:: with SMTP id s26mr20973098ljg.86.1554820751121;
+        Tue, 09 Apr 2019 07:39:11 -0700 (PDT)
 Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id 13sm6596433lfy.2.2019.04.09.07.37.15
+        by smtp.googlemail.com with ESMTPSA id u18sm6734336ljd.77.2019.04.09.07.39.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 07:37:17 -0700 (PDT)
-Subject: Re: [PATCH 2/4] OPP: Add support for parsing the interconnect
- bandwidth
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+        Tue, 09 Apr 2019 07:39:10 -0700 (PDT)
+Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
+To:     Rob Herring <robh@kernel.org>
 Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        jcrouse@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        evgreen@chromium.org, sibis@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+        mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org,
+        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
+        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, evgreen@chromium.org,
+        sibis@codeaurora.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
 References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <20190313090010.20534-3-georgi.djakov@linaro.org>
- <20190314063047.urmzez52bdyrkdsu@vireshk-i7>
+ <20190313090010.20534-2-georgi.djakov@linaro.org>
+ <20190328151255.GA5262@bogus>
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
@@ -116,10 +114,10 @@ Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
  7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
  E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
  KEmKjLDvB0pePJkdTw==
-Message-ID: <0cb2d777-4d05-2b06-e458-755d171b3436@linaro.org>
-Date:   Tue, 9 Apr 2019 17:37:12 +0300
+Message-ID: <6d918bd9-489c-89fa-733e-90a5dabdaa0c@linaro.org>
+Date:   Tue, 9 Apr 2019 17:39:08 +0300
 MIME-Version: 1.0
-In-Reply-To: <20190314063047.urmzez52bdyrkdsu@vireshk-i7>
+In-Reply-To: <20190328151255.GA5262@bogus>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -128,110 +126,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+Hi Rob,
 
-On 3/14/19 08:30, Viresh Kumar wrote:
-> On 13-03-19, 11:00, Georgi Djakov wrote:
->> The OPP bindings now support bandwidth values, so add support to parse it
->> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
->> is part of the dev_pm_opp.
+On 3/28/19 17:12, Rob Herring wrote:
+> On Wed, Mar 13, 2019 at 11:00:07AM +0200, Georgi Djakov wrote:
+>> In addition to frequency and voltage, some devices may have bandwidth
+>> requirements for their interconnect throughput - for example a CPU
+>> or GPU may also need to increase or decrease their bandwidth to DDR
+>> memory based on the current operating performance point.
 >>
->> Also add and export the dev_pm_opp_set_path() and dev_pm_opp_put_path()
->> helpers, to set (and release) an interconnect path to a device. The
->> bandwidth of this path will be updated when the OPPs are switched.
+>> Extend the OPP tables with additional property to describe the bandwidth
+>> needs of a device. The average and peak bandwidth values depend on the
+>> hardware and its properties.
+> 
+> How would this work if you have 1 OPP (for the bus/interconnect/ddr) and 
+> 2 devices with variable bandwidth needs? Or 'device' here means the 
+> interconnect?
+
+This is a property of the consumer devices and not of the bus. It's fine
+for devices to have different bandwidth needs and to be connected to a
+shared bus. In this case the framework knows the topology and can
+determine which parts of the bus are shared and aggregate the traffic
+accordingly.
+
 >>
 >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 >> ---
->>  drivers/opp/core.c     | 67 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/opp/of.c       | 44 +++++++++++++++++++++++++++
->>  drivers/opp/opp.h      |  6 ++++
->>  include/linux/pm_opp.h | 14 +++++++++
->>  4 files changed, 131 insertions(+)
+>>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
 >>
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index e06a0ab05ad6..4b019cecaa07 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/device.h>
->>  #include <linux/export.h>
->> +#include <linux/interconnect.h>
->>  #include <linux/pm_domain.h>
->>  #include <linux/regulator/consumer.h>
+>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+>> index 76b6c79604a5..fa598264615f 100644
+>> --- a/Documentation/devicetree/bindings/opp/opp.txt
+>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+>> @@ -129,6 +129,9 @@ Optional properties:
+>>  - opp-microamp-<name>: Named opp-microamp property. Similar to
+>>    opp-microvolt-<name> property, but for microamp instead.
 >>  
->> @@ -1645,6 +1646,72 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
->>  }
->>  EXPORT_SYMBOL_GPL(dev_pm_opp_put_clkname);
->>  
->> +/**
->> + * dev_pm_opp_set_path() - Set interconnect path for a device
->> + * @dev: Device for which interconnect path is being set.
->> + * @name: Interconnect path name or NULL.
->> + *
->> + * This must be called before any OPPs are initialized for the device.
->> + */
->> +struct opp_table *dev_pm_opp_set_path(struct device *dev, const char *name)
+>> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
+>> +  the two integer values for average and peak bandwidth in megabytes per second.
 > 
-> Maybe the OPP core can do it itself in a similar way to how we do
-> clk_get() today ?
+> -MBps would be better IMO. Either way, units should be documented in 
+> property-units.txt.
 
-Do you mean to directly call of_icc_get() in _allocate_opp_table()?
-
-[..]
->> +static int opp_parse_icc_bw(struct dev_pm_opp *opp, struct device *dev,
->> +			    struct opp_table *opp_table)
->> +{
->> +	struct property *prop = NULL;
->> +	char name[NAME_MAX];
->> +	int count;
->> +	u32 avg = 0;
->> +	u32 peak = 0;
-> 
-> Why init to 0 ?
-
-Right, seems not necessary.
-
->> +
->> +	/* Search for "opp-bw-MBs" */
->> +	sprintf(name, "opp-bw-MBs");
->> +	prop = of_find_property(opp->np, name, NULL);
->> +
->> +	/* Missing property is not a problem */
->> +	if (!prop) {
->> +		dev_dbg(dev, "%s: Missing opp-bw-MBs\n", __func__);
->> +		return 0;
->> +	}
->> +
->> +	count = of_property_count_u32_elems(opp->np, name);
->> +	if (count != 2) {
->> +		dev_err(dev, "%s: Invalid number of elements in %s property\n",
->> +			__func__, name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	opp->bandwidth = kzalloc(sizeof(*opp->bandwidth), GFP_KERNEL);
-> 
-> You forgot to free it.
-
-Will fix.
-
-[..]>> +/**
->> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
->> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
->> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
->> + *
->> + * This structure stores the bandwidth values for a single interconnect path.
->> + */
->> +struct dev_pm_opp_icc_bw {
->> +	u32 avg;
->> +	u32 peak;
->> +};
-> 
-> There is only one user of this structure, maybe we can directly add
-> the elements in teh dev_pm_opp structure.
-
-Ok, will do it.
+Agree! Of course!
 
 Thanks,
 Georgi
