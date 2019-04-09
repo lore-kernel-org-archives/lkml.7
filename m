@@ -2,76 +2,101 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EAEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E01C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E5F20850
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761A920850
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfDIRJ0 (ORCPT
+        id S1726629AbfDIRLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:09:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:51734 "EHLO newverein.lst.de"
+        Tue, 9 Apr 2019 13:11:03 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48249 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbfDIRJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:09:26 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id B96E768B02; Tue,  9 Apr 2019 19:09:13 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 19:09:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/21] arm64/iommu: improve mmap bounds checking
-Message-ID: <20190409170913.GA14679@lst.de>
-References: <20190327080448.5500-1-hch@lst.de> <20190327080448.5500-3-hch@lst.de> <3629087c-a8cb-d66e-840b-cfee125bdf4c@arm.com> <20190407065923.GA9086@lst.de> <45672f18-c741-601d-6bb2-92f50b77e981@arm.com>
+        id S1726499AbfDIRLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:11:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 10:11:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,330,1549958400"; 
+   d="scan'208";a="129917005"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 09 Apr 2019 10:11:01 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 4476C580435;
+        Tue,  9 Apr 2019 10:11:01 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v1 2/4] platform/x86: intel_pmc_ipc: Apply same width for
+ offset definitions
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com,
+        linux-kernel@vger.kernel.org
+References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+ <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <5ca33880-a97f-24b4-1c48-92c1a649558b@linux.intel.com>
+Date:   Tue, 9 Apr 2019 10:09:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45672f18-c741-601d-6bb2-92f50b77e981@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 04:12:51PM +0100, Robin Murphy wrote:
-> On 07/04/2019 07:59, Christoph Hellwig wrote:
->> On Fri, Apr 05, 2019 at 06:30:52PM +0100, Robin Murphy wrote:
->>> On 27/03/2019 08:04, Christoph Hellwig wrote:
->>>> The nr_pages checks should be done for all mmap requests, not just those
->>>> using remap_pfn_range.
->>>
->>> Hmm, the logic in iommu_dma_mmap() inherently returns an error for the "off
->>>> = nr_pages" case already. It's also supposed to be robust against the
->>> "vma_pages(vma) > nr_pages - off" condition, although by making the partial
->>> mapping and treating it as a success, rather than doing nothing and
->>> returning an error. What's the exact motivation here?
->>
->> Have one error check at the front of the function that is identical
->> to the mmap checks in the other dma_map_ops instances so that:
->>
->>   a) we get the same error behavior for partial requests everywhere
->>   b) we can lift these checks into common code in the next round.
->>
+Hi,
+
+On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+> Apply same width for offset definitions to make code more consistent.
+Looks good.
 >
-> Fair enough, but in that case why isn't the dma_mmap_from_coherent() path 
-> also covered?
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   drivers/platform/x86/intel_pmc_ipc.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index eb0b342996ca..9007aa717586 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -40,7 +40,7 @@
+>    * The ARC handles the interrupt and services it, writing optional data to
+>    * the IPC1 registers, updates the IPC_STS response register with the status.
+>    */
+> -#define IPC_CMD			0x0
+> +#define IPC_CMD			0x00
+>   #define		IPC_CMD_MSI		BIT(8)
+>   #define		IPC_CMD_SIZE		16
+>   #define		IPC_CMD_SUBCMD		12
+> @@ -101,8 +101,8 @@
+>   #define TELEM_SSRAM_SIZE		240
+>   #define TELEM_PMC_SSRAM_OFFSET		0x1B00
+>   #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
+> -#define TCO_PMC_OFFSET			0x8
+> -#define TCO_PMC_SIZE			0x4
+> +#define TCO_PMC_OFFSET			0x08
+> +#define TCO_PMC_SIZE			0x04
+>   
+>   /* PMC register bit definitions */
+>   
 
-dma_mmap_from_coherent currently duplicates those checks itself, and
-because of that the other callers also don't include it in their
-checks.  I don't actually like that situation and have patches to
-refactor and clean up that whole mess by also moving the dma coherent
-mmap to common code, and share the checks that I plan to also lift.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-But for now I'm holding these back as they would conflict with this
-series and I'm not sure if it will go in and if yes if that is through
-the dma-mapping or iommu tree.
