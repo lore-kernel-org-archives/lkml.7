@@ -2,134 +2,112 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85216C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA48C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4923520880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:37:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oprqUuiY"
+	by mail.kernel.org (Postfix) with ESMTP id 93FE120880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfDIGhW (ORCPT
+        id S1726465AbfDIGn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:37:22 -0400
-Received: from mout.web.de ([212.227.15.3]:55403 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfDIGhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:37:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554791821;
-        bh=coWDfRtBwlD0rzFtKP2QZVDjU+lpy/3nVpGi4vH90jA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=oprqUuiYiEzvfBq9mzTBzVr2uc1ODQryWKKIP4cMs4lmT4g07NPKrEI4ei195Kk9d
-         UPerSEqByfjjhgiirOxb6LMQ44rxeqIda3qkNXwLhVP7Km98PyzWw1G0H5191oyPaU
-         KTb1DkJ4bjF33wrtAsoTb9E4xVyuH2h2ptH9VWno=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.175.183]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5sDZ-1gynnI0csj-00xoon; Tue, 09
- Apr 2019 08:37:01 +0200
-Subject: Re: [1/2] net: xilinx: add a helper function for axienet_probe
-To:     Wen Yang <wen.yang99@zte.com.cn>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <John.Linn@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <2b04afef-29bc-2fe2-cb23-467d823a6ad4@web.de>
-Date:   Tue, 9 Apr 2019 08:36:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 02:43:28 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41160 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDIGn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 02:43:27 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k8so13394249lja.8;
+        Mon, 08 Apr 2019 23:43:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dojvh5C6mz+VIKO3HuOFiWuFHkUl4wLKGs+2Is0aJkE=;
+        b=ZoNmUD+BM6Pyy3scpGS/SmxkgHqYfdx7/5py09N1cnYtH9+K/kKXc7Ko1oEBDClnRU
+         vKUYf+1RQZQskR/G8K8ZvEVNpO/JxkEJmRJ1DVEthAyE/u43k7mXCmMR7M9IJM2ujbo8
+         7EYeXmraojhTlABtxEndIHmvmR6LqSoLVcNarqYqKQzGdSuNlIfOowIgh4sQdWJxdGuH
+         C73DxFAATdfL3MUOKW7VXKgouEGwagIbgBivQJQjx5F4QiC0axTcZCvVUz1HxNC+HIG3
+         o5cIoUQyOyFMPhDsSGabbBO/4mrvuA1JJ8RidNiYGKn+mgA+d8/DyKiCjXU/7BFH/nWg
+         ACOQ==
+X-Gm-Message-State: APjAAAWHME+8pFIyaGi5rtuqPlUtQRCjwCMkMjF05kaUnXFBp5k4ahwS
+        z16xDhjF49hbU5mC3QfhEMIq56WSfTF79J4/mxQ=
+X-Google-Smtp-Source: APXvYqwWlLtq8cuVIJnz2uPQidl6q464I3VAO67BZNlihvw8FkItGROri/sPn2QvKwGARwG06FGFeCfTH9iwLm8a8zc=
+X-Received: by 2002:a2e:9e4d:: with SMTP id g13mr16061952ljk.12.1554792205921;
+ Mon, 08 Apr 2019 23:43:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:P0sJ68HLkRb/rewp4s+VBJpeBkeqATKP3+5MOSV53W2QkmmwLhC
- vAISwqyc7Cs3N7amDhtf6uQiajjNxw1OKibiID04xUPuNxZGmotlgts+HSDGHlKK9IgNBX3
- Qw1vFiNShyWINvrWYGj0qsREvMswg0Gkqw6KAzfxUxefINJKGZPks2WDAtUmNRzFnjhIsq8
- +9OHnxNWDkrTYsziIr9fw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KBKayPZmOaY=:Y3n8lAKrMjYw5EVZ5wHphM
- YErgDUACEutLx05I1cHDDMw4ISIuHdIEpKfMAYbAtnM7TAgd9PvuPM4hMwFbO++jIyDZjWJUN
- UN5g7TuqbHZMbaWiy5dobHu69XzSJq7pjgn/cxb7lss9lfFED6/n4Zxu6ewMX4MgTNJK/MMlX
- ytI1eEBAfq6SaLXG77ppen6mEXNLNVeN7dyPQJYs7bqx0hUTbgERh7MG0+abj9vR/GSCN1PSr
- RzeFKheVkF/uDhoWv1TYHwMU9J8xTxc/WaKR1B4RoKOadXTnwtZrS8V0hhVrwGSMr8WWlbP94
- +v4v+ov0lcPei5fEocjUR63o/mKkQqef7kvOkwNQpW4wgpVUTyIfPPG+E48YiFcpanwUEHmyv
- uIhYYBZ0ZUPX3PJOU1QIoeyrXXgyFMp1xHda4adnHamda8bnrd+bjHHlKb4IIRWw/C3aJjnDg
- cxJkC2qPQZ64k3o9efL/APcz2vVLu2IuQtHhcbOfZCrbZ4aoSKcEkGibsu83tj818K6NXyTho
- 9x8z5St/8NLLlzaAe5w2hrgf1dZY2jaZbHItca+V8UBVINKUAOGlqKJObhtXcvw9YGZRUj6re
- HgseM4kzw2u1KVhMe8Bkl7GT1mtsXh6nIDNkCBv3djoh66JjIaY7PsJFyJZgkHSnhUashQkt/
- Tja8ToAkN5PqyT+PCHvpUzmGkCGyQPdRi04JuL1wfTQNxRzth9LycXxGvXCAPU85j75Ula8T6
- gKSGRvVxsiROlSkU3fAkZQi8/Cw798NhUmbteDIFzYOLQ6CHBwhXfaQ+neW/T97t3DJnWlaLf
- 7j+zs6qjcbDBNX5dsf8UzY6klYJR+bceGzUlRn4Yxw8eDqTxQIy8hB2rLRtbQpyTfk3QGcUqt
- Bq+TrxT+DkEV+lAO3IFU8E3RADn1pVys5ZyHFOcDGurmJh0Ur390gcOrPCujjvNueAJLJ1LMJ
- aYi1usU/Xgw==
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-3-arnd@arndb.de>
+ <20190408220312.GA18333@archlinux-i9>
+In-Reply-To: <20190408220312.GA18333@archlinux-i9>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 9 Apr 2019 08:43:09 +0200
+Message-ID: <CAK8P3a39NqQOp+0=WYuWh0UmpH=kEFLKyymNYm8DH-0gx9XaaQ@mail.gmail.com>
+Subject: Re: [PATCH 03/12] s390: purgatory: pass --target option to clang
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The "Find DMA Node, Map DMA Register, and Decode DMA IRQ" code snippets
-> in Axienet_Probe are independent. Tidy up axienet_probe a little by
-> factoring these out into a helper function.
+On Tue, Apr 9, 2019 at 12:03 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Mon, Apr 08, 2019 at 11:26:16PM +0200, Arnd Bergmann wrote:
+> > The purgatory Makefile does not inherit the original cflags,
+> > so clang falls back to the default target architecture when
+> > building it, typically this would be x86 when cross-compiling.
+> >
+> > Pass --target=s390x-linux to all compilers that understand
+> > this option.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/s390/purgatory/Makefile | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+> > index ce6a3f75065b..3a14b968cec3 100644
+> > --- a/arch/s390/purgatory/Makefile
+> > +++ b/arch/s390/purgatory/Makefile
+> > @@ -22,6 +22,7 @@ KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
+> >  KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+> >  KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
+> >  KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
+> > +KBUILD_CFLAGS += $(call cc-option,--target=s390x-linux)
+> >  KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
+> >  KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+> >
+> Would
+>
+> ifdef CONFIG_CC_IS_CLANG
+> KBUILD_CFLAGS += --target=s390x-linux
+> endif
+>
+> be a little clearer (and save a cc-option call)?
 
-Would the following wording be more appropriate for the commit description?
+Fine with me as well. Actually I noticed later that we need the same
+thing for arch/s390/boot/Makefile and arch/s390/boot/compressed/Makefile
+in some form, so maybe we should drop this one for now and find
+a solution that works for all three of them. The boot stuff is the one
+patch I did not send, since I did not think I had a good solution there,
+just one that happened to make it build.
 
+> Otherwise, makes sense.
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-in axienet_probe() are independent.
-Tidy this function implementation a little up by factoring these calls out
-into a helper function.
+ Thanks,
 
-
-Regards,
-Markus
+       Arnd
