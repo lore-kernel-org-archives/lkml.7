@@ -2,108 +2,163 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F017C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117C9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E0E20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p8RXRYuB"
+	by mail.kernel.org (Postfix) with ESMTP id C188620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfDIIJD (ORCPT
+        id S1726570AbfDIIKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:09:03 -0400
-Received: from ozlabs.org ([203.11.71.1]:58753 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbfDIIJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:09:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dg0n1krNz9sNk;
-        Tue,  9 Apr 2019 18:08:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554797340;
-        bh=3Nq4WF0VrT2jEDeO/gtW2yc5tdXu472w5pkscgUFTJI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p8RXRYuB67ikTR0NxGz1bJCbRP3y1WqnbYXZCYG8T/EPb2EYubbbcgdEdazPN0OfE
-         labtPAgHP4CmAEE6A4Sc2W4sMnoog9uxUR9TSktyaKURly+9UaEC2wNbE5MBDF1Omr
-         stsZAXf09kAKgEyQqaffq2yvwzWp1w63Qs1ws4wae1AvAwS1/OThgFjCfGrdPnmna4
-         A5KYNKZExzISHUzUsrP2dY0SblTWk0h0xB8ue4Ij9O4mr9HnwBuIwnwQn9DJoJK/A+
-         lW7/2aOI1ShK7VYMAVTe9EhCp2ogeVqAzZdYlciLBwRzKw3EAIWbWCCuRrjHAGwp0Q
-         /KjKSgDIL8l6w==
-Date:   Tue, 9 Apr 2019 18:08:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190409180855.6a33e4e9@canb.auug.org.au>
-In-Reply-To: <20190409072218.nepac7a4pngacweh@sirius.home.kraxel.org>
-References: <20190409160849.391d3efa@canb.auug.org.au>
-        <20190409072218.nepac7a4pngacweh@sirius.home.kraxel.org>
+        Tue, 9 Apr 2019 04:10:52 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57907 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDIIKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 04:10:52 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id B2F591C0018;
+        Tue,  9 Apr 2019 08:10:43 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 10:09:31 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document
+ operating-points-v2-sunxi-cpu
+Message-ID: <20190409080931.5x36pgtwhdjh2lkq@flea>
+References: <20190405102455.15311-1-tiny.windzz@gmail.com>
+ <20190405102455.15311-3-tiny.windzz@gmail.com>
+ <20190405145532.cstvbv3mxbzrmpxp@flea>
+ <CAEExFWuDjD2Ur6UuCPD_m=hvUYJj7Z=NqQ7KXXR+tmnVtDqfbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/z3HVKEe3u0hM5_Y3vXgAWZB"; protocol="application/pgp-signature"
+        protocol="application/pgp-signature"; boundary="2k2xiuosmbkit26j"
+Content-Disposition: inline
+In-Reply-To: <CAEExFWuDjD2Ur6UuCPD_m=hvUYJj7Z=NqQ7KXXR+tmnVtDqfbQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/z3HVKEe3u0hM5_Y3vXgAWZB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Gerd,
+--2k2xiuosmbkit26j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 9 Apr 2019 09:22:18 +0200 Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Tue, Apr 09, 2019 at 12:13:58AM +0800, Frank Lee wrote:
+> On Fri, Apr 5, 2019 at 10:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
+> > > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > > frequency value  based on the speedbin blown in the efuse combination.
+> > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > > provide the OPP framework with required information.
+> > > This is used to determine the voltage and frequency value for each
+> > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> > >
+> > > This change adds documentation for the DT bindings.
+> > > The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
+> > > with following parameters:
+> > > - nvmem-cells (NVMEM area containig the speedbin information)
+> > > - opp-supported-hw: A single 32 bit bitmap value,
+> > >   representing compatible HW:
+> > >                       0:      speedbin 0
+> > >                       1:      speedbin 1
+> > >                       2:      speedbin 2
+> > >                       3-31:   unused
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
+> > >  1 file changed, 235 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > > new file mode 100644
+> > > index 000000000000..80201d4e5147
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > > @@ -0,0 +1,235 @@
+> > > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> > > +===================================
+> > > +
+> > > +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> > > +varies based on the silicon variant in use. Allwinner Process Voltage
+> > > +Scaling Tables defines the voltage and frequency value  based on the
+> > > +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
+> > > +reads the efuse value from the SoC to provide the OPP framework with
+> > > +required information.
+> > > +
+> > > +Required properties:
+> > > +--------------------
+> > > +In 'cpus' nodes:
+> > > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> > > +
+> > > +In 'operating-points-v2' table:
+> > > +- compatible: Should be
+> > > +     - 'operating-points-v2-sunxi-cpu'.
+> > > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> > > +             efuse registers that has information about the
+> > > +             speedbin that is used to select the right frequency/voltage
+> > > +             value pair.
+> > > +             Please refer the for nvmem-cells
+> > > +             bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+> > > +             and also examples below.
+> > > +
+> > > +In every OPP node:
+> > > +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
+> > > +                 Bitmap:
+> > > +                     0:      speedbin 0
+> > > +                     1:      speedbin 1
+> > > +                     2:      speedbin 2
+> > > +                     3-31:   unused
+> >
+> > I'm wondering if that's the right approach.
+> >
+> > I guess we could also have three different OPP tables, and pass them
+> > all three through a phandle array, and have the kernel code select
+> > which one is relevant based on the SID content
 >
-> On Tue, Apr 09, 2019 at 04:08:49PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the drm-misc tree, today's linux-next build (powerpc
-> > allyesconfig) failed like this:
-> >=20
-> > drivers/gpu/drm/cirrus/cirrus.c: In function 'cirrus_fb_blit_rect':
-> > drivers/gpu/drm/cirrus/cirrus.c:310:25: error: implicit declaration of =
-function '__io_virt'; did you mean '__do_irq'? [-Werror=3Dimplicit-function=
--declaration]
-> >    drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
-> >                          ^~~~~~~~~
-> >                          __do_irq =20
->=20
-> Probably just a missing arm/io.h include.
+> It's ok. But why not use the way we already have?
+> Is it necessary to introduce new helper?
 
-I assume you meant asm/io.h?
+My main concern is that it becomes quite difficult to differentiate
+the various OPPs, and to which bin a particular OPP is belonging to,
+while the more traditional OPPv2 makes it much more obvious.
 
---=20
-Cheers,
-Stephen Rothwell
+Maxime
 
---Sig_/z3HVKEe3u0hM5_Y3vXgAWZB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2k2xiuosmbkit26j
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlysUxcACgkQAVBC80lX
-0Gzskgf/YCKaKjcJzoDMfYeruWGquXXzPKTwqS4mgnOxiAxQKG9YDbzTf4micFd2
-PaUeRMwXd7MGVejYsfPUY0GAobdddYI5k2toUkpfzaAJKpcqQXWPxFVRcvY+vt+4
-Qdhdad4ot2cm102kEkvUNZo8y/4cvUat7K3uCHhORYkhrOK1AfLAyl6cvs/ujXmN
-pq5LqSJTTg+0QiS1QFygD5a0l2+e5frWVIpFSvzV9A1nZKlDeUSVCC4hN+59mB4T
-Kixky5dbUpH7/PKtmNHmbFW0k94A4IegVxVOkpKQRjgMQj72CylRkCfs/V2JVZTn
-zLHYloGeVYrsMP4JUKYkF3pPhSpdhg==
-=cXB5
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxTOwAKCRDj7w1vZxhR
+xWNqAQDPFhLTiR0NkLqFqcKZWJXT38kLj7cIcY+efjoMW85wMgEA14xBMv/Zlsr7
+GwlrayWZvCDX9kk4EUEZ8kI2gCMqogc=
+=D09V
 -----END PGP SIGNATURE-----
 
---Sig_/z3HVKEe3u0hM5_Y3vXgAWZB--
+--2k2xiuosmbkit26j--
