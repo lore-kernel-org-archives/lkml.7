@@ -2,119 +2,134 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2EDC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE74920693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAB120693
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rbQKp0o1"
+	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="Fj4O1eqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfDIBGN (ORCPT
+        id S1726612AbfDIBIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:06:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42831 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbfDIBGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:06:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dTcy0Zwyz9sPn;
-        Tue,  9 Apr 2019 11:06:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554771970;
-        bh=lxxVKlKb71VvqRuml/havxSf1qEKip/V9oXdYFARi5A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rbQKp0o1zN9VqgJwb165FaFyEujOs/LnT7/OvCJ20hxMIzcw0iPECZEr/PJo9QIoU
-         qQs97fIWRp9/it8yixwRzC2HPJ6HqcZJTkTVZgGjUsMAQoskE+NTVLnPCixUmaqKFM
-         aJFBO9rF9Qn7cHS2rheH47R0CJKbQCMPniod+pRgNZkVyriIvouxo6uGVg2V0Dl0HF
-         4IrsAFjn+gH8bdaOJ48aA74XLO3fXVQZWDcK/bXMzxFj899fTbPvGnfOOoRRtVpxkx
-         ulvMRzohSpvaHFzH17QpitLQd+cwEQA2sJizOWB0+PVR9DwSOdi2gezei2MwOW6BSz
-         z/ykInBB13THw==
-Date:   Tue, 9 Apr 2019 11:06:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felix Fietkau <nbd@nbd.name>
-Subject: linux-next: manual merge of the mac80211-next tree with the
- mac80211 tree
-Message-ID: <20190409110607.29df3cf3@canb.auug.org.au>
+        Mon, 8 Apr 2019 21:08:41 -0400
+Received: from owa.iluvatar.ai ([103.91.158.24]:5253 "EHLO smg.iluvatar.ai"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbfDIBIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:08:40 -0400
+X-AuditID: 0a650161-78bff700000078a3-8f-5cabf093b18d
+Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
+        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id 06.44.30883.390FBAC5; Tue,  9 Apr 2019 09:08:35 +0800 (HKT)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
+        c=relaxed/relaxed; t=1554772115; h=from:subject:to:date:message-id;
+        bh=7PoxFksW/7Y5mrW/Yb3Kse3GMSMGjxnGjzU1zXRdg8I=;
+        b=Fj4O1eqLq9eKptCrCrpUPwnVDMk/Bcb81pxPlkLUsXqS951w230uGx869AGQh+OKFwcd7xE4amB
+        QE8j8AJ/1tRPncTNw/YMemB4TG8C3Fvuqe/Ub3CJOBuYz0h5FHNOIEgIrnwOEoTa0baTlQrNSEwWR
+        l5d7WBuX91Fqq4b1Flo=
+Received: from hsj-Precision-5520 (10.101.199.253) by
+ S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Tue, 9 Apr 2019 09:08:35 +0800
+Date:   Tue, 9 Apr 2019 09:08:33 +0800
+From:   Huang Shijie <sjhuang@iluvatar.ai>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <akpm@linux-foundation.org>, <william.kucharski@oracle.com>,
+        <ira.weiny@intel.com>, <palmer@sifive.com>, <axboe@kernel.dk>,
+        <keescook@chromium.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm/gup.c: fix the wrong comments
+Message-ID: <20190409010832.GA28081@hsj-Precision-5520>
+References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
+ <20190408141313.GU22763@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/nk7TK0lKM_uOHgtwjGYIvFv"; protocol="application/pgp-signature"
+In-Reply-To: <20190408141313.GU22763@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.101.199.253]
+X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
+ S-10-101-1-102.iluvatar.local (10.101.1.102)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXClcqYpjv5w+oYg7ufDSzmrF/DZrH6bj+b
+        xf6nz1ksznTnWlzeNYfN4t6a/6wWmycsABKLu5gsfv+Yw+bA6TG74SKLx+YVWh6L97xk8rh8
+        ttRj06dJ7B4nZvxm8fj49BaLx6Xm6+wenzfJBXBGcdmkpOZklqUW6dslcGWsejaBueCtQMWZ
+        e5eZGhiX8nQxcnJICJhITP28jLWLkYtDSOAEo8Tl+50sIAlmAR2JBbs/sXUxcgDZ0hLL/3GA
+        1LAIvGWSuP3vBTtEwzdGib377rKDNLAIqEgse/wXzGYT0JCYe+IuM0izCJD9ZosRSD2zwEVG
+        iQ0zjoMtEBawlFjXfQysnlfAXGLHk7lsILaQQJbEsZ7HzBBxQYmTM5+A1XMK2EjsXriJCcQW
+        FVCWOLDtOBPIfCEBBYkXK7UgnlGSWLJ3FhOEXSjx/eVdlgmMwrOQvDML4Z1ZSBYsYGRexchf
+        nJuul5lTWpZYklikl5i5iRESVYk7GG90vtQ7xCjAwajEw6vguDpGiDWxrLgy9xCjBAezkgjv
+        zqmrYoR4UxIrq1KL8uOLSnNSiw8xSnOwKInzlk00iRESSE8sSc1OTS1ILYLJMnFwSjUwJc7U
+        m8r46sXv7J3/Y4Oa6lQ8HRnNzsgGPzm9uWRz8O3Jc80mcEw7flz22iQzSw826yzFnUeaZ+Zr
+        FCj9DoxnZFlxmLf16HU7v9Sjgnc/BsTO6V7EejBijpeN2vXIslt+Ke9/1GmbTb06qXyBl0b/
+        szsGmc/Xdcelr5oatfPwhafuv/Rue6zm/bP7QHfFz42eftlPileFLax5oLR7Rg93lu2WpwfW
+        rVTyCuermLxP6Jm2w2EvsbjLPUFd1/RubGWs9rmxsu/z1OuNArusb/GFl7B88rj5Km/y+9My
+        /5/O5FvVv/jyialzTZev/9RWwbnm3P0qWZZ9N0RmfXGuf/b+0zWuk3bhE7yCjbkmfcxhmKPE
+        UpyRaKjFXFScCADnserWJwMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nk7TK0lKM_uOHgtwjGYIvFv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
+> On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
+> > When CONFIG_HAVE_GENERIC_GUP is defined, the kernel will use its own
+> > get_user_pages_fast().
+> > 
+> > In the following scenario, we will may meet the bug in the DMA case:
+> > 	    .....................
+> > 	    get_user_pages_fast(start,,, pages);
+> > 	        ......
+> > 	    sg_alloc_table_from_pages(, pages, ...);
+> > 	    .....................
+> > 
+> > The root cause is that sg_alloc_table_from_pages() requires the
+> > page order to keep the same as it used in the user space, but
+> > get_user_pages_fast() will mess it up.
+> 
+> I don't understand how get_user_pages_fast() can return the pages in a
+> different order in the array from the order they appear in userspace.
+> Can you explain?
+Please see the code in gup.c:
 
-Hi all,
+	int get_user_pages_fast(unsigned long start, int nr_pages,
+				unsigned int gup_flags, struct page **pages)
+	{
+		.......
+		if (gup_fast_permitted(start, nr_pages)) {
+			local_irq_disable();
+			gup_pgd_range(addr, end, gup_flags, pages, &nr);               // The @pages array maybe filled at the first time.
+			local_irq_enable();
+			ret = nr;
+		}
+		.......
+		if (nr < nr_pages) {
+			/* Try to get the remaining pages with get_user_pages */
+			start += nr << PAGE_SHIFT;
+			pages += nr;                                                  // The @pages is moved forward.
 
-Today's linux-next merge of the mac80211-next tree got a conflict in:
+			if (gup_flags & FOLL_LONGTERM) {
+				down_read(&current->mm->mmap_sem);
+				ret = __gup_longterm_locked(current, current->mm,      // The @pages maybe filled at the second time
+							    start, nr_pages - nr,
+							    pages, NULL, gup_flags);
+				up_read(&current->mm->mmap_sem);
+			} else {
+				/*
+				 * retain FAULT_FOLL_ALLOW_RETRY optimization if
+				 * possible
+				 */
+				ret = get_user_pages_unlocked(start, nr_pages - nr,    // The @pages maybe filled at the second time.
+							      pages, gup_flags);
+			}
+		}
 
-  net/mac80211/tx.c
 
-between commit:
+		.....................
 
-  eb9b64e3a9f8 ("mac80211: fix memory accounting with A-MSDU aggregation")
+BTW, I do not know why we mess up the page order. It maybe used in some special case.
 
-from the mac80211 tree and commit:
-
-  dcec1d9bc8a7 ("mac80211: calculate hash for fq without holding fq->lock i=
-n itxq enqueue")
-
-from the mac80211-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/mac80211/tx.c
-index 2e816dd67be7,3655aae96df1..000000000000
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@@ -3221,7 -3219,7 +3219,8 @@@ static bool ieee80211_amsdu_aggregate(s
-  	u8 max_subframes =3D sta->sta.max_amsdu_subframes;
-  	int max_frags =3D local->hw.max_tx_fragments;
-  	int max_amsdu_len =3D sta->sta.max_amsdu_len;
- +	int orig_truesize;
-+ 	u32 flow_idx;
-  	__be16 len;
-  	void *data;
-  	bool ret =3D false;
-
---Sig_/nk7TK0lKM_uOHgtwjGYIvFv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyr7/8ACgkQAVBC80lX
-0Gz0cQgAm7Z45grpN06oI1vDHbeyWc1Nf5XOqaDdgOzObo+f8Fbemq832Wv9g9Rv
-2Um1yA8WsPO1n+avHfatwoEV8O34shDxpRxCQkSauALhsdKY4W1Wlp8FA2M7GteV
-E66NVIITDIL8Men0nhNTUG9UFWpI7yeEfzJyHhX0Zm3w3AyVTJqYn/06ikKYObx6
-ue8YTx74ttTG/hK1N9MMoDSGNFqx+XaG9MQPWdqhi30Q1KV10hOpHUNu56ma7ZSQ
-erEM9Lk1R3DJLYKklLGJEXz+x0yXQ+pHYIVYxWY6RNkFz5g+5P8z0j3ptRY6N9ki
-/CohVqDhFhZEEb2RJPDCSpc1jpCRMQ==
-=g+rO
------END PGP SIGNATURE-----
-
---Sig_/nk7TK0lKM_uOHgtwjGYIvFv--
+Thanks
+Huang Shijie
