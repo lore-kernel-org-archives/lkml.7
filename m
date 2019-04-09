@@ -2,174 +2,433 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C73C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65872C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B962320833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20EEB20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="b3HUt1y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfDIIiJ (ORCPT
+        id S1726876AbfDIIib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:38:09 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33712 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfDIIiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:38:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E48AA78;
-        Tue,  9 Apr 2019 01:38:08 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 634C13F557;
-        Tue,  9 Apr 2019 01:38:06 -0700 (PDT)
-Subject: Re: [PATCH v8 4/9] KVM: arm/arm64: preserve host HCR_EL2 value
-To:     Kristina Martsenko <kristina.martsenko@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
- <1554172037-4516-5-git-send-email-amit.kachhap@arm.com>
- <f27a3e70-2099-45a6-48e6-481a67e360eb@arm.com>
- <6131d2cb-1062-6331-c2c3-7026081c458a@arm.com>
- <9a373ede-cdf8-c992-6f4b-352e46e0030a@arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <1c4e4f50-8324-ed78-1bfd-aee05b6d4fc5@arm.com>
-Date:   Tue, 9 Apr 2019 09:38:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 04:38:31 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45027 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfDIIib (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 04:38:31 -0400
+Received: by mail-io1-f68.google.com with SMTP id u12so13503494iop.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 01:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hr0F5S+XzCD5idVwYm4YlXT0ZQ48Tzc2AUxRkYlWLt0=;
+        b=b3HUt1y5APEE+bVngHS7/hqwuEuoZr5jU+BN9RSsc6yAS6tSfYUu/FMhV+qLtKtFoA
+         BDKAP/hK+y9Ys+lME3TAxRlT+bPSQ/J/KWfYeocq8FZgqQF2dzgk9YohHXlHv1yhVIJB
+         Twd2whkRTIdJsmLH5cueKWUAHuoi/GyUVnqpg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hr0F5S+XzCD5idVwYm4YlXT0ZQ48Tzc2AUxRkYlWLt0=;
+        b=GBf6z+vwQKKmEbwtaoJ/0MuElKxdWzqZ7erjQLX5fUuwDLKrJO3EJaGXHoiw6LKYZf
+         nr/K7LHUHVvIBL/4H+AzyiEDy6qD0Uxq0FifTe8njbthxteuRMSMkTSPzopusvQ00uY0
+         W2uHBt4X3RKnR+sdN49NQcT5dfDnLUNXsmdc9AMfz++0xQIuYyHIfU6/7TgpGw3XO3W1
+         1R+3hmS3WIpUAftDvFfz1r0b/f29V5v4DABG2Kw8HNx0X8snDVm3ehMo0eZVJ8P7+8s1
+         jjk3rkw82U/otrOCe1w9jxJLAvkh88mOPW9s3PcrxGKpri1N8FVWWDk5byLfnreh8x/A
+         KFpw==
+X-Gm-Message-State: APjAAAUPX5Td2tAWnfn3P8PpkaCO8y1BWl3bmuBL/7aDmRfBGJ70mPe1
+        65tBK62JLJSWq5BScZNp5aF02qFDN0QN3JkQsJKRKQ==
+X-Google-Smtp-Source: APXvYqy4gcARrrXnr06bFhPto4qWS5OzxSMNzk0PkAIwxZzg9F8eA3+vXxZ7ji7vtBkbuhDMtjSnIiVCATsQVI5iA+Q=
+X-Received: by 2002:a5e:8202:: with SMTP id l2mr2112372iom.144.1554799109450;
+ Tue, 09 Apr 2019 01:38:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9a373ede-cdf8-c992-6f4b-352e46e0030a@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
+In-Reply-To: <20190409002452.14551-3-megous@megous.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 9 Apr 2019 14:08:18 +0530
+Message-ID: <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+To:     megous@megous.com
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 19:39, Kristina Martsenko wrote:
-> On 08/04/2019 14:05, Amit Daniel Kachhap wrote:
->> Hi James,
->>
->> On 4/6/19 4:07 PM, James Morse wrote:
->>> Hi Amit,
->>>
->>> On 02/04/2019 03:27, Amit Daniel Kachhap wrote:
->>>> From: Mark Rutland <mark.rutland@arm.com>
->>>>
->>>> When restoring HCR_EL2 for the host, KVM uses HCR_HOST_VHE_FLAGS, which
->>>> is a constant value. This works today, as the host HCR_EL2 value is
->>>> always the same, but this will get in the way of supporting extensions
->>>> that require HCR_EL2 bits to be set conditionally for the host.
->>>>
->>>> To allow such features to work without KVM having to explicitly handle
->>>> every possible host feature combination, this patch has KVM save/restore
->>>> for the host HCR when switching to/from a guest HCR. The saving of the
->>>> register is done once during cpu hypervisor initialization state and is
->>>> just restored after switch from guest.
->>>>
->>>> For fetching HCR_EL2 during kvm initialisation, a hyp call is made using
->>>> kvm_call_hyp and is helpful in non-VHE case.
->>>>
->>>> For the hyp TLB maintenance code, __tlb_switch_to_host_vhe() is updated
->>>> to toggle the TGE bit with a RMW sequence, as we already do in
->>>> __tlb_switch_to_guest_vhe().
->>>>
->>>> The value of hcr_el2 is now stored in struct kvm_cpu_context as both host
->>>> and guest can now use this field in a common way.
->>>
->>> These HCR_EL2 flags have had me confused for quite a while.
->>> I thought this was preserving the value that head.S or cpufeature.c had set, and with
->>> ptrauth we couldn't know what this register should be anymore, the host flags has to vary.
->>>
->>> Kristina's explanation of it[0], clarified things, and with a bit more digging it appears
->>> we always set API/APK, even if the hardware doesn't support the feature (as its harmless).
->>> So we don't need to vary the host flags...
->>
->> API/APK is always set for NVHE host mode.
->>>
->>> My question is, what breaks if this patch isn't merged? (the MDCR change is cleanup we can
->>> do because of this HCR change), is this HCR change just cleanup too? If so, can we merge
->>> ptrauth without either, so we only make the change when its needed? (it will cause some
->>> changes in your patch 7, but I can't see where you depend on the host flags).
->>
->> Yes you are right that this patch does not directly effect pointer authentication functionality but contains several optimizations and cleanups such as,
->>
->> * Removes assigning static flags HCR_HOST_VHE_FLAGS/HCR_HOST_NVHE_FLAGS from switch.c so switching functions now are more generic in nature.
->> * Currently the variation in hcr_el2 flags is across modes (VHE/NVHE). Any future conditional change within those modes in host HCR_EL2 may not effect code changes in switch.c
->> * Save of hcr_el2 done at hyp init time so not expensive switching wise.
->>
->> I am fine on posting it separately also.
-> 
-> FWIW I think it makes sense to post the HCR and MDCR patches separately
-> from this series. That should make it clear that pointer auth does not
-> depend on these changes, and should make it easier to evaluate the
-> changes on their own.
-> 
-> Others' opinions are welcome as well.
+Based on the conversation about using common dtsi from this thread[1],
+I'm commenting here to make show the diff directly on the nodes,
+giving comments on each node so-that we can see the diff globally.
 
-Agreed. I'm quite eager to move forward with this series, and the least
-unrelated changes it makes, the better. Cleanups and optimizations can
-always be merged at a later time.
+On Tue, Apr 9, 2019 at 5:55 AM megous via linux-sunxi
+<linux-sunxi@googlegroups.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> Orange Pi 3 is a H6 based SBC made by Xulong, released in January 2019. I=
+t
+> has the following features:
+>
+> - Allwinner H6 quad-core 64-bit ARM Cortex-A53
+> - GPU Mali-T720
+> - 1GB or 2GB LPDDR3 RAM
+> - AXP805 PMIC
+> - AP6256 Wifi/BT 5.0
+> - USB 2.0 host port (A)
+> - USB 2.0 micro usb, OTG
+> - USB 3.0 Host + 4 port USB hub (GL3510)
+> - Gigabit Ethernet (Realtek RTL8211E phy)
+> - HDMI 2.0 port
+> - soldered eMMC (optional)
+> - 3x LED (one is on the bottom)
+> - microphone
+> - audio jack
+> - PCIe
+>
+> Add basic support for the board.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 216 ++++++++++++++++++
+>  2 files changed, 217 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dt=
+s
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+> index e4dce2f6fa3a..285a7cb5135b 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dt=
+b
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
+h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> new file mode 100644
+> index 000000000000..5fbc5e410883
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (C) 2019 Ond=C5=99ej Jirman <megous@megous.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-h6.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       model =3D "OrangePi 3";
+> +       compatible =3D "xunlong,orangepi-3", "allwinner,sun50i-h6";
+> +
+> +       aliases {
+> +               serial0 =3D &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path =3D "serial0:115200n8";
+> +       };
+> +
+> +       leds {
+> +               compatible =3D "gpio-leds";
+> +
+> +               power {
+> +                       label =3D "orangepi:red:power";
+> +                       gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
+/
+> +                       default-state =3D "on";
+> +               };
+> +
+> +               status {
+> +                       label =3D "orangepi:green:status";
+> +                       gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 *=
+/
+> +               };
+> +       };
+> +
+> +       reg_vcc5v: vcc5v {
+> +               /* board wide 5V supply directly from the DC jack */
+> +               compatible =3D "regulator-fixed";
+> +               regulator-name =3D "vcc-5v";
+> +               regulator-min-microvolt =3D <5000000>;
+> +               regulator-max-microvolt =3D <5000000>;
+> +               regulator-always-on;
+> +       };
+> +};
 
-Thanks,
+all above nodes are common to all h6 opi boards.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +
+> +&cpu0 {
+> +       cpu-supply =3D <&reg_dcdca>;
+> +};
+> +
+> +&ehci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&ehci3 {
+> +       status =3D "okay";
+> +};
+
+common to all h6 opi boards.
+
+> +
+> +&mmc0 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&mmc0_pins>;
+> +       vmmc-supply =3D <&reg_cldo1>;
+> +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> +       bus-width =3D <4>;
+> +       status =3D "okay";
+> +};
+
+common to all h6 opi boards.
+
+> +
+> +&ohci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&ohci3 {
+> +       status =3D "okay";
+> +};
+
+common to all h6 opi boards.
+
+> +
+> +&pio {
+> +       vcc-pc-supply =3D <&reg_bldo2>;
+> +       vcc-pd-supply =3D <&reg_cldo1>;
+> +};
+> +
+> +&r_i2c {
+> +       status =3D "okay";
+> +
+> +       axp805: pmic@36 {
+> +               compatible =3D "x-powers,axp805", "x-powers,axp806";
+> +               reg =3D <0x36>;
+> +               interrupt-parent =3D <&r_intc>;
+> +               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +               interrupt-controller;
+> +               #interrupt-cells =3D <1>;
+> +               x-powers,self-working-mode;
+> +               vina-supply =3D <&reg_vcc5v>;
+> +               vinb-supply =3D <&reg_vcc5v>;
+> +               vinc-supply =3D <&reg_vcc5v>;
+> +               vind-supply =3D <&reg_vcc5v>;
+> +               vine-supply =3D <&reg_vcc5v>;
+> +               aldoin-supply =3D <&reg_vcc5v>;
+> +               bldoin-supply =3D <&reg_vcc5v>;
+> +               cldoin-supply =3D <&reg_vcc5v>;
+
+all these supply voltage regulators are common to h6 opi boards.
+
+> +
+> +               regulators {
+> +                       reg_aldo1: aldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-pl-led-ir";
+> +                       };
+
+same like other h6 boards.
+
+> +
+> +                       reg_aldo2: aldo2 {
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc33-audio-tv-ephy-m=
+ac";
+> +                       };
+
+rest of h6 opi boards used it for vcc-ac200, we may append ac200 and
+make it common since the voltage is same.
+
+> +
+> +                       /* ALDO3 is shorted to CLDO1 */
+> +                       reg_aldo3: aldo3 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
+sb-uart-1";
+> +                       };
+
+same like above regulator.
+
+> +
+> +                       reg_bldo1: bldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <1800000>;
+> +                               regulator-name =3D "vcc18-dram-bias-pll";
+
+same like other h6 boards.
+
+> +                       };
+> +
+> +                       reg_bldo2: bldo2 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <1800000>;
+> +                               regulator-name =3D "vcc-efuse-pcie-hdmi-p=
+c";
+> +                       };
+
+same like other h6 boards.
+
+> +
+> +                       bldo3 {
+> +                               /* unused */
+> +                       };
+
+This is used in other h6 opi boards so we may attach status or
+re-enable it on board dts file.
+
+> +
+> +                       bldo4 {
+> +                               /* unused */
+> +                       };
+
+same like other h6 boards.
+
+> +
+> +                       reg_cldo1: cldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
+sb-uart-2";
+> +                       };
+
+same like other h6 boards.
+
+> +
+> +                       cldo2 {
+> +                               /* unused */
+> +                       };
+> +
+> +                       cldo3 {
+> +                               /* unused */
+> +                       };
+
+These two used for wifi, so we may define on board dts or attach
+status property.
+
+> +
+> +                       reg_dcdca: dcdca {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <800000>;
+> +                               regulator-max-microvolt =3D <1160000>;
+> +                               regulator-name =3D "vdd-cpu";
+> +                       };
+> +
+> +                       reg_dcdcc: dcdcc {
+> +                               regulator-min-microvolt =3D <810000>;
+> +                               regulator-max-microvolt =3D <1080000>;
+> +                               regulator-name =3D "vdd-gpu";
+> +                       };
+> +
+> +                       reg_dcdcd: dcdcd {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <960000>;
+> +                               regulator-max-microvolt =3D <960000>;
+> +                               regulator-name =3D "vdd-sys";
+> +                       };
+> +
+> +                       reg_dcdce: dcdce {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1200000>;
+> +                               regulator-max-microvolt =3D <1200000>;
+> +                               regulator-name =3D "vcc-dram";
+> +                       };
+> +
+> +                       sw {
+> +                               /* unused */
+> +                       };
+
+all above regulators are common to h6 boards.
+
+> +               };
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&uart0_ph_pins>;
+> +       status =3D "okay";
+> +};
+> +
+> +&usb2otg {
+> +       /*
+> +        * Beware that this board will not automatically disconnect
+> +        * VBUS from DCIN, when self-powered and used as a peripheral.
+> +        */
+> +       dr_mode =3D "otg";
+> +       status =3D "okay";
+> +};
+
+above nodes uart0, usb2otg are common to h6 opi boards.
+
+> +
+> +&usb2phy {
+> +       usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
+> +       usb0_vbus-supply =3D <&reg_vcc5v>;
+> +       usb3_vbus-supply =3D <&reg_vcc5v>;
+> +       status =3D "okay";
+> +};
+> --
+
+id detect pin can be differ, so we may move this on board specific dts.
+
+Note: the emac node is also common between h6 opi boards.
+
+[1] https://lkml.org/lkml/2019/4/5/857
