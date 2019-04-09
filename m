@@ -2,112 +2,87 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD03C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C6CC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150C021473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A9920880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfDIGx5 (ORCPT
+        id S1726697AbfDIGys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:53:57 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:47478 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726081AbfDIGx5 (ORCPT
+        Tue, 9 Apr 2019 02:54:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:54411 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfDIGyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:53:57 -0400
-X-UUID: 5cf32289ffdc4524948b1c5951c464b0-20190409
-X-UUID: 5cf32289ffdc4524948b1c5951c464b0-20190409
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <wangyan.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 239497021; Tue, 09 Apr 2019 14:53:12 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 9 Apr
- 2019 14:53:11 +0800
-Received: from mszsdclx1067.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 9 Apr 2019 14:53:10 +0800
-From:   wangyan wang <wangyan.wang@mediatek.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     wangyan wang <wangyan.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH V10 0/5] make mt7623 clock of hdmi stable
-Date:   Tue, 9 Apr 2019 14:53:02 +0800
-Message-ID: <20190409065307.82280-1-wangyan.wang@mediatek.com>
-X-Mailer: git-send-email 2.14.1
+        Tue, 9 Apr 2019 02:54:47 -0400
+Received: from [192.168.178.52] ([109.104.45.158]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N9dg5-1gr3EW1Eur-015Vwy; Tue, 09 Apr 2019 08:54:21 +0200
+Subject: Re: [PATCH 05/22] watchdog: bcm2835_wdt: drop platform_set_drvdata
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+References: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
+ <1554752326-13319-6-git-send-email-linux@roeck-us.net>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <13e71a39-a725-e0d9-1e42-a6212b548b30@i2se.com>
+Date:   Tue, 9 Apr 2019 08:54:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <1554752326-13319-6-git-send-email-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:0x5GjTLE4ZWmMPMhrn4tJ3UP/21bfMVyarsd/WVfRuZ6PJMfLbV
+ tEDoA1buDf+Up0n1jWWCAeT4kz9pXcg2OYzsj3/e/Z/p3Ly6CHozTTDcIHnn55hT65CUsbn
+ xgXbwqlAaOPUOqbqXB4OUJJIDgg/MoNW052Q2uDuuNfaYQZ3I+jd+Q/+i4MTZ4OOEyvB3mE
+ i2HOLNACIXFHoe/o0vbTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+BO6YoWqVWY=:k5OFYMD+PVqKb+Iu4w/Ki3
+ aMDF97xiOMzM+Xztg55fAwiwkCWSvz0/IgHB78v6sQk9uTeNWWuQ3i8WWqn+c1kyygOM7lK5N
+ gdpjbkYptZkQaDz3sDuLmj1WxSMLixXRwgJk/kI5lzT81AGxgsqbEp+FShz8p5kycWkgzAz1+
+ kVUrDnq9QgWZO5sa0eNKvx5+qLLPy5u7GDAPOPee3yklPzQgHsbBoKMCLglQszpYVJfbxZNGg
+ nBW4gPjaaGxwsXEN+92O67066uFowF+tCHq0bXy3VjEtx8lIu8Q7oHQ3+W89pasXerl9TDlAA
+ xwI9MapbFhqAYRsv/hGO+TQopMI8dyMI4aJPVuo14OEkDcTtOTNZytcmeV/rBsl1iVeX9+pev
+ Rn8npeqRcnbMDTrT3YtDlq4Z4wwVcqOy6fiT14WGzZTFQWm9mQETNGJmtwm+QIeSWPmOKBfNH
+ 9wGhPdrRl1VPBY+YTT36zfb1hSi2cuH0N+Vdz7SaRv0Fr+gwk8jjsTMaGBmxyepaN6uGnavUj
+ cwTNOLF16d4qKwV/sobguq7b17O/h0rfv78Q0r8+72S1RKjDpgVFhXwNBNVc1O8zZbhda6VNg
+ rvnzgA1xbFyhv/4EArIOiT95K8dJPo6EbWkWeP6xsW6+O9rbLOjPvI3xnFu0+PRZP2cuqxZbM
+ JCIzcrpCVM1IL1eHz4CmRRRU7cVGhZvFXg4Qij/c5tBwQDvbpqfOXEGkTR9JHXnoMC46vTQNG
+ HD6y/pAFfWv6Jq4W845aEQZYWXXaMImLokB7hdUeVwvFGO5ks4rHxxSyQQk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wangyan Wang <wangyan.wang@mediatek.com>
+Am 08.04.19 um 21:38 schrieb Guenter Roeck:
+> There is no call to platform_get_drvdata() in the driver,
+> so platform_set_drvdata() is unnecessary and can be dropped.
+>
+> The conversion was done automatically with coccinelle using the
+> following semantic patches. The semantic patches and the scripts
+> used to generate this commit log are available at
+> https://github.com/groeck/coccinelle-patches
+>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-V10 adopt maintainer's suggestion.
-Here is the change list between V9 & V10
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-1. Align the first character to the right of '(' in
-mtk_hdmi_phy_clk_get_data() of "drm/mediatek: remove flag ..."
-2. Align the first character to the right of '(' in
-mtk_hdmi_pll_recalc_rate() of "drm/mediatek: make implementation ..." 
-3. Align the first character to the right of '(' in
-mtk_hdmi_pll_round_rate() of "drm/mediatek: no change ..."
-4. move patch " drm/mediatek: make implementation ..." before
-patch "drm/mediatek: no change parent ..." 
-5. To make MT2701 HDMI stable, TVDPLL should not be adjusted and
-it's the parent clock of HDMI phy, so HDMI phy could not adjust parent
-rate. there are 3 steps to make MT2701 HDMI stable.
-    1). remove flag CLK_SET_RATE_PARENT for mt2701 hdmi phy to not propagate
-rate change to parent in "drm/mediatek: remove flag ...".
-    2). Using new factor for tvdpll in mt2701 to match divider of DPI in
-mt2701 in "drm/mediatek: using new...".
-    3). No change parent rate in round_rate() for mt2701 hdmi phy in
-"drm/mediatek: no change parent...".
-
-6. Recalculate the rate of this clock, by querying hardware to
-make implementation of recalc_rate() to match the definition.
-
-Wangyan Wang (5):
-  drm/mediatek: remove flag CLK_SET_RATE_PARENT for mt2701 hdmi phy
-  drm/mediatek: fix the rate and divder of hdmi phy for MT2701
-  drm/mediatek: using new factor for tvdpll in MT2701
-  drm/mediatek: make implementation of recalc_rate() to match the definition
-  drm/mediatek: no change parent rate in round_rate() for mt2701 hdmi phy
-
- 03_27_ck.diff                                  | 91 ++++++++++++++++++++++++
- drivers/gpu/drm/mediatek/mtk_dpi.c             |  8 +--
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 35 ++--------
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  5 +-
- drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 50 ++++++++++++--
- drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 23 +++++++
- patch1.diff                                    | 75 ++++++++++++++++++++
- patch_5_4.diff                                 | 95 ++++++++++++++++++++++++++
- remove_parent_flag.diff                        | 75 ++++++++++++++++++++
- 9 files changed, 412 insertions(+), 45 deletions(-)
- create mode 100644 03_27_ck.diff
- create mode 100644 patch1.diff
- create mode 100644 patch_5_4.diff
- create mode 100644 remove_parent_flag.diff
-
--- 
-2.14.1
+Thanks
 
