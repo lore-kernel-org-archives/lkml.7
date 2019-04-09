@@ -2,85 +2,105 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983CC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC99DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B4920850
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D06920850
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OQo/qgu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfDIXcR (ORCPT
+        id S1726992AbfDIXed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 19:32:17 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40612 "EHLO ale.deltatee.com"
+        Tue, 9 Apr 2019 19:34:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:44289 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfDIXcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 19:32:17 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hE0Dv-0005yk-9G; Tue, 09 Apr 2019 17:32:16 -0600
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Wesley Sheng <wesley.sheng@microchip.com>
-Cc:     kurt.schwemmer@microsemi.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wesleyshenggit@sina.com,
-        kelvin.cao@microchip.com
-References: <1554734088-5755-1-git-send-email-wesley.sheng@microchip.com>
- <1554734088-5755-2-git-send-email-wesley.sheng@microchip.com>
- <20190409223642.GD256045@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <634db3fa-286d-1136-b2af-1bf45501275f@deltatee.com>
-Date:   Tue, 9 Apr 2019 17:32:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726573AbfDIXed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 19:34:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44f3Xk0PkGz9sRH;
+        Wed, 10 Apr 2019 09:34:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554852870;
+        bh=R5hNgvHOR4nd+b8LQkXG7FPZAzO0AWYpDYaN0N8EaN0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OQo/qgu5BDtdKpgKIWZXPEoc5DXx+GuZh0lyKhlU8I/gVVmUkn40cVA8wh1S39FW9
+         SXGcfrKJh9/2wg3rWyAoWvasf5DVCbQevNwuMYClTqwIJfo0xSTIOkhvdGyvxmAVZu
+         Lm69YvNvd09YPTztNXHfm6nHrzSnA/n/ny5DFl1KOUsNh5VvAIcOdomgyGpNnlZfHs
+         B2OjiuAc0deoZcshCKZn1qGs95mZpNDuUxfJ9DapQ9eWSc/x6kXsbxrlg5tZFCfxuB
+         KTkgf+zdafPnB/h+DDlQdWfeLLVqKZCoREKImIQYxcQeAYHhvHX/Y4m2TV9DG9YiW7
+         osPv2AzRvyUBQ==
+Date:   Wed, 10 Apr 2019 09:34:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: linux-next: manual merge of the printk tree with Linus' tree
+Message-ID: <20190410093429.095c8975@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190409223642.GD256045@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: kelvin.cao@microchip.com, wesleyshenggit@sina.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kurt.schwemmer@microsemi.com, wesley.sheng@microchip.com, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 1/2] switchtec: Fix false maximum supported PCIe function
- number issue
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gimwf1eMZvYjGfuTZl5Qt=f"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/gimwf1eMZvYjGfuTZl5Qt=f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2019-04-09 4:36 p.m., Bjorn Helgaas wrote:
-> Hi Wesley,
-> 
-> On Mon, Apr 08, 2019 at 10:34:47PM +0800, Wesley Sheng wrote:
->> The hardware supports up to 255 PFFs and the driver only supports 48, so
->> this patch updates the driver to support them all.
->> To be backward compatible, a new ioctl and corresponding data
->> structure are created, while keep the deprecated one.
-> 
-> The above is either one paragraph that needs to be rewrapped, or two
-> paragraphs that need a blank line between.
+Today's linux-next merge of the printk tree got a conflict in:
 
-Wesley can address this.
+  mm/memblock.c
 
-> What's a PFF?
+between commit:
 
-PFF is really a concept internal to the Switchtec device. It stands for
-PCIe Function Framework. Essentially, there is a bank of registers for
-every PCIe Function (aka endpoint) in the switch. When I originally
-wrote the driver, I assumed incorrectly there would only ever be one PFF
-per port and the maximum number of ports for Switchtec parts is 48. In
-fact, the hardware supports up to 255 and there are typically two PFFs
-per upstream port (one for the port itself and one for the management
-endpoint).
+  26fb3dae0a1e ("memblock: drop memblock_alloc_*_nopanic() variants")
 
-Logan
+from Linus' tree and commit:
 
+  d75f773c86a2 ("treewide: Switch printk users from %pf and %pF to %ps and =
+%pS, respectively")
 
+from the printk tree.
 
+I fixed it up (the former removed the code changed by part of the latter)
+and can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gimwf1eMZvYjGfuTZl5Qt=f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytLAUACgkQAVBC80lX
+0GyOrQgAgdKkTUNGAVzqQ6hevkkvY1uLF915JniPe35gp0n+OKEWPX1LY/R2fxPj
+Hq/esVJnuwz3Sx/hP7aajNUed0TUPw5xtvCsHf695HizP+iqGd/vhfiAwAdkV3IZ
+XkqUGJD90tddcZXpjAPHiViUm74rGrmZpah900eg9aoNqIQ0MoxQEYbWYQ3wrVoa
+kKK5yZCLdX8vBKmnA8LN6udU1ijA11tdpMjGXaBWJX1Yt6C57MW028MjnHPHXSNd
+gsHt+Ymx9DQbJiHc+kSCsh4ngV6H/Nqay2hacR9EyLb2vfljKNyxPz90yyJr1IK6
+cbdjr4bsRiOXe2YqKSamx5znc53H/w==
+=v2mZ
+-----END PGP SIGNATURE-----
+
+--Sig_/gimwf1eMZvYjGfuTZl5Qt=f--
