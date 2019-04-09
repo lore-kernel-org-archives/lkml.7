@@ -2,252 +2,367 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E89C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE00DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD27D21841
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IGaNdo3X"
+	by mail.kernel.org (Postfix) with ESMTP id A4EBB213F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfDIB7b (ORCPT
+        id S1726568AbfDICDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:59:31 -0400
-Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:5956
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726352AbfDIB7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:59:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ky9+rMN3R+VIbMLnOMmmwP1/+FwBRNdRI5zCaC7V34I=;
- b=IGaNdo3XhhbgdJwDpzuH3nKkz3UDhV4XTKJDn4Ru9dtu0bmj1eRi24W3xmwdqQ1F556VaY/0bltGw6vHVb1CrwWPVY2Z4PPvzzkQIqWGSw5/fI375mYKcYieaC5kTrGpemQMIBJoOszBtq/Xb5yolG1hsyHyBhugI8rOkzNz9JQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3689.eurprd04.prod.outlook.com (52.134.69.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Tue, 9 Apr 2019 01:59:20 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
- 01:59:20 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Topic: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Index: AQHU3TgWpyqsIy1Nik+ALNkYzES/zaYyPHAAgAAhGEA=
-Date:   Tue, 9 Apr 2019 01:59:19 +0000
-Message-ID: <DB3PR0402MB39164EEA38E9A3C239CCA221F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
- <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211209072B94795A6A04E9A802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211209072B94795A6A04E9A802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 02616a12-6e26-475a-e139-08d6bc8efaf3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3689;
-x-ms-traffictypediagnostic: DB3PR0402MB3689:
-x-microsoft-antispam-prvs: <DB3PR0402MB3689E7D235D76C9A5D74C930F52D0@DB3PR0402MB3689.eurprd04.prod.outlook.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(396003)(376002)(366004)(13464003)(189003)(199004)(5660300002)(7696005)(478600001)(52536014)(68736007)(110136005)(106356001)(76176011)(8676002)(99286004)(105586002)(71190400001)(81166006)(26005)(53546011)(81156014)(6506007)(256004)(2906002)(71200400001)(14454004)(6116002)(186003)(3846002)(102836004)(11346002)(66066001)(14444005)(53936002)(476003)(6436002)(7416002)(86362001)(305945005)(2201001)(486006)(446003)(2501003)(44832011)(7736002)(8936002)(33656002)(55016002)(229853002)(4326008)(9686003)(316002)(6246003)(74316002)(97736004)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3689;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QSq4s01cjpi2ahbOjm+tLKm40NvhA/fHY81kGv6+i7FSY8LnY18LUN95mSX3ReW2fbRn+XP6yRRVJFCS3Bp2sTMiGHcmm65+BdtAyKh1ebxrujFDgTuys5z1MSwc6WGsFu8JO68cFntpLIFcKvTe93sxYo8oSJlWXuctMmCCrEAL9+0T6Ardo1wNC6pua/WXHfuC8BiNSScueN4hLt5vaHulvyCyxLmQidCt/ykJsE6CYgSY0xYf85cuHOz1qgTmLG89tzvhShliBJ4Hiyq+dhhtL2Gr27tKD7iLbPD6gLjrigcEDL6IRtIamdIjcCz2z+MW44UDWFsKq78bBUihODUDmNzTuwRxMq9pQiNzMWgjqqGonOZcKA+ISe+GExgWIc9/+ImtW3MSN2okfS2fMR8K/Y83dZ96Fk+9p94L8Lc=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 8 Apr 2019 22:03:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35742 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfDICDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 22:03:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 19:03:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
+   d="scan'208";a="149195224"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2019 19:03:28 -0700
+Date:   Mon, 8 Apr 2019 19:02:19 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 11/14] x86/watchdog/hardlockup: Add an HPET-based
+ hardlockup detector
+Message-ID: <20190409020219.GA6974@ranerica-svr.sc.intel.com>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1551283518-18922-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <alpine.DEB.2.21.1903262029310.1789@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02616a12-6e26-475a-e139-08d6bc8efaf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 01:59:19.9457
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3689
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903262029310.1789@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFpc2hlbmcNCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBaXNoZW5nIERvbmcNCj4gU2VudDogMjAxOcTqNNTC
-OMjVIDE5OjA5DQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IHJvYmgr
-ZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5v
-cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVz
-dGV2YW1AZ21haWwuY29tOyBhLnp1bW1vQHRvd2VydGVjaC5pdDsNCj4gYWxleGFuZHJlLmJlbGxv
-bmlAYm9vdGxpbi5jb207IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IERhbmllbCBCYWx1dGENCj4g
-PGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC0NCj4gcnRjQHZnZXIua2VybmVsLm9yZw0KPiBDYzogZGwtbGludXgt
-aW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCBWNSA0LzRdIHJ0
-YzogaW14LXNjOiBhZGQgcnRjIGFsYXJtIHN1cHBvcnQNCj4gDQo+ID4gRnJvbTogQW5zb24gSHVh
-bmcNCj4gPiBTZW50OiBNb25kYXksIE1hcmNoIDE4LCAyMDE5IDExOjEwIEFNDQo+ID4NCj4gPiBB
-ZGQgaS5NWCBzeXN0ZW0gY29udHJvbGxlciBSVEMgYWxhcm0gc3VwcG9ydCwgdGhlIFJUQyBhbGFy
-bSBpcw0KPiA+IGltcGxlbWVudGVkIHZpYSBTSVAoc2lsaWNvbiBwcm92aWRlcikgcnVudGltZSBz
-ZXJ2aWNlIGNhbGwgYW5kDQo+ID4gQVJNLVRydXN0ZWQtRmlybXdhcmUgd2lsbCBjb21tdW5pY2F0
-ZSB3aXRoIHN5c3RlbSBjb250cm9sbGVyIHZpYQ0KPiA+IE1VKG1lc3NhZ2UgdW5pdCkgSVBDIHRv
-IHNldCBSVEMgYWxhcm0uIFdoZW4gUlRDIGFsYXJtIGZpcmVzLCBzeXN0ZW0NCj4gPiBjb250cm9s
-bGVyIHdpbGwgZ2VuZXJhdGUgYSBjb21tb24gTVUgaXJxIGV2ZW50IGFuZCBub3RpZnkgc3lzdGVt
-DQo+IGNvbnRyb2xsZXIgUlRDIGRyaXZlciB0byBoYW5kbGUgdGhlIGlycSBldmVudC4NCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+
-IC0tLQ0KPiA+IE5vIGZ1bmN0aW9uIGNoYW5nZXMsIGp1c3QgdXBkYXRlIGlteF9zY3VfaXJxX3Jl
-Z2lzdGVyX25vdGlmaWVyKCkNCj4gPiBmdW5jdGlvbiBuYW1lIGFjY29yZGluZyB0byBTQ1UgSVJR
-IGZ1bmN0aW9uIG5hbWUgY2hhbmdlLg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3J0Yy9ydGMtaW14
-LXNjLmMgfCAxMTINCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMgYi9kcml2ZXJzL3J0Yy9ydGMt
-aW14LXNjLmMgaW5kZXgNCj4gPiAxOTY0MmJmLi45ZGY0OTkwIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
-Yw0KPiA+IEBAIC0zLDYgKzMsNyBAQA0KPiA+ICAgKiBDb3B5cmlnaHQgMjAxOCBOWFAuDQo+ID4g
-ICAqLw0KPiA+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5o
-Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvYXJtLXNtY2NjLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51
-eC9maXJtd2FyZS9pbXgvc2NpLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4g
-PiBAQCAtMTEsMTEgKzEyLDE3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9ydGMuaD4NCj4gPg0K
-PiA+ICAjZGVmaW5lIElNWF9TQ19USU1FUl9GVU5DX0dFVF9SVENfU0VDMTk3MAk5DQo+ID4gKyNk
-ZWZpbmUgSU1YX1NDX1RJTUVSX0ZVTkNfU0VUX1JUQ19BTEFSTQkJOA0KPiA+ICAjZGVmaW5lIElN
-WF9TQ19USU1FUl9GVU5DX1NFVF9SVENfVElNRQkJNg0KPiA+DQo+ID4gKyNkZWZpbmUgSU1YX1ND
-X0lSUV9GVU5DX0VOQUJMRQkJCTENCj4gPiArDQo+ID4gICNkZWZpbmUgSU1YX1NJUF9TUlRDCQkJ
-MHhDMjAwMDAwMg0KPiA+ICAjZGVmaW5lIElNWF9TSVBfU1JUQ19TRVRfVElNRQkJMHgwDQo+ID4N
-Cj4gPiArI2RlZmluZSBTQ19JUlFfR1JPVVBfUlRDICAgIDINCj4gPiArI2RlZmluZSBTQ19JUlFf
-UlRDICAgICAgICAgIDENCj4gPiArDQo+ID4gIHN0YXRpYyBzdHJ1Y3QgaW14X3NjX2lwYyAqcnRj
-X2lwY19oYW5kbGU7ICBzdGF0aWMgc3RydWN0IHJ0Y19kZXZpY2UNCj4gPiAqaW14X3NjX3J0YzsN
-Cj4gPg0KPiA+IEBAIC0yNCw2ICszMSwyNCBAQCBzdHJ1Y3QgaW14X3NjX21zZ190aW1lcl9nZXRf
-cnRjX3RpbWUgew0KPiA+ICAJdTMyIHRpbWU7DQo+ID4gIH0gX19wYWNrZWQ7DQo+ID4NCj4gPiAr
-c3RydWN0IGlteF9zY19tc2dfdGltZXJfZW5hYmxlX2lycSB7DQo+ID4gKwlzdHJ1Y3QgaW14X3Nj
-X3JwY19tc2cgaGRyOw0KPiA+ICsJdTMyIG1hc2s7DQo+ID4gKwl1MTYgcmVzb3VyY2U7DQo+ID4g
-Kwl1OCBncm91cDsNCj4gPiArCXU4IGVuYWJsZTsNCj4gPiArfSBfX3BhY2tlZDsNCj4gPiArDQo+
-ID4gK3N0cnVjdCBpbXhfc2NfbXNnX3RpbWVyX3J0Y19zZXRfYWxhcm0gew0KPiA+ICsJc3RydWN0
-IGlteF9zY19ycGNfbXNnIGhkcjsNCj4gPiArCXUxNiB5ZWFyOw0KPiA+ICsJdTggbW9uOw0KPiA+
-ICsJdTggZGF5Ow0KPiA+ICsJdTggaG91cjsNCj4gPiArCXU4IG1pbjsNCj4gPiArCXU4IHNlYzsN
-Cj4gPiArfSBfX3BhY2tlZDsNCj4gPiArDQo+ID4gIHN0YXRpYyBpbnQgaW14X3NjX3J0Y19yZWFk
-X3RpbWUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgcnRjX3RpbWUgKnRtKSAgew0KPiA+ICAJ
-c3RydWN0IGlteF9zY19tc2dfdGltZXJfZ2V0X3J0Y190aW1lIG1zZzsgQEAgLTYwLDkgKzg1LDky
-IEBADQo+IHN0YXRpYw0KPiA+IGludCBpbXhfc2NfcnRjX3NldF90aW1lKHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IHJ0Y190aW1lICp0bSkNCj4gPiAgCXJldHVybiByZXMuYTA7DQo+ID4gIH0N
-Cj4gPg0KPiA+ICtzdGF0aWMgaW50IGlteF9zY19ydGNfYWxhcm1faXJxX2VuYWJsZShzdHJ1Y3Qg
-ZGV2aWNlICpkZXYsIHVuc2lnbmVkDQo+ID4gK2ludA0KPiA+ICtlbmFibGUpIHsNCj4gDQo+IEkg
-dGhpbmsgeW91IHNob3VsZG4ndCBpbXBsZW1lbnQgdGhpcyBnZW5lcmljIGZ1bmN0aW9uIGluIHJ0
-YyBkcml2ZXIgaW5zdGVhZCBvZg0KPiBJbXgtc2N1LWlycSBkcml2ZXIuDQoNClJUQyBkcml2ZXIg
-aGFzIGNhcGFiaWxpdHkgdG8gZW5hYmxlL2Rpc2FibGUgSVJRLCBzbyB3ZSBoYXZlIHRvIGltcGxl
-bWVudCB0aGlzDQpjYWxsYmFjaywgYW5kIGNvbnNpZGVyaW5nIHRoZSBNVSByZXNvdXJjZSBJRCBo
-YXMgdG8gYmUgcGFyc2VkIGZyb20gRFQsIGl0IGRvZXMNCk5PVCBtYWtlIHNlbnNlIHRvIGRvIGl0
-IGZvciBhbGwgZHJpdmVyLCBzbyBJIHdpbGwgYWRkIGFub3RoZXIgQVBJIGluIGlteC1zY3UtaXJx
-IGRyaXZlcg0KdG8gcHJvdmlkZSBmdW5jdGlvbiBvZiBlbmFibGluZy9kaXNhYmxpbmcgaXJxLCBl
-YWNoIGRyaXZlciBjYW4ganVzdCBjYWxsIHRoZSBBUEkgdG8NCmVuYWJsZS9kaXNhYmxlIGl0cyBv
-d24gSVJRLCBPTkxZIG5lZWQgdG8gcGFzcyB0aGUgY29ycmVzcG9uZGluZyBhcmd1bWVudHM6DQoN
-Cit2b2lkIGlteF9zY3VfaXJxX2VuYWJsZSh1OCBncm91cCwgdTMyIG1hc2ssIHU4IGVuYWJsZSkN
-Cit7DQorICAgICAgIHN0cnVjdCBpbXhfc2NfbXNnX2lycV9lbmFibGUgbXNnOw0KKyAgICAgICBz
-dHJ1Y3QgaW14X3NjX3JwY19tc2cgKmhkciA9ICZtc2cuaGRyOw0KKyAgICAgICBpbnQgcmV0Ow0K
-Kw0KKyAgICAgICBoZHItPnZlciA9IElNWF9TQ19SUENfVkVSU0lPTjsNCisgICAgICAgaGRyLT5z
-dmMgPSBJTVhfU0NfUlBDX1NWQ19JUlE7DQorICAgICAgIGhkci0+ZnVuYyA9IElNWF9TQ19JUlFf
-RlVOQ19FTkFCTEU7DQorICAgICAgIGhkci0+c2l6ZSA9IDM7DQorDQorICAgICAgIG1zZy5yZXNv
-dXJjZSA9IG11X3Jlc291cmNlX2lkOw0KKyAgICAgICBtc2cuZ3JvdXAgPSBncm91cDsNCisgICAg
-ICAgbXNnLm1hc2sgPSBtYXNrOw0KKyAgICAgICBtc2cuZW5hYmxlID0gZW5hYmxlOw0KKw0KKyAg
-ICAgICByZXQgPSBpbXhfc2N1X2NhbGxfcnBjKHJ0Y19pcGNfaGFuZGxlLCAmbXNnLCB0cnVlKTsN
-CisgICAgICAgaWYgKHJldCkNCisgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImVuYWJsZSBp
-cnEgZmFpbGVkLCBncm91cCAlZCwgbWFzayAlZCwgcmV0ICVkXG4iLA0KKyAgICAgICAgICAgICAg
-ICAgICAgICAgZ3JvdXAsIG1hc2ssIHJldCk7DQorfQ0KDQo+IA0KPiA+ICsJc3RydWN0IGlteF9z
-Y19tc2dfdGltZXJfZW5hYmxlX2lycSBtc2c7DQo+ID4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cg
-KmhkciA9ICZtc2cuaGRyOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwloZHItPnZlciA9
-IElNWF9TQ19SUENfVkVSU0lPTjsNCj4gPiArCWhkci0+c3ZjID0gSU1YX1NDX1JQQ19TVkNfSVJR
-Ow0KPiA+ICsJaGRyLT5mdW5jID0gSU1YX1NDX0lSUV9GVU5DX0VOQUJMRTsNCj4gPiArCWhkci0+
-c2l6ZSA9IDM7DQo+ID4gKw0KPiA+ICsJbXNnLnJlc291cmNlID0gSU1YX1NDX1JfTVVfMUE7DQo+
-IA0KPiBIZXJlIG1heSBiZSB3cm9uZyBhcyBpdCBpcyBub3QgYWxpZ24gd2l0aCB3aGF0IHlvdSBk
-aWQgaW4gUGF0Y2ggMiB0aGF0IE1VDQo+IHJlc291cmNlIGlzIGR5bmFtaWNhbGx5IGRldGVjdGVk
-Lg0KDQpGaXhlZCBieSB1cHBlciBjb21tZW50IHVzaW5nIG5ldyBBUEkgaW5zaWRlIGlteC1zY3Ut
-aXJxIGRyaXZlci4NCg0KPiANCj4gPiArCW1zZy5ncm91cCA9IFNDX0lSUV9HUk9VUF9SVEM7DQo+
-ID4gKwltc2cubWFzayA9IFNDX0lSUV9SVEM7DQo+ID4gKwltc2cuZW5hYmxlID0gZW5hYmxlOw0K
-PiA+ICsNCj4gPiArCXJldCA9IGlteF9zY3VfY2FsbF9ycGMocnRjX2lwY19oYW5kbGUsICZtc2cs
-IHRydWUpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiZW5hYmxlIHJ0
-YyBpcnEgZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiAr
-CX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlu
-dCBpbXhfc2NfcnRjX3JlYWRfYWxhcm0oc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gPiAr
-cnRjX3drYWxybQ0KPiA+ICsqYWxybSkgew0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gDQo+
-IENhbid0IGF2b2lkIGRlZmluZSBOVUxMIGZ1bmN0aW9uPw0KDQpXZSBoYXZlIHRvIGltcGxlbWVu
-dCBpdCBhcyBOVUxMIGZ1bmN0aW9uLCBhcyBTQ0ZXIGRvZXMgTk9UIHByb3ZpZGUgc3VjaCBmZWF0
-dXJlLA0KQnV0IHJ0YyBhbGFybSBPTkxZIGF2YWlsYWJsZSB3aGVuIC5yZWFkX2FsYXJtIG9wcyBp
-cyBpbXBsZW1lbnRlZDogDQoNCjE0NyBzdGF0aWMgc3NpemVfdA0KMTQ4IHdha2VhbGFybV9zdG9y
-ZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0KMTQ5
-ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpidWYsIHNpemVfdCBuKQ0KMTUwIHsNCg0KLi4u
-DQoNCjE4NyAgICAgICAgICAgICAgICAgcmV0dmFsID0gcnRjX3JlYWRfYWxhcm0ocnRjLCAmYWxt
-KTsNCjE4OCAgICAgICAgICAgICAgICAgaWYgKHJldHZhbCA8IDApDQoxODkgICAgICAgICAgICAg
-ICAgICAgICAgICAgcmV0dXJuIHJldHZhbDsNCg0KDQo+IA0KPiA+ICsNCj4gPiArc3RhdGljIGlu
-dCBpbXhfc2NfcnRjX3NldF9hbGFybShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2th
-bHJtDQo+ID4gKyphbHJtKSB7DQo+ID4gKwlzdHJ1Y3QgaW14X3NjX21zZ190aW1lcl9ydGNfc2V0
-X2FsYXJtIG1zZzsNCj4gPiArCXN0cnVjdCBpbXhfc2NfcnBjX21zZyAqaGRyID0gJm1zZy5oZHI7
-DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsJc3RydWN0IHJ0Y190aW1lICphbHJtX3RtID0gJmFscm0t
-PnRpbWU7DQo+ID4gKw0KPiA+ICsJaGRyLT52ZXIgPSBJTVhfU0NfUlBDX1ZFUlNJT047DQo+ID4g
-KwloZHItPnN2YyA9IElNWF9TQ19SUENfU1ZDX1RJTUVSOw0KPiA+ICsJaGRyLT5mdW5jID0gSU1Y
-X1NDX1RJTUVSX0ZVTkNfU0VUX1JUQ19BTEFSTTsNCj4gPiArCWhkci0+c2l6ZSA9IDM7DQo+ID4g
-Kw0KPiA+ICsJbXNnLnllYXIgPSBhbHJtX3RtLT50bV95ZWFyICsgMTkwMDsNCj4gPiArCW1zZy5t
-b24gPSBhbHJtX3RtLT50bV9tb24gKyAxOw0KPiA+ICsJbXNnLmRheSA9IGFscm1fdG0tPnRtX21k
-YXk7DQo+ID4gKwltc2cuaG91ciA9IGFscm1fdG0tPnRtX2hvdXI7DQo+ID4gKwltc2cubWluID0g
-YWxybV90bS0+dG1fbWluOw0KPiA+ICsJbXNnLnNlYyA9IGFscm1fdG0tPnRtX3NlYzsNCj4gPiAr
-DQo+ID4gKwlyZXQgPSBpbXhfc2N1X2NhbGxfcnBjKHJ0Y19pcGNfaGFuZGxlLCAmbXNnLCB0cnVl
-KTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgInNldCBydGMgYWxhcm0g
-ZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4g
-PiArDQo+ID4gKwlyZXQgPSBpbXhfc2NfcnRjX2FsYXJtX2lycV9lbmFibGUoZGV2LCBhbHJtLT5l
-bmFibGVkKTsNCj4gDQo+IEp1c3QgY3VyaW91cyB3ZSBhbHJlYWR5IGhhdmUgLmFsYXJtX2lycV9l
-bmFibGUoKS4NCj4gV2h5IGRvIHdlIG5lZWQgY2FsbCBpdCBhZ2FpbiBoZXJlPw0KDQpUaGF0IGlz
-IGJlY2F1c2UgdGhlICBzZXRfYWxhcm0gZnVuY3Rpb24gIHBhc3MgYWxhcm0gdGltZSBhbmQgYWxh
-cm0tPmVuYWJsZWQgYXJndW1lbnQsDQppdCBjb3VsZCBiZSB0byBlbmFibGUgYWxhcm0gb3IgdG8g
-ZGlzYWJsZSBhbGFybSwgc28gd2UgaGF2ZSB0byBjb250cm9sIHRoZSBhbGFybQ0KZnVuY3Rpb24g
-aGVyZSwgYWxsIG90aGVyIHJ0YyBkcml2ZXJzIGFsc28gZG8gaXQgdGhpcyB3YXkuIFRoZSAuYWxh
-cm1faXJxX2VuYWJsZSgpIGNhbGxiYWNrDQppcyBmb3IganVzdCBlbmFibGUgb3IgZGlzYWJsZSBh
-bGFybS4NCg0KVGhhbmtzLA0KQW5zb24NCg0KDQo+IA0KPiBSZWdhcmRzDQo+IERvbmcgQWlzaGVu
-Zw0KPiANCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImVuYWJsZSBydGMg
-YWxhcm0gZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiAr
-CX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBydGNfY2xhc3Nfb3BzIGlteF9zY19ydGNfb3BzID0gew0KPiA+ICAJLnJlYWRf
-dGltZSA9IGlteF9zY19ydGNfcmVhZF90aW1lLA0KPiA+ICAJLnNldF90aW1lID0gaW14X3NjX3J0
-Y19zZXRfdGltZSwNCj4gPiArCS5yZWFkX2FsYXJtID0gaW14X3NjX3J0Y19yZWFkX2FsYXJtLA0K
-PiA+ICsJLnNldF9hbGFybSA9IGlteF9zY19ydGNfc2V0X2FsYXJtLA0KPiA+ICsJLmFsYXJtX2ly
-cV9lbmFibGUgPSBpbXhfc2NfcnRjX2FsYXJtX2lycV9lbmFibGUsIH07DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgaW50IGlteF9zY19ydGNfYWxhcm1fc2Nfbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9j
-ayAqbmIsDQo+ID4gKwkJCQkJdW5zaWduZWQgbG9uZyBldmVudCwgdm9pZCAqZ3JvdXApIHsNCj4g
-PiArCS8qIGlnbm9yZSBub24tcnRjIGlycSAqLw0KPiA+ICsJaWYgKCEoKGV2ZW50ICYgU0NfSVJR
-X1JUQykgJiYgKCoodTggKilncm91cCA9PQ0KPiBTQ19JUlFfR1JPVVBfUlRDKSkpDQo+ID4gKwkJ
-cmV0dXJuIDA7DQo+ID4gKw0KPiA+ICsJcnRjX3VwZGF0ZV9pcnEoaW14X3NjX3J0YywgMSwgUlRD
-X0lSUUYgfCBSVENfQUYpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgc3RydWN0IG5vdGlmaWVyX2Jsb2NrIGlteF9zY19ydGNfYWxhcm1fc2Nfbm90
-aWZpZXIgPSB7DQo+ID4gKwkubm90aWZpZXJfY2FsbCA9IGlteF9zY19ydGNfYWxhcm1fc2Nfbm90
-aWZ5LA0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgaW14X3NjX3J0Y19wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSBAQCAtNzMsNg0KPiA+ICsxODEsOCBAQCBzdGF0aWMg
-aW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAg
-CWlmIChyZXQpDQo+ID4gIAkJcmV0dXJuIHJldDsNCj4gPg0KPiA+ICsJZGV2aWNlX2luaXRfd2Fr
-ZXVwKCZwZGV2LT5kZXYsIHRydWUpOw0KPiA+ICsNCj4gPiAgCWlteF9zY19ydGMgPSBkZXZtX3J0
-Y19hbGxvY2F0ZV9kZXZpY2UoJnBkZXYtPmRldik7DQo+ID4gIAlpZiAoSVNfRVJSKGlteF9zY19y
-dGMpKQ0KPiA+ICAJCXJldHVybiBQVFJfRVJSKGlteF9zY19ydGMpOw0KPiA+IEBAIC04Nyw2ICsx
-OTcsOCBAQCBzdGF0aWMgaW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZQ0KPiA+ICpwZGV2KQ0KPiA+ICAJCXJldHVybiByZXQ7DQo+ID4gIAl9DQo+ID4NCj4gPiArCWlt
-eF9zY3VfaXJxX3JlZ2lzdGVyX25vdGlmaWVyKCZpbXhfc2NfcnRjX2FsYXJtX3NjX25vdGlmaWVy
-KTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gLS0NCj4gPiAyLjcu
-NA0KDQo=
+On Tue, Mar 26, 2019 at 09:49:13PM +0100, Thomas Gleixner wrote:
+> On Wed, 27 Feb 2019, Ricardo Neri wrote:
+> > +/**
+> > + * get_count() - Get the current count of the HPET timer
+> > + *
+> > + * Returns:
+> > + *
+> > + * Value of the main counter of the HPET timer
+> 
+> The extra newline is not required IIRC.
+> 
+>     Returns: Value ......
+> 
+> shoud be sufficient and spares a lot of lines all over the place.
+> 
+
+Many thanks for your review!
+
+I checked the documentation again and the extra line is not needed. I'll
+remove it.
+
+> > + */
+> > +static inline unsigned long get_count(void)
+> > +{
+> > +	return hpet_readq(HPET_COUNTER);
+> > +}
+> > +
+> > +/**
+> > + * set_comparator() - Update the comparator in an HPET timer instance
+> > + * @hdata:	A data structure with the timer instance to update
+> > + * @cmp:	The value to write in the in the comparator registere
+> > + *
+> > + * Returns:
+> > + *
+> > + * None
+> 
+> Returns: None is not required and provides no additional value.
+> 
+> I appreciate that you try to document your functions extensively, but please
+> apply common sense whether it really provides value. Documenting the
+> obvious is not necessarily an improvement.
+
+Sure, I'll limit function documentation to places where it makes sense.
+
+> 
+> > + */
+> > +static inline void set_comparator(struct hpet_hld_data *hdata,
+> > +				  unsigned long cmp)
+> > +{
+> > +	hpet_writeq(cmp, HPET_Tn_CMP(hdata->num));
+> > +}
+> 
+> Also do we really need wrappers plus N lines documentation for
+> hpet_readq/writeq()?
+> 
+> I fail to see the benefit. It's just increasing the line count for no
+> reason and requires the reader to lookup functions which are just cosmetic
+> wrappers.
+
+I'll remove the wrapper for set_comparator() and get_count() as well as
+their documentation. These are the simplest wrappers. Is this
+acceptable?
+
+> 
+> > +/**
+> > + * hardlockup_detector_nmi_handler() - NMI Interrupt handler
+> > + * @val:	Attribute associated with the NMI. Not used.
+> > + * @regs:	Register values as seen when the NMI was asserted
+> > + *
+> > + * When in NMI context, check if it was caused by the expiration of the
+> 
+> When in NMI context? This function _IS_ called in NMI context, right?
+> 
+
+Yes, this wording is incorrect. I'll remove the "When in NMI context"
+part.
+
+> > + * HPET timer. If yes, create a CPU mask to issue an IPI to the rest
+> > + * of monitored CPUs. Upon receiving their own NMI, the other CPUs will
+> > + * check such mask to determine if they need to also look for lockups.
+> > + *
+> > + * Returns:
+> > + *
+> > + * NMI_DONE if the HPET timer did not cause the interrupt. NMI_HANDLED
+> > + * otherwise.
+> > + */
+> > +static int hardlockup_detector_nmi_handler(unsigned int val,
+> > +					   struct pt_regs *regs)
+> > +{
+> > +	struct hpet_hld_data *hdata = hld_data;
+> > +	unsigned int cpu = smp_processor_id();
+> > +
+> > +	if (is_hpet_wdt_interrupt(hdata)) {
+> > +		/* Get ready to check other CPUs for hardlockups. */
+> > +		cpumask_copy(&hdata->cpu_monitored_mask,
+> > +			     watchdog_get_allowed_cpumask());
+> > +		cpumask_clear_cpu(smp_processor_id(),
+> > +				  &hdata->cpu_monitored_mask);
+> 
+> Why are you copying the mask in NMI context and not updating it when the
+> watchdog enable/disable functions are called?
+
+I think I need two CPU masks for this implementation. A mask is used to
+track what CPUs need to be monitored at any given time; I use
+watchdog_allowed_mask from kernel/watchdog.c for that.
+
+Separately, I need to prepare a CPU mask to determine which CPUs should be
+targeted in the IPI; I use hdata->cpu_monitored_mask for this. This mask will
+remain clear most of the time. As soon as CPUs receive their own IPI,
+they must clear themselves from this mask. This to prevent them from
+incorrectly handling unrelated NMIs; as would be the case if it relied on
+watchdog_allowed_mask.
+
+> 
+> Also the mask can contain offline CPUs, which is bad because the send IPI
+> function expects offline CPUs to be cleared.
+> 
+> Clearing the CPU in the mask is not required because the function you
+> invoke:
+> 
+> > +		apic->send_IPI_mask_allbutself(&hdata->cpu_monitored_mask,
+> > +					       NMI_VECTOR);
+> 
+> has it's name for a reason.
+> 
+
+I think it still needs to be cleared. While it may not receive an IPI
+from this call, an unrelated NMI may happen and it will incorrectly invoke
+inspection as it found its bit in the CPU mask set.
+
+> > +
+> > +		kick_timer(hdata, !(hdata->flags & HPET_DEV_PERI_CAP));
+> > +
+> > +		inspect_for_hardlockups(regs);
+> > +
+> > +		return NMI_HANDLED;
+> > +	}
+> > +
+> > +	if (cpumask_test_and_clear_cpu(cpu, &hdata->cpu_monitored_mask)) {
+> > +		inspect_for_hardlockups(regs);
+> > +		return NMI_HANDLED;
+> > +	}
+> 
+> So if the function above returns false, then why would you try to check
+> that CPU mask and invoke the inspection? You already cleared that bit
+> above. This part is pointless and can be removed.
+> 
+
+Do you mean is_hpet_wdt_interrupt()? Such function only returns true if it
+determines that the HPET caused an NMI in the handling_cpu. The goal is that
+the first block only handles an NMI caused by the HPET and the second block only
+handles the NMI IPI issued by send_IPI_mask_allbutself() in the first
+block.
+
+Also, using IPIs may not be the best approach if we have to send them across
+packages as they can be rather costly. Instead, I plan to go back to my initial
+proposal of targeting each online CPU separately in a round robin fashion
+instead of having a single CPU handling the HPET interrupt and issuing
+IPIs.
+
+> > +void hardlockup_detector_hpet_enable(void)
+> > +{
+> > +	struct cpumask *allowed = watchdog_get_allowed_cpumask();
+> > +	unsigned int cpu = smp_processor_id();
+> 
+> This is called from a function which has already a cpu argument. Why aren't
+> you handing that in?
+> 
+
+But it could also be called from watchdog_nmi_stop(), which does not
+take a cpu as argument. Perhaps watchdog_nmi_stop() does not need to be
+implemented as in addition to it watchdog_nmi_disable() is called on all
+CPUs when stopping or reconfiguring the watchdog.
+
+> > +
+> > +	if (!hld_data)
+> > +		return;
+> 
+> Why can hld_data be NULL here?
+
+It cannot. It could only be null if, for instance HPET was disabled or
+not available. These cases cause hardlockup_detector_hpet_init() to
+fail and the NMI watchdog falls back to the perf implementation.
+
+I'll remove this check.
+
+> 
+> > +
+> > +	hld_data->handling_cpu = cpumask_first(allowed);
+> > +
+> > +	if (cpu == hld_data->handling_cpu) {
+> > +		update_handling_cpu(hld_data);
+> > +		/* Force timer kick when detector is just enabled */
+> > +		kick_timer(hld_data, true);
+> > +		enable_timer(hld_data);
+> > +	}
+> 
+> That logic is wrong. The per cpu enable function is called via:
+> 
+>   softlockup_start_all()
+>     for_each_cpu(cpu, &watchdog_allowed_mask)
+>        smp_call_on_cpu(cpu, softlockup_start_fn, NULL, false);
+> 
+>        ---> softlockup_start_fn()
+>                watchdog_enable()
+> 
+> OR
+> 
+>   lockup_detector_online_cpu()
+>     watchdog_enable()
+> 
+> The latter is a CPU hotplug operation. The former is invoked when the
+> watchdog is (re)configured in the core code. Both are mutually exclusive
+> and guarantee to never invoke the function concurrently on multiple CPUs.
+> 
+> So way you should handle this is:
+> 
+> 	cpumask_set_cpu(cpu, hld_data->cpu_monitored_mask);
+> 
+> 	if (!hld_data->enabled_cpus++) {
+> 		hld_data->handling_cpu = cpu;
+> 		kick_timer();
+> 		enable_timer();
+> 	}
+> 
+> The cpu mask starts off empty and each CPU sets itself when the function is
+> invoked on it.
+> 
+> data->enabled_cpus keeps track of the enabled cpus so you avoid
+> reconfiguration just because a different cpu comes online. And it's
+> required for disable as well.
+> 
+> > +void hardlockup_detector_hpet_disable(void)
+> > +{
+> > +	struct cpumask *allowed = watchdog_get_allowed_cpumask();
+> > +
+> > +	if (!hld_data)
+> > +		return;
+> > +
+> > +	/* Only disable the timer if there are no more CPUs to monitor. */
+> > +	if (!cpumask_weight(allowed))
+> > +		disable_timer(hld_data);
+> 
+> Again this should be:
+> 
+> 	cpumask_clear_cpu(cpu, hld_data->cpu_monitored_mask);
+> 	hld_data->enabled_cpus--;
+> 
+> 	if (hld_data->handling_cpu != cpu)
+> 		return;
+> 
+> 	disable_timer();
+> 	if (hld_data->enabled_cpus)
+> 		return;
+> 
+> 	hld_data->handling_cpu = cpumask_first(hld_data->cpu_monitored_mask);
+> 	enable_timer();
+>
+
+Sure. I will update the impelementation with this suggestion in both
+hardlockup_detector_hpet_disable() and
+hardlockup_detector_hpet_enable().
+
+> > +}
+> > +
+> > +/**
+> > + * hardlockup_detector_hpet_stop() - Stop the NMI watchdog on all CPUs
+> > + *
+> > + * Returns:
+> > + *
+> > + * None
+> > + */
+> > +void hardlockup_detector_hpet_stop(void)
+> > +{
+> > +	disable_timer(hld_data);
+> > +}
+> 
+> This function is nowhere used.
+> 
+
+Actually, thanks to this comment I found a bug in my patches. This
+function should be called from watchdog_nmi_stop().
+
+> > +int __init hardlockup_detector_hpet_init(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (!is_hpet_enabled())
+> > +		return -ENODEV;
+> > +
+> > +	if (check_tsc_unstable())
+> 
+> What happens if the TSC becomes unstable _AFTER_ you initialized and
+> started the HPET watchdog?
+
+I had not considered such case. Probably it will need to be disabled and
+switch to the perf implementation?
+
+Thanks and BR,
+Ricardo
