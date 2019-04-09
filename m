@@ -2,110 +2,123 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CC1C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E7BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B4620883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="B1bGbMzj"
+	by mail.kernel.org (Postfix) with ESMTP id 2E0CB20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDIBeT (ORCPT
+        id S1726756AbfDIBfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:34:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37999 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfDIBeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:34:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dVFJ17qDz9sRC;
-        Tue,  9 Apr 2019 11:34:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554773656;
-        bh=7VbFVRSjoZ3yxJA17E521x+1KnBtls59+zeZBU2K0Jo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=B1bGbMzj+lomGzKB9o02rDw32vbZ8PfcdRgvUU8n+Ov1kZLJM/aLGC3EhDKiKHJsv
-         tIrPfWUKabYEiGd8gHjw1UOLKWN9NCsId3ubQ0OB6XyHLJbTcYa9RxczpaQlVLYC8L
-         53oglBW6V0fGH9DWjAIUxApyCH9hyHjM01auKpqHa8rcbDPa1wWJ9oSR93RTsdJU17
-         J+NZD9LTxTvmsl080li5LOgVwj8G6+5H8dmsr7iD7VHhY/6TWy65riBbyRrk+DwaqG
-         mMFmyFSwOkzLErupDxij4UY5y3OTlpY4sdfi1EmkDQGf3Nhk4lHpjaxOeWr/R7V77p
-         JVNC8FbM/yRKw==
-Date:   Tue, 9 Apr 2019 11:34:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: linux-next: manual merge of the drm-misc tree with the drm tree
-Message-ID: <20190409113410.3d2a8afc@canb.auug.org.au>
+        Mon, 8 Apr 2019 21:35:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41452 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725950AbfDIBfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:35:47 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B8BD55FF73F9E16D1671;
+        Tue,  9 Apr 2019 09:35:45 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Tue, 9 Apr 2019
+ 09:35:44 +0800
+Subject: Re: [PATCH -next] pinctrl: artpec6: Make two functions static
+To:     Nathan Chancellor <natechancellor@gmail.com>
+References: <20190321150909.3576-1-yuehaibing@huawei.com>
+ <20190408180110.GA15199@archlinux-ryzen>
+CC:     <jesper.nilsson@axis.com>, <lars.persson@axis.com>,
+        <linus.walleij@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@axis.com>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <11f6a1e6-6c8b-8490-57bb-f15f5050e80c@huawei.com>
+Date:   Tue, 9 Apr 2019 09:35:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TrW1RSpeAuZFW0sWw8mGVis"; protocol="application/pgp-signature"
+In-Reply-To: <20190408180110.GA15199@archlinux-ryzen>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TrW1RSpeAuZFW0sWw8mGVis
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2019/4/9 2:01, Nathan Chancellor wrote:
+> On Thu, Mar 21, 2019 at 11:09:09PM +0800, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warnings:
+>>
+>> drivers/pinctrl/pinctrl-artpec6.c:691:5: warning:
+>>  symbol 'artpec6_pmx_enable' was not declared. Should it be static?
+>> drivers/pinctrl/pinctrl-artpec6.c:705:6: warning:
+>>  symbol 'artpec6_pmx_disable' was not declared. Should it be static?
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/pinctrl/pinctrl-artpec6.c | 10 ++++++----
+>>  1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+>> index d89dc43..e836850 100644
+>> --- a/drivers/pinctrl/pinctrl-artpec6.c
+>> +++ b/drivers/pinctrl/pinctrl-artpec6.c
+>> @@ -688,8 +688,9 @@ static void artpec6_pmx_select_func(struct pinctrl_dev *pctldev,
+>>  	}
+>>  }
+>>  
+>> -int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
+>> -		       unsigned int group)
+>> +static int artpec6_pmx_enable(struct pinctrl_dev *pctldev,
+>> +			      unsigned int function,
+>> +			      unsigned int group)
+>>  {
+>>  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+>>  
+>> @@ -702,8 +703,9 @@ int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
+>>  	return 0;
+>>  }
+>>  
+>> -void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
+>> -			 unsigned int group)
+>> +static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
+>> +				unsigned int function,
+>> +				unsigned int group)
+> 
+> On arm32 allyesconfig:
+> 
+> drivers/pinctrl/pinctrl-artpec6.c:706:13: error: unused function
+> 'artpec6_pmx_disable' [-Werror,-Wunused-function]
+> 
+> This is the second time you've introduced an unused function warning by
+> making a function static[1], could you please be a little more vigilant
+> in your clean ups in the future?
 
-Today's linux-next merge of the drm-misc tree got conflicts in:
+Sorry for this.
 
-  drivers/gpu/drm/cirrus/cirrus_drv.h
-  drivers/gpu/drm/cirrus/cirrus_ttm.c
+> 
+> [1]: https://lore.kernel.org/lkml/20190327050126.12064-1-natechancellor@gmail.com/
+> 
+> Linus/Jesper/Lars, should this function just be deleted? I'd be happy to
+> send a patch doing so if that's the right course of action.
+> 
+> Thanks,
+> Nathan
+> 
+>>  {
+>>  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+>>  
+>> -- 
+>> 2.7.0
+>>
+>>
+> 
+> .
+> 
 
-between commits:
-
-  aa8e2435b3d4 ("drm/ttm: Define a single DRM_FILE_PAGE_OFFSET constant")
-  7d1500f9fbfc ("drm/ttm: Remove file_page_offset parameter from ttm_bo_dev=
-ice_init()")
-  bed2dd84212e ("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
-
-from the drm tree and commit:
-
-  ab3e023b1b4c ("drm/cirrus: rewrite and modernize driver.")
-
-from the drm-misc tree.
-
-I fixed it up (I just removed the files) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TrW1RSpeAuZFW0sWw8mGVis
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyr9pIACgkQAVBC80lX
-0Gx8OAf+P9Ywia+FIV6m/bOqBgRyK5oUg4qTRQW89r0wv8sOHU1ThW1w7ZDn5CJx
-WvhZNV4K7nzvt3RIzR0dJBDO4dF5KeK384AZI3KwNQlWhPXB8I+pnH0d6g8i/PlY
-af9JaTvJ2nopcQ8zc/6TqkUcIMMb6GDgHeta7PfbZok3UaaSy0x/wGTWZR4UBSZh
-2mFZ8o7dtiYGBHR0uUFlVl5/C2HQvti6Unsosk/IaEZ5r5CMJ2Wq7hGsb9cd9PBd
-7/ym6BzYSTgb1nqR6rFJSGQ0zyUlUIi6kZVym9MS2xbfkmjPEJr/1DkEC1oQL3/U
-oaebP3oVAdSiYj6lGEdNc3Xxzoymqg==
-=iCRq
------END PGP SIGNATURE-----
-
---Sig_/TrW1RSpeAuZFW0sWw8mGVis--
