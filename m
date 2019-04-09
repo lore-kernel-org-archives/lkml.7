@@ -2,154 +2,78 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60C8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758E7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C5920833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGzeATXU"
+	by mail.kernel.org (Postfix) with ESMTP id 41C4A20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554802258;
+	bh=xF0MHbJVnFRkXMVSY0Sz0OcFAfptosSeLujRNokzuKU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UB59A302JrQ12CbQ8N24CsjeYG+XKGDxH4oKIzyVs9dcGOgawaMZs4f3M9D2D7LUk
+	 zO0EFrPTHQTC83JxxbQ50rsSZZFWAwWjWdE5oYSXbvW+kOGBVbi4q5rXwvLWS8KIWx
+	 d56nEQRmeVFkRhTpGZ6D3zdSdk2T9kOjvPu8Xd8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfDIJ3y (ORCPT
+        id S1726914AbfDIJa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:29:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35260 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfDIJ3y (ORCPT
+        Tue, 9 Apr 2019 05:30:56 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37425 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfDIJa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:29:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so9067767plp.2;
-        Tue, 09 Apr 2019 02:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uz/VlezM1F/whqslASz2+vc6bdT5jIpSqLI+shePWjE=;
-        b=lGzeATXUcuz1REth//QzC6QQK7gnTIqEElIOzpj0qPWpDIHjLJ4nHnj9y8BbHJkeiW
-         fshhy2gk/nw0yP/HOt3YfE+iPr6LhQADXbj0HJj+PSzpdxXZ746VKFoU+dlPmZQsE7kQ
-         UipwR9qDkHlFQvASWgyhEwV3MgakU+4cEyp7OI3ChSlSZbxHQHVXe7zR7mIARm4Tpr6X
-         8qt89GOdp4jGitM1h5EGupWjUkrd9aWBr8qhLyLoJLn0PcJwKaONoK0WbcV67l8Ri7Js
-         XbILueCyfJRQMbvDe2xmuEPc6e0SNYkGbXYznPQLnxq79x3Odp8thOKPtZAZsf8HC5AE
-         Ns7A==
+        Tue, 9 Apr 2019 05:30:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c16so14937214otn.4;
+        Tue, 09 Apr 2019 02:30:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uz/VlezM1F/whqslASz2+vc6bdT5jIpSqLI+shePWjE=;
-        b=YmuK6Wwo3lLMgAm5suve0Os11V3vPF5N+y9lMrtPDQmiRsifLvEsTj47+0e8CW7Esq
-         ZJnlhzoY+iQovS5uFTb5Wr1vDSj5xD7ygB6s/8SXah7w+6OSF1hGRqAJjoJslIWHvLuz
-         Kv/fVd1XC0Oik7FjH2NKCn7R7cFoaggpPDyFL39A8+W2wydrK99ZRt6sed13csz4nimE
-         LEEp/MbMImt/PUt6kb3U1Krx+K4dXahy6lnZ8UOT4PJ9D6Ij8R9Yi5D0GKS9hZ7HBc/j
-         pR0EMskD0BYDo+joXAr97SV9q5c2Zq0x1xvUQxL6x8E/G4aj1KpXmXZx8kYbp0WEwf29
-         KhNw==
-X-Gm-Message-State: APjAAAUgipibidMjKgrz2zjNwrdtlvYVmyEBNXV3vohH70Gik3PVdZfq
-        FSATysrVh7pOh0KpwD0SO6o=
-X-Google-Smtp-Source: APXvYqx+5RfUIVQJZtIZpCy1Wv4ObL9JHfsp/q3PIDtl6+n0cuP5wiGWO5qhTCHp+Q6Uxkt4Xzu6bA==
-X-Received: by 2002:a17:902:b210:: with SMTP id t16mr30888324plr.84.1554802193226;
-        Tue, 09 Apr 2019 02:29:53 -0700 (PDT)
-Received: from bubble.grove.modra.org (15.193.233.220.static.exetel.com.au. [220.233.193.15])
-        by smtp.gmail.com with ESMTPSA id f7sm59853420pga.56.2019.04.09.02.29.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 02:29:52 -0700 (PDT)
-Received: by bubble.grove.modra.org (Postfix, from userid 1000)
-        id 940A580586; Tue,  9 Apr 2019 18:59:48 +0930 (ACST)
-Date:   Tue, 9 Apr 2019 18:59:48 +0930
-From:   Alan Modra <amodra@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Carlos O'Donell <codonell@redhat.com>,
-        Tulio Magno Quites Machado Filho <tuliom@ascii.art.br>,
-        Florian Weimer <fweimer@redhat.com>,
-        Michael Meissner <meissner@linux.ibm.com>,
-        Peter Bergner <bergner@vnet.ibm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, carlos <carlos@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and
- thread creation (v7)
-Message-ID: <20190409092948.GA14424@bubble.grove.modra.org>
-References: <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
- <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
- <87lg0tosfz.fsf@concordia.ellerman.id.au>
- <87pnq4zxyj.fsf@oldenburg2.str.redhat.com>
- <ce6f9db3-bf85-7aec-4bae-998e6fd629e1@redhat.com>
- <87y34o4xt3.fsf@oldenburg2.str.redhat.com>
- <43f97ddb-c8df-27ea-9517-63252ebd3183@redhat.com>
- <877ec4pam2.fsf@linux.ibm.com>
- <ce9fbc66-5eb9-0fa9-99fa-5abfe00ddfc2@redhat.com>
- <877ec3yffq.fsf@concordia.ellerman.id.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xF0MHbJVnFRkXMVSY0Sz0OcFAfptosSeLujRNokzuKU=;
+        b=Yx+XcIgoPC7vYMCffgiBnHarZgO8Xg2Z0nnK3YFHYh32TUNW5aBG9t0bipX5gAIAMm
+         Xk1fyV2MzJ7XUas5BxYSorqo/JMYvKsqU0m4OX6WSZarFSeDijcjN0sNp5MbRZPra10R
+         JOwN3/vCJ4dLartraKLQ4IzWAjWJB0LvIvvmcSDyJgX+1U9cQF9wac5XSdxVzSXtDJ10
+         8wFw1Y+7B6edl1aKTNXADDA3ElYxi0UnanpEvJIEiXWI1deAkU+IVfPm6I42orukaruv
+         CE2g8ui/vk6TNpJtVBzhDjjeRTn7dT8DPZ1t/9Z40+vEwQEaOwZH6IDYQcLB99ih8nOD
+         H+cw==
+X-Gm-Message-State: APjAAAXnNb/OztPaW1xdAPXAGg/oWH/q2F2sWVNTmo/oJk5P7SHcERGA
+        dlX9YqSD3pyrdENpjAQju2QXwamdmVVTQZjdFyw=
+X-Google-Smtp-Source: APXvYqy2whJeRDYFhQ1WR8epZJWXwBAbpl0SMfSDW3+AyfZoBtTVvs/WROgMZn7JgUsV/JmPbpgj6GGcqBKPhykhhEs=
+X-Received: by 2002:a9d:2dea:: with SMTP id g97mr3637022otb.20.1554802255792;
+ Tue, 09 Apr 2019 02:30:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877ec3yffq.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190405091647.4169-1-huntbag@linux.vnet.ibm.com>
+ <20190405091647.4169-2-huntbag@linux.vnet.ibm.com> <87r2acwpp2.fsf@dja-thinkpad.axtens.net>
+ <a8368cfa-9667-5f5b-cafe-f4830ece0f26@linux.vnet.ibm.com>
+In-Reply-To: <a8368cfa-9667-5f5b-cafe-f4830ece0f26@linux.vnet.ibm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 9 Apr 2019 11:30:44 +0200
+Message-ID: <CAJZ5v0jS7HX3ka59OhYzbdgdAYDO_DTwp44gxar_xQV_AsscSw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] cpuidle : auto-promotion for cpuidle states
+To:     Abhishek <huntbag@linux.vnet.ibm.com>
+Cc:     Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 02:23:53PM +1000, Michael Ellerman wrote:
-> I'd much rather we use a trap with a specific immediate value. Otherwise
-> someone's going to waste time one day puzzling over why userspace is
-> doing mtmsr.
+On Tue, Apr 9, 2019 at 11:29 AM Abhishek <huntbag@linux.vnet.ibm.com> wrote:
+>
+> Hi Daniel,
+>
+> Thanks for such a descriptive review. I will include all the suggestions
+> made in my next iteration.
 
-It's data.  We have other data in executable sections.  Anyone who
-wonders about odd disassembly just hasn't realized they are
-disassembling data.
-
-> It would also complicate things if we ever wanted to emulate mtmsr.
-
-No, because it won't be executed.  If I understand correctly, the only
-reason to choose an illegal, trap or privileged insn is to halt
-execution earlier rather than later when a program goes off in the
-weeds.
-
-> If we want something that is a trap rather than a nop then use 0x0fe50553.
-> 
-> That's "compare the value in r5 with 0x553 and then trap unconditionally".
-> 
-> It shows up in objdump as:
-> 
->     10000000:	53 05 e5 0f 	twui    r5,1363
-> 
-> 
-> The immediate can be anything, I chose that value to mimic the x86 value
-> Mathieu mentioned.
-> 
-> There's no reason that instruction would ever be generated because the
-> immediate value serves no purpose. So it satisfies the "very unlikely
-> to appear" criteria AFAICS.
-
-Yes, looks fine to me, except that in VLE mode (do we care?)
-".long 0x0fe50553" disassembles as
-   0:	0f e5       	se_cmphl r5,r30
-   2:	05 53       	se_mullw r3,r5
-No illegal/trap/privileged insn there.
-
-".long 0x0fe5000b" might be better to cover VLE.
-
--- 
-Alan Modra
-Australia Development Lab, IBM
+Please give me some time to send comments before that.
