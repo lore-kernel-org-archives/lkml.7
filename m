@@ -2,156 +2,152 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3CEC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309BDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E197B21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554797273;
-	bh=UJ4X7lgOTNSkZrOVJLKkRidwDuCo+nBBWjmpvCzj8MM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z7DOvWuUBOS11PXOO8fv7O02S2KjW1LUipbPCGHV87K2T8t66tHmoLNkEh8fuaiXV
-	 9973V2gnX+WT/0VlTfMMLGj8Q/cm7F+NjSHocsbzQuYfrWl53TmGMHqySxjjKz1qnT
-	 B6Yd3GJgQKPTZXGm+R52orFhyoe7M4ewtHPtfVxA=
+	by mail.kernel.org (Postfix) with ESMTP id AA5FD20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:08:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cVoTyC8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDIIHw (ORCPT
+        id S1726776AbfDIIIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726588AbfDIIHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:07:50 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF6021841;
-        Tue,  9 Apr 2019 08:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554797268;
-        bh=UJ4X7lgOTNSkZrOVJLKkRidwDuCo+nBBWjmpvCzj8MM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oCyXuM2zdqzfdx+5tJ2efSEkU2o9QLdNg+viQF0YeWWRtiDxDVIpuwrdAEC4Cw2kt
-         LYXkvvYd+YZh2mG3e0LT3v0J2JXyr+Y5RybH9uV81rm0Mk/ycDmAxaL9BQnNjxF3aH
-         3rkH0mxFI+NltjnlIpXn1h/IalnXVrP0DMUdWm3c=
-Received: by mail-wr1-f47.google.com with SMTP id t17so19539651wrw.13;
-        Tue, 09 Apr 2019 01:07:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWyKn2uTA1XFU/wWOe6ZcFpfswY5E3dyaSsgwcG+VVAauTs5sPG
-        QTDsFeCD9BrlCK6soLwU94x6AMBWgcU4CtccwHs=
-X-Google-Smtp-Source: APXvYqxOPmDFD+uZ9qPXdHILQjrN7+Z/UXUOh3u73bUm3AGqk3qjaH+A2LCe+3FdStEnstvXFH0ZhS4fRj7bP9+1izA=
-X-Received: by 2002:a5d:6646:: with SMTP id f6mr20925017wrw.68.1554797266945;
- Tue, 09 Apr 2019 01:07:46 -0700 (PDT)
+        Tue, 9 Apr 2019 04:08:22 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37886 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbfDIIIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 04:08:22 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v13so13601855ljk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 01:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Eit/w4NkCblkd4Zt520MbW+x9Fgtq9JEmsGvXZKi/TU=;
+        b=cVoTyC8ISGBK8QKC1agMZzRhhwNk3WCSeoAkv0SfUwmWFX0jvJAi1E0bvki+JIHIMz
+         NhVNulWcFHoglb0t4JUR75dLPkKZstVsryFTPpO4R0pxxGWTYsHpWDgyjv4rI/zitKcf
+         GAopx27X75L10B8S4K75s+MUrHcwTDYgnDJr0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Eit/w4NkCblkd4Zt520MbW+x9Fgtq9JEmsGvXZKi/TU=;
+        b=ilrIGujJANMqsR1vZQ90Y9J8n5l+oI0C44VqJMgd/VYiFNAB1bMKHBW+XjNVkNHIvU
+         oK0vMAXRcgkP6+nnMsSGgA8yGO63MBA5a+qQSzYTyRw08IR9P0D0fKmWv7bTtVsfsGHc
+         AK+g7LuZyypjzfpiwgI9pvvQNoUVWgfaUIe2t/x6VpWdf3teKpq/BXLoagYIdP5MqpmD
+         3lznqXui8eMoEC3ruhxS4AoNoOustirYmMo3ThJVRgTAfk4kTYq6mmmharX40vbsqjeE
+         fWriKe8EJCW0cbh9rKvq+ofJ3NORu+gJnW7TGIOnnOG5YMg8UcAOZUwBMCrUn72UcnS5
+         0f+g==
+X-Gm-Message-State: APjAAAU+2e5CbwnAFYZNanBZ+MW5tLcJiKPPSsF70rEHjmXIUcaOxcX0
+        KgNmJcDA36iY0j0b6ZmsiwKRsQ==
+X-Google-Smtp-Source: APXvYqyRGDZVvWc9b/9JQHPhqDhG7FRG2TVENG8x0vy/MAMwEtVLKCv23dPYLLzEWO1XO5r7AeQbzw==
+X-Received: by 2002:a2e:4a09:: with SMTP id x9mr2403472lja.19.1554797300040;
+        Tue, 09 Apr 2019 01:08:20 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id r77sm6755216ljb.29.2019.04.09.01.08.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 01:08:19 -0700 (PDT)
+Subject: Re: [PATCH v1 bitops] bitops: Fix UBSAN undefined behavior warning
+ for rotation right
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vadim Pasternak <vadimp@mellanox.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        idosch@mellanox.com, Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <20190407125325.24440-1-vadimp@mellanox.com>
+ <20190408155217.3f723554ae7fbcb34eeacb30@linux-foundation.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f38907e5-82a4-1e9f-a3a4-b4e366dbb90b@rasmusvillemoes.dk>
+Date:   Tue, 9 Apr 2019 10:08:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190408165744.11672-1-wens@kernel.org> <20190408165744.11672-5-wens@kernel.org>
- <20190409075804.4zrwjil7ie2gjigu@flea>
-In-Reply-To: <20190409075804.4zrwjil7ie2gjigu@flea>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Tue, 9 Apr 2019 16:07:34 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
-Message-ID: <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
- (Camera Sensor Interface)
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yong Deng <yong.deng@magewell.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408155217.3f723554ae7fbcb34eeacb30@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-> > lingo), which is similar to the one found on the A64 and H3. The only
-> > difference seems to be that support of MIPI CSI through a connected
-> > MIPI CSI-2 bridge.
-> >
-> > Add a device node for it, and pinctrl nodes for the commonly used MCLK
-> > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-> > the pinctrl nodes to keep the device tree blob size down if they are
-> > unused.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > index f739b88efb53..0c52f945fd5f 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > @@ -682,6 +682,20 @@
-> >                       #interrupt-cells = <3>;
-> >                       #gpio-cells = <3>;
-> >
-> > +                     /omit-if-no-ref/
-> > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
-> > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
-> > +                                    "PE8", "PE9", "PE10", "PE11",
-> > +                                    "PE12", "PE13";
-> > +                             function = "csi";
-> > +                     };
-> > +
-> > +                     /omit-if-no-ref/
-> > +                     csi_mclk_pin: csi-mclk-pin {
-> > +                             pins = "PE1";
-> > +                             function = "csi";
-> > +                     };
-> > +
-> >                       emac_rgmii_pins: emac-rgmii-pins {
-> >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-> >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
-> > @@ -994,6 +1008,23 @@
-> >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> >               };
-> >
-> > +             csi: camera@1cb0000 {
-> > +                     compatible = "allwinner,sun8i-a83t-csi";
-> > +                     reg = <0x01cb0000 0x1000>;
-> > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks = <&ccu CLK_BUS_CSI>,
-> > +                              <&ccu CLK_CSI_SCLK>,
-> > +                              <&ccu CLK_DRAM_CSI>;
-> > +                     clock-names = "bus", "mod", "ram";
-> > +                     resets = <&ccu RST_BUS_CSI>;
-> > +                     status = "disabled";
-> > +
-> > +                     csi_in: port {
-> > +                             #address-cells = <1>;
-> > +                             #size-cells = <0>;
->
-> If we expect a single enpoint, then we don't need the address-cells
-> and size-cells properties.
+On 09/04/2019 00.52, Andrew Morton wrote:
+> (resend, cc Andrey)
+> 
+> On Sun,  7 Apr 2019 12:53:25 +0000 Vadim Pasternak <vadimp@mellanox.com> wrote:
+> 
+>> The warning is caused by call to rorXX(), if the second parameters of
+>> this function "shift" is zero. In such case UBSAN reports the warning
+>> for the next expression: (word << (XX - shift), where XX is
+>> 64, 32, 16, 8 for respectively ror64, ror32, ror16, ror8.
+>> Fix adds validation of this parameter - in case it's equal zero, no
+>> need to rotate, just original "word" is to be returned to caller.
+>>
+>> The UBSAN undefined behavior warning has been reported for call to
+>> ror32():
+>> [   11.426543] UBSAN: Undefined behaviour in ./include/linux/bitops.h:93:33
+>> [   11.434045] shift exponent 32 is too large for 32-bit type 'unsigned int'
+> 
+> hm, do we care?
+> 
+>> ...
+>>
+> 
+>> --- a/include/linux/bitops.h
+>> +++ b/include/linux/bitops.h
+>> @@ -70,6 +70,9 @@ static inline __u64 rol64(__u64 word, unsigned int shift)
+>>   */
+>>  static inline __u64 ror64(__u64 word, unsigned int shift)
+>>  {
+>> +	if (!shift)
+>> +		return word;
+>> +
+>>  	return (word >> shift) | (word << (64 - shift));
+>>  }
+> 
+> Is there any known architecture or compiler for which UL<<64 doesn't
+> reliably produce zero?  Is there any prospect that this will become a
+> problem in the future?
 
-I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
-is kind of genius if not very hacky. They have two "identical" sensors
-on the same I2C bus and CSI bus, with shared reset line but separate
-shutdown lines. Since they are identical, they also have the same I2C
-address. I haven't figured out how to model this in the device tree.
+There's a somewhat obscure platform called x86 which ignores anything
+but the low 5 bits in %ecx for a shift instruction for a 32 bit shift
+(and in 64 bit mode, the low 6 bits), so there the instruction foo << 64
+would yield foo. Which is also ok in this case, of course, except for
+the formal UB.
 
-The point is, it's perfectly possible to have two or more sensors use
-the same controller, provided only one be active at a time.
+Now, there are other architectures that behave similarly, so one could do
 
-ChenYu
+u32 ror32(u32 x, unsigned s)
+{
+	return (x >> (s&31)) | (x << ((32-s)&31));
+}
+
+to make the shifts always well-defined and also work as expected for s
+>= 32... if only gcc recognized that the masking is redundant, so that
+its "that's a ror" pattern detection could kick in. Unfortunately, it
+seems that the above generates
+
+   0:   89 f1                   mov    %esi,%ecx
+   2:   89 f8                   mov    %edi,%eax
+   4:   f7 d9                   neg    %ecx
+   6:   d3 e0                   shl    %cl,%eax
+   8:   89 f1                   mov    %esi,%ecx
+   a:   d3 ef                   shr    %cl,%edi
+   c:   09 f8                   or     %edi,%eax
+   e:   c3                      retq
+
+while without the masking one gets
+
+  10:   89 f8                   mov    %edi,%eax
+  12:   89 f1                   mov    %esi,%ecx
+  14:   d3 c8                   ror    %cl,%eax
+  16:   c3                      retq
+
+
+Rasmus
