@@ -6,65 +6,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61211C10F13
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C824C10F14
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF7F21473
+	by mail.kernel.org (Postfix) with ESMTP id 5B66021874
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1554770693;
-	bh=KGKrDAl+sXCd83F3Y+GRPj3kIiurlVSBpH5lz8ahofw=;
+	bh=DmOiyGQaDUGZGtfRVExAqG0qOh5YnPHUyVXUy/dbXxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddpBnKf+PVvn23z5MWhqcMCFdumS7hXyn40jPCKZcaS5EklEcEGKdNLEQVPP/8OcO
-	 AyJegXDpJHlQXl4un19cZoM24EqC+O+TdkD9x8ZIwFWot/7kK1uN4VpogNE+/23zye
-	 H22hWqTbCcYrVE+u7IhZZvD4ks58wa+hbsKqNgo4=
+	b=POtrbgx2q97ZIfb4Zvuj5KOiuMuXt9qsA8hirD9M+EwfmvbQdOAndiQtc9TKAYoUO
+	 qqjpuEwUQZ+T5iDT1qSPGH8CFyggULeTxZMCYE1K5gGj26Ub6mSyz8eow3Mx9jTMyK
+	 C2ePyO1Fn/2ccEnI7QoBkcZb0MCiYK5sWNdQXxo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfDIAor (ORCPT
+        id S1726926AbfDIAov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 20:44:47 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55977 "EHLO
+        Mon, 8 Apr 2019 20:44:51 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41783 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfDIAom (ORCPT
+        by vger.kernel.org with ESMTP id S1726833AbfDIAoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 20:44:42 -0400
+        Mon, 8 Apr 2019 20:44:44 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1429123641;
-        Mon,  8 Apr 2019 20:44:41 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id A65312201F;
+        Mon,  8 Apr 2019 20:44:43 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 08 Apr 2019 20:44:41 -0400
+  by compute3.internal (MEProxy); Mon, 08 Apr 2019 20:44:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=P0zNKeCy2JQLXV9pyaFfhRTUVfbqD8BKB8VBdzTrxlY=; b=nHQmV9T9
-        GvTflNrcDKvm//OVkUZnOh0ey6ul8029Beep8Q/xRABkfr+f77r7fXZwzzib5D1J
-        eiGAp8RQJI0w76tfGAOtFW030LTrHKaF+9OsVcuJpQ7g9+BlpA7vkbERszA5DSim
-        UMS4YqVlM3evX64QZcaGHwe03dzlVFPXXHLmR3Jj25HWNyJQrVqSwsZ+nIuNz5X+
-        DiajorjAuc72wygBrHIfefRmcTSlkq6Wkf/xHQr2EDI3ACbGsECGFxH1Y3iA86uN
-        TuXAcjKzY9cME2GV5m7RCTAqZ0XyaeG9PdN7x5QXTRLjXfTMmQBDUk3J1YKIHmHi
-        kG1D3t5Pouqi+Q==
-X-ME-Sender: <xms:-OqrXC35dRhb9kaA5heRLqx2OYPv2WWmcRXxH4vboEWmvLVcO4vYeQ>
+        fm2; bh=w2fXLe4ZgTkW2x4QyojPjWlfikwMYKP+enATmuiNyAs=; b=NFfBWv3F
+        1BQRUX621YRv37Q/2dGAmI3pzFb2yPP09l6ttAjbam6cMrt0iujPX5gaZipUcKKF
+        1gzcURy86L8Jhqx/mO50dYcKUcokXHQETU+tt+Gql4rUVOrucfUPsSk9k4svARtQ
+        DjKO4E2MCrxq7QxdbSGCqkLYxR7S9d6hYUUuLYAku1hOMggcbRcE1BXmZi1XnTMy
+        61TMB+pcHtDRsZIot0AnGYf45fOSqa7e/t8NIYuWqHeK57MMDx1w2AXEE6fowwhj
+        6Wm2i0/9R9nKB/xlUFOePmJ2kA0epeiy/T7Vu0HZpeg1WzxaDc80nte6pI9cMT3g
+        i1sxyxgjjKiObA==
+X-ME-Sender: <xms:--qrXFk103e4GHxCJRJJQTpRsH-ZUgv9DfLpFdqKBQ0oNhD_uJ8SLg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggdefiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvuddrgeegrddvudejrdehtdenucfrrghrrghmpehmrghilhhfrhhomhepthhosghi
-    nheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:-OqrXDt6RZQtzF-5JTUaO_ksNqPnopDRtMTo8q1Bs9zvK5W0vq4F5g>
-    <xmx:-OqrXKichKrTONQhJzC6kvrfiucrX72S4n3nyPcI_EvvI_D3ulmSZA>
-    <xmx:-OqrXKAEn1pN48tjkxJ0gD4niGkr6PJ8kP61WxheIF1XBM5noKRURA>
-    <xmx:-eqrXKmlOd_zzNIW3a9G2WzOSwNhBYV2W2N2kP2dgX1eKOo43OTz8A>
+    nheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
+X-ME-Proxy: <xmx:--qrXBQgklb2Uxtja2umsZrBh5el3ZqYMGCByh2hZaEkhTTIvlLFLA>
+    <xmx:--qrXLYQXXAIbXFM8UvM2b7CMo881ZOjkeVvfJ4IFsly2oiz9TKiYg>
+    <xmx:--qrXB9x_QZVo5-WpLsXMNwBLaQhPhNR53sIYBaK2ikHCqwmja1kVg>
+    <xmx:--qrXHWPim3kcN-zss1uXaCRbd7YmiXeWaOubI-icHVO960ct9RcoQ>
 Received: from eros.localdomain (ppp121-44-217-50.bras1.syd2.internode.on.net [121.44.217.50])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E5BF6E4482;
-        Mon,  8 Apr 2019 20:44:38 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 901D7E42C9;
+        Mon,  8 Apr 2019 20:44:41 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] docs: Remove unnecessary reference link title
-Date:   Tue,  9 Apr 2019 10:43:58 +1000
-Message-Id: <20190409004359.29668-4-tobin@kernel.org>
+Subject: [PATCH v2 4/4] docs: Use reference to link to rst file
+Date:   Tue,  9 Apr 2019 10:43:59 +1000
+Message-Id: <20190409004359.29668-5-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190409004359.29668-1-tobin@kernel.org>
 References: <20190409004359.29668-1-tobin@kernel.org>
@@ -75,58 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Labels that precede a heading use the heading as the link title.
-Explicitly adding the link title is redundant and  makes the reference
-slightly less maintainable.
+Current document includes the path to an RST doc file.  Since this is an
+RST file we can make this a link.  Keeps the path as the link title
+since that what the original author wrote.
 
-Remove unnecessary reference link title.
+Use reference to link to rst file.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/admin-guide/mm/numa_memory_policy.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ Documentation/vm/numa.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/mm/numa_memory_policy.rst b/Documentation/admin-guide/mm/numa_memory_policy.rst
-index d78c5b315f72..1ef0146eaa4d 100644
---- a/Documentation/admin-guide/mm/numa_memory_policy.rst
-+++ b/Documentation/admin-guide/mm/numa_memory_policy.rst
-@@ -20,8 +20,7 @@ which is an administrative mechanism for restricting the nodes from which
- memory may be allocated by a set of processes. Memory policies are a
- programming interface that a NUMA-aware application can take advantage of.  When
- both cpusets and policies are applied to a task, the restrictions of the cpuset
--takes priority.  See :ref:`Memory Policies and cpusets <mem_pol_and_cpusets>`
--below for more details.
-+takes priority.  See :ref:`mem_pol_and_cpusets` below for more details.
+diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
+index 185d8a568168..5cae13e9a08b 100644
+--- a/Documentation/vm/numa.rst
++++ b/Documentation/vm/numa.rst
+@@ -109,8 +109,8 @@ System administrators and application designers can restrict a task's migration
+ to improve NUMA locality using various CPU affinity command line interfaces,
+ such as taskset(1) and numactl(1), and program interfaces such as
+ sched_setaffinity(2).  Further, one can modify the kernel's default local
+-allocation behavior using Linux NUMA memory policy.
+-[see Documentation/admin-guide/mm/numa_memory_policy.rst.]
++allocation behavior using Linux NUMA memory policy. [see
++:ref:`Documentation/admin-guide/mm/numa_memory_policy.rst <numa_memory_policy>`].
  
- Memory Policy Concepts
- ======================
-@@ -56,7 +55,7 @@ Task/Process Policy
- 	[clone() w/o the CLONE_VM flag] and exec*().  This allows a parent task
- 	to establish the task policy for a child task exec()'d from an
- 	executable image that has no awareness of memory policy.  See the
--	:ref:`Memory Policy APIs <memory_policy_apis>` section,
-+	:ref:`memory_policy_apis` section,
- 	below, for an overview of the system call
- 	that a task may use to set/change its task/process policy.
- 
-@@ -77,7 +76,7 @@ VMA Policy
- 	A "VMA" or "Virtual Memory Area" refers to a range of a task's
- 	virtual address space.  A task may define a specific policy for a range
- 	of its virtual address space.   See the
--	:ref:`Memory Policy APIs <memory_policy_apis>` section,
-+	:ref:`memory_policy_apis` section,
- 	below, for an overview of the mbind() system call used to set a VMA
- 	policy.
- 
-@@ -142,7 +141,7 @@ Shared Policy
- 	Although hugetlbfs segments now support lazy allocation, their support
- 	for shared policy has not been completed.
- 
--	As mentioned above in :ref:`VMA policies <vma_policy>` section,
-+	As mentioned above in :ref:`vma_policy` section,
- 	allocations of page cache pages for regular files mmap()ed
- 	with MAP_SHARED ignore any VMA policy installed on the virtual
- 	address range backed by the shared file mapping.  Rather,
+ System administrators can restrict the CPUs and nodes' memories that a non-
+ privileged user can specify in the scheduling or NUMA commands and functions
 -- 
 2.21.0
 
