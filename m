@@ -2,167 +2,134 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4D2C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C74C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF0021841
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554816368;
-	bh=ugv/q8Ir2xuhRZj8P2xjOajlKn7KtPMRbReuc9hn1SY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=APK/BMTzZRZS9LbFqH+KIbhwoyL4pO+GiBKOS8l30L3cuYvuATQjrI/IKR5on0uGV
-	 rU7tzdDFwWvHpvPvKYloPazOyGUePWhDjNkCNULxVO2VQC06NNfNC0CVKBfcBLXIPN
-	 47dg/aMlgppRxMXeF3d68e9RlrdkrOIZPEYt/AFw=
+	by mail.kernel.org (Postfix) with ESMTP id 8DE7420880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QM9UKVa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfDIN0H (ORCPT
+        id S1727705AbfDIN0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbfDIN0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:26:06 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDE72084C;
-        Tue,  9 Apr 2019 13:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554816365;
-        bh=ugv/q8Ir2xuhRZj8P2xjOajlKn7KtPMRbReuc9hn1SY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YAPr/ZsFO6E0bVq0o+Jix5xEtImduWat6Q8JeREGHtogNdo897jfJY64H0FyvpRSA
-         hXaqzi0Gwtc2Q6fz3WiE8/4ZA4Zipb5fztMucXfHQTuL3LE535Qvf8H8MmcsGfkHuF
-         6wXmeFqIM0X126tDLYv3kEyc5oi87xvkTZvraqXs=
-Date:   Tue, 9 Apr 2019 08:26:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com,
-        skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org,
-        heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net,
-        maxime.ripard@bootlin.com, andy.gross@linaro.org,
-        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
-        enric.balletbo@collabora.com, ezequiel@collabora.com,
-        stefan.wahren@i2se.com, marc.w.gonzalez@free.fr,
-        l.stach@pengutronix.de, tpiepho@impinj.com,
-        hayashi.kunihiko@socionext.com, yue.wang@amlogic.com,
-        shawn.lin@rock-chips.com, xiaowei.bao@nxp.com,
-        devicetree@vger.kernel.org, mmaddireddy@nvidia.com,
-        kthota@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190409132604.GA256045@google.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402183110.GE141706@google.com>
- <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
- <20190403173641.GI141706@google.com>
- <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
- <20190405185842.GC26522@google.com>
- <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
+        Tue, 9 Apr 2019 09:26:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33231 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDIN0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:26:47 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f23so14496658ljc.0;
+        Tue, 09 Apr 2019 06:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=CASyou2Sc1m+3jmTfHSR+07/UVxWLim07HVIVxer/F8=;
+        b=QM9UKVa+z54hzoRQaRQutgkB4FNjCKrL8ToiG0FpPSWbfQijF3pORICjAGjxEb2cCS
+         PfshY5ra6OlJmEGVOg9iiCYA8WawgErogRkPVvH3rQwEVtUsRl7eVMStKpIt7o8KrCXK
+         5+Whw3iD4DhGa5yQ2BPelAhW8BR5xulGQMGj36ns5sdN1lP4OWw89gyuGfQke5ubQmy3
+         3Kn7AhISpyzHpUsX6zsqhBBzLYp1BDOCdPKvA+njkGOAPoEBPX2b4lo2h568NJo8XrG5
+         xfKuiiXinrqisOYQVTc9g/jzXJvNtF9Epa4ZvajIXd0AKZCiliLFhBGZP3XAVXKg4Baz
+         8OAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=CASyou2Sc1m+3jmTfHSR+07/UVxWLim07HVIVxer/F8=;
+        b=mMjTDLikCCMdECxXkH+MWxKlOv2R8QcJgZpWQY5Kj1Ny7wp+J1ZJuM/pCwz7Zt24Nw
+         MqNFzXoo2TaTYuqle4QEcsZ/bGsqLSkXXdBJ5GY+EJpXd2qVI3JFfNQ88Ic3U+hDz1Hg
+         lA/2A4DNphs9eNCA+cJgVnIsj/o6/WUg6TFVzYYCc35h61HG/cPU3E31ITffHo9b3FA5
+         Qd/umMUm43dBywhlpSqjQI348IVHfueGsQPzLIcqy0kiP288qJ0SherJnBtBz1e79wJM
+         r/PZ4EHNVLFQLDz66iPMABhlqqR4keV17yQIS46B6/e8apUDTocYbtB/tklU+801LOYh
+         8v9Q==
+X-Gm-Message-State: APjAAAU6XA/fGQyqV+TF3GFS2ZY6nMkWTd86BskkGq1kvvMaYiQSTsZ6
+        VkKn/puX6s2lx/+4+dfUWBA=
+X-Google-Smtp-Source: APXvYqy5Eo/vG8jxkKZDPJRcgp89sxGEhBJKfIbYIvyBM4tjgAdq2hAxBk5czCzxPJREKBBpYpGYbA==
+X-Received: by 2002:a2e:9a02:: with SMTP id o2mr19358719lji.179.1554816404903;
+        Tue, 09 Apr 2019 06:26:44 -0700 (PDT)
+Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id a16sm6555688lfl.86.2019.04.09.06.26.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 06:26:44 -0700 (PDT)
+Subject: Re: [Xen-devel][PATCH] xen/cameraif: add ABI for para-virtual camera
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        konrad.wilk@oracle.com, hverkuil@xs4all.nl,
+        boris.ostrovsky@oracle.com
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+References: <20190409091546.9606-1-andr2000@gmail.com>
+ <9b9ba6b9-f045-80e2-fe8a-595728fb1ec0@suse.com>
+ <5bb8c828-b0ae-86c3-dacf-88bf6032dd6f@gmail.com>
+ <303b7d57-1785-62b3-fac0-a3e947e691c4@suse.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <e9b3a843-1b1f-94c2-e123-09fb26d89753@gmail.com>
+Date:   Tue, 9 Apr 2019 16:26:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <303b7d57-1785-62b3-fac0-a3e947e691c4@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
-> On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
-> > On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
-> > > On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
-> > > > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
-> > > > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
-> > > > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
-> > > > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
-> > > > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
-> > > > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
-> > > > > > > > > present in Tegra194 SoC.
-> > > > > > 
-> > > > > >      - Why does this chip require pcie_pme_disable_msi()?  The only other
-> > > > > >        use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
-> > > > > >        ("PCI PM: Make it possible to force using INTx for PCIe PME
-> > > > > >        signaling").
-> > > > > 
-> > > > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
-
-> > There's something wrong here.  Either the question of how PME is
-> > signaled is generic and the spec provides a way for the OS to discover
-> > that method, or it's part of the device-specific architecture that
-> > each host bridge driver has to know about its device.  If the former,
-> > we need to make the PCI core smart enough to figure it out.  If the
-> > latter, we need a better interface than this ad hoc
-> > pcie_pme_disable_msi() thing.  But if it is truly the latter, your
-> > current code is sufficient and we can refine it over time.
+On 4/9/19 12:46 PM, Juergen Gross wrote:
+> On 09/04/2019 11:33, Oleksandr Andrushchenko wrote:
+>> On 4/9/19 12:28 PM, Juergen Gross wrote:
+>>> On 09/04/2019 11:15, Oleksandr Andrushchenko wrote:
+>>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>>>
+>>>> This is the ABI for the two halves of a para-virtualized
+>>>> camera driver which extends Xen's reach multimedia capabilities even
+>>>> further enabling it for video conferencing, In-Vehicle Infotainment,
+>>>> high definition maps etc.
+>>>>
+>>>> The initial goal is to support most needed functionality with the
+>>>> final idea to make it possible to extend the protocol if need be:
+>>>>
+>>>> 1. Provide means for base virtual device configuration:
+>>>>    - pixel formats
+>>>>    - resolutions
+>>>>    - frame rates
+>>>> 2. Support basic camera controls:
+>>>>    - contrast
+>>>>    - brightness
+>>>>    - hue
+>>>>    - saturation
+>>>> 3. Support streaming control
+>>>>
+>>>> Signed-off-by: Oleksandr Andrushchenko
+>>>> <oleksandr_andrushchenko@epam.com>
+>>>> Cc: Juergen Gross <jgross@suse.com>
+>>>> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>>>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+>>> I'm in principle fine with this patch, but it should be sent as part of
+>>> a series using that header. In case the related driver isn't accepted
+>>> we'd end up with a stale header file.
+>> Hm, I am doing this as I did for the rest of protocols before:
+>> 1. Get the protocol in Xen
+>> 2. Get the copy in Linux
+>> 3. Upstream driver (use header)
+> Sorry for not having done the review properly in the past. ;-)
 >
-> In case of Tegra194, it is the latter case.
-
-This isn't a Tegra194 question; it's a question of whether this
-behavior is covered by the PCIe spec.
-
-> > What I suspect should happen eventually is the DWC driver should call
-> > devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
-> > That would require a little reorganization of the DWC data structures,
-> > but it would be good to be more consistent.
-> > 
-> > For now, I think stashing the pointer in pcie_port or dw_pcie would be
-> > OK.  I'm not 100% clear on the difference, but it looks like either
-> > should be common across all the DWC drivers, which is what we want.
+>> Even if the driver is not accepted (hope this won't happen)
+>> then this patch makes Xen and Linux properly aligned anyway.
+>> Which is IMO good
+> Having an unused header file is not good.
 >
-> Since dw_pcie is common for both root port and end point mode structures,
-> I think it makes sense to keep the pointer in pcie_port as this structure
-> is specific to root port mode of operation.
-> I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
-> used in the beginning itself to be inline with non-DWC implementations.
-> But, I'll take it up later (after I'm done with upstreaming current series)
-
-Fair enough.
-
-> > > .remove() internally calls pm_runtime_put_sync() API which calls
-> > > .runtime_suspend(). I made a new patch to add a host_deinit() call
-> > > which make all these calls. Since host_init() is called from inside
-> > > .runtime_resume() of this driver, to be in sync, I'm now calling
-> > > host_deinit() from inside .runtime_suspend() API.
-> > 
-> > I think this is wrong.  pci_stop_root_bus() will detach all the
-> > drivers from all the devices.  We don't want to do that if we're
-> > merely runtime suspending the host bridge, do we?
+> Be assured I'm going to give you the needed Reviewed-by: tag for
+> the patch adding the header in a series using it.
+Ok, sounds good
 >
-> In the current driver, the scenarios in which .runtime_suspend() is called
-> are
-> a) during .remove() call and
+>
+> Juergen
 
-It makes sense that you should call pci_stop_root_bus() during
-.remove(), i.e., when the host controller driver is being removed,
-because the PCI bus will no longer be accessible.  I think you should
-call it *directly* from tegra_pcie_dw_remove() because that will match
-what other drivers do.
-
-> b) when there is no endpoint found and controller would be shutdown
-> In both cases, it is required to stop the root bus and remove all devices,
-> so, instead of having same call present in respective paths, I kept them
-> in .runtime_suspend() itself to avoid code duplication.
-
-I don't understand this part.  We should be able to runtime suspend
-the host controller without detaching drivers for child devices.
-
-If you shutdown the controller completely and detach the *host
-controller driver*, sure, it makes sense to detach drivers from child
-devices.  But that would be handled by the host controller .remove()
-method, not by the runtime suspend method.
-
-Bjorn
