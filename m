@@ -2,135 +2,160 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96B9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40809C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A886C20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554821706;
-	bh=zpYC3RxGxZ/M90fsBhnwejjsc5FqkeIKoqxHFOecNMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EYs1+8EYz6CTkzsWMYm47UqTIXEGP0rNe9KL7GnUoAjh5co3+E6aqOXBHLx9DnAzF
-	 4yMDodAMzMzeomooS+wEPew8DIT2BAAr71brFZi7DVYO/vKchsRfBn5OBTGvtvtUOQ
-	 VajGR2RyKjBh7rw64H+G9j1UqhEc7aVFlMjA5jdA=
+	by mail.kernel.org (Postfix) with ESMTP id 10D4F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDIOzF (ORCPT
+        id S1726564AbfDIOze convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:55:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41052 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfDIOzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:55:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v7so13791226oie.8;
-        Tue, 09 Apr 2019 07:55:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xfRjzz+00VDiyayhxDXZDKz+OoEJNKL2L2yzqrq71Hc=;
-        b=WqfzdkXJj+0xH3e/mZig18Jn2lBOm39sygiOHYsEjDpHTMQfubw4o8oqIJ+dBdSlXh
-         3Xe/2lvMEp7154/2LZLyK2TrC2mEpqZcE8PnKH8nkYYffQkWLmoII3DDnj+RPSaEZv4i
-         EGHiHwnS1JXti2CPgDzOi5nhRkPYjYXXcBEdftuIktByLTEOcKX3npbiZYTu+hRQsgwO
-         BzHzDbqvvkw8Tv5LQ7JWzTwinx27bwLXYztzFyT3wnL4jDhwAHoFnqOdauZPsNrk5XMD
-         xSIVKjFH/MHj8uzbT82a5DPLOaNBYZH023Kk4Ena04FqAi6TFcz5agoi1XMezCDY+4Z4
-         K/yw==
-X-Gm-Message-State: APjAAAVRevwU4gpxCoxnJ7vh+45t0StwFohlha/gWsG1BMRPOjV3sPBC
-        +8Hv9xr0Mm1bwNI7CpfIZQgoiC4HlVLXapeaEz4=
-X-Google-Smtp-Source: APXvYqwEg0ZkIOLP0CDsBiCCSlZM1e003FYPTC0DlxapcHf61QIaxVjNaUdT29Tn/Tmu3Q5e5uken3pqnmV9IVJ/AmM=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr20030737oib.95.1554821704141;
- Tue, 09 Apr 2019 07:55:04 -0700 (PDT)
+        Tue, 9 Apr 2019 10:55:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:57918 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbfDIOze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:55:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 07:55:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="129878638"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga007.jf.intel.com with ESMTP; 09 Apr 2019 07:55:33 -0700
+Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 9 Apr 2019 07:55:33 -0700
+Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
+ FMSMSX126.amr.corp.intel.com (10.18.125.43) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 9 Apr 2019 07:55:33 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.94]) by
+ CRSMSX103.amr.corp.intel.com ([169.254.4.179]) with mapi id 14.03.0415.000;
+ Tue, 9 Apr 2019 08:55:31 -0600
+From:   "Weiny, Ira" <ira.weiny@intel.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Huang Shijie <sjhuang@iluvatar.ai>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] mm/gup.c: fix the wrong comments
+Thread-Topic: [PATCH 1/2] mm/gup.c: fix the wrong comments
+Thread-Index: AQHU7bQlN2diAK7eV0icdWdVKwXx36Yys5SAgAC3GYCAABwzgIAABCQAgACKPoD//9cAcA==
+Date:   Tue, 9 Apr 2019 14:55:31 +0000
+Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79CA51BA@CRSMSX101.amr.corp.intel.com>
+References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
+ <20190408141313.GU22763@bombadil.infradead.org>
+ <20190409010832.GA28081@hsj-Precision-5520>
+ <20190409024929.GW22763@bombadil.infradead.org>
+ <20190409030417.GA3324@hsj-Precision-5520>
+ <20190409111905.GY22763@bombadil.infradead.org>
+In-Reply-To: <20190409111905.GY22763@bombadil.infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzRhODcyZmYtMzU1Yi00NzdjLTk0ODItMzE5OTNlNDc2YmY3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoianRaRFRkODRvY1wvbGYyQzVXQzNsSmE1SlwvVW9qOWlhSHlBcWNLQUlCeCtmaGpGcHdOMmVxdjY2Z3hIejBPU0tPIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.18.205.10]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190406181704.33574-1-cai@lca.pw> <CAJZ5v0jxUn_Hhm21FFBc2eSp49kCciCzR1_UGewHkpJiTy3LGw@mail.gmail.com>
- <1554816309.26196.46.camel@lca.pw>
-In-Reply-To: <1554816309.26196.46.camel@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Apr 2019 16:54:52 +0200
-Message-ID: <CAJZ5v0g_oLdqv_sp8Un-44wO6vtQH6rVeUTKxSynO8VPPascxA@mail.gmail.com>
-Subject: Re: [PATCH -next] acpi/hmat: fix memory leaks in hmat_init()
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 3:25 PM Qian Cai <cai@lca.pw> wrote:
->
-> On Tue, 2019-04-09 at 10:25 +0200, Rafael J. Wysocki wrote:
-> > On Sat, Apr 6, 2019 at 8:18 PM Qian Cai <cai@lca.pw> wrote:
+> On Tue, Apr 09, 2019 at 11:04:18AM +0800, Huang Shijie wrote:
+> > On Mon, Apr 08, 2019 at 07:49:29PM -0700, Matthew Wilcox wrote:
+> > > On Tue, Apr 09, 2019 at 09:08:33AM +0800, Huang Shijie wrote:
+> > > > On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
+> > > > > On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
+> > > > > > The root cause is that sg_alloc_table_from_pages() requires
+> > > > > > the page order to keep the same as it used in the user space,
+> > > > > > but
+> > > > > > get_user_pages_fast() will mess it up.
+> > > > >
+> > > > > I don't understand how get_user_pages_fast() can return the
+> > > > > pages in a different order in the array from the order they appear in
+> userspace.
+> > > > > Can you explain?
+> > > > Please see the code in gup.c:
+> > > >
+> > > > 	int get_user_pages_fast(unsigned long start, int nr_pages,
+> > > > 				unsigned int gup_flags, struct page **pages)
+> > > > 	{
+> > > > 		.......
+> > > > 		if (gup_fast_permitted(start, nr_pages)) {
+> > > > 			local_irq_disable();
+> > > > 			gup_pgd_range(addr, end, gup_flags, pages, &nr);
+> // The @pages array maybe filled at the first time.
 > > >
-> > > The commit 665ac7e92757 ("acpi/hmat: Register processor domain to its
-> > > memory") introduced some memory leaks below due to it fails to release
-> > > the heap memory in an error path, and then the stack __initdata memory
-> > > which reference them get freed during boot renders those heap memory as
-> > > leaks.
+> > > Right ... but if it's not filled entirely, it will be filled
+> > > part-way, and then we stop.
 > > >
-> > > unreferenced object 0xc8ff8008349e9400 (size 128):
-> > >   comm "swapper/0", pid 1, jiffies 4294709236 (age 48121.476s)
-> > >   hex dump (first 32 bytes):
-> > >     00 d0 9e 34 08 80 ff 84 d8 00 43 11 00 10 ff ff  ...4......C.....
-> > >     00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00  ................
-> > >   backtrace:
-> > >     [<00000000869d4503>] __kmalloc+0x568/0x600
-> > >     [<0000000070fd6afb>] alloc_memory_target+0x50/0xd8
-> > >     [<00000000efa2081e>] srat_parse_mem_affinity+0x58/0x5c
-> > >     [<000000008bfaef74>] acpi_parse_entries_array+0x1c8/0x2c0
-> > >     [<0000000022804877>] acpi_table_parse_entries_array+0x11c/0x138
-> > >     [<00000000ffe9cd34>] acpi_table_parse_entries+0x7c/0xac
-> > >     [<00000000a7023afd>] hmat_init+0x90/0x174
-> > >     [<00000000694a86c1>] do_one_initcall+0x2d8/0x5f8
-> > >     [<0000000024889da9>] do_initcall_level+0x37c/0x3fc
-> > >     [<000000009be02908>] do_basic_setup+0x38/0x50
-> > >     [<0000000037b3ac0a>] kernel_init_freeable+0x194/0x258
-> > >     [<00000000f5741184>] kernel_init+0x18/0x334
-> > >     [<000000007b30f423>] ret_from_fork+0x10/0x18
-> > >     [<000000006c7147a8>] 0xffffffffffffffff
+> > > > 			local_irq_enable();
+> > > > 			ret = nr;
+> > > > 		}
+> > > > 		.......
+> > > > 		if (nr < nr_pages) {
+> > > > 			/* Try to get the remaining pages with
+> get_user_pages */
+> > > > 			start += nr << PAGE_SHIFT;
+> > > > 			pages += nr;                                                  // The
+> @pages is moved forward.
 > > >
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > Yes, to the point where gup_pgd_range() stopped.
+> > >
+> > > > 			if (gup_flags & FOLL_LONGTERM) {
+> > > > 				down_read(&current->mm->mmap_sem);
+> > > > 				ret = __gup_longterm_locked(current,
+> current->mm,      // The @pages maybe filled at the second time
+> > >
+> > > Right.
+> > >
+> > > > 				/*
+> > > > 				 * retain FAULT_FOLL_ALLOW_RETRY
+> optimization if
+> > > > 				 * possible
+> > > > 				 */
+> > > > 				ret = get_user_pages_unlocked(start,
+> nr_pages - nr,    // The @pages maybe filled at the second time.
+> > > > 							      pages, gup_flags);
+> > >
+> > > Yes.  But they'll be in the same order.
+> > >
+> > > > BTW, I do not know why we mess up the page order. It maybe used in
+> some special case.
+> > >
+> > > I'm not discounting the possibility that you've found a bug.
+> > > But documenting that a bug exists is not the solution; the solution
+> > > is fixing the bug.
+> > I do not think it is a bug :)
 > >
-> > Well, the catch is good, but the additional label is sort of excessive IMO.
+> > If we use the get_user_pages_unlocked(), DMA is okay, such as:
+> >                      ....
+> > 		     get_user_pages_unlocked()
+> > 		     sg_alloc_table_from_pages()
+> > 	             .....
 > >
-> > > ---
-> > >  drivers/acpi/hmat/hmat.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> > > index b7824a0309f7..c9b8abcf012c 100644
-> > > --- a/drivers/acpi/hmat/hmat.c
-> > > +++ b/drivers/acpi/hmat/hmat.c
-> > > @@ -637,7 +637,7 @@ static __init int hmat_init(void)
-> > >
-> > >         status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
-> > >         if (ACPI_FAILURE(status))
-> >
-> > I would just add a hmat_free_structures() call here or rework the
-> > _put_table() logic which is not really straightforward.
->
-> I am not sure how adding a hmat_free_structures() call there would be better. If
-> the name has bee changed to something else in the future, it ends up needing to
-> change 2 places. It also not save the adding line-count either. I don't see how
-> to rework the acpi_put_table() logic to be better than adding a label here
-> either.
+> > I think the comment is not accurate enough. So just add more comments,
+> > and tell the driver users how to use the GUPs.
+> 
+> gup_fast() and gup_unlocked() should return the pages in the same order.
+> If they do not, then it is a bug.
 
-Fewer jumps are easier to follow in general, so avoiding ones that can
-be avoided is helpful.
+Is there a reproducer for this?  Or do you have some debug output which shows this problem?
 
-I'm not buying the argument about more code line changes needed if the
-function name changes.  It's meaningless.
+Ira
 
-And if you check the return value of acpi_get_table() for SRAT after
-calling acpi_put_table(tbl), you will only need the out_free label, if
-I'm not mistaken.
