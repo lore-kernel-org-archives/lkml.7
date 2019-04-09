@@ -2,100 +2,261 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60B0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA4320880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746C320857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfDIG40 (ORCPT
+        id S1726507AbfDIHEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:56:26 -0400
-Received: from bastet.se.axis.com ([195.60.68.11]:45259 "EHLO
-        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfDIG4Y (ORCPT
+        Tue, 9 Apr 2019 03:04:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfDIHEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:56:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bastet.se.axis.com (Postfix) with ESMTP id 58422184F4;
-        Tue,  9 Apr 2019 08:56:22 +0200 (CEST)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id SieTQC0JahzT; Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-        by bastet.se.axis.com (Postfix) with ESMTPS id 5F29A184DD;
-        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 468741A088;
-        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3ADC91A06D;
-        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-        by boulder02.se.axis.com (Postfix) with ESMTP;
-        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: from lnxjespern3.se.axis.com (lnxjespern3.se.axis.com [10.88.4.8])
-        by seth.se.axis.com (Postfix) with ESMTP id 2DEC52CB9;
-        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Received: by lnxjespern3.se.axis.com (Postfix, from userid 363)
-        id 2846B800E1; Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 08:56:21 +0200
-From:   Jesper Nilsson <jesper.nilsson@axis.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, jespern@axis.com,
-        larper@axis.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@axis.com
-Subject: Re: [PATCH -next] pinctrl: artpec6: Make two functions static
-Message-ID: <20190409065621.2yfx5nqzpuxyj46p@axis.com>
-References: <20190321150909.3576-1-yuehaibing@huawei.com>
- <20190408180110.GA15199@archlinux-ryzen>
+        Tue, 9 Apr 2019 03:04:33 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 27A35280827;
+        Tue,  9 Apr 2019 08:04:31 +0100 (BST)
+Date:   Tue, 9 Apr 2019 09:04:27 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at,
+        linux-mtd@lists.infradead.org, juliensu@mxic.com.tw,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
+ randomizer support
+Message-ID: <20190409090427.22de9917@collabora.com>
+In-Reply-To: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408180110.GA15199@archlinux-ryzen>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:01:10AM -0700, Nathan Chancellor wrote:
-> On Thu, Mar 21, 2019 at 11:09:09PM +0800, Yue Haibing wrote:
-> > From: YueHaibing <yuehaibing@huawei.com>
-> > -void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
-> > -			 unsigned int group)
-> > +static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
-> > +				unsigned int function,
-> > +				unsigned int group)
-> 
-> On arm32 allyesconfig:
-> 
-> drivers/pinctrl/pinctrl-artpec6.c:706:13: error: unused function
-> 'artpec6_pmx_disable' [-Werror,-Wunused-function]
-> 
-> This is the second time you've introduced an unused function warning by
-> making a function static[1], could you please be a little more vigilant
-> in your clean ups in the future?
-> 
-> [1]: https://lore.kernel.org/lkml/20190327050126.12064-1-natechancellor@gmail.com/
-> 
-> Linus/Jesper/Lars, should this function just be deleted? I'd be happy to
-> send a patch doing so if that's the right course of action.
+On Tue,  9 Apr 2019 11:22:52 +0800
+Mason Yang <masonccyang@mxic.com.tw> wrote:
 
-Yes, that function is unused and can be dropped.
+> Add a driver for Macronix NAND read retry and randomizer.
 
-> Thanks,
-> Nathan
+These are 2 orthogonal changes, and should thus bit split in 2 patches.
 
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/mtd/nand/raw/nand_macronix.c | 169 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+> index 47d8cda..a19caa4 100644
+> --- a/drivers/mtd/nand/raw/nand_macronix.c
+> +++ b/drivers/mtd/nand/raw/nand_macronix.c
+> @@ -17,6 +17,174 @@
+>  
+>  #include "internals.h"
+>  
+> +#define MACRONIX_READ_RETRY_BIT BIT(0)
+> +#define MACRONIX_RANDOMIZER_BIT BIT(1)
+> +#define MACRONIX_READ_RETRY_MODE 5
+> +
+> +#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
+> +
+> +struct nand_onfi_vendor_macronix {
+> +	u8 reserved[1];
+> +	u8 reliability_func;
+> +} __packed;
+> +
+> +struct nand_chip *mxic_sysfs;
+> +
+> +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
+> +{
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
+> +	int ret;
+> +
+> +	if (mode > MACRONIX_READ_RETRY_MODE)
+> +		mode = MACRONIX_READ_RETRY_MODE;
+> +
+> +	feature[0] = mode;
+> +	ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
+> +	if (ret)
+> +		pr_err("failed to enter read retry moded:%d\n", mode);
+> +
+> +	if (mode == 0)
+> +		ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY,
+> +					 feature);
+> +		if (ret)
+> +			pr_err("failed to exits read retry moded:%d\n", mode);
+> +
+> +	return ret;
+> +}
+> +
+> +static ssize_t mxic_nand_rand_type_show(struct kobject *kobj,
+> +					struct kobj_attribute *attr, char *buf)
+> +{
+> +	struct nand_chip *chip = mxic_sysfs;
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
+> +	int ret;
+> +
+> +	nand_select_target(chip, 0);
+> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +				feature);
+> +	nand_deselect_target(chip);
+> +	if (ret)
+> +		pr_err("failed to check mxic nand device randomizer\n");
+> +
+> +	return sprintf(buf, "MXIC NAND device randomizer %s(0x%x)\n",
+> +		       feature[0] & MACRONIX_RANDOMIZER_BIT ?
+> +		       "enable" : "disable", feature[0]);
+> +}
+> +
+> +static ssize_t mxic_nand_rand_type_store(struct kobject *kobj,
+> +					 struct kobj_attribute *attr,
+> +					 const char *buf, size_t count)
+> +{
+> +	struct nand_chip *chip = mxic_sysfs;
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
+> +	unsigned int rand_layout;
+> +	int ret;
+> +
+> +	nand_select_target(chip, 0);
+> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +				feature);
+> +	nand_deselect_target(chip);
+> +
+> +	if (feature[0]) {
+> +		pr_err("Randomizer is enabled 0x%x\n", feature[0]);
+> +		goto err_out;
+> +	}
+> +
+> +	ret = kstrtouint(buf, 0, &rand_layout);
+> +	if (ret)
+> +		goto err_out;
+> +
+> +	if (rand_layout > 7) {
+> +		pr_err("Error parameter value:0x%x\n", rand_layout);
+> +		goto err_out;
+> +	}
+> +
+> +	feature[0] = rand_layout & 0x07;
+> +	nand_select_target(chip, 0);
+> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +				feature);
+> +	nand_deselect_target(chip);
+> +	if (ret) {
+> +		pr_err("device randomizer set feature failed\n");
+> +		goto err_out;
+> +	}
+> +
+> +	feature[0] = 0x0;
+> +	nand_select_target(chip, 0);
+> +	ret = nand_prog_page_op(chip, 0, 0, feature, 1);
+> +	nand_deselect_target(chip);
+> +	if (ret) {
+> +		pr_err("Prog device randomizer failed\n");
+> +		goto err_out;
+> +	}
+> +
+> +	feature[0] = 0x0;
+> +	nand_select_target(chip, 0);
+> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +				feature);
+> +	nand_deselect_target(chip);
+> +	if (ret)
+> +		pr_err("failed to exits prog device randomizer\n");
+> +
+> +err_out:
+> +	return count;
+> +}
+> +
+> +static const struct kobj_attribute sysfs_mxic_nand =
+> +	__ATTR(nand_random, S_IRUGO | S_IWUSR,
+> +	       mxic_nand_rand_type_show,
+> +	       mxic_nand_rand_type_store);
+
+No, we don't want to expose that through a sysfs file, especially since
+changing the randomizer config means making the NAND unreadable for
+those that have used it before the change.
+
+BTW, why would we want to disable the randomizer? If it's here I guess
+it's needed. The only use case I have in mind is when the controller
+also has a randomizer and you want to use this one instead of the on-die
+one.
+
+> +
+> +static void macronix_nand_onfi_init(struct nand_chip *chip)
+> +{
+> +	struct nand_parameters *p = &chip->parameters;
+> +	struct kobject *kobj;
+> +	int ret;
+> +
+> +	mxic_sysfs = chip;
+> +	if (p->onfi) {
+> +		struct nand_onfi_vendor_macronix *mxic =
+> +				(void *)p->onfi->vendor;
+> +
+> +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
+> +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
+> +			chip->setup_read_retry =
+> +				 macronix_nand_setup_read_retry;
+> +			if (p->supports_set_get_features) {
+> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
+> +					p->set_feature_list);
+> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
+> +					p->get_feature_list);
+> +			}
+> +		}
+> +
+> +		if (mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
+> +			if (p->supports_set_get_features) {
+> +				set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +					p->set_feature_list);
+> +				set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> +					p->get_feature_list);
+> +				/*
+> +				 * create syfs-fs for MXIC NAND device
+> +				 * randomizer status check & enable
+> +				 * operations.
+> +				 */
+> +				kobj = kobject_create_and_add("mxic_rand_nand",
+> +							      NULL);
+> +				if (!kobj)
+> +					return;
+> +
+> +				ret = sysfs_create_file(kobj,
+> +							&sysfs_mxic_nand.attr);
+> +				if (ret) {
+> +					pr_err("Err: mxic_rand_nand sysfs");
+> +					kobject_put(kobj);
+> +				}
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  /*
+>   * Macronix AC series does not support using SET/GET_FEATURES to change
+>   * the timings unlike what is declared in the parameter page. Unflag
+> @@ -65,6 +233,7 @@ static int macronix_nand_init(struct nand_chip *chip)
+>  		chip->bbt_options |= NAND_BBT_SCAN2NDPAGE;
+>  
+>  	macronix_nand_fix_broken_get_timings(chip);
+> +	macronix_nand_onfi_init(chip);
+>  
+>  	return 0;
+>  }
+
