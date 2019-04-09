@@ -2,113 +2,140 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E055C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18559C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7DA20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78B620830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W0yADN1C"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="BVs9hw09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfDIJsj (ORCPT
+        id S1726739AbfDIJtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:48:39 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39152 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfDIJsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:48:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x399Y63A060772;
-        Tue, 9 Apr 2019 09:48:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=oq4eb7x7a96j787xemjpLUe8MnNPEZED6xbWGfWFay4=;
- b=W0yADN1CQ75xHyT2M86RC1NJza7Xa1lOSayPbhd5mGJDafnrgxPAvT7dfsJ9uTPXUa5U
- CO7FbbROGLmDMUkCHn0VUL6PEtwxEb+Zk0wR8fh4zlhtv5sHqfqU+5TPqU7VeOX6FYrx
- v5xPuzewlAFZxH3WlXXwNJhM53DFOjOL6SwDM+i50RGVKFvDuvIR1UV2adl8Xu/V5RYF
- rn9C7t9HH1as96osEmTEegqFr5OO8BI+0Zr5bGhMbsiU+zI1kVktY5Iewvji4R0kGqz9
- HqCPMlhkOLW7scnv5LjK2q2eg47r6R3yq7Se2R9UMgDJ9SZ+/iA60hfiWjoTo3TV+DN0 Ag== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2rpmrq3ssm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 09:48:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x399kRGd148533;
-        Tue, 9 Apr 2019 09:46:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2rph7sfx3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 09:46:27 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x399kPmr009270;
-        Tue, 9 Apr 2019 09:46:25 GMT
-Received: from [10.182.71.93] (/10.182.71.93)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Apr 2019 02:46:25 -0700
-Subject: Re: [PATCH V2] io_uring: introduce inline reqs for
- IORING_SETUP_IOPOLL
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1554787314-27179-1-git-send-email-jianchao.w.wang@oracle.com>
- <20190409093717.GA15391@infradead.org>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <c76b558c-bc12-3247-2bb5-986e5ffcba1f@oracle.com>
-Date:   Tue, 9 Apr 2019 17:46:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 05:49:46 -0400
+Received: from mail-eopbgr1400124.outbound.protection.outlook.com ([40.107.140.124]:19792
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726079AbfDIJtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:49:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BZJJIhGjLfGsFunJd1udP0GiK/8wm5CJPeinnX28ngw=;
+ b=BVs9hw096LNYI4JUMqp0azMroZWamnWVD266lv0qZDwJM6Pgqmxl4fayw3Lll6jwpfnDSSQyNTIo/gQbEHT3Y1xJe36I2KFatLgb8ZIplV82p9LwaVljVA5aCiilvH7CGGKJyMkotaOAUbfbeumRpp2TdWFLrPcf+tlJjWT6hTY=
+Received: from TYAPR01MB4271.jpnprd01.prod.outlook.com (20.178.139.148) by
+ TYAPR01MB4221.jpnprd01.prod.outlook.com (20.178.140.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Tue, 9 Apr 2019 09:49:43 +0000
+Received: from TYAPR01MB4271.jpnprd01.prod.outlook.com
+ ([fe80::cda2:4f20:84e4:de70]) by TYAPR01MB4271.jpnprd01.prod.outlook.com
+ ([fe80::cda2:4f20:84e4:de70%4]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
+ 09:49:42 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: RE: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
+ independent irqs
+Thread-Topic: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
+ independent irqs
+Thread-Index: AQHU6IMtNq0pm/ZwY0KVYOnopE2tzqYqRMIAgAlc0+A=
+Date:   Tue, 9 Apr 2019 09:49:42 +0000
+Message-ID: <TYAPR01MB4271AFFCCC0B2D1215227746D82D0@TYAPR01MB4271.jpnprd01.prod.outlook.com>
+References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <TY1PR01MB17706362E3C2AB67C3ABD1E7C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB17706362E3C2AB67C3ABD1E7C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 905d9d14-8dc1-4805-906f-08d6bcd0b118
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB4221;
+x-ms-traffictypediagnostic: TYAPR01MB4221:
+x-microsoft-antispam-prvs: <TYAPR01MB422170E8D303374EC04411E2D82D0@TYAPR01MB4221.jpnprd01.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39860400002)(396003)(346002)(189003)(199004)(81156014)(4326008)(33656002)(8676002)(2906002)(14454004)(97736004)(478600001)(8936002)(81166006)(486006)(7696005)(53546011)(68736007)(76176011)(6506007)(5660300002)(66066001)(26005)(102836004)(105586002)(106356001)(99286004)(316002)(74316002)(186003)(256004)(7736002)(6246003)(71200400001)(6862004)(53936002)(71190400001)(305945005)(229853002)(476003)(14444005)(6436002)(55016002)(9686003)(446003)(3846002)(86362001)(6116002)(52536014)(25786009)(54906003)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4221;H:TYAPR01MB4271.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Llo38HQgcR63AtBc9gc0LmtYZisAmpfbsekpLnBj8Qg00xWFt3C2VU63PnnQxqtXoFyn9Ay0aNJ1zI+rMXly3hvNwwhu2i36PBvoiFnzRD6U0eZXcFqMeYXjobGdm28L1mALPi2CuT4MmLJpNtlss8rFiDlcPvbgqK1YlfpW/dva4D7xYMuAxdjs6fS/ZoGu7bhpAlYyjixBodHjYk3cAL8+sg1E7NNM5hoJGH4LjG54GWgbb8o/uMVRk9YiyicGEdxcctDgZwnXxNKQ2+syjHyO4Yy8AqOj2XXaeUvmPY/n4O3IB2TpS16WEbO6JjLIZTBxtmyyWRT5WMVNetIHXDfrc08W+YTBcT7Zu4DhdwkWVGXr4DfxuyVKU1R6F39gEEbYpXDsB0e0G6ZJ+NsE1CaTuXYNwH2uxfj3pRpsTzA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190409093717.GA15391@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=812
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904090063
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=832 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904090063
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 905d9d14-8dc1-4805-906f-08d6bcd0b118
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 09:49:42.7738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph
+Hello Fabrizio-san,
 
-On 4/9/19 5:37 PM, Christoph Hellwig wrote:
-> On Tue, Apr 09, 2019 at 01:21:54PM +0800, Jianchao Wang wrote:
->> For the IORING_SETUP_IOPOLL case, all of the submission and
->> completion are handled under ctx->uring_lock or in SQ poll thread
->> context, so io_get_req and io_put_req has been serialized well.
->> The only exception is the asynchronous workqueue context where could
->> free the io_kiocb for error. To overcome this, we allocate a new
->> io_kiocb and free the previous inlined one.
->>
->> Based on this, we introduce the preallocated reqs list per ctx and
->> needn't to provide any lock to serialize the updating of list. The
->> performacne benefits from this. The test result of following fio
->> command
-> 
-> I really don't like the idea of exposing this to userspace.  Is
-> there any good reason to not simply always allocate inline request
-> up to a certain ring size?
-> 
-Sorry, I cannot get your point.
-There is nothing exposed to userspace. We will try to allocated fixed 128
-per-ctx preallocated reqs if IORING_SETUP_IOPOLL. When this inlined reqs
-are used up, it will allocated reqs in old fashion.
+> From: Fabrizio Castro, Sent: Wednesday, April 3, 2019 7:49 PM
+>=20
+> Hello Yoshihiro-san,
+>=20
+> Thank you for your partch!
+>=20
+> > From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.or=
+g> On Behalf Of Yoshihiro Shimoda
+> > Sent: 01 April 2019 13:01
+> > Subject: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable indep=
+endent irqs
+> >
+> > Since the previous code enabled/disabled the irqs both OHCI and EHCI,
+> > it is possible to cause unexpected interruptions. To avoid this,
+> > this patch creates multiple phy instances from phandle and
+> > enables/disables independent irqs by the instances.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>=20
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Tested-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Thanks
-Jianchao
+Thank you for your review and test!
+
+<snip>
+> > +static enum usb_dr_mode rcar_gen3_get_dr_mode(struct device_node *np)
+> > +{
+> > +	enum usb_dr_mode candidate =3D USB_DR_MODE_UNKNOWN, tmp;
+> > +	int i;
+> > +
+> > +	/*
+> > +	 * If one of device nodes has other dr_mode except UNKNOWN,
+> > +	 * this function returns UNKNOWN.
+> > +	 */
+> > +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> > +		tmp =3D of_usb_get_dr_mode_by_phy(np, i);
+>=20
+> We are calling of_usb_get_dr_mode_by_phy with i =3D=3D 0, but we don't do=
+cument it
+> in the dt-bindings document?
+
+This (i =3D=3D 0) is for backward compatibility. So, I'll add such a commen=
+t on the driver.
+
+Best regards,
+Yoshihiro Shimoda
+
