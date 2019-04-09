@@ -2,46 +2,46 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C60C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919FAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC58E2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610452084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfDIQEg (ORCPT
+        id S1726666AbfDIQEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:04:36 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54055 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfDIQEg (ORCPT
+        Tue, 9 Apr 2019 12:04:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39826 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfDIQEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:04:36 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q16so4233569wmj.3;
-        Tue, 09 Apr 2019 09:04:34 -0700 (PDT)
+        Tue, 9 Apr 2019 12:04:53 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so3968738wmk.4;
+        Tue, 09 Apr 2019 09:04:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NWwbBuZC+XjhAuW0RZ7Nu80M8IGtTFgC21+5MwcriIE=;
-        b=pgyUOFJaBVpb5nZUrHxCALWl2BbWJoNRBn35OIDRR6fYQKapvgt9N579eZaDE8rKsA
-         hs1A4nY1SajAS8rBm+rC7lFVAVfV19XfCae6voaG9oGS79aMogj4TazH0gsOHmm47L+S
-         vVkDvSwPpdeIp01WsbMr9OqJhzv1QnkYqNJyocr4EV8DMtKsYf3QlSuQ7mRxP/YIUC8K
-         PLNI8zf6sf9xGLbH+I4lwR7gFL9Q30xlLeFsnu0Y0fciAXgHSpZY+CWmo+VaSJh8o4c9
-         RVRQGy7XdREcjF924lb5HT1NgAhMZOXiGKAqbQbZMBBi5GVXBIM9IIT1+Ii46THX9Zb1
-         yHrw==
-X-Gm-Message-State: APjAAAUqEN2tk8fBpgQ7NS0jdqIuppwxe6EiycssXqRInAVR7w1mIWSa
-        hVHMYcgAth5wFixN0sVHeD8=
-X-Google-Smtp-Source: APXvYqw3SsLPkYeciTQivkG3WJkLSo24zkHdmp+FSY+e3iJXH+dfPpIMaeFPhuJEHJPE5u7XlkxoSQ==
-X-Received: by 2002:a1c:230e:: with SMTP id j14mr23131236wmj.120.1554825874154;
-        Tue, 09 Apr 2019 09:04:34 -0700 (PDT)
+        bh=ZJOgfdfE21IOstV9dI+gK3TYPRr79iJgsik7Y+jnLZo=;
+        b=QTDkGpf3Rw6TA8xJq84mJglTKZyDRzQf/AQles768K437DQh+X3WJ3saDsJL+Sk6Rf
+         NbJ9SdliCHN2I09CAAkkjVgqYxcFck51kCaf2+VydlmGzf3XsEscfPnV8DPbiW2lmVyY
+         iPpb+/FZtppNlPVohrQDf3RckMX8QUq6+Bbwt1ojtblAHg1Gan45plDpKrfAFRiv2q6a
+         LuAaId4KysjkwHNUoVS3SnkUOQcYUpgXHvNlpke+3Mn6XsQupYoGvaao66VuFAmPliOF
+         4FPHHC3Mb3v9FCpJ+nm9673+qgLw0qUuufr3qubZFptAQosQpZXS+p7vP5VSi6UNfZHy
+         fYBg==
+X-Gm-Message-State: APjAAAX1FbtJBoyEf31QDlOPwnTQNa2kaFkLot3cx5Z55Ji0PGHbIjc2
+        sV3F1qUnWXw6Ix2TOaaA2fw=
+X-Google-Smtp-Source: APXvYqzpr4SsTaSG1sti0lBs7IvEgB7PB1138oiOira8mqEND4HMXPi9LACX6LGh63kf2qHFO7iiXw==
+X-Received: by 2002:a1c:e0c6:: with SMTP id x189mr17817972wmg.4.1554825890840;
+        Tue, 09 Apr 2019 09:04:50 -0700 (PDT)
 Received: from localhost ([90.85.130.193])
-        by smtp.gmail.com with ESMTPSA id s189sm31430147wmf.45.2019.04.09.09.04.33
+        by smtp.gmail.com with ESMTPSA id d7sm16091014wmf.31.2019.04.09.09.04.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 09:04:33 -0700 (PDT)
+        Tue, 09 Apr 2019 09:04:50 -0700 (PDT)
 From:   Christina Quast <cquast@hanoverdisplays.com>
 To:     tony@atomide.com
 Cc:     Christina Quast <cquast@hanoverdisplays.com>,
@@ -50,9 +50,9 @@ Cc:     Christina Quast <cquast@hanoverdisplays.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/15] ARM: dts: am335x: baltos-ir2110: Replaced register offsets with defines
-Date:   Tue,  9 Apr 2019 18:03:32 +0200
-Message-Id: <20190409160346.25599-2-cquast@hanoverdisplays.com>
+Subject: [PATCH 02/15] ARM: dts: am335x: baltos-ir3220: Replaced register offsets with defines
+Date:   Tue,  9 Apr 2019 18:03:33 +0200
+Message-Id: <20190409160346.25599-3-cquast@hanoverdisplays.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190409160346.25599-1-cquast@hanoverdisplays.com>
 References: <20190409160346.25599-1-cquast@hanoverdisplays.com>
@@ -67,15 +67,22 @@ The defines are taken from dt-bindings/pinctrl/am33xx.h
 
 Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
 ---
- arch/arm/boot/dts/am335x-baltos-ir2110.dts | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/am335x-baltos-ir3220.dts | 36 +++++++++++-----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir2110.dts b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-index 75de1e723303..e5e10fa3cae2 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-@@ -23,14 +23,14 @@
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+index 1b215c425c57..e88d9f372f74 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+@@ -23,35 +23,35 @@
  &am33xx_pinmux {
+ 	tca6416_pins: pinmux_tca6416_pins {
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
++			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR1, PIN_INPUT_PULLUP, MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
+ 		>;
+ 	};
+ 
  	uart1_pins: pinmux_uart1_pins {
  		pinctrl-single,pins = <
 -			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
@@ -94,6 +101,30 @@ index 75de1e723303..e5e10fa3cae2 100644
 +			AM33XX_PADCONF(AM335X_PIN_LCD_HSYNC, PIN_INPUT_PULLDOWN, MUX_MODE7)      /* lcd_hsync.gpio2[23] DSR */
 +			AM33XX_PADCONF(AM335X_PIN_LCD_PCLK, PIN_INPUT_PULLDOWN, MUX_MODE7)      /* lcd_pclk.gpio2[24] DCD */
 +			AM33XX_PADCONF(AM335X_PIN_LCD_AC_BIAS_EN, PIN_INPUT_PULLDOWN, MUX_MODE7)      /* lcd_ac_bias_en.gpio2[25] RI */
+ 		>;
+ 	};
+ 
+ 	uart2_pins: pinmux_uart2_pins {
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x950, PIN_INPUT | MUX_MODE1)      /* spi0_sclk.uart2_rxd_mux3 */
+-			AM33XX_IOPAD(0x954, PIN_OUTPUT | MUX_MODE1)      /* spi0_d0.uart2_txd_mux3 */
+-			AM33XX_IOPAD(0x988, PIN_INPUT_PULLDOWN | MUX_MODE2)      /* i2c0_sda.uart2_ctsn_mux0 */
+-			AM33XX_IOPAD(0x98c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)      /* i2c0_scl.uart2_rtsn_mux0 */
+-			AM33XX_IOPAD(0x830, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad12.gpio1[12] DTR */
+-			AM33XX_IOPAD(0x834, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad13.gpio1[13] DSR */
+-			AM33XX_IOPAD(0x838, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad14.gpio1[14] DCD */
+-			AM33XX_IOPAD(0x83c, PIN_INPUT_PULLDOWN | MUX_MODE7)     /* gpmc_ad15.gpio1[15] RI */
++			AM33XX_PADCONF(AM335X_PIN_SPI0_SCLK, PIN_INPUT, MUX_MODE1)      /* spi0_sclk.uart2_rxd_mux3 */
++			AM33XX_PADCONF(AM335X_PIN_SPI0_D0, PIN_OUTPUT, MUX_MODE1)      /* spi0_d0.uart2_txd_mux3 */
++			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLDOWN, MUX_MODE2)      /* i2c0_sda.uart2_ctsn_mux0 */
++			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_OUTPUT_PULLDOWN, MUX_MODE2)      /* i2c0_scl.uart2_rtsn_mux0 */
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_OUTPUT_PULLDOWN, MUX_MODE7)      /* gpmc_ad12.gpio1[12] DTR */
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT_PULLDOWN, MUX_MODE7)      /* gpmc_ad13.gpio1[13] DSR */
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_INPUT_PULLDOWN, MUX_MODE7)      /* gpmc_ad14.gpio1[14] DCD */
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_INPUT_PULLDOWN, MUX_MODE7)     /* gpmc_ad15.gpio1[15] RI */
+ 
+-			AM33XX_IOPAD(0x9a0, PIN_INPUT_PULLUP | MUX_MODE7)      /* mcasp0_aclkr.gpio3[18], INPUT_PULLDOWN | MODE7 */
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, PIN_INPUT_PULLUP, MUX_MODE7)      /* mcasp0_aclkr.gpio3[18], INPUT_PULLDOWN | MODE7 */
  		>;
  	};
  };
