@@ -6,30 +6,29 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B68EC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6D8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2278521473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3340F213F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 02:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfDICFm (ORCPT
+        id S1726953AbfDICGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 22:05:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2179 "EHLO mga05.intel.com"
+        Mon, 8 Apr 2019 22:06:04 -0400
+Received: from mga07.intel.com ([134.134.136.100]:8440 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfDICFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 22:05:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726133AbfDICGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 22:06:04 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 19:05:42 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Apr 2019 19:06:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,327,1549958400"; 
-   d="scan'208";a="221741995"
+   d="scan'208";a="221742047"
 Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga001.jf.intel.com with ESMTP; 08 Apr 2019 19:05:41 -0700
-Date:   Mon, 8 Apr 2019 19:04:32 -0700
+  by orsmga001.jf.intel.com with ESMTP; 08 Apr 2019 19:06:03 -0700
+Date:   Mon, 8 Apr 2019 19:04:54 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
@@ -45,46 +44,56 @@ Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
         Philippe Ombredanne <pombredanne@nexb.com>,
         Kate Stewart <kstewart@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH v2 05/14] x86/hpet: Relocate flag definitions to a
- header file
-Message-ID: <20190409020432.GA7102@ranerica-svr.sc.intel.com>
+Subject: Re: [RFC PATCH v2 06/14] x86/hpet: Configure the timer used by the
+ hardlockup detector
+Message-ID: <20190409020454.GA7133@ranerica-svr.sc.intel.com>
 References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1551283518-18922-6-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <alpine.DEB.2.21.1903262204080.1789@nanos.tec.linutronix.de>
+ <1551283518-18922-7-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <alpine.DEB.2.21.1903262211220.1789@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903262204080.1789@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1903262211220.1789@nanos.tec.linutronix.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:11:16PM +0100, Thomas Gleixner wrote:
+On Tue, Mar 26, 2019 at 10:13:06PM +0100, Thomas Gleixner wrote:
 > On Wed, 27 Feb 2019, Ricardo Neri wrote:
+> > +#ifdef CONFIG_X86_HARDLOCKUP_DETECTOR_HPET
+> > +struct hpet_hld_data *hpet_hardlockup_detector_assign_timer(void)
+> > +{
+> > +	struct hpet_hld_data *hdata;
+> > +	unsigned int cfg;
+> > +
+> > +	cfg = hpet_readl(HPET_Tn_CFG(HPET_WD_TIMER_NR));
+> > +
+> > +	if (!(cfg & HPET_TN_FSB_CAP))
+> > +		return NULL;
+> > +
+> > +	hdata = kzalloc(sizeof(*hdata), GFP_KERNEL);
+> > +	if (!hdata)
+> > +		return NULL;
+> > +
+> > +	hdata->flags = HPET_DEV_FSB_CAP;
 > 
-> > Users of HPET timers (such as the hardlockup detector) need the definitions
-> > of these flags to interpret the configuration of a timer as passed by
-> > platform code.
-> 
-> Which platform code?
+> Pointless.
 
-Sorry, it is not platform code. Shall I call it the HPET-enabling code?
+Agreed. Only if the timer is FSB-capable is hdata is initialized.
 > 
-> > +#define HPET_DEV_USED_BIT		2
-> > +#define HPET_DEV_USED			(1 << HPET_DEV_USED_BIT)
-> > +#define HPET_DEV_VALID			0x8
-> > +#define HPET_DEV_FSB_CAP		0x1000
-> > +#define HPET_DEV_PERI_CAP		0x2000
+> > +
+> > +	if (cfg & HPET_TN_PERIODIC_CAP)
+> > +		hdata->flags |= HPET_DEV_PERI_CAP;
 > 
-> I'm not seing why you would need any of those in the watchdog code.
+> This can be expressed by a simple:
 > 
-> The only function related to the watchdog which needs these is
-> hpet_hardlockup_detector_assign_timer() and that is located in hpet.c
-> itself.
+>      hdata->has_periodic = 1;
+> 
+> And no flag shuffling required at all.
 
-Yes, I see now that it is not needed. This patch can be removed.
+Sure. I'll implement this change.
 
 Thanks and BR,
 Ricardo
