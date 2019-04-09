@@ -2,241 +2,205 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F23C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4EDC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04F52084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4166120857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzdOPlu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDIFEa (ORCPT
+        id S1726808AbfDIFGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:04:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbfDIFEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:04:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1368AC89;
-        Tue,  9 Apr 2019 05:04:27 +0000 (UTC)
-Subject: Re: [PATCH RFC 00/39] x86/KVM: Xen HVM guest support
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ankur Arora <ankur.a.arora@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20190220201609.28290-1-joao.m.martins@oracle.com>
- <35051310-c497-8ad5-4434-1b8426a317d2@redhat.com>
- <8b1f4912-4f92-69ae-ae01-d899d5640572@oracle.com>
- <3ee91f33-2973-c2db-386f-afbf138081b4@redhat.com>
- <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
- <ac0fb2d0-59bf-1330-24ab-331c1a69b13f@suse.com>
- <94738323-ebdf-d58e-55b6-313e27c923b0@oracle.com>
- <585163c2-8dea-728d-7556-9cb3559f0eca@suse.com>
- <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <59deb041-2b5d-8451-32c7-644fe36e053b@suse.com>
-Date:   Tue, 9 Apr 2019 07:04:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 9 Apr 2019 01:06:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44700 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfDIFGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 01:06:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y13so8950292pfm.11;
+        Mon, 08 Apr 2019 22:06:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mPzuYWAD9n3E7cK9DQsoS+9to3SIkl5lmMig0KfgMSY=;
+        b=jzdOPlu/x8auCMomI1PhvJbl6f2twqu5f+3vfkvAV+xE4cSTD4MEdJHxBxcS6yZqq7
+         Wi39SerktOeg2gpodvg1AttXtj/Agsk4ZqT+ll/DmXRCFXA3Rjxv4W5JXcJX12w2wN76
+         dRlAvbUeYZEdvLSCT/Uss7a0WGfW2BKtrXLgXRvC3oSExXDC5J5XOfEY7Bmkeaqldqo5
+         ofQJMLjd1hvJFdB8CUbFyyIJY+r2saK636byggJ7IyW27rDUZrXVU6SyMCAhmEBOTAxA
+         KKZ9ZFWfs5Cuc9geuO38yzWGzY7Wi5VVNgI6n1sfPWfNRYKsiEibfk9xWlxOtSOlTpg3
+         qikQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mPzuYWAD9n3E7cK9DQsoS+9to3SIkl5lmMig0KfgMSY=;
+        b=XLB0dxROcSnRoYQGx3uK4gSXmI/qWzSPmNitZmDHSnTslBbcw0lxFaxtgV4I31RoBt
+         UboBIJjtTq6Ukg8b3vDLjwb/cEXU6y4rgZjOsbAD0uvWGgA1UkIsxRG0C7p0Nlu6Ihza
+         JnEquF4qzWT0pd3wU5LUwYfZGoaIorsJP9FMFl06jaz97M6WPHwlRLjc9CHyOMG67Feq
+         AjQDGKmQM5mi9D5xg+X97EY9hJ0Mze0wT5UxiizaqhE0XRsJSS+wvYB5KoYvQOf0T/Pw
+         ARLO//dFGVzTidtAXrpURF9Sr1S2GVJOrTKEOU76WOM0IBoXFeqTf5r9cnaQAJdOjL0w
+         8XIA==
+X-Gm-Message-State: APjAAAVTqVJxkRC5VW2gBgbFeQoMzsm47WzT1eTKGq3FB1M9OcSXMvl0
+        JAOiWo2s/Qn6TfyH7GW08pc=
+X-Google-Smtp-Source: APXvYqxpbmL0psDw+R51UHqyQpUsOO53H3NyesVqG9HDMScxBNzwN2DcZVBVbnl14am4Y2jDppOgXw==
+X-Received: by 2002:a65:6212:: with SMTP id d18mr30672141pgv.162.1554786366700;
+        Mon, 08 Apr 2019 22:06:06 -0700 (PDT)
+Received: from icarus ([2001:268:c1c0:11e:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id j19sm15751431pfr.155.2019.04.08.22.05.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Apr 2019 22:06:05 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 14:07:08 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     gregkh@linuxfoundation.org, jic23@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org,
+        david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk,
+        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        patrick.havelange@essensium.com,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
+ sysfs documentation
+Message-ID: <20190409050708.GB2842@icarus>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+ <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
+ <20190408215531.GB27592@amd>
 MIME-Version: 1.0
-In-Reply-To: <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190408215531.GB27592@amd>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 19:31, Joao Martins wrote:
-> On 4/8/19 11:42 AM, Juergen Gross wrote:
->> On 08/04/2019 12:36, Joao Martins wrote:
->>> On 4/8/19 7:44 AM, Juergen Gross wrote:
->>>> On 12/03/2019 18:14, Joao Martins wrote:
->>>>> On 2/22/19 4:59 PM, Paolo Bonzini wrote:
->>>>>> On 21/02/19 12:45, Joao Martins wrote:
->>>>>>> On 2/20/19 9:09 PM, Paolo Bonzini wrote:
->>>>>>>> On 20/02/19 21:15, Joao Martins wrote:
->>>>>>>>>  2. PV Driver support (patches 17 - 39)
->>>>>>>>>
->>>>>>>>>  We start by redirecting hypercalls from the backend to routines
->>>>>>>>>  which emulate the behaviour that PV backends expect i.e. grant
->>>>>>>>>  table and interdomain events. Next, we add support for late
->>>>>>>>>  initialization of xenbus, followed by implementing
->>>>>>>>>  frontend/backend communication mechanisms (i.e. grant tables and
->>>>>>>>>  interdomain event channels). Finally, introduce xen-shim.ko,
->>>>>>>>>  which will setup a limited Xen environment. This uses the added
->>>>>>>>>  functionality of Xen specific shared memory (grant tables) and
->>>>>>>>>  notifications (event channels).
->>>>>>>>
->>>>>>>> I am a bit worried by the last patches, they seem really brittle and
->>>>>>>> prone to breakage.  I don't know Xen well enough to understand if the
->>>>>>>> lack of support for GNTMAP_host_map is fixable, but if not, you have to
->>>>>>>> define a completely different hypercall.
->>>>>>>>
->>>>>>> I guess Ankur already answered this; so just to stack this on top of his comment.
->>>>>>>
->>>>>>> The xen_shim_domain() is only meant to handle the case where the backend
->>>>>>> has/can-have full access to guest memory [i.e. netback and blkback would work
->>>>>>> with similar assumptions as vhost?]. For the normal case, where a backend *in a
->>>>>>> guest* maps and unmaps other guest memory, this is not applicable and these
->>>>>>> changes don't affect that case.
->>>>>>>
->>>>>>> IOW, the PV backend here sits on the hypervisor, and the hypercalls aren't
->>>>>>> actual hypercalls but rather invoking shim_hypercall(). The call chain would go
->>>>>>> more or less like:
->>>>>>>
->>>>>>> <netback|blkback|scsiback>
->>>>>>>  gnttab_map_refs(map_ops, pages)
->>>>>>>    HYPERVISOR_grant_table_op(GNTTABOP_map_grant_ref,...)
->>>>>>>      shim_hypercall()
->>>>>>>        shim_hcall_gntmap()
->>>>>>>
->>>>>>> Our reasoning was that given we are already in KVM, why mapping a page if the
->>>>>>> user (i.e. the kernel PV backend) is himself? The lack of GNTMAP_host_map is how
->>>>>>> the shim determines its user doesn't want to map the page. Also, there's another
->>>>>>> issue where PV backends always need a struct page to reference the device
->>>>>>> inflight data as Ankur pointed out.
->>>>>>
->>>>>> Ultimately it's up to the Xen people.  It does make their API uglier,
->>>>>> especially the in/out change for the parameter.  If you can at least
->>>>>> avoid that, it would alleviate my concerns quite a bit.
->>>>>
->>>>> In my view, we have two options overall:
->>>>>
->>>>> 1) Make it explicit, the changes the PV drivers we have to make in
->>>>> order to support xen_shim_domain(). This could mean e.g. a) add a callback
->>>>> argument to gnttab_map_refs() that is invoked for every page that gets looked up
->>>>> successfully, and inside this callback the PV driver may update it's tracking
->>>>> page. Here we no longer have this in/out parameter in gnttab_map_refs, and all
->>>>> shim_domain specific bits would be a little more abstracted from Xen PV
->>>>> backends. See netback example below the scissors mark. Or b) have sort of a
->>>>> translate_gref() and put_gref() API that Xen PV drivers use which make it even
->>>>> more explicit that there's no grant ops involved. The latter is more invasive.
->>>>>
->>>>> 2) The second option is to support guest grant mapping/unmapping [*] to allow
->>>>> hosting PV backends inside the guest. This would remove the Xen changes in this
->>>>> series completely. But it would require another guest being used
->>>>> as netback/blkback/xenstored, and less performance than 1) (though, in theory,
->>>>> it would be equivalent to what does Xen with grants/events). The only changes in
->>>>> Linux Xen code is adding xenstored domain support, but that is useful on its own
->>>>> outside the scope of this work.
->>>>>
->>>>> I think there's value on both; 1) is probably more familiar for KVM users
->>>>> perhaps (as it is similar to what vhost does?) while  2) equates to implementing
->>>>> Xen disagregation capabilities in KVM.
->>>>>
->>>>> Thoughts? Xen maintainers what's your take on this?
->>>>
->>>> What I'd like best would be a new handle (e.g. xenhost_t *) used as an
->>>> abstraction layer for this kind of stuff. It should be passed to the
->>>> backends and those would pass it on to low-level Xen drivers (xenbus,
->>>> event channels, grant table, ...).
->>>>
->>> So if IIRC backends would use the xenhost layer to access grants or frames
->>> referenced by grants, and that would grok into some of this. IOW, you would have
->>> two implementors of xenhost: one for nested remote/local events+grants and
->>> another for this "shim domain" ?
->>
->> As I'd need that for nested Xen I guess that would make it 3 variants.
->> Probably the xen-shim variant would need more hooks, but that should be
->> no problem.
->>
-> I probably messed up in the short description but "nested remote/local
-> events+grants" was referring to nested Xen (FWIW remote meant L0 and local L1).
-> So maybe only 2 variants are needed?
-
-I need one xenhost variant for the "normal" case as today: talking to
-the single hypervisor (or in nested case: to the L1 hypervisor).
-
-Then I need a variant for the nested case talking to L0 hypervisor.
-
-And you need a variant talking to xen-shim.
-
-The first two variants can be active in the same system in case of
-nested Xen: the backends of L2 dom0 are talking to L1 hypervisor,
-while its frontends are talking with L0 hypervisor.
-
+On Mon, Apr 08, 2019 at 11:55:31PM +0200, Pavel Machek wrote:
+> On Tue 2019-04-02 15:30:37, William Breathitt Gray wrote:
+> > This patch adds standard documentation for the userspace sysfs
+> > attributes of the Generic Counter interface.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-counter | 230 ++++++++++++++++++++
+> >  MAINTAINERS                                 |   1 +
+> >  2 files changed, 231 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
+> > new file mode 100644
+> > index 000000000000..566bd99fe0a5
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-counter
+> > @@ -0,0 +1,230 @@
+> > +What:		/sys/bus/counter/devices/counterX/countY/count
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count data of Count Y represented as a string.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/ceiling
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count value ceiling for Count Y. This is the upper limit for the
+> > +		respective counter.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/floor
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count value floor for Count Y. This is the lower limit for the
+> > +		respective counter.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count mode for channel Y. The ceiling and floor values for
+> > +		Count Y are used by the count mode where required. The following
+> > +		count modes are available:
+> > +
+> > +		normal:
+> > +			Counting is continuous in either direction.
+> > +
+> > +		range limit:
+> > +			An upper or lower limit is set, mimicking limit switches
+> > +			in the mechanical counterpart. The upper limit is set to
+> > +			the Count Y ceiling value, while the lower limit is set
+> > +			to the Count Y floor value. The counter freezes at
+> > +			count = ceiling when counting up, and at count = floor
+> > +			when counting down. At either of these limits, the
+> > +			counting is resumed only when the count direction is
+> > +			reversed.
+> > +
+> > +		non-recycle:
+> > +			The counter is disabled whenever a counter overflow or
+> > +			underflow takes place. The counter is re-enabled when a
+> > +			new count value is loaded to the counter via a preset
+> > +			operation or direct write.
+> > +
+> > +		modulo-n:
+> > +			A count value boundary is set between the Count Y floor
+> > +			value and the Count Y ceiling value. The counter is
+> > +			reset to the Count Y floor value at count = ceiling when
+> > +			counting up, while the counter is set to the Count Y
+> > +			ceiling value at count = floor when counting down; the
+> > +			counter does not freeze at the boundary points, but
+> > +			counts continuously throughout.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/error_noise_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/function_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/signalZ_action_available
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Discrete set of available values for the respective Count Y
+> > +		configuration are listed in this file. Values are delimited by
+> > +		newline characters.
 > 
->>>> I was planning to do that (the xenhost_t * stuff) soon in order to add
->>>> support for nested Xen using PV devices (you need two Xenstores for that
->>>> as the nested dom0 is acting as Xen backend server, while using PV
->>>> frontends for accessing the "real" world outside).
->>>>
->>>> The xenhost_t should be used for:
->>>>
->>>> - accessing Xenstore
->>>> - issuing and receiving events
->>>> - doing hypercalls
->>>> - grant table operations
->>>>
->>>
->>> In the text above, I sort of suggested a slice of this on 1.b) with a
->>> translate_gref() and put_gref() API -- to get the page from a gref. This was
->>> because of the flags|host_addr hurdle we depicted above wrt to using using grant
->>> maps/unmaps. You think some of the xenhost layer would be ammenable to support
->>> this case?
->>
->> I think so, yes.
->>
->>>
->>>> So exactly the kind of stuff you want to do, too.
->>>>
->>> Cool idea!
->>
->> In the end you might make my life easier for nested Xen. :-)
->>
-> Hehe :)
+> Elsewhere in sysfs we do space-separated:
 > 
->> Do you want to have a try with that idea or should I do that? I might be
->> able to start working on that in about a month.
->>
-> Ankur (CC'ed) will give a shot at it, and should start a new thread on this
-> xenhost abstraction layer.
+> pavel@amd:~$ cat /sys/power/state
+> freeze mem disk
+> 
+> And we use [] to mark current selection:
+> 
+> pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
+> [none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
+> kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
+> kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
+> kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
+> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
+> phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
+> rfkill1
+> 
+> Note this only works if you have less than PAGE_SIZE of entries... and
+> will never have more.
+> 
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
-Great, looking forward to it!
+Marking the current selection with [] or similar does seem useful. But
+delimiting by space does seem to cause confusion in cases where the
+values also include spaces (e.g. "quadrature x1 a"). I see that in these
+cases a "-" is used in place of a space, but that wouldn't work very
+well when values can also contain hyphens (e.g. "pulse-direction").
 
-
-Juergen
+William Breathitt Gray
