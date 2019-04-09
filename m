@@ -4,65 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63444C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AB6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324262084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D011D2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnOq0YDX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgO5WhP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfDIRYU (ORCPT
+        id S1726731AbfDIRYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:24:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46072 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfDIRYQ (ORCPT
+        Tue, 9 Apr 2019 13:24:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35594 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfDIRYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:24:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y3so9669552pgk.12;
-        Tue, 09 Apr 2019 10:24:16 -0700 (PDT)
+        Tue, 9 Apr 2019 13:24:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t21so7796636pfh.2;
+        Tue, 09 Apr 2019 10:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x4NI7aKQEmDUDGqQdkRAf06VY55NwroheFeIzCPepUQ=;
-        b=UnOq0YDX3I9UMOlMOLvNS2ULRhEgKW7pcqv2y95ITByii3wQ8pU3wf8+/uNvAmfDaO
-         VOM2SvxJT+k185Xp1W9ZOkDoUYeHjoDUkNXtqpCiPyrejV6F0n7b1vw7peDohh/UFPoe
-         81vRshgsQGL6wFJTqMtn6ComOairMooEUopVEBCCwaSqt6iql3NAnviNOYpOSuSlNzm4
-         07IQR+iXUY18ldsCr4ZY19DzqurMJuv9vTJv0b6K4bSGiCguncLGsBpxRdUPKWRbMD4I
-         Jc9yWEakMrCCW1lJ9yQG5bVG03iwV3ZF0VMYZ1Vgzrg6lYEPXHJa7fp0soAx1pNkY+Tf
-         cQJA==
+        bh=BTbLDR4gnZ7lFPmSCCa0QIInTL3LtlTlBWa9cvu84sM=;
+        b=NgO5WhP0ViQOQ67MmOnc7P+BOFX3ODs7bfwlSYsjIjsI5fLs7fClX2BQb9B74V9V2r
+         B2+0DNQz7+Sd2ACrzYmYPZh9jkuOZrdQ4ViO4Vxbk8c6z6MsXk3hKxD2dT0b5DBFKKdt
+         h1j43GRpUvri0iiGPK0zp3Q66FvPqEpIPrxTHWg4p9JLdMwBe2p66s1w2QYi+0iYTpFY
+         vMw9ltLbGBH03rQ4f/Y8N+vl3m2LHycYqUzyn6qDVbQCDAj3LyizmZD2sXc5YG5pbCcL
+         HsORUjjWHifwHn1sFQxQc/ZS+gZi3fSzJlsOVefy+sl94Is0Pui2LxnthGmws+9HDekX
+         IQtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=x4NI7aKQEmDUDGqQdkRAf06VY55NwroheFeIzCPepUQ=;
-        b=ZheYS9dEpfi1OXYh/h7TASBIyU/y46yZmk+hlASDJgnRdClS6nZFm0k+pgevaOpUcn
-         rJ2PSb6Xs/4+8QMeb1nw4eE+QCZCnoSGC1bg81/3cCOJ7akof9agoHPoItdAdEqnI4Rg
-         Uga8ZY2V1lIgk69ldZyaClO5dAZ1BmNdmv8tLqTmKt4QXU4NnhjG9dnbe/OfHnr6TVn7
-         LKtZunYBIXrubJ+LpiKNw7ZI0d3eIIej9ZcM4SIIkuJWSSFReEuGDSLZsvxukuGxGl4W
-         kd5I3XhHjWCSX2sZRzjAcExUNy/lisP1XIX7Rggd0CEpyDdq3QC0rWOhFfhzwGE/q29u
-         HZxA==
-X-Gm-Message-State: APjAAAW9YxIoOAgb5P9Cdg2hk0i5LnHlDBUy4jZ4rVjzUPTLfhf/XGzr
-        pIn4xH0I0JsI4CHLdJbEcwI9Xv+V
-X-Google-Smtp-Source: APXvYqwab62fyJkIdplK9SJ1FoLww3q88qk8OIJO6jRcWdGmsgH2x7dR9I4+Lp37LQLWdJ+pLFSi4Q==
-X-Received: by 2002:a63:b811:: with SMTP id p17mr35932710pge.219.1554830655878;
-        Tue, 09 Apr 2019 10:24:15 -0700 (PDT)
+        bh=BTbLDR4gnZ7lFPmSCCa0QIInTL3LtlTlBWa9cvu84sM=;
+        b=f8n97yX9F5l1UkKvzJ06Dcf7ImjaqJuv12yQuxnWluGgZxzg9ENY81wuntcA6tuK3S
+         a8T1EjHAJeNx64g9PNEGriIpqa5nFJxILU4lIffA2yusYXuzcBYz3S6kA5gVKB0Q1L1L
+         bj6lo5mW3+6lwy4WEf2Dbmkt9mu18/c9sTFSGZg46+Hwe0y/Y96uC1obQBw3h4HUDBDd
+         5xuK2IjkwNVMmQ5y6GiVS4G4rZWnJw4dhfCPgETCHS3C+up7dbO3dZHZeTEzi3huLRn5
+         IqEGrIGtjwz37TjHrNn1gzMJX/8sCaHh7g09qaxJ+je5s5apzguKx/u9CAU2O8c2Nzw5
+         ptLg==
+X-Gm-Message-State: APjAAAU3WnpFqGncExh5cCPulc5wMqzzo3zDUQRlZVZCr75REeousi6B
+        OSGHpyh6+8Bxt+k3oC3TF+M=
+X-Google-Smtp-Source: APXvYqyZbGEfHz99IbERUPIpeCYQUuPgVmJryMgmJIIz/W2Vu7ABU/1nqFf6vzsqsu0Q0MAQGbGecA==
+X-Received: by 2002:a63:2f44:: with SMTP id v65mr35494829pgv.141.1554830660198;
+        Tue, 09 Apr 2019 10:24:20 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z22sm17527816pgv.23.2019.04.09.10.24.15
+        by smtp.gmail.com with ESMTPSA id 4sm45069219pfn.159.2019.04.09.10.24.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 10:24:15 -0700 (PDT)
+        Tue, 09 Apr 2019 10:24:19 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andreas Werner <andreas.werner@men.de>
-Subject: [PATCH 03/23] watchdog: menf21bmc_wdt: Convert to use device managed functions and other improvements
-Date:   Tue,  9 Apr 2019 10:23:41 -0700
-Message-Id: <1554830641-9247-4-git-send-email-linux@roeck-us.net>
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 06/23] watchdog: mlx_wdt: Use 'dev' instead of dereferencing it repeatedly
+Date:   Tue,  9 Apr 2019 10:23:44 -0700
+Message-Id: <1554830641-9247-7-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
@@ -71,110 +70,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Introduce local variable 'struct device *dev' and use it instead of
+dereferencing it repeatedly.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
-- Drop assignments to otherwise unused variables
-- Drop empty remove function
-- Introduce local variable 'struct device *dev' and use it instead of
-  dereferencing it repeatedly
-- Use devm_watchdog_register_driver() to register watchdog device
-
-Cc: Andreas Werner <andreas.werner@men.de>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/menf21bmc_wdt.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
+ drivers/watchdog/mlx_wdt.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/watchdog/menf21bmc_wdt.c b/drivers/watchdog/menf21bmc_wdt.c
-index 3aefddebb386..b1dbff553cdc 100644
---- a/drivers/watchdog/menf21bmc_wdt.c
-+++ b/drivers/watchdog/menf21bmc_wdt.c
-@@ -117,12 +117,12 @@ static const struct watchdog_ops menf21bmc_wdt_ops = {
+diff --git a/drivers/watchdog/mlx_wdt.c b/drivers/watchdog/mlx_wdt.c
+index 70c2cbf9c993..03b9ac4b99af 100644
+--- a/drivers/watchdog/mlx_wdt.c
++++ b/drivers/watchdog/mlx_wdt.c
+@@ -233,20 +233,21 @@ static int mlxreg_wdt_init_timeout(struct mlxreg_wdt *wdt,
  
- static int menf21bmc_wdt_probe(struct platform_device *pdev)
+ static int mlxreg_wdt_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
- 	int ret, bmc_timeout;
- 	struct menf21bmc_wdt *drv_data;
--	struct i2c_client *i2c_client = to_i2c_client(pdev->dev.parent);
-+	struct i2c_client *i2c_client = to_i2c_client(dev->parent);
+ 	struct mlxreg_core_platform_data *pdata;
+ 	struct mlxreg_wdt *wdt;
+ 	int rc;
  
--	drv_data = devm_kzalloc(&pdev->dev,
--				sizeof(struct menf21bmc_wdt), GFP_KERNEL);
-+	drv_data = devm_kzalloc(dev, sizeof(struct menf21bmc_wdt), GFP_KERNEL);
- 	if (!drv_data)
+-	pdata = dev_get_platdata(&pdev->dev);
++	pdata = dev_get_platdata(dev);
+ 	if (!pdata) {
+-		dev_err(&pdev->dev, "Failed to get platform data.\n");
++		dev_err(dev, "Failed to get platform data.\n");
+ 		return -EINVAL;
+ 	}
+-	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
++	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+ 	if (!wdt)
  		return -ENOMEM;
  
-@@ -130,7 +130,7 @@ static int menf21bmc_wdt_probe(struct platform_device *pdev)
- 	drv_data->wdt.info = &menf21bmc_wdt_info;
- 	drv_data->wdt.min_timeout = BMC_WD_TIMEOUT_MIN;
- 	drv_data->wdt.max_timeout = BMC_WD_TIMEOUT_MAX;
--	drv_data->wdt.parent = &pdev->dev;
-+	drv_data->wdt.parent = dev;
- 	drv_data->i2c_client = i2c_client;
+-	wdt->wdd.parent = &pdev->dev;
++	wdt->wdd.parent = dev;
+ 	wdt->regmap = pdata->regmap;
+ 	mlxreg_wdt_config(wdt, pdata);
  
- 	/*
-@@ -140,40 +140,28 @@ static int menf21bmc_wdt_probe(struct platform_device *pdev)
- 	bmc_timeout = i2c_smbus_read_word_data(drv_data->i2c_client,
- 					       BMC_CMD_WD_TIME);
- 	if (bmc_timeout < 0) {
--		dev_err(&pdev->dev, "failed to get current WDT timeout\n");
-+		dev_err(dev, "failed to get current WDT timeout\n");
- 		return bmc_timeout;
+@@ -266,12 +267,11 @@ static int mlxreg_wdt_probe(struct platform_device *pdev)
+ 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
  	}
+ 	mlxreg_wdt_check_card_reset(wdt);
+-	rc = devm_watchdog_register_device(&pdev->dev, &wdt->wdd);
++	rc = devm_watchdog_register_device(dev, &wdt->wdd);
  
--	watchdog_init_timeout(&drv_data->wdt, bmc_timeout / 10, &pdev->dev);
-+	watchdog_init_timeout(&drv_data->wdt, bmc_timeout / 10, dev);
- 	watchdog_set_nowayout(&drv_data->wdt, nowayout);
- 	watchdog_set_drvdata(&drv_data->wdt, drv_data);
- 	platform_set_drvdata(pdev, drv_data);
- 
- 	ret = menf21bmc_wdt_set_bootstatus(drv_data);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to set Watchdog bootstatus\n");
-+		dev_err(dev, "failed to set Watchdog bootstatus\n");
- 		return ret;
- 	}
- 
--	ret = watchdog_register_device(&drv_data->wdt);
-+	ret = devm_watchdog_register_device(dev, &drv_data->wdt);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to register Watchdog device\n");
-+		dev_err(dev, "failed to register Watchdog device\n");
- 		return ret;
- 	}
- 
--	dev_info(&pdev->dev, "MEN 14F021P00 BMC Watchdog device enabled\n");
--
--	return 0;
--}
--
--static int menf21bmc_wdt_remove(struct platform_device *pdev)
--{
--	struct menf21bmc_wdt *drv_data = platform_get_drvdata(pdev);
--
--	dev_warn(&pdev->dev,
--		 "Unregister MEN 14F021P00 BMC Watchdog device, board may reset\n");
--
--	watchdog_unregister_device(&drv_data->wdt);
-+	dev_info(dev, "MEN 14F021P00 BMC Watchdog device enabled\n");
- 
- 	return 0;
+ register_error:
+ 	if (rc)
+-		dev_err(&pdev->dev,
+-			"Cannot register watchdog device (err=%d)\n", rc);
++		dev_err(dev, "Cannot register watchdog device (err=%d)\n", rc);
+ 	return rc;
  }
-@@ -191,7 +179,6 @@ static struct  platform_driver menf21bmc_wdt = {
- 		.name	= DEVNAME,
- 	},
- 	.probe		= menf21bmc_wdt_probe,
--	.remove		= menf21bmc_wdt_remove,
- 	.shutdown	= menf21bmc_wdt_shutdown,
- };
  
 -- 
 2.7.4
