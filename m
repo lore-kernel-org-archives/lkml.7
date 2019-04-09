@@ -2,309 +2,128 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2606FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE34C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA45C2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7822084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LQ4ImRmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfDIJh6 (ORCPT
+        id S1726881AbfDIJjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:37:58 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:47828 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfDIJh6 (ORCPT
+        Tue, 9 Apr 2019 05:39:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40150 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfDIJjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:37:58 -0400
-Received: from [IPv6:2001:983:e9a7:1:21c4:edff:e18c:6e5e] ([IPv6:2001:983:e9a7:1:21c4:edff:e18c:6e5e])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id DnCRhgmvKUjKfDnCShbx4r; Tue, 09 Apr 2019 11:37:54 +0200
-Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
- encoder interface
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-References: <20190124100419.26492-1-tfiga@chromium.org>
- <20190124100419.26492-3-tfiga@chromium.org>
- <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
- <CAAFQd5AqRzGehW6fN4P=_oVdPdH+bJQqKhxgP6zsu80p-74bXA@mail.gmail.com>
- <fded491f-8a25-3283-76c4-dee3dd56045e@xs4all.nl>
- <CAAFQd5CYT=eA_eFyHLTePBQatOBVwsoDjAfMoybJeWrO7V-raA@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <2376896b-0087-5eee-a4b9-6ad03b0fef9c@xs4all.nl>
-Date:   Tue, 9 Apr 2019 11:37:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 9 Apr 2019 05:39:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/6LRRno5QhoLuot52XNJUgJ+A/EAa4IMdtUDvkeQ950=; b=LQ4ImRmOSpQr8ePvX5oizt+t5
+        mYNM2AZMu/77qgoM+a65uwvsWfD12VHWeYlhFl0/2DCg6+WtkCCvx06hgZ3Lcxd0KwutikTpb/xIS
+        aye4+pRtlgLjX+wZU9r2HdwI7eVhI84/Oo+Up0Jhsn0dJub/8yfK0ys2GVPm6afPR+QjNc2Rm80vi
+        vrvozUOzhPntWYRF2JNDM4Q+HnqpAJqnF5J9mDVFx9FjG3S1NwAg9wtRalH+URqgirwDmjFxLzIVJ
+        CutHjXTeRfu7bGzxpbWWaQlrrmR23Zzdu1EWlwgEReHuJKtNrYCWpcu9Mf0HC4UY5N2ez++E+krVp
+        RsLax0Z5A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDnE9-0004R5-B4; Tue, 09 Apr 2019 09:39:37 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 18A3A201F29BA; Tue,  9 Apr 2019 11:39:35 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 11:39:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86: mm: Do not use set_{pud,pmd}_safe when splitting
+ the large page
+Message-ID: <20190409093935.GH14281@hirez.programming.kicks-ass.net>
+References: <20190408191103.13501-1-brijesh.singh@amd.com>
+ <20190409084031.GO4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5CYT=eA_eFyHLTePBQatOBVwsoDjAfMoybJeWrO7V-raA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJZZc4O1W+Xo6hsVnZgrrHojoZcHLyE3sjbmJ5sjOwiZcsghdk3h8binM4mv11wQT0c08n0Ed5XnYxs+yn9wFbgdv/j2zoHEblp53kGzE/of1nckUAed
- kI8Ry6Wb32WlPbZ4l80bILvk6KxvFN2U3SH2TX6hgv+XddSQ5TYCOC/XMdaU4gDrSuELfIanNvvYkr539wuzOvIWVcpTmHubxnY/2kGnviU7CjBVJIEftpGA
- OnTLMx4MausrWsqA40z1WgxzHU5nhDIpHCpePjn7ZW5elNM+eLJpw1A6LUq0jCdPvQUlsAS2qo7h535uNGaKajweJABiC63v+0Tht1uMPH7KU4Q23J94v7U4
- EDTzrSDZKjS4pizjl6yw7Bcz8tXB3NzhM65D33xMCShkfLohrYLyDKG1ly0qTBoCtwvEXfrXIPKvslPcuA3mi9Ni4vkh7FwCuOKjUS9I0qWVKWChXs56eEmt
- UPyRYzQja+NHXYbLsJQ1Yhg04mhgvOrprruSHfrGeawDlgUEGBcr514l0pQMKNzqr/RkQpEpNo+nzze3dezkZlYVnRvWvS9o4iUfS/nrbP1SfJVfdeJ1cCbW
- dExklwBGvDg0arGRJmltPnQdfG7Ku8mHxhtj5R3eUuALgazZTUx/QiY1mZ6RT+xRd5NGFWbzZmBIlD1Tn87VHTciPtIMAW7Ux/iu5+7UtCSTDw6xE8PA5ohw
- uxRhGP0Lm6s2sVIibT5Wib2o0AEvi8LdH2iz5CQXmOUmOXCAaV5c9tTdNG2+QoMO2F7RsKSCrcPtF74u7280qUDbRyW143PKoJvEHJEpIm6Z2E4j/6BFUxDk
- 6iWDelXTA33ek7y11uVNXpTzRzJcKBWhXzJ5gA8lJlAsPv18csCnIVTybffd1d6EROMa870ugxxFWTdbfhlFSKoJDPkBzbsv8ZhdZGKBC5s7ByR4YvZ7kdDN
- +U4Pk7eD/Me9u/f3Bj+xy+mC7EA0D2pNfjioXtAfQXFWMn9Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409084031.GO4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 9:11 AM, Tomasz Figa wrote:
-> On Mon, Apr 8, 2019 at 5:43 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 4/8/19 10:36 AM, Tomasz Figa wrote:
->>> On Mon, Mar 25, 2019 at 10:12 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>>>
->>>> Another comment found while creating compliance tests:
->>>>
->>>> On 1/24/19 11:04 AM, Tomasz Figa wrote:
->>>>> +Drain
->>>>> +=====
->>>>> +
->>>>> +To ensure that all the queued ``OUTPUT`` buffers have been processed and the
->>>>> +related ``CAPTURE`` buffers are given to the client, the client must follow the
->>>>> +drain sequence described below. After the drain sequence ends, the client has
->>>>> +received all encoded frames for all ``OUTPUT`` buffers queued before the
->>>>> +sequence was started.
->>>>> +
->>>>> +1. Begin the drain sequence by issuing :c:func:`VIDIOC_ENCODER_CMD`.
->>>>> +
->>>>> +   * **Required fields:**
->>>>> +
->>>>> +     ``cmd``
->>>>> +         set to ``V4L2_ENC_CMD_STOP``
->>>>> +
->>>>> +     ``flags``
->>>>> +         set to 0
->>>>> +
->>>>> +     ``pts``
->>>>> +         set to 0
->>>>> +
->>>>> +   .. warning::
->>>>> +
->>>>> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTURE``
->>>>> +      queues are streaming. For compatibility reasons, the call to
->>>>> +      :c:func:`VIDIOC_ENCODER_CMD` will not fail even if any of the queues is
->>>>> +      not streaming, but at the same time it will not initiate the `Drain`
->>>>> +      sequence and so the steps described below would not be applicable.
->>>>> +
->>>>> +2. Any ``OUTPUT`` buffers queued by the client before the
->>>>> +   :c:func:`VIDIOC_ENCODER_CMD` was issued will be processed and encoded as
->>>>> +   normal. The client must continue to handle both queues independently,
->>>>> +   similarly to normal encode operation. This includes:
->>>>> +
->>>>> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked with the
->>>>> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
->>>>> +
->>>>> +     .. warning::
->>>>> +
->>>>> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
->>>>> +        ``bytesused`` = 0) and in that case it must be ignored by the client,
->>>>> +        as it does not contain an encoded frame.
->>>>> +
->>>>> +     .. note::
->>>>> +
->>>>> +        Any attempt to dequeue more buffers beyond the buffer marked with
->>>>> +        ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
->>>>> +        :c:func:`VIDIOC_DQBUF`.
->>>>> +
->>>>> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queued
->>>>> +     before the ``V4L2_ENC_CMD_STOP`` command are dequeued,
->>>>> +
->>>>> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribes to it.
->>>>> +
->>>>> +   .. note::
->>>>> +
->>>>> +      For backwards compatibility, the encoder will signal a ``V4L2_EVENT_EOS``
->>>>> +      event when the last frame has been decoded and all frames are ready to be
->>>>> +      dequeued. It is deprecated behavior and the client must not rely on it.
->>>>> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
->>>>> +
->>>>> +3. Once all ``OUTPUT`` buffers queued before the ``V4L2_ENC_CMD_STOP`` call are
->>>>> +   dequeued and the last ``CAPTURE`` buffer is dequeued, the encoder is stopped
->>>>> +   and it will accept, but not process any newly queued ``OUTPUT`` buffers
->>>>> +   until the client issues any of the following operations:
->>>>> +
->>>>> +   * ``V4L2_ENC_CMD_START`` - the encoder will not be reset and will resume
->>>>> +     operation normally, with all the state from before the drain,
->>>>
->>>> I assume that calling CMD_START when *not* draining will succeed but does nothing.
->>>>
->>>> In other words: while draining is in progress START will return EBUSY. When draining
->>>> was finished, then START will resume the encoder. In all other cases it just returns
->>>> 0 since the encoder is really already started.
->>>>
->>>
->>> Yes, that was the intention and seems to be the closest to the
->>> behavior described in the existing documentation.
->>>
->>>>> +
->>>>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->>>>> +     ``CAPTURE`` queue - the encoder will be reset (see the `Reset` sequence)
->>>>> +     and then resume encoding,
->>>>> +
->>>>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->>>>> +     ``OUTPUT`` queue - the encoder will resume operation normally, however any
->>>>> +     source frames queued to the ``OUTPUT`` queue between ``V4L2_ENC_CMD_STOP``
->>>>> +     and :c:func:`VIDIOC_STREAMOFF` will be discarded.
->>>>> +
->>>>> +.. note::
->>>>> +
->>>>> +   Once the drain sequence is initiated, the client needs to drive it to
->>>>> +   completion, as described by the steps above, unless it aborts the process by
->>>>> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
->>>>> +   queues.  The client is not allowed to issue ``V4L2_ENC_CMD_START`` or
->>>>> +   ``V4L2_ENC_CMD_STOP`` again while the drain sequence is in progress and they
->>>>> +   will fail with -EBUSY error code if attempted.
->>>>
->>>> I assume calling STOP again once the drain sequence completed just returns 0 and
->>>> doesn't do anything else (since we're already stopped).
->>>>
->>>
->>> Right.
->>>
->>>>> +
->>>>> +   Although mandatory, the availability of encoder commands may be queried
->>>>> +   using :c:func:`VIDIOC_TRY_ENCODER_CMD`.
->>>>
->>>> Some corner cases:
->>>>
->>>> 1) No buffers are queued on either vb2_queue, but STREAMON is called for both queues.
->>>>    Now ENC_CMD_STOP is issued. What should happen?
->>>>
->>>>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->>>>    at once as an empty buffer with FLAG_LAST set.
->>>>
->>>
->>> SGTM. It's actually similar to a relatively common case where all
->>> CAPTURE buffers have been dequeued and the application has to refill
->>> the CAPTURE queue, but in the meantime a drain request needs to be
->>> issued.
->>>
->>>> 2) Both queues are streaming and buffers have been encoded, but currently no buffers
->>>>    are queued on either vb2_queue. Now ENC_CMD_STOP is issued. What should happen?
->>>>
->>>>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->>>>    at once as an empty buffer with FLAG_LAST set. This is consistent with the
->>>>    previous corner case.
->>>
->>> Agreed.
->>>
->>>>
->>>> 3) The CAPTURE queue contains buffers, the OUTPUT queue does not. Now ENC_CMD_STOP
->>>>    is issued. What should happen?
->>>>
->>>>    Proposal: the oldest CAPTURE buffer in the ready queue is returned as an empty
->>>>    buffer with FLAG_LAST set.
->>>
->>> Generally agreed, but not sure if there is a reason to specifically
->>> refer to the oldest buffer. (I'm personally for keeping the queues
->>> ordered, though...)
->>
->> Feel free to rephrase. Perhaps: "an empty CAPTURE buffer with FLAG_LAST set should be
->> queued up for userspace to signal that the encoder has stopped." Or something along
->> those lines.
+On Tue, Apr 09, 2019 at 10:40:31AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 08, 2019 at 07:11:21PM +0000, Singh, Brijesh wrote:
+> > The following commit 0a9fe8ca844d ("x86/mm: Validate kernel_physical_mapping_init()
+> > PTE population") triggers the below warning in the SEV guest.
+> > 
+> > WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgalloc.h:87 phys_pmd_init+0x30d/0x386
+> > Call Trace:
+> >  kernel_physical_mapping_init+0xce/0x259
+> >  early_set_memory_enc_dec+0x10f/0x160
+> >  kvm_smp_prepare_boot_cpu+0x71/0x9d
+> >  start_kernel+0x1c9/0x50b
+> >  secondary_startup_64+0xa4/0xb0
+> > 
+> > The SEV guest calls kernel_physical_mapping_init() to clear the encryption
+> > mask from an existing mapping. While clearing the encryption mask
+> > kernel_physical_mapping_init() splits the large pages into the smaller.
+> > To split the page, the kernel_physical_mapping_init() allocates a new page
+> > and updates the existing entry. The set_{pud,pmd}_safe triggers warning
+> > when updating the entry with page in the present state. We should use the
+> > set_{pud,pmd} when updating an existing entry with the new entry.
+> > 
+> > Updating an entry will also requires a TLB flush. Currently the caller
+> > (early_set_memory_enc_dec()) is taking care of issuing the TLB flushes.
 > 
-> I've added a note:
+> I'm not entirely sure I like this, this means all users of
+> kernel_physical_mapping_init() now need to be aware and careful.
 > 
->    For reference, handling of various corner cases is described below:
+> That said; the alternative is adding an argument to the function and
+> propagating it through the callchain and dynamically switching between
+> _safe and not. Which doesn't sound ideal either.
 > 
->    * In case of no buffer in the ``OUTPUT`` queue at the time the
->      ``V4L2_ENC_CMD_STOP`` command was issued, the drain sequence completes
->      immediately and the encoder returns an empty ``CAPTURE`` buffer with the
->      ``V4L2_BUF_FLAG_LAST`` flag set.
-> 
->    * In case of no buffer in the ``CAPTURE`` queue at the time the drain
->      sequence completes, the next time the client queues a ``CAPTURE`` buffer
->      it is returned at once as an empty buffer with the ``V4L2_BUF_FLAG_LAST``
->      flag set.
-> 
->    * If :c:func:`VIDIOC_STREAMOFF` is called on the ``CAPTURE`` queue in the
->      middle of the drain sequence, the drain sequence is cancelled and all
+> Anybody else got clever ideas?
 
-cancelled -> canceled
+The more I think about it, I think that is in fact the right thing to
+do.
 
->      ``CAPTURE`` buffers are implicitly returned to the userpace.
+Rename kernel_physical_mapping_init() to __& and add that flag, thread
+it down to all the set_{pud,pmd.pte}() thingies. Then add:
 
-userpace -> userspace
+unsigned long kernel_physical_mapping_init(unsigned long paddr_start, unsigned
+		long paddr_end, unsigned long page_size_mask)
+{
+	return __kernel_physical_mapping_init(paddr_start, paddr_end, page_size_mask, true);
+}
 
-> 
->    * If :c:func:`VIDIOC_STREAMOFF` is called on the ``OUTPUT`` queue in the
->      middle of the drain sequence, the drain sequence completes immediately and
->      next ``CAPTURE`` buffer will be returned empty with the
->      ``V4L2_BUF_FLAG_LAST`` flag set.
-> 
-> Slightly changed the split into cases to cover behaviors rather than
-> conditions. WDYT?
+unsigned long kernel_physical_mapping_change(unsigned long paddr_start, unsigned
+		long paddr_end, unsigned long page_size_mask)
+{
+	unsigned long last;
 
-Looks good (with those two typos fixed).
+	last = __kernel_physical_mapping_init(paddr_start, paddr_end, page_size_mask, false);
 
-	Hans
+	__flush_tlb_all();
 
-> 
-> Best regards,
-> Tomasz
-> 
->>
->> Regards,
->>
->>         Hans
->>
->>>
->>>>
->>>> 4) Both queues have queued buffers. ENC_CMD_STOP is issued to start the drain process.
->>>>    Before the drain process completes STREAMOFF is called for either CAPTURE or
->>>>    OUTPUT queue. What should happen?
->>>>
->>>>    Proposal for STREAMOFF(CAPTURE): aborts the drain process and all CAPTURE buffers are
->>>>    returned to userspace. If encoding is restarted, then any remaining OUTPUT buffers
->>>>    will be used as input to the encoder.
->>>>
->>>
->>> Agreed.
->>>
->>>>    Proposal for STREAMOFF(OUTPUT): the next capture buffer will be empty and have
->>>>    FLAG_LAST set.
->>>
->>> Agreed.
->>>
->>>>
->>>> Some of this might have to be documented, but these corner cases should certainly be
->>>> tested by v4l2-compliance. Before I write those tests I'd like to know if you agree
->>>> with this.
->>>
->>> Agreed with just one minor comment. Thanks for checking with me!
->>>
->>> Best regards,
->>> Tomasz
->>>
->>
+	return last;
+}
+
+Or something along those lines.
+
 
