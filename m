@@ -2,116 +2,117 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9FFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAF5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391592077C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4DF2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="mAQdepYM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+phQLjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfDISXk (ORCPT
+        id S1726677AbfDISZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 14:23:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36794 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfDISXj (ORCPT
+        Tue, 9 Apr 2019 14:25:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40905 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfDISZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 14:23:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ck15so9911009plb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 11:23:39 -0700 (PDT)
+        Tue, 9 Apr 2019 14:25:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c207so10207605pfc.7;
+        Tue, 09 Apr 2019 11:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PNVquwwp98grAeY4p/OsTz4uwPvJY4QzfDrrKIhwckI=;
-        b=mAQdepYMqjV59NADmqDN+b5fsNEXJA6d5WVSejU51qXmU+EmyjMCVQT7XpIteEIsb7
-         Fe3SIIn3SUBYkQTlbOkGFxkXH+sGJPeqPnXaW4a3fP002SGN+fGRlfj/2Mej3A8Dt/z3
-         AYSGYkKFlbbra+abb4N6+3TaKIFw0jZDK7+JBD+hhPuLbeucP8VNCgRydYddPlnJN4WO
-         S0u8VBjOLOd33eGZME9tkfPrSA3ijx6YeRg8TwsqpnhDLMlMLs9kl8hjBrG6H6VV3vqb
-         7vQaerBJZPoFsjAjf6ZSdWLT9k0cNscNSyNCnp9LINTH9ayPnMBAKLylrfSvPm7gV2Dw
-         9Xxw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rgxjd6yfkaznKtLOQ+DHwY5+ybgamLHodNbBCQq+vgI=;
+        b=g+phQLjdoNa5OIXk0j5RCyMaF5yjTaWux0jZDc39etaLa2BtsipqvcWdU8kCL5fqI1
+         ms99VKLJ2MWlxUmAkbKAyygKSs09DTpY0op1gW3Ulta3FpflR0OZcy9luKjkh48R3HN5
+         Y7Auj0/BVx+ZuzgPFrVf6bnvGNPYcH/pGYAlD2c8D4bQYJI3awVOY2VzPqfHFgVTbq9k
+         gLxb/pfVDO0weK+qEHArNCRMT88Yxxy2sJGIym41bOygbxx699lSmul4KDrVo1mDraVg
+         PGZBVcqNeHPrZDcRggbOgp2Wai4GZP+u44s7jYKlngVSBWozY6lpNtLNSGH09o92kUhf
+         Px4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PNVquwwp98grAeY4p/OsTz4uwPvJY4QzfDrrKIhwckI=;
-        b=FGOwxsQ1Y4PmCk78yQwngQ4bTv7zi4kwhrAFLRh6Z03Gd7u4MZW7oGT1zQ53gCb1pR
-         D/7XO2JHfwVUqqxPjQq1iHRiJQJSMiKZ0eGPkwNhB3BT8u9yXsbXSXsWoJoGoetDjr/D
-         8zJ/+ESLnMg/SX/h5iNc9bbpfuY41TTcUXuu24HCksV8mPDFJOwE4rNuzF+CTK+wxSaI
-         raZ9G2qxSriJzEK97UfdjIGDt9Ga+kUQa/MvefRFxMV6Cf7trsjE/o45wI03xcdpN7k+
-         3ML5Ivb/FQomV7QCIKTvLl0t4eu8rMEjEnTa2ank2OrPKYtNlPBVzUcSl/CFtZzBl8J4
-         iY2A==
-X-Gm-Message-State: APjAAAXvg2qLefgzf0kv3H4j83LjJ+cccAiMkzUnCSo6ff8d/w5cjnYn
-        28AU6GkKHv9rueUBl26T+SF71Iycya8UQg==
-X-Google-Smtp-Source: APXvYqwl905bBA0yyU3tGDNoEAfOlWunKxcIUtIgqtdK5eeUiT69V/TPXctnM1sKu87kPC6kSlH2/A==
-X-Received: by 2002:a17:902:2e83:: with SMTP id r3mr38653676plb.153.1554834217882;
-        Tue, 09 Apr 2019 11:23:37 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id j28sm66715725pgb.46.2019.04.09.11.23.35
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rgxjd6yfkaznKtLOQ+DHwY5+ybgamLHodNbBCQq+vgI=;
+        b=WU8v2d7bzZ9zNxPXzpwXiT/9bPdKBAYUdlD+6JfOwQfKEHq39jZIidxmfqwPc7VylF
+         B8C9F+rW3o0Tc6nvaB0b8TULyCrKy8OsxqvkPdpG3UNK9uIMKV3U+BiJR6SWMBP1fTKr
+         52nXrGMhm2ed8V9kTfSyFrJ1azSlToz7NQVFDnEsq1geKKK7GCDbq0nMOIkPQGAz01cv
+         9Gy7ZTk1VaNjtJehyN4f0zDUxs5dMsGOtUtmszP8LtzWFJ0Nt3UwFS+bqDxHk3FFSxZI
+         Ggza9ZXUOckUA8vtm9gyp5QgB2cgMe/W6JP3dZiwYf2+VXZkaBEDchP7NGmdh25ttDGK
+         69YA==
+X-Gm-Message-State: APjAAAXT+ky45w1Cm1/Cf5JrDfrVZ1HmIhway30QWzdeL9VYK4MpT5yT
+        cvZiabeGOqUTY7uMp+Qh+gU=
+X-Google-Smtp-Source: APXvYqzcRUJgIUZ5EBgr08LZBZU4sAei5vrd6iktbW3iloKoT/4IzU1+o4arzZIuIWATS7Tq1uPQoA==
+X-Received: by 2002:a63:4a5f:: with SMTP id j31mr36308226pgl.369.1554834327019;
+        Tue, 09 Apr 2019 11:25:27 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k186sm27539061pfc.137.2019.04.09.11.25.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 11:23:36 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: add support for barrier fsync
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <7c7276e4-8ffa-495a-6abf-926a58ee899e@kernel.dk>
- <20190409181742.GA24925@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5f8d9644-9e8f-c9d2-611e-4b144c62539c@kernel.dk>
-Date:   Tue, 9 Apr 2019 12:23:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 09 Apr 2019 11:25:25 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 11:25:24 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: Re: linux-next: Tree for Apr 9
+Message-ID: <20190409182524.GA18518@roeck-us.net>
+References: <20190409180042.15bb90b6@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190409181742.GA24925@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409180042.15bb90b6@canb.auug.org.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 12:17 PM, Christoph Hellwig wrote:
-> On Tue, Apr 09, 2019 at 10:27:43AM -0600, Jens Axboe wrote:
->> It's a quite common use case to issue a bunch of writes, then an fsync
->> or fdatasync when they complete. Since io_uring doesn't guarantee any
->> type of ordering, the application must track issued writes and wait
->> with the fsync issue until they have completed.
->>
->> Add an IORING_FSYNC_BARRIER flag that helps with this so the application
->> doesn't have to do this manually. If this flag is set for the fsync
->> request, we won't issue it until pending IO has already completed.
+On Tue, Apr 09, 2019 at 06:00:42PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I think we need a much more detailed explanation of the semantics,
-> preferably in man page format.
+> Changes since 20190408:
 > 
-> Barrier at least in Linux traditionally means all previously submitted
-> requests have finished and no new ones are started until the
-> barrier request finishes, which is very heavy handed.  Is that what
-> this is supposed to do?  If not what are the exact guarantees vs
-> ordering and or barrier semantics?
+> The mac80211-next tree gained a conflict against the mac80211 tree.
+> 
+> The drm tree still had its build failure for which I disabled a driver.
+> 
+> The drm-misc tree gained conflicts against the drm tree and also a build
+> failure for which I marked a driver as BROKEN.
+> 
+> The scsi-mkp tree gained a build failure for which I reverted a commit.
+> 
+> The rtc tree gained a conflict against the omap tree.
+> 
+> Non-merge commits (relative to Linus' tree): 5587
+>  5386 files changed, 176906 insertions(+), 87493 deletions(-)
+> 
 
-The patch description isn't that great, and maybe the naming isn't that
-intuitive either. The way it's implemented, the fsync will NOT be issued
-until previously issued IOs have completed. That means both reads and
-writes, since there's no way to wait for just one.  In terms of
-semantics, any previously submitted writes will have completed before
-this fsync is issued. The barrier fsync has no ordering wrt future
-writes, no ordering is implied there. Hence:
+This one deserves a reply.
 
-W1, W2, W3, FSYNC_W_BARRIER, W4, W5
+Build results:
+	total: 159 pass: 144 fail: 15
+Failed builds: 
+	<many>
+Qemu test results:
+	total: 345 pass: 227 fail: 118
+Failed tests: 
+	<many>
 
-W1..3 will have been completed by the hardware side before we start
-FSYNC_W_BARRIER. We don't wait with issuing W4..5 until after the fsync
-completes, no ordering is provided there.
+Build failure is:
 
--- 
-Jens Axboe
+s/nfsd/nfssvc.c: In function 'nfsd_support_acl_version':
+fs/nfsd/nfssvc.c:145:14: error: 'NFSD_ACL_MINVERS' undeclared
 
+and similar. Build failures and (many ? most ? all ?) of the qemu failures
+are due to commit 55d4c716ea ("nfsd: Add custom rpcbind callbacks for
+knfsd").
+
+Guenter
