@@ -2,97 +2,187 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BAEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAB1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13012084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832482084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfDILnj (ORCPT
+        id S1727078AbfDILsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:43:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53807 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbfDILnj (ORCPT
+        Tue, 9 Apr 2019 07:48:06 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38631 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbfDILsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:43:39 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hDpA6-0008Mb-48; Tue, 09 Apr 2019 11:43:34 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Tue, 9 Apr 2019 07:48:06 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DF06560006;
+        Tue,  9 Apr 2019 11:47:56 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 13:47:56 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
         Franky Lin <franky.lin@broadcom.com>,
         Hante Meuleman <hante.meuleman@broadcom.com>,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         Wright Feng <wright.feng@cypress.com>,
         Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] brcmfmac: fix leak of mypkt on error return path
-Date:   Tue,  9 Apr 2019 12:43:33 +0100
-Message-Id: <20190409114333.24342-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+Message-ID: <20190409114756.v6v33nsdtiitglee@flea>
+References: <20190409002452.14551-1-megous@megous.com>
+ <20190409002452.14551-3-megous@megous.com>
+ <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
+ <20190409113157.e4vrzesbgmyslomb@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="aa6vze47q2e2azio"
+Content-Disposition: inline
+In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-Currently if the call to brcmf_sdiod_set_backplane_window fails then
-then error return path leaks mypkt. Fix this by returning by a new
-error path labelled 'out' that calls brcmu_pkt_buf_free_skb to free
-mypkt.  Also remove redundant check on err before calling
-brcmf_sdiod_skbuff_write.
+--aa6vze47q2e2azio
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Addresses-Coverity: ("Resource Leak")
-Fixes: a7c3aa1509e2 ("brcmfmac: Remove brcmf_sdiod_addrprep()")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+On Tue, Apr 09, 2019 at 01:31:57PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Jagan,
+>
+> On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
+> > Based on the conversation about using common dtsi from this thread[1],
+> > I'm commenting here to make show the diff directly on the nodes,
+> > giving comments on each node so-that we can see the diff globally.
+>
+> Thanks for the suggestions below. It mostly repeats the differences and
+> commonalities I already stated in the previous discussion.
+>
+> I don't have much to add to what I already said previously, though, becau=
+se you
+> didn't address my concerns there. But I can restate and expand on those
+> concerns.
+>
+> Previously I already agreed it's possible to base orangepi-3.dts on
+> orangepi.dtsi, and proposed a maintainable way forward, and why to follow=
+ it (to
+> quote myself):
+>
+>   Schematics allow for high amount of variability in the power tree (see =
+all the
+>   NC (not connected) / 0R resistors) in the schematic around AXP805. Ever=
+y board
+>   based on this Xunlong design can be subtly different.
+>
+>   I already suggested a maintainable solution, below. Where base dtsi has=
+ empty
+>   config for regulators and every board based on that just defines it com=
+pletely
+>   for itself.
+>
+>   A few regulators (for CPU/GPU) will most probably have the same meaning=
+ on
+>   every derived board, so these can probably be kept in dtsi without caus=
+ing too
+>   much annoyance.
+>
+>   It's unpleasant to have wrong regulator setup defined in an underlying =
+dtsi,
+>   and then trying to override it by removing/adding random properties in =
+the
+>   board dts for the new boards based on that, so that it fits.
+>
+>   The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi =
+can be
+>   shared (as of now).
+>
+> My suggestion was this:
+>
+>   So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I=
+'d have
+>   to first move some things out of the base dtsi to the OrangePi Lite2 an=
+d One
+>   Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only des=
+cribe
+>   HW that is *really* shared by these 2 boards and Orange Pi 3.
+>
+>   If I do that, I'd undefine all the axp805 regulator nodes and move the
+>   configurations to each of the 3 board files. That will probably end up =
+being
+>   the least confusing and most maintainable. See axp81x.dtsi lines 86-144=
+ for
+>   what I mean.
+>
+> You seem to be suggesting a solution where every time we add an OrangePi =
+H6
+> based board, the person adding it will have to go through the base dtsi a=
+nd all
+> the other boards based on it, status disable or otherwise change regulato=
+rs in
+> the base dtsi, patch all the other boards to re-enable it.
+>
+> It would be already unpleasant just adding a third board based on this ap=
+proach.
+> And when the fourth board is added, with another small differences in the
+> regulator use/meanings, the person will be looking at patching 4 dts files
+> + adding one for his own board. For what benefit, to save some bytes righ=
+t now?
+>
+> I think maintainability, ease of adding new boards is more important, than
+> having a dtsi that tries to maximally cover all the commonalities between=
+ the
+> existing boards right now, without regards for the future. That's why
+> I suggested an approach like in axp81x.dtsi lines 86-144.
 
-V2: Remove  redundant check on err before calling
-brcmf_sdiod_skbuff_write, kudos to Dan Carpenter and Arend Van Spriel
-for spotting this.
+I agree.
 
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Maxime
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index ec129864cc9c..60aede5abb4d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -628,15 +628,13 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
- 
- 	err = brcmf_sdiod_set_backplane_window(sdiodev, addr);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	addr &= SBSDIO_SB_OFT_ADDR_MASK;
- 	addr |= SBSDIO_SB_ACCESS_2_4B_FLAG;
- 
--	if (!err)
--		err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr,
--					       mypkt);
--
-+	err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr, mypkt);
-+out:
- 	brcmu_pkt_buf_free_skb(mypkt);
- 
- 	return err;
--- 
-2.20.1
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
+--aa6vze47q2e2azio
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKyGbAAKCRDj7w1vZxhR
+xZTAAQCOzqr6NWU8ZLOC72DWyNDWvVDoMHEH5977Yq/x03pA3wEAwsPhQ1kQG3mb
+mRjfuU5xD+jCyn066cuvMBk6bRHgQgA=
+=ef/T
+-----END PGP SIGNATURE-----
+
+--aa6vze47q2e2azio--
