@@ -2,156 +2,134 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D6DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85216C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FDD2082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4923520880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VALgzOeP"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oprqUuiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfDIGen (ORCPT
+        id S1726512AbfDIGhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:34:43 -0400
-Received: from mail-eopbgr710073.outbound.protection.outlook.com ([40.107.71.73]:36000
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbfDIGem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XQhPn69KdUnb7zds+71WEBjrDcaMJquJBnmE4VybI5I=;
- b=VALgzOeP+Wf2WKl9niK7i+rebyrSqMi6jtlXRecHgziMcx5G3qGxJxlGCXFLSGyLR7wMalTcAZ047tzvK0mrWY1vacdPvfNEM0giJ20F3C2aqlISevYBAXOiPaFyNJsSsbv/YT9P8ILupRlFGuK79r6ZavZ41CNrLKf5AgVySJM=
-Received: from SN4PR0201CA0011.namprd02.prod.outlook.com
- (2603:10b6:803:2b::21) by CY1PR02MB2012.namprd02.prod.outlook.com
- (2a01:111:e400:c5ab::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.15; Tue, 9 Apr
- 2019 06:34:39 +0000
-Received: from BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by SN4PR0201CA0011.outlook.office365.com
- (2603:10b6:803:2b::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1792.14 via Frontend
- Transport; Tue, 9 Apr 2019 06:34:39 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT046.mail.protection.outlook.com (10.152.76.118) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1771.16
- via Frontend Transport; Tue, 9 Apr 2019 06:34:38 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hDkL8-00037V-Bb; Mon, 08 Apr 2019 23:34:38 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hDkL3-0007hL-7u; Mon, 08 Apr 2019 23:34:33 -0700
-Received: from [172.30.17.111]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hDkKy-0007dX-Q9; Mon, 08 Apr 2019 23:34:29 -0700
-Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-To:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-CC:     Michal Simek <michal.simek@xilinx.com>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kishore m <chinnikishore369@gmail.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
- <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
- <d425bd61-238b-f085-f450-d052349878a8@xilinx.com>
- <20190408165109.GA6459@archbook>
- <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <19e24c86-a92d-cabe-f20a-64a1a805e172@xilinx.com>
-Date:   Tue, 9 Apr 2019 08:34:25 +0200
+        Tue, 9 Apr 2019 02:37:22 -0400
+Received: from mout.web.de ([212.227.15.3]:55403 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfDIGhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 02:37:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1554791821;
+        bh=coWDfRtBwlD0rzFtKP2QZVDjU+lpy/3nVpGi4vH90jA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=oprqUuiYiEzvfBq9mzTBzVr2uc1ODQryWKKIP4cMs4lmT4g07NPKrEI4ei195Kk9d
+         UPerSEqByfjjhgiirOxb6LMQ44rxeqIda3qkNXwLhVP7Km98PyzWw1G0H5191oyPaU
+         KTb1DkJ4bjF33wrtAsoTb9E4xVyuH2h2ptH9VWno=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.175.183]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5sDZ-1gynnI0csj-00xoon; Tue, 09
+ Apr 2019 08:37:01 +0200
+Subject: Re: [1/2] net: xilinx: add a helper function for axienet_probe
+To:     Wen Yang <wen.yang99@zte.com.cn>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
+        Anirudha Sarangi <anirudh@xilinx.com>,
+        John Linn <John.Linn@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>
+References: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2b04afef-29bc-2fe2-cb23-467d823a6ad4@web.de>
+Date:   Tue, 9 Apr 2019 08:36:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(376002)(2980300002)(189003)(199004)(126002)(186003)(36756003)(316002)(63266004)(11346002)(76176011)(2616005)(426003)(64126003)(476003)(9786002)(486006)(81156014)(93886005)(8936002)(2486003)(106466001)(58126008)(50466002)(26005)(478600001)(77096007)(8676002)(5660300002)(81166006)(23676004)(44832011)(336012)(53546011)(446003)(65826007)(31686004)(2870700001)(6246003)(229853002)(106002)(4326008)(2906002)(31696002)(65806001)(54906003)(36386004)(47776003)(305945005)(356004)(65956001)(6666004)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR02MB2012;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 431bdb50-b3e8-4446-e274-08d6bcb57109
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4709054)(2017052603328);SRVR:CY1PR02MB2012;
-X-MS-TrafficTypeDiagnostic: CY1PR02MB2012:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <CY1PR02MB201271E31CA712F9251AFE57C62D0@CY1PR02MB2012.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 000227DA0C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: yRsC0BA9mfKXHai4MBlpLHb54w4/b1TxkkOB7UD4U7Eivdy4cMhN2525XRYk0mPXWO4QQkAxU9n2J3h28RBxrGRh/eDIyPtGhGbeNcOWU0EATZWqMkUXMdCvsqR7Vl8l3QIL4weRbps2H90MoW6OpRXQ27Mapj/o96ZTsODKdNUSG8MmFydDgWQUGo9EbhDogfKWvN2Mph86iPirRsA4h+HxMOr7GwjDkKxuQDqneoz3HGjKQvzsLoRydu+ZONF7CkFzYwiAxaD0gC8EfUbtk9by5XD5gEJQYpc5cD4ZAAW0SSM2siIuVyMingee1gb3QyKitN+X8VRp1xKyF1wnoLC3bXdL+RdRDGuC9NyGoLob6p/1kq2a+/zT9m9ojRQd1AkEx4FbaACuU2fVKq7DmlKV8d9+lW74HPKUmGmDOJM=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2019 06:34:38.9368
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 431bdb50-b3e8-4446-e274-08d6bcb57109
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR02MB2012
+X-Provags-ID: V03:K1:P0sJ68HLkRb/rewp4s+VBJpeBkeqATKP3+5MOSV53W2QkmmwLhC
+ vAISwqyc7Cs3N7amDhtf6uQiajjNxw1OKibiID04xUPuNxZGmotlgts+HSDGHlKK9IgNBX3
+ Qw1vFiNShyWINvrWYGj0qsREvMswg0Gkqw6KAzfxUxefINJKGZPks2WDAtUmNRzFnjhIsq8
+ +9OHnxNWDkrTYsziIr9fw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KBKayPZmOaY=:Y3n8lAKrMjYw5EVZ5wHphM
+ YErgDUACEutLx05I1cHDDMw4ISIuHdIEpKfMAYbAtnM7TAgd9PvuPM4hMwFbO++jIyDZjWJUN
+ UN5g7TuqbHZMbaWiy5dobHu69XzSJq7pjgn/cxb7lss9lfFED6/n4Zxu6ewMX4MgTNJK/MMlX
+ ytI1eEBAfq6SaLXG77ppen6mEXNLNVeN7dyPQJYs7bqx0hUTbgERh7MG0+abj9vR/GSCN1PSr
+ RzeFKheVkF/uDhoWv1TYHwMU9J8xTxc/WaKR1B4RoKOadXTnwtZrS8V0hhVrwGSMr8WWlbP94
+ +v4v+ov0lcPei5fEocjUR63o/mKkQqef7kvOkwNQpW4wgpVUTyIfPPG+E48YiFcpanwUEHmyv
+ uIhYYBZ0ZUPX3PJOU1QIoeyrXXgyFMp1xHda4adnHamda8bnrd+bjHHlKb4IIRWw/C3aJjnDg
+ cxJkC2qPQZ64k3o9efL/APcz2vVLu2IuQtHhcbOfZCrbZ4aoSKcEkGibsu83tj818K6NXyTho
+ 9x8z5St/8NLLlzaAe5w2hrgf1dZY2jaZbHItca+V8UBVINKUAOGlqKJObhtXcvw9YGZRUj6re
+ HgseM4kzw2u1KVhMe8Bkl7GT1mtsXh6nIDNkCBv3djoh66JjIaY7PsJFyJZgkHSnhUashQkt/
+ Tja8ToAkN5PqyT+PCHvpUzmGkCGyQPdRi04JuL1wfTQNxRzth9LycXxGvXCAPU85j75Ula8T6
+ gKSGRvVxsiROlSkU3fAkZQi8/Cw798NhUmbteDIFzYOLQ6CHBwhXfaQ+neW/T97t3DJnWlaLf
+ 7j+zs6qjcbDBNX5dsf8UzY6klYJR+bceGzUlRn4Yxw8eDqTxQIy8hB2rLRtbQpyTfk3QGcUqt
+ Bq+TrxT+DkEV+lAO3IFU8E3RADn1pVys5ZyHFOcDGurmJh0Ur390gcOrPCujjvNueAJLJ1LMJ
+ aYi1usU/Xgw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08. 04. 19 22:27, Alan Tull wrote:
-> On Mon, Apr 8, 2019 at 11:51 AM Moritz Fischer <mdf@kernel.org> wrote:
->>
->> Hi Michal,
->>
->> On Mon, Apr 08, 2019 at 04:36:15PM +0200, Michal Simek wrote:
->>> On 08. 04. 19 16:17, Alan Tull wrote:
->>>> On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> wrote:
->>>>>
->>>>> Hi Alan,
->>>>>
->>>>> Thanks for look into it and providing the ACK.
->>>>> I got one minor comments from Moritz Fischer do you want me fix that issue now or I can fix it later as it’s a minor comment?
->>>>
->>>> Please fix for Moritz comment.
->>>>
->>>>> In which kernel version i can expect this driver changes??
->>>>
->>>> Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
->>>> thing, it's drivers/firmware.
->>>
->>> I can take it via arm-soc guys if you are ok with that.
->>> Just need to have your ack in commits.
->>> We have done it like this several times, IIRC reset, nvmem.
->>
->> I'm fine with you taking it through arm-soc. Alan?
-> 
-> Fine with me!
+> The "Find DMA Node, Map DMA Register, and Decode DMA IRQ" code snippets
+> in Axienet_Probe are independent. Tidy up axienet_probe a little by
+> factoring these out into a helper function.
 
-ok.
-Nava: Please address all comments from reviewers and let me know when
-all are happy and I will take it.
+Would the following wording be more appropriate for the commit description?
 
-Thanks,
-Michal
+
+in axienet_probe() are independent.
+Tidy this function implementation a little up by factoring these calls out
+into a helper function.
+
+
+Regards,
+Markus
