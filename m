@@ -2,353 +2,89 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FCAC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4356C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0883220857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB61820857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfDIKCY (ORCPT
+        id S1726846AbfDIKDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:02:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58512 "EHLO mx1.redhat.com"
+        Tue, 9 Apr 2019 06:03:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24415 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfDIKCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:02:23 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DE6FB30018EA;
-        Tue,  9 Apr 2019 10:02:21 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-49.ams2.redhat.com [10.36.117.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 67F095D71F;
-        Tue,  9 Apr 2019 10:02:13 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH v1 4/4] mm/memory_hotplug: Make __remove_pages() and arch_remove_memory() never fail
-Date:   Tue,  9 Apr 2019 12:01:48 +0200
-Message-Id: <20190409100148.24703-5-david@redhat.com>
-In-Reply-To: <20190409100148.24703-1-david@redhat.com>
-References: <20190409100148.24703-1-david@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 09 Apr 2019 10:02:22 +0000 (UTC)
+        id S1726129AbfDIKDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:03:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 03:03:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="335126563"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Apr 2019 03:03:17 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hDnb1-0001WB-Tb; Tue, 09 Apr 2019 13:03:15 +0300
+Date:   Tue, 9 Apr 2019 13:03:15 +0300
+From:   Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, Liu@smile.fi.intel.com,
+        Yi L <yi.l.liu@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 05/18] iommu: introduce device fault data
+Message-ID: <20190409100315.GD9224@smile.fi.intel.com>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1554767973-30125-6-git-send-email-jacob.jun.pan@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554767973-30125-6-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All callers of arch_remove_memory() ignore errors. And we should really
-try to remove any errors from the memory removal path.
-No more errors are reported from __remove_pages(). BUG() in s390x code
-in case arch_remove_memory() is triggered. We may implement that properly
-later. WARN in case powerpc code failed to remove the section mapping,
-which is better than ignoring the error completely right now.
+On Mon, Apr 08, 2019 at 04:59:20PM -0700, Jacob Pan wrote:
+> Device faults detected by IOMMU can be reported outside the IOMMU
+> subsystem for further processing. This patch introduces
+> a generic device fault data structure.
+> 
+> The fault can be either an unrecoverable fault or a page request,
+> also referred to as a recoverable fault.
+> 
+> We only care about non internal faults that are likely to be reported
+> to an external subsystem.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: linux-ia64@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-sh@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/ia64/mm/init.c            | 11 +++--------
- arch/powerpc/mm/mem.c          | 11 ++++-------
- arch/s390/mm/init.c            |  5 +++--
- arch/sh/mm/init.c              | 11 +++--------
- arch/x86/mm/init_32.c          |  5 +++--
- arch/x86/mm/init_64.c          | 10 +++-------
- include/linux/memory_hotplug.h |  8 ++++----
- mm/memory_hotplug.c            |  5 ++---
- 8 files changed, 25 insertions(+), 41 deletions(-)
+JFYI: we have a Co-developed-by tag as well for better granularity of what
+certain person/people did.
 
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 379eb1f9adc9..d28e29103bdb 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -682,20 +682,15 @@ int arch_add_memory(int nid, u64 start, u64 size,
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
-+void arch_remove_memory(int nid, u64 start, u64 size,
-+			struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct zone *zone;
--	int ret;
- 
- 	zone = page_zone(pfn_to_page(start_pfn));
--	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
--	if (ret)
--		pr_warn("%s: Problem encountered in __remove_pages() as"
--			" ret=%d\n", __func__,  ret);
--
--	return ret;
-+	__remove_pages(zone, start_pfn, nr_pages, altmap);
- }
- #endif
- #endif
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 76deaa8525db..cc9425fb9056 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -131,8 +131,8 @@ int __meminit arch_add_memory(int nid, u64 start, u64 size,
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--int __meminit arch_remove_memory(int nid, u64 start, u64 size,
--					struct vmem_altmap *altmap)
-+void __meminit arch_remove_memory(int nid, u64 start, u64 size,
-+				  struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
-@@ -147,14 +147,13 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
- 	if (altmap)
- 		page += vmem_altmap_offset(altmap);
- 
--	ret = __remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
--	if (ret)
--		return ret;
-+	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
- 
- 	/* Remove htab bolted mappings for this section of memory */
- 	start = (unsigned long)__va(start);
- 	flush_inval_dcache_range(start, start + size);
- 	ret = remove_section_mapping(start, start + size);
-+	WARN_ON_ONCE(ret);
- 
- 	/* Ensure all vmalloc mappings are flushed in case they also
- 	 * hit that section of memory
-@@ -162,8 +161,6 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
- 	vm_unmap_aliases();
- 
- 	resize_hpt_for_hotplug(memblock_phys_mem_size());
--
--	return ret;
- }
- #endif
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index f5db961ad792..31b1071315d7 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -234,14 +234,15 @@ int arch_add_memory(int nid, u64 start, u64 size,
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
-+void arch_remove_memory(int nid, u64 start, u64 size,
-+			struct vmem_altmap *altmap)
- {
- 	/*
- 	 * There is no hardware or firmware interface which could trigger a
- 	 * hot memory remove on s390. So there is nothing that needs to be
- 	 * implemented.
- 	 */
--	return -EBUSY;
-+	BUG();
- }
- #endif
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index 168d3a6b9358..5aeb4d7099a1 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -429,20 +429,15 @@ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
-+void arch_remove_memory(int nid, u64 start, u64 size,
-+			struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = PFN_DOWN(start);
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct zone *zone;
--	int ret;
- 
- 	zone = page_zone(pfn_to_page(start_pfn));
--	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
--	if (unlikely(ret))
--		pr_warn("%s: Failed, __remove_pages() == %d\n", __func__,
--			ret);
--
--	return ret;
-+	__remove_pages(zone, start_pfn, nr_pages, altmap);
- }
- #endif
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index 755dbed85531..075e568098f2 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -860,14 +860,15 @@ int arch_add_memory(int nid, u64 start, u64 size,
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
-+void arch_remove_memory(int nid, u64 start, u64 size,
-+			struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct zone *zone;
- 
- 	zone = page_zone(pfn_to_page(start_pfn));
--	return __remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(zone, start_pfn, nr_pages, altmap);
- }
- #endif
- #endif
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index db42c11b48fb..20d14254b686 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1141,24 +1141,20 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
- 	remove_pagetable(start, end, true, NULL);
- }
- 
--int __ref arch_remove_memory(int nid, u64 start, u64 size,
--				struct vmem_altmap *altmap)
-+void __ref arch_remove_memory(int nid, u64 start, u64 size,
-+			      struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct page *page = pfn_to_page(start_pfn);
- 	struct zone *zone;
--	int ret;
- 
- 	/* With altmap the first mapped page is offset from @start */
- 	if (altmap)
- 		page += vmem_altmap_offset(altmap);
- 	zone = page_zone(page);
--	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
--	WARN_ON_ONCE(ret);
-+	__remove_pages(zone, start_pfn, nr_pages, altmap);
- 	kernel_physical_mapping_remove(start, start + size);
--
--	return ret;
- }
- #endif
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index d0a145ffa4fe..9d0efac902ec 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -112,10 +112,10 @@ static inline bool movable_node_is_enabled(void)
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--extern int arch_remove_memory(int nid, u64 start, u64 size,
--				struct vmem_altmap *altmap);
--extern int __remove_pages(struct zone *zone, unsigned long start_pfn,
--	unsigned long nr_pages, struct vmem_altmap *altmap);
-+extern void arch_remove_memory(int nid, u64 start, u64 size,
-+			       struct vmem_altmap *altmap);
-+extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
-+			   unsigned long nr_pages, struct vmem_altmap *altmap);
- #endif /* CONFIG_MEMORY_HOTREMOVE */
- 
- /*
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 17a60281c36f..52fef4a81e4c 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -548,8 +548,8 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
-  * sure that pages are marked reserved and zones are adjust properly by
-  * calling offline_pages().
-  */
--int __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
--		 unsigned long nr_pages, struct vmem_altmap *altmap)
-+void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
-+		    unsigned long nr_pages, struct vmem_altmap *altmap)
- {
- 	unsigned long i;
- 	unsigned long map_offset = 0;
-@@ -580,7 +580,6 @@ int __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
- 	}
- 
- 	set_zone_contiguous(zone);
--	return 0;
- }
- #endif /* CONFIG_MEMORY_HOTREMOVE */
- 
 -- 
-2.17.2
+With Best Regards,
+Andy Shevchenko
+
 
