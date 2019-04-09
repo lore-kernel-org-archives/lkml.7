@@ -2,221 +2,94 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6420C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD08BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2ACC20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8483420883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDIKab (ORCPT
+        id S1727049AbfDIKah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:30:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbfDIKaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:30:25 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 62437EB4795704B3854F;
-        Tue,  9 Apr 2019 18:17:36 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 9 Apr 2019 18:17:26 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
-CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel regions
-Date:   Tue, 9 Apr 2019 18:28:18 +0800
-Message-ID: <20190409102819.121335-4-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409102819.121335-1-chenzhou10@huawei.com>
-References: <20190409102819.121335-1-chenzhou10@huawei.com>
+        Tue, 9 Apr 2019 06:30:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:25541 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbfDIKag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:30:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 03:30:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="141265265"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2019 03:30:32 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hDo1O-0001kx-Uq; Tue, 09 Apr 2019 13:30:30 +0300
+Date:   Tue, 9 Apr 2019 13:30:30 +0300
+From:   Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 01/18] drivers core: Add I/O ASID allocator
+Message-ID: <20190409103030.GK9224@smile.fi.intel.com>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1554767973-30125-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20190409100049.GC9224@smile.fi.intel.com>
+ <20190409100436.GA28683@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409100436.GA28683@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit (arm64: kdump: support reserving crashkernel above 4G),
-there may be two crash kernel regions, one is below 4G, the other is
-above 4G.
+On Tue, Apr 09, 2019 at 03:04:36AM -0700, Christoph Hellwig wrote:
+> On Tue, Apr 09, 2019 at 01:00:49PM +0300, Andriy Shevchenko wrote:
+> > I think it makes sense to add a helper macro to rcupdate.h
+> > (and we have several cases in kernel that can utilize it)
+> > 
+> > #define kfree_non_null_rcu(ptr, rcu_head)		\
+> > 	do {						\
+> > 		if (ptr)				\
+> > 			kfree_rcu(ptr, rcu_head);	\
+> > 	} while (0)
+> > 
+> > as a more common pattern for resource deallocators.
+> 
+> I think that should move straight into kfree_rcu.  
 
-Crash dump kernel reads more than one crash kernel regions via a dtb
-property under node /chosen,
-linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+Possible. I didn't dare to offer this due to lack of knowledge how it's used in
+other places.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
- include/linux/memblock.h |  6 +++++
- mm/memblock.c            |  7 ++---
- 3 files changed, 66 insertions(+), 13 deletions(-)
+> In general
+> we expect *free* to deal with NULL pointers transparently, so we
+> should do so here as well.
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 3bebddf..0f18665 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
- 
-+/* at most two crash kernel regions, low_region and high_region */
-+#define CRASH_MAX_USABLE_RANGES	2
-+#define LOW_REGION_IDX			0
-+#define HIGH_REGION_IDX			1
-+
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
- 	struct memblock_region *usablemem = data;
--	const __be32 *reg;
--	int len;
-+	const __be32 *reg, *endp;
-+	int len, nr = 0;
- 
- 	if (depth != 1 || strcmp(uname, "chosen") != 0)
- 		return 0;
-@@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
- 		return 1;
- 
--	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+	endp = reg + (len / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+		if (++nr >= CRASH_MAX_USABLE_RANGES)
-+			break;
-+	}
- 
- 	return 1;
- }
- 
- static void __init fdt_enforce_memory_region(void)
- {
--	struct memblock_region reg = {
--		.size = 0,
--	};
-+	int i, cnt = 0;
-+	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
-+
-+	memset(regs, 0, sizeof(regs));
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
-+
-+	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
-+		if (regs[i].size)
-+			cnt++;
-+		else
-+			break;
-+
-+	if (cnt - 1 == LOW_REGION_IDX)
-+		memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+				regs[LOW_REGION_IDX].size);
-+	else if (cnt - 1 == HIGH_REGION_IDX) {
-+		/*
-+		 * Two crash kernel regions, cap the memory range
-+		 * [regs[LOW_REGION_IDX].base, regs[HIGH_REGION_IDX].end]
-+		 * and then remove the memory range in the middle.
-+		 */
-+		int start_rgn, end_rgn, i, ret;
-+		phys_addr_t mid_base, mid_size;
-+
-+		mid_base = regs[LOW_REGION_IDX].base + regs[LOW_REGION_IDX].size;
-+		mid_size = regs[HIGH_REGION_IDX].base - mid_base;
-+		ret = memblock_isolate_range(&memblock.memory, mid_base,
-+				mid_size, &start_rgn, &end_rgn);
- 
--	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+		if (ret)
-+			return;
- 
--	if (reg.size)
--		memblock_cap_memory_range(reg.base, reg.size);
-+		memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
-+				regs[HIGH_REGION_IDX].base -
-+				regs[LOW_REGION_IDX].base +
-+				regs[HIGH_REGION_IDX].size);
-+		for (i = end_rgn - 1; i >= start_rgn; i--) {
-+			if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+				memblock_remove_region(&memblock.memory, i);
-+		}
-+		memblock_remove_range(&memblock.reserved, mid_base,
-+				mid_base + mid_size);
-+	}
- }
- 
- void __init arm64_memblock_init(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 294d5d8..787d252 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -110,9 +110,15 @@ void memblock_discard(void);
- 
- phys_addr_t memblock_find_in_range(phys_addr_t start, phys_addr_t end,
- 				   phys_addr_t size, phys_addr_t align);
-+void memblock_remove_region(struct memblock_type *type, unsigned long r);
- void memblock_allow_resize(void);
- int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
- int memblock_add(phys_addr_t base, phys_addr_t size);
-+int memblock_isolate_range(struct memblock_type *type,
-+					phys_addr_t base, phys_addr_t size,
-+					int *start_rgn, int *end_rgn);
-+int memblock_remove_range(struct memblock_type *type,
-+					phys_addr_t base, phys_addr_t size);
- int memblock_remove(phys_addr_t base, phys_addr_t size);
- int memblock_free(phys_addr_t base, phys_addr_t size);
- int memblock_reserve(phys_addr_t base, phys_addr_t size);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index e7665cf..1846e2d 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -357,7 +357,8 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
- 	return ret;
- }
- 
--static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
-+void __init_memblock memblock_remove_region(struct memblock_type *type,
-+					unsigned long r)
- {
- 	type->total_size -= type->regions[r].size;
- 	memmove(&type->regions[r], &type->regions[r + 1],
-@@ -724,7 +725,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
-  * Return:
-  * 0 on success, -errno on failure.
-  */
--static int __init_memblock memblock_isolate_range(struct memblock_type *type,
-+int __init_memblock memblock_isolate_range(struct memblock_type *type,
- 					phys_addr_t base, phys_addr_t size,
- 					int *start_rgn, int *end_rgn)
- {
-@@ -784,7 +785,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
- 	return 0;
- }
- 
--static int __init_memblock memblock_remove_range(struct memblock_type *type,
-+int __init_memblock memblock_remove_range(struct memblock_type *type,
- 					  phys_addr_t base, phys_addr_t size)
- {
- 	int start_rgn, end_rgn;
+Exactly my point, thanks.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
