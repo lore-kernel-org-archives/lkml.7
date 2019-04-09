@@ -2,99 +2,642 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FF8C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A467C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB5920883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD7620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554845693;
-	bh=3Rn/tLNFiLmHFC8vgadLzksy1JdM3dfI4xofu9xTBuY=;
+	s=default; t=1554845767;
+	bh=BXIIV1+7y0Hc8cppQXrwDoFp6MlE+5NQagahpnl9Lng=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PQaXZ7bIyYkic3gZL9VpOXapRJACJVxGd5ynX475/rV0wUcOboowsn/R9MeJLUT4m
-	 uzTk3ptcfKjYkjHt1fHXAS9I0lYUjqI3HJsnrWGIgVXkLe+w1wp78i2Qk5EirZLjZF
-	 JVFpaoUb32c+z5u+LCxntWxgLrh0ESjwpU+MMqaY=
+	b=qjjA1Hz6ikAQabIZEKlIyQ8/nz3TqFZGS/RUwuyOZUVL59lrBCSR7y/+DV+XTYVgU
+	 9tuZDJo9kGw4j6Sc69Dd8N/38nHMDBU/oB7B3MU16bxTyJeihsXVkO+lWODm8e0D2a
+	 sAtLhjCpLguA3bnsNZw9LcinC6wlJQtrBBf3f6uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDIVew (ORCPT
+        id S1726682AbfDIVgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 17:34:52 -0400
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:36664 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfDIVew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 17:34:52 -0400
-Received: by mail-oi1-f172.google.com with SMTP id l203so14905079oia.3;
-        Tue, 09 Apr 2019 14:34:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YCj8/Jh2lzAX/ifQOqTmL3TNG1QpFM+KmxMgxpaY2b0=;
-        b=USsq/KkjoobeKX8bzvlZhwc0sw5lgrNbgDFOHtpRFkH0Hwbxdd9LjzQxLohdilM9DL
-         5k6tPC9KPfTaxIMznNwkqVSVCC9knTpNpNFhzbUTKN7/p+N5NYbTe029+7HFv+W3nlNf
-         al7w0onkk3TMXE4EBkVcj5MGpqC/KNxD+38Q/vd9JrtRnDDCVd5zGWEjlA+VF/Dr8LTd
-         +8B08gqwVpjMJY/3YixFE68rA3FiHgsEqHmVmVGKw0M4rrxT9aAQ1saewCjpjA786sSf
-         eUOvHeM5FykTXZdXhFVVmztMXbKI8jGr3qIlaoli73ysJOTOwqFQwR8PinY4QKBKuNy0
-         OXIQ==
-X-Gm-Message-State: APjAAAXyy+cZaiYSDKvcCCshOF726MbxS//6Q69bqE+zKSPLDiDePGKm
-        19KqzACGokytJp/jh/RsWqnJ+3coALhTTmtH2Jo=
-X-Google-Smtp-Source: APXvYqxRtIOamILXpNgWHGXCVRFM6O+kD1ULGS7OydC1r8bpiYBolDJQxNbp3mn7Z9hAlrw6cnhouXOuS33l2Af2t00=
-X-Received: by 2002:aca:8d3:: with SMTP id 202mr356699oii.76.1554845691361;
- Tue, 09 Apr 2019 14:34:51 -0700 (PDT)
+        Tue, 9 Apr 2019 17:36:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfDIVgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 17:36:05 -0400
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3197D20883;
+        Tue,  9 Apr 2019 21:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554845763;
+        bh=BXIIV1+7y0Hc8cppQXrwDoFp6MlE+5NQagahpnl9Lng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sniIVJ9gxQlEf6PenV0rj7IyFOvmUkNC5MMVzFjnOooC9XrT1OJo08ztrgCNtmMeN
+         5RAzLvhZ4c0ze1bV6SA75AqylSUZAzh/X1QhbgNd9jpM0XmKUScrviQ5729i9/SclS
+         +t6maWZR+Ei478gnQQFDfdGr5pQbmZqh2Af2Kbmc=
+Received: by mail-ed1-f49.google.com with SMTP id d13so148320edr.5;
+        Tue, 09 Apr 2019 14:36:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAXDJfuFMFuy/W3kWbvB4lvbKllKViYhWPmVKqJqxbB/t2Apsg50
+        rMe3wVidHj5X/5J+Tp49Wnz9oJ8zPtJqDtblYyI=
+X-Google-Smtp-Source: APXvYqyYAA6M5YbQxVpsTRSaDUgQ1Tgf9k6t3ZASg7XDkWPnShdXIJIH8xgu3I9mPM2Cxniqe84io9WeMsi2oraYtSc=
+X-Received: by 2002:a17:906:8281:: with SMTP id h1mr21927628ejx.124.1554845761712;
+ Tue, 09 Apr 2019 14:36:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190406181704.33574-1-cai@lca.pw> <CAJZ5v0jxUn_Hhm21FFBc2eSp49kCciCzR1_UGewHkpJiTy3LGw@mail.gmail.com>
- <1554816309.26196.46.camel@lca.pw> <CAJZ5v0g_oLdqv_sp8Un-44wO6vtQH6rVeUTKxSynO8VPPascxA@mail.gmail.com>
- <1554823996.26196.48.camel@lca.pw>
-In-Reply-To: <1554823996.26196.48.camel@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Apr 2019 23:34:40 +0200
-Message-ID: <CAJZ5v0jSutxp0jadaj3d2rR+2i4xX7BHaf6g0o_UDQ4-decw8g@mail.gmail.com>
-Subject: Re: [PATCH -next] acpi/hmat: fix memory leaks in hmat_init()
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-17-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1553483264-5379-17-git-send-email-hao.wu@intel.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Tue, 9 Apr 2019 16:35:25 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQ8L-RGwZyz2fbDvni5o92AEei1DxjVfga7kMe5VPS7jg@mail.gmail.com>
+Message-ID: <CANk1AXQ8L-RGwZyz2fbDvni5o92AEei1DxjVfga7kMe5VPS7jg@mail.gmail.com>
+Subject: Re: [PATCH 16/17] fpga: dfl: fme: add global error reporting support
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
+        Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 5:33 PM Qian Cai <cai@lca.pw> wrote:
+On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
+
+Hi Hao,
+
 >
-> On Tue, 2019-04-09 at 16:54 +0200, Rafael J. Wysocki wrote:
-> > Fewer jumps are easier to follow in general, so avoiding ones that can
-> > be avoided is helpful.
-> >
-> > I'm not buying the argument about more code line changes needed if the
-> > function name changes.  It's meaningless.
-> >
-> > And if you check the return value of acpi_get_table() for SRAT after
-> > calling acpi_put_table(tbl), you will only need the out_free label, if
-> > I'm not mistaken.
+> This patch adds support for global error reporting for FPGA
+> Management Engine (FME), it introduces sysfs interfaces to
+> report different error detected by the hardware, and allow
+> user to clear errors or inject error for testing purpose.
 >
-> I don't really understand this.
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-platform-dfl-fme |  58 ++++
+>  drivers/fpga/Makefile                            |   2 +-
+>  drivers/fpga/dfl-fme-error.c                     | 390 +++++++++++++++++++++++
+>  drivers/fpga/dfl-fme-main.c                      |   4 +
+>  drivers/fpga/dfl-fme.h                           |   2 +
+>  drivers/fpga/dfl.h                               |   2 +
+>  6 files changed, 457 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/fpga/dfl-fme-error.c
+>
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> index 4b6448f..38f9cdd 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> @@ -156,3 +156,61 @@ KernelVersion:  5.2
+>  Contact:       Wu Hao <hao.wu@intel.com>
+>  Description:   Read-only. Read this file to get power limit for fpga, it
+>                 is only valid for integrated solution.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/fme-errors/errors
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. Read this file to get errors detected by hardware.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/fme-errors/first_error
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. Read this file to get the first error detected by
+> +               hardware.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/fme-errors/next_error
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. Read this file to get the second error detected by
+> +               hardware.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/fme-errors/clear
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Write-only. Write error code to this file to clear errors. If
+> +               the input error code doesn't match, it returns -EBUSY.
 
-Sorry, I didn't have the original code in front of me when I was
-writing my reply.
+As with the afu errors patch, seems like -EINVAL would be better.
 
-I was thinking about checking the return value of
-acpi_table_parse_entries() after calling acpi_put_table(tbl).  Then,
-if it returns an error, you only need to call hmat_free_structures().
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/pcie0_errors
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. It returns errors detected on pcie0 link.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/pcie1_errors
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. It returns errors detected on pcie1 link.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/nonfatal_errors
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. It returns non-fatal errors detected.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/catfatal_errors
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-only. It returns catastrophic and fatal errors detected.
+> +
+> +What:          /sys/bus/platform/devices/dfl-fme.0/errors/inject_error
+> +Date:          March 2019
+> +KernelVersion:  5.2
+> +Contact:       Wu Hao <hao.wu@intel.com>
+> +Description:   Read-Write. Write this file to inject errors for testing
+> +               purpose. Read this file to check errors injected.
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index f1f0af7..1a9fa3d 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -38,7 +38,7 @@ obj-$(CONFIG_FPGA_DFL_FME_BRIDGE)     += dfl-fme-br.o
+>  obj-$(CONFIG_FPGA_DFL_FME_REGION)      += dfl-fme-region.o
+>  obj-$(CONFIG_FPGA_DFL_AFU)             += dfl-afu.o
+>
+> -dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o
+> +dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o dfl-fme-error.o
+>  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
+>  dfl-afu-objs += dfl-afu-error.o
+>
+> diff --git a/drivers/fpga/dfl-fme-error.c b/drivers/fpga/dfl-fme-error.c
+> new file mode 100644
+> index 0000000..f2bd5f8
+> --- /dev/null
+> +++ b/drivers/fpga/dfl-fme-error.c
+> @@ -0,0 +1,390 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for FPGA Management Engine Error Management
+> + *
+> + * Copyright 2019 Intel Corporation, Inc.
+> + *
+> + * Authors:
+> + *   Kang Luwei <luwei.kang@intel.com>
+> + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
+> + *   Wu Hao <hao.wu@intel.com>
+> + *   Joseph Grecco <joe.grecco@intel.com>
+> + *   Enno Luebbers <enno.luebbers@intel.com>
+> + *   Tim Whisonant <tim.whisonant@intel.com>
+> + *   Ananda Ravuri <ananda.ravuri@intel.com>
+> + *   Mitchel, Henry <henry.mitchel@intel.com>
+> + */
+> +
+> +#include <linux/uaccess.h>
+> +
+> +#include "dfl.h"
+> +#include "dfl-fme.h"
+> +
+> +#define FME_ERROR_MASK         0x8
+> +#define FME_ERROR              0x10
+> +#define MBP_ERROR              BIT_ULL(6)
+> +#define PCIE0_ERROR_MASK       0x18
+> +#define PCIE0_ERROR            0x20
+> +#define PCIE1_ERROR_MASK       0x28
+> +#define PCIE1_ERROR            0x30
+> +#define FME_FIRST_ERROR                0x38
+> +#define FME_NEXT_ERROR         0x40
+> +#define RAS_NONFAT_ERROR_MASK  0x48
+> +#define RAS_NONFAT_ERROR       0x50
+> +#define RAS_CATFAT_ERROR_MASK  0x58
+> +#define RAS_CATFAT_ERROR       0x60
+> +#define RAS_ERROR_INJECT       0x68
+> +#define INJECT_ERROR_MASK      GENMASK_ULL(2, 0)
+> +
+> +static ssize_t errors_show(struct device *dev,
+> +                          struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + FME_ERROR));
+> +}
+> +static DEVICE_ATTR_RO(errors);
+> +
+> +static ssize_t first_error_show(struct device *dev,
+> +                               struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + FME_FIRST_ERROR));
+> +}
+> +static DEVICE_ATTR_RO(first_error);
+> +
+> +static ssize_t next_error_show(struct device *dev,
+> +                              struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + FME_NEXT_ERROR));
+> +}
+> +static DEVICE_ATTR_RO(next_error);
+> +
+> +static ssize_t clear_store(struct device *dev, struct device_attribute *attr,
+> +                          const char *buf, size_t count)
+> +{
+> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> +       struct device *err_dev = dev->parent;
+> +       struct dfl_feature *feature;
+> +       void __iomem *base;
+> +       u64 v, val;
+> +       int ret;
+> +
+> +       ret = kstrtou64(buf, 0, &val);
+> +       if (ret)
+> +               return ret;
 
-Similarly, if acpi_get_table(ACPI_SIG_HMAT, 0, &tbl) returns an error,
-you only need to call hmat_free_structures().
+from kstrtox.c:
+* Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
 
-But I didn't remember the other jumps to out_put.
+Your sysfs doc could be updated to explain these return codes.
 
-Still, since it is valid to pass NULL to acpi_put_table(), you can
-jump to out_put if acpi_get_table(ACPI_SIG_HMAT, 0, &tbl) returns an
-error too.
+> +
+> +       feature = dfl_get_feature_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +       base = feature->ioaddr;
+> +
+> +       mutex_lock(&pdata->lock);
+> +       writeq(GENMASK_ULL(63, 0), base + FME_ERROR_MASK);
+> +
+> +       v = readq(base + FME_ERROR);
+> +       if (val != v) {
+> +               ret = -EINVAL;
+
+Oh wait, that's what I thought it should be ;)  so the doc just needs to change.
+
+> +               goto done;
+
+It would be easy to avoid using 'goto' here.
+
+> +       }
+> +
+> +       writeq(v, base + FME_ERROR);
+> +       v = readq(base + FME_FIRST_ERROR);
+> +       writeq(v, base + FME_FIRST_ERROR);
+> +       v = readq(base + FME_NEXT_ERROR);
+> +       writeq(v, base + FME_NEXT_ERROR);
+> +
+> +done:
+> +       /* Workaround: disable MBP_ERROR if feature revision is 0 */
+> +       writeq(dfl_feature_revision(feature->ioaddr) ? 0ULL : MBP_ERROR,
+> +              base + FME_ERROR_MASK);
+> +       mutex_unlock(&pdata->lock);
+> +       return ret ? ret : count;
+> +}
+> +static DEVICE_ATTR_WO(clear);
+> +
+> +static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
+> +                            char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "%u\n", dfl_feature_revision(base));
+> +}
+> +static DEVICE_ATTR_RO(revision);
+
+The revision attr to be documented in the sysfs doc.
+
+> +
+> +static ssize_t pcie0_errors_show(struct device *dev,
+> +                                struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + PCIE0_ERROR));
+> +}
+> +
+> +static ssize_t pcie0_errors_store(struct device *dev,
+
+The sysfs doc shows this as read-only.
+
+> +                                 struct device_attribute *attr,
+> +                                 const char *buf, size_t count)
+> +{
+> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +       u64 v, val;
+> +       int ret;
+> +
+> +       ret = kstrtou64(buf, 0, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       mutex_lock(&pdata->lock);
+> +       writeq(GENMASK_ULL(63, 0), base + PCIE0_ERROR_MASK);
+> +
+> +       v = readq(base + PCIE0_ERROR);
+> +       if (val != v)
+> +               ret = -EBUSY;
+> +       else
+> +               writeq(v, base + PCIE0_ERROR);
+> +
+> +       writeq(0ULL, base + PCIE0_ERROR_MASK);
+> +       mutex_unlock(&pdata->lock);
+> +       return ret ? ret : count;
+> +}
+> +static DEVICE_ATTR_RW(pcie0_errors);
+> +
+> +static ssize_t pcie1_errors_show(struct device *dev,
+> +                                struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + PCIE1_ERROR));
+> +}
+> +
+> +static ssize_t pcie1_errors_store(struct device *dev,
+> +                                 struct device_attribute *attr,
+> +                                 const char *buf, size_t count)
+
+Same here, documentation needs to show as R/W and explain what happens
+when written.
+
+> +{
+> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +       u64 v, val;
+> +       int ret;
+> +
+> +       ret = kstrtou64(buf, 0, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       mutex_lock(&pdata->lock);
+> +       writeq(GENMASK_ULL(63, 0), base + PCIE1_ERROR_MASK);
+> +
+> +       v = readq(base + PCIE1_ERROR);
+> +       if (val != v)
+> +               ret = -EBUSY;
+> +       else
+> +               writeq(v, base + PCIE1_ERROR);
+> +
+> +       writeq(0ULL, base + PCIE1_ERROR_MASK);
+> +       mutex_unlock(&pdata->lock);
+> +       return ret ? ret : count;
+> +}
+> +static DEVICE_ATTR_RW(pcie1_errors);
+> +
+> +static ssize_t nonfatal_errors_show(struct device *dev,
+> +                                   struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + RAS_NONFAT_ERROR));
+> +}
+> +static DEVICE_ATTR_RO(nonfatal_errors);
+> +
+> +static ssize_t catfatal_errors_show(struct device *dev,
+> +                                   struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)readq(base + RAS_CATFAT_ERROR));
+> +}
+> +static DEVICE_ATTR_RO(catfatal_errors);
+> +
+> +static ssize_t inject_error_show(struct device *dev,
+> +                                struct device_attribute *attr, char *buf)
+> +{
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +       u64 v;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       v = readq(base + RAS_ERROR_INJECT);
+> +
+> +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> +                        (unsigned long long)FIELD_GET(INJECT_ERROR_MASK, v));
+> +}
+> +
+> +static ssize_t inject_error_store(struct device *dev,
+> +                                 struct device_attribute *attr,
+> +                                 const char *buf, size_t count)
+> +{
+> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> +       struct device *err_dev = dev->parent;
+> +       void __iomem *base;
+> +       u8 inject_error;
+> +       int ret;
+> +       u64 v;
+> +
+> +       ret = kstrtou8(buf, 0, &inject_error);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (inject_error & ~INJECT_ERROR_MASK)
+> +               return -EINVAL;
+> +
+> +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
+> +
+> +       mutex_lock(&pdata->lock);
+> +       v = readq(base + RAS_ERROR_INJECT);
+> +       v &= ~INJECT_ERROR_MASK;
+> +       v |= FIELD_PREP(INJECT_ERROR_MASK, inject_error);
+> +       writeq(v, base + RAS_ERROR_INJECT);
+> +       mutex_unlock(&pdata->lock);
+> +
+> +       return count;
+> +}
+> +static DEVICE_ATTR_RW(inject_error);
+> +
+> +static struct attribute *fme_errors_attrs[] = {
+> +       &dev_attr_errors.attr,
+> +       &dev_attr_first_error.attr,
+> +       &dev_attr_next_error.attr,
+> +       &dev_attr_clear.attr,
+> +       NULL,
+> +};
+> +
+> +static struct attribute_group fme_errors_attr_group = {
+> +       .attrs  = fme_errors_attrs,
+> +       .name   = "fme-errors",
+> +};
+> +
+> +static struct attribute *errors_attrs[] = {
+> +       &dev_attr_revision.attr,
+> +       &dev_attr_pcie0_errors.attr,
+> +       &dev_attr_pcie1_errors.attr,
+> +       &dev_attr_nonfatal_errors.attr,
+> +       &dev_attr_catfatal_errors.attr,
+> +       &dev_attr_inject_error.attr,
+> +       NULL,
+> +};
+> +
+> +static struct attribute_group errors_attr_group = {
+> +       .attrs  = errors_attrs,
+> +};
+> +
+> +static const struct attribute_group *error_groups[] = {
+> +       &fme_errors_attr_group,
+> +       &errors_attr_group,
+> +       NULL
+> +};
+> +
+> +static void fme_error_enable(struct dfl_feature *feature)
+> +{
+> +       void __iomem *base = feature->ioaddr;
+> +
+> +       /* Workaround: disable MBP_ERROR if revision is 0 */
+> +       writeq(dfl_feature_revision(feature->ioaddr) ? 0ULL : MBP_ERROR,
+> +              base + FME_ERROR_MASK);
+> +       writeq(0ULL, base + PCIE0_ERROR_MASK);
+> +       writeq(0ULL, base + PCIE1_ERROR_MASK);
+> +       writeq(0ULL, base + RAS_NONFAT_ERROR_MASK);
+> +       writeq(0ULL, base + RAS_CATFAT_ERROR_MASK);
+> +}
+> +
+> +static void err_dev_release(struct device *dev)
+> +{
+> +       kfree(dev);
+> +}
+> +
+> +static int fme_global_err_init(struct platform_device *pdev,
+> +                              struct dfl_feature *feature)
+> +{
+> +       struct device *dev;
+> +       int ret = 0;
+> +
+> +       dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +       if (!dev)
+> +               return -ENOMEM;
+> +
+> +       dev->parent = &pdev->dev;
+> +       dev->release = err_dev_release;
+> +       dev_set_name(dev, "errors");
+> +
+> +       fme_error_enable(feature);
+> +
+> +       ret = device_register(dev);
+> +       if (ret) {
+> +               put_device(dev);
+> +               return ret;
+> +       }
+> +
+> +       ret = sysfs_create_groups(&dev->kobj, error_groups);
+> +       if (ret) {
+> +               device_unregister(dev);
+> +               return ret;
+> +       }
+> +
+> +       feature->priv = dev;
+> +
+> +       return ret;
+> +}
+> +
+> +static void fme_global_err_uinit(struct platform_device *pdev,
+> +                                struct dfl_feature *feature)
+> +{
+> +       struct device *dev = feature->priv;
+> +
+> +       sysfs_remove_groups(&dev->kobj, error_groups);
+> +       device_unregister(dev);
+> +}
+> +
+> +const struct dfl_feature_id fme_global_err_id_table[] = {
+> +       {.id = FME_FEATURE_ID_GLOBAL_ERR,},
+> +       {0,}
+> +};
+> +
+> +const struct dfl_feature_ops fme_global_err_ops = {
+> +       .init = fme_global_err_init,
+> +       .uinit = fme_global_err_uinit,
+> +};
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index dafa6580..76cb112 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -686,6 +686,10 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
+>                 .ops = &fme_power_mgmt_ops,
+>         },
+>         {
+> +               .id_table = fme_global_err_id_table,
+> +               .ops = &fme_global_err_ops,
+> +       },
+> +       {
+>                 .ops = NULL,
+>         },
+>  };
+> diff --git a/drivers/fpga/dfl-fme.h b/drivers/fpga/dfl-fme.h
+> index 7a021c4..5fbe3f5 100644
+> --- a/drivers/fpga/dfl-fme.h
+> +++ b/drivers/fpga/dfl-fme.h
+> @@ -37,5 +37,7 @@ struct dfl_fme {
+>
+>  extern const struct dfl_feature_ops fme_pr_mgmt_ops;
+>  extern const struct dfl_feature_id fme_pr_mgmt_id_table[];
+> +extern const struct dfl_feature_ops fme_global_err_ops;
+> +extern const struct dfl_feature_id fme_global_err_id_table[];
+>
+>  #endif /* __DFL_FME_H */
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index fbc57f0..6c32080 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -197,12 +197,14 @@ struct dfl_feature_driver {
+>   *                 feature dev (platform device)'s reources.
+>   * @ioaddr: mapped mmio resource address.
+>   * @ops: ops of this sub feature.
+> + * @priv: priv data of this feature.
+>   */
+>  struct dfl_feature {
+>         u64 id;
+>         int resource_index;
+>         void __iomem *ioaddr;
+>         const struct dfl_feature_ops *ops;
+> +       void *priv;
+>  };
+>
+>  #define DEV_STATUS_IN_USE      0
+> --
+> 2.7.4
+>
+
+Thanks,
+Alan
