@@ -2,162 +2,103 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2612C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886E3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D48920883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554790326;
-	bh=HjKj0zZX3UV/q5Qo3qnQwSa0uBTp20Bp/2kcay+9GhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rRjv2oNY81qLS3bDOc5rj8IbsYgFdl+UhoZtBVkqg6u46FR2H5POSS/FlcCy/1Efd
-	 nypPf+qG5ejgwC1xhlVlpsrzxDpZj76ikr4XvTxsVi03BL1IzQphxbfdvHVJwxXAIR
-	 ImIG0rIcckerp4ZO/4o6XF+XjWL0gJRbq2qYDvOc=
+	by mail.kernel.org (Postfix) with ESMTP id 6081A2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfDIGME (ORCPT
+        id S1726496AbfDIGMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:12:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55662 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726062AbfDIGMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:12:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 36CE4AD5E;
-        Tue,  9 Apr 2019 06:12:01 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 08:12:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Oscar Salvador <osalvador@suse.de>, david@redhat.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/2] mm, memory_hotplug: provide a more generic
- restrictions for memory hotplug
-Message-ID: <20190409061200.GA10383@dhcp22.suse.cz>
-References: <20190408082633.2864-1-osalvador@suse.de>
- <20190408082633.2864-3-osalvador@suse.de>
- <20190408213041.50350dac32ed315839c57e09@linux-foundation.org>
+        Tue, 9 Apr 2019 02:12:52 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18018 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725781AbfDIGMv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 02:12:51 -0400
+X-UUID: 708af587616e4ecbb67f047c76954581-20190409
+X-UUID: 708af587616e4ecbb67f047c76954581-20190409
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1412010561; Tue, 09 Apr 2019 14:12:45 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 9 Apr 2019 14:12:43 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 9 Apr 2019 14:12:43 +0800
+Message-ID: <1554790363.10331.1.camel@mtksdaap41>
+Subject: Re: [PATCH 01/14] [media] mtk-mipicsi: add mediatek mipicsi driver
+ for mt2712
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Stu Hsieh <stu.hsieh@mediatek.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>
+Date:   Tue, 9 Apr 2019 14:12:43 +0800
+In-Reply-To: <1554724505-19882-2-git-send-email-stu.hsieh@mediatek.com>
+References: <1554724505-19882-1-git-send-email-stu.hsieh@mediatek.com>
+         <1554724505-19882-2-git-send-email-stu.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190408213041.50350dac32ed315839c57e09@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: CF19FFDC3CE20E6C10B2D4979EFABE8034C444B504E33512BB9CFFC39EED8FBD2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 08-04-19 21:30:41, Andrew Morton wrote:
-> On Mon,  8 Apr 2019 10:26:33 +0200 Oscar Salvador <osalvador@suse.de> wrote:
-> 
-> > arch_add_memory, __add_pages take a want_memblock which controls whether
-> > the newly added memory should get the sysfs memblock user API (e.g.
-> > ZONE_DEVICE users do not want/need this interface). Some callers even
-> > want to control where do we allocate the memmap from by configuring
-> > altmap.
-> > 
-> > Add a more generic hotplug context for arch_add_memory and __add_pages.
-> > struct mhp_restrictions contains flags which contains additional
-> > features to be enabled by the memory hotplug (MHP_MEMBLOCK_API
-> > currently) and altmap for alternative memmap allocator.
-> > 
-> > This patch shouldn't introduce any functional change.
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
-> 
-> x86_64 allnoconfig:
-> 
-> In file included from ./include/linux/mmzone.h:744:0,
->                  from ./include/linux/gfp.h:6,
->                  from ./include/linux/umh.h:4,
->                  from ./include/linux/kmod.h:22,
->                  from ./include/linux/module.h:13,
->                  from init/do_mounts.c:1:
-> ./include/linux/memory_hotplug.h:353:11: warning: ‘struct mhp_restrictions’ declared inside parameter list will not be visible outside of this definition or declaration
->     struct mhp_restrictions *restrictions);
->            ^~~~~~~~~~~~~~~~
-> 
-> Fix this by moving the arch_add_memory() definition inside
-> CONFIG_MEMORY_HOTPLUG and moving the mhp_restrictions definition to a more
-> appropriate place.
+Hi, Stu:
 
-LGTM. Thanks for the fixup!
-
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+On Mon, 2019-04-08 at 19:54 +0800, Stu Hsieh wrote:
+> This patch add mediatek mipicsi driver for mt2712,
+> including probe function to get the value from device tree,
+> and register to v4l2 the host device.
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 > ---
+>  drivers/media/platform/mtk-mipicsi/Makefile   |   4 +
+>  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 768 ++++++++++++++++++
+>  2 files changed, 772 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
+>  create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 > 
->  include/linux/memory_hotplug.h |   24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> --- a/include/linux/memory_hotplug.h~mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
-> +++ a/include/linux/memory_hotplug.h
-> @@ -54,6 +54,16 @@ enum {
->  };
->  
->  /*
-> + * Restrictions for the memory hotplug:
-> + * flags:  MHP_ flags
-> + * altmap: alternative allocator for memmap array
-> + */
-> +struct mhp_restrictions {
-> +	unsigned long flags;
-> +	struct vmem_altmap *altmap;
+
+[snip]
+
+> +
+> +static const struct of_device_id mtk_mipicsi_of_match[] = {
+> +	{ .compatible = "mediatek,mt2712-mipicsi", },
+
+Where is the binding document of "mediatek,mt2712-mipicsi"?
+
+Regards,
+CK
+
+> +	{},
 > +};
 > +
-> +/*
->   * Zone resizing functions
->   *
->   * Note: any attempt to resize a zone should has pgdat_resize_lock()
-> @@ -101,6 +111,8 @@ extern void __online_page_free(struct pa
->  
->  extern int try_online_node(int nid);
->  
-> +extern int arch_add_memory(int nid, u64 start, u64 size,
-> +			struct mhp_restrictions *restrictions);
->  extern u64 max_mem_size;
->  
->  extern bool memhp_auto_online;
-> @@ -126,16 +138,6 @@ extern int __remove_pages(struct zone *z
->  
->  #define MHP_MEMBLOCK_API               (1<<0)
->  
-> -/*
-> - * Restrictions for the memory hotplug:
-> - * flags:  MHP_ flags
-> - * altmap: alternative allocator for memmap array
-> - */
-> -struct mhp_restrictions {
-> -	unsigned long flags;
-> -	struct vmem_altmap *altmap;
-> -};
-> -
->  /* reasonably generic interface to expand the physical pages */
->  extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
->  		       struct mhp_restrictions *restrictions);
-> @@ -349,8 +351,6 @@ extern int walk_memory_range(unsigned lo
->  extern int __add_memory(int nid, u64 start, u64 size);
->  extern int add_memory(int nid, u64 start, u64 size);
->  extern int add_memory_resource(int nid, struct resource *resource);
-> -extern int arch_add_memory(int nid, u64 start, u64 size,
-> -			struct mhp_restrictions *restrictions);
->  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
->  extern bool is_memblock_offlined(struct memory_block *mem);
-> _
-> 
+> +static struct platform_driver mtk_mipicsi_driver = {
+> +	.driver		= {
+> +		.name	= MTK_MIPICSI_DRV_NAME,
+> +		.of_match_table = of_match_ptr(mtk_mipicsi_of_match),
+> +	},
+> +	.probe		= mtk_mipicsi_probe,
+> +	.remove		= mtk_mipicsi_remove,
+> +};
+> +
+> +module_platform_driver(mtk_mipicsi_driver);
+> +MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
+> +MODULE_LICENSE("GPL v2");
 
--- 
-Michal Hocko
-SUSE Labs
+
