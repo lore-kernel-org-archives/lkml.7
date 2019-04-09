@@ -2,98 +2,151 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD10C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CD1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E9B20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PYZeGXAc"
+	by mail.kernel.org (Postfix) with ESMTP id AA7B020857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfDIMPG (ORCPT
+        id S1726796AbfDIMZq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:15:06 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55091 "EHLO vps0.lunn.ch"
+        Tue, 9 Apr 2019 08:25:46 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:50642 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbfDIMPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:15:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=5MD0QGE8HMnZEwh9ib4ODjfQ8egR2VR1Li2Ef+UBmAs=; b=PYZeGXAcN63LYcpv9rA7OuOhri
-        mDkT1Z9Rvf9TisRXrESWeAAvb89wf3Ta63+cBtt/8+ZzH+zKQ7rOrOLogG9j6fhe0qeLK6nKaoVQl
-        Rvdli2XzCOx0Teo/g2QQfmqccPfDVYs9sImzVtYHeih+9J/W6vCaEbpXp4c0C3b9Y4q8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hDpeQ-000409-9B; Tue, 09 Apr 2019 14:14:54 +0200
-Date:   Tue, 9 Apr 2019 14:14:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: Re: [PATCH net-next v3] net: dsa: mv88e6xxx: Prevent suspend to RAM
-Message-ID: <20190409121454.GB28742@lunn.ch>
-References: <20190205110728.11451-1-miquel.raynal@bootlin.com>
- <20190408215540.GA27929@amd>
- <20190409090643.0d8ce19a@xps13>
+        id S1726035AbfDIMZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 08:25:45 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 953AA17C68; Tue,  9 Apr 2019 13:25:43 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
+        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        tony@atomide.com, marc.w.gonzalez@free.fr, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch argument
+References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+Date:   Tue, 09 Apr 2019 13:25:43 +0100
+In-Reply-To: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+        (Stefan Agner's message of "Mon, 8 Apr 2019 22:59:53 +0200")
+Message-ID: <yw1xk1g3xt4o.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409090643.0d8ce19a@xps13>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 09:06:43AM +0200, Miquel Raynal wrote:
-> Hi Pavel,
-> 
-> Pavel Machek <pavel@ucw.cz> wrote on Mon, 8 Apr 2019 23:55:41 +0200:
-> 
-> > On Tue 2019-02-05 12:07:28, Miquel Raynal wrote:
-> > > On one hand, the mv88e6xxx driver has a work queue called in loop
-> > > which will attempt register accesses after MDIO bus suspension, that
-> > > entirely freezes the platform during suspend.
-> > > 
-> > > On the other hand, the DSA core is not ready yet to support suspend to
-> > > RAM operation because so far there is no way to recover reliably the
-> > > switch configuration.
-> > > 
-> > > To avoid the kernel to freeze when suspending with a switch driven by
-> > > the mv88e6xxx driver, we choose to prevent the driver suspension and
-> > > in the same way, the whole platform.
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
-> > 
-> > Could we at least do printk() so that user knows what went wrong?
-> > 
-> > Debugging s2ram is usually not easy :-(.
-> 
-> I suppose you will be told that suspend was refused by a driver
-> (probably without stating which one though). You may send a patch to add
-> a trace if you think it is important, as this change as already been
-> merged.
+Stefan Agner <stefan@agner.ch> writes:
 
-Hi Miquel, Pavel
+> The LLVM Target parser currently does not allow to specify the security
+> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
+> to use Clang with LLVM's integrated assembler, this leads to build
+> errors such as this:
+>   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
+>
+> Use ".arch_extension sec" to enable the security extension in a more
+> portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
+> multi-platform kernel is being built.
+>
+> Note that this is technically not exactly the same as the old code
+> checked for availabilty of the security extension by calling as-instr.
+> However, there are already other sites which use ".arch_extension sec"
+> unconditionally, hence de-facto we need an assembler capable of
+> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
+> arch extension "sec" is available since binutils 2.21 according to
+> its documentation [1].
+>
+> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
+> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Acked-by: Mans Rullgard <mans@mansr.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+> Changes since v1:
+> - Explicitly specify assembler architecture as armv7-a to avoid
+>   build issues when bulding v6/v7 multi arch kernel.
+>
+>  arch/arm/mach-bcm/Makefile         | 3 ---
+>  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
+>  arch/arm/mach-exynos/Makefile      | 4 ----
+>  arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
+>  arch/arm/mach-exynos/sleep.S       | 3 ++-
+>  arch/arm/mach-highbank/Makefile    | 3 ---
+>  arch/arm/mach-highbank/smc.S       | 3 ++-
+>  arch/arm/mach-keystone/Makefile    | 3 ---
+>  arch/arm/mach-keystone/smc.S       | 1 +
+>  arch/arm/mach-omap2/Makefile       | 8 --------
+>  arch/arm/mach-omap2/omap-headsmp.S | 2 ++
+>  arch/arm/mach-omap2/omap-smc.S     | 3 ++-
+>  arch/arm/mach-omap2/sleep33xx.S    | 1 +
+>  arch/arm/mach-omap2/sleep34xx.S    | 2 ++
+>  arch/arm/mach-omap2/sleep43xx.S    | 2 ++
+>  arch/arm/mach-omap2/sleep44xx.S    | 2 ++
+>  arch/arm/mach-tango/Makefile       | 3 ---
+>  arch/arm/mach-tango/smc.S          | 1 +
+>  18 files changed, 19 insertions(+), 30 deletions(-)
 
-I don't know the s2ram code at all, but this seems like a generic
-problem. The core should be reporting which driver returned an error,
-not the driver itself.
+[...]
 
-    Andrew
+> diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+> index a55a7ecf146a..541e850a736c 100644
+> --- a/arch/arm/mach-bcm/bcm_kona_smc.c
+> +++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+> @@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
+>  		__asmeq("%2", "r4")
+>  		__asmeq("%3", "r5")
+>  		__asmeq("%4", "r6")
+> -#ifdef REQUIRES_SEC
+>  		".arch_extension sec\n"
+> -#endif
+>  		"	smc    #0\n"
+>  		: "=r" (ip), "=r" (r0)
+>  		: "r" (r4), "r" (r5), "r" (r6)
+
+[...]
+
+> diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
+> index d15de8179fab..ec03dc499270 100644
+> --- a/arch/arm/mach-keystone/smc.S
+> +++ b/arch/arm/mach-keystone/smc.S
+> @@ -21,6 +21,7 @@
+>   *
+>   * Return: Non zero value on failure
+>   */
+> +	.arch_extension sec
+>  ENTRY(keystone_cpu_smc)
+>  	stmfd   sp!, {r4-r11, lr}
+>  	smc	#0
+
+[...]
+
+> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
+> index 361a8dc89804..cf2d21e5226c 100644
+> --- a/arch/arm/mach-tango/smc.S
+> +++ b/arch/arm/mach-tango/smc.S
+> @@ -1,6 +1,7 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #include <linux/linkage.h>
+>
+> +	.arch_extension sec
+>  ENTRY(tango_smc)
+>  	push	{lr}
+>  	mov	ip, r1
+
+Is there some reason these three don't need the .arch directive?
+
+-- 
+Måns Rullgård
