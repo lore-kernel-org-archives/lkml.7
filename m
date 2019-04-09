@@ -2,84 +2,108 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB7DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4772D20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF3E2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YBZTCpib"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/04Eq/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfDIKEl (ORCPT
+        id S1726773AbfDIKFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:04:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37184 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfDIKEk (ORCPT
+        Tue, 9 Apr 2019 06:05:45 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36160 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDIKFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:04:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ECN5RtyAoOFeKS2bytXLHxuqXCY8zXSsiaFPh0hQOLE=; b=YBZTCpibRaLdOoYWUhK9zEG/0
-        BTqM90ug44ilMFjAoeZSG1zHMsGuzCmfCw6zMxBSVSwaiUxPPEttp+BVD4PxBgWkTUiWkcouLTNkm
-        3cO3mpOjPHaR+Yh1aXQSmj6s7qR8TCRY9N+dyrq4ShyJKFS2Dx7AsXv29PHt9l+Uwpy5vB3fsc3lZ
-        oDu5i+lPtNXqjsNhQ6B4NIrREIcorgn7GuD4o2shm/2Fr4J4b+kNvFVKsnR+9p+9nP/hmcJKHh73X
-        bUx5+sib41bVfh8IjO4ycM+bzbqA0x53BifGUJRfr+4NAB7f1nj5WebbWG0HqYZhIw+ANg3On6m0Z
-        +SoGUUkRg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hDncK-0007WU-W6; Tue, 09 Apr 2019 10:04:36 +0000
-Date:   Tue, 9 Apr 2019 03:04:36 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 01/18] drivers core: Add I/O ASID allocator
-Message-ID: <20190409100436.GA28683@infradead.org>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1554767973-30125-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <20190409100049.GC9224@smile.fi.intel.com>
+        Tue, 9 Apr 2019 06:05:45 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s16so14392610edr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 03:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nZdxuF7Yo4b5TWKbKMBtG1jI5YiJkeFgii/BbUNDMEo=;
+        b=n/04Eq/7sjNaVUFVSweAFYHb2hBJwd2JX+O8YcPYcv++PWVWc+CfXKgOT9z7f59xoK
+         dXGmAM6O4zIlwL294nRr+yp+XQCuHbMfeaYheFqYWkexDFK1DkFXRdcVxKH34fL5Qw35
+         nllW+NxOrdud8oKWw9Vff+s0BW3Bv+xlfvj3o/LwrdadLNMmy11jAvtj/WwwmtyZKonN
+         uTWQoVPM2hpsub1ht1vyLEEjFFpr4RV1XB2qmZ6fmNOHp3AVLJPjacfMXGcAx5tdFiw9
+         F4TfxV+yDadQTe+ApCK78urZm8mvFXywayklmIPzUZvII0zZUXgGfubHWPf6Rq5kv1N2
+         NtVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nZdxuF7Yo4b5TWKbKMBtG1jI5YiJkeFgii/BbUNDMEo=;
+        b=Q3aiTaAVwTgYRnyOWkLCzxxZxUjx6ATA2lSQuRxPKRK1VA3VLLsP/l7ib721EKk1yn
+         iPydIayk8NYOmjZjxAkFl+QGsC5+4t7sXjmO23VaWSJLkDlpUzNUM+hWXrukfntyaBSm
+         C0st2DdX0weS7AbslGFuIAuVhzuf6QtrgZef8KdODS0SQOgOu1T4WEqqDm+alHQVmxVF
+         tHZef2+OrmPi5MyQDgDOEx/2KpEkFrrmdKqGDWp18m1j4+zuy8nrXCRmspnYfdZzudxL
+         0QXz2AOPmVOYVdc7UIsHyLovhWD1wk3KP4pys5QeLNLZ4dYIsHCAon2qqs1MVoExMYjn
+         Mg3w==
+X-Gm-Message-State: APjAAAWL1TiR8gfb4gSWEBB5MmaY5IDDZllE0EFFCewMsiFA5iY7oLkm
+        Xglf7vF609ea6Wm22HKvVFvm/443Xit2jyXWx6M=
+X-Google-Smtp-Source: APXvYqzvej5fXE1PGyV2IQBupSDP0/N82QVQTCC4Q1QJEJ6tJB04URbGmmmNIE8coNueavwzh072JWrxvzYfJwh/Olo=
+X-Received: by 2002:a17:906:4b10:: with SMTP id y16mr20454872eju.19.1554804343290;
+ Tue, 09 Apr 2019 03:05:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409100049.GC9224@smile.fi.intel.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1554798876-20653-1-git-send-email-viorel.suman@nxp.com> <1554798876-20653-2-git-send-email-viorel.suman@nxp.com>
+In-Reply-To: <1554798876-20653-2-git-send-email-viorel.suman@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 9 Apr 2019 13:05:31 +0300
+Message-ID: <CAEnQRZB8ub6tyuputU51Ev9d6USg4idcXW6P6tkfuhHECAuGUA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: fsl_audmix: remove "model" attribute
+To:     Viorel Suman <viorel.suman@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 01:00:49PM +0300, Andriy Shevchenko wrote:
-> I think it makes sense to add a helper macro to rcupdate.h
-> (and we have several cases in kernel that can utilize it)
-> 
-> #define kfree_non_null_rcu(ptr, rcu_head)		\
-> 	do {						\
-> 		if (ptr)				\
-> 			kfree_rcu(ptr, rcu_head);	\
-> 	} while (0)
-> 
-> as a more common pattern for resource deallocators.
+Hi Viorel,
 
-I think that should move straight into kfree_rcu.  In general
-we expect *free* to deal with NULL pointers transparently, so we
-should do so here as well.
+Few comments inline.
+
+On Tue, Apr 9, 2019 at 11:36 AM Viorel Suman <viorel.suman@nxp.com> wrote:
+>
+> Use "of_device_id.data" to specify the machine driver,
+> instead of "model" DTS attribute.
+
+<snip>
+
+>  static int fsl_audmix_probe(struct platform_device *pdev)
+>  {
+> +       struct device *dev = &pdev->dev;
+
+You might want to remove this change from the patch because it touches
+a lot of lines
+and it makes the review harder.
+
+I don't see any reason to have it at all.
+
+thanks,
+Daniel.
