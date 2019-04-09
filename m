@@ -2,162 +2,154 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57819C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60C8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C1120833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C5920833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGnDMBWt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGzeATXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfDIJ34 (ORCPT
+        id S1727002AbfDIJ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:29:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33378 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfDIJ3z (ORCPT
+        Tue, 9 Apr 2019 05:29:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35260 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfDIJ3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:29:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j10so14955419otq.0;
-        Tue, 09 Apr 2019 02:29:54 -0700 (PDT)
+        Tue, 9 Apr 2019 05:29:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so9067767plp.2;
+        Tue, 09 Apr 2019 02:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/lPkJNKAbh4YluUe8wkzivO7jBarzDZkEmu1FMVG3GQ=;
-        b=aGnDMBWtmpLTdQTm9E6aK+e7QRyTXyCpmqfp9w1FOho/D+h9pMERi+bbOX1sRHSHtg
-         SRGD80dLCHWLD18WCy//UP4tepcwUJrf9p/1maM74Uz1zQJvlz/GRz3nrG6lWGeQp8Jv
-         BsA89mVR3O7O/o/SqiQkzn3pzWVZO7GcCJQoR6f3pt14w7UHH/l01bGlolaq21QtmB7G
-         fa/hIKlQL50cf3jd6ZKlsqOMhx00zpYsHrpGbN8RZJeLyzfWcMUwW9dWAwU0DGz61HU7
-         PukIMJK1/mMeLluV4DbJYkaM2fQ/QSnGtsbc0N8oy/OpvN2okLB2NSfrDnNCt6DKWst/
-         NxQA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uz/VlezM1F/whqslASz2+vc6bdT5jIpSqLI+shePWjE=;
+        b=lGzeATXUcuz1REth//QzC6QQK7gnTIqEElIOzpj0qPWpDIHjLJ4nHnj9y8BbHJkeiW
+         fshhy2gk/nw0yP/HOt3YfE+iPr6LhQADXbj0HJj+PSzpdxXZ746VKFoU+dlPmZQsE7kQ
+         UipwR9qDkHlFQvASWgyhEwV3MgakU+4cEyp7OI3ChSlSZbxHQHVXe7zR7mIARm4Tpr6X
+         8qt89GOdp4jGitM1h5EGupWjUkrd9aWBr8qhLyLoJLn0PcJwKaONoK0WbcV67l8Ri7Js
+         XbILueCyfJRQMbvDe2xmuEPc6e0SNYkGbXYznPQLnxq79x3Odp8thOKPtZAZsf8HC5AE
+         Ns7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/lPkJNKAbh4YluUe8wkzivO7jBarzDZkEmu1FMVG3GQ=;
-        b=FozpherMoKIkVp3xRzLOKJQveJdMv32NoKBLb4nYv7XLFKv6FqmDHgdwSmLK2G++o1
-         LEXjW2V7IjKJGdUIRRS4Rr7IZfU0O1NbKP7Be9/BTRXYK8avNJWgppMHzEAZanPnJLtQ
-         jrURbZZHq5DvUpdlqhlDHeeP/8f831KCzoTJRwR8KnoK/vpqm3x5DKK+q9u9gDdK8sLD
-         67DQTC2iGiN45gBOed9q+CrowtWlQM7+Yi5lslC5NubV9k5ul1CESQP+nNIzz+tWu7MZ
-         yEeS7hgoI70+EI6Icxrdw34itEzs06m5E7xiug81FKRvIA+us8+G2xcapDEQpJVCrji9
-         Ex4w==
-X-Gm-Message-State: APjAAAVSFB+TZXZAaYp0LUEQBC4eDmv0glWGuhTFl98iO4uB4lHhnMOL
-        Hr1TqyhOFsuf16xEsfWsqj1ZshqHZFFkIjyDeNo=
-X-Google-Smtp-Source: APXvYqyyVxeJFmcXe1tajnKk3eMMkpvqF0BmL0LkUcQFBdssEWr5RsoTCo4nEn4dyUWhse8FJEHXLDSRlTe+EG37mX8=
-X-Received: by 2002:a05:6830:183:: with SMTP id q3mr23049815ota.204.1554802194207;
- Tue, 09 Apr 2019 02:29:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uz/VlezM1F/whqslASz2+vc6bdT5jIpSqLI+shePWjE=;
+        b=YmuK6Wwo3lLMgAm5suve0Os11V3vPF5N+y9lMrtPDQmiRsifLvEsTj47+0e8CW7Esq
+         ZJnlhzoY+iQovS5uFTb5Wr1vDSj5xD7ygB6s/8SXah7w+6OSF1hGRqAJjoJslIWHvLuz
+         Kv/fVd1XC0Oik7FjH2NKCn7R7cFoaggpPDyFL39A8+W2wydrK99ZRt6sed13csz4nimE
+         LEEp/MbMImt/PUt6kb3U1Krx+K4dXahy6lnZ8UOT4PJ9D6Ij8R9Yi5D0GKS9hZ7HBc/j
+         pR0EMskD0BYDo+joXAr97SV9q5c2Zq0x1xvUQxL6x8E/G4aj1KpXmXZx8kYbp0WEwf29
+         KhNw==
+X-Gm-Message-State: APjAAAUgipibidMjKgrz2zjNwrdtlvYVmyEBNXV3vohH70Gik3PVdZfq
+        FSATysrVh7pOh0KpwD0SO6o=
+X-Google-Smtp-Source: APXvYqx+5RfUIVQJZtIZpCy1Wv4ObL9JHfsp/q3PIDtl6+n0cuP5wiGWO5qhTCHp+Q6Uxkt4Xzu6bA==
+X-Received: by 2002:a17:902:b210:: with SMTP id t16mr30888324plr.84.1554802193226;
+        Tue, 09 Apr 2019 02:29:53 -0700 (PDT)
+Received: from bubble.grove.modra.org (15.193.233.220.static.exetel.com.au. [220.233.193.15])
+        by smtp.gmail.com with ESMTPSA id f7sm59853420pga.56.2019.04.09.02.29.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 02:29:52 -0700 (PDT)
+Received: by bubble.grove.modra.org (Postfix, from userid 1000)
+        id 940A580586; Tue,  9 Apr 2019 18:59:48 +0930 (ACST)
+Date:   Tue, 9 Apr 2019 18:59:48 +0930
+From:   Alan Modra <amodra@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Carlos O'Donell <codonell@redhat.com>,
+        Tulio Magno Quites Machado Filho <tuliom@ascii.art.br>,
+        Florian Weimer <fweimer@redhat.com>,
+        Michael Meissner <meissner@linux.ibm.com>,
+        Peter Bergner <bergner@vnet.ibm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, carlos <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and
+ thread creation (v7)
+Message-ID: <20190409092948.GA14424@bubble.grove.modra.org>
+References: <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
+ <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
+ <87lg0tosfz.fsf@concordia.ellerman.id.au>
+ <87pnq4zxyj.fsf@oldenburg2.str.redhat.com>
+ <ce6f9db3-bf85-7aec-4bae-998e6fd629e1@redhat.com>
+ <87y34o4xt3.fsf@oldenburg2.str.redhat.com>
+ <43f97ddb-c8df-27ea-9517-63252ebd3183@redhat.com>
+ <877ec4pam2.fsf@linux.ibm.com>
+ <ce9fbc66-5eb9-0fa9-99fa-5abfe00ddfc2@redhat.com>
+ <877ec3yffq.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190409090828.16282-1-bob.liu@oracle.com>
-In-Reply-To: <20190409090828.16282-1-bob.liu@oracle.com>
-From:   Jinpu Wang <jinpuwang@gmail.com>
-Date:   Tue, 9 Apr 2019 11:29:42 +0200
-Message-ID: <CAD9gYJKYu15b7ZuAvud-BzG5fRP=B33yPJuEq84nsN_8y3EC1Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH] blk-mq: fix hang caused by freeze/unfreeze sequence
-To:     Bob Liu <bob.liu@oracle.com>, r.peniaev@gmail.com
-Cc:     linux-block@vger.kernel.org, shirley.ma@oracle.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877ec3yffq.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bob Liu <bob.liu@oracle.com> =E4=BA=8E2019=E5=B9=B44=E6=9C=889=E6=97=A5=E5=
-=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8811:11=E5=86=99=E9=81=93=EF=BC=9A
->
-> This patch was proposed by Roman Pen[3] years ago.
-> Recently we hit a bug which is likely caused by the same reason,so rebase=
-d his
-> fix to v5.1 and resend.
-> Below is almost copied from that patch[3].
->
-> ------
-> Long time ago there was a similar fix proposed by Akinobu Mita[1],
-> but it seems that time everyone decided to fix this subtle race in
-> percpu-refcount and Tejun Heo[2] did an attempt (as I can see that
-> patchset was not applied).
->
-> The following is a description of a hang in blk_mq_freeze_queue_wait() -
-> same fix but a bug from another angle.
->
-> The hang happens on attempt to freeze a queue while another task does
-> queue unfreeze.
->
-> The root cause is an incorrect sequence of percpu_ref_reinit() and
-> percpu_ref_kill() and as a result those two can be swapped:
->
->  CPU#0               CPU#1
->  ----------------    -----------------
->  percpu_ref_kill()
->
->                      percpu_ref_kill() << atomic reference does
->  percpu_ref_reinit()                   << not guarantee the order
->
->                      blk_mq_freeze_queue_wait() << HANG HERE
->
->                      percpu_ref_reinit()
->
-> Firstly this wrong sequence raises two kernel warnings:
->
->   1st. WARNING at lib/percpu-recount.c:309
->        percpu_ref_kill_and_confirm called more than once
->
->   2nd. WARNING at lib/percpu-refcount.c:331
->
-> But the most unpleasant effect is a hang of a blk_mq_freeze_queue_wait(),
-> which waits for a zero of a q_usage_counter, which never happens
-> because percpu-ref was reinited (instead of being killed) and stays in
-> PERCPU state forever.
->
-> The simplified sequence above can be reproduced on shared tags, when
-> queue A is going to die meanwhile another queue B is in init state and
-> is trying to freeze the queue A, which shares the same tags set:
->
->  CPU#0                           CPU#1
->  ------------------------------- ------------------------------------
->  q1 =3D blk_mq_init_queue(shared_tags)
->
->                                 q2 =3D blk_mq_init_queue(shared_tags):
->                                   blk_mq_add_queue_tag_set(shared_tags):
->                                     blk_mq_update_tag_set_depth(shared_ta=
-gs):
->                                       blk_mq_freeze_queue(q1)
->  blk_cleanup_queue(q1)                 ...
->    blk_mq_freeze_queue(q1)   <<<->>>   blk_mq_unfreeze_queue(q1)
->
-> [1] Message id: 1443287365-4244-7-git-send-email-akinobu.mita@gmail.com
-> [2] Message id: 1443563240-29306-6-git-send-email-tj@kernel.org
-> [3] https://patchwork.kernel.org/patch/9268199/
->
-> Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
-> Signed-off-by: Bob Liu <bob.liu@oracle.com>
-> Cc: Akinobu Mita <akinobu.mita@gmail.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: linux-block@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
->
+On Tue, Apr 09, 2019 at 02:23:53PM +1000, Michael Ellerman wrote:
+> I'd much rather we use a trap with a specific immediate value. Otherwise
+> someone's going to waste time one day puzzling over why userspace is
+> doing mtmsr.
 
-Replaced Roman's email address.
+It's data.  We have other data in executable sections.  Anyone who
+wonders about odd disassembly just hasn't realized they are
+disassembling data.
 
-We at 1 & 1 IONOS (former ProfitBricks) have been carried this patch
-for some years,
-it has been running in production for some years too, would be good to
-see it in upstream :)
+> It would also complicate things if we ever wanted to emulate mtmsr.
 
-Thanks,
+No, because it won't be executed.  If I understand correctly, the only
+reason to choose an illegal, trap or privileged insn is to halt
+execution earlier rather than later when a program goes off in the
+weeds.
 
-Jack Wang
-Linux Kernel Developer @ 1 & 1 IONOS
+> If we want something that is a trap rather than a nop then use 0x0fe50553.
+> 
+> That's "compare the value in r5 with 0x553 and then trap unconditionally".
+> 
+> It shows up in objdump as:
+> 
+>     10000000:	53 05 e5 0f 	twui    r5,1363
+> 
+> 
+> The immediate can be anything, I chose that value to mimic the x86 value
+> Mathieu mentioned.
+> 
+> There's no reason that instruction would ever be generated because the
+> immediate value serves no purpose. So it satisfies the "very unlikely
+> to appear" criteria AFAICS.
+
+Yes, looks fine to me, except that in VLE mode (do we care?)
+".long 0x0fe50553" disassembles as
+   0:	0f e5       	se_cmphl r5,r30
+   2:	05 53       	se_mullw r3,r5
+No illegal/trap/privileged insn there.
+
+".long 0x0fe5000b" might be better to cover VLE.
+
+-- 
+Alan Modra
+Australia Development Lab, IBM
