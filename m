@@ -2,122 +2,100 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FA9C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D7BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C945F21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zPUCIEg5"
+	by mail.kernel.org (Postfix) with ESMTP id AD61B213F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 03:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfDIDaa (ORCPT
+        id S1727240AbfDIDbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 23:30:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39174 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfDIDaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 23:30:30 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x393T152151814;
-        Tue, 9 Apr 2019 03:30:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=yNAnix0vPb3Rl0k78u1G6bUYV+iub+YsxxG7ebwDs7U=;
- b=zPUCIEg5CUbDsP0wiNhIk8OvKl7JmuJp/okBnahAcSyFxQGyUIBX0mUXXvSDwxGePx48
- NrjyTdGtU6SokLBju1C5MHRO0FJXgs6UmehpqLkJwBelmrbkxGxMum3xPyNtznCJKNyK
- tsuyXYXsx+cmTxCu9OF5v546DaJIpch/WUPBPAU0Awd6uy7o5zpfnAy6J79W1BDCI29d
- wZxF0RYoFjH9WuwuJIQcM/3JVB+lqv5g3l++SgMFyFu8b5baxaJCrool/xQ0LfBpjJc5
- bG42V9v+I+cQdSbMNEUon2THP8ovxp9E6fz/8kazU/0MNxC81zFK+2hjaBsRWs5b615w Fw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2rphmeacg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 03:30:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x393TlYX158719;
-        Tue, 9 Apr 2019 03:30:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2rpj5aava2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 03:30:18 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x393UFQU025909;
-        Tue, 9 Apr 2019 03:30:16 GMT
-Received: from [192.168.1.222] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Apr 2019 20:30:15 -0700
-Subject: Re: [PATCH v2 0/2] A couple hugetlbfs fixes
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190328234704.27083-1-mike.kravetz@oracle.com>
- <20190408194815.77d4mftojhkrgbhv@linux-r8p5>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <ec2426bc-d817-f645-b868-9edb9b4c54ca@oracle.com>
-Date:   Mon, 8 Apr 2019 20:30:14 -0700
+        Mon, 8 Apr 2019 23:31:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46508 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbfDIDbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 23:31:51 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D269B308620E;
+        Tue,  9 Apr 2019 03:31:50 +0000 (UTC)
+Received: from [10.72.12.117] (ovpn-12-117.pek2.redhat.com [10.72.12.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E0901001E8E;
+        Tue,  9 Apr 2019 03:31:45 +0000 (UTC)
+Subject: Re: INFO: task hung in vhost_net_stop_vq
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        syzbot <syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        virtualization@lists.linux-foundation.org, weiyj.lk@gmail.com
+References: <0000000000004f8499057be95e1d@google.com>
+ <0000000000008ee87005847fc985@google.com>
+ <20190325100223-mutt-send-email-mst@kernel.org>
+ <df4f2cf6-8469-f894-8f45-7c48a6a1801f@redhat.com>
+ <CACT4Y+Z1s-Lx1UXHKj88kQoOcbiD8gwyuRU3F_+cceP3pzbbrw@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <858fcd87-071f-e484-7d2d-a7d9f8144f91@redhat.com>
+Date:   Tue, 9 Apr 2019 11:31:44 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190408194815.77d4mftojhkrgbhv@linux-r8p5>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CACT4Y+Z1s-Lx1UXHKj88kQoOcbiD8gwyuRU3F_+cceP3pzbbrw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=923
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904090022
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904090023
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 09 Apr 2019 03:31:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 12:48 PM, Davidlohr Bueso wrote:
-> On Thu, 28 Mar 2019, Mike Kravetz wrote:
-> 
->> - A BUG can be triggered (not easily) due to temporarily mapping a
->>  page before doing a COW.
-> 
-> But you actually _have_ seen it? Do you have the traces? I ask
-> not because of the patches perse, but because it would be nice
-> to have a real snipplet in the Changelog for patch 2.
 
-Yes, I actually saw this problem.  It happened while I was debugging and
-testing some patches for hugetlb migration.  The BUG I hit was in
-unaccount_page_cache_page(): VM_BUG_ON_PAGE(page_mapped(page), page).
+On 2019/3/26 下午6:28, Dmitry Vyukov wrote:
+> On Tue, Mar 26, 2019 at 11:17 AM Jason Wang<jasowang@redhat.com>  wrote:
+>> On 2019/3/25 下午10:02, Michael S. Tsirkin wrote:
+>>> Looks like more iotlb locking mess?
+>> Looking at the calltrace:
+>>
+>> [  221.743675] =============================================
+>> [  221.744297] [ INFO: possible recursive locking detected ]
+>> [  221.744944] 4.7.0+ #1 Not tainted
+>> [  221.745326] ---------------------------------------------
+>> [  221.746128] syz-executor1/6823 is trying to acquire lock:
+>> [  221.746737]  (&vq->mutex){+.+...}, at: [<ffffffff84484b70>] vhost_process_iotlb_msg+0xe0/0x9e0
+>> [  221.747789]
+>> [  221.747789] but task is already holding lock:
+>> [  221.748470]  (&vq->mutex){+.+...}, at: [<ffffffff84484b70>] vhost_process_iotlb_msg+0xe0/0x9e0
+>> [  221.749535]
+>> [  221.749535] other info that might help us debug this:
+>> [  221.750280]  Possible unsafe locking scenario:
+>> [  221.750280]
+>> [  221.750946]        CPU0
+>> [  221.751232]        ----
+>> [  221.751523]   lock(&vq->mutex);
+>> [  221.751922]   lock(&vq->mutex);
+>> [  221.752339]
+>> [  221.752339]  *** DEADLOCK ***
+>> [  221.752339]
+>>
+>> I could not think of a path that can hit this. And I could not reproduce with the reproducer in the link in net-next.
+> Looking at the bisection log, syzbot is able to reproduce this
+> super-reliably on multiple kernel revisions. Are you sure you are
+> using the right config/revision? What else can be in play? syzbot uses
+> VMs. The image is available.
+>
+>
 
-Stack trace was something like:
-unaccount_page_cache_page
-  __delete_from_page_cache
-    delete_from_page_cache
-      remove_huge_page
-        remove_inode_hugepages
-          hugetlbfs_punch_hole
-            hugetlbfs_fallocate
+Yes, looks like the reason is vhost accept zero size iova range which 
+lead a infinite loop when trying to translate iova. Will post a patch to 
+fix this.
 
-When I hit that, it took me a while to figure out how it could happen.
-i.e. How could a page be mapped at that point in remove_inode_hugepages?
-It checks page_mapped and we are holding the fault mutex.  With some
-additional debug code (strategic udelays) I could hit the issue on a
-somewhat regular basis and verified another thread was in the
-hugetlb_no_page/hugetlb_cow path for the same page at the same time.
+Thanks
 
-Unfortunately, I did not save the traces.  I am trying to recreate now.
-However, my test system was recently updated and it might take a little
-time to recreate.
--- 
-Mike Kravetz
