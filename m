@@ -6,25 +6,26 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C59EC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F195FC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAE620651
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E342133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfDIH5P (ORCPT
+        id S1726783AbfDIH5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:57:15 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:33275 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfDIH5O (ORCPT
+        Tue, 9 Apr 2019 03:57:25 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55621 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDIH5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:57:14 -0400
+        Tue, 9 Apr 2019 03:57:25 -0400
+X-Originating-IP: 90.88.30.125
 Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id D36E610001B;
-        Tue,  9 Apr 2019 07:57:09 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 09:57:09 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 025EA20011;
+        Tue,  9 Apr 2019 07:57:20 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 09:57:20 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Chen-Yu Tsai <wens@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -38,16 +39,16 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 1/6] clk: sunxi-ng: a83t: Add pll-video0 as parent of
- csi-mclk
-Message-ID: <20190409075709.mdh62rdpiqmcfjmc@flea>
+Subject: Re: [PATCH 2/6] dt-bindings: media: sun6i-csi: Add compatible string
+ for A83T variant
+Message-ID: <20190409075720.2wcb4vxgfrglurca@flea>
 References: <20190408165744.11672-1-wens@kernel.org>
- <20190408165744.11672-2-wens@kernel.org>
+ <20190408165744.11672-3-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ljfwd3xjzjevfhm6"
+        protocol="application/pgp-signature"; boundary="mxelptzuo73wdvyh"
 Content-Disposition: inline
-In-Reply-To: <20190408165744.11672-2-wens@kernel.org>
+In-Reply-To: <20190408165744.11672-3-wens@kernel.org>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,24 +56,24 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ljfwd3xjzjevfhm6
+--mxelptzuo73wdvyh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 09, 2019 at 12:57:39AM +0800, Chen-Yu Tsai wrote:
+On Tue, Apr 09, 2019 at 12:57:40AM +0800, Chen-Yu Tsai wrote:
 > From: Chen-Yu Tsai <wens@csie.org>
 >
-> Allwinner's BSP for the A83T lists pll-video0 as the first parent to
-> csi-mclk with index 0. This parent is not listed in the datasheet, but
-> actually works, and makes more sense considering the index is the
-> default value out of reset.
+> The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> lingo), which is similar to the one found on the A64 and H3. The only
+> difference seems to be that support of MIPI CSI through a connected
+> MIPI CSI-2 bridge.
 >
-> Add pll-video0 as a parent to csi-mclk with index 0.
+> Add a compatible string for this variant.
 >
-> Fixes: 05359be1176b ("clk: sunxi-ng: Add driver for A83T CCU")
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Applied, thanks!
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
 Maxime
 
 --
@@ -80,15 +81,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---ljfwd3xjzjevfhm6
+--mxelptzuo73wdvyh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxQVQAKCRDj7w1vZxhR
-xW9UAP9bCO7liBbWiegGWBL/zx+00RNayMeVqwJyb5qxd4gVYQD+O39nkEH/FRKA
-iV3T3zEzgmfYwY3zYDTskH6Zyg6Kzgg=
-=URzt
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxQYAAKCRDj7w1vZxhR
+xS1uAQDasKM/U/lQCplMzhCDbaO7SOT1yQz/VJcAQ3s7pFTz8AD/cQf2EzI1rRkZ
+dYubrUhQxDtX1G/+NJQqJVgGzCnNQAk=
+=V48v
 -----END PGP SIGNATURE-----
 
---ljfwd3xjzjevfhm6--
+--mxelptzuo73wdvyh--
