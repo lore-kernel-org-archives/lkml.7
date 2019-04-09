@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BBBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35F7C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A5C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A722E2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyQmYhPw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="poaYvC8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfDIP4y (ORCPT
+        id S1726829AbfDIP47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:56:54 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34691 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfDIP4x (ORCPT
+        Tue, 9 Apr 2019 11:56:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45991 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfDIP44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:56:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so9657141plt.1;
-        Tue, 09 Apr 2019 08:56:52 -0700 (PDT)
+        Tue, 9 Apr 2019 11:56:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y3so9523450pgk.12;
+        Tue, 09 Apr 2019 08:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=M5HFAKWUCr5U5uYHe5yyobnPaLvGutqLb7zNlZCPKwM=;
-        b=gyQmYhPwEDG0ycbcusRQvumZALLRNKitRCHTbO1qYrZJDax/zijcxQZ2ePTyZ9i++x
-         KjH2RGkPAJ6lrNTT6yb8oRK1YfbfFEMlOwrJFWIskalNBUv6exbpAqGjoJm3TZwYtley
-         fZJo9a2uvqMaZJwebeJIaTjoB6W37ERtIss0VDv3nohJdOkp+VUFcMdadrF1sY+A2syN
-         yKd6oCTkWsJJJ/1mzCxuOzi69QI52PAFKNaHgIYCZeGSOtKsVo0LKXfe7WR0H/g9RgUx
-         XkYk10775fxw+xOTQmbxsf3ao5rm1epqJBHTzEC75Ukg6hx29k2fVuGqVFUXklw0YRpp
-         wcYw==
+        bh=xbDzPgrG7sGMDqtDgEqDecIChfX7yasg95T4JIMF8ig=;
+        b=poaYvC8y90H6Ywp90NpRkMEj/1Kvus9KfcAsGKrMD2jGK0B6HREX3eDgybEBhdRJFM
+         qtwmifuAVpXUNL+BEI3rEeCp2hvmGkdWKpbWji39VGwexowAGwy8BiL0CR3DfLYi7ElD
+         HUrgwDEuxMrFC8b/+bhFf6VfZrCLVm5q02TTilbu/ozsrylbNHFuSWZ9wOeYsripY3Vt
+         9kWPHwE+fiK7qBNMxPdVVFtcX68vmb1nAK3BvAbGT2wZAtizPqBdPSog/yCnmtmYffmO
+         lx/bQ/+nsRtlN8NB/VGTFLdOK/sPY/PT7RvB1/gSOujvycPVVVvBhB/jHv+EfLOVkgkI
+         fBOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=M5HFAKWUCr5U5uYHe5yyobnPaLvGutqLb7zNlZCPKwM=;
-        b=l0+sfhWT1+Oh5HO5kTDdGqOfqMr+JoAcS3a6N1w4H+NaQUk8zYAVQK5VL+wkIXLpQF
-         zQgyBFBSAHU2VJfYyVO4QEaCryjX2F+DfXz8qXovca3rxo+JuhJYv4pZ2oRcrCTamC6K
-         HJaKDegvkFnDTN2oZszKKVn2Ktg2TmRejxhwGWa9qotdrRI1rrfIQEMYNJuyRw/xZy+A
-         PkvAW+L/ghZEeDuLrtPTateXTPcM7mCTbX5SuAcxQZ9IDfKSycekRttlfJoTIeqWhxCf
-         mo5xC0jYOSWRXI3Hbf8MzHjMrFAmEB74vTe0S6DlkpuQ0zaOMzxBRLVH29vqb6Zd6YVZ
-         wMbQ==
-X-Gm-Message-State: APjAAAXxipUH5y6aEFC6uci/7hGOvnA1a/vROth8HgV46JK+cwY90idz
-        2U1D7ORWrU8NqohwUf+6igPmYKSt
-X-Google-Smtp-Source: APXvYqx9aeSrrpNGAv8AFC/Ritsby4txL0TbXoHOcufDOAFYQG25tRRThOpKC6EFr3b4iw4H2xuLRw==
-X-Received: by 2002:a17:902:a506:: with SMTP id s6mr36630652plq.164.1554825412030;
-        Tue, 09 Apr 2019 08:56:52 -0700 (PDT)
+        bh=xbDzPgrG7sGMDqtDgEqDecIChfX7yasg95T4JIMF8ig=;
+        b=E9BYKJlQ4iVSlwv35RzV4dqsXcHRPqpE6fuy7U0jmhw5chtTYXUyOghxFmtAsilhXZ
+         EmSApEExKuRHB+KabvWG8JSwwgEnUCoSn7+K179VbcmXUFr8/mVBrlC23Yg2k7SKy9Bt
+         tawLxfBwhoRk1sdh6scAiMpX+zuC4uEmAbhCCuiRo6whCUK6wNanKYYIVBfszGvH6NPK
+         6F2chEx15YUb/VXBEmZKFV48G1Iz17PTBOE2gzizlCirE6mZNmfEsHnXlTy6A5Z+MDW5
+         6Gsp5+znvvnLZ6hWCTOsGuLefHLO3G4Z/WvBmJyt2uIg5fFdOPwbv8H6K+CF34gpEIJc
+         Jywg==
+X-Gm-Message-State: APjAAAXJI6lXBHmfBYaY4GFXHYCOJtIldUmXWFTu7JWUmzLjnR6prcVg
+        zbHpZy4KV1bIF308zvsBej8=
+X-Google-Smtp-Source: APXvYqyLHZ+XWyB92EqtFDRHk3ioHGyOdKtlW7F6XBfi+Vwk/b2d+Ftokg662lL1KWo1GVhbyBmUKw==
+X-Received: by 2002:a62:69c2:: with SMTP id e185mr37248078pfc.119.1554825415595;
+        Tue, 09 Apr 2019 08:56:55 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b72sm70383560pga.86.2019.04.09.08.56.47
+        by smtp.gmail.com with ESMTPSA id b72sm70383560pga.86.2019.04.09.08.56.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 08:56:51 -0700 (PDT)
+        Tue, 09 Apr 2019 08:56:54 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 03/12] Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
-Date:   Tue,  9 Apr 2019 23:56:17 +0800
-Message-Id: <20190409155626.6049-4-changbin.du@gmail.com>
+Subject: [PATCH v3 04/12] Documentation: PCI: convert pci-iov-howto.txt to reST
+Date:   Tue,  9 Apr 2019 23:56:18 +0800
+Message-Id: <20190409155626.6049-5-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190409155626.6049-1-changbin.du@gmail.com>
 References: <20190409155626.6049-1-changbin.du@gmail.com>
@@ -81,258 +81,251 @@ add it to Sphinx TOC tree. No essential content change.
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- .../{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst}  | 140 ++++++++++--------
  Documentation/PCI/index.rst                   |   1 +
- 2 files changed, 82 insertions(+), 59 deletions(-)
- rename Documentation/PCI/{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst} (70%)
+ .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++++++++--------
+ 2 files changed, 94 insertions(+), 68 deletions(-)
+ rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
 
-diff --git a/Documentation/PCI/PCIEBUS-HOWTO.txt b/Documentation/PCI/PCIEBUS-HOWTO.rst
-similarity index 70%
-rename from Documentation/PCI/PCIEBUS-HOWTO.txt
-rename to Documentation/PCI/PCIEBUS-HOWTO.rst
-index 15f0bb3b5045..f882ff62c51f 100644
---- a/Documentation/PCI/PCIEBUS-HOWTO.txt
-+++ b/Documentation/PCI/PCIEBUS-HOWTO.rst
-@@ -1,16 +1,23 @@
--		The PCI Express Port Bus Driver Guide HOWTO
--	Tom L Nguyen tom.l.nguyen@intel.com
--			11/03/2004
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index 452723318405..e1c19962a7f8 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -10,3 +10,4 @@ Linux PCI Bus Subsystem
+ 
+    pci
+    PCIEBUS-HOWTO
++   pci-iov-howto
+diff --git a/Documentation/PCI/pci-iov-howto.txt b/Documentation/PCI/pci-iov-howto.rst
+similarity index 63%
+rename from Documentation/PCI/pci-iov-howto.txt
+rename to Documentation/PCI/pci-iov-howto.rst
+index d2a84151e99c..b9fd003206f1 100644
+--- a/Documentation/PCI/pci-iov-howto.txt
++++ b/Documentation/PCI/pci-iov-howto.rst
+@@ -1,14 +1,19 @@
+-		PCI Express I/O Virtualization Howto
+-		Copyright (C) 2009 Intel Corporation
+-		    Yu Zhao <yu.zhao@intel.com>
 +.. SPDX-License-Identifier: GPL-2.0
 +.. include:: <isonum.txt>
  
--1. About this guide
-+===========================================
-+The PCI Express Port Bus Driver Guide HOWTO
-+===========================================
+-		Update: November 2012
+-			-- sysfs-based SRIOV enable-/disable-ment
+-		Donald Dutile <ddutile@redhat.com>
++====================================
++PCI Express I/O Virtualization Howto
++====================================
+ 
+-1. Overview
++:Copyright: |copy| 2009 Intel Corporation
++:Authors: - Yu Zhao <yu.zhao@intel.com>
++          - Donald Dutile <ddutile@redhat.com>
+ 
+-1.1 What is SR-IOV
++Overview
++========
 +
-+:Author: Tom L Nguyen tom.l.nguyen@intel.com 11/03/2004
-+:Copyright: |copy| 2004 Intel Corporation
++What is SR-IOV
++--------------
+ 
+ Single Root I/O Virtualization (SR-IOV) is a PCI Express Extended
+ capability which makes one physical device appear as multiple virtual
+@@ -23,9 +28,11 @@ Memory Space, which is used to map its register set. VF device driver
+ operates on the register set so it can be functional and appear as a
+ real existing PCI device.
+ 
+-2. User Guide
++User Guide
++==========
+ 
+-2.1 How can I enable SR-IOV capability
++How can I enable SR-IOV capability
++----------------------------------
+ 
+ Multiple methods are available for SR-IOV enablement.
+ In the first method, the device driver (PF driver) will control the
+@@ -43,105 +50,123 @@ checks, e.g., check numvfs == 0 if enabling VFs, ensure
+ numvfs <= totalvfs.
+ The second method is the recommended method for new/future VF devices.
+ 
+-2.2 How can I use the Virtual Functions
++How can I use the Virtual Functions
++-----------------------------------
+ 
+ The VF is treated as hot-plugged PCI devices in the kernel, so they
+ should be able to work in the same way as real PCI devices. The VF
+ requires device driver that is same as a normal PCI device's.
+ 
+-3. Developer Guide
++Developer Guide
++===============
+ 
+-3.1 SR-IOV API
++SR-IOV API
++----------
+ 
+ To enable SR-IOV capability:
+-(a) For the first method, in the driver:
 +
-+About this guide
-+================
++(a) For the first method, in the driver::
++
+ 	int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
+-	'nr_virtfn' is number of VFs to be enabled.
+-(b) For the second method, from sysfs:
++
++'nr_virtfn' is number of VFs to be enabled.
++
++(b) For the second method, from sysfs::
++
+ 	echo 'nr_virtfn' > \
+         /sys/bus/pci/devices/<DOMAIN:BUS:DEVICE.FUNCTION>/sriov_numvfs
  
- This guide describes the basics of the PCI Express Port Bus driver
- and provides information on how to enable the service drivers to
- register/unregister with the PCI Express Port Bus Driver.
+ To disable SR-IOV capability:
+-(a) For the first method, in the driver:
++
++(a) For the first method, in the driver::
++
+ 	void pci_disable_sriov(struct pci_dev *dev);
+-(b) For the second method, from sysfs:
++
++(b) For the second method, from sysfs::
++
+ 	echo  0 > \
+         /sys/bus/pci/devices/<DOMAIN:BUS:DEVICE.FUNCTION>/sriov_numvfs
  
--2. Copyright 2004 Intel Corporation
+ To enable auto probing VFs by a compatible driver on the host, run
+ command below before enabling SR-IOV capabilities. This is the
+ default behavior.
++::
++
+ 	echo 1 > \
+         /sys/bus/pci/devices/<DOMAIN:BUS:DEVICE.FUNCTION>/sriov_drivers_autoprobe
  
--3. What is the PCI Express Port Bus Driver
-+What is the PCI Express Port Bus Driver
-+=======================================
+ To disable auto probing VFs by a compatible driver on the host, run
+ command below before enabling SR-IOV capabilities. Updating this
+ entry will not affect VFs which are already probed.
++::
++
+ 	echo  0 > \
+         /sys/bus/pci/devices/<DOMAIN:BUS:DEVICE.FUNCTION>/sriov_drivers_autoprobe
  
- A PCI Express Port is a logical PCI-PCI Bridge structure. There
- are two types of PCI Express Port: the Root Port and the Switch
-@@ -30,7 +37,8 @@ support (AER), and virtual channel support (VC). These services may
- be handled by a single complex driver or be individually distributed
- and handled by corresponding service drivers.
+-3.2 Usage example
++Usage example
++-------------
  
--4. Why use the PCI Express Port Bus Driver?
-+Why use the PCI Express Port Bus Driver?
-+========================================
- 
- In existing Linux kernels, the Linux Device Driver Model allows a
- physical device to be handled by only a single driver. The PCI
-@@ -51,28 +59,31 @@ PCI Express Ports and distributes all provided service requests
- to the corresponding service drivers as required. Some key
- advantages of using the PCI Express Port Bus driver are listed below:
- 
--	- Allow multiple service drivers to run simultaneously on
--	  a PCI-PCI Bridge Port device.
-+  - Allow multiple service drivers to run simultaneously on
-+    a PCI-PCI Bridge Port device.
- 
--	- Allow service drivers implemented in an independent
--	  staged approach.
-+  - Allow service drivers implemented in an independent
-+    staged approach.
- 
--	- Allow one service driver to run on multiple PCI-PCI Bridge
--	  Port devices.
-+  - Allow one service driver to run on multiple PCI-PCI Bridge
-+    Port devices.
- 
--	- Manage and distribute resources of a PCI-PCI Bridge Port
--	  device to requested service drivers.
-+  - Manage and distribute resources of a PCI-PCI Bridge Port
-+    device to requested service drivers.
- 
--5. Configuring the PCI Express Port Bus Driver vs. Service Drivers
-+Configuring the PCI Express Port Bus Driver vs. Service Drivers
-+===============================================================
- 
--5.1 Including the PCI Express Port Bus Driver Support into the Kernel
-+Including the PCI Express Port Bus Driver Support into the Kernel
-+-----------------------------------------------------------------
- 
- Including the PCI Express Port Bus driver depends on whether the PCI
- Express support is included in the kernel config. The kernel will
- automatically include the PCI Express Port Bus driver as a kernel
- driver when the PCI Express support is enabled in the kernel.
- 
--5.2 Enabling Service Driver Support
-+Enabling Service Driver Support
-+-------------------------------
- 
- PCI device drivers are implemented based on Linux Device Driver Model.
- All service drivers are PCI device drivers. As discussed above, it is
-@@ -89,9 +100,11 @@ header file /include/linux/pcieport_if.h, before calling these APIs.
- Failure to do so will result an identity mismatch, which prevents
- the PCI Express Port Bus driver from loading a service driver.
- 
--5.2.1 pcie_port_service_register
-+pcie_port_service_register
-+~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Following piece of code illustrates the usage of the SR-IOV API.
 +::
  
--int pcie_port_service_register(struct pcie_port_service_driver *new)
-+  int pcie_port_service_register(struct pcie_port_service_driver *new)
- 
- This API replaces the Linux Driver Model's pci_register_driver API. A
- service driver should always calls pcie_port_service_register at
-@@ -99,69 +112,76 @@ module init. Note that after service driver being loaded, calls
- such as pci_enable_device(dev) and pci_set_master(dev) are no longer
- necessary since these calls are executed by the PCI Port Bus driver.
- 
--5.2.2 pcie_port_service_unregister
-+pcie_port_service_unregister
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+::
- 
--void pcie_port_service_unregister(struct pcie_port_service_driver *new)
-+  void pcie_port_service_unregister(struct pcie_port_service_driver *new)
- 
- pcie_port_service_unregister replaces the Linux Driver Model's
- pci_unregister_driver. It's always called by service driver when a
- module exits.
- 
--5.2.3 Sample Code
-+Sample Code
-+~~~~~~~~~~~
- 
- Below is sample service driver code to initialize the port service
- driver data structure.
-+::
- 
--static struct pcie_port_service_id service_id[] = { {
--	.vendor = PCI_ANY_ID,
--	.device = PCI_ANY_ID,
--	.port_type = PCIE_RC_PORT,
--	.service_type = PCIE_PORT_SERVICE_AER,
--	}, { /* end: all zeroes */ }
--};
-+  static struct pcie_port_service_id service_id[] = { {
-+    .vendor = PCI_ANY_ID,
-+    .device = PCI_ANY_ID,
-+    .port_type = PCIE_RC_PORT,
-+    .service_type = PCIE_PORT_SERVICE_AER,
-+    }, { /* end: all zeroes */ }
-+  };
- 
--static struct pcie_port_service_driver root_aerdrv = {
--	.name		= (char *)device_name,
--	.id_table	= &service_id[0],
-+  static struct pcie_port_service_driver root_aerdrv = {
-+    .name		= (char *)device_name,
-+    .id_table	= &service_id[0],
- 
--	.probe		= aerdrv_load,
--	.remove		= aerdrv_unload,
-+    .probe		= aerdrv_load,
-+    .remove		= aerdrv_unload,
- 
--	.suspend	= aerdrv_suspend,
--	.resume		= aerdrv_resume,
--};
-+    .suspend	= aerdrv_suspend,
-+    .resume		= aerdrv_resume,
-+  };
- 
- Below is a sample code for registering/unregistering a service
- driver.
-+::
- 
--static int __init aerdrv_service_init(void)
+-static int dev_probe(struct pci_dev *dev, const struct pci_device_id *id)
 -{
--	int retval = 0;
-+  static int __init aerdrv_service_init(void)
-+  {
-+    int retval = 0;
+-	pci_enable_sriov(dev, NR_VIRTFN);
++	static int dev_probe(struct pci_dev *dev, const struct pci_device_id *id)
++	{
++		pci_enable_sriov(dev, NR_VIRTFN);
  
--	retval = pcie_port_service_register(&root_aerdrv);
--	if (!retval) {
--		/*
--		 * FIX ME
--		 */
--	}
--	return retval;
+-	...
+-
+-	return 0;
 -}
-+    retval = pcie_port_service_register(&root_aerdrv);
-+    if (!retval) {
-+      /*
-+      * FIX ME
-+      */
-+    }
-+    return retval;
-+  }
++		...
  
--static void __exit aerdrv_service_exit(void)
+-static void dev_remove(struct pci_dev *dev)
 -{
--	pcie_port_service_unregister(&root_aerdrv);
+-	pci_disable_sriov(dev);
++		return 0;
++	}
+ 
+-	...
 -}
-+  static void __exit aerdrv_service_exit(void)
-+  {
-+    pcie_port_service_unregister(&root_aerdrv);
-+  }
++	static void dev_remove(struct pci_dev *dev)
++	{
++		pci_disable_sriov(dev);
  
--module_init(aerdrv_service_init);
--module_exit(aerdrv_service_exit);
-+  module_init(aerdrv_service_init);
-+  module_exit(aerdrv_service_exit);
+-static int dev_suspend(struct pci_dev *dev, pm_message_t state)
+-{
+-	...
++		...
++	}
  
--6. Possible Resource Conflicts
-+Possible Resource Conflicts
-+===========================
+-	return 0;
+-}
++	static int dev_suspend(struct pci_dev *dev, pm_message_t state)
++	{
++		...
  
- Since all service drivers of a PCI-PCI Bridge Port device are
- allowed to run simultaneously, below lists a few of possible resource
- conflicts with proposed solutions.
+-static int dev_resume(struct pci_dev *dev)
+-{
+-	...
++		return 0;
++	}
  
--6.1 MSI and MSI-X Vector Resource
-+MSI and MSI-X Vector Resource
-+-----------------------------
+-	return 0;
+-}
++	static int dev_resume(struct pci_dev *dev)
++	{
++		...
  
- Once MSI or MSI-X interrupts are enabled on a device, it stays in this
- mode until they are disabled again.  Since service drivers of the same
-@@ -179,7 +199,8 @@ driver. Service drivers should use (struct pcie_device*)dev->irq to
- call request_irq/free_irq. In addition, the interrupt mode is stored
- in the field interrupt_mode of struct pcie_device.
+-static void dev_shutdown(struct pci_dev *dev)
+-{
+-	...
+-}
++		return 0;
++	}
  
--6.3 PCI Memory/IO Mapped Regions
-+PCI Memory/IO Mapped Regions
-+----------------------------
- 
- Service drivers for PCI Express Power Management (PME), Advanced
- Error Reporting (AER), Hot-Plug (HP) and Virtual Channel (VC) access
-@@ -188,7 +209,8 @@ registers accessed are independent of each other. This patch assumes
- that all service drivers will be well behaved and not overwrite
- other service driver's configuration settings.
- 
--6.4 PCI Config Registers
-+PCI Config Registers
-+--------------------
- 
- Each service driver runs its PCI config operations on its own
- capability structure except the PCI Express capability structure, in
-diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-index 7babf43709b0..452723318405 100644
---- a/Documentation/PCI/index.rst
-+++ b/Documentation/PCI/index.rst
-@@ -9,3 +9,4 @@ Linux PCI Bus Subsystem
-    :numbered:
- 
-    pci
-+   PCIEBUS-HOWTO
+-static int dev_sriov_configure(struct pci_dev *dev, int numvfs)
+-{
+-	if (numvfs > 0) {
+-		...
+-		pci_enable_sriov(dev, numvfs);
++	static void dev_shutdown(struct pci_dev *dev)
++	{
+ 		...
+-		return numvfs;
+ 	}
+-	if (numvfs == 0) {
+-		....
+-		pci_disable_sriov(dev);
+-		...
+-		return 0;
++
++	static int dev_sriov_configure(struct pci_dev *dev, int numvfs)
++	{
++		if (numvfs > 0) {
++			...
++			pci_enable_sriov(dev, numvfs);
++			...
++			return numvfs;
++		}
++		if (numvfs == 0) {
++			....
++			pci_disable_sriov(dev);
++			...
++			return 0;
++		}
+ 	}
+-}
+-
+-static struct pci_driver dev_driver = {
+-	.name =		"SR-IOV Physical Function driver",
+-	.id_table =	dev_id_table,
+-	.probe =	dev_probe,
+-	.remove =	dev_remove,
+-	.suspend =	dev_suspend,
+-	.resume =	dev_resume,
+-	.shutdown =	dev_shutdown,
+-	.sriov_configure = dev_sriov_configure,
+-};
++
++	static struct pci_driver dev_driver = {
++		.name =		"SR-IOV Physical Function driver",
++		.id_table =	dev_id_table,
++		.probe =	dev_probe,
++		.remove =	dev_remove,
++		.suspend =	dev_suspend,
++		.resume =	dev_resume,
++		.shutdown =	dev_shutdown,
++		.sriov_configure = dev_sriov_configure,
++	};
 -- 
 2.20.1
 
