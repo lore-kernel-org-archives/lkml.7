@@ -3,36 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2E0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3C1C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8654B2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D65B2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfDINxu (ORCPT
+        id S1726678AbfDINxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:53:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38516 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbfDINxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:53:45 -0400
+        Tue, 9 Apr 2019 09:53:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:38528 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbfDINxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:53:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7CE6A78;
-        Tue,  9 Apr 2019 06:53:44 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 427E9A78;
+        Tue,  9 Apr 2019 06:53:49 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B75F3F68F;
-        Tue,  9 Apr 2019 06:53:43 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC6E53F68F;
+        Tue,  9 Apr 2019 06:53:47 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, julien.thierry@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC 4/6] arm64: assembler: Add macro to annotate asm function having non standard stack-frame.
-Date:   Tue,  9 Apr 2019 14:52:41 +0100
-Message-Id: <20190409135243.12424-5-raphael.gault@arm.com>
+Subject: [RFC 5/6] arm64: sleep: Add stack frame setup for __cpu_supsend_enter
+Date:   Tue,  9 Apr 2019 14:52:42 +0100
+Message-Id: <20190409135243.12424-6-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190409135243.12424-1-raphael.gault@arm.com>
 References: <20190409135243.12424-1-raphael.gault@arm.com>
@@ -41,38 +41,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Annotate cpu_resume and _cpu_resume to silence objtool warning
+about non-standard stack frame.
+
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- arch/arm64/include/asm/assembler.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/kernel/sleep.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 4feb6119c3c9..636a07a7eb76 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -748,4 +748,22 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
- .Lyield_out_\@ :
- 	.endm
- 
+diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+index 3e53ffa07994..eb434525fe82 100644
+--- a/arch/arm64/kernel/sleep.S
++++ b/arch/arm64/kernel/sleep.S
+@@ -90,6 +90,7 @@ ENTRY(__cpu_suspend_enter)
+ 	str	x0, [x1]
+ 	add	x0, x0, #SLEEP_STACK_DATA_SYSTEM_REGS
+ 	stp	x29, lr, [sp, #-16]!
++	mov	x29, sp
+ 	bl	cpu_do_suspend
+ 	ldp	x29, lr, [sp], #16
+ 	mov	x0, #1
+@@ -146,3 +147,6 @@ ENTRY(_cpu_resume)
+ 	mov	x0, #0
+ 	ret
+ ENDPROC(_cpu_resume)
 +
-+#ifdef	CONFIG_STACK_VALIDATION
-+	/*
-+	 * This macro is the arm64 assembler equivalent of the
-+	 * macro STACK_FRAME_NON_STANDARD define at
-+	 * ~/include/linux/frame.h
-+	 */
-+	.macro	asm_stack_frame_non_standard	func
-+	.pushsection ".discard.func_stack_frame_non_standard"
-+	.8byte	\func
-+	.popsection
-+	.endm
-+#else
-+	.macro	asm_stack_frame_non_standard	func
-+	.endm
-+#endif
-+
-+
- #endif	/* __ASM_ASSEMBLER_H */
++	asm_stack_frame_non_standard cpu_resume
++	asm_stack_frame_non_standard _cpu_resume
 -- 
 2.17.1
 
