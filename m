@@ -2,114 +2,159 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B65C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA47AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44AE2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3RWtpBy"
+	by mail.kernel.org (Postfix) with ESMTP id 90D362084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDIOa5 (ORCPT
+        id S1726578AbfDIOgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:30:57 -0400
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:46109 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfDIOa5 (ORCPT
+        Tue, 9 Apr 2019 10:36:03 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:34408 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfDIOgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:30:57 -0400
-Received: by mail-pf1-f172.google.com with SMTP id 9so9796412pfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v58eMpfsbiEIl9l4zzEufgNsVEjnb59XTH7GyJk9IOs=;
-        b=C3RWtpByHtpPFSYe0sLTPnvvrnMOPvTbKwBWj+qHmmjlhgDES+r5KR9aDKmqKqCWeJ
-         pHydW9SBZfKbe67XlyqjvqBRize5Nt5efTOOAJUwLonGNhz6Zf+9tUE1uYDFpAyQuSrP
-         LZW8yQjOtLwjq4Fbo2sGllOlMSN3Wd7Vo5ga0boLcxX3lUpbxnGlP5YLC6RfT8+E0DUk
-         O3HefkAETo28n/BNnqHBXSVn8h8IacGnmQe8u7m90avfz3fSWvSPu1LrvqPkrNSAFXQ9
-         3nk9GO1yW1OvSKHKUwMf1+NPQSgIr55Tuk22q4iQoahFH2r5xY+zhzbSq9G5NYDKp0kd
-         NOmQ==
+        Tue, 9 Apr 2019 10:36:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id y13so14165959iol.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:36:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v58eMpfsbiEIl9l4zzEufgNsVEjnb59XTH7GyJk9IOs=;
-        b=nLjOv+uS2NSAg1hXAyroVrr6Wx6o6NW14wV9LgRcnKBo348sWpV6987PEDVz9t2yhz
-         yoUpnj4GcMvwh20lMywLHLkJWyR6zAbrSrbicquNU0dtQszw9jkz+/Jp0g1KgSRSzxg9
-         HD06yWZr3sm8ZNQrAB/EQ3uNbfz6AAK0ZTd1q4w6RQvN4a7GHOdYMCuW8aWs3mgFLu98
-         gPxVVhGGkYipFZ7E1sZv5q/AkB0iLGdQcMgh0876mS82UV9YjkUhYQHb+Z+VcxUKNktQ
-         e4B0OgTdhIPxw+jfb6L2ywOVRkKSNV7rQWO4SYtdnxljBjKkVcQzHciE6Zbo7/7L+WeK
-         rhBg==
-X-Gm-Message-State: APjAAAXZ/gPoemVwoxQVoKL+X5k0N+bjL8td9H1LSJvVmfWgsyzmGw3k
-        nRtUhdxQnAuCh61GqkQQRuU=
-X-Google-Smtp-Source: APXvYqxvNbk3RY0sjC9xAFiUP6EE6HeshGcGfwUQEMquPb1kHVWV40vIHakXttXtl+quo+g1Q5EktA==
-X-Received: by 2002:a63:6988:: with SMTP id e130mr18607721pgc.150.1554820255577;
-        Tue, 09 Apr 2019 07:30:55 -0700 (PDT)
-Received: from [10.230.28.107] ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id g64sm75692364pfg.13.2019.04.09.07.30.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 07:30:54 -0700 (PDT)
-Subject: Re: [PATCH] perf vendor events arm64: Add Cortex-A72 events
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190407213422.19059-1-f.fainelli@gmail.com>
- <20190408164733.GC7872@fuggles.cambridge.arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <7771bb01-30a1-4b52-b887-1d6651085c85@gmail.com>
-Date:   Tue, 9 Apr 2019 07:30:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=mEQkGT7iJSk6abWCfz2qxrwMGOPOmG8LOxSSomFQ5oI=;
+        b=VrUghqDGihLkllizszivk1tjMRypjaaG2txsndoaVSLSxztVL6I8HypgZ2zSGScJt6
+         9IDDhH+HPCb9oiWoYRxjJ5y7YWbcfYNJrSYiAGb3iNaILCXi70L3trJP+QaXhzP2b2Rp
+         GcPkWz5blifnkTazEKWna6bayQKPxeNMFsshcVfQwjReNr2vWm43TVoppgG5ZsqDxHP/
+         fHZjRc8AjdPgUWUA+YYk4a5B3/LUwsPlkdi1og3td9LSkIf62DwJnwRltYNvIcDopnlK
+         gCG92ErUNHwn5js/R3b5fn+IoslpHJ5rqE+0SX4Tf2VFIrfkpoegQo/jyO8BXC1PZNeY
+         QoXQ==
+X-Gm-Message-State: APjAAAWJiyHKRv1vVxl+8EXaekeW1DdMbpjnx1Z0CdO0z9/GvdM1eqPb
+        GBM5yNhTonIjeGNSkXWqDnyJCI4wiYYmMaEzebvuhFUFss5f
+X-Google-Smtp-Source: APXvYqzDhvZKKItNzLO27hTXEzJtA1bL8CFh1mjrn1zPXEcBfvEbQ2R0MTxBiM9CKviHxHbM4SkBLe2LdSW11ZFiSD9O5u/Y6rHH
 MIME-Version: 1.0
-In-Reply-To: <20190408164733.GC7872@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5d:899a:: with SMTP id m26mr6128245iol.5.1554820560752;
+ Tue, 09 Apr 2019 07:36:00 -0700 (PDT)
+Date:   Tue, 09 Apr 2019 07:36:00 -0700
+In-Reply-To: <00000000000051e9c2057d31a563@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000036a4a9058619dff3@google.com>
+Subject: Re: kernel BUG at fs/inode.c:LINE!
+From:   syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, amir73il@gmail.com, dvyukov@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        penguin-kernel@I-love.SAKURA.ne.jp, raven@themaw.net,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Bisection is inconclusive: the first bad commit could be any of:
 
+cd4f2a66 lib/genalloc.c: fix allocation of aligned buffer from non-aligned  
+chunk
+df3f18d3 fls: change parameter to unsigned int
+9067c8d5 lib/find_bit_benchmark.c: align test_find_next_and_bit with others
+c2824829 include/linux/printk.h: drop silly "static inline asmlinkage" from  
+dump_stack()
+26e88a47 checkpatch: warn on const char foo[] = "bar"; declarations
+e98eceb8 drivers/dma-buf/udmabuf.c: convert to use vm_fault_t
+5b6bf71d build_bug.h: remove most of dummy BUILD_BUG_ON stubs for Sparse
+f34c9474 fs/epoll: remove max_nests argument from ep_call_nested()
+56f6c16e build_bug.h: remove negative-array fallback for BUILD_BUG_ON()
+cd2f11e6 fs/epoll: simplify ep_send_events_proc() ready-list loop
+74a37b90 Documentation/process/coding-style.rst: don't use "extern" with  
+function prototypes
+ab1909a8 fs/epoll: drop ovflist branch prediction
+499aeb57 proc/sysctl: fix return error for proc_doulongvec_minmax()
+b7fa8017 fs/epoll: robustify ep->mtx held checks
+d877fd09 fs/proc/base.c: slightly faster /proc/*/limits
+f2c37862 fs/epoll: reduce the scope of wq lock in epoll_wait()
+860705c8 fs-epoll-reduce-the-scope-of-wq-lock-in-epoll_wait-fix
+c62975fb fs/proc/inode.c: delete unnecessary variable in proc_alloc_inode()
+9460069d fs/proc/util.c: include fs/proc/internal.h for name_to_int()
+ea5f967a fs/epoll: avoid barrier after an epoll_wait(2) timeout
+b61909d2 fs-epoll-avoid-barrier-after-an-epoll_wait2-timeout-fix
+c768eca0 fs/proc/base.c: use ns_capable instead of capable for timerslack_ns
+81553cde fs/epoll: rename check_events label to send_events
+b6af7800 fs/buffer.c: add debug print for __getblk_gfp() stall problem
+11193e16 mm/page_owner: align with pageblock_nr pages
+349afd96 fs/epoll: deal with wait_queue only once
+393af37c fs-epoll-deal-with-wait_queue-only-once-fix
+c20187bf mm/page_owner: align with pageblock_nr_pages
+20fbef31 mm: don't expose page to fast gup before it's ready
+ad4f37b8 init/main.c: make "initcall_level_names[]" const char *
+0bcbe611 autofs: improve ioctl sbi checks
+69ab6b14 mm: fix race between swapoff and mincore
+b783d261 autofs-improve-ioctl-sbi-checks-fix
+de44564f mm, swap: fix race between swapoff and some swap operations
+010a80ff mm, swap: fix race between swapoff and some swap operations
+9c82e3b8 autofs: fix possible inode leak in autofs_fill_super()
+855b7de1 mm/page_alloc.c: remove software prefetching in __free_pages_core()
+cd4d5fa9 autofs: simplify parse_options() function call
+e8fed666 memory_hotplug-free-pages-as-higher-order-fix-fix
+f7aa1250 autofs: change catatonic setting to a bit flag
+578f6458 autofs: add strictexpire mount option
+71e7f022 memory_hotplug-free-pages-as-higher-order-fix
+8286148b mm/page_alloc.c: memory hotplug: free pages as higher order
+e5d8e894 hfsplus: return file attributes on statx
+728804fa include/uapi/linux/msdos_fs.h: use MSDOS_NAME for volume label size
+e93a0c0d include/linux/memory_hotplug.h: remove duplicate declaration of  
+offline_pages()
+3d991a59 ptrace: take into account saved_sigmask in PTRACE_{GET,SET}SIGMASK
+a7b16608 mm/mmu_notifier: contextual information for event triggering  
+invalidation v2
+302092c9  
+mm-mmu_notifier-use-structure-for-invalidate_range_start-end-calls-v2-checkpatch-fixes
+cdd7a0aa fork: fix some -Wmissing-prototypes warnings
+137d92bd mm/mmu_notifier: use structure for invalidate_range_start/end  
+calls v2
+b89cf731 exec: load_script: don't blindly truncate shebang string
+42905641  
+mm-mmu_notifier-use-structure-for-invalidate_range_start-end-callback-fix-fix
+ad2539c7 exec: increase BINPRM_BUF_SIZE to 256
+0db734c6 mm/mmu_notifier: use structure for invalidate_range_start/end  
+callback
+c09b6daf exec: separate MM_ANONPAGES and RLIMIT_STACK accounting
+37ba86cc hwpoison, memory_hotplug: allow hwpoisoned pages to be offlined
+dc98b124 exec-separate-mm_anonpages-and-rlimit_stack-accounting-fix
+28286054  
+exec-separate-mm_anonpages-and-rlimit_stack-accounting-checkpatch-fixes
+b08acb20 mm-kmemleak-little-optimization-while-scanning-fix
+27faeb70 bfs: extra sanity checking and static inode bitmap
+79d0fd91 mm, kmemleak: little optimization while scanning
+232619fc lib/ioremap: ensure break-before-make is used for huge p4d mappings
+7a489f5d panic: add options to print system info when panic happens
+784bedb5 kernel/sysctl: add panic_print into sysctl
+e5dfd59e lib/ioremap: ensure phys_addr actually corresponds to a physical  
+address
+5f8d4992 kernel/kcov.c: mark write_comp_data() as notrace
+7bdcb055 x86/pgtable: drop pXd_none() checks from pXd_free_pYd_table()
+0aa19fc1 arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table()
+7ab8b68a scripts/gdb: fix lx-version string output
+b2581b70 initramfs: cleanup incomplete rootfs
+ee095458 ioremap: rework pXd_free_pYd_page() API
+ce10bcf4 mm/page_alloc.c: calculate first_deferred_pfn directly
+efae8091 ipc: allow boot time extension of IPCMNI from 32k to 8M
+ab7db927  
+ipc-allow-boot-time-extension-of-ipcmni-from-32k-to-8m-checkpatch-fixes
+f163b82f mm/filemap.c: remove useless check in pagecache_get_page()
+399e0a80 mm/page_io.c: fix polled swap page in
+d04978ca ipc: conserve sequence numbers in extended IPCMNI mode
+07365469 Merge branch 'akpm-current/current'
 
-On 4/8/2019 9:47 AM, Will Deacon wrote:
-> Hi Florian,
-> 
-> On Sun, Apr 07, 2019 at 02:34:22PM -0700, Florian Fainelli wrote:
->> The Cortex-A72 supports all ARMv8 recommended events up to the
->> RC_ST_SPEC (0x91) event, create an appropriate JSON file for mapping
->> those events and update the mapfile.csv for matching the Cortex-A72 MIDR
->> to that file.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  .../arm64/arm/cortex-a72/core-imp-def.json    | 206 ++++++++++++++++++
->>  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
->>  2 files changed, 207 insertions(+)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a72/core-imp-def.json
-> 
-> It would be worth checking how many of these events are common between a57
-> and a72, as they may be able to share much of the json file.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e1fc2b200000
+start commit:   [unknown
+git tree:       linux-next
+dashboard link: https://syzkaller.appspot.com/bug?extid=5399ed0832693e29f392
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101032b3400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16534063400000
 
-Makes sense, will check the Cortex-A57 TRM and re-submit accordingly.
-Thanks!
--- 
-Florian
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
