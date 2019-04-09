@@ -2,183 +2,241 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAB3C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F23C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD872084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LPBTYxT0"
+	by mail.kernel.org (Postfix) with ESMTP id A04F52084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfDIFAO (ORCPT
+        id S1726535AbfDIFEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:00:14 -0400
-Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:20441
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Tue, 9 Apr 2019 01:04:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725550AbfDIFAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:00:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZtLXM1gwQzVo4EVtqWS4L6QYlpO9IiXgQ1lo9hTe1tY=;
- b=LPBTYxT0+zC+GpaKQl+iyD4LCapz5sfgOhDWM3znnSWlhhBHLveCAe18vb2cGOzAiGvedy3IToQgb2aujIvydjeAO7Ovk6GxcJ2lp11SyBWl4ydEd5uzt5PvCgMnBAHWu1gY78EP/pc6h9mfGSS67Y0MIqxi2G/V7eZVw2wTrO8=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.14; Tue, 9 Apr 2019 05:00:07 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
- 05:00:07 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V7 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Topic: [PATCH V7 4/4] rtc: imx-sc: add rtc alarm support
-Thread-Index: AQHU7pEZ9C2z6clnd0y9G0M2Z7iy3Q==
-Date:   Tue, 9 Apr 2019 05:00:07 +0000
-Message-ID: <1554785675-8090-4-git-send-email-Anson.Huang@nxp.com>
-References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR01CA0032.apcprd01.prod.exchangelabs.com
- (2603:1096:203:3e::20) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 36208c98-b07f-4de3-f701-08d6bca83c33
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3865;
-x-ms-traffictypediagnostic: DB3PR0402MB3865:
-x-microsoft-antispam-prvs: <DB3PR0402MB38654F1EEE99F672132DD790F52D0@DB3PR0402MB3865.eurprd04.prod.outlook.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(136003)(346002)(396003)(199004)(189003)(2906002)(52116002)(36756003)(68736007)(186003)(6436002)(26005)(110136005)(86362001)(6506007)(386003)(2201001)(8936002)(478600001)(25786009)(76176011)(102836004)(7736002)(316002)(4326008)(305945005)(66066001)(2501003)(97736004)(105586002)(7416002)(99286004)(50226002)(6486002)(8676002)(81156014)(81166006)(6116002)(106356001)(3846002)(71190400001)(71200400001)(5660300002)(14454004)(446003)(11346002)(486006)(6512007)(14444005)(2616005)(256004)(53936002)(476003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: evZ++ZPVQqodDOOdXn7tB5twf2Q4ZyeNJkWAmd32X4A0St75Sg+dTC38c+F7EFxg2x/vA9Ktu6K1I35YJILTyjvSknKXYgTY9lzX2QSvj8Xooqz8zYDKNWkpuYYln2cpbrQyTNFlRpGZ9dJXNFWjIJ8rbkc21issE6xXCHyDl3QfuEGRdnn8GzlR0JcUDsc5lAySKVkDZxPxSaCKERW4D/kxTRZtk145idLPYGcxW/MwD+7v+QvdSJUbKvThdkWVdTlLVdFXsAbLS86w8cvjxROsEVTparTqIbaTpiuBANsQj8t5rK1errpokBaT2zd8YuuiOVNzgg2NtqXXXaGlz4syur2iNvztUSF9Ix+1+iZMRsC7h9ZmhgoRe281xuP+avq1dFC45YadG5iUm0uB5dt+FIHwNQiUSwe6ecEEYmk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725781AbfDIFEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 01:04:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D1368AC89;
+        Tue,  9 Apr 2019 05:04:27 +0000 (UTC)
+Subject: Re: [PATCH RFC 00/39] x86/KVM: Xen HVM guest support
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20190220201609.28290-1-joao.m.martins@oracle.com>
+ <35051310-c497-8ad5-4434-1b8426a317d2@redhat.com>
+ <8b1f4912-4f92-69ae-ae01-d899d5640572@oracle.com>
+ <3ee91f33-2973-c2db-386f-afbf138081b4@redhat.com>
+ <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
+ <ac0fb2d0-59bf-1330-24ab-331c1a69b13f@suse.com>
+ <94738323-ebdf-d58e-55b6-313e27c923b0@oracle.com>
+ <585163c2-8dea-728d-7556-9cb3559f0eca@suse.com>
+ <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <59deb041-2b5d-8451-32c7-644fe36e053b@suse.com>
+Date:   Tue, 9 Apr 2019 07:04:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36208c98-b07f-4de3-f701-08d6bca83c33
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 05:00:07.2902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
+In-Reply-To: <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgUlRDIGFsYXJtIHN1cHBvcnQsIHRoZSBSVEMgYWxh
-cm0NCmlzIGltcGxlbWVudGVkIHZpYSBTSVAoc2lsaWNvbiBwcm92aWRlcikgcnVudGltZSBzZXJ2
-aWNlIGNhbGwNCmFuZCBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB3aWxsIGNvbW11bmljYXRlIHdpdGgg
-c3lzdGVtIGNvbnRyb2xsZXINCnZpYSBNVShtZXNzYWdlIHVuaXQpIElQQyB0byBzZXQgUlRDIGFs
-YXJtLiBXaGVuIFJUQyBhbGFybSBmaXJlcywNCnN5c3RlbSBjb250cm9sbGVyIHdpbGwgZ2VuZXJh
-dGUgYSBjb21tb24gTVUgaXJxIGV2ZW50IGFuZCBub3RpZnkNCnN5c3RlbSBjb250cm9sbGVyIFJU
-QyBkcml2ZXIgdG8gaGFuZGxlIHRoZSBpcnEgZXZlbnQuDQoNClNpZ25lZC1vZmYtYnk6IEFuc29u
-IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8
-YWlzaGVuZy5kb25nQG54cC5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgVjY6DQoJLSBhZGQgY29t
-bWVudHMgdG8gLnJlYWRfYWxhcm0gY2FsbGJhY2sgZnVuY3Rpb24gdG8gZXhwbGFpbiB3aHkgaXQg
-aXMgYW4gZW1wdHkgZnVuY3Rpb247DQoJLSBpbXByb3ZlIGlycSBub3RpZnkgY2FsbGJhY2sgZnVu
-Y3Rpb24gbmFtZS4NCi0tDQogZHJpdmVycy9ydGMvcnRjLWlteC1zYy5jIHwgODcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDg3IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
-YyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KaW5kZXggMTk2NDJiZi4uYzkzMzA0NSAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KKysrIGIvZHJpdmVycy9ydGMvcnRj
-LWlteC1zYy5jDQpAQCAtMyw2ICszLDcgQEANCiAgKiBDb3B5cmlnaHQgMjAxOCBOWFAuDQogICov
-DQogDQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmg+DQogI2luY2x1
-ZGUgPGxpbnV4L2FybS1zbWNjYy5oPg0KICNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvc2Np
-Lmg+DQogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KQEAgLTExLDExICsxMiwxNSBAQA0KICNp
-bmNsdWRlIDxsaW51eC9ydGMuaD4NCiANCiAjZGVmaW5lIElNWF9TQ19USU1FUl9GVU5DX0dFVF9S
-VENfU0VDMTk3MAk5DQorI2RlZmluZSBJTVhfU0NfVElNRVJfRlVOQ19TRVRfUlRDX0FMQVJNCQk4
-DQogI2RlZmluZSBJTVhfU0NfVElNRVJfRlVOQ19TRVRfUlRDX1RJTUUJCTYNCiANCiAjZGVmaW5l
-IElNWF9TSVBfU1JUQwkJCTB4QzIwMDAwMDINCiAjZGVmaW5lIElNWF9TSVBfU1JUQ19TRVRfVElN
-RQkJMHgwDQogDQorI2RlZmluZSBTQ19JUlFfR1JPVVBfUlRDICAgIDINCisjZGVmaW5lIFNDX0lS
-UV9SVEMgICAgICAgICAgMQ0KKw0KIHN0YXRpYyBzdHJ1Y3QgaW14X3NjX2lwYyAqcnRjX2lwY19o
-YW5kbGU7DQogc3RhdGljIHN0cnVjdCBydGNfZGV2aWNlICppbXhfc2NfcnRjOw0KIA0KQEAgLTI0
-LDYgKzI5LDE2IEBAIHN0cnVjdCBpbXhfc2NfbXNnX3RpbWVyX2dldF9ydGNfdGltZSB7DQogCXUz
-MiB0aW1lOw0KIH0gX19wYWNrZWQ7DQogDQorc3RydWN0IGlteF9zY19tc2dfdGltZXJfcnRjX3Nl
-dF9hbGFybSB7DQorCXN0cnVjdCBpbXhfc2NfcnBjX21zZyBoZHI7DQorCXUxNiB5ZWFyOw0KKwl1
-OCBtb247DQorCXU4IGRheTsNCisJdTggaG91cjsNCisJdTggbWluOw0KKwl1OCBzZWM7DQorfSBf
-X3BhY2tlZDsNCisNCiBzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF90aW1lKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IHJ0Y190aW1lICp0bSkNCiB7DQogCXN0cnVjdCBpbXhfc2NfbXNnX3Rp
-bWVyX2dldF9ydGNfdGltZSBtc2c7DQpAQCAtNjAsOSArNzUsNzcgQEAgc3RhdGljIGludCBpbXhf
-c2NfcnRjX3NldF90aW1lKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHJ0Y190aW1lICp0bSkN
-CiAJcmV0dXJuIHJlcy5hMDsNCiB9DQogDQorc3RhdGljIGludCBpbXhfc2NfcnRjX2FsYXJtX2ly
-cV9lbmFibGUoc3RydWN0IGRldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgZW5hYmxlKQ0KK3sNCisJ
-cmV0dXJuIGlteF9zY3VfaXJxX2dyb3VwX2VuYWJsZShTQ19JUlFfR1JPVVBfUlRDLCBTQ19JUlFf
-UlRDLCBlbmFibGUpOw0KK30NCisNCitzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF9hbGFybShz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbHJtKQ0KK3sNCisJLyoNCisJ
-ICogU0NVIGZpcm13YXJlIGRvZXMgTk9UIHByb3ZpZGUgcmVhZCBhbGFybSBBUEksIGJ1dCAucmVh
-ZF9hbGFybQ0KKwkgKiBjYWxsYmFjayBpcyByZXF1aXJlZCBieSBSVEMgZnJhbWV3b3JrIHRvIHN1
-cHBvcnQgYWxhcm0gZnVuY3Rpb24sDQorCSAqIHNvIGp1c3QgcmV0dXJuIGhlcmUuDQorCSAqLw0K
-KwlyZXR1cm4gMDsNCit9DQorDQorc3RhdGljIGludCBpbXhfc2NfcnRjX3NldF9hbGFybShzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbHJtKQ0KK3sNCisJc3RydWN0IGlt
-eF9zY19tc2dfdGltZXJfcnRjX3NldF9hbGFybSBtc2c7DQorCXN0cnVjdCBpbXhfc2NfcnBjX21z
-ZyAqaGRyID0gJm1zZy5oZHI7DQorCWludCByZXQ7DQorCXN0cnVjdCBydGNfdGltZSAqYWxybV90
-bSA9ICZhbHJtLT50aW1lOw0KKw0KKwloZHItPnZlciA9IElNWF9TQ19SUENfVkVSU0lPTjsNCisJ
-aGRyLT5zdmMgPSBJTVhfU0NfUlBDX1NWQ19USU1FUjsNCisJaGRyLT5mdW5jID0gSU1YX1NDX1RJ
-TUVSX0ZVTkNfU0VUX1JUQ19BTEFSTTsNCisJaGRyLT5zaXplID0gMzsNCisNCisJbXNnLnllYXIg
-PSBhbHJtX3RtLT50bV95ZWFyICsgMTkwMDsNCisJbXNnLm1vbiA9IGFscm1fdG0tPnRtX21vbiAr
-IDE7DQorCW1zZy5kYXkgPSBhbHJtX3RtLT50bV9tZGF5Ow0KKwltc2cuaG91ciA9IGFscm1fdG0t
-PnRtX2hvdXI7DQorCW1zZy5taW4gPSBhbHJtX3RtLT50bV9taW47DQorCW1zZy5zZWMgPSBhbHJt
-X3RtLT50bV9zZWM7DQorDQorCXJldCA9IGlteF9zY3VfY2FsbF9ycGMocnRjX2lwY19oYW5kbGUs
-ICZtc2csIHRydWUpOw0KKwlpZiAocmV0KSB7DQorCQlkZXZfZXJyKGRldiwgInNldCBydGMgYWxh
-cm0gZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJl
-dCA9IGlteF9zY19ydGNfYWxhcm1faXJxX2VuYWJsZShkZXYsIGFscm0tPmVuYWJsZWQpOw0KKwlp
-ZiAocmV0KSB7DQorCQlkZXZfZXJyKGRldiwgImVuYWJsZSBydGMgYWxhcm0gZmFpbGVkLCByZXQg
-JWRcbiIsIHJldCk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJldHVybiAwOw0KK30NCisN
-CiBzdGF0aWMgY29uc3Qgc3RydWN0IHJ0Y19jbGFzc19vcHMgaW14X3NjX3J0Y19vcHMgPSB7DQog
-CS5yZWFkX3RpbWUgPSBpbXhfc2NfcnRjX3JlYWRfdGltZSwNCiAJLnNldF90aW1lID0gaW14X3Nj
-X3J0Y19zZXRfdGltZSwNCisJLnJlYWRfYWxhcm0gPSBpbXhfc2NfcnRjX3JlYWRfYWxhcm0sDQor
-CS5zZXRfYWxhcm0gPSBpbXhfc2NfcnRjX3NldF9hbGFybSwNCisJLmFsYXJtX2lycV9lbmFibGUg
-PSBpbXhfc2NfcnRjX2FsYXJtX2lycV9lbmFibGUsDQorfTsNCisNCitzdGF0aWMgaW50IGlteF9z
-Y19ydGNfYWxhcm1fbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIsDQorCQkJCQl1bnNp
-Z25lZCBsb25nIGV2ZW50LCB2b2lkICpncm91cCkNCit7DQorCS8qIGlnbm9yZSBub24tcnRjIGly
-cSAqLw0KKwlpZiAoISgoZXZlbnQgJiBTQ19JUlFfUlRDKSAmJiAoKih1OCAqKWdyb3VwID09IFND
-X0lSUV9HUk9VUF9SVEMpKSkNCisJCXJldHVybiAwOw0KKw0KKwlydGNfdXBkYXRlX2lycShpbXhf
-c2NfcnRjLCAxLCBSVENfSVJRRiB8IFJUQ19BRik7DQorDQorCXJldHVybiAwOw0KK30NCisNCitz
-dGF0aWMgc3RydWN0IG5vdGlmaWVyX2Jsb2NrIGlteF9zY19ydGNfYWxhcm1fc2Nfbm90aWZpZXIg
-PSB7DQorCS5ub3RpZmllcl9jYWxsID0gaW14X3NjX3J0Y19hbGFybV9ub3RpZnksDQogfTsNCiAN
-CiBzdGF0aWMgaW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCkBAIC03Myw2ICsxNTYsOCBAQCBzdGF0aWMgaW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJaWYgKHJldCkNCiAJCXJldHVybiByZXQ7DQogDQor
-CWRldmljZV9pbml0X3dha2V1cCgmcGRldi0+ZGV2LCB0cnVlKTsNCisNCiAJaW14X3NjX3J0YyA9
-IGRldm1fcnRjX2FsbG9jYXRlX2RldmljZSgmcGRldi0+ZGV2KTsNCiAJaWYgKElTX0VSUihpbXhf
-c2NfcnRjKSkNCiAJCXJldHVybiBQVFJfRVJSKGlteF9zY19ydGMpOw0KQEAgLTg3LDYgKzE3Miw4
-IEBAIHN0YXRpYyBpbnQgaW14X3NjX3J0Y19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KKwlpbXhfc2N1X2lycV9yZWdpc3Rlcl9ub3Rp
-ZmllcigmaW14X3NjX3J0Y19hbGFybV9zY19ub3RpZmllcik7DQorDQogCXJldHVybiAwOw0KIH0N
-CiANCi0tIA0KMi43LjQNCg0K
+On 08/04/2019 19:31, Joao Martins wrote:
+> On 4/8/19 11:42 AM, Juergen Gross wrote:
+>> On 08/04/2019 12:36, Joao Martins wrote:
+>>> On 4/8/19 7:44 AM, Juergen Gross wrote:
+>>>> On 12/03/2019 18:14, Joao Martins wrote:
+>>>>> On 2/22/19 4:59 PM, Paolo Bonzini wrote:
+>>>>>> On 21/02/19 12:45, Joao Martins wrote:
+>>>>>>> On 2/20/19 9:09 PM, Paolo Bonzini wrote:
+>>>>>>>> On 20/02/19 21:15, Joao Martins wrote:
+>>>>>>>>>  2. PV Driver support (patches 17 - 39)
+>>>>>>>>>
+>>>>>>>>>  We start by redirecting hypercalls from the backend to routines
+>>>>>>>>>  which emulate the behaviour that PV backends expect i.e. grant
+>>>>>>>>>  table and interdomain events. Next, we add support for late
+>>>>>>>>>  initialization of xenbus, followed by implementing
+>>>>>>>>>  frontend/backend communication mechanisms (i.e. grant tables and
+>>>>>>>>>  interdomain event channels). Finally, introduce xen-shim.ko,
+>>>>>>>>>  which will setup a limited Xen environment. This uses the added
+>>>>>>>>>  functionality of Xen specific shared memory (grant tables) and
+>>>>>>>>>  notifications (event channels).
+>>>>>>>>
+>>>>>>>> I am a bit worried by the last patches, they seem really brittle and
+>>>>>>>> prone to breakage.  I don't know Xen well enough to understand if the
+>>>>>>>> lack of support for GNTMAP_host_map is fixable, but if not, you have to
+>>>>>>>> define a completely different hypercall.
+>>>>>>>>
+>>>>>>> I guess Ankur already answered this; so just to stack this on top of his comment.
+>>>>>>>
+>>>>>>> The xen_shim_domain() is only meant to handle the case where the backend
+>>>>>>> has/can-have full access to guest memory [i.e. netback and blkback would work
+>>>>>>> with similar assumptions as vhost?]. For the normal case, where a backend *in a
+>>>>>>> guest* maps and unmaps other guest memory, this is not applicable and these
+>>>>>>> changes don't affect that case.
+>>>>>>>
+>>>>>>> IOW, the PV backend here sits on the hypervisor, and the hypercalls aren't
+>>>>>>> actual hypercalls but rather invoking shim_hypercall(). The call chain would go
+>>>>>>> more or less like:
+>>>>>>>
+>>>>>>> <netback|blkback|scsiback>
+>>>>>>>  gnttab_map_refs(map_ops, pages)
+>>>>>>>    HYPERVISOR_grant_table_op(GNTTABOP_map_grant_ref,...)
+>>>>>>>      shim_hypercall()
+>>>>>>>        shim_hcall_gntmap()
+>>>>>>>
+>>>>>>> Our reasoning was that given we are already in KVM, why mapping a page if the
+>>>>>>> user (i.e. the kernel PV backend) is himself? The lack of GNTMAP_host_map is how
+>>>>>>> the shim determines its user doesn't want to map the page. Also, there's another
+>>>>>>> issue where PV backends always need a struct page to reference the device
+>>>>>>> inflight data as Ankur pointed out.
+>>>>>>
+>>>>>> Ultimately it's up to the Xen people.  It does make their API uglier,
+>>>>>> especially the in/out change for the parameter.  If you can at least
+>>>>>> avoid that, it would alleviate my concerns quite a bit.
+>>>>>
+>>>>> In my view, we have two options overall:
+>>>>>
+>>>>> 1) Make it explicit, the changes the PV drivers we have to make in
+>>>>> order to support xen_shim_domain(). This could mean e.g. a) add a callback
+>>>>> argument to gnttab_map_refs() that is invoked for every page that gets looked up
+>>>>> successfully, and inside this callback the PV driver may update it's tracking
+>>>>> page. Here we no longer have this in/out parameter in gnttab_map_refs, and all
+>>>>> shim_domain specific bits would be a little more abstracted from Xen PV
+>>>>> backends. See netback example below the scissors mark. Or b) have sort of a
+>>>>> translate_gref() and put_gref() API that Xen PV drivers use which make it even
+>>>>> more explicit that there's no grant ops involved. The latter is more invasive.
+>>>>>
+>>>>> 2) The second option is to support guest grant mapping/unmapping [*] to allow
+>>>>> hosting PV backends inside the guest. This would remove the Xen changes in this
+>>>>> series completely. But it would require another guest being used
+>>>>> as netback/blkback/xenstored, and less performance than 1) (though, in theory,
+>>>>> it would be equivalent to what does Xen with grants/events). The only changes in
+>>>>> Linux Xen code is adding xenstored domain support, but that is useful on its own
+>>>>> outside the scope of this work.
+>>>>>
+>>>>> I think there's value on both; 1) is probably more familiar for KVM users
+>>>>> perhaps (as it is similar to what vhost does?) while  2) equates to implementing
+>>>>> Xen disagregation capabilities in KVM.
+>>>>>
+>>>>> Thoughts? Xen maintainers what's your take on this?
+>>>>
+>>>> What I'd like best would be a new handle (e.g. xenhost_t *) used as an
+>>>> abstraction layer for this kind of stuff. It should be passed to the
+>>>> backends and those would pass it on to low-level Xen drivers (xenbus,
+>>>> event channels, grant table, ...).
+>>>>
+>>> So if IIRC backends would use the xenhost layer to access grants or frames
+>>> referenced by grants, and that would grok into some of this. IOW, you would have
+>>> two implementors of xenhost: one for nested remote/local events+grants and
+>>> another for this "shim domain" ?
+>>
+>> As I'd need that for nested Xen I guess that would make it 3 variants.
+>> Probably the xen-shim variant would need more hooks, but that should be
+>> no problem.
+>>
+> I probably messed up in the short description but "nested remote/local
+> events+grants" was referring to nested Xen (FWIW remote meant L0 and local L1).
+> So maybe only 2 variants are needed?
+
+I need one xenhost variant for the "normal" case as today: talking to
+the single hypervisor (or in nested case: to the L1 hypervisor).
+
+Then I need a variant for the nested case talking to L0 hypervisor.
+
+And you need a variant talking to xen-shim.
+
+The first two variants can be active in the same system in case of
+nested Xen: the backends of L2 dom0 are talking to L1 hypervisor,
+while its frontends are talking with L0 hypervisor.
+
+> 
+>>>> I was planning to do that (the xenhost_t * stuff) soon in order to add
+>>>> support for nested Xen using PV devices (you need two Xenstores for that
+>>>> as the nested dom0 is acting as Xen backend server, while using PV
+>>>> frontends for accessing the "real" world outside).
+>>>>
+>>>> The xenhost_t should be used for:
+>>>>
+>>>> - accessing Xenstore
+>>>> - issuing and receiving events
+>>>> - doing hypercalls
+>>>> - grant table operations
+>>>>
+>>>
+>>> In the text above, I sort of suggested a slice of this on 1.b) with a
+>>> translate_gref() and put_gref() API -- to get the page from a gref. This was
+>>> because of the flags|host_addr hurdle we depicted above wrt to using using grant
+>>> maps/unmaps. You think some of the xenhost layer would be ammenable to support
+>>> this case?
+>>
+>> I think so, yes.
+>>
+>>>
+>>>> So exactly the kind of stuff you want to do, too.
+>>>>
+>>> Cool idea!
+>>
+>> In the end you might make my life easier for nested Xen. :-)
+>>
+> Hehe :)
+> 
+>> Do you want to have a try with that idea or should I do that? I might be
+>> able to start working on that in about a month.
+>>
+> Ankur (CC'ed) will give a shot at it, and should start a new thread on this
+> xenhost abstraction layer.
+
+Great, looking forward to it!
+
+
+Juergen
