@@ -2,194 +2,217 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F324C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB6C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6472084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01102214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mN1ax0q/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n8TwZ8Y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfDIRSu (ORCPT
+        id S1726591AbfDIRV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:18:50 -0400
-Received: from mail-eopbgr150055.outbound.protection.outlook.com ([40.107.15.55]:31298
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726035AbfDIRSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:18:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxEZpdtoJEEXLXRYxISjI2xhC4TLalOIPHKW6a5/Da4=;
- b=mN1ax0q/MhUe/iCmr/+oiKrLAMPys84/y61xjqc1e0gqrT/KbEqE+zuEEdoS84BIUaa7gxAyrowYPM/RAlJq2K/8haXHGoJ7jilCwI1sWx/VuxdroOA4bCCA5x/Ms5jDxudtruM9VEgQwAQX9QHZaz5ZTvytqb90xROtJQCn4kY=
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com (52.134.125.139) by
- AM0PR05MB4610.eurprd05.prod.outlook.com (52.133.58.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Tue, 9 Apr 2019 17:18:45 +0000
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::566:c98d:cad8:b3cd]) by AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::566:c98d:cad8:b3cd%5]) with mapi id 15.20.1771.021; Tue, 9 Apr 2019
- 17:18:45 +0000
-From:   Mark Bloch <markb@mellanox.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com>
-CC:     Daniel Jurgens <danielj@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        "swise@opengridcomputing.com" <swise@opengridcomputing.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in rdma_listen (2)
-Thread-Topic: general protection fault in rdma_listen (2)
-Thread-Index: AQHUdsv4hMnAGL+oV0uOS462pTp0lqVSulQAgOIQfoCAADggAA==
-Date:   Tue, 9 Apr 2019 17:18:45 +0000
-Message-ID: <8b2e0e44-56d6-a585-6096-24d8ccc021f6@mellanox.com>
-References: <000000000000396c09057a17b6fd@google.com>
- <0000000000008a1687057acbb692@google.com>
- <CACT4Y+bLW_qunREOz6NN_0eN5B_4iw+Cu3Sg2vLxOK3ktekkqA@mail.gmail.com>
-In-Reply-To: <CACT4Y+bLW_qunREOz6NN_0eN5B_4iw+Cu3Sg2vLxOK3ktekkqA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0002.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::15) To AM0PR05MB4403.eurprd05.prod.outlook.com
- (2603:10a6:208:65::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=markb@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [208.186.24.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b05141e6-6cc0-4063-23cb-08d6bd0f6bed
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4610;
-x-ms-traffictypediagnostic: AM0PR05MB4610:
-x-ms-exchange-purlcount: 4
-x-microsoft-antispam-prvs: <AM0PR05MB46102376BCD04CA146BE2C3DD22D0@AM0PR05MB4610.eurprd05.prod.outlook.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(366004)(189003)(199004)(316002)(6506007)(386003)(105586002)(102836004)(7736002)(110136005)(476003)(229853002)(55236004)(6246003)(66066001)(6512007)(53546011)(6306002)(486006)(305945005)(4326008)(106356001)(54906003)(6116002)(86362001)(3846002)(99286004)(8936002)(2906002)(8676002)(25786009)(81156014)(81166006)(2616005)(186003)(97736004)(36756003)(6436002)(31696002)(71190400001)(71200400001)(14454004)(966005)(26005)(446003)(11346002)(6486002)(45080400002)(14444005)(478600001)(68736007)(76176011)(256004)(31686004)(5660300002)(52116002)(53936002)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4610;H:AM0PR05MB4403.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DYX0dty3uw4hnHahemXQBFARvNWJs7uX3rwHZAfPvncE+e8mbw2QcX1bYJEo8PGYZbnxR2d8Xc1vkg6yk1NVR6GBeWIs9MmIeNad2x3ksopfT5rLkd4WZtCyXzRr0Ae8lno6O+CXqsYzyQ/C318XZ5Xe9g/1x5GXyMy7KSlG6Tcc2gc1DpclY8B/RTmN0/iJANvunl8B8C8WEh2lxVfqNlP9+lpGQcbuPHegbRKvh9iTCGnE5tq33pvutpKirm8sG167PBMSdeX1LHMsHZ5THd7ISFo8b9JGV28qD54ojiupRr1n5IbtIzVMZHIcdWW/98WbqR1jU3DGVwj9LMQAF15UndFtRh0jdYoDFW/bWQi02Kho32/ecM3hqNGdPHuHImDyu1dyRvzVkoGekzeQI5lZSctGstoG8QKzPUnQCvE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1BA58934C299F4458B2C748C0E0B41AE@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 9 Apr 2019 13:21:27 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33751 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbfDIRV1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:21:27 -0400
+Received: by mail-io1-f66.google.com with SMTP id b6so15037201iog.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 10:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I6IMmvUGAf0eU7ybuIU2/HaCzcsJS2xP8y2lDsQdA+Q=;
+        b=n8TwZ8Y4dkVFIf5Ga9lJ0UgTfR5Y0ndWTH6s5OFXVC/BCID9/HQTCSm9lntPxdoygX
+         R7/8demt44uRRlKoPLTj1yJ4CvgZYkuxsTx8YUS69ABnt6CWMwfsgogDHgdOMJGBV4MO
+         VxfgKMNtYlZskbkr/KEUMhRtW9YFnrs1pJQYR1mFMASW92+j7XwNNFTAqGvRAFncWyWv
+         1TAgjgAUzPnwe4yxuQClZmFi4kZoj47wgUqf0r/ZNrBYGngfF6VJmuN+brOg+yMNbzX+
+         lA3p6Ftexl8h/ID7vW71A7kMktvD6yn6RuLEzi8iKJMclbPZhJZ6Y9cO4bhmOX2Rxsl6
+         Fs0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I6IMmvUGAf0eU7ybuIU2/HaCzcsJS2xP8y2lDsQdA+Q=;
+        b=UQjdPNLpnxX1JVIPjztq/0AvGJWYpJwrsDGE1XxtdM29lGI0FiTSuHFtEWUlaZGxHA
+         lZ9c+Zr9wVD0jWxucxOP0Cd8yivmZR7wNLw7XAd3I9Wy3BawsU2/2YDYvxVtVHNOdfxl
+         6TcPoJ59G6olvUjbfKrg9egGziWIpezKthXH+wveBqvEIhswVdI8vxaWKSFmo8VUG8AC
+         Dxkd6bjm3rSD1Sb0hRNxR4A5r4TiAnjuy3Awg847EVPcbckZK4YnowfjeIqDouD+FgZc
+         xukO0eIf5+0PoqISZvajI7UgHE1ck9tnrh0tLIKb0T8cTF7VkrPyPPJjdv7bB9fU0ka1
+         VU/A==
+X-Gm-Message-State: APjAAAWQd62I9jIvGEEd3/rben+PvG1qu8mXPZG3qz1u0xRyiky0nmvf
+        6stCrUfMJec/9h5LJnGw6KNNr8U0kN+7bCs8gSSmH0AFsAfzHQ==
+X-Google-Smtp-Source: APXvYqxRsQgJ7iWwhmBjfzIPC2n1Qwhw8ACmeQ1P+wDbglv1OxwRhUJUcTv/D0+XW4kxsArobKWOT0j4U1rxxgiZOWc=
+X-Received: by 2002:a6b:f201:: with SMTP id q1mr18287829ioh.197.1554830485879;
+ Tue, 09 Apr 2019 10:21:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b05141e6-6cc0-4063-23cb-08d6bd0f6bed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 17:18:45.5288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4610
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155440491334.3190322.44013027330479237.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ocQGxTAapfjb5WufhL=Qj54LythHcPHsyy+wUnVBnfA@mail.gmail.com> <CAPcyv4gUL8j+EaAZ556_NKXLgva++HgPBOeeAUNHN+DAWaewaQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4gUL8j+EaAZ556_NKXLgva++HgPBOeeAUNHN+DAWaewaQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 9 Apr 2019 10:21:14 -0700
+Message-ID: <CAKv+Gu_M-V-3ahHTj10iyx=eC2pBzFg027NmdBX1x7nXrpqK7g@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/5] efi: Detect UEFI 2.8 Special Purpose Memory
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvOS8xOSA2OjU3IEFNLCBEbWl0cnkgVnl1a292IHdyb3RlOg0KPiBPbiBGcmksIE5v
-diAxNiwgMjAxOCBhdCA2OjQ0IFBNIHN5emJvdA0KPiA8c3l6Ym90KzZiNDZiMTM1NjAyYTNmM2Fj
-OTllQHN5emthbGxlci5hcHBzcG90bWFpbC5jb20+IHdyb3RlOg0KPj4NCj4+IHN5emJvdCBoYXMg
-Zm91bmQgYSByZXByb2R1Y2VyIGZvciB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KPj4NCj4+IEhF
-QUQgY29tbWl0OiAgICBkYTUzMjJlNjU5NDAgTWVyZ2UgdGFnICdzZWxpbnV4LXByLTIwMTgxMTE1
-JyBvZiBnaXQ6Ly9naXQuLi4NCj4+IGdpdCB0cmVlOiAgICAgICB1cHN0cmVhbQ0KPj4gY29uc29s
-ZSBvdXRwdXQ6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEzYTA2
-ZjdiNDAwMDAwDQo+PiBrZXJuZWwgY29uZmlnOiAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5j
-b20veC8uY29uZmlnP3g9ZDg2ZjI0MzMzODgwYjYwNQ0KPj4gZGFzaGJvYXJkIGxpbms6IGh0dHBz
-Oi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL2J1Zz9leHRpZD02YjQ2YjEzNTYwMmEzZjNhYzk5ZQ0K
-Pj4gY29tcGlsZXI6ICAgICAgIGdjYyAoR0NDKSA4LjAuMSAyMDE4MDQxMyAoZXhwZXJpbWVudGFs
-KQ0KPj4gc3l6IHJlcHJvOiAgICAgIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVw
-cm8uc3l6P3g9MTBmYThhNDc0MDAwMDANCj4+DQo+PiBJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhl
-IGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KPj4gUmVw
-b3J0ZWQtYnk6IHN5emJvdCs2YjQ2YjEzNTYwMmEzZjNhYzk5ZUBzeXprYWxsZXIuYXBwc3BvdG1h
-aWwuY29tDQo+Pg0KPj4gSVB2NjogQUREUkNPTkYoTkVUREVWX0NIQU5HRSk6IHZldGgxOiBsaW5r
-IGJlY29tZXMgcmVhZHkNCj4+IElQdjY6IEFERFJDT05GKE5FVERFVl9DSEFOR0UpOiB2ZXRoMDog
-bGluayBiZWNvbWVzIHJlYWR5DQo+PiA4MDIxcTogYWRkaW5nIFZMQU4gMCB0byBIVyBmaWx0ZXIg
-b24gZGV2aWNlIHRlYW0wDQo+PiBrYXNhbjogQ09ORklHX0tBU0FOX0lOTElORSBlbmFibGVkDQo+
-PiBrYXNhbjogR1BGIGNvdWxkIGJlIGNhdXNlZCBieSBOVUxMLXB0ciBkZXJlZiBvciB1c2VyIG1l
-bW9yeSBhY2Nlc3MNCj4+IGdlbmVyYWwgcHJvdGVjdGlvbiBmYXVsdDogMDAwMCBbIzFdIFBSRUVN
-UFQgU01QIEtBU0FODQo+PiBDUFU6IDEgUElEOiA2MzI4IENvbW06IHN5ei1leGVjdXRvcjAgTm90
-IHRhaW50ZWQgNC4yMC4wLXJjMisgIzMzNw0KPj4gSGFyZHdhcmUgbmFtZTogR29vZ2xlIEdvb2ds
-ZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MNCj4+IEdvb2dsZSAw
-MS8wMS8yMDExDQo+PiBSSVA6IDAwMTA6Y21hX2JpbmRfbGlzdGVuIGRyaXZlcnMvaW5maW5pYmFu
-ZC9jb3JlL2NtYS5jOjMzNTUgW2lubGluZV0NCj4+IFJJUDogMDAxMDpyZG1hX2xpc3RlbisweDM1
-Ny8weDk5MCBkcml2ZXJzL2luZmluaWJhbmQvY29yZS9jbWEuYzozNDY5DQo+PiBDb2RlOiA0YyA4
-YiBhYiBjOCAwMSAwMCAwMCAzMSBmNiA0OCBjNyBjNyA2MCAzYiBkYiA4OSBlOCA5ZSBlYiAyNSAw
-MiA0OCBiOA0KPj4gMDAgMDAgMDAgMDAgMDAgZmMgZmYgZGYgNDkgOGQgN2QgMDggNDggODkgZmEg
-NDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAwZg0KPj4gODUgNjQgMDUgMDAgMDAgNDggYjggMDAg
-MDAgMDAgMDAgMDAgZmMgZmYgZGYgNGQgOGINCj4+IFJTUDogMDAxODpmZmZmODg4MWIyNjZmOTcw
-IEVGTEFHUzogMDAwMTAyMDINCj4+IFJBWDogZGZmZmZjMDAwMDAwMDAwMCBSQlg6IGZmZmY4ODgx
-YmE5YTZkODAgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQo+PiBSRFg6IDAwMDAwMDAwMDAwMDAwMDEg
-UlNJOiAwMDAwMDAwMDAwMDAwMDA0IFJESTogMDAwMDAwMDAwMDAwMDAwOA0KPj4gUkJQOiBmZmZm
-ODg4MWIyNjZmYTEwIFIwODogZmZmZmZiZmZmMTNiNjc3NSBSMDk6IGZmZmZmYmZmZjEzYjY3NzQN
-Cj4+IFIxMDogZmZmZjg4ODFiMjY2Zjk2MCBSMTE6IGZmZmZmZmZmODlkYjNiYTMgUjEyOiAxZmZm
-ZjExMDM2NGNkZjMxDQo+PiBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAwMDAwMDAwMDAwMDAw
-MDAzIFIxNTogZmZmZjg4ODFkOTA4ZmE4MA0KPj4gRlM6ICAwMDAwN2YyMmY5ZTI3NzAwKDAwMDAp
-IEdTOmZmZmY4ODgxZGFmMDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4gQ1M6
-ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4gQ1IyOiAw
-MDAwMDAwMDAwNGNlZjA4IENSMzogMDAwMDAwMDFiYTRiNDAwMCBDUjQ6IDAwMDAwMDAwMDAxNDA2
-ZTANCj4+IERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAw
-MDAwMDAwMDAwMDAwMDAwDQo+PiBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZm
-ZmUwZmYwIERSNzogMDAwMDAwMDAwMDAwMDQwMA0KPj4gQ2FsbCBUcmFjZToNCj4+ICAgdWNtYV9s
-aXN0ZW4rMHgxYTQvMHgyNjAgZHJpdmVycy9pbmZpbmliYW5kL2NvcmUvdWNtYS5jOjExMDANCj4+
-ICAgdWNtYV93cml0ZSsweDM2NS8weDQ2MCBkcml2ZXJzL2luZmluaWJhbmQvY29yZS91Y21hLmM6
-MTY4OQ0KPj4gICBfX3Zmc193cml0ZSsweDExOS8weDlmMCBmcy9yZWFkX3dyaXRlLmM6NDg1DQo+
-PiAgIHZmc193cml0ZSsweDFmYy8weDU2MCBmcy9yZWFkX3dyaXRlLmM6NTQ5DQo+PiAgIGtzeXNf
-d3JpdGUrMHgxMDEvMHgyNjAgZnMvcmVhZF93cml0ZS5jOjU5OA0KPj4gICBfX2RvX3N5c193cml0
-ZSBmcy9yZWFkX3dyaXRlLmM6NjEwIFtpbmxpbmVdDQo+PiAgIF9fc2Vfc3lzX3dyaXRlIGZzL3Jl
-YWRfd3JpdGUuYzo2MDcgW2lubGluZV0NCj4+ICAgX194NjRfc3lzX3dyaXRlKzB4NzMvMHhiMCBm
-cy9yZWFkX3dyaXRlLmM6NjA3DQo+PiAgIGRvX3N5c2NhbGxfNjQrMHgxYjkvMHg4MjAgYXJjaC94
-ODYvZW50cnkvY29tbW9uLmM6MjkwDQo+PiAgIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFt
-ZSsweDQ5LzB4YmUNCj4+IFJJUDogMDAzMzoweDQ1NzU2OQ0KPj4gQ29kZTogZmQgYjMgZmIgZmYg
-YzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgNjYgOTAgNDggODkgZjggNDggODkgZjcN
-Cj4+IDQ4IDg5IGQ2IDQ4IDg5IGNhIDRkIDg5IGMyIDRkIDg5IGM4IDRjIDhiIDRjIDI0IDA4IDBm
-IDA1IDw0OD4gM2QgMDEgZjAgZmYNCj4+IGZmIDBmIDgzIGNiIGIzIGZiIGZmIGMzIDY2IDJlIDBm
-IDFmIDg0IDAwIDAwIDAwIDAwDQo+PiBSU1A6IDAwMmI6MDAwMDdmMjJmOWUyNmM3OCBFRkxBR1M6
-IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMDAxDQo+PiBSQVg6IGZmZmZmZmZmZmZm
-ZmZmZGEgUkJYOiAwMDAwMDAwMDAwMDAwMDAzIFJDWDogMDAwMDAwMDAwMDQ1NzU2OQ0KPj4gUkRY
-OiAwMDAwMDAwMDAwMDAwMDEwIFJTSTogMDAwMDAwMDAyMDAwMDBjMCBSREk6IDAwMDAwMDAwMDAw
-MDAwMDUNCj4+IFJCUDogMDAwMDAwMDAwMDcyYmYwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5
-OiAwMDAwMDAwMDAwMDAwMDAwDQo+PiBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAw
-MDAwMDAwMjQ2IFIxMjogMDAwMDdmMjJmOWUyNzZkNA0KPj4gUjEzOiAwMDAwMDAwMDAwNGM1NzFm
-IFIxNDogMDAwMDAwMDAwMDRkOTM2MCBSMTU6IDAwMDAwMDAwZmZmZmZmZmYNCj4+IE1vZHVsZXMg
-bGlua2VkIGluOg0KPj4gLS0tWyBlbmQgdHJhY2UgYWQyNzZhMGJjYjMxNmZiMyBdLS0tDQo+PiBS
-SVA6IDAwMTA6Y21hX2JpbmRfbGlzdGVuIGRyaXZlcnMvaW5maW5pYmFuZC9jb3JlL2NtYS5jOjMz
-NTUgW2lubGluZV0NCj4+IFJJUDogMDAxMDpyZG1hX2xpc3RlbisweDM1Ny8weDk5MCBkcml2ZXJz
-L2luZmluaWJhbmQvY29yZS9jbWEuYzozNDY5DQo+PiBDb2RlOiA0YyA4YiBhYiBjOCAwMSAwMCAw
-MCAzMSBmNiA0OCBjNyBjNyA2MCAzYiBkYiA4OSBlOCA5ZSBlYiAyNSAwMiA0OCBiOA0KPj4gMDAg
-MDAgMDAgMDAgMDAgZmMgZmYgZGYgNDkgOGQgN2QgMDggNDggODkgZmEgNDggYzEgZWEgMDMgPDgw
-PiAzYyAwMiAwMCAwZg0KPj4gODUgNjQgMDUgMDAgMDAgNDggYjggMDAgMDAgMDAgMDAgMDAgZmMg
-ZmYgZGYgNGQgOGINCj4+IFJTUDogMDAxODpmZmZmODg4MWIyNjZmOTcwIEVGTEFHUzogMDAwMTAy
-MDINCj4+IFJBWDogZGZmZmZjMDAwMDAwMDAwMCBSQlg6IGZmZmY4ODgxYmE5YTZkODAgUkNYOiAw
-MDAwMDAwMDAwMDAwMDAwDQo+PiBSRFg6IDAwMDAwMDAwMDAwMDAwMDEgUlNJOiAwMDAwMDAwMDAw
-MDAwMDA0IFJESTogMDAwMDAwMDAwMDAwMDAwOA0KPj4gUkJQOiBmZmZmODg4MWIyNjZmYTEwIFIw
-ODogZmZmZmZiZmZmMTNiNjc3NSBSMDk6IGZmZmZmYmZmZjEzYjY3NzQNCj4+IFIxMDogZmZmZjg4
-ODFiMjY2Zjk2MCBSMTE6IGZmZmZmZmZmODlkYjNiYTMgUjEyOiAxZmZmZjExMDM2NGNkZjMxDQo+
-PiBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAwMDAwMDAwMDAwMDAwMDAzIFIxNTogZmZmZjg4
-ODFkOTA4ZmE4MA0KPj4gRlM6ICAwMDAwN2YyMmY5ZTI3NzAwKDAwMDApIEdTOmZmZmY4ODgxZGFm
-MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4gQ1M6ICAwMDEwIERTOiAwMDAw
-IEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4gQ1IyOiBmZmZmZmZmZmZmNjAwNDAw
-IENSMzogMDAwMDAwMDFiYTRiNDAwMCBDUjQ6IDAwMDAwMDAwMDAxNDA2ZTANCj4+IERSMDogMDAw
-MDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAw
-DQo+PiBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogMDAw
-MDAwMDAwMDAwMDQwMA0KPiANCj4gSGkgTWFyaywNCj4gDQo+IFlvdSB0ZXN0ZWQgc29tZSBmaXhl
-ZCBmb3IgdGhpcyBidWcuIFRoZSBsYXRlc3QgdGVzdGVkIHBhdGNoIGRpZCBub3QNCj4gdHJpZ2dl
-ciBjcmFzaC4gQnVnIHN5emJvdCBuZXZlciBzZWVuIGFueSBmaXhlcyBmb3IgdGhpcyBidWcuIElm
-IHlvdQ0KPiBzdWJtaXR0ZWQgdGhlIHBhdGNoLCBwbGVhc2UgbWFyayB0aGlzIGJ1ZyBhcyBmaXhl
-ZC4NCg0KSGkgRG1pdHJ5LA0KDQpJJ3ZlIHRhbGtlZCB3aXRoIEphc29uIChvZmYgbGlzdCkgYXQg
-dGhlIHRpbWUsIGFuZCB3ZSBhZ3JlZWQgdGhhdCB3aGlsZSB0aGUgcGF0Y2gNCmZpeGVzIHRoZSBp
-c3N1ZSwgaXQncyBqdXN0IGEgYmFuZC1haWQgdGhhdCBkb2Vzbid0IGZpeCB0aGUgdW5kZXJsaW5l
-IGlzc3VlcyB3aXRoIHRoYXQgY29kZS4NCg0KSSB0aGluayBQYXJhdiBoYXMvaGFkIHBsYW5zIGZv
-ciBhIG1vcmUgY29tcHJlaGVuc2l2ZSBmaXggZm9yIHRoYXQgZW50aXJlIHVjbWEuYyBjb2RlLg0K
-DQo+IA0KPiBUaGFua3MNCj4gDQoNClRoYW5rcw0K
+On Tue, 9 Apr 2019 at 09:44, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Fri, Apr 5, 2019 at 9:21 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> >
+> > Hi Dan,
+> >
+> > On Thu, 4 Apr 2019 at 21:21, Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > interpretation of the EFI Memory Types as "reserved for a special
+> > > purpose".
+> > >
+> > > The proposed Linux behavior for special purpose memory is that it is
+> > > reserved for direct-access (device-dax) by default and not available for
+> > > any kernel usage, not even as an OOM fallback. Later, through udev
+> > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > node identifier.
+> > >
+> > > A follow-on patch integrates parsing of the ACPI HMAT to identify the
+> > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > now, arrange for EFI_MEMORY_SP memory to be reserved.
+> > >
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Borislav Petkov <bp@alien8.de>
+> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > Cc: Darren Hart <dvhart@infradead.org>
+> > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > >  arch/x86/Kconfig                  |   18 ++++++++++++++++++
+> > >  arch/x86/boot/compressed/eboot.c  |    5 ++++-
+> > >  arch/x86/boot/compressed/kaslr.c  |    2 +-
+> > >  arch/x86/include/asm/e820/types.h |    9 +++++++++
+> > >  arch/x86/kernel/e820.c            |    9 +++++++--
+> > >  arch/x86/platform/efi/efi.c       |   10 +++++++++-
+> > >  include/linux/efi.h               |   14 ++++++++++++++
+> > >  include/linux/ioport.h            |    1 +
+> > >  8 files changed, 63 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > index c1f9b3cf437c..cb9ca27de7a5 100644
+> > > --- a/arch/x86/Kconfig
+> > > +++ b/arch/x86/Kconfig
+> > > @@ -1961,6 +1961,24 @@ config EFI_MIXED
+> > >
+> > >            If unsure, say N.
+> > >
+> > > +config EFI_SPECIAL_MEMORY
+> > > +       bool "EFI Special Purpose Memory Support"
+> > > +       depends on EFI
+> > > +       ---help---
+> > > +         On systems that have mixed performance classes of memory EFI
+> > > +         may indicate special purpose memory with an attribute (See
+> > > +         EFI_MEMORY_SP in UEFI 2.8). A memory range tagged with this
+> > > +         attribute may have unique performance characteristics compared
+> > > +         to the system's general purpose "System RAM" pool. On the
+> > > +         expectation that such memory has application specific usage
+> > > +         answer Y to arrange for the kernel to reserve it for
+> > > +         direct-access (device-dax) by default. The memory range can
+> > > +         later be optionally assigned to the page allocator by system
+> > > +         administrator policy. Say N to have the kernel treat this
+> > > +         memory as general purpose by default.
+> > > +
+> > > +         If unsure, say Y.
+> > > +
+> >
+> > EFI_MEMORY_SP is now part of the UEFI spec proper, so it does not make
+> > sense to make any understanding of it Kconfigurable.
+>
+> No, I think you're misunderstanding what this Kconfig option is trying
+> to achieve.
+>
+> The configuration capability is solely for the default kernel policy.
+> As can already be seen by Christoph's response [1] the thought that
+> the firmware gets more leeway to dictate to Linux memory policy may be
+> objectionable.
+>
+> [1]: https://lore.kernel.org/lkml/20190409121318.GA16955@infradead.org/
+>
+> So the Kconfig option is gating whether the kernel simply ignores the
+> attribute and gives it to the page allocator by default. Anything
+> fancier, like sub-dividing how much is OS managed vs device-dax
+> accessed requires the OS to reserve it all from the page-allocator by
+> default until userspace policy can be applied.
+>
+
+I don't think this policy should dictate whether we pretend that the
+attribute doesn't exist in the first place. We should just wire up the
+bit fully, and only apply this policy at the very end.
+
+> > Instead, what I would prefer is to implement support for EFI_MEMORY_SP
+> > unconditionally (including the ability to identify it in the debug
+> > dump of the memory map etc), in a way that all architectures can use
+> > it. Then, I think we should never treat it as ordinary memory and make
+> > it the firmware's problem not to use the EFI_MEMORY_SP attribute in
+> > cases where it results in undesired behavior in the OS.
+>
+> No, a policy of "never treat it as ordinary memory" confuses the base
+> intent of the attribute which is an optional hint to get the OS to not
+> put immovable / non-critical allocations in what could be a precious
+> resource.
+>
+
+The base intent is to prevent the OS from using memory that is
+co-located with an accelerator for any purpose other than what the
+accelerator needs it for. Having a Kconfigurable policy that may be
+disabled kind of misses the point IMO. I think 'optional hint' doesn't
+quite capture the intent.
+
+> Moreover, the interface for platform firmware to indicate that a
+> memory range should never be treated as ordinary memory is simply the
+> existing "reserved" memory type, not this attribute. That's the
+> mechanism to use when platform firmware knows that a driver is needed
+> for a given mmio resource.
+>
+
+Reserved memory is memory that simply should never touched at all by
+the OS, and on ARM, we take care never to map it anywhere. However, it
+could be annotated with the EFI_MEMORY_RUNTIME attribute in order for
+the OS to provide a virtual mapping for it on behalf of the runtime
+services, which is why it needs to be listed in the memory map at all.
+This has nothing to do with usable memory that should or not should be
+used in a certain way by the OS.
+
+> > Also, sInce there is a generic component and a x86 component, can you
+> > please split those up?
+>
+> Sure, can do.
+>
+> >
+> > You only cc'ed me on patch #1 this time, but could you please cc me on
+> > the entire series for v2? Thanks.
+>
+> Yes, will do, and thanks for taking a look.
