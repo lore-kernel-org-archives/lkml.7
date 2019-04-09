@@ -2,130 +2,108 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9832BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81530C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C272083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D202083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DHpMqzEL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJATPsXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfDIHgd (ORCPT
+        id S1726757AbfDIHgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:36:33 -0400
-Received: from mail-eopbgr00073.outbound.protection.outlook.com ([40.107.0.73]:13166
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726205AbfDIHgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:36:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nIln8v+qggtQSAGuxpRxZ7vWPG7U0i/aoEbR+Ai6GJA=;
- b=DHpMqzELLiRzvxkuzWPHQulCsgr09ZS1OOz4EmrKKRzB+mms0E8Iq4lUOy7vk9uC+qL/WdUQrxO4Wx0RKFHdBYWYU2u0CjcAo7SL2Ec6uSxe0M4vjGO5kEzVgZ9cOcqpZPTPsVF+AzgocpmaQIiGbuK4X2qyDeVb+vPfDeEgzEU=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.138.152) by
- DB7PR04MB4027.eurprd04.prod.outlook.com (52.134.107.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.14; Tue, 9 Apr 2019 07:36:30 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::99f0:f8da:a123:e25]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::99f0:f8da:a123:e25%3]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
- 07:36:30 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
-Thread-Topic: [PATCH V2 2/5] can: flexcan: add CAN FD mode support
-Thread-Index: AQHU3hMIFyY4rNIjS0Kc2R8JlKca+KYyqbcAgACE+JCAAFo6gIAAA44g
-Date:   Tue, 9 Apr 2019 07:36:29 +0000
-Message-ID: <DB7PR04MB46185B04DA6F714FF120A3A8E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20190319051512.14950-3-qiangqing.zhang@nxp.com>
- <385f7948-d12b-1fc2-2ed2-23d1e76034a0@nxp.com>
- <DB7PR04MB46181D2AC261EAB6DEECEFCCE62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <VI1PR0402MB286355821F5C81122A7C86E2DF2D0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB286355821F5C81122A7C86E2DF2D0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7788d6e6-8fff-4d56-5750-08d6bcbe14f1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4027;
-x-ms-traffictypediagnostic: DB7PR04MB4027:
-x-microsoft-antispam-prvs: <DB7PR04MB4027DC8FD42415DA376DBA2DE62D0@DB7PR04MB4027.eurprd04.prod.outlook.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(376002)(366004)(346002)(13464003)(199004)(189003)(97736004)(54906003)(2906002)(6246003)(66066001)(229853002)(110136005)(71190400001)(26005)(186003)(3846002)(6116002)(99286004)(4326008)(102836004)(68736007)(71200400001)(53546011)(6506007)(106356001)(25786009)(105586002)(6436002)(476003)(486006)(11346002)(446003)(76176011)(7696005)(93886005)(33656002)(14444005)(256004)(8936002)(8676002)(52536014)(5660300002)(316002)(81156014)(9686003)(81166006)(74316002)(14454004)(305945005)(53936002)(7736002)(478600001)(86362001)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4027;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ghEo51XHPyOCqqcCHJDfVAqFYi0A5ZyZYYUiKXTAp7vY2rl1Fx73lYxYIykyzb1j17wfzAZXO9GQi8VTRvC4LnoFKJALtqwpnla/HVERICzJS7FSMDuvU8LA2HosxkiHmFDlrt/EqOqg3+2VXPiz64oDZMnWLuBIL5F5fcEnLsOCJbYIYkbvs+B48OyTJZLDgqnokE0glxLEO1hAuIyYxmCpfO/v6FqUhXzxCy7fxiVWi4jjZiihelXDgqijzg9pvYzu1Br2xQADZUZoDmsCBW/bL46JiFdSOjeUOjfx4Unc9gA8iKAEGCRzBG3CTQTACkIGUyzHJqkl6xWkqCmTG+y9IlaJtQOSAOBagSw2UmX675M2kmeUfdf2BasSZzrY/SaMjTs6XnHfn6kgokw3mwDMDVsLcYSAmFsJyLTZwng=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7788d6e6-8fff-4d56-5750-08d6bcbe14f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 07:36:29.8961
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4027
+        Tue, 9 Apr 2019 03:36:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41311 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfDIHgt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:36:49 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 188so9181388pfd.8;
+        Tue, 09 Apr 2019 00:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9bEy5XG2sC3I8z9cfzh5IJXe7CaSLjpMHO9QO+hf0Tg=;
+        b=CJATPsXQJpxEH7KprBLLawEhmA2fZ6GiGwQdxGCL2n6PfseNTcEI6XfCY17EuHGC9d
+         P5XODUE19v1i1kVNZjNN7K09l3j7H06l+7uJjg9nhWdD0Zn0COFy9SRoEkTIfYoM3Q9B
+         S78b4ymV1t4A2dj5nUnloAv3Tp3R/SJMlEhSkkAtsMsjNXO4mzS2QAh2wWFgc7/4tt5w
+         j+HGkk4sVqVfRe69BEY7d1GdwsuVVHjblO+KyfY0dE5UkK/IwNGw4F/rYlg4USMOmeuw
+         YL9PP6gyOA/PhTMveCEiqAPiNXOZIk3WgQsBfyPlydJnUAHk0xqvkFlfUL7026zhJl2Q
+         0uRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9bEy5XG2sC3I8z9cfzh5IJXe7CaSLjpMHO9QO+hf0Tg=;
+        b=lUSizg6y3ss47Y3nY62NR/55iwZtlJIeiCXC4xYyFP9xCYd7dX3mUC4r1+G5fQSJck
+         1xcBKdfgr5+DizxiZiJqYBc9fUPpUgaddDBWuNZJ4YbzTSgzlcq2/OplMyx+GgXj3fD7
+         spVQQHp/fPTrjoeIGVaNm9NlCzDEK/kON12pDx0/CZNO82fRVpgcM41V0cDbOuLCwWQf
+         5W1XQskYpV9TKjwOfuEv4K30JDUOIFQ+/OVkpP/IlfgkorsnHtlE5MLJhSMqbddC1crU
+         YsQ5vF2pJiYmlghCN5CxyVKsk2z79JJuyI47mvvZ8DTOZA0OrvBd4NJqDRn4HyrbS9+B
+         4J5Q==
+X-Gm-Message-State: APjAAAVgkLr/YFH5a/yrRS6FLwi2rKOIFkQyWvf9wgBWUkUaRNk75lZc
+        5pXFCFsnirCQgdStg3g5hXw=
+X-Google-Smtp-Source: APXvYqyij7GwvRqzOquOBiQ16Ms1tcqjlGsVYk6+rmpcmOGrAZtcwrQKwMGPFQBS5h8b9PRrtqkwMQ==
+X-Received: by 2002:aa7:8096:: with SMTP id v22mr5873344pff.94.1554795408852;
+        Tue, 09 Apr 2019 00:36:48 -0700 (PDT)
+Received: from shadowsocks.asia-east1-b.c.nth-highlander-219506.internal. (191.202.194.35.bc.googleusercontent.com. [35.194.202.191])
+        by smtp.gmail.com with ESMTPSA id j14sm32862446pfa.57.2019.04.09.00.36.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 00:36:47 -0700 (PDT)
+From:   Huang Rui <huangruippp@gmail.com>
+X-Google-Original-From: Huang Rui <huangruiPPP@gmail.com>
+To:     davem@davemloft.net
+Cc:     ast@kernel.org, daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, jiri@mellanox.com,
+        ecree@solarflare.com, idosch@mellanox.com, petrm@mellanox.com,
+        alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
+        lirongqing@baidu.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, huangruiPPP@gmail.com
+Subject: [PATCH] net:bridge:bridge mtu auto tuning does not always work
+Date:   Tue,  9 Apr 2019 07:36:42 +0000
+Message-Id: <20190409073642.12953-1-huangruiPPP@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0ZWZhbi1nYWJyaWVsIE1p
-cmVhDQo+IFNlbnQ6IDIwMTnE6jTUwjnI1SAxNTowNQ0KPiBUbzogSm9ha2ltIFpoYW5nIDxxaWFu
-Z3FpbmcuemhhbmdAbnhwLmNvbT47IE1hcmMgS2xlaW5lLUJ1ZGRlDQo+IDxta2xAcGVuZ3V0cm9u
-aXguZGU+DQo+IENjOiBsaW51eC1jYW5Admdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJu
-ZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJFOiBb
-UEFUQ0ggVjIgMi81XSBjYW46IGZsZXhjYW46IGFkZCBDQU4gRkQgbW9kZSBzdXBwb3J0DQo+IA0K
-PiA+IEZyb206IEpvYWtpbSBaaGFuZw0KPiA+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDksIDIwMTkg
-NTowNyBBTQ0KPiA+IEhpIFN0ZWZhbiwNCj4gPg0KPiA+IFRoYW5rcyBmb3IgeW91ciB2YWxpZGF0
-aW9uISBDb3VsZCB5b3UgYWRkIHlvdXIgdGVzdCB0YWcgaWYgeW91IGNhbg0KPiA+IHN1Y2Nlc3Nm
-dWxseSB2YWxpZGF0ZWQ/DQo+IA0KPiBTdXJlLCBubyBwcm9ibGVtLiBQbGVhc2Ugbm90ZSB0aGF0
-IEkgbmVlZGVkIHRvIHJlcGxhY2UgImZsZXhjYW5fcmVhZCIgYW5kDQo+ICJmbGV4Y2FuX3dyaXRl
-IiB3aXRoICJwcml2LT5yZWFkIiBhbmQgInByaXYtPndyaXRlIiByZXNwZWN0aXZlbHksIGluIFBB
-VENIIFYyDQo+IDQvNS4NCg0KICBIaSBTdGVmYW4sDQoNCiAgSSBtYWRlIGEgbWlzdGFrZSBoZXJl
-LCB0aGFuayB5b3UgZm9yIHBvaW50aW5nIG91dC4gSSB3aWxsIGZpeCBpdCBpbiBWMy4NCg0KPiA+
-ICBbSm9ha2ltIFpoYW5nXSBXZSBhZGRlZCBjYW4gZmQgc3VwcG9ydCBpbiA0Ljkga2VybmVsIHdo
-aWNoIGxldA0KPiA+IG1haWxib3hfcmVhZCBjYWxsIGFsbG9jX2NhbihmZClfc2tiIGluIHRoZSBw
-YXN0LiBOb3cgdGhlIGRyaXZlcg0KPiA+IGFsbG9jYXRlIHNrYiBiZWZvcmUgbWFpbGJveF9yZWFk
-IGluIHJ4X29mZmxvYWQgYW5kIGFsc28gcmVhZCB0aGUgb3ZlcmZsb3cNCj4gZnJhbWVzLg0KPiA+
-ICAgICAgICAgICAgICAgSSBhZGQgdGhlICJpc19jYW5mZCIgc2luY2UgSSBkb24ndCB3YW50IHRv
-IGNoYW5nZSB0aGUNCj4gPiByeF9vZmZsb2FkIGZyYW1ld29yayB0b28gbXVjaC4gQG1rbEBwZW5n
-dXRyb25peC5kZSwgY291bGQgeW91IGdpdmUNCj4gPiBzb21lIGFkdmljZSwgd2hpY2ggc29sdXRp
-b24gaXMgYmV0dGVyPw0KPiANCj4gVGhpcyBpcyBtb3JlIG9mIGEgZnVuY3Rpb25hbGl0eSBpc3N1
-ZS4gRm9yIGV4YW1wbGUsIGNhbmR1bXAgZnJvbSBjYW51dGlscyA0LjAuNg0KPiBuZXZlciBzaG93
-cyBDQU4gRkQgZnJhbWVzLCBidXQgc2hvdWxkIHN0aWxsIGJlIGFibGUgdG8gc2hvdyB0aGUgQ0FO
-IDIuMCBvbmVzDQo+IHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciAiZmQgb24iIHdhcyBzdXBwbGllZC4g
-SSBzdWdnZXN0IHRoZSBmb2xsb3dpbmcgc2VwYXJhdGlvbjoNCj4gDQo+IGNhbl9yeF9vZmZsb2Fk
-X29mZmxvYWRfb25lOg0KPiAJc3RydWN0IHNrX2J1ZmYgKnNrYiA9IE5VTEw7DQo+IAkuLi4NCj4g
-CWJvb2wgZHJvcCA9IHVubGlrZWx5KHNrYl9xdWV1ZV9sZW4oJm9mZmxvYWQtPnNrYl9xdWV1ZSkg
-Pg0KPiAJCQkgICAgIG9mZmxvYWQtPnNrYl9xdWV1ZV9sZW5fbWF4KTsNCj4gDQo+IAlpZiAob2Zm
-bG9hZC0+bWFpbGJveF9yZWFkKG9mZmxvYWQsIGRyb3AsICZza2IsICZ0aW1lc3RhbXAsIG4pICYm
-ICFza2IpDQo+IAkJb2ZmbG9hZC0+ZGV2LT5zdGF0cy5yeF9kcm9wcGVkKys7DQo+IA0KPiAJaWYg
-KHNrYikgew0KPiAJCXN0cnVjdCBjYW5fcnhfb2ZmbG9hZF9jYiAqY2IgPSBjYW5fcnhfb2ZmbG9h
-ZF9nZXRfY2Ioc2tiKTsNCj4gDQo+IAkJY2ItPnRpbWVzdGFtcCA9IHRpbWVzdGFtcDsNCj4gCX0N
-Cj4gDQo+IAlyZXR1cm4gc2tiOw0KPiANCj4gZmxleGNhbl9tYWlsYm94X3JlYWQ6DQo+IAkuLi4N
-Cj4gCWlmICghZHJvcCkgew0KPiAJCWlmIChyZWdfY3RybCAmIEZMRVhDQU5fTUJfQ05UX0VETCkN
-Cj4gCQkJKnNrYiA9IGFsbG9jX2NhbmZkX3NrYihvZmZsb2FkLT5kZXYsICZjZik7DQo+IAkJZWxz
-ZQ0KPiAJCQkqc2tiID0gYWxsb2NfY2FuX3NrYihvZmZsb2FkLT5kZXYsDQo+IAkJCQkJICAgICAo
-c3RydWN0IGNhbl9mcmFtZSAqKikmY2YpOw0KPiAJfQ0KPiAJaWYgKCpza2IpIHsNCj4gCQkvKiB1
-c2UgY2YgKi8NCj4gCQkuLi4NCj4gCX0NCj4gCS8qIG1hcmsgYXMgcmVhZCAqLw0KPiANCj4gQWx0
-aG91Z2ggbm90IHZpc2libGUgaW4gdGhlIEZsZXhDQU4gY2FzZSwgdGhlIHNvY2tldCBidWZmZXJz
-IHdvdWxkIGJlIGFsc28NCj4gZnJlZWQgZnJvbSBpbnNpZGUgbWFpbGJveF9yZWFkIGlmIGVycm9y
-cyB3ZXJlIGVuY291bnRlcmVkIGFmdGVyIGFsbG9jYXRpb24uDQogIA0KIFRoaXMgaXMgYSBnb29k
-IHNvbHV0aW9uLCBJIHdpbGwgYWRkIGl0IGluIFYzLiBUaGFuayB5b3UgdmVyeSBtdWNoLg0KDQpC
-ZXN0IFJlZ2FyZHMsDQpKb2FraW0gWmhhbmcNCg0KPiBSZWdhcmRzLA0KPiBTdGVmYW4NCg==
+If someone setup a bridge and add a port(for example: eth0)
+into the bridge, but configure the bridge's mtu which is equal
+to eth0's mtu, the auto tuning flag will not be set true. But
+the meaning of the auto tuning flag is that it will be set true
+if a user configure bridge's mtu.
+
+Signed-off-by: Huang Rui <huangruiPPP@gmail.com>
+---
+ net/core/dev.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 2b67f2a..ba410d7 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7670,8 +7670,12 @@ int dev_set_mtu_ext(struct net_device *dev, int new_mtu,
+ {
+ 	int err, orig_mtu;
+ 
+-	if (new_mtu == dev->mtu)
+-		return 0;
++	if (new_mtu == dev->mtu) {
++		if (dev->priv_flags & IFF_EBRIDGE)
++			return __dev_set_mtu(dev, new_mtu);
++		else
++			return 0;
++	}
+ 
+ 	/* MTU must be positive, and in range */
+ 	if (new_mtu < 0 || new_mtu < dev->min_mtu) {
+-- 
+1.8.3.1
+
