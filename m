@@ -2,97 +2,148 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE3AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951A7C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871A620833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SCHnd5dB"
+	by mail.kernel.org (Postfix) with ESMTP id 68CCD20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 21:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDIVQG (ORCPT
+        id S1726612AbfDIVRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 17:16:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42195 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfDIVQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 17:16:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44f0Sy1RPSz9sTL;
-        Wed, 10 Apr 2019 07:16:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554844562;
-        bh=CY7vp+AOdaEGbXRn0Jb4+9n9d17lWmVWbiC3unm7Z3I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SCHnd5dBbc0IGTylTQkZXh/s+esQd6DvQILhORg7fWWGfaYOrIyaeph8IE8RIcMXZ
-         18VraCzsUbKw44/WMzZcT7sEhizlVkwAO0IdTM3h/ksoqSJluNq2aITgk0JZmkDx6E
-         5yFDOg0o8Wg3GVlmT5Eso2iNDFNQ34xCwC4UeVLeS1PHXESkZz5KaFJb80LPYmTz85
-         XbbDhoFIV9qKdeSPyvXVHeM2o4OU1mYeOM7ArFeY9sVLS0oRZl15txMmwT5Mcim+Iy
-         ToXJprhy8ooqaOUanyGtDsjagAbZmo3gL3LJiidptLYGH9NC2T2SKC46IJDhj+RHB7
-         u3247RHySMwqg==
-Date:   Wed, 10 Apr 2019 07:15:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: linux-next: Fixes tag needs some work in the nvdimm-fixes tree
-Message-ID: <20190410071555.6a283e81@canb.auug.org.au>
+        Tue, 9 Apr 2019 17:17:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37700 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfDIVRL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 17:17:11 -0400
+Received: from static-50-53-47-167.bvtn.or.frontiernet.net ([50.53.47.167] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1hDy78-0003k9-Ji; Tue, 09 Apr 2019 21:17:06 +0000
+Subject: Re: [PATCH] apparmor: Restore Y/N in /sys for apparmor's "enabled"
+To:     James Morris <jmorris@namei.org>, Kees Cook <keescook@chromium.org>
+Cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190408160706.GA18786@beast>
+ <CADyDSO4NkEY-SPT-abnyRXT9kGWhF8LbU3XQGNp-5k_15debDg@mail.gmail.com>
+ <CAGXu5j+g8tPrDAYVKv26ci6zvGuvC1TMXto7weVP2QBymMRjhw@mail.gmail.com>
+ <alpine.LRH.2.21.1904100611310.7633@namei.org>
+From:   John Johansen <john.johansen@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <1b73db72-bc87-400c-a4e3-709e21bc6359@canonical.com>
+Date:   Tue, 9 Apr 2019 14:17:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Lh_f5ZKb7voCN2YyW9N7roG"; protocol="application/pgp-signature"
+In-Reply-To: <alpine.LRH.2.21.1904100611310.7633@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Lh_f5ZKb7voCN2YyW9N7roG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/9/19 1:11 PM, James Morris wrote:
+> On Tue, 9 Apr 2019, Kees Cook wrote:
+> 
+>> On Mon, Apr 8, 2019 at 11:21 PM David Rheinsberg
+>> <david.rheinsberg@gmail.com> wrote:
+>>>
+>>> Hi
+>>>
+>>> On Mon, Apr 8, 2019 at 6:07 PM Kees Cook <keescook@chromium.org> wrote:
+>>>>
+>>>> Before commit c5459b829b71 ("LSM: Plumb visibility into optional "enabled"
+>>>> state"), /sys/module/apparmor/parameters/enabled would show "Y" or "N"
+>>>> since it was using the "bool" handler. After being changed to "int",
+>>>> this switched to "1" or "0", breaking the userspace AppArmor detection
+>>>> of dbus-broker. This restores the Y/N output while keeping the LSM
+>>>> infrastructure happy.
+>>>>
+>>>> Before:
+>>>>         $ cat /sys/module/apparmor/parameters/enabled
+>>>>         1
+>>>>
+>>>> After:
+>>>>         $ cat /sys/module/apparmor/parameters/enabled
+>>>>         Y
+>>>>
+>>>> Reported-by: David Rheinsberg <david.rheinsberg@gmail.com>
+>>>> Link: https://lkml.kernel.org/r/CADyDSO6k8vYb1eryT4g6+EHrLCvb68GAbHVWuULkYjcZcYNhhw@mail.gmail.com
+>>>> Fixes: c5459b829b71 ("LSM: Plumb visibility into optional "enabled" state")
+>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>> ---
+>>>> This fix, if John is okay with it, is needed in v5.1 to correct the
+>>>> userspace regression reported by David.
+>>>> ---
+>>>>  security/apparmor/lsm.c | 49 ++++++++++++++++++++++++++++++++++++++++-
+>>>>  1 file changed, 48 insertions(+), 1 deletion(-)
+>>>
+>>> This looks good to me. Thanks a lot! If this makes v5.1, I will leave
+>>> the apparmor-detection in dbus-broker as it is, unless someone asks me
+>>> to parse 0/1 as well?
+>>>
+>>> I cannot judge whether the apparmor_initialized check is correct, but
+>>> for the parameter parsing:
+>>>
+>>> Reviewed-by: David Rheinsberg <david.rheinsberg@gmail.com>
+>>
+>> Thanks!
+>>
+>> James, are you able to take this for v5.1 fixes?
+> 
+> Actually, JJ usually submits directly to Linus.  
+> 
 
-Hi Dan,
-
-In commit
-
-  631804370762 ("tools/testing/nvdimm: Retain security state after overwrit=
-e")
-
-Fixes tag
-
-  Fixes: 926f74802cb ("tools/testing/nvdimm: Add overwrite support for nfit=
-_test")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Lh_f5ZKb7voCN2YyW9N7roG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytC4sACgkQAVBC80lX
-0GwrPQf/cxotoDN5+QHPjWSNJ1vkJYZRiAmUIAa0RMJMbJhdRCpUtjZDCAKuu/EB
-aRrnCIO6eftLIR6my8lrzpDeqxHT0omHY9AWJI791mcvjIqcqmVF0mskGd6DJpGy
-VxvleYMuWo1ReJM84bplc2vu25JrgT2AGl9svOVE5fPXCEOHk7gGog8Jzov8uQfu
-Os6SaVf2Xjvyr9M9umf8Q9apzvmoSsN0Ebxr3zNfO8seYaZgEJ64mQQ+tuXdTW2k
-IgkAuu9OS47L/XGYaLJucHhylQ9ZpD+syiglw0V6cLyblYTEIFqvG6lGX+2iBmle
-PGz9mOfLt5+truOrhqxlA6NwcMOS4w==
-=PjQh
------END PGP SIGNATURE-----
-
---Sig_/Lh_f5ZKb7voCN2YyW9N7roG--
+yeah, I can push this up
