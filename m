@@ -2,433 +2,141 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65872C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EEB20833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C86F20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="b3HUt1y5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lhvXYLjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfDIIib (ORCPT
+        id S1726689AbfDIIkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:38:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45027 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfDIIib (ORCPT
+        Tue, 9 Apr 2019 04:40:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54540 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDIIkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:38:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id u12so13503494iop.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 01:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hr0F5S+XzCD5idVwYm4YlXT0ZQ48Tzc2AUxRkYlWLt0=;
-        b=b3HUt1y5APEE+bVngHS7/hqwuEuoZr5jU+BN9RSsc6yAS6tSfYUu/FMhV+qLtKtFoA
-         BDKAP/hK+y9Ys+lME3TAxRlT+bPSQ/J/KWfYeocq8FZgqQF2dzgk9YohHXlHv1yhVIJB
-         Twd2whkRTIdJsmLH5cueKWUAHuoi/GyUVnqpg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hr0F5S+XzCD5idVwYm4YlXT0ZQ48Tzc2AUxRkYlWLt0=;
-        b=GBf6z+vwQKKmEbwtaoJ/0MuElKxdWzqZ7erjQLX5fUuwDLKrJO3EJaGXHoiw6LKYZf
-         nr/K7LHUHVvIBL/4H+AzyiEDy6qD0Uxq0FifTe8njbthxteuRMSMkTSPzopusvQ00uY0
-         W2uHBt4X3RKnR+sdN49NQcT5dfDnLUNXsmdc9AMfz++0xQIuYyHIfU6/7TgpGw3XO3W1
-         1R+3hmS3WIpUAftDvFfz1r0b/f29V5v4DABG2Kw8HNx0X8snDVm3ehMo0eZVJ8P7+8s1
-         jjk3rkw82U/otrOCe1w9jxJLAvkh88mOPW9s3PcrxGKpri1N8FVWWDk5byLfnreh8x/A
-         KFpw==
-X-Gm-Message-State: APjAAAUPX5Td2tAWnfn3P8PpkaCO8y1BWl3bmuBL/7aDmRfBGJ70mPe1
-        65tBK62JLJSWq5BScZNp5aF02qFDN0QN3JkQsJKRKQ==
-X-Google-Smtp-Source: APXvYqy4gcARrrXnr06bFhPto4qWS5OzxSMNzk0PkAIwxZzg9F8eA3+vXxZ7ji7vtBkbuhDMtjSnIiVCATsQVI5iA+Q=
-X-Received: by 2002:a5e:8202:: with SMTP id l2mr2112372iom.144.1554799109450;
- Tue, 09 Apr 2019 01:38:29 -0700 (PDT)
+        Tue, 9 Apr 2019 04:40:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lacHWlCx5ytgox4JLsXW5Q6SwzY5b3yqibU9d2knw0I=; b=lhvXYLjqNNEbiT3kLHTdp3XKI
+        ASSOv8ODxIXKQUX/xoJ/aVwyTitaWIPrvB5Sk4HEti2Jrg11MZ7v4HWuVGs2KIPc9+D/7psxqKxiP
+        aDOxGb5uUSO0Z/UUZmyrHyQsydJdoHWoLiwgiVGaM2O9fj5mhXKJVxM6JvBUeoQyeaaYPy2Q2ZBMM
+        dtVMSoebu6HpZHDqq1fK9pRaYIL7BVuD6VEpDLqxSIXFr1UNgZQU6chQipXQAxy43Bf+ZTqCaHjVX
+        yHNPORoplXsJvCHiYFeC8Fd7xoWx8p0MXTFkeF/uklaKPwhLAYHOBFdN4DjrsvZhqQKKU81XKsOXz
+        ZDImuaCxQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDmIz-0006gc-0m; Tue, 09 Apr 2019 08:40:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5901E20CE1DC1; Tue,  9 Apr 2019 10:40:31 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 10:40:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86: mm: Do not use set_{pud,pmd}_safe when splitting
+ the large page
+Message-ID: <20190409084031.GO4038@hirez.programming.kicks-ass.net>
+References: <20190408191103.13501-1-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
-In-Reply-To: <20190409002452.14551-3-megous@megous.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 9 Apr 2019 14:08:18 +0530
-Message-ID: <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-To:     megous@megous.com
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408191103.13501-1-brijesh.singh@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the conversation about using common dtsi from this thread[1],
-I'm commenting here to make show the diff directly on the nodes,
-giving comments on each node so-that we can see the diff globally.
+On Mon, Apr 08, 2019 at 07:11:21PM +0000, Singh, Brijesh wrote:
+> The following commit 0a9fe8ca844d ("x86/mm: Validate kernel_physical_mapping_init()
+> PTE population") triggers the below warning in the SEV guest.
+> 
+> WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgalloc.h:87 phys_pmd_init+0x30d/0x386
+> Call Trace:
+>  kernel_physical_mapping_init+0xce/0x259
+>  early_set_memory_enc_dec+0x10f/0x160
+>  kvm_smp_prepare_boot_cpu+0x71/0x9d
+>  start_kernel+0x1c9/0x50b
+>  secondary_startup_64+0xa4/0xb0
+> 
+> The SEV guest calls kernel_physical_mapping_init() to clear the encryption
+> mask from an existing mapping. While clearing the encryption mask
+> kernel_physical_mapping_init() splits the large pages into the smaller.
+> To split the page, the kernel_physical_mapping_init() allocates a new page
+> and updates the existing entry. The set_{pud,pmd}_safe triggers warning
+> when updating the entry with page in the present state. We should use the
+> set_{pud,pmd} when updating an existing entry with the new entry.
+> 
+> Updating an entry will also requires a TLB flush. Currently the caller
+> (early_set_memory_enc_dec()) is taking care of issuing the TLB flushes.
 
-On Tue, Apr 9, 2019 at 5:55 AM megous via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 is a H6 based SBC made by Xulong, released in January 2019. I=
-t
-> has the following features:
->
-> - Allwinner H6 quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 1GB or 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - AP6256 Wifi/BT 5.0
-> - USB 2.0 host port (A)
-> - USB 2.0 micro usb, OTG
-> - USB 3.0 Host + 4 port USB hub (GL3510)
-> - Gigabit Ethernet (Realtek RTL8211E phy)
-> - HDMI 2.0 port
-> - soldered eMMC (optional)
-> - 3x LED (one is on the bottom)
-> - microphone
-> - audio jack
-> - PCIe
->
-> Add basic support for the board.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+I'm not entirely sure I like this, this means all users of
+kernel_physical_mapping_init() now need to be aware and careful.
+
+That said; the alternative is adding an argument to the function and
+propagating it through the callchain and dynamically switching between
+_safe and not. Which doesn't sound ideal either.
+
+Anybody else got clever ideas?
+
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Fixes: 0a9fe8ca844d (x86/mm: Validate kernel_physical_mapping_init() ...)
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Tom Lendacky <Thomas.Lendacky@amd.com>
 > ---
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 216 ++++++++++++++++++
->  2 files changed, 217 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dt=
-s
->
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..285a7cb5135b 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dt=
-b
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> new file mode 100644
-> index 000000000000..5fbc5e410883
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -0,0 +1,216 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2019 Ond=C5=99ej Jirman <megous@megous.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +       model =3D "OrangePi 3";
-> +       compatible =3D "xunlong,orangepi-3", "allwinner,sun50i-h6";
-> +
-> +       aliases {
-> +               serial0 =3D &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path =3D "serial0:115200n8";
-> +       };
-> +
-> +       leds {
-> +               compatible =3D "gpio-leds";
-> +
-> +               power {
-> +                       label =3D "orangepi:red:power";
-> +                       gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
-/
-> +                       default-state =3D "on";
-> +               };
-> +
-> +               status {
-> +                       label =3D "orangepi:green:status";
-> +                       gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 *=
-/
-> +               };
-> +       };
-> +
-> +       reg_vcc5v: vcc5v {
-> +               /* board wide 5V supply directly from the DC jack */
-> +               compatible =3D "regulator-fixed";
-> +               regulator-name =3D "vcc-5v";
-> +               regulator-min-microvolt =3D <5000000>;
-> +               regulator-max-microvolt =3D <5000000>;
-> +               regulator-always-on;
-> +       };
-> +};
-
-all above nodes are common to all h6 opi boards.
-
-> +
-> +&cpu0 {
-> +       cpu-supply =3D <&reg_dcdca>;
-> +};
-> +
-> +&ehci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&ehci3 {
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&mmc0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&mmc0_pins>;
-> +       vmmc-supply =3D <&reg_cldo1>;
-> +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-> +       bus-width =3D <4>;
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&ohci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&ohci3 {
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&pio {
-> +       vcc-pc-supply =3D <&reg_bldo2>;
-> +       vcc-pd-supply =3D <&reg_cldo1>;
-> +};
-> +
-> +&r_i2c {
-> +       status =3D "okay";
-> +
-> +       axp805: pmic@36 {
-> +               compatible =3D "x-powers,axp805", "x-powers,axp806";
-> +               reg =3D <0x36>;
-> +               interrupt-parent =3D <&r_intc>;
-> +               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-controller;
-> +               #interrupt-cells =3D <1>;
-> +               x-powers,self-working-mode;
-> +               vina-supply =3D <&reg_vcc5v>;
-> +               vinb-supply =3D <&reg_vcc5v>;
-> +               vinc-supply =3D <&reg_vcc5v>;
-> +               vind-supply =3D <&reg_vcc5v>;
-> +               vine-supply =3D <&reg_vcc5v>;
-> +               aldoin-supply =3D <&reg_vcc5v>;
-> +               bldoin-supply =3D <&reg_vcc5v>;
-> +               cldoin-supply =3D <&reg_vcc5v>;
-
-all these supply voltage regulators are common to h6 opi boards.
-
-> +
-> +               regulators {
-> +                       reg_aldo1: aldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-pl-led-ir";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       reg_aldo2: aldo2 {
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-audio-tv-ephy-m=
-ac";
-> +                       };
-
-rest of h6 opi boards used it for vcc-ac200, we may append ac200 and
-make it common since the voltage is same.
-
-> +
-> +                       /* ALDO3 is shorted to CLDO1 */
-> +                       reg_aldo3: aldo3 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-1";
-> +                       };
-
-same like above regulator.
-
-> +
-> +                       reg_bldo1: bldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc18-dram-bias-pll";
-
-same like other h6 boards.
-
-> +                       };
-> +
-> +                       reg_bldo2: bldo2 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc-efuse-pcie-hdmi-p=
-c";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       bldo3 {
-> +                               /* unused */
-> +                       };
-
-This is used in other h6 opi boards so we may attach status or
-re-enable it on board dts file.
-
-> +
-> +                       bldo4 {
-> +                               /* unused */
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       reg_cldo1: cldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-2";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       cldo2 {
-> +                               /* unused */
-> +                       };
-> +
-> +                       cldo3 {
-> +                               /* unused */
-> +                       };
-
-These two used for wifi, so we may define on board dts or attach
-status property.
-
-> +
-> +                       reg_dcdca: dcdca {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <1160000>;
-> +                               regulator-name =3D "vdd-cpu";
-> +                       };
-> +
-> +                       reg_dcdcc: dcdcc {
-> +                               regulator-min-microvolt =3D <810000>;
-> +                               regulator-max-microvolt =3D <1080000>;
-> +                               regulator-name =3D "vdd-gpu";
-> +                       };
-> +
-> +                       reg_dcdcd: dcdcd {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <960000>;
-> +                               regulator-max-microvolt =3D <960000>;
-> +                               regulator-name =3D "vdd-sys";
-> +                       };
-> +
-> +                       reg_dcdce: dcdce {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1200000>;
-> +                               regulator-max-microvolt =3D <1200000>;
-> +                               regulator-name =3D "vcc-dram";
-> +                       };
-> +
-> +                       sw {
-> +                               /* unused */
-> +                       };
-
-all above regulators are common to h6 boards.
-
-> +               };
-> +       };
-> +};
-> +
-> +&uart0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&uart0_ph_pins>;
-> +       status =3D "okay";
-> +};
-> +
-> +&usb2otg {
-> +       /*
-> +        * Beware that this board will not automatically disconnect
-> +        * VBUS from DCIN, when self-powered and used as a peripheral.
-> +        */
-> +       dr_mode =3D "otg";
-> +       status =3D "okay";
-> +};
-
-above nodes uart0, usb2otg are common to h6 opi boards.
-
-> +
-> +&usb2phy {
-> +       usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
-> +       usb0_vbus-supply =3D <&reg_vcc5v>;
-> +       usb3_vbus-supply =3D <&reg_vcc5v>;
-> +       status =3D "okay";
-> +};
-> --
-
-id detect pin can be differ, so we may move this on board specific dts.
-
-Note: the emac node is also common between h6 opi boards.
-
-[1] https://lkml.org/lkml/2019/4/5/857
+>  arch/x86/mm/init_64.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index bccff68e3267..0a26b64a99b9 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -536,7 +536,7 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+>  		paddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot);
+>  
+>  		spin_lock(&init_mm.page_table_lock);
+> -		pmd_populate_kernel_safe(&init_mm, pmd, pte);
+> +		pmd_populate_kernel(&init_mm, pmd, pte);
+>  		spin_unlock(&init_mm.page_table_lock);
+>  	}
+>  	update_page_count(PG_LEVEL_2M, pages);
+> @@ -623,7 +623,7 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+>  					   page_size_mask, prot);
+>  
+>  		spin_lock(&init_mm.page_table_lock);
+> -		pud_populate_safe(&init_mm, pud, pmd);
+> +		pud_populate(&init_mm, pud, pmd);
+>  		spin_unlock(&init_mm.page_table_lock);
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
