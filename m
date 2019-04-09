@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB466C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA262C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB85520883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD1E2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TX3lekic"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shalK5ht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfDIRYO (ORCPT
+        id S1726615AbfDIRYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:24:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42638 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfDIRYN (ORCPT
+        Tue, 9 Apr 2019 13:24:17 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32937 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfDIRYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:24:13 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cv12so9792782plb.9;
-        Tue, 09 Apr 2019 10:24:13 -0700 (PDT)
+        Tue, 9 Apr 2019 13:24:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k19so9701235pgh.0;
+        Tue, 09 Apr 2019 10:24:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WDkdjCuCoMl4klGjBikpqpnhMyWOhlVzWHe2RSdyLn0=;
-        b=TX3lekicuwdd7C++LfiUuLaqPbrTD3Spl0GMuuAv9LUWdOWbBQhnsXzW9GFO8p3I+W
-         6j5Ykqe3nhTs4MKMkWufVVbH7f0BDWYDdsgJl2y4IMRNETk4k+5gpen4jfR1JrerUwEv
-         hDcpcd/eSq0foA2J9OYBalqPNR8i+d9ZzRCYoSrMLOActt5BOadq9C3u+rPH3rBiXBnG
-         gCSdKu8HyPL0jETy6QpkoOJ2WKaGUnpxp4ht0SH8LgLT1QuyH9x0MsZY7W5j84c3Oze9
-         DRmXaX+tZViYWn2v6aFHX3NNcuz0NQq5/bb1Rr9zePhxo7cPa2bhZXlwyMXw4lT99xAG
-         k88g==
+        bh=jKbn0+uhPr/AYdBY5ar3yTCFhEOd5nLB6VfRC6MJRs4=;
+        b=shalK5htuv5iTeHjjay2f9Y3ThgIXWaEiHASUHAjJLeFul0xMsWmwAijFo3QQNG3+n
+         kyIfcFdqYlMnJmXIB4IZNWdEFxDk7QYNU9/IO8YS7tR4vJGsoNZ+fYLjchvx6si5y5Jt
+         vrr7qKsSnRwWAYihNwLiLVHhNzsRSQ2G9+M34VbPixh/nlABu9pYlupp4Yc9MDHAcgfE
+         epMhlHuYLpZikldCbXUFwvysFL0gp2OB52qk2n3QaUPPmn5dqOYMnM2DNk/DQ4FomCdw
+         vVVPvifyM/Dg+YS9UIJZFiFt6W9UhMeIoSYOF+gSMZnLN/T7d6pnZkzN8o0Uerw6eX8h
+         CLXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=WDkdjCuCoMl4klGjBikpqpnhMyWOhlVzWHe2RSdyLn0=;
-        b=DqJW3NmDkeMzREcHwi4M5a1FI39xHWQVyPJ9ovCrIM5SWRYZStvpRSqzsR7CN2+EGP
-         uvXtZSfLk1ryhS83Twkg074p83KZmkipVWGWuKBPSCoDjvhedDTJpT5xPrm1Autq9I38
-         pjy2v6iVdYuo+8bt1SoHpEgU4beK9qqMMRIcIABFXo8slZYm2AEUXmAlEbOco4B+i8D3
-         dYedXT9AvULcq2Du6CEVFlbXSbModaICRNWfdJIHoy+Yl3CkBKBAaTx7htwbZNIK+ryQ
-         l0skkD0YqIXct2pfqFQ4+/nyl6Ti/jdTXDvA++yf5HC9oYjNqpX8Z2UB0ktPyPQVv/zk
-         UmBA==
-X-Gm-Message-State: APjAAAVLnoT3KV+qYZB5Rr45mia0LtGXrARyCeIQOWmYmpfNu/+J8Rm2
-        3p0YYjyfhhiKFPbjdBA11Akcuq34
-X-Google-Smtp-Source: APXvYqwVcFu9w2KErfPWvjoL2Iq7SKADR+E81dsVQ7tlI2u7cBlGnLxyX6ixz52AWUCZyqnbdehC/A==
-X-Received: by 2002:a17:902:d83:: with SMTP id 3mr14265678plv.125.1554830653174;
-        Tue, 09 Apr 2019 10:24:13 -0700 (PDT)
+        bh=jKbn0+uhPr/AYdBY5ar3yTCFhEOd5nLB6VfRC6MJRs4=;
+        b=bzDV3Ul09EifMpYrZHA2bKU4VVSs3RqgqWaN4lKOyrBO56zEut/+cS3FDeZO2GmTdg
+         PIM+QhVynYxXhC+/yjz6D+IC04jMsqaqKc2ZNgYP737X0srP0gZdTzG4pRkX9D85j8AC
+         u47nTI5RLH0FAZ0707kHk1rIDflFtvDWylMw4iNRriZIfGyMJYOA0xCnLvIzSo6ALfaq
+         FERfDPM/ynZDtKUK9UoW+gEnQTcy/lUvY2CujKTCNhEdSRM1R4e157oEx5VCe1AxVHmN
+         JRggAgQFeYW+HJO9qQEoUWop1uq3zjfZh9ohKNxtXeTdoMzRuQOhYLuXfcNIixx+LmFN
+         Kw4g==
+X-Gm-Message-State: APjAAAX7X5nJeSFgkKupBsn0urOmlpHXEAK7Snv/uSod6EFjcBK586RV
+        EegLI9eeGT5Hywku/u3Bi7R8sdpf
+X-Google-Smtp-Source: APXvYqyWqvGmg7h8q0DRYGXRO1e1TkVmxX/7G5h+mhILcL6AodF6B/LsfwYkj/OEg2rduen9pky5RQ==
+X-Received: by 2002:a63:450f:: with SMTP id s15mr35323176pga.157.1554830654534;
+        Tue, 09 Apr 2019 10:24:14 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m16sm83832033pfi.29.2019.04.09.10.24.12
+        by smtp.gmail.com with ESMTPSA id a6sm46239723pfn.181.2019.04.09.10.24.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 10:24:12 -0700 (PDT)
+        Tue, 09 Apr 2019 10:24:14 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 01/23] watchdog: max77620_wdt: Convert to use device managed functions and other improvements
-Date:   Tue,  9 Apr 2019 10:23:39 -0700
-Message-Id: <1554830641-9247-2-git-send-email-linux@roeck-us.net>
+        Guenter Roeck <linux@roeck-us.net>,
+        Johannes Thumshirn <morbidrsa@gmail.com>
+Subject: [PATCH 02/23] watchdog: mena21_wdt: Use 'dev' instead of dereferencing it repeatedly
+Date:   Tue,  9 Apr 2019 10:23:40 -0700
+Message-Id: <1554830641-9247-3-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
@@ -70,90 +71,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device managed functions to simplify error handling, reduce
-source code size, improve readability, and reduce the likelyhood of bugs.
-Other improvements as listed below.
+Introduce local variable 'struct device *dev' and use it instead of
+dereferencing it repeatedly.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
-- Drop assignments to otherwise unused variables
-- Drop empty remove function
-- Introduce local variable 'struct device *dev' and use it instead of
-  dereferencing it repeatedly
-- Replace stop on remove with call to watchdog_stop_on_unregister()
-- Use devm_watchdog_register_driver() to register watchdog device
-
+Cc: Johannes Thumshirn <morbidrsa@gmail.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/max77620_wdt.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ drivers/watchdog/mena21_wdt.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/watchdog/max77620_wdt.c b/drivers/watchdog/max77620_wdt.c
-index 70c9cd3ba938..3ca6b9337932 100644
---- a/drivers/watchdog/max77620_wdt.c
-+++ b/drivers/watchdog/max77620_wdt.c
-@@ -112,17 +112,18 @@ static const struct watchdog_ops max77620_wdt_ops = {
+diff --git a/drivers/watchdog/mena21_wdt.c b/drivers/watchdog/mena21_wdt.c
+index 6db69883ece6..e9ca4e0e25dc 100644
+--- a/drivers/watchdog/mena21_wdt.c
++++ b/drivers/watchdog/mena21_wdt.c
+@@ -127,19 +127,20 @@ static struct watchdog_device a21_wdt = {
  
- static int max77620_wdt_probe(struct platform_device *pdev)
+ static int a21_wdt_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
- 	struct max77620_wdt *wdt;
- 	struct watchdog_device *wdt_dev;
- 	unsigned int regval;
+ 	struct a21_wdt_drv *drv;
+ 	unsigned int reset = 0;
+ 	int num_gpios;
  	int ret;
+ 	int i;
  
--	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
- 	if (!wdt)
+-	drv = devm_kzalloc(&pdev->dev, sizeof(struct a21_wdt_drv), GFP_KERNEL);
++	drv = devm_kzalloc(dev, sizeof(struct a21_wdt_drv), GFP_KERNEL);
+ 	if (!drv)
  		return -ENOMEM;
  
--	wdt->dev = &pdev->dev;
--	wdt->rmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	wdt->dev = dev;
-+	wdt->rmap = dev_get_regmap(dev->parent, NULL);
- 	if (!wdt->rmap) {
- 		dev_err(wdt->dev, "Failed to get parent regmap\n");
+-	num_gpios = gpiod_count(&pdev->dev, NULL);
++	num_gpios = gpiod_count(dev, NULL);
+ 	if (num_gpios != NUM_GPIOS) {
+-		dev_err(&pdev->dev, "gpios DT property wrong, got %d want %d",
++		dev_err(dev, "gpios DT property wrong, got %d want %d",
+ 			num_gpios, NUM_GPIOS);
  		return -ENODEV;
-@@ -183,25 +184,16 @@ static int max77620_wdt_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(wdt_dev, nowayout);
- 	watchdog_set_drvdata(wdt_dev, wdt);
+ 	}
+@@ -152,12 +153,9 @@ static int a21_wdt_probe(struct platform_device *pdev)
+ 			gflags = GPIOD_ASIS;
+ 		else
+ 			gflags = GPIOD_IN;
+-		drv->gpios[i] = devm_gpiod_get_index(&pdev->dev, NULL, i,
+-						     gflags);
+-		if (IS_ERR(drv->gpios[i])) {
+-			ret = PTR_ERR(drv->gpios[i]);
+-			return ret;
+-		}
++		drv->gpios[i] = devm_gpiod_get_index(dev, NULL, i, gflags);
++		if (IS_ERR(drv->gpios[i]))
++			return PTR_ERR(drv->gpios[i]);
  
--	ret = watchdog_register_device(wdt_dev);
-+	watchdog_stop_on_unregister(wdt_dev);
-+	ret = devm_watchdog_register_device(dev, wdt_dev);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-+		dev_err(dev, "watchdog registration failed: %d\n", ret);
+ 		gpiod_set_consumer_name(drv->gpios[i], "MEN A21 Watchdog");
+ 
+@@ -173,10 +171,10 @@ static int a21_wdt_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	watchdog_init_timeout(&a21_wdt, 30, &pdev->dev);
++	watchdog_init_timeout(&a21_wdt, 30, dev);
+ 	watchdog_set_nowayout(&a21_wdt, nowayout);
+ 	watchdog_set_drvdata(&a21_wdt, drv);
+-	a21_wdt.parent = &pdev->dev;
++	a21_wdt.parent = dev;
+ 
+ 	reset = a21_wdt_get_bootstatus(drv);
+ 	if (reset == 2)
+@@ -189,15 +187,15 @@ static int a21_wdt_probe(struct platform_device *pdev)
+ 		a21_wdt.bootstatus |= WDIOF_EXTERN2;
+ 
+ 	drv->wdt = a21_wdt;
+-	dev_set_drvdata(&pdev->dev, drv);
++	dev_set_drvdata(dev, drv);
+ 
+-	ret = devm_watchdog_register_device(&pdev->dev, &a21_wdt);
++	ret = devm_watchdog_register_device(dev, &a21_wdt);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Cannot register watchdog device\n");
++		dev_err(dev, "Cannot register watchdog device\n");
  		return ret;
  	}
  
+-	dev_info(&pdev->dev, "MEN A21 watchdog timer driver enabled\n");
++	dev_info(dev, "MEN A21 watchdog timer driver enabled\n");
+ 
  	return 0;
  }
- 
--static int max77620_wdt_remove(struct platform_device *pdev)
--{
--	struct max77620_wdt *wdt = platform_get_drvdata(pdev);
--
--	max77620_wdt_stop(&wdt->wdt_dev);
--	watchdog_unregister_device(&wdt->wdt_dev);
--
--	return 0;
--}
--
- static const struct platform_device_id max77620_wdt_devtype[] = {
- 	{ .name = "max77620-watchdog", },
- 	{ },
-@@ -213,7 +205,6 @@ static struct platform_driver max77620_wdt_driver = {
- 		.name	= "max77620-watchdog",
- 	},
- 	.probe	= max77620_wdt_probe,
--	.remove	= max77620_wdt_remove,
- 	.id_table = max77620_wdt_devtype,
- };
- 
 -- 
 2.7.4
 
