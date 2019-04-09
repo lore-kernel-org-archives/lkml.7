@@ -2,100 +2,76 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE98C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EAEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE01214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgKQFcsk"
+	by mail.kernel.org (Postfix) with ESMTP id 82E5F20850
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDIRA6 (ORCPT
+        id S1726541AbfDIRJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:00:58 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:46075 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDIRA5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:00:57 -0400
-Received: by mail-lf1-f44.google.com with SMTP id t15so9025817lfl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 10:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EVEEcAd9WHhYjPxPs9+RgAT+g9az+iC7s/1ataG+iSY=;
-        b=SgKQFcskFAzwd49wNA4VbDlzcCwa5tkIkxDn5LKGrzx/JWQHhpH2M45WVG7errFM5h
-         9FVfWPfMfh16Mivgy51er/QukcyhGkaSZxWeGWmdEETIp8V4g8m2oWgLU2IipnU0sj2N
-         ASezx+WmRXxQrJnvuzIvBW33SbDbvYgHLbDjCdOpeBxPeStMruskMJ++fQQNA5nffbF7
-         9Nd5JGdXK0L+uI9ioGnDNK/4miD68Y6Paoq7BMZIbULFdbtpki/bUc4XPYT6fgenK/JK
-         w6q6RRVTcpqCVWFZdQr3NmdGj3UZEGFQA1NDeSsxHBRi7ekLWh6lcIzwVSTOifFLUldZ
-         22/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EVEEcAd9WHhYjPxPs9+RgAT+g9az+iC7s/1ataG+iSY=;
-        b=Za0LHXbmwDbtBTu4Vwl8xCmQTWxG30om2grEvqRNdYvCFrVZMFCBxBDnI0lwAvQbiw
-         k2wRuwujokmCwt8a7Hd9jhK0atTSKUNvNnQedl5Vdpemw8zeW8kHkR4obPiNvzXgu20I
-         513jET9oTxs5qW6gxBaqeQiAD6SQAYTgQXshCLdyiDBN5Kauf7wDZ0jVvBkW8eGEdqFY
-         tfNrabE2Jhtu7MBvRaNxHvfAYaw6+lIJomUKQv2ARBe75G/6Kw2eLu/SOXVRdPjwswJA
-         fm7fF021YJpD8X5+sdauPYyt39Wwc6IRqZSMLRtgMGtXimRVpaTHanY1M0+KMjCqzIeS
-         iy7g==
-X-Gm-Message-State: APjAAAWng+Ez36FR5Sh+XqDVSmgzX1H4aBGlNNTZ8t0/BukXW0UjDaoC
-        OEu7Hgk/a7MDnsF9WErzr4FZ08pC
-X-Google-Smtp-Source: APXvYqy3/1b4a2EVEqb9i7SZH+MXGJ1pfq8WYe3ZCpunokseVop/O6Zxw3h+8AaFqErA4jo6e0HIoA==
-X-Received: by 2002:a19:761a:: with SMTP id c26mr3126814lff.8.1554829255789;
-        Tue, 09 Apr 2019 10:00:55 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id q5sm5273294lff.30.2019.04.09.10.00.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 10:00:54 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 737B44606E7; Tue,  9 Apr 2019 20:00:54 +0300 (MSK)
-Date:   Tue, 9 Apr 2019 20:00:54 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Vince Weaver <vincent.weaver@maine.edu>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
-Message-ID: <20190409170054.GF1421@uranus.lan>
-References: <20190403191944.GH1421@uranus.lan>
- <20190403203144.GI1421@uranus.lan>
- <alpine.DEB.2.21.1904040922350.3758@macbook-air>
- <20190404133327.GP1421@uranus.lan>
- <alpine.DEB.2.21.1904041234340.5098@macbook-air>
- <20190404164700.GR1421@uranus.lan>
- <alpine.DEB.2.21.1904041454290.5597@macbook-air>
- <20190404202038.GT1421@uranus.lan>
- <20190407202055.GX1421@uranus.lan>
- <alpine.DEB.2.21.1904091237090.15486@macbook-air>
+        Tue, 9 Apr 2019 13:09:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:51734 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbfDIRJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:09:26 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id B96E768B02; Tue,  9 Apr 2019 19:09:13 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 19:09:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/21] arm64/iommu: improve mmap bounds checking
+Message-ID: <20190409170913.GA14679@lst.de>
+References: <20190327080448.5500-1-hch@lst.de> <20190327080448.5500-3-hch@lst.de> <3629087c-a8cb-d66e-840b-cfee125bdf4c@arm.com> <20190407065923.GA9086@lst.de> <45672f18-c741-601d-6bb2-92f50b77e981@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904091237090.15486@macbook-air>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <45672f18-c741-601d-6bb2-92f50b77e981@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 12:38:25PM -0400, Vince Weaver wrote:
-> 
-> It still crashes at the same place with this patch and my reproducible 
-> test case.
+On Tue, Apr 09, 2019 at 04:12:51PM +0100, Robin Murphy wrote:
+> On 07/04/2019 07:59, Christoph Hellwig wrote:
+>> On Fri, Apr 05, 2019 at 06:30:52PM +0100, Robin Murphy wrote:
+>>> On 27/03/2019 08:04, Christoph Hellwig wrote:
+>>>> The nr_pages checks should be done for all mmap requests, not just those
+>>>> using remap_pfn_range.
+>>>
+>>> Hmm, the logic in iommu_dma_mmap() inherently returns an error for the "off
+>>>> = nr_pages" case already. It's also supposed to be robust against the
+>>> "vma_pages(vma) > nr_pages - off" condition, although by making the partial
+>>> mapping and treating it as a success, rather than doing nothing and
+>>> returning an error. What's the exact motivation here?
+>>
+>> Have one error check at the front of the function that is identical
+>> to the mmap checks in the other dma_map_ops instances so that:
+>>
+>>   a) we get the same error behavior for partial requests everywhere
+>>   b) we can lift these checks into common code in the next round.
+>>
+>
+> Fair enough, but in that case why isn't the dma_mmap_from_coherent() path 
+> also covered?
 
-Thank for testing, Vince! At least now we know it is unrelated to
-alias events. Will ping you once I get more ideas.
+dma_mmap_from_coherent currently duplicates those checks itself, and
+because of that the other callers also don't include it in their
+checks.  I don't actually like that situation and have patches to
+refactor and clean up that whole mess by also moving the dma coherent
+mmap to common code, and share the checks that I plan to also lift.
+
+But for now I'm holding these back as they would conflict with this
+series and I'm not sure if it will go in and if yes if that is through
+the dma-mapping or iommu tree.
