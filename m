@@ -2,134 +2,81 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8CBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84104C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3FF2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qiY4oaPq"
+	by mail.kernel.org (Postfix) with ESMTP id 529622083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfDIHfQ (ORCPT
+        id S1726646AbfDIHgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:35:16 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34978 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfDIHfQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:35:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t4so13547629ljc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 00:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=LwZvRAwjz4v8vPB24QlTXxeUwtfYiSirjEGXsASLuDU=;
-        b=qiY4oaPqfTf3/T5SoWvYI3WlshrEYkpjv2JCk0cSXN0x3+9uYxuPhNpoaXzBdP/2pZ
-         i3H02EljbkFGq/t3Y8IqsVkruIXLQXBoSVKplchUd8OqnaqZx+aI8/xwceEie3FvBDCD
-         94DmzuKY1qVSlkR1Kaj54A2mXNHpuFCrucKGgMAbK1TNPXv/yxqG/mMHGZTDuHTMcyJC
-         99ChYKuH6ggalX7x3ORcS6JTSHWq/GYZ9zIHVN2pbKck0INFDIbL6b7rpvNO5nMChIpi
-         VFvs6Ia+ky6Rz7Ejuph8IKjM3RzSCE461aU2JnaQqUHopH7nzs2XFYBpFn8IvcGjstkF
-         TVkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=LwZvRAwjz4v8vPB24QlTXxeUwtfYiSirjEGXsASLuDU=;
-        b=KPIM44ykBvD+GlnkXXkoseRQdDSFvxZ/jtfmL445RccttZ0+HXDfG32jFfacAdrvYr
-         OsjXwwG1gJvOotXpBtSSrmchJFaa+Sv9WB8aNeoHxcgzd1W+PxXDZJUooPFgQqaqLTcG
-         HrJ57Cc3vTVhGxmFBsuOMCuamfKzFKv+0yy8n39FpKtZRg/nROH+Y8fScudYBe71EWZk
-         rm3VWKa3qK8QJLzZFQMaM0uPcEsL2ETyGxiP0gAYq4OzngoYNfypeLw2w16tMihewzHn
-         1d3x7s8/Qgt02IJDdBuHUy06dBJWpXLcukGjxa7VVfJMbbm5nw9uj0rKAFp0105i6R40
-         IBQw==
-X-Gm-Message-State: APjAAAURWx47laomF8G/QN/BRtDMIW3QBrpJHZt/l5ubfCUdLf2STWek
-        XYzH3hWF3T8tPf483n0Ebxsr2H17ldFhzaLSISjeRg==
-X-Google-Smtp-Source: APXvYqzfKNqys0GobM4u8jt3J6Oyk6PGtVt93Q142DP3RUNDDo20Kd4Qq4bUK7ups+7NTewIUvriXKCZWEUt9gzGB2A=
-X-Received: by 2002:a2e:9a46:: with SMTP id k6mr18301188ljj.119.1554795314005;
- Tue, 09 Apr 2019 00:35:14 -0700 (PDT)
+        Tue, 9 Apr 2019 03:36:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfDIHgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:36:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 37874B02C;
+        Tue,  9 Apr 2019 07:36:08 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 09:36:07 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, jikos@kernel.org, joe.lawrence@redhat.com,
+        ggherdovich@suse.cz, linux-kbuild@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: use -flive-patching when CONFIG_LIVEPATCH is
+ enabled
+Message-ID: <20190409073607.ms4amehc23quaio3@pathway.suse.cz>
+References: <20190404184411.1392-1-mbenes@suse.cz>
+ <20190404201855.xtvtgxaaomcmowrt@treble>
 MIME-Version: 1.0
-References: <20190405234514.6183-1-megous@megous.com> <20190405234514.6183-8-megous@megous.com>
- <20190408074042.74s5qckukcpore3e@flea> <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
-In-Reply-To: <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Apr 2019 09:35:02 +0200
-Message-ID: <CACRpkdYGdLEeX8aBJfPQg=8OHcQR_uTJoA1FaO5p1od+VX2Nzg@mail.gmail.com>
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404201855.xtvtgxaaomcmowrt@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 1:22 AM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
+On Thu 2019-04-04 15:18:55, Josh Poimboeuf wrote:
+> On Thu, Apr 04, 2019 at 08:44:11PM +0200, Miroslav Benes wrote:
+> > GCC 9 introduces a new option, -flive-patching. It disables certain
+> > optimizations which could make a compilation unsafe for later live
+> > patching of the running kernel.
+> > 
+> > The option is used only if CONFIG_LIVEPATCH is enabled and $(CC)
+> > supports it.
+> > 
+> > Performance impact of the option was measured on three different
+> > Intel machines - two bigger NUMA boxes and one smaller UMA box. Kernel
+> > intensive (IO, scheduling, networking) benchmarks were selected, plus a
+> > set of HPC workloads from NAS Parallel Benchmark. The tests were done on
+> > upstream kernel 5.0-rc8 with openSUSE Leap 15.0 userspace.
+> > 
+> > The majority of the tests is unaffected. The only significant exception
+> > is the scheduler section which suffers 1-3% degradation.
+> > 
+> > Evaluated-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > ---
+> > The patch is based on master branch of the livepatching tree on
+> > git.kernel.org.
+> > 
+> > Many thanks to Giovanni who ran the whole testing campaign and analyzed
+> > the results. I archived the dashboard and detailed data. If anyone is
+> > interested, we could probably set up a public website somewhere.
+> 
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-> > > +                enable-active-high;
-> > > +                gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> >
-> > Is enable-active-high still needed? It's redundant with the
-> > GPIO_ACTIVE_HIGH flag.
->
-> Looking at the code, use/non-use of enable-active-high inhibits
-> flags specified in gpio property. So the GPIO_ACTIVE_HIGH flag
-> is ignored here (had GPIO_ACTIVE_LOW been used, the kernel would
-> ignore it too and print a warning).
->
-> So enable-active-high is still necessary here.
->
-> See comment in gpiolib-of.c where this is handled:
->
-> /*
->  * The regulator GPIO handles are specified such that the
->  * presence or absence of "enable-active-high" solely controls
->  * the polarity of the GPIO line. Any phandle flags must
->  * be actively ignored.
->  */
+I have committed the patch into the branch for-5.2/core.
 
-Yeah this caused me special headache in the current merge
-window because of buggy code on my part.
-
-This is an effect of this flag being defined for powerpc
-ages before we properly implemented generic GPIO
-bindings. We just have to respect it.
-
-See:
-https://marc.info/?l=3Dlinux-gpio&m=3D155417774822532&w=3D2
-
-Yours,
-Linus Walleij
+Best Regards,
+Petr
