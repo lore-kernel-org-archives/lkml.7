@@ -2,237 +2,135 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D6BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD03C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CC821473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE5A20830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TbobGleR"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="DHNoMD1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfDIJrp (ORCPT
+        id S1726898AbfDIJrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:47:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37167 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfDIJro (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:47:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v84so13011205oif.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:47:43 -0700 (PDT)
+        Tue, 9 Apr 2019 05:47:53 -0400
+Received: from mail-eopbgr1400107.outbound.protection.outlook.com ([40.107.140.107]:65024
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfDIJrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:47:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ONojt7DSJuXLOIn+w7xwUHVbI9Qr9/WFumFlFOuNW+A=;
-        b=TbobGleRXLfIriPfQ79rXtq4pabgN2t01OdGZBWutzdoIuq7XEsf0LS2ctUKtey730
-         h/Z2CBH/6K/9bDtmkgqMHrCH3djuPVD7uLgl3jwxczZfjrYTkueGDxpqJ4xu/V6L1gDi
-         TqKEUw5Oa7L8Izof6YXTW+pQHJ9d3wZdm/E0g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ONojt7DSJuXLOIn+w7xwUHVbI9Qr9/WFumFlFOuNW+A=;
-        b=Cj6Ykq1nVAg4BRX/KeQQXci1963sKqown5UuGrBd+XkuFe782sQzp0oAdApb5DOhqP
-         olE23CV6pchMCBUrp65yhGyUnkDk4WlLN3PUix6MrbBtY7OF0RBKG4Fw1VWe0tp1+dYm
-         +klpYDdUQYHiFndR48ihXn18j2JF3dIheUgUuZMJPX0G/oXaknotXfgPeGfOO9wMmB9H
-         Es1cx2uBHDGos9TlJ6RgUelws0AP+vigXgOf/2ds06/zU0dfUQoSmgEe6TSRvkdey6y5
-         8WeNmaLB+BW+QZ5ArFq7UbMKRu6JKzpgruUiTTgwbFDml2NDUnMOmUz7J5/KEjvwlWpj
-         RLTg==
-X-Gm-Message-State: APjAAAUSCSzQOnHvtvx6T+guGJt3/g90HX1uonO+fiibqpNxdz6x1OXO
-        HO0ntd/Xd9nbDIvYIwTFdtVZ1PhZcGs=
-X-Google-Smtp-Source: APXvYqyojW/LDv6xrXZGGXk+QLtAvMDfvHBxzLe6ta0oHANEVK4cRmKnXYyOnefm+nz447lkD4r9pw==
-X-Received: by 2002:aca:3056:: with SMTP id w83mr18185650oiw.78.1554803263276;
-        Tue, 09 Apr 2019 02:47:43 -0700 (PDT)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com. [209.85.167.169])
-        by smtp.gmail.com with ESMTPSA id h8sm12532641oti.64.2019.04.09.02.47.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 02:47:42 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id e5so13042432oii.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:47:41 -0700 (PDT)
-X-Received: by 2002:aca:4b03:: with SMTP id y3mr18864793oia.21.1554803261513;
- Tue, 09 Apr 2019 02:47:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20181022144901.113852-1-tfiga@chromium.org> <20181022144901.113852-2-tfiga@chromium.org>
- <cf0fc2fc-72c6-dbca-68f7-a349879a3a14@xs4all.nl> <CAAFQd5AORjMjHdavdr3zM13BnyFnKnEb-0aKNjvwbB_xJEnxgQ@mail.gmail.com>
- <9b7c1385-d482-6e92-2222-2daa835dbc91@xs4all.nl> <CAAFQd5DwjLt8UeDohzrMausaLGnOStvrmp5p7frYbG1hbGjx3Q@mail.gmail.com>
- <CAAFQd5BPJv3cbJOWrziEjz_yE32DhfZv9vb-pG1Ltx-KS2=PQg@mail.gmail.com>
- <3ea3bf5bf9904ce877142c41f595207752172d27.camel@ndufresne.ca>
- <CAAFQd5C_OD=bvAxG0B_G+T6bnWddPHuiVZApj_8_+4xpMjH9+g@mail.gmail.com>
- <c145fbf21301d03bdfdd8bf6613f0f68576e66be.camel@ndufresne.ca> <CAAFQd5D4AP+xj_EkcsB84UqxCLBBEGComqGaMCm2zHSMnpqOKw@mail.gmail.com>
-In-Reply-To: <CAAFQd5D4AP+xj_EkcsB84UqxCLBBEGComqGaMCm2zHSMnpqOKw@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 9 Apr 2019 18:47:30 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
-Message-ID: <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] media: docs-rst: Document memory-to-memory video
- decoder interface
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
+ d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OseHzYK+wOuq0fd4DGSoi0wi6fKomx5nIfGuIuB7mlY=;
+ b=DHNoMD1LO62RVYpF7mZ+dIIC4wE56RtU//laDNeQWJSap9G2L0KOzpZxeL3PjBMfhv7mxAc8K/IJvM9xZhMRVMXJl1vmN/zxpLmC/HHBGFTxI+xG5sDSbScGWFAkosMacC/lzF9bYV0f39GvRSwPmwA6bxjvQA1Qb/NwS0ShWzI=
+Received: from TYAPR01MB4271.jpnprd01.prod.outlook.com (20.178.139.148) by
+ TYAPR01MB4221.jpnprd01.prod.outlook.com (20.178.140.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Tue, 9 Apr 2019 09:47:49 +0000
+Received: from TYAPR01MB4271.jpnprd01.prod.outlook.com
+ ([fe80::cda2:4f20:84e4:de70]) by TYAPR01MB4271.jpnprd01.prod.outlook.com
+ ([fe80::cda2:4f20:84e4:de70%4]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
+ 09:47:49 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Simon Horman <horms@verge.net.au>
+CC:     "kishon@ti.com" <kishon@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
+ independent irqs
+Thread-Topic: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
+ independent irqs
+Thread-Index: AQHU6IMtNq0pm/ZwY0KVYOnopE2tzqYqK7OAgAl1TzA=
+Date:   Tue, 9 Apr 2019 09:47:49 +0000
+Message-ID: <TYAPR01MB4271AF6C14F4A99902FAFA2FD82D0@TYAPR01MB4271.jpnprd01.prod.outlook.com>
+References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20190403091939.qguys2dftombenpb@verge.net.au>
+In-Reply-To: <20190403091939.qguys2dftombenpb@verge.net.au>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca20d1e0-8fa0-43fb-1954-08d6bcd06d6c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB4221;
+x-ms-traffictypediagnostic: TYAPR01MB4221:
+x-microsoft-antispam-prvs: <TYAPR01MB422196E7B2DF326EDD4B3DFCD82D0@TYAPR01MB4221.jpnprd01.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39860400002)(396003)(346002)(51444003)(189003)(199004)(81156014)(4326008)(33656002)(8676002)(2906002)(14454004)(97736004)(478600001)(8936002)(81166006)(486006)(7696005)(68736007)(76176011)(6506007)(5660300002)(66066001)(26005)(102836004)(105586002)(106356001)(99286004)(316002)(74316002)(186003)(256004)(7736002)(6246003)(71200400001)(53936002)(6916009)(71190400001)(305945005)(229853002)(476003)(14444005)(6436002)(55016002)(9686003)(446003)(3846002)(86362001)(6116002)(52536014)(25786009)(54906003)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4221;H:TYAPR01MB4271.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1PnhpPlR/eI0XfdVZhfKqflLuUPtM3k/iHILDv4PwOoh9q6KpY7O7Iyqbra1DGHN1TBuSUiZhQ8KN0LKqvjWZU2UEvH2Mv2kYcUwuI8WIevwwZD7y5WyUdGIcS7iOo9v8wVnAPfkAXwUJJzbSXoAC4uQfDY0WTCDk52WvsYkQVOduW2mWuX6FKlLb4SOv+uONHoIp1yD8OokSLUBTbjVFn/lJDCQf7ZffuWt9CxmNrRxlUAFrOLiHARUG4/Xl4JjNN7j0cE4Oc049HDcqJISToEsM3/TZitrYtugIjMtbQM+LpX0C8DQyCaWwrzGJYfMMzUgfyNlKZfQWA7cXC6zetaLls31sG2bTgnZZoQMHbPybEcTSS380Q3ZPAdQRw5jJXQCOWO3zFVupIUtRZ9AYryEs6UMNWY4sYDJognzSkk=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca20d1e0-8fa0-43fb-1954-08d6bcd06d6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 09:47:49.2702
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 2:35 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> On Wed, Jan 30, 2019 at 1:02 PM Nicolas Dufresne <nicolas@ndufresne.ca> w=
-rote:
-> >
-> > Le vendredi 25 janvier 2019 =C3=A0 12:27 +0900, Tomasz Figa a =C3=A9cri=
-t :
-> > > On Fri, Jan 25, 2019 at 4:55 AM Nicolas Dufresne <nicolas@ndufresne.c=
-a> wrote:
-> > > > Le jeudi 24 janvier 2019 =C3=A0 18:06 +0900, Tomasz Figa a =C3=A9cr=
-it :
-> > > > > > Actually I just realized the last point might not even be achie=
-vable
-> > > > > > for some of the decoders (s5p-mfc, mtk-vcodec), as they don't r=
-eport
-> > > > > > which frame originates from which bitstream buffer and the driv=
-er just
-> > > > > > picks the most recently consumed OUTPUT buffer to copy the time=
-stamp
-> > > > > > from. (s5p-mfc actually "forgets" to set the timestamp in some =
-cases
-> > > > > > too...)
-> > > > > >
-> > > > > > I need to think a bit more about this.
-> > > > >
-> > > > > Actually I misread the code. Both s5p-mfc and mtk-vcodec seem to
-> > > > > correctly match the buffers.
-> > > >
-> > > > Ok good, since otherwise it would have been a regression in MFC dri=
-ver.
-> > > > This timestamp passing thing could in theory be made optional thoug=
-h,
-> > > > it lives under some COPY_TIMESTAMP kind of flag. What that means th=
-ough
-> > > > is that a driver without such a capability would need to signal dro=
-pped
-> > > > frames using some other mean.
-> > > >
-> > > > In userspace, the main use is to match the produced frame against a
-> > > > userspace specific list of frames. At least this seems to be the ca=
-se
-> > > > in Gst and Chromium, since the userspace list contains a superset o=
-f
-> > > > the metadata found in the v4l2_buffer.
-> > > >
-> > > > Now, using the produced timestamp, userspace can deduce frame that =
-the
-> > > > driver should have produced but didn't (could be a deadline case co=
-dec,
-> > > > or simply the frames where corrupted). It's quite normal for a code=
-c to
-> > > > just keep parsing until it finally find something it can decode.
-> > > >
-> > > > That's at least one way to do it, but there is other possible
-> > > > mechanism. The sequence number could be used, or even producing buf=
-fers
-> > > > with the ERROR flag set. What matters is just to give userspace a w=
-ay
-> > > > to clear these frames, which would simply grow userspace memory usa=
-ge
-> > > > over time.
-> > >
-> > > Is it just me or we were missing some consistent error handling then?
-> > >
-> > > I feel like the drivers should definitely return the bitstream buffer=
-s
-> > > with the ERROR flag, if there is a decode failure of data in the
-> > > buffer. Still, that could become more complicated if there is more
-> > > than 1 frame in that piece of bitstream, but only 1 frame is corrupte=
-d
-> > > (or whatever).
-> >
-> > I agree, but it might be more difficult then it looks (even FFMPEG does
-> > not do that). I believe the code that is processing the bitstream in
-> > stateful codecs is mostly unrelated from the code actually doing the
-> > decoding. So what might happen is that the decoding part will never
-> > actually allocate a buffer for the skipped / corrupted part of the
-> > bitstream. Also, the notion of a skipped frame is not always evident in
-> > when parsing H264 or HEVC NALs. There is still a full page of text just
-> > to explain how to detect that start of a new frame.
->
-> Right. I don't think we can guarantee that we can always correlate the
-> errors with exact buffers and so I phrased the paragraph about errors
-> in v3 in a bit more conservative way:
->
-> See the snapshot hosted by Hans (thanks!):
-> https://hverkuil.home.xs4all.nl/codec-api/uapi/v4l/dev-decoder.html#decod=
-ing
->
-> >
-> > Yet, it would be interesting to study the firmwares we have and see
-> > what they provide that would help making decode errors more explicit.
-> >
->
-> Agreed.
->
-> > >
-> > > Another case is when the bitstream, even if corrupted, is still enoug=
-h
-> > > to produce some output. My intuition tells me that such CAPTURE buffe=
-r
-> > > should be then returned with the ERROR flag. That wouldn't still be
-> > > enough for any more sophisticated userspace error concealment, but
-> > > could still let the userspace know to perhaps drop the frame.
-> >
-> > You mean if a frame was concealed (typically the frame was decoded from
-> > a closed by reference instead of the expected reference). That is
-> > something signalled by FFPEG. We should document this possibility. I
-> > actually have something implemented in GStreamer. Basically if we have
-> > the ERROR flag with a payload size smaller then expected, I drop the
-> > frame and produce a drop event message, while if I have a frame with
-> > ERROR flag but of the right payload size, I assume it is corrupted, and
-> > simply flag it as corrupted, leaving to the application the decision to
-> > display it or not. This is a case that used to happen with some UVC
-> > cameras (though some have been fixed, and the UVC camera should drop
-> > smaller payload size buffers now).
->
-> I think it's a behavior that makes the most sense indeed.
->
-> Technically one could also consider the case of 0 < bytesused <
-> sizeimage, which could mean that only a part of the frame is in the
-> buffer. An application could try to blend it with previous frame using
-> some concealing algorithms. I haven't seen an app that could do such
-> thing, though.
+Hi Simon-san,
 
-Actually some interesting thought on this. I don't think the existing
-drivers would return any CAPTURE buffers on errors right now, but just
-return the OUTPUT buffer that failed to be decoded. Should we change
-this so that always one CAPTURE buffer with the ERROR flag is
-returned, to signal the application that a frame was potentially
-dropped?
+> From: Simon Horman, Sent: Wednesday, April 3, 2019 6:20 PM
+>=20
+> Hi Shimoda-san,
+>=20
+> On Mon, Apr 01, 2019 at 09:01:23PM +0900, Yoshihiro Shimoda wrote:
+> > Since the previous code enabled/disabled the irqs both OHCI and EHCI,
+> > it is possible to cause unexpected interruptions. To avoid this,
+> > this patch creates multiple phy instances from phandle and
+> > enables/disables independent irqs by the instances.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>=20
+> I noted a few nits below but overall this looks good to me.
+>=20
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+Thank you for your review!
+
+<snip>
+> > +#define NUM_OF_PHYS			4
+> > +#define PHY_INDEX_BOTH_HC		0
+> > +#define PHY_INDEX_OHCI			1
+> > +#define PHY_INDEX_EHCI			2
+> > +#define PHY_INDEX_HSUSB			3
+>=20
+> nit: I think the above #defines would be better expressed as an enum.
+
+I'll modify it.
+
+<snip>
+> > +static enum usb_dr_mode rcar_gen3_get_dr_mode(struct device_node *np)
+> > +{
+> > +	enum usb_dr_mode candidate =3D USB_DR_MODE_UNKNOWN, tmp;
+>=20
+> nit: I think that there could be a better name for tmp, f.e. mode
+> nit: The scope of tmp could be limited to inside the for loop.
+
+I'll modify it.
 
 Best regards,
-Tomasz
+Yoshihiro Shimoda
+
