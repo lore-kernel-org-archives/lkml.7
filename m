@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348BFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE16C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA2F2133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0567420883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfDIShV (ORCPT
+        id S1726826AbfDIShY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 14:37:21 -0400
+        Tue, 9 Apr 2019 14:37:24 -0400
 Received: from mga12.intel.com ([192.55.52.136]:40624 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfDIShQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 14:37:16 -0400
+        id S1726773AbfDIShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 14:37:19 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 11:37:16 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 11:37:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,330,1549958400"; 
-   d="scan'208";a="141403367"
+   d="scan'208";a="141403373"
 Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2019 11:37:15 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2019 11:37:18 -0700
 From:   richard.gong@linux.intel.com
 To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1 4/6] firmware: add Intel Stratix10 remote system update driver
-Date:   Tue,  9 Apr 2019 13:46:00 -0500
-Message-Id: <1554835562-25056-5-git-send-email-richard.gong@linux.intel.com>
+Subject: [PATCHv1 5/6] firmware: rsu: document sysfs interface
+Date:   Tue,  9 Apr 2019 13:46:01 -0500
+Message-Id: <1554835562-25056-6-git-send-email-richard.gong@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
 References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
@@ -46,499 +46,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Richard Gong <richard.gong@intel.com>
 
-The Intel Remote System Update (RSU) driver exposes interfaces access
-through the Intel Service Layer to user space via sysfs interface.
-The RSU interfaces report and control some of the optional RSU features
-on Intel Stratix 10 SoC.
-
-The RSU feature provides a way for customers to update the boot
-configuration of a Intel Stratix 10 SoC device with significantly reduced
-risk of corrupting the bitstream storage and bricking the system.
+Describe Intel Stratix10 Remote System Update (RSU) device attributes
 
 Signed-off-by: Richard Gong <richard.gong@intel.com>
 Reviewed-by: Alan Tull <atull@kernel.org>
 ---
- drivers/firmware/Kconfig         |  18 ++
- drivers/firmware/Makefile        |   1 +
- drivers/firmware/stratix10-rsu.c | 428 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 447 insertions(+)
- create mode 100644 drivers/firmware/stratix10-rsu.c
+ .../testing/sysfs-devices-platform-stratix10-rsu   | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index cac16c4..9e61d2f 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -228,6 +228,24 @@ config INTEL_STRATIX10_SERVICE
- 
- 	  Say Y here if you want Stratix10 service layer support.
- 
-+config INTEL_STRATIX10_RSU
-+        tristate "Intel Stratix10 Remote System Update"
-+        depends on INTEL_STRATIX10_SERVICE
-+        help
-+          The Intel Remote System Update (RSU) driver exposes interfaces
-+          access through the Intel Service Layer to user space via Sysfs
-+          device attribute nodes. The RSU interfaces report/control some of
-+          the optional RSU features of the Stratix 10 SoC FPGA.
-+
-+          The RSU feature provides a way for customers to update the boot
-+          configuration of a Stratix 10 SoC device with significantly reduced
-+          risk of corrupting the bitstream storage and bricking the system.
-+
-+          Enable RSU support if you are using an Intel SoC FPGA with the RSU
-+          feature enabled and you want Linux user space control.
-+
-+          Say Y here if you want Intel RSU support.
-+
- config QCOM_SCM
- 	bool
- 	depends on ARM || ARM64
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 80feb63..41b6fa3 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_EDD)		+= edd.o
- obj-$(CONFIG_EFI_PCDP)		+= pcdp.o
- obj-$(CONFIG_DMIID)		+= dmi-id.o
- obj-$(CONFIG_INTEL_STRATIX10_SERVICE) += stratix10-svc.o
-+obj-$(CONFIG_INTEL_STRATIX10_RSU)     += stratix10-rsu.o
- obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
- obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
+diff --git a/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu b/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
 new file mode 100644
-index 0000000..bf410f86
+index 0000000..cb461ee
 --- /dev/null
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -0,0 +1,428 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018-2019, Intel Corporation
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/bitfield.h>
-+#include <linux/completion.h>
-+#include <linux/kobject.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/firmware/intel/stratix10-svc-client.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+
-+#define RSU_VERSION_MASK		GENMASK_ULL(31, 0)
-+#define RSU_STATE_MASK			GENMASK_ULL(63, 32)
-+#define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(31, 0)
-+#define RSU_ERROR_LOCATION_MASK		GENMASK_ULL(63, 32)
-+
-+#define RSU_REQUEST_TIMEOUT	(msecs_to_jiffies(SVC_RSU_REQUEST_TIMEOUT_MS))
-+
-+/**
-+ * struct stratix10_rsu_priv - rsu data structure
-+ * @chan: pointer to the allocated service channel
-+ * @client: active service client
-+ * @completion: state for callback completion
-+ * @status.current_image: address of image currently running in flash
-+ * @status.fail_image: address of failed image in flash
-+ * @status.version: the version number of RSU firmware
-+ * @status.state: the state of RSU system
-+ * @status.error_details: error code
-+ * @status.error_location: the error offset inside the image that failed
-+ */
-+struct stratix10_rsu_priv {
-+	struct stratix10_svc_chan *chan;
-+	struct stratix10_svc_client client;
-+	struct completion completion;
-+	struct mutex lock;
-+	struct {
-+		unsigned long current_image;
-+		unsigned long fail_image;
-+		unsigned int version;
-+		unsigned int state;
-+		unsigned int error_details;
-+		unsigned int error_location;
-+	} status;
-+};
-+
-+/**
-+ * rsu_status_callback() - Status callback from Intel service layer
-+ * @client: pointer to service client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for RSU status request. Status is
-+ * only updated after a system reboot, so a get updated status call is
-+ * made during driver probe.
-+ */
-+static void rsu_status_callback(struct stratix10_svc_client *client,
-+				struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+	struct arm_smccc_res *res = (struct arm_smccc_res *)data->kaddr1;
-+
-+	if (data->status == BIT(SVC_STATUS_RSU_OK)) {
-+		priv->status.version = FIELD_GET(RSU_VERSION_MASK,
-+						 res->a2);
-+		priv->status.state = FIELD_GET(RSU_STATE_MASK, res->a2);
-+		priv->status.fail_image = res->a1;
-+		priv->status.current_image = res->a0;
-+		priv->status.error_location =
-+			FIELD_GET(RSU_ERROR_LOCATION_MASK, res->a3);
-+		priv->status.error_details =
-+			FIELD_GET(RSU_ERROR_DETAIL_MASK, res->a3);
-+	} else {
-+		dev_err(client->dev, "COMMAND_RSU_STATUS returned 0x%lX\n",
-+			res->a0);
-+		priv->status.version = 0;
-+		priv->status.state = 0;
-+		priv->status.fail_image = 0;
-+		priv->status.current_image = 0;
-+		priv->status.error_location = 0;
-+		priv->status.error_details = 0;
-+	}
-+
-+	complete(&priv->completion);
-+}
-+
-+/**
-+ * rsu_update_callback() - Update callback from Intel service layer
-+ * @client: pointer to client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for RSU update request.
-+ */
-+static void rsu_update_callback(struct stratix10_svc_client *client,
-+				struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+
-+	if (data->status != BIT(SVC_STATUS_RSU_OK))
-+		dev_err(client->dev, "COMMAND_RSU_UPDATE returned %i\n",
-+			data->status);
-+	complete(&priv->completion);
-+}
-+
-+/*
-+ * rsu_notify_callback() - Notify callback from Intel service layer
-+ * @client: pointer to client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for RSU notify request.
-+ */
-+static void rsu_notify_callback(struct stratix10_svc_client *client,
-+				struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+
-+	if (data->status != BIT(SVC_STATUS_RSU_OK))
-+		dev_err(client->dev, "COMMAND_RSU_NOTIFY returned %i\n",
-+			data->status);
-+	complete(&priv->completion);
-+}
-+
-+/**
-+ * rsu_send_msg() - send a message to Intel service layer
-+ * @priv: pointer to rsu private data
-+ * @command: RSU status or update command
-+ * @arg: the request argument, the bitstream address or notify status
-+ * @callback: function pointer for the callback (status or update)
-+ *
-+ * Start an Intel service layer transaction to perform the SMC call that
-+ * is necessary to get RSU boot log or set the address of bitstream to
-+ * boot after reboot.
-+ *
-+ * Returns 0 on success or -ETIMEDOUT on error.
-+ */
-+static int rsu_send_msg(struct stratix10_rsu_priv *priv,
-+	enum stratix10_svc_command_code command,
-+	unsigned long arg,
-+	void (*callback)(struct stratix10_svc_client *client,
-+			struct stratix10_svc_cb_data *data))
-+{
-+	struct stratix10_svc_client_msg msg;
-+	int ret;
-+
-+	mutex_lock(&priv->lock);
-+	reinit_completion(&priv->completion);
-+	priv->client.receive_cb = callback;
-+
-+	msg.command = command;
-+	if (arg)
-+		msg.arg[0] = arg;
-+
-+	ret = stratix10_svc_send(priv->chan, &msg);
-+	if (ret < 0)
-+		goto status_done;
-+
-+	ret = wait_for_completion_interruptible_timeout(
-+				&priv->completion, RSU_REQUEST_TIMEOUT);
-+	if (!ret) {
-+		dev_err(priv->client.dev,
-+			"timeout waiting for COMMAND_RSU_STATUS\n");
-+		ret = -ETIMEDOUT;
-+		goto status_done;
-+	} else if (ret < 0) {
-+		dev_err(priv->client.dev,
-+			"error (%d) waiting for COMMAND_RSU_STATUS\n", ret);
-+		goto status_done;
-+	} else {
-+		ret = 0;
-+	}
-+
-+status_done:
-+	stratix10_svc_done(priv->chan);
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
-+/*
-+ * This driver exposes some optional features of the Intel Stratix 10 SoC FPGA.
-+ * The SysFS interfaces exposed here are FPGA Remote System Update (RSU)
-+ * related.  They allow user space software to query the configuration system
-+ * status and to request optional reboot behavior specific to Intel FPGAs.
-+ */
-+
-+static ssize_t current_image_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%ld", priv->status.current_image);
-+}
-+
-+static ssize_t fail_image_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%ld", priv->status.fail_image);
-+}
-+
-+static ssize_t version_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", priv->status.version);
-+}
-+
-+static ssize_t state_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", priv->status.state);
-+}
-+
-+static ssize_t error_location_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", priv->status.error_location);
-+}
-+
-+static ssize_t error_details_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", priv->status.error_details);
-+}
-+
-+static ssize_t reboot_image_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+	unsigned long address;
-+	int ret;
-+
-+	if (priv == 0)
-+		return -ENODEV;
-+
-+	ret = kstrtoul(buf, 0, &address);
-+	if (ret)
-+		return ret;
-+
-+	rsu_send_msg(priv, COMMAND_RSU_UPDATE,
-+			address, rsu_update_callback);
-+
-+	return count;
-+}
-+
-+static ssize_t notify_store(struct device *dev,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t count)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+	unsigned long status;
-+	int ret;
-+
-+	if (priv == 0)
-+		return -ENODEV;
-+
-+	ret = kstrtoul(buf, 0, &status);
-+	if (ret)
-+		return ret;
-+
-+	rsu_send_msg(priv, COMMAND_RSU_NOTIFY,
-+			status, rsu_notify_callback);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RO(current_image);
-+static DEVICE_ATTR_RO(fail_image);
-+static DEVICE_ATTR_RO(state);
-+static DEVICE_ATTR_RO(version);
-+static DEVICE_ATTR_RO(error_location);
-+static DEVICE_ATTR_RO(error_details);
-+static DEVICE_ATTR_WO(reboot_image);
-+static DEVICE_ATTR_WO(notify);
-+
-+static struct attribute *attrs[] = {
-+	&dev_attr_current_image.attr,
-+	&dev_attr_fail_image.attr,
-+	&dev_attr_state.attr,
-+	&dev_attr_version.attr,
-+	&dev_attr_error_location.attr,
-+	&dev_attr_error_details.attr,
-+	&dev_attr_reboot_image.attr,
-+	&dev_attr_notify.attr,
-+	NULL
-+};
-+
-+static struct attribute_group attr_group = {
-+	.attrs = attrs
-+};
-+
-+static int stratix10_rsu_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stratix10_rsu_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->client.dev = dev;
-+	priv->client.receive_cb = NULL;
-+	priv->client.priv = priv;
-+	priv->status.current_image = 0;
-+	priv->status.fail_image = 0;
-+	priv->status.error_location = 0;
-+	priv->status.error_details = 0;
-+	priv->status.version = 0;
-+	priv->status.state = 0;
-+
-+	mutex_init(&priv->lock);
-+	priv->chan = stratix10_svc_request_channel_byname(&priv->client,
-+							 SVC_CLIENT_RSU);
-+	if (IS_ERR(priv->chan)) {
-+		dev_err(dev, "couldn't get service channel (%s)\n",
-+			SVC_CLIENT_RSU);
-+		return PTR_ERR(priv->chan);
-+	}
-+
-+	init_completion(&priv->completion);
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* status is only updated after reboot */
-+	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
-+			   0, rsu_status_callback);
-+	if (ret) {
-+		dev_err(dev, "Error getting RSU status (%i)\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
-+		return ret;
-+	}
-+
-+	ret = sysfs_create_group(&dev->kobj, &attr_group);
-+	if (ret)
-+		stratix10_svc_free_channel(priv->chan);
-+
-+	pr_info("Intel RSU Driver Initialized\n");
-+	return ret;
-+}
-+
-+static int stratix10_rsu_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stratix10_rsu_priv *priv = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&dev->kobj, &attr_group);
-+	stratix10_svc_free_channel(priv->chan);
-+	return 0;
-+}
-+
-+static const struct of_device_id stratix10_rsu_of_match[] = {
-+	{.compatible = "intel,stratix10-rsu"},
-+	{},
-+};
-+
-+static struct platform_driver stratix10_rsu_driver = {
-+	.probe = stratix10_rsu_probe,
-+	.remove = stratix10_rsu_remove,
-+	.driver = {
-+		.name = "stratix10-rsu",
-+		.of_match_table = stratix10_rsu_of_match,
-+	},
-+};
-+
-+static int __init stratix10_rsu_init(void)
-+{
-+	struct device_node *fw_np;
-+	struct device_node *np;
-+	int ret;
-+
-+	fw_np = of_find_node_by_name(NULL, "svc");
-+	if (!fw_np)
-+		return -ENODEV;
-+
-+	np = of_find_matching_node(fw_np, stratix10_rsu_of_match);
-+	if (!np)
-+		return -ENODEV;
-+
-+	of_node_put(np);
-+	ret = of_platform_populate(fw_np, stratix10_rsu_of_match, NULL, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return platform_driver_register(&stratix10_rsu_driver);
-+}
-+
-+static void __exit stratix10_rsu_exit(void)
-+{
-+	return platform_driver_unregister(&stratix10_rsu_driver);
-+}
-+
-+module_init(stratix10_rsu_init);
-+module_exit(stratix10_rsu_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel Remote System Update Driver");
-+MODULE_AUTHOR("Richard Gong <richard.gong@intel.com>");
++++ b/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+@@ -0,0 +1,78 @@
++		Intel Stratix10 Remote System Update (RSU) device attributes
++
++What:		/sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/current_image
++Date:		April 2019
++KernelVersion:	5.2
++Contact:	Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) the address of image currently running in flash.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/fail_image
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) the address of failed image in flash.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/state
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) the state of RSU system.
++		The state field has two parts: major error code in upper 16 bits and minor error code
++		in lower 16 bits.
++		1. Major error code
++			0xF001 -- bitstream error
++			0xF002 -- hardware access failure
++			0xF003 -- bitstream corruption
++			0xF004 -- internal error
++			0xF005 -- device error
++			0xF006 -- HPS watchdog timeout
++			0xF007 -- internal unknown error
++		2: Minor error code
++			Currently used only when major error is 0xF006 (HPS watchdog timeout), in which
++		case the minor error code is the value reported by HPS to firmware through the RSU notify
++		command before the watchdog timeout occurs.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/version
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) the version number of RSU firmware.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/error_location
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) the error offset inside the image that failed.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/error_details
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(RO) error code.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/reboot_image
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(WO) the address of image to be loaded on next reboot command.
++
++What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/notify
++Date:           April 2019
++KernelVersion:  5.2
++Contact:        Richard Gong <richard.gong@intel.com>
++Description:
++		(WO) inform firmware that the current software state as a 16-bit
++		numerical value below:
++		0 -- the first stage bootloader didn't run or didn't reach the
++		     point of launching second stage bootloader
++		1 -- failed in second bootloader or didn't get to the point of
++		     launching the operating system
++		2 -- both first and second stage bootloader ran and the operating
++		     system launch was attempted.
 -- 
 2.7.4
 
