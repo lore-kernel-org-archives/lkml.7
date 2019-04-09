@@ -2,298 +2,255 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABC4C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF2EC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2EF20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A2220651
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bGE76B1m"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O2Ci7LUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfDIJIb (ORCPT
+        id S1726850AbfDIJJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:08:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37628 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726493AbfDIJIQ (ORCPT
+        Tue, 9 Apr 2019 05:09:22 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46356 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfDIJJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:08:16 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x398pmKO021436;
-        Tue, 9 Apr 2019 11:07:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Ihw2vSvs6AA0LkCRPUc9omKGsQLZXtdPzeoLMV4GV8M=;
- b=bGE76B1mDj+fmCfRs1h/HgHbFOQti3turh+Z0DoL+8SRZAGp5cGdzmasNCHDBnbl76CH
- +V9nTL4rn+IE5M43qX1ZGoG87IUs/RcHe101yFlh4uvavmKroLqd2ISJ++BCLN9IUUnw
- itYBSF8MUl5T471hizzoQ3ao8hmpghiiL98yYuDsWejl9PiyRCP0wRkT84DQ/st3z9l5
- ef+bVVXiSE+F4KtdPshtayDRkRQ5WTiuK7BqPJOyt8ooEqV/RYnvZ5h0K9XUy/odYS/0
- Rp+XGC/SddDgmH512IlMD9DhiFYmfrMUY7g6N5oYy9y4EnyMrbRV4GuJhUfhbkcZ6WQz uA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rpr7wgkf6-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 09 Apr 2019 11:07:10 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DD7F31;
-        Tue,  9 Apr 2019 09:07:04 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 13E562748;
-        Tue,  9 Apr 2019 09:07:04 +0000 (GMT)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 9 Apr
- 2019 11:07:03 +0200
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Tue, 9 Apr 2019 11:07:03 +0200
-From:   Pascal PAILLET-LME <p.paillet@st.com>
-To:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Pascal PAILLET-LME <p.paillet@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 2/3] ARM: dts: stm32: add stpmic1 support on stm32mp157a
- dk1 board
-Thread-Topic: [PATCH v2 2/3] ARM: dts: stm32: add stpmic1 support on
- stm32mp157a dk1 board
-Thread-Index: AQHU7rOZC+/rg+MUg028eou+9g6Okw==
-Date:   Tue, 9 Apr 2019 09:07:03 +0000
-Message-ID: <1554800820-5412-3-git-send-email-p.paillet@st.com>
-References: <1554800820-5412-1-git-send-email-p.paillet@st.com>
-In-Reply-To: <1554800820-5412-1-git-send-email-p.paillet@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_03:,,
- signatures=0
+        Tue, 9 Apr 2019 05:09:21 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3993ceG030477;
+        Tue, 9 Apr 2019 09:09:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=XoCGbypPfVgywZhfIvQD9juZEXsILJVfuiOaDvsV7UI=;
+ b=O2Ci7LUl/Mt8fIqdNnWqL0lYoE4xT1pNkbsV0mBKIzjXf3Iuml7jDWSv/kEpAb8Lgczt
+ qcuKb3gxHLRdcP18KnLQoN0zs8CKTD26rvs8Be/uZMzuHyDV5ykRJTCjpgr9hUW/xWMx
+ KP2yHMm2Byb6fSqpTRyOupIoqQbvQfndUvbkG5yHihKUD4MUMPAqvJ1aQlLSE6J4sLQm
+ XAN3/0cFKCXQBHlPEsILcun9CamZIqJa9KAdGjBf3687cmO98QjrK2f1Ug6qi614g11z
+ zWIObL1Scd0/fpKosQnvNPCI+ADoxRoCGLxF8gQbSrnpOUg+WLUrDhJudyZOfEuzJmTe 9A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2rphmebue3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Apr 2019 09:09:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3998SvQ064298;
+        Tue, 9 Apr 2019 09:09:10 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rph7sff0h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Apr 2019 09:09:09 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x399968H019284;
+        Tue, 9 Apr 2019 09:09:07 GMT
+Received: from localhost.localdomain (/101.95.182.98)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Apr 2019 02:09:05 -0700
+From:   Bob Liu <bob.liu@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     shirley.ma@oracle.com, martin.petersen@oracle.com,
+        Bob Liu <bob.liu@oracle.com>,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] blk-mq: fix hang caused by freeze/unfreeze sequence
+Date:   Tue,  9 Apr 2019 17:08:28 +0800
+Message-Id: <20190409090828.16282-1-bob.liu@oracle.com>
+X-Mailer: git-send-email 2.9.5
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904090060
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904090060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds stpmic1 support on stm32mp157a dk1 board.
-The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
-regulators, 3 power switches, a watchdog and an input for a power on key.
-The DMAs are disabled because the PMIC generates a very few traffic and
-DMA channels may lack for other usage.
+This patch was proposed by Roman Pen[3] years ago.
+Recently we hit a bug which is likely caused by the same reason,so rebased his
+fix to v5.1 and resend.
+Below is almost copied from that patch[3].
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
+------
+Long time ago there was a similar fix proposed by Akinobu Mita[1],
+but it seems that time everyone decided to fix this subtle race in
+percpu-refcount and Tejun Heo[2] did an attempt (as I can see that
+patchset was not applied).
+
+The following is a description of a hang in blk_mq_freeze_queue_wait() -
+same fix but a bug from another angle.
+
+The hang happens on attempt to freeze a queue while another task does
+queue unfreeze.
+
+The root cause is an incorrect sequence of percpu_ref_reinit() and
+percpu_ref_kill() and as a result those two can be swapped:
+
+ CPU#0               CPU#1
+ ----------------    -----------------
+ percpu_ref_kill()
+
+                     percpu_ref_kill() << atomic reference does
+ percpu_ref_reinit()                   << not guarantee the order
+
+                     blk_mq_freeze_queue_wait() << HANG HERE
+
+                     percpu_ref_reinit()
+
+Firstly this wrong sequence raises two kernel warnings:
+
+  1st. WARNING at lib/percpu-recount.c:309
+       percpu_ref_kill_and_confirm called more than once
+
+  2nd. WARNING at lib/percpu-refcount.c:331
+
+But the most unpleasant effect is a hang of a blk_mq_freeze_queue_wait(),
+which waits for a zero of a q_usage_counter, which never happens
+because percpu-ref was reinited (instead of being killed) and stays in
+PERCPU state forever.
+
+The simplified sequence above can be reproduced on shared tags, when
+queue A is going to die meanwhile another queue B is in init state and
+is trying to freeze the queue A, which shares the same tags set:
+
+ CPU#0                           CPU#1
+ ------------------------------- ------------------------------------
+ q1 = blk_mq_init_queue(shared_tags)
+
+                                q2 = blk_mq_init_queue(shared_tags):
+                                  blk_mq_add_queue_tag_set(shared_tags):
+                                    blk_mq_update_tag_set_depth(shared_tags):
+                                      blk_mq_freeze_queue(q1)
+ blk_cleanup_queue(q1)                 ...
+   blk_mq_freeze_queue(q1)   <<<->>>   blk_mq_unfreeze_queue(q1)
+
+[1] Message id: 1443287365-4244-7-git-send-email-akinobu.mita@gmail.com
+[2] Message id: 1443563240-29306-6-git-send-email-tj@kernel.org
+[3] https://patchwork.kernel.org/patch/9268199/
+
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 158 ++++++++++++++++++++++++++++++=
-++--
- 1 file changed, 150 insertions(+), 8 deletions(-)
+ v3:
+   - rebase to v5.1
+ v2:
+   - forgotten hunk from local repo
+   - minor tweaks in the commit message
+---
+ block/blk-core.c       |  3 ++-
+ block/blk-mq.c         | 19 ++++++++++---------
+ include/linux/blkdev.h |  7 ++++++-
+ 3 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm3=
-2mp157a-dk1.dts
-index 1b1886d..4bb91ab 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -9,6 +9,7 @@
- #include "stm32mp157c.dtsi"
- #include "stm32mp157-pinctrl.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-=20
- / {
- 	model =3D "STMicroelectronics STM32MP157A-DK1 Discovery Board";
-@@ -36,14 +37,6 @@
- 			default-state =3D "off";
- 		};
- 	};
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a55389b..fb97497 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -433,7 +433,7 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
+ 		smp_rmb();
+
+ 		wait_event(q->mq_freeze_wq,
+-			   (atomic_read(&q->mq_freeze_depth) == 0 &&
++			   (!q->mq_freeze_depth &&
+ 			    (pm || (blk_pm_request_resume(q),
+ 				    !blk_queue_pm_only(q)))) ||
+ 			   blk_queue_dying(q));
+@@ -523,6 +523,7 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+ 	spin_lock_init(&q->queue_lock);
+
+ 	init_waitqueue_head(&q->mq_freeze_wq);
++	mutex_init(&q->mq_freeze_lock);
+
+ 	/*
+ 	 * Init percpu_ref in atomic mode so that it's faster to shutdown.
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index a935483..373af60 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -143,13 +143,14 @@ void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
+
+ void blk_freeze_queue_start(struct request_queue *q)
+ {
+-	int freeze_depth;
 -
--	v3v3: regulator-3v3 {
--		compatible =3D "regulator-fixed";
--		regulator-name =3D "v3v3";
--		regulator-min-microvolt =3D <3300000>;
--		regulator-max-microvolt =3D <3300000>;
--		regulator-always-on;
--	};
- };
-=20
- &ethernet0 {
-@@ -65,6 +58,155 @@
- 	};
- };
-=20
-+
-+&i2c4 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns =3D <185>;
-+	i2c-scl-falling-time-ns =3D <20>;
-+	status =3D "okay";
-+	/* spare dmas for other usage */
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible =3D "st,stpmic1";
-+		reg =3D <0x33>;
-+		interrupts-extended =3D <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells =3D <2>;
-+		status =3D "okay";
-+
-+		regulators {
-+			compatible =3D "st,stpmic1-regulators";
-+			ldo1-supply =3D <&v3v3>;
-+			ldo3-supply =3D <&vdd_ddr>;
-+			ldo6-supply =3D <&v3v3>;
-+			pwr_sw1-supply =3D <&bst_out>;
-+			pwr_sw2-supply =3D <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name =3D "vddcore";
-+				regulator-min-microvolt =3D <800000>;
-+				regulator-max-microvolt =3D <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name =3D "vdd_ddr";
-+				regulator-min-microvolt =3D <1350000>;
-+				regulator-max-microvolt =3D <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name =3D "vdd";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				st,mask-reset;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name =3D "v3v3";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode =3D <0>;
-+			};
-+
-+			v1v8_audio: ldo1 {
-+				regulator-name =3D "v1v8_audio";
-+				regulator-min-microvolt =3D <1800000>;
-+				regulator-max-microvolt =3D <1800000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO1 0>;
-+			};
-+
-+			v3v3_hdmi: ldo2 {
-+				regulator-name =3D "v3v3_hdmi";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO2 0>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name =3D "vtt_ddr";
-+				regulator-min-microvolt =3D <500000>;
-+				regulator-max-microvolt =3D <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name =3D "vdd_usb";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				interrupts =3D <IT_CURLIM_LDO4 0>;
-+			};
-+
-+			vdda: ldo5 {
-+				regulator-name =3D "vdda";
-+				regulator-min-microvolt =3D <2900000>;
-+				regulator-max-microvolt =3D <2900000>;
-+				interrupts =3D <IT_CURLIM_LDO5 0>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v2_hdmi: ldo6 {
-+				regulator-name =3D "v1v2_hdmi";
-+				regulator-min-microvolt =3D <1200000>;
-+				regulator-max-microvolt =3D <1200000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO6 0>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name =3D "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			 bst_out: boost {
-+				regulator-name =3D "bst_out";
-+				interrupts =3D <IT_OCP_BOOST 0>;
-+			 };
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name =3D "vbus_otg";
-+				interrupts =3D <IT_OCP_OTG 0>;
-+			 };
-+
-+			 vbus_sw: pwr_sw2 {
-+				regulator-name =3D "vbus_sw";
-+				interrupts =3D <IT_OCP_SWOUT 0>;
-+				regulator-active-discharge;
-+			 };
-+		};
-+
-+		onkey {
-+			compatible =3D "st,stpmic1-onkey";
-+			interrupts =3D <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
-+			interrupt-names =3D "onkey-falling", "onkey-rising";
-+			power-off-time-sec =3D <10>;
-+			status =3D "okay";
-+		};
-+
-+		watchdog {
-+			compatible =3D "st,stpmic1-wdt";
-+			status =3D "disabled";
-+		};
-+	};
-+};
-+
- &ipcc {
- 	status =3D "okay";
- };
---=20
-1.9.1
+-	freeze_depth = atomic_inc_return(&q->mq_freeze_depth);
+-	if (freeze_depth == 1) {
++	mutex_lock(&q->mq_freeze_lock);
++	if (++q->mq_freeze_depth == 1) {
+ 		percpu_ref_kill(&q->q_usage_counter);
++		mutex_unlock(&q->mq_freeze_lock);
+ 		if (queue_is_mq(q))
+ 			blk_mq_run_hw_queues(q, false);
++	} else {
++		mutex_unlock(&q->mq_freeze_lock);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(blk_freeze_queue_start);
+@@ -198,14 +199,14 @@ EXPORT_SYMBOL_GPL(blk_mq_freeze_queue);
+
+ void blk_mq_unfreeze_queue(struct request_queue *q)
+ {
+-	int freeze_depth;
+-
+-	freeze_depth = atomic_dec_return(&q->mq_freeze_depth);
+-	WARN_ON_ONCE(freeze_depth < 0);
+-	if (!freeze_depth) {
++	mutex_lock(&q->mq_freeze_lock);
++	q->mq_freeze_depth--;
++	WARN_ON_ONCE(q->mq_freeze_depth < 0);
++	if (!q->mq_freeze_depth) {
+ 		percpu_ref_resurrect(&q->q_usage_counter);
+ 		wake_up_all(&q->mq_freeze_wq);
+ 	}
++	mutex_unlock(&q->mq_freeze_lock);
+ }
+ EXPORT_SYMBOL_GPL(blk_mq_unfreeze_queue);
+
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 5c58a3b..64f7683 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -535,7 +535,7 @@ struct request_queue {
+
+ 	struct mutex		sysfs_lock;
+
+-	atomic_t		mq_freeze_depth;
++	int			mq_freeze_depth;
+
+ #if defined(CONFIG_BLK_DEV_BSG)
+ 	struct bsg_class_device bsg_dev;
+@@ -547,6 +547,11 @@ struct request_queue {
+ #endif
+ 	struct rcu_head		rcu_head;
+ 	wait_queue_head_t	mq_freeze_wq;
++	/*
++	 * Protect concurrent access to q_usage_counter by
++	 * percpu_ref_kill() and percpu_ref_reinit().
++	 */
++	struct mutex		mq_freeze_lock;
+ 	struct percpu_ref	q_usage_counter;
+ 	struct list_head	all_q_node;
+
+--
+2.9.5
+
