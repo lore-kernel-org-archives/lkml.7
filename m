@@ -6,88 +6,160 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7670BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D23C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496E821473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A7C2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfDIKQq (ORCPT
+        id S1727190AbfDIKRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:16:46 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:47953 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfDIKQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:16:44 -0400
-Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AD18F100011;
-        Tue,  9 Apr 2019 10:16:41 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4/6] rtc: lpc32xx: switch to rtc_time64_to_tm/rtc_tm_to_time64
-Date:   Tue,  9 Apr 2019 12:16:29 +0200
-Message-Id: <20190409101631.5116-4-alexandre.belloni@bootlin.com>
+        Tue, 9 Apr 2019 06:17:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41794 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726765AbfDIKRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:17:33 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5F1B8B18EC5747D21AA4;
+        Tue,  9 Apr 2019 18:17:31 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 9 Apr 2019 18:17:24 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
+CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v3 2/4] arm64: kdump: support reserving crashkernel above 4G
+Date:   Tue, 9 Apr 2019 18:28:17 +0800
+Message-ID: <20190409102819.121335-3-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409101631.5116-1-alexandre.belloni@bootlin.com>
-References: <20190409101631.5116-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190409102819.121335-1-chenzhou10@huawei.com>
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the 64bit versions of rtc_tm time conversion now that the range is
-enforced by the core.
+When crashkernel is reserved above 4G in memory, kernel should
+reserve some amount of low memory for swiotlb and some DMA buffers.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Kernel would try to allocate at least 256M below 4G automatically
+as x86_64 if crashkernel is above 4G. Meanwhile, support
+crashkernel=X,[high,low] in arm64.
+
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/rtc/rtc-lpc32xx.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ arch/arm64/include/asm/kexec.h |  3 +++
+ arch/arm64/kernel/setup.c      |  3 +++
+ arch/arm64/mm/init.c           | 26 +++++++++++++++++++++-----
+ 3 files changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-lpc32xx.c b/drivers/rtc/rtc-lpc32xx.c
-index 652b969158d4..bd5186928eae 100644
---- a/drivers/rtc/rtc-lpc32xx.c
-+++ b/drivers/rtc/rtc-lpc32xx.c
-@@ -66,7 +66,7 @@ static int lpc32xx_rtc_read_time(struct device *dev, struct rtc_time *time)
- 	struct lpc32xx_rtc *rtc = dev_get_drvdata(dev);
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 67e4cb7..32949bf 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -28,6 +28,9 @@
  
- 	elapsed_sec = rtc_readl(rtc, LPC32XX_RTC_UCOUNT);
--	rtc_time_to_tm(elapsed_sec, time);
-+	rtc_time64_to_tm(elapsed_sec, time);
+ #define KEXEC_ARCH KEXEC_ARCH_AARCH64
  
- 	return 0;
- }
-@@ -95,7 +95,7 @@ static int lpc32xx_rtc_read_alarm(struct device *dev,
++/* 2M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_2M
++
+ #ifndef __ASSEMBLY__
+ 
+ /**
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566..82cd9a0 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+ 		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++		    crashk_low_res.end <= res->end)
++			request_resource(res, &crashk_low_res);
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 972bf43..3bebddf 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -64,6 +64,7 @@ EXPORT_SYMBOL(memstart_addr);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -74,20 +75,30 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ static void __init reserve_crashkernel(void)
  {
- 	struct lpc32xx_rtc *rtc = dev_get_drvdata(dev);
+ 	unsigned long long crash_base, crash_size;
++	bool high = false;
+ 	int ret;
  
--	rtc_time_to_tm(rtc_readl(rtc, LPC32XX_RTC_MATCH0), &wkalrm->time);
-+	rtc_time64_to_tm(rtc_readl(rtc, LPC32XX_RTC_MATCH0), &wkalrm->time);
- 	wkalrm->enabled = rtc->alarm_enabled;
- 	wkalrm->pending = !!(rtc_readl(rtc, LPC32XX_RTC_INTSTAT) &
- 		LPC32XX_RTC_INTSTAT_MATCH0);
-@@ -109,13 +109,8 @@ static int lpc32xx_rtc_set_alarm(struct device *dev,
- 	struct lpc32xx_rtc *rtc = dev_get_drvdata(dev);
- 	unsigned long alarmsecs;
- 	u32 tmp;
--	int ret;
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+ 	/* no crashkernel= or invalid value specified */
+-	if (ret || !crash_size)
+-		return;
++	if (ret || !crash_size) {
++		/* crashkernel=X,high */
++		ret = parse_crashkernel_high(boot_command_line,
++				memblock_phys_mem_size(),
++				&crash_size, &crash_base);
++		if (ret || !crash_size)
++			return;
++		high = true;
++	}
  
--	ret = rtc_tm_to_time(&wkalrm->time, &alarmsecs);
--	if (ret < 0) {
--		dev_warn(dev, "Failed to convert time: %d\n", ret);
--		return ret;
--	}
-+	alarmsecs = rtc_tm_to_time64(&wkalrm->time);
+ 	crash_size = PAGE_ALIGN(crash_size);
  
- 	spin_lock_irq(&rtc->lock);
+ 	if (crash_base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
+-				crash_size, SZ_2M);
++		crash_base = memblock_find_in_range(0,
++				high ? memblock_end_of_DRAM()
++				: ARCH_LOW_ADDRESS_LIMIT,
++				crash_size, CRASH_ALIGN);
+ 		if (crash_base == 0) {
+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 				crash_size);
+@@ -105,13 +116,18 @@ static void __init reserve_crashkernel(void)
+ 			return;
+ 		}
+ 
+-		if (!IS_ALIGNED(crash_base, SZ_2M)) {
++		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+ 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+ 			return;
+ 		}
+ 	}
+ 	memblock_reserve(crash_base, crash_size);
+ 
++	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
++		memblock_free(crash_base, crash_size);
++		return;
++	}
++
+ 	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+ 		crash_base, crash_base + crash_size, crash_size >> 20);
  
 -- 
-2.20.1
+2.7.4
 
