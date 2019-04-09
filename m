@@ -2,114 +2,135 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F3FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA772C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C5820833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxk9dQmZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9FD3920833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfDIPBp (ORCPT
+        id S1726723AbfDIPCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:01:45 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46055 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfDIPBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:01:43 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v20so20069365qtv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 08:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KGCLS1/Mdh0CKtBo2RIDljEgFQe9uGR7+t/tNnMwvHI=;
-        b=kxk9dQmZIPojrJl4f+dCYF6p1hMWVhfwa/97VrSuM2USSLxZjz6WtYehmvF/5ropby
-         kNCQH/AEHnQTwKnn+4CUeJf6bA+VftpCMzii2CA4RKS6HuxmkgkS/w5Plj9vjISqraBB
-         Wbxb8c7yu3DJKsNRiBWKLD708gydnAhSkOfEw7ZByualKz1jQzFbZxrlP09R5IwVYmTg
-         8/fE5MWmjZilkKa96c3o0llx4ZMABMwlA7OoehEYAsVKTI8fD5ik5R/MACexnt8NuzC0
-         nn63bQgooT0J0lyX5HVy9b6BzfSdnBjzIKRuH67FUWyvQ/x0ptvkGOE1Bm0VK2KLDWvF
-         5TSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KGCLS1/Mdh0CKtBo2RIDljEgFQe9uGR7+t/tNnMwvHI=;
-        b=jndiG7OkNmi0YH+YrUPI4BFK8FMZVW1JK2C2yic0WkWyinYAPppoPWPpjK0gOicek3
-         4/IZMs+Rl/eguzHF66mvmVsQPybArLgWxf5Iz0IFr0TqEp/x/+74x8mDFEjTyXgb94M4
-         Umf6vub5xtiLM5iWLN61IsHRV0I5LeQUj2SVuVUuSr7hT3VAT0H5LQQ/Fqn2FMJXNwtx
-         zN316MamLXyTXEH1D7NisDghH7KECcFL1FBoMf49Q0gVrZvejAmmCAiAEE23N8ZWszUy
-         SRHluqpIg18Ckp9O/vP6QAxG7CwhbW1b6gzww8EvxdnsSOQN9l7HolnQ2buUNJepDPow
-         29hw==
-X-Gm-Message-State: APjAAAXa/tUhwYeHA2Aty/SJHdDs1iBrH7q/z0Vh4g0GnV4LsvpFViOb
-        Kx2DziQE5/ib3iwaecjDPmE=
-X-Google-Smtp-Source: APXvYqyoPDQW3lUCcygasUk6/ghw/DUQoFWJc5g6xkgph7BHk9N0EeKrEx6iTvUufzRwf7MCHBueYw==
-X-Received: by 2002:a0c:897b:: with SMTP id 56mr29395631qvq.55.1554822101737;
-        Tue, 09 Apr 2019 08:01:41 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id g12sm18063260qkk.85.2019.04.09.08.01.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 08:01:40 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C4BCB4039C; Tue,  9 Apr 2019 12:01:38 -0300 (-03)
-Date:   Tue, 9 Apr 2019 12:01:38 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf scripts python: export-to-sqlite.py: Fix use of
- parent_id in calls_view
-Message-ID: <20190409150138.GC31835@kernel.org>
-References: <20190409062557.26138-1-adrian.hunter@intel.com>
+        Tue, 9 Apr 2019 11:02:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59868 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbfDIPCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 11:02:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 08:02:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="162750400"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2019 08:02:20 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CFD6BFA; Tue,  9 Apr 2019 18:02:19 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] dmaengine: idma64: Move driver name to the header
+Date:   Tue,  9 Apr 2019 18:02:19 +0300
+Message-Id: <20190409150219.15094-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409062557.26138-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 09, 2019 at 09:25:57AM +0300, Adrian Hunter escreveu:
-> Fix following error using calls_view:
->  Query failed: ambiguous column name: parent_id Unable to execute statement
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+There are two drivers that are relying on the iDMA 64-bit driver name
+to match. Instead of duplicating string in both of them, dedicate
+a header file and share it between users.
 
-Applied, and thanks for the Fixes tag, appreciated,
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/idma64.c       |  9 ++++-----
+ drivers/mfd/intel-lpss.c   |  4 ++--
+ include/linux/dma/idma64.h | 14 ++++++++++++++
+ 3 files changed, 20 insertions(+), 7 deletions(-)
+ create mode 100644 include/linux/dma/idma64.h
 
-- Arnaldo
-
-> Fixes: 8ce9a7251d11 ("perf scripts python: export-to-sqlite.py: Export calls parent_id")
-> ---
->  tools/perf/scripts/python/export-to-sqlite.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-> index 3b71902a5a21..bf271fbc3a88 100644
-> --- a/tools/perf/scripts/python/export-to-sqlite.py
-> +++ b/tools/perf/scripts/python/export-to-sqlite.py
-> @@ -331,7 +331,7 @@ if perf_db_export_calls:
->  			'return_id,'
->  			'CASE WHEN flags=0 THEN \'\' WHEN flags=1 THEN \'no call\' WHEN flags=2 THEN \'no return\' WHEN flags=3 THEN \'no call/return\' WHEN flags=6 THEN \'jump\' ELSE flags END AS flags,'
->  			'parent_call_path_id,'
-> -			'parent_id'
-> +			'calls.parent_id'
->  		' FROM calls INNER JOIN call_paths ON call_paths.id = call_path_id')
->  
->  do_query(query, 'CREATE VIEW samples_view AS '
-> -- 
-> 2.17.1
-
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index 0baf9797cc09..4180cf197823 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -19,10 +19,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+-#include "idma64.h"
++#include <linux/dma/idma64.h>
+ 
+-/* Platform driver name */
+-#define DRV_NAME		"idma64"
++#include "idma64.h"
+ 
+ /* For now we support only two channels */
+ #define IDMA64_NR_CHAN		2
+@@ -697,7 +696,7 @@ static struct platform_driver idma64_platform_driver = {
+ 	.probe		= idma64_platform_probe,
+ 	.remove		= idma64_platform_remove,
+ 	.driver = {
+-		.name	= DRV_NAME,
++		.name	= LPSS_IDMA64_DRIVER_NAME,
+ 		.pm	= &idma64_dev_pm_ops,
+ 	},
+ };
+@@ -707,4 +706,4 @@ module_platform_driver(idma64_platform_driver);
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("iDMA64 core driver");
+ MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
+-MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_ALIAS("platform:" LPSS_IDMA64_DRIVER_NAME);
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 50bffc3382d7..45221e092ecf 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -28,6 +28,8 @@
+ #include <linux/seq_file.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ 
++#include <linux/dma/idma64.h>
++
+ #include "intel-lpss.h"
+ 
+ #define LPSS_DEV_OFFSET		0x000
+@@ -96,8 +98,6 @@ static const struct resource intel_lpss_idma64_resources[] = {
+ 	DEFINE_RES_IRQ(0),
+ };
+ 
+-#define LPSS_IDMA64_DRIVER_NAME		"idma64"
+-
+ /*
+  * Cells needs to be ordered so that the iDMA is created first. This is
+  * because we need to be sure the DMA is available when the host controller
+diff --git a/include/linux/dma/idma64.h b/include/linux/dma/idma64.h
+new file mode 100644
+index 000000000000..621cfae60554
+--- /dev/null
++++ b/include/linux/dma/idma64.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Definitions for the Intel integrated DMA 64-bit
++ *
++ * Copyright (C) 2019 Intel Corporation
++ */
++
++#ifndef __LINUX_DMA_IDMA64_H__
++#define __LINUX_DMA_IDMA64_H__
++
++/* Platform driver name */
++#define LPSS_IDMA64_DRIVER_NAME		"idma64"
++
++#endif /* __LINUX_DMA_IDMA64_H__ */
 -- 
+2.20.1
 
-- Arnaldo
