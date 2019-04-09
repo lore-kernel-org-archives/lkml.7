@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7455BC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AD7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4116B20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06932084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="TJF+s2Rh"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="RYaMYmZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDIOHh (ORCPT
+        id S1726672AbfDIOIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:07:37 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37478 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbfDIOHg (ORCPT
+        Tue, 9 Apr 2019 10:08:49 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42941 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfDIOIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:07:36 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v13so14576446ljk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:07:34 -0700 (PDT)
+        Tue, 9 Apr 2019 10:08:48 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v22so14587220lje.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UQxJMSZMCM3zKcDpRRfm0HzVbtFnEegjOT3D0Jsz53o=;
-        b=TJF+s2Rh3KaDaWciSpvRfu5kfPblnXMMZ136vWoCaUsQQF2c7PN9rSIpCeiG27E307
-         jrNVOiiACI5M/apRlWCXc0OE5bXix2BwUtVDiV0vRm/4or5lruqN4xtLiWisx+EiPtkj
-         Lu0iWDZWt3IiIJO6b2MO7E/fI4NMGhpy+bXK9mtECKza8SMr05XajqZJv/wa05GNmu6f
-         HmqRwvvUe7hdIr/I0wMo7Ht+CEiSfXXp9pUNg5B4uUHkq8+h0OUlKYVdgEax9DRan8Vs
-         IMDS/y8mbiUPiCAjn9m0duONEAWQvRFgBW1B9hS0f0H8dp/PQGiCB8kJbRFBuwOmcg7J
-         9sbQ==
+        bh=bJqwsdxna4Q7olx1D3bxkirl81KCJrqbp6C3D799jOY=;
+        b=RYaMYmZgaC0PAGqbNW8JyoyXmTkaZWh0jFfuadqfVhFNh4yifjUEeeaDfGvqPhnfo9
+         QI+BexXT3kmM4AhboT/k0KecivnHifHJcSp+cNIAp8nL50MOF8C5OQe31hzSxh8mGUei
+         +J8XTagY0dOGuNc/NUImPnO1tlmBVw7QrTQuyCucsN/TXYBzPE4Omo2+JoQdK+92qgOW
+         fME30PGDubQUNYvOjA7EaHwUo0hdpWwh101+n5pw+57np51nP8SstJufG7BFTUH8ZzVI
+         e2hYxtTdlWRnhnpfPDsMbo3qj3DUhGLMajgvWnAgj6/5mCc6retn1xvIIbhku6J0PrD1
+         IFww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UQxJMSZMCM3zKcDpRRfm0HzVbtFnEegjOT3D0Jsz53o=;
-        b=ChtcVcHY+lZb7zQ5BmByEavWRRaHf3zwvyAAALEX5x8p8ejlJSgZgptsjQ5dWo/6u5
-         Z50B+bUYJi3DTu48+1sD/9Qqqo9Sq+LrJ7HMRVSR4dYRHZdXcNiZTWkchm5HVUktxKtI
-         NoPmWH7KexKySG0CwQLrRh4HN0Keq3whIxl11+at2ZQwVpX6cL3vq0nMZ9b00LR4D0mY
-         byu1e4rxS9e/7w/xqO+v2Fr06FY0pMxUXIFOF5aQdrmqAPM+GahwAvxWqCvNHf6fovBz
-         xd1HQaLiSRwBhuzotLGGMsLav7Dm5JjMwUF3YSbFiOH8DTn+igTElwOR0QJ9hiAYQaEA
-         auOA==
-X-Gm-Message-State: APjAAAWn0OGTypiblWMzLAs+NFv5i8QkSLPK0iwL81oIYceQ9B6egFTx
-        xwvmS+yPr04A4nRHm0WK4JXnmFqVLTZPk5VhKYIj
-X-Google-Smtp-Source: APXvYqyEgbz1ViHg/yoq+SHC9WJ9RsRoXWSV3JGxCZUXOc3HVStH4Y161vmCk/BoPcyMqeZkGNVZEihNWTJpgEa0Hjg=
-X-Received: by 2002:a2e:88c1:: with SMTP id a1mr19600298ljk.78.1554818854001;
- Tue, 09 Apr 2019 07:07:34 -0700 (PDT)
+        bh=bJqwsdxna4Q7olx1D3bxkirl81KCJrqbp6C3D799jOY=;
+        b=p/njlZjH6a07Q/N6VHQ3dVUlujrfflhZZFNhpwil6HcRWzrFTlPoKGJ/8IzHyJhjSc
+         iftKM7LvWaqiAY/Im0awWLydwbon7NZ31fcq9SjGpeMebWvYYCDCJLsOkHe5EI/SM01M
+         JCEsgtyeh9A/UF7VIu09VL2zBssL2QtvEqd25XB4FqDkbao5nswybkyVhA0tf1/YHd1f
+         i/5g6Qtl+kyy2yYOCwciTYa5t+ssybTupzScr6GDRQprkuXA3bEo4gf3LMibuOPfRAKo
+         wg4KpeUcivRSgbUWRzfADCUUTZTO/yP+Vv6NsqPJHQ8nStVs2/5nfoEThT394Wezh8FU
+         ckDg==
+X-Gm-Message-State: APjAAAU8mYr1cV7+SA726ABcRn+9sLZ+Wj6nZF5H/rqkNAbNHn36z9uo
+        5iDwgkCIJLNmNyx2Co6u11kImRM/388kUOHrbVH1
+X-Google-Smtp-Source: APXvYqyt5fG4EaaXMN+QXFBDUje0i0ygJRMUjGXJsdatvrnmqTymIGvwjojwIPLd69AxWFGGOZ8wRP7JCmuaa5vQzQ8=
+X-Received: by 2002:a2e:4e12:: with SMTP id c18mr741895ljb.3.1554818926625;
+ Tue, 09 Apr 2019 07:08:46 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1554732921.git.rgb@redhat.com> <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
  <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
- <CAHC9VhRbxefdpTX5ct+1=uccv9b2GH+imDPPbB90RBWSjMcgbA@mail.gmail.com> <20190409134852.GB15660@hmswarspite.think-freely.org>
-In-Reply-To: <20190409134852.GB15660@hmswarspite.think-freely.org>
+ <CAHC9VhRbxefdpTX5ct+1=uccv9b2GH+imDPPbB90RBWSjMcgbA@mail.gmail.com> <20190409135304.rgkcpgya6h3ciphy@madcap2.tricolour.ca>
+In-Reply-To: <20190409135304.rgkcpgya6h3ciphy@madcap2.tricolour.ca>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 9 Apr 2019 10:07:22 -0400
-Message-ID: <CAHC9VhQ2DAfaHcSUoE3vTtSzGL5TtRuLZgGrt4TyG44pKuBD7g@mail.gmail.com>
+Date:   Tue, 9 Apr 2019 10:08:35 -0400
+Message-ID: <CAHC9VhS9EwnfS8BxL__mQrgYywTOgrXdnW=4zCiM_DYJc4U5+g@mail.gmail.com>
 Subject: Re: [PATCH ghak90 V6 05/10] audit: add contid support for signalling
  the audit daemon
-To:     Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
 Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
         containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
         linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
@@ -73,17 +72,16 @@ Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
         Simo Sorce <simo@redhat.com>,
         Eric Paris <eparis@parisplace.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 9:49 AM Neil Horman <nhorman@tuxdriver.com> wrote:
-> On Tue, Apr 09, 2019 at 09:40:58AM -0400, Paul Moore wrote:
+On Tue, Apr 9, 2019 at 9:53 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-04-09 09:40, Paul Moore wrote:
 > > On Tue, Apr 9, 2019 at 8:58 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > >
 > > > On Tue, Apr 9, 2019 at 5:40 AM Richard Guy Briggs <rgb@redhat.com> wrote:
 > > > > Add audit container identifier support to the action of signalling the
 > > > > audit daemon.
@@ -118,20 +116,18 @@ On Tue, Apr 9, 2019 at 9:49 AM Neil Horman <nhorman@tuxdriver.com> wrote:
 > > (so very many) problems with the audit kernel/userspace interface that
 > > still need to be addressed.
 >
-> Agreed, this change as-is is in keeping with the message structure that audit
-> has today, and so is ok with me, but the long term goal should be a conversion
-> to netlink attributes for all audit messages.  Thats a big undertaking and
-> should be addressed separately though.
+> While this particular message type is used very infrequently, adding a
+> version field to every message type strikes me as a huge overhead for
+> the small likelihood of the format needing to change.
+>
+> I'd prefer to just key it off the AUDIT_FEATURE_BITMAP or some other
+> easily detectable change in this distinguishing feature, such as the
+> presence of /proc/self/audit_containerid, which is what I've done in the
+> accompanying userspace patchset that I'm preparing to post that works
+> with this change.
 
-You've likely missed all the conversations around this from some time
-ago, but this is the direction I want us to go towards eventually, and
-yes, this is a huge undertaking (much larger than the audit container
-ID work) that will need to be done in stages.
-
-The first step is moving away from audit_log_format() to an in-kernel
-audit API that separates the data from the record format; I've got a
-lot of ideas on that, but as I said earlier, it's mostly on the back
-burner so it doesn't hold up the audit container ID work.
+That's fine.  As I said, I'm not overly worried about this; I view
+this as a bit of a necessary hack.
 
 -- 
 paul moore
