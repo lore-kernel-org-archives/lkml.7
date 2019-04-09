@@ -2,102 +2,74 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D05DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9EC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B1F2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3482A2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fz6LU0al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfDIJg4 (ORCPT
+        id S1726952AbfDIJhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:36:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34740 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfDIJg4 (ORCPT
+        Tue, 9 Apr 2019 05:37:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40004 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfDIJha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:36:56 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x399Y7Ff034997
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 05:36:55 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rrpp1e976-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 05:36:55 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Tue, 9 Apr 2019 10:36:53 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Apr 2019 10:36:50 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x399anDR43974692
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Apr 2019 09:36:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67C96A405B;
-        Tue,  9 Apr 2019 09:36:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC29DA4054;
-        Tue,  9 Apr 2019 09:36:47 +0000 (GMT)
-Received: from oc0383214508.ibm.com (unknown [9.124.35.65])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Apr 2019 09:36:47 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] cpuidle : auto-promotion for cpuidle states
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        ego@linux.vnet.ibm.com
-References: <20190405091647.4169-1-huntbag@linux.vnet.ibm.com>
- <20190405091647.4169-2-huntbag@linux.vnet.ibm.com>
- <87lg0kwp3t.fsf@dja-thinkpad.axtens.net>
-From:   Abhishek <huntbag@linux.vnet.ibm.com>
-Date:   Tue, 9 Apr 2019 15:06:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 9 Apr 2019 05:37:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=op+L4NAIEip0r58yPjKmf3F8G9uO01A+HqsRyJmhuOk=; b=fz6LU0alZO7FY5Utkhh712m5n
+        vLFvh0i40N94cWI4HjYxVK/+7ojT8bU5W3w8N6fuG3SMebYzAEP8CdzYQ/8dJYIYBPA36ebrnOgmq
+        I7++msO2QV+8run0z2TO4JhWkJiDtrRILoCrNazz8/Hg6nYvhTf38+YsYfcE2yo/aNrfnCrLT73AF
+        qPaQoYs/jmxDFjMhHYU2dpYfeD50KjglonTDz4QKon9otNgJzqCNblJrzJd4vaTFkJpHIYgXdFW+d
+        h9S0Jpjx5jzE0cwuztGXrJNlua26EPVpAIxASJW1l1O0x43RF7Ti18iPbLh9TT4rIV6eURgGN5Fy1
+        qplfJMChA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDnBt-00046Y-Nt; Tue, 09 Apr 2019 09:37:17 +0000
+Date:   Tue, 9 Apr 2019 02:37:17 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] io_uring: introduce inline reqs for
+ IORING_SETUP_IOPOLL
+Message-ID: <20190409093717.GA15391@infradead.org>
+References: <1554787314-27179-1-git-send-email-jianchao.w.wang@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <87lg0kwp3t.fsf@dja-thinkpad.axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19040909-0020-0000-0000-0000032DD817
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040909-0021-0000-0000-0000217FFD89
-Message-Id: <f8a0e5ad-44d1-9a12-1995-57f3671a5889@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=734 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904090063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554787314-27179-1-git-send-email-jianchao.w.wang@oracle.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Tue, Apr 09, 2019 at 01:21:54PM +0800, Jianchao Wang wrote:
+> For the IORING_SETUP_IOPOLL case, all of the submission and
+> completion are handled under ctx->uring_lock or in SQ poll thread
+> context, so io_get_req and io_put_req has been serialized well.
+> The only exception is the asynchronous workqueue context where could
+> free the io_kiocb for error. To overcome this, we allocate a new
+> io_kiocb and free the previous inlined one.
+> 
+> Based on this, we introduce the preallocated reqs list per ctx and
+> needn't to provide any lock to serialize the updating of list. The
+> performacne benefits from this. The test result of following fio
+> command
 
-On 04/08/2019 07:55 PM, Daniel Axtens wrote:
-> Hi,
->
-> Sorry, just realised another thing I wanted to ask:
->
->> @@ -442,6 +442,26 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->>   		}
->>   	}
->>
->>
->> +#ifdef CPUIDLE_FLAG_AUTO_PROMOTION
-> Why is this based on CPUIDLE_FLAG_ rather than CONFIG_CPU_IDLE_? Won't
-> this always be true, given that the flag is defined regardless of the
-> config option in the header?
-Yeah, You are right. This should have been CONFIG_CPU_IDLE_AUTO_PROMOTION.
-
---Abhishek
-
+I really don't like the idea of exposing this to userspace.  Is
+there any good reason to not simply always allocate inline request
+up to a certain ring size?
