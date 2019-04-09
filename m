@@ -2,314 +2,105 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1B6C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797BFC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251282077C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4108C20830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FihTCBNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfDIUXu (ORCPT
+        id S1726632AbfDIUeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 16:23:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55402 "EHLO mx1.redhat.com"
+        Tue, 9 Apr 2019 16:34:24 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51338 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbfDIUXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 16:23:49 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726333AbfDIUeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 16:34:23 -0400
+Received: from zn.tnic (p200300EC2F0F8500250718ACA0948A5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:8500:2507:18ac:a094:8a5f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D3DF7307EAAD;
-        Tue,  9 Apr 2019 20:23:48 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E39AD19C72;
-        Tue,  9 Apr 2019 20:23:45 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/nouveau/i2c: Disable i2c bus access after ->fini()
-Date:   Tue,  9 Apr 2019 16:23:30 -0400
-Message-Id: <20190409202335.4190-1-lyude@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F12E1EC00FF;
+        Tue,  9 Apr 2019 22:34:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554842061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9pkiibSoE1UtncS1t4SALzcqhoYEOsusZM3elMz8lWU=;
+        b=FihTCBNeWMvliyh2g7ngcgErRE+xcnI7X5F1Yig3UDVessMKky9GE5TwXRxMHd7IenWgru
+        78WrokkV1PCoyKgldcCPALeNykPMpMrvtn4K1uuLeozh4zGSnclUMn51onRl4i5WfAYFcL
+        Li2RUJCLAaBN3gKjI/rqI+Tsiuc3jck=
+Date:   Tue, 9 Apr 2019 22:34:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
+Message-ID: <20190409203412.GE6150@zn.tnic>
+References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
+ <20190408141205.12376-3-Yazen.Ghannam@amd.com>
+ <20190408175142.GK15689@zn.tnic>
+ <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 09 Apr 2019 20:23:49 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For a while, we've had the problem of i2c bus access not grabbing
-a runtime PM ref when it's being used in userspace by i2c-dev, resulting
-in nouveau spamming the kernel log with errors if anything attempts to
-access the i2c bus while the GPU is in runtime suspend. An example:
+On Mon, Apr 08, 2019 at 06:55:59PM +0000, Ghannam, Yazen wrote:
+> We already have the case where some banks are not initialized either
+> due to quirks or because they are Read-as-Zero, but we don't try to
+> skip creating their files. With this full set (see patch 5), an unused
+> bank will return a control value of 0.
 
-[  130.078386] nouveau 0000:01:00.0: i2c: aux 000d: begin idle timeout ffffffff
+So set_bank() is changed to do:
 
-Since the GPU is in runtime suspend, the MMIO region that the i2c bus is
-on isn't accessible. On x86, the standard behavior for accessing an
-unavailable MMIO region is to just return ~0.
+@@ -2088,7 +2097,7 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+        if (kstrtou64(buf, 0, &new) < 0)
+                return -EINVAL;
 
-Except, that turned out to be a lie. While computers with a clean
-concious will return ~0 in this scenario, some machines will actually
-completely hang a CPU on certian bad MMIO accesses. This was witnessed
-with someone's Lenovo ThinkPad P50, where sensors-detect attempting to
-access the i2c bus while the GPU was suspended would result in a CPU
-hang:
+-       if (bank >= mca_cfg.banks)
++       if (bank >= per_cpu(num_banks, s->id))
+                return -EINVAL;
 
-  CPU: 5 PID: 12438 Comm: sensors-detect Not tainted 5.0.0-0.rc4.git3.1.fc30.x86_64 #1
-  Hardware name: LENOVO 20EQS64N17/20EQS64N17, BIOS N1EET74W (1.47 ) 11/21/2017
-  RIP: 0010:ioread32+0x2b/0x30
-  Code: 81 ff ff ff 03 00 77 20 48 81 ff 00 00 01 00 76 05 0f b7 d7 ed c3
-  48 c7 c6 e1 0c 36 96 e8 2d ff ff ff b8 ff ff ff ff c3 8b 07 <c3> 0f 1f
-  40 00 49 89 f0 48 81 fe ff ff 03 00 76 04 40 88 3e c3 48
-  RSP: 0018:ffffaac3c5007b48 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000001111000 RBX: 0000000001111000 RCX: 0000043017a97186
-  RDX: 0000000000000aaa RSI: 0000000000000005 RDI: ffffaac3c400e4e4
-  RBP: ffff9e6443902c00 R08: ffffaac3c400e4e4 R09: ffffaac3c5007be7
-  R10: 0000000000000004 R11: 0000000000000001 R12: ffff9e6445dd0000
-  R13: 000000000000e4e4 R14: 00000000000003c4 R15: 0000000000000000
-  FS:  00007f253155a740(0000) GS:ffff9e644f600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00005630d1500358 CR3: 0000000417c44006 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   g94_i2c_aux_xfer+0x326/0x850 [nouveau]
-   nvkm_i2c_aux_i2c_xfer+0x9e/0x140 [nouveau]
-   __i2c_transfer+0x14b/0x620
-   i2c_smbus_xfer_emulated+0x159/0x680
-   ? _raw_spin_unlock_irqrestore+0x1/0x60
-   ? rt_mutex_slowlock.constprop.0+0x13d/0x1e0
-   ? __lock_is_held+0x59/0xa0
-   __i2c_smbus_xfer+0x138/0x5a0
-   i2c_smbus_xfer+0x4f/0x80
-   i2cdev_ioctl_smbus+0x162/0x2d0 [i2c_dev]
-   i2cdev_ioctl+0x1db/0x2c0 [i2c_dev]
-   do_vfs_ioctl+0x408/0x750
-   ksys_ioctl+0x5e/0x90
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x60/0x1e0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f25317f546b
-  Code: 0f 1e fa 48 8b 05 1d da 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
-  ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
-  f0 ff ff 73 01 c3 48 8b 0d ed d9 0c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffc88caab68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  RAX: ffffffffffffffda RBX: 00005630d0fe7260 RCX: 00007f25317f546b
-  RDX: 00005630d1598e80 RSI: 0000000000000720 RDI: 0000000000000003
-  RBP: 00005630d155b968 R08: 0000000000000001 R09: 00005630d15a1da0
-  R10: 0000000000000070 R11: 0000000000000246 R12: 00005630d1598e80
-  R13: 00005630d12f3d28 R14: 0000000000000720 R15: 00005630d12f3ce0
-  watchdog: BUG: soft lockup - CPU#5 stuck for 23s! [sensors-detect:12438]
 
-Yikes! While I wanted to try to make it so that accessing an i2c bus on
-nouveau would wake up the GPU as needed, airlied pointed out that pretty
-much any usecase for userspace accessing an i2c bus on a GPU (mainly for
-the DDC brightness control that some displays have) is going to only be
-useful while there's at least one display enabled on the GPU anyway, and
-the GPU never sleeps while there's displays running.
+How would that work if the disabled/not-present bank is in the middle?
+The old example: bank3 on CPU5.
 
-Since teaching the i2c bus to wake up the GPU on userspace accesses is a
-good deal more difficult than it might seem, mostly due to the fact that
-we have to use the i2c bus during runtime resume of the GPU, we instead
-opt for the easiest solution: don't let userspace access i2c busses on
-the GPU at all while it's in runtime suspend.
+> Would that be sufficient to indicate that a bank is not used?
 
-Changes since v1:
-* Also disable i2c busses that run over DP AUX
+Well, it should not allow for any control bits to be set and it should
+have the proper bank number.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
----
- .../gpu/drm/nouveau/include/nvkm/subdev/i2c.h |  2 ++
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c | 26 ++++++++++++++++++-
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h |  2 ++
- .../gpu/drm/nouveau/nvkm/subdev/i2c/base.c    | 15 +++++++++++
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c | 21 ++++++++++++++-
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h |  1 +
- 6 files changed, 65 insertions(+), 2 deletions(-)
+> But I do have a couple of thoughts:
 
-diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-index eef54e9b5d77..7957eafa5f0e 100644
---- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-+++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-@@ -38,6 +38,7 @@ struct nvkm_i2c_bus {
- 	struct mutex mutex;
- 	struct list_head head;
- 	struct i2c_adapter i2c;
-+	u8 enabled;
- };
- 
- int nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *);
-@@ -57,6 +58,7 @@ struct nvkm_i2c_aux {
- 	struct mutex mutex;
- 	struct list_head head;
- 	struct i2c_adapter i2c;
-+	u8 enabled;
- 
- 	u32 intr;
- };
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-index 4c1f547da463..b4e7404fe660 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-@@ -105,9 +105,15 @@ nvkm_i2c_aux_acquire(struct nvkm_i2c_aux *aux)
- {
- 	struct nvkm_i2c_pad *pad = aux->pad;
- 	int ret;
-+
- 	AUX_TRACE(aux, "acquire");
- 	mutex_lock(&aux->mutex);
--	ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-+
-+	if (aux->enabled)
-+		ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-+	else
-+		ret = -EIO;
-+
- 	if (ret)
- 		mutex_unlock(&aux->mutex);
- 	return ret;
-@@ -145,6 +151,24 @@ nvkm_i2c_aux_del(struct nvkm_i2c_aux **paux)
- 	}
- }
- 
-+void
-+nvkm_i2c_aux_init(struct nvkm_i2c_aux *aux)
-+{
-+	AUX_TRACE(aux, "init");
-+	mutex_lock(&aux->mutex);
-+	aux->enabled = true;
-+	mutex_unlock(&aux->mutex);
-+}
-+
-+void
-+nvkm_i2c_aux_fini(struct nvkm_i2c_aux *aux)
-+{
-+	AUX_TRACE(aux, "fini");
-+	mutex_lock(&aux->mutex);
-+	aux->enabled = false;
-+	mutex_unlock(&aux->mutex);
-+}
-+
- int
- nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *func,
- 		  struct nvkm_i2c_pad *pad, int id,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-index 7d56c4ba693c..08f6b2ee64ab 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-@@ -16,6 +16,8 @@ int nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *, struct nvkm_i2c_pad *,
- int nvkm_i2c_aux_new_(const struct nvkm_i2c_aux_func *, struct nvkm_i2c_pad *,
- 		      int id, struct nvkm_i2c_aux **);
- void nvkm_i2c_aux_del(struct nvkm_i2c_aux **);
-+void nvkm_i2c_aux_init(struct nvkm_i2c_aux *);
-+void nvkm_i2c_aux_fini(struct nvkm_i2c_aux *);
- int nvkm_i2c_aux_xfer(struct nvkm_i2c_aux *, bool retry, u8 type,
- 		      u32 addr, u8 *data, u8 *size);
- 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-index 4f197b15acf6..ecacb22834d7 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-@@ -160,8 +160,18 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev, bool suspend)
- {
- 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
- 	struct nvkm_i2c_pad *pad;
-+	struct nvkm_i2c_bus *bus;
-+	struct nvkm_i2c_aux *aux;
- 	u32 mask;
- 
-+	list_for_each_entry(aux, &i2c->aux, head) {
-+		nvkm_i2c_aux_fini(aux);
-+	}
-+
-+	list_for_each_entry(bus, &i2c->bus, head) {
-+		nvkm_i2c_bus_fini(bus);
-+	}
-+
- 	if ((mask = (1 << i2c->func->aux) - 1), i2c->func->aux_stat) {
- 		i2c->func->aux_mask(i2c, NVKM_I2C_ANY, mask, 0);
- 		i2c->func->aux_stat(i2c, &mask, &mask, &mask, &mask);
-@@ -180,6 +190,7 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
- 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
- 	struct nvkm_i2c_bus *bus;
- 	struct nvkm_i2c_pad *pad;
-+	struct nvkm_i2c_aux *aux;
- 
- 	list_for_each_entry(pad, &i2c->pad, head) {
- 		nvkm_i2c_pad_init(pad);
-@@ -189,6 +200,10 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
- 		nvkm_i2c_bus_init(bus);
- 	}
- 
-+	list_for_each_entry(aux, &i2c->aux, head) {
-+		nvkm_i2c_aux_init(aux);
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-index 807a2b67bd64..ed50cc3736b9 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-@@ -110,6 +110,19 @@ nvkm_i2c_bus_init(struct nvkm_i2c_bus *bus)
- 	BUS_TRACE(bus, "init");
- 	if (bus->func->init)
- 		bus->func->init(bus);
-+
-+	mutex_lock(&bus->mutex);
-+	bus->enabled = true;
-+	mutex_unlock(&bus->mutex);
-+}
-+
-+void
-+nvkm_i2c_bus_fini(struct nvkm_i2c_bus *bus)
-+{
-+	BUS_TRACE(bus, "fini");
-+	mutex_lock(&bus->mutex);
-+	bus->enabled = false;
-+	mutex_unlock(&bus->mutex);
- }
- 
- void
-@@ -126,9 +139,15 @@ nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *bus)
- {
- 	struct nvkm_i2c_pad *pad = bus->pad;
- 	int ret;
-+
- 	BUS_TRACE(bus, "acquire");
- 	mutex_lock(&bus->mutex);
--	ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-+
-+	if (bus->enabled)
-+		ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-+	else
-+		ret = -EIO;
-+
- 	if (ret)
- 		mutex_unlock(&bus->mutex);
- 	return ret;
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-index bea0dd33961e..465464bba58b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-@@ -18,6 +18,7 @@ int nvkm_i2c_bus_new_(const struct nvkm_i2c_bus_func *, struct nvkm_i2c_pad *,
- 		      int id, struct nvkm_i2c_bus **);
- void nvkm_i2c_bus_del(struct nvkm_i2c_bus **);
- void nvkm_i2c_bus_init(struct nvkm_i2c_bus *);
-+void nvkm_i2c_bus_fini(struct nvkm_i2c_bus *);
- 
- int nvkm_i2c_bit_xfer(struct nvkm_i2c_bus *, struct i2c_msg *, int);
- 
+> 1) Will missing banks confuse users? As mentioned, we already have the
+> case of unused/uninitialized banks today, but we don't skip their file
+> creation. a) Will this affect any userspace tools?
+
+I guess it would be easier if we keep creating all files but denote properly
+which banks are disabled.
+
+> 2) Is the added complexity for file creation/destruction worth it? As
+> mentioned, the file will return 0 for unused/uninitialized banks.
+
+Yeah.
+
+Thx.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
