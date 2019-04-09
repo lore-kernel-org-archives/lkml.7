@@ -2,204 +2,89 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3256EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809A2206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E24206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sDZ6WKNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDIIoB (ORCPT
+        id S1726383AbfDIIoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:44:01 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:43921 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfDIIoB (ORCPT
+        Tue, 9 Apr 2019 04:44:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40582 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbfDIIoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:44:01 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id C712D100006;
-        Tue,  9 Apr 2019 08:43:51 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 10:43:51 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 05/13] pinctrl: sunxi: Prepare for alternative bias
- voltage setting methods
-Message-ID: <20190409084351.blyvkg47tjbjxwde@flea>
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-6-megous@megous.com>
+        Tue, 9 Apr 2019 04:44:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h4so19730516wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 01:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=HM2Pcrp/PTYpJw1kiu/1UYLz8U5HkCrpn0W1FDR044U=;
+        b=sDZ6WKNQ3iWBVO7Qg0zhC2aEDO7k5bJUf4Qw5bbSHMRZtL3wn6yCP5lzVTCechftWN
+         5I+Ox6IfKzf4m92Lv+gX5zVloP+Qd5z30eS8IUnqI1Z3hEaBW9ueRO7EsOGw+Z4mLyVz
+         SxcGDU/AY3GMWdsHW+ctl2qHXqw4VEBNmLdmWZbFqmK9A//APs5M8/qcExtK2XqTuCGz
+         C/Zx1oFCAR91UfvrCgEHf3xaZYeOKWSsR89gf5UtEJ8vhD/mx27Sz81EVqD1/HK1wf0c
+         xgSITbQtJpDLK68LXjnfJT8A2Dqa2JAEVyDtJwLQ3Za/47pRKkPekvbT796NpBHS+Vmv
+         h8EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=HM2Pcrp/PTYpJw1kiu/1UYLz8U5HkCrpn0W1FDR044U=;
+        b=cfYX8TcxsySnlZ+IlzBkwSyaWhIeGagMW+IXFVmgaEogFX85d7iKlu+qXT2kaMtt6H
+         tZA2c33kl8POVuTtB01wfIr14mtlKYwKebDXDPZoTgN6mdhj+2ybe7xW01IC0GKrAqFi
+         5d/0Th1Egy6CQyyWbgdQllJ3Ym8L7U4a66BgNe+VFOZ2w/CreRChE2w9b/Zj7XCaRVQE
+         CjRZSvyhPd4NChEmtMJQNTpCzY98KXtJW47tbP35vxpTbbhSeGXfwKslTMLUO5JdyWcO
+         RM05waUYfGThnrhdHXOXaEhoFV/GZFASkDk0h/PC1rXmR2cPAGRqqdNMnD5f61a4+kpb
+         4/kA==
+X-Gm-Message-State: APjAAAWlm+O1OLbZEb14ivMfyrpwAeBi8nX7Vvkn5JQacWohBK192233
+        VP8q2Bizls5ATVll9mml6mzRlQ==
+X-Google-Smtp-Source: APXvYqwXqgheZlxrHWUd/4S5AqcI7iPGv9V4Rz/MoCSy8r5nSUUKDf4gALgPcI74EQLW4t/72UFUuw==
+X-Received: by 2002:adf:fd0c:: with SMTP id e12mr21764985wrr.230.1554799484462;
+        Tue, 09 Apr 2019 01:44:44 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id y1sm94385738wrd.34.2019.04.09.01.44.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Apr 2019 01:44:43 -0700 (PDT)
+Message-ID: <7dd2bfa45b97aedd64218f9489d1b1f3e477e134.camel@baylibre.com>
+Subject: Re: [PATCH 08/11] drm/meson: Add G12A support for CVBS Encoer
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Apr 2019 10:44:42 +0200
+In-Reply-To: <e5199bf4ff4a125414a8843ab4be0eb641ac5d91.camel@baylibre.com>
+References: <20190325141824.21259-1-narmstrong@baylibre.com>
+         <20190325141824.21259-9-narmstrong@baylibre.com>
+         <e5199bf4ff4a125414a8843ab4be0eb641ac5d91.camel@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="56xgcpawz766jjoo"
-Content-Disposition: inline
-In-Reply-To: <20190409002452.14551-6-megous@megous.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2019-04-09 at 10:43 +0200, Jerome Brunet wrote:
+> On Mon, 2019-03-25 at 15:18 +0100, Neil Armstrong wrote:
+> > The Meson G12A SoCs uses the exact same CVBS encoder except a simple
+> > CVBS DAC register offset and settings delta.
+> > 
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >   drivers/gpu/drm/meson/meson_venc.c      | 11 +++++++++--
+> >   drivers/gpu/drm/meson/meson_venc_cvbs.c | 25 ++++++++++++++++++-------
+> >   2 files changed, 27 insertions(+), 9 deletions(-)
 
---56xgcpawz766jjoo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+... and there is a typo in the patch title. s/Encoer/Encoder
 
-Hi,
-
-On Tue, Apr 09, 2019 at 02:24:44AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> H6 has a different I/O voltage bias setting method than A80. Prepare
-> existing code for using alternative bias voltage setting methods.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 41 +++++++++++++----------
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 ++-
->  3 files changed, 28 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-> index da37d594a13d..3aa210079b18 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-> @@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
->  	.npins = ARRAY_SIZE(sun9i_a80_pins),
->  	.irq_banks = 5,
->  	.disable_strict_mode = true,
-> -	.has_io_bias_cfg = true,
-> +	.io_bias_cfg_variant = IO_BIAS_CFG_V1,
->  };
->
->  static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> index 8dd25caea2cf..b8dd58ef33b7 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -610,7 +610,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  	u32 val, reg;
->  	int uV;
->
-> -	if (!pctl->desc->has_io_bias_cfg)
-> +	if (!pctl->desc->io_bias_cfg_variant)
->  		return 0;
->
->  	uV = regulator_get_voltage(supply);
-> @@ -621,23 +621,28 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  	if (uV == 0)
->  		return 0;
->
-> -	/* Configured value must be equal or greater to actual voltage */
-> -	if (uV <= 1800000)
-> -		val = 0x0; /* 1.8V */
-> -	else if (uV <= 2500000)
-> -		val = 0x6; /* 2.5V */
-> -	else if (uV <= 2800000)
-> -		val = 0x9; /* 2.8V */
-> -	else if (uV <= 3000000)
-> -		val = 0xA; /* 3.0V */
-> -	else
-> -		val = 0xD; /* 3.3V */
-> -
-> -	pin -= pctl->desc->pin_base;
-> -
-> -	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
-> -	reg &= ~IO_BIAS_MASK;
-> -	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-> +	if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V1) {
-> +		/*
-> +		 * Configured value must be equal or greater to actual
-> +		 * voltage.
-> +		 */
-> +		if (uV <= 1800000)
-> +			val = 0x0; /* 1.8V */
-> +		else if (uV <= 2500000)
-> +			val = 0x6; /* 2.5V */
-> +		else if (uV <= 2800000)
-> +			val = 0x9; /* 2.8V */
-> +		else if (uV <= 3000000)
-> +			val = 0xA; /* 3.0V */
-> +		else
-> +			val = 0xD; /* 3.3V */
-> +
-> +		pin -= pctl->desc->pin_base;
-> +
-> +		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
-> +		reg &= ~IO_BIAS_MASK;
-> +		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-> +	}
->
->  	return 0;
->  }
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> index ee15ab067b5f..642f667e99d2 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -95,6 +95,9 @@
->  #define PINCTRL_SUN7I_A20	BIT(7)
->  #define PINCTRL_SUN8I_R40	BIT(8)
->
-> +/* Bias voltage configuration done via Pn_GRP_CONFIG registers. */
-> +#define IO_BIAS_CFG_V1		1
-> +
-
-Can we turn this into an enum, and give them proper name? Mentionning
-an example in the commit would be great too.
-
-Something like:
-
-enum sunxi_desc_bias_voltage {
-        /* Bias Voltage configuration is done through Pn_GRP_CONFIG registers, as seen on the A83t */
-	BIAS_VOLTAGE_GRP_CONFIG,
-};
-
-etc.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---56xgcpawz766jjoo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxbRwAKCRDj7w1vZxhR
-xeaZAQDdcObvBXJGqx+5c2yDDZ/BRZDxHZ7AwgeemSZV8lsHgAD/fDqf3WSJQn7q
-fsSgPVLlNkihJdSMVpkdwzbozfMMjA8=
-=L+SO
------END PGP SIGNATURE-----
-
---56xgcpawz766jjoo--
