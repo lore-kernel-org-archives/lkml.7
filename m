@@ -2,112 +2,103 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6453DC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D67620883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A9C20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kNgsyP5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfDIFU0 (ORCPT
+        id S1727080AbfDIFWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:20:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44572 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfDIFUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:20:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g12so8649800pll.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 22:20:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1YUfMPM7RT1o5URCsP5/A8wjExy9E/3T5zL1WxdDFpI=;
-        b=Of/aTY0hJb8/Y8LgFZSBARqjQcXchfxSD5iNTcnDOlULWZa4daZ7A8hlQw0ZykEYmt
-         6H7BIwaVaC9xbm1SBS5wE4HUz57B7kjEToWUDGl07k1GK6bM6Tprs/g5uiaes8UJunWN
-         P/ehAEo7Y6mfbLTYFRrm1HdYexUC/kMcBo9cAs9xQvBKabWTG3c+/0phHbHuDvnrKHal
-         L6eWkZg6xDKqa8TItVpdh1u+hYXMBksKz9P36k7E1vwecyTZxcLqqLPlmaffv45nHy1y
-         sLFH8AB1p/iulP/Nk8KV8wPEGN+Iolfg9k5DoGH6OdRdwkht+1f9MxEA0K6wK7tfMrKl
-         hjWg==
-X-Gm-Message-State: APjAAAVOB6Gs+OpRjMqRY5uabpd2ZEyMQnG9O4Xi/0ElVnIBxSrmz6Ix
-        eTjLESgnX5+dfTMzcSwouwx1NA==
-X-Google-Smtp-Source: APXvYqzhrg94zZKMqARZTPlnpBF65FbExNLYEDlH8PaVsNnFFrNS5x/xA9UeSdVBUIhP+KvcD/Laog==
-X-Received: by 2002:a17:902:b715:: with SMTP id d21mr35489861pls.103.1554787224724;
-        Mon, 08 Apr 2019 22:20:24 -0700 (PDT)
-Received: from localhost.localdomain ([209.132.188.81])
-        by smtp.gmail.com with ESMTPSA id y19sm43192451pfn.164.2019.04.08.22.20.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 22:20:23 -0700 (PDT)
-Subject: Re: [PATCH 0/3] support reserving crashkernel above 4G on arm64 kdump
-To:     Chen Zhou <chenzhou10@huawei.com>, catalin.marinas@arm.com,
-        will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        ard.biesheuvel@linaro.org, takahiro.akashi@linaro.org
-Cc:     wangkefeng.wang@huawei.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <49012d55-2020-e2ac-1102-59a5f3911a29@redhat.com>
-Date:   Tue, 9 Apr 2019 13:20:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 9 Apr 2019 01:22:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:43343 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbfDIFWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 01:22:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dbJg28m2z9sP8;
+        Tue,  9 Apr 2019 15:22:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554787347;
+        bh=vBFjbUqi5RIaGmyq2uqRMxwyKXnovxOP+Vy5X835MiA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kNgsyP5JNrp7BcVLKL6mfi2QJJM1BGof8kdKwM0sZuCGrgTWLNVYNhxVtQ6SSSoeK
+         JsFSOJ+QbY7P4vU7SRyXDOPz1GT21kwP9h4Bj1MQQKraU1iFJON/FOgyr9Y4SPTPyQ
+         MJUjHI263L8f60SG40l1Ei/TbfCPnxJB2ePRKqra48uowoEZnQWyDEL5fS19lqMTp4
+         pJ/iony09o4l9YZHX8jsa74YD1vECuSsSY4Lh3ilBkHBMh4j4PoK+vB+XFF6ZTB4IT
+         j21EGI+BCzw1TJImVuy3DX1wW55I3dEq9mrFMLP7/nRtoOHyKZt6qXlBaGGQdTIwvi
+         eFzfjzf+mBMuQ==
+Date:   Tue, 9 Apr 2019 15:22:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keerthy <j-keerthy@ti.com>
+Subject: linux-next: manual merge of the rtc tree with the omap tree
+Message-ID: <20190409152226.5fecccd1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190403030546.23718-1-chenzhou10@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/IIXaJ5r=mv4x_tHbswY/UGJ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen,
+--Sig_/IIXaJ5r=mv4x_tHbswY/UGJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the patchset.
+Hi all,
 
-Before I review the patches in detail, I have a couple of generic 
-queries. Please see them in-line:
+Today's linux-next merge of the rtc tree got a conflict in:
 
-On 04/03/2019 11:05 AM, Chen Zhou wrote:
-> When crashkernel is reserved above 4G in memory, kernel should reserve
-> some amount of low memory for swiotlb and some DMA buffers. So there may
-> be two crash kernel regions, one is below 4G, the other is above 4G.
-> 
-> Crash dump kernel reads more than one crash kernel regions via a dtb
-> property under node /chosen,
-> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
-> 
-> Besides, we need to modify kexec-tools:
->    arm64: support more than one crash kernel regions
-> 
-> Chen Zhou (3):
->    arm64: kdump: support reserving crashkernel above 4G
->    arm64: kdump: support more than one crash kernel regions
->    kdump: update Documentation about crashkernel on arm64
-> 
->   Documentation/admin-guide/kernel-parameters.txt |   4 +-
->   arch/arm64/kernel/setup.c                       |   3 +
->   arch/arm64/mm/init.c                            | 108 ++++++++++++++++++++----
->   include/linux/memblock.h                        |   1 +
->   mm/memblock.c                                   |  40 +++++++++
->   5 files changed, 139 insertions(+), 17 deletions(-)
+  drivers/rtc/rtc-omap.c
 
-I am wondering about the use-case for the same. I remember normally 
-fedora-based arm64 systems can do well with a maximum crashkernel size 
-of <=512MB reserved below the 4G boundary.
+between commit:
 
-So, do you mean that for your use-case (may be a huawei board based 
-setup?), you need:
+  6256f7f7f217 ("rtc: OMAP: Add support for rtc-only mode")
 
-- more than 512MB of crashkernel size, or
-- you want to split the crashkernel reservation across the 4GB boundary 
-irrespective of the crashkernel size value.
+from the omap tree and commit:
 
-Thanks,
-Bhupesh
+  35118b7a4ea0 ("rtc: omap: let the core handle range")
 
+from the rtc tree.
+
+I fixed it up (I used the latter resolution around tm2bcd() changes) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IIXaJ5r=mv4x_tHbswY/UGJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlysLBIACgkQAVBC80lX
+0GxMygf/cmV0uz/fSC/lh0Ddj4K3RTH8cg9alDqqG08JNV0EV/NdlbzLC1RxViPS
+yrDIjDMtvMlyEofVBtxhGntPaphGMV1lKQGwyGWqF+jEk8qvL4sJGD+G1oraN8/H
+mHaq/Epiaklnwl4iZK1euWH9t8jYUQMWUlBUh0kgp0INd7qvgbJxiZqGKMC7VT97
+bcwhZOn8Z2APmdtZMxrhAZ02fac7t26V3K8WgdI340MLlrj35dbzVuPQnDjqbpJT
+4P3kJA7PJwoRN++kXk9aGByYlcY5kHHvLDkkYwPaaP5SxZUehqgzDMf/KdbFbZEa
+nRhb63hl2NnMSisjYbzl+tdfuiQXCQ==
+=w1Am
+-----END PGP SIGNATURE-----
+
+--Sig_/IIXaJ5r=mv4x_tHbswY/UGJ--
