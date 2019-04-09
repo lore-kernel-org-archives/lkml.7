@@ -2,109 +2,112 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C493C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6453DC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C9120883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D67620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfDIFQl (ORCPT
+        id S1726837AbfDIFU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:16:41 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4407 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725550AbfDIFQl (ORCPT
+        Tue, 9 Apr 2019 01:20:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44572 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbfDIFUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:16:41 -0400
-X-UUID: aa2acfe69a0041efb731e51f630df759-20190409
-X-UUID: aa2acfe69a0041efb731e51f630df759-20190409
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 872247550; Tue, 09 Apr 2019 13:16:07 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 9 Apr 2019 13:15:59 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 9 Apr 2019 13:15:59 +0800
-Message-ID: <1554786959.336.1.camel@mtksdaap41>
-Subject: Re: [PATCH 1/7] drm/mediatek: fix possible object reference leak
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-CC:     <linux-kernel@vger.kernel.org>, <wang.yi59@zte.com.cn>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 9 Apr 2019 13:15:59 +0800
-In-Reply-To: <1554307455-40361-2-git-send-email-wen.yang99@zte.com.cn>
-References: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn>
-         <1554307455-40361-2-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 9 Apr 2019 01:20:25 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g12so8649800pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 22:20:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1YUfMPM7RT1o5URCsP5/A8wjExy9E/3T5zL1WxdDFpI=;
+        b=Of/aTY0hJb8/Y8LgFZSBARqjQcXchfxSD5iNTcnDOlULWZa4daZ7A8hlQw0ZykEYmt
+         6H7BIwaVaC9xbm1SBS5wE4HUz57B7kjEToWUDGl07k1GK6bM6Tprs/g5uiaes8UJunWN
+         P/ehAEo7Y6mfbLTYFRrm1HdYexUC/kMcBo9cAs9xQvBKabWTG3c+/0phHbHuDvnrKHal
+         L6eWkZg6xDKqa8TItVpdh1u+hYXMBksKz9P36k7E1vwecyTZxcLqqLPlmaffv45nHy1y
+         sLFH8AB1p/iulP/Nk8KV8wPEGN+Iolfg9k5DoGH6OdRdwkht+1f9MxEA0K6wK7tfMrKl
+         hjWg==
+X-Gm-Message-State: APjAAAVOB6Gs+OpRjMqRY5uabpd2ZEyMQnG9O4Xi/0ElVnIBxSrmz6Ix
+        eTjLESgnX5+dfTMzcSwouwx1NA==
+X-Google-Smtp-Source: APXvYqzhrg94zZKMqARZTPlnpBF65FbExNLYEDlH8PaVsNnFFrNS5x/xA9UeSdVBUIhP+KvcD/Laog==
+X-Received: by 2002:a17:902:b715:: with SMTP id d21mr35489861pls.103.1554787224724;
+        Mon, 08 Apr 2019 22:20:24 -0700 (PDT)
+Received: from localhost.localdomain ([209.132.188.81])
+        by smtp.gmail.com with ESMTPSA id y19sm43192451pfn.164.2019.04.08.22.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 22:20:23 -0700 (PDT)
+Subject: Re: [PATCH 0/3] support reserving crashkernel above 4G on arm64 kdump
+To:     Chen Zhou <chenzhou10@huawei.com>, catalin.marinas@arm.com,
+        will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        ard.biesheuvel@linaro.org, takahiro.akashi@linaro.org
+Cc:     wangkefeng.wang@huawei.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190403030546.23718-1-chenzhou10@huawei.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <49012d55-2020-e2ac-1102-59a5f3911a29@redhat.com>
+Date:   Tue, 9 Apr 2019 13:20:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190403030546.23718-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 6C3628861AC26213B58C9F255F10F5CB456356F772F5AF5FB2C22EA78C8C0EF12000:8
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Wen:
+Hi Chen,
 
-On Thu, 2019-04-04 at 00:04 +0800, Wen Yang wrote:
-> The call to of_parse_phandle returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
+Thanks for the patchset.
+
+Before I review the patches in detail, I have a couple of generic 
+queries. Please see them in-line:
+
+On 04/03/2019 11:05 AM, Chen Zhou wrote:
+> When crashkernel is reserved above 4G in memory, kernel should reserve
+> some amount of low memory for swiotlb and some DMA buffers. So there may
+> be two crash kernel regions, one is below 4G, the other is above 4G.
 > 
-> Detected by coccinelle with the following warnings:
-> drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
-> drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
-
-For this patch, applied to mediatek-drm-fixes-5.1 [1], thanks.
-
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.1
-
-Regards,
-CK
-
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 > 
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: CK Hu <ck.hu@mediatek.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mediatek@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
->  1 file changed, 1 insertion(+)
+> Besides, we need to modify kexec-tools:
+>    arm64: support more than one crash kernel regions
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> index 915cc84..ed10f4d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -1516,6 +1516,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
->  	of_node_put(remote);
->  
->  	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
-> +	of_node_put(i2c_np);
->  	if (!hdmi->ddc_adpt) {
->  		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
->  		return -EINVAL;
+> Chen Zhou (3):
+>    arm64: kdump: support reserving crashkernel above 4G
+>    arm64: kdump: support more than one crash kernel regions
+>    kdump: update Documentation about crashkernel on arm64
+> 
+>   Documentation/admin-guide/kernel-parameters.txt |   4 +-
+>   arch/arm64/kernel/setup.c                       |   3 +
+>   arch/arm64/mm/init.c                            | 108 ++++++++++++++++++++----
+>   include/linux/memblock.h                        |   1 +
+>   mm/memblock.c                                   |  40 +++++++++
+>   5 files changed, 139 insertions(+), 17 deletions(-)
 
+I am wondering about the use-case for the same. I remember normally 
+fedora-based arm64 systems can do well with a maximum crashkernel size 
+of <=512MB reserved below the 4G boundary.
+
+So, do you mean that for your use-case (may be a huawei board based 
+setup?), you need:
+
+- more than 512MB of crashkernel size, or
+- you want to split the crashkernel reservation across the 4GB boundary 
+irrespective of the crashkernel size value.
+
+Thanks,
+Bhupesh
 
