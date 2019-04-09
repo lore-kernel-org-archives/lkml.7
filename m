@@ -2,114 +2,209 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19426C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE135C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40EC213F2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="WEmCei7b"
+	by mail.kernel.org (Postfix) with ESMTP id 9B28F21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 00:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554770122;
+	bh=/Vy//+so3VDSR4WKdBq0CaM88Ncn2coDH8E/MuBqYQw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NsHgK+lq13KX2GfxACHe9ZypAf6ouYYTCpi4aOoFVRAkUJZycOgC5ELwWuzOcee+n
+	 M/gJ58BWw2H2QTeMGHpWjI1jfOAGgxeZDGJTzHqAQqhG1QPGmRaQ+3YTwbUiweo9Vr
+	 WfURF3na9gWipLkjKn19TJEKcpMlFnOJgXzUJ/40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfDIA2R (ORCPT
+        id S1726582AbfDIAfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 20:28:17 -0400
-Received: from mail-eopbgr800090.outbound.protection.outlook.com ([40.107.80.90]:45168
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726068AbfDIA2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 20:28:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector1-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8vCwMHLym3GpEVXFAq+1wea14V8Fys4EzKGuGrBdJU=;
- b=WEmCei7bEEJ2qbF1YsyOIsokxbx/2lJu0q+tUQIdJwrp4djleQxnwUtBpFtxOE1FAh0IziLWNs23XrqTWgAaMqMQusaVVLhKIqCg1LYa8ORhUO9lTyL+4Qo4hRCDuuHr3feXx+ueRTltoPyGm0wMmba0LFd7D5ngYNZG0zdYW2g=
-Received: from DM6PR13CA0033.namprd13.prod.outlook.com (2603:10b6:5:bc::46) by
- MN2PR13MB3136.namprd13.prod.outlook.com (2603:10b6:208:137::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1792.8; Tue, 9 Apr
- 2019 00:28:14 +0000
-Received: from BL2NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by DM6PR13CA0033.outlook.office365.com
- (2603:10b6:5:bc::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1792.8 via Frontend
- Transport; Tue, 9 Apr 2019 00:28:13 +0000
-Authentication-Results: spf=pass (sender IP is 117.103.190.44)
- smtp.mailfrom=sony.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 117.103.190.44 as permitted sender) receiver=protection.outlook.com;
- client-ip=117.103.190.44; helo=jp.sony.com;
-Received: from jp.sony.com (117.103.190.44) by
- BL2NAM02FT039.mail.protection.outlook.com (10.152.77.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1771.16 via Frontend Transport; Tue, 9 Apr 2019 00:28:12 +0000
-Received: from JPYOKXHT205.jp.sony.com (117.103.191.83) by
- JPYOKXEG104.jp.sony.com (117.103.190.44) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 9 Apr 2019 00:28:11 +0000
-Received: from JPYOKXMS103.jp.sony.com ([169.254.3.107]) by
- JPYOKXHT205.jp.sony.com ([180.12.183.213]) with mapi id 14.03.0439.000; Tue,
- 9 Apr 2019 00:28:11 +0000
-From:   <Kento.A.Kobayashi@sony.com>
-To:     <stern@rowland.harvard.edu>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <oneukum@suse.com>, <gregkh@linuxfoundation.org>,
-        <usb-storage@lists.one-eyed-alien.net>, <Jacky.Cao@sony.com>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH] usb: uas: fix usb subsystem hang after power off hub
- port
-Thread-Topic: [PATCH] usb: uas: fix usb subsystem hang after power off hub
- port
-Thread-Index: AdTVjvFIkAhaIt3DQTSj1OrTHxvrsgAQFLsAAIWEBcAAQQqsgAB7RvcAAgdcBTAAAJSpAACOr4UQABH/lYAA3G8Q4AAdt7kAAE4ci4AAIMlyAADTcgoQ
-Date:   Tue, 9 Apr 2019 00:28:10 +0000
-Message-ID: <AE5419EAB4965843B3C0C1FE29F1FFE5892A0D@JPYOKXMS103.jp.sony.com>
-References: <AE5419EAB4965843B3C0C1FE29F1FFE5891C86@JPYOKXMS103.jp.sony.com>
- <Pine.LNX.4.44L0.1904041522150.1288-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1904041522150.1288-100000@iolanthe.rowland.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2001:cf8:1:539:0:dddd:1bac:d758]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 8 Apr 2019 20:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726349AbfDIAfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 20:35:21 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A33213F2;
+        Tue,  9 Apr 2019 00:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554770119;
+        bh=/Vy//+so3VDSR4WKdBq0CaM88Ncn2coDH8E/MuBqYQw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=uP41OXEPQR25KmXi4eNSpLbcAs5p7YhVlp37WhvOZ89tnesIT9IMTzz5NWiOUzoFd
+         TV1qJhugj5QTeoU5S/KjLRI4MgUWK74FjmB3lRG3a4jfTWiLCfU19EbuZE5W0D5fQW
+         gG1UusFYnnoeWk7gvHzAQVBOms+zZCnPcGb1TbAI=
+Date:   Mon, 8 Apr 2019 17:35:11 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-X260
+To:     Joao Martins <joao.m.martins@oracle.com>
+cc:     Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, Artem_Mygaiev@epam.com
+Subject: Re: [PATCH RFC 00/39] x86/KVM: Xen HVM guest support
+In-Reply-To: <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
+Message-ID: <alpine.DEB.2.10.1904081728120.4155@sstabellini-ThinkPad-X260>
+References: <20190220201609.28290-1-joao.m.martins@oracle.com> <35051310-c497-8ad5-4434-1b8426a317d2@redhat.com> <8b1f4912-4f92-69ae-ae01-d899d5640572@oracle.com> <3ee91f33-2973-c2db-386f-afbf138081b4@redhat.com> <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
+ <ac0fb2d0-59bf-1330-24ab-331c1a69b13f@suse.com> <94738323-ebdf-d58e-55b6-313e27c923b0@oracle.com> <585163c2-8dea-728d-7556-9cb3559f0eca@suse.com> <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
+User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:117.103.190.44;IPV:NLI;CTRY:JP;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(396003)(346002)(136003)(376002)(2980300002)(199004)(189003)(486006)(186003)(76176011)(47776003)(6116002)(33656002)(77096007)(356004)(26005)(102836004)(246002)(336012)(106466001)(476003)(426003)(126002)(446003)(11346002)(436003)(478600001)(2486003)(72206003)(23676004)(86152003)(7696005)(6246003)(2171002)(7736002)(37786003)(4326008)(2201001)(5660300002)(2876002)(106002)(316002)(2906002)(54906003)(110136005)(305945005)(4744005)(8936002)(50466002)(86362001)(229853002)(55016002)(8676002)(55846006)(7636002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR13MB3136;H:jp.sony.com;FPR:;SPF:Pass;LANG:en;PTR:jpyokxeg104.jp.sony.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 493e5495-4642-40e6-2506-08d6bc824093
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:MN2PR13MB3136;
-X-MS-TrafficTypeDiagnostic: MN2PR13MB3136:
-X-Microsoft-Antispam-PRVS: <MN2PR13MB3136B0D008F7987E339584C0C92D0@MN2PR13MB3136.namprd13.prod.outlook.com>
-X-Forefront-PRVS: 000227DA0C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: XC+4JL3AlKAsYZZeYV+zyv/jlZwS22O1Y2cIpxdYFFF3aTg7ikr/LmuWJLTob/27XjUjhulAgigIg6DnxQ3WhRr6s+CpMXy7pm3FP8EjeLn6A68L5li2VY21O84+KonrWydBal8Sk6JxW7wT1kbxpmQ0ngsH6+Hkq2soZRc/EpdOWhmHmSeEv4hiSX2m7hVoG/Gf/3G+pGlNEPXcQaeBA/bNS6sqSFx3sOo38gEq1CjvvlRUY1og5lxoyN+5y0NJFcDk/gaNe4mJMYcUbALOSRlQQHdpRiRdkJxmwa15DOS5GPliXTW6X8dxLorF1/0DnnWiKzeXiPFXDvnFhsyXWlo5t3tZqd7UHLZeJWwf7KbQ3tPYbOYmcSuCq27dT6dbH9+HXcigAetvsAJeXJ7FKq4ITvSlmRbxMqBVbsjc5uE=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2019 00:28:12.9805
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 493e5495-4642-40e6-2506-08d6bc824093
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[117.103.190.44];Helo=[jp.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3136
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj5TbyBpdCBsb29rcyBhcyB0aG91Z2ggdGhlIFNDU0kgc3Vic3lzdGVtIGRvZXNuJ3Qg
-bGlrZSB0byBoYXZlIGEgcmVzZXQgaGFuZGxlciBjYWxsIHNjc2lfcmVtb3ZlX2hvc3QuICBDb21t
-YW5kcyBkaXNwYXRjaGVkIGJ5IHRoZSByZW1vdmFsIHJvdXRpbmVzIGFyZSBmb3JjZWQgdG8gd2Fp
-dCBmb3IgdGhlIHJlc2V0IHJlY292ZXJ5IHRvIGZpbmlzaCwgd2hpY2ggd29uJ3QgaGFwcGVuIHVu
-dGlsIHRob3NlIGNvbW1hbmRzIGhhdmUgYmVlbiBjb21wbGV0ZWQuDQoNCllvdSBtZWFuIHJlc2V0
-IGhhbmRlbGVyIHNob3VsZCBub3QgY2FsbCBzY3NpX3JlbW92ZV9ob3N0LCByaWdodD8NCkJ1dCBh
-Y3R1YWxseSwgc2NzaV9yZW1vdmVfaG9zdCBpcyBjYWxsZWQgZnJvbSByZXNldCBoYW5kbGVyIGlu
-IHRoaXMgY2FzZS4NCg0KPklzIHRoaXMgYSBidWcgaW4gdGhlIFNDU0kgY29yZT8gDQpObywgSSB0
-aGluayB0aGlzIGlzIGEgYnVnIGluIHVhcyBkcml2ZXIuDQoNClJlZ2FyZHMsDQpLZW50byBLb2Jh
-eWFzaGkNCg==
+On Mon, 8 Apr 2019, Joao Martins wrote:
+> On 4/8/19 11:42 AM, Juergen Gross wrote:
+> > On 08/04/2019 12:36, Joao Martins wrote:
+> >> On 4/8/19 7:44 AM, Juergen Gross wrote:
+> >>> On 12/03/2019 18:14, Joao Martins wrote:
+> >>>> On 2/22/19 4:59 PM, Paolo Bonzini wrote:
+> >>>>> On 21/02/19 12:45, Joao Martins wrote:
+> >>>>>> On 2/20/19 9:09 PM, Paolo Bonzini wrote:
+> >>>>>>> On 20/02/19 21:15, Joao Martins wrote:
+> >>>>>>>>  2. PV Driver support (patches 17 - 39)
+> >>>>>>>>
+> >>>>>>>>  We start by redirecting hypercalls from the backend to routines
+> >>>>>>>>  which emulate the behaviour that PV backends expect i.e. grant
+> >>>>>>>>  table and interdomain events. Next, we add support for late
+> >>>>>>>>  initialization of xenbus, followed by implementing
+> >>>>>>>>  frontend/backend communication mechanisms (i.e. grant tables and
+> >>>>>>>>  interdomain event channels). Finally, introduce xen-shim.ko,
+> >>>>>>>>  which will setup a limited Xen environment. This uses the added
+> >>>>>>>>  functionality of Xen specific shared memory (grant tables) and
+> >>>>>>>>  notifications (event channels).
+> >>>>>>>
+> >>>>>>> I am a bit worried by the last patches, they seem really brittle and
+> >>>>>>> prone to breakage.  I don't know Xen well enough to understand if the
+> >>>>>>> lack of support for GNTMAP_host_map is fixable, but if not, you have to
+> >>>>>>> define a completely different hypercall.
+> >>>>>>>
+> >>>>>> I guess Ankur already answered this; so just to stack this on top of his comment.
+> >>>>>>
+> >>>>>> The xen_shim_domain() is only meant to handle the case where the backend
+> >>>>>> has/can-have full access to guest memory [i.e. netback and blkback would work
+> >>>>>> with similar assumptions as vhost?]. For the normal case, where a backend *in a
+> >>>>>> guest* maps and unmaps other guest memory, this is not applicable and these
+> >>>>>> changes don't affect that case.
+> >>>>>>
+> >>>>>> IOW, the PV backend here sits on the hypervisor, and the hypercalls aren't
+> >>>>>> actual hypercalls but rather invoking shim_hypercall(). The call chain would go
+> >>>>>> more or less like:
+> >>>>>>
+> >>>>>> <netback|blkback|scsiback>
+> >>>>>>  gnttab_map_refs(map_ops, pages)
+> >>>>>>    HYPERVISOR_grant_table_op(GNTTABOP_map_grant_ref,...)
+> >>>>>>      shim_hypercall()
+> >>>>>>        shim_hcall_gntmap()
+> >>>>>>
+> >>>>>> Our reasoning was that given we are already in KVM, why mapping a page if the
+> >>>>>> user (i.e. the kernel PV backend) is himself? The lack of GNTMAP_host_map is how
+> >>>>>> the shim determines its user doesn't want to map the page. Also, there's another
+> >>>>>> issue where PV backends always need a struct page to reference the device
+> >>>>>> inflight data as Ankur pointed out.
+> >>>>>
+> >>>>> Ultimately it's up to the Xen people.  It does make their API uglier,
+> >>>>> especially the in/out change for the parameter.  If you can at least
+> >>>>> avoid that, it would alleviate my concerns quite a bit.
+> >>>>
+> >>>> In my view, we have two options overall:
+> >>>>
+> >>>> 1) Make it explicit, the changes the PV drivers we have to make in
+> >>>> order to support xen_shim_domain(). This could mean e.g. a) add a callback
+> >>>> argument to gnttab_map_refs() that is invoked for every page that gets looked up
+> >>>> successfully, and inside this callback the PV driver may update it's tracking
+> >>>> page. Here we no longer have this in/out parameter in gnttab_map_refs, and all
+> >>>> shim_domain specific bits would be a little more abstracted from Xen PV
+> >>>> backends. See netback example below the scissors mark. Or b) have sort of a
+> >>>> translate_gref() and put_gref() API that Xen PV drivers use which make it even
+> >>>> more explicit that there's no grant ops involved. The latter is more invasive.
+> >>>>
+> >>>> 2) The second option is to support guest grant mapping/unmapping [*] to allow
+> >>>> hosting PV backends inside the guest. This would remove the Xen changes in this
+> >>>> series completely. But it would require another guest being used
+> >>>> as netback/blkback/xenstored, and less performance than 1) (though, in theory,
+> >>>> it would be equivalent to what does Xen with grants/events). The only changes in
+> >>>> Linux Xen code is adding xenstored domain support, but that is useful on its own
+> >>>> outside the scope of this work.
+> >>>>
+> >>>> I think there's value on both; 1) is probably more familiar for KVM users
+> >>>> perhaps (as it is similar to what vhost does?) while  2) equates to implementing
+> >>>> Xen disagregation capabilities in KVM.
+> >>>>
+> >>>> Thoughts? Xen maintainers what's your take on this?
+> >>>
+> >>> What I'd like best would be a new handle (e.g. xenhost_t *) used as an
+> >>> abstraction layer for this kind of stuff. It should be passed to the
+> >>> backends and those would pass it on to low-level Xen drivers (xenbus,
+> >>> event channels, grant table, ...).
+> >>>
+> >> So if IIRC backends would use the xenhost layer to access grants or frames
+> >> referenced by grants, and that would grok into some of this. IOW, you would have
+> >> two implementors of xenhost: one for nested remote/local events+grants and
+> >> another for this "shim domain" ?
+> > 
+> > As I'd need that for nested Xen I guess that would make it 3 variants.
+> > Probably the xen-shim variant would need more hooks, but that should be
+> > no problem.
+> > 
+> I probably messed up in the short description but "nested remote/local
+> events+grants" was referring to nested Xen (FWIW remote meant L0 and local L1).
+> So maybe only 2 variants are needed?
+> 
+> >>> I was planning to do that (the xenhost_t * stuff) soon in order to add
+> >>> support for nested Xen using PV devices (you need two Xenstores for that
+> >>> as the nested dom0 is acting as Xen backend server, while using PV
+> >>> frontends for accessing the "real" world outside).
+> >>>
+> >>> The xenhost_t should be used for:
+> >>>
+> >>> - accessing Xenstore
+> >>> - issuing and receiving events
+> >>> - doing hypercalls
+> >>> - grant table operations
+> >>>
+> >>
+> >> In the text above, I sort of suggested a slice of this on 1.b) with a
+> >> translate_gref() and put_gref() API -- to get the page from a gref. This was
+> >> because of the flags|host_addr hurdle we depicted above wrt to using using grant
+> >> maps/unmaps. You think some of the xenhost layer would be ammenable to support
+> >> this case?
+> > 
+> > I think so, yes.
+> > 
+> >>
+> >>> So exactly the kind of stuff you want to do, too.
+> >>>
+> >> Cool idea!
+> > 
+> > In the end you might make my life easier for nested Xen. :-)
+> > 
+> Hehe :)
+> 
+> > Do you want to have a try with that idea or should I do that? I might be
+> > able to start working on that in about a month.
+> > 
+> Ankur (CC'ed) will give a shot at it, and should start a new thread on this
+> xenhost abstraction layer.
+
+If you are up for it, it would be great to write some documentation too.
+We are starting to have decent docs for some PV protocols, describing a
+specific PV interface, but we are lacking docs about the basic building
+blocks to bring up PV drivers in general. They would be extremely
+useful. Given that you have just done the work, you are in a great
+position to write those docs. Even bad English would be fine, I am sure
+somebody else could volunteer to clean-up the language. Anything would
+help :-)
