@@ -2,230 +2,115 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088FDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E87C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96D12070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034D920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P+hWwkLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfDIIxf (ORCPT
+        id S1726456AbfDIIz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:53:35 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33964 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfDIIxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:53:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B65FA78;
-        Tue,  9 Apr 2019 01:53:34 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F163A3F557;
-        Tue,  9 Apr 2019 01:53:32 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 09:53:28 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas-Mich Richter <tmricht@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>, acme@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>, jolsa@redhat.com
-Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
-Message-ID: <20190409085327.GA21979@lakrids.cambridge.arm.com>
-References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
- <20190403104103.GE4038@hirez.programming.kicks-ass.net>
- <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
- <20190404110909.GY4038@hirez.programming.kicks-ass.net>
- <20190404130300.GF14281@hirez.programming.kicks-ass.net>
- <adcbac67-82b5-98a4-efb4-61c9ed870c15@linux.ibm.com>
- <20190408082229.GI4038@hirez.programming.kicks-ass.net>
- <20190408095031.GG14281@hirez.programming.kicks-ass.net>
+        Tue, 9 Apr 2019 04:55:58 -0400
+Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:36806
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726091AbfDIIz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 04:55:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uyyxUsl4HoHT3XA8wr35YBd6ebO34tXLUeqZ6g0OAzg=;
+ b=P+hWwkLSQDnSUzrMrm1T4X/BMOBJJpBu9bNCIiX54eWBHptI09TyIDB3Q2Ib3CPYNs8k9lMq67KofzuUSB7ToiEAHnZrFdplJj9B+mBpJAiMASF/bCqYn/7/LH3O56fGQhhTKe7lgFsZJa0LlZBa+Crw9RAQQsWdjQffXi1vlVE=
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
+ VI1PR04MB4399.eurprd04.prod.outlook.com (20.177.55.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Tue, 9 Apr 2019 08:55:53 +0000
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1792.009; Tue, 9 Apr 2019
+ 08:55:53 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "Julia.Lawall@lip6.fr" <Julia.Lawall@lip6.fr>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "viorel.suman@gmail.com" <viorel.suman@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 0/2] ASoC: fsl: audmix: fix two issues
+Thread-Topic: [PATCH 0/2] ASoC: fsl: audmix: fix two issues
+Thread-Index: AQHU7q8yBr+pG49UL0OPQueKZODeUqYzhrSA
+Date:   Tue, 9 Apr 2019 08:55:53 +0000
+Message-ID: <1554800153.2729.5.camel@nxp.com>
+References: <1554798876-20653-1-git-send-email-viorel.suman@nxp.com>
+In-Reply-To: <1554798876-20653-1-git-send-email-viorel.suman@nxp.com>
+Reply-To: Viorel Suman <viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b1085a39-bc18-4300-951e-08d6bcc92c2c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4399;
+x-ms-traffictypediagnostic: VI1PR04MB4399:
+x-microsoft-antispam-prvs: <VI1PR04MB4399D17E4989994A9C5AB0B3922D0@VI1PR04MB4399.eurprd04.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(376002)(346002)(366004)(199004)(189003)(6506007)(103116003)(102836004)(476003)(446003)(11346002)(486006)(110136005)(76176011)(316002)(106356001)(2616005)(99286004)(256004)(2501003)(105586002)(71200400001)(25786009)(97736004)(54906003)(4326008)(3450700001)(26005)(44832011)(53936002)(71190400001)(43066004)(186003)(14454004)(81156014)(66066001)(229853002)(8676002)(3846002)(81166006)(8936002)(6512007)(6116002)(5660300002)(6486002)(2906002)(4744005)(86362001)(478600001)(6246003)(7416002)(36756003)(2201001)(68736007)(6436002)(305945005)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4399;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WZd5C2b1+4FtqaRdnffV+fwu53QuajMEiHIKdITvaOUy9FXEWtaEaoT1kHPhACIuUAdrpBgqpYX6eFgGpu1x726NXS4sU6RX/JfVTU/Jx1djwRNDAUHt7miCBSr93VwzZBifQjGonA4DHuHOX795I6o+4I87M3vPi1VgH4GwsCChWwqsXqSA/1XpexJPDWr+gFHbyFPd/zzG+QKQulY/X58LbVOK9qeIax5sDmD/M393/PoG/CChqcTNnydz/rf587hSLb7L4MeNThdHCEvnVkJjS2my6PxzMWmw4Ja7OyfCMcNRGiI17h+efgxfg2vl0u4SMBZ2NLLm8h7IjNpIV+zQ8D0xt5LxeYKeW9jo3PmsG/CZY9M1irXMreddPDgSE0dTNdTwAr5LboAwQ2yf/3NYRZ1YjBdoJXuQGCWwrzg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0599532AC1B14B4F96A1D6EB5C7FA96F@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408095031.GG14281@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1085a39-bc18-4300-951e-08d6bcc92c2c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 08:55:53.4751
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4399
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:50:31AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 08, 2019 at 10:22:29AM +0200, Peter Zijlstra wrote:
-> > On Mon, Apr 08, 2019 at 09:12:28AM +0200, Thomas-Mich Richter wrote:
-> 
-> > > very good news, your fix ran over the weekend without any hit!!!
-> > > 
-> > > Thanks very much for your help. Do you submit this patch to the kernel mailing list?
-> > 
-> > Most excellent, let me go write a Changelog.
-> 
-> Hi Thomas, find below.
-> 
-> Sadly, while writing the Changelog I ended up with a 'completely'
-> differet patch again, could I bother you to test this one too?
-> 
-> ---
-> Subject: perf: Fix perf_event_disable_inatomic()
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Thu, 4 Apr 2019 15:03:00 +0200
-> 
-> Thomas-Mich Richter reported he triggered a WARN from event_function_local()
-> on his s390. The problem boils down to:
-> 
->   CPU-A				CPU-B
-> 
->   perf_event_overflow()
->     perf_event_disable_inatomic()
->       @pending_disable = 1
->       irq_work_queue();
-> 
->   sched-out
->     event_sched_out()
->       @pending_disable = 0
-> 
-> 				sched-in
-> 				perf_event_overflow()
-> 				  perf_event_disable_inatomic()
-> 				    @pending_disable = 1;
-> 				    irq_work_queue(); // FAILS
-> 
->   irq_work_run()
->     perf_pending_event()
->       if (@pending_disable)
->         perf_event_disable_local(); // WHOOPS
-> 
-> The problem exists in generic, but s390 is particularly sensitive
-> because it doesn't implement arch_irq_work_raise(), nor does it call
-> irq_work_run() from it's PMU interrupt handler (nor would that be
-> sufficient in this case, because s390 also generates
-> perf_event_overflow() from pmu::stop). Add to that the fact that s390
-> is a virtual architecture and (virtual) CPU-A can stall long enough
-> for the above race to happen, even if it would self-IPI.
-> 
-> Adding an irq_work_syn() to event_sched_in() would work for all hardare
-> PMUs that properly use irq_work_run() but fails for software PMUs.
-
-Typo: s/syn/sync/
-
-> 
-> Instead encode the CPU number in @pending_disable, such that we can
-> tell which CPU requested the disable. This then allows us to detect
-> the above scenario and even redirect the IPI to make up for the failed
-> queue.
-> 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-> Cc: acme@redhat.com
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Reported-by: Thomas-Mich Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-I can't think of a nicer way of handling this, so FWIW:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> ---
->  kernel/events/core.c |   52 ++++++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 43 insertions(+), 9 deletions(-)
-> 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2009,8 +2009,8 @@ event_sched_out(struct perf_event *event
->  	event->pmu->del(event, 0);
->  	event->oncpu = -1;
->  
-> -	if (event->pending_disable) {
-> -		event->pending_disable = 0;
-> +	if (READ_ONCE(event->pending_disable) >= 0) {
-> +		WRITE_ONCE(event->pending_disable, -1);
->  		state = PERF_EVENT_STATE_OFF;
->  	}
->  	perf_event_set_state(event, state);
-> @@ -2198,7 +2198,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
->  
->  void perf_event_disable_inatomic(struct perf_event *event)
->  {
-> -	event->pending_disable = 1;
-> +	WRITE_ONCE(event->pending_disable, smp_processor_id());
-> +	/* can fail, see perf_pending_event_disable() */
->  	irq_work_queue(&event->pending);
->  }
->  
-> @@ -5810,10 +5811,45 @@ void perf_event_wakeup(struct perf_event
->  	}
->  }
->  
-> +static void perf_pending_event_disable(struct perf_event *event)
-> +{
-> +	int cpu = READ_ONCE(event->pending_disable);
-> +
-> +	if (cpu < 0)
-> +		return;
-> +
-> +	if (cpu == smp_processor_id()) {
-> +		WRITE_ONCE(event->pending_disable, -1);
-> +		perf_event_disable_local(event);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 *  CPU-A			CPU-B
-> +	 *
-> +	 *  perf_event_disable_inatomic()
-> +	 *    @pending_disable = CPU-A;
-> +	 *    irq_work_queue();
-> +	 *
-> +	 *  sched-out
-> +	 *    @pending_disable = -1;
-> +	 *
-> +	 *				sched-in
-> +	 *				perf_event_disable_inatomic()
-> +	 *				  @pending_disable = CPU-B;
-> +	 *				  irq_work_queue(); // FAILS
-> +	 *
-> +	 *  irq_work_run()
-> +	 *    perf_pending_event()
-> +	 *
-> +	 * But the event runs on CPU-B and wants disabling there.
-> +	 */
-> +	irq_work_queue_on(&event->pending, cpu);
-> +}
-> +
->  static void perf_pending_event(struct irq_work *entry)
->  {
-> -	struct perf_event *event = container_of(entry,
-> -			struct perf_event, pending);
-> +	struct perf_event *event = container_of(entry, struct perf_event, pending);
->  	int rctx;
->  
->  	rctx = perf_swevent_get_recursion_context();
-> @@ -5822,10 +5858,7 @@ static void perf_pending_event(struct ir
->  	 * and we won't recurse 'further'.
->  	 */
->  
-> -	if (event->pending_disable) {
-> -		event->pending_disable = 0;
-> -		perf_event_disable_local(event);
-> -	}
-> +	perf_pending_event_disable(event);
->  
->  	if (event->pending_wakeup) {
->  		event->pending_wakeup = 0;
-> @@ -10236,6 +10269,7 @@ perf_event_alloc(struct perf_event_attr
->  
->  
->  	init_waitqueue_head(&event->waitq);
-> +	event->pending_disable = -1;
->  	init_irq_work(&event->pending, perf_pending_event);
->  
->  	mutex_init(&event->mmap_mutex);
+UGxlYXNlIGlnbm9yZSB0aGlzIHNlcmllcywgdGhlIGRldmljZSBiaW5kaW5ncyBkb2N1bWVudGF0
+aW9uLCBbMV0sDQpzdGlsbCBjb250YWlucyAibW9kZWwiIGF0dHJpYnV0ZS4gV2lsbCBzZW5kIFYy
+Lg0KDQpbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2ZzbCxhdWRt
+aXgudHh0DQoNClJlZ2FyZHMsDQpWaW9yZWwNCg0KT24gTWEsIDIwMTktMDQtMDkgYXQgMDg6MzUg
+KzAwMDAsIFZpb3JlbCBTdW1hbiB3cm90ZToNCj4gVGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0
+ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0ZQ0KPiByZW1vdmVkIGFzIHJlcXVlc3RlZCBi
+eSBOaWNvbGluIENoZW4sIGJ1dCBsb29rcyBsaWtlICh2NCkNCj4gdmVyc2lvbiBvZiBEQUkgZHJp
+dmVyIHJlYWNoZWQgImZvci1uZXh0IiBicmFuY2ggLSBmaXggdGhpcy4NCj4gQXNzaWRlIG9mIHRo
+aXMgZml4IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZA0K
+PiBieSBKdWxpYSBMYXdhbGwuDQo+IA0KPiBWaW9yZWwgU3VtYW4gKDIpOg0KPiDCoCBBU29DOiBm
+c2xfYXVkbWl4OiByZW1vdmUgIm1vZGVsIiBhdHRyaWJ1dGUNCj4gwqAgQVNvQzogaW14LWF1ZG1p
+eDogZml4IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gcHJvYmUNCj4gDQo+IMKgc291bmQvc29j
+L2ZzbC9mc2xfYXVkbWl4LmMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
+DQo+IC0tLS0tLS0tLS0tLQ0KPiDCoHNvdW5kL3NvYy9mc2wvaW14LWF1ZG1peC5jIHwgMzEgKysr
+KysrKysrLS0tLS0tLS0tLS0tLS0NCj4gwqAyIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMo
+KyksIDQ5IGRlbGV0aW9ucygtKQ0KPiANCj4gLS3CoA0KPiAyLjcuNA0KPiA=
