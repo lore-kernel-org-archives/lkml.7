@@ -2,276 +2,109 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E165C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB7BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659542084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPB16sTC"
+	by mail.kernel.org (Postfix) with ESMTP id 56DBE2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfDIP5a (ORCPT
+        id S1727020AbfDIP5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:57:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40035 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726499AbfDIP51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:57:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d31so5004717pgl.7;
-        Tue, 09 Apr 2019 08:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=70bPnOCiyT/McnTHJ3/ThQzEgD9Y96j/IQ+8yT0RXAA=;
-        b=SPB16sTCvMJPQO9GdrEhPEsKQ3jc6/0SHl1bV9/1wBiM6pW5RaZF1ohRngkdAwiJAW
-         2OGEqTIB2IkZ+YM3vZkZUC7mn22xmQH5+Hl9PsTjrQCNtAvWMPtiFSoY5KvpBJWPL0p1
-         zFrDYRON5oGTvBcakTPiah0WktIYsEi4xDGfbsFykYVJxFYgrONB+nuM3MwXQlIzDOPa
-         ZUQvVcOqIEw8VnKPQxd4DXJcndL4n1Tlj0bWDHOsJJ2kgoNj0pjlyJKwjLcXdVCfVLXX
-         6o4fHsqbpfuy0++ZoE8RdZ9ppiWaTGL3amjYvYPTvPpqV8zLuURxKXwpRwm3gnn6OkQY
-         4aaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=70bPnOCiyT/McnTHJ3/ThQzEgD9Y96j/IQ+8yT0RXAA=;
-        b=LGNZENurRTSx2kmUK1cs3nUXOpmL3eTosmC3MY0LsyJ+vJODxlpL+FR9cxR79Z7RNK
-         G0BuoqHtIVxGI8xDESMtyUpgu37ltwQpPmrlfxjcZ0xcwSzzoktY7735+x0d07IvO2RL
-         fIEO9JsZcp1+4lnxmzKdp4uNNcNMoAvXKXrAlqmhU01cdQxKHrazw2LEpPqxmdt9F4ar
-         5E6auyG1pMzJlvEAGiP0in4eG3y4Hqadg9CHia6AyCr81vwaghoRAlrpqtsJpEJ1xdgB
-         vdFLszFVm1OCQcwgjGZn6+tmsR7LgFpb8ct2PqALcHnGsOzRIV1rNPhl28+5uIr4kZ7q
-         UDZQ==
-X-Gm-Message-State: APjAAAX8LErFaksxtg7wu7cfSzLWwvDjT04q/J/2xpRDv8+eSvd/doHE
-        9UaUJmMqLcuPNtt4EZS4L4A=
-X-Google-Smtp-Source: APXvYqxgscPMjcN8Wqt3u/bC0HtMPqhOVDlke3DBjdczX6Y9h2Z6lbf4gmh5P7SCXfvlQo3A332vFA==
-X-Received: by 2002:a62:7648:: with SMTP id r69mr18322984pfc.114.1554825446239;
-        Tue, 09 Apr 2019 08:57:26 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b72sm70383560pga.86.2019.04.09.08.57.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 08:57:25 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 12/12] Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
-Date:   Tue,  9 Apr 2019 23:56:26 +0800
-Message-Id: <20190409155626.6049-13-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409155626.6049-1-changbin.du@gmail.com>
-References: <20190409155626.6049-1-changbin.du@gmail.com>
+        Tue, 9 Apr 2019 11:57:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53830 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbfDIP5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 11:57:39 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 974F530A9CE1;
+        Tue,  9 Apr 2019 15:57:39 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FE181001E7B;
+        Tue,  9 Apr 2019 15:57:31 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 11:57:28 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, omosnace@redhat.com,
+        eparis@parisplace.org, ebiederm@xmission.com, oleg@redhat.com
+Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
+Message-ID: <20190409155728.dfp4qwseo6jxdmqr@madcap2.tricolour.ca>
+References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
+ <20190409080138.745d18a1@ivy-bridge>
+ <20190409140259.n4t6rxb24eu3uzvp@madcap2.tricolour.ca>
+ <20190409173716.1a0308fb@ivy-bridge>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409173716.1a0308fb@ivy-bridge>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 09 Apr 2019 15:57:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On 2019-04-09 17:37, Steve Grubb wrote:
+> On Tue, 9 Apr 2019 10:02:59 -0400
+> Richard Guy Briggs <rgb@redhat.com> wrote:
+> 
+> > On 2019-04-09 08:01, Steve Grubb wrote:
+> > > On Mon,  8 Apr 2019 23:52:29 -0400 Richard Guy Briggs
+> > > <rgb@redhat.com> wrote:  
+> > > > When a process signals the audit daemon (shutdown, rotate, resume,
+> > > > reconfig) but syscall auditing is not enabled, we still want to
+> > > > know the identity of the process sending the signal to the audit
+> > > > daemon.  
+> > > 
+> > > Why? If syscall auditing is disabled, then there is no requirement
+> > > to provide anything. What is the real problem that you are seeing?  
+> > 
+> > Shutdown messages with -1 in them rather than the real values.
+> 
+> OK. We can fix that by patching auditd to see if auditing is enabled
+> before requesting signal info. If auditing is disabled, the proper
+> action is for the kernel to ignore any audit userspace messages except
+> the configuration commands.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- Documentation/PCI/endpoint/index.rst          |  1 +
- ...{pci-test-howto.txt => pci-test-howto.rst} | 81 +++++++++++++------
- 2 files changed, 56 insertions(+), 26 deletions(-)
- rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+If auditing is disabled in the kernel, none of this is trackable.  It is
+for those as yet unsupported arches that can run audit enabled but
+without auditsyscall support.
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index b680a3fc4fec..d114ea74b444 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -10,3 +10,4 @@ PCI Endpoint Framework
-    pci-endpoint
-    pci-endpoint-cfs
-    pci-test-function
-+   pci-test-howto
-diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.rst
-similarity index 78%
-rename from Documentation/PCI/endpoint/pci-test-howto.txt
-rename to Documentation/PCI/endpoint/pci-test-howto.rst
-index 040479f437a5..909f770a07d6 100644
---- a/Documentation/PCI/endpoint/pci-test-howto.txt
-+++ b/Documentation/PCI/endpoint/pci-test-howto.rst
-@@ -1,38 +1,51 @@
--			    PCI TEST USERGUIDE
--		    Kishon Vijay Abraham I <kishon@ti.com>
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================
-+PCI Test User Guide
-+===================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
- 
- This document is a guide to help users use pci-epf-test function driver
- and pci_endpoint_test host driver for testing PCI. The list of steps to
- be followed in the host side and EP side is given below.
- 
--1. Endpoint Device
-+Endpoint Device
-+===============
- 
--1.1 Endpoint Controller Devices
-+Endpoint Controller Devices
-+---------------------------
- 
--To find the list of endpoint controller devices in the system:
-+To find the list of endpoint controller devices in the system::
- 
- 	# ls /sys/class/pci_epc/
- 	  51000000.pcie_ep
- 
--If PCI_ENDPOINT_CONFIGFS is enabled
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
- 	# ls /sys/kernel/config/pci_ep/controllers
- 	  51000000.pcie_ep
- 
--1.2 Endpoint Function Drivers
- 
--To find the list of endpoint function drivers in the system:
-+Endpoint Function Drivers
-+-------------------------
-+
-+To find the list of endpoint function drivers in the system::
- 
- 	# ls /sys/bus/pci-epf/drivers
- 	  pci_epf_test
- 
--If PCI_ENDPOINT_CONFIGFS is enabled
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
- 	# ls /sys/kernel/config/pci_ep/functions
- 	  pci_epf_test
- 
--1.3 Creating pci-epf-test Device
-+
-+Creating pci-epf-test Device
-+----------------------------
- 
- PCI endpoint function device can be created using the configfs. To create
--pci-epf-test device, the following commands can be used
-+pci-epf-test device, the following commands can be used::
- 
- 	# mount -t configfs none /sys/kernel/config
- 	# cd /sys/kernel/config/pci_ep/
-@@ -42,7 +55,7 @@ The "mkdir func1" above creates the pci-epf-test function device that will
- be probed by pci_epf_test driver.
- 
- The PCI endpoint framework populates the directory with the following
--configurable fields.
-+configurable fields::
- 
- 	# ls functions/pci_epf_test/func1
- 	  baseclass_code	interrupt_pin	progif_code	subsys_id
-@@ -51,67 +64,83 @@ configurable fields.
- 
- The PCI endpoint function driver populates these entries with default values
- when the device is bound to the driver. The pci-epf-test driver populates
--vendorid with 0xffff and interrupt_pin with 0x0001
-+vendorid with 0xffff and interrupt_pin with 0x0001::
- 
- 	# cat functions/pci_epf_test/func1/vendorid
- 	  0xffff
- 	# cat functions/pci_epf_test/func1/interrupt_pin
- 	  0x0001
- 
--1.4 Configuring pci-epf-test Device
-+
-+Configuring pci-epf-test Device
-+-------------------------------
- 
- The user can configure the pci-epf-test device using configfs entry. In order
- to change the vendorid and the number of MSI interrupts used by the function
--device, the following commands can be used.
-+device, the following commands can be used::
- 
- 	# echo 0x104c > functions/pci_epf_test/func1/vendorid
- 	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
- 	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
- 	# echo 8 > functions/pci_epf_test/func1/msix_interrupts
- 
--1.5 Binding pci-epf-test Device to EP Controller
-+
-+Binding pci-epf-test Device to EP Controller
-+--------------------------------------------
- 
- In order for the endpoint function device to be useful, it has to be bound to
- a PCI endpoint controller driver. Use the configfs to bind the function
--device to one of the controller driver present in the system.
-+device to one of the controller driver present in the system::
- 
- 	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
- 
- Once the above step is completed, the PCI endpoint is ready to establish a link
- with the host.
- 
--1.6 Start the Link
-+
-+Start the Link
-+--------------
- 
- In order for the endpoint device to establish a link with the host, the _start_
--field should be populated with '1'.
-+field should be populated with '1'::
- 
- 	# echo 1 > controllers/51000000.pcie_ep/start
- 
--2. RootComplex Device
- 
--2.1 lspci Output
-+RootComplex Device
-+==================
-+
-+lspci Output
-+------------
- 
--Note that the devices listed here correspond to the value populated in 1.4 above
-+Note that the devices listed here correspond to the value populated in 1.4
-+above::
- 
- 	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
- 	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
- 
--2.2 Using Endpoint Test function Device
-+
-+Using Endpoint Test function Device
-+-----------------------------------
- 
- pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
--tests. To compile this tool the following commands should be used:
-+tests. To compile this tool the following commands should be used::
- 
- 	# cd <kernel-dir>
- 	# make -C tools/pci
- 
--or if you desire to compile and install in your system:
-+or if you desire to compile and install in your system::
- 
- 	# cd <kernel-dir>
- 	# make -C tools/pci install
- 
- The tool and script will be located in <rootfs>/usr/bin/
- 
--2.2.1 pcitest.sh Output
-+
-+pcitest.sh Output
-+~~~~~~~~~~~~~~~~~
-+::
-+
- 	# pcitest.sh
- 	BAR tests
- 
--- 
-2.20.1
+Here's a current sample with CONFIG_AUDIT and ~CONFIG_AUDITSYSCALL
+configured, note "auid=" and "pid=":
 
+	killall -HUP auditd
+	type=DAEMON_CONFIG msg=audit(2019-04-09 11:37:04.508:3266) op=reconfigure state=changed auid=unset pid=-1 subj=? res=success
+
+	killall -TERM auditd
+	type=DAEMON_END msg=audit(2019-04-09 11:51:50.441:5709) : op=terminate auid=unset pid=-1 subj=? res=success 
+	
+and the same with the patch applied:
+
+	killall -HUP auditd
+	type=DAEMON_CONFIG msg=audit(2019-04-09 11:42:40.851:8924) op=reconfigure state=changed auid=root pid=652 subj=? res=success
+
+	killall -TERM auditd
+	type=DAEMON_END msg=audit(2019-04-09 11:51:50.441:5709) : op=terminate auid=root pid=652 subj=? res=success 
+
+The USR1 "rotate" and USR2 "resume" log messages need to be fixed in
+userspace.
+
+> -Steve
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
