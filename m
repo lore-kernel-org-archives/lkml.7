@@ -2,228 +2,171 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FF9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BE120833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231B720833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="S8OeXBkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfDIPFu (ORCPT
+        id S1726572AbfDIPGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:05:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33060 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbfDIPFu (ORCPT
+        Tue, 9 Apr 2019 11:06:42 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:36560 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbfDIPGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:05:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e5so13864837oii.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 08:05:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O1HuW9YLnEnMz8tserQMgKGS9dsMWN5Ltt0ANXmLvmM=;
-        b=Vq3eeu6nx+vsNrMV1JsOBNuY7To4TQKQc10Je6LYv5JP87q/Hd56h9X3K6W8XIcc7l
-         3MnRrjYDg2yHjsBoMP2hHwgon8mfuUqnwsFuPf6iH8B9wCOBMNPkMWNMGkuCsrKon66z
-         HiCdIg1GqTOjDNS9R91AXWjXR/z9H3B4TKW5NAKzEDHvrUsSj+34glt7uFFDdIX7zGdM
-         KB4tuPPYR7qXakzrdQ5wbPRREVszYAwVokvVAQwSfcQn37pGaUBj84lBICeuxxGCuHNX
-         q2kN1bbz2Bif0dBd5U4LLydqVHSysz34icvhEe1ntP9IrUSAkm0quZ0JPOXMT6yYQM6w
-         RiKg==
-X-Gm-Message-State: APjAAAUSslfkw2F37GZtwyJWTAZs1eBaPDEGem+pN8dTTQc+f44G7iWr
-        2qVaGxh8MGxHQXGOizFUMrcqXGhxSUbf7vGbNG5eMQ==
-X-Google-Smtp-Source: APXvYqwnB1x3SmE27hLE1Q/4mwLDqH3j70iJly41N+B1OIgqkWfFgsDMhlz4y5fBMBWAafacJ5X4APLm/3vi5rVfo3Q=
-X-Received: by 2002:aca:aa14:: with SMTP id t20mr19688585oie.166.1554822349194;
- Tue, 09 Apr 2019 08:05:49 -0700 (PDT)
+        Tue, 9 Apr 2019 11:06:42 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 07C8C5C049E;
+        Tue,  9 Apr 2019 17:06:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1554822399;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mFcQankGcxlTRtVWL5OghSI7av78saWyFI9XAL/gLqk=;
+        b=S8OeXBkg9kxEAMZdDWioKqkliPMZD81MaWGBFqCCkATp2X0RdZ69WyDcwyLme3hz1rRvNy
+        w7oZJgov9kwSZsFBPQ/68t8HoFN5IoEs6vLaO1naS39+aI4LRvym9EtQp+/VFaEDmK48Qx
+        4yty/CFzjmbRLNB3BQsJFbCrpndMEE0=
 MIME-Version: 1.0
-References: <20190409123134.19350-1-omosnace@redhat.com> <20190409123134.19350-2-omosnace@redhat.com>
- <20190409142647.oijxnedqf2dicxbi@madcap2.tricolour.ca>
-In-Reply-To: <20190409142647.oijxnedqf2dicxbi@madcap2.tricolour.ca>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Tue, 9 Apr 2019 17:05:39 +0200
-Message-ID: <CAFqZXNuxbzKifFm-dcgaUMojqNZtLipfsztrbR1RLfMG0RJwaA@mail.gmail.com>
-Subject: Re: [PATCH ghak10 v7 1/2] timekeeping: Audit clock adjustments
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 09 Apr 2019 17:06:38 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     =?UTF-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@mansr.com>
+Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
+        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        tony@atomide.com, marc.w.gonzalez@free.fr, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch
+ argument
+In-Reply-To: <yw1xk1g3xt4o.fsf@mansr.com>
+References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+ <yw1xk1g3xt4o.fsf@mansr.com>
+Message-ID: <398fb21bc96007bac89dce25ed2eb79e@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 4:26 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-04-09 14:31, Ondrej Mosnacek wrote:
-> > Emit an audit record whenever the system clock is changed (i.e. shifted
-> > by a non-zero offset) by a syscall from userspace. The syscalls than can
-> > (at the time of writing) trigger such record are:
-> >   - settimeofday(2), stime(2), clock_settime(2) -- via
-> >     do_settimeofday64()
-> >   - adjtimex(2), clock_adjtime(2) -- via do_adjtimex()
-> >
-> > The new records have type AUDIT_TIME_INJOFFSET and contain the following
-> > fields:
-> >   - sec -- the 'seconds' part of the offset
-> >   - nsec -- the 'nanoseconds' part of the offset
-> >
-> > Example record (time was shifted backwards by ~16.125 seconds):
-> >
-> > type=TIME_INJOFFSET msg=audit(1530616049.652:13): sec=-16 nsec=124887145
->
-> I have a minor nit about the interpretation of these values.  I realize
-> the values printed are the ones that are supplied.  When the sec
-> value is negative, does that imply that the nsec value has the same
-> sign?  IOW, are the two values added with a multiplier to the nsec
-> value, or are they concatenated with a decimal in the middle?  I expect
-> the latter.  In the current userspace support, there is no explicit type
-> support included yet for interpreted fields.  This is just a minor
-> documentation issue to me.
+On 09.04.2019 14:25, Måns Rullgård wrote:
+> Stefan Agner <stefan@agner.ch> writes:
+> 
+>> The LLVM Target parser currently does not allow to specify the security
+>> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
+>> to use Clang with LLVM's integrated assembler, this leads to build
+>> errors such as this:
+>>   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
+>>
+>> Use ".arch_extension sec" to enable the security extension in a more
+>> portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
+>> multi-platform kernel is being built.
+>>
+>> Note that this is technically not exactly the same as the old code
+>> checked for availabilty of the security extension by calling as-instr.
+>> However, there are already other sites which use ".arch_extension sec"
+>> unconditionally, hence de-facto we need an assembler capable of
+>> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
+>> arch extension "sec" is available since binutils 2.21 according to
+>> its documentation [1].
+>>
+>> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
+>> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> Acked-by: Mans Rullgard <mans@mansr.com>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>> Changes since v1:
+>> - Explicitly specify assembler architecture as armv7-a to avoid
+>>   build issues when bulding v6/v7 multi arch kernel.
+>>
+>>  arch/arm/mach-bcm/Makefile         | 3 ---
+>>  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
+>>  arch/arm/mach-exynos/Makefile      | 4 ----
+>>  arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
+>>  arch/arm/mach-exynos/sleep.S       | 3 ++-
+>>  arch/arm/mach-highbank/Makefile    | 3 ---
+>>  arch/arm/mach-highbank/smc.S       | 3 ++-
+>>  arch/arm/mach-keystone/Makefile    | 3 ---
+>>  arch/arm/mach-keystone/smc.S       | 1 +
+>>  arch/arm/mach-omap2/Makefile       | 8 --------
+>>  arch/arm/mach-omap2/omap-headsmp.S | 2 ++
+>>  arch/arm/mach-omap2/omap-smc.S     | 3 ++-
+>>  arch/arm/mach-omap2/sleep33xx.S    | 1 +
+>>  arch/arm/mach-omap2/sleep34xx.S    | 2 ++
+>>  arch/arm/mach-omap2/sleep43xx.S    | 2 ++
+>>  arch/arm/mach-omap2/sleep44xx.S    | 2 ++
+>>  arch/arm/mach-tango/Makefile       | 3 ---
+>>  arch/arm/mach-tango/smc.S          | 1 +
+>>  18 files changed, 19 insertions(+), 30 deletions(-)
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+>> index a55a7ecf146a..541e850a736c 100644
+>> --- a/arch/arm/mach-bcm/bcm_kona_smc.c
+>> +++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+>> @@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
+>>  		__asmeq("%2", "r4")
+>>  		__asmeq("%3", "r5")
+>>  		__asmeq("%4", "r6")
+>> -#ifdef REQUIRES_SEC
+>>  		".arch_extension sec\n"
+>> -#endif
+>>  		"	smc    #0\n"
+>>  		: "=r" (ip), "=r" (r0)
+>>  		: "r" (r4), "r" (r5), "r" (r6)
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
+>> index d15de8179fab..ec03dc499270 100644
+>> --- a/arch/arm/mach-keystone/smc.S
+>> +++ b/arch/arm/mach-keystone/smc.S
+>> @@ -21,6 +21,7 @@
+>>   *
+>>   * Return: Non zero value on failure
+>>   */
+>> +	.arch_extension sec
+>>  ENTRY(keystone_cpu_smc)
+>>  	stmfd   sp!, {r4-r11, lr}
+>>  	smc	#0
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
+>> index 361a8dc89804..cf2d21e5226c 100644
+>> --- a/arch/arm/mach-tango/smc.S
+>> +++ b/arch/arm/mach-tango/smc.S
+>> @@ -1,6 +1,7 @@
+>>  /* SPDX-License-Identifier: GPL-2.0 */
+>>  #include <linux/linkage.h>
+>>
+>> +	.arch_extension sec
+>>  ENTRY(tango_smc)
+>>  	push	{lr}
+>>  	mov	ip, r1
+> 
+> Is there some reason these three don't need the .arch directive?
 
-Good point! I wrote the sentence too quickly without thinking about
-it... I actually had to find this out for the tests (and looking at it
-again, I got it wrong there as well, although in a different way...) -
-it is actually the former variant (multiplier + addition). So the
-"~16.125" should actually be "~15.875" (and I need to fix the
-testsuite pull request...).
-
-> > The records of this type will be associated with the corresponding
-> > syscall records.
-> >
-> > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
->
-> Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
->
-> > ---
-> >  include/linux/audit.h      | 14 ++++++++++++++
-> >  include/uapi/linux/audit.h |  1 +
-> >  kernel/auditsc.c           |  6 ++++++
-> >  kernel/time/timekeeping.c  |  6 ++++++
-> >  4 files changed, 27 insertions(+)
-> >
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 1e69d9fe16da..2c62c0468888 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -365,6 +365,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
-> >  extern void __audit_mmap_fd(int fd, int flags);
-> >  extern void __audit_log_kern_module(char *name);
-> >  extern void __audit_fanotify(unsigned int response);
-> > +extern void __audit_tk_injoffset(struct timespec64 offset);
-> >
-> >  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
-> >  {
-> > @@ -467,6 +468,16 @@ static inline void audit_fanotify(unsigned int response)
-> >               __audit_fanotify(response);
-> >  }
-> >
-> > +static inline void audit_tk_injoffset(struct timespec64 offset)
-> > +{
-> > +     /* ignore no-op events */
-> > +     if (offset.tv_sec == 0 && offset.tv_nsec == 0)
-> > +             return;
-> > +
-> > +     if (!audit_dummy_context())
-> > +             __audit_tk_injoffset(offset);
-> > +}
-> > +
-> >  extern int audit_n_rules;
-> >  extern int audit_signals;
-> >  #else /* CONFIG_AUDITSYSCALL */
-> > @@ -580,6 +591,9 @@ static inline void audit_log_kern_module(char *name)
-> >  static inline void audit_fanotify(unsigned int response)
-> >  { }
-> >
-> > +static inline void audit_tk_injoffset(struct timespec64 offset)
-> > +{ }
-> > +
-> >  static inline void audit_ptrace(struct task_struct *t)
-> >  { }
-> >  #define audit_n_rules 0
-> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> > index 3901c51c0b93..ab58d67baf4d 100644
-> > --- a/include/uapi/linux/audit.h
-> > +++ b/include/uapi/linux/audit.h
-> > @@ -114,6 +114,7 @@
-> >  #define AUDIT_REPLACE                1329    /* Replace auditd if this packet unanswerd */
-> >  #define AUDIT_KERN_MODULE    1330    /* Kernel Module events */
-> >  #define AUDIT_FANOTIFY               1331    /* Fanotify access decision */
-> > +#define AUDIT_TIME_INJOFFSET 1332    /* Timekeeping offset injected */
-> >
-> >  #define AUDIT_AVC            1400    /* SE Linux avc denial or grant */
-> >  #define AUDIT_SELINUX_ERR    1401    /* Internal SE Linux Errors */
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 51a2ceb3a1ca..80dfe0cdc636 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -2512,6 +2512,12 @@ void __audit_fanotify(unsigned int response)
-> >               AUDIT_FANOTIFY, "resp=%u", response);
-> >  }
-> >
-> > +void __audit_tk_injoffset(struct timespec64 offset)
-> > +{
-> > +     audit_log(audit_context(), GFP_KERNEL, AUDIT_TIME_INJOFFSET,
-> > +               "sec=%lli nsec=%li", (long long)offset.tv_sec, offset.tv_nsec);
-> > +}
-> > +
-> >  static void audit_log_task(struct audit_buffer *ab)
-> >  {
-> >       kuid_t auid, uid;
-> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> > index f986e1918d12..3d24be4cd607 100644
-> > --- a/kernel/time/timekeeping.c
-> > +++ b/kernel/time/timekeeping.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/stop_machine.h>
-> >  #include <linux/pvclock_gtod.h>
-> >  #include <linux/compiler.h>
-> > +#include <linux/audit.h>
-> >
-> >  #include "tick-internal.h"
-> >  #include "ntp_internal.h"
-> > @@ -1250,6 +1251,9 @@ out:
-> >       /* signal hrtimers about time change */
-> >       clock_was_set();
-> >
-> > +     if (!ret)
-> > +             audit_tk_injoffset(ts_delta);
-> > +
-> >       return ret;
-> >  }
-> >  EXPORT_SYMBOL(do_settimeofday64);
-> > @@ -2322,6 +2326,8 @@ int do_adjtimex(struct __kernel_timex *txc)
-> >               ret = timekeeping_inject_offset(&delta);
-> >               if (ret)
-> >                       return ret;
-> > +
-> > +             audit_tk_injoffset(delta);
-> >       }
-> >
-> >       ktime_get_real_ts64(&ts);
-> > --
-> > 2.20.1
-> >
->
-> - RGB
->
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> IRC: rgb, SunRaycer
-> Voice: +1.647.777.2635, Internal: (81) 32635
-
-
+They all do not use a memory barrier instruction (e.g. dmb) which caused
+issues on the other files.
 
 --
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Stefan
