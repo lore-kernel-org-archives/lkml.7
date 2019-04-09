@@ -2,107 +2,130 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA670C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B702C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3B2205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554806517;
-	bh=UTQwELX4g/y/5RF08DcWnDlemQfSE1xs8kkwzu/lcmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q4lrKqQX/n9xPIraH36fJhjqySpnjKIKvL5J1fyn/QuoR6TCpBLcO3gOCrn+g+wRw
-	 VkkA8PWE6+GyG6jXFEMPXWKX1Bl7K/wCgl6HJXhITDMSTPNyYpdTggIlbP2pmCStvM
-	 qeKHSJBmdaLnfsob1IDkg32RWMs45T+azu9X6vsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2171720880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfDIKlz (ORCPT
+        id S1727001AbfDIKmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
+        Tue, 9 Apr 2019 06:42:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46722 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfDIKlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:41:55 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726062AbfDIKmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:42:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BC0205F4
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2019 10:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554806514;
-        bh=UTQwELX4g/y/5RF08DcWnDlemQfSE1xs8kkwzu/lcmM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EypApUze176ipRthU5QwzfJjkIf0OaHFjOUI9KkEPeJ4XLktwcwkbqLW9n33R9KUJ
-         survO1zmjDoWPA8Jadu0rn6EPm3rdIr94ONxBnWToCNx966EI160IIbWGmhRjkA6GM
-         Bj++eOQ4ZsS/p+nguB8H/aStlXWLMvSr02t5C/ig=
-Received: by mail-qt1-f173.google.com with SMTP id w30so19062843qta.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 03:41:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAVpw3TbQdFCmPSs4jbtePLNOqEjfCcdldoCSsYUy3A45q24zY0f
-        Gh32+hcfQlT4v0PNNNkN5fkdhU1wSPCiu1okwGQ=
-X-Google-Smtp-Source: APXvYqyB//+VdhDxsubxvRI5OCbSCXrUwj9wJ5lsgwIZiJutH6E/LBB9oiwpD6Z7iPuyapuD5/EBMLNZCXZdymDucGE=
-X-Received: by 2002:a0c:98b3:: with SMTP id f48mr28950233qvd.202.1554806513865;
- Tue, 09 Apr 2019 03:41:53 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5BCA26698A;
+        Tue,  9 Apr 2019 10:42:09 +0000 (UTC)
+Received: from krava (unknown [10.40.205.91])
+        by smtp.corp.redhat.com (Postfix) with SMTP id CC58A69185;
+        Tue,  9 Apr 2019 10:42:06 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 12:42:05 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, brueckner@linux.vnet.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf/report: [RFC] Handling OOM in perf report
+Message-ID: <20190409104205.GB29688@krava>
+References: <20190401142000.17679-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-References: <MWHPR12MB1343B0921E0D4DD39A1C9F38CB2D0@MWHPR12MB1343.namprd12.prod.outlook.com>
-In-Reply-To: <MWHPR12MB1343B0921E0D4DD39A1C9F38CB2D0@MWHPR12MB1343.namprd12.prod.outlook.com>
-From:   Josh Boyer <jwboyer@kernel.org>
-Date:   Tue, 9 Apr 2019 06:41:43 -0400
-X-Gmail-Original-Message-ID: <CA+5PVA4ymVN5UC72vy4r_nvryvXRZbUT1G0Gu6p1DYXCS-GgTw@mail.gmail.com>
-Message-ID: <CA+5PVA4ymVN5UC72vy4r_nvryvXRZbUT1G0Gu6p1DYXCS-GgTw@mail.gmail.com>
-Subject: Re: pull request: Linux-firmware: Update cxgb4 firmware
-To:     Vishal Kulkarni <vishal@chelsio.com>
-Cc:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>,
-        Nirranjan Kirubaharan <nirranjan@chelsio.com>,
-        dt <dt@chelsio.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401142000.17679-1-tmricht@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 09 Apr 2019 10:42:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 6:00 AM Vishal Kulkarni <vishal@chelsio.com> wrote:
->
-> Hi,
->
-> Kindly pull the new firmware from the following URL:
-> git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
->
-> Thanks,
-> Vishal
->
-> The following changes since commit 67b75798ea88f4b1d6ee6a3b5a0634d29620c094:
->
->   linux-firmware: add firmware for MT7615E (2019-04-02 08:00:12 -0400)
->
-> are available in the git repository at:
->
->   git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
->
-> for you to fetch changes up to ddde59823ae0452582c49774894173435e885549:
->
->   cxgb4: update firmware to revision 1.23.4.0 (2019-04-09 02:43:33 -0700)
->
-> ----------------------------------------------------------------
-> Vishal Kulkarni (1):
->       cxgb4: update firmware to revision 1.23.4.0
->
->  WHENCE                                         |  12 ++++++------
->  cxgb4/{t4fw-1.23.3.0.bin => t4fw-1.23.4.0.bin} | Bin 570880 -> 570880 bytes
->  cxgb4/t4fw.bin                                 |   2 +-
->  cxgb4/{t5fw-1.23.3.0.bin => t5fw-1.23.4.0.bin} | Bin 659456 -> 659456 bytes
->  cxgb4/t5fw.bin                                 |   2 +-
->  cxgb4/{t6fw-1.23.3.0.bin => t6fw-1.23.4.0.bin} | Bin 708608 -> 708608 bytes
->  cxgb4/t6fw.bin                                 |   2 +-
->  7 files changed, 9 insertions(+), 9 deletions(-)
->  rename cxgb4/{t4fw-1.23.3.0.bin => t4fw-1.23.4.0.bin} (99%)
->  rename cxgb4/{t5fw-1.23.3.0.bin => t5fw-1.23.4.0.bin} (99%)
->  rename cxgb4/{t6fw-1.23.3.0.bin => t6fw-1.23.4.0.bin} (99%)
+On Mon, Apr 01, 2019 at 04:20:00PM +0200, Thomas Richter wrote:
 
-Pulled and pushed out.
+SNIP
 
-josh
+> perf_session__process_event() returns to its caller, where -ENOMEM is
+> changed to -EINVAL and processing stops:
+> 
+>  if ((skip = perf_session__process_event(session, event, head)) < 0) {
+>       pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> 	     head, event->header.size, event->header.type);
+>       err = -EINVAL;
+>       goto out_err;
+>  }
+> 
+> This occured in the FINISHED_ROUND event when it has to process some
+> 10000 entries and ran out of memory.
+> 
+> I understand that my perf.data file might just be too big, but I would
+> like to see some error message indicating OOM error instead of
+> processing failure of a unrelated event.
+
+you can limit the size of the report queue via ~/.perfconfig file:
+
+[report]
+queue-size=1M
+
+above should use only 1M for the queue management data the data
+for sample still get allocated thought.. but it could help
+
+> 
+> However this patch just does what the pr_debug() statement indicates,
+> the event is skipped and processing continues.
+> But at least the root cause is indicated and also shows up in the
+> GUI.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/builtin-report.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 4054eb1f98ac..7a27b815f7a8 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -283,8 +283,13 @@ static int process_sample_event(struct perf_tool *tool,
+>  		al.map->dso->hit = 1;
+>  
+>  	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>  		pr_debug("problem adding hist entry, skipping event\n");
+> +		if (ret == -ENOMEM) {
+> +			pr_err("Running out of memory\n");
+> +			ret = 0;
+> +		}
+> +	}
+
+
+I think we can propagate the error completely (like below),
+and even warn about ENOMEM specificaly
+
+but I think we should bail out in case of ENOMEM, because
+the data are incomplete and misleading
+
+jirka
+
+
+---
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..eea247a26ad8 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1933,7 +1933,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+ 		       file_offset + head, event->header.size,
+ 		       event->header.type);
+-		err = -EINVAL;
++		err = skip;
+ 		goto out;
+ 	}
+ 
