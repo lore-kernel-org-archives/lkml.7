@@ -2,66 +2,91 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAEAC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6415C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5329420651
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC0F21473
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="heyQdx+m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFwBKChN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfDIJoA (ORCPT
+        id S1726493AbfDIJp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:44:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42432 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbfDIJoA (ORCPT
+        Tue, 9 Apr 2019 05:45:57 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33204 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfDIJp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zx6C5JsUe6faTo75OXfPQ0cJ9akfAT5lqwFOCOcI+wE=; b=heyQdx+m0q9w5BcVNQYiGF8Bq
-        MM1HPWbF55jwpQav54D5Iq9hp2gEV9yLkq0YJuatvCJDpmDJ+8jo5O8/nlsqys8cp5/0XWrv4Jyno
-        8y6Yb0WoRA+wuBK2cU+DV3s0gYUSruPaE1WQvVpmBGR27W/lu4WsmxnBwDrNpf99S8NBCk798eGlK
-        8u26+aCePJMhJl2xl+0fAPWiCMYpMNjjXl7+njxGw3qu8y+FUunUKMRfYps9yfP1Sk75xCOj0zGVc
-        QomwpniASUMBYI+chAg51cipw+sW/Rx+GrLtpBY2j/5UscjTUnW4VusELJVwpTTRnV2P7g1sqYcwN
-        b6sBUncQQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hDnIL-00068F-NJ; Tue, 09 Apr 2019 09:43:57 +0000
-Date:   Tue, 9 Apr 2019 02:43:57 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jianchao Wang <jianchao.w.wang@oracle.com>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] io_uring: introduce inline reqs for
- IORING_SETUP_IOPOLL
-Message-ID: <20190409094357.GA23530@infradead.org>
-References: <1554787314-27179-1-git-send-email-jianchao.w.wang@oracle.com>
- <20190409093717.GA15391@infradead.org>
+        Tue, 9 Apr 2019 05:45:56 -0400
+Received: by mail-yw1-f65.google.com with SMTP id l5so6019507ywa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R/XsV/8Ukf+RUb49ThZY9ILm7j6ClSjMvZz7QocK+HA=;
+        b=YFwBKChNbe2wytzY/L8eWK4QM5OTjdY+L4TgcIt1zqs62ELypAhX0hrGMYQL7rTIhv
+         APlq1ddNN60yokmEYfGZ2qpyRY0pUSJJTzK7hnpojESQcDJfyDJWOvCM/Tey2NUFFfh2
+         DcM6XMhF+ERgV1CixQfLDY+5Xg39IksSeAZuxJVLG/DrhCoBurdhUF6t9SbopOa1l/iO
+         KwweQEoDHT9hRuoLUOheexXmyHdIzG/7HZJhPElSJzCWaSb6XcnL5Y2lVRY3Ol5G8YDA
+         vV4Yk/Qese19NNqyAi8/PN5bVvssulEL3PdPxJ8AR6NlV6mPyaoZUmC+cqFOYnU5LPvx
+         p/mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R/XsV/8Ukf+RUb49ThZY9ILm7j6ClSjMvZz7QocK+HA=;
+        b=kv0VffXx+5f9N0Qa41m0PGw4xxLssqguuVtFllpQslLPZb/uQlnnxd1lr2WBFtGR8/
+         3VHYY+wwIGGKIiabILEG9qjsdMxuHcvxV4G4NBQb63QFvSosgOtPaa+zKpWN6uYkaDov
+         TWx9gn5L73476/fig9VKBnZrmRWMpJSR74DmxF2SGLH2KKx5+iX0m3an/LemO71QI1uf
+         mUTeSucBDR6/7xe3eFH03S9DutsUKtJvcztpCwRyzYfrGF5CRVaF7gjwae5+x607xWhY
+         w9JQy3BbQfNInWZ8lGlEX31pObiJVtTv89Y10HaBRx0BxHqIKYH6bzUkDu/1DmkdMjqL
+         Ht7g==
+X-Gm-Message-State: APjAAAVBhriLvJII1CM6zCWC2+dWKpg/CfyAzz0ziJ9QPlNPkV2F3O1W
+        hIPSOujVUkv5BI+T+hUvV2DMHO48+HS3ovqzmEjxQg4kHdU=
+X-Google-Smtp-Source: APXvYqyYiaKcnKgqhX+qkMz4o1eVUn7fFoT5hup3soRtdbX+cnIwOC5hTX3zXmfMPpAWheWNjA58ueRCLXSP5kW7aKk=
+X-Received: by 2002:a81:4fd5:: with SMTP id d204mr27576554ywb.186.1554803155937;
+ Tue, 09 Apr 2019 02:45:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409093717.GA15391@infradead.org>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190406183508.25273-1-urezki@gmail.com> <20190406183508.25273-2-urezki@gmail.com>
+ <20190408231905.GA31139@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190408231905.GA31139@tower.DHCP.thefacebook.com>
+From:   Uladzislau Rezki <urezki@gmail.com>
+Date:   Tue, 9 Apr 2019 11:45:45 +0200
+Message-ID: <CA+KHdyVRL7hWw8mLvpHj46NCnZ_Cttkw1+ycjR-XP=ohEAnJuQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] mm/vmap: keep track of free blocks for vmap allocation
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 02:37:17AM -0700, Christoph Hellwig wrote:
-> I really don't like the idea of exposing this to userspace.  Is
-> there any good reason to not simply always allocate inline request
-> up to a certain ring size?
+Hello, Roman.
 
-Sorry - misread the patch.  The flag isn't actually user visible so
-all is fine!
+>
+> Reviewed-by: Roman Gushchin <guro@fb.com>
+>
+> Thanks!
+I appreciate your effort in reviewing to make it better.
+
+Thank you!
+
+-- 
+Uladzislau Rezki
