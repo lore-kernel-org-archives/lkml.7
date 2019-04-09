@@ -2,149 +2,120 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75263C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CFCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0F320880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FD421473
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtU2eedT"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="G3Fo5cx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbfDIEBq (ORCPT
+        id S1726755AbfDIEFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 00:01:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43346 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfDIEBq (ORCPT
+        Tue, 9 Apr 2019 00:05:42 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36079 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfDIEFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 00:01:46 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c20so9410760qkc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 21:01:46 -0700 (PDT)
+        Tue, 9 Apr 2019 00:05:42 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so9850929qtn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 21:05:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4u8fidm5D/opMYz7YM2gWO+UekfpbAquXOxV/eIlKgk=;
-        b=gtU2eedTWqSRvZn7ZCVXsaVeVFV7MIJTrZLf1Q2wuOrmyj7qOBmUWqDuhxqGSEp0Ik
-         pQEYp9mm18X8MaRh7TQfSBji4+ey/0R6xohEExXcHHGqbtC55/95Csp3S2xrxavENJXX
-         WZW+kgSXj/hYWNsAkyPAfjxlkHSIY/umaiVAGgQ/NHyhQcgV9u+WxwjuEYNnFlj2wk8R
-         VTiE/d9JRLbkQj8q46tRMwlDMTFNJcO33nBalhNnZ+nMJigV0bcH9Kh2LfCd2TM7or9S
-         8MWfAKuL0VqhwV0u1SBg6KDrmVR2LSJzgdXykV/o0gCmrZ92CZbFR7TmC/YkOMGJFGB1
-         5psA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zppCZKF0rZ1NnZ9xjCb0DzXkMNKc+Uy/xubAcaV6Yvg=;
+        b=G3Fo5cx9ldlWA5w+d1uPLa3zpDz9GhiSAi/g+Z4o5/z49iXUZ9faeJOMerXVzu323D
+         FciNy8z6KdgSwOQqfPkaohJyJuV3UjU4kLNuTKbGsAO0E7XDBgUZQgxsA8iIerL9FPaQ
+         C+AMQMSO9ChMD4F8wh1UMy1Jx8N7O4PI7Rwdh8kQPpJzA2tDhfUktIIGf1DyH0oO7dMi
+         2OLTYpyBBQ6oZpN7bA7gAhrsphzkcGoD5BphsPUQBspV83iuB+pGHcDzYj1gsk39gP0n
+         5ZNE3ZOdHYm4USxBv/uxXeAtLj9fKxrnbmD7Z85vXC/ZBtfzyZwEDNvJuiYsIWv8Lopo
+         CqYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4u8fidm5D/opMYz7YM2gWO+UekfpbAquXOxV/eIlKgk=;
-        b=gQOO/5lBEzReKNA82M9uE/n4UbUnNPVHHNet3iD2RgPVOzNdl3ktWvGTWF7k6OcMIK
-         MW1D/Dn/7jeQEzq4ciXMVFvhWsqalFlXDy/WcWL8rhWXj2L5riA1o/0KEq8+5Z9ASNWC
-         Htm6QdzE+Q0CVIYLCEVA7VoianJJXhzqA749aEBfXH2AWNc24tvDj6IzS7tw4IodtGh4
-         j41Kvyfc0tENByPImSScLzC26reDZ75Lp+s1DlnNwwSZL2B+K8goUWO/w+CaSnyQFJtO
-         AWjKyJIU4dN+M4JGAaoHs8YE0fTRX8jmIihdeVOIJsk1uoFA2P7O9eh3r5jnm0vlyqJ9
-         o0Kw==
-X-Gm-Message-State: APjAAAWlMRVHd4wX1VZ3kv0/WPFqeu3rOcjrax3cNwBicudJU5G2jZ15
-        KxNN8F9WFUDUj2J913M1rxCsPfWA7B0oE2Zq3JY=
-X-Google-Smtp-Source: APXvYqzGUVzEZARAVQsaCKjmqLL+SspArRjqUdatG4scWs0EZoAOmQOEFfR1Nmp9uDtiNnjdtTUw9VQyU2yMduFN9jw=
-X-Received: by 2002:a05:620a:1591:: with SMTP id d17mr25699490qkk.39.1554782505387;
- Mon, 08 Apr 2019 21:01:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190110081750.11358-1-kraxel@redhat.com> <CAPM=9tx8N6jxVzsT-RqtQFrFb9qLK4qUUje+d=fpTYZ6+PnYpg@mail.gmail.com>
-In-Reply-To: <CAPM=9tx8N6jxVzsT-RqtQFrFb9qLK4qUUje+d=fpTYZ6+PnYpg@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 9 Apr 2019 14:01:33 +1000
-Message-ID: <CAPM=9tyEmn2LXhNmPSOi7JAgBc3QZwNtM+8FT8CWebz4GztaJA@mail.gmail.com>
-Subject: Re: [PATCH] drm/qxl: drop prime import/export callbacks
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zppCZKF0rZ1NnZ9xjCb0DzXkMNKc+Uy/xubAcaV6Yvg=;
+        b=jwqIjrIAstIgbtEQtXLHaoDFHAcmCPU3kNl6pagc0pV+Bn5bb7cnSmNnBKN+B9dlvZ
+         Upf39UTO2+X7pYg5HbatPlSf6D1wbItCr756DA3i5eO2yXpGOwL4q9/DTANwTk8kaUvz
+         Iqz9qRYL0roU4hzzgKIwnn6YJ5nX8XqV3TZhysYJxclT5ZG7KI83glIFWvqHxCMw/5Aa
+         bQ6r5DN0Z0XuurX8m9guuFeDIqYHlFO2H0k/9l6GA/AEZf332ShGU8hXzkRlRHzvFH7c
+         jAk/oN2i7hauqJ8ZEak0VQcJMUyt3LxiKLd6Bsu+19/l1xwp2ih1FBRMym3/8AIr4IeM
+         5qlA==
+X-Gm-Message-State: APjAAAX8wXM8ki869ZvNBSct7D4yQfx6wlzI2N0rtkvTsoNBziQ6kjhJ
+        Kagr2btpY+uR9kSquEGFP/ZWvkwQ6oc=
+X-Google-Smtp-Source: APXvYqztEyrw/6TQw4d2NvoTwYv/KENDm4gcbaiM10st7rQdiAPOJEToI9IhM3Ss87WvjmV4GEq7OQ==
+X-Received: by 2002:a0c:969d:: with SMTP id a29mr27331190qvd.56.1554782741353;
+        Mon, 08 Apr 2019 21:05:41 -0700 (PDT)
+Received: from ovpn-120-238.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k140sm17052187qke.9.2019.04.08.21.05.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2019 21:05:40 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org
+Cc:     catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] x86/mm/mem_encrypt: fix a crash with kmemleak_scan
+Date:   Tue,  9 Apr 2019 00:05:02 -0400
+Message-Id: <20190409040502.55361-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 12 Jan 2019 at 07:13, Dave Airlie <airlied@gmail.com> wrote:
->
-> On Thu, 10 Jan 2019 at 18:17, Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> > Also set prime_handle_to_fd and prime_fd_to_handle to NULL,
-> > so drm will not advertive DRM_PRIME_CAP_{IMPORT,EXPORT} to
-> > userspace.
+The first kmemleak_scan() after boot would trigger a crash below because
 
-It's been pointed out to me that disables DRI3 for these devices, I'm
-not sure that is the solution we actually wanted.
+kernel_init
+  free_initmem
+    mem_encrypt_free_decrypted_mem
+      free_init_pages
 
-any ideas?
-Dave.
+unmapped some memory inside the .bss.
 
-> >
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->
-> Reviewed-by: Dave Airlie <airlied@redhat.com>
-> > ---
-> >  drivers/gpu/drm/qxl/qxl_drv.c   |  4 ----
-> >  drivers/gpu/drm/qxl/qxl_prime.c | 14 --------------
-> >  2 files changed, 18 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> > index 13c8a662f9..ccb090f3ab 100644
-> > --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> > +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> > @@ -250,14 +250,10 @@ static struct drm_driver qxl_driver = {
-> >  #if defined(CONFIG_DEBUG_FS)
-> >         .debugfs_init = qxl_debugfs_init,
-> >  #endif
-> > -       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-> > -       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-> >         .gem_prime_export = drm_gem_prime_export,
-> >         .gem_prime_import = drm_gem_prime_import,
-> >         .gem_prime_pin = qxl_gem_prime_pin,
-> >         .gem_prime_unpin = qxl_gem_prime_unpin,
-> > -       .gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
-> > -       .gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
-> >         .gem_prime_vmap = qxl_gem_prime_vmap,
-> >         .gem_prime_vunmap = qxl_gem_prime_vunmap,
-> >         .gem_prime_mmap = qxl_gem_prime_mmap,
-> > diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
-> > index a55dece118..df65d3c1a7 100644
-> > --- a/drivers/gpu/drm/qxl/qxl_prime.c
-> > +++ b/drivers/gpu/drm/qxl/qxl_prime.c
-> > @@ -38,20 +38,6 @@ void qxl_gem_prime_unpin(struct drm_gem_object *obj)
-> >         WARN_ONCE(1, "not implemented");
-> >  }
-> >
-> > -struct sg_table *qxl_gem_prime_get_sg_table(struct drm_gem_object *obj)
-> > -{
-> > -       WARN_ONCE(1, "not implemented");
-> > -       return ERR_PTR(-ENOSYS);
-> > -}
-> > -
-> > -struct drm_gem_object *qxl_gem_prime_import_sg_table(
-> > -       struct drm_device *dev, struct dma_buf_attachment *attach,
-> > -       struct sg_table *table)
-> > -{
-> > -       WARN_ONCE(1, "not implemented");
-> > -       return ERR_PTR(-ENOSYS);
-> > -}
-> > -
-> >  void *qxl_gem_prime_vmap(struct drm_gem_object *obj)
-> >  {
-> >         WARN_ONCE(1, "not implemented");
-> > --
-> > 2.9.3
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+BUG: unable to handle kernel paging request at ffffffffbd402000
+CPU: 12 PID: 325 Comm: kmemleak Not tainted 5.1.0-rc4+ #4
+RIP: 0010:scan_block+0x58/0x160
+Call Trace:
+ scan_gray_list+0x1d9/0x280
+ kmemleak_scan+0x485/0xad0
+ kmemleak_scan_thread+0x9f/0xc4
+ kthread+0x1d2/0x1f0
+ ret_from_fork+0x35/0x40
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/mm/mem_encrypt.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 385afa2b9e17..614ab156024f 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -18,6 +18,7 @@
+ #include <linux/dma-direct.h>
+ #include <linux/swiotlb.h>
+ #include <linux/mem_encrypt.h>
++#include <linux/kmemleak.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+@@ -369,6 +370,11 @@ void __init mem_encrypt_free_decrypted_mem(void)
+ 		}
+ 	}
+ 
++	/*
++	 * Inform kmemleak about the hole in the .bss section since the
++	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
++	 */
++	kmemleak_free_part((void *)vaddr, vaddr_end - vaddr);
+ 	free_init_pages("unused decrypted", vaddr, vaddr_end);
+ }
+ 
+-- 
+2.17.2 (Apple Git-113)
+
