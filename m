@@ -2,293 +2,234 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E3AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534B6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F24D21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:40:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="c4GCQrQG"
+	by mail.kernel.org (Postfix) with ESMTP id 19F4F2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfDIPkQ (ORCPT
+        id S1726588AbfDIPnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:40:16 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43995 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDIPkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:40:16 -0400
-Received: by mail-pl1-f195.google.com with SMTP id n8so5062600plp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 08:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1vVGbkC9Hrl77DLW544aLWPTPJHYEEx7X3v6Ib+Goxk=;
-        b=c4GCQrQG8cPXF4Nf7AxV0/Fxjt07grwLbM63/JCxSWXS65/+SCwcHeQOu2DdPz2jWM
-         bf70TQ2HDGYeVuOx96YrRyIc620Uj072xaufs1Ew/WOPd/jlNm8Qtq8RxdoKMDFGjisf
-         /sPZLNGY5hWG1yk95iB1HCyPwpjJRrGuYshWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1vVGbkC9Hrl77DLW544aLWPTPJHYEEx7X3v6Ib+Goxk=;
-        b=O/FBdWrWrLZ1qUyt2BicOG+e437nPLSQVxgyyIvlY7LRk9H62CBa4c+/Q0r7EYXZ9+
-         FXs4wNMGUM7UD1jI7fo2c+Itvwza3qNem+nzYJOQU+GN8jNtSaAmXvDaysqqCV15Ot79
-         Llx/kdbfyrD8fdoDqk/VDQ7Mhvi/1UR+cb+vc6l2JhA5E1Bwz7u0A9L9lRk7vov0lC3x
-         jEwUl0HMqtcF2kdlcP0dTEygr7smSrM98EIATwkWyiW9m2lzcSVKsQ2b2RpFYGnEHSb2
-         cOKEdfESHEnaBZ9DqdJ9lg8Ee4joCXBba3B5i6yqHflPHrESKRI7zKPJR3FplST0u8bs
-         mabQ==
-X-Gm-Message-State: APjAAAXq4UcFWcODBGsQtTteXplWCa1wTrmepWY/jeu5p1K+ts2DDfu+
-        x4YhfCHy8Wq++EKiIndBNyk7ZQ==
-X-Google-Smtp-Source: APXvYqwYV4PF3nH4gPpZVevv1e5HFoQpiJ2irQOlHK2oAd++pg4eE/vmLX6lFcBZ05W66oYQIgqryg==
-X-Received: by 2002:a17:902:a506:: with SMTP id s6mr36551912plq.164.1554824415170;
-        Tue, 09 Apr 2019 08:40:15 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id i31sm53981357pgi.36.2019.04.09.08.40.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 08:40:13 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 11:40:12 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     paulmck <paulmck@linux.ibm.com>, rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
-Message-ID: <20190409154012.GC248418@google.com>
-References: <20190402142816.GA13084@linux.ibm.com>
- <1632568795.549.1554669696728.JavaMail.zimbra@efficios.com>
- <20190407210718.GA6656@localhost>
- <20190408022728.GF14111@linux.ibm.com>
- <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
- <20190408142230.GJ14111@linux.ibm.com>
- <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
- <20190408154616.GO14111@linux.ibm.com>
- <1489474416.1465.1554744287985.JavaMail.zimbra@efficios.com>
+        Tue, 9 Apr 2019 11:43:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53896 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726372AbfDIPnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 11:43:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 24626AF67;
+        Tue,  9 Apr 2019 15:43:04 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4829D1E429B; Tue,  9 Apr 2019 17:43:03 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 17:43:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL
+ writeback
+Message-ID: <20190409154303.GB1426@quack2.suse.cz>
+References: <20190409114922.30095-1-amir73il@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1489474416.1465.1554744287985.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190409114922.30095-1-amir73il@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 01:24:47PM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 8, 2019, at 11:46 AM, paulmck paulmck@linux.ibm.com wrote:
+On Tue 09-04-19 14:49:22, Amir Goldstein wrote:
+> Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
+> writeback") claims that sync_file_range(2) syscall was "created for
+> userspace to be able to issue background writeout and so waiting for
+> in-flight IO is undesirable there" and changes the writeback (back) to
+> WB_SYNC_NONE.
 > 
-> > On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> 
-> >> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
-> >> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> 
-> >> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
-> >> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
-> >> >> >> > 
-> >> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
-> >> >> >> > wrote:
-> >> >> >> > 
-> >> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
-> >> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> >> > >> 
-> >> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
-> >> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
-> >> >> >> > >> > 
-> >> >> >> > >> > [ . . . ]
-> >> >> >> > >> > 
-> >> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
-> >> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
-> >> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
-> >> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
-> >> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
-> >> >> >> > >> >> > > @@ -338,6 +338,10 @@
-> >> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-> >> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
-> >> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
-> >> >> >> > >> >> > > +		. = ALIGN(8);						\
-> >> >> >> > >> >> > > +		__start___srcu_struct = .;				\
-> >> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
-> >> >> >> > >> >> > > +		__end___srcu_struct = .;				\
-> >> >> >> > >> >> > >  	}								\
-> >> >> >> > >> >> > 
-> >> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
-> >> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
-> >> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
-> >> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
-> >> >> >> > >> >> > of the dev branch.
-> >> >> >> > >> >> 
-> >> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
-> >> >> >> > >> >> work.
-> >> >> >> > >> >> 
-> >> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
-> >> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
-> >> >> >> > >> >> optimism?
-> >> >> >> > >> > 
-> >> >> >> > >> > And to answer the other question, in the case where I am suffering from
-> >> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
-> >> >> >> > >> > for the updated original commit thus far.
-> >> >> >> > >> > 
-> >> >> >> > >> > And may I have your Tested-by?
-> >> >> >> > >> 
-> >> >> >> > >> Just to confirm: does the cleanup performed in the modules going
-> >> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
-> >> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
-> >> >> >> > >> module unload ?
-> >> >> >> > >> 
-> >> >> >> > > 
-> >> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
-> >> >> >> > > responsibility of the module writer to prevent delays for all modules.
-> >> >> >> > 
-> >> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
-> >> >> >> > srcu domain within that module, I don't see how it would cause delays for
-> >> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
-> >> >> >> > am I missing ?
-> >> >> >> 
-> >> >> >> Yes you are right. I thought of this after I just sent my email. I think it
-> >> >> >> makes sense for srcu case to do and could avoid a class of bugs.
-> >> >> > 
-> >> >> > If there are call_srcu() callbacks outstanding, the module writer still
-> >> >> > needs the srcu_barrier() because otherwise callbacks arrive after
-> >> >> > the module text has gone, which will be disappoint the CPU when it
-> >> >> > tries fetching instructions that are no longer mapped.  If there are
-> >> >> > no call_srcu() callbacks from that module, then there is no need for
-> >> >> > srcu_barrier() either way.
-> >> >> > 
-> >> >> > So if an srcu_barrier() is needed, the module developer needs to
-> >> >> > supply it.
-> >> >> 
-> >> >> When you say "callbacks arrive after the module text has gone",
-> >> >> I think you assume that free_module() is invoked before the
-> >> >> MODULE_STATE_GOING notifiers are called. But it's done in the
-> >> >> opposite order: going notifiers are called first, and then
-> >> >> free_module() is invoked.
-> >> >> 
-> >> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
-> >> >> going notifier.
-> >> >> 
-> >> >> Or am I missing something ?
-> >> > 
-> >> > We do seem to be talking past each other.  ;-)
-> >> > 
-> >> > This has nothing to do with the order of events at module-unload time.
-> >> > 
-> >> > So please let me try again.
-> >> > 
-> >> > If a given srcu_struct in a module never has call_srcu() invoked, there
-> >> > is no need to invoke rcu_barrier() at any time, whether at module-unload
-> >> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
-> >> > for no good reason.
-> >> 
-> >> Not if we invoke srcu_barrier() for that specific domain. If
-> >> call_srcu was never invoked for a srcu domain, I don't see why
-> >> srcu_barrier() should be more expensive than a simple check that
-> >> the domain does not have any srcu work queued.
-> > 
-> > But that simple check does involve a cache miss for each possible CPU (not
-> > just each online CPU), so it is non-trivial, especially on large systems.
-> > 
-> >> > If a given srcu_struct in a module does have at least one call_srcu()
-> >> > invoked, it is already that module's responsibility to make sure that
-> >> > the code sticks around long enough for the callback to be invoked.
-> >> 
-> >> I understand that when users do explicit dynamic allocation/cleanup of
-> >> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
-> >> However, if they do static definition of srcu domains, it would be nice
-> >> if we can handle the barriers under the hood.
-> > 
-> > All else being equal, of course.  But...
-> > 
-> >> > This means that correct SRCU users that invoke call_srcu() already
-> >> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
-> >> > reasonable probability, now get a WARN_ON() at module-unload time, with
-> >> > the per-CPU state getting leaked.  Before this change, they would (also
-> >> > with reasonable probability) instead get an instruction-fetch fault when
-> >> > the SRCU callback was invoked after the completion of the module unload.
-> >> > Furthermore, in all cases where they would previously have gotten the
-> >> > instruction-fetch fault, they now get the WARN_ON(), like this:
-> >> > 
-> >> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
-> >> >		return; /* Forgot srcu_barrier(), so just leak it! */
-> >> > 
-> >> > So this change already represents an improvement in usability.
-> >> 
-> >> Considering that we can do a srcu_barrier() for the specific domain,
-> >> and that it should add no noticeable overhead if there is no queued
-> >> callbacks, I don't see a good reason for leaving the srcu_barrier
-> >> invocation to the user rather than implicitly doing it from the
-> >> module going notifier.
-> > 
-> > Now, I could automatically add an indicator of whether or not a
-> > call_srcu() had happened, but then again, that would either add a
-> > call_srcu() scalability bottleneck or again require a scan of all possible
-> > CPUs...  to figure out if it was necessary to scan all possible CPUs.
-> > 
-> > Or is scanning all possible CPUs down in the noise in this case?  Or
-> > am I missing a trick that would reduce the overhead?
+> This claim is only partially true. Is is true for users that use the flag
+> SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
+> the reason for changing to WB_SYNC_NONE writeback.
 > 
-> Module unloading implicitly does a synchronize_rcu (for RCU-sched), and
-> a stop_machine. So I would be tempted to say that overhead of iteration
-> over all CPUs might not matter that much considering the rest.
+> However, that claim is not true for users that use that flag combination
+> SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.  Those users explicitly
+> requested to wait for in-flight IO as well as to writeback of dirty
+> pages.  sync_file_range(2) man page describes this flag combintaion as
+> "write-for-data-integrity operation", although some may argue against
+> this definition.
 > 
-> About notifying that a call_srcu has happened for the srcu domain in a
-> scalable fashion, let's see... We could have a flag "call_srcu_used"
-> for each call_srcu domain. Whenever call_srcu is invoked, it would
-> load that flag. It sets it on first use.
+> Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT and use
+> the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
+> writeback, to perform the range sync request.
 > 
-> The idea here is to only use that flag when srcu_barrier is performed
-> right before the srcu domain cleanup (it could become part of that
-> cleanup). Else, using it in all srcu_barrier() might be tricky, because
-> we may then need to add memory barriers or locking to the call_srcu
-> fast-path, which is an overhead we try to avoid.
+> One intended use case for this API is creating a dependency between
+> a new file's content and its link into the namepsace without requiring
+> journal commit and flushing of disk volatile caches:
 > 
-> However, if we only use that flag as part of the srcu domain cleanup,
-> it's already prohibited to invoke call_srcu concurrently with the
-> cleanup of the same domain, so I don't think we would need any
-> memory barriers in call_srcu.
+>   fd = open(".", O_TMPFILE | O_RDWR);
+>   write(fd, newdata, count);
+>   sync_file_range(fd, SYNC_FILE_RANGE_WRITE_AND_WAIT, 0, 0);
+>   linkat(AT_EMPTY_PATH, fd, AT_FDCWD, newfile);
+> 
+> For many local filesystems, ext4 and xfs included, the sequence above
+> will guaranty that after crash, either 'newfile' exists with 'newdata'
+> content or 'newfile' does not exists.  For some applications, this
+> guaranty is strong enough and the effects of sync_file_range(2), even
+> with WB_SYNC_ALL, are far less intrusive to other writers in the system
+> than the effects of fdatasync(2).
 
-About the last part of your email, it seems to that if after call_srcu has
-returned, if the module could be unloaded on some other CPU - then it would
-need to see the flag stored by the preceding call_srcu, so I believe there
-would be a memory barrier between the two opreations (call_srcu and module
-unload).
+I agree that this paragraph is true but I don't want any userspace program
+rely on this. We've been through this when ext3 got converted to ext4 and
+it has caused a lot of complaints. Ext3 had provided rather strong data vs
+metadata ordering due to the way journalling was implemented. Then ext4
+came, implemented delayed allocation and somewhat changed how journalling
+works and suddently userspace programmers were caught by surprise their code
+working by luck stopped working. And they were complaining that when their
+code worked without fsync(2) before, it should work after it as well. So it
+took a lot of explaining that their applications are broken and Ted has
+also implemented some workarounds to make at least the most common mistakes
+silently fixed by the kernel most of the time.
 
-Also about doing the unconditional srcu_barrier, since a module could be
-unloaded at any time - don't all SRCU using modules need to invoke
-srcu_barrier() during their clean up anyway so we are incurring the barrier
-overhead anyway? Or, am I missing a design pattern here? It seems to me
-rcutorture module definitely calls srcu_barrier() before it is unloaded.
+So I'm against providing 90% data integrity guarantees because there'll be
+many people who'll think they can get away with it and then complain when
+they won't once our implementation changes.
 
-thanks,
+Rather I'd modify the manpage to not say that SYNC_FILE_RANGE_WAIT_BEFORE
+| SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WAIT_AFTER is a
+write-for-data-integrity.
+								Honza
 
- - Joel
-
-> Thoughts ?
 > 
-> Thanks,
+> Fixes: 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE")
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
 > 
-> Mathieu
+> Hi folks,
 > 
+> I was debating with myself whether I should change behavior of
+> sync_file_range(2) do to what documentation says it does and flag names
+> suggest that they do or to introduce a new flag for the old/new
+> behavior.
+> 
+> At the moment, myself won with restoring old behavior without a new
+> flag, but with re-branding of existing flags. I do not see how there
+> could be users relying on existing behavior (TM).
+> 
+> An argument in favor of new flag is that with existing flags,
+> application doesn't know if kernel provides the guaranty or not.
+> 
+> An argument is favor of existing flags is to not further complicate the
+> man page, that is complicated enough as it is.
+> With this patch in upstream and stable kernels, the only thing I would add to
+> man page is:
+> 
+>   SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER
+> + (or SYNC_FILE_RANGE_WRITE_AND_WAIT)
+>    This is a write-for-data-integrity operation that will ensure that all pages
+>    in the specified range which were dirty when sync_file_range() was called are
+> -  committed to disk.
+> +  written to disk.  It should be noted that disk caches are not flushed by this
+> +  call, so there are no guarantees here that the data will be available on disk
+> +  after a crash.
+> 
+> Thought?
+> 
+> Amir.
+> 
+> 
+>  fs/sync.c               | 25 ++++++++++++++++++-------
+>  include/uapi/linux/fs.h |  3 +++
+>  2 files changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/sync.c b/fs/sync.c
+> index b54e0541ad89..5cf6fdbae4de 100644
+> --- a/fs/sync.c
+> +++ b/fs/sync.c
+> @@ -18,8 +18,8 @@
+>  #include <linux/backing-dev.h>
+>  #include "internal.h"
+>  
+> -#define VALID_FLAGS (SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE| \
+> -			SYNC_FILE_RANGE_WAIT_AFTER)
+> +#define VALID_FLAGS (SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WRITE_AND_WAIT | \
+> +		     SYNC_FILE_RANGE_WAIT_BEFORE | SYNC_FILE_RANGE_WAIT_AFTER)
+>  
+>  /*
+>   * Do the filesystem syncing work. For simple filesystems
+> @@ -235,9 +235,9 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+>  }
+>  
+>  /*
+> - * sys_sync_file_range() permits finely controlled syncing over a segment of
+> + * ksys_sync_file_range() permits finely controlled syncing over a segment of
+>   * a file in the range offset .. (offset+nbytes-1) inclusive.  If nbytes is
+> - * zero then sys_sync_file_range() will operate from offset out to EOF.
+> + * zero then ksys_sync_file_range() will operate from offset out to EOF.
+>   *
+>   * The flag bits are:
+>   *
+> @@ -254,7 +254,7 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+>   * Useful combinations of the flag bits are:
+>   *
+>   * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE: ensures that all pages
+> - * in the range which were dirty on entry to sys_sync_file_range() are placed
+> + * in the range which were dirty on entry to ksys_sync_file_range() are placed
+>   * under writeout.  This is a start-write-for-data-integrity operation.
+>   *
+>   * SYNC_FILE_RANGE_WRITE: start writeout of all dirty pages in the range which
+> @@ -266,10 +266,13 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+>   * earlier SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE operation to wait
+>   * for that operation to complete and to return the result.
+>   *
+> - * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER:
+> + * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER
+> + * (a.k.a. SYNC_FILE_RANGE_WRITE_AND_WAIT):
+>   * a traditional sync() operation.  This is a write-for-data-integrity operation
+>   * which will ensure that all pages in the range which were dirty on entry to
+> - * sys_sync_file_range() are committed to disk.
+> + * ksys_sync_file_range() are written to disk.  It should be noted that disk
+> + * caches are not flushed by this call, so there are no guarantees here that the
+> + * data will be available on disk after a crash.
+>   *
+>   *
+>   * SYNC_FILE_RANGE_WAIT_BEFORE and SYNC_FILE_RANGE_WAIT_AFTER will detect any
+> @@ -338,6 +341,14 @@ int ksys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
+>  
+>  	mapping = f.file->f_mapping;
+>  	ret = 0;
+> +	if ((flags & SYNC_FILE_RANGE_WRITE_AND_WAIT) ==
+> +		     SYNC_FILE_RANGE_WRITE_AND_WAIT) {
+> +		/* Unlike SYNC_FILE_RANGE_WRITE alone uses WB_SYNC_ALL */
+> +		ret = filemap_write_and_wait_range(mapping, offset, endbyte);
+> +		if (ret < 0)
+> +			goto out_put;
+> +	}
+> +
+>  	if (flags & SYNC_FILE_RANGE_WAIT_BEFORE) {
+>  		ret = file_fdatawait_range(f.file, offset, endbyte);
+>  		if (ret < 0)
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index 121e82ce296b..59c71fa8c553 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -320,6 +320,9 @@ struct fscrypt_key {
+>  #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+>  #define SYNC_FILE_RANGE_WRITE		2
+>  #define SYNC_FILE_RANGE_WAIT_AFTER	4
+> +#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
+> +					 SYNC_FILE_RANGE_WAIT_BEFORE | \
+> +					 SYNC_FILE_RANGE_WAIT_AFTER)
+>  
+>  /*
+>   * Flags for preadv2/pwritev2:
 > -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+> 2.17.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
