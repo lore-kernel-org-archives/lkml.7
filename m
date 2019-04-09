@@ -2,233 +2,69 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55B3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60264C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7045A2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32ACB2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfDIM6C (ORCPT
+        id S1727460AbfDIM7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:58:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36505 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbfDIM6B (ORCPT
+        Tue, 9 Apr 2019 08:59:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55225 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfDIM7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:58:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o74so15428184ota.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 05:58:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwXo0uFNihYstUH5LVz3cKdXiA5bwZ5eOv+D7iD7tJk=;
-        b=Nf/vEw69NOGPJRHbTXvEO5hMCwHfpJbqDY8E33/x3+MOKWCz8ojY1CFphOjlM691qG
-         U1Sc/m3AJ4yjF5thYuCjrWrPqYsvd0jXq492Mx1IS3LIxQxmJ3WNDBL/HPllbmBH7oyI
-         /3xpqpIh3yh8bXaz5v+je0dcRkinzeG5iVEeUW1wjqULPkYUxwfogf4E8ItkcJUgzjN0
-         ajUXBuRX8bJFX5oK/jQ8DZL4fZJOTs+WoIif1vJmrnpVglSyC4s34oWXGxPqB7rLqHgf
-         tQvmVajQn86O3KxcOLu8YfDlXWR607XlPGjKxFF4Uo0PyzzvapfGGcTPSR9jhD6MJSsu
-         BHMg==
-X-Gm-Message-State: APjAAAXLlQTY8BPxvKhfNKqU9KU2w3GntCdVwdKefrKsx3AvZFaaboo6
-        6VSW/btOUc/T2d2RgMIAFCWanAVuX0dQRv0evmmeZ1jX
-X-Google-Smtp-Source: APXvYqyVlghjm0c4DsiqmvAf5XvkBygKZ9WhfoIdhghOnk5r+nDn11yE4lT1SIIt/gib1bAaGDq8OQHsuTgjXFhWGjM=
-X-Received: by 2002:a9d:6941:: with SMTP id p1mr23213980oto.64.1554814680445;
- Tue, 09 Apr 2019 05:58:00 -0700 (PDT)
+        Tue, 9 Apr 2019 08:59:17 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hDqLJ-0001qy-6B; Tue, 09 Apr 2019 12:59:13 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dns: remove redundant zero length namelen check
+Date:   Tue,  9 Apr 2019 13:59:12 +0100
+Message-Id: <20190409125912.11600-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
-In-Reply-To: <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Tue, 9 Apr 2019 14:57:50 +0200
-Message-ID: <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 05/10] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Simo Sorce <simo@redhat.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 5:40 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> Add audit container identifier support to the action of signalling the
-> audit daemon.
->
-> Since this would need to add an element to the audit_sig_info struct,
-> a new record type AUDIT_SIGNAL_INFO2 was created with a new
-> audit_sig_info2 struct.  Corresponding support is required in the
-> userspace code to reflect the new record request and reply type.
-> An older userspace won't break since it won't know to request this
-> record type.
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-This looks good to me.
+The zero namelen check is redundant as it has already been checked
+for zero at the start of the function.  Remove the redundant check.
 
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Addresses-Coverity: ("Logically Dead Code")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/dns_resolver/dns_query.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Although I'm wondering if we shouldn't try to future-proof the
-AUDIT_SIGNAL_INFO2 format somehow, so that we don't need to add
-another AUDIT_SIGNAL_INFO3 when the need arises to add yet-another
-identifier to it... The simplest solution I can come up with is to add
-a "version" field at the beginning (set to 2 initially), then v<N>_len
-at the beginning of data for version <N>. But maybe this is too
-complicated for too little gain...
+diff --git a/net/dns_resolver/dns_query.c b/net/dns_resolver/dns_query.c
+index 76338c38738a..19aa32fc1802 100644
+--- a/net/dns_resolver/dns_query.c
++++ b/net/dns_resolver/dns_query.c
+@@ -94,8 +94,6 @@ int dns_query(const char *type, const char *name, size_t namelen,
+ 		desclen += typelen + 1;
+ 	}
+ 
+-	if (!namelen)
+-		namelen = strnlen(name, 256);
+ 	if (namelen < 3 || namelen > 255)
+ 		return -EINVAL;
+ 	desclen += namelen + 1;
+-- 
+2.20.1
 
-> ---
->  include/linux/audit.h       |  7 +++++++
->  include/uapi/linux/audit.h  |  1 +
->  kernel/audit.c              | 27 +++++++++++++++++++++++++++
->  kernel/audit.h              |  1 +
->  kernel/auditsc.c            |  1 +
->  security/selinux/nlmsgtab.c |  1 +
->  6 files changed, 38 insertions(+)
->
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 43438192ca2a..c2dec9157463 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -37,6 +37,13 @@ struct audit_sig_info {
->         char            ctx[0];
->  };
->
-> +struct audit_sig_info2 {
-> +       uid_t           uid;
-> +       pid_t           pid;
-> +       u64             cid;
-> +       char            ctx[0];
-> +};
-> +
->  struct audit_buffer;
->  struct audit_context;
->  struct inode;
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index 55fde9970762..10cc67926cf1 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -72,6 +72,7 @@
->  #define AUDIT_SET_FEATURE      1018    /* Turn an audit feature on or off */
->  #define AUDIT_GET_FEATURE      1019    /* Get which features are enabled */
->  #define AUDIT_CONTAINER_OP     1020    /* Define the container id and info */
-> +#define AUDIT_SIGNAL_INFO2     1021    /* Get info auditd signal sender */
->
->  #define AUDIT_FIRST_USER_MSG   1100    /* Userspace messages mostly uninteresting to kernel */
->  #define AUDIT_USER_AVC         1107    /* We filter this differently */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 3e0af53f3c4d..87e1d367f98c 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -138,6 +138,7 @@ struct audit_net {
->  kuid_t         audit_sig_uid = INVALID_UID;
->  pid_t          audit_sig_pid = -1;
->  u32            audit_sig_sid = 0;
-> +u64            audit_sig_cid = AUDIT_CID_UNSET;
->
->  /* Records can be lost in several ways:
->     0) [suppressed in audit_alloc]
-> @@ -1097,6 +1098,7 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
->         case AUDIT_ADD_RULE:
->         case AUDIT_DEL_RULE:
->         case AUDIT_SIGNAL_INFO:
-> +       case AUDIT_SIGNAL_INFO2:
->         case AUDIT_TTY_GET:
->         case AUDIT_TTY_SET:
->         case AUDIT_TRIM:
-> @@ -1260,6 +1262,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->         struct audit_buffer     *ab;
->         u16                     msg_type = nlh->nlmsg_type;
->         struct audit_sig_info   *sig_data;
-> +       struct audit_sig_info2  *sig_data2;
->         char                    *ctx = NULL;
->         u32                     len;
->
-> @@ -1519,6 +1522,30 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->                                  sig_data, sizeof(*sig_data) + len);
->                 kfree(sig_data);
->                 break;
-> +       case AUDIT_SIGNAL_INFO2:
-> +               len = 0;
-> +               if (audit_sig_sid) {
-> +                       err = security_secid_to_secctx(audit_sig_sid, &ctx, &len);
-> +                       if (err)
-> +                               return err;
-> +               }
-> +               sig_data2 = kmalloc(sizeof(*sig_data2) + len, GFP_KERNEL);
-> +               if (!sig_data2) {
-> +                       if (audit_sig_sid)
-> +                               security_release_secctx(ctx, len);
-> +                       return -ENOMEM;
-> +               }
-> +               sig_data2->uid = from_kuid(&init_user_ns, audit_sig_uid);
-> +               sig_data2->pid = audit_sig_pid;
-> +               if (audit_sig_sid) {
-> +                       memcpy(sig_data2->ctx, ctx, len);
-> +                       security_release_secctx(ctx, len);
-> +               }
-> +               sig_data2->cid = audit_sig_cid;
-> +               audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO2, 0, 0,
-> +                                sig_data2, sizeof(*sig_data2) + len);
-> +               kfree(sig_data2);
-> +               break;
->         case AUDIT_TTY_GET: {
->                 struct audit_tty_status s;
->                 unsigned int t;
-> diff --git a/kernel/audit.h b/kernel/audit.h
-> index e2912924af0d..c5ac6436317e 100644
-> --- a/kernel/audit.h
-> +++ b/kernel/audit.h
-> @@ -345,6 +345,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
->  extern pid_t audit_sig_pid;
->  extern kuid_t audit_sig_uid;
->  extern u32 audit_sig_sid;
-> +extern u64 audit_sig_cid;
->
->  extern int audit_filter(int msgtype, unsigned int listtype);
->
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index eea445b7a181..0a29a00feaf1 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2405,6 +2405,7 @@ int audit_signal_info(int sig, struct task_struct *t)
->                 else
->                         audit_sig_uid = uid;
->                 security_task_getsecid(current, &audit_sig_sid);
-> +               audit_sig_cid = audit_get_contid(current);
->         }
->
->         if (!audit_signals || audit_dummy_context())
-> diff --git a/security/selinux/nlmsgtab.c b/security/selinux/nlmsgtab.c
-> index 9cec81209617..682fe7397762 100644
-> --- a/security/selinux/nlmsgtab.c
-> +++ b/security/selinux/nlmsgtab.c
-> @@ -132,6 +132,7 @@ struct nlmsg_perm {
->         { AUDIT_DEL_RULE,       NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
->         { AUDIT_USER,           NETLINK_AUDIT_SOCKET__NLMSG_RELAY    },
->         { AUDIT_SIGNAL_INFO,    NETLINK_AUDIT_SOCKET__NLMSG_READ     },
-> +       { AUDIT_SIGNAL_INFO2,   NETLINK_AUDIT_SOCKET__NLMSG_READ     },
->         { AUDIT_TRIM,           NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
->         { AUDIT_MAKE_EQUIV,     NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
->         { AUDIT_TTY_GET,        NETLINK_AUDIT_SOCKET__NLMSG_READ     },
-> --
-> 1.8.3.1
->
-
-
---
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
