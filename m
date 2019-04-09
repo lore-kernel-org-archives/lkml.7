@@ -2,279 +2,492 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D173C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CBAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4888020857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB54020857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aeGdP304"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="VPX1viL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfDILbM (ORCPT
+        id S1727130AbfDILcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:31:12 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13217 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfDILbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:31:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cac82790000>; Tue, 09 Apr 2019 04:31:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Apr 2019 04:31:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Apr 2019 04:31:08 -0700
-Received: from [10.24.47.181] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 9 Apr
- 2019 11:30:56 +0000
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
-        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
-        <horms+renesas@verge.net.au>, <olof@lixom.net>,
-        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
-        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
-        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
-        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
-        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
-        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
-        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
-        <devicetree@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kthota@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402183110.GE141706@google.com>
- <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
- <20190403173641.GI141706@google.com>
- <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
- <20190405185842.GC26522@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
-Date:   Tue, 9 Apr 2019 17:00:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 07:32:02 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42984 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfDILcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 07:32:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1554809517; bh=1mees+S2L7FCDxo7RyLjgEgMFJ3PRBmTyqr3l3rMb0w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VPX1viL1iy0MXteXhepHJZDpd/pbGT6QnlgW+WBv3VkfA0rn0YjpU5nzIDvQcgsfy
+         nhlsbrBm6qmJJjiR+hxK25khE6kTp9n1szU61Ax8mY+rxGQNvMH72nHw3Kgq9I42No
+         nIfl773vmnGglVtEkoUFje9g7sdtPuli44kVftcE=
+Date:   Tue, 9 Apr 2019 13:31:57 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+Message-ID: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+Mail-Followup-To: Jagan Teki <jagan@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+References: <20190409002452.14551-1-megous@megous.com>
+ <20190409002452.14551-3-megous@megous.com>
+ <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190405185842.GC26522@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554809466; bh=L6s6RC+J5Po5qw6aqen1BzfX3nUDlBa8RU10uNGp6LM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aeGdP304E2BrrtdAELURbr4116mLIljj31LkYkcG+D33Zi2/xQzDSJ3ouS5a6uUhS
-         Tpy7Jh2+bcmcSkM9Xk2MXIvLxpV+oSfDUTyuZrf1cBMzkuryaK740RmCnxS7gKa60u
-         Qp0zFfKPHv1XWcd7oLpQMFUdpiXZ9B/C2guUbcQJVIQOBM+hclBjP+myPlEZ8jSA4T
-         CEW/7tdwXUQlOFAlaP694aWv0S3CdPzmgbpO2E/ULhyBg0rWRO3rQ1cOFJymn9TRm1
-         0p81eD0JUWqcgdNqFPqmhmSfnyOnW6ug8EPw6SjKYtNlzBzLEVtJVRpxG6ERbGozQu
-         nR0moOe4FvxSQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
-> On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
->> On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
->>> On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
->>>> On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
->>>>> On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
->>>>>> On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
->>>>>>> On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
->>>>>>>> Add support for Synopsys DesignWare core IP based PCIe host controller
->>>>>>>> present in Tegra194 SoC.
->>>>>
->>>>>      - Why does this chip require pcie_pme_disable_msi()?  The only other
->>>>>        use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
->>>>>        ("PCI PM: Make it possible to force using INTx for PCIe PME
->>>>>        signaling").
->>>>
->>>> Because Tegra194 doesn't support raising PME interrupts through MSI line.
->>>
->>> What does the spec say about this?  Is hardware supposed to
->>> support MSI for PME?  Given that MSI Wind U-100 and Tegra194 are
->>> the only two cases we know about where PME via MSI isn't
->>> supported, it seems like there must be either a requirement for
->>> that or some mechanism for the OS to figure this out, e.g., a
->>> capability bit.
->>
->> AFAIU, Spec doesn't say anything about whether PME interrupt should
->> be through MSI or by other means. As far as Tegra194 is concerned,
->> there are only two interrupt lanes that go from PCIe IP to GIC, one
->> being legacy interrupt (that represents legacy interrupts coming
->> over PCIe bus from downstream devices and also the events happening
->> internal to root port) and the other being MSI interrupt (that
->> represents MSI interrupts coming over PCIe bus from downstream
->> devices). Since hardware folks had a choice to route PME interrupts
->> either through legacy interrupt line or through MSI interrupt line
->> and legacy interrupt line was chosen as a design choice. That being
->> the case at hardware level, I tried to inform the same through
->> pcie_pme_disable_msi() to PCIe sub-system that PME interrupts are
->> not expected over MSI.
-> 
-> There's something wrong here.  Either the question of how PME is
-> signaled is generic and the spec provides a way for the OS to discover
-> that method, or it's part of the device-specific architecture that
-> each host bridge driver has to know about its device.  If the former,
-> we need to make the PCI core smart enough to figure it out.  If the
-> latter, we need a better interface than this ad hoc
-> pcie_pme_disable_msi() thing.  But if it is truly the latter, your
-> current code is sufficient and we can refine it over time.
-In case of Tegra194, it is the latter case.
+Hi Jagan,
 
-> 
->>>>>>> I see that an earlier patch added "bus" to struct pcie_port.
->>>>>>> I think it would be better to somehow connect to the
->>>>>>> pci_host_bridge struct.  Several other drivers already do
->>>>>>> this; see uses of pci_host_bridge_from_priv().
->>>>>>
->>>>>> All non-DesignWare based implementations save their private data
->>>>>> structure in 'private' pointer of struct pci_host_bridge and use
->>>>>> pci_host_bridge_from_priv() to get it back. But, DesignWare
->>>>>> based implementations save pcie_port in 'sysdata' and nothing in
->>>>>> 'private' pointer. So,  I'm not sure if
->>>>>> pci_host_bridge_from_priv() can be used in this case. Please do
->>>>>> let me know if you think otherwise.
->>>>>
->>>>> DesignWare-based drivers should have a way to retrieve the
->>>>> pci_host_bridge pointer.  It doesn't have to be *exactly* the same
->>>>> as non-DesignWare drivers, but it should be similar.
->>>>
->>>> I gave my reasoning as to why with the current code, it is not
->>>> possible to get the pci_host_bridge structure pointer from struct
->>>> pcie_port pointer in another thread as a reply to Thierry Reding's
->>>> comments. Since Jishen'g changes to support remove functionality are
->>>> accepted, I think using bus pointer saved in struct pcie_port
->>>> pointer shouldn't be any issue now. Please do let me know if that is
->>>> something not acceptable.
->>>>
->>>>>>> That would give you the bus, as well as flags like
->>>>>>> no_ext_tags, native_aer, etc, which this driver, being a host
->>>>>>> bridge driver that's responsible for this part of the
->>>>>>> firmware/OS interface, may conceivably need.
->>>
->>> I think saving the pp->root_bus pointer as Jisheng's patch does is a
->>> sub-optimal solution.  If we figure out how to save the
->>> pci_host_bridge pointer, we automatically get the root bus pointer as
->>> well.
->>>
->>> It may require some restructuring to save the pci_host_bridge pointer,
->>> but I doubt it's really *impossible*.
->>
->> Is it OK to save pci_host_bridge pointer in pcie_port structure
->> directly? I see that as another way to get pci_host_bridge pointer
->> from pcie_port structure. My understanding is that, to get
->> pci_host_bridge pointer, either pcie_port structure should be part
->> of pci_host_bridge structure (which is the case with all non-DW
->> implementations) or pcie_port should have a pointer to some
->> structure which is directly (and not by means of a pointer) part of
->> pci_host_bridge structure so that container_of() can be used to get
->> pci_host_bridge.  As I see, there is no data object of
->> pci_host_bridge whose pointer is saved in pcie_port structure. In
->> fact, in reverse, pcie_port's struct dev pointer is saved as parent
->> to pci_host_bridge's struct dev. So, another way would be to iterate
->> over the children of pcie_port's struct dev pointer to find
->> pci_host_bridge's dev pointer and from there get pci_host_bridge
->> through container_of. But, I think is complicating it more than
->> using bus pointer from pcie_port. I'm not sure if I'm able to convey
->> the issue I'm facing here to get pci_host_bridge from pcie_port, but
->> doing any other thing seems complicating it even more.
-> 
-> What I suspect should happen eventually is the DWC driver should call
-> devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
-> That would require a little reorganization of the DWC data structures,
-> but it would be good to be more consistent.
-> 
-> For now, I think stashing the pointer in pcie_port or dw_pcie would be
-> OK.  I'm not 100% clear on the difference, but it looks like either
-> should be common across all the DWC drivers, which is what we want.
-Since dw_pcie is common for both root port and end point mode structures,
-I think it makes sense to keep the pointer in pcie_port as this structure
-is specific to root port mode of operation.
-I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
-used in the beginning itself to be inline with non-DWC implementations.
-But, I'll take it up later (after I'm done with upstreaming current series)
+On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
+> Based on the conversation about using common dtsi from this thread[1],
+> I'm commenting here to make show the diff directly on the nodes,
+> giving comments on each node so-that we can see the diff globally.
 
-> 
-> (Tangent, dw_pcie_host_init() currently uses pci_alloc_host_bridge(),
-> not devm_pci_alloc_host_bridge(), even though it uses other devm
-> interfaces.  This looks like a probable buglet.)
-> 
-> (Tangent 2, devm_pci_alloc_host_bridge() doesn't initialize
-> bridge->native_aer, etc, as pci_alloc_host_bridge() does.  This looks
-> like my fault from 02bfeb484230 ("PCI/portdrv: Simplify PCIe feature
-> permission checking"), and it probably means none of those PCIe
-> services work correctly for these native host bridge drivers.)
-> 
->>>>>>>> +static int tegra_pcie_dw_runtime_suspend(struct device *dev)
->>>>>>>> +{
->>>>>>>> +	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
->>>>>>>> +
->>>>>>>> +	tegra_pcie_downstream_dev_to_D0(pcie);
->>>>>>>> +
->>>>>>>> +	pci_stop_root_bus(pcie->pci.pp.bus);
->>>>>>>> +	pci_remove_root_bus(pcie->pci.pp.bus);
->>>>>>>
->>>>>>> Why are you calling these?  No other drivers do this except in
->>>>>>> their .remove() methods.  Is there something special about
->>>>>>> Tegra, or is this something the other drivers *should* be
->>>>>>> doing?
->>>>>>
->>>>>> Since this API is called by remove, I'm removing the hierarchy
->>>>>> to safely bring down all the devices. I'll have to re-visit this
->>>>>> part as Jisheng Zhang's patches
->>>>>> https://patchwork.kernel.org/project/linux-pci/list/?series=98559
->>>>>> are now approved and I need to verify this part after
->>>>>> cherry-picking Jisheng's changes.
->>>>>
->>>>> Tegra194 should do this the same way as other drivers, independent
->>>>> of Jisheng's changes.
->>>>
->>>> When other Designware implementations add remove functionality, even
->>>> they should be calling these APIs (Jisheng also mentioned the same
->>>> in his commit message)
->>>
->>> My point is that these APIs should be called from driver .remove()
->>> methods, not from .runtime_suspend() methods.
->>
->> .remove() internally calls pm_runtime_put_sync() API which calls
->> .runtime_suspend(). I made a new patch to add a host_deinit() call
->> which make all these calls. Since host_init() is called from inside
->> .runtime_resume() of this driver, to be in sync, I'm now calling
->> host_deinit() from inside .runtime_suspend() API.
-> 
-> I think this is wrong.  pci_stop_root_bus() will detach all the
-> drivers from all the devices.  We don't want to do that if we're
-> merely runtime suspending the host bridge, do we?
-In the current driver, the scenarios in which .runtime_suspend() is called
-are
-a) during .remove() call and
-b) when there is no endpoint found and controller would be shutdown
-In both cases, it is required to stop the root bus and remove all devices,
-so, instead of having same call present in respective paths, I kept them
-in .runtime_suspend() itself to avoid code duplication.
+Thanks for the suggestions below. It mostly repeats the differences and
+commonalities I already stated in the previous discussion.
 
-> 
-> Bjorn
-> 
+I don't have much to add to what I already said previously, though, because you
+didn't address my concerns there. But I can restate and expand on those
+concerns.
 
+Previously I already agreed it's possible to base orangepi-3.dts on
+orangepi.dtsi, and proposed a maintainable way forward, and why to follow it (to
+quote myself):
+
+  Schematics allow for high amount of variability in the power tree (see all the
+  NC (not connected) / 0R resistors) in the schematic around AXP805. Every board
+  based on this Xunlong design can be subtly different.
+
+  I already suggested a maintainable solution, below. Where base dtsi has empty
+  config for regulators and every board based on that just defines it completely
+  for itself.
+
+  A few regulators (for CPU/GPU) will most probably have the same meaning on
+  every derived board, so these can probably be kept in dtsi without causing too
+  much annoyance.
+
+  It's unpleasant to have wrong regulator setup defined in an underlying dtsi,
+  and then trying to override it by removing/adding random properties in the
+  board dts for the new boards based on that, so that it fits.
+
+  The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi can be
+  shared (as of now).
+
+My suggestion was this:
+
+  So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I'd have
+  to first move some things out of the base dtsi to the OrangePi Lite2 and One
+  Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only describe
+  HW that is *really* shared by these 2 boards and Orange Pi 3.
+
+  If I do that, I'd undefine all the axp805 regulator nodes and move the
+  configurations to each of the 3 board files. That will probably end up being
+  the least confusing and most maintainable. See axp81x.dtsi lines 86-144 for
+  what I mean.
+
+You seem to be suggesting a solution where every time we add an OrangePi H6
+based board, the person adding it will have to go through the base dtsi and all
+the other boards based on it, status disable or otherwise change regulators in
+the base dtsi, patch all the other boards to re-enable it.
+
+It would be already unpleasant just adding a third board based on this approach.
+And when the fourth board is added, with another small differences in the
+regulator use/meanings, the person will be looking at patching 4 dts files
++ adding one for his own board. For what benefit, to save some bytes right now?
+
+I think maintainability, ease of adding new boards is more important, than
+having a dtsi that tries to maximally cover all the commonalities between the
+existing boards right now, without regards for the future. That's why
+I suggested an approach like in axp81x.dtsi lines 86-144.
+
+thank you and regards,
+  o.
+
+> On Tue, Apr 9, 2019 at 5:55 AM megous via linux-sunxi
+> <linux-sunxi@googlegroups.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > Orange Pi 3 is a H6 based SBC made by Xulong, released in January 2019. It
+> > has the following features:
+> >
+> > - Allwinner H6 quad-core 64-bit ARM Cortex-A53
+> > - GPU Mali-T720
+> > - 1GB or 2GB LPDDR3 RAM
+> > - AXP805 PMIC
+> > - AP6256 Wifi/BT 5.0
+> > - USB 2.0 host port (A)
+> > - USB 2.0 micro usb, OTG
+> > - USB 3.0 Host + 4 port USB hub (GL3510)
+> > - Gigabit Ethernet (Realtek RTL8211E phy)
+> > - HDMI 2.0 port
+> > - soldered eMMC (optional)
+> > - 3x LED (one is on the bottom)
+> > - microphone
+> > - audio jack
+> > - PCIe
+> >
+> > Add basic support for the board.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 216 ++++++++++++++++++
+> >  2 files changed, 217 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> > index e4dce2f6fa3a..285a7cb5135b 100644
+> > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > new file mode 100644
+> > index 000000000000..5fbc5e410883
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > @@ -0,0 +1,216 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > +/*
+> > + * Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "sun50i-h6.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +       model = "OrangePi 3";
+> > +       compatible = "xunlong,orangepi-3", "allwinner,sun50i-h6";
+> > +
+> > +       aliases {
+> > +               serial0 = &uart0;
+> > +       };
+> > +
+> > +       chosen {
+> > +               stdout-path = "serial0:115200n8";
+> > +       };
+> > +
+> > +       leds {
+> > +               compatible = "gpio-leds";
+> > +
+> > +               power {
+> > +                       label = "orangepi:red:power";
+> > +                       gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
+> > +                       default-state = "on";
+> > +               };
+> > +
+> > +               status {
+> > +                       label = "orangepi:green:status";
+> > +                       gpios = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
+> > +               };
+> > +       };
+> > +
+> > +       reg_vcc5v: vcc5v {
+> > +               /* board wide 5V supply directly from the DC jack */
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc-5v";
+> > +               regulator-min-microvolt = <5000000>;
+> > +               regulator-max-microvolt = <5000000>;
+> > +               regulator-always-on;
+> > +       };
+> > +};
+> 
+> all above nodes are common to all h6 opi boards.
+> 
+> > +
+> > +&cpu0 {
+> > +       cpu-supply = <&reg_dcdca>;
+> > +};
+> > +
+> > +&ehci0 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&ehci3 {
+> > +       status = "okay";
+> > +};
+> 
+> common to all h6 opi boards.
+> 
+> > +
+> > +&mmc0 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&mmc0_pins>;
+> > +       vmmc-supply = <&reg_cldo1>;
+> > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> > +       bus-width = <4>;
+> > +       status = "okay";
+> > +};
+> 
+> common to all h6 opi boards.
+> 
+> > +
+> > +&ohci0 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&ohci3 {
+> > +       status = "okay";
+> > +};
+> 
+> common to all h6 opi boards.
+> 
+> > +
+> > +&pio {
+> > +       vcc-pc-supply = <&reg_bldo2>;
+> > +       vcc-pd-supply = <&reg_cldo1>;
+> > +};
+> > +
+> > +&r_i2c {
+> > +       status = "okay";
+> > +
+> > +       axp805: pmic@36 {
+> > +               compatible = "x-powers,axp805", "x-powers,axp806";
+> > +               reg = <0x36>;
+> > +               interrupt-parent = <&r_intc>;
+> > +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells = <1>;
+> > +               x-powers,self-working-mode;
+> > +               vina-supply = <&reg_vcc5v>;
+> > +               vinb-supply = <&reg_vcc5v>;
+> > +               vinc-supply = <&reg_vcc5v>;
+> > +               vind-supply = <&reg_vcc5v>;
+> > +               vine-supply = <&reg_vcc5v>;
+> > +               aldoin-supply = <&reg_vcc5v>;
+> > +               bldoin-supply = <&reg_vcc5v>;
+> > +               cldoin-supply = <&reg_vcc5v>;
+> 
+> all these supply voltage regulators are common to h6 opi boards.
+> 
+> > +
+> > +               regulators {
+> > +                       reg_aldo1: aldo1 {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <3300000>;
+> > +                               regulator-max-microvolt = <3300000>;
+> > +                               regulator-name = "vcc-pl-led-ir";
+> > +                       };
+> 
+> same like other h6 boards.
+> 
+> > +
+> > +                       reg_aldo2: aldo2 {
+> > +                               regulator-min-microvolt = <3300000>;
+> > +                               regulator-max-microvolt = <3300000>;
+> > +                               regulator-name = "vcc33-audio-tv-ephy-mac";
+> > +                       };
+> 
+> rest of h6 opi boards used it for vcc-ac200, we may append ac200 and
+> make it common since the voltage is same.
+> 
+> > +
+> > +                       /* ALDO3 is shorted to CLDO1 */
+> > +                       reg_aldo3: aldo3 {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <3300000>;
+> > +                               regulator-max-microvolt = <3300000>;
+> > +                               regulator-name = "vcc33-io-pd-emmc-sd-usb-uart-1";
+> > +                       };
+> 
+> same like above regulator.
+> 
+> > +
+> > +                       reg_bldo1: bldo1 {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <1800000>;
+> > +                               regulator-max-microvolt = <1800000>;
+> > +                               regulator-name = "vcc18-dram-bias-pll";
+> 
+> same like other h6 boards.
+> 
+> > +                       };
+> > +
+> > +                       reg_bldo2: bldo2 {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <1800000>;
+> > +                               regulator-max-microvolt = <1800000>;
+> > +                               regulator-name = "vcc-efuse-pcie-hdmi-pc";
+> > +                       };
+> 
+> same like other h6 boards.
+> 
+> > +
+> > +                       bldo3 {
+> > +                               /* unused */
+> > +                       };
+> 
+> This is used in other h6 opi boards so we may attach status or
+> re-enable it on board dts file.
+> 
+> > +
+> > +                       bldo4 {
+> > +                               /* unused */
+> > +                       };
+> 
+> same like other h6 boards.
+> 
+> > +
+> > +                       reg_cldo1: cldo1 {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <3300000>;
+> > +                               regulator-max-microvolt = <3300000>;
+> > +                               regulator-name = "vcc33-io-pd-emmc-sd-usb-uart-2";
+> > +                       };
+> 
+> same like other h6 boards.
+> 
+> > +
+> > +                       cldo2 {
+> > +                               /* unused */
+> > +                       };
+> > +
+> > +                       cldo3 {
+> > +                               /* unused */
+> > +                       };
+> 
+> These two used for wifi, so we may define on board dts or attach
+> status property.
+> 
+> > +
+> > +                       reg_dcdca: dcdca {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <800000>;
+> > +                               regulator-max-microvolt = <1160000>;
+> > +                               regulator-name = "vdd-cpu";
+> > +                       };
+> > +
+> > +                       reg_dcdcc: dcdcc {
+> > +                               regulator-min-microvolt = <810000>;
+> > +                               regulator-max-microvolt = <1080000>;
+> > +                               regulator-name = "vdd-gpu";
+> > +                       };
+> > +
+> > +                       reg_dcdcd: dcdcd {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <960000>;
+> > +                               regulator-max-microvolt = <960000>;
+> > +                               regulator-name = "vdd-sys";
+> > +                       };
+> > +
+> > +                       reg_dcdce: dcdce {
+> > +                               regulator-always-on;
+> > +                               regulator-min-microvolt = <1200000>;
+> > +                               regulator-max-microvolt = <1200000>;
+> > +                               regulator-name = "vcc-dram";
+> > +                       };
+> > +
+> > +                       sw {
+> > +                               /* unused */
+> > +                       };
+> 
+> all above regulators are common to h6 boards.
+> 
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&uart0 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&uart0_ph_pins>;
+> > +       status = "okay";
+> > +};
+> > +
+> > +&usb2otg {
+> > +       /*
+> > +        * Beware that this board will not automatically disconnect
+> > +        * VBUS from DCIN, when self-powered and used as a peripheral.
+> > +        */
+> > +       dr_mode = "otg";
+> > +       status = "okay";
+> > +};
+> 
+> above nodes uart0, usb2otg are common to h6 opi boards.
+> 
+> > +
+> > +&usb2phy {
+> > +       usb0_id_det-gpios = <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
+> > +       usb0_vbus-supply = <&reg_vcc5v>;
+> > +       usb3_vbus-supply = <&reg_vcc5v>;
+> > +       status = "okay";
+> > +};
+> > --
+> 
+> id detect pin can be differ, so we may move this on board specific dts.
+> 
+> Note: the emac node is also common between h6 opi boards.
+> 
+> [1] https://lkml.org/lkml/2019/4/5/857
