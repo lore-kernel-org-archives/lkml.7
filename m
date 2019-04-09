@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB96C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EC5C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473C920883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBDB2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QjQ67Dno"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OSNiQCGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfDIL1w (ORCPT
+        id S1727196AbfDIL1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:27:52 -0400
-Received: from mail-eopbgr00062.outbound.protection.outlook.com ([40.107.0.62]:60903
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Tue, 9 Apr 2019 07:27:54 -0400
+Received: from mail-eopbgr60044.outbound.protection.outlook.com ([40.107.6.44]:54757
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbfDIL1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:27:49 -0400
+        id S1726066AbfDIL1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 07:27:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c6NrgQhMOQwwBdEIxmvg14af3hG4jnoZ5T+SkoB+wJU=;
- b=QjQ67DnorCPSJWbXEtwoigWTK9kuD6looLJVxLKrUV1g9b4xr0PF1LqzY85AekMYcThox3O/kttfxuDgqjQ7KWXlSPH+FY3PZiEOZZLExgdbKbL7can01PoSeato1mZl5kWfqSrz589gQZJiCiL6JtCBFRnwkkJQGBbrpj4loxc=
+ bh=1CN2h3kDeze9CrlUJZ2HyX75qCHNNCF8VcNChwJhJM8=;
+ b=OSNiQCGGIOHvnDhu2EOGaREzSJv2dA5tKL8ZubRnq4Iv24Aink61y+tLfcOPgCQ9Ld4Jpv9gQD0xk4H2pfPM5P2h/FavNbocW9oknbnIH+wKZVAxqKtXBL4W9Hec214Sk4ZU6qkjFCOPXBFbGuj/8ENcNZKVVHmNZJrtYc2G9lQ=
 Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
- VI1PR04MB3086.eurprd04.prod.outlook.com (10.170.228.160) with Microsoft SMTP
+ VI1PR04MB5216.eurprd04.prod.outlook.com (20.177.51.205) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Tue, 9 Apr 2019 11:27:41 +0000
+ 15.20.1771.16; Tue, 9 Apr 2019 11:27:42 +0000
 Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
  ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
  ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1792.009; Tue, 9 Apr 2019
- 11:27:40 +0000
+ 11:27:42 +0000
 From:   Viorel Suman <viorel.suman@nxp.com>
 To:     Timur Tabi <timur@kernel.org>,
         Nicolin Chen <nicoleotsuka@gmail.com>,
@@ -58,11 +58,12 @@ CC:     Viorel Suman <viorel.suman@nxp.com>,
         "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 2/3] dt-bindings: fsl,audmix: remove "model" attribute
-Thread-Topic: [PATCH v2 2/3] dt-bindings: fsl,audmix: remove "model" attribute
-Thread-Index: AQHU7sc+tBzccqTIbEGI7+Z1sKouvQ==
-Date:   Tue, 9 Apr 2019 11:27:40 +0000
-Message-ID: <1554809242-27475-3-git-send-email-viorel.suman@nxp.com>
+Subject: [PATCH v2 3/3] ASoC: imx-audmix: fix object reference leaks in probe
+Thread-Topic: [PATCH v2 3/3] ASoC: imx-audmix: fix object reference leaks in
+ probe
+Thread-Index: AQHU7sc+9q6sLFqPvEazfy9Py2lM7g==
+Date:   Tue, 9 Apr 2019 11:27:42 +0000
+Message-ID: <1554809242-27475-4-git-send-email-viorel.suman@nxp.com>
 References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
 In-Reply-To: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
 Accept-Language: en-US
@@ -78,49 +79,55 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [212.146.100.6]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c86c69e9-90f9-4da6-9e10-08d6bcde606f
+x-ms-office365-filtering-correlation-id: 98b606a0-705f-46a2-15c5-08d6bcde6131
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB3086;
-x-ms-traffictypediagnostic: VI1PR04MB3086:
-x-microsoft-antispam-prvs: <VI1PR04MB30866BA84614C77C0EEE5851922D0@VI1PR04MB3086.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5216;
+x-ms-traffictypediagnostic: VI1PR04MB5216:
+x-microsoft-antispam-prvs: <VI1PR04MB5216DE47F1358549609A82BC922D0@VI1PR04MB5216.eurprd04.prod.outlook.com>
 x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39860400002)(366004)(396003)(376002)(189003)(199004)(106356001)(71200400001)(71190400001)(256004)(68736007)(5660300002)(8676002)(81156014)(81166006)(105586002)(478600001)(97736004)(66066001)(36756003)(102836004)(6506007)(7416002)(486006)(476003)(2616005)(11346002)(446003)(4326008)(8936002)(386003)(6512007)(26005)(186003)(14454004)(50226002)(25786009)(6436002)(53936002)(76176011)(2906002)(54906003)(3846002)(6116002)(99286004)(44832011)(52116002)(305945005)(316002)(110136005)(4744005)(86362001)(6486002)(7736002)(921003)(142933001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3086;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39860400002)(376002)(189003)(199004)(386003)(6486002)(106356001)(5660300002)(6512007)(26005)(76176011)(44832011)(8936002)(7416002)(8676002)(81156014)(81166006)(3846002)(71190400001)(71200400001)(6506007)(105586002)(97736004)(86362001)(6116002)(68736007)(66066001)(102836004)(14454004)(99286004)(316002)(11346002)(2616005)(110136005)(486006)(478600001)(54906003)(256004)(36756003)(305945005)(7736002)(53936002)(476003)(4326008)(6436002)(446003)(2906002)(50226002)(25786009)(186003)(52116002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5216;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Nafi6YjdUjjf5he3lyG7UWSij61zj9CkDA8daQK8yNbl7uaMhI7fti3WZCKV224s3786ZXWkzuHMrkD27I3mKpwfc+nWcNqDXT+Fq5gpfVHoBZ1GrwBX9EjYudccJiu7UW2h9ID/vq90vis6NU/9jHNr5fT9fTx5D5gMbwz9rELYh/dorQ/TbSKExHHgjyZlCQpYskAYpm6nPEV/OAAGb+zraR5cK555FKa8VsBxFnWxSFduAY2x5lcWOT9i0opR/huzqznmll7sviBGiYlIOb4/pPSHvoniBM7b5119WEDrPy3UTmEHxImqknap5RuXtfgSNoGt2VTjxzoMGx+e4Uy9RiBh7D+r24IvftWW+rmhFAzuEspbqjD/1XmTEQNfF5kRXcXS/L6FSh9UO7/3HjCVpy/nWMU5DTb9QYMmP14=
+x-microsoft-antispam-message-info: FWC/57vLScyCH9XwTHP4ash9QthHXueBXNaCJ8KwqwrPhdqLNyJuStOaDHNbc0EtaiDGSS78OKgpV6fNUDNXtncjmICfKvvN+Vof+krr7gnfxPgYX1kPsm3PtCvuKX/TM+jdMHWoiNuBJUZXIrtNRMAWesUjQ/hp+mOESPPP0VbOKoRyM/Pg64pOJErO87ewSRVGrJ8fGtJHYHj6twfumEmmgytBHz+JxOluO942h2E3ZHJVkSpm+3rfeCRgWGh3xcThzbnHjOlENfPu5JhQ9DL5WK93dzhNy/YfCDr6/G19V2tb0iTzPoG6q4SwkXRL3cG8KhBHslv9bdiJQyvunFk229Aq+iJZQGvxjhA5A6IRispFSeWm2TioKNR/7JpWnG28vH4GZfZ0qOfIqNDLzndY0fPG7BksrfMaLhKy7lg=
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c86c69e9-90f9-4da6-9e10-08d6bcde606f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 11:27:40.8654
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98b606a0-705f-46a2-15c5-08d6bcde6131
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 11:27:42.2755
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3086
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5216
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVtb3ZlICJtb2RlbCIgYXR0cmlidXRlLg0KDQpTaWduZWQtb2ZmLWJ5OiBWaW9yZWwgU3VtYW4g
-PHZpb3JlbC5zdW1hbkBueHAuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NvdW5kL2ZzbCxhdWRtaXgudHh0IHwgNCAtLS0tDQogMSBmaWxlIGNoYW5nZWQsIDQg
-ZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc291bmQvZnNsLGF1ZG1peC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc291bmQvZnNsLGF1ZG1peC50eHQNCmluZGV4IDQ1ZjgwN2UuLjg0MGI3ZTAgMTAwNjQ0
-DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZnNsLGF1ZG1p
-eC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2ws
-YXVkbWl4LnR4dA0KQEAgLTM4LDkgKzM4LDYgQEAgRGV2aWNlIGRyaXZlciByZXF1aXJlZCBwcm9w
-ZXJ0aWVzOg0KIAkJCSAgdG8gU0FJIGludGVyZmFjZXMgdG8gYmUgcHJvdmlkZWQsIHRoZSBmaXJz
-dCBTQUkgaW4gdGhlDQogCQkJICBsaXN0IGJlaW5nIHVzZWQgdG8gcm91dGUgdGhlIEFVRE1JWCBv
-dXRwdXQuDQogDQotICAtIG1vZGVsCQk6IE11c3QgY29udGFpbiBtYWNoaW5lIGRyaXZlciBuYW1l
-IHdoaWNoIHdpbGwgY29uZmlndXJlDQotCQkJICBhbmQgaW5zdGFudGlhdGUgdGhlIGFwcHJvcHJp
-YXRlIGF1ZGlvIGNhcmQuDQotDQogRGV2aWNlIGRyaXZlciBjb25maWd1cmF0aW9uIGV4YW1wbGU6
-DQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCiAgIGF1ZG1peDogYXVk
-bWl4QDU5ODQwMDAwIHsNCkBAIC01MCw1ICs0Nyw0IEBAIERldmljZSBkcml2ZXIgY29uZmlndXJh
-dGlvbiBleGFtcGxlOg0KICAgICBjbG9jay1uYW1lcyA9ICJpcGciOw0KICAgICBwb3dlci1kb21h
-aW5zID0gPCZwZF9hdWRtaXg+Ow0KICAgICBkYWlzID0gPCZzYWk0PiwgPCZzYWk1PjsNCi0gICAg
-bW9kZWwgPSAiaW14LWF1ZG1peCI7DQogICB9Ow0KLS0gDQoyLjcuNA0KDQo=
+UmVsZWFzZSB0aGUgcmVmZXJlbmNlIHRvIHRoZSB1bmRlcmx5aW5nIGRldmljZSB0YWtlbg0KYnkg
+b2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIGNhbGwuDQoNClNpZ25lZC1vZmYtYnk6IFZpb3JlbCBT
+dW1hbiA8dmlvcmVsLnN1bWFuQG54cC5jb20+DQpSZXBvcnRlZC1ieTogSnVsaWEgTGF3YWxsIDxK
+dWxpYS5MYXdhbGxAbGlwNi5mcj4NCi0tLQ0KIHNvdW5kL3NvYy9mc2wvaW14LWF1ZG1peC5jIHwg
+NCArKysrDQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEv
+c291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMgYi9zb3VuZC9zb2MvZnNsL2lteC1hdWRtaXguYw0K
+aW5kZXggNzk4M2JkMy4uOWFhZjNlNSAxMDA2NDQNCi0tLSBhL3NvdW5kL3NvYy9mc2wvaW14LWF1
+ZG1peC5jDQorKysgYi9zb3VuZC9zb2MvZnNsL2lteC1hdWRtaXguYw0KQEAgLTE3MSw2ICsxNzEs
+NyBAQCBzdGF0aWMgaW50IGlteF9hdWRtaXhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikNCiAJCQlucC0+ZnVsbF9uYW1lKTsNCiAJCXJldHVybiAtRUlOVkFMOw0KIAl9DQorCXB1
+dF9kZXZpY2UoJmF1ZG1peF9wZGV2LT5kZXYpOw0KIA0KIAludW1fZGFpID0gb2ZfY291bnRfcGhh
+bmRsZV93aXRoX2FyZ3MoYXVkbWl4X25wLCAiZGFpcyIsIE5VTEwpOw0KIAlpZiAobnVtX2RhaSAh
+PSBGU0xfQVVETUlYX01BWF9EQUlTKSB7DQpAQCAtMjE2LDYgKzIxNyw3IEBAIHN0YXRpYyBpbnQg
+aW14X2F1ZG1peF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAkJCWRldl9l
+cnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBmaW5kIFNBSSBwbGF0Zm9ybSBkZXZpY2VcbiIpOw0K
+IAkJCXJldHVybiAtRUlOVkFMOw0KIAkJfQ0KKwkJcHV0X2RldmljZSgmY3B1X3BkZXYtPmRldik7
+DQogDQogCQlkYWlfbmFtZSA9IGRldm1fa2FzcHJpbnRmKCZwZGV2LT5kZXYsIEdGUF9LRVJORUws
+ICIlcyVzIiwNCiAJCQkJCSAgZmVfbmFtZV9wcmVmLCBhcmdzLm5wLT5mdWxsX25hbWUgKyAxKTsN
+CkBAIC0yODAsNiArMjgyLDggQEAgc3RhdGljIGludCBpbXhfYXVkbWl4X3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8g
+ZmluZCBTQUkgcGxhdGZvcm0gZGV2aWNlXG4iKTsNCiAJCXJldHVybiAtRUlOVkFMOw0KIAl9DQor
+CXB1dF9kZXZpY2UoJmNwdV9wZGV2LT5kZXYpOw0KKw0KIAlwcml2LT5jcHVfbWNsayA9IGRldm1f
+Y2xrX2dldCgmY3B1X3BkZXYtPmRldiwgIm1jbGsxIik7DQogCWlmIChJU19FUlIocHJpdi0+Y3B1
+X21jbGspKSB7DQogCQlyZXQgPSBQVFJfRVJSKHByaXYtPmNwdV9tY2xrKTsNCi0tIA0KMi43LjQN
+Cg0K
