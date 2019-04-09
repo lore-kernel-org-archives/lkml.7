@@ -2,300 +2,79 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE001C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3F6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D6F21734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D488020833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jxSOesuH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OpDzbeTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfDIQSN (ORCPT
+        id S1726548AbfDIQUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:18:13 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43238 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfDIQSM (ORCPT
+        Tue, 9 Apr 2019 12:20:34 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45010 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfDIQUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:18:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id n8so5130122plp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7vTW31AUTO6cZ3I7PxgLoU4SnH1OSBJW0NkQcXxBp0s=;
-        b=jxSOesuHjysiwSiJ22DL9LtmtpFa6PrylMaQUmc64MXbIVllsY6wpQuh0DLMY3cYAA
-         n25/MffrluXgWfl+sf0A0NcRKDbUPgyqmG3/CMcaMh5V7JuSKnbnIcKGaeCZ7EvmrkxZ
-         7D0RcNstvWA4umnzXCOCkG0ynqVFW7oLXzvws=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7vTW31AUTO6cZ3I7PxgLoU4SnH1OSBJW0NkQcXxBp0s=;
-        b=DU/VcFgdkuembaQtd+2OdAlRyreyUJo1NByKokMD0kEsa0WnpEK7GFY12BLqRgZ5iS
-         IbJHgpV3CrU7hH2ym9u6ND5PA7taB1QG2KdrK3UpTJ2lDB7XyNXatdpXmqaGz+IuG02i
-         Nq+MBmE2pUQo0LJBxR4gm6+F6daCyVhzcrr32JTmLT7xB5rs1WzEDPIePqxAf9nYYHhc
-         pddzwhphPetFGo0OuuQKmys3ENOLbg0Yp54cSmEhGmymdsomB66wwxjceGSUpBz0vZaw
-         tvnBYH0ZNd0uWx5ZhI7CEdx8xz0iJlKFgeb6sqdgsK9KpEiBVesS0seTK+G0odSpqY93
-         aISw==
-X-Gm-Message-State: APjAAAXCkiH0jKzNn01H3Qdwm+DI+FrIRr7ACN69abbPfDC1xMBpEc3B
-        LfdMIeq6B7GAam4cvO37LIjAGA==
-X-Google-Smtp-Source: APXvYqw+m/K00hARXr0tFdnhpSJ28C1FBQ0n+SO6AK3ah8VtCcwiUkRT8xPani9glBFPaaBcpHMx3Q==
-X-Received: by 2002:a17:902:2f43:: with SMTP id s61mr16377788plb.181.1554826691282;
-        Tue, 09 Apr 2019 09:18:11 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c17sm48448392pfd.76.2019.04.09.09.18.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 09:18:10 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 12:18:09 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     paulmck <paulmck@linux.ibm.com>, rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
-Message-ID: <20190409161809.GA10629@google.com>
-References: <20190402142816.GA13084@linux.ibm.com>
- <20190408022728.GF14111@linux.ibm.com>
- <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com>
- <20190408142230.GJ14111@linux.ibm.com>
- <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com>
- <20190408154616.GO14111@linux.ibm.com>
- <1489474416.1465.1554744287985.JavaMail.zimbra@efficios.com>
- <20190409154012.GC248418@google.com>
- <534133139.2374.1554825363211.JavaMail.zimbra@efficios.com>
+        Tue, 9 Apr 2019 12:20:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9imv8zmeNakxRzEk5Gp6PO+5BWFNMWRb4XZCaz5T864=; b=OpDzbeTN0eTNcSzbJSfUzlzlH
+        tffFRcXesd1LRtPlJWom6JqRr/wMvNWW27ajHc7TH3/5f8h+jx/QuyQA77PDDlKr+2KL+8hiJ2rg5
+        yZmTPkU049xb6YBx3DwodswZbKFh1eknhPUFwWLfqQHIY3EY0DX0tsLUpixilERgcNTRd0m/CtuGn
+        6EK8uTXe8nYW8xqcg8yYxDxg67JvRg2bPup/omtvMSI5JmhqpTqgEU9ImbohXUqtDAt2qln4K2HNA
+        9pVmRch2REayQlUp5S0PYccHDet9XY7Az9OaUlO7ErOclGzPm5XzbYyf5FgWhCzB+GDZ/AKuiXXxq
+        vM0xza87w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hDtU6-0001Cb-DG; Tue, 09 Apr 2019 16:20:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F27A0201F29A3; Tue,  9 Apr 2019 18:20:28 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 18:20:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        jpoimboe@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        julien.thierry@arm.com
+Subject: Re: [RFC 2/6] objtool: arm64: Add required implementation for
+ supporting the aarch64 architecture in objtool.
+Message-ID: <20190409162028.GT11158@hirez.programming.kicks-ass.net>
+References: <20190409135243.12424-1-raphael.gault@arm.com>
+ <20190409135243.12424-3-raphael.gault@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <534133139.2374.1554825363211.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190409135243.12424-3-raphael.gault@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 11:56:03AM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 9, 2019, at 11:40 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> 
-> > On Mon, Apr 08, 2019 at 01:24:47PM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Apr 8, 2019, at 11:46 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> 
-> >> > On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
-> >> >> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> 
-> >> >> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
-> >> >> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> >> 
-> >> >> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
-> >> >> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
-> >> >> >> >> > 
-> >> >> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
-> >> >> >> >> > wrote:
-> >> >> >> >> > 
-> >> >> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
-> >> >> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> >> >> > >> 
-> >> >> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
-> >> >> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
-> >> >> >> >> > >> > 
-> >> >> >> >> > >> > [ . . . ]
-> >> >> >> >> > >> > 
-> >> >> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
-> >> >> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
-> >> >> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
-> >> >> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
-> >> >> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
-> >> >> >> >> > >> >> > > @@ -338,6 +338,10 @@
-> >> >> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-> >> >> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
-> >> >> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
-> >> >> >> >> > >> >> > > +		. = ALIGN(8);						\
-> >> >> >> >> > >> >> > > +		__start___srcu_struct = .;				\
-> >> >> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
-> >> >> >> >> > >> >> > > +		__end___srcu_struct = .;				\
-> >> >> >> >> > >> >> > >  	}								\
-> >> >> >> >> > >> >> > 
-> >> >> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
-> >> >> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
-> >> >> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
-> >> >> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
-> >> >> >> >> > >> >> > of the dev branch.
-> >> >> >> >> > >> >> 
-> >> >> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
-> >> >> >> >> > >> >> work.
-> >> >> >> >> > >> >> 
-> >> >> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
-> >> >> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
-> >> >> >> >> > >> >> optimism?
-> >> >> >> >> > >> > 
-> >> >> >> >> > >> > And to answer the other question, in the case where I am suffering from
-> >> >> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
-> >> >> >> >> > >> > for the updated original commit thus far.
-> >> >> >> >> > >> > 
-> >> >> >> >> > >> > And may I have your Tested-by?
-> >> >> >> >> > >> 
-> >> >> >> >> > >> Just to confirm: does the cleanup performed in the modules going
-> >> >> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
-> >> >> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
-> >> >> >> >> > >> module unload ?
-> >> >> >> >> > >> 
-> >> >> >> >> > > 
-> >> >> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
-> >> >> >> >> > > responsibility of the module writer to prevent delays for all modules.
-> >> >> >> >> > 
-> >> >> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
-> >> >> >> >> > srcu domain within that module, I don't see how it would cause delays for
-> >> >> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
-> >> >> >> >> > am I missing ?
-> >> >> >> >> 
-> >> >> >> >> Yes you are right. I thought of this after I just sent my email. I think it
-> >> >> >> >> makes sense for srcu case to do and could avoid a class of bugs.
-> >> >> >> > 
-> >> >> >> > If there are call_srcu() callbacks outstanding, the module writer still
-> >> >> >> > needs the srcu_barrier() because otherwise callbacks arrive after
-> >> >> >> > the module text has gone, which will be disappoint the CPU when it
-> >> >> >> > tries fetching instructions that are no longer mapped.  If there are
-> >> >> >> > no call_srcu() callbacks from that module, then there is no need for
-> >> >> >> > srcu_barrier() either way.
-> >> >> >> > 
-> >> >> >> > So if an srcu_barrier() is needed, the module developer needs to
-> >> >> >> > supply it.
-> >> >> >> 
-> >> >> >> When you say "callbacks arrive after the module text has gone",
-> >> >> >> I think you assume that free_module() is invoked before the
-> >> >> >> MODULE_STATE_GOING notifiers are called. But it's done in the
-> >> >> >> opposite order: going notifiers are called first, and then
-> >> >> >> free_module() is invoked.
-> >> >> >> 
-> >> >> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
-> >> >> >> going notifier.
-> >> >> >> 
-> >> >> >> Or am I missing something ?
-> >> >> > 
-> >> >> > We do seem to be talking past each other.  ;-)
-> >> >> > 
-> >> >> > This has nothing to do with the order of events at module-unload time.
-> >> >> > 
-> >> >> > So please let me try again.
-> >> >> > 
-> >> >> > If a given srcu_struct in a module never has call_srcu() invoked, there
-> >> >> > is no need to invoke rcu_barrier() at any time, whether at module-unload
-> >> >> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
-> >> >> > for no good reason.
-> >> >> 
-> >> >> Not if we invoke srcu_barrier() for that specific domain. If
-> >> >> call_srcu was never invoked for a srcu domain, I don't see why
-> >> >> srcu_barrier() should be more expensive than a simple check that
-> >> >> the domain does not have any srcu work queued.
-> >> > 
-> >> > But that simple check does involve a cache miss for each possible CPU (not
-> >> > just each online CPU), so it is non-trivial, especially on large systems.
-> >> > 
-> >> >> > If a given srcu_struct in a module does have at least one call_srcu()
-> >> >> > invoked, it is already that module's responsibility to make sure that
-> >> >> > the code sticks around long enough for the callback to be invoked.
-> >> >> 
-> >> >> I understand that when users do explicit dynamic allocation/cleanup of
-> >> >> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
-> >> >> However, if they do static definition of srcu domains, it would be nice
-> >> >> if we can handle the barriers under the hood.
-> >> > 
-> >> > All else being equal, of course.  But...
-> >> > 
-> >> >> > This means that correct SRCU users that invoke call_srcu() already
-> >> >> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
-> >> >> > reasonable probability, now get a WARN_ON() at module-unload time, with
-> >> >> > the per-CPU state getting leaked.  Before this change, they would (also
-> >> >> > with reasonable probability) instead get an instruction-fetch fault when
-> >> >> > the SRCU callback was invoked after the completion of the module unload.
-> >> >> > Furthermore, in all cases where they would previously have gotten the
-> >> >> > instruction-fetch fault, they now get the WARN_ON(), like this:
-> >> >> > 
-> >> >> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
-> >> >> >		return; /* Forgot srcu_barrier(), so just leak it! */
-> >> >> > 
-> >> >> > So this change already represents an improvement in usability.
-> >> >> 
-> >> >> Considering that we can do a srcu_barrier() for the specific domain,
-> >> >> and that it should add no noticeable overhead if there is no queued
-> >> >> callbacks, I don't see a good reason for leaving the srcu_barrier
-> >> >> invocation to the user rather than implicitly doing it from the
-> >> >> module going notifier.
-> >> > 
-> >> > Now, I could automatically add an indicator of whether or not a
-> >> > call_srcu() had happened, but then again, that would either add a
-> >> > call_srcu() scalability bottleneck or again require a scan of all possible
-> >> > CPUs...  to figure out if it was necessary to scan all possible CPUs.
-> >> > 
-> >> > Or is scanning all possible CPUs down in the noise in this case?  Or
-> >> > am I missing a trick that would reduce the overhead?
-> >> 
-> >> Module unloading implicitly does a synchronize_rcu (for RCU-sched), and
-> >> a stop_machine. So I would be tempted to say that overhead of iteration
-> >> over all CPUs might not matter that much considering the rest.
-> >> 
-> >> About notifying that a call_srcu has happened for the srcu domain in a
-> >> scalable fashion, let's see... We could have a flag "call_srcu_used"
-> >> for each call_srcu domain. Whenever call_srcu is invoked, it would
-> >> load that flag. It sets it on first use.
-> >> 
-> >> The idea here is to only use that flag when srcu_barrier is performed
-> >> right before the srcu domain cleanup (it could become part of that
-> >> cleanup). Else, using it in all srcu_barrier() might be tricky, because
-> >> we may then need to add memory barriers or locking to the call_srcu
-> >> fast-path, which is an overhead we try to avoid.
-> >> 
-> >> However, if we only use that flag as part of the srcu domain cleanup,
-> >> it's already prohibited to invoke call_srcu concurrently with the
-> >> cleanup of the same domain, so I don't think we would need any
-> >> memory barriers in call_srcu.
-> > 
-> > About the last part of your email, it seems to that if after call_srcu has
-> > returned, if the module could be unloaded on some other CPU - then it would
-> > need to see the flag stored by the preceding call_srcu, so I believe there
-> > would be a memory barrier between the two opreations (call_srcu and module
-> > unload).
-> 
-> In order for the module unload not to race against module execution, it needs
-> to happen after the call_srcu in a way that is already ordered by other means,
-> else module unload races against the module code.
+On Tue, Apr 09, 2019 at 02:52:39PM +0100, Raphael Gault wrote:
 
-Agreed.
+> The decoding of the instruction is split into classes and subclasses as described into
+> the Instruction Encoding in the ArmV8.5 Architecture Reference Manual.
 
-> > Also about doing the unconditional srcu_barrier, since a module could be
-> > unloaded at any time - don't all SRCU using modules need to invoke
-> > srcu_barrier() during their clean up anyway so we are incurring the barrier
-> > overhead anyway? Or, am I missing a design pattern here? It seems to me
-> > rcutorture module definitely calls srcu_barrier() before it is unloaded.
-> 
-> I think a valid approach which is even simpler might be: if a module statically
-> defines a SRCU domain, it should be expected to use it. So adding a srcu_barrier()
-> to its module going notifier should not hurt. The rare case where a module defines
-> a static SRCU domain *and* does not actually use it with call_srcu() does not
-> seem that usual, and not worth optimizing for.
+>  tools/objtool/arch/arm64/decode.c             | 2843 +++++++++++++++++
 
-That sounds like a reasonable approach to me.
+Oh man, I hope you generated much of that from the ARM64 Instruction Set
+Architecture XML files [*]. Otherwise that's been a lot of typing.
 
-thanks,
+Anyway, since you now have that, would it make sense to use this same
+decoder in your kernel tree? I found at least one partial decoder in
+arch/arm64/kernel/probes/decode-insn.c, but I suspect you have more.
 
- - Joel
+(Note kprobes is how x86 initially grew its instruction decoder IIRC)
 
+
+* https://developer.arm.com/architectures/cpu-architecture/a-profile/exploration-tools
