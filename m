@@ -2,143 +2,137 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9F6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7455BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27C82084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4116B20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="LinLEVX7"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="TJF+s2Rh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfDIOHN (ORCPT
+        id S1726539AbfDIOHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:07:13 -0400
-Received: from mail-eopbgr1310040.outbound.protection.outlook.com ([40.107.131.40]:15936
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726035AbfDIOHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:07:13 -0400
+        Tue, 9 Apr 2019 10:07:37 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37478 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726471AbfDIOHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:07:36 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v13so14576446ljk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 07:07:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=teoenmingcorp.onmicrosoft.com; s=selector1-teoenmingcorp-com0iei;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RnYlA09Wn1kjAkpWItn040iaEU5opNDXIDDvIfmIt2I=;
- b=LinLEVX7pcFCJmbS8lIUcnWFgnUbcE2Yhoy6WetlclFX27Nb7CtGe4l2aK7hQ4d/XT8gmxsNJRGGfI4ISZbYqz+0HjtGH1ssXG0C4BgvKqbhpdO/xv8IMA/Om5mERIh7blkVo35ShXsK5mJz1n7j2VU43+pIBRYE9If2ncdJsk4=
-Received: from HK0PR01MB2644.apcprd01.prod.exchangelabs.com (20.177.148.141)
- by HK0PR01MB2627.apcprd01.prod.exchangelabs.com (20.177.148.202) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.15; Tue, 9 Apr
- 2019 14:07:09 +0000
-Received: from HK0PR01MB2644.apcprd01.prod.exchangelabs.com
- ([fe80::d9ee:56ed:f05d:b56c]) by HK0PR01MB2644.apcprd01.prod.exchangelabs.com
- ([fe80::d9ee:56ed:f05d:b56c%5]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
- 14:07:09 +0000
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-Subject: Teo En Ming's Fortigate-VM64 Site-to-Site IPsec VPN Tunnel Manual
- v1.0
-Thread-Topic: Teo En Ming's Fortigate-VM64 Site-to-Site IPsec VPN Tunnel
- Manual v1.0
-Thread-Index: AdTu3VX5GvqRx/m4QduaHZ3AgbyfaQ==
-Date:   Tue, 9 Apr 2019 14:07:09 +0000
-Message-ID: <HK0PR01MB26445503E5D2833E2C6B8B94872D0@HK0PR01MB2644.apcprd01.prod.exchangelabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ceo@teo-en-ming-corp.com; 
-x-originating-ip: [118.189.211.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8673e54b-f232-4360-ad18-08d6bcf4a7bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7027125)(7031125)(7023125)(7093024)(5600139)(711020)(4605104)(2017052603328)(7177060)(7172020)(7174020)(7193020);SRVR:HK0PR01MB2627;
-x-ms-traffictypediagnostic: HK0PR01MB2627:
-x-ms-exchange-purlcount: 9
-x-microsoft-antispam-prvs: <HK0PR01MB2627BEBD445141D58B8F0FB6872D0@HK0PR01MB2627.apcprd01.prod.exchangelabs.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(34036004)(39830400003)(376002)(366004)(346002)(396003)(199004)(189003)(66066001)(26005)(86362001)(38610400001)(8676002)(33656002)(8936002)(586005)(256004)(2501003)(81166006)(81156014)(7736002)(74316002)(486006)(7696005)(14454004)(6506007)(476003)(2906002)(102836004)(305945005)(5660300002)(68736007)(45080400002)(6436002)(52536014)(106356001)(105586002)(966005)(186003)(55016002)(3846002)(6116002)(97736004)(9686003)(498600001)(6916009)(6306002)(4326008)(99286004)(71190400001)(5640700003)(53936002)(71200400001)(25786009)(107886003)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR01MB2627;H:HK0PR01MB2644.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6h18qyN4AdIvzl/iR3s3mJV44RXMyJLTMkZAOM6kaPQ/A7cAjICT50CXZxEbazc/Wsj9ppWph/GTCOeBc6ixCAk407wv71EacUvlDHoVmWrAesuBZnMFIBDZP4ml6gWnZG1F+XSKIbSuDAUpuTiP8mX6P493OgOvu7ep2m7euvCdy0Am1bAhahcH/klQfynSsxjGn+XJRHCLnuZwAjxHoP9CGDRvCFUc2ZgoDUdyaOrz4KdA9wkZn3nQfroGGPxme+K6VGlBnoQ1oUkSRN9VmOkzrJbCGSy0wLoCoapPkBoBBjTB5npttJaPh9uhMikzDsAj8F7qhvWPJ2Kpfxv1ILcsohHi+DfSBpapxRl5WaGAn/3U72jnJg1QlS7nsfKzKVT9pIzQ3slp8eGv1JHxryMNZMCcwm+fUK4kY+SAXEI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UQxJMSZMCM3zKcDpRRfm0HzVbtFnEegjOT3D0Jsz53o=;
+        b=TJF+s2Rh3KaDaWciSpvRfu5kfPblnXMMZ136vWoCaUsQQF2c7PN9rSIpCeiG27E307
+         jrNVOiiACI5M/apRlWCXc0OE5bXix2BwUtVDiV0vRm/4or5lruqN4xtLiWisx+EiPtkj
+         Lu0iWDZWt3IiIJO6b2MO7E/fI4NMGhpy+bXK9mtECKza8SMr05XajqZJv/wa05GNmu6f
+         HmqRwvvUe7hdIr/I0wMo7Ht+CEiSfXXp9pUNg5B4uUHkq8+h0OUlKYVdgEax9DRan8Vs
+         IMDS/y8mbiUPiCAjn9m0duONEAWQvRFgBW1B9hS0f0H8dp/PQGiCB8kJbRFBuwOmcg7J
+         9sbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UQxJMSZMCM3zKcDpRRfm0HzVbtFnEegjOT3D0Jsz53o=;
+        b=ChtcVcHY+lZb7zQ5BmByEavWRRaHf3zwvyAAALEX5x8p8ejlJSgZgptsjQ5dWo/6u5
+         Z50B+bUYJi3DTu48+1sD/9Qqqo9Sq+LrJ7HMRVSR4dYRHZdXcNiZTWkchm5HVUktxKtI
+         NoPmWH7KexKySG0CwQLrRh4HN0Keq3whIxl11+at2ZQwVpX6cL3vq0nMZ9b00LR4D0mY
+         byu1e4rxS9e/7w/xqO+v2Fr06FY0pMxUXIFOF5aQdrmqAPM+GahwAvxWqCvNHf6fovBz
+         xd1HQaLiSRwBhuzotLGGMsLav7Dm5JjMwUF3YSbFiOH8DTn+igTElwOR0QJ9hiAYQaEA
+         auOA==
+X-Gm-Message-State: APjAAAWn0OGTypiblWMzLAs+NFv5i8QkSLPK0iwL81oIYceQ9B6egFTx
+        xwvmS+yPr04A4nRHm0WK4JXnmFqVLTZPk5VhKYIj
+X-Google-Smtp-Source: APXvYqyEgbz1ViHg/yoq+SHC9WJ9RsRoXWSV3JGxCZUXOc3HVStH4Y161vmCk/BoPcyMqeZkGNVZEihNWTJpgEa0Hjg=
+X-Received: by 2002:a2e:88c1:: with SMTP id a1mr19600298ljk.78.1554818854001;
+ Tue, 09 Apr 2019 07:07:34 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: teo-en-ming-corp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8673e54b-f232-4360-ad18-08d6bcf4a7bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 14:07:09.0721
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB2627
+References: <cover.1554732921.git.rgb@redhat.com> <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
+ <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
+ <CAHC9VhRbxefdpTX5ct+1=uccv9b2GH+imDPPbB90RBWSjMcgbA@mail.gmail.com> <20190409134852.GB15660@hmswarspite.think-freely.org>
+In-Reply-To: <20190409134852.GB15660@hmswarspite.think-freely.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 9 Apr 2019 10:07:22 -0400
+Message-ID: <CAHC9VhQ2DAfaHcSUoE3vTtSzGL5TtRuLZgGrt4TyG44pKuBD7g@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 05/10] audit: add contid support for signalling
+ the audit daemon
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good evening from Singapore,
+On Tue, Apr 9, 2019 at 9:49 AM Neil Horman <nhorman@tuxdriver.com> wrote:
+> On Tue, Apr 09, 2019 at 09:40:58AM -0400, Paul Moore wrote:
+> > On Tue, Apr 9, 2019 at 8:58 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > >
+> > > On Tue, Apr 9, 2019 at 5:40 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > Add audit container identifier support to the action of signalling the
+> > > > audit daemon.
+> > > >
+> > > > Since this would need to add an element to the audit_sig_info struct,
+> > > > a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> > > > audit_sig_info2 struct.  Corresponding support is required in the
+> > > > userspace code to reflect the new record request and reply type.
+> > > > An older userspace won't break since it won't know to request this
+> > > > record type.
+> > > >
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > >
+> > > This looks good to me.
+> > >
+> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > >
+> > > Although I'm wondering if we shouldn't try to future-proof the
+> > > AUDIT_SIGNAL_INFO2 format somehow, so that we don't need to add
+> > > another AUDIT_SIGNAL_INFO3 when the need arises to add yet-another
+> > > identifier to it... The simplest solution I can come up with is to add
+> > > a "version" field at the beginning (set to 2 initially), then v<N>_len
+> > > at the beginning of data for version <N>. But maybe this is too
+> > > complicated for too little gain...
+> >
+> > FWIW, I believe the long term solution to this is the fabled netlink
+> > attribute approach that we haven't talked about in some time, but I
+> > keep dreaming about (it has been mostly on the back burner becasue 1)
+> > time and 2) didn't want to impact the audit container ID work).  While
+> > I'm not opposed to trying to make things like this a bit more robust
+> > by adding version fields and similar things, there are still so many
+> > (so very many) problems with the audit kernel/userspace interface that
+> > still need to be addressed.
+>
+> Agreed, this change as-is is in keeping with the message structure that audit
+> has today, and so is ok with me, but the long term goal should be a conversion
+> to netlink attributes for all audit messages.  Thats a big undertaking and
+> should be addressed separately though.
 
-Primary Subject/Topic: Teo En Ming's Fortigate-VM64 Site-to-Site IPsec VPN =
-Tunnel Manual v1.0
+You've likely missed all the conversations around this from some time
+ago, but this is the direction I want us to go towards eventually, and
+yes, this is a huge undertaking (much larger than the audit container
+ID work) that will need to be done in stages.
 
-Secondary Subject/Topic: How to Deploy Site-to-Site IPsec VPN Tunnel with F=
-ortigate-VM64 5.6.8 Virtual Firewall Appliances and VMware Workstation Pro =
-15.0.4
+The first step is moving away from audit_log_format() to an in-kernel
+audit API that separates the data from the record format; I've got a
+lot of ideas on that, but as I said earlier, it's mostly on the back
+burner so it doesn't hold up the audit container ID work.
 
-Multiple Links to PDF Manual version 1.0 (47 pages)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-
-1. DocDroid Link
-
-https://www.docdroid.net/XqcbEhQ/teo-en-ming-fortigate-vm-site-to-site-ipse=
-c-vpn-manual-v10.pdf
-
-2. Google Drive Link
-
-https://drive.google.com/open?id=3D1S6JOyUs9ic2jBUQa-L5Xzv3bMpyjEWas
-
-3. Microsoft OneDrive Link
-
-https://1drv.ms/b/s!ArahPxJAVR61hRCjv7-l5Xt2q6TV
-
-4. Scribd Link (Low Quality PDF)
-
-https://www.scribd.com/document/405589802/Teo-En-Ming-s-Fortigate-VM64-Site=
--To-Site-IPsec-VPN-Tunnel-Manual-v1-0
-
-5. DocHub Link
-
-https://dochub.com/enmingteo/rag2NZ/teo-en-ming-fortigate-vm-site-to-site-i=
-psec-vpn-manual-v1-0-pdf?dt=3DRhaC2bQZsxhbR3jyZ6nt
-
------BEGIN EMAIL SIGNATURE-----
-
-The Gospel for all Targeted Individuals (TIs):
-
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
-e.html
-
-***************************************************************************=
-*****************
-
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
-
+-- 
+paul moore
+www.paul-moore.com
