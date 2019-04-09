@@ -2,151 +2,98 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F64DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1406217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554784247;
-	bh=ovcgkNvUTRNhpQLDpzSrnSD7eK8UmR0Bob3F0soYNUE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YLFeZbdQEuIm79+O0s9tSgJfBuSMsB7fuaBPS/vjbWHnO14lcUwhiP3pVgh1QzbLt
-	 f9LfsbLiloplj44Fto1DNv/RBQyL2OqXmBmFVwrTeqO27QRklmPn0XOPtKMvjdaCD4
-	 HhQBaDOQjNUBPRY3+W+rQ0ApNmFOcptoAAI24xhU=
+	by mail.kernel.org (Postfix) with ESMTP id 2817E20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 04:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LDwrWxTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfDIEap (ORCPT
+        id S1726678AbfDIEny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 00:30:45 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:42342 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfDIEap (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 00:30:45 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id A8EC8E26;
-        Tue,  9 Apr 2019 04:30:43 +0000 (UTC)
-Date:   Mon, 8 Apr 2019 21:30:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     mhocko@suse.com, david@redhat.com, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/2] mm, memory_hotplug: provide a more generic
- restrictions for memory hotplug
-Message-Id: <20190408213041.50350dac32ed315839c57e09@linux-foundation.org>
-In-Reply-To: <20190408082633.2864-3-osalvador@suse.de>
-References: <20190408082633.2864-1-osalvador@suse.de>
-        <20190408082633.2864-3-osalvador@suse.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Apr 2019 00:43:54 -0400
+Received: from mail-eopbgr40074.outbound.protection.outlook.com ([40.107.4.74]:18759
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726079AbfDIEnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 00:43:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lRQEE8MRtQ0Odno9G1xiejd4M6PKIAsuDZQUsrD+kjo=;
+ b=LDwrWxTyUnUg/u7H6wU2BxzJKrOnhAy1HjJYgFd1xS035iaCt5fbKvDXgVnYon+JcvC4BGkmt68Ph/PNcE8D2ChfvKGuhxONg8qGsXL2T+0ZWeQCxc67jeIpWbb0MG+lPJrwzrJ1dhcuZuDFwKWDoG1M4CuGcHpIcY+nbhh9pkk=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB6465.eurprd04.prod.outlook.com (20.179.253.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.15; Tue, 9 Apr 2019 04:43:50 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
+ 04:43:50 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Olof Johansson <olof@lixom.net>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [RESEND] arm64: defconfig: Enable RTC_DRV_SNVS
+Thread-Topic: [RESEND] arm64: defconfig: Enable RTC_DRV_SNVS
+Thread-Index: AQHU7jxLq+OSUQszvUq2rZ157qMiNqYzQQoQ
+Date:   Tue, 9 Apr 2019 04:43:49 +0000
+Message-ID: <AM0PR04MB42117A999FBB3F9A981DD2F7802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1554749572-5090-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1554749572-5090-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d34ec58e-56d7-4db9-34d8-08d6bca5f5ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6465;
+x-ms-traffictypediagnostic: AM0PR04MB6465:
+x-microsoft-antispam-prvs: <AM0PR04MB646550982B71AC85F58E7C5B802D0@AM0PR04MB6465.eurprd04.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(396003)(366004)(346002)(189003)(199004)(33656002)(26005)(66066001)(6246003)(6116002)(9686003)(186003)(53936002)(102836004)(14454004)(55016002)(3846002)(478600001)(81156014)(81166006)(105586002)(71200400001)(25786009)(8936002)(256004)(71190400001)(106356001)(229853002)(74316002)(86362001)(5660300002)(558084003)(110136005)(11346002)(44832011)(99286004)(8676002)(446003)(97736004)(2906002)(4326008)(476003)(6506007)(305945005)(2501003)(7696005)(54906003)(6436002)(68736007)(76176011)(316002)(486006)(52536014)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6465;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: asG7uy1ncZvc5389UqBmwcfO1pAeNViLzrE8h1NF2wBGPz3UApV+V+ofDejn/QcdGZCMe27JE5YHuPy0dsKVxZiR5+o5dt6TDLLuKqLNe6z5kvwI/LVQ5NSwiq7xVO6vcLjo0Up/BLiUj2yXjToIGEGfabKtOUW3cl63MkrKpCZlKeZ/1QGl/kY8sDZoyrVG8tLCZ7Py+x+wpACPbcMeL7rKIxLk/5nhSyxy5GjzsgngdvLc6JmOPlqN2lPsuyX0qMDtxOtqOcC8ZbcP5OmfKzBQdIK7HGrHMW6EeQA+YjwX7quFByH92y1dj/2nyt+u4oOIxi0n9q6fkbyVC0f+MLAYJpmnVeHMykuh1JT7u1f/mYwOdCXe+VpSJ3R8pnMYYHMBSJru2aw27T6ZpFvTzb9m5KgfRcoPWLSonxDVgSo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d34ec58e-56d7-4db9-34d8-08d6bca5f5ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 04:43:49.9792
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6465
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  8 Apr 2019 10:26:33 +0200 Oscar Salvador <osalvador@suse.de> wrote:
+> From: Abel Vesa
+> Sent: Tuesday, April 9, 2019 2:53 AM
+>=20
+> i.MX8MQ needs it for RTC support.
+>=20
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 
-> arch_add_memory, __add_pages take a want_memblock which controls whether
-> the newly added memory should get the sysfs memblock user API (e.g.
-> ZONE_DEVICE users do not want/need this interface). Some callers even
-> want to control where do we allocate the memmap from by configuring
-> altmap.
-> 
-> Add a more generic hotplug context for arch_add_memory and __add_pages.
-> struct mhp_restrictions contains flags which contains additional
-> features to be enabled by the memory hotplug (MHP_MEMBLOCK_API
-> currently) and altmap for alternative memmap allocator.
-> 
-> This patch shouldn't introduce any functional change.
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
-
-x86_64 allnoconfig:
-
-In file included from ./include/linux/mmzone.h:744:0,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/umh.h:4,
-                 from ./include/linux/kmod.h:22,
-                 from ./include/linux/module.h:13,
-                 from init/do_mounts.c:1:
-./include/linux/memory_hotplug.h:353:11: warning: ‘struct mhp_restrictions’ declared inside parameter list will not be visible outside of this definition or declaration
-    struct mhp_restrictions *restrictions);
-           ^~~~~~~~~~~~~~~~
-
-Fix this by moving the arch_add_memory() definition inside
-CONFIG_MEMORY_HOTPLUG and moving the mhp_restrictions definition to a more
-appropriate place.
-
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- include/linux/memory_hotplug.h |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
---- a/include/linux/memory_hotplug.h~mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
-+++ a/include/linux/memory_hotplug.h
-@@ -54,6 +54,16 @@ enum {
- };
- 
- /*
-+ * Restrictions for the memory hotplug:
-+ * flags:  MHP_ flags
-+ * altmap: alternative allocator for memmap array
-+ */
-+struct mhp_restrictions {
-+	unsigned long flags;
-+	struct vmem_altmap *altmap;
-+};
-+
-+/*
-  * Zone resizing functions
-  *
-  * Note: any attempt to resize a zone should has pgdat_resize_lock()
-@@ -101,6 +111,8 @@ extern void __online_page_free(struct pa
- 
- extern int try_online_node(int nid);
- 
-+extern int arch_add_memory(int nid, u64 start, u64 size,
-+			struct mhp_restrictions *restrictions);
- extern u64 max_mem_size;
- 
- extern bool memhp_auto_online;
-@@ -126,16 +138,6 @@ extern int __remove_pages(struct zone *z
- 
- #define MHP_MEMBLOCK_API               (1<<0)
- 
--/*
-- * Restrictions for the memory hotplug:
-- * flags:  MHP_ flags
-- * altmap: alternative allocator for memmap array
-- */
--struct mhp_restrictions {
--	unsigned long flags;
--	struct vmem_altmap *altmap;
--};
--
- /* reasonably generic interface to expand the physical pages */
- extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
- 		       struct mhp_restrictions *restrictions);
-@@ -349,8 +351,6 @@ extern int walk_memory_range(unsigned lo
- extern int __add_memory(int nid, u64 start, u64 size);
- extern int add_memory(int nid, u64 start, u64 size);
- extern int add_memory_resource(int nid, struct resource *resource);
--extern int arch_add_memory(int nid, u64 start, u64 size,
--			struct mhp_restrictions *restrictions);
- extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
- 		unsigned long nr_pages, struct vmem_altmap *altmap);
- extern bool is_memblock_offlined(struct memory_block *mem);
-_
-
+Regards
+Dong Aisheng
