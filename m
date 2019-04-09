@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE32C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C02C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6099214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3DAF2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUsDpz0e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opVxhz0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfDIRZp (ORCPT
+        id S1727170AbfDIRZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:25:45 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41408 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfDIRYd (ORCPT
+        Tue, 9 Apr 2019 13:25:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43108 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfDIRYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:24:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d1so9802356plj.8;
-        Tue, 09 Apr 2019 10:24:32 -0700 (PDT)
+        Tue, 9 Apr 2019 13:24:31 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so10105090pfd.10;
+        Tue, 09 Apr 2019 10:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=INJ416e+pd21Ry2WyJYMICDziX05uHazE/a32a5u+ko=;
-        b=nUsDpz0eQ7fheYMhQdWPNcTGzLYvKFdNYN6yDPkLcm682erL9LH8/51bmUaBoGCd/k
-         LY9b4REzc4ZosAKIWN2cEPalss4SRG2CbcQZwMh9B/FQioT92taBZSLl0Y9VcepcpoKl
-         EzGa/ZMv8B6IUtqZKQp88GPnWPis9a5szJUT6BXvcjF2+btDhN9ilA1Bg1u3R3xm55hH
-         EWf6GjUd82xE1X8u68dKwQOP+1liETA++s9CTA3eIncS3aMebBA1I+9XtZVixC+TfC3g
-         2Q31bzf3v/at+IzuEk3Lm4x8dzRTu05QZM8BBY6CbVDtfR/JApr1rA0H4now7rDxDB2E
-         zdoA==
+        bh=bnlZ/hHz2P+XdfA2OTKL/VfiS9qckCeYUcGcUaZUPJQ=;
+        b=opVxhz0fsOXp/x3EQw6IhRKSlx7G/xDAheArKDTVorvHhykijNsRv/ryay0ZNyAVY+
+         Tb495xgJz5wWiBsTA1xAFNmxaXvDDGKmlHYE5mF/6wPzY+TQ43y4f/N42/33/sSNx8Or
+         4cBMiBKIKXRSZ2CQv+ASA58+x24C6HFbZVEQpopFSQCu+GzMEiNNV+AiIvSJRQkbU5ww
+         2LDsUZmTNBITJZyYBKyvwkbA+sSrH0j9ndEKdHq5DPmUIE9ROpxk+t3dL7Je8MTDqs92
+         TLSuLViN/NV9WsMqZCeTiSk/XnEb48Y89OQBT+50pmXbKeqPlrxcVBShG/tbnIYSwmgP
+         dARw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=INJ416e+pd21Ry2WyJYMICDziX05uHazE/a32a5u+ko=;
-        b=jOXB0RoLUTppZQe6PdQU6EJ8uU7e2YHNa7crfBXjblfa18y8BpTUnfPzTnTFc41ToD
-         Xcq0IF4T4hUow4AhNQnJg7Eu0F7lBpQYGZB3Mzi7cokuL7Du7E0uYRgdlFoJGQ+HqT7C
-         bZcohmc0WJ1IwDuxSfRJUR5qmWGBQ0UFnqyuFeq+E3w45zmumBBtXH/vozP1k36PyoXu
-         pc+P/iLsxQapDAGVuWXMOfTcGIydJw+LN+w6W6n58TcA42ULJ6e4NFZrvkOGMucPgctb
-         dLHnX0AK8JlDftev2ffr6WmDEoEHUHs5etQJqn7EqVgoYLMcu8XSAjB85rEiHrlQlhFL
-         8JcQ==
-X-Gm-Message-State: APjAAAUrR0PZqFzZxcnJRS2SX1WCv6UKKGW2Ld1pppdrzL20npRFlYru
-        jPEiiFi9mZtO6G4/SToqB7M=
-X-Google-Smtp-Source: APXvYqz2Uwp0LqP3ZB8rfsBu+VkCRxfavd7rZtFsUMq+EKMJ7TMBF7901youLmoyVm2ZAxBLfHVUtA==
-X-Received: by 2002:a17:902:7d8f:: with SMTP id a15mr4589813plm.3.1554830672499;
-        Tue, 09 Apr 2019 10:24:32 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i3sm49062881pfa.90.2019.04.09.10.24.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=bnlZ/hHz2P+XdfA2OTKL/VfiS9qckCeYUcGcUaZUPJQ=;
+        b=NdR2y59k2kUs43pRw/UA2j0iNJoZg6OUB4XMyZsAg6WtBF1055h7ZZeFfVgNbj5hLZ
+         xW0MwNxJrgrVSf/BhxxkzFXpuet2ZLpLoXPKTVyDLei3RmaxXB0G0CwWwKUl1FEsrb4H
+         HNnjYiDKnowzqbEUnFSA7xXHGwGdrjA4xyM6spDOxDE0KmpmmU3sJYi+7IlgqIeH5IzQ
+         YMSgFdNFm2a6yxGrHmkgGc+rNLEHRZOA9WPcdCYxUXGk1BfwSEkIcu9EfQ4GfSG3LXTs
+         WH7WUk+nW3gIz2qU0M98X8y7K4EqkmOIOV7Ow85Jo2W/r/yWOrSAiFFHRLG6HqncTyae
+         8Kjw==
+X-Gm-Message-State: APjAAAUW7n/uzHPRkgFRgFEF+ULcHukFchVSASBbBkPNIlftCP8I86K6
+        nRaLHBKtxxjNbjGSXFRrLs8=
+X-Google-Smtp-Source: APXvYqw7vcq7zSxOxF96FEvco77OOLatQNEF4Wz8ihNNVOHN/q3fdJ+dmf82Ec4j8vdDUHeAUlxoIg==
+X-Received: by 2002:a63:7117:: with SMTP id m23mr34950135pgc.271.1554830671117;
         Tue, 09 Apr 2019 10:24:31 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b26sm65662685pgn.4.2019.04.09.10.24.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 10:24:30 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 15/23] watchdog: rza_wdt: Use 'dev' instead of dereferencing it repeatedly
-Date:   Tue,  9 Apr 2019 10:23:53 -0700
-Message-Id: <1554830641-9247-16-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 14/23] watchdog: rtd119x_wdt: Convert to use device managed functions and other improvements
+Date:   Tue,  9 Apr 2019 10:23:52 -0700
+Message-Id: <1554830641-9247-15-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
@@ -70,88 +70,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce local variable 'struct device *dev' and use it instead of
-dereferencing it repeatedly.
+Use device managed functions to simplify error handling, reduce
+source code size, improve readability, and reduce the likelyhood of bugs.
+Other improvements as listed below.
 
 The conversion was done automatically with coccinelle using the
 following semantic patches. The semantic patches and the scripts
 used to generate this commit log are available at
 https://github.com/groeck/coccinelle-patches
 
+- Drop assignments to otherwise unused variables
+- Drop unnecessary braces around conditional return statements
+- Drop empty remove function
+- Use devm_add_action_or_reset() for calls to clk_disable_unprepare
+- Replace 'of_clk_get(np, 0)' with 'devm_clk_get(dev, NULL)'
+- Introduce local variable 'struct device *dev' and use it instead of
+  dereferencing it repeatedly
+- Use devm_watchdog_register_driver() to register watchdog device
+
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/rza_wdt.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/watchdog/rtd119x_wdt.c | 42 +++++++++++++++---------------------------
+ 1 file changed, 15 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
-index b854f0aeb3ef..7b6c365f7cd3 100644
---- a/drivers/watchdog/rza_wdt.c
-+++ b/drivers/watchdog/rza_wdt.c
-@@ -166,11 +166,12 @@ static const struct watchdog_ops rza_wdt_ops = {
+diff --git a/drivers/watchdog/rtd119x_wdt.c b/drivers/watchdog/rtd119x_wdt.c
+index cb17c49f3534..c4cb23d65218 100644
+--- a/drivers/watchdog/rtd119x_wdt.c
++++ b/drivers/watchdog/rtd119x_wdt.c
+@@ -95,12 +95,18 @@ static const struct of_device_id rtd119x_wdt_dt_ids[] = {
+ 	 { }
+ };
  
- static int rza_wdt_probe(struct platform_device *pdev)
++static void rtd119x_clk_disable_unprepare(void *data)
++{
++	clk_disable_unprepare(data);
++}
++
+ static int rtd119x_wdt_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
- 	struct rza_wdt *priv;
- 	unsigned long rate;
+ 	struct rtd119x_watchdog_device *data;
  	int ret;
  
--	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
+-	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
  		return -ENOMEM;
  
-@@ -178,21 +179,21 @@ static int rza_wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
+@@ -108,22 +114,24 @@ static int rtd119x_wdt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(data->base))
+ 		return PTR_ERR(data->base);
  
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	priv->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
+-	data->clk = of_clk_get(pdev->dev.of_node, 0);
++	data->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(data->clk))
+ 		return PTR_ERR(data->clk);
  
- 	rate = clk_get_rate(priv->clk);
- 	if (rate < 16384) {
--		dev_err(&pdev->dev, "invalid clock rate (%ld)\n", rate);
-+		dev_err(dev, "invalid clock rate (%ld)\n", rate);
- 		return -ENOENT;
- 	}
+ 	ret = clk_prepare_enable(data->clk);
+-	if (ret) {
+-		clk_put(data->clk);
++	if (ret)
++		return ret;
++	ret = devm_add_action_or_reset(dev, rtd119x_clk_disable_unprepare,
++				       data->clk);
++	if (ret)
+ 		return ret;
+-	}
  
- 	priv->wdev.info = &rza_wdt_ident,
- 	priv->wdev.ops = &rza_wdt_ops,
--	priv->wdev.parent = &pdev->dev;
-+	priv->wdev.parent = dev;
+ 	data->wdt_dev.info = &rtd119x_wdt_info;
+ 	data->wdt_dev.ops = &rtd119x_wdt_ops;
+ 	data->wdt_dev.timeout = 120;
+ 	data->wdt_dev.max_timeout = 0xffffffff / clk_get_rate(data->clk);
+ 	data->wdt_dev.min_timeout = 1;
+-	data->wdt_dev.parent = &pdev->dev;
++	data->wdt_dev.parent = dev;
  
--	priv->cks = (u8)(uintptr_t)of_device_get_match_data(&pdev->dev);
-+	priv->cks = (u8)(uintptr_t) of_device_get_match_data(dev);
- 	if (priv->cks == CKS_4BIT) {
- 		/* Assume slowest clock rate possible (CKS=0xF) */
- 		priv->wdev.max_timeout = (DIVIDER_4BIT * U8_MAX) / rate;
-@@ -207,19 +208,19 @@ static int rza_wdt_probe(struct platform_device *pdev)
- 		 * max_hw_heartbeat_ms.
- 		 */
- 		priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
--		dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
--			 priv->wdev.max_hw_heartbeat_ms);
-+		dev_dbg(dev, "max hw timeout of %dms\n",
-+			priv->wdev.max_hw_heartbeat_ms);
- 	}
+ 	watchdog_stop_on_reboot(&data->wdt_dev);
+ 	watchdog_set_drvdata(&data->wdt_dev, data);
+@@ -133,31 +141,11 @@ static int rtd119x_wdt_probe(struct platform_device *pdev)
+ 	rtd119x_wdt_set_timeout(&data->wdt_dev, data->wdt_dev.timeout);
+ 	rtd119x_wdt_stop(&data->wdt_dev);
  
- 	priv->wdev.min_timeout = 1;
- 	priv->wdev.timeout = DEFAULT_TIMEOUT;
- 
--	watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
-+	watchdog_init_timeout(&priv->wdev, 0, dev);
- 	watchdog_set_drvdata(&priv->wdev, priv);
- 
--	ret = devm_watchdog_register_device(&pdev->dev, &priv->wdev);
-+	ret = devm_watchdog_register_device(dev, &priv->wdev);
- 	if (ret)
--		dev_err(&pdev->dev, "Cannot register watchdog device\n");
-+		dev_err(dev, "Cannot register watchdog device\n");
- 
- 	return ret;
+-	ret = watchdog_register_device(&data->wdt_dev);
+-	if (ret) {
+-		clk_disable_unprepare(data->clk);
+-		clk_put(data->clk);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static int rtd119x_wdt_remove(struct platform_device *pdev)
+-{
+-	struct rtd119x_watchdog_device *data = platform_get_drvdata(pdev);
+-
+-	watchdog_unregister_device(&data->wdt_dev);
+-
+-	clk_disable_unprepare(data->clk);
+-	clk_put(data->clk);
+-
+-	return 0;
++	return devm_watchdog_register_device(dev, &data->wdt_dev);
  }
+ 
+ static struct platform_driver rtd119x_wdt_driver = {
+ 	.probe = rtd119x_wdt_probe,
+-	.remove = rtd119x_wdt_remove,
+ 	.driver = {
+ 		.name = "rtd1295-watchdog",
+ 		.of_match_table	= rtd119x_wdt_dt_ids,
 -- 
 2.7.4
 
