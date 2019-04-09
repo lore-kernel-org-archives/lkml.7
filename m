@@ -2,130 +2,96 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C00C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B0C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3609B2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5949F2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfDITLv (ORCPT
+        id S1726968AbfDITLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 15:11:51 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:39498 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726497AbfDITLu (ORCPT
+        Tue, 9 Apr 2019 15:11:55 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:42221 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfDITLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 15:11:50 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud9.xs4all.net with ESMTPSA
-        id Dw9ohQUhdiLOmDw9rh4pfW; Tue, 09 Apr 2019 21:11:47 +0200
-Message-ID: <10ca99831556bed2849e16caa5a4810628dc320c.camel@tiscali.nl>
-Subject: Re: CONFIG_* symbols in UAPI headers?
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     Christoph Hellwig <hch@lst.de>, Jie Zhang <jie.zhang@analog.com>
-Cc:     Mike Frysinger <vapier@gentoo.org>,
-        David Howells <dhowells@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 09 Apr 2019 21:11:44 +0200
-In-Reply-To: <20190408124640.GA607@lst.de>
-References: <20190408124640.GA607@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIPQIcZ4KvPu46+eDT2MM+SEWOGQy7P6d90TqyeXZL4+8n6Kcpj1u7s8SqKxOxsElumt/RD0XJ1QdhsAh+GaY3bPKanWxZGgCv22PoTyDPfDjaVQ46wn
- C00u7ZdajfgQIEN8I93G4w65JXcbUFoV7yhpos9x7nMBYUqs/oI8umQqM3lFIKsG0azvYmFFKfwfEzSaLxe2NbI/i3GRlmb7DSlbHRUabzhSvfzOqMUH09C9
- kxat3GDuuf9fWDIywSlFNFVJ3G/skKoQ9HendIWw/GyY38lSoy4LzG/yCua7E7lo160e62+TekNQxmG0KF1J8t7kWLXh+pi+BiSlgyVz4Cs=
+        Tue, 9 Apr 2019 15:11:52 -0400
+Received: from localhost ([2.171.41.193]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MV6G0-1hM4nu3Y86-00S7xH; Tue, 09 Apr 2019 21:11:29 +0200
+Date:   Tue, 9 Apr 2019 21:11:28 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        songqiang1304521@gmail.com, robh@kernel.org, m.othacehe@gmail.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 3/3] Kconfig: change configuration of srf04 ultrasonic iio
+ sensor
+Message-ID: <20190409191126.lkjujjnvjyxua3fn@arbad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:tQ+PdOMlJh44Sw5kkguM4eGYVVeX0cKfISKrqG3IW5nQW7ntndl
+ 5InQkROY01TnimtECvpWmMBeargImLBQyBZGjwpi65Bx6Kq6692ozKJpr8zj6CUiPOVQiCF
+ yel49EncHLXXFOPvv7K7Li99qKtB86nMamZuI8yeaxxxwBuIS56NpHVrwemY/oDJErYJc1m
+ co/T2mMBGZtBQeVkDh86A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6wylmMkoAoU=:mvlTplnkKZB98DuZw2GK7k
+ YbzLWnw5S7KMD3ZDKOKRKFNQ4GSVR3/OTHl6D3lZNTdQw7qVkWBfuPxwoedbZD3jvLp3SoceA
+ 47ct3PICLmNodVHyW6SKq9WRToDHr/vz+1+ee819WrQbzUvMEpzLZcRm45mY82fqROUzuwaGb
+ 7j0CqPLtildl8xmaqM20enAuC5aNJVrQxadlaeEEyavr3+n1PNC1PeEieJsSctAbBoN3+Le4d
+ at44BQoHiSYuOTAC44DYTUC3DxYSmItGJVzpz+EidhFQWLAiw9RyaBkXc/aNVvwyQVUTV8eo8
+ xxpQklT/5u8yIqbm1Kdcz3Lj/Y9vqz0cNuKP8Ia8hK/0QA5aokn2R22vOi6F6EU/rQNMP9iJy
+ +ps8OQltblpjcX03L5yVQRa5EN9Elt7TLRUzbXuLjEP/kcuFW6DJJCXJanp3rNFrC0i5dJyrj
+ 2AnrsTZSDyx1BJ8lPl3YX9ONXwFZNuN3jra5IKAqVMavknORYp18C4i9iXdMJgCfDk2kkieaW
+ bY+XRB5BRQLc6480YQj8wCBkdwlwggfrEfYUSolMBFFP+/UI2FLdBQwet48JUXsB52dIe9/Of
+ 9NwZ0BQAofPHqFkznEJpf141GC/8okEX/uOuU6O4IoLKmZHvbW6nIs9Mf5bFHG7hVbwszGzXI
+ cA3pRJ7vcQdeM8xKtZ7KyhORjIWE+F0t3A9dK9QHiq5qbKFOJ2OTghh5Et+VOiRvTsCvOox0F
+ pM1Y9jyN00m9CZ+k3Jq0q/VJ9U7RGzRPyTN/vw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig schreef op ma 08-04-2019 om 14:46 [+0200]:
-> There are a few similar issues, like struct elf_prstatus having
-> a different layout depending on CONFIG_BINFMT_ELF_FDPIC, or
-> MAX_SHARED_LIBS defending on CONFIG_BINFMT_SHARED_FLAT.
+reword configuration option for SRF04
 
-I've had the patch pasted below in a local branch for over five years, but
-never dared to push it upstream.
+list supported types in help text
 
-Does it still apply?
-
-Thanks,
-
-
-Paul Bolle 
-
--- >8 ---
-From 0f73c8ee776c197e3029c4eed21af0f121a8f9d3 Mon Sep 17 00:00:00 2001
-From: Paul Bolle <pebolle@tiscali.nl>
-Date: Tue, 4 Feb 2014 22:22:48 +0100
-Subject: [PATCH] headers_check: enable check for CONFIG_ leakage
-
-The check for leaked CONFIG_ symbols was disabled in v2.6.30, because it
-generated too much noise. But a (rather simplistic) preprocessing of
-comments suffices to silence the noise (ie, no false positives are
-reported anymore).
-
-So add some preprocessing of comments and enable check_config() again.
-
-Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- scripts/headers_check.pl | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+ drivers/iio/proximity/Kconfig | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/headers_check.pl b/scripts/headers_check.pl
-index b6aec5e4365f..8e67017c1b67 100755
---- a/scripts/headers_check.pl
-+++ b/scripts/headers_check.pl
-@@ -36,13 +36,36 @@ foreach my $file (@files) {
- 	open(my $fh, '<', $filename)
- 		or die "$filename: $!\n";
- 	$lineno = 0;
-+	my $in_comment = 0;
-+	my $swap_state = 0;
- 	while ($line = <$fh>) {
- 		$lineno++;
--		&check_include();
--		&check_asm_types();
--		&check_sizetypes();
--		&check_declarations();
--		# Dropped for now. Too much noise &check_config();
-+
-+		# strip inline comments
-+		$line =~ s|/\*.*\*/||;
-+
-+		# try to handle multi line comments
-+		if ($in_comment == 0 and $line =~ m|/\*|) {
-+			$line =~ s|/\*.*$||;
-+			# we still need to check (the first half of) this line
-+			# so we set $in_comment after the checks
-+			$swap_state = 1;
-+		}
-+		if ($in_comment == 1 and $line =~ m|\*/|) {
-+			$line =~ s|^.*\*/||;
-+			$in_comment = 0;
-+		}
-+		unless ($in_comment) {
-+			check_include();
-+			check_asm_types();
-+			check_sizetypes();
-+			check_declarations();
-+			check_config();
-+		}
-+		if ($swap_state)  {
-+			$in_comment = 1;
-+			$swap_state = 0;
-+		}
- 	}
- 	close $fh;
- }
+diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
+index 12a3d3d40a91..e9f254ae3892 100644
+--- a/drivers/iio/proximity/Kconfig
++++ b/drivers/iio/proximity/Kconfig
+@@ -68,12 +68,19 @@ config RFD77402
+ 	  module will be called rfd77402.
+ 
+ config SRF04
+-	tristate "Devantech SRF04 ultrasonic ranger sensor"
++	tristate "GPIO bitbanged ultrasonic ranger sensor (SRF04, MB1000)"
+ 	depends on GPIOLIB
+ 	help
+-	  Say Y here to build a driver for Devantech SRF04 ultrasonic
++	  Say Y here to build a driver for GPIO bitbanged ultrasonic
+ 	  ranger sensor. This driver can be used to measure the distance
+ 	  of objects. It is using two GPIOs.
++	  Actually Supported types are:
++	  - Devantech SRF04
++	  - Maxbotix mb1000
++	  - Maxbotix mb1010
++	  - Maxbotix mb1020
++	  - Maxbotix mb1030
++	  - Maxbotix mb1040
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called srf04.
 -- 
-2.17.2
-
+2.11.0
