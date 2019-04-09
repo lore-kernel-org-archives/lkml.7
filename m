@@ -2,134 +2,207 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C74C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE7420880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538E9206DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QM9UKVa+"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="f5NR+bIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfDIN0r (ORCPT
+        id S1727753AbfDIN2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:26:47 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33231 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfDIN0r (ORCPT
+        Tue, 9 Apr 2019 09:28:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38305 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727325AbfDIN17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:26:47 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so14496658ljc.0;
-        Tue, 09 Apr 2019 06:26:45 -0700 (PDT)
+        Tue, 9 Apr 2019 09:27:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id v4so14251397ioj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 06:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=CASyou2Sc1m+3jmTfHSR+07/UVxWLim07HVIVxer/F8=;
-        b=QM9UKVa+z54hzoRQaRQutgkB4FNjCKrL8ToiG0FpPSWbfQijF3pORICjAGjxEb2cCS
-         PfshY5ra6OlJmEGVOg9iiCYA8WawgErogRkPVvH3rQwEVtUsRl7eVMStKpIt7o8KrCXK
-         5+Whw3iD4DhGa5yQ2BPelAhW8BR5xulGQMGj36ns5sdN1lP4OWw89gyuGfQke5ubQmy3
-         3Kn7AhISpyzHpUsX6zsqhBBzLYp1BDOCdPKvA+njkGOAPoEBPX2b4lo2h568NJo8XrG5
-         xfKuiiXinrqisOYQVTc9g/jzXJvNtF9Epa4ZvajIXd0AKZCiliLFhBGZP3XAVXKg4Baz
-         8OAg==
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=xJVc12goI8rqGySbWSdxOIoYdvxImxl/QNO4neztKXI=;
+        b=f5NR+bIXQSfde2BcDK/AtMhi+vY7SV0Q3mrZcwE7FSyiUi2hjBAQD++MmaDR20Iys8
+         RvzWxSkXC6zBwuq3OmNXHXU2h7sjufzOra+fMy6ivg0+hPgYMZK6fIsS14gn5Gu9ppIA
+         7yHcbbWvOfPcsHRoIqm5pb71TXKVILYuiPjFI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=CASyou2Sc1m+3jmTfHSR+07/UVxWLim07HVIVxer/F8=;
-        b=mMjTDLikCCMdECxXkH+MWxKlOv2R8QcJgZpWQY5Kj1Ny7wp+J1ZJuM/pCwz7Zt24Nw
-         MqNFzXoo2TaTYuqle4QEcsZ/bGsqLSkXXdBJ5GY+EJpXd2qVI3JFfNQ88Ic3U+hDz1Hg
-         lA/2A4DNphs9eNCA+cJgVnIsj/o6/WUg6TFVzYYCc35h61HG/cPU3E31ITffHo9b3FA5
-         Qd/umMUm43dBywhlpSqjQI348IVHfueGsQPzLIcqy0kiP288qJ0SherJnBtBz1e79wJM
-         r/PZ4EHNVLFQLDz66iPMABhlqqR4keV17yQIS46B6/e8apUDTocYbtB/tklU+801LOYh
-         8v9Q==
-X-Gm-Message-State: APjAAAU6XA/fGQyqV+TF3GFS2ZY6nMkWTd86BskkGq1kvvMaYiQSTsZ6
-        VkKn/puX6s2lx/+4+dfUWBA=
-X-Google-Smtp-Source: APXvYqy5Eo/vG8jxkKZDPJRcgp89sxGEhBJKfIbYIvyBM4tjgAdq2hAxBk5czCzxPJREKBBpYpGYbA==
-X-Received: by 2002:a2e:9a02:: with SMTP id o2mr19358719lji.179.1554816404903;
-        Tue, 09 Apr 2019 06:26:44 -0700 (PDT)
-Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id a16sm6555688lfl.86.2019.04.09.06.26.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 06:26:44 -0700 (PDT)
-Subject: Re: [Xen-devel][PATCH] xen/cameraif: add ABI for para-virtual camera
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        konrad.wilk@oracle.com, hverkuil@xs4all.nl,
-        boris.ostrovsky@oracle.com
-Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-References: <20190409091546.9606-1-andr2000@gmail.com>
- <9b9ba6b9-f045-80e2-fe8a-595728fb1ec0@suse.com>
- <5bb8c828-b0ae-86c3-dacf-88bf6032dd6f@gmail.com>
- <303b7d57-1785-62b3-fac0-a3e947e691c4@suse.com>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <e9b3a843-1b1f-94c2-e123-09fb26d89753@gmail.com>
-Date:   Tue, 9 Apr 2019 16:26:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=xJVc12goI8rqGySbWSdxOIoYdvxImxl/QNO4neztKXI=;
+        b=aajOwy7R2P7VLgQ8T9f7SLShgAo37qhoryCoydLDl6Ct98+vS5z8tOzNnR1NZ3S0qS
+         bw5Cw5AlCl6qcOVlL4HT09KJIAGSqdl+hyH1vCVIwDRYZtcWhyU1FuTkP9ybDSCwPygn
+         MpFPkWWB9/0m1uPKt2x9vJmRQn6byazyS0GnteEEZDI+lySp287CTueAKO0Oq9IThC3H
+         O6J3h4InfpNHy7OshzUPzeYNqmI3DMiUDWx4NkCdOJynzbtNSqpLNmFsaRYNtKhsM5Oy
+         xKPqXFYc9hlSxYkCRySjL78XacO/+8CceJx8vIGQIC1iNvRwHkyfumoQnhGRaAW90YQ4
+         knHw==
+X-Gm-Message-State: APjAAAXm5ZUwFsUNKHW9gg90GfA2y5fntDFM2PUqrrmpQNhKfYSPJa0x
+        QnFLWv6MAzkSiC232hvTI7/iWsCFW3ycpMW2DCkHqw==
+X-Google-Smtp-Source: APXvYqy01et48ReAOSaa4kFhye3b3Klu1UErPDXwE5xbVWJksNHuLhjMBRfNIJjL5gSUuguL4VbqOkwbSJ/SoAVk84c=
+X-Received: by 2002:a5e:9e02:: with SMTP id i2mr21183504ioq.238.1554816478797;
+ Tue, 09 Apr 2019 06:27:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <303b7d57-1785-62b3-fac0-a3e947e691c4@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
+ <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com> <20190409113157.e4vrzesbgmyslomb@core.my.home>
+In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 9 Apr 2019 18:57:47 +0530
+Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 12:46 PM, Juergen Gross wrote:
-> On 09/04/2019 11:33, Oleksandr Andrushchenko wrote:
->> On 4/9/19 12:28 PM, Juergen Gross wrote:
->>> On 09/04/2019 11:15, Oleksandr Andrushchenko wrote:
->>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->>>>
->>>> This is the ABI for the two halves of a para-virtualized
->>>> camera driver which extends Xen's reach multimedia capabilities even
->>>> further enabling it for video conferencing, In-Vehicle Infotainment,
->>>> high definition maps etc.
->>>>
->>>> The initial goal is to support most needed functionality with the
->>>> final idea to make it possible to extend the protocol if need be:
->>>>
->>>> 1. Provide means for base virtual device configuration:
->>>>    - pixel formats
->>>>    - resolutions
->>>>    - frame rates
->>>> 2. Support basic camera controls:
->>>>    - contrast
->>>>    - brightness
->>>>    - hue
->>>>    - saturation
->>>> 3. Support streaming control
->>>>
->>>> Signed-off-by: Oleksandr Andrushchenko
->>>> <oleksandr_andrushchenko@epam.com>
->>>> Cc: Juergen Gross <jgross@suse.com>
->>>> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
->>>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
->>> I'm in principle fine with this patch, but it should be sent as part of
->>> a series using that header. In case the related driver isn't accepted
->>> we'd end up with a stale header file.
->> Hm, I am doing this as I did for the rest of protocols before:
->> 1. Get the protocol in Xen
->> 2. Get the copy in Linux
->> 3. Upstream driver (use header)
-> Sorry for not having done the review properly in the past. ;-)
->
->> Even if the driver is not accepted (hope this won't happen)
->> then this patch makes Xen and Linux properly aligned anyway.
->> Which is IMO good
-> Having an unused header file is not good.
->
-> Be assured I'm going to give you the needed Reviewed-by: tag for
-> the patch adding the header in a series using it.
-Ok, sounds good
->
->
-> Juergen
+Hi Ond=C5=99ej Jirman,
 
+On Tue, Apr 9, 2019 at 5:01 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
+>
+> Hi Jagan,
+>
+> On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
+> > Based on the conversation about using common dtsi from this thread[1],
+> > I'm commenting here to make show the diff directly on the nodes,
+> > giving comments on each node so-that we can see the diff globally.
+>
+> Thanks for the suggestions below. It mostly repeats the differences and
+> commonalities I already stated in the previous discussion.
+>
+> I don't have much to add to what I already said previously, though, becau=
+se you
+> didn't address my concerns there. But I can restate and expand on those
+> concerns.
+>
+> Previously I already agreed it's possible to base orangepi-3.dts on
+> orangepi.dtsi, and proposed a maintainable way forward, and why to follow=
+ it (to
+> quote myself):
+>
+>   Schematics allow for high amount of variability in the power tree (see =
+all the
+>   NC (not connected) / 0R resistors) in the schematic around AXP805. Ever=
+y board
+>   based on this Xunlong design can be subtly different.
+
+Well, how about defining them in required dts file and group it common
+regulators in dtsi? The idea of all these 3 H6 OPI boards are
+evaluated in the same design consideration by adding new IP's in new
+boards design by keeping the core things common like lite2 has wifi,
+one plus has emac and 3 has PCIe etc. This is what I got from
+Steven(OrangePI).
+
+>
+>   I already suggested a maintainable solution, below. Where base dtsi has=
+ empty
+>   config for regulators and every board based on that just defines it com=
+pletely
+>   for itself.
+>
+>   A few regulators (for CPU/GPU) will most probably have the same meaning=
+ on
+>   every derived board, so these can probably be kept in dtsi without caus=
+ing too
+>   much annoyance.
+>
+>   It's unpleasant to have wrong regulator setup defined in an underlying =
+dtsi,
+>   and then trying to override it by removing/adding random properties in =
+the
+>   board dts for the new boards based on that, so that it fits.
+
+If we manage them properly by moving common things in dtsi and rest in
+dts, we may avoid these underlying issues.
+
+>
+>   The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi =
+can be
+>   shared (as of now).
+>
+> My suggestion was this:
+>
+>   So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I=
+'d have
+>   to first move some things out of the base dtsi to the OrangePi Lite2 an=
+d One
+>   Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only des=
+cribe
+>   HW that is *really* shared by these 2 boards and Orange Pi 3.
+>
+>   If I do that, I'd undefine all the axp805 regulator nodes and move the
+>   configurations to each of the 3 board files. That will probably end up =
+being
+>   the least confusing and most maintainable. See axp81x.dtsi lines 86-144=
+ for
+>   what I mean.
+>
+> You seem to be suggesting a solution where every time we add an OrangePi =
+H6
+> based board, the person adding it will have to go through the base dtsi a=
+nd all
+> the other boards based on it, status disable or otherwise change regulato=
+rs in
+> the base dtsi, patch all the other boards to re-enable it.
+>
+> It would be already unpleasant just adding a third board based on this ap=
+proach.
+> And when the fourth board is added, with another small differences in the
+> regulator use/meanings, the person will be looking at patching 4 dts file=
+s
+> + adding one for his own board. For what benefit, to save some bytes righ=
+t now?
+>
+> I think maintainability, ease of adding new boards is more important, tha=
+n
+> having a dtsi that tries to maximally cover all the commonalities between=
+ the
+> existing boards right now, without regards for the future. That's why
+> I suggested an approach like in axp81x.dtsi lines 86-144.
+
+True, if the boards indeed are different but we can maintain easily if
+the boards are from same family of design based my experience and few
+boards do share common things in dtsi already.
+
+Anyway, thanks for inputs. Seems like patch is applied already may be
+we can move into dtsi if require in future.
+
+Thanks,
+Jagan.
