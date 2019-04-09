@@ -2,356 +2,233 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D7C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55B3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CD82133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7045A2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfDIM5b (ORCPT
+        id S1727445AbfDIM6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:57:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33512 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726908AbfDIM5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:57:30 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 502FCF91CEADC68235D3;
-        Tue,  9 Apr 2019 20:54:15 +0800 (CST)
-Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 9 Apr 2019 20:54:09 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v5 6/6] x86/iommu: add support for generic boot option iommu.dma_mode
-Date:   Tue, 9 Apr 2019 20:53:08 +0800
-Message-ID: <20190409125308.18304-7-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20190409125308.18304-1-thunder.leizhen@huawei.com>
-References: <20190409125308.18304-1-thunder.leizhen@huawei.com>
+        Tue, 9 Apr 2019 08:58:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36505 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfDIM6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 08:58:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o74so15428184ota.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 05:58:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BwXo0uFNihYstUH5LVz3cKdXiA5bwZ5eOv+D7iD7tJk=;
+        b=Nf/vEw69NOGPJRHbTXvEO5hMCwHfpJbqDY8E33/x3+MOKWCz8ojY1CFphOjlM691qG
+         U1Sc/m3AJ4yjF5thYuCjrWrPqYsvd0jXq492Mx1IS3LIxQxmJ3WNDBL/HPllbmBH7oyI
+         /3xpqpIh3yh8bXaz5v+je0dcRkinzeG5iVEeUW1wjqULPkYUxwfogf4E8ItkcJUgzjN0
+         ajUXBuRX8bJFX5oK/jQ8DZL4fZJOTs+WoIif1vJmrnpVglSyC4s34oWXGxPqB7rLqHgf
+         tQvmVajQn86O3KxcOLu8YfDlXWR607XlPGjKxFF4Uo0PyzzvapfGGcTPSR9jhD6MJSsu
+         BHMg==
+X-Gm-Message-State: APjAAAXLlQTY8BPxvKhfNKqU9KU2w3GntCdVwdKefrKsx3AvZFaaboo6
+        6VSW/btOUc/T2d2RgMIAFCWanAVuX0dQRv0evmmeZ1jX
+X-Google-Smtp-Source: APXvYqyVlghjm0c4DsiqmvAf5XvkBygKZ9WhfoIdhghOnk5r+nDn11yE4lT1SIIt/gib1bAaGDq8OQHsuTgjXFhWGjM=
+X-Received: by 2002:a9d:6941:: with SMTP id p1mr23213980oto.64.1554814680445;
+ Tue, 09 Apr 2019 05:58:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+References: <cover.1554732921.git.rgb@redhat.com> <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
+In-Reply-To: <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Tue, 9 Apr 2019 14:57:50 +0200
+Message-ID: <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 05/10] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following equivalence or replacement relationship exists:
-iommu=pt <--> iommu.dma_mode=passthrough.
-iommu=nopt can be replaced with iommu.dma_mode=lazy.
-intel_iommu=strict <--> iommu.dma_mode=strict.
-amd_iommu=fullflush <--> iommu.dma_mode=strict.
+On Tue, Apr 9, 2019 at 5:40 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> Add audit container identifier support to the action of signalling the
+> audit daemon.
+>
+> Since this would need to add an element to the audit_sig_info struct,
+> a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> audit_sig_info2 struct.  Corresponding support is required in the
+> userspace code to reflect the new record request and reply type.
+> An older userspace won't break since it won't know to request this
+> record type.
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  6 ++---
- arch/ia64/include/asm/iommu.h                   |  2 --
- arch/ia64/kernel/pci-dma.c                      |  2 --
- arch/x86/include/asm/iommu.h                    |  1 -
- arch/x86/kernel/pci-dma.c                       | 35 ++++++++++++-------------
- drivers/iommu/Kconfig                           |  2 +-
- drivers/iommu/amd_iommu.c                       | 10 +++----
- drivers/iommu/amd_iommu_init.c                  |  4 +--
- drivers/iommu/amd_iommu_types.h                 |  6 -----
- drivers/iommu/intel-iommu.c                     |  9 +++----
- 10 files changed, 31 insertions(+), 46 deletions(-)
+This looks good to me.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 176f96032d9d62a..ca6edc529d6a614 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1815,9 +1815,9 @@
- 			options(such as CONFIG_IOMMU_DEFAULT_PASSTHROUGH) to
- 			choose which mode to be used.
- 			Note: For historical reasons, ARM64/S390/PPC/X86 have
--			their specific options. Currently, only ARM64/S390/PPC
--			support this boot option, and hope other ARCHs to use
--			this as generic boot option.
-+			their specific options, but strongly recommended switch
-+			to use this one, the new ARCHs should use this generic
-+			boot option.
- 		passthrough
- 			Configure DMA to bypass the IOMMU by default.
- 		lazy
-diff --git a/arch/ia64/include/asm/iommu.h b/arch/ia64/include/asm/iommu.h
-index 7429a72f3f92199..92aceef63710861 100644
---- a/arch/ia64/include/asm/iommu.h
-+++ b/arch/ia64/include/asm/iommu.h
-@@ -8,10 +8,8 @@
- extern void no_iommu_init(void);
- #ifdef	CONFIG_INTEL_IOMMU
- extern int force_iommu, no_iommu;
--extern int iommu_pass_through;
- extern int iommu_detected;
- #else
--#define iommu_pass_through	(0)
- #define no_iommu		(1)
- #define iommu_detected		(0)
- #endif
-diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-index fe988c49f01ce6a..f5d49cd3fbb01a9 100644
---- a/arch/ia64/kernel/pci-dma.c
-+++ b/arch/ia64/kernel/pci-dma.c
-@@ -22,8 +22,6 @@
- int force_iommu __read_mostly;
- #endif
- 
--int iommu_pass_through;
--
- static int __init pci_iommu_init(void)
- {
- 	if (iommu_detected)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index baedab8ac5385f7..b91623d521d9f0f 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -4,7 +4,6 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
--extern int iommu_pass_through;
- 
- /* 10 seconds */
- #define DMAR_OPERATION_TIMEOUT ((cycles_t) tsc_khz*10*1000)
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index d460998ae828514..fc64928e47cb860 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -6,6 +6,7 @@
- #include <linux/memblock.h>
- #include <linux/gfp.h>
- #include <linux/pci.h>
-+#include <linux/iommu.h>
- 
- #include <asm/proto.h>
- #include <asm/dma.h>
-@@ -34,21 +35,6 @@
- /* Set this to 1 if there is a HW IOMMU in the system */
- int iommu_detected __read_mostly = 0;
- 
--/*
-- * This variable becomes 1 if iommu=pt is passed on the kernel command line.
-- * If this variable is 1, IOMMU implementations do no DMA translation for
-- * devices and allow every device to access to whole physical memory. This is
-- * useful if a user wants to use an IOMMU only for KVM device assignment to
-- * guests and not for driver dma translation.
-- * It is also possible to disable by default in kernel config, and enable with
-- * iommu=nopt at boot time.
-- */
--#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
--int iommu_pass_through __read_mostly = 1;
--#else
--int iommu_pass_through __read_mostly;
--#endif
--
- extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
- 
- /* Dummy device used for NULL arguments (normally ISA). */
-@@ -139,10 +125,23 @@ static __init int iommu_setup(char *p)
- 		if (!strncmp(p, "soft", 4))
- 			swiotlb = 1;
- #endif
-+
-+		/*
-+		 * IOMMU implementations do no DMA translation for devices and
-+		 * allow every device to access to whole physical memory. This
-+		 * is useful if a user wants to use an IOMMU only for KVM
-+		 * device assignment to guests and not for driver dma
-+		 * translation.
-+		 */
- 		if (!strncmp(p, "pt", 2))
--			iommu_pass_through = 1;
--		if (!strncmp(p, "nopt", 4))
--			iommu_pass_through = 0;
-+			iommu_default_dma_mode_set(IOMMU_DMA_MODE_PASSTHROUGH);
-+
-+		/*
-+		 * The default dma mode is lazy on X86. And if dma mode is
-+		 * already nopt, keep it no change.
-+		 */
-+		if (!strncmp(p, "nopt", 4) && IOMMU_DMA_MODE_IS_PASSTHROUGH())
-+			iommu_default_dma_mode_set(IOMMU_DMA_MODE_LAZY);
- 
- 		gart_parse_options(p);
- 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 5dca666b22e6cd5..ace8cb467d742f9 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -78,7 +78,7 @@ choice
- 	prompt "IOMMU dma mode"
- 	depends on IOMMU_API
- 	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
--	default IOMMU_DEFAULT_LAZY if S390_IOMMU
-+	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
- 	default IOMMU_DEFAULT_STRICT
- 	help
- 	  This option allows IOMMU dma mode to be chose at build time, to
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f7cdd2ab7f11f6c..44be42f1e887ea4 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -448,7 +448,7 @@ static int iommu_init_device(struct device *dev)
- 	 * invalid address), we ignore the capability for the device so
- 	 * it'll be forced to go into translation mode.
- 	 */
--	if ((iommu_pass_through || !amd_iommu_force_isolation) &&
-+	if ((IOMMU_DMA_MODE_IS_PASSTHROUGH() || !amd_iommu_force_isolation) &&
- 	    dev_is_pci(dev) && pci_iommuv2_capable(to_pci_dev(dev))) {
- 		struct amd_iommu *iommu;
- 
-@@ -2274,7 +2274,7 @@ static int amd_iommu_add_device(struct device *dev)
- 
- 	BUG_ON(!dev_data);
- 
--	if (iommu_pass_through || dev_data->iommu_v2)
-+	if (IOMMU_DMA_MODE_IS_PASSTHROUGH() || dev_data->iommu_v2)
- 		iommu_request_dm_for_dev(dev);
- 
- 	/* Domains are initialized for this device - have a look what we ended up with */
-@@ -2479,7 +2479,7 @@ static void __unmap_single(struct dma_ops_domain *dma_dom,
- 		start += PAGE_SIZE;
- 	}
- 
--	if (amd_iommu_unmap_flush) {
-+	if (IOMMU_DMA_MODE_IS_STRICT()) {
- 		domain_flush_tlb(&dma_dom->domain);
- 		domain_flush_complete(&dma_dom->domain);
- 		dma_ops_free_iova(dma_dom, dma_addr, pages);
-@@ -2853,10 +2853,10 @@ int __init amd_iommu_init_api(void)
- 
- int __init amd_iommu_init_dma_ops(void)
- {
--	swiotlb        = (iommu_pass_through || sme_me_mask) ? 1 : 0;
-+	swiotlb = (IOMMU_DMA_MODE_IS_PASSTHROUGH() || sme_me_mask) ? 1 : 0;
- 	iommu_detected = 1;
- 
--	if (amd_iommu_unmap_flush)
-+	if (IOMMU_DMA_MODE_IS_STRICT())
- 		pr_info("IO/TLB flush on unmap enabled\n");
- 	else
- 		pr_info("Lazy IO/TLB flushing enabled\n");
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 1b1378619fc9ec2..eae18aae2bafd39 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -166,8 +166,6 @@ struct ivmd_header {
- 					   to handle */
- LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
- 					   we find in ACPI */
--bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
--
- LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
- 					   system */
- 
-@@ -2857,7 +2855,7 @@ static int __init parse_amd_iommu_options(char *str)
- {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "fullflush", 9) == 0)
--			amd_iommu_unmap_flush = true;
-+			iommu_default_dma_mode_set(IOMMU_DMA_MODE_STRICT);
- 		if (strncmp(str, "off", 3) == 0)
- 			amd_iommu_disabled = true;
- 		if (strncmp(str, "force_isolation", 15) == 0)
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 87965e4d964771b..724182f158523a1 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -743,12 +743,6 @@ struct unity_map_entry {
- /* allocation bitmap for domain ids */
- extern unsigned long *amd_iommu_pd_alloc_bitmap;
- 
--/*
-- * If true, the addresses will be flushed on unmap time, not when
-- * they are reused
-- */
--extern bool amd_iommu_unmap_flush;
--
- /* Smallest max PASID supported by any IOMMU in the system */
- extern u32 amd_iommu_max_pasid;
- 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 28cb713d728ceef..57203f895382831 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -362,7 +362,6 @@ static int domain_detach_iommu(struct dmar_domain *domain,
- 
- static int dmar_map_gfx = 1;
- static int dmar_forcedac;
--static int intel_iommu_strict;
- static int intel_iommu_superpage = 1;
- static int intel_iommu_sm;
- static int iommu_identity_mapping;
-@@ -453,7 +452,7 @@ static int __init intel_iommu_setup(char *str)
- 			dmar_forcedac = 1;
- 		} else if (!strncmp(str, "strict", 6)) {
- 			pr_info("Disable batched IOTLB flush\n");
--			intel_iommu_strict = 1;
-+			iommu_default_dma_mode_set(IOMMU_DMA_MODE_STRICT);
- 		} else if (!strncmp(str, "sp_off", 6)) {
- 			pr_info("Disable supported super page\n");
- 			intel_iommu_superpage = 0;
-@@ -3408,7 +3407,7 @@ static int __init init_dmars(void)
- 		iommu->flush.flush_iotlb(iommu, 0, 0, 0, DMA_TLB_GLOBAL_FLUSH);
- 	}
- 
--	if (iommu_pass_through)
-+	if (IOMMU_DMA_MODE_IS_PASSTHROUGH())
- 		iommu_identity_mapping |= IDENTMAP_ALL;
- 
- #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
-@@ -3749,7 +3748,7 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 
- 	freelist = domain_unmap(domain, start_pfn, last_pfn);
- 
--	if (intel_iommu_strict) {
-+	if (IOMMU_DMA_MODE_IS_STRICT()) {
- 		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
- 				      nrpages, !freelist, 0);
- 		/* free iova */
-@@ -5460,7 +5459,7 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
- 	} else if (dmar_map_gfx) {
- 		/* we have to ensure the gfx device is idle before we flush */
- 		pci_info(dev, "Disabling batched IOTLB flush on Ironlake\n");
--		intel_iommu_strict = 1;
-+		iommu_default_dma_mode_set(IOMMU_DMA_MODE_STRICT);
-        }
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0040, quirk_calpella_no_shadow_gtt);
--- 
-1.8.3
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+
+Although I'm wondering if we shouldn't try to future-proof the
+AUDIT_SIGNAL_INFO2 format somehow, so that we don't need to add
+another AUDIT_SIGNAL_INFO3 when the need arises to add yet-another
+identifier to it... The simplest solution I can come up with is to add
+a "version" field at the beginning (set to 2 initially), then v<N>_len
+at the beginning of data for version <N>. But maybe this is too
+complicated for too little gain...
+
+> ---
+>  include/linux/audit.h       |  7 +++++++
+>  include/uapi/linux/audit.h  |  1 +
+>  kernel/audit.c              | 27 +++++++++++++++++++++++++++
+>  kernel/audit.h              |  1 +
+>  kernel/auditsc.c            |  1 +
+>  security/selinux/nlmsgtab.c |  1 +
+>  6 files changed, 38 insertions(+)
+>
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 43438192ca2a..c2dec9157463 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -37,6 +37,13 @@ struct audit_sig_info {
+>         char            ctx[0];
+>  };
+>
+> +struct audit_sig_info2 {
+> +       uid_t           uid;
+> +       pid_t           pid;
+> +       u64             cid;
+> +       char            ctx[0];
+> +};
+> +
+>  struct audit_buffer;
+>  struct audit_context;
+>  struct inode;
+> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> index 55fde9970762..10cc67926cf1 100644
+> --- a/include/uapi/linux/audit.h
+> +++ b/include/uapi/linux/audit.h
+> @@ -72,6 +72,7 @@
+>  #define AUDIT_SET_FEATURE      1018    /* Turn an audit feature on or off */
+>  #define AUDIT_GET_FEATURE      1019    /* Get which features are enabled */
+>  #define AUDIT_CONTAINER_OP     1020    /* Define the container id and info */
+> +#define AUDIT_SIGNAL_INFO2     1021    /* Get info auditd signal sender */
+>
+>  #define AUDIT_FIRST_USER_MSG   1100    /* Userspace messages mostly uninteresting to kernel */
+>  #define AUDIT_USER_AVC         1107    /* We filter this differently */
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 3e0af53f3c4d..87e1d367f98c 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -138,6 +138,7 @@ struct audit_net {
+>  kuid_t         audit_sig_uid = INVALID_UID;
+>  pid_t          audit_sig_pid = -1;
+>  u32            audit_sig_sid = 0;
+> +u64            audit_sig_cid = AUDIT_CID_UNSET;
+>
+>  /* Records can be lost in several ways:
+>     0) [suppressed in audit_alloc]
+> @@ -1097,6 +1098,7 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
+>         case AUDIT_ADD_RULE:
+>         case AUDIT_DEL_RULE:
+>         case AUDIT_SIGNAL_INFO:
+> +       case AUDIT_SIGNAL_INFO2:
+>         case AUDIT_TTY_GET:
+>         case AUDIT_TTY_SET:
+>         case AUDIT_TRIM:
+> @@ -1260,6 +1262,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>         struct audit_buffer     *ab;
+>         u16                     msg_type = nlh->nlmsg_type;
+>         struct audit_sig_info   *sig_data;
+> +       struct audit_sig_info2  *sig_data2;
+>         char                    *ctx = NULL;
+>         u32                     len;
+>
+> @@ -1519,6 +1522,30 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>                                  sig_data, sizeof(*sig_data) + len);
+>                 kfree(sig_data);
+>                 break;
+> +       case AUDIT_SIGNAL_INFO2:
+> +               len = 0;
+> +               if (audit_sig_sid) {
+> +                       err = security_secid_to_secctx(audit_sig_sid, &ctx, &len);
+> +                       if (err)
+> +                               return err;
+> +               }
+> +               sig_data2 = kmalloc(sizeof(*sig_data2) + len, GFP_KERNEL);
+> +               if (!sig_data2) {
+> +                       if (audit_sig_sid)
+> +                               security_release_secctx(ctx, len);
+> +                       return -ENOMEM;
+> +               }
+> +               sig_data2->uid = from_kuid(&init_user_ns, audit_sig_uid);
+> +               sig_data2->pid = audit_sig_pid;
+> +               if (audit_sig_sid) {
+> +                       memcpy(sig_data2->ctx, ctx, len);
+> +                       security_release_secctx(ctx, len);
+> +               }
+> +               sig_data2->cid = audit_sig_cid;
+> +               audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO2, 0, 0,
+> +                                sig_data2, sizeof(*sig_data2) + len);
+> +               kfree(sig_data2);
+> +               break;
+>         case AUDIT_TTY_GET: {
+>                 struct audit_tty_status s;
+>                 unsigned int t;
+> diff --git a/kernel/audit.h b/kernel/audit.h
+> index e2912924af0d..c5ac6436317e 100644
+> --- a/kernel/audit.h
+> +++ b/kernel/audit.h
+> @@ -345,6 +345,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
+>  extern pid_t audit_sig_pid;
+>  extern kuid_t audit_sig_uid;
+>  extern u32 audit_sig_sid;
+> +extern u64 audit_sig_cid;
+>
+>  extern int audit_filter(int msgtype, unsigned int listtype);
+>
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index eea445b7a181..0a29a00feaf1 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2405,6 +2405,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+>                 else
+>                         audit_sig_uid = uid;
+>                 security_task_getsecid(current, &audit_sig_sid);
+> +               audit_sig_cid = audit_get_contid(current);
+>         }
+>
+>         if (!audit_signals || audit_dummy_context())
+> diff --git a/security/selinux/nlmsgtab.c b/security/selinux/nlmsgtab.c
+> index 9cec81209617..682fe7397762 100644
+> --- a/security/selinux/nlmsgtab.c
+> +++ b/security/selinux/nlmsgtab.c
+> @@ -132,6 +132,7 @@ struct nlmsg_perm {
+>         { AUDIT_DEL_RULE,       NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
+>         { AUDIT_USER,           NETLINK_AUDIT_SOCKET__NLMSG_RELAY    },
+>         { AUDIT_SIGNAL_INFO,    NETLINK_AUDIT_SOCKET__NLMSG_READ     },
+> +       { AUDIT_SIGNAL_INFO2,   NETLINK_AUDIT_SOCKET__NLMSG_READ     },
+>         { AUDIT_TRIM,           NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
+>         { AUDIT_MAKE_EQUIV,     NETLINK_AUDIT_SOCKET__NLMSG_WRITE    },
+>         { AUDIT_TTY_GET,        NETLINK_AUDIT_SOCKET__NLMSG_READ     },
+> --
+> 1.8.3.1
+>
 
 
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
