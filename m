@@ -2,98 +2,68 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570E5C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B30C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AD02084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544A32084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f7jE8eVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfDIUMC (ORCPT
+        id S1726741AbfDIUNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 16:12:02 -0400
-Received: from namei.org ([65.99.196.166]:32992 "EHLO namei.org"
+        Tue, 9 Apr 2019 16:13:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48494 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfDIUMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 16:12:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x39KBwBR007797;
-        Tue, 9 Apr 2019 20:11:58 GMT
-Date:   Wed, 10 Apr 2019 06:11:58 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Kees Cook <keescook@chromium.org>
-cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
-        John Johansen <john.johansen@canonical.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Johansen <john.johansen@canonical.com>
-Subject: Re: [PATCH] apparmor: Restore Y/N in /sys for apparmor's "enabled"
-In-Reply-To: <CAGXu5j+g8tPrDAYVKv26ci6zvGuvC1TMXto7weVP2QBymMRjhw@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.1904100611310.7633@namei.org>
-References: <20190408160706.GA18786@beast> <CADyDSO4NkEY-SPT-abnyRXT9kGWhF8LbU3XQGNp-5k_15debDg@mail.gmail.com> <CAGXu5j+g8tPrDAYVKv26ci6zvGuvC1TMXto7weVP2QBymMRjhw@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1726517AbfDIUNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 16:13:31 -0400
+Received: from zn.tnic (p200300EC2F0F850034F9F589D882639B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:8500:34f9:f589:d882:639b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5349B1EC00FF;
+        Tue,  9 Apr 2019 22:13:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554840810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=TJTV5PNZEol+XmBW62N/1p2Fum6+baujgu7QCqCSxJQ=;
+        b=f7jE8eVjZVzyPEKHECaWkWciS3sTygjLeAT8BLG40AGalDiiTNcU584CBs7qfBj0C0+K+m
+        Rk6r3+zAR0PJpcBAtQxim1JAUAv+4Z6AA7/Y4VNFd5Pk64SIQ1CO2DUz1hB7bFbyAnl/8e
+        sRWwq9vdw8OX2h0dCBzDr1TLWFGY5Ys=
+Date:   Tue, 9 Apr 2019 22:13:23 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thor Thayer <thor.thayer@linux.intel.com>
+Cc:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, james.morse@arm.com,
+        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
+Message-ID: <20190409201323.GD6150@zn.tnic>
+References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
+ <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Apr 2019, Kees Cook wrote:
+On Tue, Apr 09, 2019 at 02:11:58PM -0500, Thor Thayer wrote:
+> If possible, I'd like this series to go through the EDAC tree since future
+> patches will follow this format.
 
-> On Mon, Apr 8, 2019 at 11:21 PM David Rheinsberg
-> <david.rheinsberg@gmail.com> wrote:
-> >
-> > Hi
-> >
-> > On Mon, Apr 8, 2019 at 6:07 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Before commit c5459b829b71 ("LSM: Plumb visibility into optional "enabled"
-> > > state"), /sys/module/apparmor/parameters/enabled would show "Y" or "N"
-> > > since it was using the "bool" handler. After being changed to "int",
-> > > this switched to "1" or "0", breaking the userspace AppArmor detection
-> > > of dbus-broker. This restores the Y/N output while keeping the LSM
-> > > infrastructure happy.
-> > >
-> > > Before:
-> > >         $ cat /sys/module/apparmor/parameters/enabled
-> > >         1
-> > >
-> > > After:
-> > >         $ cat /sys/module/apparmor/parameters/enabled
-> > >         Y
-> > >
-> > > Reported-by: David Rheinsberg <david.rheinsberg@gmail.com>
-> > > Link: https://lkml.kernel.org/r/CADyDSO6k8vYb1eryT4g6+EHrLCvb68GAbHVWuULkYjcZcYNhhw@mail.gmail.com
-> > > Fixes: c5459b829b71 ("LSM: Plumb visibility into optional "enabled" state")
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > This fix, if John is okay with it, is needed in v5.1 to correct the
-> > > userspace regression reported by David.
-> > > ---
-> > >  security/apparmor/lsm.c | 49 ++++++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 48 insertions(+), 1 deletion(-)
-> >
-> > This looks good to me. Thanks a lot! If this makes v5.1, I will leave
-> > the apparmor-detection in dbus-broker as it is, unless someone asks me
-> > to parse 0/1 as well?
-> >
-> > I cannot judge whether the apparmor_initialized check is correct, but
-> > for the parameter parsing:
-> >
-> > Reviewed-by: David Rheinsberg <david.rheinsberg@gmail.com>
-> 
-> Thanks!
-> 
-> James, are you able to take this for v5.1 fixes?
-
-Actually, JJ usually submits directly to Linus.  
+You know how that works - I need ACKs.
 
 -- 
-James Morris
-<jmorris@namei.org>
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
