@@ -2,99 +2,110 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2B4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589FBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AE82084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244C52084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:13:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="gxnGbicq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfDINMj (ORCPT
+        id S1727431AbfDINNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:12:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727070AbfDINMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:12:38 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 374B09D1F641A5F1B7F6;
-        Tue,  9 Apr 2019 21:12:32 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.120) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Tue, 9 Apr 2019
- 21:12:25 +0800
-From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-Subject: Re: [PATCH] fs/buffer.c: Fix data corruption when buffer write with
- IO error
-To:     Jan Kara <jack@suse.cz>
-CC:     <viro@zeniv.linux.org.uk>, <tytso@mit.edu>,
-        <adilger.kernel@dilger.ca>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
-        <yi.zhang@huawei.com>
-References: <1554534793-31444-1-git-send-email-zhangxiaoxu5@huawei.com>
- <20190408111108.GB18662@quack2.suse.cz>
-Message-ID: <cdc7faed-20a0-4024-9405-ab74d7d18ab8@huawei.com>
-Date:   Tue, 9 Apr 2019 21:11:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Tue, 9 Apr 2019 09:13:08 -0400
+Received: from vern.gendns.com ([98.142.107.122]:45110 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbfDINNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 09:13:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XWViNH1Wxw9uYqCVZQz/ft4Cplusn+KMz/3xhiiHXMY=; b=gxnGbicq2ll7/v2m+YTmEGhEQM
+        Ter0pWlqbGSOz5XMmxVWe5lboZfAn7EIv7TWYDAqMjlXqXVCRRYr9kg9xgecdK9K4+mUQK4vtvvGV
+        AtD5lwRL2I19cvAh/r+JYzTJL2qNwCuNqP59r8QJBwBZaZ2VsdvyODJEyVi5laIvuBFMGCIcUGeE8
+        SKYQSTHIMVaSCkElu/OH5Th9JpzuXe1WF3GSWAt/1/mVCiFZ43YV7ke6YOdsP56ohL6ZaKhQEUyym
+        alehLdG37gR83zxezdc93ps0/NJAoWNIyb6YU86ZNgAfBN1uw7ZpAGf7i7kANrVaThSn2YJTiN3lw
+        nFzLMdMA==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:50018 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <david@lechnology.com>)
+        id 1hDqYf-0002Gd-Bw; Tue, 09 Apr 2019 09:13:01 -0400
+Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
+ sysfs documentation
+To:     Pavel Machek <pavel@ucw.cz>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     gregkh@linuxfoundation.org, jic23@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        thierry.reding@gmail.com, esben@haabendal.dk,
+        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        patrick.havelange@essensium.com,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+ <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
+ <20190408215531.GB27592@amd>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <d7a44b77-a8e5-d4fa-9a11-96cdde862b4c@lechnology.com>
+Date:   Tue, 9 Apr 2019 08:12:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190408111108.GB18662@quack2.suse.cz>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190408215531.GB27592@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.120]
-X-CFilter-Loop: Reflected
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/8/2019 7:11 PM, Jan Kara wrote:
-> On Sat 06-04-19 15:13:13, ZhangXiaoxu wrote:
->> When the buffer write failed, 'end_buffer_write_sync' and
->> 'end_buffer_async_write' will clear the uptodate flag. But the
->> data in the buffer maybe newer than disk. In some case, this
->> will lead data corruption.
->>
->> For example: ext4 flush metadata to disk failed, it will clear
->> the uptodate flag. when a new coming call want the buffer, it will
->> read it from the disk(because the buffer no uptodate flag). But
->> the journal not checkpoint now, it will read old data from disk.
->> If read successfully, ext4 will write the old data to the new
->> journal, the data will corruption.
->>
->> So, don't clear the uptodate flag when write the buffer failed.
->>
->> Signed-off-by: ZhangXiaoxu<zhangxiaoxu5@huawei.com>
-> Thanks for the patch. But what are the chances that after the write has
-> failed the read will succeed? Also there were places that were using
-> buffer_uptodate() to detect IO errors. Did you check all those got
-> converted to using buffer_write_io_error() instead?
+On 4/8/19 4:55 PM, Pavel Machek wrote:
 > 
-> 								Honza
+> pavel@amd:~$ cat /sys/power/state
+> freeze mem disk
 > 
-I encountered this situation when using iscsi target as the ext4 volume,
-if the network down a while when ext4 write metadata to disk, and maybe
-read will success after the network recovered.
-In my testcase, just create and delete files, when disconnect the network,
-the dir entry maybe corruption. I add some logs when read entry buffer from
-disk, the buffer stats maybe buffer_write_io_error() and !buffer_uptodate().
-In this case, the ext4 will corruption high probability. Because the buffer
-is read from disk, and some newer information just on journal. In this case,
-we should not read buffer from the disk.
+> And we use [] to mark current selection:
 
-I don't know any other filesystem how to use the uptodate flag. But I think
-uptodate means the buffer is valid and newer than disk, am I right?
+I know this is used elsewhere, but I don't think it is a good pattern
+to copy. Parsing it from user-space is annoying. Also it breaks the
+sysfs rule of "one item per file" since it tells us two things - the
+list of possible values _and_ the current active value.
 
-I just test ext4 use the xfstest.
-
-Any other idea about my problem?
-
-
-
-
+> 
+> pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
+> [none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
+> kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
+> kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
+> kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
+> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
+> phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
+> rfkill1
+> 
+> Note this only works if you have less than PAGE_SIZE of entries... and
+> will never have more.
+> 
+> 									Pavel
+> 
 
