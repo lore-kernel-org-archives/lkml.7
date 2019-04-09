@@ -2,239 +2,99 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CF0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584EBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3697C20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QefLO8g5"
+	by mail.kernel.org (Postfix) with ESMTP id 30A5120830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfDIK2Z (ORCPT
+        id S1726686AbfDIKaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:28:25 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40548 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfDIK2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:28:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 3so13091777oir.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 03:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zYTuoLYFJqANn1Vm2k0gRmGZwBX9er5JKzWBC2GAxrY=;
-        b=QefLO8g5+P26iA7b7fmNguGD2S+2frIoWz0IdSGaT8jb/P6Lk6wAT0BNQdoGkCDLtt
-         YCYWAwaUCxy4G6b2MOS6MU8bZNRwvWI0o07R0ayIBCUuwP0j06EI2FoKC3CX37Vx44KG
-         Orr80cHIy2p493y4OmtaquoFLRrbgsYwS1+54=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zYTuoLYFJqANn1Vm2k0gRmGZwBX9er5JKzWBC2GAxrY=;
-        b=sTh9qLuvQhGqePBAU4LRf7tEnO15OQq9uvK8GeD+UpWo5H21DC08FyZCKwljPBCdDh
-         DCVjueH5DsKfEL10ov+DwWgoa47K/wK0qZIr59nACbaaN1ipJU57caa6/Z1Ygk56Kq70
-         0+Iv9etRYeVho5Ugw7qI6QxKqowxfjr5h99neX399OawAodr1V8Uuo7ttf5IPTrG9ppH
-         djDGHI756rTKK/VhWvN9tBi4CMOZ4RLS+P8X4aITLyMVj9mecvlUFy54lYlxvfl4/XIp
-         neZcHRlkrLe2F3SJGCMvdkiarab8+QQPJZaRBXABGJOoVrHU/qOa067B4SOjcYVTvA7E
-         VQrw==
-X-Gm-Message-State: APjAAAVhJ+9mJVzXlb0Ba7K5Rl4UGrxdSboZ2i5VQx9gtIfeIAFD1P+u
-        Hh4MQe0EJxbDmYRPfXqzQbAbtJEJB0o=
-X-Google-Smtp-Source: APXvYqzBWA151qHrt9TuWQIgsfyaufAC7tO4DpLnlJeyyagUZgqJ9CfqREOYxiIF25VA/yzQAo+PZQ==
-X-Received: by 2002:aca:b4c6:: with SMTP id d189mr20022983oif.83.1554805702848;
-        Tue, 09 Apr 2019 03:28:22 -0700 (PDT)
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
-        by smtp.gmail.com with ESMTPSA id m206sm12631726oif.50.2019.04.09.03.28.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 03:28:21 -0700 (PDT)
-Received: by mail-ot1-f43.google.com with SMTP id c16so15064143otn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 03:28:21 -0700 (PDT)
-X-Received: by 2002:a9d:57c2:: with SMTP id q2mr22414256oti.313.1554805700679;
- Tue, 09 Apr 2019 03:28:20 -0700 (PDT)
+        Tue, 9 Apr 2019 06:30:24 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6714 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726129AbfDIKaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:30:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3B36332E131E4A5A35B3;
+        Tue,  9 Apr 2019 18:17:26 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 9 Apr 2019 18:17:19 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
+CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v3 0/4] support reserving crashkernel above 4G on arm64 kdump
+Date:   Tue, 9 Apr 2019 18:28:15 +0800
+Message-ID: <20190409102819.121335-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190124100419.26492-1-tfiga@chromium.org> <20190124100419.26492-2-tfiga@chromium.org>
- <1554461965.3060.5.camel@pengutronix.de> <8f05866a-1244-5e85-9b37-409526970779@xs4all.nl>
-In-Reply-To: <8f05866a-1244-5e85-9b37-409526970779@xs4all.nl>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 9 Apr 2019 19:28:09 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Bit7E4iQLxOZo=Qd-CK1tcKL-eV-+fozhV3di44taDvQ@mail.gmail.com>
-Message-ID: <CAAFQd5Bit7E4iQLxOZo=Qd-CK1tcKL-eV-+fozhV3di44taDvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] media: docs-rst: Document memory-to-memory video
- decoder interface
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 8:21 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> On 4/5/19 12:59 PM, Philipp Zabel wrote:
-> > On Thu, 2019-01-24 at 19:04 +0900, Tomasz Figa wrote:
-> >> Due to complexity of the video decoding process, the V4L2 drivers of
-> >> stateful decoder hardware require specific sequences of V4L2 API calls
-> >> to be followed. These include capability enumeration, initialization,
-> >> decoding, seek, pause, dynamic resolution change, drain and end of
-> >> stream.
-> >>
-> >> Specifics of the above have been discussed during Media Workshops at
-> >> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
-> >> Conference Europe 2014 in D=C3=BCsseldorf. The de facto Codec API that
-> >> originated at those events was later implemented by the drivers we alr=
-eady
-> >> have merged in mainline, such as s5p-mfc or coda.
-> >>
-> >> The only thing missing was the real specification included as a part o=
-f
-> >> Linux Media documentation. Fix it now and document the decoder part of
-> >> the Codec API.
-> >>
-> >> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> >> ---
-> >>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1076 ++++++++++++++++=
-+
-> >>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    5 +
-> >>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
-> >>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
-> >>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   40 +-
-> >>  Documentation/media/uapi/v4l/vidioc-g-fmt.rst |   14 +
-> >>  6 files changed, 1135 insertions(+), 15 deletions(-)
-> >>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
-> >>
-> >> diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentat=
-ion/media/uapi/v4l/dev-decoder.rst
-> >> new file mode 100644
-> >> index 000000000000..b7db2352ad41
-> >> --- /dev/null
-> >> +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
-> >> @@ -0,0 +1,1076 @@
-> >> +.. -*- coding: utf-8; mode: rst -*-
-> >> +
-> >> +.. _decoder:
-> >> +
-> >> +*************************************************
-> >> +Memory-to-memory Stateful Video Decoder Interface
-> >> +*************************************************
-> >> +
-> > [...]
-> >> +
-> >> +Drain
-> >> +=3D=3D=3D=3D=3D
-> >> +
-> > [...]
-> >> +
-> >> +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_S=
-TOP`` call
-> >> +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the deco=
-der is
-> >> +   stopped and it will accept, but not process, any newly queued ``OU=
-TPUT``
-> >> +   buffers until the client issues any of the following operations:
-> >> +
-> > [...]
-> >> +
-> >> +.. note::
-> >> +
-> >> +   Once the drain sequence is initiated, the client needs to drive it=
- to
-> >> +   completion, as described by the steps above, unless it aborts the =
-process by
-> >> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``C=
-APTURE``
-> >> +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START``=
- or
-> >> +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progres=
-s and they
-> >> +   will fail with -EBUSY error code if attempted.
-> >
-> > Should the V4L2_DEC_CMD_STOP documentation in
-> > Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst:
-> >
-> >   * - ``V4L2_DEC_CMD_STOP``
-> >     - 1
-> >     - Stop the decoder. When the decoder is already stopped, this
-> >       command does nothing.
-> >
-> > be updated to mention that for mem2mem decoders this not only does
-> > nothing, but returns an -EBUSY error return value?
->
-> Yes. Basically in this case the STOP is still in progress, so returning
-> EBUSY makes sense and should be documented.
->
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G.
 
-Done. Also for the encoder.
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 
-> >
-> > Also, if V4L2_DEC_CMD_STOP_IMMEDIATELY is set, should the decoder drop
-> > all pending buffers and signal EOS immediately? Should this be mentione=
-d
-> > here?
->
-> Hmm, the decoder spec says that flags should be set to 0, and current cod=
-ec
-> drivers explicitly disallow a non-0 flags value.
->
-> I'm not sure if there is a practical use-case for V4L2_DEC_CMD_STOP_IMMED=
-IATELY
-> in the context of a decoder. If you want to stop immediately, then just c=
-all
-> streamoff on the OUTPUT queue.
->
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions(see [1])
 
-Agreed.
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+  two. Put "move reserve_crashkernel_low() into kexec_core.c" in a seperate
+  patch.
 
-> >
-> >> +   Although mandatory, the availability of decoder commands may be qu=
-eried
-> >> +   using :c:func:`VIDIOC_TRY_DECODER_CMD`.
-> >
-> > Do the TRY_DECODER_CMD also return -EBUSY during the draining phase?
->
-> No.
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+  in fdt_enforce_memory_region().
+  There are at most two crash kernel regions, for two crash kernel regions
+  case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+  and then remove the memory range in the middle.
 
-Ack.
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[v1]: https://lkml.org/lkml/2019/4/8/628
+[v2]: https://lkml.org/lkml/2019/4/9/86
 
-Best regards,
-Tomasz
+Chen Zhou (4):
+  x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+  arm64: kdump: support reserving crashkernel above 4G
+  arm64: kdump: support more than one crash kernel regions
+  kdump: update Documentation about crashkernel on arm64
 
->
-> Regards,
->
->         Hans
->
-> >
-> > regards
-> > Philipp
-> >
->
+ Documentation/admin-guide/kernel-parameters.txt |  4 +-
+ arch/arm64/include/asm/kexec.h                  |  3 +
+ arch/arm64/kernel/setup.c                       |  3 +
+ arch/arm64/mm/init.c                            | 92 +++++++++++++++++++++----
+ arch/x86/include/asm/kexec.h                    |  3 +
+ arch/x86/kernel/setup.c                         | 66 ++----------------
+ include/linux/kexec.h                           |  1 +
+ include/linux/memblock.h                        |  6 ++
+ kernel/kexec_core.c                             | 53 ++++++++++++++
+ mm/memblock.c                                   |  7 +-
+ 10 files changed, 159 insertions(+), 79 deletions(-)
+
+-- 
+2.7.4
+
