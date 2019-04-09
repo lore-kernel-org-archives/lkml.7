@@ -2,172 +2,100 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C57DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB8F20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAGurzXJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5AA4320880
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfDIG4R (ORCPT
+        id S1726678AbfDIG40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:56:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38571 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfDIG4Q (ORCPT
+        Tue, 9 Apr 2019 02:56:26 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:45259 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfDIG4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:56:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id v4so13330995ioj.5;
-        Mon, 08 Apr 2019 23:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g1CAhrs+XKcnO04tYd62P5aQHE9n2UfoCEcN1al9wbA=;
-        b=YAGurzXJeGj/1GBjBd/jXslO4S7jXu0drLCwWbSl4Ff23U1myJ7lbxVYPXe3LVJCYR
-         d37tlQLgTOzRzJMVfutOUWE+Hb87UpqZofmQOYHFw5YqBr0gAsRbuzRJB6nkRtjxqjYL
-         rYjUs+AB9OXE81tj4uGMh67fa2wyy5TgGkHFrbkpzdLl7VShiZ2X+Vwjaz+SaDNM/Zz3
-         zJtFMhjWJJ1vsXD+LwECxFwAVlJkwEVAv9PvQqvkDEc2dJg4Lu/fqHW4vN1sHRlLo27w
-         p5DtyY9wcYPeIcIe9GBxgRA/mAkNz/fg0Dn2yLKoWBwE943JLYvJPjDA0w6mESIRbLcN
-         U91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g1CAhrs+XKcnO04tYd62P5aQHE9n2UfoCEcN1al9wbA=;
-        b=CcLgawnl8yBNa2tYCH+BtCByAuQvepeCVaFiXi+Br12SrmW586UI7qiG03UppnLfng
-         l4OiIbblgkZflFeXQuon5zVH+ojP3P49hl8buZHOxgb2Wo+u/sg9TVrDdpPQwhqtL9XI
-         oOz6cmX/rmlNR4+UrI0Eo7OtlEFXyCv0JRVumDtkiTC87e6/yTWfumVud0kKTAWMqLCL
-         az/1FyLs8IesRSCTiBkgdILOnVBQ756wiR0xhQ2pxFCeJPgem6Lp6pU32YJE5birdNDh
-         efS0HIFEd0c+o4OShaXRZzZ1QDJeXsMRAF9+3eKolhdbLZj8gEArBOWyKEV/iJ96vuK6
-         ivRw==
-X-Gm-Message-State: APjAAAWt5vEi7glIioBdjUlQqa0fqyogcnL6aXMdMk3by1f2mM/GPxQd
-        0DvWmu5avSHzBAQc9gNtpmKYcVjXLyF4
-X-Google-Smtp-Source: APXvYqx5SqQVG+mYJ3/E0eGJivWLVRr47VWTZ+/p6n4K3DQVuc3HU7TsnLCdRVJmcegVu+yUO5lALw==
-X-Received: by 2002:a6b:6509:: with SMTP id z9mr23954838iob.43.1554792976033;
-        Mon, 08 Apr 2019 23:56:16 -0700 (PDT)
-Received: from ip-172-31-35-247.us-east-2.compute.internal (ec2-52-15-165-154.us-east-2.compute.amazonaws.com. [52.15.165.154])
-        by smtp.gmail.com with ESMTPSA id 65sm6644927itw.1.2019.04.08.23.56.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 23:56:15 -0700 (PDT)
-From:   Rundong Ge <rdong.ge@gmail.com>
-To:     pablo@netfilter.org
-Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        davem@davemloft.net, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rdong.ge@gmail.com
-Subject: [PATCH] netfilter: fix dangling pointer access of fake_rtable
-Date:   Tue,  9 Apr 2019 06:56:12 +0000
-Message-Id: <20190409065612.32652-1-rdong.ge@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Apr 2019 02:56:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id 58422184F4;
+        Tue,  9 Apr 2019 08:56:22 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id SieTQC0JahzT; Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+        by bastet.se.axis.com (Postfix) with ESMTPS id 5F29A184DD;
+        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 468741A088;
+        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3ADC91A06D;
+        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+        by boulder02.se.axis.com (Postfix) with ESMTP;
+        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: from lnxjespern3.se.axis.com (lnxjespern3.se.axis.com [10.88.4.8])
+        by seth.se.axis.com (Postfix) with ESMTP id 2DEC52CB9;
+        Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Received: by lnxjespern3.se.axis.com (Postfix, from userid 363)
+        id 2846B800E1; Tue,  9 Apr 2019 08:56:21 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 08:56:21 +0200
+From:   Jesper Nilsson <jesper.nilsson@axis.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Yue Haibing <yuehaibing@huawei.com>, jespern@axis.com,
+        larper@axis.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@axis.com
+Subject: Re: [PATCH -next] pinctrl: artpec6: Make two functions static
+Message-ID: <20190409065621.2yfx5nqzpuxyj46p@axis.com>
+References: <20190321150909.3576-1-yuehaibing@huawei.com>
+ <20190408180110.GA15199@archlinux-ryzen>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190408180110.GA15199@archlinux-ryzen>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With  bridge-nf-call-iptables enabeled, Skbs go through the bridge
-and enqueued between  <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF> and
-<NF_BR_FORWARD,NF_BR_PRI_BRNF - 1> won't be flushed when bridge is
-down. Then _skb_refdst of skbs in the nfqueue become dangling pointer.
+On Mon, Apr 08, 2019 at 11:01:10AM -0700, Nathan Chancellor wrote:
+> On Thu, Mar 21, 2019 at 11:09:09PM +0800, Yue Haibing wrote:
+> > From: YueHaibing <yuehaibing@huawei.com>
+> > -void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
+> > -			 unsigned int group)
+> > +static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
+> > +				unsigned int function,
+> > +				unsigned int group)
+> 
+> On arm32 allyesconfig:
+> 
+> drivers/pinctrl/pinctrl-artpec6.c:706:13: error: unused function
+> 'artpec6_pmx_disable' [-Werror,-Wunused-function]
+> 
+> This is the second time you've introduced an unused function warning by
+> making a function static[1], could you please be a little more vigilant
+> in your clean ups in the future?
+> 
+> [1]: https://lore.kernel.org/lkml/20190327050126.12064-1-natechancellor@gmail.com/
+> 
+> Linus/Jesper/Lars, should this function just be deleted? I'd be happy to
+> send a patch doing so if that's the right course of action.
 
-Reproduce steps:
-1.Create a bridge on the box.
-2.echo 1 >/proc/sys/net/bridge/bridge-nf-call-iptables
-3.Add a netfilter hook function to queue the packets to nfqueuenum 0.
-  The hook point must between <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF> and
-  <NF_BR_FORWARD,NF_BR_PRI_BRNF - 1>.
-4.Add a userspace process "nfqueue_rcv" to continuously read and
-  set_verdict "NF_ACCEPT" to packets from queue 0.
-5.Continuosly ping client1 from client0
-6.Send "Ctrl + Z" to pause the "nfqueue_rcv" to simulate the queue
-  congestion.
-7.Using "ifconfig br0 down&&brctl delbr br0" to delete the bridge.
-8.At this time the _skb_refdst of skbs in the nfqueue become dangling
-  pointer. If we send "fg" to resume the "nfqueue_rcv", the kernel
-  may try to access the freed memory.
+Yes, that function is unused and can be dropped.
 
-Debug log:
-Here I add debug logs in "netdev_freemem" and "dst_release" to prove
-the freed memory access. As the log shows, the "dst_release" accessed
-bridge's fake_rtable after the bridge was freed.
+> Thanks,
+> Nathan
 
-Apr  8 22:25:14 raydon kernel: [62139.005062] netdev_freemem name:br0,
-fake_rtable:000000009d76cef0
-
-Apr  8 22:25:21 raydon kernel: [62145.967133] dst_release
-dst:000000009d76cef0 dst->dev->name: řKU¡TH
-
-Apr  8 22:25:21 raydon kernel: [62145.967154] dst_release
-dst:000000009d76cef0 dst->dev->name: řKU¡TH
-
-Apr  8 22:25:21 raydon kernel: [62145.967180] dst_release
-dst:000000009d76cef0 dst->dev->name: řKU¡TH
-
-Apr  8 22:25:21 raydon kernel: [62145.967197] dst_release
-dst:000000009d76cef0 dst->dev->name: řKU¡TH
-
-The reason why the hook point should be after <NF_BR_PRE_ROUTING,
-NF_BR_PRI_BRNF> is skbs reference bridge's fake_rtable in
-"br_nf_pre_routing_finish" hooked at <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF>.
-
-And the reason why the hook point should be before <NF_BR_FORWARD,
-NF_BR_PRI_BRNF - 1> is "br_nf_forward_ip" will set the state.out to
-bridge dev. After this hook point, the "nfqnl_dev_drop" triggered by
-the bridge's NETDEV_DOWN event can flush the queued skbs before
-bridge's memory is freed, because the state.out now matches the
-bridge's dev.
-
-Signed-off-by: Rundong Ge <rdong.ge@gmail.com>
----
- net/netfilter/nfnetlink_queue.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-index 0dcc359..57eb02d 100644
---- a/net/netfilter/nfnetlink_queue.c
-+++ b/net/netfilter/nfnetlink_queue.c
-@@ -905,13 +905,25 @@ static void free_entry(struct nf_queue_entry *entry)
- dev_cmp(struct nf_queue_entry *entry, unsigned long ifindex)
- {
- #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
--	int physinif, physoutif;
-+	struct net_device *physindev, *physoutdev;
-+	struct net_bridge_port *port;
- 
--	physinif = nf_bridge_get_physinif(entry->skb);
--	physoutif = nf_bridge_get_physoutif(entry->skb);
--
--	if (physinif == ifindex || physoutif == ifindex)
--		return 1;
-+	physindev = nf_bridge_get_physindev(entry->skb);
-+	physoutdev = nf_bridge_get_physoutdev(entry->skb);
-+	if (physindev) {
-+		if (physindev->ifindex == ifindex)
-+			return 1;
-+		port = br_port_get_rcu(physindev);
-+		if (port && port->br->dev->ifindex == ifindex)
-+			return 1;
-+	}
-+	if (physoutdev) {
-+		if (physoutdev->ifindex == ifindex)
-+			return 1;
-+		port = br_port_get_rcu(physoutdev);
-+		if (port && port->br->dev->ifindex == ifindex)
-+			return 1;
-+	}
- #endif
- 	if (entry->state.in)
- 		if (entry->state.in->ifindex == ifindex)
+/^JN - Jesper Nilsson
 -- 
-1.8.3.1
-
+               Jesper Nilsson -- jesper.nilsson@axis.com
