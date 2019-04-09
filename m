@@ -2,310 +2,247 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18150C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E02C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02912084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QxfEtDrR"
+	by mail.kernel.org (Postfix) with ESMTP id ECC352133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDIP4H (ORCPT
+        id S1726699AbfDIP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:56:07 -0400
-Received: from mail.efficios.com ([167.114.142.138]:53924 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfDIP4G (ORCPT
+        Tue, 9 Apr 2019 11:56:19 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50725 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfDIP4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:56:06 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 6A7927D519;
-        Tue,  9 Apr 2019 11:56:04 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id tbw8SNeOpC1O; Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 8DE737D512;
-        Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8DE737D512
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554825363;
-        bh=/nMy26pOddtBtf06Juea9FeOG3eTQpzKIEoVIFLGlhw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=QxfEtDrRvP90cA/YJq4+82Jg2nseFPt6lVL6sb+cRbEmKxlN8k9D9F+nr1V/rdzxt
-         xP1tnpzFmG8yUQkg6x4ITEj75z1ncksBIdOrvV7CcteZsSSxRJSvSgTg3ZNpzvs0zT
-         Dh13S2SaFB8QDFQoy3XPDo2NwninOSHsTBBWeNxGJI6Umq28aTrRz5eh7UiZmLS/oi
-         CB92KDqcGPxwO9rUKyzKjmlVN11Ly9w7PLRDhUBGYPkcuJxSu/nTcpU96aEpKtTVs/
-         XUR0+BVbDgwPLhYbJudxbomEuPVLnmNlk38wu9ZPuiZGmA/3gvilNJBpJNfMK0NslS
-         8GDGsYahN7oZg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id LEuhU81JQqOr; Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 5DAA97D50B;
-        Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
-Date:   Tue, 9 Apr 2019 11:56:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     "Joel Fernandes, Google" <joel@joelfernandes.org>
-Cc:     paulmck <paulmck@linux.ibm.com>, rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Message-ID: <534133139.2374.1554825363211.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190409154012.GC248418@google.com>
-References: <20190402142816.GA13084@linux.ibm.com> <20190408022728.GF14111@linux.ibm.com> <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com> <20190408142230.GJ14111@linux.ibm.com> <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com> <20190408154616.GO14111@linux.ibm.com> <1489474416.1465.1554744287985.JavaMail.zimbra@efficios.com> <20190409154012.GC248418@google.com>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+        Tue, 9 Apr 2019 11:56:19 -0400
+Received: by mail-it1-f194.google.com with SMTP id q14so5759665itk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 08:56:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=68C3iwnYo2Xm/QppO0J52a1O4X/I+vs9O44WQpI5AC4=;
+        b=G/kOsFjjCH6HthlZIR+ESMU117nXicF623vJqnJwbuzZzRZ/L8HYhGsgjoP5zCp3xr
+         JZGx9h6LdT1uB2owf2DuAiwco6zX+Udiq0lAWs6x3gAO2gPj5v4g7FQSz5cwRFODmSjm
+         Yj9eedZuozgPb9zFjO+YtqePjcb0KP8ch2qgNorT4yi794831MJM7zV1iShx0ZVo04Pj
+         34a4ztevfLAE1OhjtzqcL0TzukeR7helRU9rpwsacTrffyP0zZ6PpkiHAc7IUNCEngko
+         ERtEAI3KIx0t5eZZDSUhQDryuJ1dx+PYWau88pdVNip1ZskveGkFRyo42NzTv/lwHZpm
+         GhEA==
+X-Gm-Message-State: APjAAAUAp0qmBDxRF6zN6s+/R6ZnbMuKRvqSDu+t4XaK3bxBrmbssnwB
+        BwGFpHOExFHtaVymfVhpEGsd7re8I/+BSn+Lyoc=
+X-Google-Smtp-Source: APXvYqwTqrcXs4HLZBRm+YVMq+4XVf2s96If7WZyhZIF2BCAp66UjjkSH6JCvuXzN/CK4lM+kNvk6VXEBUNfPW8Cr68=
+X-Received: by 2002:a02:6f55:: with SMTP id b21mr26845136jae.30.1554825378032;
+ Tue, 09 Apr 2019 08:56:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Forbid static SRCU use in modules
-Thread-Index: tr32J95yRILwhwodqgU+xadZI80HRw==
+References: <20190401074730.12241-1-robh@kernel.org> <20190401074730.12241-4-robh@kernel.org>
+ <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com> <CAL_Jsq+wAUS=gukDLoY6DWP40w4Wtyd_Y4B2S3KMCx2ekL97qg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+wAUS=gukDLoY6DWP40w4Wtyd_Y4B2S3KMCx2ekL97qg@mail.gmail.com>
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date:   Tue, 9 Apr 2019 17:56:05 +0200
+Message-ID: <CAAObsKCnycxxKWA+bUeU9vOu53eT9WZVkzdZ0KCtW9Xj9cV8Cw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Marty E . Plummer" <hanetzer@startmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 9, 2019, at 11:40 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
+On Mon, 8 Apr 2019 at 23:04, Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Apr 5, 2019 at 7:30 AM Steven Price <steven.price@arm.com> wrote:
+> >
+> > On 01/04/2019 08:47, Rob Herring wrote:
+> > > This adds the initial driver for panfrost which supports Arm Mali
+> > > Midgard and Bifrost family of GPUs. Currently, only the T860 and
+> > > T760 Midgard GPUs have been tested.
+>
+> [...]
+> > > +
+> > > +             if (status & JOB_INT_MASK_ERR(j)) {
+> > > +                     job_write(pfdev, JS_COMMAND_NEXT(j), JS_COMMAND_NOP);
+> > > +                     job_write(pfdev, JS_COMMAND(j), JS_COMMAND_HARD_STOP_0);
+> >
+> > Hard-stopping an already completed job isn't likely to do very much :)
+> > Also you are using the "_0" version which is only valid when "job chain
+> > disambiguation" is present.
 
-> On Mon, Apr 08, 2019 at 01:24:47PM -0400, Mathieu Desnoyers wrote:
->> ----- On Apr 8, 2019, at 11:46 AM, paulmck paulmck@linux.ibm.com wrote:
->> 
->> > On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
->> >> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
->> >> 
->> >> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
->> >> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
->> >> >> 
->> >> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
->> >> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
->> >> >> >> > 
->> >> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
->> >> >> >> > wrote:
->> >> >> >> > 
->> >> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
->> >> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
->> >> >> >> > >> 
->> >> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
->> >> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
->> >> >> >> > >> > 
->> >> >> >> > >> > [ . . . ]
->> >> >> >> > >> > 
->> >> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
->> >> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
->> >> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
->> >> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
->> >> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
->> >> >> >> > >> >> > > @@ -338,6 +338,10 @@
->> >> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
->> >> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
->> >> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
->> >> >> >> > >> >> > > +		. = ALIGN(8);						\
->> >> >> >> > >> >> > > +		__start___srcu_struct = .;				\
->> >> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
->> >> >> >> > >> >> > > +		__end___srcu_struct = .;				\
->> >> >> >> > >> >> > >  	}								\
->> >> >> >> > >> >> > 
->> >> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
->> >> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
->> >> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
->> >> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
->> >> >> >> > >> >> > of the dev branch.
->> >> >> >> > >> >> 
->> >> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
->> >> >> >> > >> >> work.
->> >> >> >> > >> >> 
->> >> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
->> >> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
->> >> >> >> > >> >> optimism?
->> >> >> >> > >> > 
->> >> >> >> > >> > And to answer the other question, in the case where I am suffering from
->> >> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
->> >> >> >> > >> > for the updated original commit thus far.
->> >> >> >> > >> > 
->> >> >> >> > >> > And may I have your Tested-by?
->> >> >> >> > >> 
->> >> >> >> > >> Just to confirm: does the cleanup performed in the modules going
->> >> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
->> >> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
->> >> >> >> > >> module unload ?
->> >> >> >> > >> 
->> >> >> >> > > 
->> >> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
->> >> >> >> > > responsibility of the module writer to prevent delays for all modules.
->> >> >> >> > 
->> >> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
->> >> >> >> > srcu domain within that module, I don't see how it would cause delays for
->> >> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
->> >> >> >> > am I missing ?
->> >> >> >> 
->> >> >> >> Yes you are right. I thought of this after I just sent my email. I think it
->> >> >> >> makes sense for srcu case to do and could avoid a class of bugs.
->> >> >> > 
->> >> >> > If there are call_srcu() callbacks outstanding, the module writer still
->> >> >> > needs the srcu_barrier() because otherwise callbacks arrive after
->> >> >> > the module text has gone, which will be disappoint the CPU when it
->> >> >> > tries fetching instructions that are no longer mapped.  If there are
->> >> >> > no call_srcu() callbacks from that module, then there is no need for
->> >> >> > srcu_barrier() either way.
->> >> >> > 
->> >> >> > So if an srcu_barrier() is needed, the module developer needs to
->> >> >> > supply it.
->> >> >> 
->> >> >> When you say "callbacks arrive after the module text has gone",
->> >> >> I think you assume that free_module() is invoked before the
->> >> >> MODULE_STATE_GOING notifiers are called. But it's done in the
->> >> >> opposite order: going notifiers are called first, and then
->> >> >> free_module() is invoked.
->> >> >> 
->> >> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
->> >> >> going notifier.
->> >> >> 
->> >> >> Or am I missing something ?
->> >> > 
->> >> > We do seem to be talking past each other.  ;-)
->> >> > 
->> >> > This has nothing to do with the order of events at module-unload time.
->> >> > 
->> >> > So please let me try again.
->> >> > 
->> >> > If a given srcu_struct in a module never has call_srcu() invoked, there
->> >> > is no need to invoke rcu_barrier() at any time, whether at module-unload
->> >> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
->> >> > for no good reason.
->> >> 
->> >> Not if we invoke srcu_barrier() for that specific domain. If
->> >> call_srcu was never invoked for a srcu domain, I don't see why
->> >> srcu_barrier() should be more expensive than a simple check that
->> >> the domain does not have any srcu work queued.
->> > 
->> > But that simple check does involve a cache miss for each possible CPU (not
->> > just each online CPU), so it is non-trivial, especially on large systems.
->> > 
->> >> > If a given srcu_struct in a module does have at least one call_srcu()
->> >> > invoked, it is already that module's responsibility to make sure that
->> >> > the code sticks around long enough for the callback to be invoked.
->> >> 
->> >> I understand that when users do explicit dynamic allocation/cleanup of
->> >> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
->> >> However, if they do static definition of srcu domains, it would be nice
->> >> if we can handle the barriers under the hood.
->> > 
->> > All else being equal, of course.  But...
->> > 
->> >> > This means that correct SRCU users that invoke call_srcu() already
->> >> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
->> >> > reasonable probability, now get a WARN_ON() at module-unload time, with
->> >> > the per-CPU state getting leaked.  Before this change, they would (also
->> >> > with reasonable probability) instead get an instruction-fetch fault when
->> >> > the SRCU callback was invoked after the completion of the module unload.
->> >> > Furthermore, in all cases where they would previously have gotten the
->> >> > instruction-fetch fault, they now get the WARN_ON(), like this:
->> >> > 
->> >> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
->> >> >		return; /* Forgot srcu_barrier(), so just leak it! */
->> >> > 
->> >> > So this change already represents an improvement in usability.
->> >> 
->> >> Considering that we can do a srcu_barrier() for the specific domain,
->> >> and that it should add no noticeable overhead if there is no queued
->> >> callbacks, I don't see a good reason for leaving the srcu_barrier
->> >> invocation to the user rather than implicitly doing it from the
->> >> module going notifier.
->> > 
->> > Now, I could automatically add an indicator of whether or not a
->> > call_srcu() had happened, but then again, that would either add a
->> > call_srcu() scalability bottleneck or again require a scan of all possible
->> > CPUs...  to figure out if it was necessary to scan all possible CPUs.
->> > 
->> > Or is scanning all possible CPUs down in the noise in this case?  Or
->> > am I missing a trick that would reduce the overhead?
->> 
->> Module unloading implicitly does a synchronize_rcu (for RCU-sched), and
->> a stop_machine. So I would be tempted to say that overhead of iteration
->> over all CPUs might not matter that much considering the rest.
->> 
->> About notifying that a call_srcu has happened for the srcu domain in a
->> scalable fashion, let's see... We could have a flag "call_srcu_used"
->> for each call_srcu domain. Whenever call_srcu is invoked, it would
->> load that flag. It sets it on first use.
->> 
->> The idea here is to only use that flag when srcu_barrier is performed
->> right before the srcu domain cleanup (it could become part of that
->> cleanup). Else, using it in all srcu_barrier() might be tricky, because
->> we may then need to add memory barriers or locking to the call_srcu
->> fast-path, which is an overhead we try to avoid.
->> 
->> However, if we only use that flag as part of the srcu domain cleanup,
->> it's already prohibited to invoke call_srcu concurrently with the
->> cleanup of the same domain, so I don't think we would need any
->> memory barriers in call_srcu.
-> 
-> About the last part of your email, it seems to that if after call_srcu has
-> returned, if the module could be unloaded on some other CPU - then it would
-> need to see the flag stored by the preceding call_srcu, so I believe there
-> would be a memory barrier between the two opreations (call_srcu and module
-> unload).
+Yeah, guess that can be removed.
 
-In order for the module unload not to race against module execution, it needs
-to happen after the call_srcu in a way that is already ordered by other means,
-else module unload races against the module code.
+> > I suspect in this case you should also be signalling the fence? At the
+> > moment you rely on the GPU timeout recovering from the fault.
+>
+> I'll defer to Tomeu who wrote this (IIRC).
 
-> 
-> Also about doing the unconditional srcu_barrier, since a module could be
-> unloaded at any time - don't all SRCU using modules need to invoke
-> srcu_barrier() during their clean up anyway so we are incurring the barrier
-> overhead anyway? Or, am I missing a design pattern here? It seems to me
-> rcutorture module definitely calls srcu_barrier() before it is unloaded.
+Yes, that would be an improvement.
 
-I think a valid approach which is even simpler might be: if a module statically
-defines a SRCU domain, it should be expected to use it. So adding a srcu_barrier()
-to its module going notifier should not hurt. The rare case where a module defines
-a static SRCU domain *and* does not actually use it with call_srcu() does not
-seem that usual, and not worth optimizing for.
+> > One issue that I haven't got to the bottom of is that I can trigger a
+> > lockdep splat:
+> >
+> > -----8<------
+> > panfrost ffa30000.gpu: js fault, js=1, status=JOB_CONFIG_FAULT,
+> > head=0x0, tail=0x0
+> > root@debian:~/ddk_panfrost# panfrost ffa30000.gpu: gpu sched timeout,
+> > js=1, status=0x40, head=0x0, tail=0x0, sched_job=12a94ba6
+> >
+> > ======================================================
+> > WARNING: possible circular locking dependency detected
+> > 5.0.0+ #32 Not tainted
+> > ------------------------------------------------------
+> > kworker/1:0/608 is trying to acquire lock:
+> > 89b1e2d8 (&(&js->job_lock)->rlock){-.-.}, at:
+> > dma_fence_remove_callback+0x14/0x50
+> >
+> > but task is already holding lock:
+> > a887e4b2 (&(&sched->job_list_lock)->rlock){-.-.}, at:
+> > drm_sched_stop+0x24/0x10c
+> >
+> > which lock already depends on the new lock.
+> >
+> >
+> > the existing dependency chain (in reverse order) is:
+> >
+> > -> #1 (&(&sched->job_list_lock)->rlock){-.-.}:
+> >        drm_sched_process_job+0x60/0x208
+> >        dma_fence_signal+0x1dc/0x1fc
+> >        panfrost_job_irq_handler+0x160/0x194
+> >        __handle_irq_event_percpu+0x80/0x388
+> >        handle_irq_event_percpu+0x24/0x78
+> >        handle_irq_event+0x38/0x5c
+> >        handle_fasteoi_irq+0xb4/0x128
+> >        generic_handle_irq+0x18/0x28
+> >        __handle_domain_irq+0xa0/0xb4
+> >        gic_handle_irq+0x4c/0x78
+> >        __irq_svc+0x70/0x98
+> >        arch_cpu_idle+0x20/0x3c
+> >        arch_cpu_idle+0x20/0x3c
+> >        do_idle+0x11c/0x22c
+> >        cpu_startup_entry+0x18/0x20
+> >        start_kernel+0x398/0x420
+> >
+> > -> #0 (&(&js->job_lock)->rlock){-.-.}:
+> >        _raw_spin_lock_irqsave+0x50/0x64
+> >        dma_fence_remove_callback+0x14/0x50
+> >        drm_sched_stop+0x5c/0x10c
+> >        panfrost_job_timedout+0xd0/0x180
+> >        drm_sched_job_timedout+0x34/0x5c
+> >        process_one_work+0x2ac/0x6a4
+> >        worker_thread+0x28c/0x3fc
+> >        kthread+0x13c/0x158
+> >        ret_from_fork+0x14/0x20
+> >          (null)
+> >
+> > other info that might help us debug this:
+> >
+> >  Possible unsafe locking scenario:
+> >
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   lock(&(&sched->job_list_lock)->rlock);
+> >                                lock(&(&js->job_lock)->rlock);
+> >                                lock(&(&sched->job_list_lock)->rlock);
+> >   lock(&(&js->job_lock)->rlock);
+> >
+> >  *** DEADLOCK ***
+> >
+> > 3 locks held by kworker/1:0/608:
+> >  #0: 9b350627 ((wq_completion)"events"){+.+.}, at:
+> > process_one_work+0x1f8/0x6a4
+> >  #1: a802aa2d ((work_completion)(&(&sched->work_tdr)->work)){+.+.}, at:
+> > process_one_work+0x1f8/0x6a4
+> >  #2: a887e4b2 (&(&sched->job_list_lock)->rlock){-.-.}, at:
+> > drm_sched_stop+0x24/0x10c
+> >
+> > stack backtrace:
+> > CPU: 1 PID: 608 Comm: kworker/1:0 Not tainted 5.0.0+ #32
+> > Hardware name: Rockchip (Device Tree)
+> > Workqueue: events drm_sched_job_timedout
+> > [<c0111088>] (unwind_backtrace) from [<c010c9a8>] (show_stack+0x10/0x14)
+> > [<c010c9a8>] (show_stack) from [<c0773df4>] (dump_stack+0x9c/0xd4)
+> > [<c0773df4>] (dump_stack) from [<c016d034>]
+> > (print_circular_bug.constprop.15+0x1fc/0x2cc)
+> > [<c016d034>] (print_circular_bug.constprop.15) from [<c016f6c0>]
+> > (__lock_acquire+0xe5c/0x167c)
+> > [<c016f6c0>] (__lock_acquire) from [<c0170828>] (lock_acquire+0xc4/0x210)
+> > [<c0170828>] (lock_acquire) from [<c07920e0>]
+> > (_raw_spin_lock_irqsave+0x50/0x64)
+> > [<c07920e0>] (_raw_spin_lock_irqsave) from [<c0516784>]
+> > (dma_fence_remove_callback+0x14/0x50)
+> > [<c0516784>] (dma_fence_remove_callback) from [<c04def38>]
+> > (drm_sched_stop+0x5c/0x10c)
+> > [<c04def38>] (drm_sched_stop) from [<c04ec80c>]
+> > (panfrost_job_timedout+0xd0/0x180)
+> > [<c04ec80c>] (panfrost_job_timedout) from [<c04df340>]
+> > (drm_sched_job_timedout+0x34/0x5c)
+> > [<c04df340>] (drm_sched_job_timedout) from [<c013ec70>]
+> > (process_one_work+0x2ac/0x6a4)
+> > [<c013ec70>] (process_one_work) from [<c013fe48>]
+> > (worker_thread+0x28c/0x3fc)
+> > [<c013fe48>] (worker_thread) from [<c01452a0>] (kthread+0x13c/0x158)
+> > [<c01452a0>] (kthread) from [<c01010b4>] (ret_from_fork+0x14/0x20)
+> > Exception stack(0xeebd7fb0 to 0xeebd7ff8)
+> > 7fa0:                                     00000000 00000000 00000000
+> > 00000000
+> > 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > 00000000
+> > 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > ----8<----
+> >
+> > This is with the below simple reproducer:
+> >
+> > ----8<----
+> > #include <sys/ioctl.h>
+> > #include <fcntl.h>
+> > #include <stdio.h>
+> >
+> > #include <libdrm/drm.h>
+> > #include "panfrost_drm.h"
+> >
+> > int main(int argc, char **argv)
+> > {
+> >         int fd;
+> >
+> >         if (argc == 2)
+> >                 fd = open(argv[1], O_RDWR);
+> >         else
+> >                 fd = open("/dev/dri/renderD128", O_RDWR);
+> >         if (fd == -1) {
+> >                 perror("Failed to open");
+> >                 return 0;
+> >         }
+> >
+> >         struct drm_panfrost_submit submit = {
+> >                 .jc = 0,
+> >         };
+> >         return ioctl(fd, DRM_IOCTL_PANFROST_SUBMIT, &submit);
+> > }
+> > ----8<----
+> >
+> > Any ideas? I'm not an expert on DRM, so I got somewhat lost!
+>
+> Tomeu?
 
-Thoughts ?
+Ran out of time today, but will be able to look at it tomorrow.
 
-Thanks,
+Thanks!
 
-Mathieu
-
-
-> 
-> thanks,
-> 
-> - Joel
-> 
->> Thoughts ?
->> 
->> Thanks,
->> 
->> Mathieu
->> 
->> --
->> Mathieu Desnoyers
->> EfficiOS Inc.
-> > http://www.efficios.com
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Tomeu
