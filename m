@@ -2,98 +2,97 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8D0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA9C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5451720883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC8120818
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PEOwFrOz"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ifW01w+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDIBjW (ORCPT
+        id S1726523AbfDIBqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:39:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53562 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfDIBjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:39:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x391dJu2080266;
-        Tue, 9 Apr 2019 01:39:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=j4Cdgmb3epUrJ87NfkbFLyJhjtgeFOZYHV246lxYQxU=;
- b=PEOwFrOzbXuuSs3gkQmvoPzelE1R74NDV71q9VylbaApUL11kwSO+LJC9Me/+AYXQKT3
- hdb866EF08V74JmHQP4G69rIQoUDCo4hm8JashLHtL/B10GxKSNfO5xC3xuShEE6rP+s
- Y+o8c3AN0bhmsVXi66uUrq//9Ken4J1VHb2f5+vY63j6h1ypvrzq13cqwtuFna0AjSQf
- iK3lV0WVTOOt4ElWoq/GlRpNpTlMuipKtHtUXo+5kjNG0NhFZwbVZLEMAu9/MKKYROwh
- o0nF0vZ/iSUp5aHyzp3g73O5BTUE5Yzdgf2UHWs+iv+kTp/6n5xxeHnVqDGZPeBGMEj5 LQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2rpmrq1uug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 01:39:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x391boCO166824;
-        Tue, 9 Apr 2019 01:39:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2rpytbbf6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Apr 2019 01:39:18 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x391dGqD029461;
-        Tue, 9 Apr 2019 01:39:17 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Apr 2019 18:39:16 -0700
-To:     Ondrej Zary <linux@zary.sk>
-Cc:     Rik Faith <faith@cs.unc.edu>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] fdomain: Resurrect fdomain and fdomain_cs drivers
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190407185617.8467-1-linux@zary.sk>
-        <20190407185617.8467-2-linux@zary.sk>
-Date:   Mon, 08 Apr 2019 21:39:14 -0400
-In-Reply-To: <20190407185617.8467-2-linux@zary.sk> (Ondrej Zary's message of
-        "Sun, 7 Apr 2019 20:56:16 +0200")
-Message-ID: <yq1imvoot31.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 8 Apr 2019 21:46:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58547 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfDIBqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:46:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dVWQ3VCZz9sPl;
+        Tue,  9 Apr 2019 11:46:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554774386;
+        bh=3DCKMSOsjDgJga8EvTSq1Ey7LySWGlBnCipRm+T7ZYo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ifW01w+Atojc0y7ZF+XLLNfZebWCHzgI29FfSr/Wicq5ck9CQll8dD0V/9ivY0hPS
+         UUu0tDezlz8HaMqGzf/A7P9plGTAp/MHDM01JFkJQW8s7VDIK7oEpHQPxqp4OQJa2l
+         sKtf5TCxssM9UTshVqZHH6PKU5QLf+3nMQJyOWcgsirLuAHBZanHOY+YWekQXvKQZz
+         dB70NyeHC5crTDyACUwfN2C1xeEv1EH6W2PCcOi2HkOc8xXtirTxBNdmx3FWKhPEyM
+         ejQ9E0ZZA6pDAUXnKDdfINMtPxSPpwR59VJ3F2lGGDV4b8aRshzjULHY9w88CTKZGh
+         JbSRou++AfEDw==
+Date:   Tue, 9 Apr 2019 11:46:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: linux-next: build warning after merge of the sound-asoc tree
+Message-ID: <20190409114625.7bd282f5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=820
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904090009
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9221 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=863 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904090009
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/MP1ZEC1DMNnGhlx0NgPyzjm"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/MP1ZEC1DMNnGhlx0NgPyzjm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ondrej,
+Hi all,
 
-> This reverts commit e184f2bf4d9f1a3c612a8c1d67e73e9cf8ab5ab9.
-> It does not compile but following patches will fix that.
+After merging the sound-asoc tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-I don't have any particular objections to reviving this driver if people
-are actually using it. However, breaking bisection is going to be a
-problem. So you'll have to squash the revert and the fixup patch and
-carefully annotate the resolutions in the commit description.
+sound/soc/intel/boards/bytcht_es8316.c: In function 'snd_byt_cht_es8316_mc_=
+probe':
+sound/soc/intel/boards/bytcht_es8316.c:508:11: warning: cast from pointer t=
+o integer of different size [-Wpointer-to-int-cast]
+   quirk =3D (int)dmi_id->driver_data;
+           ^
 
-Thanks!
+Introduced by commit
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+  a8d218f4fe81 ("ASoC: Intel: bytcht_es8316: Add quirk for the Teclast X98+=
+ II")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MP1ZEC1DMNnGhlx0NgPyzjm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyr+XEACgkQAVBC80lX
+0GwK9gf/aqkvqEyanVOIYi0cqqOVrgGhGY1te79jo9xpnvLrfDcQSe7mppoPU2/Z
+7DXhz6YO10cacGQWPxm8Nuif1KyyoIOxMCKNhnU0cvJXt0MDYO3WImbNBMYfsAYr
+4MzdC957YLuoUS2t4GiGFrTv7aG2/DYvkm20URzE7j3tUEkbRLfdaq5mkMXwB2ax
+s91KVLVCx1h2rMCqr3Ej8ogeAaQYo2BoukSrBctU6NBu5Fhl9jtnSRVto+7Ozfg4
+I+FNuYNpY+d0Gq4IpPy1jcMM5hK6fjiRUDEQ8MhNrAR4OZ35Ausz5ka7sf4AVStq
+TP6GTeWcNKQMZ6+l1p2EpSUWC3RDyg==
+=Wsb5
+-----END PGP SIGNATURE-----
+
+--Sig_/MP1ZEC1DMNnGhlx0NgPyzjm--
