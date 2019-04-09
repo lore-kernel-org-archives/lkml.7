@@ -2,205 +2,216 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4EDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CC2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4166120857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1F82084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzdOPlu/"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BonsgYrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfDIFGI (ORCPT
+        id S1726927AbfDIFI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:06:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44700 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfDIFGH (ORCPT
+        Tue, 9 Apr 2019 01:08:28 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:61154 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfDIFI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:06:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y13so8950292pfm.11;
-        Mon, 08 Apr 2019 22:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mPzuYWAD9n3E7cK9DQsoS+9to3SIkl5lmMig0KfgMSY=;
-        b=jzdOPlu/x8auCMomI1PhvJbl6f2twqu5f+3vfkvAV+xE4cSTD4MEdJHxBxcS6yZqq7
-         Wi39SerktOeg2gpodvg1AttXtj/Agsk4ZqT+ll/DmXRCFXA3Rjxv4W5JXcJX12w2wN76
-         dRlAvbUeYZEdvLSCT/Uss7a0WGfW2BKtrXLgXRvC3oSExXDC5J5XOfEY7Bmkeaqldqo5
-         ofQJMLjd1hvJFdB8CUbFyyIJY+r2saK636byggJ7IyW27rDUZrXVU6SyMCAhmEBOTAxA
-         KKZ9ZFWfs5Cuc9geuO38yzWGzY7Wi5VVNgI6n1sfPWfNRYKsiEibfk9xWlxOtSOlTpg3
-         qikQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mPzuYWAD9n3E7cK9DQsoS+9to3SIkl5lmMig0KfgMSY=;
-        b=XLB0dxROcSnRoYQGx3uK4gSXmI/qWzSPmNitZmDHSnTslBbcw0lxFaxtgV4I31RoBt
-         UboBIJjtTq6Ukg8b3vDLjwb/cEXU6y4rgZjOsbAD0uvWGgA1UkIsxRG0C7p0Nlu6Ihza
-         JnEquF4qzWT0pd3wU5LUwYfZGoaIorsJP9FMFl06jaz97M6WPHwlRLjc9CHyOMG67Feq
-         AjQDGKmQM5mi9D5xg+X97EY9hJ0Mze0wT5UxiizaqhE0XRsJSS+wvYB5KoYvQOf0T/Pw
-         ARLO//dFGVzTidtAXrpURF9Sr1S2GVJOrTKEOU76WOM0IBoXFeqTf5r9cnaQAJdOjL0w
-         8XIA==
-X-Gm-Message-State: APjAAAVTqVJxkRC5VW2gBgbFeQoMzsm47WzT1eTKGq3FB1M9OcSXMvl0
-        JAOiWo2s/Qn6TfyH7GW08pc=
-X-Google-Smtp-Source: APXvYqxpbmL0psDw+R51UHqyQpUsOO53H3NyesVqG9HDMScxBNzwN2DcZVBVbnl14am4Y2jDppOgXw==
-X-Received: by 2002:a65:6212:: with SMTP id d18mr30672141pgv.162.1554786366700;
-        Mon, 08 Apr 2019 22:06:06 -0700 (PDT)
-Received: from icarus ([2001:268:c1c0:11e:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id j19sm15751431pfr.155.2019.04.08.22.05.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Apr 2019 22:06:05 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 14:07:08 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     gregkh@linuxfoundation.org, jic23@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org,
-        david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk,
-        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        patrick.havelange@essensium.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
- sysfs documentation
-Message-ID: <20190409050708.GB2842@icarus>
-References: <cover.1554184734.git.vilhelm.gray@gmail.com>
- <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
- <20190408215531.GB27592@amd>
+        Tue, 9 Apr 2019 01:08:28 -0400
+X-Greylist: delayed 76353 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Apr 2019 01:08:26 EDT
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x3958KJu030592;
+        Tue, 9 Apr 2019 14:08:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x3958KJu030592
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554786501;
+        bh=+tLjWixVEmMfw5ZbjJe2/nYWA3NiTpUWkJvBadLWyco=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BonsgYrAUbcA0M3lEW4itblRN3LeJOwImaYixpeeDGrq3nJC0SteATYWJqbOaiU+i
+         ujAuU+F7BTgZIPCrDHbaq1utIPWwUk5tKZ8J8yPz9KqTSJ7cv3DQA/HfiEWIBeGMo/
+         R/4BBkBxUHZumUn/ySFMApsaToriEccujR9Fj02aV0to2LWV2QK4pmrzti3kMjeiGk
+         iOSFce+oXZB4Ri9wPweYM5sOQQESgaKqfnxLfMeF21VJTox1wT4RetPAVKDyJTatkV
+         Uk1NatFOJt12L/HrV/uqDBMg7qcmyY+2Lr4u8PG+kLhGPqQKuZYm4PmC4723BIYeCc
+         FXvM7xK44X0XQ==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id w140so3573937vkd.3;
+        Mon, 08 Apr 2019 22:08:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAU9gq27EA6yaoEBXer7TTJx23yPHkeLDULZJdGo6zhzU00c+pB1
+        NawgD8YvtT8MY2/NSvUVnJcWV/9DPy3Z50Vh7Rw=
+X-Google-Smtp-Source: APXvYqwSJzhZpWNvmI592VjP6WuINhFLbW/w/3RfT4Z2A5JdBgIJPh9OzAMqqHku+IYb7lMPOEZnY2JsxMpkklkwL+g=
+X-Received: by 2002:a1f:860c:: with SMTP id i12mr19524700vkd.46.1554786499684;
+ Mon, 08 Apr 2019 22:08:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190408215531.GB27592@amd>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
+ <20190408075427.6052-3-yamada.masahiro@socionext.com> <20190408161802.GI49658@atomide.com>
+ <6308904e-443a-46ff-9633-2ccb3b03bef9@ti.com>
+In-Reply-To: <6308904e-443a-46ff-9633-2ccb3b03bef9@ti.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 9 Apr 2019 14:07:43 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASYqkhW_W6K5Y9NvmqnZ2aSCbGZNw0ZFrBB3Dd2FRN8yg@mail.gmail.com>
+Message-ID: <CAK7LNASYqkhW_W6K5Y9NvmqnZ2aSCbGZNw0ZFrBB3Dd2FRN8yg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: omap2: move platform-specific asm-offset.h to arch/arm/mach-omap2
+To:     Keerthy <j-keerthy@ti.com>, Tony Lindgren <tony@atomide.com>,
+        arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:55:31PM +0200, Pavel Machek wrote:
-> On Tue 2019-04-02 15:30:37, William Breathitt Gray wrote:
-> > This patch adds standard documentation for the userspace sysfs
-> > attributes of the Generic Counter interface.
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-counter | 230 ++++++++++++++++++++
-> >  MAINTAINERS                                 |   1 +
-> >  2 files changed, 231 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
-> > new file mode 100644
-> > index 000000000000..566bd99fe0a5
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-bus-counter
-> > @@ -0,0 +1,230 @@
-> > +What:		/sys/bus/counter/devices/counterX/countY/count
-> > +KernelVersion:	5.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Count data of Count Y represented as a string.
-> > +
-> > +What:		/sys/bus/counter/devices/counterX/countY/ceiling
-> > +KernelVersion:	5.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Count value ceiling for Count Y. This is the upper limit for the
-> > +		respective counter.
-> > +
-> > +What:		/sys/bus/counter/devices/counterX/countY/floor
-> > +KernelVersion:	5.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Count value floor for Count Y. This is the lower limit for the
-> > +		respective counter.
-> > +
-> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode
-> > +KernelVersion:	5.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Count mode for channel Y. The ceiling and floor values for
-> > +		Count Y are used by the count mode where required. The following
-> > +		count modes are available:
-> > +
-> > +		normal:
-> > +			Counting is continuous in either direction.
-> > +
-> > +		range limit:
-> > +			An upper or lower limit is set, mimicking limit switches
-> > +			in the mechanical counterpart. The upper limit is set to
-> > +			the Count Y ceiling value, while the lower limit is set
-> > +			to the Count Y floor value. The counter freezes at
-> > +			count = ceiling when counting up, and at count = floor
-> > +			when counting down. At either of these limits, the
-> > +			counting is resumed only when the count direction is
-> > +			reversed.
-> > +
-> > +		non-recycle:
-> > +			The counter is disabled whenever a counter overflow or
-> > +			underflow takes place. The counter is re-enabled when a
-> > +			new count value is loaded to the counter via a preset
-> > +			operation or direct write.
-> > +
-> > +		modulo-n:
-> > +			A count value boundary is set between the Count Y floor
-> > +			value and the Count Y ceiling value. The counter is
-> > +			reset to the Count Y floor value at count = ceiling when
-> > +			counting up, while the counter is set to the Count Y
-> > +			ceiling value at count = floor when counting down; the
-> > +			counter does not freeze at the boundary points, but
-> > +			counts continuously throughout.
-> > +
-> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode_available
-> > +What:		/sys/bus/counter/devices/counterX/countY/error_noise_available
-> > +What:		/sys/bus/counter/devices/counterX/countY/function_available
-> > +What:		/sys/bus/counter/devices/counterX/countY/signalZ_action_available
-> > +KernelVersion:	5.2
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Discrete set of available values for the respective Count Y
-> > +		configuration are listed in this file. Values are delimited by
-> > +		newline characters.
-> 
-> Elsewhere in sysfs we do space-separated:
-> 
-> pavel@amd:~$ cat /sys/power/state
-> freeze mem disk
-> 
-> And we use [] to mark current selection:
-> 
-> pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
-> [none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
-> kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
-> kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
-> kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
-> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
-> phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
-> rfkill1
-> 
-> Note this only works if you have less than PAGE_SIZE of entries... and
-> will never have more.
-> 
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+On Tue, Apr 9, 2019 at 2:00 PM Keerthy <j-keerthy@ti.com> wrote:
+>
+>
+>
+> On 08/04/19 9:48 PM, Tony Lindgren wrote:
+> > Hi,
+> >
+> > * Masahiro Yamada <yamada.masahiro@socionext.com> [190408 07:56]:
+> >> <generated/ti-pm-asm-offsets.h> is only generated and included
+> >> by arch/arm/mach-omap2/, so it does not need to reside in the
+> >> globally visible include/generated/.
+> >>
+> >> I moved and renamed it to arch/arm/mach-omap2/pm-asm-offsets.h
+> >> since the prefix 'omap2-' is just redundant in mach-omap2/.
+> >>
+> >> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >> ---
+> >>
+> >> Can this be applied to ARM-SOC tree in a series?
+> >> (with Ack from the platform sub-maintainer.)
+> >>
+> >> ti-pm-asm-offsets.h does not need to reside in include/generated/,
+> >> but you may ask "Why must it get out of include/generated/?"
+> >>
+> >> My main motivation is to avoid a race condition in the currently
+> >> proposed patch:
+> >>
+> >> https://lore.kernel.org/patchwork/patch/1052763/
+> >>
+> >> This patch tries to embed some build artifacts into the kernel.
+> >>
+> >> If arch/arm/mach-omap2/ and kernel/ are built at the same time,
+> >> it may embed a truncated file.
+> >
+> > Looks like a nice improvment to me, adding Keerthy and Dave to Cc.
+> >
+> > Keerthy and Dave, can you please test this series with am3 and am4
+> > PM code?
+>
+> Tested for Deep Sleep0 on AM33xx Beaglebone-black.
+> Tested for Deep Sleep0 on AM437x-gp-evm.
+>
+> Applied this on top of Tony's for-next with the gpio patch
+> required for RTC+DDR mode on am437x-gp-evm.
 
-Marking the current selection with [] or similar does seem useful. But
-delimiting by space does seem to cause confusion in cases where the
-values also include spaces (e.g. "quadrature x1 a"). I see that in these
-cases a "-" is used in place of a space, but that wouldn't work very
-well when values can also contain hyphens (e.g. "pulse-direction").
+Was it applied to TI tree?
 
-William Breathitt Gray
+If so ...
+
+Arnd, Olof,
+Please just ignore this patch
+since it looks it was already applied to TI tree.
+
+Thanks.
+Masahiro Yamada
+
+
+
+
+> Tested-by: Keerthy <j-keerthy@ti.com>
+>
+> >
+> > Regards,
+> >
+> > Tony
+> >
+> >>   arch/arm/mach-omap2/.gitignore  | 1 +
+> >>   arch/arm/mach-omap2/Makefile    | 5 +++--
+> >>   arch/arm/mach-omap2/sleep33xx.S | 2 +-
+> >>   arch/arm/mach-omap2/sleep43xx.S | 2 +-
+> >>   4 files changed, 6 insertions(+), 4 deletions(-)
+> >>   create mode 100644 arch/arm/mach-omap2/.gitignore
+> >>
+> >> diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+> >> new file mode 100644
+> >> index 000000000000..79a8d6ea7152
+> >> --- /dev/null
+> >> +++ b/arch/arm/mach-omap2/.gitignore
+> >> @@ -0,0 +1 @@
+> >> +pm-asm-offsets.h
+> >> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+> >> index 85d1b13c9215..26baeb6477af 100644
+> >> --- a/arch/arm/mach-omap2/Makefile
+> >> +++ b/arch/arm/mach-omap2/Makefile
+> >> @@ -236,9 +236,10 @@ obj-y                                   += omap_phy_internal.o
+> >>
+> >>   obj-$(CONFIG_MACH_OMAP2_TUSB6010)  += usb-tusb6010.o
+> >>
+> >> -include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
+> >> +$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+> >>      $(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+> >>
+> >> -$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
+> >> +$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+> >>
+> >>   targets += pm-asm-offsets.s
+> >> +clean-files += pm-asm-offsets.h
+> >> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+> >> index 47a816468cdb..a003769121aa 100644
+> >> --- a/arch/arm/mach-omap2/sleep33xx.S
+> >> +++ b/arch/arm/mach-omap2/sleep33xx.S
+> >> @@ -6,7 +6,6 @@
+> >>    * Dave Gerlach, Vaibhav Bedia
+> >>    */
+> >>
+> >> -#include <generated/ti-pm-asm-offsets.h>
+> >>   #include <linux/linkage.h>
+> >>   #include <linux/platform_data/pm33xx.h>
+> >>   #include <linux/ti-emif-sram.h>
+> >> @@ -15,6 +14,7 @@
+> >>
+> >>   #include "iomap.h"
+> >>   #include "cm33xx.h"
+> >> +#include "pm-asm-offsets.h"
+> >>
+> >>   #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED                     0x00030000
+> >>   #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE                       0x0003
+> >> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+> >> index 5b9343b58fc7..aa288f361c5e 100644
+> >> --- a/arch/arm/mach-omap2/sleep43xx.S
+> >> +++ b/arch/arm/mach-omap2/sleep43xx.S
+> >> @@ -6,7 +6,6 @@
+> >>    * Dave Gerlach, Vaibhav Bedia
+> >>    */
+> >>
+> >> -#include <generated/ti-pm-asm-offsets.h>
+> >>   #include <linux/linkage.h>
+> >>   #include <linux/ti-emif-sram.h>
+> >>   #include <linux/platform_data/pm33xx.h>
+> >> @@ -19,6 +18,7 @@
+> >>   #include "iomap.h"
+> >>   #include "omap-secure.h"
+> >>   #include "omap44xx.h"
+> >> +#include "pm-asm-offsets.h"
+> >>   #include "prm33xx.h"
+> >>   #include "prcm43xx.h"
+> >>
+> >> --
+> >> 2.17.1
+> >>
+
+
+
+--
+Best Regards
+Masahiro Yamada
