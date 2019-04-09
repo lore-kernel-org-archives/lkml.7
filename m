@@ -2,157 +2,119 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9987C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E9020693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE74920693
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fDlaBpuJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a2tyfqA8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rbQKp0o1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDIBGA (ORCPT
+        id S1726799AbfDIBGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:06:00 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:52761 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726352AbfDIBF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:05:59 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id F0E7D23943;
-        Mon,  8 Apr 2019 21:05:58 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 08 Apr 2019 21:05:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=oXeZYYbWObiGKwh5XzvLRHAJTEzchbU
-        0DVqAoRpD2x4=; b=fDlaBpuJjZ5HbhgE3yoN3FKNPMEG77h3DRoO0sCL1joalhw
-        J7EMrUtvwMsSOLLftoIhABgbKKlaygunWtYUmGV8DhxsxC8kcIYvszFTCNxH4V3c
-        1Kl0twWIByKzzcQIbD9DHqN6vGIlGM2JlYv3urnT/C1gm7uT2J+kbzM9Gp7boAS4
-        vhn60W8Jgec5P5uE17jmgcRn32BWI/38TY2Nn3rH37iJ+az/txtL3JzCVWXuf/bG
-        q95mac9KcbyBj+Q4SNUC7c3jW3nlPRmwSYjwfh7or+5QruY49U71Av6GxUMV7kfA
-        9m/zB9dZbuq37R3C9VJWtUCpla9tmPeDIzwYzRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=oXeZYY
-        bWObiGKwh5XzvLRHAJTEzchbU0DVqAoRpD2x4=; b=a2tyfqA816vAwIcy/TNN1N
-        Yobgzkt2m27l7jhx85IJfFnEqX27sWz18VyUKy0Rqka7HcCwQuLyh+xKB1iZ26nh
-        pAYjrVGH7C1qnw5CHnaCWQDZyOX/JihCO8G3V17RQP/FkYuKo7fNiPc2z6lGreMc
-        1r0cJjsTAWaFmgmD19zrrv0Ml9UQAPt1QiHeLeE9iCjewu6rcEulR/ostGpsHzPr
-        vJ8vJbpRC30EB/1pFx9ZtPHR7CCbWuE75ZMtuUglu3FtTrgKM0fChmsLuqB0GGRo
-        ssAmcVUUi5EAnyV2sOuC/fWy1U90E7RPw6fjXW74tn+FPVzq1+adGCf0rRuNfToQ
-        ==
-X-ME-Sender: <xms:9e-rXG7-LGLPqiuC549DLVj8O_s01SsVJzzRq6m20I1LtfTb5WWQAA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucfrrghrrghmpehmrghi
-    lhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpe
-    dt
-X-ME-Proxy: <xmx:9e-rXDE2yncpeOHCp5CEQtRHuvKSsti4OpLnM-MfPKyji-dvZlEieQ>
-    <xmx:9e-rXJGwVqRwZGluVj6X94UpN8BnrA6U1ZLywCi4EWr-eHsPvxUC6A>
-    <xmx:9e-rXHWprFB3wCin5x-UwUgYSGNvGPhwJG3rLLOO9kyQ6L-9Yx3ZMw>
-    <xmx:9u-rXJfgERZhNhjUps0JQUCULFTP0-6VGZWN5fw4onZHsqQSDIDAyA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AA43E7C412; Mon,  8 Apr 2019 21:05:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-329-gf4aae99-fmstable-20190329v1
-Mime-Version: 1.0
-X-Me-Personality: 52947553
-Message-Id: <ac821164-92aa-468a-8ef7-5f6697b48716@www.fastmail.com>
-In-Reply-To: <8eab4602-eb0e-a49d-3dab-c6454f4fdb47@roeck-us.net>
-References: <1554752326-13319-1-git-send-email-linux@roeck-us.net>
- <1554752326-13319-4-git-send-email-linux@roeck-us.net>
- <2b039e4a-1f21-4297-a499-d8f764844693@www.fastmail.com>
- <8eab4602-eb0e-a49d-3dab-c6454f4fdb47@roeck-us.net>
-Date:   Mon, 08 Apr 2019 21:05:57 -0400
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Guenter Roeck" <linux@roeck-us.net>,
-        "Wim Van Sebroeck" <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_03/22]_watchdog:_aspeed=5Fwdt:_Use_'dev'_instead_of?=
- =?UTF-8?Q?_dereferencing_it_repeatedly?=
-Content-Type: text/plain
+        Mon, 8 Apr 2019 21:06:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42831 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbfDIBGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:06:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dTcy0Zwyz9sPn;
+        Tue,  9 Apr 2019 11:06:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554771970;
+        bh=lxxVKlKb71VvqRuml/havxSf1qEKip/V9oXdYFARi5A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rbQKp0o1zN9VqgJwb165FaFyEujOs/LnT7/OvCJ20hxMIzcw0iPECZEr/PJo9QIoU
+         qQs97fIWRp9/it8yixwRzC2HPJ6HqcZJTkTVZgGjUsMAQoskE+NTVLnPCixUmaqKFM
+         aJFBO9rF9Qn7cHS2rheH47R0CJKbQCMPniod+pRgNZkVyriIvouxo6uGVg2V0Dl0HF
+         4IrsAFjn+gH8bdaOJ48aA74XLO3fXVQZWDcK/bXMzxFj899fTbPvGnfOOoRRtVpxkx
+         ulvMRzohSpvaHFzH17QpitLQd+cwEQA2sJizOWB0+PVR9DwSOdi2gezei2MwOW6BSz
+         z/ykInBB13THw==
+Date:   Tue, 9 Apr 2019 11:06:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: linux-next: manual merge of the mac80211-next tree with the
+ mac80211 tree
+Message-ID: <20190409110607.29df3cf3@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/nk7TK0lKM_uOHgtwjGYIvFv"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/nk7TK0lKM_uOHgtwjGYIvFv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On Tue, 9 Apr 2019, at 10:33, Guenter Roeck wrote:
-> Hi Andrew,
-> 
-> On 4/8/19 5:37 PM, Andrew Jeffery wrote:
-> > 
-> > 
-> > On Tue, 9 Apr 2019, at 05:09, Guenter Roeck wrote:
-> >> Introduce local variable 'struct device *dev' and use it instead of
-> >> dereferencing it repeatedly.
-> >>
-> >> The conversion was done automatically with coccinelle using the
-> >> following semantic patches. The semantic patches and the scripts
-> >> used to generate this commit log are available at
-> >> https://github.com/groeck/coccinelle-patches
-> >>
-> >> Cc: Joel Stanley <joel@jms.id.au>
-> >> Cc: Andrew Jeffery <andrew@aj.id.au>
-> >> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> >> ---
-> >>   drivers/watchdog/aspeed_wdt.c | 21 +++++++++++----------
-> >>   1 file changed, 11 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-> >> index f09333fd54b4..34117745c65f 100644
-> >> --- a/drivers/watchdog/aspeed_wdt.c
-> >> +++ b/drivers/watchdog/aspeed_wdt.c
-> >> @@ -187,6 +187,7 @@ static const struct watchdog_info aspeed_wdt_info = {
-> >>   
-> >>   static int aspeed_wdt_probe(struct platform_device *pdev)
-> >>   {
-> >> +	struct device *dev = &pdev->dev;
-> >>   	const struct aspeed_wdt_config *config;
-> >>   	const struct of_device_id *ofdid;
-> >>   	struct aspeed_wdt *wdt;
-> >> @@ -196,7 +197,7 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
-> >>   	u32 status;
-> >>   	int ret;
-> >>   
-> >> -	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> >> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-> >>   	if (!wdt)
-> >>   		return -ENOMEM;
-> > 
-> > Looks like it's missed this one somehow?
-> > 
-> > wdt->base = devm_ioremap_resource(&pdev->dev, res);
-> > 
-> > Otherwise,
-> > 
-> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> > 
-> 
-> Assuming you mean the conversion to use devm_platform_ioremap_resource(),
-> I had this already addressed with a single patch for all watchdog drivers.
-> 
-> https://patchwork.kernel.org/patch/10882207/
-> 
-> Sorry, I didn't Cc: you on that one - I limited the number of Cc:s to 
-> avoid being
-> tagged as spammer.
+Today's linux-next merge of the mac80211-next tree got a conflict in:
 
-That's the piece I was missing.
+  net/mac80211/tx.c
 
-Thanks!
+between commit:
 
-Andrew
+  eb9b64e3a9f8 ("mac80211: fix memory accounting with A-MSDU aggregation")
+
+from the mac80211 tree and commit:
+
+  dcec1d9bc8a7 ("mac80211: calculate hash for fq without holding fq->lock i=
+n itxq enqueue")
+
+from the mac80211-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/mac80211/tx.c
+index 2e816dd67be7,3655aae96df1..000000000000
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@@ -3221,7 -3219,7 +3219,8 @@@ static bool ieee80211_amsdu_aggregate(s
+  	u8 max_subframes =3D sta->sta.max_amsdu_subframes;
+  	int max_frags =3D local->hw.max_tx_fragments;
+  	int max_amsdu_len =3D sta->sta.max_amsdu_len;
+ +	int orig_truesize;
++ 	u32 flow_idx;
+  	__be16 len;
+  	void *data;
+  	bool ret =3D false;
+
+--Sig_/nk7TK0lKM_uOHgtwjGYIvFv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyr7/8ACgkQAVBC80lX
+0Gz0cQgAm7Z45grpN06oI1vDHbeyWc1Nf5XOqaDdgOzObo+f8Fbemq832Wv9g9Rv
+2Um1yA8WsPO1n+avHfatwoEV8O34shDxpRxCQkSauALhsdKY4W1Wlp8FA2M7GteV
+E66NVIITDIL8Men0nhNTUG9UFWpI7yeEfzJyHhX0Zm3w3AyVTJqYn/06ikKYObx6
+ue8YTx74ttTG/hK1N9MMoDSGNFqx+XaG9MQPWdqhi30Q1KV10hOpHUNu56ma7ZSQ
+erEM9Lk1R3DJLYKklLGJEXz+x0yXQ+pHYIVYxWY6RNkFz5g+5P8z0j3ptRY6N9ki
+/CohVqDhFhZEEb2RJPDCSpc1jpCRMQ==
+=g+rO
+-----END PGP SIGNATURE-----
+
+--Sig_/nk7TK0lKM_uOHgtwjGYIvFv--
