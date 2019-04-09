@@ -2,86 +2,77 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32288C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37709C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3B020883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MF+FPIwy"
+	by mail.kernel.org (Postfix) with ESMTP id 0312020857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfDIRcG (ORCPT
+        id S1726644AbfDIRdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:32:06 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44270 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfDIRcG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:32:06 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i21so14243035oib.11;
-        Tue, 09 Apr 2019 10:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q4C37kuk/3QFpUiiREEwzcAc84XKEDNmELmFYcLjkEI=;
-        b=MF+FPIwyi4WoexvD6zWXNKaS8kN8zCQo7ftTcZYalBMpNeISIYYygjgQ0J+sgloIFs
-         HawHXQ/GNBpj03c5Luy62vgEcKyOeF2u6S+p9TKCe/J9r9akSSx4tUJxbYilDhz9ltd4
-         6tFVqy9Bomv99WsUiFifSZZjCv91GFAPTSjRn0WOxNzW7a69Pe9uLoyll7TCnDLjxk61
-         BDbEOWKUqPYYCt7EF4BOx5ZsuSPvsvVw8+DPPWyDQCvdA5CMdws5RO/p3qP+puxTyHPt
-         4kL/XRf/MJHwDpgH6S4bcrbUU4RDoM+T3gpzFyUF9HtGHOiVDUgkw1dF8HsHk19GFec+
-         NdtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q4C37kuk/3QFpUiiREEwzcAc84XKEDNmELmFYcLjkEI=;
-        b=IMXa74oXcWQiywgx02adJ/L0PFozCBR4KQvj0jpjBkX90Gwk1UZgbiV0ptPm0VA3Mt
-         trhrj1CSOgZ4+GDxf7CrTTSLoR6llbO/RYQyVG6ETkpK4knXOMWdabbUb0z0U34j2W07
-         s00p5e4XKscOyPDNjR7Z7PcwYCsBDR56g+9VpN3eeYqZC3TIGAlXv7D/NDJ7oVccV2jL
-         d4BCHK7YXWHzqai5X4xYJF3gNqZw19lklYE2luASoFk5H46yBIPBraQJOOfP1Sjyne96
-         nWLwxJAyIeU2TGl1D2g64lMnB41oZYHFgLw3VlZiUHrl+r14ZNJKcPMQHa7YOTETivKi
-         3sJA==
-X-Gm-Message-State: APjAAAUuT+NZkDIYqYC+yw5culC+ABo/QzcP+XBRY0X7UIENbBX3TUSI
-        l2FHagDvg77peOpUYmTZ+AwdeLjj2Zo662oj8l8=
-X-Google-Smtp-Source: APXvYqzosr0oVFGgTYFfLwGAJTnjqnihK1XEdKaMO4M/f+9wFlCJVSS1zn0MEQrqZu2PowaMGtPqtZaiNY9Y8UxZrIQ=
-X-Received: by 2002:aca:c405:: with SMTP id u5mr21816544oif.77.1554831125587;
- Tue, 09 Apr 2019 10:32:05 -0700 (PDT)
+        Tue, 9 Apr 2019 13:33:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:42076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbfDIRdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:33:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F164215BE;
+        Tue,  9 Apr 2019 10:33:32 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98C3F3F59C;
+        Tue,  9 Apr 2019 10:33:31 -0700 (PDT)
+Subject: Re: [PATCH 07/21] dma-iommu: move the arm64 wrappers to common code
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190327080448.5500-1-hch@lst.de>
+ <20190327080448.5500-8-hch@lst.de>
+ <67573dd3-72c7-692d-bc1a-7edb49ff9551@arm.com>
+ <20190409172309.GD14679@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <eace43d1-417e-c96d-0c13-160973fce077@arm.com>
+Date:   Tue, 9 Apr 2019 18:33:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190409144250.7237-1-TheSven73@gmail.com> <20190409144250.7237-5-TheSven73@gmail.com>
- <CAL_JsqJhefb3qmPN4Fn5zMz_UYFTRdPthqi4NNGMNqwNtSy76A@mail.gmail.com> <CAGngYiX15ts+dr4MzvtHcEfasZCSK1Lok=PkVhqRwKtzWVnQtA@mail.gmail.com>
-In-Reply-To: <CAGngYiX15ts+dr4MzvtHcEfasZCSK1Lok=PkVhqRwKtzWVnQtA@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 9 Apr 2019 13:31:53 -0400
-Message-ID: <CAGngYiX+53Rk2gTJ7G0QhQvEL-fF=Zan5jW9h7cR3gV1-J9xCg@mail.gmail.com>
-Subject: Re: [PATCH v10 4/7] dt-bindings: anybus-controller: document
- devicetree binding
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190409172309.GD14679@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 1:16 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> My apologies for the confusion. You already offered your tag to an
-> identical commit in v3:
-> https://lkml.org/lkml/2018/11/6/66
->
-> Am I ok to add it, given that nothing has changed in this particular commit?
+On 09/04/2019 18:23, Christoph Hellwig wrote:
+> On Tue, Apr 09, 2019 at 04:07:02PM +0100, Robin Murphy wrote:
+>>> -static inline int iommu_dma_init(void)
+>>> +static inline void iommu_setup_dma_ops(struct device *dev, u64 dma_base,
+>>> +		u64 size, const struct iommu_ops *ops)
+>>>    {
+>>> -	return 0;
+>>>    }
+>>
+>> I don't think it makes sense to have a stub for that - AFAICS it should
+>> only ever be called form arch code with an inherent "select IOMMU_DMA"
+>> (much like the stuff which isn't stubbed currently).
+>>
+>> Otherwise, I'm about 97% sure the rest of the move looks OK - thanks for
+>> splitting things up.
+> 
+> arm64 only selects IOMMU_DMA if IOMMU_SUPPORT is selected, which can
+> be disabled.  So to keep some (unusual) arm64 configs compiling we'll need
+> the stub..
 
-I added a link to the wrong version. The current patch is identical to
-v5, where you
-said it looks fine, but the series itself still has discussion.
-https://lkml.org/lkml/2018/12/7/600
+Urgh, right, it worked out before because arm64 stubbed its own caller 
+of iommu_dma_init_domain() internally... Oh well - I guess there's no 
+nicer alternative, and we have always treated arch_setup_dma_ops() that way.
 
-Should I re-post to the DT list?
+Robin.
