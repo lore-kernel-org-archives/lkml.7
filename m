@@ -2,125 +2,144 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF14C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991E4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB0D2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AE62084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtfNJa7U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSvo5iSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDIQar (ORCPT
+        id S1726487AbfDIQaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:30:47 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42086 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfDIQap (ORCPT
+        Tue, 9 Apr 2019 12:30:55 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40388 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfDIQaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:30:45 -0400
-Received: by mail-vs1-f65.google.com with SMTP id f15so10170703vsk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:30:45 -0700 (PDT)
+        Tue, 9 Apr 2019 12:30:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h22so15531603edw.7;
+        Tue, 09 Apr 2019 09:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5bSi6KbE8Pk9RuCYTPgITspTMM1nkuTpfW7nb1CrSbw=;
-        b=XtfNJa7UEnVWxz8Hu3HBCaw4Djlx23xSTXXl7GOQGQrEePRnNbLEWuWTYRrjm9iumw
-         1AkOmChoOrdttuxBS5ZGMiwZ0Fa+Htp0Acw/A1xlO8kkzBO875MKV5gcTh5jYW9grLti
-         QTe25q6VxDmwjPaNgolfsoy/Qzgm4jwEUMYm0=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hzwlE548oHwmQvi7KHwntG9Pp/EUNoag5IWtMq7QI10=;
+        b=KSvo5iSVAJKQsySQlK8CvClsQq+jejyRdfqQUeuLFMFOUaawroJGnvQa8Wy6scPt7z
+         jELKnNGZhg55clkBNykfXLrBtEG3XTYUqBvEVMTLl4X+EOcX1ljGOqL8dIEQ3rD4tEwh
+         uBnwLy1WNmouB0vKio583SWUC8kqAn2cCAUVnnHscu+I49nFi+nKVu83gaGy2rdT3nyB
+         RfOi3fL9r/6PclkVYymdbEJLmSFJ5j5ox+6dWNh36jmHOGVa/4Ub/kgK/Dn6xP9CdNSG
+         iFFj/4dsWr6yCPlGUw+b6CMhZuG3tTCQzfdTsW8oYiraCEI5gv6f0brI5qvi2yk9amQP
+         MSMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5bSi6KbE8Pk9RuCYTPgITspTMM1nkuTpfW7nb1CrSbw=;
-        b=l0RrVVWpJ3f9yXtPBd/EbYLXUHilsuADFYo/KmTaILZ4vOeER8d9JgWjlIh3Ek4rCH
-         Q5yjt8fIPIcJRyzWa3scGk89I2iGsxa6atGHi3914ysVDU16H8WVCtmqIGNzVcI94PH4
-         MdOuwU8eDuAIOzy1MaLfKR/lR+E8Sq4FnHQH4DfTa4YnbEMUR+Vzs8+JvnBTh9cD2g8j
-         im9ahiOf2kM6ng16rp2TT9g0wEFk5a0sjOFfVA9sO4ZryeidTC4SwdOUpAeiDG7ieLn8
-         5uMTyeYK8Y4D2QEzROkhWt4zfiOxfCP5LQSkmddY6PisoZuHHpy9UQWJ9siik5qzUql6
-         8SyA==
-X-Gm-Message-State: APjAAAV1Xy7tZv2rD9V6aOjaLOCIWYGAoDRvln9FG0kaZ/BP52qy7Z9I
-        U2A90vEO+yDhTq0MZ0pzZPx4sIUymrw=
-X-Google-Smtp-Source: APXvYqyvB4SfxZclD7PV42UCrKEbyh9esEiwRwOB0UobUQMLhZwhMyg0CW9vs/sQEN4FpINu5XHjFA==
-X-Received: by 2002:a67:8192:: with SMTP id c140mr21001529vsd.176.1554827443956;
-        Tue, 09 Apr 2019 09:30:43 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id g19sm4397504vkf.33.2019.04.09.09.30.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 09:30:43 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id g187so10164712vsc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:30:42 -0700 (PDT)
-X-Received: by 2002:a67:f04e:: with SMTP id q14mr21108873vsm.133.1554827442297;
- Tue, 09 Apr 2019 09:30:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hzwlE548oHwmQvi7KHwntG9Pp/EUNoag5IWtMq7QI10=;
+        b=nrWfxi58oIriCNBBvY7FAstnIPFGCUtGNO8bk1grCi5XMUBA7x9vwPVOcvMFggCxaZ
+         VFQnl6srgPk2Ud0cwGGOOkbnC2W371xs4Sqeg1V7xrbUgOXzXB6dqPkeWwLYMhX4Czbp
+         XJdSyC2qgV17YsWK0CuPg/YDf0PznZJLuc8Ew55ZDrGN3PyskLA4WD3qxUGf8GkOxMY7
+         XK8iGf74hZx4GuRWDTSHpWomykgrVnWTxbY3hE6tWrQpQGl7dEo8CO0FzkMCpJZElyUF
+         HoIHQ80JbkpgEJT7Vk2c7BLTh08m16e7y0qnnItJwbd3fLLlCXbKujgXYdgbblFzCKhZ
+         pkLA==
+X-Gm-Message-State: APjAAAUnmlV+QY6ELwC3VfLkK27KCpFlFcbKZbufe1HBAdPASjEMwGa8
+        CxcWsS7CxWzFLF8RCCrBJZs=
+X-Google-Smtp-Source: APXvYqyAmiFmo66dxw/cEmEsxFaDJQJrOVPQUtKRipbrq1ZK2Lz1nyiBNT+2zAwTcSJB9MHyzdceeg==
+X-Received: by 2002:a50:9856:: with SMTP id h22mr24412225edb.186.1554827453133;
+        Tue, 09 Apr 2019 09:30:53 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id m25sm2294450eja.10.2019.04.09.09.30.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Apr 2019 09:30:51 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 09:30:49 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/12] s390: purgatory: pass --target option to clang
+Message-ID: <20190409163049.GA2046@archlinux-i9>
+References: <20190408212648.2407234-1-arnd@arndb.de>
+ <20190408212648.2407234-3-arnd@arndb.de>
+ <20190408220312.GA18333@archlinux-i9>
+ <CAK8P3a39NqQOp+0=WYuWh0UmpH=kEFLKyymNYm8DH-0gx9XaaQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190212173902.GA6829@embeddedor>
-In-Reply-To: <20190212173902.GA6829@embeddedor>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 9 Apr 2019 09:30:30 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJDjM6=wLLuj3rxwc9uVttG27Ux7UaszAkV=YTTWYDsyg@mail.gmail.com>
-Message-ID: <CAGXu5jJDjM6=wLLuj3rxwc9uVttG27Ux7UaszAkV=YTTWYDsyg@mail.gmail.com>
-Subject: Re: [PATCH] NFC: st21nfca: Fix a couple of fall-through warnings
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Samuel Ortiz <sameo@linux.intel.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a39NqQOp+0=WYuWh0UmpH=kEFLKyymNYm8DH-0gx9XaaQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 9:39 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
->
-> This patch fixes the following warnings by adding a missing break
-> and a fall-through annotation:
->
-> drivers/nfc/st21nfca/dep.c: In function =E2=80=98st21nfca_tm_event_send_d=
-ata=E2=80=99:
-> drivers/nfc/st21nfca/dep.c:391:3: warning: this statement may fall throug=
-h [-Wimplicit-fallthrough=3D]
->    switch (cmd1) {
->    ^~~~~~
-> drivers/nfc/st21nfca/dep.c:404:2: note: here
->   default:
->   ^~~~~~~
-> In file included from ./include/linux/kernel.h:15,
->                  from ./include/linux/skbuff.h:17,
->                  from ./include/net/nfc/hci.h:21,
->                  from drivers/nfc/st21nfca/dep.c:17:
-> drivers/nfc/st21nfca/dep.c: In function =E2=80=98st21nfca_im_recv_dep_res=
-_cb=E2=80=99:
-> ./include/linux/printk.h:303:2: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
->   printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/nfc/st21nfca/dep.c:622:4: note: in expansion of macro =E2=80=98pr=
-_err=E2=80=99
->     pr_err("Received a ACK/NACK PDU\n");
->     ^~~~~~
-> drivers/nfc/st21nfca/dep.c:623:3: note: here
->    case ST21NFCA_NFC_DEP_PFB_I_PDU:
->    ^~~~
->
-> Warning level 3 was used: -Wimplicit-fallthrough=3D3
->
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Tue, Apr 09, 2019 at 08:43:09AM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 9, 2019 at 12:03 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Mon, Apr 08, 2019 at 11:26:16PM +0200, Arnd Bergmann wrote:
+> > > The purgatory Makefile does not inherit the original cflags,
+> > > so clang falls back to the default target architecture when
+> > > building it, typically this would be x86 when cross-compiling.
+> > >
+> > > Pass --target=s390x-linux to all compilers that understand
+> > > this option.
+> > >
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > >  arch/s390/purgatory/Makefile | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+> > > index ce6a3f75065b..3a14b968cec3 100644
+> > > --- a/arch/s390/purgatory/Makefile
+> > > +++ b/arch/s390/purgatory/Makefile
+> > > @@ -22,6 +22,7 @@ KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
+> > >  KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+> > >  KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
+> > >  KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
+> > > +KBUILD_CFLAGS += $(call cc-option,--target=s390x-linux)
+> > >  KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
+> > >  KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+> > >
+> > Would
+> >
+> > ifdef CONFIG_CC_IS_CLANG
+> > KBUILD_CFLAGS += --target=s390x-linux
+> > endif
+> >
+> > be a little clearer (and save a cc-option call)?
+> 
+> Fine with me as well. Actually I noticed later that we need the same
+> thing for arch/s390/boot/Makefile and arch/s390/boot/compressed/Makefile
+> in some form, so maybe we should drop this one for now and find
+> a solution that works for all three of them. The boot stuff is the one
+> patch I did not send, since I did not think I had a good solution there,
+> just one that happened to make it build.
+> 
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+It did just occur to me that we added the --target and --gcc-toolchain
+flags to a clang specific variable, CLANG_FLAGS, that has already been
+used by powerpc in commit 813af51f5d30 ("powerpc/boot: Set target when
+cross-compiling for clang"). I assume that could be used here?
 
---=20
-Kees Cook
+Nathan
+
+> > Otherwise, makes sense.
+> >
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+>  Thanks,
+> 
+>        Arnd
