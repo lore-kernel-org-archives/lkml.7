@@ -2,134 +2,169 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0666C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410ACC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7D72084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143AD2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mpwxrvub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfDIRZf (ORCPT
+        id S1726800AbfDIRYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:25:35 -0400
-Received: from verein.lst.de ([213.95.11.211]:51855 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbfDIRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:25:33 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id D799268B02; Tue,  9 Apr 2019 19:25:20 +0200 (CEST)
-Date:   Tue, 9 Apr 2019 19:25:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/21] dma-iommu: refactor iommu_dma_mmap
-Message-ID: <20190409172520.GE14679@lst.de>
-References: <20190327080448.5500-1-hch@lst.de> <20190327080448.5500-9-hch@lst.de> <adf139e2-a595-fa08-e287-f358c06d7e91@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adf139e2-a595-fa08-e287-f358c06d7e91@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 9 Apr 2019 13:24:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37295 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfDIRYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:24:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so9686844pgc.4;
+        Tue, 09 Apr 2019 10:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wCXHrOsWqXSwK8IC/YC+rDt+Fx5DNdMSraig28kMeIs=;
+        b=mpwxrvubsnHrRUQtwmvZrNHCNi7Q/q1+vHEdRG/TriC9+JvoBUwhaM6IEHDoKRrEuV
+         S+71QQoSHQwUH+TJRh3Cq5BJf3fUfMlmnzWzFjxMdhvSemuA3g81R5FOq6ceNTozTJol
+         hV0JsMj0MxAhV+NyY7di3Y9cSTXeqHnpCEWInRs23MJ6Zjq1CtrQi+98x79Zt9T27934
+         maj70O6yRjKfjnkDhCAosJpYIDmSdllc7gpsbWbbiBpgcOzxs1gkOiG280EdmyxHSqgm
+         kaO+n9+RZL0QpfiDlk3PewK8unON20eM5V8MbvShTGJ2UfbtQya6/Z6GlXh+H744Qq3g
+         8KcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=wCXHrOsWqXSwK8IC/YC+rDt+Fx5DNdMSraig28kMeIs=;
+        b=aZC3Gv+kFCoyU/uhKuV6XV5dl0U3s7xiLowbzKROUkh8PkA4soKPTFVztfghjfMMP/
+         Cb/GdpS9tjspNOZZWWdKq5fefFsdbzF5wTt76ipImu0P5udih/JKU/qvkLFpZiRlJjQF
+         GM0TiDl4QmkQkdy7P0wuOxoO0MDUfjN9M62+bZOq2ad2p6CiOUGSljvddhPLD4k0MUmn
+         wy6JX0ZQkcQ1P8FkaC0i02UGDo1vSBTWuQPb1pJembPAoSQG7H8kmxxv9K6GL40aXe1G
+         NMIBnEaRCQD297zrpFdjvawgxAeVQ26eCJsGdcKC6ezcwYhhN9r70FT7zMgV/hFzPhOP
+         qMvA==
+X-Gm-Message-State: APjAAAU/0PgThSZZDCGqCFMqyciuMT/8EEdkkwTcLRHYGAAvflQI35Ki
+        BChJPoa/HLbArOsamif92M4=
+X-Google-Smtp-Source: APXvYqx7DrLyrMimYHWjerCF4nTRqpMoTuqxLhS2qiGsz+sSBX7rHt5y0STqMuiVIIFME2lx9p31VQ==
+X-Received: by 2002:a65:6259:: with SMTP id q25mr35969443pgv.103.1554830662973;
+        Tue, 09 Apr 2019 10:24:22 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q75sm7345068pfi.102.2019.04.09.10.24.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 10:24:22 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH 08/23] watchdog: mtk_wdt: Convert to use device managed functions and other improvements
+Date:   Tue,  9 Apr 2019 10:23:46 -0700
+Message-Id: <1554830641-9247-9-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
+References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 04:29:07PM +0100, Robin Murphy wrote:
-> On 27/03/2019 08:04, Christoph Hellwig wrote:
->> Move the vm_area handling into __iommu_dma_mmap, which is renamed
->> to iommu_dma_mmap_remap.
->>
->> Inline __iommu_dma_mmap_pfn into the main function to simplify the code
->> flow a bit.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> ---
->>   drivers/iommu/dma-iommu.c | 50 ++++++++++++++-------------------------
->>   1 file changed, 18 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
->> index d14fe9f8c692..43bd3c7e0f6b 100644
->> --- a/drivers/iommu/dma-iommu.c
->> +++ b/drivers/iommu/dma-iommu.c
->> @@ -597,23 +597,27 @@ static struct page **__iommu_dma_alloc(struct device *dev, size_t size,
->>   }
->>     /**
->> - * __iommu_dma_mmap - Map a buffer into provided user VMA
->> - * @pages: Array representing buffer from __iommu_dma_alloc()
->> + * iommu_dma_mmap_remap - Map a remapped page array into provided user VMA
->> + * @cpu_addr: virtual address of the memory to be remapped
->>    * @size: Size of buffer in bytes
->>    * @vma: VMA describing requested userspace mapping
->>    *
->> - * Maps the pages of the buffer in @pages into @vma. The caller is responsible
->> + * Maps the pages pointed to by @cpu_addr into @vma. The caller is responsible
->>    * for verifying the correct size and protection of @vma beforehand.
->>    */
->> -static int __iommu_dma_mmap(struct page **pages, size_t size,
->> +static int iommu_dma_mmap_remap(void *cpu_addr, size_t size,
->>   		struct vm_area_struct *vma)
->>   {
->> +	struct vm_struct *area = find_vm_area(cpu_addr);
->>   	unsigned long uaddr = vma->vm_start;
->>   	unsigned int i, count = PAGE_ALIGN(size) >> PAGE_SHIFT;
->>   	int ret = -ENXIO;
->>   +	if (WARN_ON(!area || !area->pages))
->> +		return -ENXIO;
->> +
->>   	for (i = vma->vm_pgoff; i < count && uaddr < vma->vm_end; i++) {
->> -		ret = vm_insert_page(vma, uaddr, pages[i]);
->> +		ret = vm_insert_page(vma, uaddr, area->pages[i]);
->>   		if (ret)
->>   			break;
->>   		uaddr += PAGE_SIZE;
->> @@ -1052,21 +1056,13 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
->>   	}
->>   }
->>   -static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
->> -			      unsigned long pfn, size_t size)
->> -{
->> -	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
->> -			       vma->vm_end - vma->vm_start,
->> -			       vma->vm_page_prot);
->> -}
->> -
->>   static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->>   		void *cpu_addr, dma_addr_t dma_addr, size_t size,
->>   		unsigned long attrs)
->>   {
->>   	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
->>   	unsigned long off = vma->vm_pgoff;
->> -	struct vm_struct *area;
->> +	unsigned long pfn;
->>   	int ret;
->>     	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, 
->> attrs);
->> @@ -1077,25 +1073,15 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->>   	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
->>   		return -ENXIO;
->>   -	if (!is_vmalloc_addr(cpu_addr)) {
->> -		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
->> -		return __iommu_dma_mmap_pfn(vma, pfn, size);
->> -	}
->> +	if (is_vmalloc_addr(cpu_addr)) {
->> +		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
->> +			return iommu_dma_mmap_remap(cpu_addr, size, vma);
->> +		pfn = vmalloc_to_pfn(cpu_addr);
->> +	} else
->> +		pfn = page_to_pfn(virt_to_page(cpu_addr));
->
-> Nit: braces around the else clause for correct style.
+Use device managed functions to simplify error handling, reduce
+source code size, improve readability, and reduce the likelyhood of bugs.
+Other improvements as listed below.
 
-So I generally prefer that style too.  But in this case one of the
-later patches will add an ifdef around the if { ... } else, and
-adding braces would make that a lot more awkware.  There is another
-occurance or two of this patter in this series elsewhere as well.
+The conversion was done automatically with coccinelle using the
+following semantic patches. The semantic patches and the scripts
+used to generate this commit log are available at
+https://github.com/groeck/coccinelle-patches
+
+- Drop assignments to otherwise unused variables
+- Drop empty remove function
+- Introduce local variable 'struct device *dev' and use it instead of
+  dereferencing it repeatedly
+- Use devm_watchdog_register_driver() to register watchdog device
+- Replace shutdown function with call to watchdog_stop_on_reboot()
+
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/watchdog/mtk_wdt.c | 33 ++++++++-------------------------
+ 1 file changed, 8 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+index 113a48d54058..9c3d0033260d 100644
+--- a/drivers/watchdog/mtk_wdt.c
++++ b/drivers/watchdog/mtk_wdt.c
+@@ -153,10 +153,11 @@ static const struct watchdog_ops mtk_wdt_ops = {
+ 
+ static int mtk_wdt_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct mtk_wdt_dev *mtk_wdt;
+ 	int err;
+ 
+-	mtk_wdt = devm_kzalloc(&pdev->dev, sizeof(*mtk_wdt), GFP_KERNEL);
++	mtk_wdt = devm_kzalloc(dev, sizeof(*mtk_wdt), GFP_KERNEL);
+ 	if (!mtk_wdt)
+ 		return -ENOMEM;
+ 
+@@ -171,9 +172,9 @@ static int mtk_wdt_probe(struct platform_device *pdev)
+ 	mtk_wdt->wdt_dev.timeout = WDT_MAX_TIMEOUT;
+ 	mtk_wdt->wdt_dev.max_timeout = WDT_MAX_TIMEOUT;
+ 	mtk_wdt->wdt_dev.min_timeout = WDT_MIN_TIMEOUT;
+-	mtk_wdt->wdt_dev.parent = &pdev->dev;
++	mtk_wdt->wdt_dev.parent = dev;
+ 
+-	watchdog_init_timeout(&mtk_wdt->wdt_dev, timeout, &pdev->dev);
++	watchdog_init_timeout(&mtk_wdt->wdt_dev, timeout, dev);
+ 	watchdog_set_nowayout(&mtk_wdt->wdt_dev, nowayout);
+ 	watchdog_set_restart_priority(&mtk_wdt->wdt_dev, 128);
+ 
+@@ -181,29 +182,13 @@ static int mtk_wdt_probe(struct platform_device *pdev)
+ 
+ 	mtk_wdt_stop(&mtk_wdt->wdt_dev);
+ 
+-	err = watchdog_register_device(&mtk_wdt->wdt_dev);
++	watchdog_stop_on_reboot(&mtk_wdt->wdt_dev);
++	err = devm_watchdog_register_device(dev, &mtk_wdt->wdt_dev);
+ 	if (unlikely(err))
+ 		return err;
+ 
+-	dev_info(&pdev->dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
+-			mtk_wdt->wdt_dev.timeout, nowayout);
+-
+-	return 0;
+-}
+-
+-static void mtk_wdt_shutdown(struct platform_device *pdev)
+-{
+-	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
+-
+-	if (watchdog_active(&mtk_wdt->wdt_dev))
+-		mtk_wdt_stop(&mtk_wdt->wdt_dev);
+-}
+-
+-static int mtk_wdt_remove(struct platform_device *pdev)
+-{
+-	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
+-
+-	watchdog_unregister_device(&mtk_wdt->wdt_dev);
++	dev_info(dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
++		 mtk_wdt->wdt_dev.timeout, nowayout);
+ 
+ 	return 0;
+ }
+@@ -245,8 +230,6 @@ static const struct dev_pm_ops mtk_wdt_pm_ops = {
+ 
+ static struct platform_driver mtk_wdt_driver = {
+ 	.probe		= mtk_wdt_probe,
+-	.remove		= mtk_wdt_remove,
+-	.shutdown	= mtk_wdt_shutdown,
+ 	.driver		= {
+ 		.name		= DRV_NAME,
+ 		.pm		= &mtk_wdt_pm_ops,
+-- 
+2.7.4
+
