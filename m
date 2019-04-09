@@ -2,199 +2,155 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E5EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFB6C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1B120883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C84A20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="SleyPmA4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eV2EbIcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDIRY4 (ORCPT
+        id S1726919AbfDIRYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:24:56 -0400
-Received: from mail-eopbgr690083.outbound.protection.outlook.com ([40.107.69.83]:34790
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726513AbfDIRYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:24:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KGPwwYc/VUGVEgjbazzT8nXv2SHXye0yvJPcYPtZTsM=;
- b=SleyPmA4C1Sg1Ly+vzgkHHGGnCanHt9Q+J3KfArmIAPNIP32k5GId13edeIfaQmtSoVQ/CJYhEZciKtOrFsmiOfjMUjin8AmsjviWrcye9y5TqPHANgcCVkqgHyd+L3KZYQi5QGsqjNwr018Shjcqtk5o/rsJomV6vcPHmV+rxc=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6064.namprd05.prod.outlook.com (20.178.241.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.7; Tue, 9 Apr 2019 17:24:49 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad%7]) with mapi id 15.20.1792.009; Tue, 9 Apr 2019
- 17:24:49 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "hch@lst.de" <hch@lst.de>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Deepak Singh Rawat <drawat@vmware.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: revert dma direct internals abuse
-Thread-Topic: revert dma direct internals abuse
-Thread-Index: AQHU7fmi7IV/x30l7UexE5gP02MWCKYymy+AgAD+MwCAADQ1gIAAB6sAgAAMwgCAABMAAIAAIUkA
-Date:   Tue, 9 Apr 2019 17:24:48 +0000
-Message-ID: <da06614b308500392c179651ef9c6fb835ee4045.camel@vmware.com>
-References: <20190408105525.5493-1-hch@lst.de>
-         <7d5f35da4a6b58639519f0764c7edbfe4dd1ba02.camel@vmware.com>
-         <20190409095740.GE6827@lst.de>
-         <5f0837ffc135560c764c38849eead40269cebb48.camel@vmware.com>
-         <20190409133157.GA10876@lst.de>
-         <466e658c73607fca5112d718972e87c0b78653ad.camel@vmware.com>
-         <20190409152538.GA12816@lst.de>
-In-Reply-To: <20190409152538.GA12816@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.56]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66876b2c-e08f-4d47-0552-08d6bd10452c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6064;
-x-ms-traffictypediagnostic: MN2PR05MB6064:
-x-microsoft-antispam-prvs: <MN2PR05MB60645127B57101360D2C8079A12D0@MN2PR05MB6064.namprd05.prod.outlook.com>
-x-forefront-prvs: 000227DA0C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(396003)(136003)(366004)(189003)(199004)(7736002)(99286004)(102836004)(8676002)(478600001)(186003)(1730700003)(68736007)(316002)(76176011)(2501003)(14444005)(256004)(26005)(81156014)(476003)(6512007)(81166006)(2906002)(486006)(4326008)(25786009)(6506007)(6116002)(6246003)(71200400001)(8936002)(71190400001)(36756003)(3846002)(2351001)(53936002)(11346002)(106356001)(446003)(5640700003)(6916009)(105586002)(54906003)(86362001)(93886005)(305945005)(5660300002)(66066001)(14454004)(229853002)(2616005)(6486002)(118296001)(97736004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6064;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /1q0DzMWqjcs/2spBCcUdevM2Pep028QddjwuQQ8ZuLMxndvvX6Ozictvvuh6gjNmwXmgE5to+neB8aB8duAPMFudAKGYcCOvPlX1SaDbJ0dQu7LffckMw77MPxAxBFt7jvijFvKBaIwwXOCzI0yh6hVvxkwclz9D4Gv8LTYBycKk6+2/kX3B+ApPlZE9EeIikPHpZxvsJHXsTPcEvMxA6geV/EgdHXhRzo1nmbK/MOlMFobB15swK9lMsZLRFZWjmMMc3Sv92kBIeR9jUQb9ZaaWv9EZqUQPlzjb4z12HY5p3bgOZQfUAz8F9fKB/ImD4oeKsjrqZAwHRQpYlJNcO1PB+fL8+uXbcKAHIVr8TLsC2YlqSCcbVSdCon1VrHEy752Yiz4avfUBl6/Zet42PzIfrWZbKjuCaY4RRXLM5M=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5F44158474DBDB4E8E43F25AFEB4988C@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66876b2c-e08f-4d47-0552-08d6bd10452c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 17:24:49.4551
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6064
+        Tue, 9 Apr 2019 13:24:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41317 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfDIRYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 13:24:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 188so10101963pfd.8;
+        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wD2DSazscH8pXYOvV/UE8CSsvEV5LX5/5sBBOGKP7p8=;
+        b=eV2EbIcXbFp6kSeKeMNvf5UqnqRATv1xl1WZ+nYPml+zy6bcX/dFqOoeXypThBKXpI
+         Lf1dEWoGHeHrQanv3ZMbUbvQiaDOx9yRszWjxb/3qyadSGi+0kysQFgNSIBl5ZIHPoJk
+         m85t125W/rODREVLJW8JeKQNjJ2P2EmyibFTOWEpiUmZp6FgQvqlQ/ltXJybYKalw5kb
+         iFnfw2dEQezAwcjwCYyxKtTmHSx2hPRWixPTu3xGLEVWPuf4cEcnK24sLp1rUaX+0R+j
+         HDE7DEYoO9MjGADWk0M7EIV8tpPj3UECDpJlJL/24LJGCo0nGHrs8pEgBdHSZRuOZ/Jt
+         IpAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=wD2DSazscH8pXYOvV/UE8CSsvEV5LX5/5sBBOGKP7p8=;
+        b=FyrNeUyEbxeh+EN/GzMgOdhPNp33PKfL4vBv980gsObHKWdx6yxm0dKakFv4dX3k4G
+         QSogSJzsd+GAnjE2RTbIUdq/rCAbn14JHwXRBp02iZQ4Uh36KvEjYLjj9RtbZKVNxmV8
+         aLJD/PtVtnUfLTXArLYHzil95U+6Pwxtd+Erp4hSMl9qp5glSyexEQ6zXbu4k6zGhGSK
+         sL86BjBVfTnSNJ+UFFIGh8cyraMoK6cyXbn3haw4+wXakfRQe2xakS32XIqcxYfJsdQW
+         Bkq8n7KtHYDMwqb2wLTJ2VQgGkW3udk13SPEgBS87qBLSObGdTptIs9nQych1wcufsYR
+         mwvw==
+X-Gm-Message-State: APjAAAXxYoqQ+zlgpNsQQRV9PMFJ3akzk1fPXC4ulO86X8uIKh4DbUx/
+        nYta2VkjcDcwo4iLFacUuy+e/S0K
+X-Google-Smtp-Source: APXvYqxX7yq7oeJCIHOJZAA6eu5MS+m+Z8J0sAWhG5A7iGuMBYVg8Q46PO4tCBnuFW2fSL6aOmJKGQ==
+X-Received: by 2002:a65:5286:: with SMTP id y6mr35447051pgp.79.1554830675591;
+        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v43sm25926590pgn.57.2019.04.09.10.24.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 10:24:35 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Barry Song <baohua@kernel.org>
+Subject: [PATCH 17/23] watchdog: sirfsoc_wdt: Convert to use device managed functions and other improvements
+Date:   Tue,  9 Apr 2019 10:23:55 -0700
+Message-Id: <1554830641-9247-18-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
+References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA0LTA5IGF0IDE3OjI1ICswMjAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
-biBUdWUsIEFwciAwOSwgMjAxOSBhdCAwMjoxNzo0MFBNICswMDAwLCBUaG9tYXMgSGVsbHN0cm9t
-IHdyb3RlOg0KPiA+IElmIHRoYXQncyB0aGUgY2FzZSwgSSB0aGluayBtb3N0IG9mIHRoZSBncmFw
-aGljcyBkcml2ZXJzIHdpbGwgc3RvcA0KPiA+IGZ1bmN0aW9uaW5nLiBJIGRvbid0IHRoaW5rIHBl
-b3BsZSB3b3VsZCB3YW50IHRoYXQsIGFuZCBldmVuIGlmIHRoZQ0KPiA+IGdyYXBoaWNzIGRyaXZl
-cnMgYXJlICJ0byBibGFtZSIgZHVlIHRvIG5vdCBpbXBsZW1lbnRpbmcgdGhlIHN5bmMNCj4gPiBj
-YWxscywNCj4gPiBJIHRoaW5rIHRoZSB3b3JrIGludm9sdmVkIHRvIGdldCB0aGluZ3MgcmlnaHQg
-aXMgaW1wcmVzc2l2ZSBpZiBhdA0KPiA+IGFsbA0KPiA+IHBvc3NpYmxlLg0KPiANCj4gTm90ZSB0
-aGF0IHRoaXMgb25seSBhZmZlY3RzIGV4dGVybmFsLCB1bnRydXN0ZWQgZGV2aWNlcy4gIEJ1dCB0
-aGF0DQo+IG1heSBpbmNsdWRlIGVHUFUsDQoNCldoYXQgYWJvdXQgZGlzY3JldGUgZ3JhcGhpY3Mg
-Y2FyZHMsIGxpa2UgUmFkZW9uIGFuZCBOdmlkaWE/IFdobyBnZXRzIHRvDQpkZXRlcm1pbmUgd2hh
-dCdzIHRydXN0ZWQ/DQoNCj4gc28geWVzIEdQVSBmb2xrcyBmaW5hbGx5IG5lZWQgdG8gdXAgdGhl
-aXIgZ2FtZSBhbmQNCj4gc3RvcCB0aGlua2luZyB0aGV5IGFyZSBhYm92ZSB0aGUgbGF3XkheSF5I
-aW50ZXJmYWNlLg0KDQpBbmQgb3RoZXJzIGRvaW5nIHVzZXItc3BhY2UgRE1BLiBCdXQgSSBkb24n
-dCB0aGluayBhIGdvb2Qgd2F5IGlzIHRvDQpicmVhayB0aGVpciBkcml2ZXJzLg0KDQo+IA0KPiA+
-IFRoZXJlIGFyZSB0d28gdGhpbmdzIHRoYXQgY29uY2VybnMgbWUgd2l0aCBkbWFfYWxsb2NfY29o
-ZXJlbnQ6DQo+ID4gDQo+ID4gMSkgSXQgc2VlbXMgdG8gd2FudCBwYWdlcyBtYXBwZWQgZWl0aGVy
-IGluIHRoZSBrZXJuZWwgbWFwIG9yDQo+ID4gdm1hcHBlZC4NCj4gPiBHcmFwaGljcyBkcml2ZXJz
-IGFsbG9jYXRlIGh1Z2UgYW1vdW50cyBvZiBtZW1vcnksIFR5cGljYWxseSB1cCB0bw0KPiA+IDUw
-JQ0KPiA+IG9mIHN5c3RlbSBtZW1vcnkgb3IgbW9yZS4gSW4gYSAzMiBiaXQgUEFFIHN5c3RlbSBJ
-J20gYWZyYWlkIG9mDQo+ID4gcnVubmluZw0KPiA+IG91dCBvZiB2bWFwIHNwYWNlIGFzIHdlbGwg
-YXMgbm90IGJlaW5nIGFibGUgdG8gYWxsb2NhdGUgYXMgbXVjaA0KPiA+IG1lbW9yeQ0KPiA+IGFz
-IEkgd2FudC4gUGVyaGFwcyBhIGRtYV9hbGxvY19jb2hlcmVudCgpIGludGVyZmFjZSB0aGF0IHJl
-dHVybnMgYQ0KPiA+IHBhZ2UNCj4gPiByYXRoZXIgdGhhbiBhIHZpcnR1YWwgYWRkcmVzcyB3b3Vs
-ZCBkbyB0aGUgdHJpY2suDQo+IA0KPiBXZSBjYW4ndCBqdXN0IHNpbXBseSBleHBvcnQgYSBwYWdl
-LiAgRm9yIGRldmljZXMgdGhhdCBhcmUgbm90IGNhY2hlDQo+IGNvaGVyZW50IHdlIG5lZWQgdG8g
-cmVtYXAgdGhlIHJldHVybmVkIG1lbW9yeSB0byBiZSB1bmNhY2hlZC4gIEluIHRoZQ0KPiBjb21t
-b24gY2FzZXMgdGhhdCBpcyBlaXRoZXIgZG9uZSBieSBzZXR0aW5nIGFuIHVuY2FjaGVkIGJpdCBp
-biB0aGUNCj4gcGFnZQ0KPiB0YWJsZXMsIG9yIGJ5IHVzaW5nIGEgc3BlY2lhbCBhZGRyZXNzIHNw
-YWNlIGFsaWFzLiAgU28gdGhlIHZpcnR1YWwNCj4gYWRkcmVzcyB0byBhY2Nlc3MgdGhlIHBhZ2Ug
-bWF0dGVyLCBhbmQgd2UgY2FuJ3QganVzdCBrbWFwIGEgcmFuZG9tDQo+IHBhZ2UgYW4gZXhwZWN0
-IGl0IHRvIGJlIGNvaGVyZW50LiAgSWYgeW91IHdhbnQgbWVtb3J5IHRoYXQgaXMgbm90DQo+IG1h
-cHBlZCBpbnRvIHRoZSBrZXJuZWwgZGlyZWN0IG1hcHBpbmcgYW5kIERNQSB0byBpdCB5b3UgbmVl
-ZCB0bw0KPiB1c2UgdGhlIHByb3BlciBETUEgc3RyZWFtaW5nIGludGVyZmFjZSBhbmQgb2JleSB0
-aGVpciBydWxlcy4NCg0KR1BVIGxpYnJhcmllcyB0cmFkaXRpb25hbGx5IGhhdmUgYmVlbiB0YWtp
-bmcgY2FyZSBvZiB0aGUgQ1BVIG1hcHBpbmcNCmNhY2hpbmcgbW9kZXMgc2luY2UgdGhlIGZpcnN0
-IEFHUCBkcml2ZXJzLiBHUFUgTU1VIHB0ZXMgY29tbW9ubHkNCnN1cHBvcnQgdmFyaW91cyBjYWNo
-aW5nIG9wdGlvbnMgYW5kIHBhZ2VzIGFyZSBjaGFuZ2luZyBjYWNoaW5nIG1vZGUNCmR5bmFtaWNh
-bGx5Lg0KU28gZXZlbiBpZiB0aGUgRE1BIGxheWVyIG5lZWRzIHRvIGRvIHRoZSByZW1hcHBpbmcs
-IGNvdWxkbid0IHdlIGRvIHRoYXQNCm9uLWRlbWFuZCB3aGVuIG5lZWRlZCB3aXRoIGEgc2ltcGxl
-IGludGVyZmFjZT8NCg0KPiANCj4gPiAyKSBFeHBvcnRpbmcgdXNpbmcgZG1hLWJ1Zi4gQSBwYWdl
-IGFsbG9jYXRlZCB1c2luZw0KPiA+IGRtYV9hbGxvY19jb2hlcmVudCgpDQo+ID4gZm9yIG9uZSBk
-ZXZpY2UgbWlnaHQgbm90IGJlIGNvaGVyZW50IGZvciBhbm90aGVyIGRldmljZS4gV2hhdA0KPiA+
-IGhhcHBlbnMNCj4gPiBpZiBJIGFsbG9jYXRlIGEgcGFnZSB1c2luZyBkbWFfYWxsb2NfY29oZXJl
-bnQoKSBmb3IgZGV2aWNlIDEgYW5kDQo+ID4gdGhlbg0KPiA+IHdhbnQgdG8gbWFwIGl0IHVzaW5n
-IGRtYV9tYXBfcGFnZSgpIGZvciBkZXZpY2UgMj8NCj4gDQo+IFRoZSBwcm9ibGVtIGluIHRoaXMg
-Y2FzZSBpc24ndCByZWFsbHkgdGhlIGNvaGVyZW5jeSAtIG9uY2UgYSBwYWdlDQo+IGlzIG1hcHBl
-ZCB1bmNhY2hlZCBpdCBpcyAnY29oZXJlbnQnIGZvciBhbGwgZGV2aWNlcywgZXZlbiB0aG9zZSBu
-b3QNCj4gcmVxdWlyaW5nIGl0LiAgVGhlIHByb2JsZW0gaXMgYWRkcmVzc2FiaWxpdHkgLSB0aGUg
-RE1BIGFkZHJlc3MgZm9yDQo+IHRoZSBzYW1lIG1lbW9yeSBtaWdodCBiZSBkaWZmZXJlbnQgZm9y
-IGRpZmZlcmVudCBkZXZpY2VzLCBhbmQNCj4gc29tZXRoaW5nDQo+IHRoYXQgbG9va3MgY29udGln
-b3VzIHRvIG9uZSBkZXZpY2UgdGhhdCBpcyB1c2luZyBhbiBJT01NVSBtaWdodCBub3QNCj4gZm9y
-IGFub3RoZXIgb25lIHVzaW5nIHRoZSBkaXJlY3QgbWFwcGluZy4NCj4gDQo+IFdlIGhhdmUgdGhl
-IGRtYV9nZXRfc2d0YWJsZSBBUEkgdG8gbWFwIGEgcGllY2Ugb2YgY29oZXJlbnQgbWVtb3J5DQo+
-IHVzaW5nIHRoZSBzdHJlYW1pbmcgQVBJcyBmb3IgYW5vdGhlciBkZXZpY2UsIGJ1dCBpdCBoYXMg
-YWxsIHNvcnRzIG9mDQo+IHByb2JsZW1zLg0KPiANCj4gVGhhdCBiZWluZyBzYWlkOiB5b3VyIGRy
-aXZlciBhbHJlYWR5IHVzZXMgdGhlIGRtYSBjb2hlcmVudCBBUEkNCj4gdW5kZXIgdmFyaW91cyBj
-aXJjdW1zdGFuY2VzLCBzbyB5b3UgYWxyZWFkeSBoYXZlIHRoZSBhYm92ZSBpc3N1ZXMuDQoNClll
-cywgYnV0IHRoZXkgYXJlIGhpZGRlbiBiZWhpbmQgZHJpdmVyIG9wdGlvbnMuIFdlIGNhbid0IGhh
-dmUgc29tZW9uZQ0KdXBncmFkZSB0aGVpciBrZXJuZWwgYW5kIHN1ZGRlbmx5IHRoaW5ncyBkb24n
-dCB3b3JrIGFueW1vcmUsIFRoYXQgc2FpZCwNCkkgdGhpbmsgdGhlIFNXSU9UTEIgY2FzZSBpcyBy
-YXJlIGVub3VnaCBmb3IgdGhlIGJlbG93IHNvbHV0aW9uIHRvIGJlDQphY2NlcHRhYmxlLCBhbHRo
-b3VnaCB0aGUgVFRNIGNoZWNrIGZvciB0aGUgY29oZXJlbnQgcGFnZSBwb29sIGJlaW5nDQphdmFp
-bGFibGUgc3RpbGwgbmVlZHMgdG8gcmVtYWluLg0KDQpUaGFua3MsDQpUaG9tYXMNCg0KDQo+IA0K
-PiBJbiB0aGUgZW5kIHN3aW90bGJfbnJfdGJsKCkgbWlnaHQgYmUgdGhlIGJlc3QgaGludCB0aGF0
-IHNvbWUgYm91bmNlDQo+IGJ1ZmZlcmluZyBjb3VsZCBoYXBwZW4uICBUaGlzIGlzbid0IHByb3Bl
-ciB1c2Ugb2YgdGhlIEFQSSwgYnV0IGF0DQo+IGxlYXN0IGEgbGl0dGxlIGJldHRlciB0aGFuIHlv
-dXIgb2xkIGludGVsX2lvbW11X2VtYWJsZWQgY2hlY2sNCj4gYW5kIG11Y2ggYmV0dGVyIHRoYW4g
-d2Ugd2UgaGF2ZSByaWdodCBub3cuICBTb21ldGhpbmcgbGlrZSB0aGlzOg0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X2Rydi5jDQo+IGIvZHJpdmVycy9n
-cHUvZHJtL3Ztd2dmeC92bXdnZnhfZHJ2LmMNCj4gaW5kZXggNjE2NWZlMmM0NTA0Li5mZjAwYmVh
-MDI2YzUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X2Rydi5j
-DQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X2Rydi5jDQo+IEBAIC01NDUs
-MjEgKzU0NSw2IEBAIHN0YXRpYyB2b2lkIHZtd19nZXRfaW5pdGlhbF9zaXplKHN0cnVjdA0KPiB2
-bXdfcHJpdmF0ZSAqZGV2X3ByaXYpDQo+ICAJZGV2X3ByaXYtPmluaXRpYWxfaGVpZ2h0ID0gaGVp
-Z2h0Ow0KPiAgfQ0KPiAgDQo+IC0vKioNCj4gLSAqIHZtd19hc3N1bWVfaW9tbXUgLSBGaWd1cmUg
-b3V0IHdoZXRoZXIgY29oZXJlbnQgZG1hLXJlbWFwcGluZw0KPiBtaWdodCBiZQ0KPiAtICogdGFr
-aW5nIHBsYWNlLg0KPiAtICogQGRldjogUG9pbnRlciB0byB0aGUgc3RydWN0IGRybV9kZXZpY2Uu
-DQo+IC0gKg0KPiAtICogUmV0dXJuOiB0cnVlIGlmIGlvbW11IHByZXNlbnQsIGZhbHNlIG90aGVy
-d2lzZS4NCj4gLSAqLw0KPiAtc3RhdGljIGJvb2wgdm13X2Fzc3VtZV9pb21tdShzdHJ1Y3QgZHJt
-X2RldmljZSAqZGV2KQ0KPiAtew0KPiAtCWNvbnN0IHN0cnVjdCBkbWFfbWFwX29wcyAqb3BzID0g
-Z2V0X2RtYV9vcHMoZGV2LT5kZXYpOw0KPiAtDQo+IC0JcmV0dXJuICFkbWFfaXNfZGlyZWN0KG9w
-cykgJiYgb3BzICYmDQo+IC0JCW9wcy0+bWFwX3BhZ2UgIT0gZG1hX2RpcmVjdF9tYXBfcGFnZTsN
-Cj4gLX0NCj4gLQ0KPiAgLyoqDQo+ICAgKiB2bXdfZG1hX3NlbGVjdF9tb2RlIC0gRGV0ZXJtaW5l
-IGhvdyBETUEgbWFwcGluZ3Mgc2hvdWxkIGJlIHNldCB1cA0KPiBmb3IgdGhpcw0KPiAgICogc3lz
-dGVtLg0KPiBAQCAtNTgxLDI1ICs1NjYsMTQgQEAgc3RhdGljIGludCB2bXdfZG1hX3NlbGVjdF9t
-b2RlKHN0cnVjdA0KPiB2bXdfcHJpdmF0ZSAqZGV2X3ByaXYpDQo+ICAJCVt2bXdfZG1hX21hcF9w
-b3B1bGF0ZV0gPSAiS2VlcGluZyBETUEgbWFwcGluZ3MuIiwNCj4gIAkJW3Ztd19kbWFfbWFwX2Jp
-bmRdID0gIkdpdmluZyB1cCBETUEgbWFwcGluZ3MgZWFybHkuIn07DQo+ICANCj4gLQlpZiAodm13
-X2ZvcmNlX2NvaGVyZW50KQ0KPiAtCQlkZXZfcHJpdi0+bWFwX21vZGUgPSB2bXdfZG1hX2FsbG9j
-X2NvaGVyZW50Ow0KPiAtCWVsc2UgaWYgKHZtd19hc3N1bWVfaW9tbXUoZGV2X3ByaXYtPmRldikp
-DQo+IC0JCWRldl9wcml2LT5tYXBfbW9kZSA9IHZtd19kbWFfbWFwX3BvcHVsYXRlOw0KPiAtCWVs
-c2UgaWYgKCF2bXdfZm9yY2VfaW9tbXUpDQo+IC0JCWRldl9wcml2LT5tYXBfbW9kZSA9IHZtd19k
-bWFfcGh5czsNCj4gLQllbHNlIGlmIChJU19FTkFCTEVEKENPTkZJR19TV0lPVExCKSAmJiBzd2lv
-dGxiX25yX3RibCgpKQ0KPiArCWlmICh2bXdfZm9yY2VfY29oZXJlbnQgfHwNCj4gKwkgICAgKElT
-X0VOQUJMRUQoQ09ORklHX1NXSU9UTEIpICYmIHN3aW90bGJfbnJfdGJsKCkpKQ0KPiAgCQlkZXZf
-cHJpdi0+bWFwX21vZGUgPSB2bXdfZG1hX2FsbG9jX2NvaGVyZW50Ow0KPiArCWVsc2UgaWYgKHZt
-d19yZXN0cmljdF9pb21tdSkNCj4gKwkJZGV2X3ByaXYtPm1hcF9tb2RlID0gdm13X2RtYV9tYXBf
-YmluZDsNCj4gIAllbHNlDQo+ICAJCWRldl9wcml2LT5tYXBfbW9kZSA9IHZtd19kbWFfbWFwX3Bv
-cHVsYXRlOw0KPiAgDQo+IC0JaWYgKGRldl9wcml2LT5tYXBfbW9kZSA9PSB2bXdfZG1hX21hcF9w
-b3B1bGF0ZSAmJg0KPiB2bXdfcmVzdHJpY3RfaW9tbXUpDQo+IC0JCWRldl9wcml2LT5tYXBfbW9k
-ZSA9IHZtd19kbWFfbWFwX2JpbmQ7DQo+IC0NCj4gLQkvKiBObyBUVE0gY29oZXJlbnQgcGFnZSBw
-b29sPyBGSVhNRTogQXNrIFRUTSBpbnN0ZWFkISAqLw0KPiAtICAgICAgICBpZiAoIShJU19FTkFC
-TEVEKENPTkZJR19TV0lPVExCKSB8fA0KPiBJU19FTkFCTEVEKENPTkZJR19JTlRFTF9JT01NVSkp
-ICYmDQo+IC0JICAgIChkZXZfcHJpdi0+bWFwX21vZGUgPT0gdm13X2RtYV9hbGxvY19jb2hlcmVu
-dCkpDQo+IC0JCXJldHVybiAtRUlOVkFMOw0KPiAtDQo+ICAJRFJNX0lORk8oIkRNQSBtYXAgbW9k
-ZTogJXNcbiIsIG5hbWVzW2Rldl9wcml2LT5tYXBfbW9kZV0pOw0KPiAgCXJldHVybiAwOw0KPiAg
-fQ0KPiANCg==
+Use device managed functions to simplify error handling, reduce
+source code size, improve readability, and reduce the likelyhood of bugs.
+Other improvements as listed below.
+
+The conversion was done automatically with coccinelle using the
+following semantic patches. The semantic patches and the scripts
+used to generate this commit log are available at
+https://github.com/groeck/coccinelle-patches
+
+- Drop empty remove function
+- Introduce local variable 'struct device *dev' and use it instead of
+  dereferencing it repeatedly
+- Replace shutdown function with call to watchdog_stop_on_reboot()
+- Replace stop on remove with call to watchdog_stop_on_unregister()
+- Use devm_watchdog_register_driver() to register watchdog device
+
+Cc: Barry Song <baohua@kernel.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/watchdog/sirfsoc_wdt.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/watchdog/sirfsoc_wdt.c b/drivers/watchdog/sirfsoc_wdt.c
+index 2559062d35da..e79a4097d50b 100644
+--- a/drivers/watchdog/sirfsoc_wdt.c
++++ b/drivers/watchdog/sirfsoc_wdt.c
+@@ -146,6 +146,7 @@ static struct watchdog_device sirfsoc_wdd = {
+ 
+ static int sirfsoc_wdt_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	int ret;
+ 	void __iomem *base;
+ 
+@@ -155,11 +156,13 @@ static int sirfsoc_wdt_probe(struct platform_device *pdev)
+ 
+ 	watchdog_set_drvdata(&sirfsoc_wdd, (__force void *)base);
+ 
+-	watchdog_init_timeout(&sirfsoc_wdd, timeout, &pdev->dev);
++	watchdog_init_timeout(&sirfsoc_wdd, timeout, dev);
+ 	watchdog_set_nowayout(&sirfsoc_wdd, nowayout);
+-	sirfsoc_wdd.parent = &pdev->dev;
++	sirfsoc_wdd.parent = dev;
+ 
+-	ret = watchdog_register_device(&sirfsoc_wdd);
++	watchdog_stop_on_reboot(&sirfsoc_wdd);
++	watchdog_stop_on_unregister(&sirfsoc_wdd);
++	ret = devm_watchdog_register_device(dev, &sirfsoc_wdd);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -168,19 +171,6 @@ static int sirfsoc_wdt_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static void sirfsoc_wdt_shutdown(struct platform_device *pdev)
+-{
+-	struct watchdog_device *wdd = platform_get_drvdata(pdev);
+-
+-	sirfsoc_wdt_disable(wdd);
+-}
+-
+-static int sirfsoc_wdt_remove(struct platform_device *pdev)
+-{
+-	sirfsoc_wdt_shutdown(pdev);
+-	return 0;
+-}
+-
+ #ifdef	CONFIG_PM_SLEEP
+ static int sirfsoc_wdt_suspend(struct device *dev)
+ {
+@@ -218,8 +208,6 @@ static struct platform_driver sirfsoc_wdt_driver = {
+ 		.of_match_table	= sirfsoc_wdt_of_match,
+ 	},
+ 	.probe = sirfsoc_wdt_probe,
+-	.remove = sirfsoc_wdt_remove,
+-	.shutdown = sirfsoc_wdt_shutdown,
+ };
+ module_platform_driver(sirfsoc_wdt_driver);
+ 
+-- 
+2.7.4
+
