@@ -2,148 +2,133 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E4C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FB5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A693B20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E7120833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 18:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PoL/k0X6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KYy8GE9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfDISqT (ORCPT
+        id S1726752AbfDISts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 14:46:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41854 "EHLO
+        Tue, 9 Apr 2019 14:49:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41105 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbfDISqT (ORCPT
+        with ESMTP id S1726517AbfDIStr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 14:46:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d1so9936154plj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 11:46:18 -0700 (PDT)
+        Tue, 9 Apr 2019 14:49:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d1so9941543plj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 11:49:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0vApW/buY6OtCIWOQhnD5Xdm5WPEcH/+QK5/B7HgPtU=;
-        b=PoL/k0X6ejuMiI0c9MQKWm9xd2VHgVKAB9jdtVvO3kK/e3wM/mpcxFVRmHspMNOgC/
-         bB1b9loCQDjA1VnrgOvVXwfQ+gllNSnaecp+jqKsn9Ol/BtRXIIFVul4IVhADr9weE42
-         RmAetUkOE3iZ2F1dLzmooSr/dt7QAdit053yA0l7Ki1DaYGkdFO4G4au7kSPT/OGcAQh
-         Z0fQe4/q+c454Z4G2I+jsz9dXCNoeiS86mBjV0JUUkCKoFzQGQ27zq84otl/tuAokojP
-         sdcsLxvOVvYmCI8FetX8eTq51isRqSaQ3OyPWhKyRVHE9xa+Ru/n4KgX9T+OeZS2KB0P
-         SCLQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L4is5FXMpfFs6/M7ruarZlM+xNAwN3JlFJ4HA6Tf5uM=;
+        b=KYy8GE9opzQ59ZYjuvmSJuWdAwAuclcWsMmiwWRixyftrq90HyX6HsZsz7eFQe5Dla
+         6SZ7fJh9WCqWogocFur616cMGEuvXuRiFupiGSmjA8D1XXzBZRMx9HcGXZ8cViuruRvK
+         J/4oMzTGqvdhh1iMGzCTgkRX06Xeljr4LrPsw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0vApW/buY6OtCIWOQhnD5Xdm5WPEcH/+QK5/B7HgPtU=;
-        b=E1uPxW3hZ3vcNkvkdR7gi6TLN99NKaP0rcppeOci9g1vTW19g3oTHD5s1k5CLvn2Yq
-         l9Y9tXVOKnNctvECsJS+Ocav2RKA588Zw90hYoBBIlAvwNrN914DYXvDR6h/UxDUhO4W
-         4VadCOJfehHR7XbDNoS61ZMsnFla7mx5XlAQVluFMCfS47eWJHOv3Eq2/63lsTAxvdPH
-         e3lTTY/KsnULoBAiggv+HsxinxA6PN1U11f7kC+3NGd11ssHP8Ug1xB9xN7ZDrUw498R
-         qJikRuGZKqybKCsxTXSjUXdGwlArR5vwomh8OX/cdhJFWf8SqjyFW0hB7E68a08o078i
-         UqCQ==
-X-Gm-Message-State: APjAAAUMb5bjtopQUTH/nL3qIrIkjyfmRVFAQkH+5ouF15Khd2GZDDPs
-        ibyaw8Re4sqUz943AFyIR/Sl1ZZIqkISTA==
-X-Google-Smtp-Source: APXvYqxCFYzGofLG3ra9STFDozNvsDGaIZYxmKv5Hy7Ee58vyLLkvQg2fJGIj6Q+oooq1xpqXuGskA==
-X-Received: by 2002:a17:902:ec0c:: with SMTP id cy12mr16772022plb.291.1554835577855;
-        Tue, 09 Apr 2019 11:46:17 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id h4sm42587504pgn.20.2019.04.09.11.46.15
+        bh=L4is5FXMpfFs6/M7ruarZlM+xNAwN3JlFJ4HA6Tf5uM=;
+        b=SvTVz+fpR0biFyb0w0mYm8QcjCyNfpKjthuAY4yYdIcA34AuAvmOaKZWKezRRkxWQP
+         lbsTirlaCC8G+uTgHoaqA2UE4L293KH2pidD5RO4mk0oz1Dg6oV24yhCkk9LmW7V05TW
+         w4WhB56+I1VwCsuHxWGvnJ9PN+GWT7mce+hNytuk+0Wea1ggNGAXPuz8PmJ6ji3Te62P
+         XIhJdFt7mg2mW0YiWEyWH1NHZ9ysaTDQVzNXrYQW4fviCgnpq52l468qXalPzMDxldH8
+         HrDea0ERtOpFMW4dAPvtzmg+Y4ia79Ff596ZMDhZ5HjfB142tTf5s5Pqc7LwqSEiuIQQ
+         uBNw==
+X-Gm-Message-State: APjAAAXVlyc4pWcEtKM8U7aRD9gD+0BdLBdLBdGJRh7PNIqE9bDAY8oH
+        kvbsVdYdHHYgHC9ZtJYznKY3Og==
+X-Google-Smtp-Source: APXvYqwmo2qCq+y4pplU42yrXsyTm+zfulcJpj32giPR+ESH4uvPp9uNLtWuQS7IGSP1GP5UapUM8w==
+X-Received: by 2002:a17:902:2a2a:: with SMTP id i39mr37466309plb.211.1554835787201;
+        Tue, 09 Apr 2019 11:49:47 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id b63sm92777588pfj.54.2019.04.09.11.49.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 11:46:16 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: add support for barrier fsync
-To:     Chris Mason <clm@fb.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <7c7276e4-8ffa-495a-6abf-926a58ee899e@kernel.dk>
- <20190409181742.GA24925@infradead.org>
- <5f8d9644-9e8f-c9d2-611e-4b144c62539c@kernel.dk>
- <5BF7FDDE-212E-4F9A-9B50-26BDA99E952A@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a7f00629-f822-7271-7a4e-ad3b802752e4@kernel.dk>
-Date:   Tue, 9 Apr 2019 12:46:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 09 Apr 2019 11:49:46 -0700 (PDT)
+From:   Brian Norris <briannorris@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
+Date:   Tue,  9 Apr 2019 11:49:17 -0700
+Message-Id: <20190409184917.65062-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-In-Reply-To: <5BF7FDDE-212E-4F9A-9B50-26BDA99E952A@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 12:42 PM, Chris Mason wrote:
-> On 9 Apr 2019, at 14:23, Jens Axboe wrote:
-> 
->> On 4/9/19 12:17 PM, Christoph Hellwig wrote:
->>> On Tue, Apr 09, 2019 at 10:27:43AM -0600, Jens Axboe wrote:
->>>> It's a quite common use case to issue a bunch of writes, then an 
->>>> fsync
->>>> or fdatasync when they complete. Since io_uring doesn't guarantee 
->>>> any
->>>> type of ordering, the application must track issued writes and wait
->>>> with the fsync issue until they have completed.
->>>>
->>>> Add an IORING_FSYNC_BARRIER flag that helps with this so the 
->>>> application
->>>> doesn't have to do this manually. If this flag is set for the fsync
->>>> request, we won't issue it until pending IO has already completed.
->>>
->>> I think we need a much more detailed explanation of the semantics,
->>> preferably in man page format.
->>>
->>> Barrier at least in Linux traditionally means all previously 
->>> submitted
->>> requests have finished and no new ones are started until the
->>> barrier request finishes, which is very heavy handed.  Is that what
->>> this is supposed to do?  If not what are the exact guarantees vs
->>> ordering and or barrier semantics?
->>
->> The patch description isn't that great, and maybe the naming isn't 
->> that
->> intuitive either. The way it's implemented, the fsync will NOT be 
->> issued
->> until previously issued IOs have completed. That means both reads and
->> writes, since there's no way to wait for just one.  In terms of
->> semantics, any previously submitted writes will have completed before
->> this fsync is issued. The barrier fsync has no ordering wrt future
->> writes, no ordering is implied there. Hence:
->>
->> W1, W2, W3, FSYNC_W_BARRIER, W4, W5
->>
->> W1..3 will have been completed by the hardware side before we start
->> FSYNC_W_BARRIER. We don't wait with issuing W4..5 until after the 
->> fsync
->> completes, no ordering is provided there.
-> 
-> Looking at the patch, why is fsync special?  Seems like you could add 
-> this ordering bit to any write?
+Badly-designed systems might have (for example) active-high wake pins
+that default to high (e.g., because of external pull ups) until they
+have an active firmware which starts driving it low. This can cause an
+interrupt storm in the time between request_irq() and disable_irq().
 
-It's really not, the exact same technique could be used on any type of
-command to imply ordering. My initial idea was to have an explicit
-barrier/ordering command, but I didn't think that separating it from an
-actual command would be needed/useful.
+We don't support shared interrupts here, so let's just pre-configure the
+interrupt to avoid auto-enabling it.
 
-> While you're here, do you want to add a way to FUA/cache flush?  
-> Basically the rest of what user land would need to make their own 
-> write-back-cache-safe implementation.
+Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
+Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Hi Linus,
 
-FUA would be a WRITEV/WRITE_FIXED flag, that should be trivially doable.
+Can you please apply this for v5.1-rc5? This fixes a regression that I
+reported several times. I nearly just sent a proper pull request, but I
+figured this 2-line patch was clearer.
 
-In terms of cache flush, that's very heavy handed (and storage
-oriented).  What applications would want/need to do an explicit whole
-device flush?
+This patch was originally sent here:
+https://lore.kernel.org/patchwork/patch/1044896/
+https://lkml.kernel.org/lkml/20190222003051.127006-1-briannorris@chromium.org/
 
+My other series was merged, even though it gave a clear dependency on
+this bugfix:
+
+https://lkml.kernel.org/lkml/CA+ASDXMePkQDRfaSwNGnRYyGdsuvfUCXBtDK79o2mP=1hdNQUA@mail.gmail.com
+
+Several pings were ignored, so here I'm submitting this to you, Linus.
+
+Thanks,
+Brian
+
+ drivers/bluetooth/btusb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index ded198328f21..7db48ae65cd2 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2942,6 +2942,7 @@ static int btusb_config_oob_wake(struct hci_dev *hdev)
+ 		return 0;
+ 	}
+ 
++	irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
+ 			       0, "OOB Wake-on-BT", data);
+ 	if (ret) {
+@@ -2956,7 +2957,6 @@ static int btusb_config_oob_wake(struct hci_dev *hdev)
+ 	}
+ 
+ 	data->oob_wake_irq = irq;
+-	disable_irq(irq);
+ 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
+ 	return 0;
+ }
 -- 
-Jens Axboe
+2.21.0.392.gf8f6787159e-goog
 
