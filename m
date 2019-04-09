@@ -2,132 +2,166 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932CFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6432220880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554798324;
-	bh=oaS6f76BKxRmq8otg6LSpUIPoj6vfOU+3HFQzYGs22Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dEo1xPgySHUlwZPgWYzgtLU5HL5npK0YqHGx3NOh0CddmQm4tupz+5haJ8YmTFO1F
-	 nZU6KCch0I96bo/KSFSnza+1e2bEnAt3Sido+sl38f/g7T3YmrD6XQxOcL8bW8jj9K
-	 siojJ7X4MgzhZzNVQAo/om3zxiQdRac6IZg+AG74=
+	by mail.kernel.org (Postfix) with ESMTP id 79FB920857
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 08:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDIIZX (ORCPT
+        id S1726588AbfDII2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 04:25:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39671 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfDIIZX (ORCPT
+        Tue, 9 Apr 2019 04:28:24 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60007 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfDII2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 04:25:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f10so8650434otb.6;
-        Tue, 09 Apr 2019 01:25:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ztTlJVe9dYWkHV8KqSemRa9C2RUeEJ94F76mKLeWHuk=;
-        b=dsAyYoJiOaqqTgYxWHj/jaPVBABex4rvbTsPUyWGNnhNIFhiJGGYe5y89gjOV0R13e
-         pCpPpSFgUMbHv6agPxxSEaM+iaR4P4TQim9GvBCyE8YE4Khb7FcIOZLKS1GQqMmoAQ7s
-         8EhSe0HuVwR1D3+VdL+C5UM69r0am0gyvbEQfk7w2wAajZhsFrHYOoWJEofC56pC9WYB
-         84THUT3krzFZx2cM3o/MnvOtYaqBOW9d2Ba3RrQYhMCoQsswhpWjgwGSrhdVj0f2VHZG
-         b+Rc0YKtBiWB2fJnuW22CJm3xgI2mICAoQj6koUYS/vOANqWr+/ekamtn9HLsEAub6wr
-         9S5Q==
-X-Gm-Message-State: APjAAAV6LbmbY3DLeujJLIdnGonCMuclP70Rd0UZaC0/r+TgHEXW4+Ei
-        YpKvkoIRXeSUlnsYtRfY0atURsd2tbTl8742w8HgnSDF
-X-Google-Smtp-Source: APXvYqzYfuGHwhA9mz5qH7Xuor2infLgy5DuIDet79lXYzCetBa+TCkuKmhsINJj8ebeFwR4zbHGIvtNtUrLFWwodT8=
-X-Received: by 2002:a9d:4b11:: with SMTP id q17mr23354309otf.272.1554798322167;
- Tue, 09 Apr 2019 01:25:22 -0700 (PDT)
+        Tue, 9 Apr 2019 04:28:23 -0400
+X-Originating-IP: 90.88.30.125
+Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B565C20011;
+        Tue,  9 Apr 2019 08:28:18 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 10:28:18 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190409082818.z33mq2qrxethldzf@flea>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190406181704.33574-1-cai@lca.pw>
-In-Reply-To: <20190406181704.33574-1-cai@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Apr 2019 10:25:11 +0200
-Message-ID: <CAJZ5v0jxUn_Hhm21FFBc2eSp49kCciCzR1_UGewHkpJiTy3LGw@mail.gmail.com>
-Subject: Re: [PATCH -next] acpi/hmat: fix memory leaks in hmat_init()
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kpheoitgx7h7groz"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 6, 2019 at 8:18 PM Qian Cai <cai@lca.pw> wrote:
->
-> The commit 665ac7e92757 ("acpi/hmat: Register processor domain to its
-> memory") introduced some memory leaks below due to it fails to release
-> the heap memory in an error path, and then the stack __initdata memory
-> which reference them get freed during boot renders those heap memory as
-> leaks.
->
-> unreferenced object 0xc8ff8008349e9400 (size 128):
->   comm "swapper/0", pid 1, jiffies 4294709236 (age 48121.476s)
->   hex dump (first 32 bytes):
->     00 d0 9e 34 08 80 ff 84 d8 00 43 11 00 10 ff ff  ...4......C.....
->     00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000869d4503>] __kmalloc+0x568/0x600
->     [<0000000070fd6afb>] alloc_memory_target+0x50/0xd8
->     [<00000000efa2081e>] srat_parse_mem_affinity+0x58/0x5c
->     [<000000008bfaef74>] acpi_parse_entries_array+0x1c8/0x2c0
->     [<0000000022804877>] acpi_table_parse_entries_array+0x11c/0x138
->     [<00000000ffe9cd34>] acpi_table_parse_entries+0x7c/0xac
->     [<00000000a7023afd>] hmat_init+0x90/0x174
->     [<00000000694a86c1>] do_one_initcall+0x2d8/0x5f8
->     [<0000000024889da9>] do_initcall_level+0x37c/0x3fc
->     [<000000009be02908>] do_basic_setup+0x38/0x50
->     [<0000000037b3ac0a>] kernel_init_freeable+0x194/0x258
->     [<00000000f5741184>] kernel_init+0x18/0x334
->     [<000000007b30f423>] ret_from_fork+0x10/0x18
->     [<000000006c7147a8>] 0xffffffffffffffff
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Well, the catch is good, but the additional label is sort of excessive IMO.
+--kpheoitgx7h7groz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  drivers/acpi/hmat/hmat.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > From: Chen-Yu Tsai <wens@csie.org>
+> > >
+> > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > difference seems to be that support of MIPI CSI through a connected
+> > > MIPI CSI-2 bridge.
+> > >
+> > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > unused.
+> > >
+> > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > >  1 file changed, 31 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > index f739b88efb53..0c52f945fd5f 100644
+> > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > @@ -682,6 +682,20 @@
+> > >                       #interrupt-cells = <3>;
+> > >                       #gpio-cells = <3>;
+> > >
+> > > +                     /omit-if-no-ref/
+> > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > +                                    "PE12", "PE13";
+> > > +                             function = "csi";
+> > > +                     };
+> > > +
+> > > +                     /omit-if-no-ref/
+> > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > +                             pins = "PE1";
+> > > +                             function = "csi";
+> > > +                     };
+> > > +
+> > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > @@ -994,6 +1008,23 @@
+> > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > >               };
+> > >
+> > > +             csi: camera@1cb0000 {
+> > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > +                     reg = <0x01cb0000 0x1000>;
+> > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > +                              <&ccu CLK_CSI_SCLK>,
+> > > +                              <&ccu CLK_DRAM_CSI>;
+> > > +                     clock-names = "bus", "mod", "ram";
+> > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > +                     status = "disabled";
+> > > +
+> > > +                     csi_in: port {
+> > > +                             #address-cells = <1>;
+> > > +                             #size-cells = <0>;
+> >
+> > If we expect a single enpoint, then we don't need the address-cells
+> > and size-cells properties.
 >
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> index b7824a0309f7..c9b8abcf012c 100644
-> --- a/drivers/acpi/hmat/hmat.c
-> +++ b/drivers/acpi/hmat/hmat.c
-> @@ -637,7 +637,7 @@ static __init int hmat_init(void)
+> I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> is kind of genius if not very hacky. They have two "identical" sensors
+> on the same I2C bus and CSI bus, with shared reset line but separate
+> shutdown lines. Since they are identical, they also have the same I2C
+> address. I haven't figured out how to model this in the device tree.
 >
->         status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
->         if (ACPI_FAILURE(status))
+> The point is, it's perfectly possible to have two or more sensors use
+> the same controller, provided only one be active at a time.
 
-I would just add a hmat_free_structures() call here or rework the
-_put_table() logic which is not really straightforward.
+Right, but I guess the common case would be to have a single sensor,
+where that wouldn't be needed.
 
-> -               return 0;
-> +               goto out_free;
->
->         hmat_revision = tbl->revision;
->         switch (hmat_revision) {
-> @@ -659,8 +659,9 @@ static __init int hmat_init(void)
->         }
->         hmat_register_targets();
->  out_put:
-> -       hmat_free_structures();
->         acpi_put_table(tbl);
-> +out_free:
-> +       hmat_free_structures();
->         return 0;
->  }
->  subsys_initcall(hmat_init);
-> --
+In odd cases, we can always specify it in the DTS, and if it becomes
+common enough, we can move it to the DTSI.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--kpheoitgx7h7groz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxXogAKCRDj7w1vZxhR
+xVk6AP9OXA7JSV+hWfF0oqzzfv8BQdd7sZthxjt3suYeI/uYzQEAjEsdzyvU6je9
+i2UDzJlviDpFUwnjMofxIPuMy1sOdwk=
+=husF
+-----END PGP SIGNATURE-----
+
+--kpheoitgx7h7groz--
