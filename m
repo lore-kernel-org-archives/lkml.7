@@ -2,126 +2,239 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F39C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C132084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F012084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F0ZoIxdT"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="AcEqKK9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfDIQJf (ORCPT
+        id S1726602AbfDIQKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:09:35 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35401 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfDIQJe (ORCPT
+        Tue, 9 Apr 2019 12:10:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39472 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfDIQKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:09:34 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190409160932euoutp02aafffffa2d03d26f0a0bd50314f4ffe6~T2iqWSw5H3276132761euoutp023
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2019 16:09:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190409160932euoutp02aafffffa2d03d26f0a0bd50314f4ffe6~T2iqWSw5H3276132761euoutp023
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554826172;
-        bh=u6Z/OMmWHC6ss2pITts3drgys85PGJnDF+5FLakx8FE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=F0ZoIxdTJLjwMHh5tgZqcDKE32Z7EcwRJaOl6UyIeh4LSrbhPnj+41jimWKhY3GCu
-         X8VAae+v/dpJnN2eK3kLunuPSLuI4yhQ14NalK5zOrO5Hn7HP/farENMK9pbKSyG/9
-         GEijCyvodSBTldt6QoyVvBvsv2yxusRs70pv+bEg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190409160932eucas1p2420e40ab26c6cc2b91a2d7b85104eb07~T2ipl1JY81594415944eucas1p2_;
-        Tue,  9 Apr 2019 16:09:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7A.1C.04325.BB3CCAC5; Tue,  9
-        Apr 2019 17:09:31 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190409160931eucas1p23ee0ca79d00f9c72a7a2d3e07a6c8703~T2io5NzRL1796217962eucas1p21;
-        Tue,  9 Apr 2019 16:09:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190409160931eusmtrp2ece2fff7c98f35d2af8de835d7ce0593~T2io4oTzG1280112801eusmtrp2C;
-        Tue,  9 Apr 2019 16:09:31 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-33-5cacc3bbc91a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C7.46.04140.BB3CCAC5; Tue,  9
-        Apr 2019 17:09:31 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190409160930eusmtip1f935a21834f1f6f98cabdfe167d58632~T2ioa4lXI2971229712eusmtip1f;
-        Tue,  9 Apr 2019 16:09:30 +0000 (GMT)
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: Remove console argument from
- bootargs
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, notify@kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <fb27dff4-7b1f-3010-2f04-8c0a3f8d8de6@samsung.com>
-Date:   Tue, 9 Apr 2019 18:09:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190408051926.462-2-krzk@kernel.org>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SXUhTYRj229nZzlaTz2n6olE5JCxQE7s4ZFhBxG4C80KkDJ15UMlN2dTU
-        YYqB5d/UutCWP8uKchrqtFkKKtM5LXOZIZaV4Q+Z0wtzDUTT3I6Vd8/7/Hzv88JHEeIXpC+V
-        oshglApZqoQn5BqH1seCegZaYk84fgfS7TWtJN0wOEbSFXM2grZa2/i0YW6SpCe6a3l0jbWX
-        Qz8f/MKnP8xtkfTthR/EWaHUoC/mSTse50s1nXokXTMciuReFp5OZFJTshhlSES8MFkzbCfT
-        P3Oyyx9oyQL0hFOCBBTgk1CjreKXICElxs8QGI2lpFMQYzuCyaf+rLCGYLay7l/CUfCRwwpP
-        EazbG0l2WEHQqKvnOl2eOArM1mnkFLywFUHrpt41EM6IVWNzuXg4FMrNGuTEIhwBuvaJnaco
-        iosDoHUhwUkfwDEwM9RGshYPGLk/74oKcBjYRmZdmMA+UGhvIll8GLpWagnnLsAmPlgWH+72
-        Pg/9nzpIFnvCkqWTz+KDsP2qgcMGbiEo65nms0MlghmLDrGucBiwjLvaEfgYtHaHsPQ56P/u
-        4DhpwO4wteLBlnCHu8ZqgqVFcKdIzLoDYENfvVvHF0rnt7mVSKLdc5p2zznaPedo/+/VIa4e
-        +TCZKnkSowpTMDeCVTK5KlORFHwtTW5AO5/pzZbl10vUu5lgQphCkv2imPqWWDEpy1LlyE0I
-        KELiJRLE7VCiRFlOLqNMi1NmpjIqE/KjuBIfkdrt2xUxTpJlMNcZJp1R/lU5lMC3AJmso436
-        mzbB+3sBPgFN5uVVvPG2UWzOrZJ2Eq/pR9PS5qb1LY5//pn1pXH9EQ2vLyjnagat8X6XsFxB
-        x0f6DcuGsz2b29b2RV8cd2yGamIu6S4ombyuSADDavGGe6YST0Wr0wOPLoT3uY2e6q8rK47K
-        K1KHlSzyfn71LlRLuKpkWehxQqmS/QE4Lo6ySAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7q7D6+JMdhxg8ti44z1rBbzj5xj
-        teh//JrZ4vz5DewWmx5fY7W4vGsOm8WM8/uYLNYeuctuceXxP1aL9qcvmR24PDat6mTz2Lyk
-        3qNvyypGj8+b5AJYovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJz
-        MstSi/TtEvQy+k58YS24w1TRO3sWawPjUqYuRk4OCQETiW8NN4FsLg4hgaWMEstbNjN3MXIA
-        JaQk5rcoQdQIS/y51sUGUfOaUeL1up1sIAlhgSCJo+dvM4IkRATOM0qc2rmUFcRhFljOKDF3
-        6SywFUIC0RIr1veA2WwChhK9R/sYQWxeATuJBRsvs4JsYxFQkVj/NAkkLCoQIXHm/QoWiBJB
-        iZMzn4DZnALGEq9PPgKzmQXUJf7Mu8QMYYtLNH1ZyQphy0tsfzuHeQKj0Cwk7bOQtMxC0jIL
-        ScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgXG47djPLTsYu94FH2IU4GBU4uENmL4m
-        Rog1say4MvcQowQHs5IIL2c8UIg3JbGyKrUoP76oNCe1+BCjKdBvE5mlRJPzgSkiryTe0NTQ
-        3MLS0NzY3NjMQkmc97xBZZSQQHpiSWp2ampBahFMHxMHp1QDI9/0nxfUQtblMa7+JNTRaM44
-        3/bh6rZb+/ZrHHEwnJ55m7k1tV5ceDd7TJHjI74f0xP81y7b8rZZ4uAD3ylRTCanbuc2xUVm
-        3+1NK1155sESS6EnS7pc2aU2NV6eeK964csaq21hMcJVXCu8d//YJpS6ea+0fc6Zm3/+du0Q
-        XWG3trb34tlZOkosxRmJhlrMRcWJADUnyNvZAgAA
-X-CMS-MailID: 20190409160931eucas1p23ee0ca79d00f9c72a7a2d3e07a6c8703
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190409160931eucas1p23ee0ca79d00f9c72a7a2d3e07a6c8703
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190409160931eucas1p23ee0ca79d00f9c72a7a2d3e07a6c8703
-References: <20190408051926.462-1-krzk@kernel.org>
-        <20190408051926.462-2-krzk@kernel.org>
-        <CGME20190409160931eucas1p23ee0ca79d00f9c72a7a2d3e07a6c8703@eucas1p2.samsung.com>
+        Tue, 9 Apr 2019 12:10:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k3so9564659pga.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 09:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZpCa4KCQHdqKl2oL3mhDp4cKBTmdoa9/ZNCPYnpPtu8=;
+        b=AcEqKK9RxNxeiiQq1sDZjfoV7657md7s389Afv4LvLQsJScJ+gvEWoq7okysE7DzF/
+         HI2DplF9AyJkbFuTbo2adYAQWcbZ+qF5Y/77o9AnaVqHm8wskpUSe2zM3MAwputrqRt7
+         /BGTvtyItbEk7axR0DwWNP42R4mByVTx81vOR3IkTSzXjJCsc1nBrjaxm3x/5oxFyJIT
+         HP5B79xvFaGKlemYR5rTyN+8fLJMOsyYyN8oJ7aZuw5Zyn1YbOqDOJqujktvZqE8QjY/
+         1/VUf+n+kVDBqIAESTciNbjBmXEHYEhNgmsI0+1mFAGGubgrUCNZRr70/+BL4ikvVCys
+         eOZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZpCa4KCQHdqKl2oL3mhDp4cKBTmdoa9/ZNCPYnpPtu8=;
+        b=afUZnagBXU3b8jv298L85wlI4qo5vBNms7Y0Hd5aCb8vgqHeIknZ1FCPHy+GHzrmNY
+         88aGChpdt/XdDxoC0sNCp7CykZpSoVufjShmfkFN3smW2CLfrAJjYUaSpsfjXa68uVnc
+         ihadort1cVy+wMIRtxOc+y0yohI1kAdqcFaVJ2ndEgq/dkRg6fw+SgdqW81LCI6zBS6Q
+         aUALeafgmaQTgoRPcRGvZnQ+3AWshuS6j+BLIyT7TbOejsUm5988UoegMFScTpkBxRHc
+         cy8K23RGFmVk/0oYeTCokL9TJsurbMmWvsl4A1ka/zmgkwbboO3sR5gP6T82+FCWo61F
+         HPyQ==
+X-Gm-Message-State: APjAAAU48SNhGNMJ/vGDKQHAva8a38AG8CrOo9YKd8lUjK72mDlUy2Ai
+        MugeEtvr4uoYqr3HDW/i11YNAA==
+X-Google-Smtp-Source: APXvYqyA5wptfX7b3m4Sh/1rYqcKFaccgP9tlYManiSCB+OR3ieipNyN4KLCGG3mxTRpc9oLMoVKCA==
+X-Received: by 2002:a63:618d:: with SMTP id v135mr35323953pgb.2.1554826248629;
+        Tue, 09 Apr 2019 09:10:48 -0700 (PDT)
+Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
+        by smtp.gmail.com with ESMTPSA id f2sm25403399pgc.30.2019.04.09.09.10.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 09:10:47 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Ying-Chun Liu <paul.liu@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: anatop: Remove unneeded fields from struct anatop_regulator
+Date:   Wed, 10 Apr 2019 00:10:39 +0800
+Message-Id: <20190409161039.4451-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/19 07:19, Krzysztof Kozlowski wrote:
-> Remove the "console=ttySAC..." argument from DTSes having a proper
-> stdout-path property.  To make the code functionally equivalent, add the
-> serial port baud rate and parity.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+These fields are only used in anatop_regulator_probe() so use local
+variables instead. The *initdata is not used so can be removed.
+The *anatop is renamed to *regmap for better readability.
+Use u32 instead of int for the variables used as third argument of
+of_property_read_u32().
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/anatop-regulator.c | 63 ++++++++++++----------------
+ 1 file changed, 27 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
+index d9d8155ed8cb..754739d004e5 100644
+--- a/drivers/regulator/anatop-regulator.c
++++ b/drivers/regulator/anatop-regulator.c
+@@ -23,18 +23,10 @@
+ #define LDO_FET_FULL_ON			0x1f
+ 
+ struct anatop_regulator {
+-	u32 control_reg;
+-	struct regmap *anatop;
+-	int vol_bit_shift;
+-	int vol_bit_width;
+ 	u32 delay_reg;
+ 	int delay_bit_shift;
+ 	int delay_bit_width;
+-	int min_bit_val;
+-	int min_voltage;
+-	int max_voltage;
+ 	struct regulator_desc rdesc;
+-	struct regulator_init_data *initdata;
+ 	bool bypass;
+ 	int sel;
+ };
+@@ -55,7 +47,7 @@ static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
+ 		 * to calculate how many steps LDO need to
+ 		 * ramp up, and how much delay needed. (us)
+ 		 */
+-		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
++		regmap_read(reg->regmap, anatop_reg->delay_reg, &val);
+ 		val = (val >> anatop_reg->delay_bit_shift) &
+ 			((1 << anatop_reg->delay_bit_width) - 1);
+ 		ret = (new_sel - old_sel) * (LDO_RAMP_UP_UNIT_IN_CYCLES <<
+@@ -170,6 +162,13 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 	struct anatop_regulator *sreg;
+ 	struct regulator_init_data *initdata;
+ 	struct regulator_config config = { };
++	struct regmap *regmap;
++	u32 control_reg;
++	u32 vol_bit_shift;
++	u32 vol_bit_width;
++	u32 min_bit_val;
++	u32 min_voltage;
++	u32 max_voltage;
+ 	int ret = 0;
+ 	u32 val;
+ 
+@@ -192,48 +191,41 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	initdata->supply_regulator = "vin";
+-	sreg->initdata = initdata;
+ 
+ 	anatop_np = of_get_parent(np);
+ 	if (!anatop_np)
+ 		return -ENODEV;
+-	sreg->anatop = syscon_node_to_regmap(anatop_np);
++	regmap = syscon_node_to_regmap(anatop_np);
+ 	of_node_put(anatop_np);
+-	if (IS_ERR(sreg->anatop))
+-		return PTR_ERR(sreg->anatop);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
+ 
+-	ret = of_property_read_u32(np, "anatop-reg-offset",
+-				   &sreg->control_reg);
++	ret = of_property_read_u32(np, "anatop-reg-offset", &control_reg);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-reg-offset property set\n");
+ 		return ret;
+ 	}
+-	ret = of_property_read_u32(np, "anatop-vol-bit-width",
+-				   &sreg->vol_bit_width);
++	ret = of_property_read_u32(np, "anatop-vol-bit-width", &vol_bit_width);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-vol-bit-width property set\n");
+ 		return ret;
+ 	}
+-	ret = of_property_read_u32(np, "anatop-vol-bit-shift",
+-				   &sreg->vol_bit_shift);
++	ret = of_property_read_u32(np, "anatop-vol-bit-shift", &vol_bit_shift);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-vol-bit-shift property set\n");
+ 		return ret;
+ 	}
+-	ret = of_property_read_u32(np, "anatop-min-bit-val",
+-				   &sreg->min_bit_val);
++	ret = of_property_read_u32(np, "anatop-min-bit-val", &min_bit_val);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-min-bit-val property set\n");
+ 		return ret;
+ 	}
+-	ret = of_property_read_u32(np, "anatop-min-voltage",
+-				   &sreg->min_voltage);
++	ret = of_property_read_u32(np, "anatop-min-voltage", &min_voltage);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-min-voltage property set\n");
+ 		return ret;
+ 	}
+-	ret = of_property_read_u32(np, "anatop-max-voltage",
+-				   &sreg->max_voltage);
++	ret = of_property_read_u32(np, "anatop-max-voltage", &max_voltage);
+ 	if (ret) {
+ 		dev_err(dev, "no anatop-max-voltage property set\n");
+ 		return ret;
+@@ -247,24 +239,23 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 	of_property_read_u32(np, "anatop-delay-bit-shift",
+ 			     &sreg->delay_bit_shift);
+ 
+-	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage) / 25000 + 1
+-			    + sreg->min_bit_val;
+-	rdesc->min_uV = sreg->min_voltage;
++	rdesc->n_voltages = (max_voltage - min_voltage) / 25000 + 1
++			    + min_bit_val;
++	rdesc->min_uV = min_voltage;
+ 	rdesc->uV_step = 25000;
+-	rdesc->linear_min_sel = sreg->min_bit_val;
+-	rdesc->vsel_reg = sreg->control_reg;
+-	rdesc->vsel_mask = ((1 << sreg->vol_bit_width) - 1) <<
+-			   sreg->vol_bit_shift;
++	rdesc->linear_min_sel = min_bit_val;
++	rdesc->vsel_reg = control_reg;
++	rdesc->vsel_mask = ((1 << vol_bit_width) - 1) << vol_bit_shift;
+ 	rdesc->min_dropout_uV = 125000;
+ 
+ 	config.dev = &pdev->dev;
+ 	config.init_data = initdata;
+ 	config.driver_data = sreg;
+ 	config.of_node = pdev->dev.of_node;
+-	config.regmap = sreg->anatop;
++	config.regmap = regmap;
+ 
+ 	/* Only core regulators have the ramp up delay configuration. */
+-	if (sreg->control_reg && sreg->delay_bit_width) {
++	if (control_reg && sreg->delay_bit_width) {
+ 		rdesc->ops = &anatop_core_rops;
+ 
+ 		ret = regmap_read(config.regmap, rdesc->vsel_reg, &val);
+@@ -273,7 +264,7 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 			return ret;
+ 		}
+ 
+-		sreg->sel = (val & rdesc->vsel_mask) >> sreg->vol_bit_shift;
++		sreg->sel = (val & rdesc->vsel_mask) >> vol_bit_shift;
+ 		if (sreg->sel == LDO_FET_FULL_ON) {
+ 			sreg->sel = 0;
+ 			sreg->bypass = true;
+@@ -306,7 +297,7 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 			anatop_rops.disable = regulator_disable_regmap;
+ 			anatop_rops.is_enabled = regulator_is_enabled_regmap;
+ 
+-			rdesc->enable_reg = sreg->control_reg;
++			rdesc->enable_reg = control_reg;
+ 			rdesc->enable_mask = BIT(enable_bit);
+ 		}
+ 	}
+-- 
+2.17.1
+
