@@ -2,106 +2,82 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA56DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE57C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8758420833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="acczSLll"
+	by mail.kernel.org (Postfix) with ESMTP id 7A65C20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbfDITxs (ORCPT
+        id S1726709AbfDIUAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 15:53:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33740 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfDITxr (ORCPT
+        Tue, 9 Apr 2019 16:00:01 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:60303 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfDIUAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 15:53:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so146931wrp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 12:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B7QjH+DHJebgggEI3cQJ0RyRsWLJCrfk+VPqpJ23WfM=;
-        b=acczSLlluIJsJZ2R3QQNk/zJICSj8xl2qabwl6Ro56EDvrs4ofbm3Hu9na+gSpA5jL
-         PW0LRVaRZlbUwgDpN2clgzL1xpgLru6R53U6pBDNGwxh7GZquM8Dm4DyjsVRGqjZQq0m
-         DaKWdogI1dCCIwlNPG4Tc5pn369S9E54Q+W7I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B7QjH+DHJebgggEI3cQJ0RyRsWLJCrfk+VPqpJ23WfM=;
-        b=HFHCaNl0xi19r3M4wlr/i1UCA6bVEQfjicmJhkiPo77GNVe3P8zyugssRJJTIm531p
-         qopfPPHrxA7UkRP9y7x0NcdCHK9i7U3FhcZ+eKBBttveUfLleGaJWmr/jmoJI8vB4/u7
-         nbWq2Gkqu4Q02grGaWCi04tqoD1d53hxSF5OgHJUzCtVqMfa8MLQAhmdbTvZ60tUMLSN
-         tSDSkeGwwdyjwSD3e8XudD02Ec22DqXBBiZ/ZlcH0IIfec+rGNF7BpJBhyB4EZK2Jf9k
-         IggYy77IiYgo/AjF9anfokrohEfsnkbGynVp45YDfDgAi96QZMOu1TSPGFOIKcsfRKZt
-         Lvjg==
-X-Gm-Message-State: APjAAAWzOothzW1v2ihea/3Cf7vwIyuWT8cLYIrrbO7rhNmcfe9Z3OG5
-        Jc0hoVjwEJlNUbMGmV49jxTFFnvDniBECQwn+QHrNQ==
-X-Google-Smtp-Source: APXvYqzqVljO+72W5ZGGJJ3wRzjIWRI7nNTo97NXF07gGcL3AX9F1+A2xoSVlwMJkctbxL0BGbhRSxxJe4Jf48gz6/Y=
-X-Received: by 2002:adf:eb0b:: with SMTP id s11mr4365227wrn.140.1554839626238;
- Tue, 09 Apr 2019 12:53:46 -0700 (PDT)
+        Tue, 9 Apr 2019 16:00:00 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 24E81E0003;
+        Tue,  9 Apr 2019 19:59:57 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 1/3] rtc: ab3100: set range
+Date:   Tue,  9 Apr 2019 21:59:43 +0200
+Message-Id: <20190409195945.20725-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190401205519.34023-2-fletcherw@chromium.org>
- <20190405204257.87095-1-fletcherw@chromium.org> <20190405204257.87095-2-fletcherw@chromium.org>
- <20190408061014.GG2803@sirena.org.uk>
-In-Reply-To: <20190408061014.GG2803@sirena.org.uk>
-From:   Fletcher Woodruff <fletcherw@chromium.org>
-Date:   Tue, 9 Apr 2019 13:53:20 -0600
-Message-ID: <CAN-6NYZ49abdE=zkwQpFfeT1u_7DcxHh7AXe2qAibuUYUnkL+g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ASoC: rt5677: allow multiple interrupt sources
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ross Zwisler <zwisler@google.com>, alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 12:38 AM Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Apr 05, 2019 at 02:42:55PM -0600, Fletcher Woodruff wrote:
->
-> > This patch allows headphone plug detect and mic present
-> > detect to be enabled at the same time. This patch implements
-> > an irq_chip with irq_domain directly instead of using
-> > regmap_irq, so that interrupt source line polarities can
-> > be flipped to support irq sharing.
->
-> This changelog still doesn't explain why there is a need to open code
-> this rather than having the irq_chip and irq_domain provided by
-> regmap-irq support whatever is missing here.  You said it "needs its own
-> irq regardless for hotword detection" but provided no information on why
-> this is.
+The ab3100 has a 48bit counter running at 65536 Hz (despite one of the
+comment). The max value is then (2^48 - 1)/2^16 == 2^32 - 1.
 
-Sorry! I misunderstood your earlier response so I didn't clarify that
-portion of the commit message. Thanks for your patience.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-ab3100.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-How does this updated commit message sound? If you think it's
-sufficiently clear, I can send a v3 for this patch.
+diff --git a/drivers/rtc/rtc-ab3100.c b/drivers/rtc/rtc-ab3100.c
+index 821ff52a2222..f73a3707b897 100644
+--- a/drivers/rtc/rtc-ab3100.c
++++ b/drivers/rtc/rtc-ab3100.c
+@@ -228,15 +228,17 @@ static int __init ab3100_rtc_probe(struct platform_device *pdev)
+ 		/* Ignore any error on this write */
+ 	}
+ 
+-	rtc = devm_rtc_device_register(&pdev->dev, "ab3100-rtc",
+-					&ab3100_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(rtc)) {
+-		err = PTR_ERR(rtc);
+-		return err;
+-	}
++	rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(rtc))
++		return PTR_ERR(rtc);
++
++	rtc->ops = &ab3100_rtc_ops;
++	/* 48bit counter at (AB3100_RTC_CLOCK_RATE * 2) */
++	rtc->range_max = U32_MAX;
++
+ 	platform_set_drvdata(pdev, rtc);
+ 
+-	return 0;
++	return rtc_register_device(rtc);
+ }
+ 
+ static struct platform_driver ab3100_rtc_driver = {
+-- 
+2.20.1
 
-This patch allows headphone plug detect and mic present
-detect to be enabled at the same time. This patch implements
-an irq_chip with irq_domain directly instead of using
-regmap-irq, so that interrupt source line polarities can
-be flipped to support irq sharing.
-
-This patch does not add polarity flipping support within regmap-irq
-because there is extra work that must be done within the irq handler
-to support hotword detection. On the Chromebook Pixel, the firmware will
-disconnect GPIO1 from the jack detection irq when a hotword is detected
-and trigger the interrupt handler. Inside the handler, we will need to
-detect this, report the hotword event, and re-connect GPIO1 to the jack
-detection irq.
