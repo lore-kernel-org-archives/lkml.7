@@ -2,203 +2,176 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF251C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42F4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF35D2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996772077C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 17:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBx4G+Mx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQigrRqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfDIRnb (ORCPT
+        id S1726562AbfDIRtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 13:43:31 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38618 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfDIRna (ORCPT
+        Tue, 9 Apr 2019 13:49:36 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:38964 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfDIRtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 13:43:30 -0400
-Received: by mail-it1-f196.google.com with SMTP id f22so6365658ita.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 10:43:29 -0700 (PDT)
+        Tue, 9 Apr 2019 13:49:36 -0400
+Received: by mail-it1-f194.google.com with SMTP id 139so6401119ita.4;
+        Tue, 09 Apr 2019 10:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XmDVdiKFQMgmOSzJpVqrAD9brTBEs/9kUPJaqAGOqQA=;
-        b=PBx4G+MxD3HIInOsM4cCOyXIVWi+68pABdFm69DT3WNEkVAghz854oh/wD4BKFf0IW
-         Mpm1/p5gusrAz5KWDPMo55SWKR3JLTIzpZMo+MQ9YHQp69r5zFQ9gt6ao2BOI86IGAzR
-         eTJ5vUfKOEFy/14lLd4NH3jUkiUSloTr2VAgDYMcUVMKQ0v+F3QhEQKAqeD0A5tlv/jh
-         ENAcEs3nEQ5al163P95TUrZnbNK5adnHukD0mi9wTnG+vo1fYwXORMKFBtNCwNQpjDIL
-         PIpkV/ps/EbwwftvDM62ANu020T6xRrpeteErWCce8nXItYoClhYq37o21cWiXhtaNXt
-         BChg==
+        bh=MoFB4KGbO5bnWW9b0d3DZz7QfAbAO0D02d4oxMDK29s=;
+        b=nQigrRqVGbbEZU1twqk9nfPDh5fO2Jx6vhF5F6LsXrIvZHq5QQy99HLun0wTRKbkMJ
+         c6D7rNW3M0boELO6iIg6SE99EYX9QNa0CBFzyvDfUkdHzWQlZq3x/DIVViKeBekr0Pua
+         dUy+YQNo4g7xBgn3IzAglR0k5s1OAmjBW3Z8lXYAfQjHQJyQyILmMSukLrtMz2hGZPh2
+         MrjPGmhWCqS92OiQm8OBEPTVbBh4YqQuOKJ1zA1n/Hrhe59LHjmzhjWF/RGfi7Amk66H
+         n7b722aQ/SNS+FU1QHYRxtPGKmqKJL+9RIEolwPjQ0bMGM6NIQcDKYibScmeaVyUkC+4
+         MDRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XmDVdiKFQMgmOSzJpVqrAD9brTBEs/9kUPJaqAGOqQA=;
-        b=QEw55XdkhBYp/nF6KMksJ6ZF9DTaonLW7alr374sQ4j3Qj22zYzyQvUGoHEC2x3Yn0
-         ejDJRrU6GRW+PqxRwrmjSV7QDiktiWQsT8uDoGNGd6bb+FMqu5a+lqaJg+jSQ+HRwT8I
-         5c142I4waaNUU03EP7TJK6i3tsPRAmHFaxUa7nmD7y9ejZ6iQZaR6CxsPhHb+almwdEK
-         jXBiJJ3vDwHgpyrB8AAjoNZGls1MijZ00O0oPWeYejInLg7CIKjat9AlyE22ziaXZI4n
-         gvWq19XOnsJw4HzuE6sIq3r0aEuTd4y8a0mcvQPlyJngs7x7kqOYib7oyFbRYvyqGC3q
-         KDrQ==
-X-Gm-Message-State: APjAAAXX4UNPRH82GDcFOfv1mpejWTI71cswOVe357IqG1L7NgVqFth2
-        9L7gHR8MHf7EkUjm9Z1Dw7QrlnHjSdEwL9qDuNmMsQ==
-X-Google-Smtp-Source: APXvYqzoKbb4JnE7tTDIPFJmEdNb7IHI72Sgq5wV8sLblh7/ulZaJRgix/Q+mt65nWJPvp5IthxJLFmalx5zPraRlII=
-X-Received: by 2002:a02:9042:: with SMTP id y2mr26954930jaf.113.1554831809419;
- Tue, 09 Apr 2019 10:43:29 -0700 (PDT)
+        bh=MoFB4KGbO5bnWW9b0d3DZz7QfAbAO0D02d4oxMDK29s=;
+        b=i5N2LeCOEp2ofN0u21syGyPL5FflXfbbwxp05pJgZfDVAEbbSA48Oklff/yHoDQbR9
+         nb2LuqBIg2TagubnFqlFOKmjNEpmgQuElYEjXR8vAd3IYStilG4bmOxKsn4NNNjpA/Aq
+         9vA6NIXcd+cmnOI7qWnGMjQQlY1j2RBel9KBkKrywIqIONY/fFR7boTyZj20c2Xfqbnz
+         aQTRN0R9mb8LakgWxoXvxDwG3aWMh2uBLw52YYDAdIBhUIt/NvJFkrOzk+g0nKzui+4N
+         x7snCPH36SE+teduwAfE6p0HsZqVYFL6Z9BrSeo7Ojz38UqRT9DoulbIt2JGOk1t1pth
+         eT0g==
+X-Gm-Message-State: APjAAAUkP+vNvai4Lzrme5q0/sFLIQFe9gpqo+toLG/QjQm5t/kElOGQ
+        66gMKjjqq4QjKhg/gH+0hLjpS9UjAndPNDtnaV8=
+X-Google-Smtp-Source: APXvYqxxttc5uh6VUStni4vuoLdqP9WDh1iFM4CNn54DM6JOU3WpVNQZ5ka9SimkO2DUdHY1bBjlffvS+R50V1ry3L8=
+X-Received: by 2002:a05:6638:110:: with SMTP id x16mr27724565jao.75.1554832174769;
+ Tue, 09 Apr 2019 10:49:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190409135243.12424-1-raphael.gault@arm.com>
-In-Reply-To: <20190409135243.12424-1-raphael.gault@arm.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 9 Apr 2019 10:43:18 -0700
-Message-ID: <CAKv+Gu_qGN8SG7ajkF7zAoAJd=qskC1oonmjzsqzZyGb9rYGLA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] objtool: Add support for Arm64
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20190405102455.15311-1-tiny.windzz@gmail.com> <20190405102455.15311-3-tiny.windzz@gmail.com>
+ <20190405145532.cstvbv3mxbzrmpxp@flea> <CAEExFWuDjD2Ur6UuCPD_m=hvUYJj7Z=NqQ7KXXR+tmnVtDqfbQ@mail.gmail.com>
+ <20190409080931.5x36pgtwhdjh2lkq@flea>
+In-Reply-To: <20190409080931.5x36pgtwhdjh2lkq@flea>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Wed, 10 Apr 2019 01:49:23 +0800
+Message-ID: <CAEExFWs8jn1-Ht6Rq0ukL=Kz0sTwgf+kJzxw3Js=6hX+2OjYTA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document operating-points-v2-sunxi-cpu
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Apr 2019 at 06:53, Raphael Gault <raphael.gault@arm.com> wrote:
+On Tue, Apr 9, 2019 at 4:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Hi,
+> On Tue, Apr 09, 2019 at 12:13:58AM +0800, Frank Lee wrote:
+> > On Fri, Apr 5, 2019 at 10:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
+> > > > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > > > frequency value  based on the speedbin blown in the efuse combination.
+> > > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > > > provide the OPP framework with required information.
+> > > > This is used to determine the voltage and frequency value for each
+> > > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> > > >
+> > > > This change adds documentation for the DT bindings.
+> > > > The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
+> > > > with following parameters:
+> > > > - nvmem-cells (NVMEM area containig the speedbin information)
+> > > > - opp-supported-hw: A single 32 bit bitmap value,
+> > > >   representing compatible HW:
+> > > >                       0:      speedbin 0
+> > > >                       1:      speedbin 1
+> > > >                       2:      speedbin 2
+> > > >                       3-31:   unused
+> > > >
+> > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > > ---
+> > > >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
+> > > >  1 file changed, 235 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > > > new file mode 100644
+> > > > index 000000000000..80201d4e5147
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > > > @@ -0,0 +1,235 @@
+> > > > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> > > > +===================================
+> > > > +
+> > > > +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> > > > +varies based on the silicon variant in use. Allwinner Process Voltage
+> > > > +Scaling Tables defines the voltage and frequency value  based on the
+> > > > +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
+> > > > +reads the efuse value from the SoC to provide the OPP framework with
+> > > > +required information.
+> > > > +
+> > > > +Required properties:
+> > > > +--------------------
+> > > > +In 'cpus' nodes:
+> > > > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> > > > +
+> > > > +In 'operating-points-v2' table:
+> > > > +- compatible: Should be
+> > > > +     - 'operating-points-v2-sunxi-cpu'.
+> > > > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> > > > +             efuse registers that has information about the
+> > > > +             speedbin that is used to select the right frequency/voltage
+> > > > +             value pair.
+> > > > +             Please refer the for nvmem-cells
+> > > > +             bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+> > > > +             and also examples below.
+> > > > +
+> > > > +In every OPP node:
+> > > > +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
+> > > > +                 Bitmap:
+> > > > +                     0:      speedbin 0
+> > > > +                     1:      speedbin 1
+> > > > +                     2:      speedbin 2
+> > > > +                     3-31:   unused
+> > >
+> > > I'm wondering if that's the right approach.
+> > >
+> > > I guess we could also have three different OPP tables, and pass them
+> > > all three through a phandle array, and have the kernel code select
+> > > which one is relevant based on the SID content
+> >
+> > It's ok. But why not use the way we already have?
+> > Is it necessary to introduce new helper?
 >
-> As of now, objtool only supports the x86_64 architecture but the
-> groundwork has already been done in order to add support for other
-> architecture without too much effort.
->
-> This series of patches adds support for the arm64 architecture
-> based on the Armv8.5 Architecture Reference Manual.
->
+> My main concern is that it becomes quite difficult to differentiate
+> the various OPPs, and to which bin a particular OPP is belonging to,
+> while the more traditional OPPv2 makes it much more obvious.
+Hi Maxime,
 
-I think it makes sense to clarify *why* we want this on arm64. Also,
-we should identify things that objtool does today that maybe we don't
-want on arm64, rather than buy into all of it by default.
+How about the newer patch ?
+I think it is clearer. Just add a printk and people will know the opp
+information used.
 
-> * Patch 1 adapts the existing code to be able to add support for other
->   architecture.
-> * Patch 2 provide implementation of the required function for the arm64
->   architecture.
-> * Patch 3 adapts the checking of the stack state for the arm64
->   architecture.
-> * Patch 4 & 5 fix some warning objtool raised in some particular
->   functions of ~/arch/arm64/kernel/sleep.S. Patch 4 add a macro to
->   signal that some function should be ignored by objtool.
-> * Patch 6 enables stack validation for arm64.
+Yangtao
 >
-> Theses patches should provide support for the main cases and behaviour.
-> However a few corner cases are not yet handled by objtool:
->
-> * In the `~/arch/arm64/crypto/` directory, I noticed that some plain
->   data are sometimes stored in the `.text` section causing objtool to mistake
->   this for instructions and trying (and failing) to interprete them.  If someone
->   could explain to me why we store data directly in the .text section I would
->   appreciate it.
->
-
-Just for convenience, basically. Not specifying a section at all when
-emitting a literal amounts to putting it into .text, and a a bonus, it
-is guaranteed to be in range for a ADR instructions (which is not the
-case when the code is built into the kernel rather than enabled as a
-module)
-
-Due to Spectre I have already updated some of the code so larger
-tables are moved into .rodata (since literal data might contain binary
-sequences that are usable as spectre gadgets), but some work remains
-to be done.
-
-> * In the support for arm32 architecture such as in `~/arch/arm64/kernel/kuser32.S`
->   some A32 instructions are used but such instructions are not understood by
->   objtool causing a warning.
->
-> I also have a few unclear points I would like to bring to your
-> attention:
->
-> * For x86_64, when looking for a symbol relocation with explicit
->   addend, objtool systematically adds a +4 offset to the addend.
->   I don't understand why even if I have a feeling it is related
->   to the type of relacation.
->
-> * I currently don't have a clear understanding about how switch-tables
->   are generated on arm64 and how to retrieve them (based on relocations).
->
-> Please provide me with any feedback and comments as well on the content
-> than the style of these patches.
->
-> Thanks,
->
-> Raphael
->
-> ->
->
-> Raphael Gault (6):
->   objtool: Refactor code to make it more suitable for multiple
->     architecture support
->   objtool: arm64: Add required implementation for supporting the aarch64
->     architecture in objtool.
->   objtool: arm64: Adapt the stack frame checks and the section analysis
->     for the arm architecture
->   arm64: assembler: Add macro to annotate asm function having non
->     standard stack-frame.
->   arm64: sleep: Add stack frame setup for __cpu_supsend_enter
->   objtool: arm64: Enable stack validation for arm64
->
->  arch/arm64/Kconfig                            |    1 +
->  arch/arm64/include/asm/assembler.h            |   18 +
->  arch/arm64/kernel/sleep.S                     |    4 +
->  tools/objtool/Build                           |    1 -
->  tools/objtool/arch.h                          |   11 +
->  tools/objtool/arch/arm64/Build                |    6 +
->  tools/objtool/arch/arm64/bit_operations.c     |   65 +
->  tools/objtool/arch/arm64/decode.c             | 2870 +++++++++++++++++
->  .../objtool/arch/arm64/include/arch_special.h |   44 +
->  .../arch/arm64/include/asm/orc_types.h        |  109 +
->  .../arch/arm64/include/bit_operations.h       |   22 +
->  tools/objtool/arch/arm64/include/cfi.h        |   76 +
->  .../objtool/arch/arm64/include/insn_decode.h  |  219 ++
->  tools/objtool/arch/arm64/orc_gen.c            |   40 +
->  tools/objtool/arch/x86/Build                  |    1 +
->  tools/objtool/arch/x86/decode.c               |  111 +
->  tools/objtool/arch/x86/include/arch_special.h |   35 +
->  tools/objtool/{ => arch/x86/include}/cfi.h    |    0
->  tools/objtool/{ => arch/x86}/orc_gen.c        |   10 +-
->  tools/objtool/check.c                         |  209 +-
->  tools/objtool/check.h                         |    1 +
->  tools/objtool/elf.c                           |    3 +-
->  tools/objtool/orc.h                           |    4 +-
->  tools/objtool/special.c                       |   18 +-
->  24 files changed, 3740 insertions(+), 138 deletions(-)
->  create mode 100644 tools/objtool/arch/arm64/Build
->  create mode 100644 tools/objtool/arch/arm64/bit_operations.c
->  create mode 100644 tools/objtool/arch/arm64/decode.c
->  create mode 100644 tools/objtool/arch/arm64/include/arch_special.h
->  create mode 100644 tools/objtool/arch/arm64/include/asm/orc_types.h
->  create mode 100644 tools/objtool/arch/arm64/include/bit_operations.h
->  create mode 100644 tools/objtool/arch/arm64/include/cfi.h
->  create mode 100644 tools/objtool/arch/arm64/include/insn_decode.h
->  create mode 100644 tools/objtool/arch/arm64/orc_gen.c
->  create mode 100644 tools/objtool/arch/x86/include/arch_special.h
->  rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
->  rename tools/objtool/{ => arch/x86}/orc_gen.c (96%)
+> Maxime
 >
 > --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
