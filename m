@@ -2,105 +2,130 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797BFC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1E4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4108C20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:34:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FihTCBNe"
+	by mail.kernel.org (Postfix) with ESMTP id E14822084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 20:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfDIUeY (ORCPT
+        id S1726558AbfDIUlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 16:34:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51338 "EHLO mail.skyhub.de"
+        Tue, 9 Apr 2019 16:41:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34806 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbfDIUeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 16:34:23 -0400
-Received: from zn.tnic (p200300EC2F0F8500250718ACA0948A5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:8500:2507:18ac:a094:8a5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726337AbfDIUlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 16:41:15 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F12E1EC00FF;
-        Tue,  9 Apr 2019 22:34:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554842061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9pkiibSoE1UtncS1t4SALzcqhoYEOsusZM3elMz8lWU=;
-        b=FihTCBNeWMvliyh2g7ngcgErRE+xcnI7X5F1Yig3UDVessMKky9GE5TwXRxMHd7IenWgru
-        78WrokkV1PCoyKgldcCPALeNykPMpMrvtn4K1uuLeozh4zGSnclUMn51onRl4i5WfAYFcL
-        Li2RUJCLAaBN3gKjI/rqI+Tsiuc3jck=
-Date:   Tue, 9 Apr 2019 22:34:12 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
-Message-ID: <20190409203412.GE6150@zn.tnic>
-References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
- <20190408141205.12376-3-Yazen.Ghannam@amd.com>
- <20190408175142.GK15689@zn.tnic>
- <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id A448B31649AA;
+        Tue,  9 Apr 2019 20:41:14 +0000 (UTC)
+Received: from intel-knightslanding-lb-02.khw1.lab.eng.bos.redhat.com (intel-knightslanding-lb-02.khw1.lab.eng.bos.redhat.com [10.16.200.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9517719022;
+        Tue,  9 Apr 2019 20:41:11 +0000 (UTC)
+From:   Joel Savitz <jsavitz@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Savitz <jsavitz@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org
+Subject: [PATCH v2] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+Date:   Tue,  9 Apr 2019 16:40:03 -0400
+Message-Id: <20190409204003.6428-1-jsavitz@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 09 Apr 2019 20:41:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 06:55:59PM +0000, Ghannam, Yazen wrote:
-> We already have the case where some banks are not initialized either
-> due to quirks or because they are Read-as-Zero, but we don't try to
-> skip creating their files. With this full set (see patch 5), an unused
-> bank will return a control value of 0.
+If a process is limited by taskset (i.e. cpuset) to only be allowed to
+run on cpu N, and then cpu N is offlined via hotplug, the process will
+be assigned the current value of its cpuset cgroup's effective_cpus field
+in a call to do_set_cpus_allowed() in cpuset_cpus_allowed_fallback().
+This argument's value does not makes sense for this case, because
+task_cs(tsk)->effective_cpus is modified by cpuset_hotplug_workfn()
+to reflect the new value of cpu_active_mask after cpu N is removed from
+the mask. While this may make sense for the cgroup affinity mask, it
+does not make sense on a per-task basis, as a task that was previously
+limited to only be run on cpu N will be limited to every cpu _except_ for
+cpu N after it is offlined/onlined via hotplug.
 
-So set_bank() is changed to do:
+Pre-patch behavior:
 
-@@ -2088,7 +2097,7 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
-        if (kstrtou64(buf, 0, &new) < 0)
-                return -EINVAL;
+	$ grep Cpus /proc/$$/status
+	Cpus_allowed:	ff
+	Cpus_allowed_list:	0-7
 
--       if (bank >= mca_cfg.banks)
-+       if (bank >= per_cpu(num_banks, s->id))
-                return -EINVAL;
+	$ taskset -p 4 $$
+	pid 19202's current affinity mask: f
+	pid 19202's new affinity mask: 4
 
+	$ grep Cpus /proc/self/status
+	Cpus_allowed:	04
+	Cpus_allowed_list:	2
 
-How would that work if the disabled/not-present bank is in the middle?
-The old example: bank3 on CPU5.
+	# echo off > /sys/devices/system/cpu/cpu2/online
+	$ grep Cpus /proc/$$/status
+	Cpus_allowed:	0b
+	Cpus_allowed_list:	0-1,3
 
-> Would that be sufficient to indicate that a bank is not used?
+	# echo on > /sys/devices/system/cpu/cpu2/online
+	$ grep Cpus /proc/$$/status
+	Cpus_allowed:	0b
+	Cpus_allowed_list:	0-1,3
 
-Well, it should not allow for any control bits to be set and it should
-have the proper bank number.
+On a patched system, the final grep produces the following
+output instead:
 
-> But I do have a couple of thoughts:
+	$ grep Cpus /proc/$$/status
+	Cpus_allowed:	ff
+	Cpus_allowed_list:	0-7
 
-> 1) Will missing banks confuse users? As mentioned, we already have the
-> case of unused/uninitialized banks today, but we don't skip their file
-> creation. a) Will this affect any userspace tools?
+This patch changes the above behavior by instead resetting the mask to
+task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+mode.
 
-I guess it would be easier if we keep creating all files but denote properly
-which banks are disabled.
+This fallback mechanism is only triggered if _every_ other valid avenue
+has been traveled, and it is the last resort before calling BUG().
 
-> 2) Is the added complexity for file creation/destruction worth it? As
-> mentioned, the file will return 0 for unused/uninitialized banks.
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Yeah.
-
-Thx.
-
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 4834c4214e9c..6c9deb2cc687 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3255,10 +3255,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 	spin_unlock_irqrestore(&callback_lock, flags);
+ }
+ 
++/**
++ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
++ * @tsk: pointer to task_struct with which the scheduler is struggling
++ *
++ * Description: In the case that the scheduler cannot find an allowed cpu in
++ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
++ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
++ * which will not contain a sane cpumask during cases such as cpu hotplugging.
++ * This is the absolute last resort for the scheduler and it is only used if
++ * _every_ other avenue has been traveled.
++ **/
++
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ {
+ 	rcu_read_lock();
+-	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
++	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
++		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+ 	rcu_read_unlock();
+ 
+ 	/*
 -- 
-Regards/Gruss,
-    Boris.
+2.18.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
