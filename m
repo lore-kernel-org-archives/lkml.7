@@ -2,93 +2,118 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13197C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12243C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88EF2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE5D2077C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="YEhdK1Tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfDINlM (ORCPT
+        id S1727281AbfDINlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 9 Apr 2019 09:41:13 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41088 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfDINlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Apr 2019 09:41:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60142 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726685AbfDINlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:41:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7489FB13F;
-        Tue,  9 Apr 2019 13:41:10 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 15:41:09 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
-Message-ID: <20190409134109.ounidzwphouqr3w2@pathway.suse.cz>
-References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
- <20190402021419.GA617@jagdpanzerIV>
- <20190402022840.et7sbiamxeutbw2q@shbuild888>
- <20190402022900.GA2219@jagdpanzerIV>
+Received: by mail-lj1-f195.google.com with SMTP id k8so14481374lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 06:41:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p3vyeIn43IG+brbHELRfPrc4NO3qJy22/cRNmBwEyGY=;
+        b=YEhdK1Tr1X1VAi2x4C9Scm7lUUzJpv+938XjrX0A+cTfKoaFB+Q0mGB01QfJ4S14ca
+         VPn67lqVFVG0ODvDCDcZyb4R6m5UJOkNTaEGIFDSQsUwtxX/CDULbZ7SCSE0Ou84AJpY
+         RUYz7Yx2EnAna3gJwgWun8XzBOHLvMpLJS6O7MoeKDcDzT2tM/n+BHJkqFZyXOqAvGME
+         UumFcqkYcqocGjGk/exUSNSDXNiF2aJyllsIeQCjLrGc7pzav2VZAzAv4sqE3rab0Lzi
+         bkCutZuMsjQifi+XC6TwbGb2H4GKmwztZ1iCEg2mZeVEQILzFRKFrZrKJwS3VKvpHfft
+         MfPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p3vyeIn43IG+brbHELRfPrc4NO3qJy22/cRNmBwEyGY=;
+        b=rPASgG5t3XD+2m2HGPFHJgmSv/TToQ64nNAZEHfAQS+dRK2zT3lrbp63e17LMnSeNV
+         SGFPTz106iJengVTXXJlxP26pBGoSrc1a+CUUi2uDQDL101LTsSmtnzWf9ULbVJC+xdW
+         LvcAZmf8cCYAD9IRjTZkixHZovn2eL5SmDI973c/mXSBGZuJnLDCS6AaKJkX0zb+aUF2
+         JMcc3CvgJw32yl3qsyDFo9MU/Mgd2Q7QpPviRDe4tELjhYEYYPeiNlHjvFhyYhL6MKaa
+         LtZTPrM0/cQErdEHd3rTqyMpmzsUzwLVs/UdUnLVFK3Y7+18Kx4YJicYG1R+lmjQDzoR
+         BIEA==
+X-Gm-Message-State: APjAAAUTiFh7ImbAbxOJDmjYSmZaqy9sn+NYE1if44jMsky/DTGZI8Yq
+        TXywNrLcrrs/USOC7h/K1pc68AC91eMS/dui9OxY
+X-Google-Smtp-Source: APXvYqxdHKPr+2RXagsy6oke+WsSror1Au2F3cfqo87dZHnTU7VnFYh0IZ+ojX7bGxfI2rP/TxrbFRMJ5Pcqi8JYG1I=
+X-Received: by 2002:a2e:9649:: with SMTP id z9mr2697569ljh.92.1554817269998;
+ Tue, 09 Apr 2019 06:41:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402022900.GA2219@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <cover.1554732921.git.rgb@redhat.com> <baa5f3c6d4aa7f9fec903ebb51949f3ac743d067.1554732921.git.rgb@redhat.com>
+ <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
+In-Reply-To: <CAFqZXNvZTb-OrCHugEc2TrW57EX_f_+absARpR1bUBN3_uavdQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 9 Apr 2019 09:40:58 -0400
+Message-ID: <CAHC9VhRbxefdpTX5ct+1=uccv9b2GH+imDPPbB90RBWSjMcgbA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 05/10] audit: add contid support for signalling
+ the audit daemon
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-04-02 11:29:00, Sergey Senozhatsky wrote:
-> On (04/02/19 10:28), Feng Tang wrote:
-> > > So my first thought was - let's not add a `bool flag', but instead add
-> > > an `enum' with clear flag names, e.g. DUMP_ALL/DUMP_PENDING, etc. Something
-> > > similar to what ftrace_dump(DUMP_ALL) does. And we already have panic_print
-> > > bit-mask and panic_print_sys_info(), which controls what we print when in
-> > > panic. So we can move console_flush_on_panic() to panic_print_sys_info()
-> > > and handle different types of console_flush_on_panic() there:
-> > > 
-> > > ---
-> > > 
-> > > diff --git a/kernel/panic.c b/kernel/panic.c
-> > > index 0ae0d7332f12..e142faaebbcd 100644
-> > > --- a/kernel/panic.c
-> > > +++ b/kernel/panic.c
-> > > @@ -134,6 +134,11 @@ EXPORT_SYMBOL(nmi_panic);
-> > >  
-> > >  static void panic_print_sys_info(void)
-> > >  {
-> > > +	if (panic_print & PANIC_PRINT_REPLAY_LOGBUF)
-> > > +		console_flush_on_panic(DUMP_ALL);
-> > > +	else
-> > > +		console_flush_on_panic(DUMP_PENDING);
-> > > +
-> > >  	if (panic_print & PANIC_PRINT_TASK_INFO)
-> > >  		show_state();
-> > >  
-> > > @@ -277,7 +282,6 @@ void panic(const char *fmt, ...)
-> > >  	 * panic() is not being callled from OOPS.
-> > >  	 */
-> > >  	debug_locks_off();
-> > > -	console_flush_on_panic();
-> > >  
-> > >  	panic_print_sys_info();
-> > >  
-> > 
-> > I guess this is what my 2/2 patch exactly does :)
-> 
-> Oh, indeed... I didn't check 2/2.
+On Tue, Apr 9, 2019 at 8:58 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> On Tue, Apr 9, 2019 at 5:40 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Add audit container identifier support to the action of signalling the
+> > audit daemon.
+> >
+> > Since this would need to add an element to the audit_sig_info struct,
+> > a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> > audit_sig_info2 struct.  Corresponding support is required in the
+> > userspace code to reflect the new record request and reply type.
+> > An older userspace won't break since it won't know to request this
+> > record type.
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+>
+> This looks good to me.
+>
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+>
+> Although I'm wondering if we shouldn't try to future-proof the
+> AUDIT_SIGNAL_INFO2 format somehow, so that we don't need to add
+> another AUDIT_SIGNAL_INFO3 when the need arises to add yet-another
+> identifier to it... The simplest solution I can come up with is to add
+> a "version" field at the beginning (set to 2 initially), then v<N>_len
+> at the beginning of data for version <N>. But maybe this is too
+> complicated for too little gain...
 
-I suggest to merge the two patches into one. It will
-still be rather small and easier to review.
+FWIW, I believe the long term solution to this is the fabled netlink
+attribute approach that we haven't talked about in some time, but I
+keep dreaming about (it has been mostly on the back burner becasue 1)
+time and 2) didn't want to impact the audit container ID work).  While
+I'm not opposed to trying to make things like this a bit more robust
+by adding version fields and similar things, there are still so many
+(so very many) problems with the audit kernel/userspace interface that
+still need to be addressed.
 
-Best Regards,
-Petr
+-- 
+paul moore
+www.paul-moore.com
