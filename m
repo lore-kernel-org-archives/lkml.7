@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF508C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893B1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D452084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F66C2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 19:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfDITRh (ORCPT
+        id S1726797AbfDITRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 15:17:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56623 "EHLO mx1.redhat.com"
+        Tue, 9 Apr 2019 15:17:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:25450 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfDITRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 15:17:35 -0400
+        id S1726712AbfDITRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 15:17:38 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A10F9307EA91;
-        Tue,  9 Apr 2019 19:17:34 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 502CE68570;
+        Tue,  9 Apr 2019 19:17:37 +0000 (UTC)
 Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4629A5C666;
-        Tue,  9 Apr 2019 19:17:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 033555F9C9;
+        Tue,  9 Apr 2019 19:17:34 +0000 (UTC)
 From:   Richard Guy Briggs <rgb@redhat.com>
 To:     containers@lists.linux-foundation.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
@@ -35,59 +35,180 @@ To:     containers@lists.linux-foundation.org,
 Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
         omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
         nhorman@redhat.com, Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghau51/ghau40 v6 2/7] AUDIT_CONTAINER_ID message type basic support
-Date:   Tue,  9 Apr 2019 15:16:53 -0400
-Message-Id: <1554837418-25278-3-git-send-email-rgb@redhat.com>
+Subject: [PATCH ghau51/ghau40 v6 3/7] auditctl: add support for AUDIT_CONTID filter
+Date:   Tue,  9 Apr 2019 15:16:54 -0400
+Message-Id: <1554837418-25278-4-git-send-email-rgb@redhat.com>
 In-Reply-To: <1554837418-25278-1-git-send-email-rgb@redhat.com>
 References: <1554837418-25278-1-git-send-email-rgb@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 09 Apr 2019 19:17:34 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 09 Apr 2019 19:17:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This defines the message number for the audit container identifier
-information record should the kernel headers not be up to date and gives
-the record number a name for printing.
+A u64 container identifier has been added to the kernel view of tasks.
+This allows container orchestrators to label tasks with a unique
+tamperproof identifier that gets inherited by its children to be able to
+track the provenance of actions by a container.
 
-See: https://github.com/linux-audit/audit-userspace/issues/51
-See: https://github.com/linux-audit/audit-kernel/issues/90
+Add support to libaudit and auditctl for the AUDIT_CONTID field to
+filter based on audit container identifier.  This field is specified
+with the "contid" field name on the command line.
+
+Since it is a u64 and larger than any other numeric field, send it as a
+string but do the appropriate conversions on each end in each direction.
+
+See: https://github.com/linux-audit/audit-userspace/issues/40
+See: https://github.com/linux-audit/audit-kernel/issues/91
 See: https://github.com/linux-audit/audit-testsuite/issues/64
 See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
 Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 ---
- lib/libaudit.h    | 4 ++++
- lib/msg_typetab.h | 1 +
- 2 files changed, 5 insertions(+)
+ docs/auditctl.8        |  3 +++
+ lib/fieldtab.h         |  1 +
+ lib/libaudit.c         | 36 ++++++++++++++++++++++++++++++++++++
+ lib/libaudit.h         |  7 +++++++
+ src/auditctl-listing.c | 21 +++++++++++++++++++++
+ 5 files changed, 68 insertions(+)
 
+diff --git a/docs/auditctl.8 b/docs/auditctl.8
+index 2c970cf3d54d..a5327e839861 100644
+--- a/docs/auditctl.8
++++ b/docs/auditctl.8
+@@ -213,6 +213,9 @@ Parent's Process ID
+ .B sessionid
+ User's login session ID
+ .TP
++.B contid
++Process' audit container ID
++.TP
+ .B subj_user
+ Program's SE Linux User
+ .TP
+diff --git a/lib/fieldtab.h b/lib/fieldtab.h
+index c425d5b86049..4224e60bb37b 100644
+--- a/lib/fieldtab.h
++++ b/lib/fieldtab.h
+@@ -47,6 +47,7 @@ _S(AUDIT_OBJ_TYPE,     "obj_type"     )
+ _S(AUDIT_OBJ_LEV_LOW,  "obj_lev_low"  )
+ _S(AUDIT_OBJ_LEV_HIGH, "obj_lev_high" )
+ _S(AUDIT_SESSIONID,    "sessionid"    )
++_S(AUDIT_CONTID,       "contid"       )
+ 
+ _S(AUDIT_DEVMAJOR,     "devmajor"     )
+ _S(AUDIT_DEVMINOR,     "devminor"     )
+diff --git a/lib/libaudit.c b/lib/libaudit.c
+index 393d5bcdc030..5df5ddf85430 100644
+--- a/lib/libaudit.c
++++ b/lib/libaudit.c
+@@ -1742,6 +1742,42 @@ int audit_rule_fieldpair_data(struct audit_rule_data **rulep, const char *pair,
+ 			else if (strcmp(v, "unset") == 0)
+ 				rule->values[rule->field_count] = UINT_MAX;
+ 			break;
++		case AUDIT_CONTID: {
++			unsigned long long val;
++
++			if ((audit_get_features() &
++				AUDIT_FEATURE_BITMAP_CONTAINERID) == 0)
++				return -EAU_FIELDNOSUPPORT;
++			if (flags != AUDIT_FILTER_EXCLUDE &&
++			    flags != AUDIT_FILTER_USER &&
++			    flags != AUDIT_FILTER_EXIT)
++				return -EAU_FIELDNOFILTER;
++			if (isdigit((char)*(v))) 
++				val = strtoull(v, NULL, 0);
++			else if (strlen(v) >= 2 && *(v)=='-' && 
++						(isdigit((char)*(v+1)))) 
++				val = strtoll(v, NULL, 0);
++			else if (strcmp(v, "unset") == 0)
++				val = ULLONG_MAX;
++			else
++				return -EAU_FIELDVALNUM;
++			if (errno)
++				return -EAU_FIELDVALNUM;
++			vlen = sizeof(unsigned long long);
++			rule->values[rule->field_count] = vlen;
++			offset = rule->buflen;
++			rule->buflen += vlen;
++			*rulep = realloc(rule, sizeof(*rule) + rule->buflen);
++			if (*rulep == NULL) {
++				free(rule);
++				audit_msg(LOG_ERR, "Cannot realloc memory!\n");
++				return -3;
++			} else {
++				rule = *rulep;
++			}
++			*(unsigned long long*)(&rule->buf[offset]) = val;
++			break;
++		}
+ 		case AUDIT_DEVMAJOR...AUDIT_INODE:
+ 		case AUDIT_SUCCESS:
+ 			if (flags != AUDIT_FILTER_EXIT)
 diff --git a/lib/libaudit.h b/lib/libaudit.h
-index 6cf20252e76f..b3ff8bdaa649 100644
+index b3ff8bdaa649..e7256a328c45 100644
 --- a/lib/libaudit.h
 +++ b/lib/libaudit.h
-@@ -283,6 +283,10 @@ extern "C" {
- #define AUDIT_FANOTIFY		1331 /* Fanotify access decision */
+@@ -339,6 +339,9 @@ extern "C" {
+ #ifndef AUDIT_FEATURE_BITMAP_FILTER_FS
+ #define AUDIT_FEATURE_BITMAP_FILTER_FS		0x00000040
+ #endif
++#ifndef AUDIT_FEATURE_BITMAP_CONTAINERID
++#define AUDIT_FEATURE_BITMAP_CONTAINERID	0x00000080
++#endif
+ 
+ /* Defines for interfield comparison update */
+ #ifndef AUDIT_OBJ_UID
+@@ -362,6 +365,10 @@ extern "C" {
+ #define AUDIT_FSTYPE 26
  #endif
  
-+#ifndef AUDIT_CONTAINER_ID
-+#define AUDIT_CONTAINER_ID	1332 /* Container ID */
++#ifndef AUDIT_CONTID
++#define AUDIT_CONTID 27
 +#endif
 +
- #ifndef AUDIT_MAC_CALIPSO_ADD
- #define AUDIT_MAC_CALIPSO_ADD	1418 /* NetLabel: add CALIPSO DOI entry */
+ #ifndef AUDIT_COMPARE_UID_TO_OBJ_UID
+ #define AUDIT_COMPARE_UID_TO_OBJ_UID   1
  #endif
-diff --git a/lib/msg_typetab.h b/lib/msg_typetab.h
-index f9fa46dcfa67..44d594d46de8 100644
---- a/lib/msg_typetab.h
-+++ b/lib/msg_typetab.h
-@@ -124,6 +124,7 @@ _S(AUDIT_PROCTITLE,                  "PROCTITLE"                     )
- _S(AUDIT_FEATURE_CHANGE,             "FEATURE_CHANGE"                )
- _S(AUDIT_KERN_MODULE,                "KERN_MODULE"                   )
- _S(AUDIT_FANOTIFY,                   "FANOTIFY"                      )
-+_S(AUDIT_CONTAINER_ID,               "CONTAINER_ID"                  )
- _S(AUDIT_AVC,                        "AVC"                           )
- _S(AUDIT_SELINUX_ERR,                "SELINUX_ERR"                   )
- _S(AUDIT_AVC_PATH,                   "AVC_PATH"                      )
+diff --git a/src/auditctl-listing.c b/src/auditctl-listing.c
+index f670ff9bd6e8..a62454f88b2c 100644
+--- a/src/auditctl-listing.c
++++ b/src/auditctl-listing.c
+@@ -25,6 +25,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits.h>
+ #include "auditctl-listing.h"
+ #include "private.h"
+ #include "auditctl-llist.h"
+@@ -460,6 +461,26 @@ static void print_rule(const struct audit_rule_data *r)
+ 						audit_operator_to_symbol(op),
+ 						audit_fstype_to_name(
+ 						r->values[i]));
++			} else if (field == AUDIT_CONTID) {
++				unsigned long long val;
++
++				if (r->values[i] == sizeof(unsigned long long)) {
++					val = *(unsigned long long*)(&r->buf[boffset]);
++
++					if (val != ULLONG_MAX)
++						printf(" -F %s%s%llu", name,
++							audit_operator_to_symbol(op),
++							val);
++					else
++						printf(" -F %s%s%s", name,
++							audit_operator_to_symbol(op),
++							"unset");
++				} else {
++					printf(" -F %s%s%s", name,
++						audit_operator_to_symbol(op),
++						"inval");
++				}
++				boffset += r->values[i];
+ 			} else {
+ 				// The default is signed decimal
+ 				printf(" -F %s%s%d", name, 
 -- 
 1.8.3.1
 
