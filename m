@@ -2,122 +2,189 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B90AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C08C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF4A2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED68217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:17:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKpuC37b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfDIGQ5 (ORCPT
+        id S1726471AbfDIGRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:16:57 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52473 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfDIGQ5 (ORCPT
+        Tue, 9 Apr 2019 02:17:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46345 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfDIGRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:16:57 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id C22771C0004;
-        Tue,  9 Apr 2019 06:16:48 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v2 1/2] x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config in arch/Kconfig
-Date:   Tue,  9 Apr 2019 02:14:48 -0400
-Message-Id: <20190409061449.5083-2-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409061449.5083-1-alex@ghiti.fr>
-References: <20190409061449.5083-1-alex@ghiti.fr>
+        Tue, 9 Apr 2019 02:17:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r25so2758616lfn.13;
+        Mon, 08 Apr 2019 23:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XVUI5sWl/mko1IjkbRDCczAOo+DWIKHvVwzZKO9ey8M=;
+        b=iKpuC37b/W9gnQHlKyXQsrbKJd+/drf2Hv8V3oXIdmLPXDVZ9PIoNs12K3H/oeXZSd
+         ntqA/DPibQG3kCHwVQ1+u5E6p3D1xq3D5anzZWBFdTux4ntxY/u+UD79r72OeMCnFR4v
+         +v8oEW8Pce6NPS6evVaWwTmOR8s28EpacqA8lf/PLOsdQOlml8q7m5VaVbiRssH/Cj+I
+         lIdgJUEIvd3wzqVYEklHNeJxatPwj86ktRvsFhosFc+61nBn7yd3rTm8VkMoXQXoLx6I
+         AfzL866vMcmHkMBVnb2EODlFqUt/Tf6sb5rLwjofq6ZQKlmgWDWmVXOru/yi09PGWw6w
+         Hk4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XVUI5sWl/mko1IjkbRDCczAOo+DWIKHvVwzZKO9ey8M=;
+        b=lB6hqAdSklcwv6zY3hy4PSfhY2+D+5udTvYc5pjRLqsa1y1gIkKANmDcDFjrCLDmy5
+         7ZdPwOADSub5fvQ0auCszjCguWMSh9NwewoKEaHVlzudtjtk9Z1jxifegIwJhYX3UEX1
+         duqJAqO+zU6z2O+ypHVrIv6S9HsD6axIiVYxlNNAtIpCvAjlUaDE4DJVPwlVQL1KZDDW
+         NNhMpO41nniteQeBd6fs9yy50QNs8lH3FL5VguzwMofhtCiS2HNES5DfuvPyksCpP3/T
+         jPSGl/snlHj3z1AsjE0LxAAycHNQ1wrZfTGbzWo4zqNrDa8gMac+wjb+keXNIxRb1ZNO
+         W+jg==
+X-Gm-Message-State: APjAAAUSTP8fuCJ/DH28gFfPS2jbdRjM2wLwzIgMb+MVY/8LllkRmje3
+        pu3zGiXvTdIqr6JmQuJW/YhuDHSQ4qkl4VO7APU=
+X-Google-Smtp-Source: APXvYqzRVyYQF95nCiqgET1kk0SjOcmMhC+aOUtHZXTsDUtBuKrygbCT0gC/J5XPE8cvaOujK9I/d9QG6rJVxJTRI3I=
+X-Received: by 2002:a19:f013:: with SMTP id p19mr12738522lfc.36.1554790669149;
+ Mon, 08 Apr 2019 23:17:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1552921225.git.jrdr.linux@gmail.com> <CAFqt6zaV5zcc495BBk1Wi7p+zOF8y=P5KRfKkvwY=stagUFKWQ@mail.gmail.com>
+In-Reply-To: <CAFqt6zaV5zcc495BBk1Wi7p+zOF8y=P5KRfKkvwY=stagUFKWQ@mail.gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 9 Apr 2019 11:47:37 +0530
+Message-ID: <CAFqt6zbDk7OAdk-WXG50Frppny0DOpdwR1vnTS7pCpjf66j3aQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 0/9] mm: Use vm_map_pages() and
+ vm_map_pages_zero() API
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rik van Riel <riel@surriel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        rppt@linux.vnet.ibm.com, Peter Zijlstra <peterz@infradead.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        robin.murphy@arm.com, iamjoonsoo.kim@lge.com, treding@nvidia.com,
+        Kees Cook <keescook@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        stefanr@s5r6.in-berlin.de, hjc@rock-chips.com,
+        Heiko Stuebner <heiko@sntech.de>, airlied@linux.ie,
+        oleksandr_andrushchenko@epam.com, joro@8bytes.org,
+        pawel@osciak.com, Kyungmin Park <kyungmin.park@samsung.com>,
+        mchehab@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, xen-devel@lists.xen.org,
+        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARCH_WANT_HUGE_PMD_SHARE config was declared in both architectures:
-move this declaration in arch/Kconfig and make those architectures
-select it.
+Hi Andrew/ Michal,
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
----
- arch/Kconfig       | 3 +++
- arch/arm64/Kconfig | 2 +-
- arch/x86/Kconfig   | 4 +---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+On Mon, Apr 1, 2019 at 10:56 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> Hi Andrew,
+>
+> On Tue, Mar 19, 2019 at 7:47 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >
+> > Previouly drivers have their own way of mapping range of
+> > kernel pages/memory into user vma and this was done by
+> > invoking vm_insert_page() within a loop.
+> >
+> > As this pattern is common across different drivers, it can
+> > be generalized by creating new functions and use it across
+> > the drivers.
+> >
+> > vm_map_pages() is the API which could be used to map
+> > kernel memory/pages in drivers which has considered vm_pgoff.
+> >
+> > vm_map_pages_zero() is the API which could be used to map
+> > range of kernel memory/pages in drivers which has not considered
+> > vm_pgoff. vm_pgoff is passed default as 0 for those drivers.
+> >
+> > We _could_ then at a later "fix" these drivers which are using
+> > vm_map_pages_zero() to behave according to the normal vm_pgoff
+> > offsetting simply by removing the _zero suffix on the function
+> > name and if that causes regressions, it gives us an easy way to revert.
+> >
+> > Tested on Rockchip hardware and display is working fine, including talking
+> > to Lima via prime.
+> >
+> > v1 -> v2:
+> >         Few Reviewed-by.
+> >
+> >         Updated the change log in [8/9]
+> >
+> >         In [7/9], vm_pgoff is treated in V4L2 API as a 'cookie'
+> >         to select a buffer, not as a in-buffer offset by design
+> >         and it always want to mmap a whole buffer from its beginning.
+> >         Added additional changes after discussing with Marek and
+> >         vm_map_pages() could be used instead of vm_map_pages_zero().
+> >
+> > v2 -> v3:
+> >         Corrected the documentation as per review comment.
+> >
+> >         As suggested in v2, renaming the interfaces to -
+> >         *vm_insert_range() -> vm_map_pages()* and
+> >         *vm_insert_range_buggy() -> vm_map_pages_zero()*.
+> >         As the interface is renamed, modified the code accordingly,
+> >         updated the change logs and modified the subject lines to use the
+> >         new interfaces. There is no other change apart from renaming and
+> >         using the new interface.
+> >
+> >         Patch[1/9] & [4/9], Tested on Rockchip hardware.
+> >
+> > v3 -> v4:
+> >         Fixed build warnings on patch [8/9] reported by kbuild test robot.
+> >
+> > Souptick Joarder (9):
+> >   mm: Introduce new vm_map_pages() and vm_map_pages_zero() API
+> >   arm: mm: dma-mapping: Convert to use vm_map_pages()
+> >   drivers/firewire/core-iso.c: Convert to use vm_map_pages_zero()
+> >   drm/rockchip/rockchip_drm_gem.c: Convert to use vm_map_pages()
+> >   drm/xen/xen_drm_front_gem.c: Convert to use vm_map_pages()
+> >   iommu/dma-iommu.c: Convert to use vm_map_pages()
+> >   videobuf2/videobuf2-dma-sg.c: Convert to use vm_map_pages()
+> >   xen/gntdev.c: Convert to use vm_map_pages()
+> >   xen/privcmd-buf.c: Convert to use vm_map_pages_zero()
+>
+> Is it fine to take these patches into mm tree for regression ?
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 8c858bb133c9..273cefc6b787 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -567,6 +567,9 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- config HAVE_ARCH_HUGE_VMAP
- 	bool
- 
-+config ARCH_WANT_HUGE_PMD_SHARE
-+	bool
-+
- config HAVE_ARCH_SOFT_DIRTY
- 	bool
- 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 870ef86a64ed..8b7870974961 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -68,6 +68,7 @@ config ARM64
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
- 	select ARCH_WANT_FRAME_POINTERS
-+	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARM_AMBA
- 	select ARM_ARCH_TIMER
-@@ -885,7 +886,6 @@ config SYS_SUPPORTS_HUGETLBFS
- 	def_bool y
- 
- config ARCH_WANT_HUGE_PMD_SHARE
--	def_bool y if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
- 
- config ARCH_HAS_CACHE_LINE_SIZE
- 	def_bool y
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 0f2ab09da060..fd5fc2d288be 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -82,6 +82,7 @@ config X86
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
- 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
-+	select ARCH_WANT_HUGE_PMD_SHARE
- 	select ARCH_WANTS_THP_SWAP		if X86_64
- 	select BUILDTIME_EXTABLE_SORT
- 	select CLKEVT_I8253
-@@ -298,9 +299,6 @@ config ARCH_HIBERNATION_POSSIBLE
- config ARCH_SUSPEND_POSSIBLE
- 	def_bool y
- 
--config ARCH_WANT_HUGE_PMD_SHARE
--	def_bool y
--
- config ARCH_WANT_GENERAL_HUGETLB
- 	def_bool y
- 
--- 
-2.20.1
+v4 of this series has not received any further comments/ kbuild error
+in last 8 weeks (including
+the previously posted v4).
 
+Any suggestion, if it safe to take these changes through mm tree ? or any
+other tree is preferred ?
+
+>
+> >
+> >  arch/arm/mm/dma-mapping.c                          | 22 ++----
+> >  drivers/firewire/core-iso.c                        | 15 +---
+> >  drivers/gpu/drm/rockchip/rockchip_drm_gem.c        | 17 +----
+> >  drivers/gpu/drm/xen/xen_drm_front_gem.c            | 18 ++---
+> >  drivers/iommu/dma-iommu.c                          | 12 +---
+> >  drivers/media/common/videobuf2/videobuf2-core.c    |  7 ++
+> >  .../media/common/videobuf2/videobuf2-dma-contig.c  |  6 --
+> >  drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 22 ++----
+> >  drivers/xen/gntdev.c                               | 11 ++-
+> >  drivers/xen/privcmd-buf.c                          |  8 +--
+> >  include/linux/mm.h                                 |  4 ++
+> >  mm/memory.c                                        | 81 ++++++++++++++++++++++
+> >  mm/nommu.c                                         | 14 ++++
+> >  13 files changed, 134 insertions(+), 103 deletions(-)
+> >
+> > --
+> > 1.9.1
+> >
