@@ -2,171 +2,88 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7654AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1039620833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D81A2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 07:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfDIHXs (ORCPT
+        id S1726730AbfDIHX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 03:23:48 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:57557 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfDIHXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:23:48 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 5BA5A10000E;
-        Tue,  9 Apr 2019 07:23:41 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 09:23:40 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Message-ID: <20190409072340.lndjtgy7o7y2b76z@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-8-megous@megous.com>
- <20190408074042.74s5qckukcpore3e@flea>
- <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
+        Tue, 9 Apr 2019 03:23:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49946 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfDIHXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 03:23:53 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F2B3916C4;
+        Tue,  9 Apr 2019 07:23:53 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21E7F5C28D;
+        Tue,  9 Apr 2019 07:23:53 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 6C09B16E03; Tue,  9 Apr 2019 09:23:52 +0200 (CEST)
+Date:   Tue, 9 Apr 2019 09:23:52 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: linux-next: manual merge of the drm-misc tree with the drm tree
+Message-ID: <20190409072352.2qcuarc76kjgnhkm@sirius.home.kraxel.org>
+References: <20190409113410.3d2a8afc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cti4uw5canfn7foj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
+In-Reply-To: <20190409113410.3d2a8afc@canb.auug.org.au>
 User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 09 Apr 2019 07:23:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 09, 2019 at 11:34:10AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the drm-misc tree got conflicts in:
+> 
+>   drivers/gpu/drm/cirrus/cirrus_drv.h
+>   drivers/gpu/drm/cirrus/cirrus_ttm.c
+> 
+> between commits:
+> 
+>   aa8e2435b3d4 ("drm/ttm: Define a single DRM_FILE_PAGE_OFFSET constant")
+>   7d1500f9fbfc ("drm/ttm: Remove file_page_offset parameter from ttm_bo_device_init()")
+>   bed2dd84212e ("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
+> 
+> from the drm tree and commit:
+> 
+>   ab3e023b1b4c ("drm/cirrus: rewrite and modernize driver.")
+> 
+> from the drm-misc tree.
+> 
+> I fixed it up (I just removed the files) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
---cti4uw5canfn7foj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ping drm-misc maintainers.  Time to update drm-misc-next with a
+backmerge I think?
 
-On Tue, Apr 09, 2019 at 01:22:32AM +0200, Ond=C5=99ej Jirman wrote:
-> On Mon, Apr 08, 2019 at 09:40:42AM +0200, Maxime Ripard wrote:
-> > On Sat, Apr 06, 2019 at 01:45:09AM +0200, megous@megous.com wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-> > > According to the phy datasheet, both regulators need to be enabled
-> > > at the same time, but we can only specify a single phy-supply in
-> > > the DT.
-> > >
-> > > This can be achieved by making one regulator depedning on the
-> > > other via vin-supply. While it's not a technically correct
-> > > description of the hardware, it achieves the purpose.
-> > >
-> > > All values of RX/TX delay were tested exhaustively and a middle
-> > > one of the working values was chosen.
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++=
-++
-> > >  1 file changed, 44 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > index 644946749088..5270142527f5 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > @@ -15,6 +15,7 @@
-> > >
-> > >  	aliases {
-> > >  		serial0 =3D &uart0;
-> > > +		ethernet0 =3D &emac;
-> > >  	};
-> > >
-> > >  	chosen {
-> > > @@ -64,6 +65,27 @@
-> > >  		regulator-max-microvolt =3D <5000000>;
-> > >  		regulator-always-on;
-> > >  	};
-> > > +
-> > > +	/*
-> > > +	 * The board uses 2.5V RGMII signalling. Power sequence
-> > > +	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-> > > +	 * power rails at the same time and to wait 100ms.
-> > > +	 */
-> > > +	reg_gmac_2v5: gmac-2v5 {
-> > > +                compatible =3D "regulator-fixed";
-> > > +                regulator-name =3D "gmac-2v5";
-> > > +                regulator-min-microvolt =3D <2500000>;
-> > > +                regulator-max-microvolt =3D <2500000>;
-> > > +                startup-delay-us =3D <100000>;
-> > > +                enable-active-high;
-> > > +                gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> >
-> > Is enable-active-high still needed? It's redundant with the
-> > GPIO_ACTIVE_HIGH flag.
->
-> Looking at the code, use/non-use of enable-active-high inhibits
-> flags specified in gpio property. So the GPIO_ACTIVE_HIGH flag
-> is ignored here (had GPIO_ACTIVE_LOW been used, the kernel would
-> ignore it too and print a warning).
->
-> So enable-active-high is still necessary here.
+thanks,
+  Gerd
 
-Too bad :/
-
-> See comment in gpiolib-of.c where this is handled:
->
-> /*
->  * The regulator GPIO handles are specified such that the
->  * presence or absence of "enable-active-high" solely controls
->  * the polarity of the GPIO line. Any phandle flags must
->  * be actively ignored.
->  */
-
-Thanks for digging this out
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---cti4uw5canfn7foj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxIfAAKCRDj7w1vZxhR
-xW/CAQCrJqoV6FLDqDM5IP7NCK4txMyjvVpL9TidL1s65icMtgEA8w8/LBe0fC/i
-0vW0YKPvx+onrCje430iF2jdywhGjgk=
-=Jz+2
------END PGP SIGNATURE-----
-
---cti4uw5canfn7foj--
