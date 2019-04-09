@@ -2,151 +2,165 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CD1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CDDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7B020857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A312084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfDIMZq convert rfc822-to-8bit (ORCPT
+        id S1727073AbfDIM1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:25:46 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:50642 "EHLO unicorn.mansr.com"
+        Tue, 9 Apr 2019 08:27:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45470 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbfDIMZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:25:45 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 953AA17C68; Tue,  9 Apr 2019 13:25:43 +0100 (BST)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
-        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
-        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
-        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        tony@atomide.com, marc.w.gonzalez@free.fr, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch argument
-References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
-Date:   Tue, 09 Apr 2019 13:25:43 +0100
-In-Reply-To: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
-        (Stefan Agner's message of "Mon, 8 Apr 2019 22:59:53 +0200")
-Message-ID: <yw1xk1g3xt4o.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726001AbfDIM1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 08:27:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 05:27:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="147757555"
+Received: from dcondura-mobl.ger.corp.intel.com (HELO intel.com) ([10.252.20.22])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Apr 2019 05:27:10 -0700
+Date:   Tue, 9 Apr 2019 13:27:10 +0100
+From:   Eric Engestrom <eric.engestrom@intel.com>
+To:     Ayan Halder <Ayan.Halder@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "malidp@foss.arm.com" <malidp@foss.arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH libdrm] headers: Sync with drm-next
+Message-ID: <20190409122710.k2bh25xg43lrqzvq@intel.com>
+References: <20190408205422.dj7z4dl36nauwlk7@intel.com>
+ <1554809706-15389-1-git-send-email-ayan.halder@arm.com>
+ <20190409115913.hvyjxlda4wtzm75t@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190409115913.hvyjxlda4wtzm75t@intel.com>
+Organization: Intel Corporation (UK) Ltd. - Co. Reg. 1134945 - Pipers Way,
+ Swindon SN3 1RJ
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stefan Agner <stefan@agner.ch> writes:
+On Tuesday, 2019-04-09 12:59:13 +0100, Eric Engestrom wrote:
+> On Tuesday, 2019-04-09 11:35:14 +0000, Ayan Halder wrote:
+> > Generated using make headers_install from the drm-next
+> > tree - git://anongit.freedesktop.org/drm/drm
+> > branch - drm-next
+> > commit - 14d2bd53a47a7e1cb3e03d00a6b952734cf90f3f
+> > 
+> > The changes were as follows :-
+> > 
+> > core: (drm.h, drm_fourcc.h, drm_mode.h)
+> > - Added 'struct drm_syncobj_transfer', 'struct drm_syncobj_timeline_wait' and 'struct drm_syncobj_timeline_array'
+> > - Added various DRM_IOCTL_SYNCOBJ_ ioctls
+> > - Added some new RGB and YUV formats
+> > - Added 'DRM_FORMAT_MOD_VENDOR_ALLWINNER'
+> > - Added 'SAMSUNG' and Arm's 'AFBC' and 'ALLWINNER' format modifiers
+> > - Added 'struct drm_mode_rect'
+> > 
+> > i915:
+> > - Added struct 'struct i915_user_extension' and various 'struct drm_i915_gem_context_'
+> > - Added different modes of per-process Graphics Translation Table
+> > 
+> > msm:
+> > - Added various get or set GEM buffer info flags
+> > - Added some MSM_SUBMIT_BO_ macros
+> > - Modified 'struct drm_msm_gem_info'
+> > 
+> > Signed-off-by: Ayan Kumar halder <ayan.halder@arm.com>
+> 
+> This looks sane, and applies cleanly :)
+> Acked-by: Eric Engestrom <eric.engestrom@intel.com>
 
-> The LLVM Target parser currently does not allow to specify the security
-> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
-> to use Clang with LLVM's integrated assembler, this leads to build
-> errors such as this:
->   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
->
-> Use ".arch_extension sec" to enable the security extension in a more
-> portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
-> multi-platform kernel is being built.
->
-> Note that this is technically not exactly the same as the old code
-> checked for availabilty of the security extension by calling as-instr.
-> However, there are already other sites which use ".arch_extension sec"
-> unconditionally, hence de-facto we need an assembler capable of
-> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
-> arch extension "sec" is available since binutils 2.21 according to
-> its documentation [1].
->
-> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
-> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> Acked-by: Mans Rullgard <mans@mansr.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-> Changes since v1:
-> - Explicitly specify assembler architecture as armv7-a to avoid
->   build issues when bulding v6/v7 multi arch kernel.
->
->  arch/arm/mach-bcm/Makefile         | 3 ---
->  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
->  arch/arm/mach-exynos/Makefile      | 4 ----
->  arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
->  arch/arm/mach-exynos/sleep.S       | 3 ++-
->  arch/arm/mach-highbank/Makefile    | 3 ---
->  arch/arm/mach-highbank/smc.S       | 3 ++-
->  arch/arm/mach-keystone/Makefile    | 3 ---
->  arch/arm/mach-keystone/smc.S       | 1 +
->  arch/arm/mach-omap2/Makefile       | 8 --------
->  arch/arm/mach-omap2/omap-headsmp.S | 2 ++
->  arch/arm/mach-omap2/omap-smc.S     | 3 ++-
->  arch/arm/mach-omap2/sleep33xx.S    | 1 +
->  arch/arm/mach-omap2/sleep34xx.S    | 2 ++
->  arch/arm/mach-omap2/sleep43xx.S    | 2 ++
->  arch/arm/mach-omap2/sleep44xx.S    | 2 ++
->  arch/arm/mach-tango/Makefile       | 3 ---
->  arch/arm/mach-tango/smc.S          | 1 +
->  18 files changed, 19 insertions(+), 30 deletions(-)
+Actually, revoking that, as this patch breaks the build; see below.
 
-[...]
+> 
+> > ---
+> >  include/drm/drm.h        |  36 +++++++
+> >  include/drm/drm_fourcc.h | 136 +++++++++++++++++++++++++++
+> >  include/drm/drm_mode.h   |  23 ++++-
+> >  include/drm/i915_drm.h   | 237 ++++++++++++++++++++++++++++++++++++++++-------
+> >  include/drm/msm_drm.h    |  25 +++--
+> >  5 files changed, 415 insertions(+), 42 deletions(-)
+> > 
+[snip]
+> > diff --git a/include/drm/msm_drm.h b/include/drm/msm_drm.h
+> > index c06d0a5..91a16b3 100644
+> > --- a/include/drm/msm_drm.h
+> > +++ b/include/drm/msm_drm.h
+> > @@ -105,14 +105,24 @@ struct drm_msm_gem_new {
+> >  	__u32 handle;         /* out */
+> >  };
+> >  
+> > -#define MSM_INFO_IOVA	0x01
+> > -
+> > -#define MSM_INFO_FLAGS (MSM_INFO_IOVA)
+> > +/* Get or set GEM buffer info.  The requested value can be passed
+> > + * directly in 'value', or for data larger than 64b 'value' is a
+> > + * pointer to userspace buffer, with 'len' specifying the number of
+> > + * bytes copied into that buffer.  For info returned by pointer,
+> > + * calling the GEM_INFO ioctl with null 'value' will return the
+> > + * required buffer size in 'len'
+> > + */
+> > +#define MSM_INFO_GET_OFFSET	0x00   /* get mmap() offset, returned by value */
+> > +#define MSM_INFO_GET_IOVA	0x01   /* get iova, returned by value */
+> > +#define MSM_INFO_SET_NAME	0x02   /* set the debug name (by pointer) */
+> > +#define MSM_INFO_GET_NAME	0x03   /* get debug name, returned by pointer */
+> >  
+> >  struct drm_msm_gem_info {
+> >  	__u32 handle;         /* in */
+> > -	__u32 flags;	      /* in - combination of MSM_INFO_* flags */
+> > -	__u64 offset;         /* out, mmap() offset or iova */
+> > +	__u32 info;           /* in - one of MSM_INFO_* */
+> > +	__u64 value;          /* in or out */
+> > +	__u32 len;            /* in or out */
+> > +	__u32 pad;
 
-> diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
-> index a55a7ecf146a..541e850a736c 100644
-> --- a/arch/arm/mach-bcm/bcm_kona_smc.c
-> +++ b/arch/arm/mach-bcm/bcm_kona_smc.c
-> @@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
->  		__asmeq("%2", "r4")
->  		__asmeq("%3", "r5")
->  		__asmeq("%4", "r6")
-> -#ifdef REQUIRES_SEC
->  		".arch_extension sec\n"
-> -#endif
->  		"	smc    #0\n"
->  		: "=r" (ip), "=r" (r0)
->  		: "r" (r4), "r" (r5), "r" (r6)
+freedreno/msm/msm_bo.c needs to be updated to reflect those changes.
 
-[...]
-
-> diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
-> index d15de8179fab..ec03dc499270 100644
-> --- a/arch/arm/mach-keystone/smc.S
-> +++ b/arch/arm/mach-keystone/smc.S
-> @@ -21,6 +21,7 @@
->   *
->   * Return: Non zero value on failure
->   */
-> +	.arch_extension sec
->  ENTRY(keystone_cpu_smc)
->  	stmfd   sp!, {r4-r11, lr}
->  	smc	#0
-
-[...]
-
-> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
-> index 361a8dc89804..cf2d21e5226c 100644
-> --- a/arch/arm/mach-tango/smc.S
-> +++ b/arch/arm/mach-tango/smc.S
-> @@ -1,6 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #include <linux/linkage.h>
->
-> +	.arch_extension sec
->  ENTRY(tango_smc)
->  	push	{lr}
->  	mov	ip, r1
-
-Is there some reason these three don't need the .arch directive?
-
--- 
-Måns Rullgård
+> >  };
+> >  
+> >  #define MSM_PREP_READ        0x01
+> > @@ -188,8 +198,11 @@ struct drm_msm_gem_submit_cmd {
+> >   */
+> >  #define MSM_SUBMIT_BO_READ             0x0001
+> >  #define MSM_SUBMIT_BO_WRITE            0x0002
+> > +#define MSM_SUBMIT_BO_DUMP             0x0004
+> >  
+> > -#define MSM_SUBMIT_BO_FLAGS            (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE)
+> > +#define MSM_SUBMIT_BO_FLAGS            (MSM_SUBMIT_BO_READ | \
+> > +					MSM_SUBMIT_BO_WRITE | \
+> > +					MSM_SUBMIT_BO_DUMP)
+> >  
+> >  struct drm_msm_gem_submit_bo {
+> >  	__u32 flags;          /* in, mask of MSM_SUBMIT_BO_x */
+> > -- 
+> > 2.7.4
+> > 
