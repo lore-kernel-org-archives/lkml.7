@@ -2,87 +2,432 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3887C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837F8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FE02084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5572084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 16:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MX0zC3oE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDIQbk (ORCPT
+        id S1726592AbfDIQc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 12:31:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33162 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbfDIQbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 12:31:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 09:31:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="147810650"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Apr 2019 09:31:38 -0700
-Date:   Tue, 9 Apr 2019 09:34:13 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 09/18] iommu/vt-d: Enlightened PASID allocation
-Message-ID: <20190409093413.603b5333@jacob-builder>
-In-Reply-To: <20190409100859.GF9224@smile.fi.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1554767973-30125-10-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20190409100859.GF9224@smile.fi.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 9 Apr 2019 12:32:29 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:33138 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfDIQc2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 12:32:28 -0400
+Received: by mail-yb1-f194.google.com with SMTP id i10so6787312ybk.0;
+        Tue, 09 Apr 2019 09:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hWlhODeoz/eJ/bsLb744/9F2ZqPfuIlii0YjizPB7lg=;
+        b=MX0zC3oE6KSWspzw6Rl+qvtKw8hLD9ETFWB+YbbNlXyEJ50dJkvkPyOAPFbANPX33N
+         A6PpPmtJPBUXMrKQlZ3XvcnvDx0FxIWlJZ3yUW1MQQEXig1dXSANfnHwcIgl03BemtcD
+         dbOkz2/STxWM1fNYhS8RFJsciQ+qF2hwz2cj41isCXU8nHKwpsbp+v3kETCSoSt+Qt5o
+         h33UGyZegs6wZCv10uippWWeXCOzQXLOajkYPIvhjGRrvPYaKbTMoNxBbxSPyB2VxYK+
+         eC3CXHbcbUjxzA/u/4NXcaZ2xqkVs9pz2pCjTC0UYnVvAFawBgQHkQ4OdERTWfoG76WD
+         5DaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hWlhODeoz/eJ/bsLb744/9F2ZqPfuIlii0YjizPB7lg=;
+        b=Pvg+Enqe/+X99nbHFoXjFzaScG9RPUT9lMeEIpGtZu/+c9zcS1NG/+ZxvOTPkKbNx/
+         4NS0OeEzi4sXK7WqIDiqaeeghHWVnYjX1JRe2YZcHHxRIER1irfp7ZpgBdJnx8L1xLKa
+         OOtbHPcx2puy4KUasGYdKXnF6mb8xBZXhq6nwAD+Gjp6J8aDs2wiYFvxapIlOREn22nJ
+         ww37a0TqprMWvKbWCQpfWN79r2I+eQ7Lg61ysS5EXeJLh6obHlpHOpiXWSLzKSeTqW96
+         nVh+wik17ZGksK7i1aIGEXEREtt+K09A2g08di45ceq6cpLQS/FSDIKzxwTqVkOXm5qG
+         JaXQ==
+X-Gm-Message-State: APjAAAXY0O/zG/Z2khfg+Mq8gV/Miwdtrh1WsMrLqT6GOB8htQUOuudd
+        HHYXAe685uKvYVrkDJEUbNttzaG2MBLSE7jst5w=
+X-Google-Smtp-Source: APXvYqzQYL1LjO7cbYe6GPO3ljaaPlb1QWoamKHvyLOP1XLhj6vqlhJgCxGUF86X77hRyDPRMILcNhaSzvw+GXkwW2Y=
+X-Received: by 2002:a25:ba87:: with SMTP id s7mr30503138ybg.49.1554827547042;
+ Tue, 09 Apr 2019 09:32:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190405205736.55177-1-icenowy@aosc.io> <20190405205736.55177-4-icenowy@aosc.io>
+In-Reply-To: <20190405205736.55177-4-icenowy@aosc.io>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 9 Apr 2019 18:34:20 +0200
+Message-ID: <CAJiuCcfTULqnkpfaeYSmhtLmot+y5E+4ggTUhA9LE1gySSTnsA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v5 3/5] phy: allwinner: add phy driver for
+ USB3 PHY on Allwinner H6 SoC
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Apr 2019 13:08:59 +0300
-Andriy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Hi,
 
-> On Mon, Apr 08, 2019 at 04:59:24PM -0700, Jacob Pan wrote:
-> > From: Lu Baolu <baolu.lu@linux.intel.com>
-> > 
-> > If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the
-> > IOMMU driver should rely on the emulation software to allocate
-> > and free PASID IDs. The Intel vt-d spec revision 3.0 defines a
-> > register set to support this. This includes a capability register,
-> > a virtual command register and a virtual response register. Refer
-> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
-> > 
-> > This patch adds the enlightened PASID allocation/free interfaces
-> > via the virtual command register.  
-> 
-> > +	pr_debug("vcmd alloc pasid\n");  
-> 
-> Perhaps tracepoints should be in use?
-> OTOH we have function tracer, so, this message in any case is a noise.
-> And this is applicable to other similar cases.
-> 
+On Fri, 5 Apr 2019 at 22:58, Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
+> controlled).
+>
+> Add a driver for it.
 
-Agreed, I added that for debug purpose.
+Tested the serie on top of sunxi/for-next with USB3 storage and
+HID-generic keyboard on my Beelink GS1.
+
+Tested-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+
+ Just a suggestion could you add a patch to enable this PHY in the
+arm64/defconfig by default ?
 
 Thanks,
+Cl=C3=A9ment
 
-Jacob
+>
+> The register operations in this driver is mainly extracted from the BSP
+> USB3 driver.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> Changes in v5:
+> - Dropped support for vbus-supply property in the device node itself and
+>   added support for vbus-supply property in the connector subnode.
+>
+> Changes in v4:
+> - Added support for vbus-supply property.
+>
+> Changes in v3:
+> - Dropped USB_SUPPORT dependency.
+> - Added Chen-Yu's Review tag.
+>
+> No changes in v2, v1. drivers/phy/allwinner/Kconfig           |  12 ++
+>  drivers/phy/allwinner/Makefile          |   1 +
+>  drivers/phy/allwinner/phy-sun50i-usb3.c | 260 ++++++++++++++++++++++++
+>  3 files changed, 273 insertions(+)
+>  create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+>
+> diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfi=
+g
+> index fb1204bcc454..2c363db177f2 100644
+> --- a/drivers/phy/allwinner/Kconfig
+> +++ b/drivers/phy/allwinner/Kconfig
+> @@ -41,3 +41,15 @@ config PHY_SUN9I_USB
+>           sun9i SoCs.
+>
+>           This driver controls each individual USB 2 host PHY.
+> +
+> +config PHY_SUN50I_USB3
+> +       tristate "Allwinner sun50i SoC USB3 PHY driver"
+> +       depends on ARCH_SUNXI && HAS_IOMEM && OF
+> +       depends on RESET_CONTROLLER
+> +       select USB_COMMON
+> +       select GENERIC_PHY
+> +       help
+> +         Enable this to support the USB3.0-capable transceiver that is
+> +         part of some Allwinner sun50i SoCs.
+> +
+> +         This driver controls each individual USB 2+3 host PHY combo.
+> diff --git a/drivers/phy/allwinner/Makefile b/drivers/phy/allwinner/Makef=
+ile
+> index 7d0053efbfaa..59575a895779 100644
+> --- a/drivers/phy/allwinner/Makefile
+> +++ b/drivers/phy/allwinner/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_PHY_SUN4I_USB)            +=3D phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN6I_MIPI_DPHY)      +=3D phy-sun6i-mipi-dphy.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)            +=3D phy-sun9i-usb.o
+> +obj-$(CONFIG_PHY_SUN50I_USB3)          +=3D phy-sun50i-usb3.o
+> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwin=
+ner/phy-sun50i-usb3.c
+> new file mode 100644
+> index 000000000000..5299aef98668
+> --- /dev/null
+> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Allwinner sun50i(H6) USB 3.0 phy driver
+> + *
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * Based on phy-sun9i-usb.c, which is:
+> + *
+> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens@csie.org>
+> + *
+> + * Based on code from Allwinner BSP, which is:
+> + *
+> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/usb/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +
+> +/* Interface Status and Control Registers */
+> +#define SUNXI_ISCR                     0x00
+> +#define SUNXI_PIPE_CLOCK_CONTROL       0x14
+> +#define SUNXI_PHY_TUNE_LOW             0x18
+> +#define SUNXI_PHY_TUNE_HIGH            0x1c
+> +#define SUNXI_PHY_EXTERNAL_CONTROL     0x20
+> +
+> +/* USB2.0 Interface Status and Control Register */
+> +#define SUNXI_ISCR_FORCE_VBUS          (3 << 12)
+> +
+> +/* PIPE Clock Control Register */
+> +#define SUNXI_PCC_PIPE_CLK_OPEN                (1 << 6)
+> +
+> +/* PHY External Control Register */
+> +#define SUNXI_PEC_EXTERN_VBUS          (3 << 1)
+> +#define SUNXI_PEC_SSC_EN               (1 << 24)
+> +#define SUNXI_PEC_REF_SSP_EN           (1 << 26)
+> +
+> +/* PHY Tune High Register */
+> +#define SUNXI_TX_DEEMPH_3P5DB(n)       ((n) << 19)
+> +#define SUNXI_TX_DEEMPH_3P5DB_MASK     GENMASK(24, 19)
+> +#define SUNXI_TX_DEEMPH_6DB(n)         ((n) << 13)
+> +#define SUNXI_TX_DEEMPH_6GB_MASK       GENMASK(18, 13)
+> +#define SUNXI_TX_SWING_FULL(n)         ((n) << 6)
+> +#define SUNXI_TX_SWING_FULL_MASK       GENMASK(12, 6)
+> +#define SUNXI_LOS_BIAS(n)              ((n) << 3)
+> +#define SUNXI_LOS_BIAS_MASK            GENMASK(5, 3)
+> +#define SUNXI_TXVBOOSTLVL(n)           ((n) << 0)
+> +#define SUNXI_TXVBOOSTLVL_MASK         GENMASK(0, 2)
+> +
+> +struct sun50i_usb3_phy {
+> +       struct phy *phy;
+> +       void __iomem *regs;
+> +       struct reset_control *reset;
+> +       struct clk *clk;
+> +       struct platform_device *connector_dev;
+> +       struct regulator *vbus;
+> +};
+> +
+> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
+> +{
+> +       u32 val;
+> +
+> +       val =3D readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +       val |=3D SUNXI_PEC_EXTERN_VBUS;
+> +       val |=3D SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
+> +       writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +
+> +       val =3D readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +       val |=3D SUNXI_PCC_PIPE_CLK_OPEN;
+> +       writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +
+> +       val =3D readl(phy->regs + SUNXI_ISCR);
+> +       val |=3D SUNXI_ISCR_FORCE_VBUS;
+> +       writel(val, phy->regs + SUNXI_ISCR);
+> +
+> +       /*
+> +        * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
+> +        * registers are directly taken from the BSP USB3 driver from
+> +        * Allwiner.
+> +        */
+> +       writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
+> +
+> +       val =3D readl(phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +       val &=3D ~(SUNXI_TXVBOOSTLVL_MASK | SUNXI_LOS_BIAS_MASK |
+> +                SUNXI_TX_SWING_FULL_MASK | SUNXI_TX_DEEMPH_6GB_MASK |
+> +                SUNXI_TX_DEEMPH_3P5DB_MASK);
+> +       val |=3D SUNXI_TXVBOOSTLVL(0x7);
+> +       val |=3D SUNXI_LOS_BIAS(0x7);
+> +       val |=3D SUNXI_TX_SWING_FULL(0x55);
+> +       val |=3D SUNXI_TX_DEEMPH_6DB(0x20);
+> +       val |=3D SUNXI_TX_DEEMPH_3P5DB(0x15);
+> +       writel(val, phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +}
+> +
+> +static int sun50i_usb3_phy_init(struct phy *_phy)
+> +{
+> +       struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
+> +       int ret;
+> +
+> +       ret =3D clk_prepare_enable(phy->clk);
+> +       if (ret)
+> +               goto err_clk;
+> +
+> +       ret =3D reset_control_deassert(phy->reset);
+> +       if (ret)
+> +               goto err_reset;
+> +
+> +       sun50i_usb3_phy_open(phy);
+> +       return 0;
+> +
+> +err_reset:
+> +       clk_disable_unprepare(phy->clk);
+> +
+> +err_clk:
+> +       return ret;
+> +}
+> +
+> +static int sun50i_usb3_phy_exit(struct phy *_phy)
+> +{
+> +       struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
+> +
+> +       reset_control_assert(phy->reset);
+> +       clk_disable_unprepare(phy->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_on(struct phy *_phy)
+> +{
+> +       struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
+> +
+> +       if (phy->vbus)
+> +               return regulator_enable(phy->vbus);
+> +       else
+> +               return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_off(struct phy *_phy)
+> +{
+> +       struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
+> +
+> +       if (phy->vbus)
+> +               return regulator_disable(phy->vbus);
+> +       else
+> +               return 0;
+> +}
+> +
+> +static const struct phy_ops sun50i_usb3_phy_ops =3D {
+> +       .init           =3D sun50i_usb3_phy_init,
+> +       .exit           =3D sun50i_usb3_phy_exit,
+> +       .power_on       =3D sun50i_usb3_phy_power_on,
+> +       .power_off      =3D sun50i_usb3_phy_power_off,
+> +       .owner          =3D THIS_MODULE,
+> +};
+> +
+> +static int sun50i_usb3_phy_probe(struct platform_device *pdev)
+> +{
+> +       struct sun50i_usb3_phy *phy;
+> +       struct device *dev =3D &pdev->dev;
+> +       struct phy_provider *phy_provider;
+> +       struct resource *res;
+> +       struct device_node *connector_node;
+> +       int ret;
+> +
+> +       phy =3D devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +       if (!phy)
+> +               return -ENOMEM;
+> +
+> +       dev_set_drvdata(dev, phy);
+> +
+> +       phy->clk =3D devm_clk_get(dev, NULL);
+> +       if (IS_ERR(phy->clk)) {
+> +               dev_err(dev, "failed to get phy clock\n");
+> +               return PTR_ERR(phy->clk);
+> +       }
+> +
+> +       phy->reset =3D devm_reset_control_get(dev, NULL);
+> +       if (IS_ERR(phy->reset)) {
+> +               dev_err(dev, "failed to get reset control\n");
+> +               return PTR_ERR(phy->reset);
+> +       }
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       phy->regs =3D devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(phy->regs))
+> +               return PTR_ERR(phy->regs);
+> +
+> +       /* Populate the connector as platform device */
+> +       ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev=
+->dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * Currently the Allwinner USB3 PHY contains only one port, so we
+> +        * only process one connector now.
+> +        */
+> +       connector_node =3D of_get_next_child(pdev->dev.of_node, NULL);
+> +
+> +       if (connector_node) {
+> +               /* Get the platform device */
+> +               phy->connector_dev =3D of_find_device_by_node(connector_n=
+ode);
+> +               if (!phy->connector_dev) {
+> +                       dev_err(dev, "no device for connector\n");
+> +                       return -ENODEV;
+> +               }
+> +
+> +               phy->vbus =3D regulator_get(&phy->connector_dev->dev, "vb=
+us");
+> +               if (IS_ERR(phy->vbus))
+> +                       return PTR_ERR(phy->vbus);
+> +       }
+> +
+> +       phy->phy =3D devm_phy_create(dev, NULL, &sun50i_usb3_phy_ops);
+> +       if (IS_ERR(phy->phy)) {
+> +               dev_err(dev, "failed to create PHY\n");
+> +               return PTR_ERR(phy->phy);
+> +       }
+> +
+> +       phy_set_drvdata(phy->phy, phy);
+> +       phy_provider =3D devm_of_phy_provider_register(dev, of_phy_simple=
+_xlate);
+> +
+> +       return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static int sun50i_usb3_phy_remove(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct sun50i_usb3_phy *phy =3D dev_get_drvdata(dev);
+> +
+> +       if (phy->vbus)
+> +               regulator_put(phy->vbus);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sun50i_usb3_phy_of_match[] =3D {
+> +       { .compatible =3D "allwinner,sun50i-h6-usb3-phy" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, sun50i_usb3_phy_of_match);
+> +
+> +static struct platform_driver sun50i_usb3_phy_driver =3D {
+> +       .probe  =3D sun50i_usb3_phy_probe,
+> +       .remove =3D sun50i_usb3_phy_remove,
+> +       .driver =3D {
+> +               .of_match_table =3D sun50i_usb3_phy_of_match,
+> +               .name  =3D "sun50i-usb3-phy",
+> +       }
+> +};
+> +module_platform_driver(sun50i_usb3_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner sun50i USB 3.0 phy driver");
+> +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.18.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
