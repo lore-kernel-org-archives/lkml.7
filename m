@@ -2,157 +2,137 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90DAC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458ACC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73F520818
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1215320833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2BVTu8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfDIJUx (ORCPT
+        id S1726825AbfDIJWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:20:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39704 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfDIJUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:20:52 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B830A3086237;
-        Tue,  9 Apr 2019 09:20:50 +0000 (UTC)
-Received: from [10.36.117.49] (ovpn-117-49.ams2.redhat.com [10.36.117.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E69D608A7;
-        Tue,  9 Apr 2019 09:20:37 +0000 (UTC)
-Subject: Re: Thoughts on simple scanner approach for free page hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <d2413648-8943-4414-708a-9442ab4b9e65@redhat.com>
-Date:   Tue, 9 Apr 2019 11:20:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 9 Apr 2019 05:22:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35511 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfDIJWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:22:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so9055578plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=YC1feqKlZEVMS4YoQTZ4Ne8qnxJnVw8mIrsaa5cJO1s=;
+        b=Q2BVTu8v8RaHnw+RJ33EBqlCDvyN95SyH3iRtjS8e4OLg8n5Gpk4pe1wrDeAE21o2o
+         w1HJZyQlewnGhXF/s0SRjvE79c2HsbEncGinhM/CWLG2GCcSRZu0K3vecOBS0pcoFriP
+         iewULm1VV6OVRzQBTtbJVPPdjenUYGAsmhQuBquy89RT/16LgWcT0S+8QCvTz41qeTjD
+         Zfas6U/5vUymoXmWz3kWZIsghciz3iiIeq42iXMEh9+Kyb/iwL1rjDHOodhWyKyYPrc0
+         QMB09SN6ovwiYYbZhQ1gVGoqq9XlVYHuZ2Dn/WkEo5ca3CNrZfOGcjwqxCI+G9+hGfyF
+         59ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=YC1feqKlZEVMS4YoQTZ4Ne8qnxJnVw8mIrsaa5cJO1s=;
+        b=Fkas76JNK4paii3FjOQbuNTJGBBlSmQoTlXlPDysSKqNV+NTegPZsZRS5DsGS8bLvX
+         YctWzdKUCrSnbtMVFpiI0uF5CCOJjTPmmIhR9+imvMoPFtvBXOW4XYDTzyXCEvFtYtxq
+         IsaEHG87mjufduHeAPJ2tSJfnci8SvYQOiB5lQUgFwXcaakmZpbG7ekAcTQu3r7NaTYG
+         GcpYp+f1ctkzF2DP/PBElzEopulTBxyfq39SZjHiAlRNof8HmQ809Y4Gi/1py1jfTxzd
+         1vQ44cTTgGMuG3rIZBfOodavY3D8DxAHW65Zxo56d0+cHTazbJWMd4hHzVamerBMiGaH
+         eYmw==
+X-Gm-Message-State: APjAAAWLg3bQB1geM+ILzYTO9Y7O9XhKrCSGggaORbvCEFR/7HrHPMn3
+        Jn3/dEsrCrBU2DgZDFp3bA4=
+X-Google-Smtp-Source: APXvYqw6HVklM7gvOhRdGBZMNKTtPCqzE49p+QBftb7VgZ2pwtboNH00CRR6e+uxB7qHHTTEJS8klQ==
+X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr14996001plb.190.1554801721726;
+        Tue, 09 Apr 2019 02:22:01 -0700 (PDT)
+Received: from localhost ([58.84.79.14])
+        by smtp.gmail.com with ESMTPSA id b19sm21883248pgb.51.2019.04.09.02.22.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 02:22:01 -0700 (PDT)
+Date:   Tue, 09 Apr 2019 19:21:54 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 0/4] Allow CPU0 to be nohz full
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20190404120704.18479-1-npiggin@gmail.com>
+        <alpine.DEB.2.21.1904041635190.1685@nanos.tec.linutronix.de>
+        <1554393113.wbjxx9ccdx.astroid@bobo.none>
+        <alpine.DEB.2.21.1904051952160.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904051952160.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1554800737.v126tflazd.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 09 Apr 2019 09:20:51 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> With that said I have a few ideas that may help to address the 4
-> issues called out above. The basic idea is simple. We use a high water
-> mark based on zone->free_area[order].nr_free to determine when to wake
-> up a thread to start hinting memory out of a given free area. From
-> there we allocate non-"Offline" pages from the free area and assign
-> them to the hinting queue up to 64MB at a time. Once the hinting is
-> completed we mark them "Offline" and add them to the tail of the
-> free_area. Doing this we should cycle the non-"Offline" pages slowly
-> out of the free_area. In addition the search cost should be minimal
-> since all of the "Offline" pages should be aggregated to the tail of
-> the free_area so all pages allocated off of the free_area will be the
-> non-"Offline" pages until we shift over to them all being "Offline".
-> This should be effective for MAX_ORDER - 1 and MAX_ORDER - 2 pages
-> since the only real consumer of add_to_free_area_tail is
-> __free_one_page which uses it to place a page with an order less than
-> MAX_ORDER - 2 on the tail of a free_area assuming that it should be
-> freeing the buddy of that page shortly. The only other issue with
-> adding to tail would be the memory shuffling which was recently added,
-> but I don't see that as being something that will be enabled in most
-> cases so we could probably just make the features mutually exclusive,
-> at least for now.
-> 
-> So if I am not mistaken this would essentially require a couple
-> changes to the mm infrastructure in order for this to work.
-> 
-> First we would need to split nr_free into two counters, something like
-> nr_freed and nr_bound. You could use nr_freed - nr_bound to get the
-> value currently used for nr_free. When we pulled the pages for hinting
-> we would reduce the nr_freed value and then add back to it when the
-> pages are returned. When pages are allocated they would increment the
-> nr_bound value. The idea behind this is that we can record nr_free
-> when we collect the pages and save it to some local value. This value
-> could then tell us how many new pages have been added that have not
-> been hinted upon.
-> 
-> In addition we will need some way to identify which pages have been
-> hinted on and which have not. The way I believe easiest to do this
-> would be to overload the PageType value so that we could essentially
-> have two values for "Buddy" pages. We would have our standard "Buddy"
-> pages, and "Buddy" pages that also have the "Offline" value set in the
-> PageType field. Tracking the Online vs Offline pages this way would
-> actually allow us to do this with almost no overhead as the mapcount
-> value is already being reset to clear the "Buddy" flag so adding a
-> "Offline" flag to this clearing should come at no additional cost.
+Thomas Gleixner's on April 6, 2019 3:54 am:
+> On Fri, 5 Apr 2019, Nicholas Piggin wrote:
+>> Thomas Gleixner's on April 5, 2019 12:36 am:
+>> > On Thu, 4 Apr 2019, Nicholas Piggin wrote:
+>> >=20
+>> >> I've been looking at ways to fix suspend breakage with CPU0 as a
+>> >> nohz CPU. I started looking at various things like allowing CPU0
+>> >> to take over do_timer again temporarily or allowing nohz full
+>> >> to be stopped at runtime (that is quite a significant change for
+>> >> little real benefit). The problem then was having the housekeeping
+>> >> CPU go offline.
+>> >>=20
+>> >> So I decided to try just allowing the freeze to occur on non-zero
+>> >> CPU. This seems to be a lot simpler to get working, but I guess
+>> >> some archs won't be able to deal with this? Would it be okay to
+>> >> make it opt-in per arch?
+>> >=20
+>> > It needs to be opt in. x86 will fall on its nose with that.
+>>=20
+>> Okay I can add that.
+>>=20
+>> > Now the real interesting question is WHY do we need that at all?
+>>=20
+>> Why full nohz for CPU0? Basically this is how their job system was
+>> written and used, testing nohz full was a change that came much later=20
+>> as an optimisation.
+>>=20
+>> I don't think there is a fundamental reason an equivalent system
+>> could not be made that uses a different CPU for housekeeping, but I
+>> was assured the change would be quite difficult for them.
+>>=20
+>> If we can support it, it seems nice if you can take a particular
+>> configuration and just apply nohz_full to your application processors
+>> without any other changes.
+>=20
+> This wants an explanation in the patches.
 
-BTW I like the idea of allocating pages that have already been hinted as
-last "choice", allocating pages that have not been hinted yet first.
+Okay.
 
--- 
+> And patch 4 has in the changelog:
+>=20
+>    nohz_full has been successful at significantly reducing jitter for a
+>    large supercomputer customer, but their job control system requires CP=
+U0
+>    to be for housekeeping.
+>=20
+> which just makes me dazed and confused :)
+>=20
+> Other than some coherent explanation and making it opt in, I don't think
+> there is a fundamental issue with that.
+
+I will try to make the changelogs less jibberish then :)
 
 Thanks,
+Nick
 
-David / dhildenb
+=
