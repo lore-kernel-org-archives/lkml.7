@@ -2,134 +2,176 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2EDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BC3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAB120693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="Fj4O1eqL"
+	by mail.kernel.org (Postfix) with ESMTP id C5CAF20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 01:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554772170;
+	bh=1BkXaBHmADM0p2CpTukf2bZxhHWNCIxFzO/Rrf4FZCY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HKKreuXitKKR0HLSPpBqeuxMy8t5sR6rNayVHQ06BF1B1heTprrWzgJhEUJopMTpY
+	 z2NWkD17IiXiEOAYeM+rYrw/Rc2VQfCZRhtnlWSba9Imi7CukQKe9iebxRjKuR8H5Q
+	 /jrcHXF40dH5IM0EwEECp4X5qn+rS11G1lm5B3/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfDIBIl (ORCPT
+        id S1726666AbfDIBJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Apr 2019 21:08:41 -0400
-Received: from owa.iluvatar.ai ([103.91.158.24]:5253 "EHLO smg.iluvatar.ai"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726387AbfDIBIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Apr 2019 21:08:40 -0400
-X-AuditID: 0a650161-78bff700000078a3-8f-5cabf093b18d
-Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
-        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id 06.44.30883.390FBAC5; Tue,  9 Apr 2019 09:08:35 +0800 (HKT)
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
-        c=relaxed/relaxed; t=1554772115; h=from:subject:to:date:message-id;
-        bh=7PoxFksW/7Y5mrW/Yb3Kse3GMSMGjxnGjzU1zXRdg8I=;
-        b=Fj4O1eqLq9eKptCrCrpUPwnVDMk/Bcb81pxPlkLUsXqS951w230uGx869AGQh+OKFwcd7xE4amB
-        QE8j8AJ/1tRPncTNw/YMemB4TG8C3Fvuqe/Ub3CJOBuYz0h5FHNOIEgIrnwOEoTa0baTlQrNSEwWR
-        l5d7WBuX91Fqq4b1Flo=
-Received: from hsj-Precision-5520 (10.101.199.253) by
- S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Tue, 9 Apr 2019 09:08:35 +0800
-Date:   Tue, 9 Apr 2019 09:08:33 +0800
-From:   Huang Shijie <sjhuang@iluvatar.ai>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <akpm@linux-foundation.org>, <william.kucharski@oracle.com>,
-        <ira.weiny@intel.com>, <palmer@sifive.com>, <axboe@kernel.dk>,
-        <keescook@chromium.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm/gup.c: fix the wrong comments
-Message-ID: <20190409010832.GA28081@hsj-Precision-5520>
-References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
- <20190408141313.GU22763@bombadil.infradead.org>
+        Mon, 8 Apr 2019 21:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbfDIBJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Apr 2019 21:09:29 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF6ED21874;
+        Tue,  9 Apr 2019 01:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554772167;
+        bh=1BkXaBHmADM0p2CpTukf2bZxhHWNCIxFzO/Rrf4FZCY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=00c2jEDjpGNAhhfi7vQ2PVbSmek1kMqwGE8pZhnouFjHtAb0aFoWTV0H8xl+sO9Z4
+         xW1ktk2KrA58rH305O8nwfEo3IDBEe6AyvzUIyhr+liiFNGxH/KGGPozGeZUlNJm6M
+         L6EGDiniZLduFCwlxqeCrrYZtqQo9Cfq3XmZs3RI=
+Received: by mail-qt1-f174.google.com with SMTP id t28so17850127qte.6;
+        Mon, 08 Apr 2019 18:09:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVKFqIyrXRMbp+7idnl/t1kRqW2pcnGEmieSQFAeRlyAesgB4Dl
+        SQ4GmgWcf1LyH8zkehDpKWP5VG/04kZUe6hvrQ==
+X-Google-Smtp-Source: APXvYqwzZYb2mCrLdNnyppoU0hlsrw18yJQ5hvEX7pAlMdPoB4W0VXSuh1I/hnrX3b5krKBmkP+Dy1VLd5bRThf5iGo=
+X-Received: by 2002:ac8:33cf:: with SMTP id d15mr28265010qtb.149.1554772166965;
+ Mon, 08 Apr 2019 18:09:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190408141313.GU22763@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.101.199.253]
-X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
- S-10-101-1-102.iluvatar.local (10.101.1.102)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXClcqYpjv5w+oYg7ufDSzmrF/DZrH6bj+b
-        xf6nz1ksznTnWlzeNYfN4t6a/6wWmycsABKLu5gsfv+Yw+bA6TG74SKLx+YVWh6L97xk8rh8
-        ttRj06dJ7B4nZvxm8fj49BaLx6Xm6+wenzfJBXBGcdmkpOZklqUW6dslcGWsejaBueCtQMWZ
-        e5eZGhiX8nQxcnJICJhITP28jLWLkYtDSOAEo8Tl+50sIAlmAR2JBbs/sXUxcgDZ0hLL/3GA
-        1LAIvGWSuP3vBTtEwzdGib377rKDNLAIqEgse/wXzGYT0JCYe+IuM0izCJD9ZosRSD2zwEVG
-        iQ0zjoMtEBawlFjXfQysnlfAXGLHk7lsILaQQJbEsZ7HzBBxQYmTM5+A1XMK2EjsXriJCcQW
-        FVCWOLDtOBPIfCEBBYkXK7UgnlGSWLJ3FhOEXSjx/eVdlgmMwrOQvDML4Z1ZSBYsYGRexchf
-        nJuul5lTWpZYklikl5i5iRESVYk7GG90vtQ7xCjAwajEw6vguDpGiDWxrLgy9xCjBAezkgjv
-        zqmrYoR4UxIrq1KL8uOLSnNSiw8xSnOwKInzlk00iRESSE8sSc1OTS1ILYLJMnFwSjUwJc7U
-        m8r46sXv7J3/Y4Oa6lQ8HRnNzsgGPzm9uWRz8O3Jc80mcEw7flz22iQzSw826yzFnUeaZ+Zr
-        FCj9DoxnZFlxmLf16HU7v9Sjgnc/BsTO6V7EejBijpeN2vXIslt+Ke9/1GmbTb06qXyBl0b/
-        szsGmc/Xdcelr5oatfPwhafuv/Rue6zm/bP7QHfFz42eftlPileFLax5oLR7Rg93lu2WpwfW
-        rVTyCuermLxP6Jm2w2EvsbjLPUFd1/RubGWs9rmxsu/z1OuNArusb/GFl7B88rj5Km/y+9My
-        /5/O5FvVv/jyialzTZev/9RWwbnm3P0qWZZ9N0RmfXGuf/b+0zWuk3bhE7yCjbkmfcxhmKPE
-        UpyRaKjFXFScCADnserWJwMAAA==
+References: <20190405205736.55177-1-icenowy@aosc.io> <20190405205736.55177-3-icenowy@aosc.io>
+ <20190406071402.GA6006@bogus> <B954438A-73B2-4156-81CD-197C08D0E3F5@aosc.io>
+In-Reply-To: <B954438A-73B2-4156-81CD-197C08D0E3F5@aosc.io>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 8 Apr 2019 20:09:14 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJMxhbvT6jv+-tsaOPq4anTjRPn0b2qVp=TF4uh6KDzNw@mail.gmail.com>
+Message-ID: <CAL_JsqJMxhbvT6jv+-tsaOPq4anTjRPn0b2qVp=TF4uh6KDzNw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] dt-bindings: phy: add binding for Allwinner USB3 PHY
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
-> On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
-> > When CONFIG_HAVE_GENERIC_GUP is defined, the kernel will use its own
-> > get_user_pages_fast().
-> > 
-> > In the following scenario, we will may meet the bug in the DMA case:
-> > 	    .....................
-> > 	    get_user_pages_fast(start,,, pages);
-> > 	        ......
-> > 	    sg_alloc_table_from_pages(, pages, ...);
-> > 	    .....................
-> > 
-> > The root cause is that sg_alloc_table_from_pages() requires the
-> > page order to keep the same as it used in the user space, but
-> > get_user_pages_fast() will mess it up.
-> 
-> I don't understand how get_user_pages_fast() can return the pages in a
-> different order in the array from the order they appear in userspace.
-> Can you explain?
-Please see the code in gup.c:
+On Sat, Apr 6, 2019 at 2:24 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+>
+>
+> =E4=BA=8E 2019=E5=B9=B44=E6=9C=886=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
+:14:02, Rob Herring <robh@kernel.org> =E5=86=99=E5=88=B0:
+> >On Sat, Apr 06, 2019 at 04:57:33AM +0800, Icenowy Zheng wrote:
+> >> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+> >> external USB3 pins of the SoC.
+> >>
+> >> Add a device tree binding for the PHY.
+> >>
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> >> ---
+> >> Changes in v5:
+> >> - Dropped Vbus regulator and added connector subnode.
+> >>
+> >> Changes in v4:
+> >> - Changed Vbus regulator property to vbus-supply.
+> >>
+> >> Changes in v3:
+> >> - Added Chen-Yu's Review tag.
+> >>
+> >> No changes in v2, v1.
+> >>
+> >>  .../bindings/phy/sun50i-usb3-phy.txt          | 28
+> >+++++++++++++++++++
+> >>  1 file changed, 28 insertions(+)
+> >>  create mode 100644
+> >Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >>
+> >> diff --git
+> >a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >> new file mode 100644
+> >> index 000000000000..eeedc53e6360
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >> @@ -0,0 +1,28 @@
+> >> +Allwinner sun50i USB3 PHY
+> >> +-----------------------
+> >> +
+> >> +Required properties:
+> >> +- compatible : should be one of
+> >> +  * allwinner,sun60i-h6-usb3-phy
+> >> +- reg : a list of offset + length pairs
+> >> +- #phy-cells : from the generic phy bindings, must be 0
+> >> +- clocks : phandle + clock specifier for the phy clock
+> >> +- resets : phandle + reset specifier for the phy reset
+> >> +
+> >> +Optional nodes:
+> >> +- connector : A sub-node required for representing the connector
+> >connected
+> >> +          to the USB PHY. See ../connector/usb-connector.txt for
+> >details.
+> >> +
+> >> +Example:
+> >> +    usb3phy: phy@5210000 {
+> >> +            compatible =3D "allwinner,sun50i-h6-usb3-phy";
+> >> +            reg =3D <0x5210000 0x10000>;
+> >> +            clocks =3D <&ccu CLK_USB_PHY1>;
+> >> +            resets =3D <&ccu RST_USB_PHY1>;
+> >> +            #phy-cells =3D <0>;
+> >> +
+> >> +            connector {
+> >> +                    compatible =3D "usb-a-connector";
+> >> +                    label =3D "USB3";
+> >
+> >The binding defines that a connector is a child of USB controller or
+>
+> Please note that the word used is not "USB controller", but "USB interfac=
+e
+> controller".
 
-	int get_user_pages_fast(unsigned long start, int nr_pages,
-				unsigned int gup_flags, struct page **pages)
-	{
-		.......
-		if (gup_fast_permitted(start, nr_pages)) {
-			local_irq_disable();
-			gup_pgd_range(addr, end, gup_flags, pages, &nr);               // The @pages array maybe filled at the first time.
-			local_irq_enable();
-			ret = nr;
-		}
-		.......
-		if (nr < nr_pages) {
-			/* Try to get the remaining pages with get_user_pages */
-			start += nr << PAGE_SHIFT;
-			pages += nr;                                                  // The @pages is moved forward.
+Same thing.
 
-			if (gup_flags & FOLL_LONGTERM) {
-				down_read(&current->mm->mmap_sem);
-				ret = __gup_longterm_locked(current, current->mm,      // The @pages maybe filled at the second time
-							    start, nr_pages - nr,
-							    pages, NULL, gup_flags);
-				up_read(&current->mm->mmap_sem);
-			} else {
-				/*
-				 * retain FAULT_FOLL_ALLOW_RETRY optimization if
-				 * possible
-				 */
-				ret = get_user_pages_unlocked(start, nr_pages - nr,    // The @pages maybe filled at the second time.
-							      pages, gup_flags);
-			}
-		}
+We do not represent PHYs as part of the hierarchy. The controller just
+points to its PHY with the 'phys' property, but is not part of the
+graph.
 
+Unless your PHY handle USB-C functions like PD and alternate modes,
+then it shouldn't be part of the graph.
 
-		.....................
-
-BTW, I do not know why we mess up the page order. It maybe used in some special case.
-
-Thanks
-Huang Shijie
+> A USB controller is something that deal with USB protocol, and connect to=
+ a USB
+> PHY with ULPI/UTMI/PIPE interface. It's not connected to the connector
+> directly at all. Then the PHY is connected to the interface controller (i=
+f present), or
+> the connector, with D+, D- and SS pins.
+>
+> >some port controller (such as USB-C ctrlr) with OF graph to USB
+> >controller. So either way, this is wrong unless this is more than just
+> >a
+> >phy.
+> >
+> >Rob
+> >
+> >_______________________________________________
+> >linux-arm-kernel mailing list
+> >linux-arm-kernel@lists.infradead.org
+> >http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> --
+> =E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84=
+Android=E8=AE=BE=E5=A4=87=E3=80=82
