@@ -2,108 +2,225 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6666BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F97C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D36C21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B00120883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfDIFsR (ORCPT
+        id S1726240AbfDIGBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:48:17 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:41586 "EHLO mxct.zte.com.cn"
+        Tue, 9 Apr 2019 02:01:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60660 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfDIFsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:48:14 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 0CB2B7FDEBDDE21AAFC2;
-        Tue,  9 Apr 2019 13:48:12 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x395m6pE046078;
-        Tue, 9 Apr 2019 13:48:06 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019040913482157-7975998 ;
-          Tue, 9 Apr 2019 13:48:21 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:TI NETCP ETHERNET DRIVER)
-Subject: [PATCH 2/2] net: ethernet: ti: eliminated some duplicate code.
-Date:   Tue, 9 Apr 2019 13:48:01 +0800
-Message-Id: <1554788881-22647-2-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-04-09 13:48:21,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-04-09 13:48:04,
-        Serialize complete at 2019-04-09 13:48:04
-X-MAIL: mse01.zte.com.cn x395m6pE046078
+        id S1725781AbfDIGBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 02:01:47 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2F12B10C6E;
+        Tue,  9 Apr 2019 06:01:47 +0000 (UTC)
+Received: from ivy-bridge (ovpn-116-129.ams2.redhat.com [10.36.116.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4E325D9D1;
+        Tue,  9 Apr 2019 06:01:38 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 08:01:38 +0200
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, omosnace@redhat.com,
+        eparis@parisplace.org, ebiederm@xmission.com, oleg@redhat.com
+Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
+Message-ID: <20190409080138.745d18a1@ivy-bridge>
+In-Reply-To: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
+References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 09 Apr 2019 06:01:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put the code that obtains device_node and the code that
-uses it tightly together to remove duplicate resource
-cleanup statements between them.
+On Mon,  8 Apr 2019 23:52:29 -0400
+Richard Guy Briggs <rgb@redhat.com> wrote:
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reported-by: Markus Elfring <Markus.Elfring@web.de>
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Cc: Wingman Kwok <w-kwok2@ti.com> (maintainer:TI NETCP ETHERNET DRIVER)
-Cc: Murali Karicheri <m-karicheri2@ti.com> (maintainer:TI NETCP ETHERNET DRIVER)
-Cc: "David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS)
-Cc: netdev@vger.kernel.org (open list:TI NETCP ETHERNET DRIVER)
-Cc: linux-kernel@vger.kernel.org (open list)
----
- drivers/net/ethernet/ti/netcp_ethss.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+> When a process signals the audit daemon (shutdown, rotate, resume,
+> reconfig) but syscall auditing is not enabled, we still want to know
+> the identity of the process sending the signal to the audit daemon.
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 0a920c5..748116a 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3651,22 +3651,18 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	interfaces = of_get_child_by_name(node, "interfaces");
--	if (!interfaces)
--		dev_err(dev, "could not find interfaces\n");
--
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret) {
--		of_node_put(interfaces);
-+	if (ret)
- 		return ret;
--	}
- 
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret) {
--		of_node_put(interfaces);
-+	if (ret)
- 		return ret;
--	}
-+
-+	interfaces = of_get_child_by_name(node, "interfaces");
-+	if (!interfaces)
-+		dev_err(dev, "could not find interfaces\n");
- 
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
--- 
-2.9.5
+Why? If syscall auditing is disabled, then there is no requirement to
+provide anything. What is the real problem that you are seeing?
+
+Thanks,
+-Steve
+
+> Move audit_signal_info() out of syscall auditing to general auditing
+> but create a new function audit_signal_info_syscall() to take care of
+> the syscall dependent parts for when syscall auditing is enabled.
+> 
+> Please see the github kernel audit issue
+> https://github.com/linux-audit/audit-kernel/issues/111
+> 
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  include/linux/audit.h |  6 ++++++
+>  kernel/audit.c        | 27 +++++++++++++++++++++++++++
+>  kernel/audit.h        |  4 ++--
+>  kernel/auditsc.c      | 19 +++----------------
+>  kernel/signal.c       |  2 +-
+>  5 files changed, 39 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 1e69d9fe16da..4a22fc3f824f 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -173,6 +173,9 @@ static inline unsigned int
+> audit_get_sessionid(struct task_struct *tsk) }
+>  
+>  extern u32 audit_enabled;
+> +
+> +extern int audit_signal_info(int sig, struct task_struct *t);
+> +
+>  #else /* CONFIG_AUDIT */
+>  static inline __printf(4, 5)
+>  void audit_log(struct audit_context *ctx, gfp_t gfp_mask, int type,
+> @@ -226,6 +229,9 @@ static inline unsigned int
+> audit_get_sessionid(struct task_struct *tsk) }
+>  
+>  #define audit_enabled AUDIT_OFF
+> +
+> +#define audit_signal_info(s, t) AUDIT_OFF
+> +
+>  #endif /* CONFIG_AUDIT */
+>  
+>  #ifdef CONFIG_AUDIT_COMPAT_GENERIC
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index b96bf69183f4..67399ff72d43 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -2274,6 +2274,33 @@ int audit_set_loginuid(kuid_t loginuid)
+>  }
+>  
+>  /**
+> + * audit_signal_info - record signal info for shutting down audit
+> subsystem
+> + * @sig: signal value
+> + * @t: task being signaled
+> + *
+> + * If the audit subsystem is being terminated, record the task (pid)
+> + * and uid that is doing that.
+> + */
+> +int audit_signal_info(int sig, struct task_struct *t)
+> +{
+> +	kuid_t uid = current_uid(), auid;
+> +
+> +	if (auditd_test_task(t) &&
+> +	    (sig == SIGTERM || sig == SIGHUP ||
+> +	     sig == SIGUSR1 || sig == SIGUSR2)) {
+> +		audit_sig_pid = task_tgid_nr(current);
+> +		auid = audit_get_loginuid(current);
+> +		if (uid_valid(auid))
+> +			audit_sig_uid = auid;
+> +		else
+> +			audit_sig_uid = uid;
+> +		security_task_getsecid(current, &audit_sig_sid);
+> +	}
+> +
+> +	return audit_signal_info_syscall(t);
+> +}
+> +
+> +/**
+>   * audit_log_end - end one audit record
+>   * @ab: the audit_buffer
+>   *
+> diff --git a/kernel/audit.h b/kernel/audit.h
+> index 958d5b8fc1b3..18a8ae812e9f 100644
+> --- a/kernel/audit.h
+> +++ b/kernel/audit.h
+> @@ -299,7 +299,7 @@ extern bool audit_tree_match(struct audit_chunk
+> *chunk, extern void audit_put_tree(struct audit_tree *tree);
+>  extern void audit_kill_trees(struct audit_context *context);
+>  
+> -extern int audit_signal_info(int sig, struct task_struct *t);
+> +extern int audit_signal_info_syscall(struct task_struct *t);
+>  extern void audit_filter_inodes(struct task_struct *tsk,
+>  				struct audit_context *ctx);
+>  extern struct list_head *audit_killed_trees(void);
+> @@ -330,7 +330,7 @@ extern void audit_filter_inodes(struct
+> task_struct *tsk, #define audit_tree_path(rule) ""	/* never
+> called */ #define audit_kill_trees(context) BUG()
+>  
+> -#define audit_signal_info(s, t) AUDIT_DISABLED
+> +#define audit_signal_info_syscall(t) AUDIT_OFF
+>  #define audit_filter_inodes(t, c) AUDIT_DISABLED
+>  #endif /* CONFIG_AUDITSYSCALL */
+>  
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 98a98e6dca05..dbd43d84c347 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2370,30 +2370,17 @@ void __audit_ptrace(struct task_struct *t)
+>  }
+>  
+>  /**
+> - * audit_signal_info - record signal info for shutting down audit
+> subsystem
+> - * @sig: signal value
+> + * audit_signal_info_syscall - record signal info for syscalls
+>   * @t: task being signaled
+>   *
+>   * If the audit subsystem is being terminated, record the task (pid)
+>   * and uid that is doing that.
+>   */
+> -int audit_signal_info(int sig, struct task_struct *t)
+> +int audit_signal_info_syscall(struct task_struct *t)
+>  {
+>  	struct audit_aux_data_pids *axp;
+>  	struct audit_context *ctx = audit_context();
+> -	kuid_t uid = current_uid(), auid, t_uid = task_uid(t);
+> -
+> -	if (auditd_test_task(t) &&
+> -	    (sig == SIGTERM || sig == SIGHUP ||
+> -	     sig == SIGUSR1 || sig == SIGUSR2)) {
+> -		audit_sig_pid = task_tgid_nr(current);
+> -		auid = audit_get_loginuid(current);
+> -		if (uid_valid(auid))
+> -			audit_sig_uid = auid;
+> -		else
+> -			audit_sig_uid = uid;
+> -		security_task_getsecid(current, &audit_sig_sid);
+> -	}
+> +	kuid_t t_uid = task_uid(t);
+>  
+>  	if (!audit_signals || audit_dummy_context())
+>  		return 0;
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index b7953934aa99..73db5dfa797d 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -43,6 +43,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/posix-timers.h>
+>  #include <linux/livepatch.h>
+> +#include <linux/audit.h>	/* audit_signal_info() */
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/signal.h>
+> @@ -52,7 +53,6 @@
+>  #include <asm/unistd.h>
+>  #include <asm/siginfo.h>
+>  #include <asm/cacheflush.h>
+> -#include "audit.h"	/* audit_signal_info() */
+>  
+>  /*
+>   * SLAB caches for signal bits.
 
