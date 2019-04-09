@@ -2,235 +2,153 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9664C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2EAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578112084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D24D208C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554818601;
+	bh=/iGOLlZ2LmnG4+GxeSSAeOo+q+PkEY1dl+1g+OpPUcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BZvks7mfLFbzNZu4tsdGv7qv1K2aA4+xYLOIsnFfz2CUuXY+JiIJNJuWWhJjkeTTf
+	 Q+oCI7mwKbb1HIAP/0CNDXGIxTerTee/nvbDI3Q8yg+y6aeu85IIz1kKUQiEI6YHlA
+	 rBYoqxzzAqX1jMz/4GF5jHKxORUxkS7xjwNg2464=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfDIODM (ORCPT
+        id S1726559AbfDIODU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:03:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:30658 "EHLO mx1.redhat.com"
+        Tue, 9 Apr 2019 10:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbfDIODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:03:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726035AbfDIODU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:03:20 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B77E1307EA8F;
-        Tue,  9 Apr 2019 14:03:11 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF1B719C7B;
-        Tue,  9 Apr 2019 14:03:02 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 10:02:59 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, omosnace@redhat.com,
-        eparis@parisplace.org, ebiederm@xmission.com, oleg@redhat.com
-Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
-Message-ID: <20190409140259.n4t6rxb24eu3uzvp@madcap2.tricolour.ca>
-References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
- <20190409080138.745d18a1@ivy-bridge>
+        by mail.kernel.org (Postfix) with ESMTPSA id 03571218D2;
+        Tue,  9 Apr 2019 14:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554818599;
+        bh=/iGOLlZ2LmnG4+GxeSSAeOo+q+PkEY1dl+1g+OpPUcY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f1Zz//H0Cg2Fs09zpE3QCaKP9yb05zG7iLJTw/GlXp1MVqN4W8c8LCVWoEZ6AEBVf
+         cJJn3Ps5tkf+Rk7ADcN+BU1k0ANiR1DxymmJ92w5eFwPD+f2IS+zAbQzw7CyAwplgx
+         irimpZk4Uu/01NzVkcPelXhYZKoeX2CcNhGb5y7I=
+Received: by mail-qt1-f175.google.com with SMTP id w30so19839419qta.8;
+        Tue, 09 Apr 2019 07:03:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/xYR6DkFbAFo//MVYwcgtNblb0rJrxP8ELkmV1mxgmSTh3iG1
+        3OdwhMr9xzVAomCVgZrWmNrxaZyb/KnTliOxSg==
+X-Google-Smtp-Source: APXvYqyM1Tx6vJxXx8cKc8TxTrSOj9IYi5Zc7ZXbQ30spZ1kCR6fFeW4/jgz39Hu1EQR2VTkmD3CLad6R/scmcN5d9I=
+X-Received: by 2002:a0c:b919:: with SMTP id u25mr29990006qvf.216.1554818598130;
+ Tue, 09 Apr 2019 07:03:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409080138.745d18a1@ivy-bridge>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 09 Apr 2019 14:03:11 +0000 (UTC)
+References: <1554359858-21049-1-git-send-email-rjliao@codeaurora.org>
+ <1554368908-22017-1-git-send-email-rjliao@codeaurora.org> <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
+ <535c74d4-00b1-eef2-578a-8807f4b9f640@free.fr> <319cbb5f23ed3d9f1ae77c697001378d@codeaurora.org>
+In-Reply-To: <319cbb5f23ed3d9f1ae77c697001378d@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 9 Apr 2019 09:03:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKLL8x63wzpi2tfNfvVe5TX=Uxz+owPZbhevhW-84bDAA@mail.gmail.com>
+Message-ID: <CAL_JsqKLL8x63wzpi2tfNfvVe5TX=Uxz+owPZbhevhW-84bDAA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: bluetooth: Add device property
+ nvm-postfix for QCA6174
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-09 08:01, Steve Grubb wrote:
-> On Mon,  8 Apr 2019 23:52:29 -0400 Richard Guy Briggs <rgb@redhat.com> wrote:
-> > When a process signals the audit daemon (shutdown, rotate, resume,
-> > reconfig) but syscall auditing is not enabled, we still want to know
-> > the identity of the process sending the signal to the audit daemon.
-> 
-> Why? If syscall auditing is disabled, then there is no requirement to
-> provide anything. What is the real problem that you are seeing?
+On Tue, Apr 9, 2019 at 5:15 AM Rocky Liao <rjliao@codeaurora.org> wrote:
+>
+> On 2019-04-04 20:32, Marc Gonzalez wrote:
+> > +robh
+> >
+> > On 04/04/2019 11:08, Rocky Liao wrote:
+> >
+> >> This patchs patch adds an optional device property nvm-postfix to
+> >> allow the
+> >> driver to load customized nvm file based on this property
+> >
+> > While text /before/ is indeed called a "prefix", text /after/ is not a
+> > "postfix",
+> > but a "suffix".
+> >
+> >
+> >>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> index 824c0e2..70cda4b 100644
+> >> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> @@ -16,6 +16,7 @@ Optional properties for compatible string
+> >> qcom,qca6174-bt:
+> >>
+> >>   - enable-gpios: gpio specifier used to enable chip
+> >>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+> >> + - nvm-postfix: nvm file postfix to load customized nvm file
+> >
+> > The device tree is supposed to describe hardware.
+> >
+> > The name of which file to load can hardly be considered part of the HW.
+> >
+> > Possible solutions:
+> > 1) derive the file name from the compatible string
+> > 2) pass the name as a module parameter
+> > 3) something else
+> >
+> >
+> >> @@ -39,6 +40,7 @@ serial@7570000 {
+> >>
+> >>              enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+> >>              clocks = <&divclk4>;
+> >> +            nvm-postfix = "i2s";
+> >>      };
+> >>  };
+> >
+> > If one provides the entire suffix, including the underscore, then you
+> > can
+> > simplify the code:
+> >
+> >       snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x%s.bin",
+> > soc_ver, suffix ? suffix : "");
+> >
+> > Regards
+> .
+> Hi Marc,
+>
+> The major purpose for that property is about the BT audio bus type, can
+> it be considered as part of the HW? If yes maybe we can use a property
+> name "audio-bus" to reflect that.
+>
+> If not then I will adopt the solution 1 to add a new compatible string
+> "{ .compatible = "qcom,qca6174-bt-i2s" }" and load specific nvm for this
+> compatible string, please feel free to let me know if any other
+> concerns.
 
-Shutdown messages with -1 in them rather than the real values.
+I don't think the suggestion was to add the nvm string to the
+compatible, but rather compatible strings serve as a map key. Having
+board specific firmware files for wifi/bt is pretty common, but
+parameters for 'i2s' is a bit strange. So a better explanation of what
+parameters this contains would help. How/when does it vary, for
+example?
 
-> -Steve
-> 
-> > Move audit_signal_info() out of syscall auditing to general auditing
-> > but create a new function audit_signal_info_syscall() to take care of
-> > the syscall dependent parts for when syscall auditing is enabled.
-> > 
-> > Please see the github kernel audit issue
-> > https://github.com/linux-audit/audit-kernel/issues/111
-> > 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  include/linux/audit.h |  6 ++++++
-> >  kernel/audit.c        | 27 +++++++++++++++++++++++++++
-> >  kernel/audit.h        |  4 ++--
-> >  kernel/auditsc.c      | 19 +++----------------
-> >  kernel/signal.c       |  2 +-
-> >  5 files changed, 39 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 1e69d9fe16da..4a22fc3f824f 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -173,6 +173,9 @@ static inline unsigned int
-> > audit_get_sessionid(struct task_struct *tsk) }
-> >  
-> >  extern u32 audit_enabled;
-> > +
-> > +extern int audit_signal_info(int sig, struct task_struct *t);
-> > +
-> >  #else /* CONFIG_AUDIT */
-> >  static inline __printf(4, 5)
-> >  void audit_log(struct audit_context *ctx, gfp_t gfp_mask, int type,
-> > @@ -226,6 +229,9 @@ static inline unsigned int
-> > audit_get_sessionid(struct task_struct *tsk) }
-> >  
-> >  #define audit_enabled AUDIT_OFF
-> > +
-> > +#define audit_signal_info(s, t) AUDIT_OFF
-> > +
-> >  #endif /* CONFIG_AUDIT */
-> >  
-> >  #ifdef CONFIG_AUDIT_COMPAT_GENERIC
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index b96bf69183f4..67399ff72d43 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2274,6 +2274,33 @@ int audit_set_loginuid(kuid_t loginuid)
-> >  }
-> >  
-> >  /**
-> > + * audit_signal_info - record signal info for shutting down audit
-> > subsystem
-> > + * @sig: signal value
-> > + * @t: task being signaled
-> > + *
-> > + * If the audit subsystem is being terminated, record the task (pid)
-> > + * and uid that is doing that.
-> > + */
-> > +int audit_signal_info(int sig, struct task_struct *t)
-> > +{
-> > +	kuid_t uid = current_uid(), auid;
-> > +
-> > +	if (auditd_test_task(t) &&
-> > +	    (sig == SIGTERM || sig == SIGHUP ||
-> > +	     sig == SIGUSR1 || sig == SIGUSR2)) {
-> > +		audit_sig_pid = task_tgid_nr(current);
-> > +		auid = audit_get_loginuid(current);
-> > +		if (uid_valid(auid))
-> > +			audit_sig_uid = auid;
-> > +		else
-> > +			audit_sig_uid = uid;
-> > +		security_task_getsecid(current, &audit_sig_sid);
-> > +	}
-> > +
-> > +	return audit_signal_info_syscall(t);
-> > +}
-> > +
-> > +/**
-> >   * audit_log_end - end one audit record
-> >   * @ab: the audit_buffer
-> >   *
-> > diff --git a/kernel/audit.h b/kernel/audit.h
-> > index 958d5b8fc1b3..18a8ae812e9f 100644
-> > --- a/kernel/audit.h
-> > +++ b/kernel/audit.h
-> > @@ -299,7 +299,7 @@ extern bool audit_tree_match(struct audit_chunk
-> > *chunk, extern void audit_put_tree(struct audit_tree *tree);
-> >  extern void audit_kill_trees(struct audit_context *context);
-> >  
-> > -extern int audit_signal_info(int sig, struct task_struct *t);
-> > +extern int audit_signal_info_syscall(struct task_struct *t);
-> >  extern void audit_filter_inodes(struct task_struct *tsk,
-> >  				struct audit_context *ctx);
-> >  extern struct list_head *audit_killed_trees(void);
-> > @@ -330,7 +330,7 @@ extern void audit_filter_inodes(struct
-> > task_struct *tsk, #define audit_tree_path(rule) ""	/* never
-> > called */ #define audit_kill_trees(context) BUG()
-> >  
-> > -#define audit_signal_info(s, t) AUDIT_DISABLED
-> > +#define audit_signal_info_syscall(t) AUDIT_OFF
-> >  #define audit_filter_inodes(t, c) AUDIT_DISABLED
-> >  #endif /* CONFIG_AUDITSYSCALL */
-> >  
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 98a98e6dca05..dbd43d84c347 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -2370,30 +2370,17 @@ void __audit_ptrace(struct task_struct *t)
-> >  }
-> >  
-> >  /**
-> > - * audit_signal_info - record signal info for shutting down audit
-> > subsystem
-> > - * @sig: signal value
-> > + * audit_signal_info_syscall - record signal info for syscalls
-> >   * @t: task being signaled
-> >   *
-> >   * If the audit subsystem is being terminated, record the task (pid)
-> >   * and uid that is doing that.
-> >   */
-> > -int audit_signal_info(int sig, struct task_struct *t)
-> > +int audit_signal_info_syscall(struct task_struct *t)
-> >  {
-> >  	struct audit_aux_data_pids *axp;
-> >  	struct audit_context *ctx = audit_context();
-> > -	kuid_t uid = current_uid(), auid, t_uid = task_uid(t);
-> > -
-> > -	if (auditd_test_task(t) &&
-> > -	    (sig == SIGTERM || sig == SIGHUP ||
-> > -	     sig == SIGUSR1 || sig == SIGUSR2)) {
-> > -		audit_sig_pid = task_tgid_nr(current);
-> > -		auid = audit_get_loginuid(current);
-> > -		if (uid_valid(auid))
-> > -			audit_sig_uid = auid;
-> > -		else
-> > -			audit_sig_uid = uid;
-> > -		security_task_getsecid(current, &audit_sig_sid);
-> > -	}
-> > +	kuid_t t_uid = task_uid(t);
-> >  
-> >  	if (!audit_signals || audit_dummy_context())
-> >  		return 0;
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index b7953934aa99..73db5dfa797d 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -43,6 +43,7 @@
-> >  #include <linux/compiler.h>
-> >  #include <linux/posix-timers.h>
-> >  #include <linux/livepatch.h>
-> > +#include <linux/audit.h>	/* audit_signal_info() */
-> >  
-> >  #define CREATE_TRACE_POINTS
-> >  #include <trace/events/signal.h>
-> > @@ -52,7 +53,6 @@
-> >  #include <asm/unistd.h>
-> >  #include <asm/siginfo.h>
-> >  #include <asm/cacheflush.h>
-> > -#include "audit.h"	/* audit_signal_info() */
-> >  
-> >  /*
-> >   * SLAB caches for signal bits.
-> 
+Also, if it is only a handful of parameters, making them DT properties
+is preferred.
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Rob
