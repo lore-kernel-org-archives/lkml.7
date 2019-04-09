@@ -2,86 +2,121 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5A0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13558C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFDA20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53E12084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XTiH67AP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfDILZU (ORCPT
+        id S1726996AbfDIL1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:25:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47677 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfDILZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:25:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 04:25:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="290005141"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 09 Apr 2019 04:25:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CBE8CFA; Tue,  9 Apr 2019 14:25:15 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        junxiao.chang@intel.com, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/4] platform/x86: intel_pmc_ipc: Apply same width for offset definitions
-Date:   Tue,  9 Apr 2019 14:25:13 +0300
-Message-Id: <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
-References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+        Tue, 9 Apr 2019 07:27:44 -0400
+Received: from mail-eopbgr00062.outbound.protection.outlook.com ([40.107.0.62]:60903
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726066AbfDIL1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 07:27:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OKHYWzD+YWUXtLfdQvkryqgwTZ0PgPWa0f+13fPJW5I=;
+ b=XTiH67APd8zJsPLxVXsoE3rCvRPOVl0ZF534uFrlCP06q1XHD93WLuWgbI/Z/yEuiTHMVDfuqhhsbQJoNkvzVoPNa0xefLbf3ZrzVhzjm1GH+u8hW2Rd+6LWdoBzPR0gRvArUFUdCoBIGpOQLc0YMi7dnC8J17/CU/vUzCbHnL4=
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
+ VI1PR04MB3086.eurprd04.prod.outlook.com (10.170.228.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Tue, 9 Apr 2019 11:27:38 +0000
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1792.009; Tue, 9 Apr 2019
+ 11:27:38 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+CC:     Viorel Suman <viorel.suman@nxp.com>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/3] ASoC: fsl: audmix: remove "model" attribute and fix
+ ref leaks
+Thread-Topic: [PATCH v2 0/3] ASoC: fsl: audmix: remove "model" attribute and
+ fix ref leaks
+Thread-Index: AQHU7sc8h0omtYu4aEyCmk0WvWJxAg==
+Date:   Tue, 9 Apr 2019 11:27:38 +0000
+Message-ID: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0187.eurprd08.prod.outlook.com
+ (2603:10a6:800:d2::17) To VI1PR04MB4704.eurprd04.prod.outlook.com
+ (2603:10a6:803:52::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 42c632c8-64d7-4b27-7595-08d6bcde5f0a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB3086;
+x-ms-traffictypediagnostic: VI1PR04MB3086:
+x-microsoft-antispam-prvs: <VI1PR04MB308685E8FA3FF56549D27129922D0@VI1PR04MB3086.eurprd04.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39860400002)(366004)(396003)(376002)(189003)(199004)(106356001)(71200400001)(71190400001)(256004)(68736007)(5660300002)(8676002)(81156014)(81166006)(105586002)(478600001)(97736004)(66066001)(36756003)(102836004)(6506007)(7416002)(486006)(476003)(2616005)(4326008)(8936002)(386003)(6512007)(26005)(186003)(14454004)(50226002)(25786009)(6436002)(53936002)(2906002)(54906003)(3846002)(6116002)(99286004)(44832011)(52116002)(305945005)(316002)(110136005)(4744005)(86362001)(6486002)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3086;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 13uS4xd4e4PgpCH/lGYxoqeyFm14YsSUv6nXnnhC3vJPaCC1v5sIyINniatv1MIVH6l+hHyX5ewUGIIftEiDT16sRXoduT3wvrLEhcwcT5NMib5O8Azt4mmQsCL6nOOGd7UV1oRxC721JsvbLh3U5ONyrJ+so0m6HL/ZnepjdDkdCMxguaRw8bcTOHJm0AuNyCTcz42r5DkfFCzNjQOUpdI/NodsB9aCLO0xX8EMkf63hRQRsVLm+WFR84vHLq+6lcAco6nLj9oc1JEWXJXRo6MEyfoZWWTs+4jzr4ghRDmBRfkbWMCf0PBEPaaK28/TJo5Vf/bRML/8uwAggAuG6nf0dFQVZnUMx11dp94uVUcLH6Xjf9da0IyK90PbilkJY3zQhoYK6fURQ/6fUgMLU84yrWxan9qFQiEN0ArLx8A=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42c632c8-64d7-4b27-7595-08d6bcde5f0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 11:27:38.6619
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apply same width for offset definitions to make code more consistent.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index eb0b342996ca..9007aa717586 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -40,7 +40,7 @@
-  * The ARC handles the interrupt and services it, writing optional data to
-  * the IPC1 registers, updates the IPC_STS response register with the status.
-  */
--#define IPC_CMD			0x0
-+#define IPC_CMD			0x00
- #define		IPC_CMD_MSI		BIT(8)
- #define		IPC_CMD_SIZE		16
- #define		IPC_CMD_SUBCMD		12
-@@ -101,8 +101,8 @@
- #define TELEM_SSRAM_SIZE		240
- #define TELEM_PMC_SSRAM_OFFSET		0x1B00
- #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
--#define TCO_PMC_OFFSET			0x8
--#define TCO_PMC_SIZE			0x4
-+#define TCO_PMC_OFFSET			0x08
-+#define TCO_PMC_SIZE			0x04
- 
- /* PMC register bit definitions */
- 
--- 
-2.20.1
-
+VGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0
+ZSByZW1vdmVkIGFzDQpyZXF1ZXN0ZWQgYnkgTmljb2xpbiBDaGVuLCBidXQgbG9va3MgbGlrZSAo
+djQpIHZlcnNpb24gb2YgREFJIGRyaXZlcg0KcmVhY2hlZCAiZm9yLW5leHQiIGJyYW5jaCAtIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nICJtb2RlbCIgYXR0cmlidXRlLg0KQXNzaWRlIG9mIHRoaXMgZml4
+IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZCBieQ0KSnVs
+aWEgTGF3YWxsLg0KDQpWaW9yZWwgU3VtYW4gKDMpOg0KICBBU29DOiBmc2xfYXVkbWl4OiByZW1v
+dmUgIm1vZGVsIiBhdHRyaWJ1dGUNCiAgZHQtYmluZGluZ3M6IGZzbCxhdWRtaXg6IHJlbW92ZSAi
+bW9kZWwiIGF0dHJpYnV0ZQ0KICBBU29DOiBpbXgtYXVkbWl4OiBmaXggb2JqZWN0IHJlZmVyZW5j
+ZSBsZWFrcyBpbiBwcm9iZQ0KDQpDaGFuZ2VzIHNpbmNlIFYxOg0KICBhKSBSZW1vdmVkICJtb2Rl
+bCIgYXR0cmlidXRlIGZyb20gZHQtYmluZGluZ3MgZG9jdW1lbnRhdGlvbg0KICBiKSBBZHJlc3Nl
+ZCBEYW5pZWwncyBjb21tZW50cw0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZnNs
+LGF1ZG1peC50eHQgICAgICAgfCAgNCAtLQ0KIHNvdW5kL3NvYy9mc2wvZnNsX2F1ZG1peC5jICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgNDMgKysrKysrKysrKysrLS0tLS0tLS0tLQ0KIHNvdW5k
+L3NvYy9mc2wvaW14LWF1ZG1peC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKysNCiAz
+IGZpbGVzIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KDQotLSAN
+CjIuNy40DQoNCg==
