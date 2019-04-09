@@ -6,36 +6,56 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAC4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B2FC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DD42064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2313B2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbfDIOxP (ORCPT
+        id S1726653AbfDIOxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 9 Apr 2019 10:53:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33944 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726415AbfDIOxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Apr 2019 10:53:15 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44929 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfDIOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:53:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 07:53:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="138825684"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Apr 2019 07:53:09 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hDs7Y-0004SK-4b; Tue, 09 Apr 2019 17:53:08 +0300
-Date:   Tue, 9 Apr 2019 17:53:08 +0300
-From:   Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x39Ee1H1135601
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 10:53:14 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rruktpkq3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 10:53:14 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 9 Apr 2019 15:53:12 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 9 Apr 2019 15:53:09 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x39Er8Jn27787270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Apr 2019 14:53:08 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C382B2067;
+        Tue,  9 Apr 2019 14:53:08 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D4CBB2068;
+        Tue,  9 Apr 2019 14:53:08 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Apr 2019 14:53:07 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 04B7016C34AA; Tue,  9 Apr 2019 07:53:08 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 07:53:08 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -44,61 +64,107 @@ Cc:     iommu@lists.linux-foundation.org,
         Yi Liu <yi.l.liu@intel.com>,
         "Tian, Kevin" <kevin.tian@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 16/18] iommu: add max num of cache and granu types
-Message-ID: <20190409145308.GQ9224@smile.fi.intel.com>
+Subject: Re: [PATCH 01/18] drivers core: Add I/O ASID allocator
+Reply-To: paulmck@linux.ibm.com
 References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1554767973-30125-17-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1554767973-30125-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20190409100049.GC9224@smile.fi.intel.com>
+ <20190409100436.GA28683@infradead.org>
+ <20190409103030.GK9224@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554767973-30125-17-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190409103030.GK9224@smile.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040914-0052-0000-0000-000003A99DE3
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010896; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01186624; UDB=6.00621496; IPR=6.00967384;
+ MB=3.00026363; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-09 14:53:12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040914-0053-0000-0000-0000606FB512
+Message-Id: <20190409145308.GZ14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904090094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 04:59:31PM -0700, Jacob Pan wrote:
-
-Commit message?
-
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  include/uapi/linux/iommu.h | 2 ++
->  1 file changed, 2 insertions(+)
+On Tue, Apr 09, 2019 at 01:30:30PM +0300, Andriy Shevchenko wrote:
+> On Tue, Apr 09, 2019 at 03:04:36AM -0700, Christoph Hellwig wrote:
+> > On Tue, Apr 09, 2019 at 01:00:49PM +0300, Andriy Shevchenko wrote:
+> > > I think it makes sense to add a helper macro to rcupdate.h
+> > > (and we have several cases in kernel that can utilize it)
+> > > 
+> > > #define kfree_non_null_rcu(ptr, rcu_head)		\
+> > > 	do {						\
+> > > 		if (ptr)				\
+> > > 			kfree_rcu(ptr, rcu_head);	\
+> > > 	} while (0)
+> > > 
+> > > as a more common pattern for resource deallocators.
+> > 
+> > I think that should move straight into kfree_rcu.  
 > 
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index 9344cbb..59569d6 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -197,6 +197,7 @@ struct iommu_inv_addr_info {
->  	__u64	granule_size;
->  	__u64	nb_granules;
->  };
-> +#define NR_IOMMU_CACHE_INVAL_GRANU	(3)
->  
->  /**
->   * First level/stage invalidation information
-> @@ -228,6 +229,7 @@ struct iommu_cache_invalidate_info {
->  		struct iommu_inv_addr_info addr_info;
->  	};
->  };
-> +#define NR_IOMMU_CACHE_TYPE		(3)
-
-+ blank line?
-
->  /**
->   * struct gpasid_bind_data - Information about device and guest PASID binding
->   * @gcr3:	Guest CR3 value from guest mm
-> -- 
-> 2.7.4
+> Possible. I didn't dare to offer this due to lack of knowledge how it's used in
+> other places.
 > 
+> > In general
+> > we expect *free* to deal with NULL pointers transparently, so we
+> > should do so here as well.
+> 
+> Exactly my point, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+As shown below?
 
+And now that you mention it, it is a bit surprising that no one has
+complained before.  ;-)
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 23ad938244968e9d2a8001a1c52887c113b182f6
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Tue Apr 9 07:48:18 2019 -0700
+
+    rcu: Make kfree_rcu() ignore NULL pointers
+    
+    This commit makes the kfree_rcu() macro's semantics be consistent
+    with the likes of kfree() by adding a check for NULL pointers, so
+    that kfree_rcu(NULL, ...) is a no-op.
+    
+    Reported-by: Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Reported-by: Christoph Hellwig <hch@infradead.org>
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 922bb6848813..c68649b9bcec 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -828,9 +828,13 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
+  * The BUILD_BUG_ON check must not involve any function calls, hence the
+  * checks are done in macros here.
+  */
+-#define kfree_rcu(ptr, rcu_head)					\
+-	__kfree_rcu(&((ptr)->rcu_head), offsetof(typeof(*(ptr)), rcu_head))
+-
++#define kfree_rcu(ptr, rhf)						\
++do {									\
++	typeof (ptr) ___p = (ptr);					\
++									\
++	if (___p)							\
++		__kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
++} while (0)
+ 
+ /*
+  * Place this after a lock-acquisition primitive to guarantee that
 
