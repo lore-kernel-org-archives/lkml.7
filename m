@@ -2,160 +2,174 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7874C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54627C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9630520857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7oWjjj8"
+	by mail.kernel.org (Postfix) with ESMTP id 24DC221473
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 05:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDIFsH (ORCPT
+        id S1727398AbfDIFsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 01:48:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37629 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfDIFsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 01:48:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 8so9026137pfr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 22:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fk7ySHxspoQihk8H1hUCQ6mXk911Jd5AiLjmPFk57ng=;
-        b=b7oWjjj8wtAUlON+nhLUHiPwGpU30IK4b+8JQ6KUOB84LK1dbWga+pyVL8g+Jf8Gp/
-         IRqjQXy//wIGc/M7zk2xQzwoozAcM6dfFPV814aeMMtcASPxFcn1jb7RgHn/duVasTDC
-         zUo3D+lp1qAoj5P1sHjT3l/wOOW+RLAyUgMFOjS/kE4DLFXW4lJStu03mDr/3/tBD6jx
-         c1pxpIUwCKOeW8rtSmS6vNu4swoolVjJaOGECpfvqRQt7EFQ23bF6s93TL2XUacvgvEi
-         4uyVLm0dsT6Chq6VSp3T7X8r9jlSr3KJ3vZ3/39JN3wXK2uRMxqlh8CUlMi82JvLIwL3
-         QTOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fk7ySHxspoQihk8H1hUCQ6mXk911Jd5AiLjmPFk57ng=;
-        b=qhnJqPRVhU40HOb2yE85V6LjteIeG8P2Wdgxlr2tZxQ5/CxGpnToWcmcgenhSq5uRO
-         osyLm0N554LYb964DdivUIKqsvaum1C/Ipt5ruNRZ1wNCC7P+TFw2LLwWl2HAkCRvrIi
-         d0b9l6PBlLVz6ATbxzmMAUJ4JeZpc2/Mjbnlx8XAgAe8kfoNqiRWudQpJyLipwe5fSX0
-         Cgertg0KXpec1p7X/QYiMzR58NnjgpfN0HhfNgHdLbOnwxRl6swsjwLfGY6irhqcr8s1
-         BQbdQsWWELQPP5f3pOLItMn6j8HHnDfFLTJeuRyQGuFBPsin3ttzt8M5mQLUlvc06wgD
-         lNSw==
-X-Gm-Message-State: APjAAAV3Mg+Wc/asbIEy3+z58HN64aIBaGxF7s2+BqEWdOKBZRcfMySu
-        /K58YgoTUGT1G6RNgaP/qLCKQQ==
-X-Google-Smtp-Source: APXvYqzPczeXhlAD01YGNI5f4m3UhJyYYe1Ma0ggwIGWktlC++t8UvxBeHtaROccWgH/uwecLeFdgg==
-X-Received: by 2002:a63:1659:: with SMTP id 25mr31609522pgw.275.1554788886343;
-        Mon, 08 Apr 2019 22:48:06 -0700 (PDT)
-Received: from localhost ([122.172.162.162])
-        by smtp.gmail.com with ESMTPSA id c1sm37639959pgk.44.2019.04.08.22.48.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2019 22:48:05 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 11:18:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/9] cpufreq: qcom: support qcs404 on nvmem driver
-Message-ID: <20190409054803.m24qucluqtxmd4vq@vireshk-i7>
-References: <20190404050931.9812-1-niklas.cassel@linaro.org>
- <20190404050931.9812-5-niklas.cassel@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404050931.9812-5-niklas.cassel@linaro.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+        Tue, 9 Apr 2019 01:48:14 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:41542 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbfDIFsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 01:48:14 -0400
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id 2D51645D417A2F6FA42D;
+        Tue,  9 Apr 2019 13:48:11 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x395m5Fc046077;
+        Tue, 9 Apr 2019 13:48:05 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019040913482107-7975996 ;
+          Tue, 9 Apr 2019 13:48:21 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Anirudha Sarangi <anirudh@xilinx.com>,
+        John Linn <John.Linn@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] net: xilinx: add a helper function for axienet_probe
+Date:   Tue, 9 Apr 2019 13:48:00 +0800
+Message-Id: <1554788881-22647-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-04-09 13:48:21,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-04-09 13:48:03,
+        Serialize complete at 2019-04-09 13:48:03
+X-MAIL: mse01.zte.com.cn x395m5Fc046077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-04-19, 07:09, Niklas Cassel wrote:
-> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> 
+The "Find DMA Node, Map DMA Register, and Decode DMA IRQ" code snippets
+in Axienet_Probe are independent. Tidy up axienet_probe a little by
+factoring these out into a helper function.
 
-Always have something here, even for the simplest of the patches.
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reported-by: Markus Elfring <Markus.Elfring@web.de>
+Cc: Anirudha Sarangi <anirudh@xilinx.com>
+Cc: John Linn <John.Linn@xilinx.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 69 +++++++++++++++--------
+ 1 file changed, 45 insertions(+), 24 deletions(-)
 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
->  drivers/cpufreq/qcom-cpufreq-nvmem.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> index 366c65a7132a..7fdc38218390 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/pm_opp.h>
->  #include <linux/slab.h>
->  #include <linux/soc/qcom/smem.h>
-> @@ -79,6 +80,13 @@ static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
->  	return version;
->  }
->  
-> +static int qcom_cpufreq_qcs404_name_version(struct device *cpu_dev,
-> +					    struct nvmem_cell *speedbin_nvmem,
-> +					    struct qcom_cpufreq_drv *drv)
-> +{
-> +	return 0;
-> +}
-> +
-
-Why provide empty stubs? Rather check for get_version() in probe and call only
-if it is supported.
-
->  static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
->  					  struct nvmem_cell *speedbin_nvmem,
->  					  struct qcom_cpufreq_drv *drv)
-> @@ -191,6 +199,14 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->  			dev_err(cpu_dev, "Failed to set supported hardware\n");
->  			goto free_opp;
->  		}
-> +
-> +		ret = dev_pm_domain_attach(cpu_dev, false);
-
-Why is it required specially for this platform and not earlier ?
-
-And I was hoping for the attach-by-name thing to be present here instead because
-of multiple domain thing.
-
-> +		if (ret) {
-> +			if (ret == -EPROBE_DEFER)
-> +				goto free_opp;
-> +			dev_err(cpu_dev, "Could not attach to pm_domain: %d\n",
-> +				ret);
-
-And it is okay if we couldn't attach the domain ?
-
-> +		}
->  	}
->  
->  	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
-> @@ -247,6 +263,8 @@ static const struct of_device_id qcom_cpufreq_match_list[] __initconst = {
->  	  .data = qcom_cpufreq_kryo_name_version },
->  	{ .compatible = "qcom,msm8996",
->  	  .data = qcom_cpufreq_kryo_name_version },
-> +	{ .compatible = "qcom,qcs404",
-> +	  .data = qcom_cpufreq_qcs404_name_version },
->  	{},
->  };
->  
-> -- 
-> 2.20.1
-
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 4041c75..2d15897 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1434,6 +1434,48 @@ static void axienet_dma_err_handler(unsigned long data)
+ }
+ 
+ /**
++ * axienet_dma_res_init - Initialize the DMA related resources of
++ *                        the axienet local structure.
++ * @lp: Pointer to axienet local structure
++ *
++ * Return: 0, on success
++ *	    Non-zero error value on failure.
++ *
++ * This function find the DMA node via pdev, map the DMA registers,
++ * and decode the DMA IRQs.
++ */
++static int axienet_dma_res_init(struct axienet_local *lp)
++{
++	struct resource dmares;
++	struct device_node *np;
++	int ret;
++
++	np = of_parse_phandle(lp->dev->of_node, "axistream-connected", 0);
++	if (!np) {
++		dev_err(lp->dev, "could not find DMA node\n");
++		ret = -ENODEV;
++		return ret;
++	}
++	ret = of_address_to_resource(np, 0, &dmares);
++	if (ret) {
++		dev_err(lp->dev, "unable to get DMA resource\n");
++		goto put_node;
++	}
++	lp->dma_regs = devm_ioremap_resource(lp->dev, &dmares);
++	if (IS_ERR(lp->dma_regs)) {
++		dev_err(lp->dev, "could not map DMA regs\n");
++		ret = PTR_ERR(lp->dma_regs);
++		goto put_node;
++	}
++	lp->rx_irq = irq_of_parse_and_map(np, 1);
++	lp->tx_irq = irq_of_parse_and_map(np, 0);
++
++put_node:
++	of_node_put(np);
++	return ret;
++}
++
++/**
+  * axienet_probe - Axi Ethernet probe function.
+  * @pdev:	Pointer to platform device structure.
+  *
+@@ -1448,11 +1490,10 @@ static void axienet_dma_err_handler(unsigned long data)
+ static int axienet_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+-	struct device_node *np;
+ 	struct axienet_local *lp;
+ 	struct net_device *ndev;
+ 	const void *mac_addr;
+-	struct resource *ethres, dmares;
++	struct resource *ethres;
+ 	u32 value;
+ 
+ 	ndev = alloc_etherdev(sizeof(*lp));
+@@ -1565,29 +1606,9 @@ static int axienet_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	/* Find the DMA node, map the DMA registers, and decode the DMA IRQs */
+-	np = of_parse_phandle(pdev->dev.of_node, "axistream-connected", 0);
+-	if (!np) {
+-		dev_err(&pdev->dev, "could not find DMA node\n");
+-		ret = -ENODEV;
+-		goto free_netdev;
+-	}
+-	ret = of_address_to_resource(np, 0, &dmares);
+-	if (ret) {
+-		dev_err(&pdev->dev, "unable to get DMA resource\n");
+-		of_node_put(np);
+-		goto free_netdev;
+-	}
+-	lp->dma_regs = devm_ioremap_resource(&pdev->dev, &dmares);
+-	if (IS_ERR(lp->dma_regs)) {
+-		dev_err(&pdev->dev, "could not map DMA regs\n");
+-		ret = PTR_ERR(lp->dma_regs);
+-		of_node_put(np);
++	ret = axienet_dma_res_init(lp);
++	if (ret)
+ 		goto free_netdev;
+-	}
+-	lp->rx_irq = irq_of_parse_and_map(np, 1);
+-	lp->tx_irq = irq_of_parse_and_map(np, 0);
+-	of_node_put(np);
+ 	if ((lp->rx_irq <= 0) || (lp->tx_irq <= 0)) {
+ 		dev_err(&pdev->dev, "could not determine irqs\n");
+ 		ret = -ENOMEM;
 -- 
-viresh
+2.9.5
+
