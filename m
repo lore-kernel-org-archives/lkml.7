@@ -2,133 +2,162 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACADDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2612C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797B920883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:08:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JUkqm4Ce"
+	by mail.kernel.org (Postfix) with ESMTP id 7D48920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554790326;
+	bh=HjKj0zZX3UV/q5Qo3qnQwSa0uBTp20Bp/2kcay+9GhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rRjv2oNY81qLS3bDOc5rj8IbsYgFdl+UhoZtBVkqg6u46FR2H5POSS/FlcCy/1Efd
+	 nypPf+qG5ejgwC1xhlVlpsrzxDpZj76ikr4XvTxsVi03BL1IzQphxbfdvHVJwxXAIR
+	 ImIG0rIcckerp4ZO/4o6XF+XjWL0gJRbq2qYDvOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfDIGI5 (ORCPT
+        id S1726438AbfDIGME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:08:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52563 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfDIGI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:08:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44dcLC3Fs9z9sNj;
-        Tue,  9 Apr 2019 16:08:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554790133;
-        bh=b+lLXWelGn0jDE9KSkoP25RySRJxegTyui5Cc3aep6E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JUkqm4Certk4Rck2RCNUtaXk0dNWFN+SlxLtTXWLPC2Bz5FPgL3ycPl47Ij/vmj01
-         4vG9Uwz7YihKjyX/Ovc3polFoANCqsepu9DCMUbD1T7h0tBUASpblJ1xXFnrlgQ+l3
-         LrwbA1rIV6g7IaQdI/lPfFtFcf3UN1eQ9cfa60VIK4N5DxaHgVOxSREWifb58St3bl
-         OoGaJ4WxXqwuQA0bssjEoqms2S+CmqgYC+51T1Hudpv3td+FE5Zu5gsSqiriDE/pia
-         kd4yOok1tX4Poi/teHWpbWhqbdDrKv7SvhCVqxD/n6Bd7ARMIU4brqZXphBAlO6nkF
-         SlxrQjt1Z9zPw==
-Date:   Tue, 9 Apr 2019 16:08:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190409160849.391d3efa@canb.auug.org.au>
+        Tue, 9 Apr 2019 02:12:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55662 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726062AbfDIGMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 02:12:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 36CE4AD5E;
+        Tue,  9 Apr 2019 06:12:01 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 08:12:00 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Oscar Salvador <osalvador@suse.de>, david@redhat.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/2] mm, memory_hotplug: provide a more generic
+ restrictions for memory hotplug
+Message-ID: <20190409061200.GA10383@dhcp22.suse.cz>
+References: <20190408082633.2864-1-osalvador@suse.de>
+ <20190408082633.2864-3-osalvador@suse.de>
+ <20190408213041.50350dac32ed315839c57e09@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/DWKl6TYJOO3DDbnDEbr3Usa"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190408213041.50350dac32ed315839c57e09@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DWKl6TYJOO3DDbnDEbr3Usa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon 08-04-19 21:30:41, Andrew Morton wrote:
+> On Mon,  8 Apr 2019 10:26:33 +0200 Oscar Salvador <osalvador@suse.de> wrote:
+> 
+> > arch_add_memory, __add_pages take a want_memblock which controls whether
+> > the newly added memory should get the sysfs memblock user API (e.g.
+> > ZONE_DEVICE users do not want/need this interface). Some callers even
+> > want to control where do we allocate the memmap from by configuring
+> > altmap.
+> > 
+> > Add a more generic hotplug context for arch_add_memory and __add_pages.
+> > struct mhp_restrictions contains flags which contains additional
+> > features to be enabled by the memory hotplug (MHP_MEMBLOCK_API
+> > currently) and altmap for alternative memmap allocator.
+> > 
+> > This patch shouldn't introduce any functional change.
+> 
+> From: Andrew Morton <akpm@linux-foundation.org>
+> Subject: mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
+> 
+> x86_64 allnoconfig:
+> 
+> In file included from ./include/linux/mmzone.h:744:0,
+>                  from ./include/linux/gfp.h:6,
+>                  from ./include/linux/umh.h:4,
+>                  from ./include/linux/kmod.h:22,
+>                  from ./include/linux/module.h:13,
+>                  from init/do_mounts.c:1:
+> ./include/linux/memory_hotplug.h:353:11: warning: ‘struct mhp_restrictions’ declared inside parameter list will not be visible outside of this definition or declaration
+>     struct mhp_restrictions *restrictions);
+>            ^~~~~~~~~~~~~~~~
+> 
+> Fix this by moving the arch_add_memory() definition inside
+> CONFIG_MEMORY_HOTPLUG and moving the mhp_restrictions definition to a more
+> appropriate place.
 
-Hi all,
+LGTM. Thanks for the fixup!
 
-After merging the drm-misc tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> 
+>  include/linux/memory_hotplug.h |   24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> --- a/include/linux/memory_hotplug.h~mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix
+> +++ a/include/linux/memory_hotplug.h
+> @@ -54,6 +54,16 @@ enum {
+>  };
+>  
+>  /*
+> + * Restrictions for the memory hotplug:
+> + * flags:  MHP_ flags
+> + * altmap: alternative allocator for memmap array
+> + */
+> +struct mhp_restrictions {
+> +	unsigned long flags;
+> +	struct vmem_altmap *altmap;
+> +};
+> +
+> +/*
+>   * Zone resizing functions
+>   *
+>   * Note: any attempt to resize a zone should has pgdat_resize_lock()
+> @@ -101,6 +111,8 @@ extern void __online_page_free(struct pa
+>  
+>  extern int try_online_node(int nid);
+>  
+> +extern int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions);
+>  extern u64 max_mem_size;
+>  
+>  extern bool memhp_auto_online;
+> @@ -126,16 +138,6 @@ extern int __remove_pages(struct zone *z
+>  
+>  #define MHP_MEMBLOCK_API               (1<<0)
+>  
+> -/*
+> - * Restrictions for the memory hotplug:
+> - * flags:  MHP_ flags
+> - * altmap: alternative allocator for memmap array
+> - */
+> -struct mhp_restrictions {
+> -	unsigned long flags;
+> -	struct vmem_altmap *altmap;
+> -};
+> -
+>  /* reasonably generic interface to expand the physical pages */
+>  extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+>  		       struct mhp_restrictions *restrictions);
+> @@ -349,8 +351,6 @@ extern int walk_memory_range(unsigned lo
+>  extern int __add_memory(int nid, u64 start, u64 size);
+>  extern int add_memory(int nid, u64 start, u64 size);
+>  extern int add_memory_resource(int nid, struct resource *resource);
+> -extern int arch_add_memory(int nid, u64 start, u64 size,
+> -			struct mhp_restrictions *restrictions);
+>  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap);
+>  extern bool is_memblock_offlined(struct memory_block *mem);
+> _
+> 
 
-drivers/gpu/drm/cirrus/cirrus.c: In function 'cirrus_fb_blit_rect':
-drivers/gpu/drm/cirrus/cirrus.c:310:25: error: implicit declaration of func=
-tion '__io_virt'; did you mean '__do_irq'? [-Werror=3Dimplicit-function-dec=
-laration]
-   drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
-                         ^~~~~~~~~
-                         __do_irq
-drivers/gpu/drm/cirrus/cirrus.c:310:25: warning: passing argument 1 of 'drm=
-_fb_memcpy_dstclip' makes pointer from integer without a cast [-Wint-conver=
-sion]
-   drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
-                         ^~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/gpu/drm/cirrus/cirrus.c:33:
-include/drm/drm_format_helper.h:18:34: note: expected 'void *' but argument=
- is of type 'int'
- void drm_fb_memcpy_dstclip(void *dst, void *vaddr, struct drm_framebuffer =
-*fb,
-                            ~~~~~~^~~
-drivers/gpu/drm/cirrus/cirrus.c:314:37: warning: passing argument 1 of 'drm=
-_fb_xrgb8888_to_rgb565_dstclip' makes pointer from integer without a cast [=
--Wint-conversion]
-   drm_fb_xrgb8888_to_rgb565_dstclip(__io_virt(cirrus->vram),
-                                     ^~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/gpu/drm/cirrus/cirrus.c:33:
-include/drm/drm_format_helper.h:25:46: note: expected 'void *' but argument=
- is of type 'int'
- void drm_fb_xrgb8888_to_rgb565_dstclip(void *dst, unsigned int dst_pitch,
-                                        ~~~~~~^~~
-drivers/gpu/drm/cirrus/cirrus.c:319:37: warning: passing argument 1 of 'drm=
-_fb_xrgb8888_to_rgb888_dstclip' makes pointer from integer without a cast [=
--Wint-conversion]
-   drm_fb_xrgb8888_to_rgb888_dstclip(__io_virt(cirrus->vram),
-                                     ^~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/gpu/drm/cirrus/cirrus.c:33:
-include/drm/drm_format_helper.h:28:46: note: expected 'void *' but argument=
- is of type 'int'
- void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
-                                        ~~~~~~^~~
-
-Caused by commit
-
-  ab3e023b1b4c ("drm/cirrus: rewrite and modernize driver.")
-
-I have marked that driver BROKEN for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DWKl6TYJOO3DDbnDEbr3Usa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlysNvEACgkQAVBC80lX
-0GxmWwf/VoRfLiEXUWEl7T/H4C6lWqLfx1fxGJLssggwzz8Pn3eXiGQ8g5Gtys6R
-NKjvb9r6IpmHbk/6FXiuE4kU8Qile9cRp0pu5U6NMxnM4eV5d5tG1q5mroDvDr3/
-WtG38VgiF9KmiMShsZfjhMxBxmBOccmCazmcnbieMA9rj/xdTOJFrbT4XSO5Yaks
-lrRSf8CnH54/TPIvW8lt2r6kZBMNiMdJ7aaxjf7PYI2pxAS7mLaOFqtSZ2AT4pc3
-E2woWMwUBsj9IPLea2zzMDJWI5BADD6v7xfJrlKS7NIW8T/jQOXEm2l4+D2RIV1H
-kzjXDIanTnHSTIA3Svcj7Zkvy6+3Aw==
-=G9CV
------END PGP SIGNATURE-----
-
---Sig_/DWKl6TYJOO3DDbnDEbr3Usa--
+-- 
+Michal Hocko
+SUSE Labs
