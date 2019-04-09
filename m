@@ -2,385 +2,231 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109D6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4009C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF972084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AD820830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 11:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="gVoow0Fw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q71+0gJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfDILsm (ORCPT
+        id S1727232AbfDILtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 07:48:42 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:33236 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbfDILsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 07:48:42 -0400
-Received: from g550jk.localnet (80-110-119-101.cgn.dynamic.surfer.at [80.110.119.101])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 0AD79C1A44;
-        Tue,  9 Apr 2019 11:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1554810517; bh=umlbUfv0bsemnHcs5wlsDlU6EY1FukypWaEcu+eI2YE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=gVoow0FwWg8qaxhgJwzTMDRdh74ATyupSe2jgQ1hOQj8nnPVdZz9nX8fjoAg0vups
-         goYAKnpGC0BrZoJXhFqlcD7/n4oei5ciRT6HTbVkyfErA5ockz/4HjRXC/ScNDhL6S
-         OkDwejFaqS7/D3c4a0s2xHVpY4CLlt7MggtnpcJw=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] Input: add a driver for GPIO controllable vibrators
-Date:   Tue, 09 Apr 2019 13:48:35 +0200
-Message-ID: <2691889.jnjB3NjM6o@g550jk>
-In-Reply-To: <20190407221857.GB162359@dtor-ws>
-References: <20190407155841.27354-1-luca@z3ntu.xyz> <20190407155841.27354-2-luca@z3ntu.xyz> <20190407221857.GB162359@dtor-ws>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 9 Apr 2019 07:49:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52618 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfDILtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 07:49:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a184so3137956wma.2;
+        Tue, 09 Apr 2019 04:49:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cu4FZyfA3YtDJ+CsBuDx6jJwaKKA23SoG5veO6DxHnI=;
+        b=q71+0gJRHbJ92avTlhEd17kazJ35k8tQRPfPONbeZQGjyW2mwQBWciWQLbEF/YKH+S
+         8FU1iWp5QH13f/kRVwnGAAVZbF4ypeZIYQ1Ebkz1iTVcRhasNwUsWdic4EjfbyBeHtoJ
+         R3hN1hABejtVd0OHzcydiJ5TFclORQi/ZeMyFEahapyKkjUDdDTrwsXaZefzG/UNZDA8
+         6ZJb54iitlfmy8hzrbhxB2/5PN7mb4ZPZfEr4bVqz4g2t4xJejhKwYfXDuGW3y5rXJmQ
+         0DKhTb4ImDp2UMSeJDWkY9ytm1HwpTqLgEzyQGdhg5Qt/qT1wGulTl5X5ppXEjFPVIyl
+         B0Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cu4FZyfA3YtDJ+CsBuDx6jJwaKKA23SoG5veO6DxHnI=;
+        b=TA7PvQz2V4EJx5DMcBmhhPEMkce+kMuLj2k8H6cVu3PGmBGeLlcfe7MIGRgFpSWEQ0
+         LMD1QiTaIcT8h8d4M4oBrKh0jfhtBo6ZfABeBAl401RJaxZO4uo1iQlnxKw4hbkKRH0Z
+         DwbaHmqqkLj/BVJaNB0BFLtoNwvQEGINlEVHE+DlXwKWOrcVB0jyFyW0yqtdzgKQCTH+
+         9L8wkCVAnZLjjR0ff3bgfUwjuYg2Q1nTc4QEJjxolNETX7YQXDIDLNm431t28YM2dP6G
+         gjLWFZmZI5cbjPVV/htyujluKmrp12DDuY7ISxbbbSvfsFhHR2w2ydaXmCbhyed4cSqk
+         yRuQ==
+X-Gm-Message-State: APjAAAXbR/FFtmDvcpaBmqi16RURVdrEHEbXJLBl2gGNGN/q7wZ+l7zI
+        dNsUY0cLBOjglfg+e/s5IugNmMEVtDg=
+X-Google-Smtp-Source: APXvYqwBL1DCEk72FWv7eJ+UNI92axM532jgEi9brHMUbrd783n21nx41zTi/TfDmAwQOK9VtYbFug==
+X-Received: by 2002:a1c:6c09:: with SMTP id h9mr1855106wmc.130.1554810569991;
+        Tue, 09 Apr 2019 04:49:29 -0700 (PDT)
+Received: from amir-VirtualBox.ctera.local ([5.102.238.208])
+        by smtp.gmail.com with ESMTPSA id j7sm46135793wrt.96.2019.04.09.04.49.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 04:49:29 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writeback
+Date:   Tue,  9 Apr 2019 14:49:22 +0300
+Message-Id: <20190409114922.30095-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry,
+Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
+writeback") claims that sync_file_range(2) syscall was "created for
+userspace to be able to issue background writeout and so waiting for
+in-flight IO is undesirable there" and changes the writeback (back) to
+WB_SYNC_NONE.
 
-see inline comments - and:
-your last two comments should probably be also applied to the pwm-vibra.c 
-driver, as that's where these code blocks come from.
+This claim is only partially true. Is is true for users that use the flag
+SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
+the reason for changing to WB_SYNC_NONE writeback.
 
-On Montag, 8. April 2019 00:18:57 CEST Dmitry Torokhov wrote:
-> Hi Luca,
-> 
-> On Sun, Apr 07, 2019 at 05:58:41PM +0200, Luca Weiss wrote:
-> > Provide a simple driver for GPIO controllable vibrators.
-> > It will be used by the Fairphone 2.
-> > 
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
-> > 
-> >  drivers/input/misc/Kconfig      |  12 ++
-> >  drivers/input/misc/Makefile     |   1 +
-> >  drivers/input/misc/gpio-vibra.c | 214 ++++++++++++++++++++++++++++++++
-> >  3 files changed, 227 insertions(+)
-> >  create mode 100644 drivers/input/misc/gpio-vibra.c
-> > 
-> > diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> > index e15ed1bb8558..6dfe9e2fe5b1 100644
-> > --- a/drivers/input/misc/Kconfig
-> > +++ b/drivers/input/misc/Kconfig
-> > @@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
-> > 
-> >  	 To compile this driver as a module, choose M here: the module
-> >  	 will be called gpio_decoder.
-> > 
-> > +config INPUT_GPIO_VIBRA
-> > +	tristate "GPIO vibrator support"
-> > +	depends on GPIOLIB || COMPILE_TEST
-> > +	select INPUT_FF_MEMLESS
-> > +	help
-> > +	  Say Y here to get support for GPIO based vibrator devices.
-> > +
-> > +	  If unsure, say N.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module 
-will be
-> > +	  called gpio-vibra.
-> > +
-> > 
-> >  config INPUT_IXP4XX_BEEPER
-> >  
-> >  	tristate "IXP4XX Beeper support"
-> >  	depends on ARCH_IXP4XX
-> > 
-> > diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> > index b936c5b1d4ac..f38ebbdb05e2 100644
-> > --- a/drivers/input/misc/Makefile
-> > +++ b/drivers/input/misc/Makefile
-> > @@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
-> > 
-> >  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
-> >  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
-> >  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
-> > 
-> > +obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
-> > 
-> >  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
-> >  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
-> >  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-> > 
-> > diff --git a/drivers/input/misc/gpio-vibra.c
-> > b/drivers/input/misc/gpio-vibra.c new file mode 100644
-> > index 000000000000..14f9534668c8
-> > --- /dev/null
-> > +++ b/drivers/input/misc/gpio-vibra.c
-> > @@ -0,0 +1,214 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + *  GPIO vibrator driver
-> > + *
-> > + *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
-> > + *
-> > + *  Based on PWM vibrator driver:
-> > + *  Copyright (C) 2017 Collabora Ltd.
-> > + *
-> > + *  Based on previous work from:
-> > + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > + *
-> > + *  Based on PWM beeper driver:
-> > + *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
-> > + */
-> > +
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/input.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/property.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/slab.h>
-> > +
-> > +enum vibrator_state {
-> > +	VIBRATOR_OFF,
-> > +	VIBRATOR_ON
-> > +};
-> 
-> I'd probably go with simple "bool running".
-Changed.
-> 
-> > +
-> > +struct gpio_vibrator {
-> > +	struct input_dev *input;
-> > +	struct gpio_desc *gpio;
-> > +	struct regulator *vcc;
-> > +
-> > +	struct work_struct play_work;
-> > +	enum vibrator_state state;
-> > +	bool vcc_on;
-> > +};
-> > +
-> > +static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
-> > +{
-> > +	struct device *pdev = vibrator->input->dev.parent;
-> > +	int err;
-> > +
-> > +	if (!vibrator->vcc_on) {
-> > +		err = regulator_enable(vibrator->vcc);
-> > +		if (err) {
-> > +			dev_err(pdev, "failed to enable regulator: 
-%d", err);
-> > +			return err;
-> > +		}
-> > +		vibrator->vcc_on = true;
-> > +	}
-> > +
-> > +	gpiod_set_value(vibrator->gpio, 1);
-> 
-> Since this is called by work item and thus from context that can sleep,
-> we can use gpiod_set_value_cansleep() so that "slow" GPIOs can be used
-> with the driver.
-Changed.
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
-> > +{
-> > +	gpiod_set_value(vibrator->gpio, 0);
-> > +
-> > +	if (vibrator->vcc_on) {
-> > +		regulator_disable(vibrator->vcc);
-> > +		vibrator->vcc_on = false;
-> > +	}
-> > +}
-> > +
-> > +static void gpio_vibrator_play_work(struct work_struct *work)
-> > +{
-> > +	struct gpio_vibrator *vibrator = container_of(work,
-> > +					struct gpio_vibrator, 
-play_work);
-> > +
-> > +	if (vibrator->state == VIBRATOR_ON)
-> > +		gpio_vibrator_start(vibrator);
-> > +	else
-> > +		gpio_vibrator_stop(vibrator);
-> > +}
-> > +
-> > +static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
-> > +				    struct ff_effect *effect)
-> > +{
-> > +	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
-> > +
-> > +	int level = effect->u.rumble.strong_magnitude;
-> > +
-> > +	if (!level)
-> > +		level = effect->u.rumble.weak_magnitude;
-> > +
-> > +	if (level)
-> > +		vibrator->state = VIBRATOR_ON;
-> > +	else
-> > +		vibrator->state = VIBRATOR_OFF;
-> > +
-> > +	schedule_work(&vibrator->play_work);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void gpio_vibrator_close(struct input_dev *input)
-> > +{
-> > +	struct gpio_vibrator *vibrator = input_get_drvdata(input);
-> > +
-> > +	cancel_work_sync(&vibrator->play_work);
-> > +	gpio_vibrator_stop(vibrator);
-> 
-> Do you want to update vibrator->state here?
-I've looked at that a bit and it makes sense when the vibrator is on, the 
-input it closed (and the vibrator stopped but the variable is still 'on'), 
-then the device is suspended and resumed, the vibrator will be turned on 
-again, so I'll change that.
-> 
-> > +}
-> > +
-> > +static int gpio_vibrator_probe(struct platform_device *pdev)
-> > +{
-> > +	struct gpio_vibrator *vibrator;
-> > +	int err;
-> > +
-> > +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), 
-GFP_KERNEL);
-> > +	if (!vibrator)
-> > +		return -ENOMEM;
-> > +
-> > +	vibrator->input = devm_input_allocate_device(&pdev->dev);
-> > +	if (!vibrator->input)
-> > +		return -ENOMEM;
-> > +
-> > +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> > +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> > +	if (err) {
-> > +		if (err != -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "Failed to request 
-regulator: %d",
-> > +				err);
-> > +		return err;
-> > +	}
-> > +
-> > +	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", 
-GPIOD_OUT_LOW);
-> > +	err = PTR_ERR_OR_ZERO(vibrator->gpio);
-> > +	if (err) {
-> > +		if (err != -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "Failed to request main 
-gpio: %d",
-> > +				err);
-> > +		return err;
-> > +	}
-> > +
-> > +	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
-> > +
-> > +	vibrator->input->name = "gpio-vibrator";
-> > +	vibrator->input->id.bustype = BUS_HOST;
-> > +	vibrator->input->dev.parent = &pdev->dev;
-> 
-> No need to set as you used devm_input_device_alloc().
-Changed.
-> > +	vibrator->input->close = gpio_vibrator_close;
-> > +
-> > +	input_set_drvdata(vibrator->input, vibrator);
-> > +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> > +
-> > +	err = input_ff_create_memless(vibrator->input, NULL,
-> > +				      gpio_vibrator_play_effect);
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	err = input_register_device(vibrator->input);
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "Couldn't register input dev: %d", 
-err);
-> > +		return err;
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, vibrator);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
-> > +{
-> > +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-> > +
-> > +	cancel_work_sync(&vibrator->play_work);
-> > +	if (vibrator->state == VIBRATOR_ON)
-> > +		gpio_vibrator_stop(vibrator);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused gpio_vibrator_resume(struct device *dev)
-> > +{
-> > +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-> > +
-> > +	if (vibrator->state == VIBRATOR_ON)
-> > +		gpio_vibrator_start(vibrator);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
-> > +			 gpio_vibrator_suspend, 
-gpio_vibrator_resume);
-> > +
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id gpio_vibra_dt_match_table[] = {
-> > +	{ .compatible = "gpio-vibrator" },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
-> > +#endif
-> > +
-> > +static struct platform_driver gpio_vibrator_driver = {
-> > +	.probe	= gpio_vibrator_probe,
-> > +	.driver	= {
-> > +		.name	= "gpio-vibrator",
-> > +		.pm	= &gpio_vibrator_pm_ops,
-> > +		.of_match_table = 
-of_match_ptr(gpio_vibra_dt_match_table),
-> > +	},
-> > +};
-> > +module_platform_driver(gpio_vibrator_driver);
-> > +
-> > +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
-> > +MODULE_DESCRIPTION("GPIO vibrator driver");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("platform:gpio-vibrator");
-> 
-> Thanks.
+However, that claim is not true for users that use that flag combination
+SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.  Those users explicitly
+requested to wait for in-flight IO as well as to writeback of dirty
+pages.  sync_file_range(2) man page describes this flag combintaion as
+"write-for-data-integrity operation", although some may argue against
+this definition.
 
-Thank you for the review, will send a v3 soon!
-Luca
+Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT and use
+the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
+writeback, to perform the range sync request.
 
+One intended use case for this API is creating a dependency between
+a new file's content and its link into the namepsace without requiring
+journal commit and flushing of disk volatile caches:
+
+  fd = open(".", O_TMPFILE | O_RDWR);
+  write(fd, newdata, count);
+  sync_file_range(fd, SYNC_FILE_RANGE_WRITE_AND_WAIT, 0, 0);
+  linkat(AT_EMPTY_PATH, fd, AT_FDCWD, newfile);
+
+For many local filesystems, ext4 and xfs included, the sequence above
+will guaranty that after crash, either 'newfile' exists with 'newdata'
+content or 'newfile' does not exists.  For some applications, this
+guaranty is strong enough and the effects of sync_file_range(2), even
+with WB_SYNC_ALL, are far less intrusive to other writers in the system
+than the effects of fdatasync(2).
+
+Fixes: 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+
+Hi folks,
+
+I was debating with myself whether I should change behavior of
+sync_file_range(2) do to what documentation says it does and flag names
+suggest that they do or to introduce a new flag for the old/new
+behavior.
+
+At the moment, myself won with restoring old behavior without a new
+flag, but with re-branding of existing flags. I do not see how there
+could be users relying on existing behavior (TM).
+
+An argument in favor of new flag is that with existing flags,
+application doesn't know if kernel provides the guaranty or not.
+
+An argument is favor of existing flags is to not further complicate the
+man page, that is complicated enough as it is.
+With this patch in upstream and stable kernels, the only thing I would add to
+man page is:
+
+  SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER
++ (or SYNC_FILE_RANGE_WRITE_AND_WAIT)
+   This is a write-for-data-integrity operation that will ensure that all pages
+   in the specified range which were dirty when sync_file_range() was called are
+-  committed to disk.
++  written to disk.  It should be noted that disk caches are not flushed by this
++  call, so there are no guarantees here that the data will be available on disk
++  after a crash.
+
+Thought?
+
+Amir.
+
+
+ fs/sync.c               | 25 ++++++++++++++++++-------
+ include/uapi/linux/fs.h |  3 +++
+ 2 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/fs/sync.c b/fs/sync.c
+index b54e0541ad89..5cf6fdbae4de 100644
+--- a/fs/sync.c
++++ b/fs/sync.c
+@@ -18,8 +18,8 @@
+ #include <linux/backing-dev.h>
+ #include "internal.h"
+ 
+-#define VALID_FLAGS (SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE| \
+-			SYNC_FILE_RANGE_WAIT_AFTER)
++#define VALID_FLAGS (SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WRITE_AND_WAIT | \
++		     SYNC_FILE_RANGE_WAIT_BEFORE | SYNC_FILE_RANGE_WAIT_AFTER)
+ 
+ /*
+  * Do the filesystem syncing work. For simple filesystems
+@@ -235,9 +235,9 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+ }
+ 
+ /*
+- * sys_sync_file_range() permits finely controlled syncing over a segment of
++ * ksys_sync_file_range() permits finely controlled syncing over a segment of
+  * a file in the range offset .. (offset+nbytes-1) inclusive.  If nbytes is
+- * zero then sys_sync_file_range() will operate from offset out to EOF.
++ * zero then ksys_sync_file_range() will operate from offset out to EOF.
+  *
+  * The flag bits are:
+  *
+@@ -254,7 +254,7 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+  * Useful combinations of the flag bits are:
+  *
+  * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE: ensures that all pages
+- * in the range which were dirty on entry to sys_sync_file_range() are placed
++ * in the range which were dirty on entry to ksys_sync_file_range() are placed
+  * under writeout.  This is a start-write-for-data-integrity operation.
+  *
+  * SYNC_FILE_RANGE_WRITE: start writeout of all dirty pages in the range which
+@@ -266,10 +266,13 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
+  * earlier SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE operation to wait
+  * for that operation to complete and to return the result.
+  *
+- * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER:
++ * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER
++ * (a.k.a. SYNC_FILE_RANGE_WRITE_AND_WAIT):
+  * a traditional sync() operation.  This is a write-for-data-integrity operation
+  * which will ensure that all pages in the range which were dirty on entry to
+- * sys_sync_file_range() are committed to disk.
++ * ksys_sync_file_range() are written to disk.  It should be noted that disk
++ * caches are not flushed by this call, so there are no guarantees here that the
++ * data will be available on disk after a crash.
+  *
+  *
+  * SYNC_FILE_RANGE_WAIT_BEFORE and SYNC_FILE_RANGE_WAIT_AFTER will detect any
+@@ -338,6 +341,14 @@ int ksys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
+ 
+ 	mapping = f.file->f_mapping;
+ 	ret = 0;
++	if ((flags & SYNC_FILE_RANGE_WRITE_AND_WAIT) ==
++		     SYNC_FILE_RANGE_WRITE_AND_WAIT) {
++		/* Unlike SYNC_FILE_RANGE_WRITE alone uses WB_SYNC_ALL */
++		ret = filemap_write_and_wait_range(mapping, offset, endbyte);
++		if (ret < 0)
++			goto out_put;
++	}
++
+ 	if (flags & SYNC_FILE_RANGE_WAIT_BEFORE) {
+ 		ret = file_fdatawait_range(f.file, offset, endbyte);
+ 		if (ret < 0)
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 121e82ce296b..59c71fa8c553 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -320,6 +320,9 @@ struct fscrypt_key {
+ #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+ #define SYNC_FILE_RANGE_WRITE		2
+ #define SYNC_FILE_RANGE_WAIT_AFTER	4
++#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
++					 SYNC_FILE_RANGE_WAIT_BEFORE | \
++					 SYNC_FILE_RANGE_WAIT_AFTER)
+ 
+ /*
+  * Flags for preadv2/pwritev2:
+-- 
+2.17.1
 
