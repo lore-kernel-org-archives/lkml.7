@@ -5,110 +5,118 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66780C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15CBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADEC20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B771D20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 06:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfDIGGe (ORCPT
+        id S1726479AbfDIGIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 02:06:34 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44784 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfDIGGc (ORCPT
+        Tue, 9 Apr 2019 02:08:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726035AbfDIGIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:06:32 -0400
-Received: by mail-vs1-f66.google.com with SMTP id j184so9081698vsd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2019 23:06:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QghUGeU0lUIj1ypciruVkJezIKMuwoGPNeUayMnA2X0=;
-        b=MVDjLZXfobAw9Y5aWvc7vaa6UbnUNiowUaWXeK4YUCb3clyep93QzwemxnskfPI0g9
-         7aClz1VHKBfhqkUX1DEBuHMeUgHsfTI9QpH7lPkqBxQXczwuBgVVcT4tzLCm7V9K5YaU
-         Jn/ODdphokIAGcdazkkAIT0o1YeMy3t2NJn7spH2ItvY0apa0YmC0hDjl7TirzS+etMC
-         Xk6ZSPKpi5PL93Jx3KsTudVDG4qEP/+zjgewgfy2pqI8HsbpBZfhahfIJ0VYc2nzqv0a
-         2t2p1IEz+iUjC90EIyl7IKUNqFHO84OEmXGj3LTeB0Q0ct/fvYUx7/Rffik1WRe/o6fT
-         9+fQ==
-X-Gm-Message-State: APjAAAWmGJzVp5w2IawUA7mHHY0geKV+KDi1/Iw4qX4zVDUkDUExsLuz
-        noXvfGuK/4jIkWKDJealTY+X3ktWDJKjJ+jJ+2i9iA==
-X-Google-Smtp-Source: APXvYqwTyH4B5DHaUuHob3hn0CCd0qn9wA1SAGDeSuiKXcQtAmaxlaWzMuGV40Xy/+IGy0xai3bZbbQqwIkbuBpNjiU=
-X-Received: by 2002:a67:ec47:: with SMTP id z7mr17098629vso.142.1554789990778;
- Mon, 08 Apr 2019 23:06:30 -0700 (PDT)
+        Tue, 9 Apr 2019 02:08:00 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3961ZYE068752
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 02:07:59 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rrn8q9bjk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 02:07:58 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Tue, 9 Apr 2019 07:07:55 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 9 Apr 2019 07:07:51 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3967o2547120534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Apr 2019 06:07:50 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0C7242045;
+        Tue,  9 Apr 2019 06:07:49 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96BC24203F;
+        Tue,  9 Apr 2019 06:07:49 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.152.212.134])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Apr 2019 06:07:49 +0000 (GMT)
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        mark.rutland@arm.com, jolsa@redhat.com
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+ <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+ <adcbac67-82b5-98a4-efb4-61c9ed870c15@linux.ibm.com>
+ <20190408082229.GI4038@hirez.programming.kicks-ass.net>
+ <20190408095031.GG14281@hirez.programming.kicks-ass.net>
+From:   Thomas-Mich Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Date:   Tue, 9 Apr 2019 08:07:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <20190110081750.11358-1-kraxel@redhat.com> <CAPM=9tx8N6jxVzsT-RqtQFrFb9qLK4qUUje+d=fpTYZ6+PnYpg@mail.gmail.com>
- <CAPM=9tyEmn2LXhNmPSOi7JAgBc3QZwNtM+8FT8CWebz4GztaJA@mail.gmail.com> <20190409060323.xrw3fwj3yvcxsx3t@sirius.home.kraxel.org>
-In-Reply-To: <20190409060323.xrw3fwj3yvcxsx3t@sirius.home.kraxel.org>
-From:   David Airlie <airlied@redhat.com>
-Date:   Tue, 9 Apr 2019 16:06:19 +1000
-Message-ID: <CAMwc25q-7rfR=31R=FEVC47z2HvDK5xN+aOKqq00yoXSpudusQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/qxl: drop prime import/export callbacks
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408095031.GG14281@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040906-0008-0000-0000-000002D7C75C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040906-0009-0000-0000-00002243E582
+Message-Id: <d647a482-f3df-bb0a-3a02-2fecb51b3238@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904090041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 4:03 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> On Tue, Apr 09, 2019 at 02:01:33PM +1000, Dave Airlie wrote:
-> > On Sat, 12 Jan 2019 at 07:13, Dave Airlie <airlied@gmail.com> wrote:
-> > >
-> > > On Thu, 10 Jan 2019 at 18:17, Gerd Hoffmann <kraxel@redhat.com> wrote:
-> > > >
-> > > > Also set prime_handle_to_fd and prime_fd_to_handle to NULL,
-> > > > so drm will not advertive DRM_PRIME_CAP_{IMPORT,EXPORT} to
-> > > > userspace.
-> >
-> > It's been pointed out to me that disables DRI3 for these devices, I'm
-> > not sure that is the solution we actually wanted.
-> >
-> > any ideas?
->
-> Well.  Lets have a look at where we stand:
->
->  * drm_gem_prime_export() works with qxl, you'll get a dma-buf handle.
->
->  * Other drivers trying to map that dma-buf (drm_gem_map_dma_buf()
->    callback) will not work, due to the ->gem_prime_get_sg_table()
->    callback not being there.
->
->  * drm_gem_prime_import() will work with buffers from the same qxl
->    device, there is a shortcut for this special case.  Otherwise it
->    will not work, due to the ->gem_prime_import_sg_table() callback
->    not being there.
->
-> Bottom line: you can use prime to pass qxl object handles from one
-> application to another.  But you can't actually export/import qxl
-> buffer objects from/to other devices.
->
-> Problem is that we have no way to signal to userspace that prime can
-> be used that way.
->
-> Setting DRM_PRIME_CAP_{IMPORT,EXPORT} even though the driver can't
-> do that leads to other problems.  Userspace thinks it can have other
-> devices (intel vgpu for example) handle the rendering, then import
-> the rendered buffer into qxl for scanout.
->
-> Should we add something like DRM_PRIME_CAP_SAME_DEVICE?
+On 4/8/19 11:50 AM, Peter Zijlstra wrote:
+> On Mon, Apr 08, 2019 at 10:22:29AM +0200, Peter Zijlstra wrote:
+>> On Mon, Apr 08, 2019 at 09:12:28AM +0200, Thomas-Mich Richter wrote:
+> 
+>>> very good news, your fix ran over the weekend without any hit!!!
+>>>
+>>> Thanks very much for your help. Do you submit this patch to the kernel mailing list?
+>>
+>> Most excellent, let me go write a Changelog.
+> 
+> Hi Thomas, find below.
+> 
+> Sadly, while writing the Changelog I ended up with a 'completely'
+> differet patch again, could I bother you to test this one too?
+> 
 
-Yeah I expect we need some sort of same device only capability, so
-that dri3 userspace can work.
+Hi Peter,
 
-If we just fail importing in these cases what happens? userspace just
-gets confused, I know we used to print a backtrace if we hit the mmap
-path, but if we didn't do that what happens?
+I verified your second patch, it ran overnight without any message in the
+kernel log. Thanks again.
 
-Dave.
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
