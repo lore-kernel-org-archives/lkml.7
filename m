@@ -2,253 +2,310 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9452CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18150C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592D22084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554825304;
-	bh=zj5EQzGcHAp/BWcwHD/ry4NHPAaaBSRWP1h+323WtEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gcUS152o5ijtM85qUH3SS+zfKlPcRxZueFsNHpMxrAtFyCLT8X4J6qtHy8bnH+5QZ
-	 TnTIs6jgIvONamsM8vqAwWwot5BDxyqSqkI69eMDDxB1o15O+ei4wpXQagPghO67su
-	 k9X/TBWQSZB63F20qUFRijQ7ajF5p43FpXVoQ53c=
+	by mail.kernel.org (Postfix) with ESMTP id C02912084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QxfEtDrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbfDIPzD (ORCPT
+        id S1726684AbfDIP4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:55:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42616 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfDIPzC (ORCPT
+        Tue, 9 Apr 2019 11:56:07 -0400
+Received: from mail.efficios.com ([167.114.142.138]:53924 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfDIP4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:55:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w25so8503228pfi.9;
-        Tue, 09 Apr 2019 08:55:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=r43mAVZxYKG/YWvrUrXD7JBBbZT0Kp4TL+GPMx0nxBg=;
-        b=pPWgColCShDBwWN8KTeaiSFd37Oe5s07DtDoe88cQwkCFNSKV2hhF9bZxsRCZd/h8H
-         177SWOak4oWCLL+M+6o41dSFbKSU64wPmB8uYoBoLLJk5YUEziTz+Xo2bbdRGOwZJPwl
-         9qjKcAvc+RAgsvHADziJ8vlzHMICwIHuE3UEbt3+mFmba3QcngaTCCOz4pDpnTIbG+qX
-         Bh9OPs0AyiJDvcTYnnnft0apS0rj7hEXjU0uy46fSMCDC4G7JF88aEfdY+ECaqqLnaI/
-         e2NRpAaHuMeq+zwoiypKdXZguOWFnCbVFzq5lbysdpBzilZSub42N8T4oSEzKcptjw12
-         zjnA==
-X-Gm-Message-State: APjAAAXhinz3VK4QAkgDNR4tHLUK5nMdS4KTUJdIvpUm0Iyq+Z7wuOjf
-        5mY4kxT7ChwJt4rkkoMENCc=
-X-Google-Smtp-Source: APXvYqynw1dHRrvGc5Kkd7VVXAJ4UlxWn3MvmqcEp1CUJExNe2P7140Jgxq8aVfp7sw3YFvfCUqtDw==
-X-Received: by 2002:a63:6907:: with SMTP id e7mr28224535pgc.209.1554825301625;
-        Tue, 09 Apr 2019 08:55:01 -0700 (PDT)
-Received: from localhost ([207.114.172.147])
-        by smtp.gmail.com with ESMTPSA id w68sm45735950pfb.176.2019.04.09.08.55.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 08:55:00 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 08:54:59 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Nava kishore Manne <navam@xilinx.com>
-Cc:     Michal Simek <michals@xilinx.com>, Moritz Fischer <mdf@kernel.org>,
-        "atull@kernel.org" <atull@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
-Subject: Re: [PATCH v4 1/3] firmware: xilinx: Add fpga API's
-Message-ID: <20190409155459.GA7617@archbook>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-2-nava.manne@xilinx.com>
- <20190408171456.GA4293@archbook>
- <9ab8f7fb-0936-3635-60fe-164402780429@xilinx.com>
- <BYAPR02MB471005801CE9F16523516611C22D0@BYAPR02MB4710.namprd02.prod.outlook.com>
+        Tue, 9 Apr 2019 11:56:06 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 6A7927D519;
+        Tue,  9 Apr 2019 11:56:04 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id tbw8SNeOpC1O; Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 8DE737D512;
+        Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8DE737D512
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554825363;
+        bh=/nMy26pOddtBtf06Juea9FeOG3eTQpzKIEoVIFLGlhw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=QxfEtDrRvP90cA/YJq4+82Jg2nseFPt6lVL6sb+cRbEmKxlN8k9D9F+nr1V/rdzxt
+         xP1tnpzFmG8yUQkg6x4ITEj75z1ncksBIdOrvV7CcteZsSSxRJSvSgTg3ZNpzvs0zT
+         Dh13S2SaFB8QDFQoy3XPDo2NwninOSHsTBBWeNxGJI6Umq28aTrRz5eh7UiZmLS/oi
+         CB92KDqcGPxwO9rUKyzKjmlVN11Ly9w7PLRDhUBGYPkcuJxSu/nTcpU96aEpKtTVs/
+         XUR0+BVbDgwPLhYbJudxbomEuPVLnmNlk38wu9ZPuiZGmA/3gvilNJBpJNfMK0NslS
+         8GDGsYahN7oZg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id LEuhU81JQqOr; Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 5DAA97D50B;
+        Tue,  9 Apr 2019 11:56:03 -0400 (EDT)
+Date:   Tue, 9 Apr 2019 11:56:03 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     "Joel Fernandes, Google" <joel@joelfernandes.org>
+Cc:     paulmck <paulmck@linux.ibm.com>, rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Message-ID: <534133139.2374.1554825363211.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190409154012.GC248418@google.com>
+References: <20190402142816.GA13084@linux.ibm.com> <20190408022728.GF14111@linux.ibm.com> <1504296005.857.1554728734661.JavaMail.zimbra@efficios.com> <20190408142230.GJ14111@linux.ibm.com> <1447252022.1166.1554734972823.JavaMail.zimbra@efficios.com> <20190408154616.GO14111@linux.ibm.com> <1489474416.1465.1554744287985.JavaMail.zimbra@efficios.com> <20190409154012.GC248418@google.com>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR02MB471005801CE9F16523516611C22D0@BYAPR02MB4710.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Forbid static SRCU use in modules
+Thread-Index: tr32J95yRILwhwodqgU+xadZI80HRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nava,
+----- On Apr 9, 2019, at 11:40 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
 
-On Tue, Apr 09, 2019 at 08:54:34AM +0000, Nava kishore Manne wrote:
-> Hi Moritz,
+> On Mon, Apr 08, 2019 at 01:24:47PM -0400, Mathieu Desnoyers wrote:
+>> ----- On Apr 8, 2019, at 11:46 AM, paulmck paulmck@linux.ibm.com wrote:
+>> 
+>> > On Mon, Apr 08, 2019 at 10:49:32AM -0400, Mathieu Desnoyers wrote:
+>> >> ----- On Apr 8, 2019, at 10:22 AM, paulmck paulmck@linux.ibm.com wrote:
+>> >> 
+>> >> > On Mon, Apr 08, 2019 at 09:05:34AM -0400, Mathieu Desnoyers wrote:
+>> >> >> ----- On Apr 7, 2019, at 10:27 PM, paulmck paulmck@linux.ibm.com wrote:
+>> >> >> 
+>> >> >> > On Sun, Apr 07, 2019 at 09:07:18PM +0000, Joel Fernandes wrote:
+>> >> >> >> On Sun, Apr 07, 2019 at 04:41:36PM -0400, Mathieu Desnoyers wrote:
+>> >> >> >> > 
+>> >> >> >> > ----- On Apr 7, 2019, at 3:32 PM, Joel Fernandes, Google joel@joelfernandes.org
+>> >> >> >> > wrote:
+>> >> >> >> > 
+>> >> >> >> > > On Sun, Apr 07, 2019 at 03:26:16PM -0400, Mathieu Desnoyers wrote:
+>> >> >> >> > >> ----- On Apr 7, 2019, at 9:59 AM, paulmck paulmck@linux.ibm.com wrote:
+>> >> >> >> > >> 
+>> >> >> >> > >> > On Sun, Apr 07, 2019 at 06:39:41AM -0700, Paul E. McKenney wrote:
+>> >> >> >> > >> >> On Sat, Apr 06, 2019 at 07:06:13PM -0400, Joel Fernandes wrote:
+>> >> >> >> > >> > 
+>> >> >> >> > >> > [ . . . ]
+>> >> >> >> > >> > 
+>> >> >> >> > >> >> > > diff --git a/include/asm-generic/vmlinux.lds.h
+>> >> >> >> > >> >> > > b/include/asm-generic/vmlinux.lds.h
+>> >> >> >> > >> >> > > index f8f6f04c4453..c2d919a1566e 100644
+>> >> >> >> > >> >> > > --- a/include/asm-generic/vmlinux.lds.h
+>> >> >> >> > >> >> > > +++ b/include/asm-generic/vmlinux.lds.h
+>> >> >> >> > >> >> > > @@ -338,6 +338,10 @@
+>> >> >> >> > >> >> > >  		KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+>> >> >> >> > >> >> > >  		__stop___tracepoints_ptrs = .;				\
+>> >> >> >> > >> >> > >  		*(__tracepoints_strings)/* Tracepoints: strings */	\
+>> >> >> >> > >> >> > > +		. = ALIGN(8);						\
+>> >> >> >> > >> >> > > +		__start___srcu_struct = .;				\
+>> >> >> >> > >> >> > > +		*(___srcu_struct_ptrs)					\
+>> >> >> >> > >> >> > > +		__end___srcu_struct = .;				\
+>> >> >> >> > >> >> > >  	}								\
+>> >> >> >> > >> >> > 
+>> >> >> >> > >> >> > This vmlinux linker modification is not needed. I tested without it and srcu
+>> >> >> >> > >> >> > torture works fine with rcutorture built as a module. Putting further prints
+>> >> >> >> > >> >> > in kernel/module.c verified that the kernel is able to find the srcu structs
+>> >> >> >> > >> >> > just fine. You could squash the below patch into this one or apply it on top
+>> >> >> >> > >> >> > of the dev branch.
+>> >> >> >> > >> >> 
+>> >> >> >> > >> >> Good point, given that otherwise FORTRAN named common blocks would not
+>> >> >> >> > >> >> work.
+>> >> >> >> > >> >> 
+>> >> >> >> > >> >> But isn't one advantage of leaving that stuff in the RO_DATA_SECTION()
+>> >> >> >> > >> >> macro that it can be mapped read-only?  Or am I suffering from excessive
+>> >> >> >> > >> >> optimism?
+>> >> >> >> > >> > 
+>> >> >> >> > >> > And to answer the other question, in the case where I am suffering from
+>> >> >> >> > >> > excessive optimism, it should be a separate commit.  Please see below
+>> >> >> >> > >> > for the updated original commit thus far.
+>> >> >> >> > >> > 
+>> >> >> >> > >> > And may I have your Tested-by?
+>> >> >> >> > >> 
+>> >> >> >> > >> Just to confirm: does the cleanup performed in the modules going
+>> >> >> >> > >> notifier end up acting as a barrier first before freeing the memory ?
+>> >> >> >> > >> If not, is it explicitly stated that a barrier must be issued before
+>> >> >> >> > >> module unload ?
+>> >> >> >> > >> 
+>> >> >> >> > > 
+>> >> >> >> > > You mean rcu_barrier? It is mentioned in the documentation that this is the
+>> >> >> >> > > responsibility of the module writer to prevent delays for all modules.
+>> >> >> >> > 
+>> >> >> >> > It's a srcu barrier yes. Considering it would be a barrier specific to the
+>> >> >> >> > srcu domain within that module, I don't see how it would cause delays for
+>> >> >> >> > "all" modules if we implicitly issue the barrier on module unload. What
+>> >> >> >> > am I missing ?
+>> >> >> >> 
+>> >> >> >> Yes you are right. I thought of this after I just sent my email. I think it
+>> >> >> >> makes sense for srcu case to do and could avoid a class of bugs.
+>> >> >> > 
+>> >> >> > If there are call_srcu() callbacks outstanding, the module writer still
+>> >> >> > needs the srcu_barrier() because otherwise callbacks arrive after
+>> >> >> > the module text has gone, which will be disappoint the CPU when it
+>> >> >> > tries fetching instructions that are no longer mapped.  If there are
+>> >> >> > no call_srcu() callbacks from that module, then there is no need for
+>> >> >> > srcu_barrier() either way.
+>> >> >> > 
+>> >> >> > So if an srcu_barrier() is needed, the module developer needs to
+>> >> >> > supply it.
+>> >> >> 
+>> >> >> When you say "callbacks arrive after the module text has gone",
+>> >> >> I think you assume that free_module() is invoked before the
+>> >> >> MODULE_STATE_GOING notifiers are called. But it's done in the
+>> >> >> opposite order: going notifiers are called first, and then
+>> >> >> free_module() is invoked.
+>> >> >> 
+>> >> >> So AFAIU it would be safe to issue the srcu_barrier() from the module
+>> >> >> going notifier.
+>> >> >> 
+>> >> >> Or am I missing something ?
+>> >> > 
+>> >> > We do seem to be talking past each other.  ;-)
+>> >> > 
+>> >> > This has nothing to do with the order of events at module-unload time.
+>> >> > 
+>> >> > So please let me try again.
+>> >> > 
+>> >> > If a given srcu_struct in a module never has call_srcu() invoked, there
+>> >> > is no need to invoke rcu_barrier() at any time, whether at module-unload
+>> >> > time or not.  Adding rcu_barrier() in this case adds overhead and latency
+>> >> > for no good reason.
+>> >> 
+>> >> Not if we invoke srcu_barrier() for that specific domain. If
+>> >> call_srcu was never invoked for a srcu domain, I don't see why
+>> >> srcu_barrier() should be more expensive than a simple check that
+>> >> the domain does not have any srcu work queued.
+>> > 
+>> > But that simple check does involve a cache miss for each possible CPU (not
+>> > just each online CPU), so it is non-trivial, especially on large systems.
+>> > 
+>> >> > If a given srcu_struct in a module does have at least one call_srcu()
+>> >> > invoked, it is already that module's responsibility to make sure that
+>> >> > the code sticks around long enough for the callback to be invoked.
+>> >> 
+>> >> I understand that when users do explicit dynamic allocation/cleanup of
+>> >> srcu domains, they indeed need to take care of doing explicit srcu_barrier().
+>> >> However, if they do static definition of srcu domains, it would be nice
+>> >> if we can handle the barriers under the hood.
+>> > 
+>> > All else being equal, of course.  But...
+>> > 
+>> >> > This means that correct SRCU users that invoke call_srcu() already
+>> >> > have srcu_barrier() at module-unload time.  Incorrect SRCU users, with
+>> >> > reasonable probability, now get a WARN_ON() at module-unload time, with
+>> >> > the per-CPU state getting leaked.  Before this change, they would (also
+>> >> > with reasonable probability) instead get an instruction-fetch fault when
+>> >> > the SRCU callback was invoked after the completion of the module unload.
+>> >> > Furthermore, in all cases where they would previously have gotten the
+>> >> > instruction-fetch fault, they now get the WARN_ON(), like this:
+>> >> > 
+>> >> >	if (WARN_ON(rcu_segcblist_n_cbs(&sdp->srcu_cblist)))
+>> >> >		return; /* Forgot srcu_barrier(), so just leak it! */
+>> >> > 
+>> >> > So this change already represents an improvement in usability.
+>> >> 
+>> >> Considering that we can do a srcu_barrier() for the specific domain,
+>> >> and that it should add no noticeable overhead if there is no queued
+>> >> callbacks, I don't see a good reason for leaving the srcu_barrier
+>> >> invocation to the user rather than implicitly doing it from the
+>> >> module going notifier.
+>> > 
+>> > Now, I could automatically add an indicator of whether or not a
+>> > call_srcu() had happened, but then again, that would either add a
+>> > call_srcu() scalability bottleneck or again require a scan of all possible
+>> > CPUs...  to figure out if it was necessary to scan all possible CPUs.
+>> > 
+>> > Or is scanning all possible CPUs down in the noise in this case?  Or
+>> > am I missing a trick that would reduce the overhead?
+>> 
+>> Module unloading implicitly does a synchronize_rcu (for RCU-sched), and
+>> a stop_machine. So I would be tempted to say that overhead of iteration
+>> over all CPUs might not matter that much considering the rest.
+>> 
+>> About notifying that a call_srcu has happened for the srcu domain in a
+>> scalable fashion, let's see... We could have a flag "call_srcu_used"
+>> for each call_srcu domain. Whenever call_srcu is invoked, it would
+>> load that flag. It sets it on first use.
+>> 
+>> The idea here is to only use that flag when srcu_barrier is performed
+>> right before the srcu domain cleanup (it could become part of that
+>> cleanup). Else, using it in all srcu_barrier() might be tricky, because
+>> we may then need to add memory barriers or locking to the call_srcu
+>> fast-path, which is an overhead we try to avoid.
+>> 
+>> However, if we only use that flag as part of the srcu domain cleanup,
+>> it's already prohibited to invoke call_srcu concurrently with the
+>> cleanup of the same domain, so I don't think we would need any
+>> memory barriers in call_srcu.
 > 
-> Thanks for the quick response.
-> Please find my response inline
+> About the last part of your email, it seems to that if after call_srcu has
+> returned, if the module could be unloaded on some other CPU - then it would
+> need to see the flag stored by the preceding call_srcu, so I believe there
+> would be a memory barrier between the two opreations (call_srcu and module
+> unload).
+
+In order for the module unload not to race against module execution, it needs
+to happen after the call_srcu in a way that is already ordered by other means,
+else module unload races against the module code.
+
 > 
-> > -----Original Message-----
-> > From: Michal Simek [mailto:michal.simek@xilinx.com]
-> > Sent: Tuesday, April 9, 2019 12:04 PM
-> > To: Moritz Fischer <mdf@kernel.org>; Nava kishore Manne
-> > <navam@xilinx.com>
-> > Cc: atull@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
-> > Simek <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
-> > <JOLLYS@xilinx.com>; linux-fpga@vger.kernel.org; devicetree@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > chinnikishore369@gmail.com
-> > Subject: Re: [PATCH v4 1/3] firmware: xilinx: Add fpga API's
-> > 
-> > On 08. 04. 19 19:14, Moritz Fischer wrote:
-> > > Hi Nava,
-> > >
-> > > On Tue, Apr 02, 2019 at 06:01:21PM +0530, Nava kishore Manne wrote:
-> > >> This Patch Adds fpga API's to support the Bitstream loading by using
-> > >> firmware interface.
-> > >>
-> > >> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > >> ---
-> > >> Changes for v4:
-> > >> 		-None.
-> > >>
-> > >> Chnages for v3:
-> > >> 		-Created patches on top of 5.0-rc5.
-> > >> 		 No functional changes.
-> > >>
-> > >> Changes for v2:
-> > >> 		-Added Firmware FPGA Manager flags As suggested by
-> > >> 		 Moritz.
-> > >>
-> > >> Changes for v1:
-> > >> 		-None.
-> > >>
-> > >> Changes for RFC-V2:
-> > >> 		-New Patch
-> > >>
-> > >>  drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
-> > >>  include/linux/firmware/xlnx-zynqmp.h | 10 ++++++
-> > >>  2 files changed, 56 insertions(+)
-> > >>
-> > >> diff --git a/drivers/firmware/xilinx/zynqmp.c
-> > >> b/drivers/firmware/xilinx/zynqmp.c
-> > >> index 98f936125643..7159a90abc44 100644
-> > >> --- a/drivers/firmware/xilinx/zynqmp.c
-> > >> +++ b/drivers/firmware/xilinx/zynqmp.c
-> > >> @@ -537,6 +537,50 @@ static int zynqmp_pm_reset_get_status(const enum
-> > zynqmp_pm_reset reset,
-> > >>  	return ret;
-> > >>  }
-> > >>
-> > >> +/*
-> > >> + * zynqmp_pm_fpga_load - Perform the fpga load
-> > >> + * @address:	Address to write to
-> > >> + * @size:	pl bitstream size
-> > >> + * @flags:
-> > >> + *	BIT(0) - Bit-stream type.
-> > >> + *		 0 - Full Bitstream.
-> > >> + *		 1 - Partial Bitstream.
+> Also about doing the unconditional srcu_barrier, since a module could be
+> unloaded at any time - don't all SRCU using modules need to invoke
+> srcu_barrier() during their clean up anyway so we are incurring the barrier
+> overhead anyway? Or, am I missing a design pattern here? It seems to me
+> rcutorture module definitely calls srcu_barrier() before it is unloaded.
 
-Don't you wanna call out the defines instead here that you defined in
-include/linux/firmware/xlnx-zynqmp.h?
+I think a valid approach which is even simpler might be: if a module statically
+defines a SRCU domain, it should be expected to use it. So adding a srcu_barrier()
+to its module going notifier should not hurt. The rare case where a module defines
+a static SRCU domain *and* does not actually use it with call_srcu() does not
+seem that usual, and not worth optimizing for.
 
-> > >> + *
-> > >> + * This function provides access to pmufw. To transfer
-> > >> + * the required bitstream into PL.
-> > >> + *
-> > >> + * Return: Returns status, either success or error+reason  */ static
-> > >> +int zynqmp_pm_fpga_load(const u64 address, const u32 size,
-> > >> +			       const u32 flags)
-> > >> +{
-> > >> +	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
-> > >> +				   upper_32_bits(address), size, flags, NULL); }
-> > >> +
-> > >> +/**
-> > >> + * zynqmp_pm_fpga_get_status - Read value from PCAP status register
-> > >> + * @value: Value to read
-> > >> + *
-> > >> + * This function provides access to the xilfpga library to get
-> > >
-> > > xilfpga? Is that PMU firmware you're talking about?
-> 
-> Xilfpga is a library and it’s a part of PMUFW BSP.
-> It will follow the below flow to configure the PL from Linux environment.
-> Linux -Fpga Manager framework <--> Linux-Firmware Driver <- -smc call-->ATF <--IPI call--> PMUFW<--> Xilfpga library.
-
-Fair enough. Was wondering if we could simplify/clarify the comment, but
-also don't have a good suggestion :)
-> 
-> > >
-> > >> + * the PCAP status
-> > >> + *
-> > >> + * Return: Returns status, either success or error+reason  */ static
-> > >> +int zynqmp_pm_fpga_get_status(u32 *value) {
-> > >> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> > >> +	int ret;
-> > >> +
-> > >> +	if (!value)
-> > >> +		return -EINVAL;
-> > >> +
-> > >> +	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0,
-> > ret_payload);
-> > >> +	*value = ret_payload[1];
-> > >> +
-> > >> +	return ret;
-> > >> +}
-> > >> +
-> > >>  /**
-> > >>   * zynqmp_pm_init_finalize() - PM call to inform firmware that the caller
-> > >>   *			       master has initialized its own power management
-> > >> @@ -640,6 +684,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
-> > >>  	.request_node = zynqmp_pm_request_node,
-> > >>  	.release_node = zynqmp_pm_release_node,
-> > >>  	.set_requirement = zynqmp_pm_set_requirement,
-> > >> +	.fpga_load = zynqmp_pm_fpga_load,
-> > >> +	.fpga_get_status = zynqmp_pm_fpga_get_status,
-> > >>  };
-> > >>
-> > >>  /**
-> > >> diff --git a/include/linux/firmware/xlnx-zynqmp.h
-> > >> b/include/linux/firmware/xlnx-zynqmp.h
-> > >> index 642dab10f65d..4df226b6ab0f 100644
-> > >> --- a/include/linux/firmware/xlnx-zynqmp.h
-> > >> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> > >> @@ -48,6 +48,12 @@
-> > >>  #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
-> > >>  #define	ZYNQMP_PM_CAPABILITY_POWER	0x8U
-> > >>
-> > >> +/*
-> > >> + * Firmware FPGA Manager flags
-> > >> + * XILINX_ZYNQMP_PM_FPGA_PARTIAL: FPGA partial reconfiguration  */
-> > >> +#define XILINX_ZYNQMP_PM_FPGA_PARTIAL	BIT(0)
-> > >> +
-> > >>  enum pm_api_id {
-> > >>  	PM_GET_API_VERSION = 1,
-> > >>  	PM_REQUEST_NODE = 13,
-> > >> @@ -56,6 +62,8 @@ enum pm_api_id {
-> > >>  	PM_RESET_ASSERT = 17,
-> > >>  	PM_RESET_GET_STATUS,
-> > >>  	PM_PM_INIT_FINALIZE = 21,
-> > >> +	PM_FPGA_LOAD = 22,
-> > >> +	PM_FPGA_GET_STATUS,
-> > >
-> > > Any reason you can't do 'PM_FPGA_GET_STATUS = 23' here? Trying to
-> > > understand your reasoning. Are you planning to move them around?
-> > 
-> > It is 23 by design. In xilinx repo there was only the first value which is
-> > recommended practice. But upstreaming is not done in the same order that's
-> > why if there is a gap you need to assign values there.
-> > Even that 22 can be removed in this case but it is just nit.
-> > 
->  As Michal said here Assigning value of 22 is not needed. Will fix this issue in the next version.
-
-Ok, I didn't check the Xilinx repos :) Makes sense, though.
-
-With nits above addressed:
-Reviewed-by: Moritz Fischer <mdf@kernel.org>
+Thoughts ?
 
 Thanks,
-Moritz
+
+Mathieu
+
+
+> 
+> thanks,
+> 
+> - Joel
+> 
+>> Thoughts ?
+>> 
+>> Thanks,
+>> 
+>> Mathieu
+>> 
+>> --
+>> Mathieu Desnoyers
+>> EfficiOS Inc.
+> > http://www.efficios.com
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
