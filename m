@@ -2,207 +2,83 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC34BC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538E9206DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="f5NR+bIX"
+	by mail.kernel.org (Postfix) with ESMTP id BB044206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 13:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfDIN2A (ORCPT
+        id S1727548AbfDINb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 09:28:00 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38305 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfDIN17 (ORCPT
+        Tue, 9 Apr 2019 09:31:28 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40310 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfDINb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 09:27:59 -0400
-Received: by mail-io1-f67.google.com with SMTP id v4so14251397ioj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 06:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=xJVc12goI8rqGySbWSdxOIoYdvxImxl/QNO4neztKXI=;
-        b=f5NR+bIXQSfde2BcDK/AtMhi+vY7SV0Q3mrZcwE7FSyiUi2hjBAQD++MmaDR20Iys8
-         RvzWxSkXC6zBwuq3OmNXHXU2h7sjufzOra+fMy6ivg0+hPgYMZK6fIsS14gn5Gu9ppIA
-         7yHcbbWvOfPcsHRoIqm5pb71TXKVILYuiPjFI=
+        Tue, 9 Apr 2019 09:31:28 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w20so10204758qka.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 06:31:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=xJVc12goI8rqGySbWSdxOIoYdvxImxl/QNO4neztKXI=;
-        b=aajOwy7R2P7VLgQ8T9f7SLShgAo37qhoryCoydLDl6Ct98+vS5z8tOzNnR1NZ3S0qS
-         bw5Cw5AlCl6qcOVlL4HT09KJIAGSqdl+hyH1vCVIwDRYZtcWhyU1FuTkP9ybDSCwPygn
-         MpFPkWWB9/0m1uPKt2x9vJmRQn6byazyS0GnteEEZDI+lySp287CTueAKO0Oq9IThC3H
-         O6J3h4InfpNHy7OshzUPzeYNqmI3DMiUDWx4NkCdOJynzbtNSqpLNmFsaRYNtKhsM5Oy
-         xKPqXFYc9hlSxYkCRySjL78XacO/+8CceJx8vIGQIC1iNvRwHkyfumoQnhGRaAW90YQ4
-         knHw==
-X-Gm-Message-State: APjAAAXm5ZUwFsUNKHW9gg90GfA2y5fntDFM2PUqrrmpQNhKfYSPJa0x
-        QnFLWv6MAzkSiC232hvTI7/iWsCFW3ycpMW2DCkHqw==
-X-Google-Smtp-Source: APXvYqy01et48ReAOSaa4kFhye3b3Klu1UErPDXwE5xbVWJksNHuLhjMBRfNIJjL5gSUuguL4VbqOkwbSJ/SoAVk84c=
-X-Received: by 2002:a5e:9e02:: with SMTP id i2mr21183504ioq.238.1554816478797;
- Tue, 09 Apr 2019 06:27:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iQ/be5gcP57ja8QS2fif8abmySnQekyGUoKgB6lvQBw=;
+        b=OxhXml1n/xSOEaM5SsIVTMC9B8zJZchAcHJSY+kfj8GvkFvLtQNvr6UsVzdxlgGjHW
+         +dFjYVmMV7oHzd9/vuZ5AA3vnn60t9ySy0wU1H/wIv2ZjUivSM4Kp8qRotkdHZsvl1CN
+         FnW6A6Fves0BnQb3KeNEePHVIVslaRdzUAF0Xp6A2NBDnjtUlEx/ZDnFiTdhhpiyWYOW
+         DI15e45GJNnxYoFErqAdREbKA9phpb66Ar/oWxUv+n3UvWhJL5vRk9Jz0wiCIEDwdL4l
+         5USYpUxj57EaAZ2zysbqx4OK9egUzpvJHK5pXqluVoTfgOg7a8k0Y+KCii48uLQSCdis
+         7BBQ==
+X-Gm-Message-State: APjAAAUh1bw5YQUBhY6ZH0agda+1g1a8NtthnH3WIEB9/+M2mwDzMav8
+        yoTjq3footKLfjyJboCvClpGvw==
+X-Google-Smtp-Source: APXvYqxbrl9TI0FxmrWsS4ec//7ojsf+1C5OLlAEmLcfDwWlkw58TfVAGN4rnpu0WLtzYV73t8C/HA==
+X-Received: by 2002:a05:620a:132b:: with SMTP id p11mr27788585qkj.279.1554816687062;
+        Tue, 09 Apr 2019 06:31:27 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id m31sm23156297qtm.46.2019.04.09.06.31.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 06:31:26 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 09:31:18 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: Thoughts on simple scanner approach for free page hinting
+Message-ID: <20190409092625-mutt-send-email-mst@kernel.org>
+References: <CAKgT0Ue4LufT4q4dLwjqhGRpDbVnucNWhmhwWxbwtytgjxx+Kw@mail.gmail.com>
+ <d2413648-8943-4414-708a-9442ab4b9e65@redhat.com>
 MIME-Version: 1.0
-References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
- <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com> <20190409113157.e4vrzesbgmyslomb@core.my.home>
-In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 9 Apr 2019 18:57:47 +0530
-Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2413648-8943-4414-708a-9442ab4b9e65@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ond=C5=99ej Jirman,
+On Tue, Apr 09, 2019 at 11:20:36AM +0200, David Hildenbrand wrote:
+> BTW I like the idea of allocating pages that have already been hinted as
+> last "choice", allocating pages that have not been hinted yet first.
 
-On Tue, Apr 9, 2019 at 5:01 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
->
-> Hi Jagan,
->
-> On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
-> > Based on the conversation about using common dtsi from this thread[1],
-> > I'm commenting here to make show the diff directly on the nodes,
-> > giving comments on each node so-that we can see the diff globally.
->
-> Thanks for the suggestions below. It mostly repeats the differences and
-> commonalities I already stated in the previous discussion.
->
-> I don't have much to add to what I already said previously, though, becau=
-se you
-> didn't address my concerns there. But I can restate and expand on those
-> concerns.
->
-> Previously I already agreed it's possible to base orangepi-3.dts on
-> orangepi.dtsi, and proposed a maintainable way forward, and why to follow=
- it (to
-> quote myself):
->
->   Schematics allow for high amount of variability in the power tree (see =
-all the
->   NC (not connected) / 0R resistors) in the schematic around AXP805. Ever=
-y board
->   based on this Xunlong design can be subtly different.
+OK I guess but note this is just a small window during which
+not all pages have been hinted.
 
-Well, how about defining them in required dts file and group it common
-regulators in dtsi? The idea of all these 3 H6 OPI boards are
-evaluated in the same design consideration by adding new IP's in new
-boards design by keeping the core things common like lite2 has wifi,
-one plus has emac and 3 has PCIe etc. This is what I got from
-Steven(OrangePI).
+So if we actually think this has value then we need
+to design something that will desist and not drop pages
+in steady state too.
 
->
->   I already suggested a maintainable solution, below. Where base dtsi has=
- empty
->   config for regulators and every board based on that just defines it com=
-pletely
->   for itself.
->
->   A few regulators (for CPU/GPU) will most probably have the same meaning=
- on
->   every derived board, so these can probably be kept in dtsi without caus=
-ing too
->   much annoyance.
->
->   It's unpleasant to have wrong regulator setup defined in an underlying =
-dtsi,
->   and then trying to override it by removing/adding random properties in =
-the
->   board dts for the new boards based on that, so that it fits.
-
-If we manage them properly by moving common things in dtsi and rest in
-dts, we may avoid these underlying issues.
-
->
->   The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi =
-can be
->   shared (as of now).
->
-> My suggestion was this:
->
->   So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I=
-'d have
->   to first move some things out of the base dtsi to the OrangePi Lite2 an=
-d One
->   Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only des=
-cribe
->   HW that is *really* shared by these 2 boards and Orange Pi 3.
->
->   If I do that, I'd undefine all the axp805 regulator nodes and move the
->   configurations to each of the 3 board files. That will probably end up =
-being
->   the least confusing and most maintainable. See axp81x.dtsi lines 86-144=
- for
->   what I mean.
->
-> You seem to be suggesting a solution where every time we add an OrangePi =
-H6
-> based board, the person adding it will have to go through the base dtsi a=
-nd all
-> the other boards based on it, status disable or otherwise change regulato=
-rs in
-> the base dtsi, patch all the other boards to re-enable it.
->
-> It would be already unpleasant just adding a third board based on this ap=
-proach.
-> And when the fourth board is added, with another small differences in the
-> regulator use/meanings, the person will be looking at patching 4 dts file=
-s
-> + adding one for his own board. For what benefit, to save some bytes righ=
-t now?
->
-> I think maintainability, ease of adding new boards is more important, tha=
-n
-> having a dtsi that tries to maximally cover all the commonalities between=
- the
-> existing boards right now, without regards for the future. That's why
-> I suggested an approach like in axp81x.dtsi lines 86-144.
-
-True, if the boards indeed are different but we can maintain easily if
-the boards are from same family of design based my experience and few
-boards do share common things in dtsi already.
-
-Anyway, thanks for inputs. Seems like patch is applied already may be
-we can move into dtsi if require in future.
-
-Thanks,
-Jagan.
+-- 
+MST
