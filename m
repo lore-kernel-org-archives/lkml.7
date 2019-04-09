@@ -2,79 +2,160 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1AFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3914AC282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139562084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103F22084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfDIMf4 (ORCPT
+        id S1727048AbfDIMi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:35:56 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:55249 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfDIMfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:35:53 -0400
-X-Originating-IP: 109.213.33.177
-Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9E8441C0009;
-        Tue,  9 Apr 2019 12:35:50 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/2] gpio: pca953x: add support for pca6416
-Date:   Tue,  9 Apr 2019 14:35:46 +0200
-Message-Id: <20190409123546.13960-2-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190409123546.13960-1-alexandre.belloni@bootlin.com>
-References: <20190409123546.13960-1-alexandre.belloni@bootlin.com>
+        Tue, 9 Apr 2019 08:38:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:36128 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbfDIMi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 08:38:26 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 05:38:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
+   d="scan'208";a="162716165"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 09 Apr 2019 05:38:21 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 09 Apr 2019 15:38:20 +0300
+Date:   Tue, 9 Apr 2019 15:38:20 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 10/11] platform/x86: intel_cht_int33fe: Link with
+ external dependencies using fwnodes
+Message-ID: <20190409123820.GA20058@kuha.fi.intel.com>
+References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
+ <20190403164537.24643-11-heikki.krogerus@linux.intel.com>
+ <CAHp75VeTUCQax01xVNg7N6oAYKoxadX9vL-X9oEQFHHJ6OSrpg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeTUCQax01xVNg7N6oAYKoxadX9vL-X9oEQFHHJ6OSrpg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NXP PCA6416, documented at [1], is a variant of the PCA GPIO
-expander with 16 GPIOs, and supporting an interrupt.
+On Mon, Apr 08, 2019 at 07:42:52PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 3, 2019 at 7:46 PM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > Supplying also external devices - the DisplayPort connector
+> > and the USB role switch - software fwnodes. After this the
+> > driver has access to all the components tied to the USB
+> > Type-C connector and can start creating software node
+> > references to actually associate them with the USB Type-C
+> > connector device.
+> 
+> > +static int role_switch_match(struct device *dev, void *name)
+> > +{
+> > +       return !strcmp(dev_name(dev), name);
+> > +}
+> > +
+> > +static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
+> > +{
+> 
+> > +       /* First let's find xHCI PCI device */
+> > +       pdev = pci_get_class(PCI_CLASS_SERIAL_USB_XHCI, NULL);
+> > +       if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
+> > +               return -ENODEV;
+> > +
+> 
+> > +       /* Then the child platform device */
+> > +       p = device_find_child(&pdev->dev, "intel_xhci_usb_sw",
+> > +                             role_switch_match);
+> 
+> We have already similar code in kernel
+> (drivers/nvdimm/claim.c::namespace_match), perhaps
+> you at least can (locally) introduce
+> 
+> static int match_name(...) // or re-use from drivers/base/bus.c
+> {
+> ...
+> }
 
-[1] https://www.nxp.com/docs/en/data-sheet/PCA6416A.pdf
+OK.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/gpio/gpio-pca953x.c | 2 ++
- 1 file changed, 2 insertions(+)
+> static device_find_child_by_name(...)
+> {
+> ...
+> }
+> 
+> which we may move to the driver core now or later on.
+> 
+> > +       pci_dev_put(pdev);
+> > +       if (!p)
+> > +               return -EPROBE_DEFER;
+> > +
+> 
+> > +       /* Finally the mux device */
+> > +       dev = device_find_child(p, "intel_xhci_usb_sw-role-switch",
+> > +                               role_switch_match);
+> 
+> Ditto.
+> 
+> > +       put_device(p);
+> > +       if (!dev)
+> > +               return -EPROBE_DEFER;
+> 
+> > +       return 0;
+> 
+> > +}
+> 
+> > +static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
+> > +{
+> > +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
+> > +       struct pci_dev *pdev;
+> > +
+> > +       /* First let's find the GPU PCI device */
+> > +       pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
+> > +       if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
+> > +               return -ENODEV;
+> > +
+> > +       /* Then the DP child device node */
+> > +       data->dp = device_get_named_child_node(&pdev->dev, "DD02");
+> > +       pci_dev_put(pdev);
+> > +       if (!data->dp)
+> > +               return -ENODEV;
+> > +
+> 
+> > +       fwnode->secondary = ERR_PTR(-ENODEV);
+> > +       data->dp->secondary = fwnode;
+> 
+> Can't generic helper be in charge of doing this, i.e. chaining fwnodes?
+> 
+> ///
+> void fwnode_chain(parent, new)
+> {
+> ...
+> }
+> ///
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 7e76830b3368..7fb4d51277e4 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -73,6 +73,7 @@
- #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
- 
- static const struct i2c_device_id pca953x_id[] = {
-+	{ "pca6416", 16 | PCA953X_TYPE | PCA_INT, },
- 	{ "pca9505", 40 | PCA953X_TYPE | PCA_INT, },
- 	{ "pca9534", 8  | PCA953X_TYPE | PCA_INT, },
- 	{ "pca9535", 16 | PCA953X_TYPE | PCA_INT, },
-@@ -1137,6 +1138,7 @@ static int pca953x_resume(struct device *dev)
- #define OF_957X(__nrgpio, __int) (void *)(__nrgpio | PCA957X_TYPE | __int)
- 
- static const struct of_device_id pca953x_dt_ids[] = {
-+	{ .compatible = "nxp,pca6416", .data = OF_953X(16, PCA_INT), },
- 	{ .compatible = "nxp,pca9505", .data = OF_953X(40, PCA_INT), },
- 	{ .compatible = "nxp,pca9534", .data = OF_953X( 8, PCA_INT), },
- 	{ .compatible = "nxp,pca9535", .data = OF_953X(16, PCA_INT), },
+We probable should just export set_secondary_fwnode(). I'll add a
+patch for that.
+
+
+thanks Andy,
+
 -- 
-2.20.1
-
+heikki
