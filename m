@@ -2,83 +2,165 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623E8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3350CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE53208C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B63F208C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 15:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfDIP2u (ORCPT
+        id S1726670AbfDIP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 11:28:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:8859 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfDIP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 11:28:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 08:28:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,329,1549958400"; 
-   d="scan'208";a="149361869"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2019 08:28:47 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hDsg2-0004kB-8r; Tue, 09 Apr 2019 18:28:46 +0300
-Date:   Tue, 9 Apr 2019 18:28:46 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Binbin Wu <binbin.wu@intel.com>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: pinctrl-intel: move gpio suspend/resume to
- noirq phase
-Message-ID: <20190409152846.GT9224@smile.fi.intel.com>
-References: <1554720566-29103-1-git-send-email-binbin.wu@intel.com>
- <20190408124348.GQ9224@smile.fi.intel.com>
- <20190408125126.GR3622@lahna.fi.intel.com>
+        Tue, 9 Apr 2019 11:29:11 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39966 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfDIP3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 11:29:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4099015AB;
+        Tue,  9 Apr 2019 08:29:10 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCB543F68F;
+        Tue,  9 Apr 2019 08:29:08 -0700 (PDT)
+Subject: Re: [PATCH 08/21] dma-iommu: refactor iommu_dma_mmap
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190327080448.5500-1-hch@lst.de>
+ <20190327080448.5500-9-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <adf139e2-a595-fa08-e287-f358c06d7e91@arm.com>
+Date:   Tue, 9 Apr 2019 16:29:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408125126.GR3622@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190327080448.5500-9-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 03:51:26PM +0300, Mika Westerberg wrote:
-> On Mon, Apr 08, 2019 at 03:43:48PM +0300, Andy Shevchenko wrote:
-> > On Mon, Apr 08, 2019 at 06:49:26PM +0800, Binbin Wu wrote:
-> > > In current driver, SET_LATE_SYSTEM_SLEEP_PM_OPS is used to install the
-> > > callbacks for suspend/resume.
-> > > GPIO pin may be used as the interrupt pin by some device. However, using
-> > > SET_LATE_SYSTEM_SLEEP_PM_OPS() to install the callbacks, the resume
-> > > callback is called after resume_device_irqs(). Unintended interrupts may
-> > > arrive due to resuming device irqs first, but the GPIO controller is not
-> > > properly restored.
-> > > 
-> > > Normally, for a SMP system, there are multiple cores, so even when there are
-> > > unintended interrupts, BSP gets the chance to init the gpio chip soon.
-> > 
-> > gpio -> GPIO.
-> > (If Mika is okay with patch content, I may fix this when applying)
+On 27/03/2019 08:04, Christoph Hellwig wrote:
+> Move the vm_area handling into __iommu_dma_mmap, which is renamed
+> to iommu_dma_mmap_remap.
 > 
-> Yup, this looks good to me.
+> Inline __iommu_dma_mmap_pfn into the main function to simplify the code
+> flow a bit.
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/iommu/dma-iommu.c | 50 ++++++++++++++-------------------------
+>   1 file changed, 18 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index d14fe9f8c692..43bd3c7e0f6b 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -597,23 +597,27 @@ static struct page **__iommu_dma_alloc(struct device *dev, size_t size,
+>   }
+>   
+>   /**
+> - * __iommu_dma_mmap - Map a buffer into provided user VMA
+> - * @pages: Array representing buffer from __iommu_dma_alloc()
+> + * iommu_dma_mmap_remap - Map a remapped page array into provided user VMA
+> + * @cpu_addr: virtual address of the memory to be remapped
+>    * @size: Size of buffer in bytes
+>    * @vma: VMA describing requested userspace mapping
+>    *
+> - * Maps the pages of the buffer in @pages into @vma. The caller is responsible
+> + * Maps the pages pointed to by @cpu_addr into @vma. The caller is responsible
+>    * for verifying the correct size and protection of @vma beforehand.
+>    */
+> -static int __iommu_dma_mmap(struct page **pages, size_t size,
+> +static int iommu_dma_mmap_remap(void *cpu_addr, size_t size,
+>   		struct vm_area_struct *vma)
+>   {
+> +	struct vm_struct *area = find_vm_area(cpu_addr);
+>   	unsigned long uaddr = vma->vm_start;
+>   	unsigned int i, count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>   	int ret = -ENXIO;
+>   
+> +	if (WARN_ON(!area || !area->pages))
+> +		return -ENXIO;
+> +
+>   	for (i = vma->vm_pgoff; i < count && uaddr < vma->vm_end; i++) {
+> -		ret = vm_insert_page(vma, uaddr, pages[i]);
+> +		ret = vm_insert_page(vma, uaddr, area->pages[i]);
+>   		if (ret)
+>   			break;
+>   		uaddr += PAGE_SIZE;
+> @@ -1052,21 +1056,13 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+>   	}
+>   }
+>   
+> -static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
+> -			      unsigned long pfn, size_t size)
+> -{
+> -	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+> -			       vma->vm_end - vma->vm_start,
+> -			       vma->vm_page_prot);
+> -}
+> -
+>   static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+>   		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>   		unsigned long attrs)
+>   {
+>   	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>   	unsigned long off = vma->vm_pgoff;
+> -	struct vm_struct *area;
+> +	unsigned long pfn;
+>   	int ret;
+>   
+>   	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
+> @@ -1077,25 +1073,15 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+>   	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
+>   		return -ENXIO;
+>   
+> -	if (!is_vmalloc_addr(cpu_addr)) {
+> -		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
+> -		return __iommu_dma_mmap_pfn(vma, pfn, size);
+> -	}
+> +	if (is_vmalloc_addr(cpu_addr)) {
+> +		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+> +			return iommu_dma_mmap_remap(cpu_addr, size, vma);
+> +		pfn = vmalloc_to_pfn(cpu_addr);
+> +	} else
+> +		pfn = page_to_pfn(virt_to_page(cpu_addr));
 
-Pushed to my review and testing queue, thanks!
+Nit: braces around the else clause for correct style.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Otherwise, this seems to make sense;
 
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
+>   
+> -	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+> -		/*
+> -		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
+> -		 * hence in the vmalloc space.
+> -		 */
+> -		unsigned long pfn = vmalloc_to_pfn(cpu_addr);
+> -		return __iommu_dma_mmap_pfn(vma, pfn, size);
+> -	}
+> -
+> -	area = find_vm_area(cpu_addr);
+> -	if (WARN_ON(!area || !area->pages))
+> -		return -ENXIO;
+> -
+> -	return __iommu_dma_mmap(area->pages, size, vma);
+> +	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+> +			vma_pages(vma) << PAGE_SHIFT, vma->vm_page_prot);
+>   }
+>   
+>   static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
+> 
