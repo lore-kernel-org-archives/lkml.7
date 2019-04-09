@@ -2,130 +2,123 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A89C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69E320833
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E515D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 09:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="shNi6yPY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulTtk/ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfDIJdJ (ORCPT
+        id S1726926AbfDIJdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 05:33:09 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41826 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfDIJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 05:33:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554802385; bh=51Swfdv/TdkuBEeSHdiIIRwvKSgRa5x0ewTJzKhwyZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=shNi6yPYwETR18kTC/OrBtTo0orIFkiRFKj50xvSEHTB770Wzy7seg5Iq0QnFXUyr
-         pCXZJ1hHf9rBKSK7f5Loywxx4WpsIXjwJ+KX3JtD1nsrJZLHzBthJI0QEkDfYJK2SZ
-         frRAFyWOXhvrRf22Znine0LZEV2WgzN7eIBx48mI=
-Date:   Tue, 9 Apr 2019 11:33:04 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 02/13] arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
-Message-ID: <20190409093304.sutpobe5azncyl5r@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-3-megous@megous.com>
- <20190409081230.pz55uwyq33x5tfgz@flea>
+        Tue, 9 Apr 2019 05:33:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45005 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfDIJdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 05:33:40 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h16so13792361ljg.11;
+        Tue, 09 Apr 2019 02:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=bpEoroqe8Vp8JLe+a+fB4DDSJyjMUy4xWQYTUs11Mmk=;
+        b=ulTtk/ldw8xNleyN3RVmoSUh+pryf5vYaxnMBc7yrLdV2lD5r4uN4c7PGg87IIXPEV
+         cS4KKVbcPR7pyV67YkQRGRl0fx2gEDj1DBYti7JqSosJQ4Dzq0lrl0s5hwineeOvWUTt
+         hhw/6o8wKDZUTCb/hfqvGsVaNRPC8sK9yS6pDgc+RDrtGM1lak29gs1TSQgjrmVdhcob
+         MDvKQ/kwJkcY3KyzCKqz+z5/OU4sAr4CIgjzwoNTSbWyvJmVPghVMrpYTx226hu+S/Nw
+         AB65htVdPEDo1eTWkSrSYVcrvVN910btnUMtMb6nm+7CNAIaVNgyC67cBZpgoIrhpp8d
+         dWNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bpEoroqe8Vp8JLe+a+fB4DDSJyjMUy4xWQYTUs11Mmk=;
+        b=jDvy1FVjRxGWSO5L0j5k8vN51Qv1SHLrvPuvDVYodHWCC/bAroyKLuES9DfB+BhZmm
+         n/5OvQZFJuuOjkZUYXrcBiCouRHnzfuAdhB8RtUMpv5fOQedR3O+VMA1io9A4CBbxYBE
+         c8/BOSUuETmRpwOf12XCKjME1sEiJTyis9goToJF2rDQqyHBdrLdxE3qPR873Op1E2+X
+         CWNHuq6WCgDR+od4xg8CjRC385A8EL9CB6NGHraQSJDmt2sP8gQhhKG+USlA0+X2I35B
+         nsmyBQ61gufNZgfLz7JNN77hcaoSir5u5fBtv7cbzyKaCaRgmoUUl2QdtidjE3UJmRtz
+         fecQ==
+X-Gm-Message-State: APjAAAU2mN27jxu0Wkvxb2G/vuziz20Ny3fmtxilHU9Oz/AUQ/0mDt/F
+        Ic4ZFLp5Kf6n1R0TGEpmXnA=
+X-Google-Smtp-Source: APXvYqxekaf2DHxVXGAH2Dwda6xobUOhybMUtpuSHHOTSQK0kCJME2+6aS3ngvsCpi9qdcBI+kHdtQ==
+X-Received: by 2002:a2e:128a:: with SMTP id 10mr18570150ljs.170.1554802417981;
+        Tue, 09 Apr 2019 02:33:37 -0700 (PDT)
+Received: from [10.17.182.20] (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id a7sm6398830lfo.8.2019.04.09.02.33.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 02:33:37 -0700 (PDT)
+Subject: Re: [Xen-devel][PATCH] xen/cameraif: add ABI for para-virtual camera
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        konrad.wilk@oracle.com, hverkuil@xs4all.nl,
+        boris.ostrovsky@oracle.com
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+References: <20190409091546.9606-1-andr2000@gmail.com>
+ <9b9ba6b9-f045-80e2-fe8a-595728fb1ec0@suse.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <5bb8c828-b0ae-86c3-dacf-88bf6032dd6f@gmail.com>
+Date:   Tue, 9 Apr 2019 12:33:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409081230.pz55uwyq33x5tfgz@flea>
+In-Reply-To: <9b9ba6b9-f045-80e2-fe8a-595728fb1ec0@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 10:12:30AM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Tue, Apr 09, 2019 at 02:24:41AM +0200, megous@megous.com wrote:
-> > +&mmc0 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc0_pins>;
-> 
-> Since 5 minutes ago, that's now the default.
+On 4/9/19 12:28 PM, Juergen Gross wrote:
+> On 09/04/2019 11:15, Oleksandr Andrushchenko wrote:
+>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>
+>> This is the ABI for the two halves of a para-virtualized
+>> camera driver which extends Xen's reach multimedia capabilities even
+>> further enabling it for video conferencing, In-Vehicle Infotainment,
+>> high definition maps etc.
+>>
+>> The initial goal is to support most needed functionality with the
+>> final idea to make it possible to extend the protocol if need be:
+>>
+>> 1. Provide means for base virtual device configuration:
+>>   - pixel formats
+>>   - resolutions
+>>   - frame rates
+>> 2. Support basic camera controls:
+>>   - contrast
+>>   - brightness
+>>   - hue
+>>   - saturation
+>> 3. Support streaming control
+>>
+>> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>> Cc: Juergen Gross <jgross@suse.com>
+>> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+> I'm in principle fine with this patch, but it should be sent as part of
+> a series using that header. In case the related driver isn't accepted
+> we'd end up with a stale header file.
+Hm, I am doing this as I did for the rest of protocols before:
+1. Get the protocol in Xen
+2. Get the copy in Linux
+3. Upstream driver (use header)
 
-Ah. :)
-
-> > +&usb2otg {
-> > +	/*
-> > +	 * Beware that this board will not automatically disconnect
-> > +	 * VBUS from DCIN, when self-powered and used as a peripheral.
-> > +	 */
-> > +	dr_mode = "otg";
-> > +	status = "okay";
-> > +};
-> 
-> As we were discussing, I guess leaving it as host is the safest
-> option.
-> 
-> I can fix both issues while applying if that's ok for you.
-
-It's ok with me. Thank you.
-
-	o.
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
+Even if the driver is not accepted (hope this won't happen)
+then this patch makes Xen and Linux properly aligned anyway.
+Which is IMO good
+>
+> Juergen
+Thank you,
+Oleksandr
