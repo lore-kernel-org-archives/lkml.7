@@ -2,123 +2,299 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658F7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A38DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF0420880
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CAF20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 12:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfDIMAK (ORCPT
+        id S1727041AbfDIMA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 08:00:10 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:48555 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfDIMAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 08:00:09 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3FB78100006;
-        Tue,  9 Apr 2019 12:00:00 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 13:59:59 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 02/13] arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
-Message-ID: <20190409115959.6nnjidsxtygjcfgr@flea>
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-3-megous@megous.com>
- <20190409081230.pz55uwyq33x5tfgz@flea>
- <20190409093304.sutpobe5azncyl5r@core.my.home>
+        Tue, 9 Apr 2019 08:00:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5702 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfDIMA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 08:00:26 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 34383DE2A3245212A99C;
+        Tue,  9 Apr 2019 19:57:39 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Tue, 9 Apr 2019
+ 19:57:30 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <ralf@linux-mips.org>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] net: netrom: Fix error cleanup path of nr_proto_init
+Date:   Tue, 9 Apr 2019 19:53:55 +0800
+Message-ID: <20190409115355.26292-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v7qurgsknlgpcsjo"
-Content-Disposition: inline
-In-Reply-To: <20190409093304.sutpobe5azncyl5r@core.my.home>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YueHaibing <yuehaibing@huawei.com>
 
---v7qurgsknlgpcsjo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Syzkaller report this:
 
-On Tue, Apr 09, 2019 at 11:33:04AM +0200, Ond=C5=99ej Jirman wrote:
-> On Tue, Apr 09, 2019 at 10:12:30AM +0200, Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Tue, Apr 09, 2019 at 02:24:41AM +0200, megous@megous.com wrote:
-> > > +&mmc0 {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&mmc0_pins>;
-> >
-> > Since 5 minutes ago, that's now the default.
->
-> Ah. :)
->
-> > > +&usb2otg {
-> > > +	/*
-> > > +	 * Beware that this board will not automatically disconnect
-> > > +	 * VBUS from DCIN, when self-powered and used as a peripheral.
-> > > +	 */
-> > > +	dr_mode =3D "otg";
-> > > +	status =3D "okay";
-> > > +};
-> >
-> > As we were discussing, I guess leaving it as host is the safest
-> > option.
-> >
-> > I can fix both issues while applying if that's ok for you.
->
-> It's ok with me. Thank you.
+BUG: unable to handle kernel paging request at fffffbfff830524b
+PGD 237fe8067 P4D 237fe8067 PUD 237e64067 PMD 1c9716067 PTE 0
+Oops: 0000 [#1] SMP KASAN PTI
+CPU: 1 PID: 4465 Comm: syz-executor.0 Not tainted 5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:__list_add_valid+0x21/0xe0 lib/list_debug.c:23
+Code: 8b 0c 24 e9 17 fd ff ff 90 55 48 89 fd 48 8d 7a 08 53 48 89 d3 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 48 83 ec 08 <80> 3c 02 00 0f 85 8b 00 00 00 48 8b 53 08 48 39 f2 75 35 48 89 f2
+RSP: 0018:ffff8881ea2278d0 EFLAGS: 00010282
+RAX: dffffc0000000000 RBX: ffffffffc1829250 RCX: 1ffff1103d444ef4
+RDX: 1ffffffff830524b RSI: ffffffff85659300 RDI: ffffffffc1829258
+RBP: ffffffffc1879250 R08: fffffbfff0acb269 R09: fffffbfff0acb269
+R10: ffff8881ea2278f0 R11: fffffbfff0acb268 R12: ffffffffc1829250
+R13: dffffc0000000000 R14: 0000000000000008 R15: ffffffffc187c830
+FS:  00007fe0361df700(0000) GS:ffff8881f7300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffbfff830524b CR3: 00000001eb39a001 CR4: 00000000007606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ __list_add include/linux/list.h:60 [inline]
+ list_add include/linux/list.h:79 [inline]
+ proto_register+0x444/0x8f0 net/core/sock.c:3375
+ nr_proto_init+0x73/0x4b3 [netrom]
+ ? 0xffffffffc1628000
+ ? 0xffffffffc1628000
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe0361dec58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00007fe0361dec70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe0361df6bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+Modules linked in: netrom(+) ax25 fcrypt pcbc af_alg arizona_ldo1 v4l2_common videodev media v4l2_dv_timings hdlc ide_cd_mod snd_soc_sigmadsp_regmap snd_soc_sigmadsp intel_spi_platform intel_spi mtd spi_nor snd_usbmidi_lib usbcore lcd ti_ads7950 hi6421_regulator snd_soc_kbl_rt5663_max98927 snd_soc_hdac_hdmi snd_hda_ext_core snd_hda_core snd_soc_rt5663 snd_soc_core snd_pcm_dmaengine snd_compress snd_soc_rl6231 mac80211 rtc_rc5t583 spi_slave_time leds_pwm hid_gt683r hid industrialio_triggered_buffer kfifo_buf industrialio ir_kbd_i2c rc_core led_class_flash dwc_xlgmac snd_ymfpci gameport snd_mpu401_uart snd_rawmidi snd_ac97_codec snd_pcm ac97_bus snd_opl3_lib snd_timer snd_seq_device snd_hwdep snd soundcore iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan
+ bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ide_pci_generic piix aesni_intel aes_x86_64 crypto_simd cryptd glue_helper ide_core psmouse input_leds i2c_piix4 serio_raw intel_agp intel_gtt ata_generic agpgart pata_acpi parport_pc rtc_cmos parport floppy sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: rxrpc]
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+CR2: fffffbfff830524b
+---[ end trace 039ab24b305c4b19 ]---
 
-Done, thanks!
-Maxime
+If nr_proto_init failed, it may forget to call proto_unregister,
+tiggering this issue.This patch rearrange code of nr_proto_init
+to avoid such issues.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: fix compile warnings
+---
+ include/net/netrom.h           |  2 +-
+ net/netrom/af_netrom.c         | 76 ++++++++++++++++++++++++++++++------------
+ net/netrom/nr_loopback.c       |  2 +-
+ net/netrom/nr_route.c          |  2 +-
+ net/netrom/sysctl_net_netrom.c |  5 ++-
+ 5 files changed, 61 insertions(+), 26 deletions(-)
 
---v7qurgsknlgpcsjo
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/include/net/netrom.h b/include/net/netrom.h
+index 5a0714f..80f15b1 100644
+--- a/include/net/netrom.h
++++ b/include/net/netrom.h
+@@ -266,7 +266,7 @@ void nr_stop_idletimer(struct sock *);
+ int nr_t1timer_running(struct sock *);
+ 
+ /* sysctl_net_netrom.c */
+-void nr_register_sysctl(void);
++int nr_register_sysctl(void);
+ void nr_unregister_sysctl(void);
+ 
+ #endif
+diff --git a/net/netrom/af_netrom.c b/net/netrom/af_netrom.c
+index 1d3144d..71ffd1a 100644
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -1392,18 +1392,22 @@ static int __init nr_proto_init(void)
+ 	int i;
+ 	int rc = proto_register(&nr_proto, 0);
+ 
+-	if (rc != 0)
+-		goto out;
++	if (rc)
++		return rc;
+ 
+ 	if (nr_ndevs > 0x7fffffff/sizeof(struct net_device *)) {
+-		printk(KERN_ERR "NET/ROM: nr_proto_init - nr_ndevs parameter to large\n");
+-		return -1;
++		pr_err("NET/ROM: %s - nr_ndevs parameter too large\n",
++		       __func__);
++		rc = -EINVAL;
++		goto unregister_proto;
+ 	}
+ 
+ 	dev_nr = kcalloc(nr_ndevs, sizeof(struct net_device *), GFP_KERNEL);
+-	if (dev_nr == NULL) {
+-		printk(KERN_ERR "NET/ROM: nr_proto_init - unable to allocate device array\n");
+-		return -1;
++	if (!dev_nr) {
++		pr_err("NET/ROM: %s - unable to allocate device array\n",
++		       __func__);
++		rc = -ENOMEM;
++		goto unregister_proto;
+ 	}
+ 
+ 	for (i = 0; i < nr_ndevs; i++) {
+@@ -1413,13 +1417,13 @@ static int __init nr_proto_init(void)
+ 		sprintf(name, "nr%d", i);
+ 		dev = alloc_netdev(0, name, NET_NAME_UNKNOWN, nr_setup);
+ 		if (!dev) {
+-			printk(KERN_ERR "NET/ROM: nr_proto_init - unable to allocate device structure\n");
++			rc = -ENOMEM;
+ 			goto fail;
+ 		}
+ 
+ 		dev->base_addr = i;
+-		if (register_netdev(dev)) {
+-			printk(KERN_ERR "NET/ROM: nr_proto_init - unable to register network device\n");
++		rc = register_netdev(dev);
++		if (rc) {
+ 			free_netdev(dev);
+ 			goto fail;
+ 		}
+@@ -1427,36 +1431,64 @@ static int __init nr_proto_init(void)
+ 		dev_nr[i] = dev;
+ 	}
+ 
+-	if (sock_register(&nr_family_ops)) {
+-		printk(KERN_ERR "NET/ROM: nr_proto_init - unable to register socket family\n");
++	rc = sock_register(&nr_family_ops);
++	if (rc)
+ 		goto fail;
+-	}
+ 
+-	register_netdevice_notifier(&nr_dev_notifier);
++	rc = register_netdevice_notifier(&nr_dev_notifier);
++	if (rc)
++		goto out_sock;
+ 
+ 	ax25_register_pid(&nr_pid);
+ 	ax25_linkfail_register(&nr_linkfail_notifier);
+ 
+ #ifdef CONFIG_SYSCTL
+-	nr_register_sysctl();
++	rc = nr_register_sysctl();
++	if (rc)
++		goto out_sysctl;
+ #endif
+ 
+ 	nr_loopback_init();
+ 
+-	proc_create_seq("nr", 0444, init_net.proc_net, &nr_info_seqops);
+-	proc_create_seq("nr_neigh", 0444, init_net.proc_net, &nr_neigh_seqops);
+-	proc_create_seq("nr_nodes", 0444, init_net.proc_net, &nr_node_seqops);
+-out:
+-	return rc;
++	rc = -ENOMEM;
++	if (!proc_create_seq("nr", 0444, init_net.proc_net, &nr_info_seqops))
++		goto proc_remove1;
++	if (!proc_create_seq("nr_neigh", 0444, init_net.proc_net,
++			     &nr_neigh_seqops))
++		goto proc_remove2;
++	if (!proc_create_seq("nr_nodes", 0444, init_net.proc_net,
++			     &nr_node_seqops))
++		goto proc_remove3;
++
++	return 0;
++
++proc_remove3:
++	remove_proc_entry("nr_neigh", init_net.proc_net);
++proc_remove2:
++	remove_proc_entry("nr", init_net.proc_net);
++proc_remove1:
++
++	nr_loopback_clear();
++	nr_rt_free();
++
++#ifdef CONFIG_SYSCTL
++	nr_unregister_sysctl();
++out_sysctl:
++#endif
++	ax25_linkfail_release(&nr_linkfail_notifier);
++	ax25_protocol_release(AX25_P_NETROM);
++	unregister_netdevice_notifier(&nr_dev_notifier);
++out_sock:
++	sock_unregister(PF_NETROM);
+ fail:
+ 	while (--i >= 0) {
+ 		unregister_netdev(dev_nr[i]);
+ 		free_netdev(dev_nr[i]);
+ 	}
+ 	kfree(dev_nr);
++unregister_proto:
+ 	proto_unregister(&nr_proto);
+-	rc = -1;
+-	goto out;
++	return rc;
+ }
+ 
+ module_init(nr_proto_init);
+diff --git a/net/netrom/nr_loopback.c b/net/netrom/nr_loopback.c
+index 215ad22..93d13f0 100644
+--- a/net/netrom/nr_loopback.c
++++ b/net/netrom/nr_loopback.c
+@@ -70,7 +70,7 @@ static void nr_loopback_timer(struct timer_list *unused)
+ 	}
+ }
+ 
+-void __exit nr_loopback_clear(void)
++void nr_loopback_clear(void)
+ {
+ 	del_timer_sync(&loopback_timer);
+ 	skb_queue_purge(&loopback_queue);
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index 6485f59..b76aa66 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -953,7 +953,7 @@ const struct seq_operations nr_neigh_seqops = {
+ /*
+  *	Free all memory associated with the nodes and routes lists.
+  */
+-void __exit nr_rt_free(void)
++void nr_rt_free(void)
+ {
+ 	struct nr_neigh *s = NULL;
+ 	struct nr_node  *t = NULL;
+diff --git a/net/netrom/sysctl_net_netrom.c b/net/netrom/sysctl_net_netrom.c
+index ba1c368..771011b 100644
+--- a/net/netrom/sysctl_net_netrom.c
++++ b/net/netrom/sysctl_net_netrom.c
+@@ -146,9 +146,12 @@ static struct ctl_table nr_table[] = {
+ 	{ }
+ };
+ 
+-void __init nr_register_sysctl(void)
++int __init nr_register_sysctl(void)
+ {
+ 	nr_table_header = register_net_sysctl(&init_net, "net/netrom", nr_table);
++	if (!nr_table_header)
++		return -ENOMEM;
++	return 0;
+ }
+ 
+ void nr_unregister_sysctl(void)
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKyJPwAKCRDj7w1vZxhR
-xSBtAQCP8U7f2IJ8NHcsyJMZocyouQJ61gHbuel6iVd6MthJRQD/U1j6Ci6B4YUF
-7iX4RfoNvY6X+8UULzi41a9bN5dq9Q0=
-=k4Ie
------END PGP SIGNATURE-----
-
---v7qurgsknlgpcsjo--
