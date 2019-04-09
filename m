@@ -2,81 +2,175 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02617C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3208AC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31A12064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CCF2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 14:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfDIOut (ORCPT
+        id S1726562AbfDIOwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 10:50:49 -0400
-Received: from muru.com ([72.249.23.125]:45040 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfDIOus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 10:50:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A674D8027;
-        Tue,  9 Apr 2019 14:51:00 +0000 (UTC)
-Date:   Tue, 9 Apr 2019 07:50:42 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
-        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
-        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
-        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        marc.w.gonzalez@free.fr, mans@mansr.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch
- argument
-Message-ID: <20190409145042.GD2839@atomide.com>
-References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+        Tue, 9 Apr 2019 10:52:32 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58687 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfDIOwb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 10:52:31 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A34D91BF212;
+        Tue,  9 Apr 2019 14:52:25 +0000 (UTC)
+Date:   Tue, 9 Apr 2019 16:52:25 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190409145225.2ltluiyqa5xha4zd@flea>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opeshs6swmdpxgen"
 Content-Disposition: inline
-In-Reply-To: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-* Stefan Agner <stefan@agner.ch> [190408 20:59]:
-> --- a/arch/arm/mach-omap2/Makefile
-> +++ b/arch/arm/mach-omap2/Makefile
-> @@ -41,11 +41,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-common) $(smp-y) sleep44xx.o
->  obj-$(CONFIG_SOC_AM43XX)		+= $(omap-4-5-common)
->  obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
->  
-> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
-> -AFLAGS_omap-headsmp.o			:=-Wa,-march=armv7-a$(plus_sec)
-> -AFLAGS_omap-smc.o			:=-Wa,-march=armv7-a$(plus_sec)
-> -AFLAGS_sleep44xx.o			:=-Wa,-march=armv7-a$(plus_sec)
-> -
->  # Functions loaded to SRAM
->  obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
->  obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
-> @@ -95,9 +90,6 @@ obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
->  obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
->  
->  AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
-> -AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
-> -AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
-> -AFLAGS_sleep43xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+--opeshs6swmdpxgen
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think we should also change the AFLAGS_sleep24xx.o above the
-same way but with armv6 flags. This can be build tested with
-omap2plus_defconfig.
+On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > > >
+> > > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > > > difference seems to be that support of MIPI CSI through a connected
+> > > > > MIPI CSI-2 bridge.
+> > > > >
+> > > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > > > unused.
+> > > > >
+> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > ---
+> > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 31 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > @@ -682,6 +682,20 @@
+> > > > >                       #interrupt-cells = <3>;
+> > > > >                       #gpio-cells = <3>;
+> > > > >
+> > > > > +                     /omit-if-no-ref/
+> > > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > > > +                                    "PE12", "PE13";
+> > > > > +                             function = "csi";
+> > > > > +                     };
+> > > > > +
+> > > > > +                     /omit-if-no-ref/
+> > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > +                             pins = "PE1";
+> > > > > +                             function = "csi";
+> > > > > +                     };
+> > > > > +
+> > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > > > @@ -994,6 +1008,23 @@
+> > > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > >               };
+> > > > >
+> > > > > +             csi: camera@1cb0000 {
+> > > > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > +                     clock-names = "bus", "mod", "ram";
+> > > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > > +                     status = "disabled";
+> > > > > +
+> > > > > +                     csi_in: port {
+> > > > > +                             #address-cells = <1>;
+> > > > > +                             #size-cells = <0>;
+> > > >
+> > > > If we expect a single enpoint, then we don't need the address-cells
+> > > > and size-cells properties.
+> > >
+> > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > > is kind of genius if not very hacky. They have two "identical" sensors
+> > > on the same I2C bus and CSI bus, with shared reset line but separate
+> > > shutdown lines. Since they are identical, they also have the same I2C
+> > > address. I haven't figured out how to model this in the device tree.
+> > >
+> > > The point is, it's perfectly possible to have two or more sensors use
+> > > the same controller, provided only one be active at a time.
+> >
+> > Right, but I guess the common case would be to have a single sensor,
+> > where that wouldn't be needed.
+> >
+> > In odd cases, we can always specify it in the DTS, and if it becomes
+> > common enough, we can move it to the DTSI.
+>
+> Makes sense. Do you want me to re-spin?
 
-Regards,
+If there's no other comment, we'll fix it when applying.
 
-Tony
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--opeshs6swmdpxgen
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKyxqAAKCRDj7w1vZxhR
+xQqgAPoCwGE+02LeS5CqpwNkNGyMU+On6b/GFxOR2vtPx16ypwEA42TEbPqw9AfF
+r31IMk7MKBdc6HAcaoxwGTv23e1kfgU=
+=Fr2o
+-----END PGP SIGNATURE-----
+
+--opeshs6swmdpxgen--
