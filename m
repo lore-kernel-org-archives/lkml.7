@@ -2,262 +2,76 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663CCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1158E20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5872084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 10:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfDIKKd (ORCPT
+        id S1726831AbfDIKOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 06:10:33 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2106 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbfDIKKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 06:10:33 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 13E21C5FD0D03A6A17C2;
-        Tue,  9 Apr 2019 18:10:30 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 9 Apr 2019 18:10:29 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 9 Apr 2019 18:10:29 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid accessing xattr across the
- boundary
-To:     Randall Huang <huangrandall@google.com>, <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190408085016.13042-1-huangrandall@google.com>
- <bc8b164b-4787-cf81-9b47-334e7e0be630@huawei.com>
- <60f10416-4055-edb6-0e84-88eca3ea50bd@huawei.com>
- <20190409083605.GA178602@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <ce806ec6-1de1-de7b-6326-699547aaa08d@huawei.com>
-Date:   Tue, 9 Apr 2019 18:10:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 9 Apr 2019 06:14:10 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:32933 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfDIKOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 06:14:09 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k14so19043158qtb.0;
+        Tue, 09 Apr 2019 03:14:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kdv7E7EQtES4EqqVPGiQ+deLRkk2VGik0/rCDbn7V0E=;
+        b=JJ+b7KepsXSQTfaL7eUw0LdaVbxcViiHzO2tV04SPjAiQ5APKFFN7DCYlYlFdxiVtv
+         AI+w+zHeQdHsD2Ws5fawRv/vGJ0v5wDC0dyu8WoSSI9My31DhDXdizUcAxN+nFvvM1yZ
+         o5YGxfJGOh5wcwUoKLsaTAm2gG64rTZ5bxP4F9Kz0pHtNKaC+uKqUoH27Ia/FoaBMQSw
+         xRW3c3z9skAjzS639Pk/QEN9P1KDu2gfBS8uMKjiJeiTW6SKcaEh0qnN6ab9lM1SDFG2
+         lpbdvOqJsxiyRP4H63athh7j22cYUcTe/3Z53e8F3p3oqmK3HWahI5XMajDjgflIrbub
+         oCbg==
+X-Gm-Message-State: APjAAAVzRH5KDtwtS1MByFilZk9mAecCleRxdjjS1SUOI+brbNgIvmrE
+        g4icVypEk48vU0swb3X+ENgJh1P5m0RIzKkhpMY=
+X-Google-Smtp-Source: APXvYqwpCbGlumwUVi8/Zid+BGHAVH1lHax30gk0+17mJan+98MUN5xy7w9qmB0FavqDrp4wmbEisecVgp+I5gZcrIg=
+X-Received: by 2002:aed:35e4:: with SMTP id d33mr28977275qte.58.1554804848704;
+ Tue, 09 Apr 2019 03:14:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190409083605.GA178602@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-5-arnd@arndb.de>
+ <8875e0b6-00b4-884d-fd6a-a5a144543559@linux.ibm.com>
+In-Reply-To: <8875e0b6-00b4-884d-fd6a-a5a144543559@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 9 Apr 2019 12:13:52 +0200
+Message-ID: <CAK8P3a1Ckp+RMCUzB+KoUUSL9ExRc5TkU7qC8hcscm9yLnGcxg@mail.gmail.com>
+Subject: Re: [PATCH 05/12] s390: zcrypt: initialize variables before_use
+To:     Harald Freudenberger <freude@linux.ibm.com>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Ingo Franzki <ifranzki@de.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randall,
+On Tue, Apr 9, 2019 at 11:54 AM Harald Freudenberger
+<freude@linux.ibm.com> wrote:
+> On 08.04.19 23:26, Arnd Bergmann wrote:
 
-On 2019/4/9 16:36, Randall Huang wrote:
-> On Mon, Apr 08, 2019 at 08:14:43PM +0800, Chao Yu wrote:
->> On 2019/4/8 20:03, Chao Yu wrote:
->>> Hi Randall,
->>>
->>> On 2019/4/8 16:50, Randall Huang wrote:
->>>> When we traverse xattr entries via __find_xattr(),
->>>> if the raw filesystem content is faked or any hardware failure occurs,
->>>> out-of-bound error can be detected by KASAN.
->>>> Fix the issue by introducing boundary check.
->>>>
->>>> [   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
->>>> [   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
->>>> [   38.402935] c7   1827 Call trace:
->>>> [   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
->>>> [   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
->>>> [   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
->>>> [   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
->>>> [   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
->>>> [   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
->>>> [   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
->>>> [   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
->>>> [   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
->>>> [   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
->>>> [   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
->>>> [   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
->>>> [   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
->>>> [   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
->>>> [   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
->>>> [   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
->>>> [   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
->>>> [   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
->>>> [   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
->>>> [   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
->>>> [   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
->>>> [   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
->>>>
->>>> Bug: 126558260
->>>>
->>>> Signed-off-by: Randall Huang <huangrandall@google.com>
->>>> ---
->>>>  fs/f2fs/xattr.c | 22 ++++++++++++++++------
->>>>  1 file changed, 16 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
->>>> index 848a785abe25..0531c1e38275 100644
->>>> --- a/fs/f2fs/xattr.c
->>>> +++ b/fs/f2fs/xattr.c
->>>> @@ -202,12 +202,17 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
->>>>  	return handler;
->>>>  }
->>>>  
->>>> -static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
->>>> -					size_t len, const char *name)
->>>> +static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
->>>> +				int base_addr_limit, int index,
->>>
->>> unsigned int max_size,
->>>
->>>> +				size_t len, const char *name)
->>>>  {
->>>>  	struct f2fs_xattr_entry *entry;
->>>> +	void *max_addr = base_addr + ENTRY_SIZE(XATTR_ENTRY(base_addr)) +
->>>> +		base_addr_limit - 1;
->>>
->>> If I'm not missing something, shouldn't it be?
->>>
->>> void *max_addr = base_addr + max_size;
->>>
-> Hi Chao,
-> Let me show the buggy example of xattr entries.
-> 
-> Here is the buggy xattr entries.
-> The address 0x1201f24 - 0x1201fcb is correct content.
-> (Each entry occupies 4 + 9 + 10 + 1 bytes, 24 bytes)
-> Hacker append a faked entry at 0x1201fcc - 0x1201fe5
-> (entry length = 4 + 9 + 12 + 1 bytes)
-> 
-> 01201f00  00 00 00 00 00 00 00 00  00 00 00 00 11 20 f5 f2  |............. ..|
-> 01201f10  01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> 01201f20  00 00 00 00 01 09 0a 00  61 74 74 72 6e 61 6d 65  |........attrname|
-> 01201f30  31 61 74 74 72 76 61 6c  75 65 31 00 01 09 0a 00  |1attrvalue1.....|
-> 01201f40  61 74 74 72 6e 61 6d 65  32 61 74 74 72 76 61 6c  |attrname2attrval|
-> 01201f50  75 65 31 00 01 09 0a 00  61 74 74 72 6e 61 6d 65  |ue1.....attrname|
-> 01201f60  33 61 74 74 72 76 61 6c  75 65 31 00 01 09 0a 00  |3attrvalue1.....|
-> 01201f70  61 74 74 72 6e 61 6d 65  34 61 74 74 72 76 61 6c  |attrname4attrval|
-> 01201f80  75 65 31 00 01 09 0a 00  61 74 74 72 6e 61 6d 65  |ue1.....attrname|
-> 01201f90  35 61 74 74 72 76 61 6c  75 65 31 00 01 09 0a 00  |5attrvalue1.....|
-> 01201fa0  61 74 74 72 6e 61 6d 65  36 61 74 74 72 76 61 6c  |attrname6attrval|
-> 01201fb0  75 65 31 00 01 09 0a 00  61 74 74 72 6e 61 6d 65  |ue1.....attrname|
-> 01201fc0  37 61 74 74 72 76 61 6c  75 65 31 00 01 09 0c 00  |7attrvalue1.....|
-> 01201fd0  61 74 74 72 6e 61 6d 65  38 61 74 74 72 76 61 6c  |attrname8attrval|
-> 01201fe0  75 65 31 31 31 00 00 00  07 00 00 00 07 00 00 00  |ue111...........|
+> Thanks Arnd, but as Nathan already wrote, I'd prefer to have the
+> variable initialized with 0 instead of -1.
+> If you agree with this, I'll rewrite the patch and apply it to our
+> internal git and it will appear at kernel org with the next s390 code merge then.
 
-Thanks for the detailed info. :)
-
-> 
-> After lookup_all_xattrs() traveses all inline+xnid entries, the
-> base_addr becomes the starting pointer of the last xattr entry.
-> 
-> 	if (last_addr)
-> 		cur_addr = XATTR_HDR(last_addr) - 1;
-> 	else
-> 		cur_addr = txattr_addr;
-
-Actually, if last_addr is valid, it means we have traversed inline xattr space,
-but haven't found target xattr entry yet, then we will make cur_addr pointing to
-((void *)last_addr - sizeof(struct f2fs_xattr_header *)), that's because in
-__find_xattr, list_for_each_xattr() will treat @base_addr as the pointer which
-points to xattr header.
+That's fine with me, I don't care about the specific value that gets
+assigned here.
 
 Thanks,
 
-> 
-> For example,
-> before OOB error occurs, the lookup_all_xattrs() calls __find_xattr()
-> with base_addr = ffffffc05fe98228, max_size = 4 (= XATTR_PADDING_SIZE).
-> 
-> The entry size is 24 bytes = 0x18.
-> The expected design, the next entry of base_addr (ffffffc05fe98228 + 0x18),
-> ffffffc05fe98240, should be 4 bytes of zeros.
-> 
-> Because there are faked contents, the stop condition will not be
-> triggered and an OOB error happenes.
-> 
-> My aim is to block the lookup process by introducing boundary
-> check.
-> 
-> In this case, we should not access ffffffc05fe98244.
-> That's why I set the last address to ffffffc05fe98243.
-> 
->>>>  
->>>>  	list_for_each_xattr(entry, base_addr) {
->>>> +		if ((void *)entry + sizeof(__u32) > max_addr)
->>>> +			return NULL;
->>>>  		if (entry->e_name_index != index)
->>>>  			continue;
->>>>  		if (entry->e_name_len != len)
->>>> @@ -337,9 +342,9 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
->>>>  	else
->>>>  		cur_addr = txattr_addr;
->>>>  
->>>> -	*xe = __find_xattr(cur_addr, index, len, name);
->>>> +	*xe = __find_xattr(cur_addr, XATTR_PADDING_SIZE, index, len, name);
->>>
->>> max_size = *base_size - (txattr_addr - cur_addr);
->>
->> max_size = *base_size - (cur_addr - txattr_addr);
->>
->>> *xe = __find_xattr(cur_addr, max_size, index, len, name);
->>>
->>>>  check:
->>>> -	if (IS_XATTR_LAST_ENTRY(*xe)) {
->>>> +	if (!*xe || IS_XATTR_LAST_ENTRY(*xe)) {
->>>
->>> If xattr entry across boundary of max xattr space size, maybe we'd better return -EFAULT
->>> which can be distinguished from a real -ENODATA error, latter, we can set SBI_NEED_FSCK
->>> to give a repairing hint to fsck. :)
->>>
-> I will send v2 patch for review.
->>>>  		err = -ENODATA;
->>>>  		goto out;
->>>>  	}
->>>> @@ -606,9 +611,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
->>>>  		return error;
->>>>  
->>>>  	/* find entry with wanted name. */
->>>> -	here = __find_xattr(base_addr, index, len, name);
->>>> +	here = __find_xattr(base_addr, inline_xattr_size(inode) +
->>>> +			VALID_XATTR_BLOCK_SIZE + XATTR_PADDING_SIZE,
->>>> +			index, len, name);
->>>
->>> unsigned int size = F2FS_I(inode)->i_xattr_nid ? VALID_XATTR_BLOCK_SIZE : 0;
->>> unsigned int max_size = inline_xattr_size(inode) + size + XATTR_PADDING_SIZE;
->>>
->>> here = __find_xattr(..., max_size, ...);
->>>
->>> if (!here)
->>> 	return -EFAULT;
->>>
->>> Thanks,
->>>
->>>>  
->>>> -	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
->>>> +	if (!here)
->>>> +		found = 0;
->>>> +	else
->>>> +		found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
->>>>  
->>>>  	if (found) {
->>>>  		if ((flags & XATTR_CREATE)) {
->>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>> .
->>>
-> .
-> 
+      Arnd
