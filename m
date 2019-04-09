@@ -2,229 +2,195 @@ Return-Path: <SRS0=D3m8=SL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3966AC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BA4C282CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D9820830
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B255A20830
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Apr 2019 23:05:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qMUtuJd1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="MIXxZ9xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfDIXCZ (ORCPT
+        id S1726798AbfDIXFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 19:02:25 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45114 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbfDIXCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 19:02:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 899A815AB;
-        Tue,  9 Apr 2019 16:02:24 -0700 (PDT)
-Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0B0B3F68F;
-        Tue,  9 Apr 2019 16:02:21 -0700 (PDT)
-Subject: Re: Re: [PATCH] usb: xhci: inherit dma_mask from bus if set correctly
-To:     Sriram Dash <sriram.dash@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>,
-        mathias.nyman@intel.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, Jingoo Han <jingoohan1@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, mgautam@codeaurora.org,
-        felipe.balbi@linux.intel.com
-References: <CGME20190402094246epcas1p1f43795d840b4c3a1f7efddc0523b2c89@epcas1p1.samsung.com>
- <1554198011-24342-1-git-send-email-pankaj.dubey@samsung.com>
- <0d3e8992-06e1-57e4-edd5-ba230caaa189@arm.com>
- <CAGcde9F1h31FQ7qLUdFTvZ_1vt67956=5r-Do6qU3Q0vSVe6=g@mail.gmail.com>
- <CAOD6=z69K9bBqUikwogJ2YH_OfxODfsy+uRb6dX9x9AOuP6Wpw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <da9f396c-c6e6-8ee7-b3b2-1202d00aa8d2@arm.com>
-Date:   Wed, 10 Apr 2019 00:02:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 19:05:06 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38612 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726640AbfDIXFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 19:05:06 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x39MxIQ6006233;
+        Tue, 9 Apr 2019 16:04:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=QFf1j9DBOZSOq+h2Nyak4F0P+jlNDehA7OolBER2AKQ=;
+ b=qMUtuJd1Np+l23OYc9UnE01YrVEXKoH8zTdpjzTze+p8fVHbvUUK1f9ZtxYxB/v/AcpG
+ v2KlgVdUMgJyxmt4c4e541Aqp8w+WSwp/zWWeeJYvMzw++02dy7/wv5XsNFJ9GZdw1pv
+ FdZwvCiEmdss53EhnqN3EGVaDwodJqQMdrw= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by m0089730.ppops.net with ESMTP id 2rs1620vnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 09 Apr 2019 16:04:39 -0700
+Received: from frc-mbx07.TheFacebook.com (2620:10d:c0a1:f82::31) by
+ frc-hub03.TheFacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 9 Apr 2019 16:04:38 -0700
+Received: from frc-hub02.TheFacebook.com (2620:10d:c021:18::172) by
+ frc-mbx07.TheFacebook.com (2620:10d:c0a1:f82::31) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 9 Apr 2019 16:04:37 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 9 Apr 2019 16:04:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFf1j9DBOZSOq+h2Nyak4F0P+jlNDehA7OolBER2AKQ=;
+ b=MIXxZ9xziGUb6Cd8CsVyeYkgjMZA/sndzJQ4D2e7zDN0RNI169i6vXWLtvvMs9X5YClc+wCBauvU9J/BPe+RY2Lq2DsoHRxYXnIBEuDxbj+XUeFKfzP1mgsvjeFbVXZjZnUpi3pE0NDoq7XPD8ww24ecu3DrkZfWxmshHPJLoPs=
+Received: from CY4PR15MB1366.namprd15.prod.outlook.com (10.172.157.148) by
+ CY4PR15MB1416.namprd15.prod.outlook.com (10.172.160.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Tue, 9 Apr 2019 23:04:35 +0000
+Received: from CY4PR15MB1366.namprd15.prod.outlook.com
+ ([fe80::cdcb:6db:7ea8:1477]) by CY4PR15MB1366.namprd15.prod.outlook.com
+ ([fe80::cdcb:6db:7ea8:1477%4]) with mapi id 15.20.1771.016; Tue, 9 Apr 2019
+ 23:04:35 +0000
+From:   Andrey Ignatov <rdna@fb.com>
+To:     Jann Horn <jannh@google.com>
+CC:     Network Development <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Roman Gushchin <guro@fb.com>, Kernel Team <Kernel-team@fb.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v3 bpf-next 00/21] bpf: Sysctl hook
+Thread-Topic: [PATCH v3 bpf-next 00/21] bpf: Sysctl hook
+Thread-Index: AQHU6+bolDbIkvoyBUOpRFUnl6HwHKY0UXsAgAAn54A=
+Date:   Tue, 9 Apr 2019 23:04:35 +0000
+Message-ID: <20190409230432.GA59615@rdna-mbp>
+References: <cover.1554485409.git.rdna@fb.com>
+ <CAG48ez2D=fUX6_MDf5WD39av65FSQ1OF7v7gG5pqZLqgU9RAUw@mail.gmail.com>
+In-Reply-To: <CAG48ez2D=fUX6_MDf5WD39av65FSQ1OF7v7gG5pqZLqgU9RAUw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0058.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::35) To CY4PR15MB1366.namprd15.prod.outlook.com
+ (2603:10b6:903:f7::20)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:6328]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 778bc652-e830-4e52-55fb-08d6bd3fbbaf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR15MB1416;
+x-ms-traffictypediagnostic: CY4PR15MB1416:
+x-microsoft-antispam-prvs: <CY4PR15MB141673AA4A5214982640B0CAA82D0@CY4PR15MB1416.namprd15.prod.outlook.com>
+x-forefront-prvs: 000227DA0C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(346002)(366004)(39860400002)(136003)(376002)(199004)(189003)(1076003)(316002)(6512007)(106356001)(256004)(5660300002)(386003)(11346002)(14444005)(5024004)(97736004)(71200400001)(81166006)(8936002)(81156014)(8676002)(14454004)(52116002)(478600001)(86362001)(71190400001)(68736007)(7736002)(486006)(53936002)(476003)(9686003)(229853002)(25786009)(6436002)(99286004)(6246003)(7416002)(33656002)(305945005)(33716001)(6116002)(6916009)(186003)(446003)(53546011)(105586002)(4326008)(102836004)(76176011)(54906003)(6486002)(6506007)(46003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1416;H:CY4PR15MB1366.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S5AI4JOjN1Y0fI7BmCm4uZb3+zh3ENJRe7MPVfEXyKiM37RIZT/ugKABI7VaaY8VW7i9muapLioNfJWifolFUnHqOBC+jXRfASPE/V6HcNPFQ81fc8NNoq31sUMTWuykv1QWzUS5oPh+zyniMwYicRMl2/y6kJxLvd1Kaema1GQnQXlPAS+c7g1S+8GqQA5VEgrzwQt63TdeqzS6+DsAag6dLTw+92PKHBJySSO6CsrVyLH4krXTAoZseu24MGjZHDo9tuGhy++Apo/3XINUpovK4De1JDSYXZCkPfo2gWealUylhDQvU/8IQ1zT/l6+0/2cNIDQI+ceJ1ptErdcNwzMU9KtgOryY60gdiF9sBs/uWy1Gl8BZ+5BbMeqf6EX6K6RqaY04mlYf3CU17nmRDFAfw6AtBnIHS6pWBP2qnA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A1C0B86DEC54CE4EA1440C4ACE1F0F74@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAOD6=z69K9bBqUikwogJ2YH_OfxODfsy+uRb6dX9x9AOuP6Wpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 778bc652-e830-4e52-55fb-08d6bd3fbbaf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2019 23:04:35.2886
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1416
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-09_12:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-09 3:56 am, Sriram Dash wrote:
-> On Tue, Apr 2, 2019 at 9:53 PM Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
->>
->> On Tue, 2 Apr 2019 at 15:34, Robin Murphy <robin.murphy@arm.com> wrote:
->>>
->>> On 02/04/2019 10:40, Pankaj Dubey wrote:
->>>> From: Sriram Dash <sriram.dash@samsung.com>
->>>>
->>>> The xhci forcefully converts the dma_mask to either 64 or 32 and the
->>>> dma-mask set by the bus is somewhat ignored. If the platform  sets the
->>>> correct dma_mask, then respect that.
->>>
->>> It's expected for dma_mask to be larger than bus_dma_mask if the latter
->>> is set - conceptually, the device mask represents what the device is
->>> inherently capable of, while the bus mask represents external
->>> interconnect restrictions which individual drivers should not have to
->>> care about. The DMA API backend should take care of combining the two to
->>> find the intersection.
->>
->> Thanks for the review.
->>
->> We are dealing here with the xhci platform which inherits the dma mask
->> of the parent, which is from a controller device.
->>
->> When the controller dma mask is set by the platform in DT, what we
->> observe is, its not getting inherited properly and the xhci bus is
->> forcing the dma address to be either 32 bit or 64 bit.
->>
->> In "drivers/usb/host/xhci-plat.c" we have dma_mask setting as below:
->>
->>   /* Try to set 64-bit DMA first */
->> if (WARN_ON(!sysdev->dma_mask))
->>       /* Platform did not initialize dma_mask */
->>       ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
->> else
->>       ret = dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
->>
->> So even if the controller device has set the dma_mask as per it's
->> configuration in DT, xhci-plat.c will override it here in else part.
->>
->> Next it goes to "drivers/usb/host/xhci.c" file, here we have code as:
->>
->> /* Set dma_mask and coherent_dma_mask to 64-bits,
->>   * if xHC supports 64-bit addressing */
->> if (HCC_64BIT_ADDR(xhci->hcc_params) &&
->>                  !dma_set_mask(dev, DMA_BIT_MASK(64))) {
->>          xhci_dbg(xhci, "Enabling 64-bit DMA addresses.\n");
->>          dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
->> } else {
->>          /*
->>           * This is to avoid error in cases where a 32-bit USB
->>           * controller is used on a 64-bit capable system.
->>           */
->>          retval = dma_set_mask(dev, DMA_BIT_MASK(32));
->>          if (retval)
->>                  return retval;
->>          xhci_dbg(xhci, "Enabling 32-bit DMA addresses.\n");
->>          dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->> }
->>
->> So xhci will force the dma_mask to either DMA_BIT_MASK(32) or
->> DMA_BIT_MASK(64), what if my device needs other than 32 bit or 64 bit
->> dma_mask.
->>
->> The bus_dma_mask was introduced for a case when the bus from a
->> device's dma interface may carry fewer address bits. But apparently,
->> it is the only mask which retains the original dma addressing from the
->> parent. So basically what we observe is currently there is no way we
->> can pass dma_mask greater than 32-bit, from DT via dev->dma_mask or
->> dev->coherent_dma_mask due to below logic in
->>
->> from "drivers/of/platform.c" we have
->> static struct platform_device *of_platform_device_create_pdata(
->>                                          struct device_node *np,
->>                                          const char *bus_id,
->>                                          void *platform_data,
->>                                          struct device *parent)
->> {
->>        struct platform_device *dev;
->>        ...
->>        dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->>        if (!dev->dev.dma_mask)
->>               dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
->>    ...
->> }
->>
->> and then in of_dma_configure function in "drivers/of/device.c" we have..
->>
->> mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1); //This mask
->> computation is going fine and gets mask greater than 32-bit if defined
->> in DT
->> dev->coherent_dma_mask &= mask;  // Here the higher bit [63:32] will
->> get truncated as coherent_dma_mask is initialized to DMA_BIT_MASK(32)
->> in platform.c
->>
->> *dev->dma_mask &= mask; //Same here higher bits will get truncated
->> /* ...but only set bus mask if we found valid dma-ranges earlier */
->> if (!ret)
->> dev->bus_dma_mask = mask; //Only bus_dma_mask can carry the original
->> mask as specified in platform DT.
->>
->> To minimise the impact on existing code, we reused the bus_dma_mask
->> for finding the dma addressing bits.
->>
->> Or other way we may need to initialise dma_mask/coherent_dma_mask as
->> DMA_BIT_MASK(64) in "drivers/of/platform.c" and let all devices set
->> dma_mask via DT using "dma-ranges" property or respective platform
->> driver.
->>
->>> Are you seeing an actual problem here, and if so
->>> on which platform? (If the bus mask is set at all then it wouldn't seem
->>> to be the DT PCI issue that I'm still trying to fix).
->>>
->>
->>
->> We are facing this issue in one of the Samsung's upcoming SoC where we
->> need dma_mask greater than 32-bit.
->>
->> Thanks,
->> Pankaj
->>> Robin.
->>>
->>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
->>>> ---
->>>>    drivers/usb/host/xhci.c | 10 ++++++++++
->>>>    1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
->>>> index 005e659..55cf89e 100644
->>>> --- a/drivers/usb/host/xhci.c
->>>> +++ b/drivers/usb/host/xhci.c
->>>> @@ -5119,6 +5119,16 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
->>>>                dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->>>>        }
->>>>
->>>> +     /*
->>>> +      * A platform may require coherent masks other than 64/32 bit, and we
->>>> +      * should respect that. If the firmware has already requested for a
->>>> +      * dma-range, we inherit the dma_mask presuming the platform knows
->>>> +      * what it is doing.
->>>> +      */
->>>> +
->>>> +     if (dev->bus_dma_mask)
->>>> +             dma_set_mask_and_coherent(dev, dev->bus_dma_mask);
->>>> +
->>>>        xhci_dbg(xhci, "Calling HCD init\n");
->>>>        /* Initialize HCD and host controller data structures. */
->>>>        retval = xhci_init(hcd);
->>>>
-> 
-> Hello Robin,
-> 
-> Hope you found the crux of the matter. Any comments on the same?
-
-Sorry, I never received either of these replies - I've just happened to 
-notice this thread again by pure chance while looking at the linux-usb 
-patchwork for something else entirely, and managed to dredge an mbox off 
-lore.kernel.org to reply to. Mail is not my area of expertise, but 
-looking at the headers of the initial patch in my inbox it seems that 
-outlook.com is doing SPF negotiation with samsung.com, so sending via 
-gmail (as those replies appear to be) may be failing that and getting 
-silently discarded (they're not even in my spam quarantine).
-
- From the snippets of code quoted above I don't see anything obviously 
-wrong, but I'll take a closer look tomorrow. AFAICS though, if 
-dev->bus_dma_mask is set then dev is probably the appropriate device for 
-DMA, so I wouldn't expect a problem - XHCI is inherently a 64-bit 
-device, so its driver *should* be setting a 64-bit mask in this case. To 
-reiterate, what's the nature of the DMA issue? Do the mapping operations 
-fail, or do you actually see transfers going wrong due to address 
-truncation? Also, which arch is involved here - is it arm64 (as I seem 
-to have assumed), or something else?
-
-Robin.
+SmFubiBIb3JuIDxqYW5uaEBnb29nbGUuY29tPiBbVHVlLCAyMDE5LTA0LTA5IDEzOjQyIC0wNzAw
+XToNCj4gT24gVHVlLCBBcHIgOSwgMjAxOSBhdCAxMDoyNiBQTSBBbmRyZXkgSWduYXRvdiA8cmRu
+YUBmYi5jb20+IHdyb3RlOg0KPiA+IFRoZSBwYXRjaCBzZXQgaW50cm9kdWNlcyBuZXcgQlBGIGhv
+b2sgZm9yIHN5c2N0bC4NCj4gPg0KPiA+IEl0IGFkZHMgbmV3IHByb2dyYW0gdHlwZSBCUEZfUFJP
+R19UWVBFX0NHUk9VUF9TWVNDVEwgYW5kIGF0dGFjaCB0eXBlDQo+ID4gQlBGX0NHUk9VUF9TWVND
+VEwuDQo+ID4NCj4gPiBCUEZfQ0dST1VQX1NZU0NUTCBob29rIGlzIHBsYWNlZCBiZWZvcmUgY2Fs
+bGluZyB0byBzeXNjdGwncyBwcm9jX2hhbmRsZXIgc28NCj4gPiB0aGF0IGFjY2Vzc2VzIChyZWFk
+L3dyaXRlKSB0byBzeXNjdGwgY2FuIGJlIGNvbnRyb2xsZWQgZm9yIHNwZWNpZmljIGNncm91cA0K
+PiA+IGFuZCBlaXRoZXIgYWxsb3dlZCBvciBkZW5pZWQsIG9yIHRyYWNlZC4NCj4gDQo+IERvbid0
+IGxvb2sgYXQgdGhlIGNyZWRlbnRpYWxzIG9mICJjdXJyZW50IiBpbiBhIHJlYWQgb3Igd3JpdGUg
+aGFuZGxlci4NCj4gQ29uc2lkZXIgd2hhdCBoYXBwZW5zIGlmLCBmb3IgZXhhbXBsZSwgc29tZW9u
+ZSBpbnNpZGUgYSBjZ3JvdXAgb3BlbnMgYQ0KPiBzeXNjdGwgZmlsZSBhbmQgcGFzc2VzIHRoZSBm
+aWxlIGRlc2NyaXB0b3IgdG8gYW5vdGhlciBwcm9jZXNzIG91dHNpZGUNCj4gdGhlIGNncm91cCBv
+dmVyIGEgdW5peCBkb21haW4gc29ja2V0LCBhbmQgdGhhdCBvdGhlciBwcm9jZXNzIHRoZW4NCj4g
+d3JpdGVzIHRvIGl0LiBFaXRoZXIgZG8geW91ciBhY2Nlc3MgY2hlY2sgb24gb3Blbiwgb3IgdXNl
+IHRoZQ0KPiBjcmVkZW50aWFscyB0aGF0IHdlcmUgc2F2ZWQgZHVyaW5nIG9wZW4oKSBpbiB0aGUg
+cmVhZC93cml0ZSBoYW5kbGVyLg0KDQpUaGlzIHdheSB0aGlzIHNvbWVvbmUgaW5zaWRlIGNncm91
+cCBzaG91bGQgYWxyZWFkeSBoYXZlIGNvbnRyb2wgb3Zlcg0Kc29tZXRoaW5nIHJ1bm5pbmcgYXMg
+cm9vdCBbMV0gb3V0c2lkZSBvZiB0aGlzIGNncm91cCwgaS5lLiB0aGUgZ2FtZSBpcw0KYWxyZWFk
+eSBsb3N0LCBldmVuIHdpdGhvdXQgdGhpcyBob29rLg0KDQpbMV0gU2luY2UgcHJvY19zeXNfcmVh
+ZCgpIC8gcHJvY19zeXNfd3JpdGUoKSBjaGVjayBzeXNjdGxfcGVybSgpIGJlZm9yZQ0KICAgIGV4
+ZWN1dGlvbiByZWFjaGVzIHRoZSBob29rLg0KDQpUaGlzIHBhdGNoIHNldCBkb2Vzbid0IGxvb2sg
+YXQgY3JlZGVudGlhbHMgYXQgYWxsIGFuZCByZWxpZXMgb24gd2hhdA0KY2hlY2tzIHdlcmUgYWxy
+ZWFkeSBkb25lIGF0IHN5c19vcGVuIHRpbWUgb3IgaW4gcHJvY19zeXNfY2FsbF9oYW5kbGVyKCkN
+CmJlZm9yZSBleGVjdXRpb24gcmVhY2hlcyB0aGUgaG9vay4NCg0KPiA+IFRoZSBob29rIGhhcyBh
+Y2Nlc3MgdG8gc3lzY3RsIG5hbWUsIGN1cnJlbnQgc3lzY3RsIHZhbHVlIGFuZCAob24gd3JpdGUN
+Cj4gPiBvbmx5KSB0byBuZXcgc3lzY3RsIHZhbHVlIHZpYSBjb3JyZXNwb25kaW5nIGhlbHBlcnMu
+IE5ldyBzeXNjdGwgdmFsdWUgY2FuDQo+ID4gYmUgb3ZlcnJpZGRlbiBieSBwcm9ncmFtLiBCb3Ro
+IG5hbWUgYW5kIHZhbHVlcyAoY3VycmVudC9uZXcpIGFyZQ0KPiA+IHJlcHJlc2VudGVkIGFzIHN0
+cmluZ3Mgc2FtZSB3YXkgdGhleSdyZSB2aXNpYmxlIGluIC9wcm9jL3N5cy8uIEl0IGlzIHVwIHRv
+DQo+ID4gcHJvZ3JhbSB0byBwYXJzZSB0aGVzZSBzdHJpbmdzLg0KPiANCj4gQnV0IGV2ZW4gaWYg
+YSBmaWx0ZXIgaXMgaW5zdGFsbGVkIHRoYXQgcHJldmVudHMgYWxsIGFjY2VzcyB0byBhDQo+IHN5
+c2N0bCwgeW91IGNhbiBzdGlsbCByZWFkIGl0IGJ5IGluc3RhbGxpbmcgeW91ciBvd24gZmlsdGVy
+IHRoYXQsIHdoZW4NCj4gYSByZWFkIGlzIGF0dGVtcHRlZCB0aGUgbmV4dCB0aW1lLCBkdW1wcyB0
+aGUgdmFsdWUgaW50byBhIG1hcCBvcg0KPiBzb21ldGhpbmcgbGlrZSB0aGF0LCByaWdodD8NCg0K
+Tm8uIFRoaXMgY2FuIGJlIGNvbnRyb2xsZWQgYnkgY2dyb3VwIGhpZXJhcmNoeSBhbmQgYXBwcm9w
+cmlhdGUgYXR0YWNoDQpmbGFncywgc2FtZSB3YXkgYXMgd2l0aCBhbnkgb3RoZXIgY2dyb3VwLWJw
+ZiBob29rLg0KDQpFLmcuIGltYWdpbmUgdGhlcmUgaXMgYSBjZ3JvdXAgaGllcmFyY2h5Og0KICBy
+b290L3NsaWNlL2NvbnRhaW5lci8NCg0KYW5kIGNvbnRhaW5lciBhcHBsaWNhdGlvbiBydW5zIGlu
+IHJvb3Qvc2xpY2UvY29udGFpbmVyLyBpbiBhIGNncm91cA0KbmFtZXNwYWNlIChDTE9ORV9ORVdD
+R1JPVVApIHRoYXQgbWFrZXMgdmlzaWJsZSBvbmx5ICJjb250YWluZXIvIiBwYXJ0IG9mDQp0aGUg
+aGllcmFyY2h5LCBpLmUuIGZyb20gaW5zaWRlIGNvbnRhaW5lciBhcHBsaWNhdGlvbiBjYW4ndCBl
+dmVuIHNlZQ0KInJvb3Qvc2xpY2UvIi4NCg0KQWRtaW5pc3RyYXRvciBjYW4gdGhlbiBhdHRhY2gg
+c3lzY3RsIGhvb2sgdG8gInJvb3Qvc2xpY2UvIiB3aXRoIGF0dGFjaA0KZmxhZyBOT05FIChicGZf
+YXR0ci5hdHRhY2hfZmxhZ3MgPSAwKSB3aGF0IG1lYW5zIG5vYm9keSBkb3duIHRoZQ0KaGllcmFy
+Y2h5IGNhbiBvdmVycmlkZSB0aGUgcHJvZ3JhbSBhdHRhY2hlZCBieSBhZG1pbmlzdHJhdG9yLg0K
+DQo+ID4gVG8gaGVscCB3aXRoIHBhcnNpbmcgdGhlIG1vc3QgY29tbW9uIGtpbmQgb2Ygc3lzY3Rs
+IHZhbHVlLCB2ZWN0b3Igb2YNCj4gPiBpbnRlZ2VycywgdHdvIG5ldyBoZWxwZXJzIGFyZSBwcm92
+aWRlZDogYnBmX3N0cnRvbCBhbmQgYnBmX3N0cnRvdWwgd2l0aA0KPiA+IHNlbWFudGljIHNpbWls
+YXIgdG8gdXNlciBzcGFjZSBzdHJ0b2woMykgYW5kIHN0cnRvdWwoMykuDQo+ID4NCj4gPiBUaGUg
+aG9vayBhbHNvIHByb3ZpZGVzIGJwZl9zeXNjdGwgY29udGV4dCB3aXRoIHR3byBmaWVsZHM6DQo+
+ID4gKiBAd3JpdGUgaW5kaWNhdGVzIHdoZXRoZXIgc3lzY3RsIGlzIGJlaW5nIHJlYWQgKD0gMCkg
+b3Igd3JpdHRlbiAoPSAxKTsNCj4gPiAqIEBmaWxlX3BvcyBpcyBzeXNjdGwgZmlsZSBwb3NpdGlv
+biB0byByZWFkIGZyb20gb3Igd3JpdGUgdG8sIGNhbiBiZQ0KPiA+ICAgb3ZlcnJpZGRlbi4NCj4g
+Pg0KPiA+IFRoZSBob29rIGFsbG93cyB0byBtYWtlIGJldHRlciBpc29sYXRpb24gZm9yIGNvbnRh
+aW5lcml6ZWQgYXBwbGljYXRpb25zDQo+ID4gdGhhdCBhcmUgcnVuIGFzIHJvb3Qgc28gdGhhdCBv
+bmUgY29udGFpbmVyIGNhbid0IGNoYW5nZSBhIHN5c2N0bCBhbmQgYWZmZWN0DQo+ID4gYWxsIG90
+aGVyIGNvbnRhaW5lcnMgb24gYSBob3N0LCBtYWtlIGNoYW5nZXMgdG8gYWxsb3dlZCBzeXNjdGwg
+aW4gYSBzYWZlcg0KPiA+IHdheSBhbmQgc2ltcGxpZnkgc3lzY3RsIHRyYWNpbmcgZm9yIGNncm91
+cHMuDQo+IA0KPiBXaHkgY2FuJ3QgeW91IHVzZSBhIHVzZXIgbmFtZXNwYWNlIGFuZCBpc29sYXRl
+IHRoaW5ncyBwcm9wZXJseSB0aGF0DQo+IHdheT8gVGhhdCB3b3VsZCBiZSBtdWNoIGNsZWFuZXIs
+IHdvdWxkbid0IGl0Pw0KDQpJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIGhvdyB1c2VyIG5hbWVz
+cGFjZSBoZWxwcyBoZXJlLiBGcm9tIG15DQp1bmRlcnN0YW5kaW5nIGl0IGNhbiBvbmx5IGNvbXBs
+ZXRlbHkgZGVueSBhY2Nlc3MgdG8gc3lzY3RsIGFuZCBjYW4ndCBkbw0KZmluZS1ncmFpbmVkIGNv
+bnRyb2wgZm9yIHNwZWNpZmljIHN5c2N0bCBrbm9icy4gSXQgYWxzbyBjYW4ndCBtYWtlDQphbGxv
+dy9kZW55IGRlY2lzaW9uIGJhc2VkIG9uIHN5c2N0bCB2YWx1ZSBiZWluZyB3cml0dGVuLg0KDQpC
+YXNpY2FsbHkgdXNlciBuYW1lc3BhY2UgaXMgYWxsIG9yIG5vdGhpbmcuIFRoaXMgc3lzY3RsIGhv
+b2sgcHJvdmlkZXMgYQ0Kd2F5IHRvIGltcGxlbWVudCBmaW5lLWdyYWluZWQgYWNjZXNzIGNvbnRy
+b2wgZm9yIHN5c2N0bCBrbm9icyBiYXNlZCBvbg0Kc3lzY3RsIG5hbWUgb3IgdmFsdWUgYmVpbmcg
+d3JpdHRlbiBvciB3aGF0ZXZlciBlbHNlIHBvbGljeSBhZG1pbmlzdHJhdG9yDQpjYW4gY29tZSB1
+cCB3aXRoLg0KDQotLSANCkFuZHJleSBJZ25hdG92DQo=
