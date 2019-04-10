@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F0C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAAEC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2C5218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B81621B18
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfDJLFt (ORCPT
+        id S1731007AbfDJLFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:05:49 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58782 "EHLO
+        Wed, 10 Apr 2019 07:05:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58786 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730898AbfDJLFp (ORCPT
+        with ESMTP id S1730850AbfDJLFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 07:05:45 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB2u-00052m-7k; Wed, 10 Apr 2019 13:05:36 +0200
-Message-Id: <20190410103644.308534788@linutronix.de>
+        id 1hEB31-00054r-7s; Wed, 10 Apr 2019 13:05:43 +0200
+Message-Id: <20190410103644.750219625@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:02 +0200
+Date:   Wed, 10 Apr 2019 12:28:07 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
-Subject: [RFC patch 08/41] parisc/stacktrace: Remove the pointless ULONG_MAX
- marker
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>,
+        linux-mm@kvack.org
+Subject: [RFC patch 13/41] mm/kasan: Remove the ULONG_MAX stack trace hackery
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,43 +45,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Terminating the last trace entry with ULONG_MAX is a completely pointless
-exercise and none of the consumers can rely on it because it's
-inconsistently implemented across architectures. In fact quite some of the
-callers remove the entry and adjust stack_trace.nr_entries afterwards.
+No architecture terminates the stack trace with ULONG_MAX anymore. Remove
+the cruft.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-parisc@vger.kernel.org
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: kasan-dev@googlegroups.com
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: linux-mm@kvack.org
 ---
- arch/parisc/kernel/stacktrace.c |    5 -----
- 1 file changed, 5 deletions(-)
+ mm/kasan/common.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/arch/parisc/kernel/stacktrace.c
-+++ b/arch/parisc/kernel/stacktrace.c
-@@ -29,22 +29,17 @@ static void dump_trace(struct task_struc
- 	}
- }
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -74,9 +74,6 @@ static inline depot_stack_handle_t save_
  
--
- /*
-  * Save stack-backtrace addresses into a stack_trace buffer.
-  */
- void save_stack_trace(struct stack_trace *trace)
- {
- 	dump_trace(current, trace);
--	if (trace->nr_entries < trace->max_entries)
--		trace->entries[trace->nr_entries++] = ULONG_MAX;
- }
- EXPORT_SYMBOL_GPL(save_stack_trace);
+ 	save_stack_trace(&trace);
+ 	filter_irq_stacks(&trace);
+-	if (trace.nr_entries != 0 &&
+-	    trace.entries[trace.nr_entries-1] == ULONG_MAX)
+-		trace.nr_entries--;
  
- void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
- {
- 	dump_trace(tsk, trace);
--	if (trace->nr_entries < trace->max_entries)
--		trace->entries[trace->nr_entries++] = ULONG_MAX;
+ 	return depot_save_stack(&trace, flags);
  }
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
 
 
