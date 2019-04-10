@@ -2,106 +2,129 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7918CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E695C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F48B2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A94C2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgThgCgO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B6t93fkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfDJD0N (ORCPT
+        id S1726983AbfDJD1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 23:26:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39034 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfDJD0N (ORCPT
+        Tue, 9 Apr 2019 23:27:00 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45440 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfDJD07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 23:26:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k3so634633pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 20:26:13 -0700 (PDT)
+        Tue, 9 Apr 2019 23:26:59 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y6so653231ljd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 20:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sjLTw+m2ZEwqD7IRnenJTwcO08Oa8viTpb2e9ccyS4U=;
-        b=LgThgCgOgkN7pRj4T2GtyzrHmfduHws5+SQcF+2AIjGl7LmENhPJB8jlNW5djJbR8H
-         6FmJM/guN/c9YODnuQ3+CAG209rwzEYljgCvJVHJrAAbTeuFqr2a/QcqLRGAIi8OFzwE
-         o7sGMo7fXEl+x5AhPK1OiMlhvjAcib4pixHo4b0BehcZa+KFDk6b3LzjH9uGFK0tFGEN
-         NIvWjYhirgM4M6uILdsIUOhmq3zaqBLLhxNmZQAMqFdF4HMOiO0bDmtrfAeMmRKB5QaK
-         seLKOuJ8AmjpSTqDdHvi+dJXj7SOKx1ycjqjMu8eyF7J09N4BbeEKYyoRJenr0V+N/c1
-         eT1Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dK1bZLBSj9wXHxBkIORJDKWdgF7zFsKUzg67ztyitJk=;
+        b=B6t93fkT6j8fbIIoUKGH7nbLLYM1rN/IdRzchrsJ3usDVSv9ljf8rkP3JPQdI34Q2F
+         Q732/uaMhoppyXaMr6YlgTKAPExA7Sz2EPyqB1DX5mD6o+kekEmXzy4OPSDRsXo2B28i
+         MLeLPEfxIwKUtloERI1HuqUgJKd76bC342imU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sjLTw+m2ZEwqD7IRnenJTwcO08Oa8viTpb2e9ccyS4U=;
-        b=TfMTL2nqamfgPpr0hjsiv593BQYEq5FqpR29bg7eWhbJaDjEgzxZDW93nwsY/pgsRi
-         hShID2DVZlHfN5ZanmA1zwDfgV0NI56/BghrorKf0EEmI4jo2E0mJWweDizbWhufc+GQ
-         imghEtUZDESClT0E2SqaVY7W9PoXq2MmAqDAm1EiXY1yCzfALnYfsywh79ungTMXtkvu
-         AxQD2yAQeveKFaiI+lhgCu9dKNxZuAzexU7deoAFL5Kxkycz6l7hqRrhaSorx6rGu+yN
-         Z1eol4+yEm3scdIQP7MUNh8ZmxVyjf/DLUjf8nEwfiPUMsVbo5f0DP5CCJW83GVdQxZm
-         srFQ==
-X-Gm-Message-State: APjAAAX5iLh8eKfY4ui42JD8Q42NrvG/87Q7NbdHHQIVRjch9q22699D
-        R5cZ3kK2qvBlL9Easj7QFguYVg==
-X-Google-Smtp-Source: APXvYqwZerODFzooN1BoAnAvg6g1i9NOJ4zDlf5w0jfGkfzixlOMaLzkxMFtkfQa4oe1517myGS1dA==
-X-Received: by 2002:aa7:9088:: with SMTP id i8mr41168740pfa.118.1554866771683;
-        Tue, 09 Apr 2019 20:26:11 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id w23sm39848156pgj.72.2019.04.09.20.26.10
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dK1bZLBSj9wXHxBkIORJDKWdgF7zFsKUzg67ztyitJk=;
+        b=ZnyI4hfKLflCnxHR1alP5ziAlCDie4yNYKlRDBmLgmeZOKy6kFbnlT91dgBt10Fh0C
+         r4nEKX2v035qlBPKCGxkhQBAxbm7UtzusgEjz2fyxfeEpwntHb6oEnZMkR56VvL2CwpN
+         b+whaavoJL7NrSdZVIh4VfgkaxE7dV72c958XDQVzF6e5N+oulDzjyD3y4in3S9C8OgR
+         T1d6gDi5PEnz0unEaE204H63r2G8esQm2igD9Uhv6l8y1o95L63rSm3Z6Ixlf7eoZWgc
+         SXfz5ZV/0BxgZImDsVxWtLG/7BGFvtBqd/xdGuDMj4EFCnRMwVt2hDjXgf0Xo1RCC3ae
+         H53w==
+X-Gm-Message-State: APjAAAUdd85+XiJ3z5TrMum5txISWaU51J8btOg6yC3CmOp96nIpYl42
+        oDmcX8a7gkso7pUJjMgmHuK4Jxw3PxI=
+X-Google-Smtp-Source: APXvYqzvwLROLiqIrGJ93daeg+ncfMHz7mszq5fXtJjajZPd/U1hxz6fgjBbq7tva6HzJyXlxlkZBA==
+X-Received: by 2002:a2e:4555:: with SMTP id s82mr21204030lja.15.1554866817477;
+        Tue, 09 Apr 2019 20:26:57 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id w27sm27597lfc.10.2019.04.09.20.26.55
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 20:26:10 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 08:56:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Message-ID: <20190410032608.fqxahvys6rysvayy@vireshk-i7>
-References: <20190409172558.18778-1-tiny.windzz@gmail.com>
- <20190409172558.18778-3-tiny.windzz@gmail.com>
+        Tue, 09 Apr 2019 20:26:56 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id j89so708858ljb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 20:26:55 -0700 (PDT)
+X-Received: by 2002:a2e:7114:: with SMTP id m20mr21509140ljc.120.1554866814450;
+ Tue, 09 Apr 2019 20:26:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409172558.18778-3-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+References: <20190409184917.65062-1-briannorris@chromium.org> <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 9 Apr 2019 20:26:43 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com>
+Message-ID: <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com>
+Subject: Re: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-04-19, 13:25, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value  based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> 
-> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-microvolt-<name>: voltage in micro Volts.
->   At runtime, the platform can pick a <name> and matching
->   opp-microvolt-<name> property
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+Hi Linus,
 
-LGTM.
+Thanks for the reply! It's amusing that you're the only one (well,
+besides the gentleman who sits a few feet from me and kindly provided
+his Reviewed-by) to review my patch.
 
--- 
-viresh
+On Tue, Apr 9, 2019 at 7:20 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Tue, Apr 9, 2019 at 8:49 AM Brian Norris <briannorris@chromium.org> wrote:
+> > Badly-designed systems might have (for example) active-high wake pins
+> > that default to high (e.g., because of external pull ups) until they
+> > have an active firmware which starts driving it low. This can cause an
+> > interrupt storm in the time between request_irq() and disable_irq().
+>
+> Why is the fix not to move the request_irq() down to below the proper
+> initialization sequence?
+>
+> That's what drivers *should* do: initialize their hardware first,
+> request interrupts only after that. Initializing the interrupt handler
+> before the hw is actually up seems wrong..
+
+I suppose that's a possible solution. It appears that would involve
+moving this IRQ management into btusb_{open,close}, after
+->setup_on_usb(). I don't immediately see a good reason why we
+couldn't do that.
+
+But the use of NOAUTOEN is still important, because there's not really
+any direct way to ack/clear the underlying signal, even when the
+hardware is fully initialized. It's just a level-triggered wakeup
+signal, which represents "activity" from the device, and we're relying
+on the disable_irq_nosync() / BTUSB_OOB_WAKE_ENABLED dance to keep
+things in sync. (I'm not proud of that exactly, but I think it's
+otherwise correct.) Currently, this is the only window of time where
+we trust that the device remains "quiet". Even if we move this until
+after full HW initialization, I think we're still trusting the BT
+firmware (a bit too much) not to assert this signal.
+
+So, I think the problem is still potentially present no matter when we
+request the IRQ. The "uninitialized" state of the hardware (or,
+firmware) just exposes the issue extremely clearly.
+
+If you'd rather send this back to the drawing board, I can just send a
+revert for commit 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A
+wakeup pin into its USB node") for 5.1 instead. I don't mean to take
+too much of your time; I just want my regression fixed, and nothing
+further up the MAINTAINERS file helped so far.
+
+Thanks,
+Brian
