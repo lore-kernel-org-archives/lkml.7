@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88E3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E09C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F8820854
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C807D20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbfDJNl3 (ORCPT
+        id S1731258AbfDJNlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:41:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48802 "EHLO mga14.intel.com"
+        Wed, 10 Apr 2019 09:41:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36687 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732392AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732393AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:04 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="134566104"
+   d="scan'208";a="314707198"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id BFD4349A; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id CC7254C6; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 08/36] thunderbolt: Add dummy read after port capability list walk on Light Ridge
-Date:   Wed, 10 Apr 2019 16:36:25 +0300
-Message-Id: <20190410133653.88061-9-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 09/36] thunderbolt: Move LC specific functionality into a separate file
+Date:   Wed, 10 Apr 2019 16:36:26 +0300
+Message-Id: <20190410133653.88061-10-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,51 +55,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Light Ridge has an issue where reading the next capability pointer
-location in port config space the read data is not cleared. It is fine
-to read capabilities each after another so only thing we need to do is
-to make sure we issue dummy read after tb_port_find_cap() is finished to
-avoid the issue in next read.
+We will be adding more link controller functionality in subsequent
+patches and it does not make sense to keep all that in switch.c, so
+separate LC functionality into its own file.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/cap.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/thunderbolt/Makefile  |  2 +-
+ drivers/thunderbolt/lc.c      | 21 +++++++++++++++++++++
+ drivers/thunderbolt/switch.c  | 21 ++++++++++-----------
+ drivers/thunderbolt/tb.h      |  3 +++
+ drivers/thunderbolt/tb_regs.h |  2 ++
+ 5 files changed, 37 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/thunderbolt/lc.c
 
-diff --git a/drivers/thunderbolt/cap.c b/drivers/thunderbolt/cap.c
-index a58585b4e6d9..8bf8e031f0bc 100644
---- a/drivers/thunderbolt/cap.c
-+++ b/drivers/thunderbolt/cap.c
-@@ -52,6 +52,21 @@ static int tb_port_enable_tmu(struct tb_port *port, bool enable)
- 	return tb_sw_write(sw, &value, TB_CFG_SWITCH, offset, 1);
+diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
+index f2f0de27252b..8531f15d3b3c 100644
+--- a/drivers/thunderbolt/Makefile
++++ b/drivers/thunderbolt/Makefile
+@@ -1,3 +1,3 @@
+ obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
+ thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel_pci.o eeprom.o
+-thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o
++thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o
+diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
+new file mode 100644
+index 000000000000..2134a55ed837
+--- /dev/null
++++ b/drivers/thunderbolt/lc.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Thunderbolt link controller support
++ *
++ * Copyright (C) 2019, Intel Corporation
++ * Author: Mika Westerberg <mika.westerberg@linux.intel.com>
++ */
++
++#include "tb.h"
++
++/**
++ * tb_lc_read_uuid() - Read switch UUID from link controller common register
++ * @sw: Switch whose UUID is read
++ * @uuid: UUID is placed here
++ */
++int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid)
++{
++	if (!sw->cap_lc)
++		return -EINVAL;
++	return tb_sw_read(sw, uuid, TB_CFG_SWITCH, sw->cap_lc + TB_LC_FUSE, 4);
++}
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 1e29c06947af..63ff4c753d89 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1182,6 +1182,10 @@ struct tb_switch *tb_switch_alloc(struct tb *tb, struct device *parent,
+ 	}
+ 	sw->cap_plug_events = cap;
+ 
++	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
++	if (cap > 0)
++		sw->cap_lc = cap;
++
+ 	/* Root switch is always authorized */
+ 	if (!route)
+ 		sw->authorized = true;
+@@ -1278,22 +1282,17 @@ int tb_switch_configure(struct tb_switch *sw)
+ static int tb_switch_set_uuid(struct tb_switch *sw)
+ {
+ 	u32 uuid[4];
+-	int cap, ret;
++	int ret;
+ 
+-	ret = 0;
+ 	if (sw->uuid)
+-		return ret;
++		return 0;
+ 
+ 	/*
+ 	 * The newer controllers include fused UUID as part of link
+ 	 * controller specific registers
+ 	 */
+-	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
+-	if (cap > 0) {
+-		ret = tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
+-		if (ret)
+-			return ret;
+-	} else {
++	ret = tb_lc_read_uuid(sw, uuid);
++	if (ret) {
+ 		/*
+ 		 * ICM generates UUID based on UID and fills the upper
+ 		 * two words with ones. This is not strictly following
+@@ -1308,8 +1307,8 @@ static int tb_switch_set_uuid(struct tb_switch *sw)
+ 
+ 	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
+ 	if (!sw->uuid)
+-		ret = -ENOMEM;
+-	return ret;
++		return -ENOMEM;
++	return 0;
  }
  
-+static void tb_port_dummy_read(struct tb_port *port)
-+{
-+	/*
-+	 * When reading from next capability pointer location in port
-+	 * config space the read data is not cleared on LR. To avoid
-+	 * reading stale data on next read perform one dummy read after
-+	 * port capabilities are walked.
-+	 */
-+	if (tb_switch_is_lr(port->sw)) {
-+		u32 dummy;
-+
-+		tb_port_read(port, &dummy, TB_CFG_PORT, 0, 1);
-+	}
-+}
-+
- static int __tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
+ static int tb_switch_add_dma_port(struct tb_switch *sw)
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index a166265dfcf9..e52d39b25266 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -63,6 +63,7 @@ struct tb_switch_nvm {
+  * @device_name: Name of the device (or %NULL if not known)
+  * @generation: Switch Thunderbolt generation
+  * @cap_plug_events: Offset to the plug events capability (%0 if not found)
++ * @cap_lc: Offset to the link controller capability (%0 if not found)
+  * @is_unplugged: The switch is going away
+  * @drom: DROM of the switch (%NULL if not found)
+  * @nvm: Pointer to the NVM if the switch has one (%NULL otherwise)
+@@ -96,6 +97,7 @@ struct tb_switch {
+ 	const char *device_name;
+ 	unsigned int generation;
+ 	int cap_plug_events;
++	int cap_lc;
+ 	bool is_unplugged;
+ 	u8 *drom;
+ 	struct tb_switch_nvm *nvm;
+@@ -462,6 +464,7 @@ bool tb_path_is_invalid(struct tb_path *path);
+ int tb_drom_read(struct tb_switch *sw);
+ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
+ 
++int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
+ 
+ static inline int tb_route_length(u64 route)
  {
- 	u32 offset = 1;
-@@ -92,6 +107,7 @@ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index 6f1ff04ee195..4895ae9f0b40 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -237,5 +237,7 @@ struct tb_regs_hop {
+ 	u32 unknown3:4; /* set to zero */
+ } __packed;
  
- 	ret = __tb_port_find_cap(port, cap);
++/* Common link controller registers */
++#define TB_LC_FUSE			0x03
  
-+	tb_port_dummy_read(port);
- 	tb_port_enable_tmu(port, false);
- 
- 	return ret;
+ #endif
 -- 
 2.20.1
 
