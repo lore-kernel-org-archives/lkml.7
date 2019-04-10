@@ -2,63 +2,63 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA934C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159A8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABC320850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69522133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxvZOSVX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qur21Nd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbfDJO0M (ORCPT
+        id S1732749AbfDJO0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:26:12 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39326 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731971AbfDJO0M (ORCPT
+        Wed, 10 Apr 2019 10:26:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40400 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731971AbfDJO0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:26:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l7so2314709ljg.6;
-        Wed, 10 Apr 2019 07:26:10 -0700 (PDT)
+        Wed, 10 Apr 2019 10:26:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q66so2310319ljq.7;
+        Wed, 10 Apr 2019 07:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eNT8cKVfeIi7uAkEe1ZbC3EOVjlhbfRiqWYvgGhOSpU=;
-        b=hxvZOSVXLpGJNzR/H4f9Gz91udtTQtL3pLwAum6no4hIHKAfCWMPLqTxlnU15oLf6N
-         Qh4GV5NbbOp+zkWnubOICh6csky4HsdginEzcvKqnKm+rLubBCz5lhd5WpwEwwyrm0aK
-         xu+geq0OyR21JmiMtJ6tkO1HNudtM5eN6E7VBN30sjtTtBu1kesNKpxIyGwTjc/5xM7y
-         RlqHCq5rCW+0hZtXGDEz6pxEWRJJmuoNQwFr/W7LdHf8ISA8ZDUpAKtkQ/W8iNu8KhrD
-         rGsPjf7h3ZX232vDRcEZd6fbSiVF+S1W7Kzo4TVbB0BCUONoVMI99FnHlAjGm8BwPs/v
-         /tAg==
+        bh=+y2p16iLH2m+HtsDYjG0iV8Z/Xh7rWVUwWRMS6QiGYg=;
+        b=qur21Nd3eXlCOCpoEFR24g1NyRtYtiWtwK+5j0rn/tP6R781DwDcKg4l9B1YnInwx6
+         1R37Ajvmyh8Cq+ejttt6SXGT6fE7b4Hs08s8GED39xpyH5XskkDVSHAntZV8E3WlM5V+
+         nThkoK8M2cbOWDifJnDn1bGmo2Q4EH7bclNsCujLMGK/SCONS+Misg5YRAej1Ah0QnPw
+         6IhyH3NEsZYS2hD67M+O6QB8QYS2+BOqozSKOrWj+83WkPyise6Ekln+dx72ncQibzbZ
+         Av01zUUGHpzq6mtUcBXoJuKdsWavf148j5N9hvgk4cle+EgJlQBak7aWzROJq5MpndzB
+         zL/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eNT8cKVfeIi7uAkEe1ZbC3EOVjlhbfRiqWYvgGhOSpU=;
-        b=LsuyxUOXKFA0rhG+zIOFaVXljuIrFL0K6bLZBHGkgZS7Va0VzFcHiuh8ej07ckQcgM
-         mjFYIknEgjyx4oj14VW9vyzQAdByMKpiblBL6ceB6/rnO6H/Wnxce8sdXFEhmO0mWbLZ
-         qO8PeWb2kZpaGZ3xVMTu5zGhAQOumfjC1vhfS5TVRUb1n4jPe2wt5355rwYyrC9U7Trs
-         j4ZdtlvIMKoJ9sCnNaAuHU+ITOY3D3r7ISPGzw2A2tnNpzGz4oGBa4npE6TPY9z/xIe6
-         biKKal/3gWew1FS7Zy62bFO39ztkRBPtKpT3qJi6VwM9Hl6fww8U8CfUsP0N+d28cU1i
-         aTbw==
-X-Gm-Message-State: APjAAAVYevfHeKn8+Krzluepg/D8NUOJcNnNXUZGengXhwrHtgpv3DTg
-        FpIhBvmwjlqDlBQTQ+ULBbGfVmUoit+5mhwjrkg=
-X-Google-Smtp-Source: APXvYqxHd755icfvww8fjK4Q1wSOaGRHRC+OMoeABHe27VJHeKhddhShRkz0ROeDCtpxUMloeEdgGPQRNSXS/l3sPEo=
-X-Received: by 2002:a2e:5d94:: with SMTP id v20mr23144071lje.138.1554906370195;
- Wed, 10 Apr 2019 07:26:10 -0700 (PDT)
+        bh=+y2p16iLH2m+HtsDYjG0iV8Z/Xh7rWVUwWRMS6QiGYg=;
+        b=KLIiuHOAKDVx7TIO/Hc/0qcyd/aMc6KqIxNEbgOnWtPFOHgo2qHrjQiDCqrzz0xWB8
+         1uYCNGt59uk2YyIqJmiWCYJXqsW77jwbkq27I6aWLJBnIEP2ZWUM10HA4QRZa1b3fRou
+         Du6kXO5YiN8T6gzVBfm+4e1Ip1YeQy6dUGr6+TjKFz0cuJB0cOvMltEMxIsRqH+K/OfF
+         8EBH6vnlK7ZrN+sUyNCpmtGtyyLMAItO2NtBzOsia6KLPuir+8lY69zqH9mzkFoFd4ZK
+         gBblhCJNvKp2i3xnYDj/zu3gozfqz6/dk2iR0awRxbjtrI9kW35Tz5jo8q8SS7oNaxIY
+         oFsQ==
+X-Gm-Message-State: APjAAAVb1nOVqX8cOEcCZFYD0o5Gw7LlNlWMZk7REUqlx1/ZIflNaqf1
+        +Z9fdA8FIWXCDrPsjituiB0BKhuBiaJeUN1fohE=
+X-Google-Smtp-Source: APXvYqziHI7r075gt/OuJfM9PFekJuDcOB9t2Jlm/nkuFEzgM9PwxHF6IQTGleEkMqqAnzytrssxspZXshP3JVGaKcY=
+X-Received: by 2002:a2e:97d3:: with SMTP id m19mr3223389ljj.63.1554906412051;
+ Wed, 10 Apr 2019 07:26:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com> <1554894380-25153-3-git-send-email-viorel.suman@nxp.com>
-In-Reply-To: <1554894380-25153-3-git-send-email-viorel.suman@nxp.com>
+References: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com> <1554894380-25153-4-git-send-email-viorel.suman@nxp.com>
+In-Reply-To: <1554894380-25153-4-git-send-email-viorel.suman@nxp.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 10 Apr 2019 11:26:04 -0300
-Message-ID: <CAOMZO5Aw=Z1-jKkG07mHCTmVhFE6GLG90-qiuMQfNUXAoze_xw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] ASoC: fsl_audmix: remove "model" attribute from DT document
+Date:   Wed, 10 Apr 2019 11:26:46 -0300
+Message-ID: <CAOMZO5AM0OOTc0SKFMDGWnDpAWrM0-1cyeQjYb-7ZzX558hK=g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] ASoC: imx-audmix: fix object reference leaks in probe
 To:     Viorel Suman <viorel.suman@nxp.com>
 Cc:     Timur Tabi <timur@kernel.org>,
         Nicolin Chen <nicoleotsuka@gmail.com>,
@@ -88,6 +88,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Apr 10, 2019 at 8:06 AM Viorel Suman <viorel.suman@nxp.com> wrote:
 >
-> Remove "model" attribute from fsl_audmix DT document.
+> Release the reference to the underlying device taken
+> by of_find_device_by_node() call.
+>
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> Reported-by: Julia Lawall <Julia.Lawall@lip6.fr>
+> Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-Please provide the reasoning.
+Please provide a Fixes tag.
