@@ -2,244 +2,349 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E312BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56E9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2902083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkobFuGZ"
+	by mail.kernel.org (Postfix) with ESMTP id 802F42133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfDJKR4 (ORCPT
+        id S1730361AbfDJKUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:17:56 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:43853 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730121AbfDJKRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:17:55 -0400
-Received: by mail-yb1-f195.google.com with SMTP id d20so586350ybm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 03:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YtieiXoddZbmYVaCrf6tlGPQByx88qja12G5NglVOGY=;
-        b=HkobFuGZEKCT2MvXUUFw1NhEC3SV9kEDvICKaJVsevmoWKnXfGh6x7vlNDyelwC3qJ
-         U3Y1Jzwm4Tda38ori4gVG5+qwUFdkAE1ndWoUQ9N9MKSWUq7z+ikBG1E+YbcTnE/KzbG
-         sQtW2MlRJ1NC4OAHagnpSOXOGKlLHmZJNrYCuVjlF5RgHuWwrY/WCrWAAMerpG8KsTgi
-         EHVVf3yAa9y9+9ruBio26DidjlkGia4bfdVmpDSnCsPdRPTuQdtOGXxpik5aooqWXK1l
-         U2jk5jd4ErO2g0qFRVBRFN1qfW6SrMHihNuOE4gKbM2dLoYPwiYhxnIL30B/1QZP0eg2
-         3c0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YtieiXoddZbmYVaCrf6tlGPQByx88qja12G5NglVOGY=;
-        b=V9GaG8g+UWyf0q2M5XFuknX6FEvqsFQUy9SQ2PimPRP+RIxS9b2nxIvS1/Q+CfMFV/
-         dbJUGlsg+m1nsyGuJFQ3aXMZvQ80dovpMrxD1bW4o0UZ1Deo1Om8Xi5ii3ohiFSW1tAk
-         DZFgyZFh9ChAza4bAVxorJMjJazUFyXbt+skYdneHtlpoVjBmBr+zUtq6EdImBJzl/Vd
-         Kilva2jc647yDMbLYSvPZS1Tze6di8ZsRlZ67gX/2urbzP3lfR9sU2DLMm4fJBxMsFjU
-         QLPN4X1972CLkQqoPMODHKtyAleEscFLKW/wkCpjf3RSbWQ4s+lAVw3lYsfa4oQ8RTKK
-         ZnVg==
-X-Gm-Message-State: APjAAAVZw95QrXnMj5PrqPV67PhRdNnbsXLKy+APGplPVCnkeBueRPsV
-        jluKpjDIrdRfkMG5ag48ZTTnxmATOD37SABQg0E=
-X-Google-Smtp-Source: APXvYqxembit50mS9ObUU2d+d2iqN9Z4fuYnZ8yLUEyxwSyGjOUYayAjGfKyr7FHxIDdJKR2pxYjo0wVAFMlK8Lgm90=
-X-Received: by 2002:a25:c9c7:: with SMTP id z190mr34729588ybf.234.1554891473995;
- Wed, 10 Apr 2019 03:17:53 -0700 (PDT)
+        Wed, 10 Apr 2019 06:20:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:51268 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728565AbfDJKT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 06:19:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67F9015AB;
+        Wed, 10 Apr 2019 03:19:58 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09C523F59C;
+        Wed, 10 Apr 2019 03:19:55 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
+To:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Marty E . Plummer" <hanetzer@startmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-4-robh@kernel.org>
+ <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com>
+ <CAL_Jsq+wAUS=gukDLoY6DWP40w4Wtyd_Y4B2S3KMCx2ekL97qg@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b52052a3-141e-d6fd-f99a-9f7ddb611d96@arm.com>
+Date:   Wed, 10 Apr 2019 11:19:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1554883239-12051-1-git-send-email-erwan.leray@st.com>
-In-Reply-To: <1554883239-12051-1-git-send-email-erwan.leray@st.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Wed, 10 Apr 2019 12:19:38 +0200
-Message-ID: <CAJiuCcd9884Kn2MAtLMzZpdSa-=xpCDKRLQSVC6NmRNC+YFtaA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: debug: stm32: add UART early console configuration
-To:     Erwan Le Ray <erwan.leray@st.com>
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Russell King <linux@armlinux.org.uk>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Clement Peron <clement.peron@devialet.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stefan Agner <stefan@agner.ch>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Gerald Baeza <gerald.baeza@st.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Clement Peron <peron.clem@gmail.com>,
-        Bich Hemon <bich.hemon@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_Jsq+wAUS=gukDLoY6DWP40w4Wtyd_Y4B2S3KMCx2ekL97qg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 08/04/2019 22:04, Rob Herring wrote:
+> On Fri, Apr 5, 2019 at 7:30 AM Steven Price <steven.price@arm.com> wrote:
+>>
+>> On 01/04/2019 08:47, Rob Herring wrote:
+>>> This adds the initial driver for panfrost which supports Arm Mali
+>>> Midgard and Bifrost family of GPUs. Currently, only the T860 and
+>>> T760 Midgard GPUs have been tested.
+> 
+> [...]
+> 
+>>> +     case 0xD3: return "TRANSTAB_BUS_FAULT_LEVEL3";
+>>> +     case 0xD4: return "TRANSTAB_BUS_FAULT_LEVEL4";
+>>> +     case 0xD8: return "ACCESS_FLAG";
+>>> +     }
+>>> +
+>>> +     if (panfrost_has_hw_feature(pfdev, HW_FEATURE_AARCH64_MMU)) {
+>>
+>> There's not a great deal of point in this conditional - you won't get
+>> the below exception codes from hardware which doesn't support it AARCH64
+>> page tables.
+> 
+> I wasn't sure if "UNKNOWN" types could happen or not.
+> 
+>>
+>>> +             switch (exception_code) {
+>>> +             case 0xC9 ... 0xCF: return "PERMISSION_FAULT";
+>>> +             case 0xD9 ... 0xDF: return "ACCESS_FLAG";
+>>> +             case 0xE0 ... 0xE7: return "ADDRESS_SIZE_FAULT";
+>>> +             case 0xE8 ... 0xEF: return "MEMORY_ATTRIBUTES_FAULT";
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return "UNKNOWN";
+>>> +}
+> 
+>>> +static inline int panfrost_model_cmp(struct panfrost_device *pfdev, s32 id)
+>>> +{
+>>> +     s32 match_id = pfdev->features.id;
+>>> +
+>>> +     if (match_id & 0xf000)
+>>> +             match_id &= 0xf00f;
+>>
+>> I'm puzzled by this, and really not sure if it's going to work out
+>> ignoring the ARCH_MINOR/ARCH_REV fields. But for now there's no real
+>> Bifrost support.
+> 
+> That seemed to be enough for kbase to select features/issues.
 
-On Wed, 10 Apr 2019 at 10:03, Erwan Le Ray <erwan.leray@st.com> wrote:
->
-> - This patch allows to configure UART instance for early console by setting
-> physical and virtual base addresses.
-> - This patch adds UART early console support for stm32h7 and stm32mp157c.
+I can't deny that it seems to work for now, and indeed looking more
+closely at kbase that does seem to be the effect of the current code.
 
-*Newbie kernel speaking*
+>>> +     switch (param->param) {
+>>> +     case DRM_PANFROST_PARAM_GPU_ID:
+>>> +             param->value = pfdev->features.id;
+>>
+>> This is unfortunate naming - this parameter is *not* the GPU_ID. It is
+>> the top half of the GPU_ID which kbase calls the PRODUCT_ID.
+> 
+> I can rename it.
 
-I think this patch introduce at least 2, I will go for 3 modifications:
--Adding H7 Debug
--Adding MP1 debug
--(Fixing dependencies F4/F7)
+It would help prevent confusion, thanks!
 
-With my little knowledge, I will separate this patch in 3.
-Also try to have a commit log like this :
-1) Explain What's wrong or is not present
-2) Explain what you do in the patch
+>> I'm also somewhat surprised that you don't need loads of other
+>> properties from the GPU - in particular knowing the number of shader
+>> cores is useful for allocating the right amount of memory for TLS (and
+>> can't be obtained purely from the GPU_ID).
+> 
+> We'll add them as userspace needs them.
 
-here you don't explain a lot what the issues are.
+Fair enough. I'm not sure how much you want to provide "forward
+compatibility" by providing them early - the basic definitions are
+already in kbase. I found it a bit surprising that some feature
+registers are printed on probe, but not available to be queried.
 
-My 2cts on your patch, again newbie user here and I have post only few
-patches but this is my sharing.
+>>> +static int
+>>> +panfrost_lookup_bos(struct drm_device *dev,
+>>> +               struct drm_file *file_priv,
+>>> +               struct drm_panfrost_submit *args,
+>>> +               struct panfrost_job *job)
+>>> +{
+>>> +     u32 *handles;
+>>> +     int ret = 0;
+>>> +
+>>> +     job->bo_count = args->bo_handle_count;
+>>> +
+>>> +     if (!job->bo_count)
+>>> +             return 0;
+>>> +
+>>> +     job->bos = kvmalloc_array(job->bo_count,
+>>> +                               sizeof(struct drm_gem_object *),
+>>> +                               GFP_KERNEL | __GFP_ZERO);
+>>> +     if (!job->bos)
+>>
+>> If we return here then job->bo_count has been set, but job->bos is
+>> invalid - this means that panfrost_job_cleanup() will then dereference
+>> NULL. Although maybe this is better fixed in panfrost_job_cleanup().
+> 
+> Good catch. The fence arrays have the same problem. As does V3D which we copied.
+> 
+>>> +             return -ENOMEM;
+>>> +
+>>> +     job->implicit_fences = kvmalloc_array(job->bo_count,
+>>> +                               sizeof(struct dma_fence *),
+>>> +                               GFP_KERNEL | __GFP_ZERO);
+>>> +     if (!job->implicit_fences)
+>>> +             return -ENOMEM;
+> 
+>>> +static irqreturn_t panfrost_gpu_irq_handler(int irq, void *data)
+>>> +{
+>>> +     struct panfrost_device *pfdev = data;
+>>> +     u32 state = gpu_read(pfdev, GPU_INT_STAT);
+>>> +     u32 fault_status = gpu_read(pfdev, GPU_FAULT_STATUS);
+>>> +     u64 address;
+>>> +     bool done = false;
+>>> +
+>>> +     if (!state)
+>>> +             return IRQ_NONE;
+>>> +
+>>> +     if (state & GPU_IRQ_MASK_ERROR) {
+>>> +             address = (u64) gpu_read(pfdev, GPU_FAULT_ADDRESS_HI) << 32;
+>>> +             address |= gpu_read(pfdev, GPU_FAULT_ADDRESS_LO);
+>>> +
+>>> +             dev_warn(pfdev->dev, "GPU Fault 0x%08x (%s) at 0x%016llx\n",
+>>> +                      fault_status & 0xFF, panfrost_exception_name(pfdev, fault_status),
+>>> +                      address);
+>>> +
+>>> +             if (state & GPU_IRQ_MULTIPLE_FAULT)
+>>> +                     dev_warn(pfdev->dev, "There were multiple GPU faults - some have not been reported\n");
+>>> +
+>>> +             gpu_write(pfdev, GPU_INT_MASK, 0);
+>>
+>> Do you intend to mask off future GPU interrupts?
+> 
+> Yes, maybe?
+> 
+> If we fault here, then we are going to reset the gpu on timeout which
+> then re-enables interrupts.
 
-Thanks,
-Clement
+Well fair enough. But there's no actual need to force a GPU reset.
+Really there's nothing you can do other than report a GPU fault. kbase
+simply reports it and otherwise ignores it (no GPU reset).
 
->
-> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
->
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 6d6e033..4ea3e17 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -1201,23 +1201,49 @@ choice
->
->         config STM32F4_DEBUG_UART
->                 bool "Use STM32F4 UART for low-level debug"
-> -               depends on ARCH_STM32
-> +               depends on MACH_STM32F429 || MACH_STM32F469
->                 select DEBUG_STM32_UART
->                 help
->                   Say Y here if you want kernel low-level debugging support
->                   on STM32F4 based platforms, which default UART is wired on
-> -                 USART1.
-> +                 USART1, but another UART instance can be selected by modifying
-> +                 CONFIG_DEBUG_UART_PHYS.
->
->                   If unsure, say N.
->
->         config STM32F7_DEBUG_UART
->                 bool "Use STM32F7 UART for low-level debug"
-> -               depends on ARCH_STM32
-> +               depends on MACH_STM32F746 || MACH_STM32F769
->                 select DEBUG_STM32_UART
->                 help
->                   Say Y here if you want kernel low-level debugging support
->                   on STM32F7 based platforms, which default UART is wired on
-> -                 USART1.
-> +                 USART1, but another UART instance can be selected by modifying
-> +                 CONFIG_DEBUG_UART_PHYS.
-> +
-> +                 If unsure, say N.
-> +
-> +       config STM32H7_DEBUG_UART
-> +               bool "Use STM32H7 UART for low-level debug"
-> +               depends on MACH_STM32H743
-> +               select DEBUG_STM32_UART
-> +               help
-> +                 Say Y here if you want kernel low-level debugging support
-> +                 on STM32H7 based platforms, which default UART is wired on
-> +                 USART1, but another UART instance can be selected by modifying
-> +                 CONFIG_DEBUG_UART_PHYS.
-> +
-> +                 If unsure, say N.
-> +
-> +       config STM32MP1_DEBUG_UART
-> +               bool "Use STM32MP1 UART for low-level debug"
-> +               depends on MACH_STM32MP157
-> +               select DEBUG_STM32_UART
-> +               help
-> +                 Say Y here if you want kernel low-level debugging support
-> +                 on STM32MP1 based platforms, wich default UART is wired on
-> +                 UART4, but another UART instance can be selected by modifying
-> +                 CONFIG_DEBUG_UART_PHYS and CONFIG_DEBUG_UART_VIRT.
->
->                   If unsure, say N.
->
-> @@ -1622,6 +1648,9 @@ config DEBUG_UART_PHYS
->         default 0x3e000000 if DEBUG_BCM_KONA_UART
->         default 0x3f201000 if DEBUG_BCM2836
->         default 0x4000e400 if DEBUG_LL_UART_EFM32
-> +       default 0x40010000 if STM32MP1_DEBUG_UART
-> +       default 0x40011000 if STM32F4_DEBUG_UART || STM32F7_DEBUG_UART || \
-> +                               STM32H7_DEBUG_UART
->         default 0x40028000 if DEBUG_AT91_SAMV7_USART1
->         default 0x40081000 if DEBUG_LPC18XX_UART0
->         default 0x40090000 if DEBUG_LPC32XX
-> @@ -1716,7 +1745,7 @@ config DEBUG_UART_PHYS
->                 DEBUG_S3C64XX_UART || \
->                 DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
->                 DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
-> -               DEBUG_AT91_UART
-> +               DEBUG_AT91_UART || DEBUG_STM32_UART
->
->  config DEBUG_UART_VIRT
->         hex "Virtual base address of debug UART"
-> @@ -1784,6 +1813,7 @@ config DEBUG_UART_VIRT
->         default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
->         default 0xfd883000 if DEBUG_ALPINE_UART0
->         default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
-> +       default 0xfe010000 if STM32MP1_DEBUG_UART
->         default 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
->         default 0xfe017000 if DEBUG_MMP_UART2
->         default 0xfe018000 if DEBUG_MMP_UART3
-> @@ -1832,7 +1862,7 @@ config DEBUG_UART_VIRT
->                 DEBUG_S3C64XX_UART || \
->                 DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
->                 DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
-> -               DEBUG_AT91_UART
-> +               DEBUG_AT91_UART || DEBUG_STM32_UART
->
->  config DEBUG_UART_8250_SHIFT
->         int "Register offset shift for the 8250 debug UART"
-> diff --git a/arch/arm/include/debug/stm32.S b/arch/arm/include/debug/stm32.S
-> index 1abb32f..6446e46 100644
-> --- a/arch/arm/include/debug/stm32.S
-> +++ b/arch/arm/include/debug/stm32.S
-> @@ -4,14 +4,13 @@
->   * Author:   Gerald Baeza <gerald.baeza@st.com> for STMicroelectronics.
->   */
->
-> -#define STM32_UART_BASE                        0x40011000      /* USART1 */
-> -
->  #ifdef CONFIG_STM32F4_DEBUG_UART
->  #define STM32_USART_SR_OFF             0x00
->  #define STM32_USART_TDR_OFF            0x04
->  #endif
->
-> -#ifdef CONFIG_STM32F7_DEBUG_UART
-> +#if defined(CONFIG_STM32F7_DEBUG_UART) || (CONFIG_STM32H7_DEBUG_UART) || \
-> +       defined(CONFIG_STM32MP1_DEBUG_UART)
->  #define STM32_USART_SR_OFF             0x1C
->  #define STM32_USART_TDR_OFF            0x28
->  #endif
-> @@ -20,8 +19,8 @@
->  #define STM32_USART_TXE                        (1 << 7)        /* Tx data reg empty */
->
->  .macro addruart, rp, rv, tmp
-> -       ldr     \rp,      =STM32_UART_BASE      @ physical base
-> -       ldr     \rv,      =STM32_UART_BASE      @ virt base /* NoMMU */
-> +       ldr     \rp, =CONFIG_DEBUG_UART_PHYS @ physical base
-> +       ldr     \rv, =CONFIG_DEBUG_UART_VIRT @ virt base
->  .endm
->
->  .macro  senduart,rd,rx
-> --
-> 1.9.1
->
+Also will you actually trigger the GPU timeout? This won't mask of the
+JOB completion IRQ, so jobs can still complete.
+
+When you integrate other GPU irq sources (counters/power management)
+then you almost certainly don't want to mask those off just because of a
+GPU fault.
+
+>>> +static irqreturn_t panfrost_job_irq_handler(int irq, void *data)
+>>> +{
+>>> +     struct panfrost_device *pfdev = data;
+>>> +     u32 status = job_read(pfdev, JOB_INT_STAT);
+>>> +     int j;
+>>> +
+>>> +     dev_dbg(pfdev->dev, "jobslot irq status=%x\n", status);
+>>> +
+>>> +     if (!status)
+>>> +             return IRQ_NONE;
+>>> +
+>>> +     pm_runtime_mark_last_busy(pfdev->dev);
+>>> +
+>>> +     for (j = 0; status; j++) {
+>>> +             u32 mask = MK_JS_MASK(j);
+>>> +
+>>> +             if (!(status & mask))
+>>> +                     continue;
+>>> +
+>>> +             job_write(pfdev, JOB_INT_CLEAR, mask);
+>>> +
+>>> +             if (status & JOB_INT_MASK_ERR(j)) {
+>>> +                     job_write(pfdev, JS_COMMAND_NEXT(j), JS_COMMAND_NOP);
+>>> +                     job_write(pfdev, JS_COMMAND(j), JS_COMMAND_HARD_STOP_0);
+>>
+>> Hard-stopping an already completed job isn't likely to do very much :)
+>> Also you are using the "_0" version which is only valid when "job chain
+>> disambiguation" is present.
+>>
+>> I suspect in this case you should also be signalling the fence? At the
+>> moment you rely on the GPU timeout recovering from the fault.
+> 
+> I'll defer to Tomeu who wrote this (IIRC).
+> 
+> 
+>>> +static void lock_region(struct panfrost_device *pfdev, u32 as_nr,
+>>> +                     u64 iova, size_t size)
+>>> +{
+>>> +     u8 region_width;
+>>> +     u64 region = iova & PAGE_MASK;
+>>> +     /*
+>>> +      * fls returns (given the ASSERT above):
+>>
+>> But where's the assert? :p
+>>
+>>> +      * 1 .. 32
+>>> +      *
+>>> +      * 10 + fls(num_pages)
+>>> +      * results in the range (11 .. 42)
+>>> +      */
+>>> +
+>>> +     size = round_up(size, PAGE_SIZE);
+>>
+>> I'm not sure it matters, but this will break if called on a (small, i.e.
+>> less than a page) region spanning two pages. "region" will be rounded
+>> down to the page (iova & PAGE_MASK), but size will only be rounded up to
+>> the nearest page. This can miss the start of the second page.
+> 
+> This is probably redundant. Everything the driver does with memory is
+> in units of pages. Maybe imported buffers could be unaligned. Not sure
+> and we'd probably break in other places if that was the case.
+
+Yes I don't think this case will occur at the moment. I just noticed it
+because the interface was changed from kbase (kbase passes in a page
+offset, this version uses a byte offset).
+
+>>> +             /* terminal fault, print info about the fault */
+>>> +             dev_err(pfdev->dev,
+>>> +                     "Unhandled Page fault in AS%d at VA 0x%016llX\n"
+>>> +                     "Reason: %s\n"
+>>> +                     "raw fault status: 0x%X\n"
+>>> +                     "decoded fault status: %s\n"
+>>> +                     "exception type 0x%X: %s\n"
+>>> +                     "access type 0x%X: %s\n"
+>>> +                     "source id 0x%X\n",
+>>> +                     i, addr,
+>>> +                     "TODO",
+>>> +                     fault_status,
+>>> +                     (fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
+>>> +                     exception_type, panfrost_exception_name(pfdev, exception_type),
+>>> +                     access_type, access_type_name(pfdev, fault_status),
+>>> +                     source_id);
+>>> +
+>>> +             mmu_write(pfdev, MMU_INT_CLEAR, mask);
+>>
+>> To fully handle the fault you will need to issue an MMU command (i.e.
+>> call mmu_hw_do_operation()) - obviously after doing something to fix the
+>> cause (e.g. mapping a page or switching the GPU to UNMAPPED mode to kill
+>> off the job). Otherwise you may see that the GPU hangs. Although in
+>> practice at this stage of the driver the generic timeout is probably the
+>> simplest way of handling an MMU fault.
+> 
+> Any fault currently is unexpected so all we really care about at this
+> point is getting a message.
+
+No problem. It will become relevant when you schedule work from multiple
+applications at the same time.
+
+[...]
+>>
+>> This is with the below simple reproducer:
+>>
+>> ----8<----
+>> #include <sys/ioctl.h>
+>> #include <fcntl.h>
+>> #include <stdio.h>
+>>
+>> #include <libdrm/drm.h>
+>> #include "panfrost_drm.h"
+>>
+>> int main(int argc, char **argv)
+>> {
+>>         int fd;
+>>
+>>         if (argc == 2)
+>>                 fd = open(argv[1], O_RDWR);
+>>         else
+>>                 fd = open("/dev/dri/renderD128", O_RDWR);
+>>         if (fd == -1) {
+>>                 perror("Failed to open");
+>>                 return 0;
+>>         }
+>>
+>>         struct drm_panfrost_submit submit = {
+>>                 .jc = 0,
+>>         };
+>>         return ioctl(fd, DRM_IOCTL_PANFROST_SUBMIT, &submit);
+>> }
+>> ----8<----
+>>
+>> Any ideas? I'm not an expert on DRM, so I got somewhat lost!
+
+Interestingly this actually looks similar to this bug for amdgpu:
+
+https://bugs.freedesktop.org/show_bug.cgi?id=109692
+
+There's a patch on there changing the drm scheduler which might be
+relevant. I haven't had chance to try it out.
+
+Steve
