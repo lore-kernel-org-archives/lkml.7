@@ -2,314 +2,172 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAC4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC95C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BA22083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF57020820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="cKFn1n3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbfDJPQN (ORCPT
+        id S1733117AbfDJPQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:16:13 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56502 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733018AbfDJPQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:16:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43DAEA78;
-        Wed, 10 Apr 2019 08:16:11 -0700 (PDT)
-Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B1383F59C;
-        Wed, 10 Apr 2019 08:16:09 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        christian.koenig@amd.com, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        baolu.lu@linux.intel.com, zhangfei.gao@foxmail.com
-Subject: [PATCH v3 1/1] iommu: Bind process address spaces to devices
-Date:   Wed, 10 Apr 2019 16:15:16 +0100
-Message-Id: <20190410151516.47754-2-jean-philippe.brucker@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190410151516.47754-1-jean-philippe.brucker@arm.com>
-References: <20190410151516.47754-1-jean-philippe.brucker@arm.com>
+        Wed, 10 Apr 2019 11:16:17 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53002 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733104AbfDJPQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:16:14 -0400
+Received: by mail-it1-f196.google.com with SMTP id x132so4021964itf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 08:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xXXoU6/FqhffNVx13TnuqZws2BBVOxxAPM7i3tEN7Gk=;
+        b=cKFn1n3jYl3MDH5QBleg3GyZt9fGOMW0AOVk5V6g6+FahiMo/Yni6xpg1MBz2vDqwE
+         jkLTyVfI/9w9tiSrfl7m+VqNrbiN/mOa2q2/xkEozcSzmbrwuYhOEyLbuaf6loxAKX6n
+         2mNl5at8paa3YhadKIfZXAC+WI0PdMzHkELtW/4yxb6V5MY4jwm6H+iXsMS6FEiZ1l4z
+         lvgE8LF8+Ggk7FGbOTPjJdFeIz6Zm4qQ6v2cVZhUFMkhZHDm3eVvrlpPyE+R+TpxIE7E
+         0fIY3eh5s84Z0Yq4g1irQ2YBwCoWCY+v6e8DV0BFyoC4s6sBAyOuniNLQuKlXnfmyyQw
+         dCOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xXXoU6/FqhffNVx13TnuqZws2BBVOxxAPM7i3tEN7Gk=;
+        b=TdWjnl2npfQTVz4o+W5IQAzzup5+v5+/XL/5P762NcqvaHOrwFBop6JbKvfpZhhhrG
+         tYhDKUHWEQBgMAPUz8UrSPGF+l7UsIOkmln5LWt1mXWjxVdXQxYCgnFQbuc5focFF86n
+         PJiuppkp+yWfB/igMKHMW0jNmnyaTAd+M21RIDfPZjz5WCx7jjxYMWXIJuTuANowhqM7
+         rMd5hva+UmRNuFuQdub9tsuLXdJb7ZghNma1p/N9D6R358chv+w3R/+/kAZ9GKqiCk29
+         n5vDYZmRD368HDFY2v9BrX8X/KeHw2N8C6GqgKozyKnIqdlDXqN5jchWQ04NHi5pTmbq
+         Pkxg==
+X-Gm-Message-State: APjAAAVyAxDRs8F5sk5fmi9Z5AOAuPxhOlh7PeRurak4PQhcRqjXV2Jp
+        688UdZ5newA5ItwwYUrAfkVT95zdS8B+7VauB6eD/g==
+X-Google-Smtp-Source: APXvYqxni5IADu3FF8FlZg+Ln4rHXEKRkaB44FhG/joIhG3TELx5Wv9r5dL3+NTYR01YmHFm91lgDHZM5+wOe8dfTck=
+X-Received: by 2002:a24:2458:: with SMTP id f85mr2181063ita.83.1554909373652;
+ Wed, 10 Apr 2019 08:16:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com> <79b6bdbc-890a-5a51-7fa1-aec57889046a@opersys.com>
+In-Reply-To: <79b6bdbc-890a-5a51-7fa1-aec57889046a@opersys.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Wed, 10 Apr 2019 08:15:59 -0700
+Message-ID: <CAOesGMgGFunOeMt93f57fPspdDSHp2twahhudEDhMvZ=VPJHaQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Karim Yaghmour <karim.yaghmour@opersys.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bind() and unbind() operations to the IOMMU API.
-iommu_sva_bind_device() binds a device to an mm, and returns a handle to
-the bond, which is released by calling iommu_sva_unbind_device().
+On Mon, Apr 8, 2019 at 1:52 PM Karim Yaghmour
+<karim.yaghmour@opersys.com> wrote:
+>
+>
+> Hi Olof,
+>
+> On 4/8/19 12:29 PM, Olof Johansson wrote:
+> > Sorry to be late at the party with this kind of feedback, but I find
+> > the whole ".tar.gz in procfs" to be an awkward solution, especially if
+> > there's expected to be userspace tooling that depends on this
+> > long-term.
+> >
+> > Wouldn't it be more convenient to provide it in a standardized format
+> > such that you won't have to take an additional step, and always have
+> > it in a known location?
+> >
+> > Something like:
+> >
+> >   - Pseudo-filesystem, that can just be mounted under
+> > /sys/kernel/headers or something (similar to debugfs or
+> > /proc/device-tree).
+> >   - Exporting something like a squashfs image instead, allowing
+> > loopback mounting of it (or by providing a pseudo-/dev entry for it),
+> > again allowing direct export of the contents and avoiding the
+> > extracted directory from being out of sync with currently running
+> > kernel.
+> >
+> > Having to copy and extract the tarball is the most awkward step, IMHO.
+> > I also find the waste of kernel memory for it to be an issue, but
+> > given that it can be built as a module I guess that's the obvious
+> > solution for those who care about memory consumption.
+>
+> One of the things I pointed out earlier in the thread is that
+> /proc/config.gz has already set a precedent as to the interface for this
+> sort of artifact. It's a plain compressed file and it's directly
+> accessible from toplevel /proc. From a consistency perspective there's
+> an idiomatic angle to some sort of "/proc/kheaders.gz".
 
-Each mm bound to devices gets a PASID (by convention, a 20-bit system-wide
-ID representing the address space), which can be retrieved with
-iommu_sva_get_pasid(). When programming DMA addresses, device drivers
-include this PASID in a device-specific manner, to let the device access
-the given address space. Since the process memory may be paged out, device
-and IOMMU must support I/O page faults (e.g. PCI PRI).
+I'm not arguing against providing the headers in some format, I think
+that's a good idea.
 
-Using iommu_sva_set_ops(), device drivers provide an mm_exit() callback
-that is called by the IOMMU driver if the process exits before the device
-driver called unbind(). In mm_exit(), device driver should disable DMA
-from the given context, so that the core IOMMU can reallocate the PASID.
-Whether the process exited or nor, the device driver should always release
-the handle with unbind().
+On similarities, there are some but there are also substantial
+differences in the use model.
 
-To use these functions, device driver must first enable the
-IOMMU_DEV_FEAT_SVA device feature with iommu_dev_enable_feature().
+For the config file, the main use cases are:
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
----
- drivers/iommu/iommu.c | 104 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/iommu.h |  70 ++++++++++++++++++++++++++++
- 2 files changed, 174 insertions(+)
+ - Checking to make sure that the running kernel has a particular set
+of config options set or cleared.
+ - Ease of cloning the config of a running kernel when building a new one.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index d3403d84b20c..65e3b2f06e22 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2357,3 +2357,107 @@ int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
-+
-+/**
-+ * iommu_sva_bind_device() - Bind a process address space to a device
-+ * @dev: the device
-+ * @mm: the mm to bind, caller must hold a reference to it
-+ *
-+ * Create a bond between device and address space, allowing the device to access
-+ * the mm using the returned PASID. If a bond already exists between @device and
-+ * @mm, it is returned and an additional reference is taken. Caller must call
-+ * iommu_sva_unbind_device() to release each reference.
-+ *
-+ * iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA) must be called first, to
-+ * initialize the required SVA features.
-+ *
-+ * On error, returns an ERR_PTR value.
-+ */
-+struct iommu_sva *
-+iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *drvdata)
-+{
-+	struct iommu_group *group;
-+	struct iommu_sva *handle = ERR_PTR(-EINVAL);
-+	const struct iommu_ops *ops = dev->bus->iommu_ops;
-+
-+	if (!ops || !ops->sva_bind)
-+		return ERR_PTR(-ENODEV);
-+
-+	group = iommu_group_get(dev);
-+	if (!group)
-+		return ERR_PTR(-ENODEV);
-+
-+	/* Ensure device count and domain don't change while we're binding */
-+	mutex_lock(&group->mutex);
-+
-+	/*
-+	 * To keep things simple, SVA currently doesn't support IOMMU groups
-+	 * with more than one device. Existing SVA-capable systems are not
-+	 * affected by the problems that required IOMMU groups (lack of ACS
-+	 * isolation, device ID aliasing and other hardware issues).
-+	 */
-+	if (iommu_group_device_count(group) != 1)
-+		goto out_unlock;
-+
-+	handle = ops->sva_bind(dev, mm, drvdata);
-+
-+out_unlock:
-+	mutex_unlock(&group->mutex);
-+	iommu_group_put(group);
-+
-+	return handle;
-+}
-+EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
-+
-+/**
-+ * iommu_sva_unbind_device() - Remove a bond created with iommu_sva_bind_device
-+ * @handle: the handle returned by iommu_sva_bind_device()
-+ *
-+ * Put reference to a bond between device and address space. The device should
-+ * not be issuing any more transaction for this PASID. All outstanding page
-+ * requests for this PASID must have been flushed to the IOMMU.
-+ *
-+ * Returns 0 on success, or an error value
-+ */
-+void iommu_sva_unbind_device(struct iommu_sva *handle)
-+{
-+	struct iommu_group *group;
-+	struct device *dev = handle->dev;
-+	const struct iommu_ops *ops = dev->bus->iommu_ops;
-+
-+	if (!ops || !ops->sva_unbind)
-+		return;
-+
-+	group = iommu_group_get(dev);
-+	if (!group)
-+		return;
-+
-+	mutex_lock(&group->mutex);
-+	ops->sva_unbind(handle);
-+	mutex_unlock(&group->mutex);
-+
-+	iommu_group_put(group);
-+}
-+EXPORT_SYMBOL_GPL(iommu_sva_unbind_device);
-+
-+int iommu_sva_set_ops(struct iommu_sva *handle,
-+		      const struct iommu_sva_ops *sva_ops)
-+{
-+	if (handle->ops && handle->ops != sva_ops)
-+		return -EEXIST;
-+
-+	handle->ops = sva_ops;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(iommu_sva_set_ops);
-+
-+int iommu_sva_get_pasid(struct iommu_sva *handle)
-+{
-+	const struct iommu_ops *ops = handle->dev->bus->iommu_ops;
-+
-+	if (!ops || !ops->sva_get_pasid)
-+		return IOMMU_PASID_INVALID;
-+
-+	return ops->sva_get_pasid(handle);
-+}
-+EXPORT_SYMBOL_GPL(iommu_sva_get_pasid);
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index ed6738c358ca..87fe1cddd817 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -51,10 +51,13 @@ struct device;
- struct iommu_domain;
- struct notifier_block;
- struct iommu_fault_event;
-+struct iommu_sva;
- 
- typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
- 			struct device *, unsigned long, int, void *);
- typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
-+typedef int (*iommu_mm_exit_handler_t)(struct device *dev, struct iommu_sva *,
-+				       void *);
- 
- struct iommu_domain_geometry {
- 	dma_addr_t aperture_start; /* First address that can be mapped    */
-@@ -159,6 +162,28 @@ struct iommu_resv_region {
- /* Per device IOMMU features */
- enum iommu_dev_features {
- 	IOMMU_DEV_FEAT_AUX,	/* Aux-domain feature */
-+	IOMMU_DEV_FEAT_SVA,	/* Shared Virtual Addresses */
-+};
-+
-+#define IOMMU_PASID_INVALID	(-1U)
-+
-+/**
-+ * struct iommu_sva_ops - device driver callbacks for an SVA context
-+ *
-+ * @mm_exit: called when the mm is about to be torn down by exit_mmap. After
-+ *           @mm_exit returns, the device must not issue any more transaction
-+ *           with the PASID given as argument.
-+ *
-+ *           The @mm_exit handler is allowed to sleep. Be careful about the
-+ *           locks taken in @mm_exit, because they might lead to deadlocks if
-+ *           they are also held when dropping references to the mm. Consider the
-+ *           following call chain:
-+ *           mutex_lock(A); mmput(mm) -> exit_mm() -> @mm_exit() -> mutex_lock(A)
-+ *           Using mmput_async() prevents this scenario.
-+ *
-+ */
-+struct iommu_sva_ops {
-+	iommu_mm_exit_handler_t mm_exit;
- };
- 
- #ifdef CONFIG_IOMMU_API
-@@ -231,6 +256,10 @@ struct page_response_msg {
-  * @dev_feat_enabled: check enabled feature
-  * @aux_attach/detach_dev: aux-domain specific attach/detach entries.
-  * @aux_get_pasid: get the pasid given an aux-domain
-+ * @sva_bind: Bind process address space to device
-+ * @sva_unbind: Unbind process address space from device
-+ * @sva_set_ops: Set ops for a SVA handle
-+ * @sva_get_pasid: Get PASID associated to a SVA handle
-  * @page_response: handle page request response
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  */
-@@ -287,6 +316,10 @@ struct iommu_ops {
- 	void (*aux_detach_dev)(struct iommu_domain *domain, struct device *dev);
- 	int (*aux_get_pasid)(struct iommu_domain *domain, struct device *dev);
- 
-+	struct iommu_sva *(*sva_bind)(struct device *dev, struct mm_struct *mm,
-+				      void *drvdata);
-+	void (*sva_unbind)(struct iommu_sva *handle);
-+	int (*sva_get_pasid)(struct iommu_sva *handle);
- 	int (*page_response)(struct device *dev, struct page_response_msg *msg);
- 
- 	unsigned long pgsize_bitmap;
-@@ -514,6 +547,14 @@ struct iommu_fwspec {
- 	u32			ids[1];
- };
- 
-+/**
-+ * struct iommu_sva - handle to a device-mm bond
-+ */
-+struct iommu_sva {
-+	struct device			*dev;
-+	const struct iommu_sva_ops	*ops;
-+};
-+
- /* Firmware disabled ATS in the root complex */
- #define IOMMU_FWSPEC_PCI_NO_ATS			(1 << 0)
- 
-@@ -545,6 +586,14 @@ int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev);
- void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev);
- int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev);
- 
-+struct iommu_sva *iommu_sva_bind_device(struct device *dev,
-+					struct mm_struct *mm,
-+					void *drvdata);
-+void iommu_sva_unbind_device(struct iommu_sva *handle);
-+int iommu_sva_set_ops(struct iommu_sva *handle,
-+		      const struct iommu_sva_ops *ops);
-+int iommu_sva_get_pasid(struct iommu_sva *handle);
-+
- #else /* CONFIG_IOMMU_API */
- 
- struct iommu_ops {};
-@@ -893,6 +942,27 @@ iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
- 	return -ENODEV;
- }
- 
-+static inline struct iommu_sva *
-+iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *drvdata)
-+{
-+	return NULL;
-+}
-+
-+static inline void iommu_sva_unbind_device(struct iommu_sva *handle)
-+{
-+}
-+
-+static inline int iommu_sva_set_ops(struct iommu_sva *handle,
-+				    const struct iommu_sva_ops *ops)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
-+{
-+	return IOMMU_PASID_INVALID;
-+}
-+
- #endif /* CONFIG_IOMMU_API */
- 
- #ifdef CONFIG_IOMMU_DEBUGFS
--- 
-2.21.0
+The file format is just a plain text file, even if compressed. No real
+internal structure to consider.
 
+Both of the above uses are relatively rare (well, the first might be
+done in some startup scripts, etc).
+
+The kernel headers case is different. The file format is more complex
+(tarball, which would also include the structure of said tarball). You
+can't just zgrep to get some data out.
+
+Also, the way the contents is used is different, in that it will be
+needed by runtime tools that build and load eBPF programs. For the
+build to always be known to be against the running headers, every
+build would likely need to decompress and stage said tarball
+independently and not rely on previous state. If that's needed, why
+not just provide it once in the right format and avoid people building
+userspace solutions in several different ways to do the same thing?
+
+> In some offline discussions I was also told that squashfs (I'm no expert
+> of it) required special user-space tools and had some security issues.
+
+I'm unaware of what the security issues are, and there's indeed a
+GPLv2 tool needed to construct the filesystem. The latter can be
+solved, the former I don't know enough about to have an opinion.
+
+Anyway, see my other reply just now -- CPIO + a filesystem view, and
+providing said cpio archive in debugfs for those who want to copy it
+off themselves might be something that fits everybody.
+
+
+-Olof
