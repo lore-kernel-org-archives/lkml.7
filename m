@@ -2,118 +2,160 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE48C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C2DC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0062082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15642082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="5ZeeILbx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WKa7XA8o";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jYE1mzJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfDJQ6S (ORCPT
+        id S1727320AbfDJQ6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:58:18 -0400
-Received: from mail-eopbgr750058.outbound.protection.outlook.com ([40.107.75.58]:51114
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726556AbfDJQ6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:58:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WSWwLAOnwmoBM5S9mG2i0+g+gOVd0prN2ZEB9hD9n/o=;
- b=5ZeeILbxo9pPXg5XblTBJEe4LVjC8agum+O3rm/Zd2qFH+FtJvAhjmDjiDyarAgtGjOQW4QJvWCs6dCUTMPzxCezXT9SqdyIdKnH6LwUOX6zt5QagLrH0h8aSR8numUGK2OtfS7hbrIglO115+lSz5S+NhGMZ3/q7Blb4jty52M=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2766.namprd12.prod.outlook.com (52.135.107.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Wed, 10 Apr 2019 16:58:13 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::9c51:41bf:f88e:f3e8]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::9c51:41bf:f88e:f3e8%2]) with mapi id 15.20.1771.016; Wed, 10 Apr 2019
- 16:58:12 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
-Thread-Topic: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
-Thread-Index: AQHU7hUSVDLUqZVqKEupBAtcrt9jWqYyi0gAgAAIfUCAAbc/AIABTYIggAADjgCAAAApUA==
-Date:   Wed, 10 Apr 2019 16:58:12 +0000
-Message-ID: <SN6PR12MB2639F37C634BC7F6D4B86194F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
- <20190408141205.12376-3-Yazen.Ghannam@amd.com>
- <20190408175142.GK15689@zn.tnic>
- <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190409203412.GE6150@zn.tnic>
- <SN6PR12MB2639C9B48E46DA6A8BA9DB3DF82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190410164036.GC26580@zn.tnic>
-In-Reply-To: <20190410164036.GC26580@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [165.204.84.17]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4f18b10-3dd6-4cec-22d3-08d6bdd5b7dd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2766;
-x-ms-traffictypediagnostic: SN6PR12MB2766:
-x-microsoft-antispam-prvs: <SN6PR12MB2766BE00A28214A9AFC375ACF82E0@SN6PR12MB2766.namprd12.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(136003)(396003)(189003)(199004)(13464003)(72206003)(26005)(6506007)(476003)(14454004)(97736004)(102836004)(446003)(4326008)(186003)(76176011)(53546011)(66066001)(86362001)(93886005)(11346002)(33656002)(71200400001)(53936002)(6246003)(71190400001)(478600001)(6116002)(316002)(54906003)(3846002)(25786009)(486006)(8676002)(9686003)(7696005)(7736002)(8936002)(6916009)(229853002)(5660300002)(256004)(81156014)(105586002)(55016002)(99286004)(68736007)(2906002)(81166006)(106356001)(74316002)(14444005)(305945005)(52536014)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2766;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TYT+UVp33YOZs+SMS0ISytGG5YTECVDoaHi1ns0YVNENMMhjB6AdxUFHw60Ia6sQ8L9A9BC+FXMMgtZih2qKNqrzoqRoii21228eTyLyE8aRqtTY3P4zHxLJjkMEZRAQssZ39XezzpvA/nKOdm3OtihQphj6jVk0TjnA3k7LcicNPFPtPKPB/ibrAkBzOLTnWGQ2RiBzWzSQ0eooPDdQJgAmcWnEWlN8jncbsHPfUuTwamur+R+VG2XaRtl2q0pWhMEVL96NU/akJ8zyZl1gYUntfDBFJo+oFrnosLoSCZeO+Fk5sdh0EWSO4ifw/TzWXWCk6AhvVMA9XdaR54t5hhlT+QkUt8tJKjfsQXJTHVU1kp6ElAC01KQH8hGOqz2DYZdX/4izu8Avzm2dBlg2rPBO/25yzCJg4ycBuvy+fP8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4f18b10-3dd6-4cec-22d3-08d6bdd5b7dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 16:58:12.8749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
+        Wed, 10 Apr 2019 12:58:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58304 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfDJQ6b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 12:58:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5D2FA61132; Wed, 10 Apr 2019 16:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554915510;
+        bh=itdu6CaScWjWSfyfpgyIhARnIydebF5zEcZ54GQbLpE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WKa7XA8ohegUMxDMS8hDlBXF/Sim9UJ66YWTpCwtzpv8NKyBEUDsZfdi0mKG88N4d
+         zsfnIzYa1qz0TYhsZktSEpAEWVhdG76HFWb4YWzQW3p8DQdI4RLlny4ewErNzShL0e
+         ngSp4/AFghV9aP2iXOHdMR/3Sw01mzqrWPJYEmYI=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ED286030E;
+        Wed, 10 Apr 2019 16:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554915509;
+        bh=itdu6CaScWjWSfyfpgyIhARnIydebF5zEcZ54GQbLpE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jYE1mzJybUgGbn/FnT9Be+Fh8aDQpUV+QC0ixNQLphCZDq3quyPp4AHSFHPHdwib/
+         KhAi2u/jt1nDZEmLqKpv7fOGGy9GmFS2mVn5mMz8ZEvyVM7yIyIp9R/qbTo7KE35Q5
+         YAcAXNoeGI6Q3XKXBRVv7ZGCObDUGVO15Nc23Rww=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ED286030E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/msm/a6xx: Don't enable GPU state code if dependencies are missing
+Date:   Wed, 10 Apr 2019 10:58:16 -0600
+Message-Id: <1554915496-5876-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgPGJw
-QGFsaWVuOC5kZT4NCj4gU2VudDogV2VkbmVzZGF5LCBBcHJpbCAxMCwgMjAxOSAxMTo0MSBBTQ0K
-PiBUbzogR2hhbm5hbSwgWWF6ZW4gPFlhemVuLkdoYW5uYW1AYW1kLmNvbT4NCj4gQ2M6IGxpbnV4
-LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0b255
-Lmx1Y2tAaW50ZWwuY29tOyB4ODZAa2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFJF
-U0VORCAyLzVdIHg4Ni9NQ0U6IEhhbmRsZSBNQ0EgY29udHJvbHMgaW4gYSBwZXJfY3B1IHdheQ0K
-PiANCj4gT24gV2VkLCBBcHIgMTAsIDIwMTkgYXQgMDQ6MzY6MzBQTSArMDAwMCwgR2hhbm5hbSwg
-WWF6ZW4gd3JvdGU6DQo+ID4gV2UgaGF2ZSB0aGlzIGNhc2Ugb24gQU1EIEZhbWlseSAxN2ggd2l0
-aCBCYW5rIDQuIFRoZSBoYXJkd2FyZSBlbmZvcmNlcw0KPiA+IHRoaXMgYmFuayB0byBiZSBSZWFk
-LWFzLVplcm8vV3JpdGVzLUlnbm9yZWQuDQo+ID4NCj4gPiBUaGlzIGJlaGF2aW9yIGlzIGVuZm9y
-Y2VkIHdoZXRoZXIgdGhlIGJhbmsgaXMgaW4gdGhlIG1pZGRsZSBvciBhdCB0aGUNCj4gPiBlbmQu
-DQo+IA0KPiBEb2VzIG51bV9iYW5rcyBjb250YWluIHRoZSBkaXNhYmxlZCBiYW5rPyBJZiBzbywg
-dGhlbiBpdCB3aWxsIHdvcmsuDQo+IA0KDQpZZXMsIHVudXNlZCBiYW5rcyBpbiB0aGUgbWlkZGxl
-IGFyZSBjb3VudGVkIGluIHRoZSBNQ0dfQ0FQW0NvdW50XSB2YWx1ZS4NCg0KPiA+IEknbSB0aGlu
-a2luZyB0byByZWRvIHRoZSBzeXNmcyBpbnRlcmZhY2UgZm9yIGJhbmtzIGluIGFub3RoZXIgcGF0
-Y2gNCj4gPiBzZXQuIEkgY291bGQgaW5jbHVkZSBhIG5ldyBmaWxlIHRvIGluZGljYXRlIGVuYWJs
-ZWQvZGlzYWJsZWQsIG9yIG1heWJlDQo+ID4ganVzdCB1cGRhdGUgdGhlIGRvY3VtZW50YXRpb24g
-dG8gZGVzY3JpYmUgdGhpcyBjYXNlLg0KPiANCj4gTm8sIHRoZSB3cml0ZSB0byB0aGUgYmFuayBj
-b250cm9scyBzaG91bGQgZmFpbCBvbiBhIGRpc2FibGVkIGJhbmsuDQo+IA0KDQpPa2F5LCBzbyB5
-b3UncmUgc2F5aW5nIHRoZSBzeXNmcyBhY2Nlc3Mgc2hvdWxkIGZhaWwgaWYgYSBiYW5rIGlzIGRp
-c2FibGVkLiBJcyB0aGF0IGNvcnJlY3Q/DQoNCkRvZXMgImRpc2FibGVkIiBtZWFuIG9uZSBvciBi
-b3RoIG9mIHRoZXNlPw0KVW51c2VkID0gUkFaL1dJIGluIGhhcmR3YXJlDQpVbmluaXRpYWxpemVk
-ID0gTm90IGluaXRpYWxpemVkIGJ5IGtlcm5lbCBkdWUgdG8gcXVpcmtzLCBldGMuDQoNCkZvciBh
-biB1bnVzZWQgYmFuaywgaXQgZG9lc24ndCBodXJ0IHRvIHdyaXRlIE1DQV9DVEwsIGJ1dCByZWFs
-bHkgdGhlcmUncyBubyByZWFzb24gdG8gZG8gc28gYW5kIGdvIHRocm91Z2ggbWNlX3Jlc3RhcnQo
-KS4NCg0KRm9yIGFuIHVuaW5pdGlhbGl6ZWQgYmFuaywgc2hvdWxkIHdlIHByZXZlbnQgdXNlcnMg
-ZnJvbSBvdmVycmlkaW5nIHRoZSBrZXJuZWwncyBzZXR0aW5ncz8NCg0KVGhhbmtzLA0KWWF6ZW4N
-Cg0KDQogDQo=
+Add CONFIG_DRM_MSM_GPU_STATE to conditionally compile Adreno GPU state
+code depending on the availability of the dependencies.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 1707add81551 ("drm/msm/a6xx: Add a6xx gpu state")
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
+
+ drivers/gpu/drm/msm/Kconfig           | 5 +++++
+ drivers/gpu/drm/msm/Makefile          | 3 ++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 +++-
+ drivers/gpu/drm/msm/msm_debugfs.c     | 2 +-
+ 4 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+index cf549f1..cf14b2b 100644
+--- a/drivers/gpu/drm/msm/Kconfig
++++ b/drivers/gpu/drm/msm/Kconfig
+@@ -20,6 +20,11 @@ config DRM_MSM
+ 	help
+ 	  DRM/KMS driver for MSM/snapdragon.
+ 
++config DRM_MSM_GPU_STATE
++	bool
++	depends on DRM_MSM && (DEBUG_FS || DEV_COREDUMP)
++	default y
++
+ config DRM_MSM_REGISTER_LOGGING
+ 	bool "MSM DRM register logging"
+ 	depends on DRM_MSM
+diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+index 56a70c7..72d1bfc 100644
+--- a/drivers/gpu/drm/msm/Makefile
++++ b/drivers/gpu/drm/msm/Makefile
+@@ -15,7 +15,6 @@ msm-y := \
+ 	adreno/a6xx_gpu.o \
+ 	adreno/a6xx_gmu.o \
+ 	adreno/a6xx_hfi.o \
+-	adreno/a6xx_gpu_state.o \
+ 	hdmi/hdmi.o \
+ 	hdmi/hdmi_audio.o \
+ 	hdmi/hdmi_bridge.o \
+@@ -96,6 +95,8 @@ msm-y := \
+ 
+ msm-$(CONFIG_DEBUG_FS) += adreno/a5xx_debugfs.o
+ 
++msm-$(CONFIG_DRM_MSM_GPU_STATE)	+= adreno/a6xx_gpu_state.o
++
+ msm-$(CONFIG_DRM_FBDEV_EMULATION) += msm_fbdev.o
+ msm-$(CONFIG_COMMON_CLK) += disp/mdp4/mdp4_lvds_pll.o
+ msm-$(CONFIG_COMMON_CLK) += hdmi/hdmi_pll_8960.o
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index fefe773..ddbaba1 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -781,14 +781,16 @@ static const struct adreno_gpu_funcs funcs = {
+ 		.active_ring = a6xx_active_ring,
+ 		.irq = a6xx_irq,
+ 		.destroy = a6xx_destroy,
+-#if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
++#if defined(CONFIG_DRM_MSM_GPU_STATE)
+ 		.show = a6xx_show,
+ #endif
+ 		.gpu_busy = a6xx_gpu_busy,
+ 		.gpu_get_freq = a6xx_gmu_get_freq,
+ 		.gpu_set_freq = a6xx_gmu_set_freq,
++#if defined(CONFIG_DRM_MSM_GPU_STATE)
+ 		.gpu_state_get = a6xx_gpu_state_get,
+ 		.gpu_state_put = a6xx_gpu_state_put,
++#endif
+ 	},
+ 	.get_timestamp = a6xx_get_timestamp,
+ };
+diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+index fb423d3..bcfb7a4 100644
+--- a/drivers/gpu/drm/msm/msm_debugfs.c
++++ b/drivers/gpu/drm/msm/msm_debugfs.c
+@@ -75,7 +75,7 @@ static int msm_gpu_open(struct inode *inode, struct file *file)
+ 	struct msm_gpu_show_priv *show_priv;
+ 	int ret;
+ 
+-	if (!gpu)
++	if (!gpu || !gpu->funcs->gpu-state_get)
+ 		return -ENODEV;
+ 
+ 	show_priv = kmalloc(sizeof(*show_priv), GFP_KERNEL);
+-- 
+2.7.4
+
