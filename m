@@ -2,96 +2,107 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FD0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22F82082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA3520830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554931593;
+	bh=QVv8aZaojPuNI9Nt+2Wqk0vL3kP4mygQQ00q6O048kw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pRjVOHIYBmTO30k4n8uD1Fw3SJRzUjMb3ePQjs3FDSe+q8rH11G0RWdAmdK77i4U7
+	 R8H9UDASoi+h3QmUT2m591owebYagTqBK1QngmZNcmIz64/pRNqvvx934cogZaJBmU
+	 BbpIOcepXmSB9EwJJs59FNWzdd4R6G1QPLhveLac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfDJVZP (ORCPT
+        id S1726600AbfDJV0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:25:15 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:32832 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfDJVZP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:25:15 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hEKiM-0004hb-1D; Wed, 10 Apr 2019 23:25:02 +0200
-Date:   Wed, 10 Apr 2019 23:25:02 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH 12/27] x86/pkru: Provide .*_pkru_ins() functions
-Message-ID: <20190410212501.jglzib2qcygjnmxc@linutronix.de>
-References: <20190403164156.19645-1-bigeasy@linutronix.de>
- <20190403164156.19645-13-bigeasy@linutronix.de>
- <20190410163615.GB26580@zn.tnic>
- <20190410165241.GD26580@zn.tnic>
+        Wed, 10 Apr 2019 17:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725982AbfDJV0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 17:26:32 -0400
+Received: from sinanubuntu1604.mkjiurmyylmellclgttazegk5f.bx.internal.cloudapp.net (unknown [23.96.42.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 772572082A;
+        Wed, 10 Apr 2019 21:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554931591;
+        bh=QVv8aZaojPuNI9Nt+2Wqk0vL3kP4mygQQ00q6O048kw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=INnCM/2LoDGf9yNDcUDsBa+hvzGRiSU+IUZHWWXHCJeq7WI9ub2xGZ5unPsGQeUai
+         ldi9xeyw0NnwOVq6EVnF6UVBGGFgRONavAyh4+/P0aVA+n5QqVETHVi1cKp6I+fAN9
+         ed+gu7Lt/9JOGJUEEKZG3w8hrfm/UwQHzqELQl0o=
+From:   Sinan Kaya <okaya@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Sinan Kaya <okaya@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH v1] init: Do not select DEBUG_KERNEL by default
+Date:   Wed, 10 Apr 2019 21:26:25 +0000
+Message-Id: <20190410212627.29514-1-okaya@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190410165241.GD26580@zn.tnic>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-10 18:52:41 [+0200], Borislav Petkov wrote:
-> On Wed, Apr 10, 2019 at 06:36:15PM +0200, Borislav Petkov wrote:
-> > Well, this is going in the wrong direction. The proper thing to do would
-> > be to have:
-> > 
-> > rdpkru()
-> > wrpkru()
-> > 
-> > which only do the inline asm with the respective opcodes. Just like
-> > rdtsc(), clflush(), etc.
-> 
-> IOW, like this:
-> 
-> ---
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-> index 2779ace16d23..e2948ce1376c 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -127,14 +127,14 @@ static inline int pte_dirty(pte_t pte)
->  static inline u32 read_pkru(void)
->  {
->  	if (boot_cpu_has(X86_FEATURE_OSPKE))
-> -		return __read_pkru();
-> +		return rdpkru();
->  	return 0;
->  }
->  
->  static inline void write_pkru(u32 pkru)
->  {
->  	if (boot_cpu_has(X86_FEATURE_OSPKE))
-> -		__write_pkru(pkru);
-> +		wrpkru(pkru);
+We can't seem to have a kernel with CONFIG_EXPERT set but
+CONFIG_DEBUG_KERNEL unset these days.
 
-I think if this is a simple
+While some of the features under the CONFIG_EXPERT require
+CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
 
-   's@__write_pkru_ins@wrpkru@g'
-   's@__read_pkru_ins@rdpkru@g'
+The meaning of CONFIG_EXPERT and CONFIG_DEBUG_KERNEL has been
+mixed here.
 
-then it should work just fine and match what Dave asked for.
+It looks like CONFIG_KALLSYMS_ALL is the only feature that
+requires CONFIG_DEBUG_KERNEL. Move the CONFIG_DEBUG_KERNEL
+selection to where it really is needed.
 
->  }
->  
->  static inline int pte_young(pte_t pte)
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+---
+ init/Kconfig | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Sebastian
+diff --git a/init/Kconfig b/init/Kconfig
+index 4592bf7997c0..0a6346feae8d 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1206,8 +1206,6 @@ config BPF
+ 
+ menuconfig EXPERT
+ 	bool "Configure standard kernel features (expert users)"
+-	# Unhide debug options, to make the on-by-default options visible
+-	select DEBUG_KERNEL
+ 	help
+ 	  This option allows certain base kernel options and settings
+           to be disabled or tweaked. This is for specialized
+@@ -1473,7 +1471,8 @@ config KALLSYMS
+ 
+ config KALLSYMS_ALL
+ 	bool "Include all symbols in kallsyms"
+-	depends on DEBUG_KERNEL && KALLSYMS
++	select DEBUG_KERNEL
++	depends on KALLSYMS
+ 	help
+ 	   Normally kallsyms only contains the symbols of functions for nicer
+ 	   OOPS messages and backtraces (i.e., symbols from the text and inittext
+-- 
+2.21.0
+
