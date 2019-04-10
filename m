@@ -2,123 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F666C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38378C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB2F21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cvhXE5fB"
+	by mail.kernel.org (Postfix) with ESMTP id 0C18A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfDJCey (ORCPT
+        id S1726917AbfDJCgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 22:34:54 -0400
-Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:29415
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726513AbfDJCey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 22:34:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pn3aMyXCY2iCymVAodVoCEGx0dwmc+0pw+y05bsRFwY=;
- b=cvhXE5fBiCZXoOuvZ05qdHH4QUq35QfV4TtENmqMiEVxaJ8GproBip8gAnzFoqAel0VQnhv+VJ+lEW+K2sxZDa1Z9y3ohUMNt96jz6QZsKm1Bearo/YvUTate3Z1bDN4Msc8sSQqXpGcKzt+qxA4a0WlK2Tl8R4xws1eTG3i1hc=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
- VI1PR04MB4285.eurprd04.prod.outlook.com (52.134.31.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Wed, 10 Apr 2019 02:34:50 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::940a:dc67:926:e5df]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::940a:dc67:926:e5df%5]) with mapi id 15.20.1771.016; Wed, 10 Apr 2019
- 02:34:50 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Andy Tang <andy.tang@nxp.com>,
-        Jianchao Wang <jianchao.wang@nxp.com>
-Subject: RE: [EXT] Re: [v7 3/3] ahci: qoriq: add lx2160 platforms support
-Thread-Topic: [EXT] Re: [v7 3/3] ahci: qoriq: add lx2160 platforms support
-Thread-Index: AQHU2HbclXKnAjThkU+5mzIwr26m+6YyLTYQgABfEACAAQGBYIAAfzGAgADNudA=
-Date:   Wed, 10 Apr 2019 02:34:50 +0000
-Message-ID: <VI1PR04MB4431A5834D22040384C6B8D7ED2E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190312015019.30628-1-peng.ma@nxp.com>
- <20190312015019.30628-3-peng.ma@nxp.com>
- <VI1PR04MB44310DDDF2D981F0BC0D7381ED2C0@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <5bbd312c-6443-ea23-2b3e-97fd46a98a38@kernel.dk>
- <VI1PR04MB4431213C02A7DC614AB4E693ED2D0@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <40cd2a5a-040c-9785-ee17-c5407a3872a7@kernel.dk>
-In-Reply-To: <40cd2a5a-040c-9785-ee17-c5407a3872a7@kernel.dk>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e971a9b6-c811-441a-8128-08d6bd5d1b44
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4285;
-x-ms-traffictypediagnostic: VI1PR04MB4285:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB4285630E7B165A4593FBCBD5ED2E0@VI1PR04MB4285.eurprd04.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(346002)(39860400002)(136003)(199004)(189003)(13464003)(7696005)(9686003)(256004)(2501003)(6116002)(186003)(33656002)(76176011)(71200400001)(102836004)(53936002)(7736002)(478600001)(71190400001)(25786009)(68736007)(3846002)(55016002)(446003)(44832011)(45080400002)(6436002)(66066001)(6506007)(74316002)(6306002)(11346002)(97736004)(476003)(486006)(6246003)(26005)(305945005)(5024004)(8676002)(14444005)(5660300002)(106356001)(229853002)(81166006)(81156014)(2906002)(93886005)(4326008)(105586002)(86362001)(52536014)(6636002)(54906003)(110136005)(316002)(99286004)(8936002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4285;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FYFXODyuDzfGfOA3/8PCTgrvbeQf96Ncx2mon33sdMNQGzDPb1VRGp3b2B3W9ZR/pvAmfCmQ8RUXEYoYcr4gjZpFpw70URkyQ5PKGLWn1QpOFKKa2E+tV8cgKbLBtJoXVdOhgnYNYlvui/VLkTOrAbN2TsdceNto25Ou8nCQa80NyRsmesSnlfhW+kc8E8UMeGg25Es1nDr7Gq8QRyEdjXDM7SdC720B1GCGcRQw05InZD0uVsUWuMiZaogTWgJK63bF7tSOat5jnUIrpCTbr+aDoGT8s/wSUVUuPbxv9OcWL9hQXpZoNtpo/3UfHD4AtGVKXvH+7BNUwxg2rnpb2Rm/Ru/5BJnorjoW2fmFrpJn+XG5SPIVmzPaNBwaSHaNBSLejvemNAC0QXDq7LuckNrvRjiBcuRfTYzf4C/SXYU=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 9 Apr 2019 22:36:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:5143 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbfDJCgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 22:36:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 19:36:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
+   d="scan'208";a="162914730"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2019 19:36:36 -0700
+Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+ <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+ <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
+ <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
+Date:   Wed, 10 Apr 2019 10:36:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e971a9b6-c811-441a-8128-08d6bd5d1b44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 02:34:50.5085
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4285
+In-Reply-To: <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXhib2UsDQoNClRoYW5rcyB2ZXJ5IG11Y2guDQoNCkJlc3QgUmVnYXJkcywNClBlbmcNCg0K
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogSmVucyBBeGJvZSA8YXhib2VAa2Vy
-bmVsLmRrPg0KPlNlbnQ6IDIwMTnE6jTUwjnI1SAyMjoxNw0KPlRvOiBQZW5nIE1hIDxwZW5nLm1h
-QG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+bWFyay5ydXRsYW5kQGFybS5jb207IHNo
-YXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPg0KPkNjOiBsaW51
-eC1pZGVAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj5saW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmc7IEFuZHkgVGFuZw0KPjxhbmR5LnRhbmdAbnhwLmNvbT47IEppYW5jaGFvIFdhbmcgPGpp
-YW5jaGFvLndhbmdAbnhwLmNvbT4NCj5TdWJqZWN0OiBSZTogW0VYVF0gUmU6IFt2NyAzLzNdIGFo
-Y2k6IHFvcmlxOiBhZGQgbHgyMTYwIHBsYXRmb3JtcyBzdXBwb3J0DQo+DQo+V0FSTklORzogVGhp
-cyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9y
-DQo+YXR0YWNobWVudHMgdW5sZXNzIHlvdSByZWNvZ25pemUgdGhlIHNlbmRlciBhbmQga25vdyB0
-aGUgY29udGVudCBpcyBzYWZlLg0KPg0KPg0KPg0KPk9uIDQvOS8xOSAxMjo0NCBBTSwgUGVuZyBN
-YSB3cm90ZToNCj4+IEhpIEF4Ym9lLA0KPj4NCj4+IFBhdGNoIGxpbms6DQo+Pg0KPj4NCj5odHRw
-czovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUy
-RiUyRnBhdGNod28NCj5yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMDU1MDI4JTJGJmFtcDtkYXRh
-PTAyJTdDMDElN0NwZW5nLm1hJTQwDQo+bnhwLmNvbSU3Q2U3NmJlNTM5YzI0YTQ3MzNjZjNmMDhk
-NmJjZjYxOGRlJTdDNjg2ZWExZDNiYzJiNGM2ZmE5Mg0KPmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3
-QzYzNjkwNDE2MjUwNTUwMTUwMCZhbXA7c2RhdGE9QW03UUVKMlkNCj5zcWtOTFhVdElNWFUlMkZz
-NU10NFFoellZYTFGamJoV2FBWGl3JTNEJmFtcDtyZXNlcnZlZD0wDQo+Pg0KPj4NCj5odHRwczov
-L2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
-RnBhdGNod28NCj5yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMDU0MTg5JTJGJmFtcDtkYXRhPTAy
-JTdDMDElN0NwZW5nLm1hJTQwDQo+bnhwLmNvbSU3Q2U3NmJlNTM5YzI0YTQ3MzNjZjNmMDhkNmJj
-ZjYxOGRlJTdDNjg2ZWExZDNiYzJiNGM2ZmE5Mg0KPmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYz
-NjkwNDE2MjUwNTUwMTUwMCZhbXA7c2RhdGE9aWtwTkM0TSUNCj4yQkRxMyUyRlBZc1hMSGJQRGNE
-dTJLZmdJUlhzJTJCakREWFd0cDJqayUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPg0KPkFwcGxpZWQsIHRo
-YW5rcy4NCj4NCj4tLQ0KPkplbnMgQXhib2UNCg0K
+On 2019/4/10 10:25, Andy Lutomirski wrote:
+> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>>
+>> On 2019/4/10 9:58, Andy Lutomirski wrote:
+>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>>>>
+>>>> The architecture specific information of the running processes could
+>>>> be useful to the userland. Add support to examine process architecture
+>>>> specific information externally.
+>>>>
+>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>> Cc: Andi Kleen <ak@linux.intel.com>
+>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+>>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
+>>>> Cc: Linux API <linux-api@vger.kernel.org>
+>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> ---
+>>>>  fs/proc/array.c         | 5 +++++
+>>>>  include/linux/proc_fs.h | 2 ++
+>>>>  2 files changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+>>>> index 2edbb657f859..331592a61718 100644
+>>>> --- a/fs/proc/array.c
+>>>> +++ b/fs/proc/array.c
+>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>>>>  }
+>>>>
+>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
+>>>> +{
+>>>> +}
+>>>
+>>> This pointlessly bloats other architectures.  Do this instead in an
+>>> appropriate header:
+>>>
+>>> #ifndef arch_proc_pid_status
+>>> static inline void arch_proc_pid_status(...)
+>>> {
+>>> }
+>>> #endif
+>>>
+>>
+>> I saw a bunch of similar weak functions, is it not acceptable?
+>>
+>> fs/proc$ grep weak *.c
+>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
+>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
+>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
+>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+>> vmcore.c:ssize_t __weak
+> 
+> I think they're acceptable, but I don't personally like them.
+> 
+
+okay, let me try to see if I can refine it in an appropriate way.
+
+>>
+>>> Or add /proc/PID/x86_status, which sounds better in most respects to me.
+>>>
+>>
+>> I didn't figure out how to make /proc/PID/x86_status invisible to other
+>> architectures in an appropriate way, do you have any suggestions?
+> 
+> #ifdef CONFIG_X86?
+> 
+
+I'm not sure if everyone like adding an arch #ifdef in a common file,
+please allow me to wait a while to see if there are other comments.
+
+Thanks,
+-Aubrey
