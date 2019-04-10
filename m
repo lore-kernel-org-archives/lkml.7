@@ -2,251 +2,407 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27793C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DDCC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB08A217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554866261;
-	bh=1TZla5zsJoJ+Fk7s4RQax79cQhIzJ6KroNbI+HWS29o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XDDpc5KShxQqEa6Qeyb2M4pYdwyALduLUzw+4yrEmf9Z4GfuEaXeFTDujH2fo2VkF
-	 dPuzUXSwp2/asOh/9XjJEuRsEgvEZ+4F/ckFiq6cuVp7dLdFYfFmliqsGsq1d6Sz20
-	 Mlcnk639KMXnuRQqo/sQoNzF3+oJwzFm6sza38WA=
+	by mail.kernel.org (Postfix) with ESMTP id A7E3B20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfDJDRj (ORCPT
+        id S1727179AbfDJDSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 23:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfDJDRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 23:17:39 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 9 Apr 2019 23:18:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726993AbfDJDSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 23:18:04 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3A3Bm1e169657
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Apr 2019 23:18:02 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rs7gest96-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 23:18:02 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 10 Apr 2019 04:18:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Apr 2019 04:17:50 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3A3Hng957278476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 03:17:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E452A4053;
+        Wed, 10 Apr 2019 03:17:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05B11A4051;
+        Wed, 10 Apr 2019 03:17:49 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 10 Apr 2019 03:17:48 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FFD20830;
-        Wed, 10 Apr 2019 03:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554866257;
-        bh=1TZla5zsJoJ+Fk7s4RQax79cQhIzJ6KroNbI+HWS29o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cd4RAQOtwzQ5PoT3sGqUnAge//I834uXVYwGlXTYi3sb7PWEnFuE3NZr1NDVrm29Y
-         CY2AG2eA2bJZ4bNW3u7p050Wvja7UZtUVYkSNZUZIrcB0TIhbhP6q3DpdAIrfFxeKW
-         kdhlE6SKZT3P5Pz671MZj0NJwREmr+eQlY6AfZTE=
-Date:   Tue, 9 Apr 2019 20:17:35 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-Message-ID: <20190410031734.GB7140@sol.localdomain>
-References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
- <20190319170911.GB202956@gmail.com>
- <20190320185719.GB180195@gmail.com>
- <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
- <20190321175122.GA1587@sol.localdomain>
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id DC90EA038A;
+        Wed, 10 Apr 2019 13:17:47 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
+Date:   Wed, 10 Apr 2019 13:17:19 +1000
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190410031720.11067-1-alastair@au1.ibm.com>
+References: <20190410031720.11067-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321175122.GA1587@sol.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041003-4275-0000-0000-0000032624DB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041003-4276-0000-0000-000038353F7F
+Message-Id: <20190410031720.11067-4-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904100022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 10:51:22AM -0700, Eric Biggers wrote:
-> On Thu, Mar 21, 2019 at 10:45:31AM -0700, Kees Cook wrote:
-> > On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > >
-> > > On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
-> > > > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
-> > > > > When running the sha1-asm crypto selftest on arm with
-> > > > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
-> > > > >
-> > > > >     usercopy: Kernel memory overwrite attempt detected to spans
-> > > > > multiple pages (offset 0, size 42)!
-> > > > >     ------------[ cut here ]------------
-> > > > >     kernel BUG at mm/usercopy.c:102!
-> > > > >     Internal error: Oops - BUG: 0 [#1] SMP ARM
-> > > > >     Modules linked in:
-> > > > >     CPU: 0 PID: 35 Comm: cryptomgr_test Not tainted
-> > > > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
-> > > > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-> > > > >     PC is at usercopy_abort+0x68/0x90
-> > > > >     LR is at usercopy_abort+0x68/0x90
-> > > > >     pc : [<c030fd60>]    lr : [<c030fd60>]    psr: 60000013
-> > > > >     sp : ea54bc60  ip : 00000010  fp : cccccccd
-> > > > >     r10: 00000000  r9 : c0e0ce04  r8 : ea54d009
-> > > > >     r7 : ea54d00a  r6 : 00000000  r5 : 0000002a  r4 : c09d1120
-> > > > >     r3 : dd6cd422  r2 : dd6cd422  r1 : 2abb4000  r0 : 0000005f
-> > > > >     Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-> > > > >     Control: 30c5387d  Table: 40003000  DAC: fffffffd
-> > > > >     Process cryptomgr_test (pid: 35, stack limit = 0x(ptrval))
-> > > > >     Stack: (0xea54bc60 to 0xea54c000)
-> > > > >     bc60: c09d1120 c09d1120 c09d1120 00000000 0000002a 0000002a
-> > > > > 00000000 c0310060
-> > > > >     bc80: 0000002a 00000000 000001c0 00000000 00000000 c0eb11e8
-> > > > > ea54cfe0 ea538c00
-> > > > >     bca0: 00000000 ea54cfe0 ebef73e0 0000002a ea538c20 ea54bd84
-> > > > > 0000003a c0427a30
-> > > > >     bcc0: ea54bdbc 00000000 00000000 c081cf70 eb074280 c081cf70
-> > > > > 0000002a c081cf80
-> > > > >     bce0: 0000000e c07da138 ea54bd0c 00000000 c084061c c04248e8
-> > > > > c0e0a408 eb074240
-> > > > >     bd00: eb074200 c04253c8 eb074280 ea550000 00000012 dd6cd422
-> > > > > ebef7480 eb074200
-> > > > >     bd20: ea54bd84 c081cf64 ea537200 00000002 00000000 00000014
-> > > > > c084061c c0428c38
-> > > > >     bd40: ea54bd84 ea54bdbc c081cd34 00000000 c0e4e4b4 ea538c40
-> > > > > 00000002 eabe4e80
-> > > > >     bd60: ea538c00 00000400 ea4f7a00 ea4f7a60 eb074240 00000060
-> > > > > 00000006 c09d544c
-> > > > >     bd80: 00000038 00000003 00000000 00000038 ea54bd7c 00000001
-> > > > > eb074200 00000000
-> > > > >     bda0: 00000000 dead4ead ffffffff ffffffff ea54bdb0 ea54bdb0
-> > > > > 00000000 c081cf70
-> > > > >     bdc0: c081ce68 c081ce78 ea4f7480 eb000780 00000dc0 eb000780
-> > > > > c0e4ee80 443e9884
-> > > > >     bde0: 6ed23b1c a14aaeba e52951f9 f17046e5 fefefefe fefefefe
-> > > > > fefefefe fefefefe
-> > > > >     be00: eb000780 c04292c4 c0e0a638 60000013 60000013 c0305298
-> > > > > ea4f7a00 c03062bc
-> > > > >     be20: eb000780 00000cc0 ea4f7a00 dd6cd422 00000cc0 ea538c00
-> > > > > 00000002 eabe4e40
-> > > > >     be40: ea537200 00000007 00000000 ea4f7a00 eb074200 c0429314
-> > > > > eb074200 ea538c00
-> > > > >     be60: ea4f7a00 0000000a eabe4e80 c084061c c08405fc 00000006
-> > > > > c04dace8 00000006
-> > > > >     be80: 00000000 c084065c ea537200 0000000e 00000400 eb04de08
-> > > > > ea4f71a8 c0429420
-> > > > >     bea0: 00000400 ea537200 0000000e ea537200 0000000e c0429374
-> > > > > 00000400 ffffffff
-> > > > >     bec0: 000000a2 c042a414 00000103 c0e0a408 00000000 c0e0a438
-> > > > > c0e5a2a0 c0e5a2a0
-> > > > >     bee0: 00000001 00000001 00000017 ffffe000 00000000 60000013
-> > > > > c0e5a2a0 c0269470
-> > > > >     bf00: c09c9ed0 ea54bf5c 00000103 00000000 00000000 c0e0a408
-> > > > > ea537280 0000000e
-> > > > >     bf20: 00000400 c0426500 00000000 eb04de08 ea4f71a8 c02694f4
-> > > > > c09c9ed0 ea54bf5c
-> > > > >     bf40: ea54bf28 c02699d0 ea54bf5c dd6cd422 ea537200 dd6cd422
-> > > > > c09c9ed0 ea537200
-> > > > >     bf60: ea4af1c0 ea54a000 ea537200 c0426500 00000000 eb04de08
-> > > > > ea4f71a8 c0426524
-> > > > >     bf80: ea4f7180 c023dcec ea54a000 ea4af1c0 c023dbb4 00000000
-> > > > > 00000000 00000000
-> > > > >     bfa0: 00000000 00000000 00000000 c02010d8 00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > > 00000000 00000000
-> > > > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
-> > > > > (__check_object_size+0x2d8/0x448)
-> > > > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
-> > > > > (build_test_sglist+0x268/0x2d8)
-> > > > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
-> > > > > (test_hash_vec_cfg+0x110/0x694)
-> > > > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
-> > > > > (__alg_test_hash+0x158/0x1b8)
-> > > > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
-> > > > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
-> > > > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
-> > > > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
-> > > > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
-> > > > >     Exception stack(0xea54bfb0 to 0xea54bff8)
-> > > > >     bfa0:                                     00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > >     Code: e58de000 e98d0012 e1a0100c ebfd6712 (e7f001f2)
-> > > > >     ---[ end trace 190b3cf48e720f78 ]---
-> > > > >     BUG: sleeping function called from invalid context at
-> > > > > include/linux/percpu-rwsem.h:34
-> > > > >     in_atomic(): 0, irqs_disabled(): 128, pid: 35, name: cryptomgr_test
-> > > > >     CPU: 0 PID: 35 Comm: cryptomgr_test Tainted: G      D
-> > > > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
-> > > > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-> > > > >     [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
-> > > > >     [<c020ae58>] (show_stack) from [<c07c3624>] (dump_stack+0x7c/0x9c)
-> > > > >     [<c07c3624>] (dump_stack) from [<c0242e14>] (___might_sleep+0xf4/0x158)
-> > > > >     [<c0242e14>] (___might_sleep) from [<c0230210>] (exit_signals+0x2c/0x258)
-> > > > >     [<c0230210>] (exit_signals) from [<c0223d6c>] (do_exit+0x114/0xa20)
-> > > > >     [<c0223d6c>] (do_exit) from [<c020b160>] (die+0x304/0x344)
-> > > > >     [<c020b160>] (die) from [<c020b388>] (do_undefinstr+0x80/0x190)
-> > > > >     [<c020b388>] (do_undefinstr) from [<c0201b24>] (__und_svc_finish+0x0/0x3c)
-> > > > >     Exception stack(0xea54bc10 to 0xea54bc58)
-> > > > >     bc00:                                     0000005f 2abb4000
-> > > > > dd6cd422 dd6cd422
-> > > > >     bc20: c09d1120 0000002a 00000000 ea54d00a ea54d009 c0e0ce04
-> > > > > 00000000 cccccccd
-> > > > >     bc40: 00000010 ea54bc60 c030fd60 c030fd60 60000013 ffffffff
-> > > > >     [<c0201b24>] (__und_svc_finish) from [<c030fd60>] (usercopy_abort+0x68/0x90)
-> > > > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
-> > > > > (__check_object_size+0x2d8/0x448)
-> > > > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
-> > > > > (build_test_sglist+0x268/0x2d8)
-> > > > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
-> > > > > (test_hash_vec_cfg+0x110/0x694)
-> > > > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
-> > > > > (__alg_test_hash+0x158/0x1b8)
-> > > > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
-> > > > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
-> > > > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
-> > > > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
-> > > > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
-> > > > >     Exception stack(0xea54bfb0 to 0xea54bff8)
-> > > > >     bfa0:                                     00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > 00000000 00000000
-> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > >
-> > > >
-> > > > Well, this must happen with the new (in 5.1) crypto self-tests implementation
-> > > > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
-> > > > understand why hardened usercopy considers it a bug though, as there's no buffer
-> > > > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
-> > > > buffer that was allocated with __get_free_pages():
-> > > >
-> > > >       __get_free_pages(GFP_KERNEL, 1)
-> > > >
-> > > > ... where 1 means an order-1 allocation.
-> > > >
-> > > > If it copies to offset=4064 len=42, for example, then hardened usercopy
-> > > > considers it a bug even though the buffer is 8192 bytes long.  Why?
-> > > >
-> > > > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
-> > > > with ITER_KVEC.
-> > > >
-> > > > - Eric
-> > >
-> > > Kees, any thoughts on why hardened usercopy rejects copies spanning a page
-> > > boundary when they seem to be fine?
-> > 
-> > This is due to missing the compound page marking, if I remember
-> > correctly. However, I tend to leave the pagespan test disabled: it
-> > really isn't ready for production use -- there are a lot of missing
-> > annotations still.
-> > 
-> 
-> So do I need to add __GFP_COMP?  Is there any actual reason to do so?
-> Why does hardened usercopy check for it?
-> 
-> - Eric
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Hi Kees, any answer to this question?
+In order to support additional features in hex_dump_to_buffer, replace
+the ascii bool parameter with flags.
 
-- Eric
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/gpu/drm/i915/intel_engine_cs.c            |  2 +-
+ drivers/isdn/hardware/mISDN/mISDNisar.c           |  6 ++++--
+ drivers/mailbox/mailbox-test.c                    |  2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c          |  2 +-
+ drivers/net/ethernet/synopsys/dwc-xlgmac-common.c |  2 +-
+ drivers/net/wireless/ath/ath10k/debug.c           |  3 ++-
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c    |  2 +-
+ drivers/platform/chrome/wilco_ec/debugfs.c        |  3 ++-
+ drivers/scsi/scsi_logging.c                       |  8 +++-----
+ drivers/staging/fbtft/fbtft-core.c                |  2 +-
+ fs/seq_file.c                                     |  3 ++-
+ include/linux/printk.h                            |  2 +-
+ lib/hexdump.c                                     | 15 ++++++++-------
+ lib/test_hexdump.c                                |  5 +++--
+ 14 files changed, 31 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_engine_cs.c b/drivers/gpu/drm/i915/intel_engine_cs.c
+index 49fa43ff02ba..fb133e729f9a 100644
+--- a/drivers/gpu/drm/i915/intel_engine_cs.c
++++ b/drivers/gpu/drm/i915/intel_engine_cs.c
+@@ -1318,7 +1318,7 @@ static void hexdump(struct drm_printer *m, const void *buf, size_t len)
+ 		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len - pos,
+ 						rowsize, sizeof(u32),
+ 						line, sizeof(line),
+-						false) >= sizeof(line));
++						0) >= sizeof(line));
+ 		drm_printf(m, "[%04zx] %s\n", pos, line);
+ 
+ 		prev = buf + pos;
+diff --git a/drivers/isdn/hardware/mISDN/mISDNisar.c b/drivers/isdn/hardware/mISDN/mISDNisar.c
+index 386731ec2489..f13f34db6c17 100644
+--- a/drivers/isdn/hardware/mISDN/mISDNisar.c
++++ b/drivers/isdn/hardware/mISDN/mISDNisar.c
+@@ -84,7 +84,8 @@ send_mbox(struct isar_hw *isar, u8 his, u8 creg, u8 len, u8 *msg)
+ 
+ 			while (l < (int)len) {
+ 				hex_dump_to_buffer(msg + l, len - l, 32, 1,
+-						   isar->log, 256, 1);
++						   isar->log, 256,
++						   HEXDUMP_ASCII);
+ 				pr_debug("%s: %s %02x: %s\n", isar->name,
+ 					 __func__, l, isar->log);
+ 				l += 32;
+@@ -113,7 +114,8 @@ rcv_mbox(struct isar_hw *isar, u8 *msg)
+ 
+ 			while (l < (int)isar->clsb) {
+ 				hex_dump_to_buffer(msg + l, isar->clsb - l, 32,
+-						   1, isar->log, 256, 1);
++						   1, isar->log, 256,
++						   HEXDUMP_ASCII);
+ 				pr_debug("%s: %s %02x: %s\n", isar->name,
+ 					 __func__, l, isar->log);
+ 				l += 32;
+diff --git a/drivers/mailbox/mailbox-test.c b/drivers/mailbox/mailbox-test.c
+index 4e4ac4be6423..2f9a094d0259 100644
+--- a/drivers/mailbox/mailbox-test.c
++++ b/drivers/mailbox/mailbox-test.c
+@@ -213,7 +213,7 @@ static ssize_t mbox_test_message_read(struct file *filp, char __user *userbuf,
+ 		hex_dump_to_buffer(ptr,
+ 				   MBOX_BYTES_PER_LINE,
+ 				   MBOX_BYTES_PER_LINE, 1, touser + l,
+-				   MBOX_HEXDUMP_LINE_LEN, true);
++				   MBOX_HEXDUMP_LINE_LEN, HEXDUMP_ASCII);
+ 
+ 		ptr += MBOX_BYTES_PER_LINE;
+ 		l += MBOX_HEXDUMP_LINE_LEN;
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index 0cc911f928b1..e954a31cee0c 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -2992,7 +2992,7 @@ void xgbe_print_pkt(struct net_device *netdev, struct sk_buff *skb, bool tx_rx)
+ 		unsigned int len = min(skb->len - i, 32U);
+ 
+ 		hex_dump_to_buffer(&skb->data[i], len, 32, 1,
+-				   buffer, sizeof(buffer), false);
++				   buffer, sizeof(buffer), 0);
+ 		netdev_dbg(netdev, "  %#06x: %s\n", i, buffer);
+ 	}
+ 
+diff --git a/drivers/net/ethernet/synopsys/dwc-xlgmac-common.c b/drivers/net/ethernet/synopsys/dwc-xlgmac-common.c
+index eb1c6b03c329..b80adfa1f890 100644
+--- a/drivers/net/ethernet/synopsys/dwc-xlgmac-common.c
++++ b/drivers/net/ethernet/synopsys/dwc-xlgmac-common.c
+@@ -349,7 +349,7 @@ void xlgmac_print_pkt(struct net_device *netdev,
+ 		unsigned int len = min(skb->len - i, 32U);
+ 
+ 		hex_dump_to_buffer(&skb->data[i], len, 32, 1,
+-				   buffer, sizeof(buffer), false);
++				   buffer, sizeof(buffer), 0);
+ 		netdev_dbg(netdev, "  %#06x: %s\n", i, buffer);
+ 	}
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
+index 32d967a31c65..4c99ea03226d 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.c
++++ b/drivers/net/wireless/ath/ath10k/debug.c
+@@ -2662,7 +2662,8 @@ void ath10k_dbg_dump(struct ath10k *ar,
+ 						(unsigned int)(ptr - buf));
+ 			hex_dump_to_buffer(ptr, len - (ptr - buf), 16, 1,
+ 					   linebuf + linebuflen,
+-					   sizeof(linebuf) - linebuflen, true);
++					   sizeof(linebuf) - linebuflen,
++					   HEXDUMP_ASCII);
+ 			dev_printk(KERN_DEBUG, ar->dev, "%s\n", linebuf);
+ 		}
+ 	}
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 271977f7fbb0..acbe26d22c34 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -3247,7 +3247,7 @@ il3945_show_measurement(struct device *d, struct device_attribute *attr,
+ 
+ 	while (size && PAGE_SIZE - len) {
+ 		hex_dump_to_buffer(data + ofs, size, 16, 1, buf + len,
+-				   PAGE_SIZE - len, true);
++				   PAGE_SIZE - len, HEXDUMP_ASCII);
+ 		len = strlen(buf);
+ 		if (PAGE_SIZE - len)
+ 			buf[len++] = '\n';
+diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+index c090db2cd5be..238ede4a26d8 100644
+--- a/drivers/platform/chrome/wilco_ec/debugfs.c
++++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+@@ -174,7 +174,8 @@ static ssize_t raw_read(struct file *file, char __user *user_buf, size_t count,
+ 		fmt_len = hex_dump_to_buffer(debug_info->raw_data,
+ 					     debug_info->response_size,
+ 					     16, 1, debug_info->formatted_data,
+-					     FORMATTED_BUFFER_SIZE, true);
++					     FORMATTED_BUFFER_SIZE,
++					     HEXDUMP_ASCII);
+ 		/* Only return response the first time it is read */
+ 		debug_info->response_size = 0;
+ 	}
+diff --git a/drivers/scsi/scsi_logging.c b/drivers/scsi/scsi_logging.c
+index bd70339c1242..fce542bb40e6 100644
+--- a/drivers/scsi/scsi_logging.c
++++ b/drivers/scsi/scsi_logging.c
+@@ -263,7 +263,7 @@ void scsi_print_command(struct scsi_cmnd *cmd)
+ 						 "CDB[%02x]: ", k);
+ 				hex_dump_to_buffer(&cmd->cmnd[k], linelen,
+ 						   16, 1, logbuf + off,
+-						   logbuf_len - off, false);
++						   logbuf_len - off, 0);
+ 			}
+ 			dev_printk(KERN_INFO, &cmd->device->sdev_gendev, "%s",
+ 				   logbuf);
+@@ -274,8 +274,7 @@ void scsi_print_command(struct scsi_cmnd *cmd)
+ 	if (!WARN_ON(off > logbuf_len - 49)) {
+ 		off += scnprintf(logbuf + off, logbuf_len - off, " ");
+ 		hex_dump_to_buffer(cmd->cmnd, cmd->cmd_len, 16, 1,
+-				   logbuf + off, logbuf_len - off,
+-				   false);
++				   logbuf + off, logbuf_len - off, 0);
+ 	}
+ out_printk:
+ 	dev_printk(KERN_INFO, &cmd->device->sdev_gendev, "%s", logbuf);
+@@ -354,8 +353,7 @@ scsi_log_dump_sense(const struct scsi_device *sdev, const char *name, int tag,
+ 		off = sdev_format_header(logbuf, logbuf_len,
+ 					 name, tag);
+ 		hex_dump_to_buffer(&sense_buffer[i], len, 16, 1,
+-				   logbuf + off, logbuf_len - off,
+-				   false);
++				   logbuf + off, logbuf_len - off, 0);
+ 		dev_printk(KERN_INFO, &sdev->sdev_gendev, "%s", logbuf);
+ 	}
+ 	scsi_log_release_buffer(logbuf);
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index 9b07badf4c6c..2e5df5cc9d61 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -61,7 +61,7 @@ void fbtft_dbg_hex(const struct device *dev, int groupsize,
+ 	va_end(args);
+ 
+ 	hex_dump_to_buffer(buf, len, 32, groupsize, text + text_len,
+-			   512 - text_len, false);
++			   512 - text_len, 0);
+ 
+ 	if (len > 32)
+ 		dev_info(dev, "%s ...\n", text);
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index 1dea7a8a5255..a0213637af3e 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -873,7 +873,8 @@ void seq_hex_dump(struct seq_file *m, const char *prefix_str, int prefix_type,
+ 
+ 		size = seq_get_buf(m, &buffer);
+ 		ret = hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+-					 buffer, size, ascii);
++					 buffer, size,
++					 ascii ? HEXDUMP_ASCII : 0);
+ 		seq_commit(m, ret < size ? ret : -1);
+ 
+ 		seq_putc(m, '\n');
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index c014e5573665..82975853c400 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -493,7 +493,7 @@ enum {
+ 
+ extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
+ 			      int groupsize, char *linebuf, size_t linebuflen,
+-			      bool ascii);
++			      u64 flags);
+ 
+ #ifdef CONFIG_PRINTK
+ extern void print_hex_dump_ext(const char *level, const char *prefix_str,
+diff --git a/lib/hexdump.c b/lib/hexdump.c
+index 2f3bafb55a44..79db784577e7 100644
+--- a/lib/hexdump.c
++++ b/lib/hexdump.c
+@@ -84,7 +84,8 @@ EXPORT_SYMBOL(bin2hex);
+  * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
+  * @linebuf: where to put the converted data
+  * @linebuflen: total size of @linebuf, including space for terminating NUL
+- * @ascii: include ASCII after the hex output
++ * @flags: A bitwise OR of the following flags:
++ *	HEXDUMP_ASCII:		include ASCII after the hex output
+  *
+  * hex_dump_to_buffer() works on one "line" of output at a time, i.e.,
+  * 16, 32 or 64 bytes of input data converted to hex + ASCII output.
+@@ -95,7 +96,7 @@ EXPORT_SYMBOL(bin2hex);
+  *
+  * E.g.:
+  *   hex_dump_to_buffer(frame->data, frame->len, 16, 1,
+- *			linebuf, sizeof(linebuf), true);
++ *			linebuf, sizeof(linebuf), HEXDUMP_ASCII);
+  *
+  * example output buffer:
+  * 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  @ABCDEFGHIJKLMNO
+@@ -107,7 +108,7 @@ EXPORT_SYMBOL(bin2hex);
+  * string if enough space had been available.
+  */
+ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
+-		       char *linebuf, size_t linebuflen, bool ascii)
++		       char *linebuf, size_t linebuflen, u64 flags)
+ {
+ 	const u8 *ptr = buf;
+ 	int ngroups;
+@@ -184,7 +185,7 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
+ 		if (j)
+ 			lx--;
+ 	}
+-	if (!ascii)
++	if (!flags & HEXDUMP_ASCII)
+ 		goto nil;
+ 
+ 	while (lx < ascii_column) {
+@@ -204,7 +205,8 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
+ overflow2:
+ 	linebuf[lx++] = '\0';
+ overflow1:
+-	return ascii ? ascii_column + len : (groupsize * 2 + 1) * ngroups - 1;
++	return (flags & HEXDUMP_ASCII) ? ascii_column + len :
++					 (groupsize * 2 + 1) * ngroups - 1;
+ }
+ EXPORT_SYMBOL(hex_dump_to_buffer);
+ 
+@@ -299,8 +301,7 @@ void print_hex_dump_ext(const char *level, const char *prefix_str,
+ 		first_line = false;
+ 
+ 		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+-				   linebuf, sizeof(linebuf),
+-				   flags & HEXDUMP_ASCII);
++				   linebuf, sizeof(linebuf), flags);
+ 
+ 		switch (prefix_type) {
+ 		case DUMP_PREFIX_ADDRESS:
+diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
+index 5144899d3c6b..16bdb483114d 100644
+--- a/lib/test_hexdump.c
++++ b/lib/test_hexdump.c
+@@ -132,7 +132,7 @@ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
+ 
+ 	memset(real, FILL_CHAR, sizeof(real));
+ 	hex_dump_to_buffer(data_b, len, rowsize, groupsize, real, sizeof(real),
+-			   ascii);
++			   ascii ? HEXDUMP_ASCII : 0);
+ 
+ 	memset(test, FILL_CHAR, sizeof(test));
+ 	test_hexdump_prepare_test(len, rowsize, groupsize, test, sizeof(test),
+@@ -171,7 +171,8 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
+ 
+ 	memset(buf, FILL_CHAR, sizeof(buf));
+ 
+-	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen, ascii);
++	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen,
++			ascii ? HEXDUMP_ASCII : 0);
+ 
+ 	/*
+ 	 * Caller must provide the data length multiple of groupsize. The
+-- 
+2.20.1
+
