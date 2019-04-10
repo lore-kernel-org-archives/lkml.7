@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44FBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB132C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9491920820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B809D20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RTmgqhF1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mmTEbVJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbfDJNit (ORCPT
+        id S1732632AbfDJNiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:38:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41822 "EHLO
+        Wed, 10 Apr 2019 09:38:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41824 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731398AbfDJNip (ORCPT
+        with ESMTP id S1731712AbfDJNiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:38:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcZQk114425;
-        Wed, 10 Apr 2019 08:38:35 -0500
+        Wed, 10 Apr 2019 09:38:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcYRG114409;
+        Wed, 10 Apr 2019 08:38:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554903515;
-        bh=+8mTYPgXcGLNUZwrJW6eXaxRaHu1fTLPu9JmBBK7o14=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RTmgqhF1aiJf2CA3UxBjqjjCq5PHpkVBPAIOJpsYMzEEZ/+6Y/iEmGxJJ/kakoRu/
-         BMj/RSdgmsn3Z4oQAusihdJ/gzfKWjxrBo2ujvdAimDwi7H9f4gM0gCNZu8PesUWrv
-         ctvv4ti/Xggse1DCBv7vOyjYk4P7MM3EuK/TA8kk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ADcZAg085353
+        s=ti-com-17Q1; t=1554903514;
+        bh=xjr4IevYY44RIcephyTZKOHcl3H52uyijiHxVHQ5f3I=;
+        h=From:To:CC:Subject:Date;
+        b=mmTEbVJpoz+G3JOZgKTAMIs+M0REocPZifCLn75XVVJpaEBIrdXsCa9MEhcOKdV4H
+         OfwYJH5VioqPqJriCQgdB4wYFpt9UNWEzl7Ji6R/37Sg+r3+jAZeBz379ACjYW8Nu1
+         rP2YQ9y1OObBFDsxdFAVW733y1iX6n2SE9n81N70=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ADcY45009206
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Apr 2019 08:38:35 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 10 Apr 2019 08:38:34 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
- Apr 2019 08:38:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 08:38:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 10 Apr 2019 08:38:35 -0500
+ Frontend Transport; Wed, 10 Apr 2019 08:38:34 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcZDS123754;
-        Wed, 10 Apr 2019 08:38:35 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcYiY123736;
+        Wed, 10 Apr 2019 08:38:34 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <lee.jones@linaro.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 4/6] regulator: lm363x: Add support for LM36274
-Date:   Wed, 10 Apr 2019 08:38:31 -0500
-Message-ID: <20190410133833.28859-4-dmurphy@ti.com>
+Subject: [PATCH v2 1/6] regulator: lm363x: Make the gpio register enable flexible
+Date:   Wed, 10 Apr 2019 08:38:28 -0500
+Message-ID: <20190410133833.28859-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190410133833.28859-1-dmurphy@ti.com>
-References: <20190410133833.28859-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,113 +66,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding regulator support for the LM36274 backlight driver.
-This device can leverage this existing code as the functionality
-and registers are common enough between the LM36274 and the LM363x
-series of devices.
+The use of and enablement of the GPIO can be used across devices.
+Use the enable_reg in the regulator descriptor for the register to
+write.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v2 - No changes - https://lore.kernel.org/patchwork/patch/1058781/
+v2 - No changes - https://lore.kernel.org/patchwork/patch/1058777/
 
- drivers/regulator/Kconfig            |  2 +-
- drivers/regulator/lm363x-regulator.c | 52 ++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 1 deletion(-)
+ drivers/regulator/lm363x-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index b7f249ee5e68..23252ae81fdf 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -362,7 +362,7 @@ config REGULATOR_LM363X
- 	tristate "TI LM363X voltage regulators"
- 	depends on MFD_TI_LMU
- 	help
--	  This driver supports LM3631 and LM3632 voltage regulators for
-+	  This driver supports LM3631, LM3632 and LM36274 voltage regulators for
- 	  the LCD bias.
- 	  One boost output voltage is configurable and always on.
- 	  Other LDOs are used for the display module.
 diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index 382b1cecdd93..1944677b1448 100644
+index c876e161052a..382b1cecdd93 100644
 --- a/drivers/regulator/lm363x-regulator.c
 +++ b/drivers/regulator/lm363x-regulator.c
-@@ -37,6 +37,11 @@
- #define LM3632_VBOOST_MIN		4500000
- #define LM3632_VLDO_MIN			4000000
+@@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
  
-+/* LM36274 */
-+#define LM36274_BOOST_VSEL_MAX		0x3f
-+#define LM36274_LDO_VSEL_MAX		0x34
-+#define LM36274_VOLTAGE_MIN		4000000
-+
- /* Common */
- #define LM363X_STEP_50mV		50000
- #define LM363X_STEP_500mV		500000
-@@ -217,6 +222,51 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
- 		.enable_reg     = LM3632_REG_BIAS_CONFIG,
- 		.enable_mask    = LM3632_EN_VNEG_MASK,
- 	},
-+
-+	/* LM36274 */
-+	{
-+		.name           = "vboost",
-+		.of_match	= "vboost",
-+		.id             = LM36274_BOOST,
-+		.ops            = &lm363x_boost_voltage_table_ops,
-+		.n_voltages     = LM36274_BOOST_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_BOOST,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+	},
-+	{
-+		.name           = "ldo_vpos",
-+		.of_match	= "vpos",
-+		.id             = LM36274_LDO_POS,
-+		.ops            = &lm363x_regulator_voltage_table_ops,
-+		.n_voltages     = LM36274_LDO_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_POS,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
-+		.enable_mask    = LM36274_EN_VPOS_MASK,
-+	},
-+	{
-+		.name           = "ldo_vneg",
-+		.of_match	= "vneg",
-+		.id             = LM36274_LDO_NEG,
-+		.ops            = &lm363x_regulator_voltage_table_ops,
-+		.n_voltages     = LM36274_LDO_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_NEG,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
-+		.enable_mask    = LM36274_EN_VNEG_MASK,
-+	},
- };
- 
- static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev, int id)
-@@ -229,9 +279,11 @@ static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev,
- 	 */
- 	switch (id) {
- 	case LM3632_LDO_POS:
-+	case LM36274_LDO_POS:
- 		return gpiod_get_index_optional(dev, "enable", 0,
- 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
- 	case LM3632_LDO_NEG:
-+	case LM36274_LDO_NEG:
- 		return gpiod_get_index_optional(dev, "enable", 1,
- 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
- 	default:
+ 	if (gpiod) {
+ 		cfg.ena_gpiod = gpiod;
+-
+-		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
++		ret = regmap_update_bits(regmap,
++					 lm363x_regulator_desc[id].enable_reg,
+ 					 LM3632_EXT_EN_MASK,
+ 					 LM3632_EXT_EN_MASK);
+ 		if (ret) {
 -- 
 2.21.0.5.gaeb582a983
 
