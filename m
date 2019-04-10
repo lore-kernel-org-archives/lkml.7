@@ -2,127 +2,191 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ACDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7741CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B212064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A5720693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554908087;
+	bh=Xm7zs/m75bYZi4PimHClru1GSw3OltcW13YinV1GWko=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jRcKSXlPOZPNyQkdmyZyH1g+iqTdlboNV7jNIUEmNGVg4pePK/XzOZZ/7NiJ351FT
+	 00UD6t4p1Vq+eq/YjBgqUloi5BwGNhJ3V5tptR7AzSpMvFX1gTpEGuNiUihW1q9Zlc
+	 ruupu48dW3fAB7sLhM6h2i5hadR66ct3LT7aFWaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732905AbfDJOws (ORCPT
+        id S1732908AbfDJOyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:52:48 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:35868 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732881AbfDJOwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:52:45 -0400
-Received: from [IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f] ([IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id EEafhlahzNG8zEEahh1jcf; Wed, 10 Apr 2019 16:52:43 +0200
-Subject: Re: [PATCH] [media] v4l2-core: fix use-after-free error
-To:     Sumit Gupta <sumitg@nvidia.com>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, paul.kocialkowski@bootlin.com,
-        tfiga@chromium.org, keiichiw@chromium.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1554906508-17192-1-git-send-email-sumitg@nvidia.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <0480272b-4b36-0782-b501-28f305bb7903@xs4all.nl>
-Date:   Wed, 10 Apr 2019 16:52:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 10 Apr 2019 10:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732779AbfDJOyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:54:45 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8AB2183E
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554908084;
+        bh=Xm7zs/m75bYZi4PimHClru1GSw3OltcW13YinV1GWko=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nprpff5XOOu1vdD79lPc0TUz8XXJIC7hQG1ThZC7CW6fOGMrFIKivoBOlpBoV1IcR
+         nMLEiGp3ZHApvWP+T3jZgiixAFO4j/lQaEEgZi4eIEmDhImkqYTl14umuRZ+OreBta
+         zGnJ475wRQFOl7gKtSY6XsUH4aro5fTvHrUa4iaA=
+Received: by mail-wr1-f54.google.com with SMTP id y13so3359458wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:54:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAXuHWfl2kvBlIp3C1WWOsYw/ckDK49jjGPNxfCzDsyXHjcbzzx3
+        BLO7Eet9Qo1swRABV9/WLFhIf3ze6yF7DkO1iSp9TA==
+X-Google-Smtp-Source: APXvYqzEwOkPeTwugCD/xOd5gMZCr+MAtTbWCMANz+6JzZLvI5F6202ZTck2wgyDfc5N3IJlNZ04sO5EecJDJA9yCic=
+X-Received: by 2002:adf:ebd2:: with SMTP id v18mr28562532wrn.108.1554908082373;
+ Wed, 10 Apr 2019 07:54:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1554906508-17192-1-git-send-email-sumitg@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNVG/QHVlHN/BttHCEQu5shGFOQVnHfCSwCcHrd4ypVOzjbFxUPljsWhgQgL4q62j4c/mxnapkPBSNdgilPEboQvFlUFGsGw32vSAsEvXcPJoQPE7uuW
- 6aUpWl5Ys4FrxJ1uScBKu/xBZIrY7VXkWnov6td2II00MIscMtRvVhN/qx8InRFwD1CdRysBPkyWJOfAEUp5l4N61DN5VXvA1V7ufi0DZ4AVjUadF2rrgJG3
- cGaGbcIqw1LyMptwQtDYZ92i3LnfgyCrh2Jmv8NSjdidq2az7PZbrPBwD/xImUp70JKw0GbBqhiZxl6ezrObvibnnBeVkQNwCNU330Rt3SQlxKD/4STdbhDs
- aslLJBAlcY8kqwF7ZNYI0UDoW+Nwj6Vc0xssUsVsWR0y6n5SsNUWm+rYueEsqdH06LkO8Sk2Twl6AGBJ9bx8NvUNulEdIKJrGV4hzlrBfp26QRfGgiuFNJnH
- nGXGbUMqElz3St5nqbWUFPtglLuooqQHxvFP1pBQRmjBSZeieLPtxzhBHPM=
+References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+ <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+ <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com> <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
+ <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com> <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
+In-Reply-To: <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 10 Apr 2019 07:54:31 -0700
+X-Gmail-Original-Message-ID: <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
+Message-ID: <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 4:28 PM, Sumit Gupta wrote:
-> From: sumitg <sumitg@nvidia.com>
-> 
-> Fixing use-after-free within __v4l2_ctrl_handler_setup().
-> Memory is being freed with kfree(new_ref) for duplicate
-> control reference entry but cluster is still referring
-> to the duplicate entry. Change done to point cluster to
-> original reference instead of duplicate which is freed.
-> 
->  ==================================================================
->  BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
->  Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
-> 
->  Allocated by task 312:
-> 
->  Freed by task 312:
-> 
->  The buggy address belongs to the object at ffffffc324e78600
->   which belongs to the cache kmalloc-64 of size 64
->  The buggy address is located 24 bytes inside of
->   64-byte region [ffffffc324e78600, ffffffc324e78640)
->  The buggy address belongs to the page:
->  page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
-> 					(null) index:0xffffffc324e78f80
->  flags: 0x4000000000000100(slab)
->  raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
->  raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
->  page dumped because: kasan: bad access detected
-> 
->  Memory state around the buggy address:
->   ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->   ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->  >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->                              ^
->   ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->   ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
->  ==================================================================
-> 
-> Signed-off-by: sumitg <sumitg@nvidia.com>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 5e3806f..e971bab 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -2182,6 +2182,7 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
->  			continue;
->  		/* Don't add duplicates */
->  		if (ref->ctrl->id == id) {
-> +			ctrl->cluster = &ref->ctrl;
->  			kfree(new_ref);
->  			goto unlock;
->  		}
-> 
+On Tue, Apr 9, 2019 at 8:40 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>
+> On 2019/4/10 10:36, Li, Aubrey wrote:
+> > On 2019/4/10 10:25, Andy Lutomirski wrote:
+> >> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+> >>>
+> >>> On 2019/4/10 9:58, Andy Lutomirski wrote:
+> >>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+> >>>>>
+> >>>>> The architecture specific information of the running processes could
+> >>>>> be useful to the userland. Add support to examine process architecture
+> >>>>> specific information externally.
+> >>>>>
+> >>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+> >>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+> >>>>> Cc: Andi Kleen <ak@linux.intel.com>
+> >>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+> >>>>> Cc: Dave Hansen <dave.hansen@intel.com>
+> >>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> >>>>> Cc: Linux API <linux-api@vger.kernel.org>
+> >>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> >>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >>>>> ---
+> >>>>>  fs/proc/array.c         | 5 +++++
+> >>>>>  include/linux/proc_fs.h | 2 ++
+> >>>>>  2 files changed, 7 insertions(+)
+> >>>>>
+> >>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+> >>>>> index 2edbb657f859..331592a61718 100644
+> >>>>> --- a/fs/proc/array.c
+> >>>>> +++ b/fs/proc/array.c
+> >>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+> >>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+> >>>>>  }
+> >>>>>
+> >>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
+> >>>>> +{
+> >>>>> +}
+> >>>>
+> >>>> This pointlessly bloats other architectures.  Do this instead in an
+> >>>> appropriate header:
+> >>>>
+> >>>> #ifndef arch_proc_pid_status
+> >>>> static inline void arch_proc_pid_status(...)
+> >>>> {
+> >>>> }
+> >>>> #endif
+> >>>>
+> >>>
+> >>> I saw a bunch of similar weak functions, is it not acceptable?
+> >>>
+> >>> fs/proc$ grep weak *.c
+> >>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
+> >>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
+> >>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+> >>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
+> >>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+> >>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+> >>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+> >>> vmcore.c:ssize_t __weak
+> >>
+> >> I think they're acceptable, but I don't personally like them.
+> >>
+> >
+> > okay, let me try to see if I can refine it in an appropriate way.
+>
+> Hi Andy,
+>
+> Is this what you want?
+>
+> Thanks,
+> -Aubrey
+>
+> ====================================================================
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 2bb3a648fc12..82d77d3aefff 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -990,5 +990,8 @@ enum l1tf_mitigations {
+>  };
+>
+>  extern enum l1tf_mitigations l1tf_mitigation;
+> +/* Add support for architecture specific output in /proc/pid/status */
+> +void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
+> +#define arch_proc_pid_status arch_proc_pid_status
+>
+>  #endif /* _ASM_X86_PROCESSOR_H */
+> diff --git a/fs/proc/array.c b/fs/proc/array.c
+> index 2edbb657f859..fd65a6ba2864 100644
+> --- a/fs/proc/array.c
+> +++ b/fs/proc/array.c
+> @@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>  }
+>
+> +/* Add support for architecture specific output in /proc/pid/status */
+> +#ifndef arch_proc_pid_status
+> +#define arch_proc_pid_status(m, task)
+> +#endif
+> +
+>  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>                         struct pid *pid, struct task_struct *task)
+>  {
+> @@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>         task_cpus_allowed(m, task);
+>         cpuset_task_status_allowed(m, task);
+>         task_context_switch_counts(m, task);
+> +       arch_proc_pid_status(m, task);
+>         return 0;
+>  }
+>
 
-I don't like this solution. Instead move this code:
-
-        if (ctrl->handler == hdl) {
-                /* By default each control starts in a cluster of its own.
-                   new_ref->ctrl is basically a cluster array with one
-                   element, so that's perfect to use as the cluster pointer.
-                   But only do this for the handler that owns the control. */
-                ctrl->cluster = &new_ref->ctrl;
-                ctrl->ncontrols = 1;
-        }
-
-to after the insert_in_hash label.
-
-That way the ctrl->cluster pointer is only updated if everything is OK.
-
-Nice catch, BTW!
-
-Regards,
-
-	Hans
+Yes.  But I still think it would be nicer to separate the arch stuff
+into its own file.  Others might reasonably disagree with me.
