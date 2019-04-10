@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B20C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8818C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F196E20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4F1217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArwyMncq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aA8gXeHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfDJA5n (ORCPT
+        id S1726763AbfDJA6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 20:57:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39361 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbfDJA5f (ORCPT
+        Tue, 9 Apr 2019 20:58:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40670 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfDJA5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 20:57:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j9so798873wrn.6;
-        Tue, 09 Apr 2019 17:57:33 -0700 (PDT)
+        Tue, 9 Apr 2019 20:57:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so785208wre.7;
+        Tue, 09 Apr 2019 17:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9H8bnpVkrE0nOtDJWTPXFmq35hhkom4cnPHeOhOR/2g=;
-        b=ArwyMncqIW10Evy8FKqpKpqWOL2Bu4Z6bB2Ni1g7pHtmanEICT3KZQrspF9hGjhAAu
-         TSFBPkgvlzR8iI4KE/K0YR3rj9cZ90OciE6kKljamp1MJLH0SCboN3N1ZI6NE4wnyvHR
-         PeFkNWKs/VEtjAnuuo33TAZnWKO8Ilkm2JPCOC9sa8iqU/0p8jupdZbp4E/P5MQbnZi9
-         BZowMl4xl72jvzhTEbCZvAWnDwGYn22CR7OOVs+PHEKVvz1sfWkFgyoa+5HcDBSwjlSu
-         Fcn2hLlATAbx31EelWcCkxNSgTTv+4Y2PsUFsxvp2XgSEMutih73QZJqBSVZm89TE6ZN
-         2XSA==
+        bh=vLsDKfg0jRbn6GfiuxEsAKp5kPzLzpzyMLROQ+RKmwE=;
+        b=aA8gXeHMFEmTauSfONUTY/QgI1d6L4w505CrJeqdmD4hOt1yikm7c2tHGvccYg23TE
+         KxMbwsB/8/wmbH2Ot4eVLWHMchhOUnUYl+5CpCiw7rJVJWQMLs2RlpFLbXtZ6/G7ysU/
+         kqVuwrvo79gQYpSa6XpesjEl6z7LRCCSW67OxY5Xjh3iTsOkM+9q6wJue8A1cjnGBR0s
+         ZAh890dtRZliwOMWBXfgDtBepds6KaR1IOVSU4AKn4Z0Qp6AJK6wJfvVjARIqKEcgvvQ
+         2xEPvOUjWxzRlxol+iBxThFTJG0UdIBGuyfXJRDYgOfZvxaHWZLeLfWCOxBeP9BBYOHF
+         MiXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9H8bnpVkrE0nOtDJWTPXFmq35hhkom4cnPHeOhOR/2g=;
-        b=QBNH+7t/c+MjNy1GBMml0/xqv6QE/OJHhLqZYwjoqBubd4ESpoe26VhoNX6QKDR4Mz
-         xd+3sWo0P0+xBcPA2AHfxSHyVmyh+arj22KD0cTzy1N1PggDfHe0jVkKXmHWDhEa/w06
-         Loi2wPgFlwvhovCkXagcjYdSsx1+Q7Zm2mtSs6LN+jAUX96qCcHE/axZYra6YAXEkjSn
-         PN+5EdhW9lA0OSg/mb4uF3MyUUHbp9oxf4xex8gpr8Wtvoj2D6fIsMff/JYOxf4MB6ZR
-         KGv5CeDE2WOTATwYUwbatEqZzT9vcAfbkFA3SMn3kIRu2HwEkuztMVu99lMI45g50Cfa
-         pMeA==
-X-Gm-Message-State: APjAAAV0uX1Mk4kOrtJycFpwB37KeZc3dCddioJfhx3cKnOobwrAnDw8
-        U1qOSBylU/u96S0mkskfYBs=
-X-Google-Smtp-Source: APXvYqzU+j6sVTIyq6vvXOtZFGPhAKd5WpAC7rjegQ5Sl6TX1tULbd1ZrrR484b24K8K9b0Uy7s71A==
-X-Received: by 2002:a5d:6150:: with SMTP id y16mr3161885wrt.13.1554857852805;
-        Tue, 09 Apr 2019 17:57:32 -0700 (PDT)
+        bh=vLsDKfg0jRbn6GfiuxEsAKp5kPzLzpzyMLROQ+RKmwE=;
+        b=f809wE+wuuWRMuNIDouNt2oPIuihlZAADyNDhFoK3qs4ZLYvl7BPJErz09+2SpRQjd
+         CeGKHCvUTKFZq+ozZxoJlTt7O2HTjaGKNCjZswh2QOg2zD5kKXPBNu2l87NB16eWpAKn
+         jTQ7LHzl8BMr0WvaDokUi9uBp54ec0YCRfHxTF7/gooi99TpwxTYOld4X+3vF1kXeIas
+         ImWrmCIMIVYA1WNZ6jXgZHZ0DtwXwT/7FCPwl/uJcBnlpVe4Zd2rbSP873KX7rG1Y5TP
+         8Uw5Qq5/OlH7HauH9UvFDEwLqxWYv8EJqkbjiyjwtjkYyF82FWG0vknMk9LgLBqPRGbf
+         op/Q==
+X-Gm-Message-State: APjAAAXbXmPZG13FlRU24UA1wMEw/QQCV9oCGwf7f2qscmilr2tpHErX
+        0ynkv82K9Uq56h81MEfbUUc=
+X-Google-Smtp-Source: APXvYqxJD2jmf9D6LKYFSPn6ogDpVrzO2calortEx7pq1lrX4T662Uo3I+ydTGeWX/xm/J3Pfu7eXQ==
+X-Received: by 2002:adf:f051:: with SMTP id t17mr4202435wro.73.1554857861772;
+        Tue, 09 Apr 2019 17:57:41 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.31
+        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 17:57:32 -0700 (PDT)
+        Tue, 09 Apr 2019 17:57:41 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         georg.waibel@sensor-technik.de, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 net-next 11/22] net: dsa: Allow drivers to modulate between presence and absence of tagging
-Date:   Wed, 10 Apr 2019 03:56:49 +0300
-Message-Id: <20190410005700.31582-12-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 18/22] net: dsa: sja1105: Error out if RGMII delays are requested in DT
+Date:   Wed, 10 Apr 2019 03:56:56 +0300
+Message-Id: <20190410005700.31582-19-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190410005700.31582-1-olteanv@gmail.com>
 References: <20190410005700.31582-1-olteanv@gmail.com>
@@ -71,118 +71,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frames get processed by DSA and redirected to switch port net devices
-based on the ETH_P_XDSA multiplexed packet_type handler found by the
-network stack when calling eth_type_trans().
+Documentation/devicetree/bindings/net/ethernet.txt is confusing because
+it says what the MAC should not do, but not what it *should* do:
 
-The running assumption is that once the DSA .rcv function is called, DSA
-is always able to decode the switch tag in order to change the skb->dev
-from its master.
+  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
+     should not add an RX delay in this case)
 
-However there are tagging protocols (such as the new
-DSA_TAG_PROTO_SJA1105) where this assumption is not completely true,
-since switch tagging piggybacks on the absence of a vlan_filtering
-bridge.
+The gap in semantics is threefold:
+1. Is it illegal for the MAC to apply the Rx internal delay by itself,
+   and simplify the phy_mode (mask off "rgmii-rxid" into "rgmii") before
+   passing it to of_phy_connect? The documentation would suggest yes.
+1. For "rgmii-rxid", while the situation with the Rx clock skew is more
+   or less clear (needs to be added by the PHY), what should the MAC
+   driver do about the Tx delays? Is it an implicit wild card for the
+   MAC to apply delays in the Tx direction if it can? What if those were
+   already added as serpentine PCB traces, how could that be made more
+   obvious through DT bindings so that the MAC doesn't attempt to add
+   them twice and again potentially break the link?
+3. If the interface is a fixed-link and therefore the PHY object is
+   fixed (a purely software entity that obviously cannot add clock
+   skew), what is the meaning of the above property?
 
-Having DSA receive untagged traffic would put it in an impossible
-situation: the eth_type_trans() function would invoke the DSA .rcv(),
-which could not change skb->dev, then eth_type_trans() would be invoked
-again, which again would call the DSA .rcv, and the packet would never
-be able to exit the DSA filter and would spiral in a loop until the
-whole system dies.
+So an interpretation of the RGMII bindings was chosen that hopefully
+does not contradict their intention but also makes them more applied.
+The SJA1105 driver understands to act upon "rgmii-*id" phy-mode bindings
+if the port is in the PHY role (either explicitly, or if it is a
+fixed-link). Otherwise it always passes the duty of setting up delays to
+the PHY driver.
 
-This happens because eth_type_trans() doesn't actually look at the skb
-(so as to identify a potential tag) when it deems it as being
-ETH_P_XDSA. It just checks whether skb->dev has a DSA private pointer
-installed (therefore it's a DSA master) and that there exists a .rcv
-callback (everybody except DSA_TAG_PROTO_NONE has that). This is
-understandable as there are many switch tags out there, and exhaustively
-checking for all of them is far from ideal.
+The error behavior that this patch adds is required on SJA1105E/T where
+the MAC really cannot apply internal delays. If the other end of the
+fixed-link cannot apply RGMII delays either (this would be specified
+through its own DT bindings), then the situation requires PCB delays.
 
-The solution lies in the observation that a more nuanced check can be
-made when eth_type_trans() determines that switch tagging is used or
-not. In a way, this reverts patch "717ffbfb28ac net: dsa: remove
-dsa_uses_tagged_protocol", but instead of adding it back as a DSA
-function, it is now a boolean property. This is because the driver might
-actually know better when it can and can't support switch tagging.
+For SJA1105P/Q/R/S, this is however hardware supported and the error is
+thus only temporary. I created a stub function pointer for configuring
+delays per-port on RXC and TXC, and will implement it when I have access
+to a board with this hardware setup.
 
-With this patch, all tagging protocols can morph at runtime into the
-DSA_TAG_PROTO_NONE on receive, by setting cpu_dp->uses_tag_protocol = 0.
-This permits them to at least terminate traffic through the master net
-device. Their .rcv callback no longer even gets called in this mode.
+Meanwhile do not allow the user to select an invalid configuration.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
 Changes in v2:
 Patch is new.
 
- include/net/dsa.h | 8 +++++++-
- net/dsa/dsa2.c    | 7 +++++++
- net/dsa/legacy.c  | 7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/dsa/sja1105/sja1105.h          |  3 ++
+ drivers/net/dsa/sja1105/sja1105_clocking.c |  7 ++++-
+ drivers/net/dsa/sja1105/sja1105_main.c     | 32 +++++++++++++++++++++-
+ drivers/net/dsa/sja1105/sja1105_spi.c      |  6 ++++
+ 4 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 91375bcf2cfb..97325a412156 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -156,6 +156,12 @@ struct dsa_port {
- 	 * Original copy of the master netdev net_device_ops
- 	 */
- 	const struct net_device_ops *orig_ndo_ops;
-+
-+	/* Property used to allow traffic at runtime to bypass the DSA
-+	 * filter in eth_type_trans and be processed as regular on the
-+	 * master net device.
-+	 */
-+	bool			uses_tag_protocol;
+diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+index b7e745c0bb3a..3c16b991032c 100644
+--- a/drivers/net/dsa/sja1105/sja1105.h
++++ b/drivers/net/dsa/sja1105/sja1105.h
+@@ -22,6 +22,8 @@
+ 
+ struct sja1105_port {
+ 	struct dsa_port *dp;
++	bool rgmii_rx_delay;
++	bool rgmii_tx_delay;
+ 	struct work_struct xmit_work;
+ 	struct sja1105_skb_ring xmit_ring;
+ };
+@@ -61,6 +63,7 @@ struct sja1105_info {
+ 	const struct sja1105_table_ops *static_ops;
+ 	const struct sja1105_regs *regs;
+ 	int (*reset_cmd)(const void *ctx, const void *data);
++	int (*setup_rgmii_delay)(const void *ctx, int port, bool rx, bool tx);
+ 	const char *name;
  };
  
- struct dsa_switch {
-@@ -502,7 +508,7 @@ struct net_device *dsa_dev_to_net_device(struct device *dev);
- static inline bool netdev_uses_dsa(struct net_device *dev)
- {
- #if IS_ENABLED(CONFIG_NET_DSA)
--	return dev->dsa_ptr && dev->dsa_ptr->rcv;
-+	return dev->dsa_ptr && dev->dsa_ptr->uses_tag_protocol;
- #endif
- 	return false;
- }
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index f4277ee314da..e800bbf9d183 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -585,6 +585,13 @@ static int dsa_port_parse_cpu(struct dsa_port *dp, struct net_device *master)
- 	dp->tag_ops = tag_ops;
- 	dp->master = master;
- 	dp->dst = dst;
-+	/* Initially tell DSA to filter all traffic on the master net
-+	 * device in eth_type_trans unconditionally if we have a
-+	 * packet_type handler (true for all tagging protocols except
-+	 * DSA_TAG_PROTO_NONE). Then drivers can later change this
-+	 * property.
-+	 */
-+	dp->uses_tag_protocol = !!dp->rcv;
- 
- 	return 0;
- }
-diff --git a/net/dsa/legacy.c b/net/dsa/legacy.c
-index cb42939db776..6450c2deded9 100644
---- a/net/dsa/legacy.c
-+++ b/net/dsa/legacy.c
-@@ -161,6 +161,13 @@ static int dsa_switch_setup_one(struct dsa_switch *ds,
- 		/* Few copies for faster access in master receive hot path */
- 		dst->cpu_dp->rcv = dst->cpu_dp->tag_ops->rcv;
- 		dst->cpu_dp->dst = dst;
-+		/* Initially tell DSA to filter all traffic on the master net
-+		 * device in eth_type_trans unconditionally if we have a
-+		 * packet_type handler (true for all tagging protocols except
-+		 * DSA_TAG_PROTO_NONE). Then drivers can later change this
-+		 * property.
-+		 */
-+		dst->cpu_dp->uses_tag_protocol = !!dst->cpu_dp->rcv;
+diff --git a/drivers/net/dsa/sja1105/sja1105_clocking.c b/drivers/net/dsa/sja1105/sja1105_clocking.c
+index d40da3d52464..c02fec181676 100644
+--- a/drivers/net/dsa/sja1105/sja1105_clocking.c
++++ b/drivers/net/dsa/sja1105/sja1105_clocking.c
+@@ -432,7 +432,12 @@ static int rgmii_clocking_setup(struct sja1105_private *priv, int port)
+ 		dev_err(dev, "Failed to configure Tx pad registers\n");
+ 		return rc;
  	}
+-	return 0;
++	if (!priv->info->setup_rgmii_delay)
++		return 0;
++
++	return priv->info->setup_rgmii_delay(priv, port,
++					     priv->ports[port].rgmii_rx_delay,
++					     priv->ports[port].rgmii_tx_delay);
+ }
  
- 	memcpy(ds->rtable, cd->rtable, sizeof(ds->rtable));
+ static int sja1105_cgu_rmii_ref_clk_config(struct sja1105_private *priv,
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index 322da6e6d2dc..04fdca788a87 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -555,6 +555,21 @@ static int sja1105_static_config_load(struct sja1105_private *priv,
+ 	return sja1105_static_config_upload(priv);
+ }
+ 
++static void sja1105_parse_rgmii_delay(const struct sja1105_dt_port *in,
++				      struct sja1105_port *out)
++{
++	if (in->role == XMII_MAC)
++		return;
++
++	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
++	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
++		out->rgmii_rx_delay = true;
++
++	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
++	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
++		out->rgmii_tx_delay = true;
++}
++
+ static int sja1105_parse_ports_node(struct sja1105_private *priv,
+ 				    struct sja1105_dt_port *ports,
+ 				    struct device_node *ports_node)
+@@ -1318,13 +1333,28 @@ static int sja1105_setup(struct dsa_switch *ds)
+ {
+ 	struct sja1105_dt_port ports[SJA1105_NUM_PORTS];
+ 	struct sja1105_private *priv = ds->priv;
+-	int rc;
++	int rc, i;
+ 
+ 	rc = sja1105_parse_dt(priv, ports);
+ 	if (rc < 0) {
+ 		dev_err(ds->dev, "Failed to parse DT: %d\n", rc);
+ 		return rc;
+ 	}
++
++	/* Error out early if internal delays are required through DT
++	 * and we can't apply them.
++	 */
++	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
++		sja1105_parse_rgmii_delay(&ports[i], &priv->ports[i]);
++
++		if ((priv->ports[i].rgmii_rx_delay ||
++		     priv->ports[i].rgmii_tx_delay) &&
++		     !priv->info->setup_rgmii_delay) {
++			dev_err(ds->dev, "RGMII delay not supported\n");
++			return -EINVAL;
++		}
++	}
++
+ 	/* Create and send configuration down to device */
+ 	rc = sja1105_static_config_load(priv, ports);
+ 	if (rc < 0) {
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index 09cb28e9be20..e4ef4d8048b2 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -499,6 +499,7 @@ struct sja1105_info sja1105e_info = {
+ 	.part_no		= SJA1105ET_PART_NO,
+ 	.static_ops		= sja1105e_table_ops,
+ 	.dyn_ops		= sja1105et_dyn_ops,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105et_reset_cmd,
+ 	.regs			= &sja1105et_regs,
+ 	.name			= "SJA1105E",
+@@ -508,6 +509,7 @@ struct sja1105_info sja1105t_info = {
+ 	.part_no		= SJA1105ET_PART_NO,
+ 	.static_ops		= sja1105t_table_ops,
+ 	.dyn_ops		= sja1105et_dyn_ops,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105et_reset_cmd,
+ 	.regs			= &sja1105et_regs,
+ 	.name			= "SJA1105T",
+@@ -517,6 +519,7 @@ struct sja1105_info sja1105p_info = {
+ 	.part_no		= SJA1105P_PART_NO,
+ 	.static_ops		= sja1105p_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105pqrs_reset_cmd,
+ 	.regs			= &sja1105pqrs_regs,
+ 	.name			= "SJA1105P",
+@@ -526,6 +529,7 @@ struct sja1105_info sja1105q_info = {
+ 	.part_no		= SJA1105Q_PART_NO,
+ 	.static_ops		= sja1105q_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105pqrs_reset_cmd,
+ 	.regs			= &sja1105pqrs_regs,
+ 	.name			= "SJA1105Q",
+@@ -535,6 +539,7 @@ struct sja1105_info sja1105r_info = {
+ 	.part_no		= SJA1105R_PART_NO,
+ 	.static_ops		= sja1105r_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105pqrs_reset_cmd,
+ 	.regs			= &sja1105pqrs_regs,
+ 	.name			= "SJA1105R",
+@@ -545,6 +550,7 @@ struct sja1105_info sja1105s_info = {
+ 	.static_ops		= sja1105s_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
+ 	.regs			= &sja1105pqrs_regs,
++	.setup_rgmii_delay	= NULL,
+ 	.reset_cmd		= sja1105pqrs_reset_cmd,
+ 	.name			= "SJA1105S",
+ };
 -- 
 2.17.1
 
