@@ -2,180 +2,134 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FF6C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C37C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C312133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="O+XctjsQ"
+	by mail.kernel.org (Postfix) with ESMTP id DBDA02133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfDJBUl (ORCPT
+        id S1726849AbfDJBVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:20:41 -0400
-Received: from owa.iluvatar.ai ([103.91.158.24]:5258 "EHLO smg.iluvatar.ai"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726532AbfDJBUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:20:41 -0400
-X-AuditID: 0a650161-773ff700000078a3-da-5cad44e6e592
-Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
-        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id AB.C4.30883.6E44DAC5; Wed, 10 Apr 2019 09:20:38 +0800 (HKT)
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
-        c=relaxed/relaxed; t=1554859237; h=from:subject:to:date:message-id;
-        bh=GcuAOHRiKIFSZeRnIegs+sx9nR6bVTMEV5kQiFAX6gE=;
-        b=O+XctjsQKh9LHjxwrPveCyJsIuMjwXVgEkBmPe5T004HJ/7DIvdDJwozzctACuW2oZIMZIdoJEA
-        p7t+SS5TB1u7iiIW3H/T4pp4DGjCwIa9iw57crF8B/IsNPXhFtxU9c39eWaaY09CKwBP8QN5FRIty
-        YuRvoWuzFD4uXczpBRU=
-Received: from hsj-Precision-5520 (10.101.199.253) by
- S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Wed, 10 Apr 2019 09:20:37 +0800
-Date:   Wed, 10 Apr 2019 09:20:36 +0800
-From:   Huang Shijie <sjhuang@iluvatar.ai>
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm/gup.c: fix the wrong comments
-Message-ID: <20190410012034.GB3640@hsj-Precision-5520>
-References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
- <20190408141313.GU22763@bombadil.infradead.org>
- <20190409010832.GA28081@hsj-Precision-5520>
- <20190409024929.GW22763@bombadil.infradead.org>
- <20190409030417.GA3324@hsj-Precision-5520>
- <20190409111905.GY22763@bombadil.infradead.org>
- <2807E5FD2F6FDA4886F6618EAC48510E79CA51BA@CRSMSX101.amr.corp.intel.com>
+        Tue, 9 Apr 2019 21:21:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24835 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfDJBVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:21:08 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 18:21:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
+   d="scan'208";a="141419860"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga003.jf.intel.com with ESMTP; 09 Apr 2019 18:21:06 -0700
+Date:   Tue, 9 Apr 2019 18:19:57 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 12/14] x86/watchdog/hardlockup/hpet: Determine if
+ HPET timer caused NMI
+Message-ID: <20190410011957.GC10062@ranerica-svr.sc.intel.com>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1551283518-18922-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <20190409112817.GT4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79CA51BA@CRSMSX101.amr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409112817.GT4038@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.101.199.253]
-X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
- S-10-101-1-102.iluvatar.local (10.101.1.102)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXClcqYpvvMZW2MwZ7rzBZz1q9hs1h9t5/N
-        Yv/T5ywWZ7pzLS7vmsNmcW/Nf1aLzRMWAInFXUwWv3/MYXPg9JjdcJHFY/MKLY/Fe14yeVw+
-        W+qx6dMkdo8TM36zeHx8eovF41LzdXaPz5vkAjijuGxSUnMyy1KL9O0SuDJmL9zNXrBIpmLZ
-        wjfsDYzvhLsYOTkkBEwkFkycyNLFyMUhJHCCUeLK35VsIAlmAR2JBbs/AdkcQLa0xPJ/HCA1
-        LAJvmSQOnbrICNHwnVFi3tKlTCANLAKqEg2T1oHZbAIaEnNP3GUGsUUE1CQWTVrGAjF0MrPE
-        /VOxILawgKXEuu5j7CA2r4CZxLyX/VBDPzNJvFveygKREJQ4OfMJC8gVnAIhEpMn5YKERQWU
-        JQ5sO84EEhYSUJB4sVIL4hkliSV7ZzFB2IUS31/eZZnAKDwLyTuzEN6ZhWT+AkbmVYz8xbnp
-        epk5pWWJJYlFeomZmxghUZW4g/FG50u9Q4wCHIxKPLwB09fECLEmlhVX5h5ilOBgVhLh/fgG
-        KMSbklhZlVqUH19UmpNafIhRmoNFSZy3bKJJjJBAemJJanZqakFqEUyWiYNTqoFpN+Ovf+9Z
-        M6f/XaNSKbC29pXINNeljKYlaueVEif7O0zz1N4mybyJ/0P/+x/+Djcu7dZft9Liaku5anXv
-        b/slf2oXrOFZxbmgMvDWJNW7LH2vAvZ33f/Mr/+t7ajLI4UT+/YdTT/6K/5R/8ZO1aqbBy85
-        FHlM4C8MS/kpxG+iffHmAZftx57aqBgbH3ULnJDOOIV5k6Fxsa0Ap+/dHdofnTMYfh2392gI
-        cygp6L5g16b4kdPiwq8/N55xHmRT3twx97/l5K4PBzSFrl3Q2lBxWOnKSufinGo2s9s1WiYf
-        L9m1iOnEFXDuUlUo6L1hYHPtFIvk78qFwlvPcHwwkQvQUre7l/nu4DnG8vSO/2VKLMUZiYZa
-        zEXFiQC7gcoaJwMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 02:55:31PM +0000, Weiny, Ira wrote:
-> > On Tue, Apr 09, 2019 at 11:04:18AM +0800, Huang Shijie wrote:
-> > > On Mon, Apr 08, 2019 at 07:49:29PM -0700, Matthew Wilcox wrote:
-> > > > On Tue, Apr 09, 2019 at 09:08:33AM +0800, Huang Shijie wrote:
-> > > > > On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
-> > > > > > On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
-> > > > > > > The root cause is that sg_alloc_table_from_pages() requires
-> > > > > > > the page order to keep the same as it used in the user space,
-> > > > > > > but
-> > > > > > > get_user_pages_fast() will mess it up.
-> > > > > >
-> > > > > > I don't understand how get_user_pages_fast() can return the
-> > > > > > pages in a different order in the array from the order they appear in
-> > userspace.
-> > > > > > Can you explain?
-> > > > > Please see the code in gup.c:
-> > > > >
-> > > > > 	int get_user_pages_fast(unsigned long start, int nr_pages,
-> > > > > 				unsigned int gup_flags, struct page **pages)
-> > > > > 	{
-> > > > > 		.......
-> > > > > 		if (gup_fast_permitted(start, nr_pages)) {
-> > > > > 			local_irq_disable();
-> > > > > 			gup_pgd_range(addr, end, gup_flags, pages, &nr);
-> > // The @pages array maybe filled at the first time.
-> > > >
-> > > > Right ... but if it's not filled entirely, it will be filled
-> > > > part-way, and then we stop.
-> > > >
-> > > > > 			local_irq_enable();
-> > > > > 			ret = nr;
-> > > > > 		}
-> > > > > 		.......
-> > > > > 		if (nr < nr_pages) {
-> > > > > 			/* Try to get the remaining pages with
-> > get_user_pages */
-> > > > > 			start += nr << PAGE_SHIFT;
-> > > > > 			pages += nr;                                                  // The
-> > @pages is moved forward.
-> > > >
-> > > > Yes, to the point where gup_pgd_range() stopped.
-> > > >
-> > > > > 			if (gup_flags & FOLL_LONGTERM) {
-> > > > > 				down_read(&current->mm->mmap_sem);
-> > > > > 				ret = __gup_longterm_locked(current,
-> > current->mm,      // The @pages maybe filled at the second time
-> > > >
-> > > > Right.
-> > > >
-> > > > > 				/*
-> > > > > 				 * retain FAULT_FOLL_ALLOW_RETRY
-> > optimization if
-> > > > > 				 * possible
-> > > > > 				 */
-> > > > > 				ret = get_user_pages_unlocked(start,
-> > nr_pages - nr,    // The @pages maybe filled at the second time.
-> > > > > 							      pages, gup_flags);
-> > > >
-> > > > Yes.  But they'll be in the same order.
-> > > >
-> > > > > BTW, I do not know why we mess up the page order. It maybe used in
-> > some special case.
-> > > >
-> > > > I'm not discounting the possibility that you've found a bug.
-> > > > But documenting that a bug exists is not the solution; the solution
-> > > > is fixing the bug.
-> > > I do not think it is a bug :)
-> > >
-> > > If we use the get_user_pages_unlocked(), DMA is okay, such as:
-> > >                      ....
-> > > 		     get_user_pages_unlocked()
-> > > 		     sg_alloc_table_from_pages()
-> > > 	             .....
-> > >
-> > > I think the comment is not accurate enough. So just add more comments,
-> > > and tell the driver users how to use the GUPs.
-> > 
-> > gup_fast() and gup_unlocked() should return the pages in the same order.
-> > If they do not, then it is a bug.
+On Tue, Apr 09, 2019 at 01:28:17PM +0200, Peter Zijlstra wrote:
+> On Wed, Feb 27, 2019 at 08:05:16AM -0800, Ricardo Neri wrote:
+> > @@ -62,7 +67,18 @@ static inline void set_comparator(struct hpet_hld_data *hdata,
+> >  static void kick_timer(struct hpet_hld_data *hdata, bool force)
+> >  {
+> >  	bool kick_needed = force || !(hdata->flags & HPET_DEV_PERI_CAP);
+> > -	unsigned long new_compare, count;
+> > +	unsigned long tsc_curr, tsc_delta, new_compare, count;
+> > +
+> > +	/* Start obtaining the current TSC and HPET counts. */
+> > +	tsc_curr = rdtsc();
+> > +
+> > +	if (kick_needed)
+> > +		count = get_count();
+> > +
+> > +	tsc_delta = (unsigned long)watchdog_thresh * (unsigned long)tsc_khz
+> > +		    * 1000L;
+> > +	hdata->tsc_next = tsc_curr + tsc_delta;
+> > +	hdata->tsc_next_error = tsc_delta >> 6;
 > 
-> Is there a reproducer for this?  Or do you have some debug output which shows this problem?
-Is Matthew right?
+> What do we need a per hld_data tsc_next_error for? It is basically a
+> global 'constant'.
+> 
 
- " gup_fast() and gup_unlocked() should return the pages in the same order.
- If they do not, then it is a bug."
+This is true. I thought I'd keep all the needed variables in a single
+struct to make the code more readable. I guess, I did not achieve that
+goal. I'll put it as a static global variable.
 
-If Matthew is right,
-I need more time to debug the DMA issue...
-	
+> >  	/*
+> >  	 * Update the comparator in increments of watch_thresh seconds relative
+> > @@ -74,8 +90,6 @@ static void kick_timer(struct hpet_hld_data *hdata, bool force)
+> >  	 */
+> >  
+> >  	if (kick_needed) {
+> > -		count = get_count();
+> > -
+> >  		new_compare = count + watchdog_thresh * hdata->ticks_per_second;
+> >  
+> >  		set_comparator(hdata, new_compare);
+> > @@ -147,6 +161,14 @@ static void set_periodic(struct hpet_hld_data *hdata)
+> >   */
+> >  static bool is_hpet_wdt_interrupt(struct hpet_hld_data *hdata)
+> >  {
+> > +	if (smp_processor_id() == hdata->handling_cpu) {
+> > +		unsigned long tsc_curr;
+> 
+> TSC is u64
 
-Thanks
-Huang Shijie
- 
+In x86_64, isn't u64 an unsigned long? Do you mean to consider the
+32-bit case?
 
 > 
-> Ira
+> > +
+> > +		tsc_curr = rdtsc();
+> > +		if (abs(tsc_curr - hdata->tsc_next) < hdata->tsc_next_error)
+> > +			return true;
 > 
+> You can write that as:
+> 
+> 		(tsc_curr - hdata->tsc_next) + tsc_error < 2*tsc_error
+> 
+> which doesn't contain any branches what so ever.
+> 
+
+Sure, I'll add this change.
+
+Thanks and BR,
+Ricardo
