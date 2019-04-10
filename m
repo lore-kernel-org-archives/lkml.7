@@ -2,97 +2,92 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B6C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD71C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC9F2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFE92133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:30:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QNQeCv8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfDJI3e (ORCPT
+        id S1729621AbfDJIak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:29:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52479 "EHLO mga07.intel.com"
+        Wed, 10 Apr 2019 04:30:40 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41774 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfDJI3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:29:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 01:29:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="160344024"
-Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Apr 2019 01:29:31 -0700
-Subject: Re: [PATCH 1/1] spi: pxa2xx: add driver enabling message
-To:     Flavio Suligoi <f.suligoi@asem.it>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1554736964-6058-1-git-send-email-f.suligoi@asem.it>
- <51e9e073-625d-f5c0-6b2e-410f6ddb6346@linux.intel.com>
- <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
- <2c853342-f937-30e6-ce6f-010e06f7376c@linux.intel.com>
- <2a8b7e65d1334a5491b8bc9e9a96a685@asem.it>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <400467d8-19d6-1796-5fa9-cb5b37d61792@linux.intel.com>
-Date:   Wed, 10 Apr 2019 11:29:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729024AbfDJIak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:30:40 -0400
+Received: from zn.tnic (p200300EC2F0CAE00250718ACA0948A5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:2507:18ac:a094:8a5f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F32DE1EC0104;
+        Wed, 10 Apr 2019 10:30:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554885038;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=EIC5GXnIG2iCyk2VAYJWzHuCmDmx3AVARo96r1FOl20=;
+        b=QNQeCv8+MS08A9oLKOmFuZOF7Qmw/bgZrSRuhP6OjAv2LDa7JZCcfZW5BJ0ajmuKg8I/02
+        lYriF60V41Fm0zsEahSipILOCskx/vhQ0ya6LvEskc11ipbzKk08vM9ju8IOy9x2iM7DRX
+        dJP4jI4e2UOAv4kHWJnOlnoZgAxrwiM=
+Date:   Wed, 10 Apr 2019 10:30:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations='
+ cmdline options
+Message-ID: <20190410083028.GA26580@zn.tnic>
+References: <cover.1554396090.git.jpoimboe@redhat.com>
+ <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
+ <20190405131211.GE23348@zn.tnic>
+ <20190405142048.burthk2jnpcvi2om@treble>
+ <20190405152059.GG23348@zn.tnic>
+ <20190405160136.GI23348@zn.tnic>
+ <20190405161852.nmpk22omgiety4df@treble>
+ <87sguqwgu7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <2a8b7e65d1334a5491b8bc9e9a96a685@asem.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87sguqwgu7.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 11:13 AM, Flavio Suligoi wrote:
->> [    9.506895] pxa2xx-spi pxa2xx-spi.13: no DMA channels available,
->> using PIO
->> [    9.516770] pxa2xx-spi pxa2xx-spi.13: registered master spi2
->> [    9.518527] pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller
->> (PIO mode)
-> 
-> I have added this message because, using an x86 machine, the message:
-> 
-> "pxa2xx-spi pxa2xx-spi.13: registered master spi2"
-> 
-> doesn't appear in the kernel messages!
-> 
-Yeah, it needs CONFIG_SPI_DEBUG.
+On Wed, Apr 10, 2019 at 03:48:48PM +1000, Michael Ellerman wrote:
+> What about when we have a mitigation for a non-speculation related bug :)
 
->> Actually this info message doesn't necessarily tell will the driver end
->> up using DMA for transfers. See pxa2xx_spi_can_dma() and
->> pxa2xx_spi_transfer_one().
->>
->> How about replacing "no DMA channels available, using PIO" and have
->> instead single info message telling is the DMA available or does the
->> driver use PIO only?
-> 
-> Ok, it's a good idea, to avoid to many similar messages.
-> So I can simply remove the:
-> 
-> "no DMA channels available, using PIO"
-> 
-> and leave only the new:
-> 
-> " pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller (PIO mode)"
-> 
-Yes, something like that.
-
-Now I remember, please also take into account driver is dual role since 
-commit ec93cb6f827b ("spi: pxa2xx: Add slave mode support").
+Like that is *ever* going to happen... :-P
 
 -- 
-Jarkko
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
