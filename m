@@ -2,125 +2,177 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80BBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB642084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fN+MTAes"
+	by mail.kernel.org (Postfix) with ESMTP id 7DCD52084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfDJGhV (ORCPT
+        id S1728553AbfDJGiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:37:21 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42039 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfDJGhV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:37:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cv12so767948plb.9;
-        Tue, 09 Apr 2019 23:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z15Euzi/7W0xWj7RGm8EBO4XV8u51E2URV+Tg7QcB44=;
-        b=fN+MTAesy2a1t5HT9VEilFzdZlCXei702B7CZP5CB6t93Rh4kelOvfhXaH153fOE3s
-         x9g6qn9pzt2KwJ/l7k4clHhr9GRq2XyzB7LP2wRSDnGMiuI+aM2b3tH5evkrr6DvkRUj
-         MedJjeOydOUof6pnSfEzK+0VmRxl9zmT6q+q1pQjqfSELg+/QcilVWNlceGYMqdZf3il
-         Pi7X0HIK6K7K2by7bDscJN0KKzrEI0MNRNq1oNwyaPxiWXVLgRTQW1g6Iz1K+bgxIWT2
-         zHSspKyJJHEOciQbocPf2cIUv1JaqJNMGaGB07d/qzOZ/TUSZVZ8SNidCfY8oblJoo+p
-         GVcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z15Euzi/7W0xWj7RGm8EBO4XV8u51E2URV+Tg7QcB44=;
-        b=jMs0PjhVhRa9L3z3qnYXoJt6I9arZQONHF4R4kg3C8FLr7S4sZztg+IR9slpgr83Ae
-         08LXDqi21+FXnREMqIa7odPsWrdJGejEP0G5s+mqmQjp98a+sxbRgbETYllPLCYt4m07
-         iaeIyhPBt1aMgFMwPPkwva6/qlHVmqSadjfKi6BFHAg2hw2KWryMhsfmU2MuOe+WwD+X
-         f6qwyIfbqKM1y8tJeFhxwE0EUJnJACsMi6ajvY2A5ZVhE3mEvrq02cFFJdMoU7k2nIHG
-         /Dg5f8SOUDxw6179+pVWFaRHcPP2xn+RzUVc3MnmCqnznx4yk+UT5bU93LCy4sFJgUcz
-         Ajvw==
-X-Gm-Message-State: APjAAAX3+MKfrIeeRAThD/ZLXRTM2nfyXeznBqcP+bjfk0R2cMwaXSe1
-        CJEx7li4Al+NmLUjWXvh4Hk=
-X-Google-Smtp-Source: APXvYqzOQ+Lu5lRGswb5Z2P63WBfRUX8mHoz+s2loSkaKvwV6H4Mbw7THqFtMSlONX7MfN0SJPM6cg==
-X-Received: by 2002:a17:902:3183:: with SMTP id x3mr42274620plb.170.1554878240246;
-        Tue, 09 Apr 2019 23:37:20 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id 143sm69811465pge.50.2019.04.09.23.37.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 23:37:20 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 23:37:14 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Viorel Suman <viorel.suman@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Viorel Suman <viorel.suman@gmail.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] ASoC: fsl_audmix: remove "model"
- attribute
-Message-ID: <20190410063714.GA4156@Asurada>
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
- <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
- <20190410042906.GC3032@Asurada>
- <CAEnQRZBDSrpje2-ML0zr+oJkwMbbkxV5hUNc_HzZtPZv-et8mA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEnQRZBDSrpje2-ML0zr+oJkwMbbkxV5hUNc_HzZtPZv-et8mA@mail.gmail.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+        Wed, 10 Apr 2019 02:38:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51482 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726693AbfDJGiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:38:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0BB41821D8;
+        Wed, 10 Apr 2019 06:38:19 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60FBA61995;
+        Wed, 10 Apr 2019 06:38:16 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 8818F1747C; Wed, 10 Apr 2019 08:38:15 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 3/3] drm: switch drm_fb_xrgb8888_to_rgb888_dstclip to accept __iomem dst
+Date:   Wed, 10 Apr 2019 08:38:15 +0200
+Message-Id: <20190410063815.17062-4-kraxel@redhat.com>
+In-Reply-To: <20190410063815.17062-1-kraxel@redhat.com>
+References: <20190410063815.17062-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 10 Apr 2019 06:38:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 09:20:29AM +0300, Daniel Baluta wrote:
-> Hi Nicolin,
-> 
-> On Wed, Apr 10, 2019 at 7:30 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > On Tue, Apr 09, 2019 at 11:27:39AM +0000, Viorel Suman wrote:
-> > > Use "of_device_id.data" to specify the machine driver
-> > > instead of "model" DTS attribute.
-> > >
-> > > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> >
-> > Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> >
-> > > ---
-> > >  sound/soc/fsl/fsl_audmix.c | 43 +++++++++++++++++++++++--------------------
-> > >  1 file changed, 23 insertions(+), 20 deletions(-)
-> >
-> > > +     priv->pdev = platform_device_register_data(&pdev->dev, mdrv, 0, NULL,
-> > > +                                                0);
-> >
-> > Would you please send a separate patch to replace "pdev->dev"?
-> 
-> I am not sure exactly how to explain this change in the commit message. It does
-> make code easier to read and avoids dereferencing pdev pointer each time.
-> 
-> Is it enough for commit description?
+Not all archs have the __io_virt() macro, so cirrus can't simply convert
+pointers that way.  The drm format helpers have to use memcpy_toio()
+instead.
 
-You mean this? https://lore.kernel.org/patchwork/patch/862610/
+This patch makes drm_fb_xrgb8888_to_rgb888_dstclip() accept a __iomem
+dst pointer and use memcpy_toio() instead of memcpy().  The helper
+function (drm_fb_xrgb8888_to_rgb888_line) has been changed to process a
+single scanline.
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_format_helper.h     |  2 +-
+ drivers/gpu/drm/cirrus/cirrus.c     |  2 +-
+ drivers/gpu/drm/drm_format_helper.c | 57 +++++++++++++----------------
+ 3 files changed, 27 insertions(+), 34 deletions(-)
+
+diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
+index d1b8a9ea01b4..1594a1f967ad 100644
+--- a/include/drm/drm_format_helper.h
++++ b/include/drm/drm_format_helper.h
+@@ -26,7 +26,7 @@ void drm_fb_xrgb8888_to_rgb565(void *dst, void *vaddr,
+ void drm_fb_xrgb8888_to_rgb565_dstclip(void __iomem *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+ 				       struct drm_rect *clip, bool swap);
+-void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
++void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+ 				       struct drm_rect *clip);
+ void drm_fb_xrgb8888_to_gray8(u8 *dst, void *vaddr, struct drm_framebuffer *fb,
+diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
+index ed2f2d8cfb6f..be4ea370ba31 100644
+--- a/drivers/gpu/drm/cirrus/cirrus.c
++++ b/drivers/gpu/drm/cirrus/cirrus.c
+@@ -316,7 +316,7 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
+ 						  vmap, fb, rect, false);
+ 
+ 	else if (fb->format->cpp[0] == 4 && cirrus->cpp == 3)
+-		drm_fb_xrgb8888_to_rgb888_dstclip(__io_virt(cirrus->vram),
++		drm_fb_xrgb8888_to_rgb888_dstclip(cirrus->vram,
+ 						  cirrus->pitch,
+ 						  vmap, fb, rect);
+ 
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index c9521af4e90b..dd9823e3a723 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -216,33 +216,16 @@ void drm_fb_xrgb8888_to_rgb565_dstclip(void __iomem *dst, unsigned int dst_pitch
+ }
+ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565_dstclip);
+ 
+-static void drm_fb_xrgb8888_to_rgb888_lines(void *dst, unsigned int dst_pitch,
+-					    void *src, unsigned int src_pitch,
+-					    unsigned int src_linelength,
+-					    unsigned int lines)
++static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
++					   unsigned int pixels)
+ {
+-	unsigned int linepixels = src_linelength / 3;
+-	unsigned int x, y;
+-	u32 *sbuf;
+-	u8 *dbuf;
++	unsigned int x;
+ 
+-	sbuf = kmalloc(src_linelength, GFP_KERNEL);
+-	if (!sbuf)
+-		return;
+-
+-	for (y = 0; y < lines; y++) {
+-		memcpy(sbuf, src, src_linelength);
+-		dbuf = dst;
+-		for (x = 0; x < linepixels; x++) {
+-			*dbuf++ = (sbuf[x] & 0x000000FF) >>  0;
+-			*dbuf++ = (sbuf[x] & 0x0000FF00) >>  8;
+-			*dbuf++ = (sbuf[x] & 0x00FF0000) >> 16;
+-		}
+-		src += src_pitch;
+-		dst += dst_pitch;
++	for (x = 0; x < pixels; x++) {
++		*dbuf++ = (sbuf[x] & 0x000000FF) >>  0;
++		*dbuf++ = (sbuf[x] & 0x0000FF00) >>  8;
++		*dbuf++ = (sbuf[x] & 0x00FF0000) >> 16;
+ 	}
+-
+-	kfree(sbuf);
+ }
+ 
+ /**
+@@ -264,15 +247,25 @@ void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+ 				       struct drm_rect *clip)
+ {
+-	unsigned int src_offset = (clip->y1 * fb->pitches[0])
+-		+ (clip->x1 * sizeof(u32));
+-	unsigned int dst_offset = (clip->y1 * dst_pitch)
+-		+ (clip->x1 * 3);
+-	size_t src_len = (clip->x2 - clip->x1) * sizeof(u32);
++	size_t linepixels = clip->x2 - clip->x1;
++	size_t dst_len = linepixels * 3;
++	unsigned y, lines = clip->y2 - clip->y1;
++	void *dbuf;
+ 
+-	drm_fb_xrgb8888_to_rgb888_lines(dst + dst_offset, dst_pitch,
+-					vaddr + src_offset, fb->pitches[0],
+-					src_len, clip->y2 - clip->y1);
++	dbuf = kmalloc(dst_len, GFP_KERNEL);
++	if (!dbuf)
++		return;
++
++	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
++	dst += clip_offset(clip, dst_pitch, sizeof(u16));
++	for (y = 0; y < lines; y++) {
++		drm_fb_xrgb8888_to_rgb888_line(dbuf, vaddr, linepixels);
++		memcpy_toio(dst, dbuf, dst_len);
++		vaddr += fb->pitches[0];
++		dst += dst_len;
++	}
++
++	kfree(dbuf);
+ }
+ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888_dstclip);
+ 
+-- 
+2.18.1
+
