@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B054C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1F920820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351C820820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732402AbfDJNhF (ORCPT
+        id S1732445AbfDJNhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:37:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23980 "EHLO mga09.intel.com"
+        Wed, 10 Apr 2019 09:37:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46423 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732378AbfDJNhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:37:03 -0400
+        id S1732407AbfDJNhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:37:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:02 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="148069234"
+   d="scan'208";a="336622797"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2019 06:37:02 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 16C9056D; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
+        id 3244B5B8; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 14/36] thunderbolt: Rename tunnel_pci to tunnel
-Date:   Wed, 10 Apr 2019 16:36:31 +0300
-Message-Id: <20190410133653.88061-15-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 16/36] thunderbolt: Add functions for allocating and releasing HopIDs
+Date:   Wed, 10 Apr 2019 16:36:33 +0300
+Message-Id: <20190410133653.88061-17-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,88 +55,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to tunnel non-PCIe traffic as well rename tunnel_pci.[ch] to
-tunnel.[ch] to reflect this fact. No functional changes.
+Each port has a separate path configuration space that is used for
+finding the next hop (switch) in the path. HopID is an index to this
+configuration space. HopIDs 0 - 7 are reserved by the protocol.
+
+In order to get next available HopID for each direction we provide two
+pairs of helper functions that can be used to allocate and release
+HopIDs for a given port.
+
+While there remove obsolete TODO comment.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/Makefile                   | 2 +-
- drivers/thunderbolt/tb.c                       | 2 +-
- drivers/thunderbolt/{tunnel_pci.c => tunnel.c} | 4 ++--
- drivers/thunderbolt/{tunnel_pci.h => tunnel.h} | 6 +++---
- 4 files changed, 7 insertions(+), 7 deletions(-)
- rename drivers/thunderbolt/{tunnel_pci.c => tunnel.c} (98%)
- rename drivers/thunderbolt/{tunnel_pci.h => tunnel.h} (87%)
+ drivers/thunderbolt/nhi.c    |  3 +-
+ drivers/thunderbolt/switch.c | 87 +++++++++++++++++++++++++++++++++++-
+ drivers/thunderbolt/tb.h     | 11 +++++
+ 3 files changed, 98 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
-index 8531f15d3b3c..833bdee3cec7 100644
---- a/drivers/thunderbolt/Makefile
-+++ b/drivers/thunderbolt/Makefile
-@@ -1,3 +1,3 @@
- obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
--thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel_pci.o eeprom.o
-+thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
- thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index e71530d0af65..8de43a2ab205 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -12,7 +12,7 @@
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 9aa44f9762a3..cac1ead5e302 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -27,8 +27,7 @@
+  * use this ring for anything else.
+  */
+ #define RING_E2E_UNUSED_HOPID	2
+-/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
+-#define RING_FIRST_USABLE_HOPID	8
++#define RING_FIRST_USABLE_HOPID	TB_PATH_MIN_HOPID
  
- #include "tb.h"
- #include "tb_regs.h"
--#include "tunnel_pci.h"
-+#include "tunnel.h"
+ /*
+  * Minimal number of vectors when we use MSI-X. Two for control channel
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index b132439618da..30f3d6a9fe90 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -594,11 +594,88 @@ static int tb_init_port(struct tb_port *port)
+ 
+ 	tb_dump_port(port->sw->tb, &port->config);
+ 
+-	/* TODO: Read dual link port, DP port and more from EEPROM. */
++	/* Control port does not need HopID allocation */
++	if (port->port) {
++		ida_init(&port->in_hopids);
++		ida_init(&port->out_hopids);
++	}
++
+ 	return 0;
+ 
+ }
+ 
++static int tb_port_alloc_hopid(struct tb_port *port, bool in, int min_hopid,
++			       int max_hopid)
++{
++	int port_max_hopid;
++	struct ida *ida;
++
++	if (in) {
++		port_max_hopid = port->config.max_in_hop_id;
++		ida = &port->in_hopids;
++	} else {
++		port_max_hopid = port->config.max_out_hop_id;
++		ida = &port->out_hopids;
++	}
++
++	/* HopIDs 0-7 are reserved */
++	if (min_hopid < TB_PATH_MIN_HOPID)
++		min_hopid = TB_PATH_MIN_HOPID;
++
++	if (max_hopid < 0 || max_hopid > port_max_hopid)
++		max_hopid = port_max_hopid;
++
++	return ida_simple_get(ida, min_hopid, max_hopid + 1, GFP_KERNEL);
++}
++
++/**
++ * tb_port_alloc_in_hopid() - Allocate input HopID from port
++ * @port: Port to allocate HopID for
++ * @min_hopid: Minimum acceptable input HopID
++ * @max_hopid: Maximum acceptable input HopID
++ *
++ * Return: HopID between @min_hopid and @max_hopid or negative errno in
++ * case of error.
++ */
++int tb_port_alloc_in_hopid(struct tb_port *port, int min_hopid, int max_hopid)
++{
++	return tb_port_alloc_hopid(port, true, min_hopid, max_hopid);
++}
++
++/**
++ * tb_port_alloc_out_hopid() - Allocate output HopID from port
++ * @port: Port to allocate HopID for
++ * @min_hopid: Minimum acceptable output HopID
++ * @max_hopid: Maximum acceptable output HopID
++ *
++ * Return: HopID between @min_hopid and @max_hopid or negative errno in
++ * case of error.
++ */
++int tb_port_alloc_out_hopid(struct tb_port *port, int min_hopid, int max_hopid)
++{
++	return tb_port_alloc_hopid(port, false, min_hopid, max_hopid);
++}
++
++/**
++ * tb_port_release_in_hopid() - Release allocated input HopID from port
++ * @port: Port whose HopID to release
++ * @hopid: HopID to release
++ */
++void tb_port_release_in_hopid(struct tb_port *port, int hopid)
++{
++	ida_simple_remove(&port->in_hopids, hopid);
++}
++
++/**
++ * tb_port_release_out_hopid() - Release allocated output HopID from port
++ * @port: Port whose HopID to release
++ * @hopid: HopID to release
++ */
++void tb_port_release_out_hopid(struct tb_port *port, int hopid)
++{
++	ida_simple_remove(&port->out_hopids, hopid);
++}
++
+ /**
+  * tb_pci_port_enable() - Enable PCIe adapter port
+  * @port: PCIe port to enable
+@@ -1055,9 +1132,17 @@ static const struct attribute_group *switch_groups[] = {
+ static void tb_switch_release(struct device *dev)
+ {
+ 	struct tb_switch *sw = tb_to_switch(dev);
++	int i;
+ 
+ 	dma_port_free(sw->dma_port);
+ 
++	for (i = 1; i <= sw->config.max_port_number; i++) {
++		if (!sw->ports[i].disabled) {
++			ida_destroy(&sw->ports[i].in_hopids);
++			ida_destroy(&sw->ports[i].out_hopids);
++		}
++	}
++
+ 	kfree(sw->uuid);
+ 	kfree(sw->device_name);
+ 	kfree(sw->vendor_name);
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index d1f8e9722f33..1cb5009195f9 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -127,6 +127,8 @@ struct tb_switch {
+  * @dual_link_port: If the switch is connected using two ports, points
+  *		    to the other port.
+  * @link_nr: Is this primary or secondary port on the dual_link.
++ * @in_hopids: Currently allocated input HopIDs
++ * @out_hopids: Currently allocated output HopIDs
+  */
+ struct tb_port {
+ 	struct tb_regs_port_header config;
+@@ -139,6 +141,8 @@ struct tb_port {
+ 	bool disabled;
+ 	struct tb_port *dual_link_port;
+ 	u8 link_nr:1;
++	struct ida in_hopids;
++	struct ida out_hopids;
+ };
  
  /**
-  * struct tb_cm - Simple Thunderbolt connection manager
-diff --git a/drivers/thunderbolt/tunnel_pci.c b/drivers/thunderbolt/tunnel.c
-similarity index 98%
-rename from drivers/thunderbolt/tunnel_pci.c
-rename to drivers/thunderbolt/tunnel.c
-index 2de4edccbd6d..1e470564e99d 100644
---- a/drivers/thunderbolt/tunnel_pci.c
-+++ b/drivers/thunderbolt/tunnel.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Thunderbolt Cactus Ridge driver - PCIe tunnel
-+ * Thunderbolt Cactus Ridge driver - Tunneling support
-  *
-  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
-  */
-@@ -8,7 +8,7 @@
- #include <linux/slab.h>
- #include <linux/list.h>
+@@ -194,6 +198,9 @@ struct tb_path {
+ 	int path_length; /* number of hops */
+ };
  
--#include "tunnel_pci.h"
-+#include "tunnel.h"
- #include "tb.h"
++/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
++#define TB_PATH_MIN_HOPID	8
++
+ /**
+  * struct tb_cm_ops - Connection manager specific operations vector
+  * @driver_ready: Called right after control channel is started. Used by
+@@ -453,6 +460,10 @@ static inline bool tb_switch_is_er(const struct tb_switch *sw)
+ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
+ int tb_port_add_nfc_credits(struct tb_port *port, int credits);
+ int tb_port_clear_counter(struct tb_port *port, int counter);
++int tb_port_alloc_in_hopid(struct tb_port *port, int hopid, int max_hopid);
++void tb_port_release_in_hopid(struct tb_port *port, int hopid);
++int tb_port_alloc_out_hopid(struct tb_port *port, int hopid, int max_hopid);
++void tb_port_release_out_hopid(struct tb_port *port, int hopid);
  
- #define __TB_TUNNEL_PRINT(level, tunnel, fmt, arg...)                   \
-diff --git a/drivers/thunderbolt/tunnel_pci.h b/drivers/thunderbolt/tunnel.h
-similarity index 87%
-rename from drivers/thunderbolt/tunnel_pci.h
-rename to drivers/thunderbolt/tunnel.h
-index f9b65fa1fd4d..dff0f27d6ab5 100644
---- a/drivers/thunderbolt/tunnel_pci.h
-+++ b/drivers/thunderbolt/tunnel.h
-@@ -1,12 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Thunderbolt Cactus Ridge driver - PCIe tunnel
-+ * Thunderbolt Cactus Ridge driver - Tunneling support
-  *
-  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
-  */
- 
--#ifndef TB_PCI_H_
--#define TB_PCI_H_
-+#ifndef TB_TUNNEL_H_
-+#define TB_TUNNEL_H_
- 
- #include "tb.h"
- 
+ int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
+ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
 -- 
 2.20.1
 
