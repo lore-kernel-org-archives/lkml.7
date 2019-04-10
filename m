@@ -2,61 +2,116 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECAFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D197CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB5D21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A152421741
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfDJAGg convert rfc822-to-8bit (ORCPT
+        id S1726925AbfDJAKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 20:06:36 -0400
-Received: from [92.242.62.95] ([92.242.62.95]:37384 "EHLO host.uksvyaz.ru"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726680AbfDJAGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 20:06:36 -0400
-X-Greylist: delayed 336 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Apr 2019 20:06:36 EDT
-Received: from zoho.com (h88-150-221-104.host.redstation.co.uk [88.150.221.104])
-        by host.uksvyaz.ru (Postfix) with ESMTPA id B332B658F0
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2019 17:00:55 -0700 (PDT)
-Reply-To: d.c.johnston@sikhombowealth.co
-From:   djohnsto@zoho.com
-To:     linux-kernel@vger.kernel.org
-Subject: Collaboration
-Date:   09 Apr 2019 17:01:22 -0700
-Message-ID: <20190409170122.8BF1A5B76A1FA8C5@zoho.com>
+        Tue, 9 Apr 2019 20:10:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24875 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726592AbfDJAKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 20:10:20 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 17:10:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
+   d="scan'208";a="130020630"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 09 Apr 2019 17:10:18 -0700
+Date:   Tue, 9 Apr 2019 17:02:31 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v6 13/20] x86/split_lock: Enable split lock detection by
+ default
+Message-ID: <20190410000229.GA209676@romley-ivt3.sc.intel.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-14-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904041932500.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904041932500.1802@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good day. I am D C Johnston, a broker working with Sikhombo 
-Wealth Services. We are a wealth management company based in 
-South Africa. I am contacting you because one of my high profile 
-clients is interested in investing in your country and has asked 
-me to look for individuals and companies with interesting 
-business ideas and companies that he can invest in. He wants to 
-expand his portfolio and has interest in investing a substantial 
-amount of revenue abroad. I got your contact when searching the 
-internet through the directory enquiries and I believe that my 
-client will be interested in working with you.
+On Thu, Apr 04, 2019 at 08:07:57PM +0200, Thomas Gleixner wrote:
+> On Wed, 3 Apr 2019, Fenghua Yu wrote:
+> 
+> > +static void init_split_lock_detect(struct cpuinfo_x86 *c)
+> > +{
+> > +	if (cpu_has(c, X86_FEATURE_SPLIT_LOCK_DETECT)) {
+> > +		u32 l, h;
+> > +
+> > +		mutex_lock(&split_lock_detect_mutex);
+> > +		rdmsr(MSR_TEST_CTL, l, h);
+> > +		l = new_sp_test_ctl_val(l);
+> > +		wrmsr(MSR_TEST_CTL, l, h);
+> > +		show_split_lock_detection_info();
+> > +		mutex_unlock(&split_lock_detect_mutex);
+> > +	}
+> > +}
+> > +
+> >  static void early_init_intel(struct cpuinfo_x86 *c)
+> >  {
+> >  	u64 misc_enable;
+> >  
+> > +	init_split_lock_detect(c);
+> 
+> so we have in early boot:
+> 
+> 	early_cpu_init()
+> 	  early_identify_cpu()
+> 	    this_cpu->c_early_init(c)
+> 	      early_init_intel() {
+> 	        init_split_lock_detect();
+> 	      }	
+>             ....
+>             cpu_set_core_cap_bits(c)
+> 	       set(FEATURE_SPLIT_LOCK)
+> 
+> I don't have to understand how init_split_lock_detect() will magically see
+> the feature bit which gets set afterwards, right? 
 
-As you can imagine, we have not had any prior communication 
-before so I will be keeping the details to a minimum until I get 
-a confirmation from you that you are interested in this proposal. 
-I will then give you more details upon receiving your positive 
-response. Please provide your direct telephone number as well so 
-that I can give you a call to discuss further.
+early_init_intel() is called twice on the boot CPU. Besides it's called
+in earl_cpu_init(), it's also called in:
+	identify_boot_cpu()
+		identify_cpu()
+			init_intel()
+				early_init_intel()
+					init_split_lock_detect();
 
-Best regards
+It's true that init_split_lock_detect() doesn't see the feature bit when
+it's called for the first time in early_cpu_init(). But it sees the feature
+bit when it's called for the second time in identify_boot_cpu().
 
-D C Johnston
-Sikhombo Wealth Services
+So is init_split_lock_detect() in the right place?
+
+Thanks.
+
+-Fenghua
