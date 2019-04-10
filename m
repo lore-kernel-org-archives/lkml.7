@@ -2,175 +2,141 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE79C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7B1C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C8420820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF1020820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wh3HKIg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfDJMyh (ORCPT
+        id S1732173AbfDJMyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:54:37 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59695 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbfDJMyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 08:54:36 -0400
-Received: from [147.83.201.128] (helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hECkL-0008IU-Dg; Wed, 10 Apr 2019 14:54:33 +0200
-Date:   Wed, 10 Apr 2019 14:54:27 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Daniel Drake <drake@endlessm.com>
-cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        david.e.box@linux.intel.com,
-        Endless Linux Upstreaming Team <linux@endlessm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
-        Len Brown <lenb@kernel.org>
-Subject: Re: No 8254 PIT & no HPET on new Intel N3350 platforms causes kernel
- panic during early boot
-In-Reply-To: <CAD8Lp45nvFY=nj1q2wh4Y6w-8RVRfi3iJmC+xX1Vv7_VZOftdg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904101442080.3479@nanos.tec.linutronix.de>
-References: <CAD8Lp45fedoPLnK=UmUhhtkjy5u2h04sYKrx3U+m04U6FpVZ4A@mail.gmail.com> <alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de> <CAD8Lp45nvFY=nj1q2wh4Y6w-8RVRfi3iJmC+xX1Vv7_VZOftdg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42202 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731604AbfDJMyg (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:54:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id p20so2620284qtc.9
+        for <Linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=24LWhJMbWpfKCl9NIAeUFQBWfDLHnGzUp+8TuqZDdkg=;
+        b=Wh3HKIg/Qmh1AFsSrMdo7bO6maHDep/KnKA/Lsi2lHlSMy3y2WPzzRoZ7n1DPYW1Bg
+         o5eq0rYXwlOSKfhbPYA2vN5+m6pn3jV3Y5Stx3atLDvTA9bgSPmcrqRPtcCuIl6+Evs2
+         GRHuLxbfBo3ryiwyMFzHHjAytdx2iD6WU77TQiNdIvhicqwuGAyttl3eIpHOA8DzGVpM
+         8QslApmXuT6Fxxhn8J/Q7d+s9laOjpD/FEdGjebNiblsSriWLY43xuJy1UJmZn2KGhOh
+         kwzA8+6susduXTwif0jQLefmM05PtoRTX6SOTJd4zuObJ2ANs/uDD061faIUyfT8R+Jh
+         9SZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=24LWhJMbWpfKCl9NIAeUFQBWfDLHnGzUp+8TuqZDdkg=;
+        b=nsVpGpBFJM88n2UlpJnAC34EWIV4f7ZwpjmtnETY3zVxoJp/eRmhk9pQLxpoCDOifJ
+         WkFHbgNbbxK/L/qlmdla3WJ13Zy/tfX9uhc0OWLRTLLLcmENZ3SqqPl3XuwBofT5TL2l
+         Jiqftzs7cdlRZMCcXEfnflUmM8xS+FpIDWhkSXCtVz3Z6CCb3ZgJaFOiYHTMLYTYJWsu
+         OD9gQNCWJ9hQ4dVEQ42G/OuUNObc/dPz4FNu6sywP5uhDIA6Zo7v+fDCKHHQX2amoPCn
+         AsW7IijcaJmAM/sTK9YRb2zRxySSGZMjNW8Eggh1nfY5D3bq9MZvzLdlqCPl5YAy+6Mx
+         48nw==
+X-Gm-Message-State: APjAAAW3XhPSd9ysElVca9Jpua8IV8Pnl/W8RNRNbdPcLwwNYX1wcbgL
+        EsiyvM4bOPEjwig9FK9AyRI=
+X-Google-Smtp-Source: APXvYqyDiHyA0SF1y/d1j9z+Flu+xqWFQwmMob+kXWciTQjdPImKGGdLsgxJN7CkbM+KtwsCYq6Grg==
+X-Received: by 2002:aed:3427:: with SMTP id w36mr35631630qtd.54.1554900875357;
+        Wed, 10 Apr 2019 05:54:35 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id i33sm21447634qtb.64.2019.04.10.05.54.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 05:54:34 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 033E64039C; Wed, 10 Apr 2019 09:54:31 -0300 (-03)
+Date:   Wed, 10 Apr 2019 09:54:31 -0300
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v3 1/4] perf: Add a 'percore' event qualifier
+Message-ID: <20190410125431.GC13888@kernel.org>
+References: <1552985816-20915-1-git-send-email-yao.jin@linux.intel.com>
+ <1552985816-20915-2-git-send-email-yao.jin@linux.intel.com>
+ <20190410123641.GA13888@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410123641.GA13888@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Apr 2019, Daniel Drake wrote:
-> On Wed, Apr 3, 2019 at 7:21 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > That means we need the following decision logic:
-> >
-> >   1) If HPET is available in ACPI, boot normal.
-> >
-> >   2) If HPET is not available, verify that the PIT actually counts. If it
-> >      does, boot normal.
-> >
-> >      If it does not either:
-> >
-> >      2A) Verify that this is a PCH 300/C240 and fiddle with that ISST bit.
-> >
-> >          But that means that we need to chase PCH ids forever...
+Em Wed, Apr 10, 2019 at 09:36:41AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Mar 19, 2019 at 04:56:53PM +0800, Jin Yao escreveu:
+> > Add a 'percore' event qualifier, like cpu/event=0,umask=0x3,percore=1/,
+> > that sums up the event counts for both hardware threads in a core.
+> > 
+> > We can already do this with --per-core, but it's often useful to do
+> > this together with other metrics that are collected per hardware thread.
+> > So we need to support this per-core counting on a event level.
+> > 
+> > This can be implemented in only the user tool, no kernel support needed.
+> > 
+> >  v3:
+> >  ---
+> >  Simplify the code according to Jiri's comments.
+> >  Before:
+> >    "return term->val.percore ? true : false;"
+> >  Now:
+> >    "return term->val.percore;"
+> > 
+> >  v2:
+> >  ---
+> >  Change the qualifier name from 'coresum' to 'percore' according to
+> >  comments from Jiri and Andi.
 > 
-> (I found the ISST bit in the coreboot source code, which shows that
-> the register is shared over multiple Intel SoC generations. I then
-> searched for the register name online and found it documented in the
-> 320/C240 public documentation, which I linked to. However that's not
-> actually the platform in question. In this case we are working with
-> Intel Apollo Lake N3350.)
-> 
-> Anyway, I agree that doing it with PCI IDs would be painful.
-> 
-> >      2B) Shrug and just avoid the whole PIT/HPET magic all over the place:
-> >
-> >          - Avoid the interrupt delivery check in the IOAPIC code as it's
-> >            uninteresting in that case. Trivial to do.
-> 
-> What do you mean by "in that case"? In the case of having an IOAPIC?
+> I'm applying this, but please, don't forget to, when adding a new
+> qualifier, to update the documentation... I'm doing this for you this
+> time.
 
-In the case that neither HPET nor PIT are available or required.
+The first patch didn't apply with 'git am', I did it manually, and added
+the patch below
 
-> From my analysis above, this interrupt delivery check feels misplaced.
+But then the second doesn't apply to my perf/core branch as well, please
+refresh and resend a v4, thanks.
 
-Not really.
+- Arnaldo
 
-> Other parts of the clock setup code (e.g. where PIC, HPET and APIC
-> timer are enabled) do not seem to check that the timers being set up
-> actually work. If I were to try a kernel with no APIC/LAPIC support
-> then Linux would boot with a broken PIT as the clock source without
-> checking it. So why do we check it here specifically in the IOAPIC
-> code? I see it does some tricks which are presumably needed on
-> historical platforms, but maybe it could let boot continue even if it
-> can't find a working IRQ0 setup? Or it could at least skip the check
-> if IRQ0 was not working before the IOAPIC gets set up?
-
-It's not only historical. The irq0 'wiring' is still screwed up on newer
-systems and we cannot rely on the ACPI/BIOS information.
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 138fb6e94b3c..18ed1b0fceb3 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -199,6 +199,18 @@ also be supplied. For example:
  
-> If there is desire for some "check that the clocksource is actually
-> ticking" panic logic, maybe this could be done after the local APIC
-> timer is setup (which is ultimately the clock source selected and
-> used), maybe it should even be done in arch-independent code?
-
-Well. Most systems have working timers. Just x86 is an utter trainwreck in
-that regard.
-
-PIT/HPET used to work just fine forever (except for the actual interrupt
-delivery) so this is new terretory.
+   perf stat -C 0 -e 'hv_gpci/dtbp_ptitc,phys_processor_idx=0x2/' ...
  
-> >          - Prevent the TSC calibration code from touching PIT/HPET. It
-> >            should do that already when the TSC frequency can be retrieved
-> >            via CPUID or MSR. Should work, emphasis on should ...
-> 
-> >From above, this seems to be working acceptably already. It does touch
-> the PIT, but ultimately ignores the information that it provided.
-
-Yes, but we might actually be smarter than that.
-
-> >          - Prevent the APIC calibration code from touching PIT/HPET. That's
-> >            only happening right now when the TSC frequency comes from
-> >            the MSRs. No idea why the CPUID method does not provide that.
-> 
-> Where's the APIC calibration code?
-
-calibrate_APIC_clock()
++EVENT QUALIFIERS:
++
++It is also possible to add extra qualifiers to an event:
++
++percore:
++
++Sums up the event counts for all hardware threads in a core, e.g.:
++
++
++  perf stat -e cpu/event=0,umask=0x3,percore=1/
++
++
+ EVENT GROUPS
+ ------------
  
-> >            CPUID leaf 0x16 provides the bus frequency, so we can deduce the
-> >            APIC timer frequency from there and spare the whole APIC timer
-> >            calibration mess:
-> >
-> >                ECX Bits 15 - 00: Bus (Reference) Frequency (in MHz).
-> 
-> That's not available on this platform, plus
-> architecture-instruction-set-extensions-programming-reference.pdf
-
-Please use the SDM as reference, but yes it tells the same.
-
-> page 1-21 says that the data returned is actually marketing stuff, and
-> shouldn't be treated as real. I think you mean CPUID leaf 0x15
-> instead.
-
-No, it's not marketing. It's the specification and there must be a reason
-why Intel decided to actually use it in the kernel:
-
-    Author: Len Brown <len.brown@intel.com>
-    Date:   Fri Jun 17 01:22:51 2016 -0400
-
-    x86/tsc: Enumerate SKL cpu_khz and tsc_khz via CPUID
-    
-    Skylake CPU base-frequency and TSC frequency may differ
-    by up to 2%.
-    
-    Enumerate CPU and TSC frequencies separately, allowing
-    cpu_khz and tsc_khz to differ.
-    
-    The existing CPU frequency calibration mechanism is unchanged.
-    However, CPUID extensions are preferred, when available.
-    
-    CPUID.0x16 is preferred over MSR and timer calibration
-    for CPU frequency discovery.
-    
-    CPUID.0x15 takes precedence over CPU-frequency
-    for TSC frequency discovery.
-
-
-Leaf 0x15 does not tell the bus/reference clock which is what we need for
-using the local apic timer (not the TSC deadline timer).
-
-Thanks,
-
-	tglx
-
