@@ -2,113 +2,136 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47607C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F888C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A6220820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554925857;
-	bh=gLqxa+fXD7ZR+IdyPU5iivWrSAnfZHb5FWMr81rU764=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0Vkw4RjSdQmcd9MQ8Kxa7FRbd3baZYJSSGzIvWI9f9OfiHBe/j57DdLIalG8+JNj/
-	 VDBXmVC2rjdBwNjlYTuddHS/YCJiy0x2T8v25sTZ5wawN8z3nb2VsTWVDN8hRg+DHO
-	 hVQYjwEaSgChF2rpqZK2gmT7g6UK5FOgqttaHzr0=
+	by mail.kernel.org (Postfix) with ESMTP id E16E220820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1tOYVW57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfDJTuz (ORCPT
+        id S1726690AbfDJTwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:50:55 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:46384 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfDJTut (ORCPT
+        Wed, 10 Apr 2019 15:52:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51548 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfDJTwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:50:49 -0400
-Received: by mail-lf1-f45.google.com with SMTP id r25so2727541lfn.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yyqnNvbfmn5m1e4SIudC+WMARrUmp/Qx5i0nxm+Q0lw=;
-        b=eVQ+3v+1kuVPCQhKn6JTctvz1ha2XK3y1oD4BjWDkgXVAfqE6/TQWRVurqMlxNzfaA
-         rKuAaAp8gAkIFKC9/euTBToRXmNbqpaVY5UvBowdRbsgmFYQF75PNXT5bDtXDaSiSD1W
-         g/50tACWbFVgSeXTeqshZtg2JQuQ91MQZMI4o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yyqnNvbfmn5m1e4SIudC+WMARrUmp/Qx5i0nxm+Q0lw=;
-        b=lRweGzw3J4O1wJfib+NiWcxsvjKMd7ohNmYtjY3wJpjpe9Kg0hsqrffgO1yW7MIRf7
-         nJEUjvd34HAfZhp8PZRfLa/agnZwf2J9JGxxTGjriUfvHbgmXy0hLJIwmjL8DUnTs+HN
-         sv2UYZiA+zExSmhoFM5Uo1CGa7RNzhJPrbga3j9imG6J97Cu3eAV6c2Z8jTveKyOr6L+
-         pDEhB0QFhceXXAP5uvyJegRhepDszO+gl52CfsVn+ncEUore1HpqMS/4M4KRRtZmlv6A
-         eh/Vw2FBQeUlzPBAauFWaSkByoY43N2qjMmXLY3NfwefQCXcueDNh0P22NEoG/e9QOIe
-         gPCQ==
-X-Gm-Message-State: APjAAAVSPww9Ew1ZA4weJ+JGEg+bmfJMi18BlUa+IAEahugeQjQhsMiQ
-        ve9A9gwZhCaiqsOyeSlu3ximBmUxclA=
-X-Google-Smtp-Source: APXvYqyexe83SDLHalpZ+OXrIo/mJgJ0o0UD/5vtTvjpKp+tBBQv5zlIkIrK7cJQj/TbQaRm1tnuDA==
-X-Received: by 2002:ac2:518b:: with SMTP id u11mr7736357lfi.46.1554925847062;
-        Wed, 10 Apr 2019 12:50:47 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id p76sm4114923ljb.63.2019.04.10.12.50.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 12:50:46 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id v22so3246870lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:50:45 -0700 (PDT)
-X-Received: by 2002:a2e:420c:: with SMTP id p12mr24527546lja.1.1554925845465;
- Wed, 10 Apr 2019 12:50:45 -0700 (PDT)
+        Wed, 10 Apr 2019 15:52:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AJnFur184681;
+        Wed, 10 Apr 2019 19:52:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=i0h0mKYIzGcSkp5GyeepgfefbxGRwGYGQncX7cOrT6w=;
+ b=1tOYVW57t2rluwais3CojTvoD/wFtYokHlbA86Meti1k38JNCkz+ytqD0e4y2ohUXj00
+ hWJ7uU1/IRPeJlzJBs0COFVF8TbggPc/vlB8OiSYxnUaYLc7wY08hq4SCouX6VBNB4Xs
+ erH4iQYVwNCwyIKb9686kSmdRsL0Ro0chDsevnacix2W8sXTB6acrwCvT0isuXlP4iyS
+ YRGBXR0SO/bVBgn64tX+5rrNBNYVfVFpI6AeFe4VF6UGDZv7HcKNqlRU5HIFq4t2Cpp6
+ NRcHusZ9+yTcXcwkGv2PIKtxmYRtJKUktkjCZ3w4UQHcWAW2lv7WGGz7Vx985PB4VGUQ ew== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rpkht57h7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 19:52:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AJperI142730;
+        Wed, 10 Apr 2019 19:52:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2rpytce9x4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 19:52:28 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3AJqP9c021695;
+        Wed, 10 Apr 2019 19:52:25 GMT
+Received: from kadam (/197.157.0.42)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Apr 2019 12:52:25 -0700
+Date:   Wed, 10 Apr 2019 22:52:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Karen Xie <kxie@chelsio.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2] scsi: cxgbi: remove redundant __kfree_skb call on
+ skb and free cst->atid
+Message-ID: <20190410195215.GH6095@kadam>
+References: <20190410155431.10045-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190409184917.65062-1-briannorris@chromium.org>
- <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
- <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com>
- <CAHk-=whL3UEnKTpmr0bqL_6cW8cOn8mSCFAjAtpCfeMVq7Serw@mail.gmail.com> <CA+ASDXMYiDpYx06LDrZcn5gVWu_7q3DK5G0Eb1jmwjUJZAA_KQ@mail.gmail.com>
-In-Reply-To: <CA+ASDXMYiDpYx06LDrZcn5gVWu_7q3DK5G0Eb1jmwjUJZAA_KQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Apr 2019 09:50:29 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whCWwWwdqbeYTDTSTWC11czp0QxR_FUuzeAgSpjRj7Gig@mail.gmail.com>
-Message-ID: <CAHk-=whCWwWwdqbeYTDTSTWC11czp0QxR_FUuzeAgSpjRj7Gig@mail.gmail.com>
-Subject: Re: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410155431.10045-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904100129
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904100129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 7:44 AM Brian Norris <briannorris@chromium.org> wrote:
->
-> I think our key difference here is in how much we trust the device:
-> knowing the quality of the firmware running on some of these devices,
-> I wouldn't totally trust that they get it right.
+On Wed, Apr 10, 2019 at 04:54:31PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The error return path via label rel_resource checks for a non-null
+> skb before free'ing it.  However, skb is always null at this exit
+> path, so the null check and the free are redundant and can be removed.
+> Removing this allows the original goto's to rel_resource to be cleaned
+> up; the first can be replaced by a return of -EINVAL, the second can
+> be replaced by a more appropriate -ENOMEM return and fix a memory
+> leak by freeing csk->atid
+> 
+> Addresses-Coverity: ("Logically Dead Code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+> 
+> V2: Ensure cst->atid is free'd to fix memory leak, thanks to
+>     Walter Harms for spotting this mistake in V1.
+> ---
+>  drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> index 75e1273a44b3..15a48c2ac536 100644
+> --- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> +++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> @@ -979,14 +979,16 @@ static int init_act_open(struct cxgbi_sock *csk)
+>  	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
+>  	if (csk->atid < 0) {
+>  		pr_err("NO atid available.\n");
+> -		goto rel_resource;
+> +		return -EINVAL;
+>  	}
+>  	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
+>  	cxgbi_sock_get(csk);
+        ^^^^^^^^^^^^^^^^^^^
+Don't we need to a put for this as well?
 
-No.
+>  
+>  	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
+> -	if (!skb)
+> -		goto rel_resource;
+> +	if (!skb) {
+> +		cxgb3_free_atid(t3dev, csk->atid);
+> +		return -ENOMEM;
+> +	}
 
-You claim that IRQ_NOAUTOEN makes any difference, It doesn't.
 
-I claim that you should get rid of the disable/enable_irq() games you
-play, and replace them with just requesting the interrupt.
+regards,
+dan carpenter
 
-At which point the whole  IRQ_NOAUTOEN dance is entirely pointless.
-
-Just don't do it.
-
-This has nothing to do with trusting hardware, and everything to do
-with "why do you request an interrupt that you aren't actually ready
-to accept, and the hardware isn't even properly configured to generate
-yet"?
-
-See my point?
-
-               Linus
