@@ -2,153 +2,168 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEAAC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1DFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2632082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EAE20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mRRWRKAc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7VVgHvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDJWSu (ORCPT
+        id S1726644AbfDJWUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:18:50 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39953 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDJWSs (ORCPT
+        Wed, 10 Apr 2019 18:20:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40083 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfDJWUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:18:48 -0400
-Received: by mail-vs1-f66.google.com with SMTP id f22so2309457vso.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:18:48 -0700 (PDT)
+        Wed, 10 Apr 2019 18:20:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so2240801plr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tPWdwl4Tm8jzYAc3nR128aIlhxTl0fGE3roAbQtw4oQ=;
-        b=mRRWRKAc2PGSAovFYlgEPgX7EWVsz6TyMpP5c1Cjv/iBhpZxFL229MHvddvtGxYCBe
-         /LrM9ADJ1cCN1d7a6hgQnNdQHes5pnrzKsLTskhXIr+RDv8FMh+k35L0yMcK9q9dyCQq
-         5oDT0HZzka0q5yIrqNxbncujB6tVIPeXRV6eo=
+        bh=k9AQM9Er5xIu0dK7JBT6Ay6B+U4MsPIr+qvFzik28d0=;
+        b=o7VVgHvZlzx3LhZneghQwUlAr86T5syvkidjdozrG8mIhw1d6H0IBWsXmnxBmsDiaq
+         hn+0ftVUFmac2e+cDp2p2ySvZcZVMDtPq1JMckFQ17UiVg7i1aY4XkbcuWSAF6mxK0q9
+         9NSHSx9gWSQPTN8CQ0sCJ6vVmhwY6yP0EgdbqqF+NyH2WGdn/DdB4J0CctA7tVjSIRh7
+         fIgLq7nQn3M17rvS4rqehsHlpxAhSUX6INEPxt/fOgSf5VG86z6ISrRwfDsc/9OX5868
+         xzo6kQERUie/X3A3yxVSdxooK0IvqjgN7Et5ZbD+3tYdmKuowiYWWOGWkrll2Z9yg/8B
+         eekA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tPWdwl4Tm8jzYAc3nR128aIlhxTl0fGE3roAbQtw4oQ=;
-        b=BmRHV4oFRZppa1nW/A97X5pa7c6wiwAT/b19XC2wa6UyUPPmNk0PChgwZPiOMk0+bt
-         Jq/PA2OnHPIbxCqHMBU4//NcDRgnR7X+P/oy1oAFLI3wTf1tJ5E4iR6LWwMpNE4yssh+
-         nvDenJ/sx+jd467KgvPh8/e898FKoiy1bSzsK0mUmXhE+7DulT2OtQTed4bVFjEzerRd
-         Lqx5S4FmJPgiQdfd+aiTao50qLcI54gom89i6bEdZmQEkFcXUI4t9oFW3et3pT7NziSH
-         jR2T7NaRSFeqFidAQMni3REAsPB6VrZ85VMV4PgtQ29JXfaS2CmyNUidpxr9RCK32ZpO
-         npzw==
-X-Gm-Message-State: APjAAAV1GPH9do+creEVplp1/r1rroEHbRDG/28ycvhFp2iVHFECul5+
-        Vf8FXWdHtsqwrXWFRcyhWvRV2iQrhN4=
-X-Google-Smtp-Source: APXvYqw9oHCojF1AVbdi7NFtA61MO82KmtekNxXknroCdGmsafCpdGzJmttp5YNTBdE6eLqVS4yAjg==
-X-Received: by 2002:a67:eeda:: with SMTP id o26mr26709664vsp.209.1554934726814;
-        Wed, 10 Apr 2019 15:18:46 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id v22sm2025950vkd.44.2019.04.10.15.18.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id d5so1346493uan.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
-X-Received: by 2002:ab0:4eaa:: with SMTP id l42mr19453267uah.80.1554934725230;
- Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
+        bh=k9AQM9Er5xIu0dK7JBT6Ay6B+U4MsPIr+qvFzik28d0=;
+        b=KvC1eRGREtsBINloBVEx568gpD+bE8NhDffR3Sbm2rqG6W7l8pLFyWOvc+D5s0Vma3
+         qW/kiTsE6D2W5gCCDhkGEvhnmIWkKPKB24+/E5EFgZqiM9nYWI+c1BFhDkWthU/truEO
+         K2wxdYIVNUajsiFR6w1Gh9trZeYbWXPun8bVrwmK4W47dQqxgjU8Jb8TK0eyqhNMh3BZ
+         qD6cSzAN7838CFUYh71Rt9uuTXyeq7PyTJYYtb3NuidbscNpLy8bg5ebAmiM3eFXn0nc
+         yyV/lejCx9T0epU/5Pl7tObOPXfUqeJyly8fiX7YrFNl59Mleyd5ve6edmam92bT/aSc
+         IS7Q==
+X-Gm-Message-State: APjAAAX0yuMEKwPtuFlk2PiEi20wXRDh1bgQgjpJLTxfn5BaP8wAmFjB
+        96iQE4NdHGaAcWrRutVVpM42PPG4Py9uM0y3CZNC0Q==
+X-Google-Smtp-Source: APXvYqx92h4EUAn4ErLiC/ikSuis6k2GMyfUVONLnH8PeBcgCbmTD3KqAi5CghuiEuqhM4GimtniMnxUmNnT7iInjN0=
+X-Received: by 2002:a17:902:31a4:: with SMTP id x33mr46827317plb.24.1554934820450;
+ Wed, 10 Apr 2019 15:20:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-2-mcroce@redhat.com>
-In-Reply-To: <20190408220925.13077-2-mcroce@redhat.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 15:18:33 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJJDzty8trTPmuxu0_K9xvf+nJ9HGuUE9NF-WOgesu9sQ@mail.gmail.com>
-Message-ID: <CAGXu5jJJDzty8trTPmuxu0_K9xvf+nJ9HGuUE9NF-WOgesu9sQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] proc/sysctl: add shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
+References: <20190410201300.3528984-1-arnd@arndb.de>
+In-Reply-To: <20190410201300.3528984-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 10 Apr 2019 15:20:09 -0700
+Message-ID: <CAKwvOdnZjj_FRQkAqmmmMcG=s+TGFXqQS5-ZhT2E9fcGu-nm8w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] s390: only build for new CPUs with clang
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Philipp Rudo <prudo@linux.vnet.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+On Wed, Apr 10, 2019 at 1:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> In the sysctl code the proc_dointvec_minmax() function is often used to
-> validate the user supplied value between an allowed range. This function
-> uses the extra1 and extra2 members from struct ctl_table as minimum and
-> maximum allowed value.
->
-> On sysctl handler declaration, in every source file there are some readonly
-> variables containing just an integer which address is assigned to the
-> extra1 and extra2 members, so the sysctl range is enforced.
->
-> The special values 0, 1 and INT_MAX are very often used as range boundary,
-> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
-> different source files:
->
->     $ git grep -E '\.extra[12].*&(zero|one|int_max)' |wc -l
->     261
->
-> This patch adds three variables for the most commonly used values, so they
-> can be referenced instead of creating a local one for every object file.
->
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> llvm does does not understand -march=z9-109 and older target
 
-Oh, and for this patch: Yes please; let's get everyone to use these
-instead of littering the kernel with (non-const!) copies of the same
-thing. :)
+Please file bugs for these in LLVM's issue tracker.  It might be
+possible to enable these additional architecture variants if they're
+similar to existing ones and simply unrecognized.  IIRC, we had this
+issue with armv7 variants.
 
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> specifiers, so disable the respective Kconfig settings and
+> the logic to make the boot code work on old systems when
+> building with clang.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  fs/proc/proc_sysctl.c  | 5 +++++
->  include/linux/sysctl.h | 4 ++++
->  2 files changed, 9 insertions(+)
+>  arch/s390/Kconfig       | 6 ++++++
+>  arch/s390/boot/Makefile | 2 ++
+>  2 files changed, 8 insertions(+)
 >
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index d65390727541..e7a96169fced 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -21,6 +21,11 @@ static const struct inode_operations proc_sys_inode_operations;
->  static const struct file_operations proc_sys_dir_file_operations;
->  static const struct inode_operations proc_sys_dir_operations;
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 8cd860cba4d1..1a2eec61196d 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -240,6 +240,7 @@ choice
 >
-> +/* shared constants to be used in various sysctls */
-> +const int sysctl_zero = 0;
-> +const int sysctl_one = 1;
-> +const int sysctl_int_max = INT_MAX;
-> +
->  /* Support for permanently empty directories */
+>  config MARCH_Z900
+>         bool "IBM zSeries model z800 and z900"
+> +       depends on !CC_IS_CLANG
+>         select HAVE_MARCH_Z900_FEATURES
+>         help
+>           Select this to enable optimizations for model z800/z900 (2064 and
+> @@ -248,6 +249,7 @@ config MARCH_Z900
 >
->  struct ctl_table sysctl_mount_point[] = {
-> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-> index b769ecfcc3bd..f3b191799747 100644
-> --- a/include/linux/sysctl.h
-> +++ b/include/linux/sysctl.h
-> @@ -37,6 +37,10 @@ struct ctl_table_root;
->  struct ctl_table_header;
->  struct ctl_dir;
+>  config MARCH_Z990
+>         bool "IBM zSeries model z890 and z990"
+> +       depends on !CC_IS_CLANG
+>         select HAVE_MARCH_Z990_FEATURES
+>         help
+>           Select this to enable optimizations for model z890/z990 (2084 and
+> @@ -256,6 +258,7 @@ config MARCH_Z990
 >
-> +extern const int sysctl_zero;
-> +extern const int sysctl_one;
-> +extern const int sysctl_int_max;
-> +
->  typedef int proc_handler (struct ctl_table *ctl, int write,
->                           void __user *buffer, size_t *lenp, loff_t *ppos);
+>  config MARCH_Z9_109
+>         bool "IBM System z9"
+> +       depends on !CC_IS_CLANG
+>         select HAVE_MARCH_Z9_109_FEATURES
+>         help
+>           Select this to enable optimizations for IBM System z9 (2094 and
+> @@ -347,12 +350,15 @@ config TUNE_DEFAULT
+>
+>  config TUNE_Z900
+>         bool "IBM zSeries model z800 and z900"
+> +       depends on !CC_IS_CLANG
+>
+>  config TUNE_Z990
+>         bool "IBM zSeries model z890 and z990"
+> +       depends on !CC_IS_CLANG
+>
+>  config TUNE_Z9_109
+>         bool "IBM System z9"
+> +       depends on !CC_IS_CLANG
+>
+>  config TUNE_Z10
+>         bool "IBM System z10"
+> diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+> index c844eaf24ed7..953a74d04990 100644
+> --- a/arch/s390/boot/Makefile
+> +++ b/arch/s390/boot/Makefile
+> @@ -11,6 +11,7 @@ KASAN_SANITIZE := n
+>  KBUILD_AFLAGS := $(KBUILD_AFLAGS_DECOMPRESSOR)
+>  KBUILD_CFLAGS := $(KBUILD_CFLAGS_DECOMPRESSOR)
+>
+> +ifndef CONFIG_CC_IS_CLANG
+>  #
+>  # Use -march=z900 for als.c to be able to print an error
+>  # message if the kernel is started on a machine which is too old
+> @@ -25,6 +26,7 @@ CFLAGS_als.o                  += -march=z900
+>  CFLAGS_REMOVE_sclp_early_core.o        += $(CC_FLAGS_MARCH)
+>  CFLAGS_sclp_early_core.o       += -march=z900
+>  endif
+> +endif
+>
+>  CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
 >
 > --
-> 2.21.0
+> 2.20.0
 >
 
 
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
