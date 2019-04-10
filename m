@@ -2,160 +2,111 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0718C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013F8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9AA2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EQoKN063"
+	by mail.kernel.org (Postfix) with ESMTP id CCF5D20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfDJP32 (ORCPT
+        id S1729994AbfDJP3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 10 Apr 2019 11:29:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42856 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729318AbfDJP32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 11:29:28 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32978 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729318AbfDJP31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:29:27 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AFREsD024057;
-        Wed, 10 Apr 2019 17:29:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=5QF677DNR8NFyzzy+z9d2PeSsdOK9wNwGJPOinFlhkI=;
- b=EQoKN063RPfScfyaQEoM9+fqwKXOhNF4wptcGV1XGxOt0cbwJz5vD/CdVAk/Za2D14ni
- Xhi2KJqLyTQEoeiSZYPUdc5VpQX0cWPudhOQHImFK/wWiPzGoqK6YUl1QcxdspVcWMuA
- VI8vKppLFIBpam/QJOSKlLdqeQ90J8u/o79dXDS21+3f8puzL2beTSibZ/h7eKwj9QB+
- C6kEbGwTwi072fEnEmXvEiXYZI51G/KHdLoXpcW07WVcnmSK9nxxu5S3tLbiexib2fEc
- 5JAOInF6W/hRMwbb+FozNBwsSKhFGGbsqzmGiixiBVPV179hk78VAC7YDDdjBa9zXl5s zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rpr7wry88-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 10 Apr 2019 17:29:18 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF2A334;
-        Wed, 10 Apr 2019 15:29:16 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A32682673;
-        Wed, 10 Apr 2019 15:29:16 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Apr
- 2019 17:29:16 +0200
-Subject: Re: [PATCH] PM / core: Propagate dev->power.wakeup_path when no
- callbacks
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-pm@vger.kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190410095516.6170-1-ulf.hansson@linaro.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c0e5e074-b0e4-c554-ab50-b04b046a487e@st.com>
-Date:   Wed, 10 Apr 2019 17:28:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 70EB230BA351;
+        Wed, 10 Apr 2019 15:29:28 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F90B605CF;
+        Wed, 10 Apr 2019 15:29:26 +0000 (UTC)
+Subject: Re: [PATCH-tip v2 02/12] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-3-longman@redhat.com>
+ <20190410151018.GL7905@worktop.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <cc24e1ab-689a-9ef4-67ba-5791c40dfee2@redhat.com>
+Date:   Wed, 10 Apr 2019 11:29:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190410095516.6170-1-ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190410151018.GL7905@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
- signatures=0
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 10 Apr 2019 15:29:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf
+On 04/10/2019 11:10 AM, Peter Zijlstra wrote:
+> On Fri, Apr 05, 2019 at 03:21:05PM -0400, Waiman Long wrote:
+>> +#define RWSEM_WAIT_TIMEOUT	((HZ - 1)/200 + 1)
+> Given the choices in HZ, the above seems fairly 'optimistic'.
 
-On 4/10/19 11:55 AM, Ulf Hansson wrote:
-> The dev->power.direct_complete flag may become set in device_prepare() in
-> case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-> set). This leads to a broken behaviour, when there is child having wakeup
-> enabled and relies on its parent to be used in the wakeup path.
-> 
-> More precisely, when the direct complete path becomes selected for the
-> child in __device_suspend(), the propagation of the dev->power.wakeup_path
-> becomes skipped as well.
-> 
-> Let's address this problem, by checking if the device is a part the wakeup
-> path or has wakeup enabled, then prevent the direct complete path from
-> being used.
-> 
-> Reported-by: Loic Pallardy <loic.pallardy@st.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> 
+I can tighten it up and make it less "optimistic" :-)
 
-Thanks Ulf for this patch. It'll avoid to have dirty hack in serial 
-suspend callback (at least for stm32). I just tested it on stm32 kernel 
-v4.19 (which embeds all our genpd based power features). Replacing
-device_may_wakeup(dev) by
-device_may_wakeup(dev) || dev->power.wakeup_path) then dirty hack to 
-test ttydev wakeup flag in stm32 usart driver is no more needed.
+Cheers,
+Longman
 
-So you can add my Tested-by
-
-Regards
-Alex
-
-
-> More background:
-> 
-> This problem was reported by Loic Pallardy, offlist, while he was working
-> on enabling wakeup for a tty serial console driver.
-> 
-> When I looked more closely, I noticed that uart_suspend_port() calls
-> device_may_wakeup() for the tty child devices, and then also the used serial
-> driver check its device (parent) for device_may_wakeup(). To me this looks like
-> workarounds to fix a behaviour that really should be dealt with from the PM
-> core, no matter of whether the child have PM callbacks assigned or not.
-> 
-> In other words, it seems like the serial driver(s) should be checking the
-> wakeup_path flag for the parent, solely, instead.
-> 
-> I haven't digested further behaviours for other subsystem, but recently
-> reviewed a patch for a gpio driver [1], that seems to be suffering from the
-> similar problems.
-> 
-> Kind regards
-> Ulf Hansson
-> 
-> [1]
-> https://lkml.org/lkml/2019/4/4/1283
-> 
-> ---
->   drivers/base/power/main.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 41eba82ee7b9..f9cfdeee8288 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
->   	if (dev->power.syscore)
->   		goto Complete;
->   
-> +	/* Avoid direct_complete, to let wakeup_path being propagated. */
-> +	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-> +		dev->power.direct_complete = false;
-> +
->   	if (dev->power.direct_complete) {
->   		if (pm_runtime_status_suspended(dev)) {
->   			pm_runtime_disable(dev);
-> 
