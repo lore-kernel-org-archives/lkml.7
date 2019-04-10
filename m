@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6288FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D90C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA55217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9669720820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfDJXNA (ORCPT
+        id S1726926AbfDJXNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 19:13:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33020 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbfDJXM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 19:12:57 -0400
+        Wed, 10 Apr 2019 19:13:18 -0400
+Received: from foss.arm.com ([217.140.101.70]:33052 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfDJXM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 19:12:59 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB6931688;
-        Wed, 10 Apr 2019 16:12:56 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A5D3A78;
+        Wed, 10 Apr 2019 16:12:59 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B6D33F557;
-        Wed, 10 Apr 2019 16:12:56 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0C873F557;
+        Wed, 10 Apr 2019 16:12:58 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
@@ -34,9 +34,9 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
         Andre.Przywara@arm.com, linux-kernel@vger.kernel.org,
         Jeremy Linton <jeremy.linton@arm.com>,
         Andre Przywara <andre.przywara@arm.com>
-Subject: [v7 04/10] arm64: Advertise mitigation of Spectre-v2, or lack thereof
-Date:   Wed, 10 Apr 2019 18:12:31 -0500
-Message-Id: <20190410231237.52506-5-jeremy.linton@arm.com>
+Subject: [v7 08/10] arm64: Always enable ssb vulnerability detection
+Date:   Wed, 10 Apr 2019 18:12:35 -0500
+Message-Id: <20190410231237.52506-9-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410231237.52506-1-jeremy.linton@arm.com>
 References: <20190410231237.52506-1-jeremy.linton@arm.com>
@@ -47,212 +47,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+The ssb detection logic is necessary regardless of whether
+the vulnerability mitigation code is built into the kernel.
+Break it out so that the CONFIG option only controls the
+mitigation logic and not the vulnerability detection.
 
-We currently have a list of CPUs affected by Spectre-v2, for which
-we check that the firmware implements ARCH_WORKAROUND_1. It turns
-out that not all firmwares do implement the required mitigation,
-and that we fail to let the user know about it.
-
-Instead, let's slightly revamp our checks, and rely on a whitelist
-of cores that are known to be non-vulnerable, and let the user know
-the status of the mitigation in the kernel log.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[This makes more sense in front of the sysfs patch]
-[Pick pieces of that patch into this and move it earlier]
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm64/kernel/cpu_errata.c | 107 +++++++++++++++++----------------
- 1 file changed, 55 insertions(+), 52 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |  4 ----
+ arch/arm64/kernel/cpu_errata.c      | 11 +++++++----
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index e505e1fbd2b9..6ccdc97e5d6a 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -638,11 +638,7 @@ static inline int arm64_get_ssbd_state(void)
+ #endif
+ }
+ 
+-#ifdef CONFIG_ARM64_SSBD
+ void arm64_set_ssbd_mitigation(bool state);
+-#else
+-static inline void arm64_set_ssbd_mitigation(bool state) {}
+-#endif
+ 
+ extern int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+ 
 diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index cf623657cf3c..2b6e6d8e105b 100644
+index fb8eb6c6088f..6958dcdabf7d 100644
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -131,9 +131,9 @@ static void __copy_hyp_vect_bpi(int slot, const char *hyp_vecs_start,
- 	__flush_icache_range((uintptr_t)dst, (uintptr_t)dst + SZ_2K);
+@@ -275,7 +275,6 @@ static int detect_harden_bp_fw(void)
+ 	return 1;
  }
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
--				      const char *hyp_vecs_start,
--				      const char *hyp_vecs_end)
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
-+				    const char *hyp_vecs_start,
-+				    const char *hyp_vecs_end)
+-#ifdef CONFIG_ARM64_SSBD
+ DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
+ 
+ int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
+@@ -346,6 +345,7 @@ void __init arm64_enable_wa2_handling(struct alt_instr *alt,
+ 		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
+ }
+ 
++#ifdef CONFIG_ARM64_SSBD
+ void arm64_set_ssbd_mitigation(bool state)
  {
- 	static DEFINE_RAW_SPINLOCK(bp_lock);
- 	int cpu, slot = -1;
-@@ -177,23 +177,6 @@ static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
- }
- #endif	/* CONFIG_KVM_INDIRECT_VECTORS */
- 
--static void  install_bp_hardening_cb(const struct arm64_cpu_capabilities *entry,
--				     bp_hardening_cb_t fn,
--				     const char *hyp_vecs_start,
--				     const char *hyp_vecs_end)
--{
--	u64 pfr0;
--
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	pfr0 = read_cpuid(ID_AA64PFR0_EL1);
--	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_CSV2_SHIFT))
--		return;
--
--	__install_bp_hardening_cb(fn, hyp_vecs_start, hyp_vecs_end);
--}
--
- #include <uapi/linux/psci.h>
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
-@@ -228,31 +211,27 @@ static int __init parse_nospectre_v2(char *str)
- }
- early_param("nospectre_v2", parse_nospectre_v2);
- 
--static void
--enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
-+/*
-+ * -1: No workaround
-+ *  0: No workaround required
-+ *  1: Workaround installed
-+ */
-+static int detect_harden_bp_fw(void)
- {
- 	bp_hardening_cb_t cb;
- 	void *smccc_start, *smccc_end;
- 	struct arm_smccc_res res;
- 	u32 midr = read_cpuid_id();
- 
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	if (__nospectre_v2) {
--		pr_info_once("spectrev2 mitigation disabled by command line option\n");
--		return;
--	}
--
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
--		return;
-+		return -1;
- 
- 	switch (psci_ops.conduit) {
- 	case PSCI_CONDUIT_HVC:
- 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_hvc_arch_workaround_1;
- 		/* This is a guest, no need to patch KVM vectors */
- 		smccc_start = NULL;
-@@ -263,23 +242,23 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
- 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_smc_arch_workaround_1;
- 		smccc_start = __smccc_workaround_1_smc_start;
- 		smccc_end = __smccc_workaround_1_smc_end;
+ 	if (this_cpu_has_cap(ARM64_SSBS)) {
+@@ -370,6 +370,12 @@ void arm64_set_ssbd_mitigation(bool state)
  		break;
- 
- 	default:
--		return;
-+		return -1;
  	}
- 
- 	if (((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR) ||
- 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
- 		cb = qcom_link_stack_sanitization;
- 
--	install_bp_hardening_cb(entry, cb, smccc_start, smccc_end);
-+	install_bp_hardening_cb(cb, smccc_start, smccc_end);
- 
--	return;
-+	return 1;
  }
- #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
- 
-@@ -521,24 +500,48 @@ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
- 	CAP_MIDR_RANGE_LIST(midr_list)
- 
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
--
- /*
-- * List of CPUs where we need to issue a psci call to
-- * harden the branch predictor.
-+ * List of CPUs that do not need any Spectre-v2 mitigation at all.
-  */
--static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
--	MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
--	MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
--	MIDR_ALL_VERSIONS(MIDR_NVIDIA_DENVER),
--	{},
-+static const struct midr_range spectre_v2_safe_list[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
-+	{ /* sentinel */ }
- };
- 
-+static bool __maybe_unused
-+check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
++#else
++void arm64_set_ssbd_mitigation(bool state)
 +{
-+	int need_wa;
-+
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+
-+	/* If the CPU has CSV2 set, we're safe */
-+	if (cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64PFR0_EL1),
-+						 ID_AA64PFR0_CSV2_SHIFT))
-+		return false;
-+
-+	/* Alternatively, we have a list of unaffected CPUs */
-+	if (is_midr_in_range_list(read_cpuid_id(), spectre_v2_safe_list))
-+		return false;
-+
-+	/* Fallback to firmware detection */
-+	need_wa = detect_harden_bp_fw();
-+	if (!need_wa)
-+		return false;
-+
-+	/* forced off */
-+	if (__nospectre_v2) {
-+		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-+		return false;
-+	}
-+
-+	if (need_wa < 0)
-+		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
-+
-+	return (need_wa > 0);
++	pr_info_once("SSBD disabled by kernel configuration\n");
 +}
- #endif
++#endif	/* CONFIG_ARM64_SSBD */
  
- #ifdef CONFIG_HARDEN_EL2_VECTORS
-@@ -717,8 +720,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	{
- 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
--		.cpu_enable = enable_smccc_arch_workaround_1,
--		ERRATA_MIDR_RANGE_LIST(arm64_bp_harden_smccc_cpus),
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = check_branch_predictor,
+ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
+ 				    int scope)
+@@ -467,7 +473,6 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
+ 
+ 	return required;
+ }
+-#endif	/* CONFIG_ARM64_SSBD */
+ 
+ static void __maybe_unused
+ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
+@@ -759,14 +764,12 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ 		ERRATA_MIDR_RANGE_LIST(arm64_harden_el2_vectors),
  	},
  #endif
- #ifdef CONFIG_HARDEN_EL2_VECTORS
+-#ifdef CONFIG_ARM64_SSBD
+ 	{
+ 		.desc = "Speculative Store Bypass Disable",
+ 		.capability = ARM64_SSBD,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = has_ssbd_mitigation,
+ 	},
+-#endif
+ #ifdef CONFIG_ARM64_ERRATUM_1188873
+ 	{
+ 		/* Cortex-A76 r0p0 to r2p0 */
 -- 
 2.20.1
 
