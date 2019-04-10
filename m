@@ -2,78 +2,105 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94933C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECF1C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EE620818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB20120818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbfDJQuX (ORCPT
+        id S2388082AbfDJQwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:50:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50526 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388065AbfDJQuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:50:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99FAEAD5E;
-        Wed, 10 Apr 2019 16:50:21 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 09:50:13 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-Subject: Re: [PATCH-tip v2 06/12] locking/rwsem: Wake up almost all readers
- in wait queue
-Message-ID: <20190410165013.njy5bg32pxq6syyr@linux-r8p5>
-References: <20190405192115.17416-1-longman@redhat.com>
- <20190405192115.17416-7-longman@redhat.com>
+        Wed, 10 Apr 2019 12:52:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57892 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728888AbfDJQwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 12:52:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C41A374;
+        Wed, 10 Apr 2019 09:52:04 -0700 (PDT)
+Received: from red-moon (unknown [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D16C13F59C;
+        Wed, 10 Apr 2019 09:52:02 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 17:50:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/8] PCI: DWC/Keystone: MSI configuration cleanup
+Message-ID: <20190410165039.GA4558@red-moon>
+References: <20190321095927.7058-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190405192115.17416-7-longman@redhat.com>
-User-Agent: NeoMutt/20180323
+In-Reply-To: <20190321095927.7058-1-kishon@ti.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 05 Apr 2019, Waiman Long wrote:
+On Thu, Mar 21, 2019 at 03:29:19PM +0530, Kishon Vijay Abraham I wrote:
+> This series tries to address the comments discussed in [1] w.r.t
+> removing Keystone specific callbacks defined in dw_pcie_host_ops.
+> 
+> This series also tries to cleanup the Keystone interrupt handling
+> part.
+> 
+> Changes from v4:
+> *) Removed legacy interrupt cleanup patch which uses hierarchy IRQ
+>    domain since TI platform uses edge interrupt for legacy interrupt.
+>    This will be deferred till I get more details from HW team.
+> 
+> Changes from v3:
+> *) Uses hierarchy IRQ domain for legacy interrupts since there is 1:1
+>    mapping between legacy interrupt and GIC IRQ.
+>    (MSI still depends on the order of IRQs populated in dt).
+> 
+> Changes from v2:
+> *) Removed patch that modifies ks_pcie_legacy_irq_handler() to check the
+>    IRQ_STATUS of INTA/B/C/D. Lorenzo's comment to create a matrix
+>    LinuxIRQ x INTx will be added in AM654x PCIe support series
+> *) ks_pcie_legacy_irq_handler() is made to use hwirq to get IRQ offset
+>    instead of virq.
+> *) default msi_irq_chip is assigned in dw_pcie_host_init() once keystone
+>    assigns its msi_irq_chip
+> *) Fixed other minor comments from Lorenzo and Bjorn
+> 
+> Changes from v1:
+> *) Removed "PCI: keystone: Use "dummy_irq_chip" instead of new irqchip
+> for legacy interrupt handling" from the patch series. It should be
+> handled differently.
+> 
+> *) Added Gustavo's ACKed by and fixed a commit message.
+> 
+> [1] -> https://patchwork.kernel.org/patch/10681587/
+> 
+> Kishon Vijay Abraham I (8):
+>   PCI: keystone: Cleanup interrupt related macros
+>   PCI: keystone: Add separate functions for configuring MSI and legacy
+>     interrupt
+>   PCI: keystone: Use hwirq to get the MSI IRQ number offset
+>   PCI: keystone: Cleanup ks_pcie_msi_irq_handler
+>   PCI: dwc: Add support to use non default msi_irq_chip
+>   PCI: keystone: Use Keystone specific msi_irq_chip
+>   PCI: dwc: Remove Keystone specific dw_pcie_host_ops
+>   PCI: dwc: Do not write to MSI control registers if the platform
+>     doesn't use it
+> 
+>  drivers/pci/controller/dwc/pci-keystone.c     | 365 ++++++++++--------
+>  .../pci/controller/dwc/pcie-designware-host.c |  78 ++--
+>  drivers/pci/controller/dwc/pcie-designware.h  |   6 +-
+>  3 files changed, 233 insertions(+), 216 deletions(-)
 
->When the front of the wait queue is a reader, other readers
->immediately following the first reader will also be woken up at the
->same time. However, if there is a writer in between. Those readers
->behind the writer will not be woken up.
->
->Because of optimistic spinning, the lock acquisition order is not FIFO
->anyway. The lock handoff mechanism will ensure that lock starvation
->will not happen.
->
->Assuming that the lock hold times of the other readers still in the
->queue will be about the same as the readers that are being woken up,
->there is really not much additional cost other than the additional
->latency due to the wakeup of additional tasks by the waker. Therefore
->all the readers up to a maximum of 256 in the queue are woken up when
->the first waiter is a reader to improve reader throughput.
+Applied to pci/keystone, aiming for v5.2 unless something goes
+wrong with testing.
 
-Before we stopped waking readers when a writer was encountered but
-would otherwise wakeup _all_ readers. I don't understand why you want
-to limit this to MAX_READERS_WAKEUP, otherwise I agree it's nice to
-skip the writer and continue waking readers in the queue (with the handoff
-guarantees obviously).
-
-Would it not be better to do the MAX_READERS_WAKEUP limit only when
-a writer is found?
-
-Thanks,
-Davidlohr
+Lorenzo
