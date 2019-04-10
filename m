@@ -2,137 +2,121 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A70EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086A12077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BACDA2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iPRNj1KY"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="arrJ0gtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfDJJUr (ORCPT
+        id S1729404AbfDJJXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:20:47 -0400
-Received: from mout.web.de ([212.227.17.11]:40369 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbfDJJUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:20:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554888018;
-        bh=2FYswxDKW9RjyC9nnuFAbcWwWRs0tTGJp9obytb1g40=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=iPRNj1KYQ+n7aURaJxUGbca/RoZu4cOHMqihNnCSHaX98eLCJLI4uuXPB7QiYGC3k
-         8K3UBlXBpTL+AoiqOoF2zy+XR/enqhRvJHBEQxAy7uTaPwxzBwZexqXCh03PbhzEh5
-         ROTaS4ew58gnlns/s645gg/ldM05Ax129QTk92Xs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.98.93]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lo0ZA-1gh0VW09Um-00g4MB; Wed, 10
- Apr 2019 11:20:18 +0200
-Subject: Re: [v2] net: xilinx: add a helper function for axienet_probe
-To:     Wen Yang <wen.yang99@zte.com.cn>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <John.Linn@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <1554865035-8499-1-git-send-email-wen.yang99@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <cb5657c0-e21a-0228-0638-0b41b423a812@web.de>
-Date:   Wed, 10 Apr 2019 11:20:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1554865035-8499-1-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
+        Wed, 10 Apr 2019 05:23:20 -0400
+Received: from mail-eopbgr40096.outbound.protection.outlook.com ([40.107.4.96]:23810
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729367AbfDJJXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:23:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yrs3Ge3ptc84V0fG1G9YEJl4Ar5Wu9P26wXtRaXgbjo=;
+ b=arrJ0gtnO/qBqfEX1huI1Qp8TAKv0q1X5zAsU/tWl0cR9IooqhkmgTqiD54i41eWcXH3DQksROKSjLPGvuIL/q7n9QaD9aCfw3EQiRnZrYg3s8E9FqBLsE7LyHiw69lRLyEdj/QqVSGMSWz/LPfO8+eFXVGp1/EY/lG7Ptye8Ng=
+Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com (10.168.188.7) by
+ HE1PR0701MB2604.eurprd07.prod.outlook.com (10.168.187.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.11; Wed, 10 Apr 2019 09:23:15 +0000
+Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com
+ ([fe80::1449:d020:a36f:a8a3]) by HE1PR0701MB2652.eurprd07.prod.outlook.com
+ ([fe80::1449:d020:a36f:a8a3%6]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
+ 09:23:15 +0000
+From:   "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] modpost: make KBUILD_MODPOST_WARN also configurable for
+Thread-Topic: [PATCH v2] modpost: make KBUILD_MODPOST_WARN also configurable
+ for
+Thread-Index: AdTvfB/gjVQwJ0l9SOGmgdISIvt+nw==
+Date:   Wed, 10 Apr 2019 09:23:15 +0000
+Message-ID: <HE1PR0701MB2652D08633C7322BDEABDACBFA2E0@HE1PR0701MB2652.eurprd07.prod.outlook.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=wladislav.wiebe@nokia.com; 
+x-originating-ip: [131.228.32.189]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e64ee84c-a58a-482c-d1b0-08d6bd962929
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR0701MB2604;
+x-ms-traffictypediagnostic: HE1PR0701MB2604:
+x-microsoft-antispam-prvs: <HE1PR0701MB26046972B9DD4E6F28138C33FA2E0@HE1PR0701MB2604.eurprd07.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(136003)(39860400002)(189003)(199004)(105586002)(86362001)(478600001)(14454004)(9686003)(106356001)(2501003)(71190400001)(74316002)(256004)(53936002)(55016002)(2201001)(14444005)(71200400001)(3846002)(5660300002)(52536014)(6116002)(2906002)(25786009)(4326008)(305945005)(7736002)(7696005)(8676002)(81156014)(33656002)(110136005)(99286004)(102836004)(97736004)(6506007)(316002)(26005)(68736007)(476003)(486006)(186003)(66066001)(6436002)(8936002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0701MB2604;H:HE1PR0701MB2652.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mrAt/pHfYqndRPjeimgKZh4eZj4FThV8rwbjulBnvwF1NhnJNzPevMGayff6c2nCcc+hB62W5MalVyTRjldPq3+I7/aIq5ZqR5lGmwFxHTDOURUk6HAY9OE3nl7vQGCCgm12ynTolm7VnGYW6SJ49LAewwZdXV4YkP62FK27RmyqE1pA5FIVdN2WdrN3/4EomDB007enfEBwN9ubj1j/i8q73wQst8or/dlcJ0eEZfy/XrsKCMYmmcbTtSrRPyDcQ2nQ4srcz5kz9R1S7WLgGSfyl53Ja/tOuogZKKXPFO5h3W23a5msPW2qbN8z5wCvZY+3Webwb92L1VTzjZOfaIa3JDL2Woc+DCNe5t656PCX7bbgo5rghqAyhT9HYAsQyGr59YvRZaUOZ1EnIKCOvZQNBMjjCtj/8kMAppKhm5w=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jHb9h3UtyFkMr4ZSftIwD8Q0bvt8oZ+vFI5fETh9YzqCwlCz4o/
- mcxCJW7rzARPBS6llSKxsmVCHuS+RnrsyjCHIR1pChkW0k6o10RhEQBZlmP+vTGMfsoLi9K
- tnqXeLrw1TbYqjdnKQ3NPA6yGODhEoTi/HuELcliiJZaBuxzu1Sg4UJz09y8hm03ibZX1X3
- /rNLm57y2H3QqKEvO8J2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+KJDi6GXL0Y=:pgKxfarPMmbPy3wEPx9AxK
- Jg82uU7A6j6bc0u6B+5FZoydEau5srnEKzMjKDc9uDPMh4ySVxRFr2yjiwYz3/IBjorXkc9Cn
- wOTHP3Y4J2fKTI/anNvmOZEk7Y2z2J7i+l/v5oaLShS2Dhs56h/VZhoAcA6Q7Ew3Gl/FdARjl
- VoEO30jo4/ymJjWBkpzBti+0I6ki93d1vdIvNlzkht50mPe1D5nFqAeZj3Yakwqu9TkooJQCs
- O+kjSpiimXTRz7ZP6l1VgaviJHT7Qt3+on9ug95CFIKo4WBp7IvdfmeVBkV1OMI29Bt6jjCs2
- 6GY5oAv2sEVCsvJ8V/9w/Smt5q2/jY3tLpuC4utV4f1bQU/kT4C+5+VmnuvHq8uKgGTVrlanr
- Cm7CbVqouRcy8xy3yRgxQtig3mZLuLH7B4diBnNAiWRihO9KuIvdC8vLfnxOs3H9N6L9w5qVx
- S1vUrhTq1fmUCpRYGE5wjm12sIQO6gb7Hz9WlEKgxavPU96kvTOISXeEcLJFLsDITVhSq87aB
- 3KjTYVwrbrAPPTICozGqLuAeGj+ggVc/J3BWqk5Bta/Bu+we5Q8nLxKiuKbho1PpP/XVr97Lo
- f6rmSouA3S4qa3Swb7jLOOBWDa87NP9RbAxtw+jwhmjhOqb9JE6zE5WBBcHPjo3YYXjHE0UDl
- FpVf4C3+p9YF9WZQeTC9EORSu1GvEOzamiMMcJ7gFSA6S53exgpuOOM+HmEy39NS72naxSJO/
- oywe5JrurWTEYBAtGcUyKK9zcM1vyBPwHOuAM6l+HarBl8V5gLrp/ZlNJqIquZKy72yjNPYP/
- CBzlE8yBYyqinXjY0Nlr0DxXyv8i4QktG8lu1JhItefg2BosVtFbjMr3AjZEyxPFuCxDchQ8l
- B7/XBMqY+qBbsIG19tFm0Jt2HuSeo6j0Kig0Nlk3pPatEOHzcO8lVGZmUTFtqi8afod65XtG/
- XPU/mx3VvLw==
+MIME-Version: 1.0
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e64ee84c-a58a-482c-d1b0-08d6bd962929
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 09:23:15.0952
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0701MB2604
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The "Find DMA Node, Map DMA Register, and Decode DMA IRQ" code snippets
-> in axienet_probe() are independent. Tidy this function implementation
-> a little up by factoring these calls out into a helper function.
+Commit ea837f1c0503 ("kbuild: make modpost processing configurable")
+was intended to give KBUILD_MODPOST_WARN flexibility to be configurable.
+Right now KBUILD_MODPOST_WARN gets just ignored when KBUILD_EXTMOD is
+set which happens per default when building modules out of the tree.
 
-Would another adjustment be safer for the word =E2=80=9Cindependent=E2=80=
-=9D
-because there are dependencies usually involved between function calls
-for such a software refactoring?
+This change gives the opportunity to define module build behaving also
+in case of out of tree builds and default will become exit on error.
+Errors which can be detected by the build should be trapped out of the box
+there, unless somebody wants to notice broken stuff later at runtime.
 
+As this patch changes the default behaving from warning to error,
+users can consider to fix it for external module builds by:
+- providing module symbol table via KBUILD_EXTRA_SYMBOLS for
+  modules which are dependent
+- OR getting old behaving back by passing KBUILD_MODPOST_WARN to the build
 
-> v2: Massaged changelog a bit
+Signed-off-by: Wladislav Wiebe <wladislav.wiebe@nokia.com>
+---
+ scripts/Makefile.modpost | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
-Regards,
-Markus
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 6b7f354f189a..fec6ec2ffa47 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -78,7 +78,7 @@ modpost =3D scripts/mod/modpost                    \
+  $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))=
+) \
+  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
+- $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w)
++ $(if $(KBUILD_MODPOST_WARN),-w)
+=20
+ MODPOST_OPT=3D$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
+=20
+--=20
+2.19.2
