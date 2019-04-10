@@ -2,78 +2,98 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2441BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03E320820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C736D217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfDJMys (ORCPT
+        id S1732226AbfDJMyw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:54:48 -0400
-Received: from smtp.asem.it ([151.1.184.197]:61694 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732186AbfDJMyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:54:47 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003804506.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:54:43 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 10
- Apr 2019 14:54:41 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
- Transport; Wed, 10 Apr 2019 14:54:41 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
-Date:   Wed, 10 Apr 2019 14:51:36 +0200
-Message-ID: <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
-References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
+        Wed, 10 Apr 2019 08:54:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20196 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732195AbfDJMyt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:54:49 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-160-A2oPZ-l9M2SWGjvacewE_g-1; Wed, 10 Apr 2019 13:54:44 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 10 Apr 2019 13:55:53 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 10 Apr 2019 13:55:53 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Paolo Bonzini' <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH] KVM: x86: optimize check for valid PAT value
+Thread-Topic: [PATCH] KVM: x86: optimize check for valid PAT value
+Thread-Index: AQHU74O4C+qyka3PCE+FdT/UfNmwwaY1VKDw
+Date:   Wed, 10 Apr 2019 12:55:53 +0000
+Message-ID: <c2aaa028ef564c6d8bd50dbd86489115@AcuMS.aculab.com>
+References: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B0214.5CADE792.005C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+X-MC-Unique: A2oPZ-l9M2SWGjvacewE_g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With dw_dmac, sometimes the request of a DMA channel fails because
-the DMA driver is not ready, so an explicit dependency request
-is necessary.
+From: Paolo Bonzini
+> Sent: 10 April 2019 10:55
+> 
+> This check will soon be done on every nested vmentry and vmexit,
+> "parallelize" it using bitwise operations.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+...
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 28406aa1136d..7bc7ac9d2a44 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -347,4 +347,12 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+>  	__this_cpu_write(current_vcpu, NULL);
+>  }
+> 
+> +static inline bool kvm_pat_valid(u64 data)
+> +{
+> +	if (data & 0xF8F8F8F8F8F8F8F8)
+> +		return false;
+> +	/* 0, 1, 4, 5, 6, 7 are valid values.  */
+> +	return (data | ((data & 0x0202020202020202) << 1)) == data;
+> +}
+> +
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- drivers/spi/spi-pxa2xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+How about:
+	/*
+	 * Each byte must be 0, 1, 4, 5, 6 or 7.
+	 * Convert 001x to 011x then 100x so 2 and 3 fail the test.
+	 */
+	data |= (data ^ 0x0404040404040404ULL)) + 0x0202020202020202ULL;
+	if (data & 0xF8F8F8F8F8F8F8F8ULL)
+		return false;
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index c9560a1..e8ac26b 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1962,3 +1962,5 @@ static void __exit pxa2xx_spi_exit(void)
- 	platform_driver_unregister(&driver);
- }
- module_exit(pxa2xx_spi_exit);
-+
-+MODULE_SOFTDEP("pre: dw_dmac");
--- 
-2.7.4
+   David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
