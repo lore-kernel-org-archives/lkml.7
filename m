@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CB0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88E3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B61420850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F8820854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732170AbfDJNka (ORCPT
+        id S1732264AbfDJNl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:40:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46423 "EHLO mga12.intel.com"
+        Wed, 10 Apr 2019 09:41:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48802 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732419AbfDJNhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:37:08 -0400
+        id S1732392AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:37:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:07 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:04 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="222229043"
+   d="scan'208";a="134566104"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 10 Apr 2019 06:37:03 -0700
+  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 92F337B3; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
+        id BFD4349A; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 25/36] thunderbolt: Rework NFC credits handling
-Date:   Wed, 10 Apr 2019 16:36:42 +0300
-Message-Id: <20190410133653.88061-26-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 08/36] thunderbolt: Add dummy read after port capability list walk on Light Ridge
+Date:   Wed, 10 Apr 2019 16:36:25 +0300
+Message-Id: <20190410133653.88061-9-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,65 +55,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NFC (non flow control) credits is actually 20-bit field so update
-tb_port_add_nfc_credits() to handle this properly. This allows us to set
-NFC credits for Display Port path in subsequent patches.
-
-Also make sure the function does not update the hardware if the
-underlying switch is already unplugged.
+Light Ridge has an issue where reading the next capability pointer
+location in port config space the read data is not cleared. It is fine
+to read capabilities each after another so only thing we need to do is
+to make sure we issue dummy read after tb_port_find_cap() is finished to
+avoid the issue in next read.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/switch.c  | 20 +++++++++++++-------
- drivers/thunderbolt/tb_regs.h |  3 +++
- 2 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/thunderbolt/cap.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 028e9a293382..9462e6982061 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -537,14 +537,20 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
-  */
- int tb_port_add_nfc_credits(struct tb_port *port, int credits)
- {
--	if (credits == 0)
-+	u32 nfc_credits;
-+
-+	if (credits == 0 || port->sw->is_unplugged)
- 		return 0;
--	tb_port_info(port,
--		     "adding %#x NFC credits (%#x -> %#x)",
--		     credits,
--		     port->config.nfc_credits,
--		     port->config.nfc_credits + credits);
--	port->config.nfc_credits += credits;
-+
-+	nfc_credits = port->config.nfc_credits & TB_PORT_NFC_CREDITS_MASK;
-+	nfc_credits += credits;
-+
-+	tb_port_dbg(port, "adding %d NFC credits to %lu",
-+		    credits, port->config.nfc_credits & TB_PORT_NFC_CREDITS_MASK);
-+
-+	port->config.nfc_credits &= ~TB_PORT_NFC_CREDITS_MASK;
-+	port->config.nfc_credits |= nfc_credits;
-+
- 	return tb_port_write(port, &port->config.nfc_credits,
- 			     TB_CFG_PORT, 4, 1);
+diff --git a/drivers/thunderbolt/cap.c b/drivers/thunderbolt/cap.c
+index a58585b4e6d9..8bf8e031f0bc 100644
+--- a/drivers/thunderbolt/cap.c
++++ b/drivers/thunderbolt/cap.c
+@@ -52,6 +52,21 @@ static int tb_port_enable_tmu(struct tb_port *port, bool enable)
+ 	return tb_sw_write(sw, &value, TB_CFG_SWITCH, offset, 1);
  }
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 75e935acade5..74c0f4a5606d 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -211,6 +211,9 @@ struct tb_regs_port_header {
  
- } __packed;
- 
-+/* DWORD 4 */
-+#define TB_PORT_NFC_CREDITS_MASK	GENMASK(19, 0)
++static void tb_port_dummy_read(struct tb_port *port)
++{
++	/*
++	 * When reading from next capability pointer location in port
++	 * config space the read data is not cleared on LR. To avoid
++	 * reading stale data on next read perform one dummy read after
++	 * port capabilities are walked.
++	 */
++	if (tb_switch_is_lr(port->sw)) {
++		u32 dummy;
 +
- /* PCIe adapter registers */
++		tb_port_read(port, &dummy, TB_CFG_PORT, 0, 1);
++	}
++}
++
+ static int __tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
+ {
+ 	u32 offset = 1;
+@@ -92,6 +107,7 @@ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
  
- #define TB_PCI_EN			BIT(31)
+ 	ret = __tb_port_find_cap(port, cap);
+ 
++	tb_port_dummy_read(port);
+ 	tb_port_enable_tmu(port, false);
+ 
+ 	return ret;
 -- 
 2.20.1
 
