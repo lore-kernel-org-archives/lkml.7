@@ -2,140 +2,153 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4050C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEAAC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DA42082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554934722;
-	bh=UI7q17vQhvE2Etty/hhbeA139X5yjFMGcEdzOCyYvzo=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=RnCL6xlyvI7+EppPQqPHu2MsRq0SQOJfX4S96hy4UPMqq6/zO4LPM268CyV0QWcVD
-	 U+mDz+lPCqYN1tns4NMEJPhMLITirox48WCtpnrP7AcXwCcDKHzZ3o/N5MYoiAYG5T
-	 AWU6JlKLSGjKGam9JeSV0TyLl7XUgi+jskqhtGXs=
+	by mail.kernel.org (Postfix) with ESMTP id BB2632082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mRRWRKAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfDJWSk (ORCPT
+        id S1726752AbfDJWSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:18:40 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36618 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWSk (ORCPT
+        Wed, 10 Apr 2019 18:18:50 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:39953 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDJWSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:18:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id k130so2286057qke.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:18:40 -0700 (PDT)
+        Wed, 10 Apr 2019 18:18:48 -0400
+Received: by mail-vs1-f66.google.com with SMTP id f22so2309457vso.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MGSZQXDQcdOWwdlhCrxsVkTwl8GxYj97+vMhZgI1w9I=;
-        b=YghhWebs518Q9Du8A28X4VKdN4x7kDepAZExP2acSuUghBeIZuyRk8p6gl+i2e3/51
-         PA1q3Hg635V2pfqhG3nmvdxYV5e5LR0a7+AbEg8vru5SUy75A5PQTvxxhrR22NbKwNCP
-         lA0+Oq+/ZDvN3ZLuBl4hiRrdW6N+9chbcd0a9nDsn75unUq/2w7/3WSYuogdDg89yWda
-         NLx3y7juhgCAQk/1kSU18b50Q4vVKhznCG9fIrCMnwB6czqavJ+O8PcC4qCyjXev2Hr8
-         zxm2udgZWBMtyXrVNwTLfCdDGG8DTJ9YRshf/KYhWStdXquq2VExy6REn8qe+avvoOJG
-         qbNw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tPWdwl4Tm8jzYAc3nR128aIlhxTl0fGE3roAbQtw4oQ=;
+        b=mRRWRKAc2PGSAovFYlgEPgX7EWVsz6TyMpP5c1Cjv/iBhpZxFL229MHvddvtGxYCBe
+         /LrM9ADJ1cCN1d7a6hgQnNdQHes5pnrzKsLTskhXIr+RDv8FMh+k35L0yMcK9q9dyCQq
+         5oDT0HZzka0q5yIrqNxbncujB6tVIPeXRV6eo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MGSZQXDQcdOWwdlhCrxsVkTwl8GxYj97+vMhZgI1w9I=;
-        b=nH15Nc7o9238NDQmNGq9jt1O40r81iAl3CL234EY3xKLncXSimD8pjYDGOoGu6TQjJ
-         04u3ueBsaE6ETNO7Pg46pNWmiuSs38eIe5vXcfF19eszEMNobktw8tCFEYYPY2z1cOZk
-         zJuOZ0X2/jNMELWp74LMWYLFj5T+MECYCYlaESBwYJJ7PFiO3eUHHRzozFS9HDIeEMAZ
-         lKHdQcKJ1+j5eWTKFzXasJAIPoESX4/zKbwv5/S0ETrKtgeSITFVr9GRCZ7250EjZGAa
-         n73IVArdRu2RzlgWSeetQuRoEHgEsWiDqgP50bIKAqf5qZNYd/L5Bcg0j0CVvGTSsMBL
-         ctyQ==
-X-Gm-Message-State: APjAAAWv9XItIUWZRCmR/H/14sq4CLjS6A+iptUwtELfGwm1Pmcnt47r
-        t1JCV+Am21w7HQYOqDtw8u5Tmzep
-X-Google-Smtp-Source: APXvYqzOqxpzFrkqVpHfI4ObiAjfEnz8ZYok6Tec8N+nCkT8St9PAbXSEX25DYeKHfVQa3jP02KSqA==
-X-Received: by 2002:ae9:e515:: with SMTP id w21mr36419931qkf.200.1554934719433;
-        Wed, 10 Apr 2019 15:18:39 -0700 (PDT)
-Received: from [10.84.150.60] ([167.220.148.60])
-        by smtp.gmail.com with ESMTPSA id t35sm24855663qtc.10.2019.04.10.15.18.38
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tPWdwl4Tm8jzYAc3nR128aIlhxTl0fGE3roAbQtw4oQ=;
+        b=BmRHV4oFRZppa1nW/A97X5pa7c6wiwAT/b19XC2wa6UyUPPmNk0PChgwZPiOMk0+bt
+         Jq/PA2OnHPIbxCqHMBU4//NcDRgnR7X+P/oy1oAFLI3wTf1tJ5E4iR6LWwMpNE4yssh+
+         nvDenJ/sx+jd467KgvPh8/e898FKoiy1bSzsK0mUmXhE+7DulT2OtQTed4bVFjEzerRd
+         Lqx5S4FmJPgiQdfd+aiTao50qLcI54gom89i6bEdZmQEkFcXUI4t9oFW3et3pT7NziSH
+         jR2T7NaRSFeqFidAQMni3REAsPB6VrZ85VMV4PgtQ29JXfaS2CmyNUidpxr9RCK32ZpO
+         npzw==
+X-Gm-Message-State: APjAAAV1GPH9do+creEVplp1/r1rroEHbRDG/28ycvhFp2iVHFECul5+
+        Vf8FXWdHtsqwrXWFRcyhWvRV2iQrhN4=
+X-Google-Smtp-Source: APXvYqw9oHCojF1AVbdi7NFtA61MO82KmtekNxXknroCdGmsafCpdGzJmttp5YNTBdE6eLqVS4yAjg==
+X-Received: by 2002:a67:eeda:: with SMTP id o26mr26709664vsp.209.1554934726814;
+        Wed, 10 Apr 2019 15:18:46 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id v22sm2025950vkd.44.2019.04.10.15.18.45
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:18:38 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>
-References: <20190410212627.29514-1-okaya@kernel.org>
- <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
- <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org>
- <CAGXu5jLPxUESH9eMm6rvaTVue_9rNEdx+9dcxiV11kgi03jUmA@mail.gmail.com>
-Message-ID: <ac8f52a9-30a4-41fd-50f6-65c8ae859675@kernel.org>
-Date:   Wed, 10 Apr 2019 18:18:37 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id d5so1346493uan.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
+X-Received: by 2002:ab0:4eaa:: with SMTP id l42mr19453267uah.80.1554934725230;
+ Wed, 10 Apr 2019 15:18:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5jLPxUESH9eMm6rvaTVue_9rNEdx+9dcxiV11kgi03jUmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-2-mcroce@redhat.com>
+In-Reply-To: <20190408220925.13077-2-mcroce@redhat.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 15:18:33 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJJDzty8trTPmuxu0_K9xvf+nJ9HGuUE9NF-WOgesu9sQ@mail.gmail.com>
+Message-ID: <CAGXu5jJJDzty8trTPmuxu0_K9xvf+nJ9HGuUE9NF-WOgesu9sQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] proc/sysctl: add shared variables for range check
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/2019 6:04 PM, Kees Cook wrote:
+On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> In the sysctl code the proc_dointvec_minmax() function is often used to
+> validate the user supplied value between an allowed range. This function
+> uses the extra1 and extra2 members from struct ctl_table as minimum and
+> maximum allowed value.
+>
+> On sysctl handler declaration, in every source file there are some readonly
+> variables containing just an integer which address is assigned to the
+> extra1 and extra2 members, so the sysctl range is enforced.
+>
+> The special values 0, 1 and INT_MAX are very often used as range boundary,
+> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
+> different source files:
+>
+>     $ git grep -E '\.extra[12].*&(zero|one|int_max)' |wc -l
+>     261
+>
+> This patch adds three variables for the most commonly used values, so they
+> can be referenced instead of creating a local one for every object file.
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
->> I don't want any of the debug features in my kernel but still
->> need all the expert features. My kernel is considered a production
->> kernel. I don't really want to ship all the good debug enables.
-> 
-> Production kernels enable it. e.g. Ubuntu:
-> $ grep '\bCONFIG_DEBUG_KERNEL\b' /boot/config-$(uname -r)
-> CONFIG_DEBUG_KERNEL=y
-> 
+Oh, and for this patch: Yes please; let's get everyone to use these
+instead of littering the kernel with (non-const!) copies of the same
+thing. :)
 
-It makes sense for a general purpose operating system. It doesn't apply
-to my limited case where I'm very concerned about image size.
+Acked-by: Kees Cook <keescook@chromium.org>
 
->> I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
->> as none of the features except KALLSYMS depend on it. If there was
->> a compile time dependency, I'd say move it to the things that need
->> it as this patch suggests.
-> 
-> CONFIG_DEBUG_KERNEL mainly only enables the visibility of various
-> other options. I can only find two instances of it controlling a
-> "default", and one is overridden by CONFIG_SMP on alpha. :)
-> 
-> $ git grep -B2 'default.*DEBUG_KERNEL'
-> arch/alpha/Kconfig.debug-config MATHEMU
-> arch/alpha/Kconfig.debug-       tristate "Kernel FP software
-> completion" if DEBUG_KERNEL && !SMP
-> arch/alpha/Kconfig.debug:       default y if !DEBUG_KERNEL || SMP
+-Kees
+
+> ---
+>  fs/proc/proc_sysctl.c  | 5 +++++
+>  include/linux/sysctl.h | 4 ++++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index d65390727541..e7a96169fced 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -21,6 +21,11 @@ static const struct inode_operations proc_sys_inode_operations;
+>  static const struct file_operations proc_sys_dir_file_operations;
+>  static const struct inode_operations proc_sys_dir_operations;
+>
+> +/* shared constants to be used in various sysctls */
+> +const int sysctl_zero = 0;
+> +const int sysctl_one = 1;
+> +const int sysctl_int_max = INT_MAX;
+> +
+>  /* Support for permanently empty directories */
+>
+>  struct ctl_table sysctl_mount_point[] = {
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index b769ecfcc3bd..f3b191799747 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -37,6 +37,10 @@ struct ctl_table_root;
+>  struct ctl_table_header;
+>  struct ctl_dir;
+>
+> +extern const int sysctl_zero;
+> +extern const int sysctl_one;
+> +extern const int sysctl_int_max;
+> +
+>  typedef int proc_handler (struct ctl_table *ctl, int write,
+>                           void __user *buffer, size_t *lenp, loff_t *ppos);
+>
 > --
-> kernel/trace/Kconfig-menuconfig FTRACE
-> kernel/trace/Kconfig-   bool "Tracers"
-> kernel/trace/Kconfig:   default y if DEBUG_KERNEL
+> 2.21.0
+>
 
-If the idea is to just show, nothing should happen based on
-DEBUG_KERNEL, right?
 
-No default selection as in FTRACE, no c/S file changes in the code
-path as Mathieu identified.
-
-I can go after individual enables if you agree assuming Mathieu will
-go after the changes in the other email. Let me know otherwise.
-
-> 
-> What do you see enabled that CONFIG_DEBUG_KERNEL enables that you don't want?
-> 
-
+-- 
+Kees Cook
