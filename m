@@ -2,113 +2,123 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F44C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48DAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7F820850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A383120830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V3Jh78HT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732774AbfDJO1H convert rfc822-to-8bit (ORCPT
+        id S1732779AbfDJO2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:27:07 -0400
-Received: from mga01.intel.com ([192.55.52.88]:57806 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731557AbfDJO1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:27:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 07:27:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="133092435"
-Received: from irsmsx105.ger.corp.intel.com ([163.33.3.28])
-  by orsmga008.jf.intel.com with ESMTP; 10 Apr 2019 07:27:02 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- irsmsx105.ger.corp.intel.com ([169.254.7.31]) with mapi id 14.03.0415.000;
- Wed, 10 Apr 2019 15:26:34 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>
-CC:     "luto@kernel.org" <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH 1/1] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Topic: [PATCH 1/1] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU74+O1bcswLOEykmlT3LGNz7aj6Y1NTSAgAA9NAA=
-Date:   Wed, 10 Apr 2019 14:26:33 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C4915F@IRSMSX102.ger.corp.intel.com>
-References: <20190410112103.15170-1-elena.reshetova@intel.com>
- <20190410112103.15170-2-elena.reshetova@intel.com>
- <20190410114259.GB9293@gmail.com>
-In-Reply-To: <20190410114259.GB9293@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmI1ZmY1OTQtZGM2OC00YTc4LTk1NjEtNWE4YmE2ZWIzMTA4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYjM1bzNDeTB2clVzeXUrS0pLTHhJSmV0NXU4Ymt3K2ZoZUJZOTdiM3J0dnFJTTFrdjBLcHdyNURJb0NoaUt0ciJ9
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 10 Apr 2019 10:28:39 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18993 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732090AbfDJO2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:28:39 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cadfd870000>; Wed, 10 Apr 2019 07:28:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 10 Apr 2019 07:28:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 10 Apr 2019 07:28:38 -0700
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Apr
+ 2019 14:28:38 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Apr 2019 14:28:38 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.42.162]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cadfd930001>; Wed, 10 Apr 2019 07:28:37 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <sakari.ailus@linux.intel.com>, <paul.kocialkowski@bootlin.com>,
+        <tfiga@chromium.org>, <keiichiw@chromium.org>, <sumitg@nvidia.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] [media] v4l2-core: fix use-after-free error
+Date:   Wed, 10 Apr 2019 19:58:28 +0530
+Message-ID: <1554906508-17192-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554906503; bh=+vYP8mBHqgdcUcxnaIdUwSHPv0Nf2tTiLmWUBPgwwX0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=V3Jh78HT57lZyZ30HnfCYfGPLCNsMsRAdhPcyR8MWJhsBbUQTT49ShectSSJIyGv7
+         6NiZ1vPccotyHzbW2vupZykxrM3cPFSJNlpPG1bkj508inCE/an1szFxf2NIny/L5k
+         D4uGVSBiEZ0CjTKWNQh/BGL14AuZharmXDE5tujY0m1/KZnMCQj6zDW0J5uEMag2+8
+         pGxDDPcsM0Ada34si6Yxd4A0ikiGgimq+yqZxseAsiG68u1q++hxq1xLsJzzNpUROE
+         RphQh2wxUIaSbYnSmRbzRo5cWopNyyG9jMP1jCXbVeGdQU67rlACiVGgphh7Z1kEdY
+         xgQ0As6jdBUzA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: sumitg <sumitg@nvidia.com>
 
-> * Elena Reshetova <elena.reshetova@intel.com> wrote:
-> 
-> > 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
-> >     base:                                        10000000 loops in 1.62224s = 162.22 nsec / loop
-> >     random_offset (prandom_u32() every syscall): 10000000 loops in 1.64660s =
-> 166.26 nsec / loop
-> 
-> Stupid question, how did you manage to buil timing_test_64? Here it fails
-> with a bog standard gcc 7.3.0 x86-64 distro toolchain:
-> 
->  dagon:~/luto-misc-tests.git> make timing_test_64
->  g++ -m64 -o timing_test_64 -O2 -g -std=gnu++11 -pthread -Wall  timing_test.cc -lrt -
-> ldl
->  /usr/bin/ld: /tmp/cc8VRkuV.o: relocation R_X86_64_32S against `.text.startup' can
-> not be used when making a PIE object; recompile with -fPIC
->  /usr/bin/ld: final link failed: Nonrepresentable section on outputcollect2: error: ld
-> returned 1 exit status
->  Makefile:39: recipe for target 'timing_test_64' failed
+Fixing use-after-free within __v4l2_ctrl_handler_setup().
+Memory is being freed with kfree(new_ref) for duplicate
+control reference entry but cluster is still referring
+to the duplicate entry. Change done to point cluster to
+original reference instead of duplicate which is freed.
 
-I used -no-pie on CFLAGS/CCFLAGS for the whole set of tools.
+ ==================================================================
+ BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+ Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
 
-Unfortunately, this was only the first problem. After it complains about 
-rdwrgsbase asm case... That one I didn't quite understand, but because I could see that
-this case wasn't used for particular measurements I was doing, I just commented that particular
-case out. 
+ Allocated by task 312:
 
-> 
-> 
-> I'm using cb7f9f0592f8, which is like 1.5 years old - is this still the
-> latest and greatest:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/luto/misc-tests.git
+ Freed by task 312:
 
-Yes, same for me. 
+ The buggy address belongs to the object at ffffffc324e78600
+  which belongs to the cache kmalloc-64 of size 64
+ The buggy address is located 24 bytes inside of
+  64-byte region [ffffffc324e78600, ffffffc324e78640)
+ The buggy address belongs to the page:
+ page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+					(null) index:0xffffffc324e78f80
+ flags: 0x4000000000000100(slab)
+ raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+ raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+ page dumped because: kasan: bad access detected
 
-Best Regards,
-Elena.
+ Memory state around the buggy address:
+  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                             ^
+  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ==================================================================
+
+Signed-off-by: sumitg <sumitg@nvidia.com>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 5e3806f..e971bab 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2182,6 +2182,7 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 			continue;
+ 		/* Don't add duplicates */
+ 		if (ref->ctrl->id == id) {
++			ctrl->cluster = &ref->ctrl;
+ 			kfree(new_ref);
+ 			goto unlock;
+ 		}
+-- 
+2.7.4
+
