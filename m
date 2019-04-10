@@ -2,97 +2,85 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C325C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4680520830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF06F20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="f/43EHVQ"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="bhKhjRg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfDJWpM (ORCPT
+        id S1726732AbfDJWq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:45:12 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:49965 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWpL (ORCPT
+        Wed, 10 Apr 2019 18:46:56 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:56054 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDJWq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:45:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1554936311; x=1586472311;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=a3VvaOh2cf1QC+g5MffvF8to+gMoca9eohO0HIC8O3Q=;
-  b=f/43EHVQg6FNa0WyUw2hGtrxQ1QGYJU6aLsnEpXeWkoxpfHNlr5S1oHQ
-   Qdhmrd2l7yjoUH3uxYLCtFbbdVyFDutZs8t0f1nBCToSVl5YCuXSA66SS
-   usQnwMsecIJw9VWtxP4kwdNYebnH+IZ1TE0TRod1MkaI697q6Jqs3cqmh
-   6+9mmgHqprZHNZiREMAG7Hcj5xJKU50MoOnEoLWccKjNUW2C7ZIaEkonR
-   L5LFwJ+X0r2x4MYAKoSXDmFxEBhBTJ4lg1bsUiTdtZCCJ6mvM61YKL0Sb
-   NewTARIfKNag9pgULpxLp6u4mtRE8uNzECY7Y8jR0KGWqsKgqdbeI/Rvf
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,335,1549900800"; 
-   d="scan'208";a="105470406"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Apr 2019 06:45:11 +0800
-IronPort-SDR: V4u7oo/db40Dtl6p+3mc20DNtOs9nOl5X88PNc7u1c5lHAmSa7iVriy0dSLK7l0Am2CJMxXHgI
- f+s6gTOX/NhzK84ZU11r4UtONAP8OW7uW5GKSLoVd5/SBQjwPQ5I7QqAa8eaJN5EfMH3h87m6h
- laRn1MIGYdKMinUU4rJoxfDeCcqfTD6uIKC6IobXkyTfDF4kYMhf60LQ4wYFd2vp0NUEpXUl3g
- iNQr/QLnhYdkRKKBT4P0+4wjB7RXYkl1TMKFlmMgRYWp9DusbNfD2pGBsAqQPCchsWrjycM7Sp
- jqc+IYGZDpBAtvomMiQVfvyr
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 10 Apr 2019 15:22:05 -0700
-IronPort-SDR: QlOKyi6VU6nK9T6rpHWVoYgt23bZNACPlGHgqvZhpoX/gyPVFdKc50HhypFMdxTAjDyQfHRryu
- 6PWonAigBO3stB2INKY2ZKSqX6Imvy9+ghIv+m5qGEQUPmCPa3fA3NyoJVzTZbmwh5wIWQ+vVX
- FnrnnatYkvFWgISr6UksoLUIcqH1owqc3a4f40/WXNDCFTYwfFkFPhA+5fNP++Qg31NUDPZtJU
- tyfNwUHwcBxYQmuY8y2bvMUDcwDWORzXw+Y1nZPcNolUfbQ1QPBYhFPB7wUXovph73WtY0W+E7
- xyA=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 10 Apr 2019 15:45:10 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Borislav Petkov <bp@alien8.de>, Gary Guo <gary@garyguo.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-riscv@lists.infradead.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [0/3] TLB flush counters
-Date:   Wed, 10 Apr 2019 15:44:46 -0700
-Message-Id: <20190410224449.10877-1-atish.patra@wdc.com>
+        Wed, 10 Apr 2019 18:46:56 -0400
+Received: from zyt.lan (unknown [IPv6:2a02:169:3465::360])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 4125B5C062C;
+        Thu, 11 Apr 2019 00:46:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1554936413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=AFE2C6yZSCer3XVYw7g8fJ6fBDG37VSELxp7La10+ew=;
+        b=bhKhjRg9sLUsQAdSSQReqOD8LmM/kBjkArZsQ4ASvkjIOsHxnBB+kwGlb8BrrSkzb310IH
+        Pk8yFFn4Sa9b/NseUBk3gOHzZQNwQ8k8ValXFeCoQEFAimcJ64xgHKDBrrLSZUAMin0bMX
+        VT6IEds3IYjrV80H89QznDqdGpEk8y4=
+From:   Stefan Agner <stefan@agner.ch>
+To:     thierry.reding@gmail.com
+Cc:     digetx@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] gpu: host1x: fix compile error when IOMMU API is not available
+Date:   Thu, 11 Apr 2019 00:47:46 +0200
+Message-Id: <4c3d021c73c001f633803e364cfbc6ace3381205.1554936354.git.stefan@agner.ch>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RISC-V patch (2/3) is based on Gary's TLB flush patch series
+In case the IOMMU API is not available compiling host1x fails with
+the following error:
+  In file included from drivers/gpu/host1x/hw/host1x06.c:27:
+  drivers/gpu/host1x/hw/channel_hw.c: In function ‘host1x_channel_set_streamid’:
+  drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit declaration of function
+    ‘dev_iommu_fwspec_get’; did you mean ‘iommu_fwspec_free’?  [-Werror=implicit-function-declaration]
+  struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+                              ^~~~~~~~~~~~~~~~~~~~
+                              iommu_fwspec_free
 
-https://patchwork.kernel.org/project/linux-riscv/list/?series=97315
+Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ drivers/gpu/host1x/hw/channel_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The x86 kconfig fix patch(1/3) can be applied separately.
-
-Atish Patra (3):
-x86: Update DEBUG_TLBFLUSH options description.
-RISC-V: Update tlb flush counters
-RISC-V: Add DEBUG_TLBFLUSH option.
-
-arch/riscv/Kconfig.debug          | 12 ++++++++++++
-arch/riscv/include/asm/tlbflush.h |  5 +++++
-arch/riscv/mm/tlbflush.c          | 12 ++++++++++++
-arch/x86/Kconfig.debug            | 15 +++------------
-4 files changed, 32 insertions(+), 12 deletions(-)
-
---
+diff --git a/drivers/gpu/host1x/hw/channel_hw.c b/drivers/gpu/host1x/hw/channel_hw.c
+index 27101c04a827..4030d64916f0 100644
+--- a/drivers/gpu/host1x/hw/channel_hw.c
++++ b/drivers/gpu/host1x/hw/channel_hw.c
+@@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct host1x_job *job)
+ 
+ static void host1x_channel_set_streamid(struct host1x_channel *channel)
+ {
+-#if HOST1X_HW >= 6
++#if IS_ENABLED(CONFIG_IOMMU_API) &&  HOST1X_HW >= 6
+ 	struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+ 	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
+ 
+-- 
 2.21.0
 
