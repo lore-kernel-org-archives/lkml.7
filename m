@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B054C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF03C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351C820820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9D720850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfDJNhJ (ORCPT
+        id S1732492AbfDJNhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:37:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46423 "EHLO mga12.intel.com"
+        Wed, 10 Apr 2019 09:37:14 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8900 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732407AbfDJNhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732418AbfDJNhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:05 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="336622797"
+   d="scan'208";a="290342094"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2019 06:37:02 -0700
+  by orsmga004.jf.intel.com with ESMTP; 10 Apr 2019 06:37:04 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 3244B5B8; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
+        id 0AC96BB2; Wed, 10 Apr 2019 16:36:56 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 16/36] thunderbolt: Add functions for allocating and releasing HopIDs
-Date:   Wed, 10 Apr 2019 16:36:33 +0300
-Message-Id: <20190410133653.88061-17-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 34/36] thunderbolt: Make rest of the logging to happen at debug level
+Date:   Wed, 10 Apr 2019 16:36:51 +0300
+Message-Id: <20190410133653.88061-35-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,192 +55,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each port has a separate path configuration space that is used for
-finding the next hop (switch) in the path. HopID is an index to this
-configuration space. HopIDs 0 - 7 are reserved by the protocol.
+Now that the driver can handle every possible tunnel types there is no
+point to log everything as info level so turn these to happen at debug
+level instead.
 
-In order to get next available HopID for each direction we provide two
-pairs of helper functions that can be used to allocate and release
-HopIDs for a given port.
-
-While there remove obsolete TODO comment.
+While at it remove duplicated tunnel activation log message
+(tb_tunnel_activate() calls tb_tunnel_restart() which print the same
+message) and add one missing '\n' termination.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/nhi.c    |  3 +-
- drivers/thunderbolt/switch.c | 87 +++++++++++++++++++++++++++++++++++-
- drivers/thunderbolt/tb.h     | 11 +++++
- 3 files changed, 98 insertions(+), 3 deletions(-)
+ drivers/thunderbolt/ctl.c    |  2 +-
+ drivers/thunderbolt/icm.c    |  2 +-
+ drivers/thunderbolt/path.c   |  6 +++---
+ drivers/thunderbolt/switch.c | 19 +++++++++----------
+ drivers/thunderbolt/tb.c     | 11 +++++------
+ drivers/thunderbolt/tunnel.c |  6 ++----
+ 6 files changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-index 9aa44f9762a3..cac1ead5e302 100644
---- a/drivers/thunderbolt/nhi.c
-+++ b/drivers/thunderbolt/nhi.c
-@@ -27,8 +27,7 @@
-  * use this ring for anything else.
-  */
- #define RING_E2E_UNUSED_HOPID	2
--/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
--#define RING_FIRST_USABLE_HOPID	8
-+#define RING_FIRST_USABLE_HOPID	TB_PATH_MIN_HOPID
- 
- /*
-  * Minimal number of vectors when we use MSI-X. Two for control channel
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index b132439618da..30f3d6a9fe90 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -594,11 +594,88 @@ static int tb_init_port(struct tb_port *port)
- 
- 	tb_dump_port(port->sw->tb, &port->config);
- 
--	/* TODO: Read dual link port, DP port and more from EEPROM. */
-+	/* Control port does not need HopID allocation */
-+	if (port->port) {
-+		ida_init(&port->in_hopids);
-+		ida_init(&port->out_hopids);
-+	}
-+
- 	return 0;
- 
+diff --git a/drivers/thunderbolt/ctl.c b/drivers/thunderbolt/ctl.c
+index 73b386de4d15..2427d73be731 100644
+--- a/drivers/thunderbolt/ctl.c
++++ b/drivers/thunderbolt/ctl.c
+@@ -720,7 +720,7 @@ int tb_cfg_error(struct tb_ctl *ctl, u64 route, u32 port,
+ 		.port = port,
+ 		.error = error,
+ 	};
+-	tb_ctl_info(ctl, "resetting error on %llx:%x.\n", route, port);
++	tb_ctl_dbg(ctl, "resetting error on %llx:%x.\n", route, port);
+ 	return tb_ctl_tx(ctl, &pkg, sizeof(pkg), TB_CFG_PKG_ERROR);
  }
  
-+static int tb_port_alloc_hopid(struct tb_port *port, bool in, int min_hopid,
-+			       int max_hopid)
-+{
-+	int port_max_hopid;
-+	struct ida *ida;
-+
-+	if (in) {
-+		port_max_hopid = port->config.max_in_hop_id;
-+		ida = &port->in_hopids;
-+	} else {
-+		port_max_hopid = port->config.max_out_hop_id;
-+		ida = &port->out_hopids;
-+	}
-+
-+	/* HopIDs 0-7 are reserved */
-+	if (min_hopid < TB_PATH_MIN_HOPID)
-+		min_hopid = TB_PATH_MIN_HOPID;
-+
-+	if (max_hopid < 0 || max_hopid > port_max_hopid)
-+		max_hopid = port_max_hopid;
-+
-+	return ida_simple_get(ida, min_hopid, max_hopid + 1, GFP_KERNEL);
-+}
-+
-+/**
-+ * tb_port_alloc_in_hopid() - Allocate input HopID from port
-+ * @port: Port to allocate HopID for
-+ * @min_hopid: Minimum acceptable input HopID
-+ * @max_hopid: Maximum acceptable input HopID
-+ *
-+ * Return: HopID between @min_hopid and @max_hopid or negative errno in
-+ * case of error.
-+ */
-+int tb_port_alloc_in_hopid(struct tb_port *port, int min_hopid, int max_hopid)
-+{
-+	return tb_port_alloc_hopid(port, true, min_hopid, max_hopid);
-+}
-+
-+/**
-+ * tb_port_alloc_out_hopid() - Allocate output HopID from port
-+ * @port: Port to allocate HopID for
-+ * @min_hopid: Minimum acceptable output HopID
-+ * @max_hopid: Maximum acceptable output HopID
-+ *
-+ * Return: HopID between @min_hopid and @max_hopid or negative errno in
-+ * case of error.
-+ */
-+int tb_port_alloc_out_hopid(struct tb_port *port, int min_hopid, int max_hopid)
-+{
-+	return tb_port_alloc_hopid(port, false, min_hopid, max_hopid);
-+}
-+
-+/**
-+ * tb_port_release_in_hopid() - Release allocated input HopID from port
-+ * @port: Port whose HopID to release
-+ * @hopid: HopID to release
-+ */
-+void tb_port_release_in_hopid(struct tb_port *port, int hopid)
-+{
-+	ida_simple_remove(&port->in_hopids, hopid);
-+}
-+
-+/**
-+ * tb_port_release_out_hopid() - Release allocated output HopID from port
-+ * @port: Port whose HopID to release
-+ * @hopid: HopID to release
-+ */
-+void tb_port_release_out_hopid(struct tb_port *port, int hopid)
-+{
-+	ida_simple_remove(&port->out_hopids, hopid);
-+}
-+
- /**
-  * tb_pci_port_enable() - Enable PCIe adapter port
-  * @port: PCIe port to enable
-@@ -1055,9 +1132,17 @@ static const struct attribute_group *switch_groups[] = {
- static void tb_switch_release(struct device *dev)
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index d1f6ec89763c..597507bbd8ed 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -1568,7 +1568,7 @@ static int icm_firmware_start(struct tb *tb, struct tb_nhi *nhi)
+ 	if (val & REG_FW_STS_ICM_EN)
+ 		return 0;
+ 
+-	dev_info(&nhi->pdev->dev, "starting ICM firmware\n");
++	dev_dbg(&nhi->pdev->dev, "starting ICM firmware\n");
+ 
+ 	ret = icm_firmware_reset(tb, nhi);
+ 	if (ret)
+diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
+index e4c22f53ef4d..273e0cae9a98 100644
+--- a/drivers/thunderbolt/path.c
++++ b/drivers/thunderbolt/path.c
+@@ -500,8 +500,8 @@ int tb_path_activate(struct tb_path *path)
+ 					    & out_mask;
+ 		hop.unknown3 = 0;
+ 
+-		tb_port_info(path->hops[i].in_port, "Writing hop %d, index %d",
+-			     i, path->hops[i].in_hop_index);
++		tb_port_dbg(path->hops[i].in_port, "Writing hop %d, index %d\n",
++			    i, path->hops[i].in_hop_index);
+ 		tb_dump_hop(path->hops[i].in_port, &hop);
+ 		res = tb_port_write(path->hops[i].in_port, &hop, TB_CFG_HOPS,
+ 				    2 * path->hops[i].in_hop_index, 2);
+@@ -512,7 +512,7 @@ int tb_path_activate(struct tb_path *path)
+ 		}
+ 	}
+ 	path->activated = true;
+-	tb_info(path->tb, "path activation complete\n");
++	tb_dbg(path->tb, "path activation complete\n");
+ 	return 0;
+ err:
+ 	tb_WARN(path->tb, "path activation failed\n");
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index a5345a6225bd..c1b016574fb4 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -493,23 +493,22 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
+ 		if (state < 0)
+ 			return state;
+ 		if (state == TB_PORT_DISABLED) {
+-			tb_port_info(port, "is disabled (state: 0)\n");
++			tb_port_dbg(port, "is disabled (state: 0)\n");
+ 			return 0;
+ 		}
+ 		if (state == TB_PORT_UNPLUGGED) {
+ 			if (wait_if_unplugged) {
+ 				/* used during resume */
+-				tb_port_info(port,
+-					     "is unplugged (state: 7), retrying...\n");
++				tb_port_dbg(port,
++					    "is unplugged (state: 7), retrying...\n");
+ 				msleep(100);
+ 				continue;
+ 			}
+-			tb_port_info(port, "is unplugged (state: 7)\n");
++			tb_port_dbg(port, "is unplugged (state: 7)\n");
+ 			return 0;
+ 		}
+ 		if (state == TB_PORT_UP) {
+-			tb_port_info(port,
+-				     "is connected, link is up (state: 2)\n");
++			tb_port_dbg(port, "is connected, link is up (state: 2)\n");
+ 			return 1;
+ 		}
+ 
+@@ -517,9 +516,9 @@ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged)
+ 		 * After plug-in the state is TB_PORT_CONNECTING. Give it some
+ 		 * time.
+ 		 */
+-		tb_port_info(port,
+-			     "is connected, link is not up (state: %d), retrying...\n",
+-			     state);
++		tb_port_dbg(port,
++			    "is connected, link is not up (state: %d), retrying...\n",
++			    state);
+ 		msleep(100);
+ 	}
+ 	tb_port_warn(port,
+@@ -585,7 +584,7 @@ int tb_port_set_initial_credits(struct tb_port *port, u32 credits)
+ int tb_port_clear_counter(struct tb_port *port, int counter)
  {
- 	struct tb_switch *sw = tb_to_switch(dev);
-+	int i;
+ 	u32 zero[3] = { 0, 0, 0 };
+-	tb_port_info(port, "clearing counter %d\n", counter);
++	tb_port_dbg(port, "clearing counter %d\n", counter);
+ 	return tb_port_write(port, zero, TB_CFG_COUNTERS, 3 * counter, 3);
+ }
  
- 	dma_port_free(sw->dma_port);
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index e39fc1e35e6b..1f7a9e1cc09c 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -556,18 +556,17 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 		} else if (tb_port_is_dpout(port)) {
+ 			tb_teardown_dp(tb, port);
+ 		} else {
+-			tb_port_info(port,
+-				     "got unplug event for disconnected port, ignoring\n");
++			tb_port_dbg(port,
++				   "got unplug event for disconnected port, ignoring\n");
+ 		}
+ 	} else if (port->remote) {
+-		tb_port_info(port,
+-			     "got plug event for connected port, ignoring\n");
++		tb_port_dbg(port, "got plug event for connected port, ignoring\n");
+ 	} else {
+ 		if (tb_port_is_null(port)) {
+-			tb_port_info(port, "hotplug: scanning\n");
++			tb_port_dbg(port, "hotplug: scanning\n");
+ 			tb_scan_port(port);
+ 			if (!port->remote)
+-				tb_port_info(port, "hotplug: no switch found\n");
++				tb_port_dbg(port, "hotplug: no switch found\n");
+ 		} else if (tb_port_is_dpout(port)) {
+ 			tb_tunnel_dp(tb, port);
+ 		}
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 9f9b26b12d0a..31d0234837e4 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -611,7 +611,7 @@ int tb_tunnel_restart(struct tb_tunnel *tunnel)
+ {
+ 	int res, i;
  
-+	for (i = 1; i <= sw->config.max_port_number; i++) {
-+		if (!sw->ports[i].disabled) {
-+			ida_destroy(&sw->ports[i].in_hopids);
-+			ida_destroy(&sw->ports[i].out_hopids);
-+		}
-+	}
-+
- 	kfree(sw->uuid);
- 	kfree(sw->device_name);
- 	kfree(sw->vendor_name);
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index d1f8e9722f33..1cb5009195f9 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -127,6 +127,8 @@ struct tb_switch {
-  * @dual_link_port: If the switch is connected using two ports, points
-  *		    to the other port.
-  * @link_nr: Is this primary or secondary port on the dual_link.
-+ * @in_hopids: Currently allocated input HopIDs
-+ * @out_hopids: Currently allocated output HopIDs
-  */
- struct tb_port {
- 	struct tb_regs_port_header config;
-@@ -139,6 +141,8 @@ struct tb_port {
- 	bool disabled;
- 	struct tb_port *dual_link_port;
- 	u8 link_nr:1;
-+	struct ida in_hopids;
-+	struct ida out_hopids;
- };
+-	tb_tunnel_info(tunnel, "activating\n");
++	tb_tunnel_dbg(tunnel, "activating\n");
  
- /**
-@@ -194,6 +198,9 @@ struct tb_path {
- 	int path_length; /* number of hops */
- };
+ 	/*
+ 	 * Make sure all paths are properly disabled before enabling
+@@ -660,8 +660,6 @@ int tb_tunnel_activate(struct tb_tunnel *tunnel)
+ {
+ 	int i;
  
-+/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
-+#define TB_PATH_MIN_HOPID	8
-+
- /**
-  * struct tb_cm_ops - Connection manager specific operations vector
-  * @driver_ready: Called right after control channel is started. Used by
-@@ -453,6 +460,10 @@ static inline bool tb_switch_is_er(const struct tb_switch *sw)
- int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
- int tb_port_add_nfc_credits(struct tb_port *port, int credits);
- int tb_port_clear_counter(struct tb_port *port, int counter);
-+int tb_port_alloc_in_hopid(struct tb_port *port, int hopid, int max_hopid);
-+void tb_port_release_in_hopid(struct tb_port *port, int hopid);
-+int tb_port_alloc_out_hopid(struct tb_port *port, int hopid, int max_hopid);
-+void tb_port_release_out_hopid(struct tb_port *port, int hopid);
+-	tb_tunnel_info(tunnel, "activating\n");
+-
+ 	for (i = 0; i < tunnel->npaths; i++) {
+ 		if (tunnel->paths[i]->activated) {
+ 			tb_tunnel_WARN(tunnel,
+@@ -681,7 +679,7 @@ void tb_tunnel_deactivate(struct tb_tunnel *tunnel)
+ {
+ 	int i;
  
- int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
- int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
+-	tb_tunnel_info(tunnel, "deactivating\n");
++	tb_tunnel_dbg(tunnel, "deactivating\n");
+ 
+ 	if (tunnel->activate)
+ 		tunnel->activate(tunnel, false);
 -- 
 2.20.1
 
