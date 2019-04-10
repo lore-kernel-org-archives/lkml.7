@@ -2,160 +2,136 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C2DC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB087C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15642082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C1F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WKa7XA8o";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jYE1mzJy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbkvXOG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfDJQ6b (ORCPT
+        id S1727635AbfDJRBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:58:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58304 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfDJQ6b (ORCPT
+        Wed, 10 Apr 2019 13:01:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36189 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfDJRBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:58:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5D2FA61132; Wed, 10 Apr 2019 16:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554915510;
-        bh=itdu6CaScWjWSfyfpgyIhARnIydebF5zEcZ54GQbLpE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WKa7XA8ohegUMxDMS8hDlBXF/Sim9UJ66YWTpCwtzpv8NKyBEUDsZfdi0mKG88N4d
-         zsfnIzYa1qz0TYhsZktSEpAEWVhdG76HFWb4YWzQW3p8DQdI4RLlny4ewErNzShL0e
-         ngSp4/AFghV9aP2iXOHdMR/3Sw01mzqrWPJYEmYI=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ED286030E;
-        Wed, 10 Apr 2019 16:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554915509;
-        bh=itdu6CaScWjWSfyfpgyIhARnIydebF5zEcZ54GQbLpE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jYE1mzJybUgGbn/FnT9Be+Fh8aDQpUV+QC0ixNQLphCZDq3quyPp4AHSFHPHdwib/
-         KhAi2u/jt1nDZEmLqKpv7fOGGy9GmFS2mVn5mMz8ZEvyVM7yIyIp9R/qbTo7KE35Q5
-         YAcAXNoeGI6Q3XKXBRVv7ZGCObDUGVO15Nc23Rww=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ED286030E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/msm/a6xx: Don't enable GPU state code if dependencies are missing
-Date:   Wed, 10 Apr 2019 10:58:16 -0600
-Message-Id: <1554915496-5876-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 10 Apr 2019 13:01:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h18so3401883wml.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1HwBR23D4l+xU76iPNbUKjBj8GW5SzZRAKdVRvOKYlo=;
+        b=xbkvXOG3ngng9TsjpXRuaUFgtkkRkPcCczXBLnukNKAw3jNdCD+kHZZ9B2bkv9sA8w
+         aTNccsN+tFcQa8zGTckYZoenXzb8HUFI3iFR/cwoeDq0oc/ZCOnJ0DshE8qZ0/AM0MsR
+         SuDOlpAOke1p50I89tLQw6wEMeNqL91zh2oZ+wcGytTSxDvSxS8Em4Jm8CSZ0BkdNWjl
+         Y8gEtpDkucJ7y/pO9p7ADC1b9Y+qTxZ+pOlBNNsPY2OXN8VNSA2MkCGTjYCbejALo7zq
+         6uH6TIGtbA7EVeaiIQmSYxzkjJzqa0qWx8Ap1oH/7kj2+BYTOrdaMOLLTEVgPeJmZcpU
+         U8Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1HwBR23D4l+xU76iPNbUKjBj8GW5SzZRAKdVRvOKYlo=;
+        b=LlycKOAMF096ky0J1wZFnd/+GVMHo41lNReTByV0m3ZXD4ETVMQaprFLfJM/eRs24X
+         pQwCOntULuci7/05n7qNKsr8lJO79wUhWGUvT68rJzPDTkQbharsacVrLeGqXYSiXV3z
+         PZy2jG6MEEUHIT2Y+n/aOWFCicIxYZtBhSpba81JA8j0tSkwXR0yjQXisWYeIy2V97p0
+         +hc3YcCfth8Ye62hutfNlr+emaoVPfh14puXYj1Bd7M4GvlUBmzmWZV2QbFt4HgTRnVl
+         vtrcmBzcaJqa9+AeTkzAwCFl/mWqrGXkK3dJrya19v8kza4lChEV2liS5/7gx6Rn59pd
+         vwoA==
+X-Gm-Message-State: APjAAAXtIqCXhKghGrB53nJHquQ+p3DmsBQ72hb9K11xxMR5CJqUCPHt
+        Z9yKP6WUaiXGSdIET6PLwBnM6A==
+X-Google-Smtp-Source: APXvYqx8mG66oUKaOhwoEo8Xw7VfIR5xXdhs08gsN2w1DAOVKGwXzwoaXunMpAmxyb07UY7Yp9gElQ==
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr3533815wmh.32.1554915703052;
+        Wed, 10 Apr 2019 10:01:43 -0700 (PDT)
+Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id u8sm37302342wrt.69.2019.04.10.10.01.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 10:01:41 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+To:     Tony Lindgren <tony@atomide.com>,
+        Ladislav Michl <ladis@linux-mips.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Keerthy <j-keerthy@ti.com>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+ <20190327081142.GA11034@lenoch> <20190404141730.GE49658@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+Date:   Wed, 10 Apr 2019 19:01:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190404141730.GE49658@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_DRM_MSM_GPU_STATE to conditionally compile Adreno GPU state
-code depending on the availability of the dependencies.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: 1707add81551 ("drm/msm/a6xx: Add a6xx gpu state")
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Hi Tony,
 
- drivers/gpu/drm/msm/Kconfig           | 5 +++++
- drivers/gpu/drm/msm/Makefile          | 3 ++-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 +++-
- drivers/gpu/drm/msm/msm_debugfs.c     | 2 +-
- 4 files changed, 11 insertions(+), 3 deletions(-)
+can you ask for an acked-by before pulling a patch in your tree?
 
-diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-index cf549f1..cf14b2b 100644
---- a/drivers/gpu/drm/msm/Kconfig
-+++ b/drivers/gpu/drm/msm/Kconfig
-@@ -20,6 +20,11 @@ config DRM_MSM
- 	help
- 	  DRM/KMS driver for MSM/snapdragon.
- 
-+config DRM_MSM_GPU_STATE
-+	bool
-+	depends on DRM_MSM && (DEBUG_FS || DEV_COREDUMP)
-+	default y
-+
- config DRM_MSM_REGISTER_LOGGING
- 	bool "MSM DRM register logging"
- 	depends on DRM_MSM
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index 56a70c7..72d1bfc 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -15,7 +15,6 @@ msm-y := \
- 	adreno/a6xx_gpu.o \
- 	adreno/a6xx_gmu.o \
- 	adreno/a6xx_hfi.o \
--	adreno/a6xx_gpu_state.o \
- 	hdmi/hdmi.o \
- 	hdmi/hdmi_audio.o \
- 	hdmi/hdmi_bridge.o \
-@@ -96,6 +95,8 @@ msm-y := \
- 
- msm-$(CONFIG_DEBUG_FS) += adreno/a5xx_debugfs.o
- 
-+msm-$(CONFIG_DRM_MSM_GPU_STATE)	+= adreno/a6xx_gpu_state.o
-+
- msm-$(CONFIG_DRM_FBDEV_EMULATION) += msm_fbdev.o
- msm-$(CONFIG_COMMON_CLK) += disp/mdp4/mdp4_lvds_pll.o
- msm-$(CONFIG_COMMON_CLK) += hdmi/hdmi_pll_8960.o
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index fefe773..ddbaba1 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -781,14 +781,16 @@ static const struct adreno_gpu_funcs funcs = {
- 		.active_ring = a6xx_active_ring,
- 		.irq = a6xx_irq,
- 		.destroy = a6xx_destroy,
--#if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
-+#if defined(CONFIG_DRM_MSM_GPU_STATE)
- 		.show = a6xx_show,
- #endif
- 		.gpu_busy = a6xx_gpu_busy,
- 		.gpu_get_freq = a6xx_gmu_get_freq,
- 		.gpu_set_freq = a6xx_gmu_set_freq,
-+#if defined(CONFIG_DRM_MSM_GPU_STATE)
- 		.gpu_state_get = a6xx_gpu_state_get,
- 		.gpu_state_put = a6xx_gpu_state_put,
-+#endif
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
- };
-diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
-index fb423d3..bcfb7a4 100644
---- a/drivers/gpu/drm/msm/msm_debugfs.c
-+++ b/drivers/gpu/drm/msm/msm_debugfs.c
-@@ -75,7 +75,7 @@ static int msm_gpu_open(struct inode *inode, struct file *file)
- 	struct msm_gpu_show_priv *show_priv;
- 	int ret;
- 
--	if (!gpu)
-+	if (!gpu || !gpu->funcs->gpu-state_get)
- 		return -ENODEV;
- 
- 	show_priv = kmalloc(sizeof(*show_priv), GFP_KERNEL);
+
+
+On 04/04/2019 16:17, Tony Lindgren wrote:
+> * Ladislav Michl <ladis@linux-mips.org> [190327 08:12]:
+>> Hello Nathan,
+>>
+>> On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
+>>> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
+>>> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
+>>> static because its prototype was not defined in a header. Unfortunately,
+>>> this causes a build warning on multi_v7_defconfig because this function
+>>> is not used anywhere in this translation unit:
+>>>
+>>> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
+>>> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
+>>>
+>>> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
+>>> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
+>>> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
+>>> Make unexported functions static"), which is probably where this should
+>>> have happened.
+>>
+>> Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
+>> capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
+>> function being removed here). It is a part of an attempt to add event capture
+>> for OMAP. Of course I would like this functionality to be implemented, but
+>> as I do not have a time to continue, I cannot really object removing this
+>> function.
+>>
+>> Just in case you'd be interested in finishing this task ;-)
+> 
+> Well seems like no other takers :) We can always find the missing
+> function in git history when needed, so I suggest we apply this.
+> 
+> Adding Keerthy to Cc as he just posted a similar patch.
+> 
+> Regards,
+> 
+> Tony
+> 
+
+
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
