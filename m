@@ -2,192 +2,109 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BD4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07729C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1E42084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD12F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFKEnCDs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iq3SXQXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfDJRnz (ORCPT
+        id S1729991AbfDJRod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:43:55 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33732 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbfDJRnz (ORCPT
+        Wed, 10 Apr 2019 13:44:33 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:46538 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfDJRod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:43:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id b6so2942421iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:43:54 -0700 (PDT)
+        Wed, 10 Apr 2019 13:44:33 -0400
+Received: by mail-lf1-f41.google.com with SMTP id r25so2455353lfn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IJF9H8q67MNeTsMwLMUcQ9q9YgSQzYtibBojtDcgcJY=;
-        b=TFKEnCDsHmcdPNRJU4IDGSEqV1YhPf3u9b+9A/qdCKkHRznqB43JNUXXmoPdUYjTvH
-         6ssW0XG+7VmUgSkklMSVGLej+IrS4UzD2RqxM/BLBcQcof6IcEac6bxGjC4v67IF2KDu
-         DW8NeKA3ZVueL66Vun2giV9rpckmdFwbblc8Q=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PWNTa5XtaGcqQddICIj/u1u1P3x6fsMZqIHoPhhy7bI=;
+        b=Iq3SXQXSIrTf8ACEKNUw53XQgf2a1eN5kC/uU23V5dIGCAH1kprxy0rRx2iXQ3d3tu
+         DmFZlXKCgPahCxlnoXDhGCAtX+ZF3uyx0abT8elvKn9u8LR2Udu+uyrJ1gl21RVKaeDb
+         MXsd4naw3YOBCja44JFyC1XxcVEuGoPRdUs7c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IJF9H8q67MNeTsMwLMUcQ9q9YgSQzYtibBojtDcgcJY=;
-        b=ffRUfRWxjSTmaCeFrhj/3ziVQKUiOIWNxvnWYWUXP6R3q1qjobLAIHFqNuQrpNViSU
-         NN85MEBycPAMqI5dpdFSaqr6BPpVuhsPrMdNV48YaYKJiu4vqh/VVgBLIthRiaVk5U69
-         TEwJiYj4Nh6Mm8FJzlVhxQle/0r7HEJgBVzVrmg56xg1hYelb8aSnbky9ZYsNZUjkwML
-         znQQDIs12va0GTWAgpvQpl911VG7fOrKCp1a5yN9uutnRZLX8//9aP2Ih9GxlSEGRojD
-         iPgxGFYcZSuVU3+nocx2Ap6A6hVJ65onAJXYdwmPAYkV9IOX+0YSsOjfABTKWbJ+DtXk
-         2GIQ==
-X-Gm-Message-State: APjAAAUhZDS/gKuYTIRzTvUVVc8Roevuk+FVGHTn1zwH1XVHtgURenbC
-        hwZR8zcvfMLgyuhwT70OZtiqjw==
-X-Google-Smtp-Source: APXvYqzUBlZdAFnHHZKmp2MrsxTY213TX27id6S2rVzP8edTmE3c6VDMElMi1AT6KA+c7fJQhlWuYA==
-X-Received: by 2002:a6b:9189:: with SMTP id t131mr22582648iod.95.1554918234398;
-        Wed, 10 Apr 2019 10:43:54 -0700 (PDT)
-Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
-        by smtp.gmail.com with ESMTPSA id j10sm1326459itj.32.2019.04.10.10.43.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Apr 2019 10:43:53 -0700 (PDT)
-From:   Nick Crews <ncrews@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com,
-        sjg@chromium.org, alevkoy@google.com,
-        Nick Crews <ncrews@chromium.org>
-Subject: [PATCH] platform/chrome: wilco_ec: Add h1_gpio status to debugfs
-Date:   Wed, 10 Apr 2019 11:43:46 -0600
-Message-Id: <20190410174346.225490-1-ncrews@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PWNTa5XtaGcqQddICIj/u1u1P3x6fsMZqIHoPhhy7bI=;
+        b=NmO1w6JYqBnLiOfqJGAFHYF3NFAHAE3Jlko4IB4LVrBPg7SY6B5rtV/TzumDsJFqkG
+         3rW0o1vBvZGDQGP+UQ5TPxrmc+c5Ta9YrUeJ/gVnFdlgepUOMPsU1FkyYwMLdkQ4DwuW
+         XRwVZN0Fn14d2R8E4OacuMIfnF/OWtctxPc/Vdor1Ltk0CGkVzKpAP0bgdEYR05BpoHP
+         oCNXD8oYnPZkxqW7YAPxqz5oSHq0p+oUeBLXpaXQcBDRlxQYMRXaZhOMmcnUiZRufflE
+         Hy/TGhfy3sOU3g0aQvzu/XvPrrXykGa2E1rtB2LfoSUUoxRxCDbEA0S7CihE13EiOpQi
+         zPQQ==
+X-Gm-Message-State: APjAAAWlarpFNEIjRv/lY3mHfwQkUK+TQhR88ZT7dJvlfrRzgQCOQV2G
+        bTtkSF28M5LYbGNaV2ziglwUsYj5nY4=
+X-Google-Smtp-Source: APXvYqwxcEp2KG7k2AAoS49Ce7gMptaybf35fjcwXEb9P8aNOvRtUP1iRKuJjWFGvg+TW2U0uLRSrQ==
+X-Received: by 2002:ac2:482e:: with SMTP id 14mr5513254lft.1.1554918270881;
+        Wed, 10 Apr 2019 10:44:30 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id v26sm7326445lja.60.2019.04.10.10.44.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 10:44:29 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id k8so2918368lja.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:44:29 -0700 (PDT)
+X-Received: by 2002:a2e:84ce:: with SMTP id q14mr23555389ljh.80.1554918268885;
+ Wed, 10 Apr 2019 10:44:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190409184917.65062-1-briannorris@chromium.org>
+ <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
+ <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com> <CAHk-=whL3UEnKTpmr0bqL_6cW8cOn8mSCFAjAtpCfeMVq7Serw@mail.gmail.com>
+In-Reply-To: <CAHk-=whL3UEnKTpmr0bqL_6cW8cOn8mSCFAjAtpCfeMVq7Serw@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Wed, 10 Apr 2019 10:44:17 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMYiDpYx06LDrZcn5gVWu_7q3DK5G0Eb1jmwjUJZAA_KQ@mail.gmail.com>
+Message-ID: <CA+ASDXMYiDpYx06LDrZcn5gVWu_7q3DK5G0Eb1jmwjUJZAA_KQ@mail.gmail.com>
+Subject: Re: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
-tests, we need to ensure that the H1 chip is properly setting
-some GPIO lines. The h1_gpio attribute exposes the state
-of the lines:
-- ENTRY_TO_FACT_MODE in BIT(0)
-- SPI_CHROME_SEL in BIT(1)
+On Tue, Apr 9, 2019 at 8:43 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> Either it's edge-triggered and you'll get one possibly spurious
+> interrupt for an old issue, or it's level-triggered and setting up the
+> hw should bring the irq line inactive and you'll be ok.
 
-There are two reasons that I am exposing this in debugfs,
-and not as a GPIO:
-1. This is only useful for testing, so end users shouldn't ever
-care about this. In fact, if it passes the tests, then the value of
-h1_gpio will always be 2, so it would be really uninteresting for users.
-2. This GPIO is not connected to, controlled by, or really even related
-to the AP. The GPIO runs between the EC and the H1 security chip.
+I think our key difference here is in how much we trust the device:
+knowing the quality of the firmware running on some of these devices,
+I wouldn't totally trust that they get it right. (It's not fatal if we
+allow a buggy firmware to provide an occasional spurious wakeup, but
+it's much less OK to allow it a window for flooding us with
+interrupts.) So while your suggestion is indeed correct for
+well-behaved devices, I think both approaches have value.
 
-Signed-off-by: Nick Crews <ncrews@chromium.org>
----
- drivers/platform/chrome/wilco_ec/debugfs.c | 66 +++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
+> But I've applied your patch for now simply because it seems to be a
+> smaller change.
 
-diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
-index 17c4c9068aaf..198c16476efc 100644
---- a/drivers/platform/chrome/wilco_ec/debugfs.c
-+++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright 2019 Google LLC
-  *
-- * There is only one attribute used for debugging, called raw.
-+ * The raw attribute is very useful for EC debugging.
-  * You can write a hexadecimal sentence to raw, and that series of bytes
-  * will be sent to the EC. Then, you can read the bytes of response
-  * by reading from raw.
-@@ -30,6 +30,16 @@
-  * Note that the first 32 bytes of the received MBOX[] will be printed,
-  * even if some of the data is junk. It is up to you to know how many of
-  * the first bytes of data are the actual response.
-+ *
-+ * There is also another debugfs attribute, called h1_gpio.
-+ * As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
-+ * tests, we need to ensure that the H1 chip is properly setting
-+ * some GPIO lines. The h1_gpio attribute exposes the state
-+ * of the lines:
-+ * - ENTRY_TO_FACT_MODE in BIT(0)
-+ * - SPI_CHROME_SEL in BIT(1)
-+
-+ * Output will be "0\n", "1\n", "2\n", or "3\n".
-  */
- 
- #include <linux/ctype.h>
-@@ -189,6 +199,58 @@ static const struct file_operations fops_raw = {
- 	.llseek = no_llseek,
- };
- 
-+#define CMD_KB_CHROME		0x88
-+#define SUB_CMD_H1_GPIO		0x0A
-+
-+struct h1_gpio_status_request {
-+	u8 cmd;		/* Always CMD_KB_CHROME */
-+	u8 reserved;
-+	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
-+} __packed;
-+
-+struct hi_gpio_status_response {
-+	u8 status;	/* 0 if allowed */
-+	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
-+} __packed;
-+
-+static ssize_t h1_gpio_read(struct file *file, char __user *user_buf,
-+			    size_t count, loff_t *ppos)
-+{
-+	struct h1_gpio_status_request rq;
-+	struct hi_gpio_status_response rs;
-+	struct wilco_ec_message msg;
-+	char buf[3];
-+	int ret;
-+
-+	rq.cmd = CMD_KB_CHROME;
-+	rq.sub_cmd = SUB_CMD_H1_GPIO;
-+
-+	memset(&msg, 0, sizeof(msg));
-+	msg.type = WILCO_EC_MSG_LEGACY;
-+	msg.request_data = &rq;
-+	msg.request_size = sizeof(rq);
-+	msg.response_data = &rs;
-+	msg.response_size = sizeof(rs);
-+	ret = wilco_ec_mailbox(debug_info->ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+	if (rs.status)
-+		return -EIO;
-+	if (rs.val > 3)
-+		return -EBADMSG;
-+
-+	/* When rs.val <= 3, it's guaranteed to fit in buf after formatting */
-+	sprintf(buf, "%d\n", rs.val);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, sizeof(buf));
-+}
-+
-+static const struct file_operations fops_h1_gpio = {
-+	.owner = THIS_MODULE,
-+	.read = h1_gpio_read,
-+	.llseek = no_llseek,
-+};
-+
- /**
-  * wilco_ec_debugfs_probe() - Create the debugfs node
-  * @pdev: The platform device, probably created in core.c
-@@ -210,6 +272,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
- 	if (!debug_info->dir)
- 		return 0;
- 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
-+	debugfs_create_file("h1_gpio", 0444, debug_info->dir, NULL,
-+			    &fops_h1_gpio);
- 
- 	return 0;
- }
--- 
-2.20.1
+Awesome, thanks!
 
+> But I think you should look into whether it can be fixed by just
+> requesting the irq once the hardware is really up (which may indeed be
+> as late as open time).
+
+Yes, I will take a look at that for future release cycles. It's a nice
+addition regardless, I think.
+
+Brian
