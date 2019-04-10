@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD8EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862FDC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2389620850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617E920850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfDJGNd (ORCPT
+        id S1727765AbfDJGNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:13:33 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:60737 "EHLO
+        Wed, 10 Apr 2019 02:13:34 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:15765 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726879AbfDJGNa (ORCPT
+        with ESMTP id S1726661AbfDJGNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:13:30 -0400
-X-UUID: 62c40f664b494fb0875b822245c793e6-20190410
-X-UUID: 62c40f664b494fb0875b822245c793e6-20190410
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Wed, 10 Apr 2019 02:13:31 -0400
+X-UUID: 71b765b0752143d7a644afa918c7abc8-20190410
+X-UUID: 71b765b0752143d7a644afa918c7abc8-20190410
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 840614488; Wed, 10 Apr 2019 14:13:12 +0800
+        with ESMTP id 1849734595; Wed, 10 Apr 2019 14:13:16 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 10 Apr 2019 14:13:10 +0800
+ 15.0.1395.4; Wed, 10 Apr 2019 14:13:14 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 10 Apr 2019 14:13:09 +0800
+ Transport; Wed, 10 Apr 2019 14:13:12 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 CC:     Kevin Hilman <khilman@baylibre.com>,
@@ -49,11 +49,10 @@ CC:     Kevin Hilman <khilman@baylibre.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-amlogic@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [v2 PATCH 2/4] phy: qcom-qusb2: get optional clock by devm_clk_get_optional()
-Date:   Wed, 10 Apr 2019 14:13:04 +0800
-Message-ID: <50f5c2410bb86691329e5cb4d7ec38d1811fff33.1554874961.git.chunfeng.yun@mediatek.com>
+        <linux-arm-msm@vger.kernel.org>
+Subject: [v2 PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by devm_clk_get_optional()
+Date:   Wed, 10 Apr 2019 14:13:06 +0800
+Message-ID: <9f04a619e8a2cc44f5b1fe299a08f237f069d56d.1554874961.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
 References: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
@@ -67,38 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use devm_clk_get_optional() to get optional clock
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
-v2: no changes
+v2: add Acked-by Martin Blumenstingl
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 11 +++--------
+ drivers/phy/amlogic/phy-meson-gxl-usb2.c | 11 +++--------
  1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 8fd7ce139772..1cbf1d6f28ce 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -822,14 +822,9 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb2.c b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
+index 148ef0bdb9c1..4cbee412f2b0 100644
+--- a/drivers/phy/amlogic/phy-meson-gxl-usb2.c
++++ b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
+@@ -261,14 +261,9 @@ static int phy_meson_gxl_usb2_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->regmap))
+ 		return PTR_ERR(priv->regmap);
  
--	qphy->iface_clk = devm_clk_get(dev, "iface");
--	if (IS_ERR(qphy->iface_clk)) {
--		ret = PTR_ERR(qphy->iface_clk);
--		if (ret == -EPROBE_DEFER)
+-	priv->clk = devm_clk_get(dev, "phy");
+-	if (IS_ERR(priv->clk)) {
+-		ret = PTR_ERR(priv->clk);
+-		if (ret == -ENOENT)
+-			priv->clk = NULL;
+-		else
 -			return ret;
--		qphy->iface_clk = NULL;
--		dev_dbg(dev, "failed to get iface clk, %d\n", ret);
 -	}
-+	qphy->iface_clk = devm_clk_get_optional(dev, "iface");
-+	if (IS_ERR(qphy->iface_clk))
-+		return PTR_ERR(qphy->iface_clk);
++	priv->clk = devm_clk_get_optional(dev, "phy");
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
  
- 	qphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
- 	if (IS_ERR(qphy->phy_reset)) {
+ 	priv->reset = devm_reset_control_get_optional_shared(dev, "phy");
+ 	if (IS_ERR(priv->reset))
 -- 
 2.21.0
 
