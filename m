@@ -2,118 +2,191 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0D8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD7C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379DB2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C48B2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YB1V+Vju"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dDcJMViz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfDJRru (ORCPT
+        id S1730245AbfDJRsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:47:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44883 "EHLO
+        Wed, 10 Apr 2019 13:48:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34084 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729867AbfDJRru (ORCPT
+        with ESMTP id S1730156AbfDJRsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:47:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y13so1905213pfm.11;
-        Wed, 10 Apr 2019 10:47:50 -0700 (PDT)
+        Wed, 10 Apr 2019 13:48:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so1935780pfd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=q91V6OmvTc/Auau73Rj+pKcqo7v9MnUkZAtPss1ug4I=;
-        b=YB1V+VjuphtRDq7v9hUSJyTgkK+JHhanAS2uy+zLHxwxYuGMOFqyBeMEt7ey8aC93G
-         ok9zrdBo128qpJ0wxvPvclCyUBy/SRPQeknSUpJ6CQzNHqCAPV4LBrTzQH5g6c/Tbpkq
-         jTlXBtJ8Vnw5CLFGNY3uEifZFDI9MQ/3Z+/M24u/ACfXtc/TtDpKkvwx3chMzOgmgcBk
-         uYDxmBAw6AylDG2NWSFqLqaDqTSZK4jO+zZFtf/JnsnGs4410qmGGpyHgh1ltNKUKYYD
-         DQKMo1eH21IaV+/rJrpk6kGcGQg79aIPM8xD0jAgMMnABrQt60JAwduwzUVLBa9BJeRb
-         LgVg==
+        bh=sbutHiCZ8mGxfyY9QSUioqjtpuKW2Q5N9kWxngYGrGQ=;
+        b=dDcJMVizqpsIxP1GaENl0R/3F7wvMJlKcWI+khcgfVdfGkqvLa3RfggN5bN1CsnMh/
+         kJpy17p0XXe6vbOB8d9d6eyDwmIAWBLfM7I0SXPx/pdf40lEkCKCkiWn5pYGqHv3DiXS
+         QMVJU5qVKOrKTeQPRze2Hi8xB9JvFOyoorVDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q91V6OmvTc/Auau73Rj+pKcqo7v9MnUkZAtPss1ug4I=;
-        b=OVmlJSFSURk9Xdo/mtE14rOvars6KIJgNADK3qMp/thL+RGJLF+X462SHRT3GyJNqY
-         E7ruZwrtFqmzJw19ziiRMpFIQhKRzYQkBbE26CelURtDZlgAGvpIhcvQ01uCf5HDkkqn
-         fj0maJGof1lMFeutgR7ifOFubeyGjPpYyL/e+uEX84O9h79IiRZVdSZ1iXz+nupIo/gy
-         nA4WOBRablsiT9qixpCQz22hQbHSjEr7PU76+lzjZRzzk9tM8cF6tk3iLgxHlLQvmpj/
-         BEgQQ5kjub8crLxoQdO2Oh5VeRpeZHEhiFZgC2yOVXydcJ8MlHZpgXffYQ3tig3Ngn9S
-         GrvQ==
-X-Gm-Message-State: APjAAAUQfoRM1/Gbqzz7CCiRO4XUswUUCW4Ff1etmgiO3vY/mK9tMVDv
-        2IM7iGI2gY7WK6BuybFGrms=
-X-Google-Smtp-Source: APXvYqwP0ga9tcAJKgyhKFxnqq+tKec3ETA8eqkGMNgIoIX4xeB8Ns+7bKQx1uyFLfnPGd2WOtpdqA==
-X-Received: by 2002:a62:304:: with SMTP id 4mr44113960pfd.99.1554918469647;
-        Wed, 10 Apr 2019 10:47:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v19sm65644840pfa.138.2019.04.10.10.47.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 10:47:48 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:47:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joe Perches <joe@perches.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/22] watchdog: jz4740_wdt: Use 'dev' instead of
- dereferencing it repeatedly
-Message-ID: <20190410174746.GA2132@roeck-us.net>
-References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
- <1554913683-25454-21-git-send-email-linux@roeck-us.net>
- <8d44aaf119c286ac18ead30a2174aecef2dbc7e2.camel@perches.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sbutHiCZ8mGxfyY9QSUioqjtpuKW2Q5N9kWxngYGrGQ=;
+        b=m/Zve18UbkyKqc1K2sGW5Fx68f6WJTV2e+oDKXwJ2OgV3fim4205IlIvvVgLubG0pp
+         5htQr8qd/J+CyLr8jtBeZK9e2IYgr0ebixyZFbOfoCx0j6k3TuUb1TjHFq/mkvxDh8JG
+         Usu7AS46sH54sSB0E0fbZRtUe1BNZajbhv6YpzoreZ6bpSx1LHYkAYFXZUysTqy8rOTY
+         QR9FogvyeA82HiY+q8Qgg7/wztqsncc4RME06wytrkvaXmmZIMYSlYnNiAUASS7tqqYN
+         hqZGYR9pK7MMPNHAXVGW8GV1crZf8phmK9zeObeCtXB0exQ3y5wGoUmw3QsM/5jycH9s
+         IgTg==
+X-Gm-Message-State: APjAAAX9eWtGh6/3yPkfT0u0GDK51PckcX62ooG0GlElb+V4EGUDro/S
+        EPaA7uYwOKZwu/ZMdus5A2M5HZ8n8OM=
+X-Google-Smtp-Source: APXvYqxpsrtFwPwC2NMCBJeO4o6A92ulkAQ1biyJqNy6WYgouj9AdzvPIpyrg/tsadDPOXi+vTXCSA==
+X-Received: by 2002:a63:e845:: with SMTP id a5mr43320973pgk.246.1554918483038;
+        Wed, 10 Apr 2019 10:48:03 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y20sm32535485pfe.188.2019.04.10.10.48.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 10:48:02 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 13:48:00 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 1/2] module: Prepare for addition of new ro_after_init
+ sections
+Message-ID: <20190410174800.GA259061@google.com>
+References: <20190410011418.76408-1-joel@joelfernandes.org>
+ <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d44aaf119c286ac18ead30a2174aecef2dbc7e2.camel@perches.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
-
-On Wed, Apr 10, 2019 at 09:52:09AM -0700, Joe Perches wrote:
-> On Wed, 2019-04-10 at 09:28 -0700, Guenter Roeck wrote:
-> > Introduce local variable 'struct device *dev' and use it instead of
-> > dereferencing it repeatedly. Also, there is no call to dev_get_drvdata()
-> > or platform_get_drvdata() in the driver, so drop the unnecessary
-> > call to platform_set_drvdata().
+On Wed, Apr 10, 2019 at 09:26:44AM -0700, Kees Cook wrote:
+> On Tue, Apr 9, 2019 at 6:14 PM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > For the purposes of hardening modules by adding sections to
+> > ro_after_init sections, prepare for addition of new ro_after_init
+> > entries which we do in future patches. Create a table to which new
+> > entries could be added later. This makes it less error prone and reduce
+> > code duplication.
+> >
+> > Cc: paulmck@linux.vnet.ibm.com
+> > Cc: rostedt@goodmis.org
+> > Cc: mathieu.desnoyers@efficios.com
+> > Cc: rcu@vger.kernel.org
+> > Cc: kernel-hardening@lists.openwall.com
+> > Cc: kernel-team@android.com
+> > Suggested-by: keescook@chromium.org
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >
+> > ---
+> >  kernel/module.c | 42 ++++++++++++++++++++++++------------------
+> >  1 file changed, 24 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/kernel/module.c b/kernel/module.c
+> > index 524da609c884..f9221381d076 100644
+> > --- a/kernel/module.c
+> > +++ b/kernel/module.c
+> > @@ -3300,11 +3300,28 @@ static bool blacklisted(const char *module_name)
+> >  }
+> >  core_param(module_blacklist, module_blacklist, charp, 0400);
+> >
+> > +/*
+> > + * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
+> > + * layout_sections() can put it in the right place.
+> > + * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
+> > + */
+> > +static char *ro_after_init_sections[] = {
 > 
-> Dropping platform_set_drvdata seems to me like it should
-> be a separate patch.
+> static const char * const ... Need to make sure the table and its
+> strings can't be changed. :)
+
+Will fix :)
+
+> > +       ".data..ro_after_init",
+> > +
+> > +       /*
+> > +        * __jump_table structures are never modified, with the exception of
+> > +        * entries that refer to code in the __init section, which are
+> > +        * annotated as such at module load time.
+> > +        */
+> > +       "__jump_table",
+> > +       NULL
 > 
+> Since this table is known at build time, you don't need a NULL
+> terminator, you can use ARRAY_SIZE() instead.
 
-Bundling all changes into one patch per driver already resulted in more than
-60 patches total in this series. Splitting that into three sets of patches
-over three days already earned me automated replies telling me that I am now
-considered to be a spammer. One logical change per patch would have resulted
-in hundreds of patches. I don't think that would have scaled well.
+Ok, sounds good. You are absolutely right.
 
-I considered other splits, such as one coccinelle rule per patch, affecting
-multiple drivers, but that would have had the same result since it would have
-needed dozens of Cc: lines per patch. Ultimately, I decided to go with one patch
-per file.
-
-> And are you sure no other function uses a get_drvdata call?
-> Maybe something in watchdog_dev.c?  Possibly:
+> > +};
+> > +
+> >  static struct module *layout_and_allocate(struct load_info *info, int flags)
+> >  {
+> >         struct module *mod;
+> >         unsigned int ndx;
+> > -       int err;
+> > +       int err, i;
+> >
+> >         err = check_modinfo(info->mod, info, flags);
+> >         if (err)
+> > @@ -3319,23 +3336,12 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
+> >         /* We will do a special allocation for per-cpu sections later. */
+> >         info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
+> >
+> > -       /*
+> > -        * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
+> > -        * layout_sections() can put it in the right place.
+> > -        * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
+> > -        */
+> > -       ndx = find_sec(info, ".data..ro_after_init");
+> > -       if (ndx)
+> > -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> > -       /*
+> > -        * Mark the __jump_table section as ro_after_init as well: these data
+> > -        * structures are never modified, with the exception of entries that
+> > -        * refer to code in the __init section, which are annotated as such
+> > -        * at module load time.
+> > -        */
+> > -       ndx = find_sec(info, "__jump_table");
+> > -       if (ndx)
+> > -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> > +       /* Set sh_flags for read-only after init sections */
+> > +       for (i = 0; ro_after_init_sections[i]; i++) {
 > 
->    #ifdef CONFIG_WATCHDOG_SYSFS
->    static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
->    				char *buf)
->    {
->    	struct watchdog_device *wdd = dev_get_drvdata(dev);
+> i.e. for (i = 0; i < ARRAY_SIZE(ro_after_init_sections); i++)
+
+Yep.
+
+> > +               ndx = find_sec(info, ro_after_init_sections[i]);
+> > +               if (ndx)
+> > +                       info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> > +       }
+> >
+> >         /* Determine total sizes, and put offsets in sh_entsize.  For now
+> >            this is done generically; there doesn't appear to be any
 > 
+> Otherwise, yeah, looks good to me.
 
-'dev' in nowayout_show() points to the watchdog device, not to the platform
-device. Its drvdata is set in drivers/base/core.c:device_create_groups_vargs().
-Not all watchdog drivers are platform drivers, and the watchdog core can not
-depend on a watchdog device even having a parent device, much less make
-assumptions about its drvdata.
+Thanks, if you are Ok with it, I will add your Reviewed-by tag as well.
 
-Guenter
+ - Joel
+
