@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE29C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CA3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C5F20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6CA20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbfDJNmB (ORCPT
+        id S1732314AbfDJNl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:42:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36687 "EHLO mga18.intel.com"
+        Wed, 10 Apr 2019 09:41:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15443 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732380AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732385AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:03 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="314707209"
+   d="scan'208";a="335520996"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id F2CA754C; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id 0A4B155B; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 12/36] thunderbolt: Properly disable path
-Date:   Wed, 10 Apr 2019 16:36:29 +0300
-Message-Id: <20190410133653.88061-13-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 13/36] thunderbolt: Cache adapter specific capability offset into struct port
+Date:   Wed, 10 Apr 2019 16:36:30 +0300
+Message-Id: <20190410133653.88061-14-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,101 +55,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to wait until all buffers have been drained before the path can
-be considered disabled. Do this for every hop in a path.
+The adapter specific capability either is there or not if the port does
+not hold an adapter. Instead of always finding it on-demand we read the
+offset just once when the port is initialized.
 
-This adds another bit field to struct tb_regs_hop even if we are trying
-to get rid of them but we can clean them up another day.
+While there we update the struct port documentation to follow kernel-doc
+format.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/path.c    | 47 ++++++++++++++++++++++++++++++++---
- drivers/thunderbolt/tb_regs.h |  3 ++-
- 2 files changed, 45 insertions(+), 5 deletions(-)
+ drivers/thunderbolt/switch.c     | 4 ++++
+ drivers/thunderbolt/tb.c         | 8 ++++----
+ drivers/thunderbolt/tb.h         | 2 ++
+ drivers/thunderbolt/tunnel_pci.c | 9 +++------
+ 4 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
-index a11956522bac..8c2e19a6117a 100644
---- a/drivers/thunderbolt/path.c
-+++ b/drivers/thunderbolt/path.c
-@@ -7,6 +7,8 @@
- 
- #include <linux/slab.h>
- #include <linux/errno.h>
-+#include <linux/delay.h>
-+#include <linux/ktime.h>
- 
- #include "tb.h"
- 
-@@ -74,14 +76,51 @@ static void __tb_path_deallocate_nfc(struct tb_path *path, int first_hop)
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index b3f93ebe6e39..9756e6279dc9 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -586,6 +586,10 @@ static int tb_init_port(struct tb_port *port)
+ 			port->cap_phy = cap;
+ 		else
+ 			tb_port_WARN(port, "non switch port without a PHY\n");
++	} else if (port->port != 0) {
++		cap = tb_port_find_cap(port, TB_PORT_CAP_ADAP);
++		if (cap > 0)
++			port->cap_adap = cap;
  	}
+ 
+ 	tb_dump_port(port->sw->tb, &port->config);
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index d8f4ed0f2ef8..e71530d0af65 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -151,8 +151,8 @@ static struct tb_port *tb_find_unused_down_port(struct tb_switch *sw)
+ 			continue;
+ 		if (sw->ports[i].config.type != TB_TYPE_PCIE_DOWN)
+ 			continue;
+-		cap = tb_port_find_cap(&sw->ports[i], TB_PORT_CAP_ADAP);
+-		if (cap < 0)
++		cap = sw->ports[i].cap_adap;
++		if (!cap)
+ 			continue;
+ 		res = tb_port_read(&sw->ports[i], &data, TB_CFG_PORT, cap, 1);
+ 		if (res < 0)
+@@ -197,8 +197,8 @@ static void tb_activate_pcie_devices(struct tb *tb)
+ 		}
+ 
+ 		/* check whether port is already activated */
+-		cap = tb_port_find_cap(up_port, TB_PORT_CAP_ADAP);
+-		if (cap < 0)
++		cap = up_port->cap_adap;
++		if (!cap)
+ 			continue;
+ 		if (tb_port_read(up_port, &data, TB_CFG_PORT, cap, 1))
+ 			continue;
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 985a48a67a43..b4d7c4d408bd 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -121,6 +121,7 @@ struct tb_switch {
+  * @remote: Remote port (%NULL if not connected)
+  * @xdomain: Remote host (%NULL if not connected)
+  * @cap_phy: Offset, zero if not found
++ * @cap_adap: Offset of the adapter specific capability (%0 if not present)
+  * @port: Port number on switch
+  * @disabled: Disabled by eeprom
+  * @dual_link_port: If the switch is connected using two ports, points
+@@ -133,6 +134,7 @@ struct tb_port {
+ 	struct tb_port *remote;
+ 	struct tb_xdomain *xdomain;
+ 	int cap_phy;
++	int cap_adap;
+ 	u8 port;
+ 	bool disabled;
+ 	struct tb_port *dual_link_port;
+diff --git a/drivers/thunderbolt/tunnel_pci.c b/drivers/thunderbolt/tunnel_pci.c
+index 0637537ea53f..2de4edccbd6d 100644
+--- a/drivers/thunderbolt/tunnel_pci.c
++++ b/drivers/thunderbolt/tunnel_pci.c
+@@ -148,12 +148,9 @@ bool tb_pci_is_invalid(struct tb_pci_tunnel *tunnel)
+ static int tb_pci_port_active(struct tb_port *port, bool active)
+ {
+ 	u32 word = active ? 0x80000000 : 0x0;
+-	int cap = tb_port_find_cap(port, TB_PORT_CAP_ADAP);
+-	if (cap < 0) {
+-		tb_port_warn(port, "TB_PORT_CAP_ADAP not found: %d\n", cap);
+-		return cap;
+-	}
+-	return tb_port_write(port, &word, TB_CFG_PORT, cap, 1);
++	if (!port->cap_adap)
++		return -ENXIO;
++	return tb_port_write(port, &word, TB_CFG_PORT, port->cap_adap, 1);
  }
  
-+static int __tb_path_deactivate_hop(struct tb_port *port, int hop_index)
-+{
-+	struct tb_regs_hop hop;
-+	ktime_t timeout;
-+	int ret;
-+
-+	/* Disable the path */
-+	ret = tb_port_read(port, &hop, TB_CFG_HOPS, 2 * hop_index, 2);
-+	if (ret)
-+		return ret;
-+
-+	/* Already disabled */
-+	if (!hop.enable)
-+		return 0;
-+
-+	hop.enable = 0;
-+
-+	ret = tb_port_write(port, &hop, TB_CFG_HOPS, 2 * hop_index, 2);
-+	if (ret)
-+		return ret;
-+
-+	/* Wait until it is drained */
-+	timeout = ktime_add_ms(ktime_get(), 500);
-+	do {
-+		ret = tb_port_read(port, &hop, TB_CFG_HOPS, 2 * hop_index, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (!hop.pending)
-+			return 0;
-+
-+		usleep_range(10, 20);
-+	} while (ktime_before(ktime_get(), timeout));
-+
-+	return -ETIMEDOUT;
-+}
-+
- static void __tb_path_deactivate_hops(struct tb_path *path, int first_hop)
- {
- 	int i, res;
--	struct tb_regs_hop hop = { };
-+
- 	for (i = first_hop; i < path->path_length; i++) {
--		res = tb_port_write(path->hops[i].in_port, &hop, TB_CFG_HOPS,
--				    2 * path->hops[i].in_hop_index, 2);
--		if (res)
-+		res = __tb_path_deactivate_hop(path->hops[i].in_port,
-+					       path->hops[i].in_hop_index);
-+		if (res && res != -ENODEV)
- 			tb_port_warn(path->hops[i].in_port,
- 				     "hop deactivation failed for hop %d, index %d\n",
- 				     i, path->hops[i].in_hop_index);
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 1ab6e0fb31c0..82ac4ec8757f 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -234,7 +234,8 @@ struct tb_regs_hop {
- 	bool egress_fc:1;
- 	bool ingress_shared_buffer:1;
- 	bool egress_shared_buffer:1;
--	u32 unknown3:4; /* set to zero */
-+	bool pending:1;
-+	u32 unknown3:3; /* set to zero */
- } __packed;
- 
- /* Common link controller registers */
+ /**
 -- 
 2.20.1
 
