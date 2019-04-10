@@ -2,161 +2,184 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E39C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33BEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B455220830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9762077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfDJJKP (ORCPT
+        id S1728851AbfDJJOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:10:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728766AbfDJJKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:10:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CA38DAEA3;
-        Wed, 10 Apr 2019 09:10:12 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 093ED1E429B; Wed, 10 Apr 2019 11:10:12 +0200 (CEST)
-Date:   Wed, 10 Apr 2019 11:10:12 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL
- writeback
-Message-ID: <20190410091012.GH1426@quack2.suse.cz>
-References: <20190409114922.30095-1-amir73il@gmail.com>
- <20190409154303.GB1426@quack2.suse.cz>
- <CAOQ4uxi7X_Ge14Ek_BR=es8mLYbkM3vMOJE5+_Doon1OD5p0yA@mail.gmail.com>
+        Wed, 10 Apr 2019 05:14:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42150 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfDJJOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:14:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so1974425wrx.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:14:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BwTaQTGSZ64On7KN0llzGy5853Hd0nTzZGSJFn1FMBs=;
+        b=YhA0fHfWUd9JQLC6xB/Szf1VAjgtiOQ2W5ZcBuLG+8wtI+z4zl8zvD7K8YOIifVfOF
+         ykm076WjbdxrvLi2kJmnHUCrJVUVTRLHEwwzZTbUUHN6kjcfQWjf6ovk5do7Y2M6m08k
+         9HQqYFMgzoUNGlR4NfMpmzQpJh7KPrqnbXi9tr7TwwzQf5afxQ+5/busSpTI3epexUEO
+         LTlvh9GePAFO/LNfXd/zHHXz24vD0o43n0oDqsj0P7xWpwPmFFmFj3f36ugvCU6l3f7b
+         wG4PmB0KnPBplCbZBWoGwxnV28yUsUC0lRNmwPVCH3TZF+Qj9Fo9zlIZrbllUSq9mMtY
+         He7w==
+X-Gm-Message-State: APjAAAUHCdKhbqd8sZYHnxAV8bVqXDvcTvetaSHEks7XbizqF5D02Oi/
+        MTGittLX82ELNiXaesDE4cQy+X9Pldo=
+X-Google-Smtp-Source: APXvYqzseyC8dkSKAKvq1JPeQfhCt3+cUS5TZISnEnUEZ7JSnXM4MrTWs35aOQeIQPNBrZWCuVwMlg==
+X-Received: by 2002:a5d:670b:: with SMTP id o11mr13082581wru.125.1554887663011;
+        Wed, 10 Apr 2019 02:14:23 -0700 (PDT)
+Received: from localhost.localdomain.com ([2a02:8308:b13e:ee00:435d:e8f:90ca:755e])
+        by smtp.gmail.com with ESMTPSA id t24sm2305381wmi.10.2019.04.10.02.14.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 02:14:21 -0700 (PDT)
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+To:     linux-audit@redhat.com
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH ghak10 v8 0/2] audit: Log changes that can affect the system clock
+Date:   Wed, 10 Apr 2019 11:14:18 +0200
+Message-Id: <20190410091420.23987-1-omosnace@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi7X_Ge14Ek_BR=es8mLYbkM3vMOJE5+_Doon1OD5p0yA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 09-04-19 21:01:54, Amir Goldstein wrote:
-> On Tue, Apr 9, 2019 at 6:43 PM Jan Kara <jack@suse.cz> wrote:
-> > On Tue 09-04-19 14:49:22, Amir Goldstein wrote:
-> > > Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
-> > > writeback") claims that sync_file_range(2) syscall was "created for
-> > > userspace to be able to issue background writeout and so waiting for
-> > > in-flight IO is undesirable there" and changes the writeback (back) to
-> > > WB_SYNC_NONE.
-> > >
-> > > This claim is only partially true. Is is true for users that use the flag
-> > > SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
-> > > the reason for changing to WB_SYNC_NONE writeback.
-> > >
-> > > However, that claim is not true for users that use that flag combination
-> > > SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.  Those users explicitly
-> > > requested to wait for in-flight IO as well as to writeback of dirty
-> > > pages.  sync_file_range(2) man page describes this flag combintaion as
-> > > "write-for-data-integrity operation", although some may argue against
-> > > this definition.
-> > >
-> > > Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT and use
-> > > the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
-> > > writeback, to perform the range sync request.
-> > >
-> > > One intended use case for this API is creating a dependency between
-> > > a new file's content and its link into the namepsace without requiring
-> > > journal commit and flushing of disk volatile caches:
-> > >
-> > >   fd = open(".", O_TMPFILE | O_RDWR);
-> > >   write(fd, newdata, count);
-> > >   sync_file_range(fd, SYNC_FILE_RANGE_WRITE_AND_WAIT, 0, 0);
-> > >   linkat(AT_EMPTY_PATH, fd, AT_FDCWD, newfile);
-> > >
-> > > For many local filesystems, ext4 and xfs included, the sequence above
-> > > will guaranty that after crash, either 'newfile' exists with 'newdata'
-> > > content or 'newfile' does not exists.  For some applications, this
-> > > guaranty is strong enough and the effects of sync_file_range(2), even
-> > > with WB_SYNC_ALL, are far less intrusive to other writers in the system
-> > > than the effects of fdatasync(2).
-> >
-> > I agree that this paragraph is true but I don't want any userspace program
-> > rely on this. We've been through this when ext3 got converted to ext4 and
-> > it has caused a lot of complaints. Ext3 had provided rather strong data vs
-> > metadata ordering due to the way journalling was implemented. Then ext4
-> > came, implemented delayed allocation and somewhat changed how journalling
-> > works and suddently userspace programmers were caught by surprise their code
-> > working by luck stopped working. And they were complaining that when their
-> > code worked without fsync(2) before, it should work after it as well. So it
-> > took a lot of explaining that their applications are broken and Ted has
-> > also implemented some workarounds to make at least the most common mistakes
-> > silently fixed by the kernel most of the time.
-> >
-> > So I'm against providing 90% data integrity guarantees because there'll be
-> > many people who'll think they can get away with it and then complain when
-> > they won't once our implementation changes.
-> >
-> > Rather I'd modify the manpage to not say that SYNC_FILE_RANGE_WAIT_BEFORE
-> > | SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WAIT_AFTER is a
-> > write-for-data-integrity.
-> 
-> OK. I do agree that manpage is misleading and that the language describing
-> this flag combination should be toned down. I do not object to adding more
-> and more disclaimers about this API not being a data integrity API.
+This patchset implements auditing of (syscall-triggered) changes that
+can modify or indirectly affect the system clock. Some of these
+changes can already be detected by simply logging relevant syscalls,
+but this has some disadvantages:
+  a) It is usually not possible to find out from the syscall records
+     the amount by which the time was shifted.
+  b) Syscalls like adjtimex(2) or clock_adjtime(2) can be used also
+     for read-only operations, which might flood the audit log with
+     false positives. (Note that these patches don't solve this
+     problem yet due to the limitations of current record filtering
+     capabilities.)
 
-I don't think we need more disclaimers, I'd just reword that
-"write-for-data-integrity" bit.
+The main motivation is to provide better reliability of timestamps
+on the system as mandated by the FPT_STM.1 security functional
+requirement from Common Criteria. This requirement apparently demands
+that it is possible to reconstruct from audit trail the old and new
+values of the time when it is adjusted (see [1]).
 
-> But the requirement I have is a real life workload and fdatasync(2) is not at
-> all a viable option when application is creating many files per second.
-> 
-> I need to export the functionality of data writeback to userspace.
-> Objecting to expose this functionality via the interface that has been
-> documented to expose it for years and used to expose it in the
-> past (until the Fixes commit) is a bit weird IMO, even though I do
-> completely relate to your concern.
-> 
-> I don't mind removing the "intended use case" part of commit message
-> if that helps reducing the chance that people misunderstand
-> the guaranties of the API.
-> 
-> Another thing I could do is introduce a new flag for sync_file_range()
-> that will really mean what I want it to mean (all data will be written back
-> and all related inode metadata changes will be committed to journal
-> before the next inode metadata change is committed). For the sake of
-> argument let's call it SYNC_FILE_RANGE_DATA_DEPENDENCY.
+The current version of the patchset logs the following changes:
+  - direct setting of system time to a given value
+  - direct injection of timekeeping offset
+  - adjustment of timekeeping's TAI offset
+  - NTP value adjustments (may affect system time indirectly):
+    - time_offset
+    - time_freq
+    - time_status
+    - time_adjust
+    - tick_usec
 
-So there are two parts to your requirements:
+Changes to the following NTP values are not logged, as they are not
+important for security:
+  - time_maxerror
+  - time_esterror
+  - time_constant
 
-1) Data writeback for all file pages has been submitted (+ completed).
-2) What happens with related metadata.
+Audit kernel GitHub issue: https://github.com/linux-audit/audit-kernel/issues/10
+Audit kernel RFE page: https://github.com/linux-audit/audit-kernel/wiki/RFE-More-detailed-auditing-of-changes-to-system-clock
 
-sync_file_range() is fine for 1) although I agree that WB_SYNC_NONE mode
-can still end up skipping some pages due to unrelated writeback / lock
-contention so having sync_file_range() mode doing WB_SYNC_ALL writeback
-makes some sense to me.
+Audit userspace PR: https://github.com/linux-audit/audit-userspace/pull/89
+Audit testsuite PR: https://github.com/linux-audit/audit-testsuite/pull/82
 
-What happens with 2) is pretty much up to the filesystem. You are speaking
-about the journal but that is very much a filesystem specific detail.
-What if the filesystem doesn't have journal at all? E.g. ext2? We cannot
-really expose a generic API that silently fails to work based on fs
-internal details.
+Testing: Passed audit-testuite (including new functional test from PR#82)
 
-I guess I fail to see what kind of guarantees from the fs you're looking
-for? When you speak about journal, I guess you're looking for some kind of
-ordering but it's hard to be sure about exact requirements. So can you
-please spell those out? Once we know requirements, we can speak about the
-API.
+Changes in v8:
+  - Switched AUDIT_NTP_* macros to an enum
+  - Fixed mistakes in commit messages
+  - Added missing s64 -> long long conversion (forgot to commit it in v7)
 
-								Honza
+v7: https://www.redhat.com/archives/linux-audit/2019-April/msg00044.html
+Changes in v7:
+  - Removed #include <uapi/linux/timex.h> from audit.h, since it is not
+    needed
+  - Moved audit_log() calls out of locked sections and switched audit
+    allocations to GFP_KERNEL
+  - Rebased onto latest audit/next
+  - Switched the general NTP value type to long long (was s64),
+    which corresponds better with the actual timex field types
+  - Simplified commit log messages
+
+v6: https://www.redhat.com/archives/linux-audit/2019-March/msg00016.html
+Changes in v6:
+  - Reorganized the patches to group changes by record type, not
+    kernel subsytem, as suggested in earlier discussions
+  - Added checks to ignore no-change events (new value == old value)
+  - Added TIME_INJOFFSET logging also to do_settimeofday64() to cover
+    syscalls such as settimeofday(2), stime(2), clock_settime(2)
+  - Created an RFE page on audit-kernel GitHub
+
+v5: https://www.redhat.com/archives/linux-audit/2018-August/msg00039.html
+Changes in v5:
+  - Dropped logging of some less important changes and update commit messages
+  - No longer mark the patchset as RFC
+
+v4: https://www.redhat.com/archives/linux-audit/2018-August/msg00023.html
+Changes in v4:
+  - Squashed first two patches into one
+  - Renamed ADJNTPVAL's "type" field to "op" to align with audit record
+    conventions
+  - Minor commit message editing
+  - Cc timekeeping/NTP people for feedback
+
+v3: https://www.redhat.com/archives/linux-audit/2018-July/msg00001.html
+Changes in v3:
+  - Switched to separate records for each variable
+  - Both old and new value is now reported for each change
+  - Injecting offset is reported via a separate record (since this
+    offset consists of two values and is added directly to the clock,
+    i.e. it doesn't make sense to log old and new value)
+  - Added example records produced by chronyd -q (see the commit message
+    of the last patch)
+
+v2: https://www.redhat.com/archives/linux-audit/2018-June/msg00114.html
+Changes in v2:
+  - The audit_adjtime() function has been modified to only log those
+    fields that contain values that are actually used, resulting in more
+    compact records.
+  - The audit_adjtime() call has been moved to do_adjtimex() in
+    timekeeping.c
+  - Added an additional patch (for review) that simplifies the detection
+    if the syscall is read-only.
+
+v1: https://www.redhat.com/archives/linux-audit/2018-June/msg00095.html
+
+[1] https://www.niap-ccevs.org/MMO/PP/pp_ca_v2.1.pdf -- section 5.1,
+    table 4
+
+Ondrej Mosnacek (2):
+  timekeeping: Audit clock adjustments
+  ntp: Audit NTP parameters adjustment
+
+ include/linux/audit.h      | 75 ++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/audit.h |  2 +
+ kernel/auditsc.c           | 28 ++++++++++++++
+ kernel/time/ntp.c          | 22 +++++++++--
+ kernel/time/ntp_internal.h |  4 +-
+ kernel/time/timekeeping.c  | 13 ++++++-
+ 6 files changed, 139 insertions(+), 5 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
