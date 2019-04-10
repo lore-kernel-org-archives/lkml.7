@@ -2,140 +2,128 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F504C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D83C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A3020818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AB521841
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q50iCGuk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vz+FQpOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfDJWVb (ORCPT
+        id S1726612AbfDJWYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:21:31 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:33342 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWVa (ORCPT
+        Wed, 10 Apr 2019 18:24:17 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44507 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDJWYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:21:30 -0400
-Received: by mail-ua1-f66.google.com with SMTP id g8so1361273uaj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:21:30 -0700 (PDT)
+        Wed, 10 Apr 2019 18:24:16 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d11so3408883edp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=boT/6riwdA2m3FxQ0jLzkBJdoIdhrXNKi7UsmGCQNCg=;
-        b=Q50iCGuk1s4FMu7uPxo7AJcKBDeOGVVuU5GDs1SQ58P87qZgstj/5c/kHiF1+q9Chg
-         d82TiMkdbiJnRjpfUxXc+EmMGrtJcZUKVsvC8VDd0f5y1EjbHoJtbctKSUCvwpLFE9hV
-         j0nQQ61qVfyi1XygbbnDznnHUtKAQkTrNpYxA=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y7nE7ZG7nELr6t53V66jtZhQYEzl5on9riW0DsXxtsU=;
+        b=Vz+FQpOzm6oQvCsP+brtuHCQSOX5/IFmz44R5D6t8JjmNBhQLvZMg12d3Mf6jRuj2d
+         XROl8WlRjkeOMYXrAvOEVCutH9U5gq6PmaEMgw9CVvrnBormAApbvWFf9PbXBdZD2Bgk
+         gRwozLmSR9dFbDKzk4tLfRA6nXzZ1RPIdFwZKrLyl077JXOWvmbE02yK4z3GiSUDkjNh
+         FtSJAfcl/a+EYUu/nwKCLcM7j5QfUkMSaUNeXx3FD22PDYBWTpwG2FVJzfzo0rZy7mMU
+         5yfYFUy2QM6S30nBSZNlvW0ukXcXDc8ulnVSsxeCsX7UoKrbjFXO/TznvRZVaaSGwRSp
+         +CfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=boT/6riwdA2m3FxQ0jLzkBJdoIdhrXNKi7UsmGCQNCg=;
-        b=pRZhTguljQtagXmfcsYsqsnEMtzYXPztqUzWavAVisz7hzbZZM7UeChlznoSR5Ny2h
-         n9XkhU/Kpcz5ZFNpIY4OJ3bX/cRCnPiaQoNjVbiOUnPcZZLw+noOjHb/8L2lhgFhH7B0
-         cJq6Rtm4gvSPu/WVekKYjSH9EQSAQv3eROz9u2UOzMFUz/mQahr/pU66CPtajS4cGj25
-         Bsf9wfydpV4WY9nKnWRBXbFB+5EiO5dVhpgrpfRgzOyo18PVJjWUSh5AwLiMYWR7JY8l
-         uhTYIWqMGYEIHbNY7nPo+sDIO7HSn0YwVw5XIo1A0zJN0agN5UM93cpaitE4bCXP6Z2b
-         iK6A==
-X-Gm-Message-State: APjAAAWeke2x+ZIdjvLbqfayYPuhgjQoeAEgKs+wEY8BO9/w6KZhAZ5O
-        XXmV9oYVokKB0mNGW4sNTf5tO8DtDtQ=
-X-Google-Smtp-Source: APXvYqzJpZ3dfzDNRDFWbHJl1t9HF21fBkksq58JmT+ub0cT24t3QOpgTcurkpfqIO92QDjrwFTlGg==
-X-Received: by 2002:ab0:278b:: with SMTP id t11mr22731142uap.88.1554934889212;
-        Wed, 10 Apr 2019 15:21:29 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id r24sm4534297ual.8.2019.04.10.15.21.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:21:28 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id x2so925308vkx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:21:28 -0700 (PDT)
-X-Received: by 2002:a1f:7d4e:: with SMTP id y75mr25311986vkc.53.1554934886529;
- Wed, 10 Apr 2019 15:21:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190410212627.29514-1-okaya@kernel.org> <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
- <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org> <CAGXu5jLPxUESH9eMm6rvaTVue_9rNEdx+9dcxiV11kgi03jUmA@mail.gmail.com>
- <ac8f52a9-30a4-41fd-50f6-65c8ae859675@kernel.org>
-In-Reply-To: <ac8f52a9-30a4-41fd-50f6-65c8ae859675@kernel.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 15:21:15 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLsdSsgVmAU57rpBVAYK6-KxEhzDKj-w5-z2c+dsofD-Q@mail.gmail.com>
-Message-ID: <CAGXu5jLsdSsgVmAU57rpBVAYK6-KxEhzDKj-w5-z2c+dsofD-Q@mail.gmail.com>
-Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
-To:     Sinan Kaya <Okaya@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y7nE7ZG7nELr6t53V66jtZhQYEzl5on9riW0DsXxtsU=;
+        b=cAeEQu8Swa/qndk0po6phqsQWkfIQ+DZLCH16BNGDpepMkSUUsAl02+lLWxsEByWk4
+         itRu0+v/S/GAzYbqasdzmIEpMFvD4aHXNIFFpUmXPrSEA3kAVVN6D1ZDHNhzeHGdseAO
+         7uPvH0hygYu1MzNY+ySuwOBb3QMOaEdRpHL9kmFHsPoCEXQe6xESgQvl2VPqdOIHY3Yf
+         EuD3yiFDH7Rr7tARODvSy4zHk/vOHwlLGMuyO/BHoqU8AIijv/wAa7oIoA5oJQbvG6MK
+         pgmNXgTOOi3Rpn8/NmRHmz/dmTCG09l/kDC8qzwxFS07OQ7SRScyEu9QmeQ76JOVY1DA
+         3qjw==
+X-Gm-Message-State: APjAAAUIR1/FfNJCR+++ex99MUlW3wbjpCLFc0cqYI3c5qFwEo0bsx7y
+        QZsfHqak4rAdVRD4cCHoza4=
+X-Google-Smtp-Source: APXvYqzSW8A0de7PCwOZbttM9WY5RHdOdZwEuTqH8Wg6cvRd7VloMyIIu7l89/NfwCmJQirAMYsnpw==
+X-Received: by 2002:a17:906:7496:: with SMTP id e22mr25675653ejl.45.1554935055071;
+        Wed, 10 Apr 2019 15:24:15 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id h11sm4540083eds.44.2019.04.10.15.24.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 15:24:14 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 22:24:13 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
+ find_memory_block()
+Message-ID: <20190410222413.4ljc2tchgkbl4lbo@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190410101455.17338-1-david@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410101455.17338-1-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 3:18 PM Sinan Kaya <Okaya@kernel.org> wrote:
+On Wed, Apr 10, 2019 at 12:14:55PM +0200, David Hildenbrand wrote:
+>While current node handling is probably terribly broken for memory block
+>devices that span several nodes (only possible when added during boot,
+>and something like that should be blocked completely), properly put the
+>device reference we obtained via find_memory_block() to get the nid.
 >
-> On 4/10/2019 6:04 PM, Kees Cook wrote:
->
-> >> I don't want any of the debug features in my kernel but still
-> >> need all the expert features. My kernel is considered a production
-> >> kernel. I don't really want to ship all the good debug enables.
-> >
-> > Production kernels enable it. e.g. Ubuntu:
-> > $ grep '\bCONFIG_DEBUG_KERNEL\b' /boot/config-$(uname -r)
-> > CONFIG_DEBUG_KERNEL=y
-> >
->
-> It makes sense for a general purpose operating system. It doesn't apply
-> to my limited case where I'm very concerned about image size.
+>Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: David Hildenbrand <david@redhat.com>
+>Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Qian Cai <cai@lca.pw>
+>Cc: Arun KS <arunks@codeaurora.org>
+>Cc: Mathieu Malaterre <malat@debian.org>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Gotcha.
+You are right.
 
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+
+>---
+> mm/memory_hotplug.c | 1 +
+> 1 file changed, 1 insertion(+)
 >
-> >> I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
-> >> as none of the features except KALLSYMS depend on it. If there was
-> >> a compile time dependency, I'd say move it to the things that need
-> >> it as this patch suggests.
-> >
-> > CONFIG_DEBUG_KERNEL mainly only enables the visibility of various
-> > other options. I can only find two instances of it controlling a
-> > "default", and one is overridden by CONFIG_SMP on alpha. :)
-> >
-> > $ git grep -B2 'default.*DEBUG_KERNEL'
-> > arch/alpha/Kconfig.debug-config MATHEMU
-> > arch/alpha/Kconfig.debug-       tristate "Kernel FP software
-> > completion" if DEBUG_KERNEL && !SMP
-> > arch/alpha/Kconfig.debug:       default y if !DEBUG_KERNEL || SMP
-> > --
-> > kernel/trace/Kconfig-menuconfig FTRACE
-> > kernel/trace/Kconfig-   bool "Tracers"
-> > kernel/trace/Kconfig:   default y if DEBUG_KERNEL
->
-> If the idea is to just show, nothing should happen based on
-> DEBUG_KERNEL, right?
->
-> No default selection as in FTRACE, no c/S file changes in the code
-> path as Mathieu identified.
-
-Yeah, this is clearly a problem. I hadn't looked for code #ifdefs :(
-
-> I can go after individual enables if you agree assuming Mathieu will
-> go after the changes in the other email. Let me know otherwise.
-
-How about you split it, but make DEBUG_KERNEL be "default EXPERT" that
-way enabling EXPERT will enable DEBUG_KERNEL still in the default
-case?
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 5eb4a4c7c21b..328878b6799d 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -854,6 +854,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
+> 	 */
+> 	mem = find_memory_block(__pfn_to_section(pfn));
+> 	nid = mem->nid;
+>+	put_device(&mem->dev);
+> 
+> 	/* associate pfn range with the zone */
+> 	zone = move_pfn_range(online_type, nid, pfn, nr_pages);
+>-- 
+>2.20.1
 
 -- 
-Kees Cook
+Wei Yang
+Help you, Help me
