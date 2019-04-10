@@ -2,312 +2,118 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ADDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF16C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445652082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F34A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4bol1OLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731960AbfDJM2l (ORCPT
+        id S1731073AbfDJMas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:28:41 -0400
-Received: from foss.arm.com ([217.140.101.70]:53772 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728881AbfDJM2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:28:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B635DA78;
-        Wed, 10 Apr 2019 05:28:40 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FA253F59C;
-        Wed, 10 Apr 2019 05:28:36 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 13:28:34 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
- BARRIER EFFECTS" section
-Message-ID: <20190410122834.GB21169@fuggles.cambridge.arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
- <20190405135936.7266-2-will.deacon@arm.com>
- <20190410105833.GA116161@gmail.com>
+        Wed, 10 Apr 2019 08:30:48 -0400
+Received: from mail-eopbgr690049.outbound.protection.outlook.com ([40.107.69.49]:24654
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728881AbfDJMas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:30:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ybV0TLfP2CxtALB4yZqua1Z6zyoDIMTG9enZZUnqViI=;
+ b=4bol1OLw28pAEtEp9TQ7X+nW7k6SaozODAmrcHYMQHBmClMwpgevon7YcyW155gYYFio8oUF7J91c25S/Ym9IZSNUjpiDq8GJBy0B1ApQzLAuruXJOzF/umwrMK6vpL9sfj5j96Yq3fKMfDc2AVVlEfO3sAloBPRxi7VyiRFRpg=
+Received: from MWHPR02MB2623.namprd02.prod.outlook.com (10.168.206.9) by
+ MWHPR02MB2606.namprd02.prod.outlook.com (10.168.205.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.16; Wed, 10 Apr 2019 12:30:38 +0000
+Received: from MWHPR02MB2623.namprd02.prod.outlook.com
+ ([fe80::905a:a5f3:8d41:431e]) by MWHPR02MB2623.namprd02.prod.outlook.com
+ ([fe80::905a:a5f3:8d41:431e%6]) with mapi id 15.20.1792.016; Wed, 10 Apr 2019
+ 12:30:38 +0000
+From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
+To:     Mark Brown <broonie@kernel.org>, YueHaibing <yuehaibing@huawei.com>
+CC:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+Subject: RE: [LINUX PATCH v3] spi: spi-mem: Fix build error without
+ CONFIG_SPI_MEM
+Thread-Topic: [LINUX PATCH v3] spi: spi-mem: Fix build error without
+ CONFIG_SPI_MEM
+Thread-Index: AQHU75SYRghFoYZe90G0/RFUWfhl5KY1UPeAgAAAsYCAAADgoA==
+Date:   Wed, 10 Apr 2019 12:30:37 +0000
+Message-ID: <MWHPR02MB262352F3C89EB163AB1EC2B5AF2E0@MWHPR02MB2623.namprd02.prod.outlook.com>
+References: <1554897429-5959-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+ <2d9cee19-a776-ad18-b8ac-6d0d1b096ad6@huawei.com>
+ <20190410122457.GP6106@sirena.org.uk>
+In-Reply-To: <20190410122457.GP6106@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nagasure@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ae293f6-3bfe-4cff-015a-08d6bdb05670
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MWHPR02MB2606;
+x-ms-traffictypediagnostic: MWHPR02MB2606:
+x-microsoft-antispam-prvs: <MWHPR02MB2606EB23F481A5EC1D0C1C56AF2E0@MWHPR02MB2606.namprd02.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(396003)(366004)(136003)(13464003)(199004)(189003)(446003)(11346002)(8936002)(74316002)(97736004)(305945005)(476003)(9686003)(105586002)(33656002)(54906003)(106356001)(316002)(110136005)(99286004)(68736007)(55016002)(4326008)(102836004)(76176011)(53546011)(6506007)(6246003)(7736002)(81166006)(186003)(53936002)(7696005)(26005)(478600001)(81156014)(8676002)(256004)(25786009)(71190400001)(71200400001)(229853002)(2906002)(52536014)(5660300002)(86362001)(3846002)(6116002)(66066001)(486006)(14454004)(4744005)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2606;H:MWHPR02MB2623.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KgB+VY2FC80vwawJRdAaKRMR2x3A+CXTiclgsoPRvWjWmxAafis364x7g8vy1RGyYMav/JrVTUBd9AkV57FHvppI9ferdnYSwSsrXQseKsJ5Ww0Ubvk/tZ5dpuimYuQRMYSVCYgkUV9t1ClX/GMENeFyo8FJo9g4OaUVTWbvP+2PiqFI/qKwqE8WirmKuDLxdyZg+5AkWZWWvOcDhC3pUutVUMypBugxo943aSIAXfwyKgJfdWnY5HFn7LeAlT2G7HkC/vZf9N68tXc0RjoSuPDryyOMUp/J3H7uOIQt0qGPfbQQmVv1v9WcSdw4vBGheDUrwBsQGBMsGlokwjr8ge6wsEUZN9eWX7CQ3nBfOegQyUY4/CI1a4WESJK0ibEF95Mlrb+Zk2Rfg7nq8eVyWCK1AF96/S9zXktqek1pkFA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410105833.GA116161@gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ae293f6-3bfe-4cff-015a-08d6bdb05670
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 12:30:37.9817
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2606
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
+Hi,
 
-Thanks for taking a look (diff at the end).
+> -----Original Message-----
+> From: linux-spi-owner@vger.kernel.org <linux-spi-owner@vger.kernel.org> O=
+n Behalf Of
+> Mark Brown
+> Sent: Wednesday, April 10, 2019 5:55 PM
+> To: YueHaibing <yuehaibing@huawei.com>
+> Cc: Naga Sureshkumar Relli <nagasure@xilinx.com>; vigneshr@ti.com; linux-
+> kernel@vger.kernel.org; linux-spi@vger.kernel.org; Michal Simek <michals@=
+xilinx.com>;
+> nagasuresh12@gmail.com
+> Subject: Re: [LINUX PATCH v3] spi: spi-mem: Fix build error without CONFI=
+G_SPI_MEM
+>=20
+> On Wed, Apr 10, 2019 at 08:22:29PM +0800, YueHaibing wrote:
+> > On 2019/4/10 19:57, Naga Sureshkumar Relli wrote:
+>=20
+> > > +static inline bool spi_mem_default_supports_op(struct spi_mem *mem,
+> > > +				 const struct spi_mem_op *op);
+>=20
+> > Here miss a Function body, right?
+>=20
+> Yeah, I'm surprised that builds...
+Sorry, I tested with CONFIG_SPI_MEM enabled. It's my bad.
 
-On Wed, Apr 10, 2019 at 12:58:33PM +0200, Ingo Molnar wrote:
-> * Will Deacon <will.deacon@arm.com> wrote:
-> 
-> > + (*) readX(), writeX():
-> >  
-> > +     The readX() and writeX() MMIO accessors take a pointer to the peripheral
-> > +     being accessed as an __iomem * parameter. For pointers mapped with the
-> > +     default I/O attributes (e.g. those returned by ioremap()), then the
-> > +     ordering guarantees are as follows:
-> 
-> s/then the
->  /the
-
-Fixed.
-
-> > +     1. All readX() and writeX() accesses to the same peripheral are ordered
-> > +        with respect to each other. For example, this ensures that MMIO register
-> > +	writes by the CPU to a particular device will arrive in program order.
-> 
-> Vertical alignment whitespace damage: some indentations are done via 
-> spaces, one via tabs. Please standardize to tabs.
-
-Fixed.
-
-> I'd also suggest:
-> 
-> s/For example, this ensures
->  /For example this ensures
-
-I'll just drop the "For example, " prefix altogether.
-
-> > +     4. A readX() by the CPU from the peripheral will complete before any
-> > +	subsequent delay() loop can begin execution. For example, this ensures
-> > +	that two MMIO register writes by the CPU to a peripheral will arrive at
-> > +	least 1us apart if the first write is immediately read back with readX()
-> > +	and udelay(1) is called prior to the second writeX().
-> 
-> This might be more readable via some short code sequence instead?
-
-Fixed.
-
-> > +     __iomem pointers obtained with non-default attributes (e.g. those returned
-> > +     by ioremap_wc()) are unlikely to provide many of these guarantees.
-> 
-> This part is a bit confusing I think, because it's so cryptic. "Unlikely" 
-> as in probabilistic? ;-) So I think we should at least give some scope of 
-> the exceptions and expected trouble, or at least direct people to those 
-> APIs to see what the semantics are?
-
-Right, so I'm trying to tackle the common case of ioremap() in this patch.
-There isn't an agreed portable semantics for ioremap_wc() yet, so I'm taking
-a punt for now but it's something I'd like to get back to in the future.
-I've tried to clean up the wording in the diff below to spell out that
-this this is currently arch-specific.
-
-> >  
-> > + (*) readX_relaxed(), writeX_relaxed():
-> >  
-> > +     These are similar to readX() and writeX(), but provide weaker memory
-> > +     ordering guarantees. Specifically, they do not guarantee ordering with
-> > +     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
-> > +     but they are still guaranteed to be ordered with respect to other accesses
-> > +     to the same peripheral when operating on __iomem pointers mapped with the
-> > +     default I/O attributes.
-> >  
-> > + (*) readsX(), writesX():
-> >  
-> > +     The readsX() and writesX() MMIO accessors are designed for accessing
-> > +     register-based, memory-mapped FIFOs residing on peripherals that are not
-> > +     capable of performing DMA. Consequently, they provide only the ordering
-> > +     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
-> 
-> So is there any difference between 'X_relaxed' and 'sX' variants? What is 
-> the 's' about?
-
-From the ordering perspective, there isn't a difference, but they are very
-different operations in the I/O access API so I think it's worth calling
-them out separately. The 's' stands for "string", and these accessors
-repeatedly access the same address, hence the comment about "memory-mapped
-FIFOs".
-
-Anyway, please take a look at the diff below and let me know if you're
-happy with it. The original commit is currently at the bottom of my mmiowb
-tree, so I'll probably put this on top as an extra commit with your
-Reported-by.
-
-Cheers,
-
-Will
-
---->8
-
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index 3522f0cc772f..d0e332161a40 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -2517,80 +2517,88 @@ guarantees:
- 
-  (*) readX(), writeX():
- 
--     The readX() and writeX() MMIO accessors take a pointer to the peripheral
--     being accessed as an __iomem * parameter. For pointers mapped with the
--     default I/O attributes (e.g. those returned by ioremap()), then the
--     ordering guarantees are as follows:
--
--     1. All readX() and writeX() accesses to the same peripheral are ordered
--        with respect to each other. For example, this ensures that MMIO register
--	writes by the CPU to a particular device will arrive in program order.
--
--     2. A writeX() by the CPU to the peripheral will first wait for the
--        completion of all prior CPU writes to memory. For example, this ensures
--        that writes by the CPU to an outbound DMA buffer allocated by
--        dma_alloc_coherent() will be visible to a DMA engine when the CPU writes
--        to its MMIO control register to trigger the transfer.
--
--     3. A readX() by the CPU from the peripheral will complete before any
--	subsequent CPU reads from memory can begin. For example, this ensures
--	that reads by the CPU from an incoming DMA buffer allocated by
--	dma_alloc_coherent() will not see stale data after reading from the DMA
--	engine's MMIO status register to establish that the DMA transfer has
--	completed.
--
--     4. A readX() by the CPU from the peripheral will complete before any
--	subsequent delay() loop can begin execution. For example, this ensures
--	that two MMIO register writes by the CPU to a peripheral will arrive at
--	least 1us apart if the first write is immediately read back with readX()
--	and udelay(1) is called prior to the second writeX().
--
--     __iomem pointers obtained with non-default attributes (e.g. those returned
--     by ioremap_wc()) are unlikely to provide many of these guarantees.
-+	The readX() and writeX() MMIO accessors take a pointer to the
-+	peripheral being accessed as an __iomem * parameter. For pointers
-+	mapped with the default I/O attributes (e.g. those returned by
-+	ioremap()), the ordering guarantees are as follows:
-+
-+	1. All readX() and writeX() accesses to the same peripheral are ordered
-+	   with respect to each other. This ensures that MMIO register writes by
-+	   the CPU to a particular device will arrive in program order.
-+
-+	2. A writeX() by the CPU to the peripheral will first wait for the
-+	   completion of all prior CPU writes to memory. This ensures that
-+	   writes by the CPU to an outbound DMA buffer allocated by
-+	   dma_alloc_coherent() will be visible to a DMA engine when the CPU
-+	   writes to its MMIO control register to trigger the transfer.
-+
-+	3. A readX() by the CPU from the peripheral will complete before any
-+	   subsequent CPU reads from memory can begin. This ensures that reads
-+	   by the CPU from an incoming DMA buffer allocated by
-+	   dma_alloc_coherent() will not see stale data after reading from the
-+	   DMA engine's MMIO status register to establish that the DMA transfer
-+	   has completed.
-+
-+	4. A readX() by the CPU from the peripheral will complete before any
-+	   subsequent delay() loop can begin execution. This ensures that two
-+	   MMIO register writes by the CPU to a peripheral will arrive at least
-+	   1us apart if the first write is immediately read back with readX()
-+	   and udelay(1) is called prior to the second writeX():
-+
-+		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
-+		readl(DEVICE_REGISTER_0);
-+		udelay(1);
-+		writel(42, DEVICE_REGISTER_1); // ... at least 1us before this.
-+
-+	The ordering properties of __iomem pointers obtained with non-default
-+	attributes (e.g. those returned by ioremap_wc()) are specific to the
-+	underlying architecture and therefore the guarantees listed above cannot
-+	generally be relied upon for these types of mappings.
- 
-  (*) readX_relaxed(), writeX_relaxed():
- 
--     These are similar to readX() and writeX(), but provide weaker memory
--     ordering guarantees. Specifically, they do not guarantee ordering with
--     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
--     but they are still guaranteed to be ordered with respect to other accesses
--     to the same peripheral when operating on __iomem pointers mapped with the
--     default I/O attributes.
-+	These are similar to readX() and writeX(), but provide weaker memory
-+	ordering guarantees. Specifically, they do not guarantee ordering with
-+	respect to normal memory accesses or delay() loops (i.e. bullets 2-4
-+	above) but they are still guaranteed to be ordered with respect to other
-+	accesses to the same peripheral when operating on __iomem pointers
-+	mapped with the default I/O attributes.
- 
-  (*) readsX(), writesX():
- 
--     The readsX() and writesX() MMIO accessors are designed for accessing
--     register-based, memory-mapped FIFOs residing on peripherals that are not
--     capable of performing DMA. Consequently, they provide only the ordering
--     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
-+	The readsX() and writesX() MMIO accessors are designed for accessing
-+	register-based, memory-mapped FIFOs residing on peripherals that are not
-+	capable of performing DMA. Consequently, they provide only the ordering
-+	guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
- 
-  (*) inX(), outX():
- 
--     The inX() and outX() accessors are intended to access legacy port-mapped
--     I/O peripherals, which may require special instructions on some
--     architectures (notably x86). The port number of the peripheral being
--     accessed is passed as an argument.
-+	The inX() and outX() accessors are intended to access legacy port-mapped
-+	I/O peripherals, which may require special instructions on some
-+	architectures (notably x86). The port number of the peripheral being
-+	accessed is passed as an argument.
- 
--     Since many CPU architectures ultimately access these peripherals via an
--     internal virtual memory mapping, the portable ordering guarantees provided
--     by inX() and outX() are the same as those provided by readX() and writeX()
--     respectively when accessing a mapping with the default I/O attributes.
-+	Since many CPU architectures ultimately access these peripherals via an
-+	internal virtual memory mapping, the portable ordering guarantees
-+	provided by inX() and outX() are the same as those provided by readX()
-+	and writeX() respectively when accessing a mapping with the default I/O
-+	attributes.
- 
--     Device drivers may expect outX() to emit a non-posted write transaction
--     that waits for a completion response from the I/O peripheral before
--     returning. This is not guaranteed by all architectures and is therefore
--     not part of the portable ordering semantics.
-+	Device drivers may expect outX() to emit a non-posted write transaction
-+	that waits for a completion response from the I/O peripheral before
-+	returning. This is not guaranteed by all architectures and is therefore
-+	not part of the portable ordering semantics.
- 
-  (*) insX(), outsX():
- 
--     As above, the insX() and outsX() accessors provide the same ordering
--     guarantees as readsX() and writesX() respectively when accessing a mapping
--     with the default I/O attributes.
-+	As above, the insX() and outsX() accessors provide the same ordering
-+	guarantees as readsX() and writesX() respectively when accessing a
-+	mapping with the default I/O attributes.
- 
-- (*) ioreadX(), iowriteX()
-+ (*) ioreadX(), iowriteX():
- 
--     These will perform appropriately for the type of access they're actually
--     doing, be it inX()/outX() or readX()/writeX().
-+	These will perform appropriately for the type of access they're actually
-+	doing, be it inX()/outX() or readX()/writeX().
- 
- All of these accessors assume that the underlying peripheral is little-endian,
- and will therefore perform byte-swapping operations on big-endian architectures.
+Regards,
+Naga Sureshkumar Relli
