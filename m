@@ -2,117 +2,121 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1C1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77466C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EA220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="SocTHFjf"
+	by mail.kernel.org (Postfix) with ESMTP id 4E27420818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfDJImd (ORCPT
+        id S1729481AbfDJIoW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:42:33 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:47352 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfDJImc (ORCPT
+        Wed, 10 Apr 2019 04:44:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:27138 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728828AbfDJIoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:42:32 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id EEF965C071C;
-        Wed, 10 Apr 2019 10:42:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1554885750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7HuqGfOXUK8gw6tqvJtjPvBZ5uOETqKXHcsSaP+O4AE=;
-        b=SocTHFjfIYX3ZHTDPmTe7yIRuSkL+dmj4gSX7CvcL6DB3zaMvFDKHCtxf00LVs3WS03lGF
-        UEuvwatpIWGpW7ZX2E2ZDxdYL0HhlyLcqwaEcP5ceDaoBZskzo0USPc+MOE8BX8gyFRocA
-        errzNE/KYdqvq5usVdv3FOyIOIvLy1U=
+        Wed, 10 Apr 2019 04:44:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-139-fjmoDOY7OryNuGiZcxGCOA-1; Wed, 10 Apr 2019 09:44:16 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 10 Apr 2019 09:45:25 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 10 Apr 2019 09:45:25 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alastair D'Silva' <alastair@au1.ibm.com>,
+        "alastair@d-silva.org" <alastair@d-silva.org>
+CC:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Karsten Keil" <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated
+ by lines '|'
+Thread-Topic: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated
+ by lines '|'
+Thread-Index: AQHU70w0rkaVHIS5K0aGNoZBJJ6fAqY1Ew8A
+Date:   Wed, 10 Apr 2019 08:45:25 +0000
+Message-ID: <1cd09186c67b4fa4bceb84faf835ff10@AcuMS.aculab.com>
+References: <20190410031720.11067-1-alastair@au1.ibm.com>
+ <20190410031720.11067-5-alastair@au1.ibm.com>
+In-Reply-To: <20190410031720.11067-5-alastair@au1.ibm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 10 Apr 2019 10:42:30 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
-        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
-        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
-        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        marc.w.gonzalez@free.fr, mans@mansr.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch
- argument
-In-Reply-To: <20190409145042.GD2839@atomide.com>
-References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
- <20190409145042.GD2839@atomide.com>
-Message-ID: <7798addc2c24a3a3bee2954a854335cf@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.7
+X-MC-Unique: fjmoDOY7OryNuGiZcxGCOA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.2019 16:50, Tony Lindgren wrote:
-> Hi,
+From: Alastair D'Silva
+> Sent: 10 April 2019 04:17
+> With the wider display format, it can become hard to identify how many
+> bytes into the line you are looking at.
 > 
-> * Stefan Agner <stefan@agner.ch> [190408 20:59]:
->> --- a/arch/arm/mach-omap2/Makefile
->> +++ b/arch/arm/mach-omap2/Makefile
->> @@ -41,11 +41,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-common) $(smp-y) sleep44xx.o
->>  obj-$(CONFIG_SOC_AM43XX)		+= $(omap-4-5-common)
->>  obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
->>
->> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
->> -AFLAGS_omap-headsmp.o			:=-Wa,-march=armv7-a$(plus_sec)
->> -AFLAGS_omap-smc.o			:=-Wa,-march=armv7-a$(plus_sec)
->> -AFLAGS_sleep44xx.o			:=-Wa,-march=armv7-a$(plus_sec)
->> -
->>  # Functions loaded to SRAM
->>  obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
->>  obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
->> @@ -95,9 +90,6 @@ obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
->>  obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
->>
->>  AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
->> -AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
->> -AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
->> -AFLAGS_sleep43xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+> The patch adds new flags to hex_dump_to_buffer() and print_hex_dump() to
+> print vertical lines to separate every N groups of bytes.
 > 
-> I think we should also change the AFLAGS_sleep24xx.o above the
-> same way but with armv6 flags. This can be build tested with
-> omap2plus_defconfig.
+> eg.
+> buf:00000000: 454d414e 43415053|4e495f45 00584544  NAMESPAC|E_INDEX.
+> buf:00000010: 00000000 00000002|00000000 00000000  ........|........
 
-From what I can tell, since those do not add the sec extension they
-should work fine for LLVM's integrated assembler. But I agree, for
-consistency it would be nice to get rid of them the same way too.
+Ugg, that is just horrid.
+It is enough to add an extra space if you really need the columns
+to be more easily counted.
 
-A bit further up, there is also:
-AFLAGS_sram242x.o                      :=-Wa,-march=armv6
-AFLAGS_sram243x.o                      :=-Wa,-march=armv6
+I'm not even sure that is needed if you are printing 32bit words.
+OTOH 32bit words makes 64bit values really stupid on LE systems.
+Bytes with extra spaces every 4 bytes is the format I prefer
+even for long lines.
 
-I think those explicit arch definitions are not even necessary since
-ARCH_OMAP2 depends on ARCH_MULTI_V6, which cannot be built with pre v6
-architecture. So the minimum architecture we build for will be armv6...
+Oh, and if you are using hexdump() a lot you want a version
+that never uses snprintf().
 
-In a quick test omap2plus_defconfig builds fine without those AFLAGS. I
-will put it through some more testing and drop those flags in v3.
+	David
 
---
-Stefan
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-
-> 
-> Regards,
-> 
-> Tony
