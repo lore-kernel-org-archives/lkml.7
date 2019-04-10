@@ -2,148 +2,636 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF7FC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0B2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DE92082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7478D2082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554921691;
+	bh=abB4NBim94P734V6TpHNC3QF85PKc/RIcQQsFv9yODw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=niZ6076VaYXFXxhqUnX0E8TVoyMtD542amGJyK6aFl99H+3HfW6TtZqN1zZTJHVwd
+	 e0K/8fDTbhupQ4kb2Aqs1DlWEhBSqf3L2qe1EvAlBd3w3+13dmYedPw85APa7HWnrP
+	 Pa/o5+qDdnS6pyVEuShR4C+3cQs17LtfPXT+qGMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfDJSjB (ORCPT
+        id S1731645AbfDJSla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:39:01 -0400
-Received: from mail-oln040092070040.outbound.protection.outlook.com ([40.92.70.40]:61924
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727583AbfDJSjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:39:00 -0400
-Received: from DB5EUR03FT062.eop-EUR03.prod.protection.outlook.com
- (10.152.20.60) by DB5EUR03HT120.eop-EUR03.prod.protection.outlook.com
- (10.152.21.158) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16; Wed, 10 Apr
- 2019 18:38:53 +0000
-Received: from AM3PR03MB0966.eurprd03.prod.outlook.com (10.152.20.60) by
- DB5EUR03FT062.mail.protection.outlook.com (10.152.20.197) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1771.16 via Frontend Transport; Wed, 10 Apr 2019 18:38:53 +0000
-Received: from AM3PR03MB0966.eurprd03.prod.outlook.com
- ([fe80::c89:4e52:34c1:7009]) by AM3PR03MB0966.eurprd03.prod.outlook.com
- ([fe80::c89:4e52:34c1:7009%5]) with mapi id 15.20.1771.016; Wed, 10 Apr 2019
- 18:38:53 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Doug Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Elaine Zhang <zhangqing@rock-chips.com>
-CC:     Tomasz Figa <tfiga@chromium.org>,
-        Ziyuan Xu <xzy.xu@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Ryan Case <ryandcase@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] clk: rockchip: Fix video codec clocks on rk3288
-Thread-Topic: [PATCH] clk: rockchip: Fix video codec clocks on rk3288
-Thread-Index: AQHU5nomoS9eFvWRsEGSh6TEO1HQL6Y1m/eAgAAwWoA=
-Date:   Wed, 10 Apr 2019 18:38:52 +0000
-Message-ID: <AM3PR03MB09665B2755982816D2FC37E4AC2E0@AM3PR03MB0966.eurprd03.prod.outlook.com>
-References: <20190329215455.159717-1-dianders@chromium.org>
- <CAD=FV=V22Z2ziNZs5syzd1wpT4AwpXtTHP52wKvN5drgf06Z8Q@mail.gmail.com>
-In-Reply-To: <CAD=FV=V22Z2ziNZs5syzd1wpT4AwpXtTHP52wKvN5drgf06Z8Q@mail.gmail.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0181.eurprd05.prod.outlook.com
- (2603:10a6:3:f8::29) To AM3PR03MB0966.eurprd03.prod.outlook.com
- (2a01:111:e400:884c::23)
-x-incomingtopheadermarker: OriginalChecksum:9A80DC33085167426D554C10F32300CF669974193FB14F2304B808DC5A07921A;UpperCasedChecksum:10D4D1FC8AC30B819F735BDE5214F8CECC772B24E50AA895123BCC4E16226FEE;SizeAsReceived:8090;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [oDh2yREvbAQzgzkSJG6wAV44JGxB0K5r]
-x-microsoft-original-message-id: <a394b664-a8bb-3a00-0632-629227aacb52@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR03HT120;
-x-ms-traffictypediagnostic: DB5EUR03HT120:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-message-info: W9OY4DRsN5QzQbex3a3ayL5GzqpCU8yYfh7e6Lsx8ttqb0kjEUebEoL3ynond0mfNY16q85D6oTKy0FY+hGz43C3cOYsQRL6npR/YAMOpw4vColnDR7fhmZ2NPoDTqDYaKvjdrPCsT3JbQ9z85L6TON9YWJ8VrpqNHTh1IYMv/oOgQcZJgD1HwegUhfOajyO
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E2F0DD6E8F33E84C932599DB5F0FF22E@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Apr 2019 14:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728023AbfDJSl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:41:29 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3D82082A;
+        Wed, 10 Apr 2019 18:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554921687;
+        bh=abB4NBim94P734V6TpHNC3QF85PKc/RIcQQsFv9yODw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rCoO/KtcpK1qP7I0eWPait2O/wj78DS+4Ggzn6w9Wb2UD66Xs3NMyRCN0DllKShQr
+         aKdMwqOPtjA7uGfoOZlHkGilS7BRgQgfBogJlE6JqEU384GO125yyLGDQEVPAkg1bd
+         LtwL5r5Pj9EsznhGRSxZDF/lTAk0YtzGm1WQVd6U=
+Date:   Wed, 10 Apr 2019 13:41:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v2 2/2] PCI/DPC: Add Error Disconnect Recover (EDR)
+ support
+Message-ID: <20190410184124.GF256045@google.com>
+References: <cover.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <4818f4dfa41bddc3968da4717c453897d4ad5717.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eeb3d1a-0987-4bbd-751b-08d6bde3c764
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 18:38:52.9656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4818f4dfa41bddc3968da4717c453897d4ad5717.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNC0xMCAxNzo0NSwgRG91ZyBBbmRlcnNvbiB3cm90ZToNCj4gSGksDQo+DQo+IE9u
-IEZyaSwgTWFyIDI5LCAyMDE5IGF0IDI6NTUgUE0gRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNA
-Y2hyb21pdW0ub3JnPiB3cm90ZToNCj4+IEl0IGFwcGVhcnMgdGhhdCB0aGVyZSBpcyBhIHR5cG8g
-aW4gdGhlIHJrMzI4OCBUUk0uICBGb3INCj4+IEdSRl9TT0NfQ09OMFs3XSBpdCBzYXlzIHRoYXQg
-MCBtZWFucyAidmVwdSIgYW5kIDEgbWVhbnMgInZkcHUiLiAgSXQncw0KPj4gdGhlIG90aGVyIHdh
-eSBhcm91bmQuDQo+Pg0KPj4gSG93IGRvIEkga25vdz8gIEhlcmUncyBteSBldmlkZW5jZToNCj4+
-DQo+PiAxLiBQcmlvciB0byBjb21taXQgNGQzZTg0Zjk5NjI4ICgiY2xrOiByb2NrY2hpcDogZGVz
-Y3JpYmUgYWNsa192Y29kZWMNCj4+ICAgIHVzaW5nIHRoZSBuZXcgbXV4Z3JmIHR5cGUgb24gcmsz
-Mjg4Iikgd2UgYWx3YXlzIHByZXRlbmRlZCB0aGF0IHdlDQo+PiAgICB3ZXJlIHVzaW5nICJhY2xr
-X3ZkcHUiIGFuZCB0aGUgY29tbWVudCBpbiB0aGUgY29kZSBzYWlkIHRoYXQgdGhpcw0KPj4gICAg
-bWF0Y2hlZCB0aGUgZGVmYXVsdCBzZXR0aW5nIGluIHRoZSBzeXN0ZW0uICBJbiBmYWN0IHRoZSBk
-ZWZhdWx0DQo+PiAgICBzZXR0aW5nIGlzIDAgYWNjb3JkaW5nIHRvIHRoZSBUUk0gYW5kIGFjY29y
-ZGluZyB0byByZWFkaW5nIG1lbW9yeQ0KPj4gICAgYXQgYm9vdHVwLiAgSW4gYWRkaXRpb24gcmsz
-Mjg4LWJhc2VkIENocm9tZWJvb2tzIHJhbiBsaWtlIHRoaXMgYW5kDQo+PiAgICB0aGUgdmlkZW8g
-Y29kZWNzIHdvcmtlZC4NCj4+IDIuIFdpdGggdGhlIGV4aXN0aW5nIGNsb2NrIGNvZGUgaWYgeW91
-IGJvb3QgdXAgYW5kIHRyeSB0byBlbmFibGUgdGhlDQo+PiAgICBuZXcgVklERU9fUk9DS0NISVBf
-VlBVIGFzIGEgbW9kdWxlIChhbmQgd2l0aG91dCAiY2xrX2lnbm9yZV91bnVzZWQiDQo+PiAgICBv
-biB0aGUgY29tbWFuZCBsaW5lKSwgeW91IGdldCBlcnJvcnMgbGlrZSAiZmFpbGVkIHRvIGdldCBh
-Y2sgb24NCj4+ICAgIGRvbWFpbiAncGRfdmlkZW8nLCB2YWw9MHg4MDIwOCIuICBBZnRlciBmbGlw
-cGluZyB2ZXB1L3ZkcHUgdGhpbmdzDQo+PiAgICBpbml0IE9LLg0KPj4gMy4gSWYgSSBleHBvcnQg
-YW5kIGFkZCBib3RoIHRoZSB2ZXB1IGFuZCB2ZHB1IHRvIHRoZSBsaXN0IG9mIGNsb2Nrcw0KPj4g
-ICAgZm9yIFJLMzI4OF9QRF9WSURFTyBJIGNhbiBnZXQgcGFzdCB0aGUgcG93ZXIgZG9tYWluIGVy
-cm9ycywgYnV0IG5vdw0KPj4gICAgSSBmcmVlemUgd2hlbiB0aGUgdnB1X21tdSBnZXRzIGluaXR0
-ZWQuDQo+PiA0LiBJZiBJIGp1c3QgbWFyayB0aGUgInZkcHUiIGFzIElHTk9SRV9VTlVTRUQgdGhl
-biBldmVyeXRoaW5nIGJvb3RzIHVwDQo+PiAgICBhbmQgcHJvYmVzIE9LIHNob3dpbmcgdGhhdCBz
-b21laG93IHRoZSAidmRwdSIgd2FzIGltcG9ydGFudCB0byBrZWVwDQo+PiAgICBlbmFibGVkLiAg
-VGhpcyBpcyBiZWNhdXNlIHdlIHdlcmUgYWN0dWFsbHkgdXNpbmcgaXQgYXMgYSBwYXJlbnQuDQo+
-PiA1LiBBZnRlciB0aGlzIGNoYW5nZSBJIGNhbiBoYWNrICJhY2xrX3Zjb2RlY19wcmUiIHRvIHBh
-cmVudCBmcm9tDQo+PiAgICAiYWNsa192ZXB1IiB1c2luZyBhc3NpZ25lZC1jbG9ja3MgYW5kIHRo
-ZSB2aWRlbyBjb2RlYyBzdGlsbCBwcm9iZXMNCj4+ICAgIE9LLg0KPj4NCj4+IEZpeGVzOiA0ZDNl
-ODRmOTk2MjggKCJjbGs6IHJvY2tjaGlwOiBkZXNjcmliZSBhY2xrX3Zjb2RlYyB1c2luZyB0aGUg
-bmV3IG11eGdyZiB0eXBlIG9uIHJrMzI4OCIpDQo+PiBTaWduZWQtb2ZmLWJ5OiBEb3VnbGFzIEFu
-ZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+DQo+PiAtLS0NCj4+IEkgY3VycmVudGx5IGhh
-dmUgbm8gd2F5IHRvIHRlc3QgdGhlIEpQRUcgbWVtMm1lbSBkcml2ZXIsIHNvIGhvcGVmdWxseQ0K
-Pj4gb3RoZXJzIGNhbiB0ZXN0IHRoaXMgYW5kIG1ha2Ugc3VyZSBpdCdzIGhhcHB5IGZvciB0aGVt
-LiAgSSdtIGp1c3QNCj4+IGhhcHB5IG5vdCB0byBnZXQgc3RyYW5nZSBlcnJvcnMgYXQgYm9vdCBh
-bnltb3JlLg0KPj4NCj4+ICBkcml2ZXJzL2Nsay9yb2NrY2hpcC9jbGstcmszMjg4LmMgfCAyICst
-DQo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IEFu
-eSB0aG91Z2h0cyBhYm91dCB0aGlzIHBhdGNoPyAgSSdtIDk5LjklIGNlcnRhaW4gaXQncyBjb3Jy
-ZWN0IGFuZA0KPiBpdCdkIGJlIG5pY2UgdG8gZ2V0IGl0IGxhbmRlZC4gIEhlaWtvOiBJIGFzc3Vt
-ZSB5b3UncmUgc3RpbGwNCj4gY29sbGVjdGluZyBSb2NrY2hpcCBjbG9jayBwYXRjaGVzIGFuZCB3
-b3VsZCBiZSB0aGUgb25lIHRvIGFwcGx5IGl0IGFuZA0KPiAoYXQgc29tZSBwb2ludCkgc2VuZCBh
-IHB1bGwgcmVxdWVzdCB0byB0aGUgY2xvY2sgdHJlZT8NCj4NCj4gLURvdWcNCg0KVGhpcyBjbGsg
-Zml4IGlzIG5lZWRlZCB0byBtYWtlIE1QRUctMiBkZWNvZGluZyB3b3JrIG9uIG15IFJLMzI4OCBU
-aW5rZXIgQm9hcmQgdXNpbmcgdGhlDQpyb2NrY2hpcCB2cHUgcGF0Y2hzZXQgYW5kIGEgcGF0Y2gg
-dG8gYWRkIFJLMzI4OCBzcGVjaWZpYyBNUEVHLTIgY29kZSBbMV0uDQoNCkFsc28gbm90ZSB0aGF0
-IHRoZSBzYW1lIGNoYW5nZSB3YXMgc3VnZ2VzdGVkIGluIGEgcHJldmlvdXMgcGF0Y2ggWzJdIGZy
-b20gYnkgYXlha2EuDQoNCklmIHBvc3NpYmxlIHBsZWFzZSBhbHNvIGFkZCB0aGUgQ0xLX1NFVF9S
-QVRFX1BBUkVOVCBjaGFuZ2UgZnJvbSBbM10gaW4gYSBwb3NzaWJsZSB2MiwNCnRoYXQgZml4ZXMg
-YXNzaWduaW5nIHRoZSBhY2xrX3Zjb2RlYyBjbGsgdG8gNDAwTWh6IGluIHRoZSByb2NrY2hpcCB2
-cHUgZHJpdmVyLg0KDQpbMV0gaHR0cHM6Ly9naXRodWIuY29tL0t3aWJvby9saW51eC1yb2NrY2hp
-cC9jb21taXQvMWY3ODA5M2UwNWM3MzYwNTE1YTE4NWY0OGI3YzVjYjhiYTFlM2UxNQ0KWzJdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTcyNTU1My8NClszXSBodHRwczovL2dp
-dGh1Yi5jb20vS3dpYm9vL2xpbnV4LXJvY2tjaGlwL2NvbW1pdC85MjE2ZGEzZjE1MjFhMGJlNTg4
-OTIzNWFiZTdmYTA5M2E0ODk0MTYwDQoNClJlZ2FyZHMsDQpKb25hcw0KDQo=
+On Tue, Mar 19, 2019 at 01:47:29PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification v3.2 ECN
+> (https://members.pcisig.com/wg/PCI-SIG/document/12614), when firmware
+> owns Downstream Port Containment (DPC), its expected to use the "Error
+> Disconnect Recover" (EDR) notification to alert OSPM of a DPC event and
+> if OS supports EDR, its expected to handle the software state invalidation
+> and port recovery in OS and let firmware know the recovery status via _OST
+> ACPI call.
+> 
+> Since EDR is a hybrid service, DPC service shall be enabled in OS even
+> if AER is not natively enabled in OS.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pcie/Kconfig        |  10 +
+>  drivers/pci/pcie/dpc.c          | 326 ++++++++++++++++++++++++++++++--
+
+I'll be looking for Keith's reviewed-by for this eventually.
+
+It looks like this could be split into some smaller patches:
+
+  - Add dpc_dev.native_dpc (hopefully we can find a less confusing name)
+  - Convert dpc_handler() to dpc_handler() + dpc_process_error()
+  - Add EDR support
+
+>  drivers/pci/pcie/portdrv_core.c |   9 +-
+>  3 files changed, 329 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 5cbdbca904ac..55f65d1cbc9e 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -142,3 +142,13 @@ config PCIE_PTM
+>  
+>  	  This is only useful if you have devices that support PTM, but it
+>  	  is safe to enable even if you don't.
+> +
+> +config PCIE_EDR
+> +	bool "PCI Express Error Disconnect Recover support"
+> +	default n
+> +	depends on PCIE_DPC && ACPI
+> +	help
+> +	  This options adds Error Disconnect Recover support as specified
+> +	  in PCI firmware specification v3.2 Downstream Port Containment
+> +	  Related Enhancements ECN. Enable this if you want to support hybrid
+> +	  DPC model which uses both firmware and OS to implement DPC.
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 7b77754a82de..bdf4ca8a0acb 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> +#include <linux/acpi.h>
+>  
+>  #include "portdrv.h"
+>  #include "../pci.h"
+> @@ -20,8 +21,23 @@ struct dpc_dev {
+>  	u16			cap_pos;
+>  	bool			rp_extensions;
+>  	u8			rp_log_size;
+> +	bool			native_dpc;
+
+This is going to be way too confusing with a "native_dpc" in both the
+struct pci_host_bridge and the struct dpc_dev.
+
+> +	pci_ers_result_t	error_state;
+> +#ifdef CONFIG_ACPI
+> +	struct acpi_device	*adev;
+> +#endif
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+> +
+> +#define EDR_PORT_ENABLE_DSM     0x0C
+> +#define EDR_PORT_LOCATE_DSM     0x0D
+> +
+> +static const guid_t pci_acpi_dsm_guid =
+> +		GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
+> +			  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
+> +#endif
+> +
+>  static const char * const rp_pio_error_string[] = {
+>  	"Configuration Request received UR Completion",	 /* Bit Position 0  */
+>  	"Configuration Request received CA Completion",	 /* Bit Position 1  */
+> @@ -67,6 +83,9 @@ void pci_save_dpc_state(struct pci_dev *dev)
+>  	if (!dpc)
+>  		return;
+>  
+> +	if (!dpc->native_dpc)
+> +		return;
+> +
+>  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+>  	if (!save_state)
+>  		return;
+> @@ -88,6 +107,9 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+>  	if (!dpc)
+>  		return;
+>  
+> +	if (!dpc->native_dpc)
+> +		return;
+> +
+>  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+>  	if (!save_state)
+>  		return;
+> @@ -224,10 +246,9 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+>  	return 1;
+>  }
+>  
+> -static irqreturn_t dpc_handler(int irq, void *context)
+> +static void dpc_process_error(struct dpc_dev *dpc)
+>  {
+>  	struct aer_err_info info;
+> -	struct dpc_dev *dpc = context;
+>  	struct pci_dev *pdev = dpc->dev->port;
+>  	struct device *dev = &dpc->dev->device;
+>  	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
+> @@ -261,6 +282,13 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+>  	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
+> +}
+> +
+> +static irqreturn_t dpc_handler(int irq, void *context)
+> +{
+> +	struct dpc_dev *dpc = context;
+> +
+> +	dpc_process_error(dpc);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -283,6 +311,230 @@ static irqreturn_t dpc_irq(int irq, void *context)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +void dpc_error_resume(struct pci_dev *dev)
+
+Looks like this should be static?
+
+> +{
+> +	struct dpc_dev *dpc;
+> +
+> +	dpc = to_dpc_dev(dev);
+> +	if (!dpc)
+> +		return;
+
+I don't think it's possible for dpc to be NULL, is it?  Remove the
+test if not.
+
+> +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
+> +}
+> +
+> +#ifdef CONFIG_ACPI
+> +
+> +/*
+> + * _DSM wrapper function to enable/disable DPC port.
+> + * @dpc   : DPC device structure
+> + * @enable: status of DPC port (0 or 1).
+> + *
+> + * returns 0 on success or errno on failure.
+> + */
+> +static int acpi_enable_dpc_port(struct dpc_dev *dpc, bool enable)
+> +{
+> +	union acpi_object *obj;
+> +	int status;
+> +	union acpi_object argv4;
+> +
+> +	/* Check whether EDR_PORT_ENABLE_DSM is supported in firmware */
+> +	status = acpi_check_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				1 << EDR_PORT_ENABLE_DSM);
+
+I don't think this acpi_check_dsm() is necessary, is it?  I expect
+acpi_evaluate_dsm() to fail nicely if there's no _DSM or it doesn't
+support the function.
+
+> +	if (!status)
+> +		return -ENOTSUPP;
+> +
+> +	argv4.type = ACPI_TYPE_INTEGER;
+> +	argv4.integer.value = enable;
+> +
+> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				EDR_PORT_ENABLE_DSM, &argv4);
+> +	if (!obj)
+> +		return -EIO;
+> +
+> +	if (obj->type == ACPI_TYPE_INTEGER && obj->integer.value == enable)
+> +		status = 0;
+> +	else
+> +		status = -EIO;
+> +
+> +	ACPI_FREE(obj);
+> +
+> +	return status;
+> +}
+> +
+> +/*
+> + * _DSM wrapper function to locate DPC port.
+> + * @dpc   : DPC device structure
+> + *
+> + * returns pci_dev or NULL.
+> + */
+> +static struct pci_dev *acpi_locate_dpc_port(struct dpc_dev *dpc)
+> +{
+> +	union acpi_object *obj;
+> +	int status;
+> +	u16 port;
+> +
+> +	/* Check whether EDR_PORT_LOCATE_DSM is supported in firmware */
+> +	status = acpi_check_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				1 << EDR_PORT_LOCATE_DSM);
+
+Unnecessary?
+
+> +	if (!status)
+> +		return dpc->dev->port;
+
+If you *do* need the acpi_check_dsm(), I would have expected to return
+NULL in this error case?
+
+> +
+> +
+
+Extra blank line here.
+
+> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
+> +				EDR_PORT_LOCATE_DSM, NULL);
+> +	if (!obj)
+> +		return NULL;
+> +
+> +	if (obj->type == ACPI_TYPE_INTEGER) {
+> +		/*
+> +		 * Firmware returns DPC port BDF details in following format:
+> +		 *	15:8 = bus
+> +		 *	7:3 = device
+> +		 *	2:0 = function
+> +		 */
+> +		port = obj->integer.value;
+> +		ACPI_FREE(obj);
+> +	} else {
+> +		ACPI_FREE(obj);
+> +		return NULL;
+> +	}
+> +
+> +	return pci_get_domain_bus_and_slot(0, PCI_BUS_NUM(port), port & 0xff);
+> +}
+> +
+> +/*
+> + * _OST wrapper function to let firmware know the status of EDR event.
+> + * @dpc   : DPC device structure.
+> + * @status: Status of EDR event.
+> + *
+
+Spurious blank line in the comment.
+
+> + */
+> +static int acpi_send_edr_status(struct dpc_dev *dpc,  u16 status)
+> +{
+> +	u32 ost_status;
+> +	struct pci_dev *pdev = dpc->dev->port;
+> +
+> +	dev_dbg(&pdev->dev, "Sending EDR status :%x\n", status);
+> +
+> +	ost_status =  PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +	ost_status = (ost_status << 16) | status;
+> +
+> +	if (!acpi_has_method(dpc->adev->handle, "_OST"))
+> +		return -ENOTSUPP;
+
+This acpi_has_method() check is superfluous, isn't it?  I would expect
+acpi_evaluate_ost() to fail gracefully if there's no _OST.
+
+I do see several other instances of code of the form:
+
+  if (!acpi_has_method(handle, "XXXX"))
+    return false;
+
+  status = acpi_evaluate_*(handle, "XXXX", ...);
+
+But I think that's a pointless pattern.  I think we could just try to
+evaluate the method directly, since the evaluation will fail if the
+method doesn't exist:
+
+  status = acpi_evaluate_*(handle, "XXXX", ...);
+
+> +	status = acpi_evaluate_ost(dpc->adev->handle,
+> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
+> +				   ost_status, NULL);
+> +	if (ACPI_FAILURE(status))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Helper function used for disconnecting the child devices when EDR event is
+> + * received from firmware.
+> + */
+> +static void dpc_disconnect_devices(struct pci_dev *dev)
+> +{
+> +	struct pci_dev *udev;
+> +	struct pci_bus *parent;
+> +	struct pci_dev *pdev, *temp;
+> +
+> +	dev_dbg(&dev->dev, "Disconnecting the child devices\n");
+> +
+> +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+> +		udev = dev;
+> +	else
+> +		udev = dev->bus->self;
+> +
+> +	parent = udev->subordinate;
+> +	pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
+> +
+> +	pci_lock_rescan_remove();
+> +	pci_dev_get(dev);
+> +	list_for_each_entry_safe_reverse(pdev, temp, &parent->devices,
+> +					 bus_list) {
+> +		pci_stop_and_remove_bus_device(pdev);
+> +	}
+> +	pci_dev_put(dev);
+> +	pci_unlock_rescan_remove();
+> +}
+> +
+> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+> +{
+> +	struct dpc_dev *dpc = (struct dpc_dev *) data;
+> +	struct pci_dev *pdev;
+> +	u16 status, cap;
+> +
+> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
+> +		return;
+> +
+> +	if (!data) {
+> +		pr_err("Invalid EDR event\n");
+
+In what instance can "data" be NULL?  I think *never*, unless ACPI
+screwed up and lost the context you supplied to
+acpi_install_notify_handler().  In that case, we should do something
+more significant than print a message and just return.  I think we
+should just omit this test, and if ACPI screwed up, we'll take a null
+pointer dereference oops, we'll see exactly where, and we'll have a
+chance to fix the problem.
+
+> +		return;
+> +	}
+> +
+> +	dev_dbg(&dpc->dev->port->dev, "Valid EDR event received\n");
+
+Set "pdev" at declaration and use it in these printks.
+
+> +
+> +	/*
+> +	 * Check if _DSM(0xD) is available, and if present locate the
+> +	 * port which issued EDR event.
+> +	 */
+> +	pdev = acpi_locate_dpc_port(dpc);
+
+Can this be done at probe-time instead of event-time?
+
+> +	if (!pdev) {
+> +		dev_err(&dpc->dev->port->dev, "No valid port found\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Get DPC priv data for given pdev
+> +	 */
+> +	dpc = to_dpc_dev(pdev);
+> +	dpc->error_state = PCI_ERS_RESULT_DISCONNECT;
+> +	pdev = dpc->dev->port;
+
+It's quite confusing to reassign pdev here.  The comment about "Get
+DPC priv data for given pdev" is really superfluous since that much is
+obvious from the code.  What's *not* obvious is whether this "pdev =
+dpc->dev->port" changes anything and if so, why.
+
+> +	cap = dpc->cap_pos;
+> +
+> +	/*
+> +	 * Check if the port supports DPC:
+> +	 *
+> +	 * if port does not support DPC, then let firmware handle
+> +	 * the error recovery and OS is responsible for cleaning
+> +	 * up the child devices.
+> +	 *
+> +	 * if port supports DPC, then fall back to default error
+> +	 * recovery.
+
+Capitalize first letter of sentences.
+
+> +	 *
+> +	 */
+> +	if (cap) {
+> +		/* Check if there is a valid DPC trigger */
+> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> +		if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
+> +			dev_err(&pdev->dev, "Invalid DPC trigger\n");
+
+Include "status" value in the printk.
+
+> +			return;
+> +		}
+> +		dpc_process_error(dpc);
+> +	}
+> +
+> +	if (dpc->error_state == PCI_ERS_RESULT_RECOVERED) {
+> +		/*
+> +		 * Recovery is successful, so send
+> +		 * _OST(0xF, BDF << 16 | 0x80, "") to firmware.
+> +		 */
+> +		status = 0x80;
+> +	} else {
+> +		/*
+> +		 * Recovery is not successful, so disconnect child devices
+> +		 * and send _OST(0xF, BDF << 16 | 0x81, "") to firmware.
+> +		 */
+> +		dpc_disconnect_devices(pdev);
+> +		status = 0x81;
+> +	}
+> +
+> +	acpi_send_edr_status(dpc, status);
+> +}
+> +
+> +#endif
+> +
+>  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+>  static int dpc_probe(struct pcie_device *dev)
+>  {
+> @@ -291,9 +543,10 @@ static int dpc_probe(struct pcie_device *dev)
+>  	struct device *device = &dev->device;
+>  	int status;
+>  	u16 ctl, cap;
+> -
+> -	if (pcie_aer_get_firmware_first(pdev))
+> -		return -ENOTSUPP;
+> +#ifdef CONFIG_ACPI
+> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +	acpi_status astatus;
+> +#endif
+>  
+>  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+>  	if (!dpc)
+> @@ -302,16 +555,53 @@ static int dpc_probe(struct pcie_device *dev)
+>  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+>  	dpc->dev = dev;
+>  	set_service_data(dev, dpc);
+> +	dpc->error_state = PCI_ERS_RESULT_NONE;
+> +
+> +	if (!pcie_aer_get_firmware_first(pdev))
+> +		if (pci_aer_available() && dpc->cap_pos)
+> +			dpc->native_dpc = 1;
+>  
+> -	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+> -					   dpc_handler, IRQF_SHARED,
+> -					   "pcie-dpc", dpc);
+> -	if (status) {
+> -		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
+> -			 status);
+> -		return status;
+> +	/*
+> +	 * If native support is not enabled and ACPI is not
+> +	 * enabled then return error.
+> +	 */
+> +	if (!dpc->native_dpc && !IS_ENABLED(CONFIG_APCI))
+> +		return -ENODEV;
+> +
+> +	if (dpc->native_dpc) {
+> +		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+> +						   dpc_handler, IRQF_SHARED,
+> +						   "pcie-dpc", dpc);
+> +		if (status) {
+> +			dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
+> +				 status);
+> +			return status;
+> +		}
+>  	}
+>  
+> +#ifdef CONFIG_ACPI
+> +	if (!dpc->native_dpc) {
+> +		if (!adev) {
+> +			dev_err(device, "No valid acpi device found\n");
+
+s/acpi/ACPI/ (in comments, printk, other English text)
+
+> +			return -ENODEV;
+> +		}
+> +
+> +		dpc->adev = adev;
+> +
+> +		/* Register ACPI notifier for EDR event */
+
+"Register handler for System events, one of which is the EDR event"?
+
+> +		astatus = acpi_install_notify_handler(adev->handle,
+> +						      ACPI_SYSTEM_NOTIFY,
+> +						      edr_handle_event,
+> +						      dpc);
+> +
+> +		if (ACPI_FAILURE(astatus)) {
+> +			dev_err(device, "Install notifier failed\n");
+
+Mention "ACPI notify handler" here.
+
+> +			return -EBUSY;
+> +		}
+> +
+> +		acpi_enable_dpc_port(dpc, true);
+> +	}
+> +#endif
+>  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+>  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+>  
+> @@ -325,8 +615,12 @@ static int dpc_probe(struct pcie_device *dev)
+>  		}
+>  	}
+>  
+> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> -	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
+> +	if (dpc->native_dpc) {
+> +		ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL |
+> +			PCI_EXP_DPC_CTL_INT_EN;
+> +		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
+> +				      ctl);
+> +	}
+>  
+>  	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+>  		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+> @@ -344,6 +638,9 @@ static void dpc_remove(struct pcie_device *dev)
+>  	struct pci_dev *pdev = dev->port;
+>  	u16 ctl;
+>  
+> +	if (!dpc->native_dpc)
+> +		return;
+> +
+>  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+>  	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+>  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
+> @@ -356,6 +653,7 @@ static struct pcie_port_service_driver dpcdriver = {
+>  	.probe		= dpc_probe,
+>  	.remove		= dpc_remove,
+>  	.reset_link	= dpc_reset_link,
+> +	.error_resume   = dpc_error_resume,
+>  };
+>  
+>  int __init pcie_dpc_init(void)
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 865f12f4b314..050cbb7a5083 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -249,9 +249,14 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		pcie_pme_interrupt_enable(dev, false);
+>  	}
+>  
+> +	/*
+> +	 * If EDR support is enabled in OS, then even if AER is not handled in
+> +	 * OS, DPC service can be enabled.
+> +	 */
+>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
+> -	    (pcie_ports_native || host->native_dpc))
+> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
+> +	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
+> +	    (pcie_ports_native || host->native_dpc))))
+
+Holy cow, I think I'll have to schedule an hour sometime to figure
+out what's going on here :)
+
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM || -- 2.20.1
+> 
