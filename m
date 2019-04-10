@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E77C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE5FC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8598D218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DF6218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfDJLGW (ORCPT
+        id S1731217AbfDJLGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:06:22 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59002 "EHLO
+        Wed, 10 Apr 2019 07:06:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:59014 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731165AbfDJLGT (ORCPT
+        with ESMTP id S1731188AbfDJLGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:19 -0400
+        Wed, 10 Apr 2019 07:06:21 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB3Y-0005FE-Rv; Wed, 10 Apr 2019 13:06:17 +0200
-Message-Id: <20190410103646.939796939@linutronix.de>
+        id 1hEB3Z-0005FP-WC; Wed, 10 Apr 2019 13:06:18 +0200
+Message-Id: <20190410103647.028742712@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:31 +0200
+Date:   Wed, 10 Apr 2019 12:28:32 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>
-Subject: [RFC patch 37/41] tracing: Use percpu stack trace buffer more
- intelligently
+Subject: [RFC patch 38/41] tracing: Make ftrace_trace_userstack() static and
+ conditional
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,137 +43,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The per cpu stack trace buffer usage pattern is odd at best. The buffer has
-place for 512 stack trace entries on 64-bit and 1024 on 32-bit. When
-interrupts or exceptions nest after the per cpu buffer was acquired the
-stacktrace length is hardcoded to 8 entries. 512/1024 stack trace entries
-in kernel stacks are unrealistic so the buffer is a complete waste.
-
-Split the buffer into chunks of 64 stack entries which is plenty. This
-allows nesting contexts (interrupts, exceptions) to utilize the cpu buffer
-for stack retrieval and avoids the fixed length allocation along with the
-conditional execution pathes.
+It's only used in trace.c and there is absolutely no point in compiling it
+in when user space stack traces are not supported.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c |   77 +++++++++++++++++++++++++--------------------------
- 1 file changed, 39 insertions(+), 38 deletions(-)
+ kernel/trace/trace.c |   14 ++++++++------
+ kernel/trace/trace.h |    8 --------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -2749,12 +2749,21 @@ trace_function(struct trace_array *tr,
+@@ -159,6 +159,8 @@ static union trace_eval_map_item *trace_
+ #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
+ 
+ static int tracing_set_tracer(struct trace_array *tr, const char *buf);
++static void ftrace_trace_userstack(struct ring_buffer *buffer,
++				   unsigned long flags, int pc);
+ 
+ #define MAX_TRACER_SIZE		100
+ static char bootup_tracer_buf[MAX_TRACER_SIZE] __initdata;
+@@ -2905,9 +2907,10 @@ void trace_dump_stack(int skip)
+ }
+ EXPORT_SYMBOL_GPL(trace_dump_stack);
+ 
++#ifdef CONFIG_USER_STACKTRACE_SUPPORT
+ static DEFINE_PER_CPU(int, user_stack_count);
+ 
+-void
++static void
+ ftrace_trace_userstack(struct ring_buffer *buffer, unsigned long flags, int pc)
+ {
+ 	struct trace_event_call *call = &event_user_stack;
+@@ -2958,13 +2961,12 @@ ftrace_trace_userstack(struct ring_buffe
+  out:
+ 	preempt_enable();
+ }
+-
+-#ifdef UNUSED
+-static void __trace_userstack(struct trace_array *tr, unsigned long flags)
++#else /* CONFIG_USER_STACKTRACE_SUPPORT */
++static void ftrace_trace_userstack(struct ring_buffer *buffer,
++				   unsigned long flags, int pc)
+ {
+-	ftrace_trace_userstack(tr, flags, preempt_count());
+ }
+-#endif /* UNUSED */
++#endif /* !CONFIG_USER_STACKTRACE_SUPPORT */
+ 
+ #endif /* CONFIG_STACKTRACE */
+ 
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -782,17 +782,9 @@ void update_max_tr_single(struct trace_a
+ #endif /* CONFIG_TRACER_MAX_TRACE */
  
  #ifdef CONFIG_STACKTRACE
- 
--#define FTRACE_STACK_MAX_ENTRIES (PAGE_SIZE / sizeof(unsigned long))
-+/* 64 entries for kernel stacks are plenty */
-+#define FTRACE_KSTACK_ENTRIES	64
-+
- struct ftrace_stack {
--	unsigned long		calls[FTRACE_STACK_MAX_ENTRIES];
-+	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
- };
- 
--static DEFINE_PER_CPU(struct ftrace_stack, ftrace_stack);
-+/* This allows 8 level nesting which is plenty */
-+#define FTRACE_KSTACK_NESTING	(PAGE_SIZE / sizeof(struct ftrace_stack))
-+
-+struct ftrace_stacks {
-+	struct ftrace_stack	stacks[FTRACE_KSTACK_NESTING];
-+};
-+
-+static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
- static DEFINE_PER_CPU(int, ftrace_stack_reserve);
- 
- static void __ftrace_trace_stack(struct ring_buffer *buffer,
-@@ -2763,10 +2772,11 @@ static void __ftrace_trace_stack(struct
+-void ftrace_trace_userstack(struct ring_buffer *buffer, unsigned long flags,
+-			    int pc);
+-
+ void __trace_stack(struct trace_array *tr, unsigned long flags, int skip,
+ 		   int pc);
+ #else
+-static inline void ftrace_trace_userstack(struct ring_buffer *buffer,
+-					  unsigned long flags, int pc)
+-{
+-}
+-
+ static inline void __trace_stack(struct trace_array *tr, unsigned long flags,
+ 				 int skip, int pc)
  {
- 	struct trace_event_call *call = &event_kernel_stack;
- 	struct ring_buffer_event *event;
-+	struct ftrace_stack *fstack;
- 	struct stack_entry *entry;
- 	struct stack_trace trace;
--	int use_stack;
--	int size = FTRACE_STACK_ENTRIES;
-+	int size = FTRACE_KSTACK_ENTRIES;
-+	int stackidx;
- 
- 	trace.nr_entries	= 0;
- 	trace.skip		= skip;
-@@ -2788,29 +2798,32 @@ static void __ftrace_trace_stack(struct
- 	 */
- 	preempt_disable_notrace();
- 
--	use_stack = __this_cpu_inc_return(ftrace_stack_reserve);
-+	stackidx = __this_cpu_inc_return(ftrace_stack_reserve);
-+
-+	/* This should never happen. If it does, yell once and skip */
-+	if (WARN_ON_ONCE(stackidx >= FTRACE_KSTACK_NESTING))
-+		goto out;
-+
- 	/*
--	 * We don't need any atomic variables, just a barrier.
--	 * If an interrupt comes in, we don't care, because it would
--	 * have exited and put the counter back to what we want.
--	 * We just need a barrier to keep gcc from moving things
--	 * around.
-+	 * The above __this_cpu_inc_return() is 'atomic' cpu local. An
-+	 * interrupt will either see the value pre increment or post
-+	 * increment. If the interrupt happens pre increment it will have
-+	 * restored the counter when it returns.  We just need a barrier to
-+	 * keep gcc from moving things around.
- 	 */
- 	barrier();
--	if (use_stack == 1) {
--		trace.entries		= this_cpu_ptr(ftrace_stack.calls);
--		trace.max_entries	= FTRACE_STACK_MAX_ENTRIES;
--
--		if (regs)
--			save_stack_trace_regs(regs, &trace);
--		else
--			save_stack_trace(&trace);
--
--		if (trace.nr_entries > size)
--			size = trace.nr_entries;
--	} else
--		/* From now on, use_stack is a boolean */
--		use_stack = 0;
-+
-+	fstack = this_cpu_ptr(ftrace_stacks.stacks) + (stackidx - 1);
-+	trace.entries		= fstack->calls;
-+	trace.max_entries	= FTRACE_KSTACK_ENTRIES;
-+
-+	if (regs)
-+		save_stack_trace_regs(regs, &trace);
-+	else
-+		save_stack_trace(&trace);
-+
-+	if (trace.nr_entries > size)
-+		size = trace.nr_entries;
- 
- 	size *= sizeof(unsigned long);
- 
-@@ -2820,19 +2833,7 @@ static void __ftrace_trace_stack(struct
- 		goto out;
- 	entry = ring_buffer_event_data(event);
- 
--	memset(&entry->caller, 0, size);
--
--	if (use_stack)
--		memcpy(&entry->caller, trace.entries,
--		       trace.nr_entries * sizeof(unsigned long));
--	else {
--		trace.max_entries	= FTRACE_STACK_ENTRIES;
--		trace.entries		= entry->caller;
--		if (regs)
--			save_stack_trace_regs(regs, &trace);
--		else
--			save_stack_trace(&trace);
--	}
-+	memcpy(&entry->caller, trace.entries, size);
- 
- 	entry->size = trace.nr_entries;
- 
 
 
