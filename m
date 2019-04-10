@@ -2,145 +2,184 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E3FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E46C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9614E20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730C120830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eULPZPSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731502AbfDJSac (ORCPT
+        id S1731522AbfDJSbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:30:32 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.119]:22730 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727305AbfDJSab (ORCPT
+        Wed, 10 Apr 2019 14:31:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34908 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbfDJSbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:30:31 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 4409B2628640
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 13:30:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id EHzShoFj92qH7EHzShBIuh; Wed, 10 Apr 2019 13:30:30 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=38980 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hEHzR-000cQi-R2; Wed, 10 Apr 2019 13:30:29 -0500
-Subject: Re: [PATCH] staging: greybus: power_supply: Use struct_size() helper
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rui Miguel Silva <rmfrfs@gmail.com>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20190403205801.GA19762@embeddedor>
- <20190404065733.GA12635@localhost>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <5e204c42-e567-9ab2-340c-1b8d017807e3@embeddedor.com>
-Date:   Wed, 10 Apr 2019 13:30:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 14:31:02 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so1934118plp.2;
+        Wed, 10 Apr 2019 11:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K5q1mArmhnmzSt9XW4y9g5UDZy89Pu07LHO7UzmM7hs=;
+        b=eULPZPSpjnII+u3PFVRSx6rxl1Czmc5unltkENZqNMp+lgqVagkXcyFKics+dxjirF
+         iM9sIGJtpotImRPinHt2CxVcm0Bi/jw4LfhrPwgifwtGbPFCBn1avKSCB+PiXba46HRY
+         ZczpWAe10T8hm/ElC+ppc5iIzTUg5Jm3y3MEW9Ofz/neiWbEfBwv7Bo4lzGxro4WMlcv
+         kLjn4ioaFl+FLNjiekvdZoeqq7osWw8Q5HxWbMCIsXpDE+kQMYLYbf+ydiN+vGL2Yo7S
+         rQ77xiYyF3noAFOCLEo5uo7XKEqTwf+fq650B6maSpof6mZvRvAOels6hb5eBjb5WU7K
+         jgtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K5q1mArmhnmzSt9XW4y9g5UDZy89Pu07LHO7UzmM7hs=;
+        b=OaJNU/pZUoIu0oGt0yw7MR5gt+mS58snfY5nTcHAEc9mixZ/ux/ZouOeYJPDTZCatg
+         puiBz9DBdtAXdHNLcDkKMP9LHgqU6DzbNERCpfafYp3ySq2m5/LIYw7ylDAum/Kxrdpg
+         dnPKWt/Cv1/SBoASd+jGFfwvIiIfGZY3GTgNx5Taoe32aWBTd7K59Qn8i96d4IT8wwS1
+         6JwKb2XorBej14PjIgHgNalJ1TjC9qHfCxawy4LZipYtOvRAppRxkOufh3EkFzMKo64A
+         JDHM+24eoqQyF54WImwc2ckVyfwzs/yd+E4WEMjoyeDq8r+O8Cwax/z7WCIf7zXCpbDs
+         FyuQ==
+X-Gm-Message-State: APjAAAW0bB2cJdBtqaoPTo4abyhGnnw4FToDzn4oaeJGx1xZjpOtdld9
+        QadEdsJMdYnPNuRX+3L1dj4=
+X-Google-Smtp-Source: APXvYqzN0pLEns/L/firzlMgQrzOsEpX2Ug+7NYdaWjPHfUCzhXu/doxRCCR9RHiuEZemQet983QsQ==
+X-Received: by 2002:a17:902:7601:: with SMTP id k1mr7525234pll.35.1554921061075;
+        Wed, 10 Apr 2019 11:31:01 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q5sm3376159pff.97.2019.04.10.11.31.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 11:31:00 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 11:30:59 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 01/21] docs: hwmon: k10temp: convert to ReST format
+Message-ID: <20190410183059.GA20261@roeck-us.net>
+References: <cover.1554893881.git.mchehab+samsung@kernel.org>
+ <9ed53a4f160d7cd4f7c05fb919196ac15ecb6d63.1554893882.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190404065733.GA12635@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hEHzR-000cQi-R2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:38980
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ed53a4f160d7cd4f7c05fb919196ac15ecb6d63.1554893882.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+On Wed, Apr 10, 2019 at 08:11:51AM -0300, Mauro Carvalho Chehab wrote:
+> Convert k10temp to ReST format, in order to allow it to
+> be parsed by Sphinx.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-On 4/4/19 1:57 AM, Johan Hovold wrote:
-> 
-> This patch looks good, but I noticed a bug here in the current code,
-> which should be fixed before applying this clean up.
-> 
-> sizeof(req) should have been sizeof(*req) above.
-> 
+The first Signed-off-by: is bad. This affects all patches in the series.
 
-Good catch.
+Guenter
 
->> -				 sizeof(struct gb_power_supply_props_desc),
->> +				 sizeof(req),
->> +				 struct_size(resp, props, props_count),
->>  				 GFP_KERNEL);
->>  	if (!op)
->>  		return -ENOMEM;
+> ---
+>  Documentation/hwmon/k10temp | 37 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
 > 
-> I've just submitted a fix (and CCed you as well). 
-> 
-> Would you mind respinning on top of that one?
-> 
-
-Yep. I'll send v2 shortly.
-
-Thanks
---
-Gustavo
+> diff --git a/Documentation/hwmon/k10temp b/Documentation/hwmon/k10temp
+> index 254d2f55345a..12a86ba17de9 100644
+> --- a/Documentation/hwmon/k10temp
+> +++ b/Documentation/hwmon/k10temp
+> @@ -2,42 +2,77 @@ Kernel driver k10temp
+>  =====================
+>  
+>  Supported chips:
+> +
+>  * AMD Family 10h processors:
+> +
+>    Socket F: Quad-Core/Six-Core/Embedded Opteron (but see below)
+> +
+>    Socket AM2+: Quad-Core Opteron, Phenom (II) X3/X4, Athlon X2 (but see below)
+> +
+>    Socket AM3: Quad-Core Opteron, Athlon/Phenom II X2/X3/X4, Sempron II
+> +
+>    Socket S1G3: Athlon II, Sempron, Turion II
+> +
+>  * AMD Family 11h processors:
+> +
+>    Socket S1G2: Athlon (X2), Sempron (X2), Turion X2 (Ultra)
+> +
+>  * AMD Family 12h processors: "Llano" (E2/A4/A6/A8-Series)
+> +
+>  * AMD Family 14h processors: "Brazos" (C/E/G/Z-Series)
+> +
+>  * AMD Family 15h processors: "Bulldozer" (FX-Series), "Trinity", "Kaveri", "Carrizo"
+> +
+>  * AMD Family 16h processors: "Kabini", "Mullins"
+>  
+>    Prefix: 'k10temp'
+> +
+>    Addresses scanned: PCI space
+> +
+>    Datasheets:
+> +
+>    BIOS and Kernel Developer's Guide (BKDG) For AMD Family 10h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/31116.pdf
+> +
+>    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 11h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/41256.pdf
+> +
+>    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 12h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/41131.pdf
+> +
+>    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 14h Models 00h-0Fh Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/43170.pdf
+> +
+>    Revision Guide for AMD Family 10h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/41322.pdf
+> +
+>    Revision Guide for AMD Family 11h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/41788.pdf
+> +
+>    Revision Guide for AMD Family 12h Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/44739.pdf
+> +
+>    Revision Guide for AMD Family 14h Models 00h-0Fh Processors:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/47534.pdf
+> +
+>    AMD Family 11h Processor Power and Thermal Data Sheet for Notebooks:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/43373.pdf
+> +
+>    AMD Family 10h Server and Workstation Processor Power and Thermal Data Sheet:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/43374.pdf
+> +
+>    AMD Family 10h Desktop Processor Power and Thermal Data Sheet:
+> +
+>      http://support.amd.com/us/Processor_TechDocs/43375.pdf
+>  
+>  Author: Clemens Ladisch <clemens@ladisch.de>
+> @@ -60,7 +95,7 @@ are using an AM3 processor on an AM2+ mainboard, you can safely use the
+>  
+>  There is one temperature measurement value, available as temp1_input in
+>  sysfs. It is measured in degrees Celsius with a resolution of 1/8th degree.
+> -Please note that it is defined as a relative value; to quote the AMD manual:
+> +Please note that it is defined as a relative value; to quote the AMD manual::
+>  
+>    Tctl is the processor temperature control value, used by the platform to
+>    control cooling systems. Tctl is a non-physical temperature on an
