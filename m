@@ -2,188 +2,245 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E46C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB34C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A558D2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Zv3Z8EA8"
+	by mail.kernel.org (Postfix) with ESMTP id 38D4520820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554889791;
+	bh=giGxJnADM0eR18iTIDswkhkYpsX4T1IgD9vCIWgC8Xs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WhUdhD7+HYrqvG/rT8XJQEtr40QpG4646c9MrxnsK7lZkgtCEb7XeAq5FPIyIS0j3
+	 idRb8kgW4nvpr5F8FvzcfWbOizdNVU2EGxLoCyLLt8Jw3nd/a/xxoJOJTC+4I5L8iP
+	 TkdZLRmQj4oBtlDl+DdcYrxV2AF6FrJEdKuUQwT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbfDJJrX (ORCPT
+        id S1730093AbfDJJtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:47:23 -0400
-Received: from mout.web.de ([212.227.17.12]:38845 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbfDJJrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:47:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554889621;
-        bh=MOfgTeMDFSikmkRUlkag5q/KVRe6z7JUQJpCKlySvuI=;
-        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
-        b=Zv3Z8EA8Ds9i9kzwuGirPGM1YQ4r3+uku19UejcntIwdEWQLznrMnGsb9eOwV769P
-         yB7wuMHW6qNMVRioK/hE3pNmQi0oWiP8OV1nrcSdA3Nqos3aVLQt6hvEpIV1nirVJZ
-         iQif3CFfRfSWLtI5utDH9qYsAcFDarOg0izFWztA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.98.93]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MOixm-1hHzZD0CBy-0068q9; Wed, 10
- Apr 2019 11:47:01 +0200
-Subject: Re: [v2] ethernet: ti: eliminate a bit of duplicate code in
- gbe_probe()
-Cc:     linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <201904101639050539211@zte.com.cn>
-To:     Wen Yang <wen.yang99@zte.com.cn>, netdev@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <10d51c0e-0bf1-ca9d-2d42-99a3d642bf2c@web.de>
-Date:   Wed, 10 Apr 2019 11:46:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 05:49:49 -0400
+Received: from casper.infradead.org ([85.118.1.10]:40994 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728543AbfDJJtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:49:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZUo/oAO6LRUwF5qvt4zAp9NpnWAe/eMac0EcWXGOy/A=; b=YS8QBN4MTC0v3dgmjyZs8csZLa
+        iESS4/29QV3kSEn3oi9puVYjRf1W3TSj1HOFdqNxAR4g8DHedvOEbFUXdcI87L+38OBjLYE+aJB8s
+        s66LE/QB8AG2DPk1C9VR5mje11sdIKTIemSnO1MeZ0h8a+8W5On40NMrhYPaFyI9P4fjDucE///KY
+        A+RarrRuMKwicmrOxmfD8+rEvLOu/RWXU7LGDRvP89HTIIIeXFgMXkWwNc6bGifEdJZHFlZcYvkSo
+        T3Dy0lS9n720xXbSyh4ozlUhL9HnzOm3sQO6FZsq3yq4BjkZMfnsfj2FIV2g2P/L+9J6ecXLVAtYD
+        tllC1JKg==;
+Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hE9rU-0000Ry-NX; Wed, 10 Apr 2019 09:49:45 +0000
+Date:   Wed, 10 Apr 2019 06:49:39 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] Add all documentation files to an html/pdf
+ produced book
+Message-ID: <20190410064939.2a9dca9a@coco.lan>
+In-Reply-To: <20190408161820.6a12657f@lwn.net>
+References: <cover.1554742526.git.mchehab+samsung@kernel.org>
+        <20190408161820.6a12657f@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <201904101639050539211@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LI9apOovdlRsRZNERQLcyJbyrouH5ZMdVFpYFgx2o4k1FLQDpHg
- XtvilQgwNC3ojyVwXkrBi2PcfD13kgJy9LMKRSMMs+4BD9FOU6f7y040sMp1czCRymnIRi4
- e/a+aDfy6mA4sFyp8QFii+ZodpFlZOnaMogL7YaHrLKRTe99SUpgrSHuvzxRcSep0DKF/v5
- G5LMc/XmgZ5NDBFL9twgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2f4Qii0k0jE=:AIt6qdakeHAHknMqCYyq6h
- VDUe2JImxqPBwEhmrvmACVBMh7RBrV378kj6QPd/OtxfZ55+JzlcekXMIdyF0U0GyJMsJ5Njg
- wAh/lvjM1USTX8CBP58OUHL5QyJRHOnrgF9SXMHslcS/nysbEu3/wY4jW0aSrFIZVY3nda1lE
- Q1S4BvOqgfkBbZQ5bAjLrueo7Ewp3Q6ajUi9KeacY2IzdZF/Ok0eUdiEA7j32SDKKGoufcrNN
- pEwpLGcQANdLL8TsYL9WM0FZ0hA6dBPRH0iI6IQlthhRnBmtrSHtDfWHdvPNCnXHeIct7+n+C
- OmPft1q7sHoU1+OKi78pwW6lgiEjhqzv+9x+Q23YLyb+lPpNafsUQbf5hxi+GtGOHQaBZQEfj
- mFwLIz8lDIKSCGAiEUxo8lHLCuyzw5K8eCp6iOvpgPKUQW16+e9KRbX2PaPUmpB9eSlYG5YS7
- IcDS98zaIy01gTX+KmtQEhAHDKgST0vK/ckeuGO3bPcG/jKV1wjBlSHneEv11hnCWyi6i3HBi
- D7vqfpGoLNMIlCH0LtfnVdLQ4+TD9fTk8nHaXW9Sxd8j0YGNNteZoeGU2hf/KoqEW3bOjXVAw
- 5mIovPkiWaxIgPJyMWE5Ga1rVKd7h1HNZTkiRVrObLoLiIZJmPIUympCd5vF0FRo5XpDy89Jw
- loW079dndwBV+sYuUHQyQvz5xdUQzFRiaWcXvlWMxqH2yc27F/ex8DgT8nqzqCf0rfT59o6xn
- 1b68AKlfNkoaQLRQTVp02JnDsoMXYWMgYWNAMD6VLTc22pRKir5KVKLq86IL2g9F10tgnbCNv
- xds4+GslklKsWeePPLaVGOYDgU8piXg+Nj7lmuiaGDAzUiZWb2OpuaijREQWpikI18LPmt2oB
- PwJ4Oor572AREv9StKj0hrsYehHwhnGtVUyt0+OvooK1Zssq/1LOl/msyC/BvWtpc+eLUDDgK
- FzmOkTskYtg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> @@ -3651,22 +3651,18 @@ static int gbe_probe(struct netcp_device *netc=
-p_device, struct device *dev,
->>>      if (ret)
->>>          return ret;
->>>
->>> -    interfaces =3D of_get_child_by_name(node, "interfaces");
->>> -    if (!interfaces)
->>> -        dev_err(dev, "could not find interfaces\n");
->>> -
->>
->> How do you think about to skip a bit of statements as a reaction for
->> such a null pointer?
->> https://elixir.bootlin.com/linux/v5.1-rc4/source/drivers/net/ethernet/t=
-i/netcp_ethss.c#L3562
-=E2=80=A6
-> Maybe you need to look at the implementation of for_each_child_of_node()=
- and of_node_put().
-> NULL check before those functions is not needed.
+Em Mon, 8 Apr 2019 16:18:20 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-This information is reasonable in principle.
+> On Mon,  8 Apr 2019 13:58:16 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > Despite having converted almost all files to ReST at the main Documentation/
+> > directory, they're still not included to any book. Also, after all those years
+> > after migrated to ReST as the official documentation format, there are still
+> > a lot of files using plain TXT files, with random internal formatting.
+> > 
+> > As it will likely require a lot more years to get everything converted,
+> > let's add index.rst files to Documentation/* subdirs, with a text_files.rst
+> > including all plain txt files as literal includes.
+> > 
+> > That ensures that the html output will contain the entire Linux Kernel
+> > documentation.  
+> 
+> Hmm...
+> 
+> >  251 files changed, 5262 insertions(+), 47 deletions(-)  
+> 
+> Somebody clearly thinks I haven't been involved in enough merge conflicts
+> recently :)
 
-Was the reference counter incremented even if a null pointer was returned
-by such a function call?
+:-)
 
+If you take a look at the patches themselves, the first 6 patches are
+puntual fixes to a single doc file, in order to fix them:
 
->>>      ret =3D netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
->>>                  gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
->>> -    if (ret) {
->>> -        of_node_put(interfaces);
->>> +    if (ret)
->>>          return ret;
->>> -    }
->>>
->>>      ret =3D netcp_txpipe_open(&gbe_dev->tx_pipe);
->>> -    if (ret) {
->>> -        of_node_put(interfaces);
->>> +    if (ret)
->>>          return ret;
->>> -    }
+  [PATCH 01/10] docs: DMA-API-HOWTO: add a missing "="
+  [PATCH 02/10] docs: atomic_bitops.txt: add a title for this document
+  [PATCH 03/10] docs: clearing-warn-once.txt: add a title for this document
+  [PATCH 04/10] docs: ntb.txt: use Sphinx notation for the two ascii figures
+  [PATCH 05/10] docs: unaligned-memory-access.txt: use a lowercase title
+  [PATCH 06/10] docs: video-output.txt: convert it to ReST format
 
-Does the preparation of the NetCP pipe still matter in this special use ca=
-se?
+I remember we patched all Documentation/*.txt files in the past to make
+them ReST compliant. New changes (or new files) broke it. Those could
+be easily reviewed by their maintainers.
 
+In order to avoid new regressions, and ensure that those ReST files
+will be part of the build, the 7th patch rename those files from
+*.txt to *.rst and move to an "other/" directory, creating an
+"unclassified" book:
 
->>> +
->>> +    interfaces =3D of_get_child_by_name(node, "interfaces");
->>> +    if (!interfaces)
->>> +        dev_err(dev, "could not find interfaces\n");
->>>
->>>      /* Create network interfaces */
->>>      INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
->>
->> Can code like the following trigger corresponding software development =
-concerns?
->>
->> for_each_child_of_node(interfaces, interface) {
->> =E2=80=A6
->> }
->> of_node_put(interfaces);
->>
-=E2=80=A6
->> if (!gbe_dev->num_slaves)
->> dev_warn(dev, "No network interface configured\n");
+  [PATCH 07/10] docs: Add all txt files to documentation
 
-Is this message really required as another response then?
+The next two patches are additional ReST improvements and warning
+fixes:
 
-Regards,
-Markus
+  [PATCH 08/10] docs: ntb.rst: add blank lines to clean up some Sphinx warnings
+  [PATCH 09/10] docs: speculation.rst: mark example blocks as such
+
+And the final patch adds one index.rst to each sub-directory at
+Documentation/ that doesn't have yet any ReST file:
+
+  [PATCH 10/10] docs: add plain text files to ReST output from  subdirs
+
+Inside each Documentation/ subdir, it also adds a text_files.rst with
+includes all plain text files.
+
+You're right: patch 07/10 rename would cause trivial merge conflicts. So, if
+we are willing to take this, it probably makes sense to apply it late at
+a merge cycle.
+
+Patch 10/10 should not cause many conflicts (except if one remove a dir or
+a file), as it only adds new files. Still, worth applying it also late
+at the merge cycle.
+
+That's said, I was naive to not reorder the patch series, keeping just
+the two polemic patches at the end. I'll rebase my series, in order to
+send the fixes patches.
+
+So, let's focus the discussions on those two patches:
+
+  [PATCH 07/10] docs: Add all txt files to documentation
+  [PATCH 10/10] docs: add plain text files to ReST output from  subdirs
+
+> I understand the goal, but I have to wonder.  This feels a lot like giving
+> up on the problem and just sweeping the remaining junk into a pile
+> somewhere.
+
+The junk is already there. If we don't take any action to
+separate the wheat from the chaff, it will keep tormenting us
+for decades to come.
+
+Looking on our main index.rst file, it defines those major groups:
+
+	Licensing documentation
+	User-oriented documentation
+	Application-developer documentation
+	Introduction to kernel development
+	Kernel API documentation
+	Architecture-specific documentation
+	Filesystem Documentation
+	Translations
+
+The problem with the legacy stuff is that the same document frequently
+has user-oriented, application-oriented and kernel-API stuff at the
+same file (or group of files), as they're usually arranged per
+subsystem or per C fileset. So, it is not possible to move them as-is
+to any of the above without risking adding mess to the higher quality
+documments.
+
+Splitting those stuff into the main groups is no joy, and would be
+an intensive hard work to solve it. We either need someone to sponsor
+a group of people just for rewriting documentation or this will never
+happen. In any case, IMHO, the best would be to add a new
+crap^h^h^h^hstaging group were we could place all legacy random stuff.
+Then, gradually fix those, splitting stuff and promoting them to the
+main books, in a similar way to what we do with staging.
+
+> I feel like it would, if anything, reduce the incentive to
+> deal with these leftover documents properly.  
+
+IMHO, it is just the opposite. Let's face it: ReST build was added around
+May, 2016, for Kernel 4.7. People had quite some time and kernel versions
+to do conversions. If nothing is done, I doubt we would have any boom on
+patches addressing the issues.
+
+On the other hand, if someone wants to add a ReST file to a random 
+Documentation/* subdir that doesn't contain yet an index.rst file, it would
+need first to add an index, and may be ashamed of adding something there
+without converting the existing files. By having one index.rst file there,
+newer files could be added directly there, without the need of touching
+the legacy stuff. IMHO, this reduces the barrier to get new documentation
+using the ReST format. It should equally be easy for someone to convert
+single document files from text to ReST, as it would only need to remove
+the file from the text_files.rst, adding it at index.rst.
+
+> If this is *really* something we want to do, I would much rather proceed
+> in smaller steps and preferably with the cooperation of the maintainers
+> involved.  Imposing all of this at once just seems like a way to make it
+> highly dangerous for me to show my face a conferences...
+
+I understand your PoV, but not sure how to proceed.
+
+IMO, we should aim to achieve two goals:
+
+1) avoid, as much as possible, to add new plain text non-ReST compatible
+files to the documentation, as, if we keep adding them, we'll never
+have a consistent documentation set;
+
+2) ensure that the already converted files will be on some book, as this
+will help to identify regressions.
+
+That's what patches 07/10 and 10/10 are trying to achieve.
+
+It should be easy to break patch 10/10 on a per-subdir base, making
+it easier to be merge it by subsystem maintainers.
+
+If I split it on per-subdir, that would fit for you?
+
+-
+
+In the case of patch 07/10, I might have done it on a different way:
+instead of moving them to a "staging-like" book (Documentation/other),
+it could have used other strategies:
+
+1) rename the files to *.rst but leaving them at the Documentation/
+diretory, and adding a new "other.rst" or "staging.rst" where those
+stuff would be added. IMHO, this is a crap way of doing it, as
+we'll use the main Documentation/ dir as a trash can;
+
+2) do a better job with moves, adding those files on some existing
+sub-directories. This doesn't sound an easy task, as it is not
+trivial to associate every single file there with an existing book.
+Also, some stuff there don't have new content added for ages.
+Maybe the stuff doesn't apply anymore (or it is for some part of
+the Kernel that are just stable enough).
+
+Ok, perhaps if we add patch 10/10 before 07/10, it could make
+easier to move the files, as we'll have a lot more places to
+add the rst files, as all sub-dirs will now contain rst files.
+
+If you're ok with such strategy, I could try such approach and
+see what happens.
+
+Thanks,
+Mauro
