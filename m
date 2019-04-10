@@ -2,115 +2,91 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9BEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8C3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FC82075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18C620850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfDJUHw (ORCPT
+        id S1726600AbfDJULQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:07:52 -0400
-Received: from muru.com ([72.249.23.125]:45250 "EHLO muru.com"
+        Wed, 10 Apr 2019 16:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfDJUHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:07:52 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AEDE580B6;
-        Wed, 10 Apr 2019 20:08:06 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 13:07:48 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Ladislav Michl <ladis@linux-mips.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
- omap_dm_timer_set_load_start
-Message-ID: <20190410200748.GN2839@atomide.com>
-References: <20190327050126.12064-1-natechancellor@gmail.com>
- <20190327081142.GA11034@lenoch>
- <20190404141730.GE49658@atomide.com>
- <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+        id S1726014AbfDJULP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 16:11:15 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C44B2077C;
+        Wed, 10 Apr 2019 20:11:14 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 16:11:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, paulmck@linux.vnet.ibm.com,
+        keescook@chromium.org, mathieu.desnoyers@efficios.com,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] module: Make __tracepoints_ptrs as read-only
+Message-ID: <20190410161112.540017d9@gandalf.local.home>
+In-Reply-To: <20190410195708.162185-3-joel@joelfernandes.org>
+References: <20190410195708.162185-1-joel@joelfernandes.org>
+        <20190410195708.162185-3-joel@joelfernandes.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 10 Apr 2019 15:57:08 -0400
+"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
 
-* Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
-> can you ask for an acked-by before pulling a patch in your tree?
-
-I certainly do ask and wait for acks where possible :)
-
-Note that I have not applied this patch. I just added
-Keerthy to Cc on this thread so maybe you misread the
-message earlier. My comment "seems like no other
-takers" was for Ladislav regarding somebody picking up
-his earlier work, not for picking up this patch :)
-
-In any case, I've been waiting for you guys to pick up
-the patch, here's my ack if you're waiting for it:
-
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-
-> On 04/04/2019 16:17, Tony Lindgren wrote:
-> > * Ladislav Michl <ladis@linux-mips.org> [190327 08:12]:
-> >> Hello Nathan,
-> >>
-> >> On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
-> >>> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
-> >>> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
-> >>> static because its prototype was not defined in a header. Unfortunately,
-> >>> this causes a build warning on multi_v7_defconfig because this function
-> >>> is not used anywhere in this translation unit:
-> >>>
-> >>> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
-> >>> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
-> >>>
-> >>> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
-> >>> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
-> >>> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
-> >>> Make unexported functions static"), which is probably where this should
-> >>> have happened.
-> >>
-> >> Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
-> >> capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
-> >> function being removed here). It is a part of an attempt to add event capture
-> >> for OMAP. Of course I would like this functionality to be implemented, but
-> >> as I do not have a time to continue, I cannot really object removing this
-> >> function.
-> >>
-> >> Just in case you'd be interested in finishing this task ;-)
-> > 
-> > Well seems like no other takers :) We can always find the missing
-> > function in git history when needed, so I suggest we apply this.
-> > 
-> > Adding Keerthy to Cc as he just posted a similar patch.
-> > 
-> > Regards,
-> > 
-> > Tony
-> > 
+> This series hardens the tracepoints in modules by making the array of
+> pointers referring to the tracepoints as read-only. This array is needed
+> during module unloading to verify that the tracepoint is quiescent.
+> There is no reason for the array to be to be writable after init, and
+> can cause security or other hidden bugs. Mark these as ro_after_init.
 > 
+> Suggested-by: paulmck@linux.vnet.ibm.com
+> Suggested-by: keescook@chromium.org
+> Suggested-by: mathieu.desnoyers@efficios.com
+> Cc: rostedt@goodmis.org
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  kernel/module.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> -- 
->  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 8b9631e789f0..be980aaa8804 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3320,6 +3320,12 @@ static const char * const ro_after_init_sections[] = {
+>  	 * by the SRCU notifiers
+>  	 */
+>  	"___srcu_struct_ptrs",
+> +
+> +	/*
+> +	 * Array of tracepoint pointers used for checking if tracepoints are
+> +	 * quiescent during unloading.
+> +	 */
+> +	"__tracepoints_ptrs",
+
+Do we ever modify the __tracepoint_ptrs section? I know the jump_label
+sections are sorted on load, which means they need to be writable
+during init, but if __tracepoint_ptrs is not sorted or touched during
+load, why not just put them in the rodata section to begin with?
+
+-- Steve
+
+>  };
+>  
+>  static struct module *layout_and_allocate(struct load_info *info, int flags)
+
