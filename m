@@ -2,109 +2,89 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788BEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A20C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D2A20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k2DtY0dc"
+	by mail.kernel.org (Postfix) with ESMTP id 7D99420830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbfDJKm4 (ORCPT
+        id S1730723AbfDJKoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:42:56 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44996 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727583AbfDJKmz (ORCPT
+        Wed, 10 Apr 2019 06:44:08 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38851 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727057AbfDJKoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:42:55 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AASxse091539;
-        Wed, 10 Apr 2019 10:42:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=rq2rPHPjdbUQjLfH5azCPUPQ611C9YAOCv/0vP0viQA=;
- b=k2DtY0dc/tq7SsIcSKuQRJKuMlDpLyoIRHxEfCSO+l21XiO1IUHBF97frQpEDsifsXma
- +MKIfH4P65NgaYifkLxG1iPOng5qCLyQdFkarP/slr8OeUmWfYF5d2mfR08XBZ3ief0L
- Uu56UtXdWM8wqktouGrd2nZNnj8YZpY0URADVNohjhZVtPzD313CmHsOihGKO90ZGe55
- jGApTkVsNaG02UvR7RyFTT2OTyLWnvqQjoNjgKQVEphQJrNEhS4xYT0T85V3vrthCZbm
- FkvF8yffKgB7yUL9A+VFgB6EADRUKiXQW8F59F/mgeBOYEsnoL6EwDNpWEj/lCaWg6n4 yA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2rphmejedw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 10:42:50 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AAgmA4151510;
-        Wed, 10 Apr 2019 10:42:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2rph7t4q78-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 10:42:50 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3AAgnt1002676;
-        Wed, 10 Apr 2019 10:42:49 GMT
-Received: from kadam (/197.157.0.42)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Apr 2019 03:42:48 -0700
-Date:   Wed, 10 Apr 2019 13:42:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Himadri Pandya <himadri18.07@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: fbtft: fix alignment should match open
- parenthesis
-Message-ID: <20190410104240.GG6095@kadam>
-References: <20190410100022.11091-1-himadri18.07@gmail.com>
+        Wed, 10 Apr 2019 06:44:07 -0400
+Received: from [IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f] ([IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id EAi4hXt5niLOmEAi5h6o44; Wed, 10 Apr 2019 12:44:05 +0200
+Subject: Re: [PATCH] staging: media: zoran: fix trailing whitespaces
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        mjpeg-users@lists.sourceforge.net, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+References: <20190408043530.21594-1-arthurmoraeslago@gmail.com>
+ <20190408065103.GA6095@kadam>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <65b52cdf-740c-6bc5-ef95-781ddd15fd02@xs4all.nl>
+Date:   Wed, 10 Apr 2019 12:44:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410100022.11091-1-himadri18.07@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904100076
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904100076
+In-Reply-To: <20190408065103.GA6095@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfI311SIw0lUwyxaKIfehUbr6ibBICobx/zk9d+i27rnAFaLJtt5zYKVootN4xYz2qCXKfjlQQ0qhThxzCFmPsXAKB9sd2Fu/X+dsr6uuEQ61zs/ciyqr
+ T9O6DnZjOVW7BsjUQE9aMR0IRWlXjWIYJk3kjcpdRlrlKRKifzNze7lsCtmrGC0LRGRiKygaKG/7eyHpVjta3Bbk9Zf9yzSlfNN92dk1EE1h//3l1wkgzBsN
+ frxcvGbJK4gek5AnucZDJ9R6YbFxipaAi5647dtNzBDq2ClISnCgL2dmZo5EjugMWPvI4BRtYiWF7iHtrMSnaHXPqHLLCsEoS3BdLh+Mdgs17aO37pWaEsAx
+ Wu0I6Vzvqvm+51uhfWfsZsczJuKeIthAoY1gfAfuiz4PFrSXDbyPQ7mLoVBhfcdo3NEKiApNAYrjdg7bAEwygGhE3PO//EmHi5Eiox2Bkfhi0HdMZbyIChH+
+ SkdVoB3/gjns/CHNu+FvyIuiMopO+7q+2wDOuiB42tm5nPH5QoDZvZ5Rtv6XqPFzietVYDuYB14+gUVijmjztIXGRDT+dY8uBnaARhF0kH8qbwJuZBXfnoSx
+ FKUDSYDvolum2yy3QNhCH4/c
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 03:30:22PM +0530, Himadri Pandya wrote:
-> Fix checkpatch warning "Alignment should match open parenthesis".
+On 4/8/19 8:51 AM, Dan Carpenter wrote:
+> On Mon, Apr 08, 2019 at 01:35:30AM -0300, Arthur Moraes do Lago wrote:
+>> There were several form feeds(^L) in the file, this patch removes them
+>> to conform with the coding style.
+>>
+>> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+>> ---
+>>  drivers/staging/media/zoran/videocodec.h | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/staging/media/zoran/videocodec.h b/drivers/staging/media/zoran/videocodec.h
+>> index 4946791fce0d..c37c0e4fb624 100644
+>> --- a/drivers/staging/media/zoran/videocodec.h
+>> +++ b/drivers/staging/media/zoran/videocodec.h
+>> @@ -49,7 +49,7 @@
+>>     device dependent and vary between MJPEG/MPEG/WAVELET/... devices. (!!!!)
+>>     ----------------------------------------------------------------------------
+>>  */
+>> -
+>> +
+>>  
 > 
-> Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
-> ---
->  drivers/staging/fbtft/fb_tinylcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Checkpatch also complains if you have two consecutive blank lines so
+> really we should just delete the lines entirely...  But this driver is
+> scheduled for deletion in May.  Let's not bother with cleaning it up.
 > 
-> diff --git a/drivers/staging/fbtft/fb_tinylcd.c b/drivers/staging/fbtft/fb_tinylcd.c
-> index 9469248f2c50..60cda57bcb33 100644
-> --- a/drivers/staging/fbtft/fb_tinylcd.c
-> +++ b/drivers/staging/fbtft/fb_tinylcd.c
-> @@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
->  	write_reg(par, 0xE5, 0x00);
->  	write_reg(par, 0xF0, 0x36, 0xA5, 0x53);
->  	write_reg(par, 0xE0, 0x00, 0x35, 0x33, 0x00, 0x00, 0x00,
-> -		       0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
-> +		  0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
+> regards,
+> dan carpenter
+> 
 
-The original code was written that way deliberately.  I don't know
-why it's broken up like that but it probably means something to people
-who have read the hardware spec.  I would leave it as-is.
+I will in fact post a pull request to remove this driver today.
 
-regards,
-dan carpenter
+Regards,
 
+	Hans
