@@ -2,61 +2,87 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59808C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BC6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2549420830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF5C20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBIfW8Bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfDJJyz (ORCPT
+        id S1730255AbfDJJzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:54:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbfDJJyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:54:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C4A59091F;
-        Wed, 10 Apr 2019 09:54:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC239104C425;
-        Wed, 10 Apr 2019 09:54:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAK7LNASRNyA9-Pfau=vyy9WZdjNEVD2gJxh+DrthRrKh6fgQhA@mail.gmail.com>
-References: <CAK7LNASRNyA9-Pfau=vyy9WZdjNEVD2gJxh+DrthRrKh6fgQhA@mail.gmail.com> <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk> <155373004377.7602.1209303093988055088.stgit@warthog.procyon.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Andreas Schwab <schwab@suse.de>, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 01/68] kbuild: skip sub-make for in-tree build with GNU Make 4.x
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <32423.1554890092.1@warthog.procyon.org.uk>
-Date:   Wed, 10 Apr 2019 10:54:52 +0100
-Message-ID: <32424.1554890092@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 10 Apr 2019 09:54:54 +0000 (UTC)
+        Wed, 10 Apr 2019 05:55:25 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51766 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbfDJJzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:55:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 4so1916180wmf.1;
+        Wed, 10 Apr 2019 02:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=aKeSTMQjglWGWQ91852+W2B2sqS7Gn4OwXBiExaxOTE=;
+        b=SBIfW8BjpdnKEttHAx7OWihVAqLr6TIJYpgGWBzR/amL0NZaJa681VixCO8pc2wWiG
+         wfRdQjhFImTNdLzhyjuOfcQFTR7Ksvf14XuSEoWywtIgWa7daVhZoGkUXrABusvPFhfg
+         QwYlFFMc2cxX6JEd1muRCzJILSO6rUb3aHw46rG2w7ut2AN+Qc5pfWoeQi7NmqMKTEjX
+         ozTKa12MU/nxXsgciEngqJG2Zufz6H22+8on1YamlAq+Vvnu2vccuyN0h61zVT1CdWVx
+         SXn4wO/sZc17NcoUiwjfWG4Ia0P6rhsbTqFw0y9yUYjoJ9/TcA7CNMJ/UpK66W2lKa3M
+         5kDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=aKeSTMQjglWGWQ91852+W2B2sqS7Gn4OwXBiExaxOTE=;
+        b=bDz/TVFDlBGhvnDg4HrjFnbisZuo60VenEVXy4dN5tc1a1EEaIIsoJvwBm9JUlfRN2
+         9sP0up9I4SYf2unV4JgHobuif3osNBLnYqDwcIEqGcp6XCky27gvw3WW0JXkynIkc+Pg
+         tGPC1jAZhBtKligFtfuM9xjM8vsU4we68XcB0uZB4sgIILstmKBxbzy2XyTZaTM/XFOP
+         MS3bcv1exd5z6YJGPjf7fGOIaTY9cQUvmuGTytiyXVBqXnXrs9ALNpD/bRQb6dngdNvU
+         78u5bjY0Vym9yiLj7czxDBSJeq0jgaOnvLj+cf21an+tiqDaqXyUHIhyT5KVYQ9ftvBb
+         RW2Q==
+X-Gm-Message-State: APjAAAVxdmTOJpKYscCYFMt7jgYw8O75S6y+wH/bNdDKJPsoHEnXhUnd
+        HXZSd/ujLX/S84Yoexo9aCF2XVhT
+X-Google-Smtp-Source: APXvYqwxdyleq6ClHxOFvX4yWIOutyO+WKk9c9LyezSXA6qK6+Qii5rZ/ejntCbHknvJfmgbtL8adA==
+X-Received: by 2002:a05:600c:211a:: with SMTP id u26mr2259684wml.74.1554890122791;
+        Wed, 10 Apr 2019 02:55:22 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id z18sm54965915wrr.90.2019.04.10.02.55.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 02:55:22 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: x86: clear VM_EXIT_SAVE_IA32_PAT
+Date:   Wed, 10 Apr 2019 11:55:21 +0200
+Message-Id: <1554890121-57272-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+This is not needed, PAT writes always take an MSR vmexit.
 
-> Why should this patch be included in a
-> totally unrelated patch series?
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Sorry, I forgot to exclude it.  It's in all my branches that I've touched
-since upstream got broken.  I've now rebased and it's gone from this branch.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 687d80cca09f..b6c533afbf27 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2288,7 +2288,6 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+ 	min |= VM_EXIT_HOST_ADDR_SPACE_SIZE;
+ #endif
+ 	opt = VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+-	      VM_EXIT_SAVE_IA32_PAT |
+ 	      VM_EXIT_LOAD_IA32_PAT |
+ 	      VM_EXIT_LOAD_IA32_EFER |
+ 	      VM_EXIT_CLEAR_BNDCFGS |
+-- 
+1.8.3.1
 
-David
