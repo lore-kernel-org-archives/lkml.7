@@ -2,147 +2,139 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44E7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4870C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC7020830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF3520830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbfDJPvz (ORCPT
+        id S1729958AbfDJPwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:51:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45081 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387476AbfDJPvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:51:07 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 13E6E6DDD6;
-        Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
-Received: from jlaw-desktop.bos.redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8045D1017B2E;
-        Wed, 10 Apr 2019 15:51:04 +0000 (UTC)
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Cc:     Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH v3 1/9] livepatch: Create and include UAPI headers
-Date:   Wed, 10 Apr 2019 11:50:50 -0400
-Message-Id: <20190410155058.9437-2-joe.lawrence@redhat.com>
-In-Reply-To: <20190410155058.9437-1-joe.lawrence@redhat.com>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com>
+        Wed, 10 Apr 2019 11:52:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34544 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727340AbfDJPww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:52:52 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AFowHF032713
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:52:51 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsjd3m1cj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:52:50 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Wed, 10 Apr 2019 16:52:49 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Apr 2019 16:52:45 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3AFqiro59572270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 15:52:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7B574204C;
+        Wed, 10 Apr 2019 15:52:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F76642042;
+        Wed, 10 Apr 2019 15:52:44 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.152.212.148])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 10 Apr 2019 15:52:44 +0000 (GMT)
+Date:   Wed, 10 Apr 2019 17:52:43 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     heiko carstens <heiko.carstens@de.ibm.com>,
+        gor <gor@linux.ibm.com>, libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        carlos <carlos@redhat.com>
+Subject: Re: rseq/s390: choosing code signature
+In-Reply-To: <514609006.3159.1554911439933.JavaMail.zimbra@efficios.com>
+References: <1779981820.2626.1554838342731.JavaMail.zimbra@efficios.com>
+        <20190410123258.37f182cf@mschwideX1>
+        <514609006.3159.1554911439933.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041015-0008-0000-0000-000002D8649E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041015-0009-0000-0000-00002244893B
+Message-Id: <20190410175243.6fc3d16a@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904100110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+On Wed, 10 Apr 2019 11:50:39 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Define klp prefixes in include/uapi/linux/livepatch.h, and use them for
-replacing hard-coded values in kernel/livepatch/core.c.
+> ----- On Apr 10, 2019, at 6:32 AM, schwidefsky schwidefsky@de.ibm.com wrote:
+> 
+> > On Tue, 9 Apr 2019 15:32:22 -0400 (EDT)
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> >   
+> >> Hi,
+> >> 
+> >> We are about to include the code signature required prior to restartable
+> >> sequences abort handlers into glibc, which will make this ABI choice final.
+> >> We need architecture maintainer input on that signature value.
+> >> 
+> >> That code signature is placed before each abort handler, so the kernel can
+> >> validate that it is indeed jumping to an abort handler (and not some
+> >> arbitrary attacker-chosen code). The signature is never executed.
+> >> 
+> >> The current discussion thread on the glibc mailing list leads us towards
+> >> using a trap with uncommon immediate operand, which simplifies integration
+> >> with disassemblers, emulators, makes it easier to debug if the control
+> >> flow gets redirected there by mistake, and is nicer for some architecture's
+> >> speculative execution.
+> >> 
+> >> We can have different signatures for each sub-architecture, as long as they
+> >> don't have to co-exist within the same process. We can special-case with
+> >> #ifdef for each sub-architecture and endianness if need be. If the architecture
+> >> has instruction set extensions that can co-exist with the architecture
+> >> instruction set within the same process, we need to take into account to which
+> >> instruction the chosen signature value would map (and possibly decide if we
+> >> need to extend rseq to support many signatures).
+> >> 
+> >> Here is an example of rseq signature definition template:
+> >> 
+> >> /*
+> >>  * TODO: document trap instruction objdump output on each sub-architecture
+> >>  * instruction sets, as well as instruction set extensions.
+> >>  */
+> >> #define RSEQ_SIG 0x########
+> >> 
+> >> Ideally we'd need a patch on top of the Linux kernel
+> >> tools/testing/selftests/rseq/rseq-s390.h file that updates
+> >> the signature value, so I can then pick it up for the glibc
+> >> patchset.  
+> > 
+> > The trap4 instruction is a suitable one. The patch would look like this  
+> 
+> Great! I'm picking it up into my rseq tree if that's OK with you.
 
-Update MAINTAINERS.
+Just added the patch to s390/linux:features for the next merge window as well.
 
-Note: Add defines to uapi as these are also to be used by a newly
-introduced klp-convert script.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Joao Moreira <jmoreira@suse.de>
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
----
- MAINTAINERS                    |  1 +
- include/linux/livepatch.h      |  1 +
- include/uapi/linux/livepatch.h | 17 +++++++++++++++++
- kernel/livepatch/core.c        |  4 ++--
- 4 files changed, 21 insertions(+), 2 deletions(-)
- create mode 100644 include/uapi/linux/livepatch.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2359e12e4c41..65b4e8f481f0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9017,6 +9017,7 @@ R:	Joe Lawrence <joe.lawrence@redhat.com>
- S:	Maintained
- F:	kernel/livepatch/
- F:	include/linux/livepatch.h
-+F:	include/uapi/linux/livepatch.h
- F:	arch/x86/include/asm/livepatch.h
- F:	arch/x86/kernel/livepatch.c
- F:	Documentation/livepatch/
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index 53551f470722..16b48e8b29a2 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -25,6 +25,7 @@
- #include <linux/ftrace.h>
- #include <linux/completion.h>
- #include <linux/list.h>
-+#include <uapi/linux/livepatch.h>
- 
- #if IS_ENABLED(CONFIG_LIVEPATCH)
- 
-diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
-new file mode 100644
-index 000000000000..bb86243de805
---- /dev/null
-+++ b/include/uapi/linux/livepatch.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * livepatch.h - Kernel Live Patching Core
-+ *
-+ * Copyright (C) 2016 Josh Poimboeuf <jpoimboe@redhat.com>
-+ */
-+
-+#ifndef _UAPI_LIVEPATCH_H
-+#define _UAPI_LIVEPATCH_H
-+
-+#include <linux/types.h>
-+
-+#define KLP_RELA_PREFIX		".klp.rela."
-+#define KLP_SYM_PREFIX		".klp.sym."
-+
-+#endif /* _UAPI_LIVEPATCH_H */
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index eb0ee10a1981..3d9ed895b252 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -235,7 +235,7 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
- 
- 		/* Format: .klp.sym.objname.symname,sympos */
- 		cnt = sscanf(strtab + sym->st_name,
--			     ".klp.sym.%55[^.].%127[^,],%lu",
-+			     KLP_SYM_PREFIX "%55[^.].%127[^,],%lu",
- 			     objname, symname, &sympos);
- 		if (cnt != 3) {
- 			pr_err("symbol %s has an incorrectly formatted name\n",
-@@ -281,7 +281,7 @@ static int klp_write_object_relocations(struct module *pmod,
- 		 * See comment in klp_resolve_symbols() for an explanation
- 		 * of the selected field width value.
- 		 */
--		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
-+		cnt = sscanf(secname, KLP_RELA_PREFIX "%55[^.]", sec_objname);
- 		if (cnt != 1) {
- 			pr_err("section %s has an incorrectly formatted name\n",
- 			       secname);
 -- 
-2.20.1
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
 
