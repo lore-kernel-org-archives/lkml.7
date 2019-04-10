@@ -2,124 +2,106 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92176C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CFFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA952083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:33:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYuFRgC6"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2C72083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554889068;
+	bh=3kO5umoLV+Zp9+WfL25lxYJDDZGvUFfkNNjuK/HkpTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZomRpL/UUI4nvWrTvxOb7Ep7xkGjsQa3t0DPYTn3lYLCDDvYX6XW9t1Wp1YYi526l
+	 pQfH7M55eqRIiBBKlFwvDbyVlJfplCQndGmqGQoTCzEs3TGR99U0trdc5VjPntWQDv
+	 vpvxjHE/SueNTBwmHJSMjknm54sO92ejXqtv/Oq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfDJJdu (ORCPT
+        id S1729940AbfDJJhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:33:50 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:40048 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfDJJdu (ORCPT
+        Wed, 10 Apr 2019 05:37:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33488 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbfDJJhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:33:50 -0400
-Received: by mail-wr1-f44.google.com with SMTP id h4so2058306wre.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+1px/DHWI8SCzx6KfYR6VAzOZhOwhiFObq5qES6AFTc=;
-        b=HYuFRgC6VzWRME+SFpFAZ4xtknixYDl81l6ABefhMTESOoafxtNQO3dwvbFylsKfPk
-         Pn9qiej7xQ+tuPNMLfOt1w3Y9HFoPPnssr9cWxytPul2kXuHuFWWTvqINWLj9rPBC9Tw
-         blBhAdSntCKDgWaDmV55RE4kPzNtGP6pyu4tQq22RxcY1EozdElXgEe0crvso3yVG8MV
-         EmvCVaI8BWiqT3/H1S/kd61k0dl/hzLAUUPo3Ptv2TxGMMK7V01DNN70h2RqwYNxIOgD
-         nLij5sv77R6kYjbEr+ud1aKaT8aRUR4q89ZVXIjeuNvEum520mp77j4sT1T/eo3NAog4
-         KIcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+1px/DHWI8SCzx6KfYR6VAzOZhOwhiFObq5qES6AFTc=;
-        b=rxl9GDi6gCvwECylVRoJgVGaKaloAQC1iTwYHAx5CAjRXPOTHvOI5uI40jjcjZGffG
-         lKl8+5IWq0RFfzyPkmhNRYVM3Ksai1bnFrl9E1/VzdkQRi6OWdNHnW2SA7vVKC0/IL7T
-         LB05vfBbSPt+pRlSFc9khooqaYhlcpMCOa/4dVV++hQXcPN4YEFAmqo1GjB3MQmzdcGM
-         SPkNygs48nwr06zgzop3zgP7U3bxQirwuYmo2yGJ+5b+IL0QqUGMUvWzeOdWqYGsaGAc
-         FstJrW7LsZIP5AWZTyITjb9hUduJvXOFxwzi+uTnNJq3cCcxFel1cB/vhNhgks4GcvwP
-         d/ZQ==
-X-Gm-Message-State: APjAAAUCVv8PAiRds1g21qZbO/jkbX4yIC6ElMaUTAaeDDK7EwtMo20Y
-        waAxMKViJDZbwPtXx6BrjCsILQ==
-X-Google-Smtp-Source: APXvYqwKw0Za71js2z9d2LuAig2tXInnm6/AEiqkVaMtZyh+M9KbP9w/slGFebTsDa893xGlABXvhQ==
-X-Received: by 2002:a5d:6a08:: with SMTP id m8mr26908793wru.30.1554888829177;
-        Wed, 10 Apr 2019 02:33:49 -0700 (PDT)
-Received: from wifi-122_dhcprange-158.wifi.unimo.it ([155.185.122.158])
-        by smtp.gmail.com with ESMTPSA id s189sm3402225wmf.45.2019.04.10.02.33.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 02:33:48 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: Thinkpad X60: regression with 5.1-rc1 and 5.1-rc4
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190410093044.GA3776@amd>
-Date:   Wed, 10 Apr 2019 11:33:43 +0200
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>, rjw@rjwysocki.net,
-        lenb@kernel.org, linux-acpi@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E5BA70BA-D560-4C4C-BEC7-83E7D6407070@linaro.org>
-References: <20190408173914.GA13260@amd>
- <678ab058-986c-9727-58d7-d3f5283e2225@kernel.dk> <20190409163304.GA23829@amd>
- <F6306562-0022-4043-BBF8-13FE4872CA31@linaro.org> <20190410093044.GA3776@amd>
-To:     Pavel Machek <pavel@ucw.cz>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Wed, 10 Apr 2019 05:37:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sTySuJ3uSEbYJqEtVFEIslJYrbNyzomjAmVxCe+9Q68=; b=MReoCFngLXipuXrWa74Axd2+L
+        QvUYJ8EVl68TwQf9BTDYGfo1xGGm8WkObxZAvOBOKBpz6NMIlBCVrRhe3ih3bPLNz60pfdYxQ8o01
+        GJBKfkAhFkTr6S/Ey25b7ddaiznHUYEuUWfbW8WW463z3+DIhVGCkeWnFfo3Wy+eQQPdY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hE9fR-0007Ju-9d; Wed, 10 Apr 2019 09:37:17 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id C15971128E83; Wed, 10 Apr 2019 10:37:16 +0100 (BST)
+Date:   Wed, 10 Apr 2019 10:37:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
+        dwmw2@infradead.org, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, computersforpeace@gmal.com,
+        paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com,
+        liang.yang@amlogic.com, geert@linux-m68k.org,
+        devicetree@vger.kernel.org, marcel.ziswiler@toradex.com,
+        linux-mtd@lists.infradead.org, richard@nod.at,
+        miquel.raynal@bootlin.com, juliensu@mxic.com.tw,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v2 3/4] spi: Add MFD for Macronix MX25F0A SPI controller
+ driver
+Message-ID: <20190410093716.GC6106@sirena.org.uk>
+References: <1554777000-10542-1-git-send-email-masonccyang@mxic.com.tw>
+ <1554777000-10542-4-git-send-email-masonccyang@mxic.com.tw>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+Content-Disposition: inline
+In-Reply-To: <1554777000-10542-4-git-send-email-masonccyang@mxic.com.tw>
+X-Cookie: teamwork, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--z4+8/lEcDcG5Ke9S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Il giorno 10 apr 2019, alle ore 11:30, Pavel Machek <pavel@ucw.cz> ha =
-scritto:
+On Tue, Apr 09, 2019 at 10:29:59AM +0800, Mason Yang wrote:
+> Add a MFD driver for Macronix MX25F0A SPI controller.
 >=20
-> Hi!
->=20
->>> I now noticed it said:
->>>=20
->>> EIP is in bfq_bfqq_expire
->>>=20
->>>> Can you try and revert:
->>>>=20
->>>> 9dee8b3b057e1
->>>>=20
->>>> and see if that helps?
->>>=20
->>> Yes, I tried and yes, it helps. What are the next steps?=20
->>>=20
->>=20
->> Try my fix:
->>=20
->> =
-https://lore.kernel.org/linux-block/20190409191420.3f56d493@fire.localdoma=
-in/T/#m30a14045e710b870f00f7c51cdaa7c403977b767
->>=20
->> and cross your fingers :)
->=20
-> It seems to work... even without fingers crossed.
->=20
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/spi/spi-mxic.c | 275 +++++++++----------------------------------=
+------
 
-Great!  I've submitted a final version of this fix patch a few minutes
-ago (not yet archived anywhere, sorry).
+This isn't adding a new MFD driver, this is a substantial refactoring of
+the SPI driver which doesn't touch SPI at all.
 
-Thanks,
-Paolo
+--z4+8/lEcDcG5Ke9S
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Tested-by: Pavel Machek <pavel@ucw.cz>
-> 									=
-Pavel
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) =
-http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlytuUsACgkQJNaLcl1U
+h9AeQgf8Cq4PSo+iWmspUorVUXm+K5G5aUI3052g+2/+hl0mEaCt7grEKFmiY6ef
+xWMpNCd1tocLecIJxAyiipHfJQDpA4hrpRhZaXkbJAG6LXwXfjK2l8YCnzHpSd43
+zGBQvVlwNIpqjYv8/YmFXe92QFk6XNPhhofK83HennndKm5ZwjF+vJTa8ZDdPhR5
+oikRqtPYEs9ONDwKPL0WRzWBq05uRoe7MjE6tfAqwahQC7paVJCgv40S51m7FUZQ
+dv5NyqAfA+piR5zFrrk5QR3GEX3+Hh2pudJjRCSjY8QQkyULl4hT2ehjanj4uWj9
+bH4xjLtxOcgcsSxo4wM6vyVNDEffnQ==
+=oPnu
+-----END PGP SIGNATURE-----
+
+--z4+8/lEcDcG5Ke9S--
