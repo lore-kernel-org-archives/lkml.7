@@ -2,307 +2,132 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7FFC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29B6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BF520818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA0D20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfDJPiC (ORCPT
+        id S1733167AbfDJPi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:38:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37336 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbfDJPiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:38:02 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D956181114;
-        Wed, 10 Apr 2019 15:38:00 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD0155DA5B;
-        Wed, 10 Apr 2019 15:38:00 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7000F3FA45;
-        Wed, 10 Apr 2019 15:38:00 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 11:38:00 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
-        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
-        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
-        aarcange@redhat.com, david@redhat.com, david@fromorbit.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        pbonzini@redhat.com, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Message-ID: <1663006162.20832248.1554910680080.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190410142426.5bf0d9a4.cohuck@redhat.com>
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-3-pagupta@redhat.com> <20190410142426.5bf0d9a4.cohuck@redhat.com>
-Subject: Re: [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
+        Wed, 10 Apr 2019 11:38:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731503AbfDJPi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:38:59 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8B5AE1E1F9D71F31DD01;
+        Wed, 10 Apr 2019 23:38:55 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
+ 23:38:49 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <paul.burton@mips.com>, <bbrezillon@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] mtd: nand: Fix build error while CONFIG_MTD_NAND_ECC_SW_BCH is set to module
+Date:   Wed, 10 Apr 2019 23:37:07 +0800
+Message-ID: <20190410153707.29492-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.117, 10.4.195.26]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: ni96j4d6FUDPJPNtE4chnh/uKdN03w==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 10 Apr 2019 15:38:01 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YueHaibing <yuehaibing@huawei.com>
 
-> 
-> > This patch adds virtio-pmem driver for KVM guest.
-> > 
-> > Guest reads the persistent memory range information from
-> > Qemu over VIRTIO and registers it on nvdimm_bus. It also
-> > creates a nd_region object with the persistent memory
-> > range information so that existing 'nvdimm/pmem' driver
-> > can reserve this into system memory map. This way
-> > 'virtio-pmem' driver uses existing functionality of pmem
-> > driver to register persistent memory compatible for DAX
-> > capable filesystems.
-> > 
-> > This also provides function to perform guest flush over
-> > VIRTIO from 'pmem' driver when userspace performs flush
-> > on DAX memory range.
-> > 
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/nvdimm/virtio_pmem.c     |  88 ++++++++++++++++++++++
-> >  drivers/virtio/Kconfig           |  10 +++
-> >  drivers/virtio/Makefile          |   1 +
-> >  drivers/virtio/pmem.c            | 124 +++++++++++++++++++++++++++++++
-> >  include/linux/virtio_pmem.h      |  60 +++++++++++++++
-> >  include/uapi/linux/virtio_ids.h  |   1 +
-> >  include/uapi/linux/virtio_pmem.h |  10 +++
-> >  7 files changed, 294 insertions(+)
-> >  create mode 100644 drivers/nvdimm/virtio_pmem.c
-> >  create mode 100644 drivers/virtio/pmem.c
-> >  create mode 100644 include/linux/virtio_pmem.h
-> >  create mode 100644 include/uapi/linux/virtio_pmem.h
-> > 
-> (...)
-> > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
-> > new file mode 100644
-> > index 000000000000..cc9de9589d56
-> > --- /dev/null
-> > +++ b/drivers/virtio/pmem.c
-> > @@ -0,0 +1,124 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * virtio_pmem.c: Virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and registers the virtual pmem device
-> > + * with libnvdimm core.
-> > + */
-> > +#include <linux/virtio_pmem.h>
-> > +#include <../../drivers/nvdimm/nd.h>
-> > +
-> > +static struct virtio_device_id id_table[] = {
-> > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
-> > +	{ 0 },
-> > +};
-> > +
-> > + /* Initialize virt queue */
-> > +static int init_vq(struct virtio_pmem *vpmem)
-> 
-> IMHO, you don't gain much by splitting off this function...
+Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
+is set to module:
 
-o.k. I kept this for better code structure.
+drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
+(.text+0xef6): undefined reference to `nand_bch_free'
+drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
+nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
+nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
+nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
 
-> 
-> > +{
-> > +	struct virtqueue *vq;
-> > +
-> > +	/* single vq */
-> > +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
-> > +				host_ack, "flush_queue");
-> > +	if (IS_ERR(vq))
-> > +		return PTR_ERR(vq);
-> 
-> I'm personally not a fan of chained assignments... I think I'd just
-> drop the 'vq' variable and operate on vpmem->req_vq directly.
+CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
+while MTD_RAW_NAND is set to y.
 
-Sure.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support")
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: use imply as suggestion
+---
+ drivers/mtd/devices/Kconfig  |  2 +-
+ drivers/mtd/nand/raw/Kconfig | 21 +++++++++++----------
+ 2 files changed, 12 insertions(+), 11 deletions(-)
 
-> 
-> > +
-> > +	spin_lock_init(&vpmem->pmem_lock);
-> > +	INIT_LIST_HEAD(&vpmem->req_list);
-> > +
-> > +	return 0;
-> > +};
-> > +
-> > +static int virtio_pmem_probe(struct virtio_device *vdev)
-> > +{
-> > +	int err = 0;
-> > +	struct resource res;
-> > +	struct virtio_pmem *vpmem;
-> > +	struct nvdimm_bus *nvdimm_bus;
-> > +	struct nd_region_desc ndr_desc = {};
-> > +	int nid = dev_to_node(&vdev->dev);
-> > +	struct nd_region *nd_region;
-> > +
-> > +	if (!vdev->config->get) {
-> > +		dev_err(&vdev->dev, "%s failure: config disabled\n",
-> 
-> Maybe s/config disabled/config access disabled/ ? That seems to be the
-> more common message.
+diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+index 7fcdaf6..f9258d6 100644
+--- a/drivers/mtd/devices/Kconfig
++++ b/drivers/mtd/devices/Kconfig
+@@ -207,7 +207,7 @@ comment "Disk-On-Chip Device Drivers"
+ config MTD_DOCG3
+ 	tristate "M-Systems Disk-On-Chip G3"
+ 	select BCH
+-	select BCH_CONST_PARAMS if !CONFIG_MTD_NAND_ECC_SW_BCH
++	select BCH_CONST_PARAMS if !MTD_NAND_ECC_SW_BCH
+ 	select BITREVERSE
+ 	help
+ 	  This provides an MTD device driver for the M-Systems DiskOnChip
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index 615d738..65c85fc 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -9,11 +9,22 @@ config MTD_NAND_ECC_SW_HAMMING_SMC
+ 	  Software ECC according to the Smart Media Specification.
+ 	  The original Linux implementation had byte 0 and 1 swapped.
+ 
++config MTD_NAND_ECC_SW_BCH
++	tristate "Support software BCH ECC"
++	select BCH
++	default n
++	help
++	  This enables support for software BCH error correction. Binary BCH
++	  codes are more powerful and cpu intensive than traditional Hamming
++	  ECC codes. They are used with NAND devices requiring more than 1 bit
++	  of error correction.
++
+ menuconfig MTD_RAW_NAND
+ 	tristate "Raw/Parallel NAND Device Support"
+ 	depends on MTD
+ 	select MTD_NAND_CORE
+ 	select MTD_NAND_ECC_SW_HAMMING
++	imply MTD_NAND_ECC_SW_BCH
+ 	help
+ 	  This enables support for accessing all type of raw/parallel
+ 	  NAND flash devices. For further information see
+@@ -21,16 +32,6 @@ menuconfig MTD_RAW_NAND
+ 
+ if MTD_RAW_NAND
+ 
+-config MTD_NAND_ECC_SW_BCH
+-	tristate "Support software BCH ECC"
+-	select BCH
+-	default n
+-	help
+-	  This enables support for software BCH error correction. Binary BCH
+-	  codes are more powerful and cpu intensive than traditional Hamming
+-	  ECC codes. They are used with NAND devices requiring more than 1 bit
+-	  of error correction.
+-
+ comment "Raw/parallel NAND flash controllers"
+ 
+ config MTD_NAND_DENALI
+-- 
+2.7.4
 
-This is better.
 
-> 
-> > +			__func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
-> > +					GFP_KERNEL);
-> 
-> Here, the vpmem variable makes sense for convenience, but I'm again not
-> a fan of the chaining :)
-
-Sure will change :)
-
-> 
-> > +	if (!vpmem) {
-> > +		err = -ENOMEM;
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	vpmem->vdev = vdev;
-> > +	err = init_vq(vpmem);
-> > +	if (err)
-> > +		goto out_err;
-> > +
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			start, &vpmem->start);
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			size, &vpmem->size);
-> > +
-> > +	res.start = vpmem->start;
-> > +	res.end   = vpmem->start + vpmem->size-1;
-> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > +	vpmem->nd_desc.module = THIS_MODULE;
-> > +
-> > +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > +						&vpmem->nd_desc);
-> 
-> And here :)
-
-Sure.
-
-> 
-> > +	if (!nvdimm_bus)
-> > +		goto out_vq;
-> > +
-> > +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
-> > +
-> > +	ndr_desc.res = &res;
-> > +	ndr_desc.numa_node = nid;
-> > +	ndr_desc.flush = virtio_pmem_flush;
-> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
-> > +	nd_region->provider_data =  dev_to_virtio
-> > +					(nd_region->dev.parent->parent);
-> 
-> Isn't it clear that this parent chain will always end up at &vdev->dev?
-
-Yes, It will resolve to &vdev->dev.
-
-> Maybe simply set ->provider_data to vdev directly? (Does it need to
-> grab a reference count of the device, BTW?)
-
-reference is already taken when registering the device with nvdimm_bus.
-
-> 
-> > +
-> > +	if (!nd_region)
-> > +		goto out_nd;
-> 
-> Probably better to do this check before you access nd_region's
-> members :)
-
-ah Sorry! Will correct this.
-
-> 
-> > +
-> > +	return 0;
-> > +out_nd:
-> > +	err = -ENXIO;
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +out_vq:
-> > +	vdev->config->del_vqs(vdev);
-> > +out_err:
-> > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
-> > +	return err;
-> > +}
-> > +
-> > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > +{
-> > +	struct virtio_pmem *vpmem = vdev->priv;
-> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > +
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> 
-> I haven't followed this around the nvdimm code, but is the nd_region
-> you created during probe cleaned up automatically, or would you need to
-> do something here?
-
-'nvdimm_bus_unregister' does that.
-> 
-> > +	vdev->config->del_vqs(vdev);
-> > +	vdev->config->reset(vdev);
-> > +	kfree(vpmem);
-> 
-> You allocated vpmem via devm_kzalloc; isn't it freed automatically on
-> remove?
-
-yes. Will remove free(vpmem).
-
-> 
-> > +}
-> > +
-> > +static struct virtio_driver virtio_pmem_driver = {
-> > +	.driver.name		= KBUILD_MODNAME,
-> > +	.driver.owner		= THIS_MODULE,
-> > +	.id_table		= id_table,
-> > +	.probe			= virtio_pmem_probe,
-> > +	.remove			= virtio_pmem_remove,
-> > +};
-> > +
-> > +module_virtio_driver(virtio_pmem_driver);
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > +MODULE_LICENSE("GPL");
-> 
-> Only looked at this from the general virtio driver angle; seems fine
-> apart from some easy-to-fix issues and some personal style preference
-> things.
-
-Thank you for the review.
-
-Best regards,
-Pankaj
-> 
