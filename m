@@ -2,123 +2,113 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E54BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA13C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0689020850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E5F20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tpYMZ/N5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbfDJOcP (ORCPT
+        id S1732826AbfDJOdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:32:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38056 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732287AbfDJOcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:32:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E98103082E0F;
-        Wed, 10 Apr 2019 14:32:03 +0000 (UTC)
-Received: from gondolin (ovpn-204-33.brq.redhat.com [10.40.204.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E921F19C7E;
-        Wed, 10 Apr 2019 14:31:43 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 16:31:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, jack@suse.cz,
-        kvm@vger.kernel.org, david@redhat.com, jasowang@redhat.com,
-        david@fromorbit.com, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org,
-        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
-        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
-        linux-nvdimm@lists.01.org,
-        vishal l verma <vishal.l.verma@intel.com>,
-        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
-        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
-        kilobyte@angband.pl, riel@surriel.com,
-        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
-        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
-Subject: Re: [Qemu-devel] [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
-Message-ID: <20190410163139.4a04175e.cohuck@redhat.com>
-In-Reply-To: <127904196.20807948.1554904981681.JavaMail.zimbra@redhat.com>
-References: <20190410040826.24371-1-pagupta@redhat.com>
-        <20190410040826.24371-3-pagupta@redhat.com>
-        <20190410091216-mutt-send-email-mst@kernel.org>
-        <127904196.20807948.1554904981681.JavaMail.zimbra@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 10 Apr 2019 10:33:47 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54778 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732330AbfDJOdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:33:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dZbaO/fpxzqz5UFKVt9LJSeKtINVKHGV1teOqRpxTBs=; b=tpYMZ/N5r3lKcu+fMIhR0hNb+
+        BmFED9xei1YHXXne14nwZbo5PtuJNvzwafO/uM6xyvQh2Jqezor3u+5/7KX7FDAjb/LPU2oTb5ZUq
+        oTn0NdZepBveIRGx1ui3GGh1H0cWX2aLHehIdK3cm5UYvGvx4XeiK90T4jQjwkwnnmfvHXwvSKUfp
+        bLRyKWU85vxF2hXTbIDuCv6D8vsTaEbsaBZSK8wUWHBfIX9VkbVfRM8pBpOzheUUGR+1BeiJQOyph
+        S3qvVJG5BqMdQDDzgcTKnWNq+kwMac1g9aSHGDfm8mJyCXjVcLoihZuf7N+a0EbPB7kPtAqnoyc39
+        iD+WVKNtg==;
+Received: from [89.200.33.100] (helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEEIC-0000aC-L1; Wed, 10 Apr 2019 14:33:37 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 51709984F05; Wed, 10 Apr 2019 16:33:48 +0200 (CEST)
+Date:   Wed, 10 Apr 2019 16:33:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>, jolsa@redhat.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Message-ID: <20190410143348.GG2490@worktop.programming.kicks-ass.net>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+ <20190404130300.GF14281@hirez.programming.kicks-ass.net>
+ <adcbac67-82b5-98a4-efb4-61c9ed870c15@linux.ibm.com>
+ <20190408082229.GI4038@hirez.programming.kicks-ass.net>
+ <20190408095031.GG14281@hirez.programming.kicks-ass.net>
+ <20190409085327.GA21979@lakrids.cambridge.arm.com>
+ <a24a2dca-72f3-ff56-5004-97c6ce86f6af@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 10 Apr 2019 14:32:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a24a2dca-72f3-ff56-5004-97c6ce86f6af@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019 10:03:01 -0400 (EDT)
-Pankaj Gupta <pagupta@redhat.com> wrote:
+On Wed, Apr 10, 2019 at 03:51:24PM +0200, Thomas-Mich Richter wrote:
+> Thanks for the fix with commit id 86071b11317550d994b55ce5e31aa06bcad783b5.
+> 
+> However doing an fgrep on the pending_disable member of struct perf_event
+> reveals two more hits in file kernel/events/ringbuffer.c when events
+> have auxiliary data.
+> 
+> Not sure if this needs to be addresses too, just wanted to let you know.
 
-> > 
-> > On Wed, Apr 10, 2019 at 09:38:22AM +0530, Pankaj Gupta wrote:  
-> > > This patch adds virtio-pmem driver for KVM guest.
-> > > 
-> > > Guest reads the persistent memory range information from
-> > > Qemu over VIRTIO and registers it on nvdimm_bus. It also
-> > > creates a nd_region object with the persistent memory
-> > > range information so that existing 'nvdimm/pmem' driver
-> > > can reserve this into system memory map. This way
-> > > 'virtio-pmem' driver uses existing functionality of pmem
-> > > driver to register persistent memory compatible for DAX
-> > > capable filesystems.
-> > > 
-> > > This also provides function to perform guest flush over
-> > > VIRTIO from 'pmem' driver when userspace performs flush
-> > > on DAX memory range.
-> > > 
-> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+*groan* indeed, and yes that would need fixing too. I completely missed
+the AUX stuff using that too.
 
-> > > diff --git a/include/uapi/linux/virtio_ids.h
-> > > b/include/uapi/linux/virtio_ids.h
-> > > index 6d5c3b2d4f4d..346389565ac1 100644
-> > > --- a/include/uapi/linux/virtio_ids.h
-> > > +++ b/include/uapi/linux/virtio_ids.h
-> > > @@ -43,5 +43,6 @@
-> > >  #define VIRTIO_ID_INPUT        18 /* virtio input */
-> > >  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
-> > >  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
-> > > +#define VIRTIO_ID_PMEM         25 /* virtio pmem */
-> > >  
-> > >  #endif /* _LINUX_VIRTIO_IDS_H */  
-> > 
-> > Didn't Paolo point out someone is using 25 for audio?  
-> 
-> 
-> Sorry! I did not notice this.
-> 
-> > 
-> > Please, reserve an ID with the Virtio TC before using it.  
-> 
-> I thought I requested[1] ID 25.
-> 
-> [1] https://github.com/oasis-tcs/virtio-spec/issues/38
-> [2] https://lists.oasis-open.org/archives/virtio-dev/201805/threads.html
-> 
-> In that case I will send request for next available ID i.e 26?
+I think we can simply do the below on top, Alexander?
 
-Have the folks using this for audio sent a reservation request as well?
-If not, I'd say the first requester should get the id...
+---
+ kernel/events/ring_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-(And yes, we need to be quicker with voting on/applying id
-reservations :/)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 678ccec60d8f..ab2b7b38adc5 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -392,7 +392,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
+ 		 * store that will be enabled on successful return
+ 		 */
+ 		if (!handle->size) { /* A, matches D */
+-			event->pending_disable = 1;
++			event->pending_disable = smp_processor_id();
+ 			perf_output_wakeup(handle);
+ 			local_set(&rb->aux_nest, 0);
+ 			goto err_put;
+@@ -480,7 +480,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+
+ 	if (wakeup) {
+ 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
+-			handle->event->pending_disable = 1;
++			handle->event->pending_disable = smp_processor_id();
+ 		perf_output_wakeup(handle);
+ 	}
+
+
