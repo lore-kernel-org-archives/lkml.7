@@ -2,202 +2,161 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0CAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C488BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346D02083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AD52083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="h9olOcSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfDJJ0z (ORCPT
+        id S1729786AbfDJJ1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:26:55 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:44597 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728057AbfDJJ0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:26:54 -0400
-Received: from [IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f] ([IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id E9VKhpJTfUjKfE9VLhgvVa; Wed, 10 Apr 2019 11:26:51 +0200
-Subject: Re: [PATCH v2 1/2] media: docs-rst: Document memory-to-memory video
- decoder interface
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-References: <20181022144901.113852-1-tfiga@chromium.org>
- <20181022144901.113852-2-tfiga@chromium.org>
- <cf0fc2fc-72c6-dbca-68f7-a349879a3a14@xs4all.nl>
- <CAAFQd5AORjMjHdavdr3zM13BnyFnKnEb-0aKNjvwbB_xJEnxgQ@mail.gmail.com>
- <9b7c1385-d482-6e92-2222-2daa835dbc91@xs4all.nl>
- <CAAFQd5DwjLt8UeDohzrMausaLGnOStvrmp5p7frYbG1hbGjx3Q@mail.gmail.com>
- <CAAFQd5BPJv3cbJOWrziEjz_yE32DhfZv9vb-pG1Ltx-KS2=PQg@mail.gmail.com>
- <3ea3bf5bf9904ce877142c41f595207752172d27.camel@ndufresne.ca>
- <CAAFQd5C_OD=bvAxG0B_G+T6bnWddPHuiVZApj_8_+4xpMjH9+g@mail.gmail.com>
- <c145fbf21301d03bdfdd8bf6613f0f68576e66be.camel@ndufresne.ca>
- <CAAFQd5D4AP+xj_EkcsB84UqxCLBBEGComqGaMCm2zHSMnpqOKw@mail.gmail.com>
- <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d5e1a68d-c4e7-2645-1cd4-e55d87839f6f@xs4all.nl>
-Date:   Wed, 10 Apr 2019 11:26:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 10 Apr 2019 05:27:12 -0400
+Received: from mail-eopbgr40090.outbound.protection.outlook.com ([40.107.4.90]:63552
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727964AbfDJJ1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:27:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=80zHO96gzHuUVA+cYqkx70/ofJ/x3Ze56Ve2kh0t1wI=;
+ b=h9olOcSxh7WbA6Q5+rrH/7Zj9ud3ufDipIn6OQU5/7AE7fdVPwRDyMjMqvqzP/r7eJHj9gmuTeIMnEMhoTCOG3kcvlu4hVJUtjay2XYCKGEZ2kNm7OtN0xaabqVimblNH/nkTAil8tY/l9yztfXZFRQPrNRL/GHYzxviDgpUfmE=
+Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com (10.168.188.7) by
+ HE1PR0701MB2667.eurprd07.prod.outlook.com (10.168.188.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.11; Wed, 10 Apr 2019 09:27:07 +0000
+Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com
+ ([fe80::1449:d020:a36f:a8a3]) by HE1PR0701MB2652.eurprd07.prod.outlook.com
+ ([fe80::1449:d020:a36f:a8a3%6]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
+ 09:27:07 +0000
+From:   "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>
+Subject: Re: [PATCH] modpost: make KBUILD_MODPOST_WARN also configurable for
+ external modules
+Thread-Topic: [PATCH] modpost: make KBUILD_MODPOST_WARN also configurable for
+ external modules
+Thread-Index: AdTjuez0lIeTgqS2RiGNuzvA7YdwJAJZwhOAADAfPAAANE+HgAAzN64A
+Date:   Wed, 10 Apr 2019 09:27:07 +0000
+Message-ID: <82f5a922-1dd8-50b5-551c-33aa6d9e1192@nokia.com>
+References: <HE1PR0701MB2652FC3F5D8E46EA93AF033AFA5F0@HE1PR0701MB2652.eurprd07.prod.outlook.com>
+ <CAK7LNAQEQyEyj_ozkARj8xjDf7EncHeBv0GY8xoP8e_Fn-qaag@mail.gmail.com>
+ <77e11884-f520-d983-3d33-ccc3043ba604@nokia.com>
+ <CAK7LNAR_Py_4_pPEcxd7_ZpicoD6rnjb-iyq=_h893m=7q7kug@mail.gmail.com>
+In-Reply-To: <CAK7LNAR_Py_4_pPEcxd7_ZpicoD6rnjb-iyq=_h893m=7q7kug@mail.gmail.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfDeU0zDfkemf/qdbHKs4iu3pROOjV6w0nWqG+Khuu2DfKffEeNTqWWhUitXefAfbtQBu4yk9iQjDne+yPI+UdJGrk7N3uGq0zONmzZ5x3aHSqUjAION4
- DZqSIpYcBGB/a8AFiVwZu2PT+AUZk3uk15/Fh2rLQKmnmP2rzq7QViuf8iruvth8rRldj8KWBC7uDCCSMZf2xxxV2EDFilH+mzVPp8Z/eMDqaJXVlXMv8hW/
- yy6Dwzx/5x/5/nNAczgjA47qpjSn431HIsYfhUOI7bWoGKz3nBeVq3prqi53XW6RuAa4g49ZzDv7LU3lY8jRNUqIV9deyHa3nkkMc7iBdfUapY84thFdolpI
- Yse2x1hYb9ieWBfDd1p83Q5YFJZ69ohFxecaQ0BKS6IvyRxNKavi0K2xY/BmVu1jryjNlknNjHAZpMweMrlkA9WprTiR/CtrZCtf0DcTlS5SQx9nEhKcjVJ+
- CfDP0hZ0KumgFsZkVdQZFnH0su90Yx22pqw9/QoYcGo84JJzd6jpqmUTu0VGUf2rItcdVu/YXeDKu/Q7gcfFSDXZs/1LYVAtic58b7huA8JagNCVF58EoG0Q
- NmqilnS4QoCHpScE1JtyjRuwa5BKT2L1O/ZclVdcScdu3eHOtH+6emCIe9+1jyQvO5ISI4k9eiqoudya47u3AGLw+Yd7cvMDfDkuQIw2VH9uosxl3kK1K8u/
- yHlJXMt8khqxq07W6tpykMeiDkv2psdErdwYq3Vpb+IwV4sfVSTFIHxQjHVBKhBZnJBWsEIQcyPqS/7CVHz92N3ukxa+j+ARsd4N0PCsltdKDQW4xcw6pI80
- hC40NL0kbY12aSTWyUropaJdDFvD3HiEs2NMPE/iWfvfc+BgPyCj58WFvg8bi0EyD25nNr5Ls/027FqnbF5tlhc+KUyb3S7XSh8iGywk6IZnPVbIVLYrC1+l
- U/LEchwtokYCfK2BIi1gU66D71/76ocD3YAPxuPHmzKjJevB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+x-clientproxiedby: HE1PR0402CA0048.eurprd04.prod.outlook.com
+ (2603:10a6:7:7c::37) To HE1PR0701MB2652.eurprd07.prod.outlook.com
+ (2603:10a6:3:98::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=wladislav.wiebe@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [131.228.32.189]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7c58565b-38aa-4c2d-b594-08d6bd96b319
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR0701MB2667;
+x-ms-traffictypediagnostic: HE1PR0701MB2667:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <HE1PR0701MB2667AC7F1A2D63FC5281C4F9FA2E0@HE1PR0701MB2667.eurprd07.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39860400002)(346002)(376002)(189003)(199004)(229853002)(186003)(6116002)(54906003)(6916009)(26005)(316002)(31686004)(305945005)(105586002)(58126008)(7736002)(106356001)(65826007)(81166006)(102836004)(486006)(2616005)(446003)(11346002)(8676002)(3846002)(6246003)(81156014)(476003)(36756003)(64126003)(14454004)(2906002)(5660300002)(71200400001)(66066001)(6512007)(76176011)(53936002)(93886005)(25786009)(99286004)(68736007)(52116002)(14444005)(65806001)(65956001)(97736004)(256004)(6306002)(6486002)(8936002)(478600001)(53546011)(6436002)(6506007)(86362001)(31696002)(386003)(966005)(71190400001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0701MB2667;H:HE1PR0701MB2652.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ch9TOApAHD67ohLiuuQbRsJU0GsEGqkdSTni0GCP+UxYqqMHFac9Po02EiZMOu5yg3vlCOg731uQUTR+/Ng9M5jSsCoh89LF6QDRfNr9PBawYERLUCwTlUEECyFoXVbcTX9ix3J/bPZ89KqSAGMdrCFzAr3Pk3fnh9PoVgom4YdVwDLKf7AlENkEbGUnA7ddUXw6GyBClG+ezqgvfaAdK8Bfw7qXVKuhKYF7jMWNW5h1MzvEcGTpL0HAll4FaT7carTdjZklF+3dgkhyeLAtqQY+mn8kx9zol6urb51Os4jxDugcsWgd6BTSKIJqSOZnsj1ZeQfzlepgTzSz1PxbNCn8FED1L2PWVv6jRzQgl/RW1uJ27j1s5fZvtFWZ1+Fwhhk0Yp6PcOlqLFry+TkjEl/TN7P2b6s8K3Kmu2bi768=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D75E4441EB95044A9CF1071AF6884FBC@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c58565b-38aa-4c2d-b594-08d6bd96b319
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 09:27:07.1738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0701MB2667
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 11:47 AM, Tomasz Figa wrote:
-> On Wed, Feb 6, 2019 at 2:35 PM Tomasz Figa <tfiga@chromium.org> wrote:
->>
->> On Wed, Jan 30, 2019 at 1:02 PM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->>>
->>> Le vendredi 25 janvier 2019 à 12:27 +0900, Tomasz Figa a écrit :
->>>> On Fri, Jan 25, 2019 at 4:55 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->>>>> Le jeudi 24 janvier 2019 à 18:06 +0900, Tomasz Figa a écrit :
->>>>>>> Actually I just realized the last point might not even be achievable
->>>>>>> for some of the decoders (s5p-mfc, mtk-vcodec), as they don't report
->>>>>>> which frame originates from which bitstream buffer and the driver just
->>>>>>> picks the most recently consumed OUTPUT buffer to copy the timestamp
->>>>>>> from. (s5p-mfc actually "forgets" to set the timestamp in some cases
->>>>>>> too...)
->>>>>>>
->>>>>>> I need to think a bit more about this.
->>>>>>
->>>>>> Actually I misread the code. Both s5p-mfc and mtk-vcodec seem to
->>>>>> correctly match the buffers.
->>>>>
->>>>> Ok good, since otherwise it would have been a regression in MFC driver.
->>>>> This timestamp passing thing could in theory be made optional though,
->>>>> it lives under some COPY_TIMESTAMP kind of flag. What that means though
->>>>> is that a driver without such a capability would need to signal dropped
->>>>> frames using some other mean.
->>>>>
->>>>> In userspace, the main use is to match the produced frame against a
->>>>> userspace specific list of frames. At least this seems to be the case
->>>>> in Gst and Chromium, since the userspace list contains a superset of
->>>>> the metadata found in the v4l2_buffer.
->>>>>
->>>>> Now, using the produced timestamp, userspace can deduce frame that the
->>>>> driver should have produced but didn't (could be a deadline case codec,
->>>>> or simply the frames where corrupted). It's quite normal for a codec to
->>>>> just keep parsing until it finally find something it can decode.
->>>>>
->>>>> That's at least one way to do it, but there is other possible
->>>>> mechanism. The sequence number could be used, or even producing buffers
->>>>> with the ERROR flag set. What matters is just to give userspace a way
->>>>> to clear these frames, which would simply grow userspace memory usage
->>>>> over time.
->>>>
->>>> Is it just me or we were missing some consistent error handling then?
->>>>
->>>> I feel like the drivers should definitely return the bitstream buffers
->>>> with the ERROR flag, if there is a decode failure of data in the
->>>> buffer. Still, that could become more complicated if there is more
->>>> than 1 frame in that piece of bitstream, but only 1 frame is corrupted
->>>> (or whatever).
->>>
->>> I agree, but it might be more difficult then it looks (even FFMPEG does
->>> not do that). I believe the code that is processing the bitstream in
->>> stateful codecs is mostly unrelated from the code actually doing the
->>> decoding. So what might happen is that the decoding part will never
->>> actually allocate a buffer for the skipped / corrupted part of the
->>> bitstream. Also, the notion of a skipped frame is not always evident in
->>> when parsing H264 or HEVC NALs. There is still a full page of text just
->>> to explain how to detect that start of a new frame.
->>
->> Right. I don't think we can guarantee that we can always correlate the
->> errors with exact buffers and so I phrased the paragraph about errors
->> in v3 in a bit more conservative way:
->>
->> See the snapshot hosted by Hans (thanks!):
->> https://hverkuil.home.xs4all.nl/codec-api/uapi/v4l/dev-decoder.html#decoding
->>
->>>
->>> Yet, it would be interesting to study the firmwares we have and see
->>> what they provide that would help making decode errors more explicit.
->>>
->>
->> Agreed.
->>
->>>>
->>>> Another case is when the bitstream, even if corrupted, is still enough
->>>> to produce some output. My intuition tells me that such CAPTURE buffer
->>>> should be then returned with the ERROR flag. That wouldn't still be
->>>> enough for any more sophisticated userspace error concealment, but
->>>> could still let the userspace know to perhaps drop the frame.
->>>
->>> You mean if a frame was concealed (typically the frame was decoded from
->>> a closed by reference instead of the expected reference). That is
->>> something signalled by FFPEG. We should document this possibility. I
->>> actually have something implemented in GStreamer. Basically if we have
->>> the ERROR flag with a payload size smaller then expected, I drop the
->>> frame and produce a drop event message, while if I have a frame with
->>> ERROR flag but of the right payload size, I assume it is corrupted, and
->>> simply flag it as corrupted, leaving to the application the decision to
->>> display it or not. This is a case that used to happen with some UVC
->>> cameras (though some have been fixed, and the UVC camera should drop
->>> smaller payload size buffers now).
->>
->> I think it's a behavior that makes the most sense indeed.
->>
->> Technically one could also consider the case of 0 < bytesused <
->> sizeimage, which could mean that only a part of the frame is in the
->> buffer. An application could try to blend it with previous frame using
->> some concealing algorithms. I haven't seen an app that could do such
->> thing, though.
-> 
-> Actually some interesting thought on this. I don't think the existing
-> drivers would return any CAPTURE buffers on errors right now, but just
-> return the OUTPUT buffer that failed to be decoded. Should we change
-> this so that always one CAPTURE buffer with the ERROR flag is
-> returned, to signal the application that a frame was potentially
-> dropped?
-
-It's what vicodec does. Since device_run is called with both an OUTPUT
-and a CAPTURE buffer it would make sense to return both buffers with the
-ERROR flag if decoding (or encoding for that matter) fails.
-
-But I would also be fine if this is seen as driver specific. Since an
-OUTPUT buffer can decode to multiple CAPTURE buffers it may not be
-all that useful in practice.
-
-Regards,
-
-	Hans
+SGksDQoNCk9uIDA5LjA0LjIwMTkgMTE6MDAsIE1hc2FoaXJvIFlhbWFkYSB3cm90ZToNCj4gSGku
+DQo+IA0KPiBPbiBNb24sIEFwciA4LCAyMDE5IGF0IDU6MDMgUE0gV2llYmUsIFdsYWRpc2xhdiAo
+Tm9raWEgLSBERS9VbG0pDQo+IDx3bGFkaXNsYXYud2llYmVAbm9raWEuY29tPiB3cm90ZToNCj4+
+DQo+PiBIaSENCj4+DQo+PiBPbiAwNy4wNC4yMDE5IDExOjA0LCBNYXNhaGlybyBZYW1hZGEgd3Jv
+dGU6DQo+Pj4gKCtDQyBKb25hcyBHb3Jza2kpDQo+Pj4NCj4+Pg0KPj4+IE9uIFR1ZSwgTWFyIDI2
+LCAyMDE5IGF0IDY6NTggUE0gV2llYmUsIFdsYWRpc2xhdiAoTm9raWEgLSBERS9VbG0pDQo+Pj4g
+PHdsYWRpc2xhdi53aWViZUBub2tpYS5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+PiBDb21taXQgZWE4
+MzdmMWMwNTAzICgia2J1aWxkOiBtYWtlIG1vZHBvc3QgcHJvY2Vzc2luZyBjb25maWd1cmFibGUi
+KQ0KPj4+PiB3YXMgaW50ZW5kZWQgdG8gZ2l2ZSBLQlVJTERfTU9EUE9TVF9XQVJOIGZsZXhpYmls
+aXR5IHRvIGJlIGNvbmZpZ3VyYWJsZS4NCj4+Pj4gUmlnaHQgbm93IEtCVUlMRF9NT0RQT1NUX1dB
+Uk4gZ2V0cyBqdXN0IGlnbm9yZWQgd2hlbiBLQlVJTERfRVhUTU9EIGlzDQo+Pj4+IHNldCB3aGlj
+aCBoYXBwZW5zIHBlciBkZWZhdWx0IHdoZW4gYnVpbGRpbmcgbW9kdWxlcyBvdXQgb2YgdGhlIHRy
+ZWUuDQo+Pj4+DQo+Pj4+IFRoaXMgY2hhbmdlIGdpdmVzIHRoZSBvcHBvcnR1bml0eSB0byBkZWZp
+bmUgbW9kdWxlIGJ1aWxkIGJlaGF2aW5nIGFsc28NCj4+Pj4gaW4gY2FzZSBvZiBvdXQgb2YgdHJl
+ZSBidWlsZHMgYW5kIGRlZmF1bHQgd2lsbCBiZWNvbWUgZXhpdCBvbiBlcnJvci4NCj4+Pj4gRXJy
+b3JzIHdoaWNoIGNhbiBiZSBkZXRlY3RlZCBieSB0aGUgYnVpbGQgc2hvdWxkIGJlIHRyYXBwZWQg
+b3V0IG9mIHRoZSBib3gNCj4+Pj4gdGhlcmUsIHVubGVzcyBzb21lYm9keSB3YW50cyB0byBub3Rp
+Y2UgYnJva2VuIHN0dWZmIGxhdGVyIGF0IHJ1bnRpbWUuDQo+Pj4NCj4+PiBJZiBhbiBleHRlcm5h
+bCBtb2R1bGUgcmVmZXJzIHRvIGEgc3ltYm9sDQo+Pj4gcHJvdmlkZWQgYnkgYW5vdGhlciBleHRl
+cm5hbCBtb2R1bGUsDQo+Pj4gdGhpcyBwYXRjaCB3aWxsIHR1cm4gdGhlIHdhcm5pbmcgaW50byB0
+aGUgZXJyb3IgYnkgZGVmYXVsdCwNCj4+PiB3aGljaCBpcyBwcm9iYWJseSBhIGJhZCBpZGVhLg0K
+Pj4NCj4+IEluZGVlZCwgZXhhY3RseSB0aGlzIHNob3VsZCBoYXBwZW4uIFlvdSBzaG91bGQgZml4
+IHlvdXIgZXh0ZXJuYWwgbW9kdWxlDQo+PiBkZXBlbmRlbmNpZXMgYnkgcHJvdmlkaW5nIHRoZWly
+IHN5bWJvbHMuIFBsZWFzZSB1c2UgZS5nLg0KPj4gS0JVSUxEX0VYVFJBX1NZTUJPTFMgaW5zdGVh
+ZCBvZiBjb252ZXJ0aW5nIGVycm9ycyB0byB3YXJuaW5nIGFuZCBob3BpbmcNCj4+IHRoYXQgdGhp
+bmdzIHdpbGwgd29yay4NCj4gDQo+IEkga25vdyB0aGlzIG9wdGlvbi4NCj4gV2hhdCBJIHdhbnQg
+dG8gc2F5IGlzLCB0aGlzIHBhdGNoIGNoYW5nZXMgdGhlIGJlaGF2aW9yLCBhbmQNCj4gbWF5IGFu
+bm95IHNvbWUgcGVvcGxlLg0KPiANCj4+IE9yIGhvdyBkbyB5b3Ugd2FudCB0byBtYWtlIHN1cmUg
+bW9kdWxlIEEgc3RpbGwNCj4+IGRlbGl2ZXJzIGFsbCBzeW1ib2xzIG5lZWRlZCBieSBtb2R1bGUg
+QiBhZnRlciBhbiB1cGRhdGUvY2hhbmdlcz8NCj4+IE1hbnVhbGx5IGNvbXBhcmluZyB0aGUgbG9n
+cyBhZnRlciBhbiB1cGRhdGUgb3Igd2FpdGluZyB1bnRpbCBpdCB0dXJucw0KPj4gb3V0IGJyb2tl
+biBkdXJpbmcgcnVuLXRpbWU/IEkgd291bGRuJ3Qgc2F5IHRoaXMgaXMgYSBnb29kIGlkZWEgOi0p
+DQo+IA0KPiBPSywgc28gdGhlIGNvbW1pdCBsb2cgc2hvdWxkIHJlY29yZCBib3RoIHRoZSBiZWhh
+dmlvciBjaGFuZ2UNCj4gYW5kIHdvcmthcm91bmRzLg0KPiANCj4gLSBJZiBhbiBleHRlcm5hbCBt
+b2R1bGUgYmVpbmcgYnVpbHQgcmVmZXJzIHRvIHN5bWJvbHMNCj4gICAgaW4gYW5vdGhlciBleHRl
+cm5hbCBtb2R1bGUsIEtidWlsZCBwcmV2aW91c2x5IHNob3dlZCBhIHdhcm5pbmcsDQo+ICAgIGJ1
+dCBnb2luZyBmb3J3YXJkIGl0IHdpbGwgdHVybiBpdCBpbnRvIGFuIGVycm9yLg0KPiANCj4gLSBU
+byB3b3JrIGFyb3VuZCB0aGlzLCB5b3Ugc2hvdWxkIHBhc3MgYSBzeW1ib2wgdGFibGUgdmlhIEtC
+VUlMRF9FWFRSQV9TWU1CT0xTLA0KPiAgICBvciBLQlVJTERfRVhUUkFfU1lNQk9MUz0xIHRvIHR1
+cm4gdGhlIGVycm9yIGludG8gYSB3YXJuaW5nLg0KDQoNCk9rLCBJJ3ZlIHBvc3RlZCB2MjoNCmh0
+dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMDU5OTg1Lw0KDQoNClRoYW5r
+cyENCg0KLSBXbGFkaXNsYXYNCg0KDQoNCj4gVGhhbmtzLg0KPiANCj4+DQo+Pj4gSSBzdWdnZXN0
+ZWQgYSBkZXNpcmVkIGNoYW5nZSBpbiB0aGUgZm9sbG93aW5nLg0KPj4+IGh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTk4MDY5MS8NCj4+Pg0KPj4+IEkgYW0gcG9raW5nIEpvbmFz
+IEdvcnNraQ0KPj4+IGlmIGhlIHBsYW5zIHRvIHNlbmQgdjIuDQo+Pg0KPj4gSSB3b3VsZG4ndCB2
+b3RlIGZvciB2MiBiYXNlZCBvbiBleHBsYW5hdGlvbiBhYm92ZS4NCj4+DQo+PiAtIFdsYWRpc2xh
+dg0KPj4NCj4+Pg0KPj4+DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IFdsYWRpc2xhdiBXaWViZSA8d2xh
+ZGlzbGF2LndpZWJlQG5va2lhLmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICAgIHNjcmlwdHMvTWFrZWZp
+bGUubW9kcG9zdCB8IDIgKy0NCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+LCAxIGRlbGV0aW9uKC0pDQo+Pj4+DQo+Pj4+IGRpZmYgLS1naXQgYS9zY3JpcHRzL01ha2VmaWxl
+Lm1vZHBvc3QgYi9zY3JpcHRzL01ha2VmaWxlLm1vZHBvc3QNCj4+Pj4gaW5kZXggNmI3ZjM1NGYx
+ODlhLi5mZWM2ZWMyZmZhNDcgMTAwNjQ0DQo+Pj4+IC0tLSBhL3NjcmlwdHMvTWFrZWZpbGUubW9k
+cG9zdA0KPj4+PiArKysgYi9zY3JpcHRzL01ha2VmaWxlLm1vZHBvc3QNCj4+Pj4gQEAgLTc4LDcg
+Kzc4LDcgQEAgbW9kcG9zdCA9IHNjcmlwdHMvbW9kL21vZHBvc3QgICAgICAgICAgICAgICAgICAg
+IFwNCj4+Pj4gICAgICQoaWYgJChLQlVJTERfRVhUUkFfU1lNQk9MUyksICQocGF0c3Vic3QgJSwg
+LWUgJSwkKEtCVUlMRF9FWFRSQV9TWU1CT0xTKSkpIFwNCj4+Pj4gICAgICQoaWYgJChLQlVJTERf
+RVhUTU9EKSwtbyAkKG1vZHVsZXN5bWZpbGUpKSAgICAgIFwNCj4+Pj4gICAgICQoaWYgJChDT05G
+SUdfU0VDVElPTl9NSVNNQVRDSF9XQVJOX09OTFkpLCwtRSkgIFwNCj4+Pj4gLSAkKGlmICQoS0JV
+SUxEX0VYVE1PRCkkKEtCVUlMRF9NT0RQT1NUX1dBUk4pLC13KQ0KPj4+PiArICQoaWYgJChLQlVJ
+TERfTU9EUE9TVF9XQVJOKSwtdykNCj4+Pj4NCj4+Pj4gICAgTU9EUE9TVF9PUFQ9JChzdWJzdCAt
+aSwtbiwkKGZpbHRlciAtaSwkKE1BS0VGTEFHUykpKQ0KPj4+Pg0KPj4+PiAtLQ0KPj4+PiAyLjE5
+LjINCj4+Pg0KPj4+DQo+Pj4NCj4gDQo+IA0KPiAtLQ0KPiBCZXN0IFJlZ2FyZHMNCj4gTWFzYWhp
+cm8gWWFtYWRhDQo+IA0K
