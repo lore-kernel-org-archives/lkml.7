@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53BDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04390C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853442133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D19217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554899220;
-	bh=AWM2xjXldOjEwxbDJrUSFC7/DqrSfOsVkR0OsJgurLQ=;
+	s=default; t=1554899223;
+	bh=I8BxiUhAA4FAdpMo9K5V9h2j8od2JFLl2YTxhFPX3nU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=I1dB4pKh+jzFFQ0LH5d4W7SQ46Ri7pvFFGdERypa4yoOctIG+HnvWE+CBYdafI+L7
-	 8AUvktLvORVFlpgp+QCegj555HOvOMgIENH84nulLZTRynRjD7Ufj0d4MljTX5XIcH
-	 GazLEGIaMS9d8MM+95TJUULphb1BHBzp2SkVg75o=
+	b=XK+MWoyYaZbGXsil8cz6sC6JsgC+FRPP1QQSWAuNnCRP99RLesh2alS4gSHwbSPcy
+	 5nC0DLHcweAHhOlFy2XyGNatBHp1Xe3oirh4sZyMkcrgNff0nxYEMfkERSGTBl24Nq
+	 RXMEEw5WOGfFfSMLMItlyajTYFv9RNkm3aKi4v+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbfDJM07 (ORCPT
+        id S1731913AbfDJM1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:26:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35576 "EHLO
+        Wed, 10 Apr 2019 08:27:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35676 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731876AbfDJM04 (ORCPT
+        with ESMTP id S1731898AbfDJM1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:26:56 -0400
+        Wed, 10 Apr 2019 08:27:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+Kjanl0NisFIjQWftyRzb6yNyG09hJNTfoZBhQmXj1E=; b=xX+35JQJTHb+
-        H3B6OIH+ORWmkRMUHa4wV/n87foSh6GrKcelt3RsS5csuSA47fqFWrFDDX5EFf/vDSC5yLHNLSE5Q
-        j19WIHEKpywhrtWKR19F6flZbdXUNMrmYetzN6HwSei6CGvCOvAenikaakDf4rJP5sahLuarIabQu
-        s05KA=;
+        List-Archive; bh=QbG6TVehOxvmLSmKg7kBE1f9BLeSxRMIzXjwwqLBKSw=; b=KeioA5KcLT/B
+        OyvcuEMTFn/Dz9Vga/IcQM31plVynVdW09LKSaCZZ3tEPBDIKaD2Re9Q1lirm008i1Utir6rw51Xh
+        ZxbbbZ/flxwNteLUs9H9AdLaqWG/o9/PDp1SB3l4Zt6z0KX9N0djbbD1lbWCNOKs5JOVnP+OIXvbu
+        lStK0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hECJa-00007L-3u; Wed, 10 Apr 2019 12:26:54 +0000
+        id 1hECJd-00007g-Ld; Wed, 10 Apr 2019 12:26:57 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 703CE1128ED2; Wed, 10 Apr 2019 13:26:53 +0100 (BST)
+        id 302351128ED2; Wed, 10 Apr 2019 13:26:57 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: s2mpa01: Remove unused define for S2MPA01_REGULATOR_CNT" to the regulator tree
+Subject: Applied "regulator: hi655x: Constify regulators array" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190410122653.703CE1128ED2@debutante.sirena.org.uk>
-Date:   Wed, 10 Apr 2019 13:26:53 +0100 (BST)
+Message-Id: <20190410122657.302351128ED2@debutante.sirena.org.uk>
+Date:   Wed, 10 Apr 2019 13:26:57 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: s2mpa01: Remove unused define for S2MPA01_REGULATOR_CNT
+   regulator: hi655x: Constify regulators array
 
 has been applied to the regulator tree at
 
@@ -84,34 +84,33 @@ to this mail.
 Thanks,
 Mark
 
-From 6e1f22ee7e4874c357a95a87f3ebc6eb093562dc Mon Sep 17 00:00:00 2001
+From 784816d46aae28f84a3ec5461b6cf69b6f02d62a Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 9 Apr 2019 21:00:42 +0800
-Subject: [PATCH] regulator: s2mpa01: Remove unused define for
- S2MPA01_REGULATOR_CNT
+Date: Mon, 8 Apr 2019 20:09:32 +0800
+Subject: [PATCH] regulator: hi655x: Constify regulators array
 
-The S2MPA01_REGULATOR_CNT is no longer used after converted to use
-simplified DT parsing.
+The regulators array should never need to be modified, make it const so
+compiler can put it to .rodata.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/s2mpa01.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/regulator/hi655x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/s2mpa01.c b/drivers/regulator/s2mpa01.c
-index da11ac5c09f2..51f7e8b74d8c 100644
---- a/drivers/regulator/s2mpa01.c
-+++ b/drivers/regulator/s2mpa01.c
-@@ -17,8 +17,6 @@
- #include <linux/mfd/samsung/core.h>
- #include <linux/mfd/samsung/s2mpa01.h>
+diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
+index bba24a6fdb1e..460ae70d8b04 100644
+--- a/drivers/regulator/hi655x-regulator.c
++++ b/drivers/regulator/hi655x-regulator.c
+@@ -158,7 +158,7 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	.ctrl_mask = cmask,                                      \
+ }
  
--#define S2MPA01_REGULATOR_CNT ARRAY_SIZE(regulators)
--
- struct s2mpa01_info {
- 	int ramp_delay24;
- 	int ramp_delay3;
+-static struct hi655x_regulator regulators[] = {
++static const struct hi655x_regulator regulators[] = {
+ 	HI655X_LDO_LINEAR(LDO2, 0x72, 0x07, 0x29, 0x2a, 0x2b, 0x01,
+ 			  2500000, 8, 100000),
+ 	HI655X_LDO(LDO7, 0x78, 0x07, 0x29, 0x2a, 0x2b, 0x06, ldo7_voltages),
 -- 
 2.20.1
 
