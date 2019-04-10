@@ -2,95 +2,115 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC66AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D9A21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgrS8y7+"
+	by mail.kernel.org (Postfix) with ESMTP id E24F521741
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554861538;
+	bh=7YTbpC+S42wTWvYFjOYL0o3r7vaXsMlP2T4iWgEMSnw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bCvG9b/shT4RDbYhZID+JrYIYuStNc7GapV9xKO21m/MsMjDLZFviGDTjZoormbUG
+	 ltoLi1hJV9xWhOlJ07aaEYrImKnR4p0zWMNYIs7wn6Vq0PQeGpMrcdbmqlZ2o4IGuj
+	 vq7Kp7k6IPQOEVzrULKTHBmtZbxxwpKkuSssC20I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfDJB57 (ORCPT
+        id S1727030AbfDJB64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:57:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46027 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfDJB56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:57:58 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o26so502145edv.12;
-        Tue, 09 Apr 2019 18:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1/6UAD0SSi15aPgBdvgJXUF/zbQSF6IzziyK/+Kj15I=;
-        b=EgrS8y7+ZXzdnhDYpQK5tY0h4kFlvwCkPa7myzvZFf4/iZGjFXqEZPrlGyUWLmjDd8
-         FDWm1hXtKmYELJgpcDzsTB04TPTc9ailDnA9MgU8xmvq4CnI2LPMDviJYGZbI6Nq9sLf
-         RY0wB0FyiIPWCsBhzlMAr7qKmFXh7mbgoxiKFzMGUvhZFhUJkOIpiP/+94cZLJW3TA3I
-         EEf2zmkoAKRiZemJ9/fnmq9+pP1V+UMS2BPODVF4a27hi7pGqMw8a2z0yPwIrJCtKgU8
-         5vj/0hNLiox6DnIqseO3VUfloi21VfUtm8mRyDP1UOP9QczuzsyeI0dlbWbAuS/O7cL8
-         oARg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1/6UAD0SSi15aPgBdvgJXUF/zbQSF6IzziyK/+Kj15I=;
-        b=fgvO+yltDsYzVR70nm0lVJSRGFCV0CelzuDkzD1vzA41C6T42r3gJgqAsd20/Ymeuu
-         rkfHBpZ4kb9HCz65yae1zc7nBgo+r/+pslyWbMjMkVufG0DPaaQSLFpnTqztWyhqmTze
-         ZqWw034Za8ky2/wOp3A+PIHXIzdNgEdf3G77W/xiiZEknmxgsKWRrCewJ2WnzwQC4Ll9
-         UOiVfcnBTFXVzIndDJq6RImpvfQi1sa4wxtneICQWm8KhJQBdKy+Yfom23qYKAORd7E/
-         8lZu2SLoQ92xAO7zG+viPmx4sy2V/ViTLgZHcPd9j+02OVgQQsyJNRs/RB7+Sa/Oa9iT
-         hDCw==
-X-Gm-Message-State: APjAAAX8ZuGlck08862107oKVYaK3VtDu9X/4wI86fsd/NB+itlTezVf
-        qvtCjTA1f6Euj8AnzSUFJ3Ir3NYW
-X-Google-Smtp-Source: APXvYqyPIZNbjD71DasGx178YMuEd+QxWNVMeNrSuSHadRhDGcrpgh4xHx0v6JZKM/Sm01zYluH4/Q==
-X-Received: by 2002:a05:6402:607:: with SMTP id n7mr14512422edv.161.1554861476642;
-        Tue, 09 Apr 2019 18:57:56 -0700 (PDT)
-Received: from [10.230.28.107] ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id r16sm1627662edy.11.2019.04.09.18.57.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 18:57:56 -0700 (PDT)
-Subject: Re: [PATCH v2 net-next 04/22] net: dsa: mt7530: Use vlan_filtering
- property from dsa_port
-To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georg.waibel@sensor-technik.de
-References: <20190410005700.31582-1-olteanv@gmail.com>
- <20190410005700.31582-5-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <c80bd309-ecf7-3be6-e8f8-06223b41a552@gmail.com>
-Date:   Tue, 9 Apr 2019 18:57:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Apr 2019 21:58:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726577AbfDJB64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:58:56 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF786218FC
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554861535;
+        bh=7YTbpC+S42wTWvYFjOYL0o3r7vaXsMlP2T4iWgEMSnw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PPLYDAOFhSkrlqOBSb/hLiEFHaW1D2dh1azUH/p736Ufu2ni35KQ42ZYfcTsM6U41
+         K6LyCBr7BQBRj/B5iDF8APEUmhQYKTqldpGVmaGfIBhzMmHEw9lqLaMV1JtQ6Cn4JR
+         PchDaRNtBZ/28KtfS1bsD9g7I+czTJnyAjlypLlQ=
+Received: by mail-wm1-f52.google.com with SMTP id r186so3605118wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:58:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAVicTU5H9sqpUStQj8zuwMJ1bDJt9uJxcYmTp+edMKqpJV45fgB
+        UVp0bMwBD72lqHi8vlLydhl02AEsUnpRjtih6nDkTA==
+X-Google-Smtp-Source: APXvYqy5adWmgC4rqeQvXKMy0S118HQDOricYPdsLLDmXtiDy9qOlFfzCwYaG9RsD83tV7hjxWP0TMIBvauKFuoyDno=
+X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr841728wme.4.1554861533515;
+ Tue, 09 Apr 2019 18:58:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190410005700.31582-5-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+In-Reply-To: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 9 Apr 2019 18:58:41 -0700
+X-Gmail-Original-Message-ID: <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+Message-ID: <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Aubrey Li <aubrey.li@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>
+> The architecture specific information of the running processes could
+> be useful to the userland. Add support to examine process architecture
+> specific information externally.
+>
+> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> Cc: Linux API <linux-api@vger.kernel.org>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  fs/proc/array.c         | 5 +++++
+>  include/linux/proc_fs.h | 2 ++
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/fs/proc/array.c b/fs/proc/array.c
+> index 2edbb657f859..331592a61718 100644
+> --- a/fs/proc/array.c
+> +++ b/fs/proc/array.c
+> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>  }
+>
+> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
+> +{
+> +}
 
+This pointlessly bloats other architectures.  Do this instead in an
+appropriate header:
 
-On 4/9/2019 5:56 PM, Vladimir Oltean wrote:
-> This field was recently introduced, so keeping state inside the driver
-> is no longer necessary.
-> 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+#ifndef arch_proc_pid_status
+static inline void arch_proc_pid_status(...)
+{
+}
+#endif
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Or add /proc/PID/x86_status, which sounds better in most respects to me.
