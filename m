@@ -2,101 +2,189 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06A5C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F753C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1F20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554894872;
-	bh=vafN731gAsfL2AltzPZ7O7LqY3FUYKvNENGnnA0lnXw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQKFBUQG42zuqkOOSFbhWM1qNwHJr6SDw1v7/IEsn3DAO852zLDw2f2ECiPw10tJx
-	 c9M8B7dQ/aD9ZfTl45wB7mY8StgqH/MR2N6HbPFgULrltrOWqCzHOkiS7T1kmyGIRt
-	 1CJKRep4oB0uWynMPLTVjPZ6lXR31oW64dLe7eRM=
+	by mail.kernel.org (Postfix) with ESMTP id 5B8BC20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jUEgtDBc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TAACRG5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbfDJLOV (ORCPT
+        id S1731016AbfDJLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:14:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44456 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731102AbfDJLMQ (ORCPT
+        Wed, 10 Apr 2019 07:16:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45034 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbfDJLQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:12:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GAmzM2cQXLWEJG/VCTUREx7sgoG/8T2f7s+Ihg8HuYc=; b=f3CaF3S/gfxq47JrrdftjVQryg
-        rHUwt5mvs91T7kBO0PJCa5t50YPpC1d8H8FIU8JT8MPF/ifN1I0eYY+ARihRu0+nUdpgmNtoTZ1PF
-        wDZ5KFDgvA2JLrnZnjbMei3wNgYiolPNVyzGO3SG3TsWT4iXMax5pxchQqv7PmgAInFlJERlW5k3P
-        Kz9EXss995H0uRpOQ5nIJPkVlfQB5zjFw/4TAxh401OHzMWQENznJkogGI7puOkiBzS2B+9Qk3orR
-        wa6yn6D6RFjW3HP645g55reKhu8SknqPBprMh9btxwuAf0Yinm3fbFitHDSC9wMT2v5ED+/c8mzTl
-        0WocNHeA==;
-Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEB9L-0006mt-Ka; Wed, 10 Apr 2019 11:12:15 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hEB9J-0007Sd-Ay; Wed, 10 Apr 2019 08:12:13 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH 05/21] docs: hwmon: emc2103: convert to ReST format
-Date:   Wed, 10 Apr 2019 08:11:55 -0300
-Message-Id: <b2b656a6d08c49aef83cd5aa06485596bbc93323.1554893882.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1554893881.git.mchehab+samsung@kernel.org>
-References: <cover.1554893881.git.mchehab+samsung@kernel.org>
+        Wed, 10 Apr 2019 07:16:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F305E60FF3; Wed, 10 Apr 2019 11:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554894984;
+        bh=0N0Rp+YhmYk/ZmowLAHt3qhV3V9KVP/SqK8yVqOQvSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jUEgtDBc6x/VWyrj0rnVmy54V7mWdZTpd3mLBpQrvXgt3EyxIqhMwoug5Y4/RAfke
+         17YaqlWZ/87M+ZkUOeDhsHjtUPD5020yiGK7PfLB1wAtgui8MC3+HxuRSjVIQ4D2Yd
+         dFqWZgjZ6c1q4ztcYVru9NRiqyW68deqFbnzi+t8=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 5CC73602DC;
+        Wed, 10 Apr 2019 11:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554894980;
+        bh=0N0Rp+YhmYk/ZmowLAHt3qhV3V9KVP/SqK8yVqOQvSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TAACRG5lKgt3Vg0iomSoE387BZvISKrMWOO0/bZa3fkN5f4Vp9t8ASt1L2VpbVorS
+         EWl91MaOR7EgV1KY3sFSKB1ANVCTLU2yQ7OG92TXEfS9fS+e5ROy3tuhOr6UahdBIR
+         QWvZYpqbpG+py6Hd+gQQR334JYdMGDd0QU/FDqh0=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Apr 2019 16:46:20 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     robh+dt@kernel.org, andy.gross@linaro.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org,
+        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        devicetree@vger.kernel.org, rnayak@codeaurora.org,
+        cw00.choi@samsung.com, linux-pm@vger.kernel.org,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        dianders@chromium.org
+Subject: Re: [PATCH RFC 7/9] cpufreq: qcom: Add support to update cpu node's
+ OPP tables
+In-Reply-To: <20190410103316.sxev2f54klemq2p6@vireshk-i7>
+References: <20190328152822.532-1-sibis@codeaurora.org>
+ <20190328152822.532-8-sibis@codeaurora.org>
+ <20190410103316.sxev2f54klemq2p6@vireshk-i7>
+Message-ID: <8aeedc48150da49b7ab2ce27dd45a455@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert emc2103 to ReST format, in order to allow it to
-be parsed by Sphinx.
+On 2019-04-10 16:03, Viresh Kumar wrote:
+> On 28-03-19, 20:58, Sibi Sankar wrote:
+>> Add support to parse and update OPP tables attached to the cpu nodes.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/cpufreq/qcom-cpufreq-hw.c | 29 +++++++++++++++++++++++++++--
+>>  1 file changed, 27 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c 
+>> b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> index 4b0b50403901..5c268dd2346c 100644
+>> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -73,6 +73,25 @@ static unsigned int 
+>> qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+>>  	return policy->freq_table[index].frequency;
+>>  }
+>> 
+>> +static int qcom_find_update_opp(struct device *cpu_dev, unsigned long 
+>> freq,
+>> +				unsigned long volt)
+>> +{
+>> +	int ret;
+>> +	struct dev_pm_opp *opp;
+>> +
+>> +	opp = dev_pm_opp_find_freq_exact(cpu_dev, freq, true);
+>> +	if (IS_ERR(opp)) {
+>> +		ret = dev_pm_opp_add(cpu_dev, freq, volt);
+> 
+> With my comment on the other patch, you can just call
+> dev_pm_opp_update_voltage() and if that fails then call 
+> dev_pm_opp_add().
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/hwmon/emc2103 | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+yeah that should simplify things.
 
-diff --git a/Documentation/hwmon/emc2103 b/Documentation/hwmon/emc2103
-index a12b2c127140..6a6ca6d1b34e 100644
---- a/Documentation/hwmon/emc2103
-+++ b/Documentation/hwmon/emc2103
-@@ -2,13 +2,17 @@ Kernel driver emc2103
- ======================
- 
- Supported chips:
-+
-   * SMSC EMC2103
-+
-     Addresses scanned: I2C 0x2e
-+
-     Prefix: 'emc2103'
-+
-     Datasheet: Not public
- 
- Authors:
--        Steve Glendinning <steve.glendinning@smsc.com>
-+	Steve Glendinning <steve.glendinning@smsc.com>
- 
- Description
- -----------
+Also through the above approach I cannot
+really disable opps that the OSM does not
+support. I can only try enabling opp's that
+OSM supports. But that would require all
+opp's nodes to start with "disabled" but
+that is not allowed I guess.
+
+> 
+>> +	} else {
+>> +		dev_pm_opp_disable(cpu_dev, freq);
+>> +		ret = dev_pm_opp_update_voltage(cpu_dev, freq, volt);
+>> +		dev_pm_opp_enable(cpu_dev, freq);
+> 
+> Perhaps no one else should be using the CPU OPP table at this point of 
+> time and
+> so we can get away with disable and enable stuff ? Just add a comment 
+> on why
+> that works.
+
+we can get away without enable/disable here
+
+> 
+>> +		dev_pm_opp_put(opp);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>>  				    struct cpufreq_policy *policy,
+>>  				    void __iomem *base)
+>> @@ -81,11 +100,16 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  	u32 volt;
+>>  	unsigned int max_cores = cpumask_weight(policy->cpus);
+>>  	struct cpufreq_frequency_table	*table;
+>> +	int ret;
+>> 
+>>  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>>  	if (!table)
+>>  		return -ENOMEM;
+>> 
+>> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+>> +	if (ret)
+>> +		dev_dbg(cpu_dev, "Couldn't add OPP table\n");
+>> +
+>>  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>>  		data = readl_relaxed(base + REG_FREQ_LUT +
+>>  				      i * LUT_ROW_SIZE);
+>> @@ -104,7 +128,7 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>> 
+>>  		if (freq != prev_freq && core_count == max_cores) {
+>>  			table[i].frequency = freq;
+>> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+>> +			qcom_find_update_opp(cpu_dev, freq * 1000, volt);
+>>  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>>  				freq, core_count);
+>>  		} else {
+>> @@ -125,7 +149,8 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  			if (prev_cc != max_cores) {
+>>  				prev->frequency = prev_freq;
+>>  				prev->flags = CPUFREQ_BOOST_FREQ;
+>> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+>> +				qcom_find_update_opp(cpu_dev, prev_freq * 1000,
+>> +						     volt);
+>>  			}
+>> 
+>>  			break;
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+
 -- 
-2.20.1
-
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
