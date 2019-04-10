@@ -2,197 +2,84 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CC9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D64C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9440321741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B76B2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDJS5y (ORCPT
+        id S1726720AbfDJTBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:57:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12518 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbfDJS5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:57:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 11:57:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
-   d="scan'208";a="141655360"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.19])
-  by orsmga003.jf.intel.com with ESMTP; 10 Apr 2019 11:57:51 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, acme@kernel.org, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 2/2] perf/x86/intel: Add Tremont core PMU support
-Date:   Wed, 10 Apr 2019 11:57:09 -0700
-Message-Id: <1554922629-126287-3-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554922629-126287-1-git-send-email-kan.liang@linux.intel.com>
-References: <1554922629-126287-1-git-send-email-kan.liang@linux.intel.com>
+        Wed, 10 Apr 2019 15:01:09 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38194 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfDJTBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 15:01:09 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g1so1922391qki.5;
+        Wed, 10 Apr 2019 12:01:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ct8LsGcjmi/0XPKOcfnklNuVfe53Ye0OTVxjS5AHnFE=;
+        b=METN/d8MhngOE+H4qm6s2+vR5B90HwwGFtQDwNQMkQbJTr+3oupZpLVZYs/LMkKRC8
+         SeNayclio8/VXh22iL9uevex3ub7mDgWtnTzFAB1H4X8Tw7jFIxaHDYJOhfEvqQGXBH9
+         3rau7TlfP6UXoa4QLLsrf3wShnhwmVpA70CIm8mul0qZHrWRbioAJ1ZcARwzcvc4KJjO
+         0sbc481erI03+SJfaL07qC7PCEk1GLdRngUSanDtNqRjAEkVD6t8SIuBgLhbD7+siYmP
+         5fYD2xgz0XY+szPyH0tnW+JQFweRiECk/oMB/Lfot612JTtlzF7eyF4EY/FrkoGFcw9S
+         lG1Q==
+X-Gm-Message-State: APjAAAV9N2/t5i4TqrUc2LZlAhjEZLDJ3CsemYtw0pxtFC7+hw07U0Ah
+        tazTDjriEijoJlQhejzEdvPZant9dv+VHDbal4g=
+X-Google-Smtp-Source: APXvYqxrvWuBkdeIf78jrs6AeI6/AGBXeGqohqTt34FkjGfq2DyOXV3TWwha+Kwm9V8GS7ik96+cinzCM1Q+OoLzsOs=
+X-Received: by 2002:a37:9e8a:: with SMTP id h132mr33945458qke.74.1554922868286;
+ Wed, 10 Apr 2019 12:01:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-2-arnd@arndb.de>
+ <CAKwvOdmRVK8t=CL5h0MXykm00R39e17dy8EkgFrLuhg1Yr0HJQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdmRVK8t=CL5h0MXykm00R39e17dy8EkgFrLuhg1Yr0HJQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 10 Apr 2019 21:00:52 +0200
+Message-ID: <CAK8P3a3ytjz5KarSPyk4G=HOGopBMN65j0eYaWZanUbGoe=wXw@mail.gmail.com>
+Subject: Re: [PATCH 02/12] s390: don't build vdso32 with clang
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Wed, Apr 10, 2019 at 6:26 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> On Mon, Apr 8, 2019 at 2:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > clang does not support 31 bit object files on s390, so skip
+> > the 32-bit vdso here, and only build it when using gcc to compile
+> > the kernel.
+>
+> What's the build failure?  Would you mind filing a bug against LLVM's
+> issue tracker for it, please?
 
-Add perf core PMU support for Intel Tremont CPU.
+As far as I can tell, llvm does only supports 64-bit output for s390, so this
+is not a bug but rather a missing feature that seems highly unlikely to
+ever get added.
 
-The init code is based on Goldmont plus.
+32-bit (31-bit) mode on s390 is only used for very old existing binaries,
+and the vdso support is optional there.
 
-The generic purpose counter 0 and fixed counter 0 have less skid.
-Force :ppp events on generic purpose counter 0.
-Force instruction:ppp on generic purpose counter 0 and fixed counter 0.
-
-Updates LLC cache event table and OFFCORE_RESPONSE mask.
-
-The adaptive PEBS, which is already enabled on ICL, is also supported
-on Tremont. No extra codes required.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since v1:
-- Allow instruction:ppp on generic purpose counter 0
-- Fix the checking for instruction event.
-
- arch/x86/events/intel/core.c | 91 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 34220ab..9f1e000 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1856,6 +1856,45 @@ static __initconst const u64 glp_hw_cache_extra_regs
- 	},
- };
- 
-+#define TNT_LOCAL_DRAM			BIT_ULL(26)
-+#define TNT_DEMAND_READ			GLM_DEMAND_DATA_RD
-+#define TNT_DEMAND_WRITE		GLM_DEMAND_RFO
-+#define TNT_LLC_ACCESS			GLM_ANY_RESPONSE
-+#define TNT_SNP_ANY			(SNB_SNP_NOT_NEEDED|SNB_SNP_MISS| \
-+					 SNB_NO_FWD|SNB_SNP_FWD|SNB_HITM)
-+#define TNT_LLC_MISS			(TNT_SNP_ANY|SNB_NON_DRAM|TNT_LOCAL_DRAM)
-+
-+static __initconst const u64 tnt_hw_cache_extra_regs
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+	[C(LL)] = {
-+		[C(OP_READ)] = {
-+			[C(RESULT_ACCESS)]	= TNT_DEMAND_READ|
-+						  TNT_LLC_ACCESS,
-+			[C(RESULT_MISS)]	= TNT_DEMAND_READ|
-+						  TNT_LLC_MISS,
-+		},
-+		[C(OP_WRITE)] = {
-+			[C(RESULT_ACCESS)]	= TNT_DEMAND_WRITE|
-+						  TNT_LLC_ACCESS,
-+			[C(RESULT_MISS)]	= TNT_DEMAND_WRITE|
-+						  TNT_LLC_MISS,
-+		},
-+		[C(OP_PREFETCH)] = {
-+			[C(RESULT_ACCESS)]	= 0x0,
-+			[C(RESULT_MISS)]	= 0x0,
-+		},
-+	},
-+};
-+
-+static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
-+	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-+	EVENT_EXTRA_END
-+};
-+
- #define KNL_OT_L2_HITE		BIT_ULL(19) /* Other Tile L2 Hit */
- #define KNL_OT_L2_HITF		BIT_ULL(20) /* Other Tile L2 Hit */
- #define KNL_MCDRAM_LOCAL	BIT_ULL(21)
-@@ -3403,6 +3442,9 @@ static struct event_constraint counter2_constraint =
- static struct event_constraint fixed_counter0_constraint =
- 			FIXED_EVENT_CONSTRAINT(0x00c0, 0);
- 
-+static struct event_constraint fixed0_counter0_constraint =
-+			INTEL_ALL_EVENT_CONSTRAINT(0, 0x100000001ULL);
-+
- static struct event_constraint *
- hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
-@@ -3454,6 +3496,29 @@ glp_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 	return c;
- }
- 
-+static struct event_constraint *
-+tnt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-+			  struct perf_event *event)
-+{
-+	struct event_constraint *c;
-+
-+	/*
-+	 * :ppp means to do reduced skid PEBS,
-+	 * which is available on PMC0 and fixed counter 0.
-+	 */
-+	if (event->attr.precise_ip == 3) {
-+		/* Force instruction:ppp on PMC0 and Fixed counter 0 */
-+		if (EVENT_CONFIG(event->hw.config) == X86_CONFIG(.event=0xc0))
-+			return &fixed0_counter0_constraint;
-+
-+		return &counter0_constraint;
-+	}
-+
-+	c = intel_get_event_constraints(cpuc, idx, event);
-+
-+	return c;
-+}
-+
- static bool allow_tsx_force_abort = true;
- 
- static struct event_constraint *
-@@ -4533,6 +4598,32 @@ __init int intel_pmu_init(void)
- 		name = "goldmont_plus";
- 		break;
- 
-+	case INTEL_FAM6_ATOM_TREMONT_X:
-+		x86_pmu.late_ack = true;
-+		memcpy(hw_cache_event_ids, glp_hw_cache_event_ids,
-+		       sizeof(hw_cache_event_ids));
-+		memcpy(hw_cache_extra_regs, tnt_hw_cache_extra_regs,
-+		       sizeof(hw_cache_extra_regs));
-+		hw_cache_event_ids[C(ITLB)][C(OP_READ)][C(RESULT_ACCESS)] = -1;
-+
-+		intel_pmu_lbr_init_skl();
-+
-+		x86_pmu.event_constraints = intel_slm_event_constraints;
-+		x86_pmu.extra_regs = intel_tnt_extra_regs;
-+		/*
-+		 * It's recommended to use CPU_CLK_UNHALTED.CORE_P + NPEBS
-+		 * for precise cycles.
-+		 */
-+		x86_pmu.pebs_aliases = NULL;
-+		x86_pmu.pebs_prec_dist = true;
-+		x86_pmu.lbr_pt_coexist = true;
-+		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
-+		x86_pmu.get_event_constraints = tnt_get_event_constraints;
-+		extra_attr = slm_format_attr;
-+		pr_cont("Tremont events, ");
-+		name = "Tremont";
-+		break;
-+
- 	case INTEL_FAM6_WESTMERE:
- 	case INTEL_FAM6_WESTMERE_EP:
- 	case INTEL_FAM6_WESTMERE_EX:
--- 
-2.7.4
-
+      Arnd
