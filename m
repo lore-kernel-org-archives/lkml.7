@@ -2,166 +2,215 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA857C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A754C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803E020830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0897C20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="RiGlvGV1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJtgUynG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfDJPum (ORCPT
+        id S2387468AbfDJPvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:50:42 -0400
-Received: from mail.efficios.com ([167.114.142.138]:34320 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728826AbfDJPum (ORCPT
+        Wed, 10 Apr 2019 11:51:05 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41633 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731183AbfDJPvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:50:42 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 889F21D6919;
-        Wed, 10 Apr 2019 11:50:40 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id ExFflYqKYuLA; Wed, 10 Apr 2019 11:50:40 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 276F81D6912;
-        Wed, 10 Apr 2019 11:50:40 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 276F81D6912
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554911440;
-        bh=CQEMTrph+vc+6/uLW4RTHKKGiQmbTxgD+HaG6AAW1iw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=RiGlvGV1Zv2vX6ZK7JYxAynBspIsn5k54/h4VomFRM0HHqJtYqWblniI1U1ssPfMi
-         DF1FBxE5asazppNoe4jGZmb2CU43Smr9TrfYZmUysL5A2N4ZZ4puB36NXW1P6RFeyi
-         pXqUVZgfdJ4y20B71gQDVc03SH1EAW4Kzlc0JV4yNjLvDzfwpu/aJgz7cEmb7vCJSD
-         4flRDEaIw11jYd8Thc+XA5AH9kxpeyEuwimNgZw3Ef2MJROQo+f4+1UW1/g6XGXYYY
-         e9fSoSd11M+CHSPgnlLYjk+AzJqySglHyCZdbk1sdAIwWpa0VxUVOyX+z6y7e0Ktv6
-         P8+ZxMik3kTyA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 5OtPiLW2r9Jh; Wed, 10 Apr 2019 11:50:40 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 07DE31D690B;
-        Wed, 10 Apr 2019 11:50:40 -0400 (EDT)
-Date:   Wed, 10 Apr 2019 11:50:39 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     schwidefsky <schwidefsky@de.ibm.com>
-Cc:     heiko carstens <heiko.carstens@de.ibm.com>,
-        gor <gor@linux.ibm.com>, libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>
-Message-ID: <514609006.3159.1554911439933.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190410123258.37f182cf@mschwideX1>
-References: <1779981820.2626.1554838342731.JavaMail.zimbra@efficios.com> <20190410123258.37f182cf@mschwideX1>
-Subject: Re: rseq/s390: choosing code signature
+        Wed, 10 Apr 2019 11:51:04 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w30so3409878qta.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 08:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I8SE0hQdgATafth9AsqVC7r1ns9guNMUwC2veAj2keA=;
+        b=kJtgUynGAHE1JRUInC+YKxM3RWQ9GSYDP6Y3rVu6lzNNJpj74oZMigmJktVSwyHNjB
+         nMn14W6udtj6pvGHZ52Ry+xWMSpuNWtB0/oxozJfRiX4m6fAkwZgIEhQuWZLtQfJPCgG
+         4PE/JZr9FenVRSb3+B7dUX3YhsLlKUiP5fFAVrVYdhjq9LR38MN3InHEeXbxF2orffUn
+         53zoCs2ELvlKxspkOwWV8etCU1BuIdVoo7790dV6Ey74nNFvgk5stpKRsm4aEDZ/bprF
+         TQFam94sMoiN78g739ntjrH0zuBQqDtpoXJXV8IN3vVT19fwP7tORCAQ9fsqWwejJEOr
+         gDXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I8SE0hQdgATafth9AsqVC7r1ns9guNMUwC2veAj2keA=;
+        b=RXZeEx4jFbO/6qC2Z+ZUSwUGJ8XpqPMPxFcdn6x9REpoS/jSey1XApjDpXiapiR/nC
+         IeR66zU7SXOARarzoWKDkdpDSZtgrHAZjEwkyIRH/ZwEqn5/4pEs2DzGAx2lG9N4xldp
+         7INLzEoAGmT1wkfPiB4MD3gOB3tYXvh0gV5gB+cH+xQBbmxf0HykkOZQd0C7AjpELsbS
+         +iHF0vfYNCvJF6F1lhO7pQYpkYWDyVbrp/LJGCYYjmqvJfESy//Hd1Lo2SLcp/CJBjFB
+         Px3ibhqnBN9lY8DjZk5PLAJRMAzR2b7wKrSrz0c5lzWFaCSnDcsTcjaUIqt08w6H2TzS
+         u88Q==
+X-Gm-Message-State: APjAAAX9aZXT9AIS/afRmMknFnjBmOGIlE5GtUwhK67xOH9m+Tx2lNJ7
+        6Umx2BtZg83MaW419A7tcy/obamUdBLNlMYVG4p8SAz/zhU=
+X-Google-Smtp-Source: APXvYqxrxnzD5OxUw/1vC9do17GmEXhvmxvbyYwJA01fgTqEyu4e+DlxDg1gE6Zi9BfO2FTohQPvkNGazJsv6DV/wO8=
+X-Received: by 2002:a0c:b018:: with SMTP id k24mr35721367qvc.218.1554911462775;
+ Wed, 10 Apr 2019 08:51:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/s390: choosing code signature
-Thread-Index: I0ikTLoE0n9yf7c3EJtl2fBgiPZZOw==
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+In-Reply-To: <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Wed, 10 Apr 2019 11:50:51 -0400
+Message-ID: <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 10, 2019, at 6:32 AM, schwidefsky schwidefsky@de.ibm.com wrote:
+On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
+[snip]
+> > > Wouldn't it be more convenient to provide it in a standardized format
+> > > such that you won't have to take an additional step, and always have
+> > > This is that form IMO.
+> >
+> > The location of the archive is fixed/known. If you are talking of the
+> > location where the user decompresses it to, then they a;ready know where they
+> > are decompressing to.
+>
+> The location _of_ the archive, sure. But the format of what is in the
+> tarball, how it is versioned, and how to manage it will have to be
+> done by every user.
+>
+> For any script that doesn't depend on some shared system state that
+> wants to, say, build a eBPF program and load it, it would need to
+> extract the tarball from scratch to make sure it is the current
+> correct version of it.
+>
+> If that's required by all users, why not just present the data in a
+> way that it can be used directly?
 
-> On Tue, 9 Apr 2019 15:32:22 -0400 (EDT)
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
->> Hi,
->> 
->> We are about to include the code signature required prior to restartable
->> sequences abort handlers into glibc, which will make this ABI choice final.
->> We need architecture maintainer input on that signature value.
->> 
->> That code signature is placed before each abort handler, so the kernel can
->> validate that it is indeed jumping to an abort handler (and not some
->> arbitrary attacker-chosen code). The signature is never executed.
->> 
->> The current discussion thread on the glibc mailing list leads us towards
->> using a trap with uncommon immediate operand, which simplifies integration
->> with disassemblers, emulators, makes it easier to debug if the control
->> flow gets redirected there by mistake, and is nicer for some architecture's
->> speculative execution.
->> 
->> We can have different signatures for each sub-architecture, as long as they
->> don't have to co-exist within the same process. We can special-case with
->> #ifdef for each sub-architecture and endianness if need be. If the architecture
->> has instruction set extensions that can co-exist with the architecture
->> instruction set within the same process, we need to take into account to which
->> instruction the chosen signature value would map (and possibly decide if we
->> need to extend rseq to support many signatures).
->> 
->> Here is an example of rseq signature definition template:
->> 
->> /*
->>  * TODO: document trap instruction objdump output on each sub-architecture
->>  * instruction sets, as well as instruction set extensions.
->>  */
->> #define RSEQ_SIG 0x########
->> 
->> Ideally we'd need a patch on top of the Linux kernel
->> tools/testing/selftests/rseq/rseq-s390.h file that updates
->> the signature value, so I can then pick it up for the glibc
->> patchset.
-> 
-> The trap4 instruction is a suitable one. The patch would look like this
+That is the part that is unclear from your proposal. If we present a
+filesystem view, then I am assuming the data will have to be
+decompressed first into memory. That means you are proposing use of
+30MB uncompressed memory. The whole archive has to be decompressed but
+the whole archive if compressed with XZ for a maximum compression
+ratio.
 
-Great! I'm picking it up into my rseq tree if that's OK with you.
+> > > Having to copy and extract the tarball is the most awkward step, IMHO.
+> > > I also find the waste of kernel memory for it to be an issue, but
+> > > given that it can be built as a module I guess that's the obvious
+> > > solution for those who care about memory consumption.
+> >
+> > Yes. We discussed in previous threads that for users who really want the
+> > archive to be completely uncompressed and in-memory, can just load the
+> > module, decompress into tmpfs, and unload the module. That is an extra step,
+> > yes.
+>
+> Most users will need to decompress it every time they use it anyway,
+> especially if there's no versioned prefix in the tarball that they can
+> use to key to a previously decompressed version with the exact same
+> kernel version and config.
+>
+> So, if you need to do that anyway, wouldn't it be easier if you just
+> mounted a FS to get to it. If you're on a system where you can't use
+> it in-place for resource reasons, you can copy it off and unmount it.
+> No extra tools needed in userspace then at run/use time.
+>
+> Said filesystem could be populated by a compressed cpio archive since
+> we already have code in the kernel to do this for initramfs, and could
+> do so at mount time -- and at unmount time it'd be freed up.
 
-Thanks,
+But still, decompressing to the filesystem in a scratch area may be
+better than decompressing to RAM, for some users who have lesser RAM.
+This patchset does not enforce a certain way of doing things and
+leaves it to the user.
 
-Mathieu
+> If you absolutely need to export a file to userspace with the archive,
+> my suggestion is to do it through debugfs. That way the format isn't
+> in a /proc ABI that can't be changed in the future (debugfs isn't
+> required to be stable in the same way). This way we can change the
+> format carried in the kernel over time without changing the official
+> way we present the data to userspace (via a filesystem view).
+>
+> As far as format goes; there's clear precedent on cpio being used and
+> supported; we already have build time requirements on the userspace
+> tools with some options. Using tar would actually be a new dependency
+> even if it is a common tool to have installed. With a self-populating
+> FS, there's no new tool requirements on the runtime side either.
 
+debugfs is going away for Android and is controversial in the fact
+that its functionality isn't guaranteed to be there (debugfs breakages
+aren't necessarily bugs AFAIK). So this isn't an option.
 
-> --
-> commit 2ee28f6d1de968a71f074ab150384b90b4121216
-> Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Date:   Wed Apr 10 12:28:41 2019 +0200
-> 
->    s390/rseq: use trap4 for RSEQ_SIG
->    
->    Use trap4 as the guard instruction for the restartable sequence abort
->    handler.
->    
->    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> 
-> diff --git a/tools/testing/selftests/rseq/rseq-s390.h
-> b/tools/testing/selftests/rseq/rseq-s390.h
-> index 1069e85258ce..d4c8e1147d86 100644
-> --- a/tools/testing/selftests/rseq/rseq-s390.h
-> +++ b/tools/testing/selftests/rseq/rseq-s390.h
-> @@ -1,6 +1,13 @@
-> /* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-> 
-> -#define RSEQ_SIG	0x53053053
-> +/*
-> + * RSEQ_SIG uses the trap4 instruction. As Linux does not make use of the
-> + * access-register mode nor the linkage stack this instruction will always
-> + * cause a special-operation exception (the trap-enabled bit in the DUCT
-> + * is and will stay 0). The instruction pattern is
-> + *	b2 ff 0f ff	trap4   4095(%r0)
-> + */
-> +#define RSEQ_SIG	0xB2FF0FFF
-> 
-> #define rseq_smp_mb()	__asm__ __volatile__ ("bcr 15,0" ::: "memory")
-> #define rseq_smp_rmb()	rseq_smp_mb()
-> --
-> blue skies,
->   Martin.
-> 
-> "Reality continues to ruin my life." - Calvin.
+> > We had close to 2-3 months of discussions now with various folks up until v5.
+> > I am about to post v6 which is in line with Masahiro Yamada's expecations. In
+> > that I will be dropping module building artifacts due to his module building
+> > concerns and only include the headers.
+>
+> I've found some of the old discussion and read up on it. I think it
+> was pretty quick at dismissing ideas for more robust implementations
+> ("it needs squashfs-tools"), and had some narrow viewpoints (exporting
+> a tarball is the least amount of kernel change, while adding
+> complexity at the system/usage side).
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Honestly, that's kind of unfair to be quoting just a few points like
+that. If I remember there were 100s of emails and many good view
+points were brought up by many people. We have done the diligence in
+the discussions of this over a period of time.
+
+> I'd also like to clarify: I'm not opposed to the general idea of
+> providing the needed headers with the kernel somehow. I just think
+> it's worth spending effort making sure an interface for it that we'll
+> need to live with forever is appropriately thought through and not
+> rushed in, especially since we're likely to get substantial
+> infrastructure on top of it quickly (eBPF and friends in particular).
+
+We have spent the time :) This seems like the best solution of all.
+Greg KH and other maintainers are also supportive of it as can be seen
+in other threads. We can consider an alternate proposal if it is
+better, but I don't see any better one proposed at the moment.
+
+- squashfs-tools requirement on the build really sucks
+- cpio uncompressed to memory equally sucks because it consumes all
+the memory uncompressed instead of reclaimable pages
+- decompressing into tmpfs will suck for Android because we don't use
+disk-based swap and we run into the same cpio issue above. We use ZRAM
+for compressed swap.
+- debugfs is a non-option for Android
+
+The tar+xz is trivially created without depending on squashfs-tools.
+And xz provides the maximum compression ratio in our experiments.
+Decompression time is a non-issue since trace tools are using it.
+
+The filesystem view sounds using mount/unmount like a pony to me, but
+it does not meet the requirements above. Let me know if I am missing
+something.
+
+thanks,
+ - Joel
