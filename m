@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F253BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E77C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB80218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8598D218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbfDJLGS (ORCPT
+        id S1731203AbfDJLGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:06:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58975 "EHLO
+        Wed, 10 Apr 2019 07:06:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:59002 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731125AbfDJLGP (ORCPT
+        with ESMTP id S1731165AbfDJLGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:15 -0400
+        Wed, 10 Apr 2019 07:06:19 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB3V-0005EJ-ML; Wed, 10 Apr 2019 13:06:13 +0200
-Message-Id: <20190410103646.667572056@linutronix.de>
+        id 1hEB3Y-0005FE-Rv; Wed, 10 Apr 2019 13:06:17 +0200
+Message-Id: <20190410103646.939796939@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:28 +0200
+Date:   Wed, 10 Apr 2019 12:28:31 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>
-Subject: [RFC patch 34/41] lockdep: Move stack trace logic into
- check_prev_add()
+Subject: [RFC patch 37/41] tracing: Use percpu stack trace buffer more
+ intelligently
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,103 +43,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only one caller of check_prev_add() which hands in a zeroed struct
-stack trace and a function pointer to save_stack(). Inside check_prev_add()
-the stack_trace struct is checked for being empty, which is always
-true. Based on that one code path stores a stack trace which is unused. The
-comment there does not make sense either. It's all leftovers from
-historical lockdep code.
+The per cpu stack trace buffer usage pattern is odd at best. The buffer has
+place for 512 stack trace entries on 64-bit and 1024 on 32-bit. When
+interrupts or exceptions nest after the per cpu buffer was acquired the
+stacktrace length is hardcoded to 8 entries. 512/1024 stack trace entries
+in kernel stacks are unrealistic so the buffer is a complete waste.
 
-Move the variable into check_prev_add() itself and cleanup the nonsensical
-checks and the pointless stack trace recording.
+Split the buffer into chunks of 64 stack entries which is plenty. This
+allows nesting contexts (interrupts, exceptions) to utilize the cpu buffer
+for stack retrieval and avoids the fixed length allocation along with the
+conditional execution pathes.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/locking/lockdep.c |   30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ kernel/trace/trace.c |   77 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 39 insertions(+), 38 deletions(-)
 
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2158,10 +2158,10 @@ check_deadlock(struct task_struct *curr,
-  */
- static int
- check_prev_add(struct task_struct *curr, struct held_lock *prev,
--	       struct held_lock *next, int distance, struct stack_trace *trace,
--	       int (*save)(struct stack_trace *trace))
-+	       struct held_lock *next, int distance)
- {
- 	struct lock_list *uninitialized_var(target_entry);
-+	struct stack_trace trace;
- 	struct lock_list *entry;
- 	struct lock_list this;
- 	int ret;
-@@ -2196,17 +2196,8 @@ check_prev_add(struct task_struct *curr,
- 	this.class = hlock_class(next);
- 	this.parent = NULL;
- 	ret = check_noncircular(&this, hlock_class(prev), &target_entry);
--	if (unlikely(!ret)) {
--		if (!trace->entries) {
--			/*
--			 * If @save fails here, the printing might trigger
--			 * a WARN but because of the !nr_entries it should
--			 * not do bad things.
--			 */
--			save(trace);
--		}
-+	if (unlikely(!ret))
- 		return print_circular_bug(&this, target_entry, next, prev);
--	}
- 	else if (unlikely(ret < 0))
- 		return print_bfs_bug(ret);
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2749,12 +2749,21 @@ trace_function(struct trace_array *tr,
  
-@@ -2253,7 +2244,7 @@ check_prev_add(struct task_struct *curr,
- 		return print_bfs_bug(ret);
+ #ifdef CONFIG_STACKTRACE
  
- 
--	if (!trace->entries && !save(trace))
-+	if (!save_trace(&trace))
- 		return 0;
- 
- 	/*
-@@ -2262,14 +2253,14 @@ check_prev_add(struct task_struct *curr,
- 	 */
- 	ret = add_lock_to_list(hlock_class(next), hlock_class(prev),
- 			       &hlock_class(prev)->locks_after,
--			       next->acquire_ip, distance, trace);
-+			       next->acquire_ip, distance, &trace);
- 
- 	if (!ret)
- 		return 0;
- 
- 	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
- 			       &hlock_class(next)->locks_before,
--			       next->acquire_ip, distance, trace);
-+			       next->acquire_ip, distance, &trace);
- 	if (!ret)
- 		return 0;
- 
-@@ -2287,12 +2278,6 @@ check_prevs_add(struct task_struct *curr
- {
- 	int depth = curr->lockdep_depth;
- 	struct held_lock *hlock;
--	struct stack_trace trace = {
--		.nr_entries = 0,
--		.max_entries = 0,
--		.entries = NULL,
--		.skip = 0,
--	};
- 
- 	/*
- 	 * Debugging checks.
-@@ -2318,7 +2303,8 @@ check_prevs_add(struct task_struct *curr
- 		 * added:
- 		 */
- 		if (hlock->read != 2 && hlock->check) {
--			int ret = check_prev_add(curr, hlock, next, distance, &trace, save_trace);
-+			int ret = check_prev_add(curr, hlock, next, distance);
+-#define FTRACE_STACK_MAX_ENTRIES (PAGE_SIZE / sizeof(unsigned long))
++/* 64 entries for kernel stacks are plenty */
++#define FTRACE_KSTACK_ENTRIES	64
 +
- 			if (!ret)
- 				return 0;
+ struct ftrace_stack {
+-	unsigned long		calls[FTRACE_STACK_MAX_ENTRIES];
++	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
+ };
+ 
+-static DEFINE_PER_CPU(struct ftrace_stack, ftrace_stack);
++/* This allows 8 level nesting which is plenty */
++#define FTRACE_KSTACK_NESTING	(PAGE_SIZE / sizeof(struct ftrace_stack))
++
++struct ftrace_stacks {
++	struct ftrace_stack	stacks[FTRACE_KSTACK_NESTING];
++};
++
++static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
+ static DEFINE_PER_CPU(int, ftrace_stack_reserve);
+ 
+ static void __ftrace_trace_stack(struct ring_buffer *buffer,
+@@ -2763,10 +2772,11 @@ static void __ftrace_trace_stack(struct
+ {
+ 	struct trace_event_call *call = &event_kernel_stack;
+ 	struct ring_buffer_event *event;
++	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	struct stack_trace trace;
+-	int use_stack;
+-	int size = FTRACE_STACK_ENTRIES;
++	int size = FTRACE_KSTACK_ENTRIES;
++	int stackidx;
+ 
+ 	trace.nr_entries	= 0;
+ 	trace.skip		= skip;
+@@ -2788,29 +2798,32 @@ static void __ftrace_trace_stack(struct
+ 	 */
+ 	preempt_disable_notrace();
+ 
+-	use_stack = __this_cpu_inc_return(ftrace_stack_reserve);
++	stackidx = __this_cpu_inc_return(ftrace_stack_reserve);
++
++	/* This should never happen. If it does, yell once and skip */
++	if (WARN_ON_ONCE(stackidx >= FTRACE_KSTACK_NESTING))
++		goto out;
++
+ 	/*
+-	 * We don't need any atomic variables, just a barrier.
+-	 * If an interrupt comes in, we don't care, because it would
+-	 * have exited and put the counter back to what we want.
+-	 * We just need a barrier to keep gcc from moving things
+-	 * around.
++	 * The above __this_cpu_inc_return() is 'atomic' cpu local. An
++	 * interrupt will either see the value pre increment or post
++	 * increment. If the interrupt happens pre increment it will have
++	 * restored the counter when it returns.  We just need a barrier to
++	 * keep gcc from moving things around.
+ 	 */
+ 	barrier();
+-	if (use_stack == 1) {
+-		trace.entries		= this_cpu_ptr(ftrace_stack.calls);
+-		trace.max_entries	= FTRACE_STACK_MAX_ENTRIES;
+-
+-		if (regs)
+-			save_stack_trace_regs(regs, &trace);
+-		else
+-			save_stack_trace(&trace);
+-
+-		if (trace.nr_entries > size)
+-			size = trace.nr_entries;
+-	} else
+-		/* From now on, use_stack is a boolean */
+-		use_stack = 0;
++
++	fstack = this_cpu_ptr(ftrace_stacks.stacks) + (stackidx - 1);
++	trace.entries		= fstack->calls;
++	trace.max_entries	= FTRACE_KSTACK_ENTRIES;
++
++	if (regs)
++		save_stack_trace_regs(regs, &trace);
++	else
++		save_stack_trace(&trace);
++
++	if (trace.nr_entries > size)
++		size = trace.nr_entries;
+ 
+ 	size *= sizeof(unsigned long);
+ 
+@@ -2820,19 +2833,7 @@ static void __ftrace_trace_stack(struct
+ 		goto out;
+ 	entry = ring_buffer_event_data(event);
+ 
+-	memset(&entry->caller, 0, size);
+-
+-	if (use_stack)
+-		memcpy(&entry->caller, trace.entries,
+-		       trace.nr_entries * sizeof(unsigned long));
+-	else {
+-		trace.max_entries	= FTRACE_STACK_ENTRIES;
+-		trace.entries		= entry->caller;
+-		if (regs)
+-			save_stack_trace_regs(regs, &trace);
+-		else
+-			save_stack_trace(&trace);
+-	}
++	memcpy(&entry->caller, trace.entries, size);
+ 
+ 	entry->size = trace.nr_entries;
  
 
 
