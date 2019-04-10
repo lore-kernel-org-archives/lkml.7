@@ -2,121 +2,110 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77466C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B31C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E27420818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A282084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbfDJIoW convert rfc822-to-8bit (ORCPT
+        id S1729588AbfDJIqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:44:22 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:27138 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728828AbfDJIoV (ORCPT
+        Wed, 10 Apr 2019 04:46:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47389 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbfDJIqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:44:21 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-139-fjmoDOY7OryNuGiZcxGCOA-1; Wed, 10 Apr 2019 09:44:16 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 10 Apr 2019 09:45:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 10 Apr 2019 09:45:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alastair D'Silva' <alastair@au1.ibm.com>,
-        "alastair@d-silva.org" <alastair@d-silva.org>
-CC:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Karsten Keil" <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated
- by lines '|'
-Thread-Topic: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated
- by lines '|'
-Thread-Index: AQHU70w0rkaVHIS5K0aGNoZBJJ6fAqY1Ew8A
-Date:   Wed, 10 Apr 2019 08:45:25 +0000
-Message-ID: <1cd09186c67b4fa4bceb84faf835ff10@AcuMS.aculab.com>
-References: <20190410031720.11067-1-alastair@au1.ibm.com>
- <20190410031720.11067-5-alastair@au1.ibm.com>
-In-Reply-To: <20190410031720.11067-5-alastair@au1.ibm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 10 Apr 2019 04:46:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3A8k59W699772
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Apr 2019 01:46:05 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3A8k5Rt699769;
+        Wed, 10 Apr 2019 01:46:05 -0700
+Date:   Wed, 10 Apr 2019 01:46:05 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
+Message-ID: <tip-d8743230c9f4e92f370ecd2a90c680ddcede6ae5@git.kernel.org>
+Cc:     hpa@zytor.com, valentin.schneider@arm.com, peterz@infradead.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        torvalds@linux-foundation.org
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, valentin.schneider@arm.com,
+          hpa@zytor.com, tglx@linutronix.de, peterz@infradead.org
+In-Reply-To: <20190409173546.4747-3-valentin.schneider@arm.com>
+References: <20190409173546.4747-3-valentin.schneider@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/topology: Fix build_sched_groups() comment
+Git-Commit-ID: d8743230c9f4e92f370ecd2a90c680ddcede6ae5
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-MC-Unique: fjmoDOY7OryNuGiZcxGCOA-1
-X-Mimecast-Spam-Score: 0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva
-> Sent: 10 April 2019 04:17
-> With the wider display format, it can become hard to identify how many
-> bytes into the line you are looking at.
-> 
-> The patch adds new flags to hex_dump_to_buffer() and print_hex_dump() to
-> print vertical lines to separate every N groups of bytes.
-> 
-> eg.
-> buf:00000000: 454d414e 43415053|4e495f45 00584544  NAMESPAC|E_INDEX.
-> buf:00000010: 00000000 00000002|00000000 00000000  ........|........
+Commit-ID:  d8743230c9f4e92f370ecd2a90c680ddcede6ae5
+Gitweb:     https://git.kernel.org/tip/d8743230c9f4e92f370ecd2a90c680ddcede6ae5
+Author:     Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate: Tue, 9 Apr 2019 18:35:46 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 10 Apr 2019 09:41:34 +0200
 
-Ugg, that is just horrid.
-It is enough to add an extra space if you really need the columns
-to be more easily counted.
+sched/topology: Fix build_sched_groups() comment
 
-I'm not even sure that is needed if you are printing 32bit words.
-OTOH 32bit words makes 64bit values really stupid on LE systems.
-Bytes with extra spaces every 4 bytes is the format I prefer
-even for long lines.
+The comment was introduced (pre 2.6.12) by:
 
-Oh, and if you are using hexdump() a lot you want a version
-that never uses snprintf().
+  8a7a2318dc07 ("[PATCH] sched: consolidate sched domains")
 
-	David
+and referred to sched_group->cpu_power. This was folded into
+sched_group->sched_group_power in
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+  commit 9c3f75cbd144 ("sched: Break out cpu_power from the sched_group structure")
 
+The comment was then updated in:
+
+  ced549fa5fc1 ("sched: Remove remaining dubious usage of "power"")
+
+but should have replaced "sg->cpu_capacity" with
+"sg->sched_group_capacity". Do that now.
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Dietmar.Eggemann@arm.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: morten.rasmussen@arm.com
+Cc: qais.yousef@arm.com
+Link: http://lkml.kernel.org/r/20190409173546.4747-3-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/topology.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 64bec54ded3e..90e1a870fb0d 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1087,8 +1087,8 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
+ 
+ /*
+  * build_sched_groups will build a circular linked list of the groups
+- * covered by the given span, and will set each group's ->cpumask correctly,
+- * and ->cpu_capacity to 0.
++ * covered by the given span, will set each group's ->cpumask correctly,
++ * and will initialize their ->sgc.
+  *
+  * Assumes the sched_domain tree is fully constructed
+  */
