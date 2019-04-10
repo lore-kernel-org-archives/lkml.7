@@ -2,51 +2,52 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35415C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9C2C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9AA2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3A4217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dnzTNW5z"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FCcKhVSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfDJEOk (ORCPT
+        id S1727346AbfDJEOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 00:14:40 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43940 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfDJEOi (ORCPT
+        Wed, 10 Apr 2019 00:14:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34300 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfDJEOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 00:14:38 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3A4EPD9070043;
-        Tue, 9 Apr 2019 23:14:25 -0500
+        Wed, 10 Apr 2019 00:14:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3A4EX7p127683;
+        Tue, 9 Apr 2019 23:14:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554869665;
-        bh=q6p8vgeXOqYpOKSUi51ll18KZe2VtjCBkLleAdHv030=;
-        h=From:To:CC:Subject:Date;
-        b=dnzTNW5z7LanKtnqidbA9glwIDxQXq4K9dPd0tlmhEyWyisOsoU+N+WxGbj18TCo9
-         gtiO9gYNWJMJTOg+S8QJX0bWW0vZpSEYrBkUDlbyo/5cE00uniT8A6fw1zvimjEcIO
-         bRr/qwC7rJdYcTdGQLude3knK6QqOUsdSZYxviqE=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3A4EPT5070056
+        s=ti-com-17Q1; t=1554869673;
+        bh=GdAkDHRmfZr1bo5G1thlARm6EMjF5EWa5nmbLaWjpQ8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FCcKhVSXZ353Ug0W8Og98iGKPW6Zae6qm/RFezJmz3IiXLtaMoTBzu9wKa2dGD3Pb
+         6v7b1NKvB7PKFcIDbb9C5RB32RZNJipyMCU34tSTkbbaAgmSx1UWKrBX5VceUvluLz
+         DHU05PPzcKKawUQ71g+b2YdYlVRLU7gHY2Qs+tCU=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3A4EXY5029038
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Apr 2019 23:14:25 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 9 Apr 2019 23:14:33 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 9 Apr
- 2019 23:14:24 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 23:14:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 9 Apr 2019 23:14:24 -0500
+ Frontend Transport; Tue, 9 Apr 2019 23:14:32 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3A4EKZL029255;
-        Tue, 9 Apr 2019 23:14:20 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3A4EKZN029255;
+        Tue, 9 Apr 2019 23:14:29 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
@@ -59,10 +60,12 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v6 00/12] Add support for TISCI Interrupt controller drivers
-Date:   Wed, 10 Apr 2019 09:43:46 +0530
-Message-ID: <20190410041358.16809-1-lokeshvutla@ti.com>
+Subject: [PATCH v6 02/12] firmware: ti_sci: Add support for RM core ops
+Date:   Wed, 10 Apr 2019 09:43:48 +0530
+Message-ID: <20190410041358.16809-3-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190410041358.16809-1-lokeshvutla@ti.com>
+References: <20190410041358.16809-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -72,116 +75,346 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI AM65x SoC based on K3 architecture introduced support for Events
-which are message based interrupts with minimal latency. These events
-are not compatible with regular interrupts and are valid only through
-an event transport lane. An Interrupt Aggregator(INTA) is introduced
-to convert these events to interrupts. INTA can also group 64 events
-into a single interrupt. Now the SoC has many peripherals and a large
-number of event sources (time sync or DMA), the use of events is
-completely dependent on a user's specific application, which drives a
-need for maximum flexibility in which event sources are used in the
-system. It is also completely up to software control as to how the
-events are serviced.
+TISCI provides support for getting the resources(IRQ, RING etc..)
+assigned to a specific device. These resources can be handled by
+the client and in turn sends TISCI cmd to configure the resources.
 
-Because of the huge flexibility there are certain standard peripherals
-(like GPIO etc)where all interrupts cannot be directly corrected to host
-interrupt controller. For this purpose, Interrupt Router(INTR) is
-introduced in the SoC. INTR just does a classic interrupt redirection.
+It is very important that client should keep track on usage of these
+resources.
 
-So the SoC has 3 types of interrupt controllers:
-- GIC500
-- Interrupt Router
-- Interrupt Aggregator
+Add support for TISCI commands to get resource ranges.
 
-Below is a diagrammatic view of how SoC integration of these interrupt
-controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
-
-Device Index-x               Device Index-y
-           |                         |
-           |                         |
-                      ....
-            \                       /
-             \                     /
-              \  (global events)  /
-          +---------------------------+   +---------+
-          |                           |   |         |
-          |             INTA          |   |  GPIO   |
-          |                           |   |         |
-          +---------------------------+   +---------+
-                         |   (vint)            |
-                         |                     |
-                        \|/                    |
-          +---------------------------+        |
-          |                           |<-------+
-          |           INTR            |
-          |                           |
-          +---------------------------+
-                         |
-                         |
-                        \|/ (gic irq)
-          +---------------------------+
-          |                           |
-          |             GIC           |
-          |                           |
-          +---------------------------+
-
-While at it, TISCI abstracts the handling of all above IRQ routes where
-interrupt sources are not directly connected to host interrupt controller.
-That would be configuration of Interrupt Aggregator and Interrupt Router.
-
-This series adds support for:
-- TISCI commands needed for IRQ configuration
-- Interrupt Router(INTR) driver.
-- Interrupt Aggregator(INTA) driver.
-- Interrupt Aggregator MSI bus layer.
-
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
 Changes since v5:
-- Each patch has respective changes mentioned.
+- None
 
-Grygorii Strashko (1):
-  firmware: ti_sci: Add support to get TISCI handle using of_phandle
+ drivers/firmware/ti_sci.c              | 170 +++++++++++++++++++++++++
+ drivers/firmware/ti_sci.h              |  42 ++++++
+ include/linux/soc/ti/ti_sci_protocol.h |  27 ++++
+ 3 files changed, 239 insertions(+)
 
-Lokesh Vutla (10):
-  firmware: ti_sci: Add support for RM core ops
-  firmware: ti_sci: Add support for IRQ management
-  firmware: ti_sci: Add helper apis to manage resources
-  dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
-  irqchip: ti-sci-intr: Add support for Interrupt Router driver
-  dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
-  irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
-  soc: ti: Add MSI domain bus support for Interrupt Aggregator
-  irqchip: ti-sci-inta: Add msi domain support
-  soc: ti: am6: Enable interrupt controller driver
-
-Peter Ujfalusi (1):
-  firmware: ti_sci: Add RM mapping table for am654
-
- .../bindings/arm/keystone/ti,sci.txt          |   3 +-
- .../interrupt-controller/ti,sci-inta.txt      |  66 ++
- .../interrupt-controller/ti,sci-intr.txt      |  83 +++
- MAINTAINERS                                   |   6 +
- drivers/firmware/ti_sci.c                     | 666 ++++++++++++++++++
- drivers/firmware/ti_sci.h                     | 102 +++
- drivers/irqchip/Kconfig                       |  23 +
- drivers/irqchip/Makefile                      |   2 +
- drivers/irqchip/irq-ti-sci-inta.c             | 659 +++++++++++++++++
- drivers/irqchip/irq-ti-sci-intr.c             | 289 ++++++++
- drivers/soc/ti/Kconfig                        |  11 +
- drivers/soc/ti/Makefile                       |   1 +
- drivers/soc/ti/ti_sci_inta_msi.c              | 167 +++++
- include/linux/irqdomain.h                     |   1 +
- include/linux/msi.h                           |   6 +
- include/linux/soc/ti/ti_sci_inta_msi.h        |  23 +
- include/linux/soc/ti/ti_sci_protocol.h        | 126 ++++
- 17 files changed, 2233 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
- create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
- create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
- create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
-
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 852043531233..503195223c09 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -64,6 +64,22 @@ struct ti_sci_xfers_info {
+ 	spinlock_t xfer_lock;
+ };
+ 
++/**
++ * struct ti_sci_rm_type_map - Structure representing TISCI Resource
++ *				management representation of dev_ids.
++ * @dev_id:	TISCI device ID
++ * @type:	Corresponding id as identified by TISCI RM.
++ *
++ * Note: This is used only as a work around for using RM range apis
++ *	for AM654 SoC. For future SoCs dev_id will be used as type
++ *	for RM range APIs. In order to maintain ABI backward compatibility
++ *	type is not being changed for AM654 SoC.
++ */
++struct ti_sci_rm_type_map {
++	u32 dev_id;
++	u16 type;
++};
++
+ /**
+  * struct ti_sci_desc - Description of SoC integration
+  * @default_host_id:	Host identifier representing the compute entity
+@@ -71,12 +87,14 @@ struct ti_sci_xfers_info {
+  * @max_msgs: Maximum number of messages that can be pending
+  *		  simultaneously in the system
+  * @max_msg_size: Maximum size of data per message that can be handled.
++ * @rm_type_map: RM resource type mapping structure.
+  */
+ struct ti_sci_desc {
+ 	u8 default_host_id;
+ 	int max_rx_timeout_ms;
+ 	int max_msgs;
+ 	int max_msg_size;
++	struct ti_sci_rm_type_map *rm_type_map;
+ };
+ 
+ /**
+@@ -1600,6 +1618,153 @@ static int ti_sci_cmd_core_reboot(const struct ti_sci_handle *handle)
+ 	return ret;
+ }
+ 
++static int ti_sci_get_resource_type(struct ti_sci_info *info, u16 dev_id,
++				    u16 *type)
++{
++	struct ti_sci_rm_type_map *rm_type_map = info->desc->rm_type_map;
++	bool found = false;
++	int i;
++
++	/* If map is not provided then assume dev_id is used as type */
++	if (!rm_type_map) {
++		*type = dev_id;
++		return 0;
++	}
++
++	for (i = 0; rm_type_map[i].dev_id; i++) {
++		if (rm_type_map[i].dev_id == dev_id) {
++			*type = rm_type_map[i].type;
++			found = true;
++			break;
++		}
++	}
++
++	if (!found)
++		return -EINVAL;
++
++	return 0;
++}
++
++/**
++ * ti_sci_get_resource_range - Helper to get a range of resources assigned
++ *			       to a host. Resource is uniquely identified by
++ *			       type and subtype.
++ * @handle:		Pointer to TISCI handle.
++ * @dev_id:		TISCI device ID.
++ * @subtype:		Resource assignment subtype that is being requested
++ *			from the given device.
++ * @s_host:		Host processor ID to which the resources are allocated
++ * @range_start:	Start index of the resource range
++ * @range_num:		Number of resources in the range
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_get_resource_range(const struct ti_sci_handle *handle,
++				     u32 dev_id, u8 subtype, u8 s_host,
++				     u16 *range_start, u16 *range_num)
++{
++	struct ti_sci_msg_resp_get_resource_range *resp;
++	struct ti_sci_msg_req_get_resource_range *req;
++	struct ti_sci_xfer *xfer;
++	struct ti_sci_info *info;
++	struct device *dev;
++	u16 type;
++	int ret = 0;
++
++	if (IS_ERR(handle))
++		return PTR_ERR(handle);
++	if (!handle)
++		return -EINVAL;
++
++	info = handle_to_ti_sci_info(handle);
++	dev = info->dev;
++
++	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_GET_RESOURCE_RANGE,
++				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
++				   sizeof(*req), sizeof(*resp));
++	if (IS_ERR(xfer)) {
++		ret = PTR_ERR(xfer);
++		dev_err(dev, "Message alloc failed(%d)\n", ret);
++		return ret;
++	}
++
++	ret = ti_sci_get_resource_type(info, dev_id, &type);
++	if (ret) {
++		dev_err(dev, "rm type lookup failed for %u\n", dev_id);
++		goto fail;
++	}
++
++	req = (struct ti_sci_msg_req_get_resource_range *)xfer->xfer_buf;
++	req->secondary_host = s_host;
++	req->type = type & MSG_RM_RESOURCE_TYPE_MASK;
++	req->subtype = subtype & MSG_RM_RESOURCE_SUBTYPE_MASK;
++
++	ret = ti_sci_do_xfer(info, xfer);
++	if (ret) {
++		dev_err(dev, "Mbox send fail %d\n", ret);
++		goto fail;
++	}
++
++	resp = (struct ti_sci_msg_resp_get_resource_range *)xfer->xfer_buf;
++
++	if (!ti_sci_is_response_ack(resp)) {
++		ret = -ENODEV;
++	} else if (!resp->range_start && !resp->range_num) {
++		ret = -ENODEV;
++	} else {
++		*range_start = resp->range_start;
++		*range_num = resp->range_num;
++	};
++
++fail:
++	ti_sci_put_one_xfer(&info->minfo, xfer);
++
++	return ret;
++}
++
++/**
++ * ti_sci_cmd_get_resource_range - Get a range of resources assigned to host
++ *				   that is same as ti sci interface host.
++ * @handle:		Pointer to TISCI handle.
++ * @dev_id:		TISCI device ID.
++ * @subtype:		Resource assignment subtype that is being requested
++ *			from the given device.
++ * @range_start:	Start index of the resource range
++ * @range_num:		Number of resources in the range
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_cmd_get_resource_range(const struct ti_sci_handle *handle,
++					 u32 dev_id, u8 subtype,
++					 u16 *range_start, u16 *range_num)
++{
++	return ti_sci_get_resource_range(handle, dev_id, subtype,
++					 TI_SCI_IRQ_SECONDARY_HOST_INVALID,
++					 range_start, range_num);
++}
++
++/**
++ * ti_sci_cmd_get_resource_range_from_shost - Get a range of resources
++ *					      assigned to a specified host.
++ * @handle:		Pointer to TISCI handle.
++ * @dev_id:		TISCI device ID.
++ * @subtype:		Resource assignment subtype that is being requested
++ *			from the given device.
++ * @s_host:		Host processor ID to which the resources are allocated
++ * @range_start:	Start index of the resource range
++ * @range_num:		Number of resources in the range
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static
++int ti_sci_cmd_get_resource_range_from_shost(const struct ti_sci_handle *handle,
++					     u32 dev_id, u8 subtype, u8 s_host,
++					     u16 *range_start, u16 *range_num)
++{
++	return ti_sci_get_resource_range(handle, dev_id, subtype, s_host,
++					 range_start, range_num);
++}
++
+ /*
+  * ti_sci_setup_ops() - Setup the operations structures
+  * @info:	pointer to TISCI pointer
+@@ -1610,6 +1775,7 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
+ 	struct ti_sci_core_ops *core_ops = &ops->core_ops;
+ 	struct ti_sci_dev_ops *dops = &ops->dev_ops;
+ 	struct ti_sci_clk_ops *cops = &ops->clk_ops;
++	struct ti_sci_rm_core_ops *rm_core_ops = &ops->rm_core_ops;
+ 
+ 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
+ 
+@@ -1640,6 +1806,10 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
+ 	cops->get_best_match_freq = ti_sci_cmd_clk_get_match_freq;
+ 	cops->set_freq = ti_sci_cmd_clk_set_freq;
+ 	cops->get_freq = ti_sci_cmd_clk_get_freq;
++
++	rm_core_ops->get_range = ti_sci_cmd_get_resource_range;
++	rm_core_ops->get_range_from_shost =
++				ti_sci_cmd_get_resource_range_from_shost;
+ }
+ 
+ /**
+diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+index 12bf316b68df..a043c4762791 100644
+--- a/drivers/firmware/ti_sci.h
++++ b/drivers/firmware/ti_sci.h
+@@ -35,6 +35,9 @@
+ #define TI_SCI_MSG_QUERY_CLOCK_FREQ	0x010d
+ #define TI_SCI_MSG_GET_CLOCK_FREQ	0x010e
+ 
++/* Resource Management Requests */
++#define TI_SCI_MSG_GET_RESOURCE_RANGE	0x1500
++
+ /**
+  * struct ti_sci_msg_hdr - Generic Message Header for All messages and responses
+  * @type:	Type of messages: One of TI_SCI_MSG* values
+@@ -461,4 +464,43 @@ struct ti_sci_msg_resp_get_clock_freq {
+ 	u64 freq_hz;
+ } __packed;
+ 
++#define TI_SCI_IRQ_SECONDARY_HOST_INVALID	0xff
++
++/**
++ * struct ti_sci_msg_req_get_resource_range - Request to get a host's assigned
++ *					      range of resources.
++ * @hdr:		Generic Header
++ * @type:		Unique resource assignment type
++ * @subtype:		Resource assignment subtype within the resource type.
++ * @secondary_host:	Host processing entity to which the resources are
++ *			allocated. This is required only when the destination
++ *			host id id different from ti sci interface host id,
++ *			else TI_SCI_IRQ_SECONDARY_HOST_INVALID can be passed.
++ *
++ * Request type is TI_SCI_MSG_GET_RESOURCE_RANGE. Responded with requested
++ * resource range which is of type TI_SCI_MSG_GET_RESOURCE_RANGE.
++ */
++struct ti_sci_msg_req_get_resource_range {
++	struct ti_sci_msg_hdr hdr;
++#define MSG_RM_RESOURCE_TYPE_MASK	GENMASK(9, 0)
++#define MSG_RM_RESOURCE_SUBTYPE_MASK	GENMASK(5, 0)
++	u16 type;
++	u8 subtype;
++	u8 secondary_host;
++} __packed;
++
++/**
++ * struct ti_sci_msg_resp_get_resource_range - Response to resource get range.
++ * @hdr:		Generic Header
++ * @range_start:	Start index of the resource range.
++ * @range_num:		Number of resources in the range.
++ *
++ * Response to request TI_SCI_MSG_GET_RESOURCE_RANGE.
++ */
++struct ti_sci_msg_resp_get_resource_range {
++	struct ti_sci_msg_hdr hdr;
++	u16 range_start;
++	u16 range_num;
++} __packed;
++
+ #endif /* __TI_SCI_H */
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 515587e9d373..0c92a922db6a 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -192,15 +192,42 @@ struct ti_sci_clk_ops {
+ 			u64 *current_freq);
+ };
+ 
++/**
++ * struct ti_sci_rm_core_ops - Resource management core operations
++ * @get_range:		Get a range of resources belonging to ti sci host.
++ * @get_rage_from_shost:	Get a range of resources belonging to
++ *				specified host id.
++ *			- s_host: Host processing entity to which the
++ *				  resources are allocated
++ *
++ * NOTE: for these functions, all the parameters are consolidated and defined
++ * as below:
++ * - handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
++ * - dev_id:	TISCI device ID.
++ * - subtype:	Resource assignment subtype that is being requested
++ *		from the given device.
++ * - range_start:	Start index of the resource range
++ * - range_end:		Number of resources in the range
++ */
++struct ti_sci_rm_core_ops {
++	int (*get_range)(const struct ti_sci_handle *handle, u32 dev_id,
++			 u8 subtype, u16 *range_start, u16 *range_num);
++	int (*get_range_from_shost)(const struct ti_sci_handle *handle,
++				    u32 dev_id, u8 subtype, u8 s_host,
++				    u16 *range_start, u16 *range_num);
++};
++
+ /**
+  * struct ti_sci_ops - Function support for TI SCI
+  * @dev_ops:	Device specific operations
+  * @clk_ops:	Clock specific operations
++ * @rm_core_ops:	Resource management core operations.
+  */
+ struct ti_sci_ops {
+ 	struct ti_sci_core_ops core_ops;
+ 	struct ti_sci_dev_ops dev_ops;
+ 	struct ti_sci_clk_ops clk_ops;
++	struct ti_sci_rm_core_ops rm_core_ops;
+ };
+ 
+ /**
 -- 
 2.21.0
 
