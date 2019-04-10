@@ -2,265 +2,128 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96285C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC8F2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59302133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R51B2yKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfDJB7o (ORCPT
+        id S1727015AbfDJCBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:59:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11561 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfDJB7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:59:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 18:59:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
-   d="scan'208";a="222073413"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga001.jf.intel.com with ESMTP; 09 Apr 2019 18:59:41 -0700
-Date:   Wed, 10 Apr 2019 09:43:58 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 11/17] fpga: dfl: afu: add error reporting support.
-Message-ID: <20190410014358.GB6689@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-12-git-send-email-hao.wu@intel.com>
- <CANk1AXS_JcdOve_7rfdzg6hkGCHY9Yp7qz6UKVq8YsRiB_fdGg@mail.gmail.com>
+        Tue, 9 Apr 2019 22:01:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35483 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfDJCBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 22:01:55 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so375704plp.2;
+        Tue, 09 Apr 2019 19:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cC06TFG6bUI/16V2fT5D5OWzacR5TW4B1dpDIaW88yc=;
+        b=R51B2yKmlBNhxJrzKPxrdE+pscvZ3CVNfJhhe+Rs3HIEF0tf2rfTYxyGXIfGub+QZv
+         U1vZ7PjdPtmDLApRLJeh6aALwrqvWPe5sYk7kbz4Bh9Y5Hh4hV5VIZDSsPFGuNRazsAo
+         nJZpX756ye1IL81r72Ji3sYBAa9wcE9DrzVr5wxsycvSo+aiZU87zA8aNQJXklznLPvo
+         rcXMNaxE65Gbmrn11BGNb2e8wc6UKIe5YHZuEsRXwFEGNQrNiiF41JGXDQOCwj5qSY/5
+         vB6d6NL7Pr32tbqy3UeX+69TXps4/POdwc/hV1qRM2FZ7mA21DnwZmL5wJnD2skLFPsM
+         Q9zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cC06TFG6bUI/16V2fT5D5OWzacR5TW4B1dpDIaW88yc=;
+        b=lsua/+OAXYWl9mVcI02N91Lgok+aKmtLXBOOZG2DR9YFL/31hDBj0RWehoDf+jmwaD
+         DnKBocjUizEK0aWjxv33hP88HndJ9Pynj5fkuAaNE3hrqrNFXW4UDG3LzT5rnWyPDkDZ
+         XZEjtr5IbRsOphdicJboERUPT5uyt7cC5tJk60VrfinmffmVvFi0UB3bkP6qlGGziMGV
+         54yMY4mPmUZWEEiz6nN8ShwVdwAIu1yNkiaZSYx8PI3cms6AUUw4h4VtKTDXYLseeD5b
+         54S+drq6ZUB3LW+CQHQf5CLgSsWwAhS8C71V7Lx4NYx8KDzEqoO16+q9xiLLPDixct4i
+         sxIw==
+X-Gm-Message-State: APjAAAXiTkMYu3QaUd+q23v0dx4vtlTj1+P2JYePUrJJlaIiXz1lcBZ2
+        ZySfRhdrmzvZo4g9m4gqwXw=
+X-Google-Smtp-Source: APXvYqx2BmtgVrtR0TviUcNP2kszX6fsRbpfyLjkE+J+0I6d16sR7IZ9xheekyUKC0Bi+176a11g1A==
+X-Received: by 2002:a17:902:9a4a:: with SMTP id x10mr41281857plv.113.1554861713643;
+        Tue, 09 Apr 2019 19:01:53 -0700 (PDT)
+Received: from [10.230.28.107] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id m23sm51470081pfa.117.2019.04.09.19.01.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 19:01:52 -0700 (PDT)
+Subject: Re: [PATCH v2 net-next 05/22] net: dsa: Add more convenient functions
+ for installing port VLANs
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georg.waibel@sensor-technik.de
+References: <20190410005700.31582-1-olteanv@gmail.com>
+ <20190410005700.31582-6-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <d9f4ec44-7cc6-0ffe-9d02-eb1b1b818340@gmail.com>
+Date:   Tue, 9 Apr 2019 19:01:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANk1AXS_JcdOve_7rfdzg6hkGCHY9Yp7qz6UKVq8YsRiB_fdGg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190410005700.31582-6-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 03:57:37PM -0500, Alan Tull wrote:
-> On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
-> 
-> Hi Hao,
-> 
-> >
-> > Error reporting is one important private feature, it reports error
-> > detected on port and accelerated function unit (AFU). It introduces
-> > several sysfs interfaces to allow userspace to check and clear
-> > errors detected by hardware.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-platform-dfl-port |  29 +++
-> >  drivers/fpga/Makefile                             |   1 +
-> >  drivers/fpga/dfl-afu-error.c                      | 225 ++++++++++++++++++++++
-> >  drivers/fpga/dfl-afu-main.c                       |   4 +
-> >  drivers/fpga/dfl-afu.h                            |   4 +
-> >  5 files changed, 263 insertions(+)
-> >  create mode 100644 drivers/fpga/dfl-afu-error.c
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-port b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > index f611e47..e6140aa 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > @@ -79,3 +79,32 @@ KernelVersion:       5.2
-> >  Contact:       Wu Hao <hao.wu@intel.com>
-> >  Description:   Read-only. Read this file to get the status of issued command
-> >                 to userclck_freqcntrcmd.
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-port.0/errors/errors
-> > +Date:          March 2019
-> > +KernelVersion: 5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get errors detected on port and
-> > +               Accelerated Function Unit (AFU).
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-port.0/errors/first_error
-> > +Date:          March 2019
-> > +KernelVersion: 5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get the first error detected by
-> > +               hardware.
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-port.0/errors/first_malformed_req
-> > +Date:          March 2019
-> > +KernelVersion: 5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get the first malformed request
-> > +               captured by hardware.
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-port.0/errors/clear
-> > +Date:          March 2019
-> > +KernelVersion: 5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Write-only. Write error code to this file to clear errors. If
-> > +               the input error code doesn't match, it returns -EBUSY error
-> > +               code.
-> 
-> I understand how -EBUSY could be the right error code for when the
-> hardware is in a state where the error can't be cleared.  But if the
-> input error code doesn't match, shouldn't the code be -EINVAL?  Also
-> as noted below, the way this is currently coded, -ETIMEDOUT could get
-> returned.
 
-Thanks for the comments, let me try to capture all possible error return
-values in doc in the next version to avoid confusion.
 
+On 4/9/2019 5:56 PM, Vladimir Oltean wrote:
+> This hides the need to perform a two-phase transaction and construct a
+> switchdev_obj_port_vlan struct.
 > 
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index c0dd4c8..f1f0af7 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -40,6 +40,7 @@ obj-$(CONFIG_FPGA_DFL_AFU)            += dfl-afu.o
-> >
-> >  dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o
-> >  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
-> > +dfl-afu-objs += dfl-afu-error.o
-> >
-> >  # Drivers for FPGAs which implement DFL
-> >  obj-$(CONFIG_FPGA_DFL_PCI)             += dfl-pci.o
-> > diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
-> > new file mode 100644
-> > index 0000000..b66bd4a
-> > --- /dev/null
-> > +++ b/drivers/fpga/dfl-afu-error.c
-> > @@ -0,0 +1,225 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Driver for FPGA Accelerated Function Unit (AFU) Error Reporting
-> > + *
-> > + * Copyright 2019 Intel Corporation, Inc.
-> > + *
-> > + * Authors:
-> > + *   Wu Hao <hao.wu@linux.intel.com>
-> > + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> > + *   Joseph Grecco <joe.grecco@intel.com>
-> > + *   Enno Luebbers <enno.luebbers@intel.com>
-> > + *   Tim Whisonant <tim.whisonant@intel.com>
-> > + *   Ananda Ravuri <ananda.ravuri@intel.com>
-> > + *   Mitchel Henry <henry.mitchel@intel.com>
-> > + */
-> > +
-> > +#include <linux/uaccess.h>
-> > +
-> > +#include "dfl-afu.h"
-> > +
-> > +#define PORT_ERROR_MASK                0x8
-> > +#define PORT_ERROR             0x10
-> > +#define PORT_FIRST_ERROR       0x18
-> > +#define PORT_MALFORMED_REQ0    0x20
-> > +#define PORT_MALFORMED_REQ1    0x28
-> > +
-> > +#define ERROR_MASK             GENMASK_ULL(63, 0)
-> > +
-> > +/* mask or unmask port errors by the error mask register. */
-> > +static void __port_err_mask(struct device *dev, bool mask)
-> > +{
-> > +       void __iomem *base;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +       writeq(mask ? ERROR_MASK : 0, base + PORT_ERROR_MASK);
-> > +}
-> > +
-> > +/* clear port errors. */
-> > +static int __port_err_clear(struct device *dev, u64 err)
-> > +{
-> > +       struct platform_device *pdev = to_platform_device(dev);
-> > +       void __iomem *base_err, *base_hdr;
-> > +       int ret;
-> > +       u64 v;
-> > +
-> > +       base_err = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +       base_hdr = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_HEADER);
-> > +
-> > +       /*
-> > +        * clear Port Errors
-> > +        *
-> > +        * - Check for AP6 State
-> > +        * - Halt Port by keeping Port in reset
-> > +        * - Set PORT Error mask to all 1 to mask errors
-> > +        * - Clear all errors
-> > +        * - Set Port mask to all 0 to enable errors
-> > +        * - All errors start capturing new errors
-> > +        * - Enable Port by pulling the port out of reset
-> > +        */
-> > +
-> > +       /* if device is still in AP6 power state, can not clear any error. */
-> > +       v = readq(base_hdr + PORT_HDR_STS);
-> > +       if (FIELD_GET(PORT_STS_PWR_STATE, v) == PORT_STS_PWR_STATE_AP6) {
-> > +               dev_err(dev, "Could not clear errors, device in AP6 state.\n");
-> > +               return -EBUSY;
-> > +       }
-> > +
-> > +       /* Halt Port by keeping Port in reset */
-> > +       ret = __port_disable(pdev);
-> > +       if (ret)
-> > +               return ret;
+> Call graph (including a function that will be introduced in a follow-up
+> patch) looks like this now (same for the *_vlan_del function):
 > 
-> __port_disable can return -ETIMEDOUT which will then get returned from
-> clear_store.  The sysfs document only talks about -EBUSY. You could
-> either document -ETIMEDOUT in the sysfs doc or you could change the
-> code to adjust the returned error code.
-
-Yes, agree.
-
+> dsa_slave_vlan_rx_add_vid   dsa_port_setup_8021q_tagging
+>             |                        |
+>             |                        |
+>             |          +-------------+
+>             |          |
+>             v          v
+>            dsa_port_vid_add      dsa_slave_port_obj_add
+>                   |                         |
+>                   +-------+         +-------+
+>                           |         |
+>                           v         v
+>                        dsa_port_vlan_add
 > 
-> > +
-> > +       /* Mask all errors */
-> > +       __port_err_mask(dev, true);
-> > +
-> > +       /* Clear errors if err input matches with current port errors.*/
-> > +       v = readq(base_err + PORT_ERROR);
-> > +
-> > +       if (v == err) {
-> > +               writeq(v, base_err + PORT_ERROR);
-> > +
-> > +               v = readq(base_err + PORT_FIRST_ERROR);
-> > +               writeq(v, base_err + PORT_FIRST_ERROR);
-> > +       } else {
-> > +               ret = -EBUSY;
-> > +       }
-> > +
-> > +       /* Clear mask */
-> > +       __port_err_mask(dev, false);
-> > +
-> > +       /* Enable the Port by clear the reset */
-> > +       __port_enable(pdev);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
-> > +                            char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", dfl_feature_revision(base));
-> > +}
-> > +static DEVICE_ATTR_RO(revision);
-> 
-> This appears to be adding a
-> /sys/bus/platform/devices/dfl-port.0/errors/revision attribute that
-> isn't documented in the sysfs document.
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+> Changes in v2:
+> Renamed __dsa_port_vlan_add to dsa_port_vid_add and not to
+> dsa_port_vlan_add_trans, as suggested, because the corresponding _del function
+> does not have a transactional phase and the naming is more uniform this way.
 
-Sorry, will fix all above issues in the next version.
+Thanks the name does look a lot better now.
 
-Thanks again for the code review and comments.
+[snip]
 
-Hao
+> +int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
+> +{
+> +	struct switchdev_obj_port_vlan vlan = {
+> +		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
+> +		.vid_begin = vid,
+> +		.vid_end = vid,
+> +	};
+
+Any reasons why this function does not take a flags argument? Also, did
+you intend to migrate dsa_slave_vlan_rx_kill_vid() to use this helper
+for deleting a VLAN ID?
+-- 
+Florian
