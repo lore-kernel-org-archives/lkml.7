@@ -2,153 +2,133 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA12C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E7DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49392075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26AA2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZuS0PA3v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="ic5XYoir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbfDJSLp (ORCPT
+        id S1731414AbfDJSMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:11:45 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40718 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731183AbfDJSLm (ORCPT
+        Wed, 10 Apr 2019 14:12:06 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:21531 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731183AbfDJSMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:11:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so1894389plr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=miRN6zeuliQksrBh7t8h/9JVfSqHYFdwsxhjfUwT/zU=;
-        b=ZuS0PA3vSJSMf3G2nPel/VjqlfyOgKUZXiesVrA4LP+QbtsJeK/zH7KPGgO29RZYQw
-         tHJzutdSXNvEaDDR9r+SoWu20twrCrZULZaRADaFYJdboeahYVng3NewpzNNJ8adUjWe
-         8Wg9hOnm/QgsoAO4p11SbM4PrHS0LD1898BJyy7Pxl1i3ucv3+4SxcgEvDql/RqiOJ+o
-         PtQ1WiMOAmBholtOywzbYmf7HpMHzhNuXqXPaxxdRESsg/G3PJMoOL60EMZ1Dv9xfLK9
-         xsLlnObqR9oHUPVKE39VAhgoKIPMIpaC5OVGq3JlGMmnP3gDLTtYxCRQ6hY/lhys7BB7
-         930g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=miRN6zeuliQksrBh7t8h/9JVfSqHYFdwsxhjfUwT/zU=;
-        b=FVdbzP6cM/5y2PS+kPHIUQzhxh1GDNSBfly8y++k1Q1KNRImeUFeX2h07t9Jnn23W/
-         i860WJ2nSwGPzRat5JqIXvFfNH12773jbdhr9BFSm3o0RcMmp+DLkXJ20K0Hjcbz6g20
-         yef4SnEuyGdmZOwaFgnD0a0TqzUF/qAag3M+NFMPQPcic7ph15QxBe81VoWbrc3NY5nb
-         WGzdUf2sgvh+rhEY2CEpZ/NxCyo7p7vRUd5kVqP0+yYzDTTs14HlXzBwwq/4270Z8bJr
-         zpBPk6FkQgRFfUuns15NvDcUwOha+xDIsRymVwoXx6gppmW081nGSW2slxEdSQKkH3Ww
-         d7Cw==
-X-Gm-Message-State: APjAAAVlTd93JA+PkJhTnvCp9QFrwnNKAUB89QeIuD7ZpGqWB4IjUdkN
-        VWf/cv0u1SPv/kFlqQnn+KImlUSD
-X-Google-Smtp-Source: APXvYqyh/GO3kWtrEJNIeEPDJiYJrkZ6Mv5iiX5XoMKQ+uzfnxl1LfZEk3a5H8dlaarSBa0kpBUiAA==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr45741093plq.91.1554919900932;
-        Wed, 10 Apr 2019 11:11:40 -0700 (PDT)
-Received: from athina.mtv.corp.google.com ([2620:0:1000:1601:d7a4:903f:6d6b:ec10])
-        by smtp.gmail.com with ESMTPSA id w21sm49564073pfn.48.2019.04.10.11.11.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 11:11:40 -0700 (PDT)
-From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
-To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] uml: fix a boot splat wrt use of cpu_all_mask
-Date:   Wed, 10 Apr 2019 11:11:23 -0700
-Message-Id: <20190410181123.174142-1-zenczykowski@gmail.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190410180908.173650-1-zenczykowski@gmail.com>
-References: <20190410180908.173650-1-zenczykowski@gmail.com>
+        Wed, 10 Apr 2019 14:12:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1554919922;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=5butOi9NeJl54vgWkLCY0TNlHUuyACb1dguvWmKvYCE=;
+        b=ic5XYoira0/qu8O0/Ne/iw0ALpdA/0C7wbRfdaoQq2UJg0BCTwUyCzBbG/29CwZWE9
+        OQ7FSeNMad52p/qldFtQKzLfBZ3VdzQb05XKCsglZw+GE+hwMjc7S3xIW/hvD1qCBUcT
+        9C8b4FQ+j8zaDtXa9Anq2+hXL/4MgdBZFDWlVsOZF0TZ0g2dglC0DQURSIhka+tBpx7f
+        h+MgNHJzdi+MaEKIy3k5Pc1Bzu7SMZfqpMUQ6mHpLCKaQIBYCyfCypA28Vv/khtHkkhY
+        ONk3jGB4H+lDqwHI9Om9DFuFMpwGXlpsXu9Akc6rsj0yFWCNT/mKe3Rnc8gPwTHPeyf1
+        UvnQ==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMGUMh5mUuF"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.200]
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id q0b361v3AIBs6mL
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 10 Apr 2019 20:11:54 +0200 (CEST)
+Subject: Re: [PATCH] can: dev: clean up CAN ctrlmode when close CAN device
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "wg@grandegger.com" <wg@grandegger.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190410062533.31535-1-qiangqing.zhang@nxp.com>
+ <39d8ef33-50c3-9b7a-88e1-8ef3a7fbac70@pengutronix.de>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <baad1868-d5aa-b4f4-0065-c6963b441403@hartkopp.net>
+Date:   Wed, 10 Apr 2019 20:11:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <39d8ef33-50c3-9b7a-88e1-8ef3a7fbac70@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
 
-Memory: 509108K/542612K available (3835K kernel code, 919K rwdata, 1028K rodata, 129K init, 211K bss, 33504K reserved, 0K cma-reserved)
-NR_IRQS: 15
-clocksource: timer: mask: 0xffffffffffffffff max_cycles: 0x1cd42e205, max_idle_ns: 881590404426 ns
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:458 clockevents_register_device+0x72/0x140
-posix-timer cpumask == cpu_all_mask, using cpu_possible_mask instead
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc4-00048-ged79cc87302b #4
-Stack:
- 604ebda0 603c5370 604ebe20 6046fd17
- 00000000 6006fcbb 604ebdb0 603c53b5
- 604ebe10 6003bfc4 604ebdd0 9000001ca
-Call Trace:
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] ? clockevents_register_device+0x72/0x140
- [<6001f16e>] show_stack+0x13b/0x155
- [<603c5370>] ? dump_stack_print_info+0xe2/0xeb
- [<6006fcbb>] ? printk+0x0/0x94
- [<603c53b5>] dump_stack+0x2a/0x2c
- [<6003bfc4>] __warn+0x10e/0x13e
- [<60070320>] ? vprintk_func+0xc8/0xcf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6003c08b>] warn_slowpath_fmt+0x97/0x99
- [<600311a1>] ? set_signals+0x0/0x3f
- [<6003bff4>] ? warn_slowpath_fmt+0x0/0x99
- [<600842cb>] ? tick_oneshot_mode_active+0x44/0x4f
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6007d2d5>] ? __clocksource_select+0x20/0x1b1
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] clockevents_register_device+0x72/0x140
- [<60031192>] ? get_signals+0x0/0xf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60002eec>] um_timer_setup+0xc8/0xca
- [<60001b59>] start_kernel+0x47f/0x57e
- [<600035bc>] start_kernel_proc+0x49/0x4d
- [<6006c483>] ? kmsg_dump_register+0x82/0x8a
- [<6001de62>] new_thread_handler+0x81/0xb2
- [<60003571>] ? kmsg_dumper_stdout_init+0x1a/0x1c
- [<60020c75>] uml_finishsetup+0x54/0x59
 
-random: get_random_bytes called from init_oops_id+0x27/0x34 with crng_init=0
----[ end trace 00173d0117a88acb ]---
-Calibrating delay loop... 6941.90 BogoMIPS (lpj=34709504)
+On 10.04.19 09:19, Marc Kleine-Budde wrote:
+> On 4/10/19 8:27 AM, Joakim Zhang wrote:
+>> CAN driver always writes registers according to "ctrlmode", and now CAN
+>> framework will keep CAN ctrlmode after device closed.
+>>
+>> e.g. with following sequences:
+>> 1)ip link set can0 type can bitrate 1000000 loopback on
+>> 2)ip link set can0 up
+>> 3)ip link set can0 down
+>> 4)ip link set can0 type can bitrate 1000000
+>> 5)ip link set can0 up
+>>
+>> After this sequence, we may want to test loopback for the first time and
+>> not to test loopback second time. However, CAN device still keep
+>> "ctrlmode" as loopback on.
+> 
+> Then you should configure loopback off in userspace.
 
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: linux-um@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/um/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ACK!
 
-diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-index 052de4c8acb2..0c572a48158e 100644
---- a/arch/um/kernel/time.c
-+++ b/arch/um/kernel/time.c
-@@ -56,7 +56,7 @@ static int itimer_one_shot(struct clock_event_device *evt)
- static struct clock_event_device timer_clockevent = {
- 	.name			= "posix-timer",
- 	.rating			= 250,
--	.cpumask		= cpu_all_mask,
-+	.cpumask		= cpu_possible_mask,
- 	.features		= CLOCK_EVT_FEAT_PERIODIC |
- 				  CLOCK_EVT_FEAT_ONESHOT,
- 	.set_state_shutdown	= itimer_shutdown,
--- 
-2.21.0.392.gf8f6787159e-goog
+The idea is that you can set a CAN interface like this:
 
+ip link set can0 type can bitrate 1000000 loopback on
+
+(..)
+
+ip link set can0 down
+ip link set can0 up
+
+and none of the configuration changes in the meanwhile.
+
+Regards,
+Oliver
+
+> 
+>> This patch intends to clean up CAN ctrlmode when close CAN device. We
+>> can set which ctrlmode we need when open CAN device again.
+> 
+> Consider a CANFD device, where CANFD has been enabled. It will feel very
+> weird if the interface looses the CANFD property by just a ifdown; ifup.
+> 
+>>
+>> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+>> ---
+>>   drivers/net/can/dev.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+>> index c05e4d50d43d..4f69a8f16ba3 100644
+>> --- a/drivers/net/can/dev.c
+>> +++ b/drivers/net/can/dev.c
+>> @@ -870,6 +870,7 @@ void close_candev(struct net_device *dev)
+>>   	struct can_priv *priv = netdev_priv(dev);
+>>   
+>>   	cancel_delayed_work_sync(&priv->restart_work);
+>> +	priv->ctrlmode = 0;
+>>   	can_flush_echo_skb(dev);
+>>   }
+>>   EXPORT_SYMBOL_GPL(close_candev);
+>>
+> 
+> Marc
+> 
