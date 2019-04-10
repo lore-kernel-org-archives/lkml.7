@@ -2,222 +2,277 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD817C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBE720820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70ED320820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EeGNO3FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfDJJwC (ORCPT
+        id S1730126AbfDJJwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:52:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47070 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfDJJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:52:02 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F19218666F;
-        Wed, 10 Apr 2019 09:52:00 +0000 (UTC)
-Received: from [10.36.118.36] (unknown [10.36.118.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73A035C666;
-        Wed, 10 Apr 2019 09:51:58 +0000 (UTC)
-Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   David Hildenbrand <david@redhat.com>
+        Wed, 10 Apr 2019 05:52:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38527 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730104AbfDJJwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:52:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w15so1847531wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NUV53/oB4wG+6wjO64XKH+JAP0dM3Iqgdg3p6qjAeB0=;
+        b=EeGNO3FG+79etFuzLNgxtFGtGfNVEeFLQ4+UczJysLZJuON/e18mDLogmaq8DXFQLW
+         BSnhCHM8/vwlC7pvbTQ6/DZ6az/vkQh2ZuIp4d7aMgZdNVntyFOF6/odH1O84n5yic/B
+         rGbQFbDtdqABGzCOh3Wkv1r06O654DSuE/LzLOIVe/92zr/szCo5i2j1/YrDM+erE1K1
+         PWEuHLEaaZcnjIQngdEZ8ALBgktrObr6aSF5qhIyA9Z8jdxomS2GS5hjuYN8DcXbuR0N
+         nVXjM18veW+xN+T+WtehRXOI6Ju4TEqXIc3SfV7MSzxIlMuVY+MBKuHj80jWWk5IsaB8
+         wi9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NUV53/oB4wG+6wjO64XKH+JAP0dM3Iqgdg3p6qjAeB0=;
+        b=qfnb8A3t7os8PXDBpaz4p81fZp8NiAEG6n8vGXifwxk0wVyRvQEEvw+ncPfoemPGhb
+         Q0C5q8yXEyDpqzCtOm5PaW6HtUDxo1Tom32Mm5cIc1WZUrv7FrHDvSRaYRLzvSeX6Bof
+         niGwfghTKv9yyGSH+cUoAHUjjZ5t31dvoKFNTLyAjBMrPqc/emGiko6PXIoQ/g/Fljz4
+         czn3R6xKEdlMsiDLpa1AvEojje42wqcRw8+UT6rNkWReSQK9hdF7Pd61u85ao8Wk0WLo
+         62fPHTFdMvLh2jpxZy+zLq2IzaHChP/WH3IHMUOaPfRGi1aqHlnMoktGD3MZOarLdNwL
+         7AGA==
+X-Gm-Message-State: APjAAAXCAx1VH7pdkFV8EgmSXJNi5HsSezZIssD6flaoCXEsoOLlk0NQ
+        TPlSxNze7+OObDnMlNIexhjD/Q==
+X-Google-Smtp-Source: APXvYqySkwzFY0FKpoyUUSvx2o6SqFCxHOanp5UeHKUk0Qjoda+QQ2fSvr9wDIKO0mRSvuFdtZH+CA==
+X-Received: by 2002:a1c:6455:: with SMTP id y82mr2054928wmb.104.1554889939478;
+        Wed, 10 Apr 2019 02:52:19 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id d3sm3495206wmf.46.2019.04.10.02.52.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 02:52:18 -0700 (PDT)
+Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        jcrouse@codeaurora.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, sibis@codeaurora.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190313090010.20534-1-georgi.djakov@linaro.org>
+ <20190313090010.20534-2-georgi.djakov@linaro.org>
+ <20190314062312.vwyu3ryeyc6iv55h@vireshk-i7>
+ <e462c932-4789-4f59-ad58-98c62266d977@linaro.org>
+ <20190410040556.uwnhmhajcasic7hb@vireshk-i7>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
 Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <91856fac-c624-fcef-4c58-547a216d370b@redhat.com>
-Date:   Wed, 10 Apr 2019 11:51:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <b94feeea-49d2-6761-11f5-fe2e9a3fa98b@linaro.org>
+Date:   Wed, 10 Apr 2019 12:52:15 +0300
 MIME-Version: 1.0
-In-Reply-To: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20190410040556.uwnhmhajcasic7hb@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 10 Apr 2019 09:52:01 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.03.19 17:57, Dan Williams wrote:
-> Changes since v4 [1]:
-> - Given v4 was from March of 2017 the bulk of the changes result from
->   rebasing the patch set from a v4.11-rc2 baseline to v5.1-rc1.
+Hi Viresh,
+
+On 4/10/19 07:05, Viresh Kumar wrote:
+> On 09-04-19, 17:36, Georgi Djakov wrote:
+>> Hi Viresh,
+>>
+>> On 3/14/19 08:23, Viresh Kumar wrote:
+>>> On 13-03-19, 11:00, Georgi Djakov wrote:
+>>>> In addition to frequency and voltage, some devices may have bandwidth
+>>>> requirements for their interconnect throughput - for example a CPU
+>>>> or GPU may also need to increase or decrease their bandwidth to DDR
+>>>> memory based on the current operating performance point.
+>>>>
+>>>> Extend the OPP tables with additional property to describe the bandwidth
+>>>> needs of a device. The average and peak bandwidth values depend on the
+>>>> hardware and its properties.
+>>>>
+>>>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
+>>>>  1 file changed, 45 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+>>>> index 76b6c79604a5..fa598264615f 100644
+>>>> --- a/Documentation/devicetree/bindings/opp/opp.txt
+>>>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+>>>> @@ -129,6 +129,9 @@ Optional properties:
+>>>>  - opp-microamp-<name>: Named opp-microamp property. Similar to
+>>>>    opp-microvolt-<name> property, but for microamp instead.
+>>>>  
+>>>> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
+>>>> +  the two integer values for average and peak bandwidth in megabytes per second.
+>>>> +
+>>>>  - opp-level: A value representing the performance level of the device,
+>>>>    expressed as a 32-bit integer.
+>>>>  
+>>>> @@ -546,3 +549,45 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
+>>>>  		};
+>>>>  	};
+>>>>  };
+>>>> +
+>>>> +Example 7: opp-bw-MBs:
+>>>> +(example: average and peak bandwidth values are defined for each OPP and the
+>>>> +interconnect between CPU and DDR memory is scaled together with CPU frequency)
+>>>> +
+>>>> +/ {
+>>>> +	cpus {
+>>>> +		CPU0: cpu@0 {
+>>>> +			compatible = "arm,cortex-a53", "arm,armv8";
+>>>> +			...
+>>>> +			operating-points-v2 = <&cpu_opp_table>;
+>>>> +			/* path between the CPU and DDR memory */
+>>>> +			interconnects = <&rpm_bimc MASTER_AMPSS_M0
+>>>> +					&rpm_bimc SLAVE_EBI_CH0>;
+>>>
+>>> Can we have multiple paths for a device ?
+>>
+>> I suppose that this is also a possible scenario. Will propose something
+>> to handle multiple paths too.
+>>
+>>>> +		};
+>>>> +	};
+>>>> +
+>>>> +	cpu_opp_table: cpu_opp_table {
+>>>> +		compatible = "operating-points-v2";
+>>>> +		opp-shared;
+>>>> +
+>>>> +		opp-200000000 {
+>>>> +			opp-hz = /bits/ 64 <200000000>;
+>>>> +			/* 457 MB/s average and 1525 MB/s peak bandwidth */
+>>>> +			opp-bw-MBs = <457 1525>;
+>>>
+>>> In that case fixing this to just 2 entries in the array is incorrect
+>>> and we should take care of that in the bindings here.
+>>
+>> We can encode the path name into the property (when there are multiple
+>> paths). We already have opp-microamp-<name> and opp-microamp-<name>, so
+>> we can follow the same practice.
+>>
+>> For example:
+>>
+>> CPU0: cpu@0 {
+>> 	compatible = "arm,cortex-a53", "arm,armv8";
+>> 	...
+>> 	operating-points-v2 = <&cpu_opp_table>;
+>> 	/* path between the CPU and DDR and path between CPU and L3 */
+>> 	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
+>> 			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
+>> 	interconnect-names "cpu-mem", "cpu-l3";
+>> };
+>>
+>> cpu_opp_table: cpu_opp_table {
+>> 	compatible = "operating-points-v2";
+>> 	opp-shared;
+>>
+>> 	opp-200000000 {
+>> 		opp-hz = /bits/ 64 <200000000>;
+>> 		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
+>> 		opp-bw-MBps-cpu-mem = <457 1525>;
+>> 		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
+>> 		opp-bw-MBps-cpu-l3 = <914 3050>;
+>> 	};
+>> };
 > 
-> - A unit test is added to ndctl to exercise the creation and dax
->   mounting of multiple independent namespaces in a single 128M section.
+> The -<name> property is different as only one of the value is ever used, i.e. we
+> can have opp-microvolt-speed0/1/2/3 (4 different values/properties) and only
+> opp-microvolt-speed1 will be used eventually and all others are discarded.
 > 
-> [1]: https://lwn.net/Articles/717383/
+> Also I am not sure if this will be actually required. We already have a list of
+> interconnects above and the order of that can be taken as reference here. i.e.
 > 
-> ---
+> CPU0: cpu@0 {
+> 	compatible = "arm,cortex-a53", "arm,armv8";
+> 	...
+> 	operating-points-v2 = <&cpu_opp_table>;
+> 	/* path between the CPU and DDR and path between CPU and L3 */
+> 	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
+> 			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
+> };
 > 
-> Quote patch7:
+> cpu_opp_table: cpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
 > 
-> "The libnvdimm sub-system has suffered a series of hacks and broken
->  workarounds for the memory-hotplug implementation's awkward
->  section-aligned (128MB) granularity. For example the following backtrace
->  is emitted when attempting arch_add_memory() with physical address
->  ranges that intersect 'System RAM' (RAM) with 'Persistent Memory' (PMEM)
->  within a given section:
->  
->   WARNING: CPU: 0 PID: 558 at kernel/memremap.c:300 devm_memremap_pages+0x3b5/0x4c0
->   devm_memremap_pages attempted on mixed region [mem 0x200000000-0x2fbffffff flags 0x200]
->   [..]
->   Call Trace:
->     dump_stack+0x86/0xc3
->     __warn+0xcb/0xf0
->     warn_slowpath_fmt+0x5f/0x80
->     devm_memremap_pages+0x3b5/0x4c0
->     __wrap_devm_memremap_pages+0x58/0x70 [nfit_test_iomap]
->     pmem_attach_disk+0x19a/0x440 [nd_pmem]
->  
->  Recently it was discovered that the problem goes beyond RAM vs PMEM
->  collisions as some platform produce PMEM vs PMEM collisions within a
->  given section. The libnvdimm workaround for that case revealed that the
->  libnvdimm section-alignment-padding implementation has been broken for a
->  long while. A fix for that long-standing breakage introduces as many
->  problems as it solves as it would require a backward-incompatible change
->  to the namespace metadata interpretation. Instead of that dubious route
->  [2], address the root problem in the memory-hotplug implementation."
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
+> 		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
+> 		opp-bw-MBps = <457 1525>, <914 3050>;
+> 	};
+> };
+
+This works too.
+
 > 
-> The approach is taken is to observe that each section already maintains
-> an array of 'unsigned long' values to hold the pageblock_flags. A single
-> additional 'unsigned long' is added to house a 'sub-section active'
-> bitmask. Each bit tracks the mapped state of one sub-section's worth of
-> capacity which is SECTION_SIZE / BITS_PER_LONG, or 2MB on x86-64.
+> I also strongly believe that "opp-bw-MBps" should be renamed in a way to make it
+> independent of the OPPs. For example, we may have devices which also need to add
+> their vote for the bandwidth but don't have an OPP table as they don't do DVFS.
+> And the same property should be used by them directly as what we will have in
+> the individual OPPs in the above example case.
 > 
-> The implication of allowing sections to be piecemeal mapped/unmapped is
-> that the valid_section() helper is no longer authoritative to determine
-> if a section is fully mapped. Instead pfn_valid() is updated to consult
-> the section-active bitmask. Given that typical memory hotplug still has
-> deep "section" dependencies the sub-section capability is limited to
-> 'want_memblock=false' invocations of arch_add_memory(), effectively only
-> devm_memremap_pages() users for now.
-> 
-> With this in place the hacks in the libnvdimm sub-system can be
-> dropped, and other devm_memremap_pages() users need no longer be
-> constrained to 128MB mapping granularity.
-> 
-> [2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
-> 
+> So maybe something like bw-MBps or something else.
 
-I started to explore the wonderful world of system ram memory hotplug
-(memory block devices) and it is full with issues. Too many to name them
-all, but two example are memory block devices that span several nodes
-(such memory can only be added during boot, mem->nid would be completely
-misleading) or that we assume struct pages have been initialized, while
-they really haven't when removing memory.
-
-It is already a mess that we have multiple sections per memory block
-devices (and it was never properly cleaned up and I think I spotted
-several issues). Going into the direction of sub-sections for memory
-block devices, I don't like. It is already a big mess.
-
-Memory block devices are an important concept for memory hotplug/unplug.
-This is the granularity memory will get onlined/offlined by user space.
-I don't see this interface going away. On the other hand, memory block
-devices only make sense for memory to be onlined/offlined in such
-chunks, system ram. So whatever ZONE_DEVICE memory doesn't run into that
-restriction.
-
-I think we should restrict adding/removing system ram via
-online_pages()/offline_pages()/add_memory()/remove_memory() to
-- memory block device granularity (already mostly checked)
-- single zones (already mostly checked)
-- single nodes (basically not checked as far as I can see)
-
-Cleaning this mess up might take some time. Essentially, all special
-handling related to memory block devices should be factored out from
-arch_add_memory()/arch_remove_memory() to add_memory()/remove_memory().
-I started looking into that. __add_pages() doesn't properly revert what
-it already did when failing.
-
-I don't have a strong opinion against adding sub-section memory hotadd
-as long as we don't use it for memory block devices hotplug. Meaning,
-use it internally, but don't use it along with memory block device hotplug.
-
-As add_memory() only works on memory block device granularity, memory
-block devices for something like that is not an issue. The real issue is
-memory added during boot that e.g. has holes or overlaps with pmem and
-friends. Trying to offline/online/remove such memory should be
-completely blocked.
-
-To easily detect multiple nodes per memory block devices, I am thinking
-about making mem->nid indicated that. E.g. nid == -1, uninitialized, nid
-== -2, mixed nodes, don't allow to offline/remove such memory. Might
-require some refactorings.
-
-The question is how we could easily detect
-- memory block devices with some sub-sections missing. Offlining code
-forbids this right now as the holes are marked as PG_reserved.
-- memory block devices with some sub-sections being ZONE_DEVICE memory
-like pmem.
-
-Both cases could only happen when memory was added during boot.
-Offlining/removing such memory has to be forbidden.
-
--- 
+Ok, will make it bandwidth-MBps.
 
 Thanks,
-
-David / dhildenb
+Georgi
