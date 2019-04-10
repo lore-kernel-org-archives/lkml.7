@@ -2,245 +2,222 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB34C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D4520820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554889791;
-	bh=giGxJnADM0eR18iTIDswkhkYpsX4T1IgD9vCIWgC8Xs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WhUdhD7+HYrqvG/rT8XJQEtr40QpG4646c9MrxnsK7lZkgtCEb7XeAq5FPIyIS0j3
-	 idRb8kgW4nvpr5F8FvzcfWbOizdNVU2EGxLoCyLLt8Jw3nd/a/xxoJOJTC+4I5L8iP
-	 TkdZLRmQj4oBtlDl+DdcYrxV2AF6FrJEdKuUQwT0=
+	by mail.kernel.org (Postfix) with ESMTP id 6CBE720820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfDJJtt (ORCPT
+        id S1730101AbfDJJwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:49:49 -0400
-Received: from casper.infradead.org ([85.118.1.10]:40994 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbfDJJtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZUo/oAO6LRUwF5qvt4zAp9NpnWAe/eMac0EcWXGOy/A=; b=YS8QBN4MTC0v3dgmjyZs8csZLa
-        iESS4/29QV3kSEn3oi9puVYjRf1W3TSj1HOFdqNxAR4g8DHedvOEbFUXdcI87L+38OBjLYE+aJB8s
-        s66LE/QB8AG2DPk1C9VR5mje11sdIKTIemSnO1MeZ0h8a+8W5On40NMrhYPaFyI9P4fjDucE///KY
-        A+RarrRuMKwicmrOxmfD8+rEvLOu/RWXU7LGDRvP89HTIIIeXFgMXkWwNc6bGifEdJZHFlZcYvkSo
-        T3Dy0lS9n720xXbSyh4ozlUhL9HnzOm3sQO6FZsq3yq4BjkZMfnsfj2FIV2g2P/L+9J6ecXLVAtYD
-        tllC1JKg==;
-Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hE9rU-0000Ry-NX; Wed, 10 Apr 2019 09:49:45 +0000
-Date:   Wed, 10 Apr 2019 06:49:39 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Wed, 10 Apr 2019 05:52:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47070 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729003AbfDJJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:52:02 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F19218666F;
+        Wed, 10 Apr 2019 09:52:00 +0000 (UTC)
+Received: from [10.36.118.36] (unknown [10.36.118.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73A035C666;
+        Wed, 10 Apr 2019 09:51:58 +0000 (UTC)
+Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
+To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] Add all documentation files to an html/pdf
- produced book
-Message-ID: <20190410064939.2a9dca9a@coco.lan>
-In-Reply-To: <20190408161820.6a12657f@lwn.net>
-References: <cover.1554742526.git.mchehab+samsung@kernel.org>
-        <20190408161820.6a12657f@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <91856fac-c624-fcef-4c58-547a216d370b@redhat.com>
+Date:   Wed, 10 Apr 2019 11:51:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 10 Apr 2019 09:52:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 8 Apr 2019 16:18:20 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> On Mon,  8 Apr 2019 13:58:16 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+On 22.03.19 17:57, Dan Williams wrote:
+> Changes since v4 [1]:
+> - Given v4 was from March of 2017 the bulk of the changes result from
+>   rebasing the patch set from a v4.11-rc2 baseline to v5.1-rc1.
 > 
-> > Despite having converted almost all files to ReST at the main Documentation/
-> > directory, they're still not included to any book. Also, after all those years
-> > after migrated to ReST as the official documentation format, there are still
-> > a lot of files using plain TXT files, with random internal formatting.
-> > 
-> > As it will likely require a lot more years to get everything converted,
-> > let's add index.rst files to Documentation/* subdirs, with a text_files.rst
-> > including all plain txt files as literal includes.
-> > 
-> > That ensures that the html output will contain the entire Linux Kernel
-> > documentation.  
+> - A unit test is added to ndctl to exercise the creation and dax
+>   mounting of multiple independent namespaces in a single 128M section.
 > 
-> Hmm...
+> [1]: https://lwn.net/Articles/717383/
 > 
-> >  251 files changed, 5262 insertions(+), 47 deletions(-)  
+> ---
 > 
-> Somebody clearly thinks I haven't been involved in enough merge conflicts
-> recently :)
+> Quote patch7:
+> 
+> "The libnvdimm sub-system has suffered a series of hacks and broken
+>  workarounds for the memory-hotplug implementation's awkward
+>  section-aligned (128MB) granularity. For example the following backtrace
+>  is emitted when attempting arch_add_memory() with physical address
+>  ranges that intersect 'System RAM' (RAM) with 'Persistent Memory' (PMEM)
+>  within a given section:
+>  
+>   WARNING: CPU: 0 PID: 558 at kernel/memremap.c:300 devm_memremap_pages+0x3b5/0x4c0
+>   devm_memremap_pages attempted on mixed region [mem 0x200000000-0x2fbffffff flags 0x200]
+>   [..]
+>   Call Trace:
+>     dump_stack+0x86/0xc3
+>     __warn+0xcb/0xf0
+>     warn_slowpath_fmt+0x5f/0x80
+>     devm_memremap_pages+0x3b5/0x4c0
+>     __wrap_devm_memremap_pages+0x58/0x70 [nfit_test_iomap]
+>     pmem_attach_disk+0x19a/0x440 [nd_pmem]
+>  
+>  Recently it was discovered that the problem goes beyond RAM vs PMEM
+>  collisions as some platform produce PMEM vs PMEM collisions within a
+>  given section. The libnvdimm workaround for that case revealed that the
+>  libnvdimm section-alignment-padding implementation has been broken for a
+>  long while. A fix for that long-standing breakage introduces as many
+>  problems as it solves as it would require a backward-incompatible change
+>  to the namespace metadata interpretation. Instead of that dubious route
+>  [2], address the root problem in the memory-hotplug implementation."
+> 
+> The approach is taken is to observe that each section already maintains
+> an array of 'unsigned long' values to hold the pageblock_flags. A single
+> additional 'unsigned long' is added to house a 'sub-section active'
+> bitmask. Each bit tracks the mapped state of one sub-section's worth of
+> capacity which is SECTION_SIZE / BITS_PER_LONG, or 2MB on x86-64.
+> 
+> The implication of allowing sections to be piecemeal mapped/unmapped is
+> that the valid_section() helper is no longer authoritative to determine
+> if a section is fully mapped. Instead pfn_valid() is updated to consult
+> the section-active bitmask. Given that typical memory hotplug still has
+> deep "section" dependencies the sub-section capability is limited to
+> 'want_memblock=false' invocations of arch_add_memory(), effectively only
+> devm_memremap_pages() users for now.
+> 
+> With this in place the hacks in the libnvdimm sub-system can be
+> dropped, and other devm_memremap_pages() users need no longer be
+> constrained to 128MB mapping granularity.
+> 
+> [2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
+> 
 
-:-)
+I started to explore the wonderful world of system ram memory hotplug
+(memory block devices) and it is full with issues. Too many to name them
+all, but two example are memory block devices that span several nodes
+(such memory can only be added during boot, mem->nid would be completely
+misleading) or that we assume struct pages have been initialized, while
+they really haven't when removing memory.
 
-If you take a look at the patches themselves, the first 6 patches are
-puntual fixes to a single doc file, in order to fix them:
+It is already a mess that we have multiple sections per memory block
+devices (and it was never properly cleaned up and I think I spotted
+several issues). Going into the direction of sub-sections for memory
+block devices, I don't like. It is already a big mess.
 
-  [PATCH 01/10] docs: DMA-API-HOWTO: add a missing "="
-  [PATCH 02/10] docs: atomic_bitops.txt: add a title for this document
-  [PATCH 03/10] docs: clearing-warn-once.txt: add a title for this document
-  [PATCH 04/10] docs: ntb.txt: use Sphinx notation for the two ascii figures
-  [PATCH 05/10] docs: unaligned-memory-access.txt: use a lowercase title
-  [PATCH 06/10] docs: video-output.txt: convert it to ReST format
+Memory block devices are an important concept for memory hotplug/unplug.
+This is the granularity memory will get onlined/offlined by user space.
+I don't see this interface going away. On the other hand, memory block
+devices only make sense for memory to be onlined/offlined in such
+chunks, system ram. So whatever ZONE_DEVICE memory doesn't run into that
+restriction.
 
-I remember we patched all Documentation/*.txt files in the past to make
-them ReST compliant. New changes (or new files) broke it. Those could
-be easily reviewed by their maintainers.
+I think we should restrict adding/removing system ram via
+online_pages()/offline_pages()/add_memory()/remove_memory() to
+- memory block device granularity (already mostly checked)
+- single zones (already mostly checked)
+- single nodes (basically not checked as far as I can see)
 
-In order to avoid new regressions, and ensure that those ReST files
-will be part of the build, the 7th patch rename those files from
-*.txt to *.rst and move to an "other/" directory, creating an
-"unclassified" book:
+Cleaning this mess up might take some time. Essentially, all special
+handling related to memory block devices should be factored out from
+arch_add_memory()/arch_remove_memory() to add_memory()/remove_memory().
+I started looking into that. __add_pages() doesn't properly revert what
+it already did when failing.
 
-  [PATCH 07/10] docs: Add all txt files to documentation
+I don't have a strong opinion against adding sub-section memory hotadd
+as long as we don't use it for memory block devices hotplug. Meaning,
+use it internally, but don't use it along with memory block device hotplug.
 
-The next two patches are additional ReST improvements and warning
-fixes:
+As add_memory() only works on memory block device granularity, memory
+block devices for something like that is not an issue. The real issue is
+memory added during boot that e.g. has holes or overlaps with pmem and
+friends. Trying to offline/online/remove such memory should be
+completely blocked.
 
-  [PATCH 08/10] docs: ntb.rst: add blank lines to clean up some Sphinx warnings
-  [PATCH 09/10] docs: speculation.rst: mark example blocks as such
+To easily detect multiple nodes per memory block devices, I am thinking
+about making mem->nid indicated that. E.g. nid == -1, uninitialized, nid
+== -2, mixed nodes, don't allow to offline/remove such memory. Might
+require some refactorings.
 
-And the final patch adds one index.rst to each sub-directory at
-Documentation/ that doesn't have yet any ReST file:
+The question is how we could easily detect
+- memory block devices with some sub-sections missing. Offlining code
+forbids this right now as the holes are marked as PG_reserved.
+- memory block devices with some sub-sections being ZONE_DEVICE memory
+like pmem.
 
-  [PATCH 10/10] docs: add plain text files to ReST output from  subdirs
+Both cases could only happen when memory was added during boot.
+Offlining/removing such memory has to be forbidden.
 
-Inside each Documentation/ subdir, it also adds a text_files.rst with
-includes all plain text files.
-
-You're right: patch 07/10 rename would cause trivial merge conflicts. So, if
-we are willing to take this, it probably makes sense to apply it late at
-a merge cycle.
-
-Patch 10/10 should not cause many conflicts (except if one remove a dir or
-a file), as it only adds new files. Still, worth applying it also late
-at the merge cycle.
-
-That's said, I was naive to not reorder the patch series, keeping just
-the two polemic patches at the end. I'll rebase my series, in order to
-send the fixes patches.
-
-So, let's focus the discussions on those two patches:
-
-  [PATCH 07/10] docs: Add all txt files to documentation
-  [PATCH 10/10] docs: add plain text files to ReST output from  subdirs
-
-> I understand the goal, but I have to wonder.  This feels a lot like giving
-> up on the problem and just sweeping the remaining junk into a pile
-> somewhere.
-
-The junk is already there. If we don't take any action to
-separate the wheat from the chaff, it will keep tormenting us
-for decades to come.
-
-Looking on our main index.rst file, it defines those major groups:
-
-	Licensing documentation
-	User-oriented documentation
-	Application-developer documentation
-	Introduction to kernel development
-	Kernel API documentation
-	Architecture-specific documentation
-	Filesystem Documentation
-	Translations
-
-The problem with the legacy stuff is that the same document frequently
-has user-oriented, application-oriented and kernel-API stuff at the
-same file (or group of files), as they're usually arranged per
-subsystem or per C fileset. So, it is not possible to move them as-is
-to any of the above without risking adding mess to the higher quality
-documments.
-
-Splitting those stuff into the main groups is no joy, and would be
-an intensive hard work to solve it. We either need someone to sponsor
-a group of people just for rewriting documentation or this will never
-happen. In any case, IMHO, the best would be to add a new
-crap^h^h^h^hstaging group were we could place all legacy random stuff.
-Then, gradually fix those, splitting stuff and promoting them to the
-main books, in a similar way to what we do with staging.
-
-> I feel like it would, if anything, reduce the incentive to
-> deal with these leftover documents properly.  
-
-IMHO, it is just the opposite. Let's face it: ReST build was added around
-May, 2016, for Kernel 4.7. People had quite some time and kernel versions
-to do conversions. If nothing is done, I doubt we would have any boom on
-patches addressing the issues.
-
-On the other hand, if someone wants to add a ReST file to a random 
-Documentation/* subdir that doesn't contain yet an index.rst file, it would
-need first to add an index, and may be ashamed of adding something there
-without converting the existing files. By having one index.rst file there,
-newer files could be added directly there, without the need of touching
-the legacy stuff. IMHO, this reduces the barrier to get new documentation
-using the ReST format. It should equally be easy for someone to convert
-single document files from text to ReST, as it would only need to remove
-the file from the text_files.rst, adding it at index.rst.
-
-> If this is *really* something we want to do, I would much rather proceed
-> in smaller steps and preferably with the cooperation of the maintainers
-> involved.  Imposing all of this at once just seems like a way to make it
-> highly dangerous for me to show my face a conferences...
-
-I understand your PoV, but not sure how to proceed.
-
-IMO, we should aim to achieve two goals:
-
-1) avoid, as much as possible, to add new plain text non-ReST compatible
-files to the documentation, as, if we keep adding them, we'll never
-have a consistent documentation set;
-
-2) ensure that the already converted files will be on some book, as this
-will help to identify regressions.
-
-That's what patches 07/10 and 10/10 are trying to achieve.
-
-It should be easy to break patch 10/10 on a per-subdir base, making
-it easier to be merge it by subsystem maintainers.
-
-If I split it on per-subdir, that would fit for you?
-
--
-
-In the case of patch 07/10, I might have done it on a different way:
-instead of moving them to a "staging-like" book (Documentation/other),
-it could have used other strategies:
-
-1) rename the files to *.rst but leaving them at the Documentation/
-diretory, and adding a new "other.rst" or "staging.rst" where those
-stuff would be added. IMHO, this is a crap way of doing it, as
-we'll use the main Documentation/ dir as a trash can;
-
-2) do a better job with moves, adding those files on some existing
-sub-directories. This doesn't sound an easy task, as it is not
-trivial to associate every single file there with an existing book.
-Also, some stuff there don't have new content added for ages.
-Maybe the stuff doesn't apply anymore (or it is for some part of
-the Kernel that are just stable enough).
-
-Ok, perhaps if we add patch 10/10 before 07/10, it could make
-easier to move the files, as we'll have a lot more places to
-add the rst files, as all sub-dirs will now contain rst files.
-
-If you're ok with such strategy, I could try such approach and
-see what happens.
+-- 
 
 Thanks,
-Mauro
+
+David / dhildenb
