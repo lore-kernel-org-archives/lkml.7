@@ -2,92 +2,152 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD71C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C310C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFE92133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QNQeCv8+"
+	by mail.kernel.org (Postfix) with ESMTP id E60622075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbfDJIak (ORCPT
+        id S1729647AbfDJIbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:30:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:41774 "EHLO mail.skyhub.de"
+        Wed, 10 Apr 2019 04:31:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42574 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbfDJIak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:30:40 -0400
-Received: from zn.tnic (p200300EC2F0CAE00250718ACA0948A5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:2507:18ac:a094:8a5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729024AbfDJIbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:31:21 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F32DE1EC0104;
-        Wed, 10 Apr 2019 10:30:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554885038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=EIC5GXnIG2iCyk2VAYJWzHuCmDmx3AVARo96r1FOl20=;
-        b=QNQeCv8+MS08A9oLKOmFuZOF7Qmw/bgZrSRuhP6OjAv2LDa7JZCcfZW5BJ0ajmuKg8I/02
-        lYriF60V41Fm0zsEahSipILOCskx/vhQ0ya6LvEskc11ipbzKk08vM9ju8IOy9x2iM7DRX
-        dJP4jI4e2UOAv4kHWJnOlnoZgAxrwiM=
-Date:   Wed, 10 Apr 2019 10:30:28 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations='
- cmdline options
-Message-ID: <20190410083028.GA26580@zn.tnic>
-References: <cover.1554396090.git.jpoimboe@redhat.com>
- <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com>
- <20190405131211.GE23348@zn.tnic>
- <20190405142048.burthk2jnpcvi2om@treble>
- <20190405152059.GG23348@zn.tnic>
- <20190405160136.GI23348@zn.tnic>
- <20190405161852.nmpk22omgiety4df@treble>
- <87sguqwgu7.fsf@concordia.ellerman.id.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 424F27F6B0;
+        Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09AAF108BEF7;
+        Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9C8ED1803385;
+        Wed, 10 Apr 2019 08:31:19 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 04:31:19 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
+        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
+        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
+        aarcange@redhat.com, david@redhat.com, david@fromorbit.com,
+        cohuck@redhat.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        pbonzini@redhat.com, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Message-ID: <299038321.20701113.1554885079188.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190410082504.GF1426@quack2.suse.cz>
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-5-pagupta@redhat.com> <20190410082504.GF1426@quack2.suse.cz>
+Subject: Re: [PATCH v5 4/6] dax: check synchronous mapping is supported
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87sguqwgu7.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.16.19, 10.4.195.8]
+Thread-Topic: check synchronous mapping is supported
+Thread-Index: 3OuZRphtFQExf6N3zq0ZSCMeImf/pQ==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 03:48:48PM +1000, Michael Ellerman wrote:
-> What about when we have a mitigation for a non-speculation related bug :)
 
-Like that is *ever* going to happen... :-P
+> > This patch introduces 'daxdev_mapping_supported' helper
+> > which checks if 'MAP_SYNC' is supported with filesystem
+> > mapping. It also checks if corresponding dax_device is
+> > synchronous. Virtio pmem device is asynchronous and
+> > does not not support VM_SYNC.
+> > 
+> > Suggested-by: Jan Kara <jack@suse.cz>
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  include/linux/dax.h | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index b896706a5ee9..4a2a60ffec86 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> > @@ -38,6 +38,24 @@ void kill_dax(struct dax_device *dax_dev);
+> >  void dax_write_cache(struct dax_device *dax_dev, bool wc);
+> >  bool dax_write_cache_enabled(struct dax_device *dax_dev);
+> >  bool dax_synchronous(struct dax_device *dax_dev);
+> > +
+> > +/*
+> > + * Callers check if synchronous mapping is enabled for DAX file
+> > + * and attached dax device is also synchronous.
+> > + *
+> > + * dax_synchronous function verifies if dax device is synchronous.
+> > + * Currently, only virtio pmem device supports asynchronous device
+> > + * flush.
+> > + */
+> 
+> Thanks for the patch! I'd restructure this comment like:
+> 
+> /*
+>  * Check if given mapping is supported by the file / underlying device.
+>  */
 
--- 
-Regards/Gruss,
-    Boris.
+Sure.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> > +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+> > +				struct dax_device *dax_dev)
+> > +{
+> 
+> 	/* Everyone supports non-sync mappings */
+> > +	if (!(vma->vm_flags & VM_SYNC))
+> > +		return true;
+> 	/* Sync mappings are supported only for files using DAX */
+> > +	if (!IS_DAX(file_inode(vma->vm_file)))
+> > +		return false;
+> 	/* Underlying device must support persisting through CPU instructions */
+> > +	return dax_synchronous(dax_dev);
+> > +}
+> >  #else
+> >  static inline struct dax_device *dax_get_by_host(const char *host)
+> >  {
+> > @@ -69,6 +87,11 @@ static inline bool dax_synchronous(struct dax_device
+> > *dax_dev)
+> >  {
+> >  	return true;
+> >  }
+> > +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+> > +				struct dax_device *dax_dev)
+> > +{
+> > +	return true;
+> 
+> This looks wrong. Shouldn't it rather be:
+> 
+> 	return !(vma->flags & VM_SYNC);
+> 
+> ?
+
+Right. I will correct this.
+
+Thanks,
+Pankaj
+
+> 
+> 								Honza
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+> 
